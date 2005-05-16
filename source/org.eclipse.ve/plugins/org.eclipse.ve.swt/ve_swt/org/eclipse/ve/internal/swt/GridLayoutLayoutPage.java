@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-15 00:18:35 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-16 23:03:39 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -34,8 +34,8 @@ import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.GridController;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
 import org.eclipse.ve.internal.java.core.*;
@@ -65,6 +65,9 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	
 	EStructuralFeature sfNumColumns, sfMakeColumnsEqualWidth, 
 		sfHorizontalSpacing, sfVerticalSpacing, sfMarginHeight, sfMarginWidth;
+
+	private int numColumnsValue, horizontalSpacingValue, verticalSpacingValue, marginHeightValue, marginWidthValue;
+	private boolean makeColsEqualWidthValue;
 	
 	boolean initialized = false;
 	
@@ -105,6 +108,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	 * Handle property changes from the GridLayoutLayoutComposite
 	 */
 	protected void propertyChanged (int type, Object value) {
+		int intValue;
 		switch (type) {
 			case SHOW_GRID_CHANGED:
 				boolean isShowing = ((Boolean)value).booleanValue();
@@ -113,14 +117,46 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 					gridController.setGridShowing(isShowing);
 				break;
 			case NUM_COLUMNS_CHANGED:
+				intValue = new Integer((String)value).intValue();
+				if (numColumnsValue != intValue) {
+					numColumnsValue = intValue;
+					execute(createSpinnerCommand(fEditPart, sfNumColumns, (String)value));
+				}
+					break;
 			case HORIZONTAL_SPACING_CHANGED:
+				intValue = new Integer((String)value).intValue();
+				if (horizontalSpacingValue != intValue) {
+					horizontalSpacingValue = intValue;
+					execute(createSpinnerCommand(fEditPart, sfHorizontalSpacing, (String)value));
+				}
+					break;
 			case VERTICAL_SPACING_CHANGED:
+				intValue = new Integer((String)value).intValue();
+				if (verticalSpacingValue != intValue) {
+					verticalSpacingValue = intValue;
+					execute(createSpinnerCommand(fEditPart, sfVerticalSpacing, (String)value));
+				}
+					break;
 			case MARGIN_HEIGHT_CHANGED:
+				intValue = new Integer((String)value).intValue();
+				if (marginHeightValue != intValue) {
+					marginHeightValue = intValue;
+					execute(createSpinnerCommand(fEditPart, sfMarginHeight, (String)value));
+				}
+					break;
 			case MARGIN_WIDTH_CHANGED:
-				execute(createSpinnerCommand(fEditPart, getSFForType(type), (String)value));
-				break;
+				intValue = new Integer((String)value).intValue();
+				if (marginWidthValue != intValue) {
+					marginWidthValue = intValue;
+					execute(createSpinnerCommand(fEditPart, sfMarginWidth, (String)value));
+				}
+					break;
 			case MAKE_COLS_EQUAL_WIDTH_CHANGED:
-				execute(createBooleanCommand(fEditPart, sfMakeColumnsEqualWidth, ((Boolean)value).booleanValue()));
+				boolean booleanValue = ((Boolean)value).booleanValue();
+				if (makeColsEqualWidthValue != booleanValue) {
+					makeColsEqualWidthValue = booleanValue;
+					execute(createBooleanCommand(fEditPart, sfMakeColumnsEqualWidth, ((Boolean)value).booleanValue()));
+				}
 				break;
 
 			default:
@@ -252,31 +288,20 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		gridController = GridController.getGridController(fEditPart);
 		if (gridComposite == null || gridController == null) { return; }
 		Object[] values = new Object[7];
+		numColumnsValue = getIntValue(fEditPart, sfNumColumns);
+		horizontalSpacingValue = getIntValue(fEditPart, sfHorizontalSpacing);
+		verticalSpacingValue = getIntValue(fEditPart, sfVerticalSpacing);
+		marginHeightValue = getIntValue(fEditPart, sfMarginHeight);
+		marginWidthValue = getIntValue(fEditPart, sfMarginWidth);
+		makeColsEqualWidthValue = getBooleanValue(fEditPart, sfMakeColumnsEqualWidth);
 		values[0] = new Boolean(gridController.isGridShowing());
-		values[1] = new Integer(getIntValue(fEditPart, sfNumColumns));
-		values[2] = new Integer(getIntValue(fEditPart, sfHorizontalSpacing));
-		values[3] = new Integer(getIntValue(fEditPart, sfVerticalSpacing));
-		values[4] = new Integer(getIntValue(fEditPart, sfMarginHeight));
-		values[5] = new Integer(getIntValue(fEditPart, sfMarginWidth));
-		values[6] = new Boolean(getBooleanValue(fEditPart, sfMakeColumnsEqualWidth));
+		values[1] = new Integer(numColumnsValue);
+		values[2] = new Integer(horizontalSpacingValue);
+		values[3] = new Integer(verticalSpacingValue);
+		values[4] = new Integer(marginHeightValue);
+		values[5] = new Integer(marginWidthValue);
+		values[6] = new Boolean(makeColsEqualWidthValue);
 		gridComposite.setInitialValues(values);
-	}
-	
-	private EStructuralFeature getSFForType(int type) {
-		switch (type) {
-			case NUM_COLUMNS_CHANGED:
-				return sfNumColumns;
-			case HORIZONTAL_SPACING_CHANGED:
-				return sfHorizontalSpacing;
-			case VERTICAL_SPACING_CHANGED:
-				return sfVerticalSpacing;
-			case MARGIN_HEIGHT_CHANGED:
-				return sfMarginHeight;
-			case MARGIN_WIDTH_CHANGED:
-				return sfMarginWidth;
-			default:
-				return null;
-		}
 	}
 	
 	/*

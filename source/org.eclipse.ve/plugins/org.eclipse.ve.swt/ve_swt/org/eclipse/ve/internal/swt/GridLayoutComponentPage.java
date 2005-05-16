@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-16 23:03:39 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -24,28 +24,32 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.*;
 import org.eclipse.gef.editparts.AbstractEditPart;
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertySource;
+
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
+
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.Spinner;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
 
 /**
  * This layout page resides on the Customize Layout window's Components tab
@@ -123,13 +127,17 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	};
 
 	protected EReference sfControlLayoutData;
-	protected EStructuralFeature sfHorizontalAlignment, sfVerticalAlignment, sfHorizontalGrab, sfVerticalGrab, sfHorizontalSpan, sfVerticalSpan;
+	protected EStructuralFeature sfHorizontalAlignment, sfVerticalAlignment, sfHorizontalGrab, sfVerticalGrab, sfHorizontalSpan, sfVerticalSpan,
+			sfHorizontalIndent, sfHeightHint, sfWidthHint;
 	protected ResourceSet rset;
 	protected AlignmentAction selectedAlignmentAction;
 	protected boolean fillVertical = false, fillHorizontal = false;
 	
-	protected Spinner horizontalSpanSpinner, verticalSpanSpinner;
-	protected int horizontalSpanValue = 1, verticalSpanValue = 1;
+	protected Spinner horizontalSpanSpinner, verticalSpanSpinner, horizontalIndentSpinner;
+	protected org.eclipse.ve.internal.java.core.Spinner heightHintSpinner, widthHintSpinner;
+	protected int horizontalSpanValue = 1, verticalSpanValue = 1, horizontalIndentValue = 0, heightHintValue = -1, widthHintValue = -1;
+
+	private Button restoreAllButton;
 
 	/*
 	 * 
@@ -485,7 +493,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		return UnexecutableCommand.INSTANCE;
 	}
 	
-	protected Command createSpanCommand(List editparts, int value, int orientation, Spinner spinner) {
+	protected Command createSpinnerCommand(List editparts, EStructuralFeature sf, int spinnerValue ) {
 		if (!editparts.isEmpty()) {
 			CommandBuilder cb = new CommandBuilder();
 			for (int i = 0; i < editparts.size(); i++) {
@@ -499,56 +507,18 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 					}
 					if (gridData != null) {
 						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
-						String init = String.valueOf(value);
-						Object spanObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
-						if (orientation == HORIZONTAL) {
-							componentCB.applyAttributeSetting(gridData, sfHorizontalSpan, spanObject);
-						} else {
-							componentCB.applyAttributeSetting(gridData, sfVerticalSpan, spanObject);
-						}
+						String init = String.valueOf(spinnerValue);
+						Object intObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
+						componentCB.applyAttributeSetting(gridData, sf, intObject);
 						componentCB.applyAttributeSetting(control, sfControlLayoutData, gridData);
 						cb.append(componentCB.getCommand());
 					}
 				}
 			}
-			cb.append(new EnableSpinnerCommand(spinner));
 			return cb.getCommand();
 		}
-		spinner.setEnabled(true);
 		return UnexecutableCommand.INSTANCE;
 	}
-	
-	/*
-	 * Command that is used to re-enable the spinner since we don't want the user
-	 * changing the span while the span is being updated. This prevents a ConcurrentModificationException
-	 * that is caused when the span is being read from the spinner side while the apply attribute setting
-	 * command is being executed in a separate thread.
-	 * 
-	 * This command should be the last command executed after all the insets commands are complete
-	 */
-	protected class EnableSpinnerCommand extends AbstractCommand {
-		protected Spinner spinner;
-		public EnableSpinnerCommand(Spinner spinner) {
-			super();
-			this.spinner = spinner;
-		}
-
-		/* 
-		 * Enable the spinner
-		 */
-		public void execute() {
-			if (spinner != null)
-				spinner.setEnabled(true);
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.gef.commands.Command#canExecute()
-		 */
-		public boolean canExecute() {
-			return true;
-		}
-
-	};
 
 	/**
 	 * Create the contents of this tab page
@@ -556,11 +526,12 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	public Control getControl(Composite parent) {
 
 		Composite mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayout(new GridLayout(2, false));
+		mainComposite.setLayout(new GridLayout(3, false));
 		
-		Group alignmentGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Alignment"), 2, 0, 0); //$NON-NLS-1$
-		GridData gd1 = new GridData(GridData.FILL_VERTICAL);
+		Group alignmentGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Alignment"), 2, 5, 0); //$NON-NLS-1$
+		GridData gd1 = new GridData();
 		gd1.verticalSpan = 2;
+		gd1.verticalAlignment = GridData.FILL;
 		alignmentGroup.setLayoutData(gd1);
 		
 		Composite alignmentGrid = new Composite(alignmentGroup, SWT.NONE);
@@ -580,8 +551,22 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			ActionContributionItem ac = new ActionContributionItem(fillActions[i]);
 			ac.fill(fillGroup);
 		}
+		Label horizontalIndentLabel = new Label(alignmentGroup, SWT.NONE);
+		horizontalIndentLabel.setText(SWTMessages.getString("GridLayoutComponentPage.HorizontalIndent")); //$NON-NLS-1$
+		
+		horizontalIndentSpinner = new Spinner(alignmentGroup, SWT.NONE);
+		horizontalIndentSpinner.setSelection(horizontalIndentValue);
+		horizontalIndentSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int value = horizontalIndentSpinner.getSelection();
+				if (value != horizontalIndentValue) {
+					horizontalIndentValue = value;
+					execute(createSpinnerCommand(getSelectedObjects(), sfHorizontalIndent, horizontalIndentValue));
+				}
+			}
+		});
 
-		Group spanGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Span"), 2, 0, 0); //$NON-NLS-1$
+		Group spanGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Span"), 2, 4, 4); //$NON-NLS-1$
 		createSpanControl(spanGroup);
 		
 		Group grabGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Grab"), 2, 0, 0); //$NON-NLS-1$
@@ -589,6 +574,53 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			ActionContributionItem ac = new ActionContributionItem(grabActions[i]);
 			ac.fill(grabGroup);
 		}
+		GridData gd2 = new GridData();
+		gd2.verticalSpan = 1;
+		gd2.verticalAlignment = GridData.FILL;
+		grabGroup.setLayoutData(gd2);
+		
+		Group hintsGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Hints"), 2, 4, 4); //$NON-NLS-1$
+		GridData gd3 = new GridData();
+		gd3.horizontalAlignment = GridData.FILL;
+		hintsGroup.setLayoutData(gd3);
+		
+		Label horizontalHintLabel = new Label(hintsGroup, SWT.NONE);
+		horizontalHintLabel.setText(SWTMessages.getString("GridLayoutComponentPage.HeightHint")); //$NON-NLS-1$
+		
+		heightHintSpinner = new org.eclipse.ve.internal.java.core.Spinner(hintsGroup, SWT.NONE, -1);
+		heightHintSpinner.setMinimum(-1);
+		heightHintSpinner.setValue(heightHintValue);
+		heightHintSpinner.addModifyListener(new Listener() {
+			public void handleEvent(Event e) {
+				int value = heightHintSpinner.getValue();
+				if (value != heightHintValue) {
+					heightHintValue = value;
+					execute(createSpinnerCommand(getSelectedObjects(), sfHeightHint, heightHintValue));
+				}
+			}
+		});
+
+		Label verticalHintLabel = new Label(hintsGroup, SWT.NONE);
+		verticalHintLabel.setText(SWTMessages.getString("GridLayoutComponentPage.WidthHint")); //$NON-NLS-1$
+		
+		widthHintSpinner = new org.eclipse.ve.internal.java.core.Spinner(hintsGroup, SWT.NONE, -1);
+		widthHintSpinner.setMinimum(-1);
+		widthHintSpinner.setValue(widthHintValue);
+		widthHintSpinner.addModifyListener(new Listener() {
+			public void handleEvent(Event e) {
+				int value = widthHintSpinner.getValue();
+				if (value != widthHintValue) {
+					widthHintValue = value;
+					execute(createSpinnerCommand(getSelectedObjects(), sfWidthHint, widthHintValue));
+				} 
+			}
+		});
+
+		Label spacer = new Label(mainComposite, SWT.None);
+		spacer.setText("");
+		
+		restoreAllButton = new Button(mainComposite, SWT.NONE);
+		restoreAllButton.setText("Restore all default values");
 		
 		return mainComposite;
 	}
@@ -607,43 +639,33 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		Label horizontalLabel = new Label(spanGroup, SWT.NONE);
 		horizontalLabel.setText(SWTMessages.getString("GridLayoutComponentPage.SpanHorizontal")); //$NON-NLS-1$
 		
-		horizontalSpanSpinner = new Spinner(spanGroup, SWT.NONE, 1);
+		horizontalSpanSpinner = new Spinner(spanGroup, SWT.NONE);
 		horizontalSpanSpinner.setMinimum(1);
-		horizontalSpanSpinner.setValue(horizontalSpanValue);
-		horizontalSpanSpinner.setEnabled(true);
+		horizontalSpanSpinner.setSelection(horizontalSpanValue);
 		
 		Label verticalLabel = new Label(spanGroup, SWT.NONE);
 		verticalLabel.setText(SWTMessages.getString("GridLayoutComponentPage.SpanVertical")); //$NON-NLS-1$
 		
-		verticalSpanSpinner = new Spinner(spanGroup, SWT.NONE, 1);
+		verticalSpanSpinner = new Spinner(spanGroup, SWT.NONE);
 		verticalSpanSpinner.setMinimum(1);
-		verticalSpanSpinner.setValue(verticalSpanValue);
-		verticalSpanSpinner.setEnabled(true);
+		verticalSpanSpinner.setSelection(verticalSpanValue);
 		
-		horizontalSpanSpinner.addModifyListener(new Listener() {
-			public void handleEvent(Event e) {
-				int value = horizontalSpanSpinner.getValue();
+		horizontalSpanSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int value = horizontalSpanSpinner.getSelection();
 				if (value != horizontalSpanValue) {
 					horizontalSpanValue = value;
-					execute(createSpanCommand(getSelectedObjects(), value, HORIZONTAL, horizontalSpanSpinner));
-				} else {
-					// Need this in the case where no command has been executed and we need to tell the
-					// spinner to reset it's 'command in progress' switch so it can except input again.
-					horizontalSpanSpinner.setEnabled(true);
+					execute(createSpinnerCommand(getSelectedObjects(), sfHorizontalSpan, value));
 				}
 			}
 		});
 		
-		verticalSpanSpinner.addModifyListener(new Listener() {
-			public void handleEvent(Event e) {
-				int value = verticalSpanSpinner.getValue();
+		verticalSpanSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int value = verticalSpanSpinner.getSelection();
 				if (value != verticalSpanValue) {
 					verticalSpanValue = value;
-					execute(createSpanCommand(getSelectedObjects(), value, VERTICAL, verticalSpanSpinner));
-				} else {
-					// Need this in the case where no command has been executed and we need to tell the
-					// spinner to reset it's 'command in progress' switch so it can except input again.
-					verticalSpanSpinner.setEnabled(true);
+					execute(createSpinnerCommand(getSelectedObjects(), sfVerticalSpan, value));
 				}
 			}
 		});
@@ -669,12 +691,6 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			if (!enable)
 				grabActions[i].setChecked(false);
 		}
-	}
-	protected void enableSpanSpinners(boolean enable) {
-		if (horizontalSpanSpinner != null)
-			horizontalSpanSpinner.setEnabled(enable);
-		if (verticalSpanSpinner != null)
-			verticalSpanSpinner.setEnabled(enable);
 	}
 
 	/*
@@ -767,10 +783,9 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 					if (enableAll) {
 						enableAlignmentActions(true);
 						enableGrabActions(true);
-						enableSpanSpinners(true);
 						handleSelectionChangedForAlignmentActions(editparts);
 						handleSelectionChangedForGrabActions(editparts);
-						handleSelectionChangedForSpanSpinners(editparts);
+						handleSelectionChangedForSpinners(editparts);
 						return true;
 					}
 				}
@@ -779,7 +794,6 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		// By default if the initial checks failed, disable and uncheck all the actions.
 		enableAlignmentActions(false);
 		enableGrabActions(false);
-		enableSpanSpinners(false);
 		return false;
 	}
 	
@@ -866,19 +880,28 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		}
 	}
 	
-	protected void handleSelectionChangedForSpanSpinners(List editparts) {
+	protected void handleSelectionChangedForSpinners(List editparts) {
 		for (int i = 0; i < editparts.size(); i++) {
 			EditPart ep = (EditPart) editparts.get(i);
 			if ( ep.getSelected() == AbstractEditPart.SELECTED_PRIMARY && ep.getModel() instanceof IJavaObjectInstance) {
 				horizontalSpanValue = getSpanValue(ep, HORIZONTAL);
 				verticalSpanValue = getSpanValue(ep, VERTICAL);
+				heightHintValue = getHintValue(ep, sfHeightHint);
+				widthHintValue = getHintValue(ep, sfWidthHint);
+				horizontalIndentValue = getHorizontalIndentValue(ep);
 				break;
 			}
 		}
 		if (horizontalSpanSpinner != null)
-			horizontalSpanSpinner.setValue(horizontalSpanValue);
+			horizontalSpanSpinner.setSelection(horizontalSpanValue);
 		if (verticalSpanSpinner != null)
-			verticalSpanSpinner.setValue(verticalSpanValue);
+			verticalSpanSpinner.setSelection(verticalSpanValue);
+		if (heightHintSpinner != null && heightHintValue != 0)
+			heightHintSpinner.setValue(heightHintValue);
+		if (widthHintSpinner != null && widthHintValue != 0)
+			widthHintSpinner.setValue(widthHintValue);
+		if (horizontalIndentSpinner != null)
+			horizontalIndentSpinner.setSelection(horizontalIndentValue);
 	}
 	
 	protected int getHorizontalAlignValue(EditPart ep) {
@@ -911,6 +934,21 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		return GridData.CENTER;
 	}
 	
+	protected int getHorizontalIndentValue(EditPart ep) {
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
+			IPropertySource gridData = (IPropertySource) ps.getPropertyValue(sfControlLayoutData);
+			if (gridData != null) {
+				Object horizPV = gridData.getPropertyValue(sfHorizontalIndent);
+				if (horizPV != null && horizPV instanceof IJavaDataTypeInstance) {
+					IIntegerBeanProxy intProxy = (IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) horizPV, rset);
+					return intProxy.intValue();
+				}
+			}
+		}
+		return 0;
+	}
+	
 	protected boolean getGrabValue(EditPart ep, int grabType) {
 		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
 		if (ps != null && getResourceSet(ep) != null) {
@@ -941,6 +979,21 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		return 1;
 	}
 	
+	protected int getHintValue(EditPart ep, EStructuralFeature sf) {
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
+			IPropertySource gridData = (IPropertySource) ps.getPropertyValue(sfControlLayoutData);
+			if (gridData != null) {
+				Object hintPV = gridData.getPropertyValue(sf);
+				if (hintPV != null && hintPV instanceof IJavaDataTypeInstance) {
+					IIntegerBeanProxy intProxy = (IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) hintPV, rset);
+					return intProxy.intValue();
+				}
+			}
+		}
+		return -1;
+	}
+	
 	/*
 	 * reset the resource set and structural features
 	 */
@@ -953,6 +1006,9 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		sfVerticalGrab = null;
 		sfHorizontalSpan = null;
 		sfVerticalSpan = null;
+		sfHorizontalIndent = null;
+		sfHeightHint = null;
+		sfWidthHint = null;
 	}
 	/*
 	 * Return the ResourceSet for this editpart. Initialize the structural features also. 
@@ -967,6 +1023,9 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			sfVerticalGrab = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_VERTICAL_GRAB);
 			sfHorizontalSpan = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_HORIZONTAL_SPAN);
 			sfVerticalSpan = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_VERTICAL_SPAN);
+			sfHorizontalIndent = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_HORIZONTAL_INDENT);
+			sfHeightHint = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_HEIGHT_HINT);
+			sfWidthHint = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_DATA_WIDTH_HINT);
 		}
 		return rset;
 	}
