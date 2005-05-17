@@ -11,14 +11,12 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.12 $ $Date: 2005-05-11 22:41:37 $
+ * $Revision: 1.13 $ $Date: 2005-05-17 23:29:10 $
  */
 import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Polyline;
 import org.eclipse.draw2d.geometry.*;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
@@ -35,9 +33,7 @@ import org.eclipse.ve.internal.cdm.Annotation;
 
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.GridController;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
@@ -54,6 +50,8 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 	private final int HEIGHT_PADDING = 4;
 
 	boolean fShowGrid = false;
+	private boolean showGridPreference = CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED);		
+
 	GridLayoutPolicyHelper helper = new GridLayoutPolicyHelper();
 	int [][] layoutDimensions = null;
 	private GridLayoutGridFigure fGridLayoutGridFigure;
@@ -67,6 +65,7 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 				helper.refresh();
 		}
 	};
+	private EditPartListener editPartSelectionListener;
 
 	
 	private class GridImageListener implements IImageListener {
@@ -122,10 +121,14 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 				String name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
 				if (name == null)
 					name = GridController.GRID_THIS_PART;
-				if (gridStateData.contains(name))
+				if (gridStateData.contains(name)) {
 					if (gridController != null)
 						gridController.setGridShowing(true);
+				}
 			}
+		} else if(showGridPreference && gridController != null) {
+			editPartSelectionListener = createEditPartSelectionListener();
+			getHost().addEditPartListener(editPartSelectionListener);
 		}
 	}
 	
@@ -141,8 +144,13 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 		if (beanProxy != null)
 			beanProxy.removeImageListener(getGridImageListener());
 		getHostFigure().removeFigureListener(hostFigureListener);
+		if (editPartSelectionListener != null) {
+			getHost().removeEditPartListener(editPartSelectionListener);
+			editPartSelectionListener = null;
+		}
 		super.deactivate();
 	}
+	
 	protected EditPolicy createChildEditPolicy(EditPart child) {
 		return new NonResizableSpannableEditPolicy(this);
 	}
@@ -478,6 +486,29 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 		fb.translateToRelative(p2);
 		fb.setPoint(p1, 0);
 		fb.setPoint(p2, 1);
+	}
+
+	/*
+	 * Create an editpart listener for the host edit part that will show the grid
+	 * if the editpart is selected. This is based on the SHOW_GRID_WHEN_SELECTED preferences.
+	 */
+	private EditPartListener createEditPartSelectionListener() {
+		return new EditPartListener.Stub() {
+			public void childAdded(EditPart editpart, int index) {
+			}
+			public void removingChild(EditPart editpart, int index) {
+			}
+			public void selectedStateChanged(EditPart editpart) {
+				if (editpart == null || editpart == getHost()
+						&& (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
+					if (gridController != null)
+						gridController.setGridShowing(true);
+				} else {
+					if (gridController != null)
+						gridController.setGridShowing(false);
+				}
+			}
+		};
 	}
 
 }
