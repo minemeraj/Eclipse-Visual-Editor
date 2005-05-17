@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-11 22:41:21 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-17 16:32:10 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -97,30 +97,28 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 				case Notification.SET:
 				case Notification.UNSET:
 					if (isBeanProxyInstantiated()) {
-						if (!msg.isTouch()) {
-							if (msg.getFeature() == sfConstraintConstraint) {
-								// TODO See if we can actually group the expression up to all notifications for this transaction instead of just this one notification.
-								IExpression expression = getBeanProxyFactory().createExpression();
+						if (msg.getFeature() == sfConstraintConstraint) {
+							// TODO See if we can actually group the expression up to all notifications for this transaction instead of just this one notification.
+							IExpression expression = getBeanProxyFactory().createExpression();
+							try {
+								if (!msg.isTouch() && msg.getOldValue() != null)
+									releaseSetting(msg.getOldValue(), expression);
+								changeConstraint((EObject) msg.getNotifier(), expression);
+							} finally {
 								try {
-									if (msg.getOldValue() != null)
-										releaseSetting(msg.getOldValue(), expression);
-									changeConstraint((EObject) msg.getNotifier(), expression);
-								} finally {
-									try {
-										if (expression.isValid())
-											expression.invokeExpression();
-										else
-											expression.close();
-									} catch (IllegalStateException e) {
-										// Shouldn't occur. Should be taken care of in applied.
-										JavaVEPlugin.log(e, Level.WARNING);
-									} catch (ThrowableProxy e) {
-										// Shouldn't occur. Should be taken care of in applied.
-										JavaVEPlugin.log(e, Level.WARNING);
-									} catch (NoExpressionValueException e) {
-										// Shouldn't occur. Should be taken care of in applied.
-										JavaVEPlugin.log(e, Level.WARNING);
-									}
+									if (expression.isValid())
+										expression.invokeExpression();
+									else
+										expression.close();
+								} catch (IllegalStateException e) {
+									// Shouldn't occur. Should be taken care of in applied.
+									JavaVEPlugin.log(e, Level.WARNING);
+								} catch (ThrowableProxy e) {
+									// Shouldn't occur. Should be taken care of in applied.
+									JavaVEPlugin.log(e, Level.WARNING);
+								} catch (NoExpressionValueException e) {
+									// Shouldn't occur. Should be taken care of in applied.
+									JavaVEPlugin.log(e, Level.WARNING);
 								}
 							}
 						} 
