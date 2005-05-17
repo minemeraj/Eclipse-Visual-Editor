@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-16 23:03:39 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-17 23:28:04 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -23,6 +23,7 @@ import org.eclipse.gef.*;
 import org.eclipse.gef.commands.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionFilter;
@@ -34,8 +35,8 @@ import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.GridController;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
 import org.eclipse.ve.internal.java.core.*;
@@ -72,15 +73,15 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	boolean initialized = false;
 	
 	private GridLayoutLayoutComposite gridComposite = null;
-//	private IGridListener gridListener = new IGridListener() {
-//		public void gridHeightChanged(int gridHeight,int oldGridHeight) {};
-//		public void gridVisibilityChanged(boolean isShowing) {
-//			if (gridComposite != null)
-//				gridComposite.setShowGrid(isShowing);
-//		};
-//		public void gridMarginChanged(int gridMargin,int oldGridMargin) {};
-//		public void gridWidthChanged(int gridWidth,int oldGridWidth) {};
-//	};
+	private IGridListener gridListener = new IGridListener() {
+		public void gridHeightChanged(int gridHeight,int oldGridHeight) {};
+		public void gridVisibilityChanged(boolean isShowing) {
+			if (gridComposite != null)
+				gridComposite.setShowGrid(isShowing);
+		};
+		public void gridMarginChanged(int gridMargin,int oldGridMargin) {};
+		public void gridWidthChanged(int gridWidth,int oldGridWidth) {};
+	};
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#handleSelectionProviderInitialization(org.eclipse.jface.viewers.ISelectionProvider)
@@ -95,12 +96,12 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	public Control getControl(Composite parent) {
 		gridComposite = new GridLayoutLayoutComposite(this, parent, SWT.NONE);
 		initializeValues();
-//		gridComposite.addDisposeListener(new DisposeListener() {
-//			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
-//				if (gridController != null)
-//					gridController.removeGridListener(gridListener);
-//			};
-//		});
+		gridComposite.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
+				if (gridController != null)
+					gridController.removeGridListener(gridListener);
+			};
+		});
 		return gridComposite;
 	}
 
@@ -184,7 +185,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 					gridController = GridController.getGridController(fEditPart);
 					if (gridController != null) {
 						initializeValues();
-//						gridController.addGridListener(gridListener);
+						gridController.addGridListener(gridListener);
 						return true;
 					}
 				}
@@ -229,6 +230,8 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 			}
 		}
 		fEditPart = null;
+		if (gridController != null)
+			gridController.removeGridListener(gridListener);
 		gridController = null;
 		// By default if the initial checks failed, disable and uncheck all the actions.
 		return false;
