@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.15 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.16 $  $Date: 2005-05-17 17:22:33 $ 
  */
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.*;
@@ -119,6 +119,7 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		Annotation a = CodeGenUtil.getAnnotation(obj);
 		if (a != null) {
 			nameEntry = name = (String) a.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+			name = getValidInstanceVariableName(obj, name, currentType, bdm);
 		}
 
 		if (name == null) {
