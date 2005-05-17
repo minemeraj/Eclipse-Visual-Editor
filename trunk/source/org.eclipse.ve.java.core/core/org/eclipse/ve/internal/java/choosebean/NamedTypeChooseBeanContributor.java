@@ -10,27 +10,27 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NamedTypeChooseBeanContributor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-17 15:43:19 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
-import org.eclipse.ui.dialogs.FilteredList.FilterMatcher;
+import org.eclipse.swt.graphics.Image;
+
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
  
 /**
  * 
  * @since 1.0.0
  */
 public class NamedTypeChooseBeanContributor extends YesNoListChooseBeanContributor {
-	
+	//TODO - have to fix this too
 	public NamedTypeChooseBeanContributor(String displayName, String classPackageName, String className){
 		super(displayName, new String[] {classPackageName, className},null); 		
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.choosebean.YesNoListChooseBeanContributor#createFilterMatcher()
-	 */
-	protected FilterMatcher createFilterMatcher() {
-		return new TypeFilterMatcher(getYesTypeFQNs(), getNoTypeFQNs(), "*"); //$NON-NLS-1$
+
+	public Image getImage() {
+		return JavaVEPlugin.getJavaBeanImage();
 	}
 	
 }

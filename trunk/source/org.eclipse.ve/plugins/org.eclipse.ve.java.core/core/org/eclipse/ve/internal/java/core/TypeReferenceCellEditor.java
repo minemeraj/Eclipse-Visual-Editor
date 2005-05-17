@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.13 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-17 15:43:19 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -80,7 +80,7 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 				new IChooseBeanContributor[] {new NamedTypeChooseBeanContributor(javaClass.getQualifiedName(),javaClass.getJavaPackage().getPackageName(), javaClass.getName())},
 				-1,
 				false);				
-		chooseBean.setFilter("*"); //$NON-NLS-1$
+		chooseBean.setFilter("**"); //$NON-NLS-1$
 		if(chooseBean.open()==Window.OK){
 			Object[] results = chooseBean.getResult();
 			IJavaObjectInstance newJavaInstance = (IJavaObjectInstance)results[0];

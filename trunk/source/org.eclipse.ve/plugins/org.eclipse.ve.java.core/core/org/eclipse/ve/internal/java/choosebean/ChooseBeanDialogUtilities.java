@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialogUtilities.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-03 21:08:35 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-17 15:43:19 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.internal.corext.util.TypeInfo;
+import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -34,8 +35,6 @@ import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.java.core.PrototypeFactory;
 import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
  
@@ -49,6 +48,7 @@ public class ChooseBeanDialogUtilities {
 	public static final String PI_CONTAINER = "container"; //$NON-NLS-1$	
 	public static final String PI_PLUGIN = "plugin"; //$NON-NLS-1$
 	public static final IChooseBeanContributor[] NO_CONTRIBS = new IChooseBeanContributor[0];
+	private static HashMap contributorNameImageMap = new HashMap();
 	
 	public static IChooseBeanContributor[] determineContributors(IJavaProject project){
 		Map containerIDs = new HashMap();
@@ -101,6 +101,28 @@ public class ChooseBeanDialogUtilities {
 			JavaVEPlugin.log(e, Level.FINE);
 			return NO_CONTRIBS;
 		}
+	}
+	
+	/**
+	 * Stores the images of contributors based on contributor names
+	 * 
+	 * @param contrib
+	 * @return
+	 */
+	public static Image getContributorImage(IChooseBeanContributor contrib){
+		Image image = null;
+		if(contrib!=null){
+			String contribName = contrib.getName();
+			if(contribName==null)
+				contribName = contrib.getClass().getName();
+			if(contributorNameImageMap.containsKey(contribName))
+				image = (Image) contributorNameImageMap.get(contribName);
+			else{
+				image = contrib.getImage();
+				contributorNameImageMap.put(contribName, image);
+			}
+		}
+		return image;
 	}
 
 	/**
@@ -211,7 +233,7 @@ public class ChooseBeanDialogUtilities {
 		Status status = new Status(
 							isInstantiable?IStatus.OK:IStatus.ERROR, 
 							JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 
-							IStatus.OK, 
+							isInstantiable?IStatus.OK:IStatus.ERROR, 
 							message, 
 							t);
 		return status;

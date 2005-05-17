@@ -542,5 +542,13 @@
          name="%NewStyleComponent.Applet">
 			</visualElement>
    </extension>
-
+   <extension
+         point="org.eclipse.ve.java.core.choosebean">
+      <contributor container="org.eclipse.jdt.launching.JRE_CONTAINER"
+            class="org.eclipse.ve.internal.jfc.codegen.SwingChooseBeanContributor">
+      </contributor>
+      <contributor container="org.eclipse.jdt.launching.JRE_CONTAINER"
+            class="org.eclipse.ve.internal.jfc.codegen.AWTChooseBeanContributor">
+      </contributor>
+   </extension>
 </plugin>
