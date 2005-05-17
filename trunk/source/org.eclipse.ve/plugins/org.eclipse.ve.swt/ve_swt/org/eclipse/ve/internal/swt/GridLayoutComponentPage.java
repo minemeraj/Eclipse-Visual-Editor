@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-16 23:03:39 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-17 21:36:10 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -28,8 +28,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -138,6 +137,8 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	protected int horizontalSpanValue = 1, verticalSpanValue = 1, horizontalIndentValue = 0, heightHintValue = -1, widthHintValue = -1;
 
 	private Button restoreAllButton;
+
+	private boolean hasGridDataValue = false;
 
 	/*
 	 * 
@@ -453,6 +454,8 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 					}
 				}
 			}
+			if (!restoreAllButton.getEnabled())
+				restoreAllButton.setEnabled(true);
 			return cb.getCommand();
 		}
 		return UnexecutableCommand.INSTANCE;
@@ -488,6 +491,8 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 					}
 				}
 			}
+			if (!restoreAllButton.getEnabled())
+				restoreAllButton.setEnabled(true);
 			return cb.getCommand();
 		}
 		return UnexecutableCommand.INSTANCE;
@@ -511,6 +516,30 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 						Object intObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
 						componentCB.applyAttributeSetting(gridData, sf, intObject);
 						componentCB.applyAttributeSetting(control, sfControlLayoutData, gridData);
+						cb.append(componentCB.getCommand());
+					}
+				}
+			}
+			if (!restoreAllButton.getEnabled())
+				restoreAllButton.setEnabled(true);
+			return cb.getCommand();
+		}
+		return UnexecutableCommand.INSTANCE;
+	}
+
+	/*
+	 * Return the command to cancel the GridData settings for this control
+	 */
+	protected Command createRestoreDefaultsCommand(List editparts) {
+		if (!editparts.isEmpty()) {
+			CommandBuilder cb = new CommandBuilder();
+			for (int i = 0; i < editparts.size(); i++) {
+				EditPart editpart = (EditPart) editparts.get(i);
+				EObject control = (EObject) editpart.getModel();
+				if (control != null) {
+					if (control.eIsSet(sfControlLayoutData)) {
+						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
+						componentCB.cancelAttributeSetting(control, sfControlLayoutData);
 						cb.append(componentCB.getCommand());
 					}
 				}
@@ -620,9 +649,30 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		spacer.setText("");
 		
 		restoreAllButton = new Button(mainComposite, SWT.NONE);
+		restoreAllButton.setEnabled(hasGridDataValue);
 		restoreAllButton.setText("Restore all default values");
+		restoreAllButton.addSelectionListener(new SelectionAdapter () {
+			public void widgetSelected(SelectionEvent e) {
+				restoreAllDefaultValues();
+			};
+		});
 		
 		return mainComposite;
+	}
+	
+	/*
+	 * Restore all the GridData default values by removing the GridData for each selected control.
+	 */
+	protected void restoreAllDefaultValues() {
+		List editparts = getSelectedObjects();
+		if (!editparts.isEmpty()) {
+			Command cmd = createRestoreDefaultsCommand(editparts);
+			if (cmd != UnexecutableCommand.INSTANCE) {
+				execute(createRestoreDefaultsCommand(editparts));
+				refreshAllValues(editparts);
+				restoreAllButton.setEnabled(false);
+			}
+		}
 	}
 	
 	protected Group createGroup(Composite aParent, String title, int numColumns, int verticalSpacing, int horizontalSpacing) {
@@ -783,9 +833,12 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 					if (enableAll) {
 						enableAlignmentActions(true);
 						enableGrabActions(true);
-						handleSelectionChangedForAlignmentActions(editparts);
-						handleSelectionChangedForGrabActions(editparts);
-						handleSelectionChangedForSpinners(editparts);
+						refreshAllValues(editparts);
+						if (restoreAllButton != null)
+							if (hasGridData(editparts))
+								restoreAllButton.setEnabled(true);
+							else
+								restoreAllButton.setEnabled(false);
 						return true;
 					}
 				}
@@ -795,6 +848,12 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		enableAlignmentActions(false);
 		enableGrabActions(false);
 		return false;
+	}
+	private void refreshAllValues(List editparts) {
+		handleSelectionChangedForAlignmentActions(editparts);
+		handleSelectionChangedForGrabActions(editparts);
+		handleSelectionChangedForSpinners(editparts);
+		hasGridDataValue = hasGridData(editparts);
 	}
 	
 	/*
@@ -904,6 +963,22 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			horizontalIndentSpinner.setSelection(horizontalIndentValue);
 	}
 	
+	/*
+	 * Return true if any of the select controls has GridData for it's layout data. 
+	 */
+	protected boolean hasGridData(List editparts) {
+		if (!editparts.isEmpty()) {
+			for (int i = 0; i < editparts.size(); i++) {
+				EditPart editpart = (EditPart) editparts.get(i);
+				EObject control = (EObject) editpart.getModel();
+				if (control != null) {
+					if (control.eIsSet(sfControlLayoutData)) { return true; }
+				}
+			}
+		}
+		return false;
+	}
+
 	protected int getHorizontalAlignValue(EditPart ep) {
 		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
 		if (ps != null && getResourceSet(ep) != null) {
