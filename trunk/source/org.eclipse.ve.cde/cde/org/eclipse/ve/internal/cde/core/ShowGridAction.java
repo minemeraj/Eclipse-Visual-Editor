@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ShowGridAction.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-27 06:43:06 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-17 23:27:25 $ 
  */
 
 
@@ -55,11 +55,9 @@ public void run() {
 	if (isChecked()) {
 		setText(CDEMessages.getString("ShowGridAction.hide.label")); //$NON-NLS-1$
 		setToolTipText(CDEMessages.getString("ShowGridAction.hide.tooltip")); //$NON-NLS-1$
-		CDEPlugin.getPlugin().getPluginPreferences().setValue(CDEPlugin.SHOW_GRID,true);		
 	} else {
 		setText(CDEMessages.getString("ShowGridAction.label")); //$NON-NLS-1$
 		setToolTipText(CDEMessages.getString("ShowGridAction.tooltip")); //$NON-NLS-1$
-		CDEPlugin.getPlugin().getPluginPreferences().setValue(CDEPlugin.SHOW_GRID,false);		
 	}
 
 	// Let other actions know this property has changed.
