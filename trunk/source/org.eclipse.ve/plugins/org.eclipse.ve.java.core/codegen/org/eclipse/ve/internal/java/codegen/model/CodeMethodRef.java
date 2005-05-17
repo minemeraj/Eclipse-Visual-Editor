@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.35 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.36 $  $Date: 2005-05-17 23:36:56 $ 
  */
 
 import java.util.*;
@@ -802,7 +802,7 @@ public String _debugExpressions() {
       }
 	}
 	catch (Exception e) {
-		sb.append("**Error***\n");
+		sb.append("**Error***\n"); //$NON-NLS-1$
 	}
     return sb.toString() ;    
 }
@@ -938,7 +938,7 @@ public void updateExpressionIndex(CodeExpressionRef exp) throws CodeGenException
 		int docOff = exp.getOffset()+getOffset() ;
 		if (exp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)) {
 			// Have to remove this expression from the source first
-			exp.updateDocument(docOff, txt.length(),"");
+			exp.updateDocument(docOff, txt.length(),""); //$NON-NLS-1$
 		}		
 		
 		if (fExpressions.indexOf(exp) >= 0) 

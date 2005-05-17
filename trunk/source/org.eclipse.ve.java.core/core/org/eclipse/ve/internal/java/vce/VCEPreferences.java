@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-12 11:39:56 $ 
+ *  $Revision: 1.16 $  $Date: 2005-05-17 23:39:48 $ 
  */
 
 
@@ -51,7 +51,7 @@ public class VCEPreferences {
 	public static final int DEFAULT_MAX_AWT_COMPONENT_IMAGE_HEIGHT = 3000;
     
 	// Rename instance preferences
-	public static final String RENAME_INSTANCE_ASK_KEY ="RENAME_INSTANCE_ASK_KEY";
+	public static final String RENAME_INSTANCE_ASK_KEY ="RENAME_INSTANCE_ASK_KEY"; //$NON-NLS-1$
 	public static final boolean RENAME_INSTANCE_ASK_DEFAULT = true;
     
     // The following are run time options

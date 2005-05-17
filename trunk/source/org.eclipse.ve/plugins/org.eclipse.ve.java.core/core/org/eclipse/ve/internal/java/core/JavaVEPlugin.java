@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.28 $  $Date: 2005-05-13 15:22:12 $ 
+ *  $Revision: 1.29 $  $Date: 2005-05-17 23:38:18 $ 
  */
 
 import java.util.Map;
@@ -42,7 +42,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final IPath  VE_PLUGIN_CACHE_DESTINATION = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append(VE_CACHE_ROOT_NAME);  //$NON-NLS-1$
 	public static final String VE_PROJECT_MODEL_CACHE_ROOT = VE_CACHE_ROOT_NAME+"/emfmodel"; //$NON-NLS-1$ 
 	public static final IPath  VE_GENERATED_OBJECTs_DESTINATION = VE_PLUGIN_CACHE_DESTINATION.append("javajetObjects"); //$NON-NLS-1$ //$NON-NLS-2$
-	public static final IPath  VE_GENERATED_LIBRARIES_CACHE = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append(".libCache");
+	public static final IPath  VE_GENERATED_LIBRARIES_CACHE = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append(".libCache"); //$NON-NLS-1$ //$NON-NLS-2$
 	// ID of the registrations extension point.
 
 	public static final String TRANSFER_HEADER = "{ *** VE HEADER ***}";	
@@ -50,7 +50,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final String PI_LIBRARY = "library"; // <library> in extension point. //$NON-NLS-1$	
 	public static final String PI_CONTAINER = "container"; // <container> in extension point. //$NON-NLS-1$	
 	public static final String PI_PATH = "path"; // <path="..."> in extension point.	 //$NON-NLS-1$
-	public static final String PLUGIN_ID = "org.eclipse.ve.java.core";
+	public static final String PLUGIN_ID = "org.eclipse.ve.java.core"; //$NON-NLS-1$
 	public static final String PI_CONTRIBUTOR = "contributor"; //$NON-NLS-1$
 	public static final String PI_PALETTECATS = "palettecats"; //$NON-NLS-1$
 	public static final String PI_RUNTIME = "runtime"; //$NON-NLS-1$

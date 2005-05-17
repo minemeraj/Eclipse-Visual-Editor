@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-04 15:13:16 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-17 23:36:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -44,7 +44,7 @@ public class VEModelCacheUtility {
 	static {
 		// Normally focus on speed not readability
 		XML_CACHE_SAVE_OPTIONS = new HashMap(4);
-        XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8");
+        XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8"); //$NON-NLS-1$
 		XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
 		XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_SAVE_TYPE_INFORMATION, Boolean.TRUE);
 		// /debug/consolelog option in the ve.java.core plugin

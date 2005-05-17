@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.16 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.17 $  $Date: 2005-05-17 23:40:12 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -99,9 +99,9 @@ public class TemplateUtil {
 	private static void getBundleLibraries(Bundle bundle, List list) {
 		// Pick up the Jars
 		try {			
-			URL url = Platform.resolve(bundle.getEntry("/"));
-			if (url.getProtocol().equals("jar")) {
-				String path =  new URL(url.getFile().substring(0, url.getFile().indexOf("!/"))).getFile();					
+			URL url = Platform.resolve(bundle.getEntry("/")); //$NON-NLS-1$
+			if (url.getProtocol().equals("jar")) { //$NON-NLS-1$
+				String path =  new URL(url.getFile().substring(0, url.getFile().indexOf("!/"))).getFile();					 //$NON-NLS-1$
 				list.add(getCorrectPath(path));
 			}
 			else {

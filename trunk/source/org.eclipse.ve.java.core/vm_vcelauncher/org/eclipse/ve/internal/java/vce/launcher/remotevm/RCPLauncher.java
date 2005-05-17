@@ -61,7 +61,7 @@ public class RCPLauncher implements ILauncher {
 		
 		try {
 			fTabPosition = Integer.parseInt(System.getProperty("rcp.launcher.tabPosition")); //$NON-NLS-1$
-			if( "true".equalsIgnoreCase(System.getProperty("rcp.launcher.traditionalTabs"))){ //$NON-NLS-1$
+			if( "true".equalsIgnoreCase(System.getProperty("rcp.launcher.traditionalTabs"))){ //$NON-NLS-1$ //$NON-NLS-2$
 				fTraditionalTabs = true;
 			}
 		} catch (NumberFormatException e1){
@@ -81,8 +81,8 @@ public class RCPLauncher implements ILauncher {
 		ViewPart viewPart = (ViewPart) javaBean;
 		ViewPartHost viewPartHost = new ViewPartHost();
 		String className = viewPart.getClass().getName();
-		if(className.indexOf(".") != -1){
-			className = className.substring(className.lastIndexOf(".") + 1);
+		if(className.indexOf(".") != -1){ //$NON-NLS-1$
+			className = className.substring(className.lastIndexOf(".") + 1); //$NON-NLS-1$
 		}
 		viewPartHost.setDetails(fTraditionalTabs, fTabPosition, clazz.getName());
 		viewPartHost.addViewPart(viewPart, className);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: AddEventWizard.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-18 23:37:33 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-17 23:37:26 $ 
  */
 
 import java.text.Collator;
@@ -564,7 +564,7 @@ public class AddEventWizard extends Wizard {
 			if (methodDecor.isSetShortDescription())
 			   label.setText(methodDecor.getShortDescription().trim());
 			else
-			   label.setText("No Description");
+			   label.setText(JavaMessages.getString("AddEventWizard.Label.NoDescription")); //$NON-NLS-1$
 			// Set the BeanEvent and Method so the callback can be created
 			beanMethod = methodProxy.getMethod();
 						
@@ -641,7 +641,7 @@ public class AddEventWizard extends Wizard {
 			if (eventSetDecorator.isSetShortDescription())
 			    label.setText(eventSetDecorator.getShortDescription().trim());
 			else
-				label.setText("No Description");
+				label.setText(JavaMessages.getString("AddEventWizard.Label.NoDescription")); //$NON-NLS-1$
 			if (!isMethod) { 
 				adjustSize(false);
 			}			

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.30 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.31 $  $Date: 2005-05-17 23:36:56 $ 
  */
 
 import java.io.IOException;
@@ -312,7 +312,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			// Format the source 
 			String content = originalCU.getSource();
 			TextEdit te = formatter.format(
-					CodeFormatter.K_COMPILATION_UNIT, content, 0, content.length(), 0, System.getProperties().getProperty("line.separator"));
+					CodeFormatter.K_COMPILATION_UNIT, content, 0, content.length(), 0, System.getProperties().getProperty("line.separator")); //$NON-NLS-1$
 			content = CodeFormatterUtil.evaluateFormatterEdit(content, te, null);
 			originalCU.getBuffer().setContents(content);
 			originalCU.getBuffer().save(monitor, true);
@@ -330,7 +330,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		if (fPage.getSelectedElement() != null) {
 			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY, getSelectedElementStringValue(fPage.getSelectedElement()));
 		} else {
-			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY, "");			
+			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY, "");			 //$NON-NLS-1$
 		}
 		monitor.beginTask("",300); //$NON-NLS-1$
 		fPage.createType(new SubProgressMonitor(monitor, 100)); // use the full progress monitor

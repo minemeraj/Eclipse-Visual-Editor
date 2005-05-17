@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.47 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.48 $  $Date: 2005-05-17 23:36:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -29,13 +29,15 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cdm.Annotation;
+
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
  
 /**
  * 
@@ -1249,7 +1251,7 @@ public class BDMMerger {
 				}
 			}
 			if(uniqueIndex==Integer.MAX_VALUE){
-				JavaVEPlugin.log("Should be having an unique number!", Level.FINE);
+				JavaVEPlugin.log("Should be having an unique number!", Level.FINE); //$NON-NLS-1$
 				uniqueIndex = bps.length;
 			}
 		}
@@ -1437,7 +1439,7 @@ public class BDMMerger {
 			visitedDecls.add(mainBeanDecl);
 			BeanPart[] mainBPs = mainBeanDecl.getBeanParts();
 			if(mainBPs==null || mainBPs.length<1)
-				JavaVEPlugin.log("BDMMerger: BPDecl with no BPs - shouldnt be so", Level.WARNING);
+				JavaVEPlugin.log("BDMMerger: BPDecl with no BPs - shouldnt be so", Level.WARNING); //$NON-NLS-1$
 			
 			List toDeleteBeansList = new ArrayList();
 			BeanPartDecleration newBPDecl = newModel.getModelDecleration(mainBeanDecl);

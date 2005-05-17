@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-17 23:38:18 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -46,8 +46,8 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 public class CustomizeJavaBeanAction extends CustomizeAction {
 	// dbk cache IMG_CUSTOMIZE_BEAN image descriptors
-	public static final ImageDescriptor IMG_CUSTOMIZE_BEAN_DISABLED = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/customizebean_co.gif");
-	public static final ImageDescriptor IMG_CUSTOMIZE_BEAN = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/customizebean_co.gif");
+	public static final ImageDescriptor IMG_CUSTOMIZE_BEAN_DISABLED = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/customizebean_co.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor IMG_CUSTOMIZE_BEAN = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/customizebean_co.gif"); //$NON-NLS-1$
 
 	protected EditDomain fEditDomain;
 	static final int NONE = 0;

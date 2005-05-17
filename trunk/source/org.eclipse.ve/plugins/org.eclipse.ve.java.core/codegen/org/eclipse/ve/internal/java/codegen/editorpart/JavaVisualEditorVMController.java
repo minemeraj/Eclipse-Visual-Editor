@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-16 19:11:18 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-17 23:36:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -98,7 +98,7 @@ public class JavaVisualEditorVMController {
 				int i =1000;
 				while (i-->0) {
 					exp.createArrayCreation(ForExpression.ROOTEXPRESSION, registry.getBeanTypeProxyFactory()
-							.getBeanTypeProxy(exp, "java.lang.Object", 1), 0);
+							.getBeanTypeProxy(exp, "java.lang.Object", 1), 0); //$NON-NLS-1$
 					exp.createArrayInitializer(0);
 				}
 				exp.invokeExpression();

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.13 $  $Date: 2005-04-20 16:17:36 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-17 23:36:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -203,7 +203,7 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 					String typeName = resolvedType==null?e.getName().getFullyQualifiedName():resolvedType.getName();
 					// Class may not be saved (inner/anonymouse class) and hence not in the JCM
 					StringBuffer b = new StringBuffer(typeName) ;
-					final String ADAPTER = "Adapter"; 
+					final String ADAPTER = "Adapter";  //$NON-NLS-1$
 					if (typeName.indexOf(ADAPTER) >= 0) {   //$NON-NLS-1$
 						int index = typeName.indexOf(ADAPTER); 
 					    b.replace(index, index+ADAPTER.length(), "Listener") ; //$NON-NLS-1$ //$NON-NLS-2$				    

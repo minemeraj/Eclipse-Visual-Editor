@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.18 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.19 $  $Date: 2005-05-17 23:36:56 $ 
  */
 
 import java.util.*;
@@ -298,7 +298,7 @@ public void setCompositionModel(IVEModelInstance cm) {
 	
 	org.eclipse.ve.internal.jcm.BeanSubclassComposition c = cm.getModelRoot() ;
 	
-	BeanPartDecleration decl = new BeanPartDecleration("BeanSubclassComposition","");
+	BeanPartDecleration decl = new BeanPartDecleration("BeanSubclassComposition",""); //$NON-NLS-1$ //$NON-NLS-2$
 	decl.setDeclaringMethod(null);
 	BeanPart b = new BeanPart(decl) ; //$NON-NLS-1$ //$NON-NLS-2$
 	
