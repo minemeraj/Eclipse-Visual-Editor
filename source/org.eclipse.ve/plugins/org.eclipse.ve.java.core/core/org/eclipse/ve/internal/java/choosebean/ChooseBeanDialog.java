@@ -10,29 +10,39 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.29 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.30 $  $Date: 2005-05-17 15:43:19 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.*;
-import org.eclipse.jdt.internal.corext.util.TypeInfo;
-import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
-import org.eclipse.jdt.internal.ui.dialogs.TypeSelectionDialog2;
+import org.eclipse.jdt.internal.corext.util.*;
+import org.eclipse.jdt.internal.corext.util.Messages;
+import org.eclipse.jdt.internal.ui.*;
+import org.eclipse.jdt.internal.ui.util.*;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableContext;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
@@ -50,14 +60,15 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
  * 
  * @since 1.1
  */
-public class ChooseBeanDialog extends TypeSelectionDialog2 implements ISelectionStatusValidator {
+public class ChooseBeanDialog extends SelectionStatusDialog implements SelectionListener {
 
 	// Constructor  input
 	private ResourceSet resourceSet;
 	private IJavaProject project;
 	private IPackageFragment pkg;
-	private IChooseBeanContributor[] contributors = null;
+	private List unmodifieableContributors = null;
 	private int selectedContributor = -1;
+	private boolean disableOthers = false;
 	private EditDomain editDomain = null ;
 	private IJavaSearchScope javaSearchScope = null;
 
@@ -65,15 +76,18 @@ public class ChooseBeanDialog extends TypeSelectionDialog2 implements ISelection
 	Button[] contributorStyleButtons = null;
 	String beanName = null; // The below text gets disposed when OK is pressed - keep the text in string
 	Text beanNameText = null;
+	BeanViewer bv = null;
+	private static boolean fgFirstTime= true; 
 	
 	// Status maintainers
+	protected String filterString = null;
 	
-	protected ChooseBeanDialog(Shell parent, boolean multi, IJavaSearchScope scope, int elementKinds) {
-		super(parent, multi, PlatformUI.getWorkbench().getProgressService(), scope, elementKinds);
+	protected ChooseBeanDialog(Shell parent, boolean multi, IJavaSearchScope scope) {
+		super(parent);//, multi, PlatformUI.getWorkbench().getProgressService(), scope, elementKinds);
+		setShellStyle(getShellStyle() | SWT.RESIZE);
 		setTitle(ChooseBeanMessages.getString("MainDialog.title")); //$NON-NLS-1$
 		setMessage(ChooseBeanMessages.getString("MainDialog.message")); //$NON-NLS-1$
 		setStatusLineAboveButtons(true);
-		setValidator(this);
 		this.javaSearchScope = scope;
 	}
 	
@@ -117,18 +131,16 @@ public class ChooseBeanDialog extends TypeSelectionDialog2 implements ISelection
 	 * 
 	 * @since 1.1
 	 */
-	public ChooseBeanDialog(Shell shell, IPackageFragment packageFragment, IChooseBeanContributor[] contributors, int choice, boolean disableOthers){
-		this(shell, 
-				false,
-				SearchEngine.createJavaSearchScope(new IJavaElement[]{packageFragment.getJavaProject()}),
-				IJavaSearchConstants.CLASS
-				);
+	protected ChooseBeanDialog(Shell shell, IPackageFragment packageFragment, IChooseBeanContributor[] contributors, int choice, boolean disableOthers){
+		this(shell, false,
+				SearchEngine.createJavaSearchScope(new IJavaElement[]{packageFragment.getJavaProject()}));
 		
 		this.selectedContributor = choice;
 		this.pkg = packageFragment;
 		this.project = packageFragment.getJavaProject();
-		this.contributors = contributors != null ? contributors : ChooseBeanDialogUtilities.determineContributors(project);
-		if(contributors==null || contributors.length < 1)
+		this.disableOthers = disableOthers;
+		this.unmodifieableContributors = contributors != null ? Arrays.asList(contributors) : Arrays.asList(ChooseBeanDialogUtilities.determineContributors(project));
+		if(unmodifieableContributors==null || unmodifieableContributors.size() < 1)
 			selectedContributor = -1;
 		else if(!isValidContributor())
 			selectedContributor = 0;
@@ -136,59 +148,164 @@ public class ChooseBeanDialog extends TypeSelectionDialog2 implements ISelection
 	
 	protected Control createDialogArea(Composite parent) {
 		// Type selection area
-		Composite area = (Composite) super.createDialogArea(parent);
+		Composite top = (Composite) super.createDialogArea(parent);
+
+		Composite area = new Composite(top, SWT.NONE);
+		area.setLayoutData(new GridData(GridData.FILL_BOTH));
+		area.setLayout(new GridLayout(2, false));
+				
+		Label label = new Label(area, SWT.NONE);
+		label.setText(JavaUIMessages.OpenTypeAction_dialogMessage);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		label.setLayoutData(gd);
+		
+		Text filterText = new Text(area, SWT.BORDER);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		filterText.setLayoutData(gd);
+		filterText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				bv.setSearchPattern(((Text)e.getSource()).getText());
+			}
+		});
+		filterText.addKeyListener(new KeyListener() {
+			public void keyReleased(KeyEvent e) {
+			}
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.ARROW_DOWN) {
+					bv.setFocus();
+				}
+			}
+		});
+	
+		label = new Label(area, SWT.NONE);
+		label.setText(JavaUIMessages.TypeSelectionComponent_label);
+		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Label progressLabel = new Label(area, SWT.NONE);
+		progressLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		progressLabel.setAlignment(SWT.RIGHT);
+		
+		bv = new BeanViewer(area, progressLabel, javaSearchScope, pkg, resourceSet); 
+		gd = new GridData(GridData.FILL_BOTH);
+		PixelConverter converter= new PixelConverter(bv.getTable());
+		gd.widthHint= converter.convertWidthInCharsToPixels(70);
+		gd.heightHint= SWTUtil.getTableHeightHint(bv.getTable(), 10);
+		gd.horizontalSpan=2;
+		bv.getTable().setLayoutData(gd);
+		bv.getTable().addSelectionListener(this);
 		
 		// Styles group
-		if(contributors!=null && contributors.length>0){
+		if(unmodifieableContributors.size()>0){
+			int numColumns = (unmodifieableContributors.size()*2) + 1;
 			Composite stylesComposite = new Composite(area, SWT.NONE);
-			GridLayout stylesCompositeLayout = new GridLayout(contributors.length+1, false);
+			GridLayout stylesCompositeLayout = new GridLayout(numColumns, false);
 			stylesComposite.setLayout(stylesCompositeLayout);
-			stylesComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan = 2;
+			stylesComposite.setLayoutData(gd);
 
-			Label image = new Label(stylesComposite, SWT.NONE);
-			image.setImage(JavaVEPlugin.getJavaBeanImage());
-			
 			Label sectionLabel = new Label(stylesComposite, SWT.NONE);
 			GridData sectionLabelData = new GridData(GridData.FILL_HORIZONTAL);
-			sectionLabelData.horizontalSpan=contributors.length;
+			sectionLabelData.horizontalSpan=numColumns;
 			sectionLabel.setLayoutData(sectionLabelData);
-			sectionLabel.setText("Styles: ");
+			sectionLabel.setText(ChooseBeanMessages.getString("ChooseBeanDialog.Section.Styles")); //$NON-NLS-1$
 			
 			Label spacer = new Label(stylesComposite, SWT.NONE);
-			spacer.setText(""); // to remove NO READ warning
+			spacer.setText(""); // to remove NO READ warning //$NON-NLS-1$
 			
-			contributorStyleButtons = new Button[contributors.length];
-			for (int i = 0; i < contributors.length; i++) {
+			final String contributorKey = "contributor"; //$NON-NLS-1$
+			contributorStyleButtons = new Button[unmodifieableContributors.size()];
+			for (int i = 0; i < unmodifieableContributors.size(); i++) {
+				IChooseBeanContributor contrib = (IChooseBeanContributor) unmodifieableContributors.get(i);
+				Label contribImage = new Label(stylesComposite, SWT.NONE);
+				Image image = ChooseBeanDialogUtilities.getContributorImage(contrib);
+				if(image!=null)
+					contribImage.setImage(image);
+				
 				contributorStyleButtons[i] = new Button(stylesComposite, SWT.RADIO);
-				contributorStyleButtons[i].setText(contributors[i].getName());
+				contributorStyleButtons[i].setText(contrib.getName());
 				contributorStyleButtons[i].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+				contributorStyleButtons[i].setData(contributorKey, contrib);
+				contributorStyleButtons[i].addSelectionListener(new SelectionListener(){
+					public void widgetSelected(SelectionEvent e) {
+						Button b = ((Button)e.getSource());
+						if(b.getSelection()){
+							IChooseBeanContributor contrib = (IChooseBeanContributor) b.getData(contributorKey);
+							selectContributor(contrib);
+						}
+					}
+					public void widgetDefaultSelected(SelectionEvent e) {
+						widgetSelected(e);
+					}
+				});
+				if(disableOthers && i!=selectedContributor)
+					contributorStyleButtons[i].setEnabled(false);
 			}
+			if(contributorStyleButtons.length>0){
+				if(selectedContributor>contributorStyleButtons.length-1 || selectedContributor<0)
+					selectedContributor = 0;
+				contributorStyleButtons[selectedContributor].setSelection(true);
+				selectContributor((IChooseBeanContributor) unmodifieableContributors.get(selectedContributor));
+			}
+			
+			// Show only beans section
+			spacer = new Label(stylesComposite, SWT.NONE);
+			spacer.setLayoutData(new GridData());
+			spacer.setText(""); //$NON-NLS-1$
+			
+			Button showBeansButton = new Button(stylesComposite, SWT.CHECK);
+			showBeansButton.setText(ChooseBeanMessages.getString("ChooseBeanDialog.Checkbox.ShowValidClasses")); //$NON-NLS-1$
+			gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan = numColumns-1;
+			showBeansButton.setLayoutData(gd);
+			showBeansButton.addSelectionListener(new SelectionAdapter(){
+				public void widgetSelected(SelectionEvent e) {
+					Button b = (Button) e.getSource();
+					bv.showOnlyBeans(b.getSelection());
+					if(selectedContributor>-1)
+						bv.updateContributor((IChooseBeanContributor) unmodifieableContributors.get(selectedContributor));
+				}
+			});
 		}
+		
 		
 		// Variable name section
 		if(!JavaVEPlugin.getPlugin().getPreferenceStore().getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY)){
 			// Bean name dialog will not be used - rename here
 			
 			Composite beanNameComposite = new Composite(area, SWT.NONE);
-			beanNameComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan = 2;
+			beanNameComposite.setLayoutData(gd);
 			beanNameComposite.setLayout(new GridLayout(2, false));
 			Label image = new Label(beanNameComposite, SWT.NONE);
 			image.setImage(JavaPlugin.getDefault().getImageRegistry().get(JavaPluginImages.IMG_FIELD_PUBLIC));
 			Label beanNameLabel = new Label(beanNameComposite, SWT.NONE);
 			beanNameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			beanNameLabel.setText("Bean name");
+			beanNameLabel.setText(ChooseBeanMessages.getString("ChooseBeanDialog.Label.BeanName")); //$NON-NLS-1$
 			Label spacer = new Label(beanNameComposite, SWT.NONE);
-			spacer.setText(""); // to remove NO READ warning
+			spacer.setText(""); // to remove NO READ warning //$NON-NLS-1$
 		
 			beanNameText = new Text(beanNameComposite, SWT.BORDER|SWT.BORDER);
 			beanNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		}
 		
 		// finished
-        applyDialogFont(area);
-		return area;
+		if(filterString!=null){
+			filterText.setText(filterString);
+		}
+        applyDialogFont(top);
+		return top;
 	}
 	
+	protected void selectContributor(IChooseBeanContributor contrib) {
+		selectedContributor = unmodifieableContributors.indexOf(contrib);
+		if(unmodifieableContributors.contains(contrib))
+			bv.updateContributor(contrib);
+	}
+
 	public Object[] getResult() {
 		Object[] results = super.getResult();
 		if(resourceSet!=null){
@@ -232,24 +349,143 @@ public class ChooseBeanDialog extends TypeSelectionDialog2 implements ISelection
 	}
 	
 	protected boolean isValidContributor(){
-		return selectedContributor > -1 && selectedContributor < contributors.length ;
+		return selectedContributor > -1 && selectedContributor < unmodifieableContributors.size() ;
 	}
 
-	public IStatus validate(Object[] selection) {
-		IStatus validate = null;
-		beanName = "";
-		if(selection!=null && selection.length>0){
-			validate = ChooseBeanDialogUtilities.getClassStatus(selection[0], pkg.getElementName(), resourceSet, javaSearchScope);
-			if(validate.getSeverity()==IStatus.OK){
-				if (selection[0] instanceof TypeInfo) {
-					TypeInfo ti = (TypeInfo) selection[0];
-					beanName = ChooseBeanDialogUtilities.getFieldProposal(ti.getFullyQualifiedName(), editDomain, resourceSet);
-					if(beanNameText!=null && !beanNameText.isDisposed())
-						beanNameText.setText(beanName==null?new String():beanName);
+//	public IStatus validate(Object[] selection) {
+//		IStatus validate = null;
+//		beanName = "";
+//		if(selection!=null && selection.length>0){
+//			validate = ChooseBeanDialogUtilities.getClassStatus(selection[0], pkg.getElementName(), resourceSet, javaSearchScope);
+//			if(validate.getSeverity()==IStatus.OK){
+//				if (selection[0] instanceof TypeInfo) {
+//					TypeInfo ti = (TypeInfo) selection[0];
+//					beanName = ChooseBeanDialogUtilities.getFieldProposal(ti.getFullyQualifiedName(), editDomain, resourceSet);
+//					if(beanNameText!=null && !beanNameText.isDisposed())
+//						beanNameText.setText(beanName==null?new String():beanName);
+//				}
+//			}
+//		}
+//		return validate;
+//	}
+
+	/*
+	 * @deprecated
+	 * Got over from TypeSelectionDialog2.computeResult(). Should not need to do this
+	 * once we have extension mechanism to the type selection dialog via bug 93162.
+	 */
+	protected void computeResult() {
+		TypeInfo[] selected= bv.getSelection();
+		if (selected == null || selected.length == 0) {
+			setResult(null);
+			return;
+		}
+		
+		TypeInfoHistory history= TypeInfoHistory.getInstance();
+		List result= new ArrayList(selected.length);
+		if (result != null) {
+			for (int i= 0; i < selected.length; i++) {
+				try {
+					TypeInfo typeInfo= selected[i];
+					history.accessed(typeInfo);
+					IType type= typeInfo.resolveType(javaSearchScope);
+					if (type == null) {
+						String title= JavaUIMessages.TypeSelectionDialog_errorTitle; 
+						String message= Messages.format(JavaUIMessages.TypeSelectionDialog_dialogMessage, typeInfo.getPath()); 
+						MessageDialog.openError(getShell(), title, message);
+						setResult(null);
+					} else {
+						result.add(type);
+					}
+				} catch (JavaModelException e) {
+					String title= JavaUIMessages.MultiTypeSelectionDialog_errorTitle; 
+					String message= JavaUIMessages.MultiTypeSelectionDialog_errorMessage; 
+					ErrorDialog.openError(getShell(), title, message, e.getStatus());
 				}
 			}
 		}
-		return validate;
+		setResult(result);
 	}
 
+	/*
+	 * @deprecated
+	 * Got over from TypeSelectionDialog2.open(). Should not need to do this
+	 * once we have extension mechanism to the type selection dialog via bug 93162.
+	 */
+	public int open() {
+		try {
+			ensureConsistency();
+		} catch (InvocationTargetException e) {
+			ExceptionHandler.handle(e, JavaUIMessages.TypeSelectionDialog_error3Title, JavaUIMessages.TypeSelectionDialog_error3Message); 
+			return CANCEL;
+		} catch (InterruptedException e) {
+			// cancelled by user
+			return CANCEL;
+		}
+		return super.open();
+	}
+
+	/*
+	 * @deprecated
+	 * Got over from TypeSelectionDialog2.close(). Should not need to do this
+	 * once we have extension mechanism to the type selection dialog via bug 93162.
+	 */
+	public boolean close() {
+		TypeInfoHistory.getInstance().save();
+		return super.close();
+	}
+	
+	/*
+	 * @deprecated
+	 * Got over from TypeSelectionDialog2.ensureConsistency(). Should not need to do this
+	 * once we have extension mechanism to the type selection dialog via bug 93162.
+	 */
+	private void ensureConsistency() throws InvocationTargetException, InterruptedException {
+		// we only have to ensure histroy consistency here since the search engine
+		// takes care of working copies.
+		IRunnableWithProgress runnable= new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				TypeInfoHistory history= TypeInfoHistory.getInstance();
+				if (fgFirstTime || history.isEmpty()) {
+					monitor.beginTask(JavaUIMessages.TypeSelectionDialog_progress_consistency, 100);
+					refreshSearchIndices(new SubProgressMonitor(monitor, 90));
+					history.checkConsistency(new SubProgressMonitor(monitor, 10));
+					monitor.done();
+					fgFirstTime= false;
+				} else {
+					history.checkConsistency(monitor);
+				}
+			}
+			private void refreshSearchIndices(IProgressMonitor monitor) throws InvocationTargetException {
+				try {
+					new SearchEngine().searchAllTypeNames(
+						null, 
+						// make sure we search a concrete name. This is faster according to Kent  
+						"_______________".toCharArray(), //$NON-NLS-1$
+						SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, 
+						IJavaSearchConstants.ENUM,
+						SearchEngine.createWorkspaceScope(), 
+						new TypeNameRequestor() {}, 
+						IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, 
+						monitor);
+				} catch (JavaModelException e) {
+					throw new InvocationTargetException(e);
+				}
+			}
+		};
+		IRunnableContext context=PlatformUI.getWorkbench().getProgressService();
+		context.run(true, true, runnable);
+	}
+
+	public void setFilter(String string) {
+		filterString = string;
+	}
+
+	public void widgetSelected(SelectionEvent e) {
+		updateStatus(ChooseBeanDialogUtilities.getClassStatus(bv.getSelection()[0], pkg.getElementName(), resourceSet, javaSearchScope));
+	}
+
+	public void widgetDefaultSelected(SelectionEvent e) {
+		widgetSelected(e);
+	}
 }

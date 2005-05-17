@@ -10,21 +10,20 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllTypesChooseBeanContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-17 15:43:19 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.ui.dialogs.FilteredList;
-import org.eclipse.ui.dialogs.FilteredList.FilterMatcher;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jface.viewers.IFilter;
+import org.eclipse.swt.graphics.Image;
  
 /**
  * 
  * @since 1.0.0
  */
 public class AllTypesChooseBeanContributor implements IChooseBeanContributor {
-	
-	private FilteredList.FilterMatcher filter = null;
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.choosebean.IChooseBeanContributor#getName()
@@ -36,11 +35,12 @@ public class AllTypesChooseBeanContributor implements IChooseBeanContributor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.choosebean.IChooseBeanContributor#getFilter(org.eclipse.jdt.core.search.IJavaSearchScope)
 	 */
-	public FilterMatcher getFilter(IJavaProject javaProject) {
-		if(filter==null){
-			filter = new TypeFilterMatcher();
-		}
-		return filter;
+	public IFilter getFilter(IPackageFragment pkg, IProgressMonitor monitor) {
+		return null;
+	}
+
+	public Image getImage() {
+		return null;
 	}
 
 }

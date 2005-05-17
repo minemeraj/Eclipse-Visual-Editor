@@ -10,9 +10,19 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SwingChooseBeanContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.1 $  $Date: 2005-05-17 15:43:17 $ 
  */
-package org.eclipse.ve.internal.java.choosebean;
+package org.eclipse.ve.internal.jfc.codegen;
+
+import org.eclipse.swt.graphics.Image;
+
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
+
+import org.eclipse.ve.internal.java.choosebean.ChooseBeanMessages;
+import org.eclipse.ve.internal.java.choosebean.YesNoListChooseBeanContributor;
+
+import org.eclipse.ve.internal.jfc.core.JFCVisualPlugin;
+
 
  
 /**
@@ -23,5 +33,8 @@ public class SwingChooseBeanContributor extends YesNoListChooseBeanContributor {
 	public static String[] SWING_BASE_TYPES = {"javax.swing", "JComponent", "javax.swing", "JFrame", "javax.swing", "JDialog", "javax.swing", "JWindow", "javax.swing", "JApplet", "javax.swing.table", "TableColumn"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$
 	public SwingChooseBeanContributor(){
 		super(ChooseBeanMessages.getString("SwingChooseBeanContributor.Name"), SWING_BASE_TYPES, null); //$NON-NLS-1$
+	}
+	public Image getImage() {
+		return CDEPlugin.getImageFromPlugin(JFCVisualPlugin.getPlugin(), "icons/full/clcl16/swingbean_obj.gif"); //$NON-NLS-1$
 	}
 }
