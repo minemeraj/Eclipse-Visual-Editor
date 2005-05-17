@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-17 23:38:18 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -27,8 +27,6 @@ import org.eclipse.jem.internal.proxy.remote.REMConnection;
 import org.eclipse.jem.util.TimerTests;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.CDEUtilities;
-import org.eclipse.ve.internal.cde.core.ModelChangeController;
 
 import org.eclipse.ve.internal.jcm.*;
 
@@ -268,13 +266,13 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 			IExpression expression = proxyDomain.getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
 			try {
 				if (getTarget() instanceof BeanSubclassComposition) {
-					TimerTests.basicTest.startStep("Init this");
+					TimerTests.basicTest.startStep("Init this"); //$NON-NLS-1$
 					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
 					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
 					initSetting(((BeanSubclassComposition) getTarget()).getThisPart(), expression, testValidity);
 					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
 					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_STEP);
-					TimerTests.basicTest.stopStep("Init this");
+					TimerTests.basicTest.stopStep("Init this"); //$NON-NLS-1$
 					if (!expression.isValid()) {
 						testValidity = true; // We will try again, but this time don't instantiate those that had an error.
 						continue outer;
@@ -284,7 +282,7 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 				// Next run the components.
 				List components = ((BeanComposition) getTarget()).getComponents();
 				for (int i = 0; i < components.size(); i++) {
-					String step = "init#" + i;
+					String step = "init#" + i; //$NON-NLS-1$
 					TimerTests.basicTest.startStep(step);
 					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
 					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
@@ -300,7 +298,7 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 				break; // We got through it all.
 			} finally {
 				try {
-					TimerTests.basicTest.startStep("eval");
+					TimerTests.basicTest.startStep("eval"); //$NON-NLS-1$
 					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
 					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
 					if (expression.isValid())
@@ -309,7 +307,7 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 						expression.close();
 					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
 					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_STEP);					
-					TimerTests.basicTest.stopStep("eval");								
+					TimerTests.basicTest.stopStep("eval");								 //$NON-NLS-1$
 				} catch (IllegalStateException e) {
 					JavaVEPlugin.log(e, Level.WARNING);
 					testValidity = true; // We will try again, but this time don't instantiate those that had an error.

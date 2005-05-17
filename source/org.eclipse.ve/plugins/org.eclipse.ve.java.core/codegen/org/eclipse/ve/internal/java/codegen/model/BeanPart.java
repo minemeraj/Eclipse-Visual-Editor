@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.40 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.41 $  $Date: 2005-05-17 23:36:56 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -269,7 +269,7 @@ public String getSimpleName () {
 public String getUniqueName() {
 	String name = fDecleration.getUniqueHandle(this);
 	if (uniqueIndex>0)
-		name+="{"+uniqueIndex+"}";
+		name+="{"+uniqueIndex+"}"; //$NON-NLS-1$ //$NON-NLS-2$
 	return name;
 }
 
@@ -495,7 +495,7 @@ public void setModel(IBeanDeclModel model) {
 public String toString () {
    String message = super.toString() + "  " + fDecleration.getName() + "(" + fDecleration.getType() + ")";	 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
    if(isDisposed())
-	   message+="[DISPOSED]";
+	   message+="[DISPOSED]"; //$NON-NLS-1$
    return message;
 }
 

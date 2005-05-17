@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-13 15:18:52 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-17 23:38:18 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -61,7 +61,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				// Get the host, copy it and serialize to a stream
 				IJavaInstance javaBeanToCopy = (IJavaInstance) getHost().getModel();
 				// Create a new EMF Resource for the copied object		
-				Resource newEMFResource = javaBeanToCopy.eResource().getResourceSet().createResource(javaBeanToCopy.eResource().getURI().appendSegment("" + javaBeanToCopy.hashCode()));				
+				Resource newEMFResource = javaBeanToCopy.eResource().getResourceSet().createResource(javaBeanToCopy.eResource().getURI().appendSegment("" + javaBeanToCopy.hashCode()));				 //$NON-NLS-1$
 				
 				copyProperty(null, javaBeanToCopy);				
 				
@@ -79,7 +79,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 					Object objectToClone = copier.get(iter.next());
 					if(objectToClone != null){
 						if(xmiResource.getID((EObject)objectToClone) == null){
-							xmiResource.setID((EObject)objectToClone,"ID_" + nextID++);
+							xmiResource.setID((EObject)objectToClone,"ID_" + nextID++); //$NON-NLS-1$
 						}
 						newEMFResource.getContents().add(objectToClone);
 					}
@@ -88,7 +88,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				// Save to a stream
 				HashMap XML_TEXT_OPTIONS = new HashMap(2);
 				XML_TEXT_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF,XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
-				XML_TEXT_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8");
+				XML_TEXT_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8"); //$NON-NLS-1$
 				XML_TEXT_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));		
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
 				try {

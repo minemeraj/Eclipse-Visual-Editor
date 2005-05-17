@@ -18,7 +18,7 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-22 20:57:55 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-17 23:36:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -241,16 +241,16 @@ public class BeanPartDecleration {
 	public String toString() {
 		StringBuffer b = new StringBuffer();
 		if (!isInModel())
-			b.append("*Shadow* ");
+			b.append("*Shadow* "); //$NON-NLS-1$
 		if (isInstanceVar())
-			b.append("InstanceVar: ");
+			b.append("InstanceVar: "); //$NON-NLS-1$
 		else {
-			b.append(">");
+			b.append(">"); //$NON-NLS-1$
 			b.append(declaredMethod.getMethodName());
-			b.append("()<: ");
+			b.append("()<: "); //$NON-NLS-1$
 		}
-		b.append(beanParts.size()+" BeanParts ");
-		b.append("["+name+" ("+type+")]");
+		b.append(beanParts.size()+" BeanParts "); //$NON-NLS-1$
+		b.append("["+name+" ("+type+")]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return b.toString();
 	}
 	public String getDeclerationHandle() {

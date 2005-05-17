@@ -23,7 +23,7 @@ public class ViewPartHost {
 	public final int MIN_Y = 175;
 	private int fTabPosition = 0;
 	private boolean fTraditionalTabs = true;
-	private String className = "";
+	private String className = ""; //$NON-NLS-1$
 
 	public Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle){
 
@@ -78,7 +78,7 @@ public class ViewPartHost {
 	private Image getDummyImage(){
 		
 		if(IMAGE == null){
-			IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_app.gif"));
+			IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_app.gif")); //$NON-NLS-1$
 		}
 		return IMAGE;
 	}

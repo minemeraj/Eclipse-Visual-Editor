@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanProxyHost2.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-17 23:38:18 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -38,7 +38,7 @@ public interface IBeanProxyHost2 extends IBeanProxyHost {
 	 * @since 1.1.0 
 	 */
 	public static final int NOTIFICATION_LIFECYCLE = -3000;
-	public static final String BEAN_INSTANTIATION_EXCEPTION = "org.eclipse.ve.internal.java.remotevm.BeanInstantiationException";
+	public static final String BEAN_INSTANTIATION_EXCEPTION = "org.eclipse.ve.internal.java.remotevm.BeanInstantiationException"; //$NON-NLS-1$
 	
 	/**
 	 * Lifecycle notification implementation used by by IBeanProxyHost2. The notification is sent out to all the EMF objects

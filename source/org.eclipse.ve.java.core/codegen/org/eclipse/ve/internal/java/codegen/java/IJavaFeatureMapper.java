@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.13 $  $Date: 2005-04-21 13:35:05 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-17 23:36:01 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -69,18 +69,18 @@ public class VEexpressionPriority {
 		if (priority<0) 
 			st.append("[NO Priority]"); //$NON-NLS-1$
 		else{
-			st.append("[");
+			st.append("["); //$NON-NLS-1$
 			st.append(priority);
-			st.append(":");
+			st.append(":"); //$NON-NLS-1$
 			if (index!=null) {
-				st.append("(");
+				st.append("("); //$NON-NLS-1$
 				st.append(index[0]);
-				st.append(",");
+				st.append(","); //$NON-NLS-1$
 				st.append(((EStructuralFeature)index[1]).getName());
-				st.append(")]");
+				st.append(")]"); //$NON-NLS-1$
 			}
 			else {
-				st.append("NoIndex]");
+				st.append("NoIndex]"); //$NON-NLS-1$
 			}
 		}
         return st.toString();

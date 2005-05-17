@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PasteJavaBeanAction.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-12 16:08:34 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-17 23:38:18 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -89,11 +89,11 @@ public class PasteJavaBeanAction extends SelectionAction {
 		EObject root = editDomain.getDiagramData();
 		ResourceSet targetResourceSet = root.eResource().getResourceSet();
 		// Use a dummy URI for the resource that is unique
-		Resource clipboardResource = targetResourceSet.createResource(root.eResource().getURI().appendSegment(":" + System.currentTimeMillis()));
+		Resource clipboardResource = targetResourceSet.createResource(root.eResource().getURI().appendSegment(":" + System.currentTimeMillis())); //$NON-NLS-1$
 		ByteArrayInputStream is = new ByteArrayInputStream(getClipboardContents().getBytes());	
 		try {
 			clipboardResource.load(is, null);
-			return new EMFPrototypeCreationFactory("/0", clipboardResource);
+			return new EMFPrototypeCreationFactory("/0", clipboardResource); //$NON-NLS-1$
 		} catch (IOException e) {
 			JavaVEPlugin.log(e);
 			return null;

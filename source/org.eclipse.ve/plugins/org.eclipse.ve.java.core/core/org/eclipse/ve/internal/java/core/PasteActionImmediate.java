@@ -59,7 +59,7 @@ public class PasteActionImmediate extends SelectionAction {
 
 	//TODO Hardcode for CheckBox for testing
 	private EMFPrototypeCreationFactory getFactory(Object template) {
-		return new EMFPrototypeCreationFactory("platform:/plugin/org.eclipse.ve.swt/CheckBox.xmi#CheckBox_1");
+		return new EMFPrototypeCreationFactory("platform:/plugin/org.eclipse.ve.swt/CheckBox.xmi#CheckBox_1"); //$NON-NLS-1$
 	}
 
 	protected Object getClipboardContents() {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.39 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.40 $  $Date: 2005-05-17 23:36:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -476,9 +476,9 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			sb.append(type+" "); //$NON-NLS-1$
 		}
 		sb.append(fbeanPart.getSimpleName());
-		sb.append(" = ");
+		sb.append(" = "); //$NON-NLS-1$
 		sb.append(CodeGenUtil.getInitString(obj, fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences()));
-		sb.append(";");
+		sb.append(";"); //$NON-NLS-1$
 		sb.append(fbeanPart.getModel().getLineSeperator());
 		fOwner.getExprRef().setState(CodeExpressionRef.STATE_INIT_EXPR,true);
 		return sb.toString();
