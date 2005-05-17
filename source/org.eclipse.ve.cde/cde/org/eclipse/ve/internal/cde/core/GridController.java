@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridController.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-27 06:43:06 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-17 23:27:25 $ 
  */
 
 import java.util.*;
@@ -72,7 +72,7 @@ public class GridController {
 	private int gridMargin = 0; 
 	
 	public GridController(){
-		showGrid = CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID);		
+		showGrid = CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED);		
 	}
 	
 	/**
