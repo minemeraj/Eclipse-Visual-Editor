@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.13 $ $Date: 2005-05-17 23:29:10 $
+ * $Revision: 1.14 $ $Date: 2005-05-17 23:49:28 $
  */
 import java.util.HashSet;
 import java.util.List;
@@ -100,6 +100,10 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 			getHostFigure().addFigureListener(hostFigureListener);	// need to know when the host figure changes so we can refresh the grid
 
 			initializeGrid();
+			if (showGridPreference) {
+				editPartSelectionListener = createEditPartSelectionListener();
+				getHost().addEditPartListener(editPartSelectionListener);
+			}
 		}
 		super.activate();
 		CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), GridLayoutLayoutPage.class);
@@ -126,9 +130,6 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 						gridController.setGridShowing(true);
 				}
 			}
-		} else if(showGridPreference && gridController != null) {
-			editPartSelectionListener = createEditPartSelectionListener();
-			getHost().addEditPartListener(editPartSelectionListener);
 		}
 	}
 	
