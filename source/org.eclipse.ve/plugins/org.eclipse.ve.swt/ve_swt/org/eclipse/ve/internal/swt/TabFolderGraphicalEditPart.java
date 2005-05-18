@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-18 16:25:15 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-18 16:48:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -112,7 +112,7 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_items)
-				queueExec(TabFolderGraphicalEditPart.this, "ITEMS");
+				queueExec(TabFolderGraphicalEditPart.this, "ITEMS"); //$NON-NLS-1$
 		}
 	};
 

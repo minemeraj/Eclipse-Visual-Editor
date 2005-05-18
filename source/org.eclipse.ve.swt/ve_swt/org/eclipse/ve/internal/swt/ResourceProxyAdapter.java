@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.11 $ $Date: 2005-04-14 13:59:32 $
+ * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.12 $ $Date: 2005-05-18 16:48:00 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -100,7 +100,7 @@ public class ResourceProxyAdapter extends BeanProxyAdapter {
 				PTExpression getRegistryEntry = ((PTMethodInvocation)expression).getReceiver(); // JFaceResources.getFontRegistry().getBold(...);
 				if (getRegistryEntry instanceof PTMethodInvocation) {
 					PTExpression registryMethod = ((PTMethodInvocation)getRegistryEntry).getReceiver(); // JFaceResources.getFontRegistry()
-					if(registryMethod instanceof PTName  &&((PTName)registryMethod).getName().equals("org.eclipse.jface.resource.JFaceResources")){
+					if(registryMethod instanceof PTName  &&((PTName)registryMethod).getName().equals("org.eclipse.jface.resource.JFaceResources")){ //$NON-NLS-1$
 							return true;
 					}
 				}

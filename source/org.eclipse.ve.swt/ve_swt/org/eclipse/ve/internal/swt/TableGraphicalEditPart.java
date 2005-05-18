@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableGraphicalEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-18 16:48:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -100,7 +100,7 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sfColumns) {
-				queueExec(TableGraphicalEditPart.this, "COLUMNS");
+				queueExec(TableGraphicalEditPart.this, "COLUMNS"); //$NON-NLS-1$
 			}
 		}
 	};
@@ -187,7 +187,7 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 		if (getChildren().size() == 0)
 			return;
 		// Farm this off to the display thread, if we're not already on it.
-		CDEUtilities.displayExec(TableGraphicalEditPart.this, "REFRESH_COLUMNS", fRefreshColumnsRunnable);
+		CDEUtilities.displayExec(TableGraphicalEditPart.this, "REFRESH_COLUMNS", fRefreshColumnsRunnable); //$NON-NLS-1$
 	}
 
 	/*

@@ -10,15 +10,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.IControlProxyHost;
@@ -78,7 +74,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 
 		if (as == sf_containerControls) {
 			addControl((IJavaObjectInstance) newValue, position);
-		} else if ("layout".equals(as.getName())) {
+		} else if ("layout".equals(as.getName())) { //$NON-NLS-1$
 			// If switching layouts we must ensure that the children's layoutData matches that of our new layout manager			
 			ensureChildLayoutDataCorrect(newValue);
 			super.applied(as, newValue, position);			
@@ -119,7 +115,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 			}
 		}
     	// There is a target VM helper that does all of the checking and correcting to avoid VM traffic
-		final IMethodProxy methodProxy = getCompositeManager().getMethodProxy("ensureChildLayoutDataCorrect",new String[] {"org.eclipse.swt.widgets.Composite","java.lang.String"});
+		final IMethodProxy methodProxy = getCompositeManager().getMethodProxy("ensureChildLayoutDataCorrect",new String[] {"org.eclipse.swt.widgets.Composite","java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		final IBeanProxy finalConstraintBeanProxy = constraintBeanProxy;
 		// Create a BeanProxy for the name of the constraint class
 		invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable(){
@@ -131,7 +127,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 	}
 	
 	private IBeanTypeProxy getCompositeManager(){
-		return getBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.CompositeManager");
+		return getBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.CompositeManager"); //$NON-NLS-1$
 	}
 	
 	

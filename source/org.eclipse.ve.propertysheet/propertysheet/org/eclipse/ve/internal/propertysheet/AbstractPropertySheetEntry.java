@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: AbstractPropertySheetEntry.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:34 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-18 16:42:57 $ 
  */
 
 
@@ -212,7 +212,7 @@ protected final void applyNewValue(Object newValue) {
 		}
 	} catch (RuntimeException e) {
 		// Don't want to let this go on up. Causes problems later on.
-		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));
+		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e)); //$NON-NLS-1$
 	}
 }
 
@@ -435,7 +435,7 @@ public String getDisplayName() {
 		return name;
 	} catch (RuntimeException e) {
 		// Don't want to let this go on up. Causes problems later on.
-		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));
+		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e)); //$NON-NLS-1$
 		return PropertysheetMessages.getString("AbstractPropertySheetEntry.DisplayName.Error"); //$NON-NLS-1$
 	}	
 }
@@ -648,7 +648,7 @@ public Image getImage() {
 		return provider.getImage(editValue);
 	} catch (RuntimeException e) {
 		// Don't want to let this go on up. Causes problems later on.
-		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));
+		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e)); //$NON-NLS-1$
 		return null;
 	}	
 }
@@ -723,7 +723,7 @@ public String getValueAsString() {
 		}
 	} catch (RuntimeException e) {
 		// Don't want to let this go on up. Causes problems later on.
-		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));
+		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e)); //$NON-NLS-1$
 		return PropertysheetMessages.getString("AbstractPropertySheetEntry.ValueAsString.Error"); //$NON-NLS-1$
 	}
 }

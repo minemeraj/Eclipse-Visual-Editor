@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlCopyEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-12 23:08:23 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-18 16:48:00 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -22,7 +22,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 public class ControlCopyEditPolicy extends WidgetCopyEditPolicy {
 	
 	protected boolean shouldCopyFeature(EStructuralFeature feature, Object eObject) {
-		if(feature != null && "allocation".equals(feature.getName())){
+		if(feature != null && "allocation".equals(feature.getName())){ //$NON-NLS-1$
 			return false;
 		} else {
 			return super.shouldCopyFeature(feature, eObject);
@@ -34,10 +34,10 @@ public class ControlCopyEditPolicy extends WidgetCopyEditPolicy {
 		super.cleanup(javaBeanToCopy, aCopier);
 		// Strip the bounds, size, location and layoutData from the primary object being copied
 		IJavaInstance copiedObject = (IJavaInstance) aCopier.get(javaBeanToCopy);
-		removeReferenceTo(copiedObject,"bounds",aCopier);
-		removeReferenceTo(copiedObject,"size",aCopier);
-		removeReferenceTo(copiedObject,"location",aCopier);
-		removeReferenceTo(copiedObject,"layoutData",aCopier);		
+		removeReferenceTo(copiedObject,"bounds",aCopier); //$NON-NLS-1$
+		removeReferenceTo(copiedObject,"size",aCopier); //$NON-NLS-1$
+		removeReferenceTo(copiedObject,"location",aCopier); //$NON-NLS-1$
+		removeReferenceTo(copiedObject,"layoutData",aCopier);		 //$NON-NLS-1$
 	}
 	
 }

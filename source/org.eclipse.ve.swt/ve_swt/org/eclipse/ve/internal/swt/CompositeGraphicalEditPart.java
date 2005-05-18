@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.21 $ $Date: 2005-05-18 00:48:40 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.22 $ $Date: 2005-05-18 16:48:00 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -30,8 +30,6 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
@@ -132,9 +130,9 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sf_compositeControls)
-				queueExec(CompositeGraphicalEditPart.this, "CONTROLS");
+				queueExec(CompositeGraphicalEditPart.this, "CONTROLS"); //$NON-NLS-1$
 			else if (notification.getFeature() == sf_compositeLayout) {
-				queueExec(CompositeGraphicalEditPart.this, "LAYOUT", new Runnable() {
+				queueExec(CompositeGraphicalEditPart.this, "LAYOUT", new Runnable() { //$NON-NLS-1$
 					public void run() {
 						if (isActive())
 							createLayoutEditPolicy();

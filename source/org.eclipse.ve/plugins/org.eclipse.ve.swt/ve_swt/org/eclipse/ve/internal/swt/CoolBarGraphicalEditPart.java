@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CoolBarGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:30 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-18 16:48:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -77,7 +77,7 @@ public class CoolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_items)
-				queueExec(CoolBarGraphicalEditPart.this, "ITEMS");
+				queueExec(CoolBarGraphicalEditPart.this, "ITEMS"); //$NON-NLS-1$
 		}
 	};
 

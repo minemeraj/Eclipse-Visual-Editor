@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:30 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-18 16:48:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -56,7 +56,7 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart impl
 			if (notification.getEventType() == Notification.REMOVING_ADAPTER)
 				return;
 			// Else assume a refresh is needed.
-			queueExec(TableColumnGraphicalEditPart.this, "REFRESH");
+			queueExec(TableColumnGraphicalEditPart.this, "REFRESH"); //$NON-NLS-1$
 		}
 
 		public void run() {

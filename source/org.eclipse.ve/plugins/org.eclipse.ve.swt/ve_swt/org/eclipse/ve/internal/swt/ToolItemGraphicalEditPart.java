@@ -9,19 +9,16 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ToolItemGraphicalEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-11 19:01:30 $
+ * $RCSfile: ToolItemGraphicalEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-05-18 16:48:00 $
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.*;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
@@ -53,7 +50,7 @@ public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart impleme
 			if (notification.getEventType() == Notification.REMOVING_ADAPTER)
 				return;
 			// Else assume a refresh is needed.
-			queueExec(ToolItemGraphicalEditPart.this, "REFRESH");
+			queueExec(ToolItemGraphicalEditPart.this, "REFRESH"); //$NON-NLS-1$
 		}
 
 		public void run() {
@@ -73,7 +70,7 @@ public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart impleme
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 
 			public void errorStatusChanged() {
-				CDEUtilities.displayExec(ToolItemGraphicalEditPart.this, "ERROR_STATUS_CHANGED", new Runnable() {
+				CDEUtilities.displayExec(ToolItemGraphicalEditPart.this, "ERROR_STATUS_CHANGED", new Runnable() { //$NON-NLS-1$
 
 					public void run() {
 						setSeverity(getControlProxy().getErrorStatus());

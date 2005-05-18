@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-11 19:01:30 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-18 16:45:32 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -274,7 +274,7 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 				
 				// Invoking the method setDetails(...) on the ViewPartHost that passes in the
 				// details in a single method call to reduce target VM round trips (as opposed to lots of different method calls for each setting)
-				IMethodProxy setDetailsMethodProxy = viewPartHostTypeProxy.getMethodProxy("setDetails",
+				IMethodProxy setDetailsMethodProxy = viewPartHostTypeProxy.getMethodProxy("setDetails", //$NON-NLS-1$
 						new IBeanTypeProxy[] {
 						intXBeanProxy.getTypeProxy(),
 						intYBeanProxy.getTypeProxy(),
@@ -291,7 +291,7 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 				String javaTypeName = ((IJavaInstance)getTarget()).getJavaType().getName();
 				IBeanProxy javaTypeNameProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(javaTypeName);
 				
-				IMethodProxy addViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("addViewPart", new String[] {"org.eclipse.ui.part.WorkbenchPart","java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$ // $NON-NLS-3$
+				IMethodProxy addViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("addViewPart", new String[] {"org.eclipse.ui.part.WorkbenchPart","java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ // $NON-NLS-3$
 				// The method addViewPart returns a two element array typed to org.eclipse.swt.Composite
 				// The first is the composite for the outer ViewPane, the second for the inner composite that is the argument to createPartControl(Composite)
 				IArrayBeanProxy compositeArrayBeanProxy = (IArrayBeanProxy) addViewPartMethodProxy.invoke(viewPartHostTypeProxy,new IBeanProxy[] {aBeanProxy,javaTypeNameProxy});

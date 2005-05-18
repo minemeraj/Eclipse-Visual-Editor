@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RCPViewClassCreationSourceContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-26 21:39:44 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-18 16:44:52 $ 
  */
 package org.eclipse.ve.internal.jface.codegen.wizards.contributors;
 
@@ -77,7 +77,7 @@ public class RCPViewClassCreationSourceContributor implements IVisualClassCreati
 			return new StatusInfo(
 					IStatus.ERROR,
 					JFaceMessages.getFormattedString(
-							"RCPViewCreation.RCP_Project_ERROR",
+							"RCPViewCreation.RCP_Project_ERROR_", //$NON-NLS-1$
 							project == null ? null : project.getName()),
 					SwtPlugin.PLUGIN_ID);
 		} else {
