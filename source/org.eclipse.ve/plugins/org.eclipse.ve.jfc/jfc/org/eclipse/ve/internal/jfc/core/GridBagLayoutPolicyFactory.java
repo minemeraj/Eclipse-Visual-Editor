@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutPolicyFactory.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-21 18:19:12 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-18 16:36:07 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -63,7 +63,7 @@ public class GridBagLayoutPolicyFactory implements ILayoutPolicyFactory {
 	}
 	
 	public JavaClass getConstraintClass(ResourceSet rSet) {
-		return Utilities.getJavaClass("java.awt.GridBagConstraints",rSet);
+		return Utilities.getJavaClass("java.awt.GridBagConstraints",rSet); //$NON-NLS-1$
 	}
 
 }

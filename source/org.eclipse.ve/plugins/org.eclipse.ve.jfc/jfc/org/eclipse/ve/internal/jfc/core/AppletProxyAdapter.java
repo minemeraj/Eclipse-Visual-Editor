@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: AppletProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-18 16:36:07 $ 
  */
 
 import org.eclipse.jem.internal.proxy.core.*;
@@ -47,8 +47,8 @@ public class AppletProxyAdapter extends ContainerProxyAdapter {
 		// but we don't recognize this. So we do normal instantiation and then initialize with our dummy applet stub that we provide.
 		IProxy result = super.primInstantiateBeanProxy(expression);
 
-		IProxyBeanType dummyStubType = getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.DummyAppletStub", expression);
-		IProxyMethod initializeMethod = dummyStubType.getMethodProxy(expression, "initializeApplet", new String[] { "java.applet.Applet"});
+		IProxyBeanType dummyStubType = getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.DummyAppletStub", expression); //$NON-NLS-1$
+		IProxyMethod initializeMethod = dummyStubType.getMethodProxy(expression, "initializeApplet", new String[] { "java.applet.Applet"}); //$NON-NLS-1$ //$NON-NLS-2$
 		expression.createSimpleMethodInvoke(initializeMethod, null, new IProxy[] { result}, false);
 		return result;
 	}
@@ -63,7 +63,7 @@ public class AppletProxyAdapter extends ContainerProxyAdapter {
 		// can free up any resources it allocated
 
 		if (isBeanProxyInstantiated()) {
-			IProxyMethod destroyMethod = getBeanProxy().getTypeProxy().getMethodProxy(expression, "destroy", (IProxyBeanType[]) null);
+			IProxyMethod destroyMethod = getBeanProxy().getTypeProxy().getMethodProxy(expression, "destroy", (IProxyBeanType[]) null); //$NON-NLS-1$
 			expression.createSimpleMethodInvoke(destroyMethod, getProxy(), null, false);
 		}
 		super.releaseBeanProxy(expression);

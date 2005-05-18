@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-05-11 19:01:39 $
+ * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-05-18 16:36:07 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -76,7 +76,7 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sfTabs)
-				queueExec(JTabbedPaneTreeEditPart.this, "TABS");
+				queueExec(JTabbedPaneTreeEditPart.this, "TABS"); //$NON-NLS-1$
 		}
 	};
 

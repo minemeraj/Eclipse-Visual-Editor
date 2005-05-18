@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: RootPaneContainerGraphicalEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-05-11 19:01:38 $
+ * $RCSfile: RootPaneContainerGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-05-18 16:36:07 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -52,7 +52,7 @@ public class RootPaneContainerGraphicalEditPart extends ComponentGraphicalEditPa
 		
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_contentPane)
-				queueExec(RootPaneContainerGraphicalEditPart.this, "CONTENTPANE");
+				queueExec(RootPaneContainerGraphicalEditPart.this, "CONTENTPANE"); //$NON-NLS-1$
 		}
 	};
 

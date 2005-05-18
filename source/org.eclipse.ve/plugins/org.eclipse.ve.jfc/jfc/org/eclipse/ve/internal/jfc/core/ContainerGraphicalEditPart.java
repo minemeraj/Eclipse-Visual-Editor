@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-05-11 19:01:38 $
+ * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-05-18 16:36:07 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -138,9 +138,9 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 		
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sf_containerComponents) {
-				queueExec(ContainerGraphicalEditPart.this, "COMPONENTS");
+				queueExec(ContainerGraphicalEditPart.this, "COMPONENTS"); //$NON-NLS-1$
 			} else if (notification.getFeature() == sf_containerLayout) {
-				queueExec(ContainerGraphicalEditPart.this, "LAYOUT", new Runnable() {
+				queueExec(ContainerGraphicalEditPart.this, "LAYOUT", new Runnable() { //$NON-NLS-1$
 
 					public void run() {
 						if (isActive())

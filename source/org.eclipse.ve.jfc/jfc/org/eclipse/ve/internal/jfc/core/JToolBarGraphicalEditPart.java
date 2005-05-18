@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JToolBarGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-05-11 19:01:38 $
+ * $RCSfile: JToolBarGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-05-18 16:36:07 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -80,7 +80,7 @@ public class JToolBarGraphicalEditPart extends ContainerGraphicalEditPart {
 		
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sfItems)
-				queueExec(JToolBarGraphicalEditPart.this, "ITEMS");
+				queueExec(JToolBarGraphicalEditPart.this, "ITEMS"); //$NON-NLS-1$
 		}
 	};
 

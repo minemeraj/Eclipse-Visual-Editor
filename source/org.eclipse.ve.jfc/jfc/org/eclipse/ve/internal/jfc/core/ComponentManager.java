@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentManager.java,v $ $Revision: 1.7 $ $Date: 2005-05-11 19:01:38 $
+ * $RCSfile: ComponentManager.java,v $ $Revision: 1.8 $ $Date: 2005-05-18 16:36:07 $
  */
 
 import java.io.InputStream;
@@ -209,7 +209,7 @@ public class ComponentManager {
 					}
 
 					public void proxyNotResolved(ProxyEvent event) {
-						JavaVEPlugin.log("Component manager proxy not resolved on remote vm.", Level.INFO);
+						JavaVEPlugin.log("Component manager proxy not resolved on remote vm.", Level.INFO); //$NON-NLS-1$
 						fComponentManagerProxy = null;
 					}
 				});
@@ -246,7 +246,7 @@ public class ComponentManager {
 	 * @since 1.1.0
 	 */
 	protected String getComponentManagerClassname() {
-		return "org.eclipse.ve.internal.jfc.vm.ComponentManager";
+		return "org.eclipse.ve.internal.jfc.vm.ComponentManager"; //$NON-NLS-1$
 	}
 
 	/**
@@ -275,7 +275,7 @@ public class ComponentManager {
 				// The location is "absolute", i.e. location relative to awt.Window the component is in.
 				fLastSignalledLocation = new Point(((IIntegerBeanProxy) parms[0]).intValue(), ((IIntegerBeanProxy) parms[1]).intValue());
 				fLastSignalledSize = new Dimension(((IIntegerBeanProxy) parms[2]).intValue(), ((IIntegerBeanProxy) parms[3]).intValue());
-				printmoved("refreshed");
+				printmoved("refreshed"); //$NON-NLS-1$
 				fireComponentRefresh();
 				break;
 			case Common.CL_IMAGEINVALID:
@@ -301,10 +301,10 @@ public class ComponentManager {
 		if (VisualComponentsLayoutPolicy.DO_VC_TRACING) {
 			movedCtr++;
 			if (fComponentBeanProxy.isBeanProxy())
-				System.out.println("Component " + ((IBeanProxy) fComponentBeanProxy).getTypeProxy().getTypeName() + "(" + hashCode() + ") cntr:"
-						+ movedCtr + ' ' + type + " to:(" + fLastSignalledLocation+ ' '+fLastSignalledSize+')');
+				System.out.println("Component " + ((IBeanProxy) fComponentBeanProxy).getTypeProxy().getTypeName() + "(" + hashCode() + ") cntr:" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						+ movedCtr + ' ' + type + " to:(" + fLastSignalledLocation+ ' '+fLastSignalledSize+')'); //$NON-NLS-1$
 			else
-				System.out.println("Component (" + hashCode() + ") cntr:" + movedCtr + ' ' + type + " to:(" + fLastSignalledLocation+ ' '+fLastSignalledSize+')');
+				System.out.println("Component (" + hashCode() + ") cntr:" + movedCtr + ' ' + type + " to:(" + fLastSignalledLocation+ ' '+fLastSignalledSize+')'); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 
@@ -332,7 +332,7 @@ public class ComponentManager {
 	protected void componentMoved(int x, int y) {
 		// The location is "absolute" in that it is relative to the awt.Window that the component is in.
 		fLastSignalledLocation = new Point(x, y);
-		printmoved("moved");
+		printmoved("moved"); //$NON-NLS-1$
 		vcSupport.fireComponentMoved(x, y);
 	}
 
@@ -409,7 +409,7 @@ public class ComponentManager {
 
 		if (fLastSignalledLocation != null && fLastSignalledSize != null) {
 			if (VisualComponentsLayoutPolicy.DO_VC_TRACING)
-				System.out.println("Requested bounds (" + hashCode() + ") cntr:" + movedCtr + " loc: " + fLastSignalledLocation);
+				System.out.println("Requested bounds (" + hashCode() + ") cntr:" + movedCtr + " loc: " + fLastSignalledLocation); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return new Rectangle(fLastSignalledLocation.x, fLastSignalledLocation.y, fLastSignalledSize.width, fLastSignalledSize.height);
 		} else
 			return new Rectangle();
@@ -471,7 +471,7 @@ public class ComponentManager {
 		else {
 			oldValue = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "java.awt.Rectangle"), 0);
+					.getBeanTypeProxy(expression, "java.awt.Rectangle"), 0); //$NON-NLS-1$
 		}
 		expression.createSimpleMethodInvoke(BeanAwtUtilities.getApplyBoundsMethodProxy(expression), fComponentManagerProxy, new IProxy[] { bounds,
 				oldValue}, false);
@@ -502,7 +502,7 @@ public class ComponentManager {
 		else {
 			oldValue = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "java.awt.Point"), 0);
+					.getBeanTypeProxy(expression, "java.awt.Point"), 0); //$NON-NLS-1$
 		}
 		expression.createSimpleMethodInvoke(BeanAwtUtilities.getApplyLocationMethodProxy(expression), fComponentManagerProxy, new IProxy[] {
 				location, oldValue}, false);
@@ -860,8 +860,8 @@ public class ComponentManager {
 			});
 
 			IProxyMethod postInitial = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
-					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController",
-					"postInitialRefresh", null);
+					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController", //$NON-NLS-1$
+					"postInitialRefresh", null); //$NON-NLS-1$
 			if (postInitial.isBeanProxy()) {
 				postInitialRefresh = (IMethodProxy) postInitial;
 			} else {
@@ -874,8 +874,8 @@ public class ComponentManager {
 			}
 
 			IProxyMethod postImages = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
-					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController",
-					"postInvalidImages", null);
+					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController", //$NON-NLS-1$
+					"postInvalidImages", null); //$NON-NLS-1$
 			if (postImages.isBeanProxy()) {
 				postInvalidImages = (IMethodProxy) postImages;
 			} else {
@@ -888,8 +888,8 @@ public class ComponentManager {
 			}
 
 			startingChanges = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
-					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController",
-					"startingChanges", null);
+					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController", //$NON-NLS-1$
+					"startingChanges", null); //$NON-NLS-1$
 			if (startingChanges.isExpressionProxy()) {
 				((ExpressionProxy) startingChanges).addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
@@ -900,8 +900,8 @@ public class ComponentManager {
 			}
 
 			IProxyMethod postChangesDone = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
-					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController",
-					"postChanges", null);
+					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController", //$NON-NLS-1$
+					"postChanges", null); //$NON-NLS-1$
 			if (postChangesDone.isBeanProxy()) {
 				this.postChangesDone = (IMethodProxy) postChangesDone;
 			} else {
@@ -942,12 +942,12 @@ public class ComponentManager {
 							postChangesDone.invokeCatchThrowableExceptions((IBeanProxy) feedbackControllerProxy);
 						} else {
 							// Something was wrong, we didn't get the initial refresh proxy.
-							JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve postChanges method!", Level.WARNING);
+							JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve postChanges method!", Level.WARNING); //$NON-NLS-1$
 						}
 					} else {
 						// We're still not valid. This shouldn't of happened. We should of always been within a transaction. We should not be
 						// creating component manager's outside of a transaction.
-						JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve itself!", Level.WARNING);
+						JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve itself!", Level.WARNING); //$NON-NLS-1$
 					}
 				}
 			}
@@ -981,12 +981,12 @@ public class ComponentManager {
 							postInitialRefresh.invokeCatchThrowableExceptions((IBeanProxy) feedbackControllerProxy);
 						} else {
 							// Something was wrong, we didn't get the initial refresh proxy.
-							JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve postInitialRefresh method!", Level.WARNING);
+							JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve postInitialRefresh method!", Level.WARNING); //$NON-NLS-1$
 						}
 					} else {
 						// We're still not valid. This shouldn't of happened. We should of always been within a transaction. We should not be
 						// creating component manager's outside of a transaction.
-						JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve itself!", Level.WARNING);
+						JavaVEPlugin.log("jfc.FeedbackComponentManager didn't resolve itself!", Level.WARNING); //$NON-NLS-1$
 					}
 				}
 			}
@@ -1082,7 +1082,7 @@ public class ComponentManager {
 		public Object calledBack(int msgID, Object[] parms) {
 			if (msgID == Common.CL_TRANSACTIONS) {
 				if (VisualComponentsLayoutPolicy.DO_VC_TRACING)
-					System.out.println("Start feedback transaction. #trans=" + parms.length / 3);
+					System.out.println("Start feedback transaction. #trans=" + parms.length / 3); //$NON-NLS-1$
 				// This will be called with parms. They will be 3-tuples of (ComponentManagerProxy, callbackID, parms);
 				for (int i = 0; i < parms.length;) {
 					ComponentManager compm = (ComponentManager) managerProxyToManager.get(parms[i++]);
@@ -1091,7 +1091,7 @@ public class ComponentManager {
 					}
 				}
 				if (VisualComponentsLayoutPolicy.DO_VC_TRACING)
-					System.out.println("Stop feedback transaction.");
+					System.out.println("Stop feedback transaction."); //$NON-NLS-1$
 			}
 			return null;
 		}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTableProxyAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-18 16:36:07 $ 
  */
 
 import java.util.Iterator;
@@ -64,7 +64,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 				//     ... send back thru ExpressionProxy to mark an instantiation error ...
 				//     throw new BeanInstantiationError(); ... so that when being applied as a setting it can be seen as not valid, but rest of expression can continue.
 				//   }				
-				ExpressionProxy expProxy = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true);
+				ExpressionProxy expProxy = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true); //$NON-NLS-1$
 				expProxy.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
 					public void proxyResolved(ProxyEvent event) {
@@ -75,7 +75,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 				});
 				expression.createThrow();
 				expression.createClassInstanceCreation(ForExpression.THROW_OPERAND, getBeanTypeProxy(
-						"org.eclipse.ve.internal.java.remotevm.BeanInstantiationException", expression), 0);
+						"org.eclipse.ve.internal.java.remotevm.BeanInstantiationException", expression), 0); //$NON-NLS-1$
 			} finally {
 				if (expression.isValid())
 					expression.createTryEnd();

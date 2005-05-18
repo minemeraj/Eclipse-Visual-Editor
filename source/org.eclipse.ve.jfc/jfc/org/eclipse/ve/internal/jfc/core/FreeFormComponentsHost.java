@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FreeFormComponentsHost.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-12 21:03:55 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-18 16:36:07 $ 
  */
 
 import org.eclipse.draw2d.geometry.Point;
@@ -181,7 +181,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 		if (swingType) {
 			if (swingDialogHost == null) {
 				Point loc = BeanAwtUtilities.getOffScreenLocation();
-				IProxyBeanType dialogType = beanProxyDomain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.FreeFormSwingDialog");
+				IProxyBeanType dialogType = beanProxyDomain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.FreeFormSwingDialog"); //$NON-NLS-1$
 				ExpressionProxy dialogProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, dialogType, 2);
 				expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, loc.x);
@@ -192,7 +192,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 		} else {
 			if (awtDialogHost == null) {
 				Point loc = BeanAwtUtilities.getOffScreenLocation();
-				IProxyBeanType dialogType = beanProxyDomain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.FreeFormAWTDialog");
+				IProxyBeanType dialogType = beanProxyDomain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.FreeFormAWTDialog"); //$NON-NLS-1$
 				ExpressionProxy dialogProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, dialogType, 2);
 				expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, loc.x);

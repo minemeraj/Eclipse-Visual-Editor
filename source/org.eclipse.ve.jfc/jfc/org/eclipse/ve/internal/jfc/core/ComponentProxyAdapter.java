@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.20 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.21 $  $Date: 2005-05-18 16:36:07 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -26,8 +26,6 @@ import org.eclipse.swt.graphics.ImageData;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
@@ -134,15 +132,15 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 			//   newBean.setBackground(lightGray);
 			//   return newBean;
 			for (int i = 0; i < notInstantiatedClasses.size(); i++) {
-				if (((JavaHelpers) notInstantiatedClasses.get(i)).getQualifiedName().equals("java.awt.Component")) {
+				if (((JavaHelpers) notInstantiatedClasses.get(i)).getQualifiedName().equals("java.awt.Component")) { //$NON-NLS-1$
 					expression.createProxyReassignmentExpression(ForExpression.ROOTEXPRESSION, (ExpressionProxy) newbean);
-					IProxyBeanType componentType = getBeanTypeProxy("java.awt.Component", expression);
-					expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, getBeanTypeProxy("java.awt.Canvas", expression), 0);
-					expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, componentType.getMethodProxy(expression, "setBackground",
-							new String[] { "java.awt.Color"}), true, 1);
+					IProxyBeanType componentType = getBeanTypeProxy("java.awt.Component", expression); //$NON-NLS-1$
+					expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, getBeanTypeProxy("java.awt.Canvas", expression), 0); //$NON-NLS-1$
+					expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, componentType.getMethodProxy(expression, "setBackground", //$NON-NLS-1$
+							new String[] { "java.awt.Color"}), true, 1); //$NON-NLS-1$
 					expression.createProxyExpression(ForExpression.METHOD_RECEIVER, newbean);
-					expression.createFieldAccess(ForExpression.METHOD_ARGUMENT, "lightGray", true);
-					expression.createTypeReceiver(getBeanTypeProxy("java.awt.Color", expression));
+					expression.createFieldAccess(ForExpression.METHOD_ARGUMENT, "lightGray", true); //$NON-NLS-1$
+					expression.createTypeReceiver(getBeanTypeProxy("java.awt.Color", expression)); //$NON-NLS-1$
 					notInstantiatedClasses.remove(notInstantiatedClasses.size() - 1); // The last one WILL be for Component. We want to be able to
 					// apply component settings.
 					break;
@@ -165,7 +163,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 				//   } catch (Exception e) {
 				//     ... send back thru ExpressionProxy to mark an instantiation error ...
 				//   }
-				ExpressionProxy expProxy = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true);
+				ExpressionProxy expProxy = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true); //$NON-NLS-1$
 				expProxy.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
 					public void proxyResolved(ProxyEvent event) {
@@ -372,7 +370,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 		if (ffProxy != null) {
 			expression.createTry();
 			ffProxy.remove(getBeanProxy(), expression);
-			expression.createTryCatchClause("java.lang.RuntimeException", false);
+			expression.createTryCatchClause("java.lang.RuntimeException", false); //$NON-NLS-1$
 			expression.createTryEnd();
 			ffProxy = null;
 		}
@@ -385,7 +383,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 			// Be on the safe so no spurious last minute notifications are sent out.
 			expression.createTry();
 			fComponentManager.dispose(expression);
-			expression.createTryCatchClause("java.lang.RuntimeException", false);
+			expression.createTryCatchClause("java.lang.RuntimeException", false); //$NON-NLS-1$
 			expression.createTryEnd();
 			// Note: Do not get rid of the component manager. This bean may of had component listeners
 			// and this bean may be about to be reinstantiated. We don't want to loose the listeners

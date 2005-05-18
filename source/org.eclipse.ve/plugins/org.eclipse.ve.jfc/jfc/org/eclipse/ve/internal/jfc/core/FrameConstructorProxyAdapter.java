@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-12 21:03:55 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-18 16:36:07 $ 
  */
 
 import java.util.List;
@@ -69,7 +69,7 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 						if (args.size() == 1) {
 							PTExpression arg1 = (PTExpression) args.get(0);
 							disposeParentOnRelease = arg1 instanceof PTClassInstanceCreation
-									&& "java.awt.Frame".equals(((PTClassInstanceCreation) arg1).getType());
+									&& "java.awt.Frame".equals(((PTClassInstanceCreation) arg1).getType()); //$NON-NLS-1$
 						}
 					}
 				}
@@ -92,7 +92,7 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 		disposeParentOnRelease = true;
 		IProxy result = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 		expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass, 1);
-		expression.createClassInstanceCreation(ForExpression.CLASSINSTANCECREATION_ARGUMENT, "java.awt.Frame", 0);
+		expression.createClassInstanceCreation(ForExpression.CLASSINSTANCECREATION_ARGUMENT, "java.awt.Frame", 0); //$NON-NLS-1$
 		return result;
 	}
 

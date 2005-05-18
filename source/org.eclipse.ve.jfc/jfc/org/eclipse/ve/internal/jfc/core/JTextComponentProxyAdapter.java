@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JTextComponentProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-18 16:36:07 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -43,8 +43,8 @@ public class JTextComponentProxyAdapter extends ComponentProxyAdapter {
 	public JTextComponentProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
-		sfSelectionStart = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionStart"));
-		sfSelectionEnd = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionEnd"));
+		sfSelectionStart = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionStart")); //$NON-NLS-1$
+		sfSelectionEnd = JavaInstantiation.getSFeature(rset, URI.createURI("java:/javax.swing.text#JTextComponent/selectionEnd")); //$NON-NLS-1$
 	}
 
 	/*

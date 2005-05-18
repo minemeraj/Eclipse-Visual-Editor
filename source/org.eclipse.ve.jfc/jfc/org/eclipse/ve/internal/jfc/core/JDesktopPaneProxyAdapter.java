@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JDesktopPaneProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-18 16:36:07 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -48,11 +48,11 @@ public class JDesktopPaneProxyAdapter extends JLayeredPaneProxyAdapter {
 
 			// To activate the frame we need to first get the DesktopManager
 			// from the DesktopPane, then have the DTM activate the frame.
-			IBeanProxy dtMgrBeanProxy = getBeanProxy().getTypeProxy().getMethodProxy("getDesktopManager").invokeCatchThrowableExceptions(
+			IBeanProxy dtMgrBeanProxy = getBeanProxy().getTypeProxy().getMethodProxy("getDesktopManager").invokeCatchThrowableExceptions( //$NON-NLS-1$
 					getBeanProxy());
 			if (dtMgrBeanProxy != null) {
 				IBeanProxy frameBeanProxy = BeanProxyUtilities.getBeanProxy(internalFrameModel);
-				dtMgrBeanProxy.getTypeProxy().getMethodProxy("activateFrame", "javax.swing.JInternalFrame").invokeCatchThrowableExceptions(
+				dtMgrBeanProxy.getTypeProxy().getMethodProxy("activateFrame", "javax.swing.JInternalFrame").invokeCatchThrowableExceptions( //$NON-NLS-1$ //$NON-NLS-2$
 						dtMgrBeanProxy, frameBeanProxy);
 			}
 			revalidateBeanProxy();

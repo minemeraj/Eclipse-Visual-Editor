@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-05-11 19:01:38 $
+ * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-05-18 16:36:07 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -91,9 +91,9 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sf_containerComponents)
-				queueExec(ContainerTreeEditPart.this, "COMPONENTS");
+				queueExec(ContainerTreeEditPart.this, "COMPONENTS"); //$NON-NLS-1$
 			else if (notification.getFeature() == sf_containerLayout) {
-				queueExec(ContainerTreeEditPart.this, "LAYOUT", new Runnable() {
+				queueExec(ContainerTreeEditPart.this, "LAYOUT", new Runnable() { //$NON-NLS-1$
 					public void run() {
 						if (isActive())
 							createLayoutPolicyHelper();
