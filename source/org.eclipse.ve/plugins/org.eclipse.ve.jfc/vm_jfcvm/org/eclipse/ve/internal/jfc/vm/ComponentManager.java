@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.vm;
 
 /*
  *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-18 22:53:55 $ 
  */
 
 import java.awt.*;
@@ -28,7 +28,10 @@ import org.eclipse.ve.internal.jfc.common.Common;
  * This is the ComponentManager. It it is a listener for the component changes and it provides helper routines to quickly access information.
  * <p>
  * It also handles the freeform settings for loc and bounds since those need to be saved and returned as default values when set by freeform override.
+ * <p>
+ * This is not meant to be subclassed. Users should use ComponentManagerExtension for that.
  * 
+ * @see ComponentManager.ComponentManagerExtension for extensions.
  * @since 1.1.0
  */
 public class ComponentManager implements ComponentListener, HierarchyBoundsListener, HierarchyListener {
@@ -36,6 +39,142 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	protected Component fComponent;
 
 	protected ComponentManagerFeedbackController feedbackController;
+	
+	protected ComponentManagerExtension[] extensions;
+	
+	/**
+	 * All component manager extensions must be a subclass of this. They
+	 * will be told of significant events and can contribute to them.
+	 * 
+	 * @since 1.1.0
+	 */
+	public abstract static class ComponentManagerExtension {
+		
+		private ComponentManager componentManager;
+		
+		void setComponentManager(ComponentManager componentManager) {
+			ComponentManager old = this.componentManager;
+			this.componentManager = componentManager;
+			componentManagerSet(old);
+		}
+		
+		/**
+		 * Called when this extension is added or removed from a componentmanager.
+		 * @param oldManager old manager or <code>null</code> if not previously in a manager.
+		 * 
+		 * @since 1.1.0
+		 */
+		protected void componentManagerSet(ComponentManager oldManager) {
+			
+		}
+		
+		/**
+		 * Get the component manager this is associated with.
+		 * @return
+		 * 
+		 * @since 1.1.0
+		 */
+		public final ComponentManager getComponentManager() {
+			return componentManager;
+		}
+		
+		/**
+		 * Get the component being managed.
+		 * @return the component being managed or <code>null</code> if not managing a component at this time.
+		 * 
+		 * @since 1.1.0
+		 */
+		public final Component getComponent() {
+			return componentManager != null ? componentManager.getComponent() : null;
+		}
+		
+		/**
+		 * The component has moved, or one of its ancestors has moved. 
+		 * 
+		 * 
+		 * @since 1.1.0
+		 */
+		protected void componentMoved() {
+		}
+
+		/**
+		 * Component was hidden.
+		 * 
+		 * 
+		 * @since 1.1.0
+		 */
+		protected void componentHidden() {
+		}
+
+		/**
+		 * Component was resized.
+		 * 
+		 * 
+		 * @since 1.1.0
+		 */
+		protected void componentResized() {
+		}
+		
+		/**
+		 * The component has been shown.
+		 * 
+		 * 
+		 * @since 1.1.0
+		 */
+		protected void componentShown() {
+			
+		}
+		
+		/**
+		 * A refresh has been queued up.
+		 * 
+		 * 
+		 * @since 1.1.0
+		 */
+		protected void refreshQueued() {
+			
+		}
+		
+		/**
+		 * Notification that the component is invalid.
+		 * <p>
+		 * This is called by the Feedback controller when it is about to validate all of the queued up windows. This will
+		 * only be called for invalidations done through the client call to {@link ComponentManager#invalidate() invalidate}
+		 * and to any parents of those components. It will not be called for any component that was invalidated through
+		 * some other means.
+		 * <p>
+		 * The default is to do nothing. Subclasses may do other things. But be aware that immediately after this call
+		 * the component will be validated.
+		 * 
+		 * @since 1.1.0
+		 */
+		protected void invalidated() {
+			
+		}
+		
+		/**
+		 * Called when everything is all set up and ready for extensions to
+		 * add any listeners that they want. These listeners must be cleaned up
+		 * in the {@link ComponentManager.ComponentManagerExtension#componentSet(Component, Component)}.
+		 * 
+		 * 
+		 * @since 1.1.0
+		 */
+		protected void startComponentListening() {
+			
+		}
+		
+		/**
+		 * Called when a new component is set into the manager.
+		 * @param oldComponent old component or <code>null</code> if no old component.
+		 * @param newComponent new component or <code>null</code> if no new component.
+		 * 
+		 * @since 1.1.0
+		 */
+		protected void componentSet(Component oldComponent, Component newComponent) {
+			
+		}
+	}
 
 	/**
 	 * This class manages the feedback from the component managers. It tries to batch them all together so that it can be sent back as one transaction
@@ -300,20 +439,56 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		}
 	}
 
+
 	/**
-	 * Called when component has been set. It allows subclasses to know this and do whatever they need. Subclasses should override. Default does
-	 * nothing.
-	 * 
-	 * @param newComponent
-	 *            the new component setting
-	 * @param oldComponent
-	 *            the old component setting
+	 * Add the extension. No affect if already in list.
+	 * @param extension
 	 * 
 	 * @since 1.1.0
 	 */
-	protected void componentSet(Component newComponent, Component oldComponent) {
+	public void addExtension(ComponentManagerExtension extension) {
+		if (extensions == null) {
+			extensions = new ComponentManagerExtension[] {extension};
+			extension.setComponentManager(this);
+		} else {
+			for (int i = 0; i < extensions.length; i++) {
+				if (extensions[i] == extension)
+					return;
+			}
+			ComponentManagerExtension[] newExtensions = new ComponentManagerExtension[extensions.length+1];
+			System.arraycopy(extensions, 0, newExtensions, 0, extensions.length);
+			newExtensions[newExtensions.length-1] = extension;
+			extensions = newExtensions;
+			extension.setComponentManager(this);				
+		}
 	}
-
+	
+	/**
+	 * Remove the extension. No affect if not in list.
+	 * @param extension
+	 * 
+	 * @since 1.1.0
+	 */
+	public void removeExtension(ComponentManagerExtension extension) {
+		if (extensions != null) {
+			for (int i = 0; i < extensions.length; i++) {
+				if (extensions[i] == extension) {
+					if (extensions.length > 1) {
+						ComponentManagerExtension[] newExtensions = new ComponentManagerExtension[extensions.length-1];
+						System.arraycopy(extensions, 0, newExtensions, 0, i);
+						int left = newExtensions.length-i;
+						if (left > 0)
+							System.arraycopy(extensions, i+1, newExtensions, i, left);
+						extensions = newExtensions;
+					} else
+						extensions = null;
+					extension.setComponentManager(null);
+					return;
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Set the component that this manager is managing.
 	 * 
@@ -336,7 +511,13 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 			feedbackController.registerComponentManager(fComponent, this);
 			feedbackController.queueInitialRefresh(this); // Queue up the initial refresh request.
 		}
-		componentSet(fComponent, oldComponent); // Tell subclasses it has changed.
+		
+		if (extensions != null) {
+			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
+			for (int i = 0; i < lcl.length; i++) {
+				lcl[i].componentSet(oldComponent, fComponent);
+			}
+		}
 	}
 	
 	/**
@@ -374,6 +555,12 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	 * @since 1.1.0
 	 */
 	protected void invalidated() {
+		if (extensions != null) {
+			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
+			for (int i = 0; i < lcl.length; i++) {
+				lcl[i].invalidated();
+			}
+		}
 	}
 	
 	/**
@@ -392,6 +579,12 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		fComponent.addHierarchyListener(this);
 		// Add a hierarchy bounds listener so we know when any parent has changed.
 		fComponent.addHierarchyBoundsListener(this);
+		if (extensions != null) {
+			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
+			for (int i = 0; i < lcl.length; i++) {
+				lcl[i].startComponentListening();
+			}
+		}
 	}
 
 	/**
@@ -447,6 +640,12 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	public void componentResized(ComponentEvent e) {
 		Component c = e.getComponent();
 		feedbackController.addTransaction(this, Common.CL_RESIZED, new Object[] { new Integer(c.getWidth()), new Integer(c.getHeight())});
+		if (extensions != null) {
+			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
+			for (int i = 0; i < lcl.length; i++) {
+				lcl[i].componentResized();
+			}
+		}
 	}
 
 	/*
@@ -466,6 +665,12 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	 */
 	protected void fireMoved() {
 		feedbackController.addTransaction(this, Common.CL_MOVED, getLocation());
+		if (extensions != null) {
+			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
+			for (int i = 0; i < lcl.length; i++) {
+				lcl[i].componentMoved();
+			}
+		}
 	}
 
 	/*
@@ -475,6 +680,12 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	 */
 	public void componentShown(final ComponentEvent e) {
 		feedbackController.addTransaction(this, Common.CL_SHOWN, null);
+		if (extensions != null) {
+			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
+			for (int i = 0; i < lcl.length; i++) {
+				lcl[i].componentShown();
+			}
+		}
 	}
 
 	/*
@@ -484,6 +695,12 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	 */
 	public void componentHidden(final ComponentEvent e) {
 		feedbackController.addTransaction(this, Common.CL_HIDDEN, null);
+		if (extensions != null) {
+			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
+			for (int i = 0; i < lcl.length; i++) {
+				lcl[i].componentHidden();
+			}
+		}
 	}
 
 	/**
@@ -515,6 +732,13 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 				feedbackController.addTransaction(ComponentManager.this, Common.CL_REFRESHED, getRefreshParms());
 			}
 		});
+		
+		if (extensions != null) {
+			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
+			for (int i = 0; i < lcl.length; i++) {
+				lcl[i].refreshQueued();
+			}
+		}		
 	}
 
 	/*

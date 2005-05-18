@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: WindowManager.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $RCSfile: WindowManagerExtension.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-05-18 22:53:56 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -22,13 +22,20 @@ import org.eclipse.jem.internal.proxy.core.IProxy;
  * Manager for awt.Window subclasses.
  * @since 1.1.0
  */
-public class WindowManager extends ComponentManager {
+public class WindowManagerExtension extends ComponentManager.ComponentManagerExtension {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.jfc.core.ComponentManager#getComponentManagerClassname()
-	 */
-	protected String getComponentManagerClassname() {
-		return "org.eclipse.ve.internal.jfc.vm.WindowManager"; //$NON-NLS-1$
+	protected IProxy windowManagerProxy;
+	
+	protected String getExtensionClassname() {
+		return "org.eclipse.ve.internal.jfc.vm.WindowManagerExtension"; //$NON-NLS-1$
+	}
+	
+	protected IProxy primGetExtensionProxy() {
+		return windowManagerProxy;
+	}
+	
+	protected void primSetExtensionProxy(IProxy proxy) {
+		windowManagerProxy = proxy;
 	}
 	
 	/**
@@ -41,6 +48,6 @@ public class WindowManager extends ComponentManager {
 	 * @since 1.1.0
 	 */
 	public void packWindowOnValidate(boolean pack, IExpression expression) {
-		expression.createSimpleMethodInvoke(BeanAwtUtilities.getWindowPackOnChange(expression), fComponentManagerProxy, new IProxy[] {expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(pack)}, false);		
+		expression.createSimpleMethodInvoke(BeanAwtUtilities.getWindowPackOnChange(expression), windowManagerProxy, new IProxy[] {expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(pack)}, false);		
 	}
 }

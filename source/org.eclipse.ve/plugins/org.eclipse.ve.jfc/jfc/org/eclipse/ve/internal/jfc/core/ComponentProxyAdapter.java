@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.22 $  $Date: 2005-05-18 18:39:17 $ 
+ *  $Revision: 1.23 $  $Date: 2005-05-18 22:53:56 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -66,7 +66,8 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 	}
 
 	/**
-	 * Create the component manager. Subclasses that require a difference component manager should return the different one.
+	 * Create the component manager. Subclasses that want to add in a Extension manager at this time should
+	 * override and do so after calling super.createComponentManager.
 	 * 
 	 * @return
 	 * 

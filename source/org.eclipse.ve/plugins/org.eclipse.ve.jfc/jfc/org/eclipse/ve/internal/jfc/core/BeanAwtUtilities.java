@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.29 $  $Date: 2005-05-18 18:39:17 $ 
+ *  $Revision: 1.30 $  $Date: 2005-05-18 22:53:55 $ 
  */
 
 import java.util.List;
@@ -522,7 +522,7 @@ public class BeanAwtUtilities {
 		IProxyMethod method = constants.methods[WINDOW_DISPOSE];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			IStandardBeanTypeProxyFactory beanTypeProxyFactory = expression.getRegistry().getBeanTypeProxyFactory();
-			method = beanTypeProxyFactory.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.WindowManager").getMethodProxy( //$NON-NLS-1$
+			method = beanTypeProxyFactory.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.WindowManagerExtension").getMethodProxy( //$NON-NLS-1$
 					expression, "disposeWindow", //$NON-NLS-1$
 					new IProxyBeanType[] {beanTypeProxyFactory.getBeanTypeProxy(expression, "java.awt.Window")}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, WINDOW_DISPOSE);
@@ -563,7 +563,7 @@ public class BeanAwtUtilities {
 		IProxyMethod method = constants.methods[MANAGER_WINDOW_PACK_ON_CHANGE];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.WindowManager").getMethodProxy( //$NON-NLS-1$
+					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.WindowManagerExtension").getMethodProxy( //$NON-NLS-1$
 							expression, "setPackOnChange", //$NON-NLS-1$
 							new String[] { "boolean"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_WINDOW_PACK_ON_CHANGE);
@@ -1363,7 +1363,7 @@ public class BeanAwtUtilities {
 		IProxyMethod method = constants.methods[MANAGER_JSPLITPANE_SETDIVIDERLOCATION];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JSplitPaneManager").getMethodProxy( //$NON-NLS-1$
+					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JSplitPaneManagerExtension").getMethodProxy( //$NON-NLS-1$
 							expression, "setDividerLocation", //$NON-NLS-1$
 							new String[] {"int"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_JSPLITPANE_SETDIVIDERLOCATION);

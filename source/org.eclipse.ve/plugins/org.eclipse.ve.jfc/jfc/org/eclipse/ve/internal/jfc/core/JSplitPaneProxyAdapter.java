@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JSplitPaneProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-18 22:53:56 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -34,7 +34,7 @@ public class JSplitPaneProxyAdapter extends ContainerProxyAdapter {
 
 	protected EStructuralFeature sfLeftComponent, sfRightComponent, sfTopComponent, sfBottomComponent, sfDividerLocation;
 
-	protected JSplitPaneManager splitPaneManager;
+	protected JSplitPaneManagerExtension splitPaneManager;
 
 	protected boolean dividerSet;
 
@@ -57,13 +57,16 @@ public class JSplitPaneProxyAdapter extends ContainerProxyAdapter {
 	}
 
 	protected ComponentManager createComponentManager() {
-		return new JSplitPaneManager();
+		ComponentManager cm = super.createComponentManager();
+		splitPaneManager = new JSplitPaneManagerExtension();
+		cm.addComponentExtension(splitPaneManager, null);
+		return cm;
 	}
 
 	protected IProxy applyBeanProperty(PropertyDecorator propertyDecorator, IProxy settingProxy, IExpression expression, boolean getOriginalValue)
 			throws NoSuchMethodException, NoSuchFieldException {
 		if (propertyDecorator.getEModelElement() == sfDividerLocation)
-			return ((JSplitPaneManager) getComponentManager()).setDividerLocation(settingProxy, getOriginalValue, expression);
+			return splitPaneManager.setDividerLocation(settingProxy, getOriginalValue, expression);
 		else
 			return super.applyBeanProperty(propertyDecorator, settingProxy, expression, getOriginalValue);
 	}

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.17 $  $Date: 2005-05-18 18:39:17 $ 
+ *  $Revision: 1.18 $  $Date: 2005-05-18 22:53:56 $ 
  */
 
 import java.util.logging.Level;
@@ -45,22 +45,17 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 		super(domain);
 	}
 	
-	/**
-	 * Get the window manager.
-	 * @return
-	 * 
-	 * @since 1.1.0
-	 */
-	protected WindowManager getWindowManager() {
-		return (WindowManager) getComponentManager();
-	}
+	protected WindowManagerExtension windowManager;
 	
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.jfc.core.ContainerProxyAdapter#createComponentManager()
 	 */
 	protected ComponentManager createComponentManager() {
-		return new WindowManager();
+		ComponentManager cm = super.createComponentManager();
+		windowManager = new WindowManagerExtension();
+		cm.addComponentExtension(windowManager, null);
+		return cm;
 	}
 
 	/**
@@ -104,7 +99,7 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 		IProxy result = super.primInstantiateBeanProxy(expression);
 		
 		if (onFreeForm)
-			getWindowManager().packWindowOnValidate(!(getEObject().eIsSet(sfComponentBounds) || getEObject().eIsSet(sfComponentSize)), expression);
+			windowManager.packWindowOnValidate(!(getEObject().eIsSet(sfComponentBounds) || getEObject().eIsSet(sfComponentSize)), expression);
 		
 		return result;
 	}
@@ -138,7 +133,7 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 								// this one notification.
 								IExpression expression = getBeanProxyFactory().createExpression();
 								try {
-									getWindowManager().packWindowOnValidate(false, expression);
+									windowManager.packWindowOnValidate(false, expression);
 								} finally {
 									try {
 										if (expression.isValid())
@@ -172,7 +167,7 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 						// notification.
 						IExpression expression = getBeanProxyFactory().createExpression();
 						try {
-							getWindowManager().packWindowOnValidate(true, expression);
+							windowManager.packWindowOnValidate(true, expression);
 						} finally {
 							try {
 								if (expression.isValid())

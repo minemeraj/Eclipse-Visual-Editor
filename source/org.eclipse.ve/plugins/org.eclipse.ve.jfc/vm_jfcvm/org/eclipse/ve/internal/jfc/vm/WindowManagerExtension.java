@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: WindowManager.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-12 21:03:55 $ 
+ *  $RCSfile: WindowManagerExtension.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-05-18 22:53:55 $ 
  */
 package org.eclipse.ve.internal.jfc.vm;
 
@@ -23,7 +23,7 @@ import java.awt.Window;
  * be saved. So it can't be a static helper class.
  * @since 1.1.0
  */
-public class WindowManager extends ComponentManager {
+public class WindowManagerExtension extends ComponentManager.ComponentManagerExtension {
 	
 	/**
 	 * Some bug in window component peer (for a Dialog) throws an exception
@@ -65,11 +65,7 @@ public class WindowManager extends ComponentManager {
 	}
 	
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.jfc.vm.ComponentManager#invalidated()
-	 */
 	protected void invalidated() {
-		super.invalidated();
 		if (packOnChange)
 			((Window) getComponent()).pack();
 	}

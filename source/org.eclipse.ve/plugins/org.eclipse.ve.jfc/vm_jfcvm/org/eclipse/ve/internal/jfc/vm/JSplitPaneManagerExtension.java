@@ -9,13 +9,12 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: JSplitPaneManager.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $RCSfile: JSplitPaneManagerExtension.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-05-18 22:53:55 $ 
  */
 package org.eclipse.ve.internal.jfc.vm;
 
 import java.awt.Component;
-import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -24,11 +23,11 @@ import javax.swing.JSplitPane;
 
  
 /**
- * JSplitPane manager
+ * JSplitPane manager extension.
  * 
  * @since 1.1.0
  */
-public class JSplitPaneManager extends ComponentManager {
+public class JSplitPaneManagerExtension extends ComponentManager.ComponentManagerExtension {
 	
 	protected static final int DIVIDER_NOT_SET = Integer.MIN_VALUE;
 	protected int setDividerLocation = DIVIDER_NOT_SET;
@@ -69,7 +68,7 @@ public class JSplitPaneManager extends ComponentManager {
 					// Note: The following may or may not be necessary in the new component manager scheme. Anything that would cause
 					// the divider location to change, such as actual setting or it, or a repaint due to a resize, should still be within
 					// a transaction, and such will get the correct image. But to be safe we will invalidate here.
-					invalidate();	// Now tell it to re-get the image. This is because sometimes these changes happen after the image has already been captured.
+					getComponentManager().invalidate();	// Now tell it to re-get the image. This is because sometimes these changes happen after the image has already been captured.
 				} finally {
 					synchronized (dividerListener) {
 						imSetting = false;
@@ -79,15 +78,14 @@ public class JSplitPaneManager extends ComponentManager {
 		}
 	};
 
-	public void componentResized(ComponentEvent e) {
+	protected void componentResized() {
 		if (setDividerLocation == DIVIDER_NOT_SET) {
 			getSplitPane().resetToPreferredSizes();
-			invalidate();	// We've got a new size with no divider. So we need to reset to the preferred sizes for the new size and schedule an image.
+			getComponentManager().invalidate();	// We've got a new size with no divider. So we need to reset to the preferred sizes for the new size and schedule an image.
 		}
-		super.componentResized(e);
 	}	
 
-	protected void componentSet(Component newComponent, Component oldComponent) {
+	protected void componentSet(Component oldComponent, Component newComponent) {
 		if (oldComponent != null) {
 			oldComponent.removePropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, dividerListener);
 		}
@@ -123,6 +121,5 @@ public class JSplitPaneManager extends ComponentManager {
 		// It was invalidated. (Either explicitly or through a child). Do we have the divider not set? If so, then we should do reset to preferred size before validating.
 		if (setDividerLocation == DIVIDER_NOT_SET)
 			getSplitPane().resetToPreferredSizes();
-		super.invalidated();
 	}	
 }
