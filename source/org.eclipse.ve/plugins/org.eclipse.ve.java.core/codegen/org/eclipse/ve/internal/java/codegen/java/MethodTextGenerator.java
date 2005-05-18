@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.21 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.22 $  $Date: 2005-05-18 22:53:26 $ 
  */
 
 import java.util.*;
@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.jdom.IDOMMethod;
 
+import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
@@ -151,29 +152,36 @@ public void generateExpressionsContent() throws CodeGenException {
  * @deprecated
  *  
  */
-protected void appendNewSource(StringBuffer buf, BeanPart bean, List kids, boolean updateDoc) throws CodeGenException {
+protected void appendNewSource(final StringBuffer buf, final BeanPart bean, final List kids, final boolean updateDoc) throws CodeGenException {
 
 	EObject obj = bean.getEObject();
-	BeanDecoderAdapter a = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(bean.getEObject(), ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER) ;
-	Iterator itr = ((JavaClass)obj.eClass()).getEAllStructuralFeatures().iterator();
-	while (itr.hasNext()) {
-		EStructuralFeature sf = (EStructuralFeature) itr.next();
-		if (obj.eIsSet(sf)) {
-			if (sf.isMany() || ignoreSF(sf) || kids.contains(sf))
-				continue;
-			if (a.getSettingAdapters(sf) != null && a.getSettingAdapters(sf).length > 0)
-				continue;
-			CodeExpressionRef newExpr = GenerateAttribute(sf, bean, null, updateDoc);
-			String src = newExpr.getContent();
-			if (src == null)
-				throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
-			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
-				JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$
-			if (!updateDoc)
-				newExpr.setOffset(buf.length());
-			buf.append(src);
+	final BeanDecoderAdapter a = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(bean.getEObject(), ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER) ;
+	CodeGenException exp = (CodeGenException) FeatureValueProvider.FeatureValueProviderHelper.visitSetFeatures(obj, new FeatureValueProvider.Visitor() {
+	
+		public Object isSet(EStructuralFeature feature, Object value) {
+			try {
+				if (feature.isMany() || ignoreSF(feature) || kids.contains(feature))
+					return null;
+				if (a.getSettingAdapters(feature) != null && a.getSettingAdapters(feature).length > 0)
+					return null;
+				CodeExpressionRef newExpr = GenerateAttribute(feature, bean, null, updateDoc);
+				String src = newExpr.getContent();
+				if (src == null)
+					throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$
+				if (!updateDoc)
+					newExpr.setOffset(buf.length());
+				buf.append(src);
+				return null;
+			} catch (CodeGenException e) {
+				return e;
+			}
 		}
-	}
+	
+	});
+	if (exp != null)
+		throw exp;
 	fsourceAppended=true ;
 }
 
