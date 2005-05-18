@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.22 $  $Date: 2005-05-17 23:27:24 $ 
+ *  $Revision: 1.23 $  $Date: 2005-05-18 14:35:42 $ 
  */
 
 import java.util.ArrayList;
@@ -323,7 +323,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		// the XML text for the JVE object model can be seen, both of which help debugging
 		
 		showGridCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowGridWhenSelected"), 15); //$NON-NLS-1$
-		renameAskCheckbox = createCheckBox(appearanceComposite, "Prompt for bean name during creation", 15);
+		renameAskCheckbox = createCheckBox(appearanceComposite, VCEMessages.getString("VCEPreferencePage.Checkbox.PromptNameOnCreation.Text"), 15); //$NON-NLS-1$
 
 		showWindowCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowLiveWindow"), 15); //$NON-NLS-1$
 		showXMLTextCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowXMLText"), 15); //$NON-NLS-1$

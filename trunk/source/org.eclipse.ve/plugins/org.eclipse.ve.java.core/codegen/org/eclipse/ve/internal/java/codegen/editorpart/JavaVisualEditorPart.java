@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.111 $  $Date: 2005-05-13 15:20:58 $ 
+ *  $Revision: 1.112 $  $Date: 2005-05-18 14:35:42 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -840,7 +840,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		pasteBeanAction = new PasteJavaBeanAction(this,editDomain);		
 		pasteBeanAction.setSelectionProvider(primaryViewer);
 		pasteBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteBeanAction.setText(CodegenEditorPartMessages.getString("Action.Paste.Label"));				
+		pasteBeanAction.setText(CodegenEditorPartMessages.getString("Action.Paste.Label"));	//$NON-NLS-1$			
 		graphicalActionRegistry.registerAction(pasteBeanAction);
 		
 		copyBeanAction = new CopyJavaBeanAction(this){
@@ -853,7 +853,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		};
 		copyBeanAction.setSelectionProvider(primaryViewer);
 		copyBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		copyBeanAction.setText(CodegenEditorPartMessages.getString("Action.Copy.Label"));						
+		copyBeanAction.setText(CodegenEditorPartMessages.getString("Action.Copy.Label"));		//$NON-NLS-1$				
 		graphicalActionRegistry.registerAction(copyBeanAction);
 		
 		
@@ -869,7 +869,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		cutAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.CUT);
 		cutAction.setId(ActionFactory.CUT.getId());
 		cutBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		cutBeanAction.setText(CodegenEditorPartMessages.getString("Action.Cut.Label"));		
+		cutBeanAction.setText(CodegenEditorPartMessages.getString("Action.Cut.Label"));		//$NON-NLS-1$
 		graphicalActionRegistry.registerAction(cutBeanAction);		
 		
 		final SelectionAction customizeAction = (SelectionAction) graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
@@ -1010,7 +1010,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		XML_SAVE_CACHE_OPTIONS = new HashMap(3);
 		XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
 		XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));
-        XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8");
+        XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8");//$NON-NLS-1$
 	}
 	public void refreshTextPage() {
 		if (xmlTextPage != null && modelBuilder != null && modelBuilder.getModelRoot() != null) {

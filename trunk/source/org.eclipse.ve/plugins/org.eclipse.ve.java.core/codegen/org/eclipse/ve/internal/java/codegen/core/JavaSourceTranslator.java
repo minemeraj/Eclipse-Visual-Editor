@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.74 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.75 $  $Date: 2005-05-18 14:35:42 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -540,7 +540,7 @@ public EditDomain getEditDomain() {
 	return fEDomain;
 }
 
-public static final String LOADING_PHASE = "LOADING_PHASE";
+public static final String LOADING_PHASE = "LOADING_PHASE";//$NON-NLS-1$
 
 
 /**
