@@ -17,7 +17,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindow.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-18 20:49:34 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-18 21:10:35 $ 
  */
 
 import java.util.ArrayList;
@@ -224,6 +224,8 @@ public class CustomizeLayoutWindow extends Window {
 		Control control = null;
 		if (parent != null && !parent.isDisposed()) {
 			control = page.getControl(parent);
+			Dialog.applyDialogFont(control);
+			parent.layout();	// re-layout to adjust for font changes
 			
 			// Now resize to handle the new page.
 			Point size = getInitialSize();
@@ -231,7 +233,6 @@ public class CustomizeLayoutWindow extends Window {
 
 			getShell().setBounds(location.x, location.y, size.x, size.y);
 		}
-		Dialog.applyDialogFont(control);
 		return control;
 	}
 	
