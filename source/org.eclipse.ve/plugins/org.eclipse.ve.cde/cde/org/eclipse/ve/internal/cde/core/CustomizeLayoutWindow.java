@@ -17,7 +17,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindow.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-18 20:49:34 $ 
  */
 
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.gef.EditPartViewer;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -215,7 +216,7 @@ public class CustomizeLayoutWindow extends Window {
 				tabFolder = null;
 			}
 		});
-		
+		Dialog.applyDialogFont(tabFolder);
 		return tabFolder;
 	}
 	
@@ -230,6 +231,7 @@ public class CustomizeLayoutWindow extends Window {
 
 			getShell().setBounds(location.x, location.y, size.x, size.y);
 		}
+		Dialog.applyDialogFont(control);
 		return control;
 	}
 	

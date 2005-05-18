@@ -90,7 +90,7 @@ public class PropertyDialogEditor extends Dialog {
 		gd1.horizontalAlignment = GridData.FILL;
 		gd1.verticalAlignment = GridData.FILL;
 		c.setLayoutData(gd1);
-		
+		applyDialogFont(composite);
 		return composite;
 	}
 }

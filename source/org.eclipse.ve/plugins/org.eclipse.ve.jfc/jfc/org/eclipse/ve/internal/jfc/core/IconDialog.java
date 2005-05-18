@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: IconDialog.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-18 20:49:35 $ 
  */
 
 import org.eclipse.core.resources.IProject;
@@ -322,6 +322,7 @@ public class IconDialog extends Dialog {
 
 		getShell().setText(VisualMessages.getString("IconDialog.Shell.Text")); //$NON-NLS-1$
 
+		applyDialogFont(panel);
 		return panel;
 	} // createContents()
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChangeParentShellObjectActionDelegate.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-18 20:49:33 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -266,7 +266,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 			}
 			// Set the selection list index based on what the initialIndex was set to when the list was intialized.
 			selectionList.select(initialIndex);
-
+			applyDialogFont(mainComposite);
 			return mainComposite;
 		}
 
