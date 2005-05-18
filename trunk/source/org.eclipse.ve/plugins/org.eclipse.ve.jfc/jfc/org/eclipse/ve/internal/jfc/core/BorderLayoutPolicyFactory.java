@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutPolicyFactory.java,v $
- *  $Revision: 1.13 $  $Date: 2005-04-21 18:19:12 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-18 16:36:07 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -76,7 +76,7 @@ public class BorderLayoutPolicyFactory implements ILayoutPolicyFactory {
 		return BeanUtilities.createJavaObject(javaClass, rset, (String)null);
 	}
 	public JavaClass getConstraintClass(ResourceSet rSet) {
-		return Utilities.getJavaClass("java.lang.String",rSet);
+		return Utilities.getJavaClass("java.lang.String",rSet); //$NON-NLS-1$
 	}
 	
 }

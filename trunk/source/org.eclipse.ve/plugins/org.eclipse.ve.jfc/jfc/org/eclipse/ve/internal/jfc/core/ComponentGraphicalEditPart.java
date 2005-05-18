@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.23 $ $Date: 2005-05-12 12:10:00 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.24 $ $Date: 2005-05-18 16:36:07 $
  */
 import java.util.*;
 
@@ -305,7 +305,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		// Listen to the error notifier so it tells us when errors occur
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 			public void errorStatusChanged() {
-				CDEUtilities.displayExec(ComponentGraphicalEditPart.this, "STATUS_CHANGED", new Runnable() {
+				CDEUtilities.displayExec(ComponentGraphicalEditPart.this, "STATUS_CHANGED", new Runnable() { //$NON-NLS-1$
 					public void run() {
 						setSeverity(errorNotifier.getErrorStatus());
 					}

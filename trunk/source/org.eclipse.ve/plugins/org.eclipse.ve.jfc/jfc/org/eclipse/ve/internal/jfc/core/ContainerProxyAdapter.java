@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-18 14:07:12 $ 
+ *  $Revision: 1.16 $  $Date: 2005-05-18 16:36:07 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -297,7 +297,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 				processPendingLayoutChange();
 	        }
 	    },
-	    ModelChangeController.createHashKey(this,"LAYOUT CHANGE"),
+	    ModelChangeController.createHashKey(this,"LAYOUT CHANGE"), //$NON-NLS-1$
 	    new Object[] {ModelChangeController.SETUP_PHASE,ModelChangeController.INIT_VIEWERS_PHASE});
 	}
 	
@@ -506,7 +506,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 				}
 
 				expression.createTryCatchClause(getBeanInstantiationExceptionTypeProxy(expression), false);
-				ExpressionProxy applyException = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true);
+				ExpressionProxy applyException = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true); //$NON-NLS-1$
 				final ComponentConstraintAdapter fccadapter = ccAdapter;
 				applyException.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 

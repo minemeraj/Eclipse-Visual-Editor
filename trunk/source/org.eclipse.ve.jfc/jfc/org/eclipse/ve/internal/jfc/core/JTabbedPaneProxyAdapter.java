@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: JTabbedPaneProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-18 16:36:07 $ 
  */
 
 import java.util.Iterator;
@@ -251,7 +251,7 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 			}
 
 			expression.createTryCatchClause(getBeanInstantiationExceptionTypeProxy(expression), false);
-			ExpressionProxy applyException = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true);
+			ExpressionProxy applyException = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true); //$NON-NLS-1$
 			final JTabAdapter ftabadapter = tabAdapter;
 			applyException.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 

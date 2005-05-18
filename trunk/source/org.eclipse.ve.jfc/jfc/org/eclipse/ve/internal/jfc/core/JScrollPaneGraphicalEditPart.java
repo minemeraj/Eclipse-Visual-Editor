@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JScrollPaneGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-05-11 19:01:39 $
+ * $RCSfile: JScrollPaneGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-05-18 16:36:07 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -54,7 +54,7 @@ public class JScrollPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_scrollpaneViewportView)
-				queueExec(JScrollPaneGraphicalEditPart.this, "SCROLLVIEW");
+				queueExec(JScrollPaneGraphicalEditPart.this, "SCROLLVIEW"); //$NON-NLS-1$
 		}
 	};
 

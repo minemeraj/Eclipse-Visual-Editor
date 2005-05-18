@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JSplitPaneTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-11 19:01:38 $
+ * $RCSfile: JSplitPaneTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-05-18 16:36:07 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -44,7 +44,7 @@ public class JSplitPaneTreeEditPart extends ComponentTreeEditPart {
 		public void notifyChanged(Notification msg) {
 			Object feature = msg.getFeature();
 			if (feature == sfLeftComponent || feature == sfRightComponent || feature == sfTopComponent || feature == sfBottomComponent || feature == sf_containerComponents)
-				queueExec(JSplitPaneTreeEditPart.this, "SPLITCOMPONENT");
+				queueExec(JSplitPaneTreeEditPart.this, "SPLITCOMPONENT"); //$NON-NLS-1$
 		}
 	};
 

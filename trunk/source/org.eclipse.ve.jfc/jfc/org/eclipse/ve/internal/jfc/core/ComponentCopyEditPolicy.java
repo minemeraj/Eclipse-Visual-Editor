@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentCopyEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-12 16:08:42 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-18 16:36:07 $ 
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -38,12 +38,12 @@ public class ComponentCopyEditPolicy extends DefaultCopyEditPolicy {
 				javaBeanToCopy,JavaInstantiation.getReference(
 						javaBeanToCopy.eResource().getResourceSet(),JFCConstants.SF_CONSTRAINT_COMPONENT));		
 		if(constraintComponent != null){
-			removeReferenceTo(constraintComponent,"constraint",aCopier);
+			removeReferenceTo(constraintComponent,"constraint",aCopier); //$NON-NLS-1$
 		}
 		// Strip bounds, size and location
-		removeReferenceTo(javaBeanToCopy,"bounds",aCopier);
-		removeReferenceTo(javaBeanToCopy,"size",aCopier);
-		removeReferenceTo(javaBeanToCopy,"location",aCopier);		
+		removeReferenceTo(javaBeanToCopy,"bounds",aCopier); //$NON-NLS-1$
+		removeReferenceTo(javaBeanToCopy,"size",aCopier); //$NON-NLS-1$
+		removeReferenceTo(javaBeanToCopy,"location",aCopier);		 //$NON-NLS-1$
 	}
 	
 }

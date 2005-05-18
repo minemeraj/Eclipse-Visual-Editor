@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChoiceProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-18 16:36:07 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -49,8 +49,8 @@ public class ChoiceProxyAdapter extends ComponentProxyAdapter {
 	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
 		IProxy bean = super.primInstantiateBeanProxy(expression);
 		// See header of this class as to why we are doing what we are doing here.
-		expression.createSimpleMethodInvoke(getBeanTypeProxy("java.awt.Choice", expression).getMethodProxy(expression, "add",
-				new String[] {"java.lang.String"}), bean, new IProxy[] {getBeanProxyFactory().createBeanProxyWith("")}, false);
+		expression.createSimpleMethodInvoke(getBeanTypeProxy("java.awt.Choice", expression).getMethodProxy(expression, "add", //$NON-NLS-1$ //$NON-NLS-2$
+				new String[] {"java.lang.String"}), bean, new IProxy[] {getBeanProxyFactory().createBeanProxyWith("")}, false); //$NON-NLS-1$ //$NON-NLS-2$
 		return bean;
 	}
 }

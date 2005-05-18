@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneManager.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-18 16:36:07 $ 
  */
 
 import org.eclipse.jem.internal.proxy.core.IExpression;
@@ -25,7 +25,7 @@ import org.eclipse.jem.internal.proxy.core.IProxy;
 public class JSplitPaneManager extends ComponentManager {
 
 	protected String getComponentManagerClassname() {
-		return "org.eclipse.ve.internal.jfc.vm.JSplitPaneManager";
+		return "org.eclipse.ve.internal.jfc.vm.JSplitPaneManager"; //$NON-NLS-1$
 	}
 	
 	/**

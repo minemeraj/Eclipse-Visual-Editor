@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: RootPaneContainerTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-05-11 19:01:38 $
+ * $RCSfile: RootPaneContainerTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-05-18 16:36:07 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -53,7 +53,7 @@ public class RootPaneContainerTreeEditPart extends ComponentTreeEditPart {
 
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_contentPane)
-				queueExec(RootPaneContainerTreeEditPart.this, "CONTENTPANE");
+				queueExec(RootPaneContainerTreeEditPart.this, "CONTENTPANE"); //$NON-NLS-1$
 		}
 	};
 

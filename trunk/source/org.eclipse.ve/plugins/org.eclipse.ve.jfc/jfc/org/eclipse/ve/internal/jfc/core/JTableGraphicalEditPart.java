@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: JTableGraphicalEditPart.java,v $ $Revision: 1.14 $ $Date: 2005-05-11 19:01:39 $
+ * $RCSfile: JTableGraphicalEditPart.java,v $ $Revision: 1.15 $ $Date: 2005-05-18 16:36:07 $
  */
 
 import java.util.Collections;
@@ -106,7 +106,7 @@ public class JTableGraphicalEditPart extends ComponentGraphicalEditPart {
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sfColumns && !notification.isTouch()) {
-				queueExec(JTableGraphicalEditPart.this, "COLUMNS");
+				queueExec(JTableGraphicalEditPart.this, "COLUMNS"); //$NON-NLS-1$
 			}
 		}
 	};
@@ -194,7 +194,7 @@ public class JTableGraphicalEditPart extends ComponentGraphicalEditPart {
 		if (!isOnScrollPane || getChildren().size() == 0)
 			return;
 		// Farm this off to the display thread, if we're not already on it.
-		CDEUtilities.displayExec(JTableGraphicalEditPart.this, "REFRESH_COLUMNS", fRefreshColumnsRunnable);
+		CDEUtilities.displayExec(JTableGraphicalEditPart.this, "REFRESH_COLUMNS", fRefreshColumnsRunnable); //$NON-NLS-1$
 	}
 
 	protected void refreshVisuals() {

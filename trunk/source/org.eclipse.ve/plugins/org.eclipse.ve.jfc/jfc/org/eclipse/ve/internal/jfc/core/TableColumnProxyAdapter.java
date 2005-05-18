@@ -6,7 +6,7 @@
  ****************************************************************************************************************************************************/
 /*
  *  $RCSfile: TableColumnProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-18 16:36:07 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -76,8 +76,8 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter2 {
 			if (table != null) {
 				IInternalBeanProxyHost2 tableProxyHost = (IInternalBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost(table);
 				if (tableProxyHost.getProxy() != null) {
-					IProxyMethod resetHeader = getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager", expression).getMethodProxy(expression, "resetHeaderValue",
-							new String[] { "javax.swing.JTable", "javax.swing.table.TableColumn"});
+					IProxyMethod resetHeader = getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager", expression).getMethodProxy(expression, "resetHeaderValue", //$NON-NLS-1$ //$NON-NLS-2$
+							new String[] { "javax.swing.JTable", "javax.swing.table.TableColumn"}); //$NON-NLS-1$ //$NON-NLS-2$
 					expression.createSimpleMethodInvoke(resetHeader, null, new IProxy[] { tableProxyHost.getProxy(), getProxy()}, false);
 				}
 			}

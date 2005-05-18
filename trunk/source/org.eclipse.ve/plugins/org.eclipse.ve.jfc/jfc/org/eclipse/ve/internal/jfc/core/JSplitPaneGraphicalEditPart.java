@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JSplitPaneGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-05-11 19:01:38 $
+ * $RCSfile: JSplitPaneGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-05-18 16:36:07 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -50,7 +50,7 @@ public class JSplitPaneGraphicalEditPart extends ComponentGraphicalEditPart {
 			Object feature = msg.getFeature();
 			if (feature == sfLeftComponent || feature == sfRightComponent || feature == sfTopComponent || feature == sfBottomComponent
 					|| feature == sf_containerComponents)
-				queueExec(JSplitPaneGraphicalEditPart.this, "COMPONENTS");
+				queueExec(JSplitPaneGraphicalEditPart.this, "COMPONENTS"); //$NON-NLS-1$
 		}
 	};
 

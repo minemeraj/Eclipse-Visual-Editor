@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FrameProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-18 16:36:07 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -78,7 +78,7 @@ public class FrameProxyAdapter extends WindowProxyAdapter {
 
 	private void overrideTitle(IExpression expression) {
 		overrideProperty(sfTitle, getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(
-				JFCMessages.getString("FrameDefaultTitle")), expression);
+				JFCMessages.getString("FrameDefaultTitle")), expression); //$NON-NLS-1$
 	}
 
 	/*

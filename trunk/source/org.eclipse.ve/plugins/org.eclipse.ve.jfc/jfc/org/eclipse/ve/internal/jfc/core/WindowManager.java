@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WindowManager.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-18 16:36:07 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -28,7 +28,7 @@ public class WindowManager extends ComponentManager {
 	 * @see org.eclipse.ve.internal.jfc.core.ComponentManager#getComponentManagerClassname()
 	 */
 	protected String getComponentManagerClassname() {
-		return "org.eclipse.ve.internal.jfc.vm.WindowManager";
+		return "org.eclipse.ve.internal.jfc.vm.WindowManager"; //$NON-NLS-1$
 	}
 	
 	/**

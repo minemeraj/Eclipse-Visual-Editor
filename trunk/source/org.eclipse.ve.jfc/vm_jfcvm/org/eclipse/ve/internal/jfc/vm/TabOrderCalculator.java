@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.vm;
 /*
  *  $RCSfile: TabOrderCalculator.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-18 16:35:29 $ 
  */
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class TabOrderCalculator {
 public TabOrderCalculator(JFrame aFrame) {
 	fFrame = aFrame;
 	try { 
-		File output = new File("C:/temp/taborder/taboutputfile.txt");
+		File output = new File("C:/temp/taborder/taboutputfile.txt"); //$NON-NLS-1$
 		try { 
 			output.delete();
 		} catch ( Exception exc ) {
@@ -50,7 +50,7 @@ public TabOrderCalculator(JFrame aFrame) {
 	} catch ( Exception exc ) {
 		exc.printStackTrace();
 	}
-	fileSeparator = System.getProperty("line.separator");	
+	fileSeparator = System.getProperty("line.separator");	 //$NON-NLS-1$
 }
 /**
  * Add all children of the container to the list of all focusable children
@@ -164,7 +164,7 @@ public Object[] getComponentOrder(){
 	for (int i = 0; i < result.length; i++) {
 		Object[] components = (Object[])result[i];
 		for (int j = 0; j < components.length; j++) {
-			write(i + "> Component(" + j + ") = " + components[j]);	
+			write(i + "> Component(" + j + ") = " + components[j]);	 //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	try {

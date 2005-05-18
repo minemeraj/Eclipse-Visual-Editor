@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.27 $  $Date: 2005-05-12 21:03:55 $ 
+ *  $Revision: 1.28 $  $Date: 2005-05-18 16:36:07 $ 
  */
 
 import java.util.List;
@@ -205,7 +205,7 @@ public class BeanAwtUtilities {
 		if (constants.componentManagerFeedbackController == null) {
 			ExpressionProxy feedbackProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT,
-					"org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController", 0);
+					"org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController", 0); //$NON-NLS-1$
 			constants.componentManagerFeedbackController = new ComponentManager.FeedbackController(feedbackProxy);
 			expression.getRegistry().getCallbackRegistry().registerCallback(feedbackProxy, constants.componentManagerFeedbackController, expression);
 			feedbackProxy.addProxyListener(new ExpressionProxy.ProxyListener() {
@@ -268,7 +268,7 @@ public class BeanAwtUtilities {
 		if (constants.jFrameDefaultOnClose_DoNothingProxy == null) {
 			try {
 				constants.jFrameDefaultOnClose_DoNothingProxy = registry.getBeanProxyFactory().createBeanProxyFrom(
-						"javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE");
+						"javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE"); //$NON-NLS-1$
 			} catch (ThrowableProxy e) {
 				JavaVEPlugin.log(e, Level.WARNING);
 			} catch (ClassCastException e) {
@@ -292,8 +292,8 @@ public class BeanAwtUtilities {
 
 		if (constants.jsplitpaneOrientation_HORIZONTAL == null) {
 			try {
-				constants.jsplitpaneOrientation_HORIZONTAL = registry.getBeanTypeProxyFactory().getBeanTypeProxy("javax.swing.JSplitPane")
-						.getFieldProxy("HORIZONTAL_SPLIT").get(null);
+				constants.jsplitpaneOrientation_HORIZONTAL = registry.getBeanTypeProxyFactory().getBeanTypeProxy("javax.swing.JSplitPane") //$NON-NLS-1$
+						.getFieldProxy("HORIZONTAL_SPLIT").get(null); //$NON-NLS-1$
 			} catch (ThrowableProxy e) {
 				JavaVEPlugin.log(e, Level.WARNING);
 			}
@@ -342,7 +342,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
 							expression, "addComponentBefore", //$NON-NLS-1$
-							new String[] {"java.awt.Container", "java.awt.Component", "java.lang.Object", "java.awt.Component"});
+							new String[] {"java.awt.Container", "java.awt.Component", "java.lang.Object", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			processExpressionProxy(method, constants.methods, MANAGER_ADD_COMPONENT_BEFORE_WITH_CONSTRAINT);
 		}
 		return method;
@@ -382,7 +382,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
 							expression, "addComponentBefore", //$NON-NLS-1$
-							new String[] {"java.awt.Container", "java.awt.Component", "java.awt.Component", "boolean"});
+							new String[] {"java.awt.Container", "java.awt.Component", "java.awt.Component", "boolean"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			processExpressionProxy(method, constants.methods, MANAGER_ADD_COMPONENT_BEFORE_WITH_NO_CONSTRAINT);
 		}
 		return method;
@@ -422,7 +422,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
 							expression, "changeConstraint", //$NON-NLS-1$
-							new String[] { "java.awt.Container", "java.awt.Component", "java.lang.Object", "boolean"});
+							new String[] { "java.awt.Container", "java.awt.Component", "java.lang.Object", "boolean"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			processExpressionProxy(method, constants.methods, MANAGER_CHANGE_CONSTRAINT);
 		}
 		return method;
@@ -460,7 +460,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
 							expression, "removeComponent", //$NON-NLS-1$
-							new String[] {"java.awt.Container", "java.awt.Component"});
+							new String[] {"java.awt.Container", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_REMOVE_COMPONENT);
 		}
 		return method;
@@ -494,7 +494,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
 							expression, "removeAllComponents", //$NON-NLS-1$
-							new String[] {"java.awt.Container"});
+							new String[] {"java.awt.Container"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_REMOVE_ALL_COMPONENTS);
 		}
 		return method;
@@ -528,7 +528,7 @@ public class BeanAwtUtilities {
 			IStandardBeanTypeProxyFactory beanTypeProxyFactory = expression.getRegistry().getBeanTypeProxyFactory();
 			method = beanTypeProxyFactory.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.WindowManager").getMethodProxy( //$NON-NLS-1$
 					expression, "disposeWindow", //$NON-NLS-1$
-					new IProxyBeanType[] {beanTypeProxyFactory.getBeanTypeProxy(expression, "java.awt.Window")});
+					new IProxyBeanType[] {beanTypeProxyFactory.getBeanTypeProxy(expression, "java.awt.Window")}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, WINDOW_DISPOSE);
 		}
 		return method;
@@ -571,7 +571,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.WindowManager").getMethodProxy( //$NON-NLS-1$
 							expression, "setPackOnChange", //$NON-NLS-1$
-							new String[] { "boolean"});
+							new String[] { "boolean"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_WINDOW_PACK_ON_CHANGE);
 		}
 		return method;
@@ -593,7 +593,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTableManager").getMethodProxy( //$NON-NLS-1$
 							expression, "addColumnBefore", //$NON-NLS-1$
-							new String[] {"javax.swing.JTable", "javax.swing.table.TableColumn", "javax.swing.table.TableColumn"});
+							new String[] {"javax.swing.JTable", "javax.swing.table.TableColumn", "javax.swing.table.TableColumn"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABLE_ADD_COLUMN_BEFORE);
 		}
 		return method;
@@ -615,7 +615,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTableManager").getMethodProxy( //$NON-NLS-1$
 							expression, "initializeTableModel", //$NON-NLS-1$
-							new String[] {"javax.swing.JTable"});
+							new String[] {"javax.swing.JTable"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABLE_INITIALIZE_TABLE_MODEL);
 		}
 		return method;
@@ -638,7 +638,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTableManager").getMethodProxy( //$NON-NLS-1$
 							expression, "removeAllColumns", //$NON-NLS-1$
-							new String[] {"javax.swing.JTable"});
+							new String[] {"javax.swing.JTable"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABLE_REMOVE_ALL_COLUMNS);
 		}
 		return method;
@@ -660,7 +660,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "javax.swing.JTable").getMethodProxy( //$NON-NLS-1$
 							expression, "removeColumn", //$NON-NLS-1$
-							new String[] {"javax.swing.table.TableColumn"});
+							new String[] {"javax.swing.table.TableColumn"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, JTABLE_REMOVE_COLUMN);
 		}
 		return method;
@@ -682,7 +682,7 @@ public class BeanAwtUtilities {
 			constants.managerJTableGetColumnRect = jtable.getProxyFactoryRegistry().getBeanTypeProxyFactory()
 			.getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager").getMethodProxy( //$NON-NLS-1$
 					"getColumnRect", //$NON-NLS-1$
-					new String[] {"javax.swing.JTable", "javax.swing.table.TableColumn"});
+					new String[] {"javax.swing.JTable", "javax.swing.table.TableColumn"}); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return (IRectangleBeanProxy) constants.managerJTableGetColumnRect.invokeCatchThrowableExceptions(null, new IBeanProxy[] {jtable, tablecolumn});
 	}
@@ -703,7 +703,7 @@ public class BeanAwtUtilities {
 			constants.managerJTableGetAllColumnRects = jtable.getProxyFactoryRegistry().getBeanTypeProxyFactory()
 			.getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager").getMethodProxy( //$NON-NLS-1$
 					"getColumnRects", //$NON-NLS-1$
-					new String[] {"javax.swing.JTable"});
+					new String[] {"javax.swing.JTable"}); //$NON-NLS-1$
 		}
 		return (IArrayBeanProxy) constants.managerJTableGetAllColumnRects.invokeCatchThrowableExceptions(null, new IBeanProxy[] {jtable});
 	}
@@ -724,7 +724,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JMenuManager").getMethodProxy( //$NON-NLS-1$
 							expression, "removeComponent", //$NON-NLS-1$
-							new String[] { "java.lang.Object"});
+							new String[] { "java.lang.Object"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_JMENU_REMOVE_COMPONENT);
 		}
 		return method;
@@ -759,7 +759,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JMenuManager").getMethodProxy( //$NON-NLS-1$
 							expression, "addComponent", //$NON-NLS-1$
-							new String[] {"java.awt.Container", "java.lang.Object", "java.lang.Object"});
+							new String[] {"java.awt.Container", "java.lang.Object", "java.lang.Object"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JMENU_ADD_COMPONENT);
 		}
 		return method;
@@ -796,7 +796,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JToolBarManager").getMethodProxy( //$NON-NLS-1$
 							expression, "addComponent", //$NON-NLS-1$
-							new String[] {"javax.swing.JToolBar", "java.lang.Object", "java.lang.Object"});
+							new String[] {"javax.swing.JToolBar", "java.lang.Object", "java.lang.Object"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JTOOLBAR_ADD_COMPONENT);
 		}
 		return method;
@@ -833,7 +833,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JToolBarManager").getMethodProxy( //$NON-NLS-1$
 							expression, "removeComponent", //$NON-NLS-1$
-							new String[] {"javax.swing.JToolBar", "java.lang.Object"});
+							new String[] {"javax.swing.JToolBar", "java.lang.Object"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_JTOOLBAR_REMOVE_COMPONENT);
 		}
 		return method;
@@ -963,7 +963,7 @@ public class BeanAwtUtilities {
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
 							expression,
 							"setComponent", //$NON-NLS-1$
-							new String[] { "java.awt.Component", "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController"} //$NON-NLS-1$
+							new String[] { "java.awt.Component", "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController"} //$NON-NLS-1$ //$NON-NLS-2$
 					);
 			processExpressionProxy(method, constants.methods, MANAGER_SET_COMPONENT);
 		}
@@ -986,7 +986,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
 							expression, "applyBounds", //$NON-NLS-1$
-							new String[] { "java.awt.Rectangle", "java.awt.Rectangle"});
+							new String[] { "java.awt.Rectangle", "java.awt.Rectangle"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_APPLY_BOUNDS);
 		}
 		return method;
@@ -1007,7 +1007,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
 							expression, "applyLocation", //$NON-NLS-1$
-							new String[] { "java.awt.Point", "java.awt.Point"});
+							new String[] { "java.awt.Point", "java.awt.Point"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_APPLY_LOCATION);
 		}
 		return method;
@@ -1030,7 +1030,7 @@ public class BeanAwtUtilities {
 			constants.methods[MANAGER_OVERRIDE_LOCATION] = method = registry.getBeanTypeProxyFactory().getBeanTypeProxy(
 					"org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
 					"overrideLoc", //$NON-NLS-1$
-					new String[] { "int", "int"});
+					new String[] { "int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return (IMethodProxy) method;
 	}
@@ -1052,7 +1052,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
 							expression, "overrideLoc", //$NON-NLS-1$
-							new String[] { "int", "int"});
+							new String[] { "int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_OVERRIDE_LOCATION);
 		}
 		return method;
@@ -1193,10 +1193,10 @@ public class BeanAwtUtilities {
 
 		if (constants.getBoxLayoutAxisFieldProxy == null) {
 			IBeanTypeProxy boxlayoutType = boxlayoutProxy.getTypeProxy();
-			constants.getBoxLayoutAxisFieldProxy = boxlayoutType.getDeclaredFieldProxy("axis");
+			constants.getBoxLayoutAxisFieldProxy = boxlayoutType.getDeclaredFieldProxy("axis"); //$NON-NLS-1$
 			try {
 				constants.getBoxLayoutAxisFieldProxy.setAccessible(true);
-				constants.boxLayoutAxis_XAXIS = boxlayoutType.getFieldProxy("X_AXIS").get(null);
+				constants.boxLayoutAxis_XAXIS = boxlayoutType.getFieldProxy("X_AXIS").get(null); //$NON-NLS-1$
 			} catch (Exception e) {
 				JavaVEPlugin.getPlugin().getLogger().log(e);
 			}
@@ -1227,7 +1227,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
 							expression, "insertTabBefore", //$NON-NLS-1$
-							new String[] {"javax.swing.JTabbedPane", "java.lang.String", "javax.swing.Icon", "java.awt.Component", "java.awt.Component"});
+							new String[] {"javax.swing.JTabbedPane", "java.lang.String", "javax.swing.Icon", "java.awt.Component", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABBEDPANE_INSERTTAB);
 		}
 		return method;
@@ -1267,7 +1267,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
 							expression, "insertTabBefore", //$NON-NLS-1$
-							new String[] {"javax.swing.JTabbedPane", "java.awt.Component", "java.awt.Component"});
+							new String[] {"javax.swing.JTabbedPane", "java.awt.Component", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABBEDPANE_INSERTTAB_DEFAULT);
 		}
 		return method;
@@ -1330,7 +1330,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
 							expression, "setIconAt", //$NON-NLS-1$
-							new String[] {"javax.swing.JTabbedPane", "java.awt.Component", "javax.swing.Icon"});
+							new String[] {"javax.swing.JTabbedPane", "java.awt.Component", "javax.swing.Icon"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABBEDPANE_SETTABICON);
 		}
 		return method;
@@ -1366,7 +1366,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
 							expression, "setTitleAt", //$NON-NLS-1$
-							new String[] {"javax.swing.JTabbedPane", "java.awt.Component", "java.lang.String"});
+							new String[] {"javax.swing.JTabbedPane", "java.awt.Component", "java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABBEDPANE_SETTABTITLE);
 		}
 		return method;
@@ -1402,7 +1402,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
 							expression, "setDefaultTitle", //$NON-NLS-1$
-							new String[] {"javax.swing.JTabbedPane", "java.awt.Component"});
+							new String[] {"javax.swing.JTabbedPane", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABBEDPANE_SETDEFAULTTITLE);
 		}
 		return method;
@@ -1452,7 +1452,7 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JSplitPaneManager").getMethodProxy( //$NON-NLS-1$
 							expression, "setDividerLocation", //$NON-NLS-1$
-							new String[] {"int"});
+							new String[] {"int"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_JSPLITPANE_SETDIVIDERLOCATION);
 		}
 		return method;

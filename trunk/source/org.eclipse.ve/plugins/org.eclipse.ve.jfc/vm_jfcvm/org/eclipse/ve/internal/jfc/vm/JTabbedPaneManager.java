@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneManager.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-18 16:35:29 $ 
  */
 
 import java.awt.Component;
@@ -117,7 +117,7 @@ public class JTabbedPaneManager {
 	 */
 	public static void setDefaultTitle(JTabbedPane tabbedPane, Component component) {
 		String title = component.getName();
-		setTitleAt(tabbedPane, component, title != null ? title : "");
+		setTitleAt(tabbedPane, component, title != null ? title : ""); //$NON-NLS-1$
 	}
 
 }
