@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter2.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-18 14:35:42 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-18 18:39:19 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -18,7 +18,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
-import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.NotificationImpl;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -101,7 +102,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		private boolean prerelease;
 		
 		/**
-		 * @param expression expression for listeners to use to do operations.
+		 * @param expression expression for listeners to use to do operations. If it <code>null</code> then this means the registry is invalid. Do not try to use it.
 		 * @param prereinstantiation <code>true</code> if this is the pre notice, or else it is the post notice.
 		 * 
 		 * @since 1.1.0
@@ -1188,7 +1189,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * 
 	 * @param expression the expression will be valid upon return if valid upon entry. If AllocationException thrown, the expression state
 	 * will be as it was upon entry.
-	 * @return
+	 * @return the bean's IProxy. <code>null</code> is not a valid return value. Subclasses must return a value, or return an AllocationException.
 	 * 
 	 * @throws AllocationException
 	 * @since 1.1.0
@@ -1285,8 +1286,8 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost2#releaseBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
-	public void releaseBeanProxy(final IExpression expression) {
-		int mark = expression.mark();
+	public final void releaseBeanProxy(final IExpression expression) {
+		int mark = expression != null ? expression.mark() : -1;
 		try {
 			if (isBeanProxyInstantiated()) {
 				ReinstantiateBeanProxyNotification notification = new ReinstantiateBeanProxyNotification(expression);
@@ -1297,44 +1298,56 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 				fireReinstantiateNotice(notification, ai);
 			}
 
-			overrideSettings = null;
-			origSettingProxies = null;
-			notInstantiatedClasses = null;
+			primReleaseBeanProxy(expression);
+		} finally {
+			if (expression != null)
+				expression.endMark(mark);
+		}
+	}
 
-			if (isBeanProxyInstantiated() || hasErrorsOfKey(INSTANTIATION_ERROR_KEY)) {
-				// Either we have a bean proxy, or there was an instantiation error, but in that case we may of had some instantiated settings that
-				// need to be released.
 
-				// Default is to release any settings that are contained as "property" settings, since these are not set in anybody else,
-				// and throw the bean proxy away. 
-				// Other subclasses may actually do something else first.
-				getJavaObject().visitSetFeatures(new FeatureValueProvider.Visitor() {
+	/**
+	 * Actually perform release. Subclasses must call super.primReleaseBeanProxy() when they are done to have
+	 * the release performed correctly.
+	 * @param expression
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void primReleaseBeanProxy(final IExpression expression) {
+		overrideSettings = null;
+		origSettingProxies = null;
+		notInstantiatedClasses = null;
+		if (isBeanProxyInstantiated() || hasErrorsOfKey(INSTANTIATION_ERROR_KEY)) {
+			// Either we have a bean proxy, or there was an instantiation error, but in that case we may of had some instantiated settings that
+			// need to be released.
 
-					public Object isSet(EStructuralFeature feature, Object value) {
-						if (value instanceof List) {
-							Iterator i = ((List) value).iterator();
-							while (i.hasNext()) {
-								releaseSetting(i.next(), expression);
-							}
-						} else
-							releaseSetting(value, expression);
-						return null;
-					}
-				});
+			// Default is to release any settings that are contained as "property" settings, since these are not set in anybody else,
+			// and throw the bean proxy away. 
+			// Other subclasses may actually do something else first.
+			getJavaObject().visitSetFeatures(new FeatureValueProvider.Visitor() {
 
-				if (ownsProxy && isBeanProxyInstantiated()) {
-					ProxyFactoryRegistry registry = getBeanProxy().getProxyFactoryRegistry();
-					// Check if valid, this could of occured due to finalizer after registry has been stopped.
-					if (registry.isValid()) {
-						registry.releaseProxy(getBeanProxy()); // Give it a chance to clean up
-					}
+				public Object isSet(EStructuralFeature feature, Object value) {
+					if (value instanceof List) {
+						Iterator i = ((List) value).iterator();
+						while (i.hasNext()) {
+							releaseSetting(i.next(), expression);
+						}
+					} else
+						releaseSetting(value, expression);
+					return null;
+				}
+			});
+
+			if (ownsProxy && isBeanProxyInstantiated()) {
+				ProxyFactoryRegistry registry = getBeanProxy().getProxyFactoryRegistry();
+				// Check if valid, this could of occured due to finalizer after registry has been stopped.
+				if (registry.isValid()) {
+					registry.releaseProxy(getBeanProxy()); // Give it a chance to clean up
 				}
 			}
-			beanProxy = null; // Now throw it away
-			ownsProxy = false;
-		} finally {
-			expression.endMark(mark);
 		}
+		beanProxy = null; // Now throw it away
+		ownsProxy = false;
 	}
 
 
@@ -1357,39 +1370,47 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 *  (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#getBeanPropertyProxyValue(org.eclipse.emf.ecore.EStructuralFeature)
 	 */
-	public IBeanProxy getBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttribute){
-		// Only ask if we have a live proxy.
-		// Don't query if this is a local attribute and we are the this part.	
-		if (isBeanProxyInstantiated() && (!isThisPart() || !isAttributeLocal(aBeanPropertyAttribute))) {
-			if (!isOverridePropertySet(aBeanPropertyAttribute)) {
-				PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator(aBeanPropertyAttribute);
-				// If we have a properyt decorator then it has a get method so just call it
-				if ( propertyDecorator != null && propertyDecorator.isReadable()) {
-					if ( propertyDecorator != null && propertyDecorator.isReadable()) {
-						try {
-							IBeanProxy beanProxy2 = getBeanProxy();
-							if(propertyDecorator.getReadMethod() != null){
-								// 	Now get the invokable and invoke it.
-								IMethodProxy getMethodProxy = BeanProxyUtilities.getMethodProxy(propertyDecorator.getReadMethod(), getBeanProxyDomain().getProxyFactoryRegistry());
-								return getMethodProxy.invoke(beanProxy2);
-							} else if (propertyDecorator.getField() != null){
-								Field field = propertyDecorator.getField();
-								// Find the get method on the same VM as the source
-								IFieldProxy aField = beanProxy2.getTypeProxy().getFieldProxy(field.getName());
-								return aField != null ? aField.get(beanProxy2) : null;
+	public final IBeanProxy getBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttribute){
+		if (isBeanProxyInstantiated()) {
+			IExpression expression = getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
+			IProxy result = null;
+			try {
+				result = getBeanPropertyProxyValue(aBeanPropertyAttribute, expression, ForExpression.ROOTEXPRESSION);
+			} finally {
+				if (expression.isValid()) {
+					try {
+						if (result != null) {
+							if (result.isExpressionProxy()) {
+								class GetResult extends ExpressionProxy.ProxyAdapter {
+									public IBeanProxy expressionResult;
+									
+									public void proxyResolved(ExpressionProxy.ProxyEvent event) {
+										expressionResult = event.getProxy();
+									}
+								}
+								
+								GetResult getResult = new GetResult();
+								((ExpressionProxy) result).addProxyListener(getResult);
+								expression.invokeExpression();
+								return getResult.expressionResult;
 							}
-						} catch (ThrowableProxy e) {
-							JavaVEPlugin.log(e, Level.FINE);	// An exception on query is just FINE, not a warning.
-						} catch (NoSuchMethodException e) {
-							JavaVEPlugin.log(e, Level.FINE);	// An exception on query is just FINE, not a warning.
 						}
-					} 
+						// Either null, or a proxy, so invokeexpression and return it. Need to always invoke expression because
+						// we don't know what was done in getBeanPropertyProxyValue(). If it didn't do anything to the expression, the
+						// invoke will be quick.
+						expression.invokeExpression();
+						return (IBeanProxy) result;
+					} catch (IllegalStateException e) {
+						JavaVEPlugin.log(e, Level.WARNING);
+					} catch (ThrowableProxy e) {
+						JavaVEPlugin.log(e, Level.WARNING);
+					} catch (NoExpressionValueException e) {
+						JavaVEPlugin.log(e, Level.WARNING);
+					}
 				}
-			} else {
-				// We have an override. So return orignal value.
-				return origSettingProxies != null ? (IBeanProxy) origSettingProxies.get(aBeanPropertyAttribute) : null;
 			}
-		}
+					
+		} 
 		return null;
 	}
 

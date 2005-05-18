@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.16 $  $Date: 2005-05-12 21:03:55 $ 
+ *  $Revision: 1.17 $  $Date: 2005-05-18 18:39:17 $ 
  */
 
 import java.util.logging.Level;
@@ -109,19 +109,14 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost2#releaseBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
-	public void releaseBeanProxy(IExpression expression) {
+	protected void primReleaseBeanProxy(IExpression expression) {
 		if (isOwnsProxy() && isBeanProxyInstantiated()) {
 			// If we own the proxy and are instantiated we need to do an actual "dispose". We can't just release it.
 			IProxyMethod dispose = BeanAwtUtilities.getWindowDisposeMethodProxy(expression);
 			expression.createSimpleMethodInvoke(dispose, null, new IProxy[] {getProxy()}, false);
 		}
 		;
-		super.releaseBeanProxy(expression);
+		super.primReleaseBeanProxy(expression);
 	}
 
 	/*

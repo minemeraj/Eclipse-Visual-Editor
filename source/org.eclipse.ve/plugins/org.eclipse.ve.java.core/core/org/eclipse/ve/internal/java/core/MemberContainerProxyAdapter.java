@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainerProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-18 18:39:19 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -231,7 +231,7 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	/**
 	 * Release the given setting.
 	 * @param v
-	 * @param expression
+	 * @param expression expression to use, or <code>null</code> if there is no registry, such as it was terminated, and we need to just clean up.
 	 * 
 	 * @since 1.1.0
 	 */
@@ -282,7 +282,8 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 					JavaVEPlugin.log(e, Level.WARNING);
 				}
 			}
-		}
+		} else
+			releaseBeanProxy(null);	// Tell everyone to clean up but no registry.
 		
 		
 	}
@@ -291,7 +292,7 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	 * Release all of the bean proxies. This is the actual implementations. Subclasses may override but should call super to
 	 * release the basics.
 	 * 
-	 * @param expression
+	 * @param expression expression to use, or <code>null</code> if there is no registry, such as it was terminated, and we need to just clean up.
 	 * 
 	 * @since 1.1.0
 	 */

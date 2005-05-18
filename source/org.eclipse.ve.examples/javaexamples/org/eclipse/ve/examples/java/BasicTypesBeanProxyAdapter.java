@@ -12,7 +12,7 @@ package org.eclipse.ve.examples.java;
 
 /*
  *  $RCSfile: BasicTypesBeanProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:23 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-18 18:40:39 $ 
  */
 
 import org.eclipse.jem.internal.proxy.core.*;
@@ -30,16 +30,12 @@ public class BasicTypesBeanProxyAdapter extends BeanProxyAdapter2 {
 		super(domain);
 	}
 
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost2#releaseBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
-	public void releaseBeanProxy(IExpression expression) {
+	protected void primReleaseBeanProxy(IExpression expression) {
 		if (isBeanProxyInstantiated() && isOwnsProxy()) {
 			IProxyMethod disposeFrameMethodProxy = getBeanProxy().getTypeProxy().getMethodProxy(expression, "disposeFrame", (IProxyBeanType[]) null); //$NON-NLS-1$
 			expression.createSimpleMethodInvoke(disposeFrameMethodProxy, getBeanProxy(), null, false);
 		}
-		super.releaseBeanProxy(expression);
+		super.primReleaseBeanProxy(expression);
 
 	}
 }

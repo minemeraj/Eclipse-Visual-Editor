@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.21 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.22 $  $Date: 2005-05-18 18:39:17 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -360,18 +360,15 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 		removeOverrideProperty(sfComponentVisible, expression);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost2#releaseBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
-	public void releaseBeanProxy(IExpression expression) {
+	protected void primReleaseBeanProxy(IExpression expression) {
 
 		if (ffProxy != null) {
-			expression.createTry();
-			ffProxy.remove(getBeanProxy(), expression);
-			expression.createTryCatchClause("java.lang.RuntimeException", false); //$NON-NLS-1$
-			expression.createTryEnd();
+			if (expression != null) {
+				expression.createTry();
+				ffProxy.remove(getBeanProxy(), expression);
+				expression.createTryCatchClause("java.lang.RuntimeException", false);	//$NON-NLS-1$
+				expression.createTryEnd();
+			}
 			ffProxy = null;
 		}
 
@@ -381,10 +378,13 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 
 		if (fComponentManager != null) {
 			// Be on the safe so no spurious last minute notifications are sent out.
-			expression.createTry();
-			fComponentManager.dispose(expression);
-			expression.createTryCatchClause("java.lang.RuntimeException", false); //$NON-NLS-1$
-			expression.createTryEnd();
+			if (expression != null) {
+				expression.createTry();
+				fComponentManager.dispose(expression);
+				expression.createTryCatchClause("java.lang.RuntimeException", false);	//$NON-NLS-1$
+				expression.createTryEnd();
+			} else
+				fComponentManager.dispose(null);	// Give it a chance to clean up without an expression.
 			// Note: Do not get rid of the component manager. This bean may of had component listeners
 			// and this bean may be about to be reinstantiated. We don't want to loose the listeners
 			// when the reinstantiation occurs.
@@ -393,22 +393,18 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 		// We need to dispose of stuff above before we do the super.release because by the time the
 		// release comes back the bean proxy will of been released and can't be used. It is needed
 		// to do the above disposes.
-		super.releaseBeanProxy(expression);
+		super.primReleaseBeanProxy(expression);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#getBeanPropertyProxyValue(org.eclipse.emf.ecore.EStructuralFeature)
-	 */
-	public IBeanProxy getBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttribute) {
+	public IProxy getBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttribute, IExpression exp, ForExpression forExpression) {
 		// Override for loc and bounds so that it goes through the component manager.
+		// Even though an expression is past in, we aren't using it here. Probably could in the future.
 		if (aBeanPropertyAttribute == sfComponentBounds)
 			return getComponentManager().getDefaultBounds();
 		else if (aBeanPropertyAttribute == sfComponentLocation)
 			return getComponentManager().getDefaultLocation();
 		else
-			return super.getBeanPropertyProxyValue(aBeanPropertyAttribute);
+			return super.getBeanPropertyProxyValue(aBeanPropertyAttribute, exp, forExpression);
 	}
 
 	/*
@@ -487,7 +483,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 		ffHost = (FreeFormComponentsHost) compositionAdapter.getFreeForm(FreeFormComponentsHost.class);
 		if (ffHost == null) {
 			// Doesn't exist yet, need to create it.
-			ffHost = new FreeFormComponentsHost(getBeanProxyDomain(), compositionAdapter);
+			ffHost = new FreeFormComponentsHost(getBeanProxyDomain().getEditDomain(), compositionAdapter);
 		}
 	}
 

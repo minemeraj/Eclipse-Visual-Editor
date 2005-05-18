@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayManager.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-11 19:01:30 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-18 18:39:15 $ 
  */
 package org.eclipse.jem.internal.proxy.swt;
 
@@ -18,8 +18,6 @@ import java.io.InputStream;
 import java.util.Stack;
 
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.core.ICallback;
-import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
  
 /**
@@ -81,6 +79,7 @@ public class DisplayManager {
 		
 		IBeanProxy displayExecProxy;
 		Exception exception;
+		Object runnableReturn;
 		
 		/*
 		 * Set the displayExec proxy for this runnable.
@@ -104,6 +103,18 @@ public class DisplayManager {
 			return exception;
 		}
 		
+		/*
+		 * Return the runnable return. This is the value that the run() returned. It is
+		 * an IDE value. 
+		 * <pacakge-protected> because only DisplayManager should get this.
+		 * @return
+		 * 
+		 * @since 1.1.0
+		 */
+		Object getRunnableReturn() {
+			return runnableReturn;
+		}
+		
 		/* (non-Javadoc)
 		 * @see org.eclipse.jem.internal.proxy.core.ICallback#calledBack(int, org.eclipse.jem.internal.proxy.core.IBeanProxy)
 		 */
@@ -113,7 +124,8 @@ public class DisplayManager {
 			try {
 				if (msgID == RUN_EXEC) {					
 					try {
-						return run(parm);
+						runnableReturn = run(parm);
+						return null;
 					} catch (ThrowableProxy e) {
 						return e;
 					} catch (RunnableException e) {
@@ -161,7 +173,7 @@ public class DisplayManager {
 		 * of the display on the proxy vm.
 		 *  
 		 * @param displayProxy A proxy to the actual Display object that this runnable is executing on.
-		 * @return An IBeanProxy or IBeanProxy[] to return from a syncExec call or <code>null</code> if nothing to return.
+		 * @return An object to return from the syncExec call or <code>null</code> if nothing to return.
 		 * @since 1.0.0
 		 * @throws ThrowableProxy if a remote vm error occurred
 		 * @throws RunnableException if any other special exception occurs that needs to be sent back to called, if syncExec, wrapper it in a RunnableException.
@@ -170,6 +182,67 @@ public class DisplayManager {
 
 	}
 	
+	/**
+	 * Use a subclass of this when you are using an expression in the display runnable. This class will make sure
+	 * that the expression is transfered between the threads correctly when used with {@link DisplayManager#syncExec(IBeanProxy, ExpressionDisplayRunnable)
+	 * 
+	 * @since 1.1.0
+	 */
+	public static abstract class ExpressionDisplayRunnable extends DisplayManager.DisplayRunnable {
+		protected Expression expression;
+		
+		/**
+		 * Construct with the expression.
+		 * @param expression
+		 * 
+		 * @since 1.1.0
+		 */
+		public ExpressionDisplayRunnable(IExpression expression) {
+			this.expression = (Expression) expression;
+		}
+		
+		public final Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
+			expression.transferThread();
+			try {
+				return doRun(displayProxy);
+			} finally {
+				expression.transferThread();
+			}
+		}
+		
+		/**
+		 * Subclasses will do the actual work within this method.
+		 * 
+		 * @param displayProxy
+		 * @return
+		 * @throws ThrowableProxy
+		 * @throws RunnableException
+		 * 
+		 * @since 1.1.0
+		 */
+		protected abstract Object doRun(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException;
+		
+	}
+	
+	/**
+	 * Used when expressions are being evaluated accross the thread boundaries.
+	 * 
+	 * @param runnable
+	 * @return
+	 * @throws ThrowableProxy
+	 * @throws RunnableException
+	 * 
+	 * @since 1.1.0
+	 */
+	public static Object syncExec(IBeanProxy displayProxy, ExpressionDisplayRunnable runnable) throws ThrowableProxy, RunnableException {
+		runnable.expression.beginTransferThread();
+		try {
+			return syncExec(displayProxy, runnable);
+		} finally {
+			runnable.expression.transferThread();
+		}
+	}
+
 	/*
 	 * Constants stored in the registry that are required by this DisplayManager.
 	 * 
@@ -485,7 +558,7 @@ public class DisplayManager {
 				else if (runnable.getException() != null)
 					throw (DisplayRunnable.RunnableException) runnable.getException();	// Runnable exception occurred.
 				else
-					return result;
+					return runnable.getRunnableReturn();
 			} finally {
 				if (displayExecProxy != null) {
 					registry.getCallbackRegistry().deregisterCallback(displayExecProxy);
@@ -506,7 +579,7 @@ public class DisplayManager {
 	 * Do an asyncExec on the default display. It will return immediately.
 	 * 
 	 * @param registry
-	 * @param runnable
+	 * @param runnable <b>Note:</b> Do not use a ExpressionDisplayRunnable. Expressions cannot be used in asyncExecs.
 	 * @throws ThrowableProxy
 	 * 
 	 * @since 1.0.0
@@ -521,7 +594,7 @@ public class DisplayManager {
 	 * Do an asyncExec on the given display and using the given runnable. It will return immediately.
 	 * 
 	 * @param displayProxy The display to asyncExec onto. It must be set, it cannot be <code>null</code>.
-	 * @param runnable
+	 * @param runnable <b>Note:</b> Do not use a ExpressionDisplayRunnable. Expressions cannot be used in asyncExecs.
 	 * @throws ThrowableProxy
 	 * 
 	 * @since 1.0.0

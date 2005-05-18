@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormSwingDialog.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-18 18:39:17 $ 
  */
 
 import java.awt.*;
@@ -115,7 +115,7 @@ public void remove(Component aComponent){
  */
 public void validate(){
 	boolean valid = isValid();
-//	System.out.println("Free Form Dialog validated");
+//	System.err.println("Free Form Swing Dialog validated: "+valid);
 	super.validate();
 	if (!valid) {
 		synchronized (getTreeLock()) {
@@ -134,8 +134,10 @@ public void validate(){
 				// The kludge is that until we receive the first true minimum size (which we submitted through pack in the ctor)
 				// is received, we can't perform a new pack here. getPreferredSize is overridden to not allow smaller than
 				// this true minimum size.
-				if (minSize != null)
+				if (minSize != null) {
 					pack();
+//					System.err.println("Freeform packed to "+getSize());
+				}
 			}
 			isValidating = false;
 		}

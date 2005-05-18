@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentManager.java,v $ $Revision: 1.8 $ $Date: 2005-05-18 16:36:07 $
+ * $RCSfile: ComponentManager.java,v $ $Revision: 1.9 $ $Date: 2005-05-18 18:39:17 $
  */
 
 import java.io.InputStream;
@@ -367,11 +367,15 @@ public class ComponentManager {
 	 * Dispose the component manager.
 	 * 
 	 * @param expression
-	 *            expression to use. It is expected the expression is set up for ForExpression.ROOT_EXPRESSION to be the next expression.
+	 *            expression to use. It is expected the expression is set up for ForExpression.ROOT_EXPRESSION to be the next expression. It may
+	 *            be <code>null</code> if the registry is gone and we are just cleaning up.
 	 * 
 	 * @since 1.1.0
 	 */
 	public void dispose(IExpression expression) {
+		// Null for expression is only valid internally. It will be called only when the component manager proxy is invalid. It is
+		// not considered to be valid for outside users to call with null.
+		
 		if (fImageDataCollector != null) {
 			// Be on the safe so no spurious last minute notifications are sent out.
 			fImageDataCollector.release();
@@ -379,8 +383,8 @@ public class ComponentManager {
 		}
 
 		if (fComponentManagerProxy != null) {
-			FeedbackController feedback = BeanAwtUtilities.getFeedbackController(expression);
-			if (fComponentManagerProxy.isBeanProxy()) {
+			if (expression != null && fComponentManagerProxy.isBeanProxy() && ((IBeanProxy)fComponentManagerProxy).isValid()) {
+				FeedbackController feedback = BeanAwtUtilities.getFeedbackController(expression);
 				feedback.deregisterComponentManager((IBeanProxy) fComponentManagerProxy);
 				if (getComponentManagerBeanProxy().isValid()) {
 					expression.createSimpleMethodInvoke(BeanAwtUtilities.getSetComponentMethodProxy(expression), fComponentManagerProxy,
@@ -394,6 +398,25 @@ public class ComponentManager {
 			fLastSignalledLocation = null;
 			fLastSignalledSize = null;
 		}
+	}
+	
+	/**
+	 * Answer whether the component manager proxy is valid or not. It is valid if not null, and is either an ExpressionProxy or is a
+	 * valid IBeanProxy (i.e. the registry is still valid). It could be possible the registry is now invalid but we still have a bean. This
+	 * occurs if the registry was terminated and we hadn't gotton around to releasing the component manager yet.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected boolean isComponentManagerProxyValid() {
+		if (fComponentManagerProxy == null)
+			return false;
+		if (fComponentManagerProxy.isExpressionProxy())
+			return true;
+		if (((IBeanProxy) fComponentManagerProxy).isValid())
+			return true;
+		dispose(null);	// Dispose with no expression to clean it up.
+		return false;
 	}
 
 	/**
@@ -519,7 +542,7 @@ public class ComponentManager {
 	 * @since 1.1.0
 	 */
 	public void overrideLocation(Point point) {
-		if (fComponentManagerProxy != null && fComponentManagerProxy.isBeanProxy()) {
+		if (isComponentManagerProxyValid() && fComponentManagerProxy.isBeanProxy()) {
 			// Apply directly
 			ProxyFactoryRegistry registry = getComponentManagerBeanProxy().getProxyFactoryRegistry();
 			BeanAwtUtilities.getOverrideLocationMethodProxy(registry).invokeCatchThrowableExceptions(
@@ -539,7 +562,7 @@ public class ComponentManager {
 	 * @since 1.1.0
 	 */
 	public IBeanProxy getDefaultLocation() {
-		if (fComponentManagerProxy != null) {
+		if (isComponentManagerProxyValid()) {
 			ProxyFactoryRegistry registry = getComponentManagerBeanProxy().getProxyFactoryRegistry();
 			return BeanAwtUtilities.getDefaultLocationMethodProxy(registry).invokeCatchThrowableExceptions(getComponentManagerBeanProxy());
 		} else
@@ -555,7 +578,7 @@ public class ComponentManager {
 	 * @since 1.1.0
 	 */
 	public IBeanProxy getDefaultBounds() {
-		if (fComponentManagerProxy != null && fComponentManagerProxy.isBeanProxy()) {
+		if (isComponentManagerProxyValid() && fComponentManagerProxy.isBeanProxy()) {
 			ProxyFactoryRegistry registry = getComponentManagerBeanProxy().getProxyFactoryRegistry();
 			return BeanAwtUtilities.getDefaultBoundsMethodProxy(registry).invokeCatchThrowableExceptions(getComponentManagerBeanProxy());
 		} else
@@ -601,7 +624,7 @@ public class ComponentManager {
 	 * Do actual invalidation. This is called only from the feedback controller.
 	 */
 	private void invalidate(IExpression expression) {
-		if (fComponentManagerProxy != null)
+		if (isComponentManagerProxyValid())
 			expression.createSimpleMethodInvoke(BeanAwtUtilities.getComponentInvalidate(expression), fComponentManagerProxy, null, false);
 	}
 

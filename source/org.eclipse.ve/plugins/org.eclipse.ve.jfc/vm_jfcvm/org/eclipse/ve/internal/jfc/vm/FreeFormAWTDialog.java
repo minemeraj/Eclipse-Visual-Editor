@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAWTDialog.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-18 18:39:17 $ 
  */
 
 import java.awt.*;
@@ -140,7 +140,7 @@ public void remove(Component aComponent){
  */
 public void validate(){
 	boolean valid = isValid();
-//	System.out.println("Free Form Dialog validated");
+//	System.err.println("Free Form AWT Dialog validated");
 	super.validate();
 	if (!valid) {
 		synchronized (getTreeLock()) {
