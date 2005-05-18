@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: LookAndFeelDialog.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-18 20:49:34 $ 
  */
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -94,6 +94,7 @@ protected Control createDialogArea(Composite aComposite){
 	fLookAndFeelClassText.addModifyListener(listener);
 	fLookAndFeelNameText.addModifyListener(listener);
 
+	applyDialogFont(c);
 	return c;
 
 }

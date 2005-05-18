@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ImageDialog.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:51:48 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-18 20:49:33 $ 
  */
 
 import org.eclipse.core.resources.IProject;
@@ -322,6 +322,7 @@ public class ImageDialog extends Dialog {
 
 		getShell().setText(SWTMessages.getString("ImageDialog.Shell.Text")); //$NON-NLS-1$
 
+		applyDialogFont(panel);
 		return panel;
 	} // createContents()
 
