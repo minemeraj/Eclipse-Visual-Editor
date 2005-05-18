@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-21 18:19:45 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-18 16:48:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -24,7 +24,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.ve.internal.java.visual.*;
-import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
  
 /**
  * 
@@ -57,7 +56,7 @@ public class GridLayoutPolicyFactory implements ILayoutPolicyFactory {
 		return null;
 	}
 	public JavaClass getConstraintClass(ResourceSet rSet) {
-		return Utilities.getJavaClass("org.eclipse.swt.layout.GridData",rSet);
+		return Utilities.getJavaClass("org.eclipse.swt.layout.GridData",rSet); //$NON-NLS-1$
 	}	
 
 }

@@ -16,7 +16,7 @@ import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 
 /*
  *  $RCSfile: CompositePropertySourceAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-14 15:52:41 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-18 16:48:00 $ 
  */
 
 public class CompositePropertySourceAdapter extends ControlPropertySourceAdapter {
@@ -25,7 +25,7 @@ public class CompositePropertySourceAdapter extends ControlPropertySourceAdapter
 		// Do not include the "layout" feature if we are implicit
 		// This is to allow for the Composite argument in something like the method
 		// createPartControl(Composite aComposite)
-		if(sfeature.getName().equals("layout")){
+		if(sfeature.getName().equals("layout")){ //$NON-NLS-1$
 			if (getBean().getAllocation() instanceof ImplicitAllocation) {
 				return false;
 			}

@@ -417,7 +417,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				 if (e!=null)
 					entries.add(e);
 				 else {					 
-					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.44"), new Object[] {swtLibraries[i].getPluginID()})); //$NON-NLS-1) //$NON-NLS-1$
+					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.44"), new Object[] {swtLibraries[i].getPluginID()})); //$NON-NLS-1) //$NON-NLS-1$ //$NON-NLS-1$
 				 }
 			}
 			else
@@ -430,7 +430,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				if (e!=null)
 					entries.add(e);
 				 else {					 
-					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.46"), new Object[] {jfaceLibraries[i].getPluginID()})); //$NON-NLS-1) //$NON-NLS-1$
+					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.46"), new Object[] {jfaceLibraries[i].getPluginID()})); //$NON-NLS-1) //$NON-NLS-1$ //$NON-NLS-1$
 				 }
 			}
 		}
@@ -471,7 +471,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				 if (e!=null)
 					entries.add(e);
 				 else {					 
-					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.47"), new Object[] {swtLibraries[i].getLegacyID()})); //$NON-NLS-1) //$NON-NLS-1$
+					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.47"), new Object[] {swtLibraries[i].getLegacyID()})); //$NON-NLS-1) //$NON-NLS-1$ //$NON-NLS-1$
 				 }
 			}
 			else
@@ -486,7 +486,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					if (e!=null)
 						entries.add(e);
 					 else {					 
-						 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.49"), new Object[] {jfaceLibraries[i].getLegacyID()})); //$NON-NLS-1) //$NON-NLS-1$
+						 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.49"), new Object[] {jfaceLibraries[i].getLegacyID()})); //$NON-NLS-1) //$NON-NLS-1$ //$NON-NLS-1$
 					 }
 				}
 				else
@@ -503,7 +503,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					if (e!=null)
 						entries.add(e);
 					 else {					 
-						 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.51"), new Object[] {swtGTKLibraries[i].getLegacyID()})); //$NON-NLS-1) //$NON-NLS-1$
+						 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.51"), new Object[] {swtGTKLibraries[i].getLegacyID()})); //$NON-NLS-1) //$NON-NLS-1$ //$NON-NLS-1$
 					 }
 				}
 				else
@@ -524,7 +524,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				 if (e!=null)
 					entries.add(e);
 				 else {					 
-					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.53"), new Object[] {swtLibraries[i].getLegacyID()})); //$NON-NLS-1) //$NON-NLS-1$
+					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.53"), new Object[] {swtLibraries[i].getLegacyID()})); //$NON-NLS-1) //$NON-NLS-1$ //$NON-NLS-1$
 				 }
 			}
 			else
@@ -539,7 +539,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					if (e!=null)
 						entries.add(e);
 					 else {					 
-						 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.55"), new Object[] {jfaceLibraries[i].getLegacyID()})); //$NON-NLS-1) //$NON-NLS-1$
+						 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.55"), new Object[] {jfaceLibraries[i].getLegacyID()})); //$NON-NLS-1) //$NON-NLS-1$ //$NON-NLS-1$
 					 }
 				}
 				else

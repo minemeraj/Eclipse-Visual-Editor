@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ItemParentProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-17 18:27:09 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-18 16:48:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -58,7 +58,7 @@ public class ItemParentProxyAdapter extends CompositeProxyAdapter {
 
 	public void releaseBeanProxy() {
 		if (isBeanProxyInstantiated()) {
-			List controls = (List) ((IJavaObjectInstance) getTarget()).eGet(getJavaObject().eClass().getEStructuralFeature("items"));
+			List controls = (List) ((IJavaObjectInstance) getTarget()).eGet(getJavaObject().eClass().getEStructuralFeature("items")); //$NON-NLS-1$
 			Iterator iter = controls.iterator();
 			while (iter.hasNext()) {
 				IBeanProxyHost value = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) iter.next());

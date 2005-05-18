@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.20 $ $Date: 2005-05-12 11:40:55 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.21 $ $Date: 2005-05-18 16:48:00 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -110,7 +110,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		// Listen to the IBeanProxyHost so it tells us when errors occur
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter(){
 			public void errorStatusChanged(){
-				CDEUtilities.displayExec(ControlGraphicalEditPart.this, "ERROR_STATUS_CHANGED", new Runnable() {
+				CDEUtilities.displayExec(ControlGraphicalEditPart.this, "ERROR_STATUS_CHANGED", new Runnable() { //$NON-NLS-1$
 					public void run() {
 						setSeverity(getControlProxy().getErrorStatus());
 					}
