@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CompositionComponentsGraphicalEditPart.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-17 23:38:18 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-18 13:45:17 $ 
  */
 
 import java.util.*;
@@ -78,7 +78,7 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 	 * @since 1.0.0
 	 */
 	protected void queueRefreshChildren() {
-		CDEUtilities.displayExec(this, "REFRESH_CHILDREN", new Runnable() {
+		CDEUtilities.displayExec(this, "REFRESH_CHILDREN", new Runnable() { //$NON-NLS-1$
 			public void run() {
 				// Test if active because this could of been queued up and not run until AFTER it was deactivated.
 				if (isActive())
