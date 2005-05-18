@@ -76,7 +76,7 @@ public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitl
 
 public static Image getDummyImage(){
 	if(IMAGE == null){
-		IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_app.gif"));
+		IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_app.gif")); //$NON-NLS-1$
 	}
 	return IMAGE;
 }
@@ -100,7 +100,7 @@ public static void layoutViewPart(WorkbenchPart aWorkbenchPart){
 public static void main(String[] args) {
 	
 	TestViewPartTest testViewPart = new TestViewPartTest(); 
-	addViewPart(testViewPart,"View Part Name");
+	addViewPart(testViewPart,JFaceTargetVMMessages.getString("ViewPartHost.ViewPart.Name")); //$NON-NLS-1$
 	layoutViewPart(testViewPart);
 	while(!shell.isDisposed()){
 		if(!shell.getDisplay().readAndDispatch())shell.getDisplay().sleep();
@@ -125,7 +125,7 @@ protected static Composite getWorkbenchShell(){
 		shell = new Shell(dialogParent,SWT.SHELL_TRIM);
 		shell.addShellListener(new PreventShellCloseMinimizeListener());
 		shell.setBounds(fx,fy,200,200);
-		shell.setText("View part host");
+		shell.setText(JFaceTargetVMMessages.getString("ViewPartHost.Shell.Text")); //$NON-NLS-1$
 		shell.setLayout(new RowLayout());
 		shell.open();
 	}

@@ -26,7 +26,7 @@ public class Environment {
 		if (display != null)
 			return;
 
-		t = new Thread("SWT UI Thread for VE") {
+		t = new Thread("SWT UI Thread for VE") { //$NON-NLS-1$
 			public void run() {
 				synchronized (Thread.currentThread()) {
 					display = new Display();
@@ -82,13 +82,13 @@ public class Environment {
 		// Style is a bitmask of NORMAL , BOLD and ITALIC
 		boolean styleUsed = false;
 		if ((fontData.getStyle() & SWT.BOLD) != 0) {
-			fontLabelBuffer.append("Bold");
+			fontLabelBuffer.append(TargetVMMessages.getString("Environment.FontLabel.Style.Bold")); //$NON-NLS-1$
 			styleUsed = true;
 		}
 		if ((fontData.getStyle() & SWT.ITALIC) != 0) {
 			if (styleUsed)
 				fontLabelBuffer.append(' ');
-			fontLabelBuffer.append("Italic");
+			fontLabelBuffer.append(TargetVMMessages.getString("Environment.FontLabel.Style.Italic")); //$NON-NLS-1$
 			styleUsed = true;
 		}
 		if (styleUsed)

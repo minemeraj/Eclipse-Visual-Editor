@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TestViewPartTest.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-03 06:04:11 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-18 18:23:13 $ 
  */
 package org.eclipse.ve.internal.jface.targetvm;
 
@@ -27,7 +27,7 @@ public class TestViewPartTest extends ViewPart {
 		Composite c = new Composite(parent,SWT.BORDER);
 		c.setLayoutData(new GridData(GridData.FILL_BOTH));
 		c.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_CYAN));
-		new Button(c,SWT.NONE).setText("Push me");
+		new Button(c,SWT.NONE).setText(JFaceTargetVMMessages.getString("TestViewPartTest.Button.Push")); //$NON-NLS-1$
 		
 	}
 
