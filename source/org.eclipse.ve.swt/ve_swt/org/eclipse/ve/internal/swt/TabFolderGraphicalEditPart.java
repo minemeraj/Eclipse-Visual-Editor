@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-11 19:01:30 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-18 16:25:15 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -101,6 +101,9 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 						setPropertySource((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
 				}
 				EditPart page = getEditPartFromModel(fSelectedItem);
+				if(page == null && s > 0){
+					page = (EditPart) children.get(0);
+				}
 				setPageVisible(page, true);
 				pageSelected(page);
 				getTabFolderProxyAdapter().revalidateBeanProxy();

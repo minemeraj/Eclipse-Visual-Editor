@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-05 19:42:27 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-18 16:25:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -101,6 +101,9 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 						setPropertySource((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
 				}
 				EditPart page = getEditPartFromModel(fSelectedItem);
+				if(page == null && s > 0){
+					page = (EditPart) children.get(0);
+				}
 				setPageVisible(page, true);
 				pageSelected(page);
 				getCTabFolderProxyAdapter().revalidateBeanProxy();
