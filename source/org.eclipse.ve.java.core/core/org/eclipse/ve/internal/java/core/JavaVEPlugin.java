@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.29 $  $Date: 2005-05-17 23:38:18 $ 
+ *  $Revision: 1.30 $  $Date: 2005-05-18 14:35:42 $ 
  */
 
 import java.util.Map;
@@ -45,7 +45,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final IPath  VE_GENERATED_LIBRARIES_CACHE = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append(".libCache"); //$NON-NLS-1$ //$NON-NLS-2$
 	// ID of the registrations extension point.
 
-	public static final String TRANSFER_HEADER = "{ *** VE HEADER ***}";	
+	public static final String TRANSFER_HEADER = "{ *** VE HEADER ***}";	 //$NON-NLS-1$
 	public static final String PI_DESCRIPTION = "description";	 //$NON-NLS-1$
 	public static final String PI_LIBRARY = "library"; // <library> in extension point. //$NON-NLS-1$	
 	public static final String PI_CONTAINER = "container"; // <container> in extension point. //$NON-NLS-1$	

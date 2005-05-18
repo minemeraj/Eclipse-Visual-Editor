@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter2.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-13 18:05:46 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-18 14:35:42 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -51,7 +51,7 @@ import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationExceptio
  */
 public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implements IBeanProxyHost2, IInternalBeanProxyHost2 {
 
-	private static final MessageError NO_BEAN_DUE_TO_PREVIOUS_ERROR = new IErrorHolder.MessageError("A previous error prevented bean from being created.",
+	private static final MessageError NO_BEAN_DUE_TO_PREVIOUS_ERROR = new IErrorHolder.MessageError(JavaMessages.getString("BeanProxyAdapter2.NO_BEAN_DUE_TO_PREVIOUS_ERROR_"), //$NON-NLS-1$
 										IErrorHolder.ERROR_INFO);	
 	// The beanproxy being wrappered. It should be accessed only through accessors, even subclasses. During
 	// instantiation it will be a ExpressionProxy.
@@ -389,7 +389,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 					public void proxyNotResolved(ProxyEvent event) {
 						if (!hasErrorsOfKey(INSTANTIATION_ERROR_KEY)) {
 							if (JavaVEPlugin.isLoggingLevel(Level.INFO))
-								JavaVEPlugin.log("Bean Proxy for " + getTarget() + " not resolved.", Level.INFO);
+								JavaVEPlugin.log("Bean Proxy for " + getTarget() + " not resolved.", Level.INFO); //$NON-NLS-1$ //$NON-NLS-2$
 							processInstantiationError(NO_BEAN_DUE_TO_PREVIOUS_ERROR);
 						}
 						beanProxy = null; // Reset back to not set.
@@ -401,7 +401,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 			//     ... send back thru ExpressionProxy to mark an instantiation error ...
 			//     throw new BeanInstantiationError(); ... so that when being applied as a setting it can be seen as not valid, but rest of expression can continue.
 			//   }				
-			ExpressionProxy expProxy = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true);
+			ExpressionProxy expProxy = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true); //$NON-NLS-1$
 			expProxy.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
 				public void proxyResolved(ProxyEvent event) {
@@ -477,7 +477,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 			try {
 				expression.createTry();
 				applyInternalBeanProperty(expression, Utilities.getPropertyDecorator(feature), value);
-				expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), false);
+				expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), false); //$NON-NLS-1$
 				revalidateBeanProxy();
 				return true;
 			} catch (IllegalArgumentException e) {
@@ -607,7 +607,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 				try {
 					cancelSetting(feature, value, index, expression);
 					revalidateBeanProxy();	// TODO get rid of this. Not really appropriate.
-					ExpressionProxy cancelException = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true);
+					ExpressionProxy cancelException = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true); //$NON-NLS-1$
 					cancelException.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 	
 						public void proxyResolved(ProxyEvent event) {
@@ -663,7 +663,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 					if (!expression.isValid())
 						return;	// We've gone bad.
 					expression.createTryCatchClause(getBeanInstantiationExceptionTypeProxy(expression), false);
-					ExpressionProxy applyException = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true);
+					ExpressionProxy applyException = expression.createTryCatchClause(getBeanTypeProxy("java.lang.Exception", expression), true); //$NON-NLS-1$
 					applyException.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
 						public void proxyResolved(ProxyEvent event) {
@@ -800,7 +800,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		if (isBeanProxyInstantiated()) {
 			// Need to use expression to apply the setting now.
 			if (expression == null)
-				throw new IllegalArgumentException("Expression must not be null when called with bean instantiated");
+				throw new IllegalArgumentException(JavaMessages.getString("BeanProxyAdapter2.OverrideProperty.ExpressionMustNotBeNull_EXC_")); //$NON-NLS-1$
 		
 			if (applyOverrideSetting(expression, feature, overrideBean)) { 
 				overrideSettings.put(feature, Boolean.FALSE);
@@ -837,7 +837,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		
 		if (overridden && isBeanProxyInstantiated()) {
 			if (expression == null)
-				throw new IllegalArgumentException("Expression must not be null when bean in instantiated.");
+				throw new IllegalArgumentException(JavaMessages.getString("BeanProxyAdapter2.RemoveOverrideProperty.ExpressionMustNotBeNull_EXC_")); //$NON-NLS-1$
 			IProxy oldValue = null;
 			if (origSettingProxies != null)
 				oldValue = (IProxy) origSettingProxies.get(feature);
@@ -1609,7 +1609,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 */
 	public void reinstantiateChild(IBeanProxyHost aChildProxyHost) {
 		// TODO Get rid of once we've merged back to IBeanProxyHost
-		throw new IllegalStateException("Should not be called.");
+		throw new IllegalStateException(JavaMessages.getString("BeanProxyAdapter2.ShouldNotBeCalled_EXC_")); //$NON-NLS-1$
 	}
 
 	/**

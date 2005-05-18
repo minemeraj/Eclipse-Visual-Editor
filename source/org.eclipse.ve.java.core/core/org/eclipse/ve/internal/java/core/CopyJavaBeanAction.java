@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CopyJavaBeanAction.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-12 21:43:30 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-18 14:35:42 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -26,7 +26,7 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 
 public class CopyJavaBeanAction extends SelectionAction {
 	
-	public static final String REQ_COPY = "VE_REQ_COPY";
+	public static final String REQ_COPY = "VE_REQ_COPY"; //$NON-NLS-1$
 	private Command copyCommand;
 	private EditDomain editDomain;
 

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.17 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.18 $  $Date: 2005-05-18 14:35:42 $ 
  */
 
 import java.util.HashMap;
@@ -312,7 +312,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 									// Must include the ui plugin									
 									HashMap plugins = new HashMap();
 									ProxyPlugin.getPlugin().getIDsFound(javaProject, new HashMap(), new HashMap(), plugins, new HashMap());
-									boolean uiIncluded = plugins.get("org.eclipse.ui")!=null;
+									boolean uiIncluded = plugins.get("org.eclipse.ui")!=null;//$NON-NLS-1$
 									if (!uiIncluded)
 										fSourceFolderStatus = new StatusInfo(
 												IStatus.ERROR,
