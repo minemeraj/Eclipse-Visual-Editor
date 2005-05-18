@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-23 23:12:41 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-18 19:31:37 $ 
  */
 
 
@@ -665,7 +665,7 @@ public class EMFContentOutlinePage extends ContentOutlinePage {
 		getViewer().setKeyHandler(getOutlineKeyHandler());
 		
 		IToolBarManager tbm = getSite().getActionBars().getToolBarManager();
-		showOverviewAction = new Action("", IAction.AS_CHECK_BOX) {
+		showOverviewAction = new Action("", IAction.AS_CHECK_BOX) {//$NON-NLS-1$
 			public void run() {
 				showPage(isChecked() ? ID_OVERVIEW : ID_OUTLINE);
 			}
@@ -775,7 +775,7 @@ protected final void setPaletteRoot() {
 		try {
 			palette = (PaletteRoot) getResourceSet().getEObject(URI.createURI("platform:/plugin/org.eclipse.ve.cde/cde_palette.xmi#cde_palette"), true); //$NON-NLS-1$
 		} catch (RuntimeException e) {
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));
+			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));//$NON-NLS-1$
 		}
 	}
 	
@@ -799,7 +799,7 @@ protected PaletteRoot getPaletteRoot() {
 			Palette ref = (Palette) getResourceSet().getEObject(URI.createURI(paletteHRef), true);
 			return (PaletteRoot) ref.getEntry();
 		} catch (RuntimeException e) {
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));
+			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));//$NON-NLS-1$
 		}
 	}	
 	
@@ -1335,7 +1335,7 @@ protected void setInput(IEditorInput input) {
 			try { 
 				initializeWithNewRoot(rootModel);
 			} catch (Exception exc){
-				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", exc));				
+				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", exc));	//$NON-NLS-1$
 			}
 			if (rootModel != null) {
 				EditPart baseEditPart = getEditPart(rootModel);
@@ -1350,7 +1350,7 @@ protected void setInput(IEditorInput input) {
 			}
 			
 		} catch (Exception exc) {
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", exc));
+			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", exc)); //$NON-NLS-1$
 		}
 	}
 	// This has been moved out of the if statement so as to handle the case

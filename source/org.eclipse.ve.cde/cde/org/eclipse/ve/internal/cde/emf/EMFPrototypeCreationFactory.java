@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFPrototypeCreationFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-04 21:59:48 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-18 19:31:37 $ 
  */
 
 import java.util.ArrayList;
@@ -100,7 +100,7 @@ public class EMFPrototypeCreationFactory implements CreationFactory, IDomainedFa
 		if (prototype != null) {
 			if (prototype.eContainer() != null) {
 				prototype = null;
-				System.out.println("Prototype from URI is not contained directly by the Resource. Res="+res.getURI()+ " Fragment=" + prototypeFragment); //$NON-NLS-1$
+				System.out.println("Prototype from URI is not contained directly by the Resource. Res="+res.getURI()+ " Fragment=" + prototypeFragment); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				prototypes = new ArrayList(res.getContents()); // Make of copy of the list of all of the prototypes.
 			}

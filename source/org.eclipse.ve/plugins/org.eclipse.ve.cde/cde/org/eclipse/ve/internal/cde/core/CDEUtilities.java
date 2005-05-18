@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-18 19:31:04 $ 
  */
 
 
@@ -113,7 +113,7 @@ public class CDEUtilities {
 		  {
 			if (index < 0 || index > 1)
 			{
-			  throw new IndexOutOfBoundsException("index=" + index + ", size=0");
+			  throw new IndexOutOfBoundsException("index=" + index + ", size=0"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			return FeatureIteratorImpl.EMPTY_ITERATOR;
@@ -328,7 +328,7 @@ public class CDEUtilities {
 	 */
 	public static EditPartNamePath getEditPartNamePath(EditPart ep, EditDomain domain) {
 		if (!ep.isActive())
-			throw new IllegalArgumentException("editpart must be active.");
+			throw new IllegalArgumentException("editpart must be active."); //$NON-NLS-1$
 		
 		AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
 		List path = new ArrayList();

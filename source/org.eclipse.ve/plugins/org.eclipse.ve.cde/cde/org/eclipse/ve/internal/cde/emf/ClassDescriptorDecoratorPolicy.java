@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: ClassDescriptorDecoratorPolicy.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-18 19:31:37 $ 
  */
 
 import java.util.HashMap;
@@ -63,7 +63,7 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
  */
 public class ClassDescriptorDecoratorPolicy {
 	// dbk cache CLASS_DECOR_GRAPHIC
-	private static final GIFFileGraphic CLASS_DECORATOR_GRAPHIC = UtilityFactory.eINSTANCE.createGIFFileGraphic((Platform.find(CDEPlugin.getPlugin().getBundle(), new Path("images/somepart.gif")).toString()));
+	private static final GIFFileGraphic CLASS_DECORATOR_GRAPHIC = UtilityFactory.eINSTANCE.createGIFFileGraphic((Platform.find(CDEPlugin.getPlugin().getBundle(), new Path("images/somepart.gif")).toString())); //$NON-NLS-1$
 	public static final String CLASS_DESCRIPTOR_DECORATOR_POLICY_KEY = "org.eclipse.ve.internal.cde.core.classdescriptordecoratorpolicykey"; //$NON-NLS-1$
 
 	/**

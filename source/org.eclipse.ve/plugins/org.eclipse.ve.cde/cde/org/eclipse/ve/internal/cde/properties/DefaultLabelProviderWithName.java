@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: DefaultLabelProviderWithName.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-18 19:31:54 $ 
  */
 
 import org.eclipse.ve.internal.cde.core.AnnotationLinkagePolicy;
@@ -29,7 +29,7 @@ public class DefaultLabelProviderWithName extends DefaultLabelProvider {
 	/**
 	 * This is used to put into a decorator key for Label provider classname so that this provider can be instantiated dynamically.
 	 */
-	public final static String DECORATOR_CLASSNAME_VALUE = "org.eclipse.ve.cde/org.eclipse.ve.internal.cde.properties.DefaultLabelProviderWithName";
+	public final static String DECORATOR_CLASSNAME_VALUE = "org.eclipse.ve.cde/org.eclipse.ve.internal.cde.properties.DefaultLabelProviderWithName"; //$NON-NLS-1$
 	
 	public DefaultLabelProviderWithName(){
 		super();
