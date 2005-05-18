@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetProxyAdapter2.java,v $ $Revision: 1.1 $ $Date: 2005-05-18 18:39:15 $
+ * $RCSfile: WidgetProxyAdapter2.java,v $ $Revision: 1.2 $ $Date: 2005-05-18 23:33:52 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -185,7 +185,7 @@ public class WidgetProxyAdapter2 extends BeanProxyAdapter2 {
 
 				protected Object doRun(IBeanProxy displayProxy) throws ThrowableProxy {
 					IBeanProxy widgetBeanProxy = getBeanProxy();
-					expression.createSimpleMethodInvoke(widgetBeanProxy.getTypeProxy().getMethodProxy(expression, "dispose"), widgetBeanProxy, null,
+					expression.createSimpleMethodInvoke(widgetBeanProxy.getTypeProxy().getMethodProxy(expression, "dispose"), widgetBeanProxy, null, //$NON-NLS-1$
 							false);
 					return null;
 				}
