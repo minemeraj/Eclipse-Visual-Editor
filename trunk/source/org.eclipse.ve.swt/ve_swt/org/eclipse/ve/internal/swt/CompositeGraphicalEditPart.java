@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.20 $ $Date: 2005-05-17 23:48:21 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.21 $ $Date: 2005-05-18 00:48:40 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -109,7 +109,7 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 			layoutPolicy = new DefaultLayoutEditPolicy(getContainerPolicy());
 
 		// Only install the newer layout policy if they aren't the same
-		if (!layoutPolicy.getClass().equals(getEditPolicy(EditPolicy.LAYOUT_ROLE).getClass())) {
+		if (getEditPolicy(EditPolicy.LAYOUT_ROLE) == null || (!(getEditPolicy(EditPolicy.LAYOUT_ROLE).getClass()).equals(layoutPolicy.getClass()))) {
 			removeEditPolicy(EditPolicy.LAYOUT_ROLE); // Get rid of old one, if any
 			// Layout policies put figure decorations for things like grids so we should remove this
 			installEditPolicy(EditPolicy.LAYOUT_ROLE, layoutPolicy);
