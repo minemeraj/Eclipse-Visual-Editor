@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CDEDefaultTreeEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-18 19:31:04 $ 
  */
 
 import org.eclipse.gef.EditPolicy;
@@ -47,7 +47,7 @@ public class CDEDefaultTreeEditPart extends AbstractTreeEditPart {
 	 * @see org.eclipse.gef.editparts.AbstractTreeEditPart#getText()
 	 */
 	protected String getText() {
-		return getModel() != null ? getModel().toString() : ""+null;
+		return getModel() != null ? getModel().toString() : ""+null; //$NON-NLS-1$
 	}
 
 }

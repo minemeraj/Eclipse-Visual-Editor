@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.commands;
 /*
  *  $RCSfile: CancelAttributeSettingCommand.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-18 19:30:17 $ 
  */
 
 import java.util.*;
@@ -53,7 +53,7 @@ public class CancelAttributeSettingCommand extends AbstractAttributeCommand {
 					undo();
 				}catch (RuntimeException e2) {
 					// Another happened, so just log this one and throw the original.				}
-					CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e2));
+					CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e2)); //$NON-NLS-1$
 				}					
 				throw e;
 			}
@@ -91,7 +91,7 @@ public class CancelAttributeSettingCommand extends AbstractAttributeCommand {
 					setAttributeSettingValue(values);
 				}catch (RuntimeException e2) {
 					// Another happened, so just log this one and throw the original.				}
-					CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e2));
+					CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e2)); //$NON-NLS-1$
 				}
 				throw e;
 			}

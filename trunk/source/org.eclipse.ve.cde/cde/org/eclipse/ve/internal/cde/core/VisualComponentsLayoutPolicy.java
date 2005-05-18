@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualComponentsLayoutPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-18 19:31:04 $ 
  */
 
 import java.util.Iterator;
@@ -19,8 +19,6 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.*;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.swt.widgets.Display;
@@ -298,15 +296,15 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 			if (visualComponent != null) {
 				Rectangle oBounds = visualComponent.getBounds();
 				if (DO_VC_TRACING)
-					System.out.println("VC Component notification: "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " refreshed to: "+oBounds);				
-				CDEUtilities.displayExec(getHost(), "REFRESH", new Runnable() {
+					System.out.println("VC Component notification: "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " refreshed to: "+oBounds);				 //$NON-NLS-1$ //$NON-NLS-2$
+				CDEUtilities.displayExec(getHost(), "REFRESH", new Runnable() { //$NON-NLS-1$
 					public void run() {
 						EditPart ep = getHost();
 						if (ep != null && ep.isActive()) {
 							Rectangle oBounds = visualComponent.getBounds();
 							Rectangle bounds = convertBounds(oBounds.getCopy());
 							if (DO_VC_TRACING)
-								System.out.println("VC Component "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " refreshed to (beforeConvert)"+oBounds+" (afterConvert)"+bounds);
+								System.out.println("VC Component "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " refreshed to (beforeConvert)"+oBounds+" (afterConvert)"+bounds); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							IFigure parent = ((GraphicalEditPart) getHost()).getFigure().getParent();
 							constrain(bounds, parent, getHost());
 							parent.setConstraint(((GraphicalEditPart) getHost()).getFigure(), bounds);
@@ -342,8 +340,8 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 		public void componentMoved(int x, int y) {
 			final IFigure child = ((GraphicalEditPart) getHost()).getFigure();
 			if (DO_VC_TRACING)
-				System.out.println("VC Component notification: "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " moved to ("+x+','+y+')');
-			CDEUtilities.displayExec(getHost(), "MOVED", new Runnable() {
+				System.out.println("VC Component notification: "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " moved to ("+x+','+y+')'); //$NON-NLS-1$ //$NON-NLS-2$
+			CDEUtilities.displayExec(getHost(), "MOVED", new Runnable() { //$NON-NLS-1$
 				public void run() {
 					if (getHost().isActive()) {
 						IFigure parent = child.getParent();
@@ -354,11 +352,11 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 							// and it may of moved more than once. We would be processing only the first one if we did that.
 							Point currentLoc = visualComponent.getLocation();
 							if (DO_VC_TRACING)
-								System.out.print("VC Component "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " moved to (beforeConvert)"+currentLoc);							
+								System.out.print("VC Component "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " moved to (beforeConvert)"+currentLoc);							 //$NON-NLS-1$ //$NON-NLS-2$
 							bounds.setLocation(currentLoc.x, currentLoc.y);
 							bounds = convertBounds(bounds);
 							if (DO_VC_TRACING)
-								System.out.println(" (afterConvert)"+bounds.getLocation());
+								System.out.println(" (afterConvert)"+bounds.getLocation()); //$NON-NLS-1$
 							constrain(bounds, parent, getHost());
 							parent.setConstraint(child, bounds);
 						}
@@ -373,7 +371,7 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 		 */
 		public void componentResized(int width, int height) {
 			final IFigure child = ((GraphicalEditPart) getHost()).getFigure();
-			CDEUtilities.displayExec(getHost(), "SIZED", new Runnable() {
+			CDEUtilities.displayExec(getHost(), "SIZED", new Runnable() { //$NON-NLS-1$
 				public void run() {
 					if (getHost().isActive()) {
 						IFigure parent = child.getParent();
@@ -384,7 +382,7 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 							// during the transaction, and only the first one will be processed here.
 							Dimension size = visualComponent.getSize();
 							if (DO_VC_TRACING)
-								System.out.println("VC Component "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " resized to "+size);							
+								System.out.println("VC Component "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " resized to "+size);							 //$NON-NLS-1$ //$NON-NLS-2$
 							bounds.setSize(size.width, size.height);
 							constrain(bounds, parent, getHost());
 							parent.setConstraint(child, bounds);

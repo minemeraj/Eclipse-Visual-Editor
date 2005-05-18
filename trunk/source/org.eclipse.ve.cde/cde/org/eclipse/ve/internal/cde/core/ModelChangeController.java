@@ -10,15 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ModelChangeController.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-18 19:31:04 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
@@ -39,9 +37,9 @@ public abstract class ModelChangeController {
 
     // TODO Not happy with these being here. They are specific to the Java Visual Editor, but JFC components are referencing
     // them to not do visual updates. They really should be moved off and figured out how the JFC components know these.
-    public static final String SETUP_PHASE = "SETUP_PHASE".intern();
+    public static final String SETUP_PHASE = "SETUP_PHASE".intern(); //$NON-NLS-1$
 
-    public static final String INIT_VIEWERS_PHASE = "INIT_VIEWERS_PHASE"
+    public static final String INIT_VIEWERS_PHASE = "INIT_VIEWERS_PHASE" //$NON-NLS-1$
             .intern();
     
     /**
@@ -49,7 +47,7 @@ public abstract class ModelChangeController {
      * 
      * @since 1.1.0
      */
-    public static final String MODEL_CHANGES_PHASE = "MODEL_CHANGES_PHASE".intern();
+    public static final String MODEL_CHANGES_PHASE = "MODEL_CHANGES_PHASE".intern(); //$NON-NLS-1$
 
     // Access to compoundChangeCount, uniqueRunnables, inRunnables should be synchronized so that access from
     // codegen side in inTransaction() won't collide with changes from the UI
@@ -318,7 +316,7 @@ public abstract class ModelChangeController {
 			 * @see org.eclipse.core.runtime.ISafeRunnable#handleException(java.lang.Throwable)
 			 */
 			public void handleException(Throwable exception) {
-				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", exception));
+				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", exception)); //$NON-NLS-1$
 			}
 
 			/* (non-Javadoc)

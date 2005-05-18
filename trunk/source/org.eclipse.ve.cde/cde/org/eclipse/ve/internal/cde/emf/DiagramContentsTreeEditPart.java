@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: DiagramContentsTreeEditPart.java,v $ $Revision: 1.4 $ $Date: 2005-05-11 19:01:26 $
+ * $RCSfile: DiagramContentsTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-18 19:31:37 $
  */
 package org.eclipse.ve.internal.cde.emf;
 
@@ -56,7 +56,7 @@ public abstract class DiagramContentsTreeEditPart extends AbstractTreeEditPart {
 		 */
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeatureID(Diagram.class) == CDMPackage.DIAGRAM__FIGURES)
-				queueExec(DiagramContentsTreeEditPart.this, "FIGURES");
+				queueExec(DiagramContentsTreeEditPart.this, "FIGURES"); //$NON-NLS-1$
 		}
 	}
 

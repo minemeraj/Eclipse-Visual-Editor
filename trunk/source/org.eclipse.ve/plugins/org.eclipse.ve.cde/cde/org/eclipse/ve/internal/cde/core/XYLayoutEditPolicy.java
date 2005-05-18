@@ -11,17 +11,16 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-18 19:31:04 $ 
  */
 
 
 
+import java.text.MessageFormat;
 import java.util.*;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.*;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -580,9 +579,9 @@ protected void showCursorFeedback(Request aRequest) {
 		cursorLabel.setOpaque(true);
 		cursorLabel.setBorder(new MarginBorder(new Insets(0,2,0,0)));
 		cursorLabel.setBackgroundColor(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-		cursorLabel.setFont(new Font(Display.getDefault(), "Tahoma", 8, SWT.NORMAL));
+		cursorLabel.setFont(new Font(Display.getDefault(), "Tahoma", 8, SWT.NORMAL)); //$NON-NLS-1$
 	}
-	cursorLabel.setText(String.valueOf(position.x)+", "+String.valueOf(position.y));
+	cursorLabel.setText(MessageFormat.format(CDEMessages.getString("XYLayoutEditPolicy.CursorFeedback.X_Y"), new Object[]{String.valueOf(position.x), String.valueOf(position.y)})); //$NON-NLS-1$
 	
 //	if (yCursorLabel == null) {
 //		yCursorLabel = new Label();

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYGridPropertiesPage.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:15 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-18 19:31:04 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -74,7 +74,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 
 		// Create show grid checkbox
 		fShowGridCheckBox = new Button(fieldsGroup, SWT.CHECK);
-		fShowGridCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Show_Grid"));
+		fShowGridCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Show_Grid")); //$NON-NLS-1$
 		data = new GridData();
 		data.horizontalSpan = 3;
 		fShowGridCheckBox.setLayoutData(data);
@@ -92,7 +92,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 
 		// Create width/height sync checkbox
 		fWidthHeightSyncCheckBox = new Button(fieldsGroup, SWT.CHECK);
-		fWidthHeightSyncCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Keep_Width_Height_Same"));
+		fWidthHeightSyncCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Keep_Width_Height_Same")); //$NON-NLS-1$
 		data = new GridData();
 		data.horizontalSpan = 3;
 		fWidthHeightSyncCheckBox.setLayoutData(data);

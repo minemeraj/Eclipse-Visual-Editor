@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CDEDefaultGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-18 19:31:04 $ 
  */
 
 import org.eclipse.draw2d.*;
@@ -27,7 +27,7 @@ import org.eclipse.swt.graphics.Image;
 
 public class CDEDefaultGraphicalEditPart extends AbstractGraphicalEditPart {
 	
-	protected static final Image DEFAULT_IMAGE = CDEPlugin.getImageFromPlugin(CDEPlugin.getPlugin(), "images/somepart.gif");
+	protected static final Image DEFAULT_IMAGE = CDEPlugin.getImageFromPlugin(CDEPlugin.getPlugin(), "images/somepart.gif"); //$NON-NLS-1$
 
 	public CDEDefaultGraphicalEditPart(Object model) {
 		setModel(model);
@@ -46,6 +46,6 @@ public class CDEDefaultGraphicalEditPart extends AbstractGraphicalEditPart {
 	protected void refreshVisuals() {
 		Label fig = (Label) getFigure();
 		fig.setIcon(DEFAULT_IMAGE);
-		fig.setText(getModel() != null ? getModel().toString() : ""+null);
+		fig.setText(getModel() != null ? getModel().toString() : ""+null); //$NON-NLS-1$
 	}
 }
