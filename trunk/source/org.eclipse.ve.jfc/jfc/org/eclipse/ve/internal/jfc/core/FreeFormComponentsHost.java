@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FreeFormComponentsHost.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-18 18:39:17 $ 
  */
 
 import org.eclipse.draw2d.geometry.Point;
@@ -23,6 +23,7 @@ import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
 import org.eclipse.ve.internal.java.core.*;
@@ -42,22 +43,38 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 
 		protected IProxy dialogProxy;
 		protected IProxyBeanType dialogTypeProxy;
+		protected String dialogTypeName;
 
-		protected FreeFormComponentProxy(ExpressionProxy dialogExpressionProxy, IProxyBeanType dialogTypeProxy) {
-			this.dialogProxy = dialogExpressionProxy;
-			dialogExpressionProxy.addProxyListener(new ExpressionProxy.ProxyAdapter(){
+		protected FreeFormComponentProxy(String dialogTypeName, IExpression expression) {
+			this.dialogTypeName = dialogTypeName;
+			create(expression);
+		}
+		
+		private void create(IExpression expression) {
+			Point loc = BeanAwtUtilities.getOffScreenLocation();
+			dialogTypeProxy = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, dialogTypeName);
+			dialogProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
+			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, dialogTypeProxy, 2);
+			expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, loc.x);
+			expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, loc.y);
+			
+			((ExpressionProxy) dialogProxy).addProxyListener(new ExpressionProxy.ProxyAdapter(){
 				public void proxyResolved(ProxyEvent event) {
 					dialogProxy = event.getProxy();
 				}
 			});
-			this.dialogTypeProxy = dialogTypeProxy;
 			if (dialogTypeProxy.isExpressionProxy()) {
 				((ExpressionProxy) dialogTypeProxy).addProxyListener(new ExpressionProxy.ProxyAdapter(){
 					public void proxyResolved(ProxyEvent event) {
-						FreeFormComponentProxy.this.dialogTypeProxy = (IProxyBeanType) event.getProxy();
+						dialogTypeProxy = (IProxyBeanType) event.getProxy();
 					}
 				});				
-			}
+			}			
+		}
+		
+		private void recreateIfNecessary(IExpression expression) {
+			if (dialogProxy == null || (dialogProxy.isBeanProxy() && !((IBeanProxy) dialogProxy).isValid()))
+				create(expression);	// It is not yet created (shouldn't happen), or it is now invalid (registry has been recycled).
 		}
 		
 		/**
@@ -79,6 +96,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 		 * @since 1.1.0
 		 */
 		protected void add(IProxy component, IExpression expression) {
+			recreateIfNecessary(expression);
 			IProxyMethod addMethod = dialogTypeProxy.getMethodProxy(expression, "add", //$NON-NLS-1$
 					new String[] {"java.awt.Component"} //$NON-NLS-1$ 
 			);
@@ -94,7 +112,8 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 		 * @since 1.1.0
 		 */
 		public void remove(IBeanProxy component, IExpression expression) {
-			if (dialogProxy.isBeanProxy() && ((IBeanProxy) dialogProxy).isValid()) {
+			if (dialogProxy != null && dialogProxy.isBeanProxy() && ((IBeanProxy) dialogProxy).isValid()) {
+				// We don't want to recreate on a remove. That would fluff it up for no reason.
 				IProxyMethod removeMethod = dialogTypeProxy.getMethodProxy(expression, "remove", //$NON-NLS-1$
 						new String[] {"java.awt.Component"} //$NON-NLS-1$
 				);
@@ -115,6 +134,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 		 * @since 1.1.0
 		 */
 		public void useComponentSize(IProxy component, boolean useComponentSize, IExpression expression) {
+			recreateIfNecessary(expression);
 			IProxyMethod useMethod = dialogTypeProxy.getMethodProxy(expression, "setUseComponentSize", //$NON-NLS-1$
 					new String[] { "java.awt.Component", "boolean" } //$NON-NLS-1$ //$NON-NLS-2$
 			);
@@ -125,7 +145,8 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 		 * dispose of the proxy.
 		 */
 		protected void dispose(IExpression expression) {
-			if (dialogProxy != null && dialogProxy.isBeanProxy() && ((IBeanProxy) dialogProxy).isValid()) {
+			if (expression != null && dialogProxy != null && dialogProxy.isBeanProxy() && ((IBeanProxy) dialogProxy).isValid()) {
+				// We don't want to recreate on a dispose. That would fluff it up for no reason.
 				IProxyMethod dispose = BeanAwtUtilities.getWindowDisposeMethodProxy(expression);
 				expression.createSimpleMethodInvoke(dispose, null, new IProxy[] {dialogProxy},false);
 			}
@@ -133,8 +154,6 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 	}
 	
 	protected FreeFormComponentProxy awtDialogHost, swingDialogHost;
-
-	protected IBeanProxyDomain beanProxyDomain;
 
 	protected EClass classComponent, classJComponent;
 
@@ -146,14 +165,11 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 	 * 
 	 * @since 1.1.0
 	 */
-	public FreeFormComponentsHost(
-		IBeanProxyDomain beanProxyDomain,
-		CompositionProxyAdapter compositionProxyAdapter) {
+	public FreeFormComponentsHost(EditDomain editDomain, CompositionProxyAdapter compositionProxyAdapter) {
 		super();
-		this.beanProxyDomain = beanProxyDomain;
 		this.compositionProxyAdapter = compositionProxyAdapter;
 
-		ensureEMFDetailsCached(EMFEditDomainHelper.getResourceSet(beanProxyDomain.getEditDomain()));
+		ensureEMFDetailsCached(EMFEditDomainHelper.getResourceSet(editDomain));
 		
 		compositionProxyAdapter.addFreeForm(FreeFormComponentsHost.class, this);
 	}
@@ -180,24 +196,12 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 	protected FreeFormComponentProxy getDialogProxy(boolean swingType, IExpression expression) {
 		if (swingType) {
 			if (swingDialogHost == null) {
-				Point loc = BeanAwtUtilities.getOffScreenLocation();
-				IProxyBeanType dialogType = beanProxyDomain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.FreeFormSwingDialog"); //$NON-NLS-1$
-				ExpressionProxy dialogProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
-				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, dialogType, 2);
-				expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, loc.x);
-				expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, loc.y);
-				swingDialogHost = new FreeFormComponentProxy(dialogProxy, dialogType); //$NON-NLS-1$
+				swingDialogHost = new FreeFormComponentProxy("org.eclipse.ve.internal.jfc.vm.FreeFormSwingDialog", expression); //$NON-NLS-1$
 			}
 			return swingDialogHost;
 		} else {
 			if (awtDialogHost == null) {
-				Point loc = BeanAwtUtilities.getOffScreenLocation();
-				IProxyBeanType dialogType = beanProxyDomain.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.FreeFormAWTDialog"); //$NON-NLS-1$
-				ExpressionProxy dialogProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
-				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, dialogType, 2);
-				expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, loc.x);
-				expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, loc.y);
-				awtDialogHost = new FreeFormComponentProxy(dialogProxy, dialogType); //$NON-NLS-1$
+				awtDialogHost = new FreeFormComponentProxy("org.eclipse.ve.internal.jfc.vm.FreeFormAWTDialog", expression); //$NON-NLS-1$
 			}
 			return awtDialogHost;
 		}

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-17 23:38:18 $ 
+ *  $Revision: 1.16 $  $Date: 2005-05-18 18:39:19 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -29,6 +29,7 @@ import org.eclipse.jem.util.TimerTests;
 import org.eclipse.ve.internal.cde.core.*;
 
 import org.eclipse.ve.internal.jcm.*;
+import org.eclipse.ve.internal.jcm.impl.JCMPackageImpl;
 
 /**
  * This is a special adaptor for BeanCompositions. There really isn't a bean proxy, but we need to handle the components and the freeform.
@@ -58,7 +59,7 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 		/**
 		 * Called by CompositionProxyAdapter when time to be disposed. It is going away.
 		 * 
-		 * @param expression
+		 * @param expression expression to use, or <code>null</code> if there is no registry, such as it was terminated, and we need to just clean up.
 		 * 
 		 * @since 1.1.0
 		 */
@@ -228,6 +229,9 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 		return msg.getFeatureID(BeanSubclassComposition.class) == JCMPackage.BEAN_SUBCLASS_COMPOSITION__METHODS;
 	}
 
+	protected List getInnerMemberContainerFeatures() {
+		return Collections.singletonList(JCMPackageImpl.eINSTANCE.getBeanSubclassComposition_Methods());
+	}
 	/**
 	 * Is this a composition feature. These are features that the composition needs 
 	 * @param msg

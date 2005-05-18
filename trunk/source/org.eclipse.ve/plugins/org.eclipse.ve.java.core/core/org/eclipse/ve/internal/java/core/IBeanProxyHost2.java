@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanProxyHost2.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-17 23:38:18 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-18 18:39:19 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -59,7 +59,7 @@ public interface IBeanProxyHost2 extends IBeanProxyHost {
 	public interface NotificationLifeCycle extends Notification {
 		/**
 		 * Get the expression that the new bean was reinstantiated under.
-		 * @return
+		 * @return the expression or <code>null</code> if the registry is invalid (usually during a release).
 		 * 
 		 * @since 1.1.0
 		 */
@@ -88,7 +88,8 @@ public interface IBeanProxyHost2 extends IBeanProxyHost {
 	 * <p>
 	 * The expression must be at {@link org.eclipse.jem.internal.proxy.initParser.tree.ForExpression#ROOTEXPRESSION RootExpression}
 	 * for release to work correctly and it must be back at RootExpression by the completion of the release call.
-	 * @param expression the expression to use. It will be left in a valid state, even if there were errors.
+	 * @param expression the expression to use. It will be left in a valid state, even if there were errors. It if is <code>null</code> then this
+	 * means the registry is not valid and we just need to clean up any variables, but we shouldn't do proxy/expression stuff.
 	 * 
 	 * @since 1.1.0
 	 */

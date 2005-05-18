@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.112 $  $Date: 2005-05-18 14:35:42 $ 
+ *  $Revision: 1.113 $  $Date: 2005-05-18 18:39:19 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1413,10 +1413,22 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		public class CreateRegistry extends Job {
 			IFile file;
+			ProxyFactoryRegistry registry;
+			
 			public CreateRegistry(String name, IFile file) {
 				super(name);
 				this.file = file;
 			}	
+			
+			/**
+			 * Get the registry that was created.
+			 * @return
+			 * 
+			 * @since 1.1.0
+			 */
+			public ProxyFactoryRegistry getRegistry() {
+				return registry;
+			}
 			
 			protected IStatus run(IProgressMonitor monitor) {
 
@@ -1616,11 +1628,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						}
 					}
 
-					synchronized (JavaVisualEditorPart.this) {
-						proxyFactoryRegistry = regResult.registry;
-						proxyFactoryRegistry.addRegistryListener(registryListener);
-						beanProxyAdapterFactory.setProxyFactoryRegistry(proxyFactoryRegistry);
-					}
+					registry = regResult.registry;
+					registry.addRegistryListener(registryListener);
 				} catch (CoreException e) {
 					// Wrapper the exception in a status so that when we join we can get the original exception back.
 					return new Status(IStatus.ERROR, JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 16, e.getStatus().getMessage(), e);
@@ -1799,13 +1808,20 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
     					ia.propagate();
                     }
 
+					CompositionProxyAdapter a = (CompositionProxyAdapter) EcoreUtil.getExistingAdapter(dd,
+							CompositionProxyAdapter.BEAN_COMPOSITION_PROXY);
+					if (!loadModel && lRestartVM && a != null) {
+						// We have a new vm but same model, and an adapter, so we need to release all of the beans
+						// before we go on.
+						a.releaseBeanProxy();
+					}
+					
                     if (lRestartVM)
                         joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.
 					
 					beanProxyAdapterFactory.setThisTypeName(modelBuilder.getThisTypeName());	// Now that we've joined and have a registry, we can set the this type name into the proxy domain.
 					modelSynchronizer.setIgnoreTypeName(modelBuilder.getThisTypeName());
-					CompositionProxyAdapter a = (CompositionProxyAdapter) EcoreUtil.getExistingAdapter(dd,
-							CompositionProxyAdapter.BEAN_COMPOSITION_PROXY);
+					
                     if (a == null) {
 						a =	new CompositionProxyAdapter(beanProxyAdapterFactory, modelChangeController);
                         dd.eAdapters().add(a);
@@ -1894,6 +1910,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					Exception e = (Exception) registryCreateJob.getResult().getException();
 					registryCreateJob = null;	// So we don't wait again.
 					throw e;
+				} else {
+					synchronized (JavaVisualEditorPart.this) {
+						proxyFactoryRegistry = registryCreateJob.getRegistry();
+						beanProxyAdapterFactory.setProxyFactoryRegistry(proxyFactoryRegistry);
+					}
 				}
 				registryCreateJob = null;	// So we don't wait again.
 			}

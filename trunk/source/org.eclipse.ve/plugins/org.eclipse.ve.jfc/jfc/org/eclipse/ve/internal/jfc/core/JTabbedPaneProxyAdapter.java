@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: JTabbedPaneProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-18 18:39:17 $ 
  */
 
 import java.util.Iterator;
@@ -374,17 +374,12 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 		revalidateBeanProxy();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost2#releaseBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
-	public void releaseBeanProxy(IExpression expression) {
+	protected void primReleaseBeanProxy(IExpression expression) {
 		// Also remove the adapters on any of the jtab. This is because if changes are
 		// made during the non-instantiated time, we won't see them because the notifications only come through
 		// while bean is instantiated.
 		removeAllJTabAdapters();
-		super.releaseBeanProxy(expression);
+		super.primReleaseBeanProxy(expression);
 	}
 
 	/*

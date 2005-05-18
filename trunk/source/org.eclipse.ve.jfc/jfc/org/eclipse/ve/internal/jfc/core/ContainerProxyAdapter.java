@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.16 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.17 $  $Date: 2005-05-18 18:39:17 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -636,11 +636,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 	}
 	
 
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost2#releaseBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
-	public void releaseBeanProxy(IExpression expression) {
+	protected void primReleaseBeanProxy(IExpression expression) {
 		// We need to release the Layout because some layouts can't be shared (e.g. BoxLayout) and when we are reinstantiated
 		// we will use the old layout. This will fail and throw exceptions.
 		// See: https://bugs.eclipse.org/bugs/show_bug.cgi?id=59351
@@ -659,6 +655,6 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 		// while bean is instantiated.
 		removeAllComponentAdapters();
 
-		super.releaseBeanProxy(expression);
+		super.primReleaseBeanProxy(expression);
 	}
 }

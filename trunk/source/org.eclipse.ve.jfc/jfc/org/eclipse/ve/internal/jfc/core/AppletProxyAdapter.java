@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: AppletProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-18 18:39:17 $ 
  */
 
 import org.eclipse.jem.internal.proxy.core.*;
@@ -53,20 +53,16 @@ public class AppletProxyAdapter extends ContainerProxyAdapter {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost2#releaseBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
-	public void releaseBeanProxy(IExpression expression) {
+
+	protected void primReleaseBeanProxy(IExpression expression) {
 		// When an applet is removed from the system it should be called with destroy so it
 		// can free up any resources it allocated
 
 		if (isBeanProxyInstantiated()) {
-			IProxyMethod destroyMethod = getBeanProxy().getTypeProxy().getMethodProxy(expression, "destroy", (IProxyBeanType[]) null); //$NON-NLS-1$
+			IProxyMethod destroyMethod = getBeanProxy().getTypeProxy().getMethodProxy(expression, "destroy");	//$NON-NLS-1$
 			expression.createSimpleMethodInvoke(destroyMethod, getProxy(), null, false);
 		}
-		super.releaseBeanProxy(expression);
+		super.primReleaseBeanProxy(expression);
 	}
 
 }

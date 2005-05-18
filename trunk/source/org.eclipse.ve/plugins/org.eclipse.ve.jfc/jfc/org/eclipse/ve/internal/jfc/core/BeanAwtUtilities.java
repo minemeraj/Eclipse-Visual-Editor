@@ -12,12 +12,11 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.28 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.29 $  $Date: 2005-05-18 18:39:17 $ 
  */
 
 import java.util.List;
 import java.util.logging.Level;
-
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClassifier;
@@ -76,13 +75,11 @@ public class BeanAwtUtilities {
 	}
 
 	// JCMMethod proxies are cached in a registry constants.
-	private IMethodProxy disposeComponentMethodProxy, getLayoutMethodProxy, setSizeMethodProxy, getBoundsMethodProxy,
+	private IMethodProxy getLayoutMethodProxy, getBoundsMethodProxy,
 			getLocationMethodProxy, getSizeMethodProxy, getPreferredSizeMethodProxy, getParentMethodProxy, getComponentsMethodProxy,
-			getManagerLocationMethodProxy, getManagerBoundsMethodProxy,
 			getManagerDefaultLocationMethodProxy, getManagerDefaultBoundsMethodProxy, 
 			getTabSelectedComponentMethodProxy, setTabSelectedComponentMethodProxy,
-			popupMenuManagerRevalidate, managerJTableGetColumnRect, managerJTableGetAllColumnRects,
-			windowPackProxy;
+			managerJTableGetAllColumnRects;
 
 	private IBeanProxy jFrameDefaultOnClose_DoNothingProxy;
 
@@ -318,8 +315,7 @@ public class BeanAwtUtilities {
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
-							expression, "invalidate", //$NON-NLS-1$
-							(IProxyBeanType[]) null);
+							expression, "invalidate"); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_INVALIDATE_COMPONENT);
 		}
 		return method;
@@ -548,9 +544,7 @@ public class BeanAwtUtilities {
 		IProxyMethod method = constants.methods[COMPONENT_GET_PARENT];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "java.awt.Component").getMethodProxy( //$NON-NLS-1$
-					expression, "getParent", //$NON-NLS-1$
-					(IProxyBeanType[]) null);
-			processExpressionProxy(method, constants.methods, COMPONENT_GET_PARENT);
+					expression, "getParent"); //$NON-NLS-1$
 		}
 		return method;
 	}
@@ -666,27 +660,6 @@ public class BeanAwtUtilities {
 		return method;
 	}
 	
-	/**
-	 * Invoke get column rectangle for a table column
-	 * @param jtable
-	 * @param tablecolumn
-	 * @return rectangle or <code>null</code> if column not in model.
-	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.JTableManager#getColumnRect(JTable, TableColumn)
-	 * @since 1.1.0
-	 */
-	public static IRectangleBeanProxy invoke_JTable_getColumnRect(IBeanProxy jtable, IBeanProxy tablecolumn) {
-		BeanAwtUtilities constants = getConstants(jtable);
-
-		if (constants.managerJTableGetColumnRect == null) {
-			constants.managerJTableGetColumnRect = jtable.getProxyFactoryRegistry().getBeanTypeProxyFactory()
-			.getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager").getMethodProxy( //$NON-NLS-1$
-					"getColumnRect", //$NON-NLS-1$
-					new String[] {"javax.swing.JTable", "javax.swing.table.TableColumn"}); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return (IRectangleBeanProxy) constants.managerJTableGetColumnRect.invokeCatchThrowableExceptions(null, new IBeanProxy[] {jtable, tablecolumn});
-	}
-
 	/**
 	 * Invoke get all column rectangles for a table.
 	 * @param jtable
@@ -852,16 +825,6 @@ public class BeanAwtUtilities {
 		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJToolBarRemoveComponent(expression), null, new IProxy[] {jtoolbar, component}, false);		
 	}	
 
-	public static void invoke_dispose(IBeanProxy aBeanProxy) {
-		BeanAwtUtilities constants = getConstants(aBeanProxy);
-
-		if (constants.disposeComponentMethodProxy == null) {
-			constants.disposeComponentMethodProxy = aBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy("java.awt.Window").getMethodProxy("dispose"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		constants.disposeComponentMethodProxy.invokeCatchThrowableExceptions(aBeanProxy);
-	}
-
 	public static IBeanProxy invoke_getLayout(IBeanProxy aContainerBeanProxy) {
 		BeanAwtUtilities constants = getConstants(aContainerBeanProxy);
 
@@ -870,19 +833,6 @@ public class BeanAwtUtilities {
 					"java.awt.Container").getMethodProxy("getLayout"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return constants.getLayoutMethodProxy.invokeCatchThrowableExceptions(aContainerBeanProxy);
-	}
-
-	public static void invoke_setSize(IBeanProxy aBeanProxy, IBeanProxy aDimensionBeanProxy) {
-		BeanAwtUtilities constants = getConstants(aBeanProxy);
-
-		if (constants.setSizeMethodProxy == null) {
-			constants.setSizeMethodProxy = aBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy("java.awt.Component").getMethodProxy( //$NON-NLS-1$
-							"setSize", //$NON-NLS-1$
-							"java.awt.Dimension" //$NON-NLS-1$
-					);
-		}
-		constants.setSizeMethodProxy.invokeCatchThrowableExceptions(aBeanProxy, aDimensionBeanProxy);
 	}
 
 	public static IRectangleBeanProxy invoke_getBounds(IBeanProxy aBeanProxy) {
@@ -1096,28 +1046,6 @@ public class BeanAwtUtilities {
 			);
 		}
 		return constants.getManagerDefaultLocationMethodProxy;
-	}
-
-	public static IArrayBeanProxy invoke_get_Bounds_Manager(IBeanProxy aComponentManager) {
-
-		BeanAwtUtilities constants = getConstants(aComponentManager);
-
-		if (constants.getManagerBoundsMethodProxy == null) {
-			constants.getManagerBoundsMethodProxy = aComponentManager.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
-					"org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy("getBounds"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return (IArrayBeanProxy) constants.getManagerBoundsMethodProxy.invokeCatchThrowableExceptions(aComponentManager);
-
-	}
-
-	public static IArrayBeanProxy invoke_get_Location_Manager(IBeanProxy aComponentManager) {
-		BeanAwtUtilities constants = getConstants(aComponentManager);
-
-		if (constants.getManagerLocationMethodProxy == null) {
-			constants.getManagerLocationMethodProxy = aComponentManager.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
-					"org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy("getLocation"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return (IArrayBeanProxy) constants.getManagerLocationMethodProxy.invokeCatchThrowableExceptions(aComponentManager);
 	}
 
 	/**
@@ -1422,21 +1350,6 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Hide and reshow the popup menu so it resizes after adding/removing components. Goes through JPopupMenuManager
-	 */
-	public static void invoke_jpopup_revalidate(IBeanProxy aJPopupMenuBeanProxy) {
-		BeanAwtUtilities constants = getConstants(aJPopupMenuBeanProxy);
-
-		if (constants.popupMenuManagerRevalidate == null) {
-			constants.popupMenuManagerRevalidate = aJPopupMenuBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
-					"org.eclipse.ve.internal.jfc.vm.JPopupMenuManager").getMethodProxy( //$NON-NLS-1$
-					"revalidate", "javax.swing.JPopupMenu" //$NON-NLS-1$ //$NON-NLS-2$
-			);
-		}
-		constants.popupMenuManagerRevalidate.invokeCatchThrowableExceptions(null, aJPopupMenuBeanProxy);
-	}
-	
-	/**
 	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JSplitPaneManager#setDividerLocation(int)}
 	 * 
 	 * @param expression
@@ -1490,20 +1403,6 @@ public class BeanAwtUtilities {
 			booleanProxy = (IBooleanBeanProxy) isLeftToRightMethodProxy.invokeCatchThrowableExceptions(componentOrientationProxy);
 		}
 		return booleanProxy;
-	}
-
-	/**
-	 * Pack the java.awt.Window
-	 */
-	public static void invoke_window_pack(IBeanProxy aWindowProxy) {
-		BeanAwtUtilities constants = getConstants(aWindowProxy);
-
-		if (constants.windowPackProxy == null) {
-			constants.windowPackProxy = aWindowProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy("java.awt.Window").getMethodProxy( //$NON-NLS-1$
-							"pack"); //$NON-NLS-1$
-		}
-		constants.windowPackProxy.invokeCatchThrowableExceptions(aWindowProxy);
 	}
 
 	/*

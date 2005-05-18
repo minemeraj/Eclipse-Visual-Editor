@@ -140,6 +140,24 @@ public static Object invokeSyncExec(ProxyFactoryRegistry registry, DisplayManage
 }
 
 /**
+ * Invoke the runnable on the display thread on the given display. This is used when expression are involved
+ * so that they will cross the thread boundary correctly. It will not return until completed. It will use
+ * the display associated with the vm that was started for this editor. There is a default one created for this.
+ * 
+ * @param registry the proxy registry to identify the vm to talk to.
+ * @param runnable the runnable to execute 
+ * @return the result, it will be either a IBeanProxy, IBeanProxy[], or <code>null</code>.
+ * @throws ThrowableProxy if a remote vm error occurred.
+ * @throws RunnableException if either a RuntimeException, or another specifically caught exception had occurred on this side.
+ * 
+ * @since 1.0.0
+ */
+public static Object invokeSyncExec(ProxyFactoryRegistry registry, DisplayManager.ExpressionDisplayRunnable runnable) throws ThrowableProxy, RunnableException {
+	JavaStandardSWTBeanConstants constants = getConstants(registry);
+	return DisplayManager.syncExec(constants.getDisplayProxy(), runnable);
+}
+
+/**
  * Invoke the runnable on the display thread on the given display. It will not return until completed. It will use
  * the display associated with the vm that was started for this editor. There is a default one created for this.
  * <p>
@@ -152,6 +170,30 @@ public static Object invokeSyncExec(ProxyFactoryRegistry registry, DisplayManage
  * @since 1.0.0
  */
 public static Object invokeSyncExecCatchThrowableExceptions(ProxyFactoryRegistry registry, DisplayManager.DisplayRunnable runnable) {
+	try {
+		return invokeSyncExec(registry, runnable);
+	} catch (ThrowableProxy e) {
+		SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
+	} catch (DisplayManager.DisplayRunnable.RunnableException e) {
+		SwtPlugin.getDefault().getLogger().log(e.getCause(), Level.WARNING);
+	}
+	return null;
+}
+
+/**
+ * Invoke the runnable on the display thread on the given display. This is used when expressions are involved and
+ * need to cross thread boundaries. It will not return until completed. It will use
+ * the display associated with the vm that was started for this editor. There is a default one created for this.
+ * <p>
+ * This one will catch and log all exceptions, either on this side or the VM side. It will return <code>null</code> in this case.
+ * 
+ * @param registry the proxy registry to identify the vm to talk to.
+ * @param runnable the runnable to execute
+ * @return the result, an <code>IBeanProxy</code>, <code>null</code>. If there were any exceptions, <code>null</code> will also be returned.
+ * 
+ * @since 1.0.0
+ */
+public static Object invokeSyncExecCatchThrowableExceptions(ProxyFactoryRegistry registry, DisplayManager.ExpressionDisplayRunnable runnable) {
 	try {
 		return invokeSyncExec(registry, runnable);
 	} catch (ThrowableProxy e) {
