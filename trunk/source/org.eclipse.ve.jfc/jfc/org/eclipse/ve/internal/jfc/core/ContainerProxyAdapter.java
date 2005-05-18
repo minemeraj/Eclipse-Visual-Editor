@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-17 16:32:10 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-18 14:07:12 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -274,7 +274,23 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 	 * @since 1.1.0
 	 */
 	protected void layoutChanged(IExpression expression) {
+
 		BeanAwtUtilities.invoke_removeAllComponents(getProxy(), expression);
+		// Do a restoreVisibility on all the components. They will be immediately removed so that should be ok.
+		// They will then be added back if they are still around at the end and the appropriate layout visibility will be reapplied.
+		Iterator components = ((List) getJavaObject().eGet(sfContainerComponents)).iterator();
+		while(components.hasNext()) {
+			EObject cc = (EObject) components.next();
+			IJavaInstance component = (IJavaInstance) cc.eGet(sfConstraintComponent);
+			try {
+				ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) BeanProxyUtilities.getBeanProxyHost(component);
+				if (componentProxyHost != null) {
+					componentProxyHost.restoreVisibility(expression);
+				}
+			} catch (ClassCastException e) {
+				// Slight possibility it wasn't a ComponentProxyAdapter due to some error like undefined class.
+			}
+		}
 		// Should never be excluding because we shouldn't be here during initialization.
 	    layoutChangePending = getModelChangeController().execAtEndOfTransaction(new Runnable(){
 	        public void run(){
