@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.41 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.42 $  $Date: 2005-05-18 21:15:05 $ 
  */
 
 import java.util.*;
@@ -505,7 +505,7 @@ protected void normalizeDecleration(BeanPart bp, CodeMethodRef method) {
  * Settings/JCMMethod generation will be constructed later
  * 
  */
-public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit cu) throws CodeGenException {
+public BeanPart createFromJVEModel(IJavaObjectInstance component, ICompilationUnit cu) throws CodeGenException {
 		
 			
       IType cuType = CodeGenUtil.getMainType(cu) ;
@@ -588,6 +588,7 @@ public void createFromJVEModel(IJavaObjectInstance component, ICompilationUnit c
       }
       bp.setModel(fBeanModel) ;
       fBeanModel.refreshMethods();
+	  return bp;
 }
 
 

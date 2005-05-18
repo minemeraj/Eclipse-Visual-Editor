@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.19 $  $Date: 2005-05-17 23:36:56 $ 
+ *  $Revision: 1.20 $  $Date: 2005-05-18 21:15:05 $ 
  */
 
 import java.util.*;
@@ -45,6 +45,7 @@ public class BeanDeclModel extends DefaultScannerFactory implements IBeanDeclMod
 	HashMap	  fBeanInitMethod = new HashMap() ;     // Keep a hash to all Methods  that update beans 
 	HashMap   fRefObjKey = new HashMap () ;         // Keep a hash from a EObject to Bean Part
     ArrayList fBeanDeleteCandidates = new ArrayList() ; // Hold before an Editor command is completed
+	ArrayList flazyCreateList = new ArrayList();  // Beans that were added to the VE model, but not geenrated yet
 	
 	TypeDeclaration				fTypeDeclaration = null ;           // The class element of the JDOM model
 	CodeTypeRef                 fTypeRef = null ;
@@ -251,10 +252,48 @@ public BeanPart getABean(String name) {
 }
 
 /**
+ * It is possible that an object was entered to the VE model, but we did not generate it 
+ * yet.  If we refer to it, that means it is type to create it.
+ * @param obj
+ * @return
+ * @throws CodeGenException
+ * 
+ * @since 1.1.0
+ */
+protected BeanPart  lazyCreateBeanInstance(EObject obj) {
+	
+	int idx = flazyCreateList.indexOf(obj);
+	if (idx<0)
+		return null;  // Not on the list of to be lazily created.
+	
+	if (! (obj instanceof IJavaObjectInstance))
+		return null;
+	
+	flazyCreateList.remove(idx);
+	
+    BeanPartFactory bgen = new BeanPartFactory(this,getCompositionModel()) ;
+    try {      
+      return bgen.createFromJVEModel((IJavaObjectInstance)obj,getCompilationUnit()) ;
+    }
+    catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
+      JavaVEPlugin.log(e, Level.WARNING) ;
+    }
+	return null;
+}
+
+public void lazyCreateBean(IJavaObjectInstance obj) {
+    if (!flazyCreateList.contains(obj))
+		flazyCreateList.add(obj);
+}
+
+/**
  *
  */
 public BeanPart getABean(EObject obj) {
-   return (BeanPart) fRefObjKey.get(obj)	 ;
+   BeanPart result = (BeanPart) fRefObjKey.get(obj); 
+   if (result==null) 
+	   result= lazyCreateBeanInstance(obj);
+   return result;   
 }
 
 public void UpdateRefObjKey(BeanPart bean,EObject prev) {

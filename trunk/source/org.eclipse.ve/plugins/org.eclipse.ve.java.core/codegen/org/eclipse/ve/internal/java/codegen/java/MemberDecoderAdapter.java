@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MemberDecoderAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-18 21:15:05 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -92,15 +92,22 @@ protected void  createBeanInstance(IJavaObjectInstance obj) throws CodeGenExcept
         // TODO We need to check if any attribute was set/removed and update the source
         return ;
     }
-    
-    BeanPartFactory bgen = new BeanPartFactory(fbeanModel,fbeanModel.getCompositionModel()) ;
-    try {      
-      bgen.createFromJVEModel(obj,fbeanModel.getCompilationUnit()) ;
-    }
-    catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
-      JavaVEPlugin.log(e, Level.WARNING) ;
-      return ;
-    }
+	
+    // We are not going to create the bean right now, as it may refer to other beans
+	// that are not in the model (e.g., a Composite/Button were just pasted,
+	// Composite may not be in the model at the time the Button is created.
+	//
+//    BeanPartFactory bgen = new BeanPartFactory(fbeanModel,fbeanModel.getCompositionModel()) ;
+//    try {      
+//      bgen.createFromJVEModel(obj,fbeanModel.getCompilationUnit()) ;
+//    }
+//    catch (org.eclipse.ve.internal.java.codegen.util.CodeGenException e) {
+//      JavaVEPlugin.log(e, Level.WARNING) ;
+//      return ;
+//    }
+	
+	// BDM will create the BeanPart lazily
+	fbeanModel.lazyCreateBean(obj);
 }
 
 protected void removeChildrenIfNeeded (BeanPart child) {
@@ -170,6 +177,7 @@ public static Object[] skipIntermediate(EObject obj, EStructuralFeature sf) {
  * a Property to a Member. In this case there is already a decoder/expression
  * associated with this value.  We need to track it down, and re-generate this expression 
  * to reflect the association with a new BeanPart.
+ * @deprecated
  */
 protected void processPromotionIfNeeded(Notification msg) {
 	
@@ -246,7 +254,6 @@ protected void processMembers(Notification msg) {
 		      if (!isInBeanSubClassComposition((IJavaObjectInstance)msg.getNewValue())) {
 		         try {
 					createBeanInstance((IJavaObjectInstance)msg.getNewValue()) ;
-					processPromotionIfNeeded(msg) ;
 				} catch (CodeGenException e) {
 					// We may be getting feedback, while parsing
 				}		         

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.36 $  $Date: 2005-05-17 23:36:56 $ 
+ *  $Revision: 1.37 $  $Date: 2005-05-18 21:15:05 $ 
  */
 
 import java.util.*;
@@ -540,11 +540,18 @@ protected ArrayList sortExpressions(List list) throws CodeGenException {
 	
 	ArrayList  sortedList = new ArrayList();
 	ArrayList  needSorting = new ArrayList();
+	ArrayList  notReadyForSorting = new ArrayList(); 
 	
 	
 	for (int i=0; i<list.size(); i++) {
 		CodeExpressionRef exp = (CodeExpressionRef) list.get(i);
-		if (!exp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED))
+		if (!exp.isStateSet(CodeExpressionRef.STATE_IN_SYNC)) {
+			//  expression generation may induce the generation of another one
+			//  e.g., a lazy creation of a BeanPart... so this one is not ready to 
+			//  be sorted yet.
+			notReadyForSorting.add(exp);
+		}
+		else if (!exp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED))
 			needSorting.add(exp);
 		else {
 			// Those that are already set in code, will not change
@@ -563,6 +570,7 @@ protected ArrayList sortExpressions(List list) throws CodeGenException {
 	for (int i=0; i<needSorting.size(); i++) {
 		addExpressionToSortedList(sortedList, (CodeExpressionRef)needSorting.get(i));
 	}		
+	sortedList.addAll(notReadyForSorting);
 	return sortedList;	
 }
 
