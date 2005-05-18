@@ -107,22 +107,22 @@ public class ImageCapture implements IImageCapture{
 		Menu menuBar = new Menu(shell,SWT.BAR);
 		shell.setMenuBar(menuBar);
 		MenuItem fileItem = new MenuItem(menuBar,SWT.CASCADE);
-		fileItem.setText("File");
+		fileItem.setText("File"); //$NON-NLS-1$
 		
 		final Button b = new Button(shell,SWT.PUSH);
-		b.setText("Foo");
+		b.setText("Foo"); //$NON-NLS-1$
 		b.setBounds(20,20,50,50);				
 		
 		final Group c = new Group(shell,SWT.BORDER);
-		c.setText("Group");
+		c.setText("Group"); //$NON-NLS-1$
 		c.setBackground(display.getSystemColor(SWT.COLOR_GREEN));
 		c.setBounds(60,40,120,80);
 		
 		c.setLayout(new GridLayout(1,false));
 		Button male = new Button(c,SWT.RADIO);
-		male.setText("Male");
+		male.setText("Male"); //$NON-NLS-1$
 		Button female = new Button(c,SWT.RADIO);
-		female.setText("Female");	
+		female.setText("Female");	 //$NON-NLS-1$
 		c.layout();	
 		
 		// Create a tab folder with two pages
@@ -130,26 +130,26 @@ public class ImageCapture implements IImageCapture{
 		tabFolder.setBounds(20,150,150,150);
 		TabItem page1 = new TabItem(tabFolder,SWT.NONE);
 		List list = new List(tabFolder,SWT.BORDER);
-		list.add("First List Item");
-		list.add("Second List Item");
+		list.add("First List Item"); //$NON-NLS-1$
+		list.add("Second List Item"); //$NON-NLS-1$
 		page1.setControl(list);
-		page1.setText("Page 1");
+		page1.setText("Page 1"); //$NON-NLS-1$
 		
 		TabItem page2 = new TabItem(tabFolder,SWT.NONE);
 		Label label1 = new Label(tabFolder,SWT.NONE);
-		label1.setText("Label");
+		label1.setText("Label"); //$NON-NLS-1$
 		page2.setControl(label1);
-		page2.setText("Page 2");		
+		page2.setText("Page 2");		 //$NON-NLS-1$
 		
 		final Table table = new Table(shell,SWT.BORDER);
 		TableColumn col1 = new TableColumn(table,SWT.NONE);
-		col1.setText("First");
+		col1.setText("First"); //$NON-NLS-1$
 		TableColumn col2 = new TableColumn(table,SWT.NONE);
-		col2.setText("Last");
+		col2.setText("Last"); //$NON-NLS-1$
 		TableItem item1 = new TableItem(table,SWT.NONE);
-		item1.setText(new String[] {"Joe","Gili"});	
+		item1.setText(new String[] {"Joe","Gili"});	 //$NON-NLS-1$ //$NON-NLS-2$
 		TableItem item2 = new TableItem(table,SWT.NONE);
-		item2.setText(new String[] {"Winchester","Mendel"});
+		item2.setText(new String[] {"Winchester","Mendel"}); //$NON-NLS-1$ //$NON-NLS-2$
 		col1.pack();
 		col2.pack();		
 		table.setLinesVisible(true);
@@ -157,13 +157,13 @@ public class ImageCapture implements IImageCapture{
 		table.setBounds(200,20,100,100);
 		
 		shell.setBackground(display.getSystemColor(SWT.COLOR_BLUE));
-		shell.setText("Title");
+		shell.setText("Title"); //$NON-NLS-1$
 		shell.setSize(400,350);		
 		
 		shell.addPaintListener(new PaintListener(){
 
 			public void paintControl(PaintEvent e) {
-				System.out.println("PaintEvent called back clipped to " + e.gc.getClipping());
+				System.out.println("PaintEvent called back clipped to " + e.gc.getClipping()); //$NON-NLS-1$
 				e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_RED));
 				e.gc.drawLine(0,0,100,100);
 			}
@@ -182,7 +182,7 @@ public class ImageCapture implements IImageCapture{
 		targetShell.setLayout(new GridLayout(1,false));		
 		
 		Button grabButton = new Button(targetShell,SWT.PUSH);
-		grabButton.setText("Grab image");
+		grabButton.setText("Grab image"); //$NON-NLS-1$
 				
 		Composite labelComposite = new Composite(targetShell,SWT.NO_REDRAW_RESIZE);
 		labelComposite.setBackground(display.getSystemColor(SWT.COLOR_WHITE));

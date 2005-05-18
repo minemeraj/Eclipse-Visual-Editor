@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutComposite.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-16 23:03:39 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-18 18:22:24 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -108,7 +108,7 @@ public class GridLayoutLayoutComposite extends Composite {
 		composite = new Composite(this, SWT.NONE);		   
 		composite.setLayout(new GridLayout());
 		showGridCheckBox = new Button(composite, SWT.CHECK);
-		showGridCheckBox.setText("Show Grid");
+		showGridCheckBox.setText(SWTMessages.getString("GridLayoutLayoutComposite.Checkbox.ShowGrid.Text")); //$NON-NLS-1$
 		showGridCheckBox.setSelection(showGrid);
 		showGridCheckBox.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {

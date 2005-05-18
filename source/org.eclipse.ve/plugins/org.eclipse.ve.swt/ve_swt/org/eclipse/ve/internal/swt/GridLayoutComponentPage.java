@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-17 21:36:10 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-18 18:22:24 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -646,11 +646,11 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		});
 
 		Label spacer = new Label(mainComposite, SWT.None);
-		spacer.setText("");
+		spacer.setText(""); //$NON-NLS-1$
 		
 		restoreAllButton = new Button(mainComposite, SWT.NONE);
 		restoreAllButton.setEnabled(hasGridDataValue);
-		restoreAllButton.setText("Restore all default values");
+		restoreAllButton.setText(SWTMessages.getString("GridLayoutComponentPage.Button.RestoreDefaults.Text")); //$NON-NLS-1$
 		restoreAllButton.addSelectionListener(new SelectionAdapter () {
 			public void widgetSelected(SelectionEvent e) {
 				restoreAllDefaultValues();
