@@ -11,10 +11,9 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.34 $  $Date: 2005-05-03 22:28:16 $ 
+ *  $Revision: 1.35 $  $Date: 2005-05-18 22:53:26 $ 
  */
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -201,14 +200,11 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 					return CodeGenUtil.getInitString((IJavaDataTypeInstance) currentVal,fbeanPart.getModel(), fOwner.getExprRef().getReqImports(), getExpressionReferences());
 
 			} else { // Is it a null value ??
-				EObject eobj = fbeanPart.getEObject();			
-				Iterator itr = ((JavaClass)eobj.eClass()).getAllProperties().iterator();
-				// TODO  
-				while (itr.hasNext()) {
-					EStructuralFeature sf = (EStructuralFeature) itr.next();
-					if (eobj.eIsSet(sf) && sf.equals(fFmapper.getFeature(null)))
+				EObject eobj = fbeanPart.getEObject();
+				EStructuralFeature sf = fFmapper.getFeature(null); 
+				if (((JavaClass)eobj.eClass()).getAllProperties().indexOf(sf) != -1)
+					if (eobj.eIsSet(sf))
 						return NULL_STRING;
-				}
 			}
 		}
 		return null;

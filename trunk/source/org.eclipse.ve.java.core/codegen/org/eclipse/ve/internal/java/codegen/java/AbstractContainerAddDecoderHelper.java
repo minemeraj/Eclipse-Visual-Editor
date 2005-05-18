@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.14 $  $Date: 2005-04-19 22:41:34 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-18 22:53:26 $ 
  */
 
 import java.util.*;
@@ -187,7 +187,7 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		}
 
 		// Unlink the real object from the intermediate/immediate object
-		if (targetRoot != null && targetRoot.eClass().getEAllStructuralFeatures().contains(getRootComponentSF())) {
+		if (targetRoot != null && targetRoot.eClass().getFeatureID(getRootComponentSF()) != -1) {
 			// The unsetting should be done on the intermediate object ONLY,
 			// which is NOT the component object. Else erroneous removal
 			// of settings is done

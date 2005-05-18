@@ -10,20 +10,19 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.18 $  $Date: 2005-05-18 21:15:05 $ 
+ *  $Revision: 1.19 $  $Date: 2005-05-18 22:53:26 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
-import java.util.*;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.impl.JavaClassImpl;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
@@ -230,7 +229,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 			return new CodeExpressionRef[] { primGenerateAttribute(sf, bean, null) };		
 		else {
 			List values = (List) bean.getEObject().eGet(sf);
-			ArrayList exprs = new ArrayList();
+			List exprs = new ArrayList();
 			for (int i = 0; i < values.size(); i++) 
 				exprs.add(primGenerateAttribute(sf, bean, new Object[]{values.get(i)}));
 			return (CodeExpressionRef[])exprs.toArray(new CodeExpressionRef[exprs.size()]);
@@ -246,21 +245,29 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	 */
 	protected void generateForSetFeatures (BeanPart bean) throws CodeGenException {
 		BeanPart.IBeanSourceGenerator gen = new BeanPart.IBeanSourceGenerator(){		
-			public void generateFromFeatures(BeanPart bp) throws CodeGenException {
+			public void generateFromFeatures(final BeanPart bp) throws CodeGenException {
 				EObject obj = bp.getEObject() ;
-				BeanDecoderAdapter a = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(obj, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER) ;		
-				Iterator itr = ((JavaClass)obj.eClass()).getEAllStructuralFeatures().iterator();
-				while (itr.hasNext()) {
-					EStructuralFeature sf = (EStructuralFeature) itr.next();
-					if (obj.eIsSet(sf)) {
-						if (ignoreSF(sf))
-							continue;
-						// Check if source was generated already
-						if (a.getSettingAdapters(sf) != null && a.getSettingAdapters(sf).length > 0)
-							continue;
-						generateAttribute(sf, bp);
+				final BeanDecoderAdapter a = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(obj, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER) ;
+				CodeGenException exp = (CodeGenException) FeatureValueProvider.FeatureValueProviderHelper.visitSetFeatures(obj, new FeatureValueProvider.Visitor() {
+				
+					public Object isSet(EStructuralFeature feature, Object value) {
+						try {
+							if (ignoreSF(feature))
+								return null;
+							// Check if source was generated already
+							if (a.getSettingAdapters(feature) != null && a.getSettingAdapters(feature).length > 0)
+								return null;
+							generateAttribute(feature, bp);
+							return null;
+						} catch (CodeGenException e) {
+							return e;
+						}
 					}
-				}				
+				
+				});
+				
+				if (exp != null)
+					throw exp;
 			}		
 		};		
 		if (bean.getInitExpression()==null)
