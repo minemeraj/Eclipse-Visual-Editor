@@ -9,18 +9,14 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositionComponentsTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-11 19:01:20 $
+ * $RCSfile: CompositionComponentsTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-05-18 13:45:17 $
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.util.*;
-import java.util.Collections;
-import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.*;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
@@ -60,7 +56,7 @@ public class CompositionComponentsTreeEditPart extends AbstractTreeEditPart {
 	 * @since 1.0.0
 	 */
 	protected void queueRefreshChildren() {
-		CDEUtilities.displayExec(this, "REFRESH_CHILDREN", new Runnable() {
+		CDEUtilities.displayExec(this, "REFRESH_CHILDREN", new Runnable() { //$NON-NLS-1$
 			public void run() {
 				// Test if active because this could of been queued up and not run until AFTER it was deactivated.
 				if (isActive())

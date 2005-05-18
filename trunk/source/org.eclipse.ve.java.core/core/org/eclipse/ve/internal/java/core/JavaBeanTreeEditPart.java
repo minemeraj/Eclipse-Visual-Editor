@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-05-12 12:09:56 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-05-18 13:45:17 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -51,7 +51,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 	protected IErrorNotifier.ErrorListener fErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 
 		public void errorStatusChanged() {
-			CDEUtilities.displayExec(JavaBeanTreeEditPart.this, "REFRESH_VISUALS", new Runnable() {
+			CDEUtilities.displayExec(JavaBeanTreeEditPart.this, "REFRESH_VISUALS", new Runnable() { //$NON-NLS-1$
 
 				public void run() {
 					if (isActive())
@@ -124,7 +124,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 				public void notifyChanged(Notification notification) {
 					if (notification.getFeature() == getSFObjectEvents())
-						queueExec(JavaBeanTreeEditPart.this, "EVENTS");
+						queueExec(JavaBeanTreeEditPart.this, "EVENTS"); //$NON-NLS-1$
 				}
 			};
 		}
@@ -346,7 +346,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 				
 				public void notifyChanged(Notification notification) {
 					if (notification.getFeatureID(AbstractEventInvocation.class) == JCMPackage.ABSTRACT_EVENT_INVOCATION__CALLBACKS)
-						queueExec(JavaBeanTreeEditPart.this, "CALLBACKS");
+						queueExec(JavaBeanTreeEditPart.this, "CALLBACKS"); //$NON-NLS-1$
 				}
 			};
 		}
@@ -363,7 +363,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 				public void notifyChanged(Notification notification) {
 					if (notification.getFeatureID(PropertyChangeEventInvocation.class) == JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES)
-						queueExec(JavaBeanTreeEditPart.this, "EVENT_PROPERTIES");
+						queueExec(JavaBeanTreeEditPart.this, "EVENT_PROPERTIES"); //$NON-NLS-1$
 				}
 			};
 		}
