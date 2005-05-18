@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.17 $  $Date: 2005-04-14 23:39:52 $ 
+ *  $Revision: 1.18 $  $Date: 2005-05-18 21:15:05 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
+import java.util.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -202,7 +203,8 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 	 */
 	protected boolean ignoreSF(EStructuralFeature sf) {				
 		EStructuralFeature[] ignore = getIgnoreSFlist() ;
-		if (sf == null || ignore==null || sf.isTransient() || sf.isMany()) return true ;
+//|| sf.isMany()		
+		if (sf == null || ignore==null || sf.isTransient()) return true ;
 		
 		for (int i = 0; i < ignore.length; i++) {
 			if (sf.equals(ignore[i])) return true ;
@@ -210,14 +212,29 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 		return false ;
 	}
 	
+	protected CodeExpressionRef primGenerateAttribute(EStructuralFeature sf,BeanPart bean, Object[] arg) throws CodeGenException {
+		ExpressionRefFactory egen = new ExpressionRefFactory(bean,sf) ;      	
+		CodeExpressionRef exp = egen.createFromJVEModel(arg) ;	
+		exp.insertContentToDocument() ;
+		if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+			JavaVEPlugin.log("\tAdding: " + exp.getContent(), Level.FINE); //$NON-NLS-1$
+		return exp;
+	}
+		
+
 	/**
 	 *  Create a new Expression for a given SF
 	 */
-	protected CodeExpressionRef GenerateAttribute(EStructuralFeature sf,BeanPart bean) throws CodeGenException {		
-		ExpressionRefFactory egen = new ExpressionRefFactory(bean,sf) ;      	
-		CodeExpressionRef exp = egen.createFromJVEModel(null) ;	
-		exp.insertContentToDocument() ;
-		return exp ;
+	protected CodeExpressionRef[] generateAttribute(EStructuralFeature sf,BeanPart bean) throws CodeGenException {		
+		if (!sf.isMany()) 
+			return new CodeExpressionRef[] { primGenerateAttribute(sf, bean, null) };		
+		else {
+			List values = (List) bean.getEObject().eGet(sf);
+			ArrayList exprs = new ArrayList();
+			for (int i = 0; i < values.size(); i++) 
+				exprs.add(primGenerateAttribute(sf, bean, new Object[]{values.get(i)}));
+			return (CodeExpressionRef[])exprs.toArray(new CodeExpressionRef[exprs.size()]);
+		}
 	}
 	/**
 	 * This method will generate Expressions for all set features
@@ -241,12 +258,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 						// Check if source was generated already
 						if (a.getSettingAdapters(sf) != null && a.getSettingAdapters(sf).length > 0)
 							continue;
-						CodeExpressionRef newExpr = GenerateAttribute(sf, bp);
-						String src = newExpr.getContent();
-						if (src == null)
-							throw new CodeGenException("Could not Generate Source"); //$NON-NLS-1$
-						if (JavaVEPlugin.isLoggingLevel(Level.FINE))
-							JavaVEPlugin.log("\tAdding: " + src, Level.FINE); //$NON-NLS-1$
+						generateAttribute(sf, bp);
 					}
 				}				
 			}		

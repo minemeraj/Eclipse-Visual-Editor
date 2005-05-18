@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.13 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-18 21:15:05 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -86,6 +86,13 @@ public interface IBeanDeclModel extends IScannerFactory {
 	public void driveExpressionChangedEvent(CodeMethodRef sourceMethod, int docOff, int delta) ;
 	public CodeMethodRef getMethod(String handle) ;
 	public Iterator getAllMethods() ;
+	/**
+	 * Mark the object as one that should be lazily created if reference in the future.
+	 * @param obj
+	 * 
+	 * @since 1.1.0
+	 */
+	public void lazyCreateBean(IJavaObjectInstance obj) ;
 	
 	/**
 	 * A CodeExpressionRef will call this API to fire an about to change Text when
