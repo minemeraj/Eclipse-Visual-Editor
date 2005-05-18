@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentManager.java,v $ $Revision: 1.9 $ $Date: 2005-05-18 18:39:17 $
+ * $RCSfile: ComponentManager.java,v $ $Revision: 1.10 $ $Date: 2005-05-18 22:53:55 $
  */
 
 import java.io.InputStream;
@@ -53,14 +53,16 @@ import org.eclipse.ve.internal.jfc.common.ImageDataConstants;
  * <p>
  * The way to use it outside of ComponentProxyAdapter for when you want to use an AWT Component as the visual component of a non-visual is this. When
  * you create your bean proxy for the component you will do a
- * {@link ComponentManager#setComponentBeanProxy(IProxy, IExpression , ModelChangeController)}. This will tell it what component to monitor. When
+ * {@link ComponentManager#setComponentBeanProxy(CompomentManagerExtension, IExpression , ModelChangeController)}. This will tell it what component to monitor. When
  * this component is disposed, {@link ComponentManager#dispose(IExpression)} should be called to release all of the resources this manager is using.
  * Once disposed, the manager can be used again by just doing the setComponentBeanProxy.
  * <p>
  * Whenever changes are being made to a component, you should call {@link ComponentManager#invalidate(ModelChangeController)} so that we know this and
  * can invalidate and revalidate this component and any parent component with a new image. You can all invalidate as often as needed during a
  * transaction. It will use the ModelChangeController to batch it down one transaction at the end of the current transaction.
- * 
+ * <p>
+ * This class in not meant to be subclassed, 
+ * use {@link ComponentManager#addComponentExtension(CompomentManagerExtension, IExpression)} to add extensions to the manager instead.
  * @since 1.0.0
  */
 public class ComponentManager {
@@ -119,10 +121,167 @@ public class ComponentManager {
 
 	private static final int VALID = 3; // Image is valid.
 
-	private ListenerList componentImageListeners; // KLUDGE need an extra list because we want to signal status and ImageNotifier doesn't signal
-													// image
+	private ListenerList componentImageListeners; // KLUDGE need an extra list because we want to signal status and ImageNotifier doesn't signal image status.
+	
+	private static final String COMPONENTMANAGER_CLASSNAME = "org.eclipse.ve.internal.jfc.vm.ComponentManager";	//$NON-NLS-1$
+	private static final String COMPONENTMANAGEREXTENSION_CLASSNAME = COMPONENTMANAGER_CLASSNAME+"$ComponentManagerExtension";	//$NON-NLS-1$
+	
+	private List extensions;
+	
+	/**
+	 * This is the base class for all component manager extensions.
+	 * 
+	 * @since 1.1.0
+	 */
+	public abstract static class ComponentManagerExtension {
+		
+		/**
+		 * Get the extension proxy to add to the component manager. This may be called
+		 * several times so don't get rid of the proxy until disposed.
+		 * <p>
+		 * The default implementation will ask for the classname and create using default constructor.
+		 * It will use primGetExtensionProxy to get the proxy whether it is created or not and
+		 * use primSetExtensionProxy to set it back. Subclasses should override if they want
+		 * something different.
+		 * 
+		 * @param expression
+		 * @return
+		 * 
+		 * @since 1.1.0
+		 */
+		protected IProxy getExtensionProxy(IExpression expression) {
+			IProxy managerExtensionProxy = primGetExtensionProxy();
+			if (managerExtensionProxy == null || ((managerExtensionProxy.isBeanProxy() && !((IBeanProxy) managerExtensionProxy).isValid()))) {
+				// Need a new one.
+				String extensionClassname = getExtensionClassname();
+				if (extensionClassname != null) {
+					primSetExtensionProxy(managerExtensionProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION));
+					expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, extensionClassname), 0);
+					((ExpressionProxy) managerExtensionProxy).addProxyListener(new ExpressionProxy.ProxyListener() {
+					
+						public void proxyVoid(ProxyEvent event) {
+							primSetExtensionProxy(null);
+						}
+					
+						public void proxyNotResolved(ProxyEvent event) {
+							primSetExtensionProxy(null);
+						}
+					
+						public void proxyResolved(ProxyEvent event) {
+							primSetExtensionProxy(event.getProxy());
+						}
+					
+					});
+				}
+			}
+			return managerExtensionProxy;
 
-	// status.
+		}
+		
+		/**
+		 * Get the extension class name. Used in the default implementation of getExtensionProxy(). It is the
+		 * name of the extension class to instantiate with the default ctor. If using the default implementation
+		 * of getExtensionProxy, this method must be overridden to return something valid.
+		 * 
+		 * @return
+		 * 
+		 * @since 1.1.0
+		 */
+		protected String getExtensionClassname() {
+			return null;
+		}
+		
+		/**
+		 * Used by default implementation of getExtensionProxy to get the current proxy
+		 * whatever it may be or null.
+		 * <p>
+		 * Only needs to be implemented if used default implementation of getExtensionProxy.
+		 * @return
+		 * 
+		 * @since 1.1.0
+		 */
+		protected IProxy primGetExtensionProxy() {
+			return null;
+		}
+		
+		/**
+		 * Used by default implementation of getExtensionProxy and disposed to set the
+		 * proxy. It may set an ExpressionProxy or an IBeanProxy or null.
+		 * 
+		 * @param proxy
+		 * 
+		 * @since 1.1.0
+		 */
+		protected void primSetExtensionProxy(IProxy proxy) {
+			
+		}
+		
+		/**
+		 * The component manager proxy is being disposed or the extension is being
+		 * removed from the component manager. Subclasses should
+		 * implement and get rid of their proxies. If it wasn't a remove, the extension is still
+		 * valid and can be reactivated at a later time.
+		 * <p>
+		 * The default implementation calls primSetExtensionProxy(null).
+		 * @param expression
+		 * 
+		 * @since 1.1.0
+		 */
+		protected void disposed(IExpression expression) {
+			primSetExtensionProxy(null);
+		}
+
+	}
+	/**
+	 * Add a component extension. If already added it has no effect.
+	 * 
+	 * @param componentExtension
+	 * @param expression expression to add with, or <code>null</code> ONLY if being added at the same time as the
+	 * component manager itself is being constructed, see {@link ComponentProxyAdapter#createComponentManager()}.
+	 * 
+	 * @see ComponentManager#removeComponentExtension(CompomentManagerExtension, IExpression)
+	 * @since 1.1.0
+	 */
+	public void addComponentExtension(ComponentManagerExtension componentExtension, IExpression expression) {
+		if (extensions == null)
+			extensions = new ArrayList(1);
+		extensions.add(componentExtension);
+		if (fComponentManagerProxy != null)
+			addExtensionProxy(componentExtension, expression);
+	}
+	
+	private void addExtensionProxy(ComponentManagerExtension extension, IExpression expression) {
+		expression.createSimpleMethodInvoke(expression.getRegistry().getBeanTypeProxyFactory()
+				.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy(expression, "addExtension", new String[] {COMPONENTMANAGEREXTENSION_CLASSNAME}), 	//$NON-NLS-1$
+				fComponentManagerProxy, new IProxy[] {extension.getExtensionProxy(expression)}, false);		
+		
+	}
+	
+	private void removeExtensionProxy(ComponentManagerExtension extension, IExpression expression) {
+		expression.createSimpleMethodInvoke(expression.getRegistry().getBeanTypeProxyFactory()
+				.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy(expression, "removeExtension", new String[] {COMPONENTMANAGEREXTENSION_CLASSNAME}), 	//$NON-NLS-1$
+				fComponentManagerProxy, new IProxy[] {extension.getExtensionProxy(expression)}, false);		
+		
+	}
+	
+	/**
+	 * Remove a component extension. If not in list it will be ignored.
+	 * 
+	 * @param componentExtension
+	 * @param expression
+	 * 
+	 * @since 1.1.0
+	 */
+	public void removeComponentExtension(ComponentManagerExtension componentExtension, IExpression expression) {
+		if (extensions != null) {
+			if (extensions.remove(componentExtension)) {
+				if (fComponentManagerProxy != null && fComponentManagerProxy.isBeanProxy() && ((IBeanProxy) fComponentManagerProxy).isValid()) {
+					removeExtensionProxy(componentExtension, expression);
+				}
+				componentExtension.disposed(expression);
+			}
+		}
+	}	
 
 	/**
 	 * Add a component listener.
@@ -200,7 +359,7 @@ public class ComponentManager {
 				ExpressionProxy newManager = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 				fComponentManagerProxy = newManager;
 				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, expression.getRegistry().getBeanTypeProxyFactory()
-						.getBeanTypeProxy(expression, getComponentManagerClassname()), 0);
+						.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME), 0);
 				newManager.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
 					public void proxyResolved(ProxyEvent event) {
@@ -213,6 +372,13 @@ public class ComponentManager {
 						fComponentManagerProxy = null;
 					}
 				});
+				
+				// Since this is new, add in any extensions that are pending.
+				if (extensions != null) {
+					for (int i = 0; i < extensions.size(); i++) {
+						addExtensionProxy((ComponentManagerExtension) extensions.get(i), expression);
+					}
+				}
 			}
 
 			expression.createSimpleMethodInvoke(BeanAwtUtilities.getSetComponentMethodProxy(expression), fComponentManagerProxy, new IProxy[] {
@@ -236,17 +402,6 @@ public class ComponentManager {
 			feedbackController.queueInitialRefresh(changeController);
 			feedbackController.queueInvalidate(this, changeController); // Also queue up an invalidate and an image refresh to occur also.
 		}
-	}
-
-	/**
-	 * Get the component manager classname. Subclasses should return there own if necessary.
-	 * 
-	 * @return
-	 * 
-	 * @since 1.1.0
-	 */
-	protected String getComponentManagerClassname() {
-		return "org.eclipse.ve.internal.jfc.vm.ComponentManager"; //$NON-NLS-1$
 	}
 
 	/**
@@ -390,6 +545,13 @@ public class ComponentManager {
 					expression.createSimpleMethodInvoke(BeanAwtUtilities.getSetComponentMethodProxy(expression), fComponentManagerProxy,
 							new IProxy[] { null, feedback.getProxy()}, false);
 					getComponentManagerBeanProxy().getProxyFactoryRegistry().releaseProxy(getComponentManagerBeanProxy());
+				}
+			}
+			
+			if (extensions != null) {
+				// Dispose the extensions.
+				for (int i = 0; i < extensions.size(); i++) {
+					((ComponentManagerExtension) extensions.get(i)).disposed(expression);
 				}
 			}
 			locationOverride = null;
@@ -811,7 +973,7 @@ public class ComponentManager {
 	 * <li>All callbacks from the proxy side are funneled through the proxy side's feedback controller and queued up to the most appropriate time and
 	 * will then send them back through this controller in one transaction. This controller will then distribute the callbacks to the appropriate
 	 * component managers.
-	 * <li>All {@link ComponentManager#setComponentBeanProxy(IProxy, IExpression, ModelChangeController) componentManagersetComponent}calls queue up
+	 * <li>All {@link ComponentManager#setComponentBeanProxy(CompomentManagerExtension, IExpression, ModelChangeController) componentManagersetComponent}calls queue up
 	 * on the proxy side a request for an initial refresh (send back of initial bounds). This class will, through
 	 * {@link FeedbackController#queueInitialRefresh(ModelChangeController) queueInitialRefresh}, add to the change controller an end of transaction
 	 * request. This request at the end of the transaction will then ask the feedback controller on the proxy side to send all in one transaction all

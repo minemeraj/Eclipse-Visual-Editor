@@ -10,22 +10,32 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.jfc.core;
 /*
- *  $RCSfile: JSplitPaneManager.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $RCSfile: JSplitPaneManagerExtension.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-05-18 22:53:56 $ 
  */
 
 import org.eclipse.jem.internal.proxy.core.IExpression;
 import org.eclipse.jem.internal.proxy.core.IProxy;
 
 /**
- * JSplitPane Manager, client (IDE) side.
+ * JSplitPane Manager extension, client (IDE) side.
  * 
  * @since 1.1.0
  */
-public class JSplitPaneManager extends ComponentManager {
+public class JSplitPaneManagerExtension extends ComponentManager.ComponentManagerExtension {
 
-	protected String getComponentManagerClassname() {
-		return "org.eclipse.ve.internal.jfc.vm.JSplitPaneManager"; //$NON-NLS-1$
+	protected IProxy managerExtensionProxy;
+	
+	protected String getExtensionClassname() {
+		return "org.eclipse.ve.internal.jfc.vm.JSplitPaneManagerExtension";	//$NON-NLS-1$
+	}
+	
+	protected IProxy primGetExtensionProxy() {
+		return managerExtensionProxy;
+	}
+	
+	protected void primSetExtensionProxy(IProxy proxy) {
+		managerExtensionProxy = proxy;
 	}
 	
 	/**
@@ -39,6 +49,6 @@ public class JSplitPaneManager extends ComponentManager {
 	 * @since 1.1.0
 	 */
 	public IProxy setDividerLocation(IProxy dividerLocation, boolean returnOldLocation, IExpression expression) {
-		return BeanAwtUtilities.invoke_JSplitPane_setDividerLocation(getComponentManagerProxy(), dividerLocation, returnOldLocation, expression);		
+		return BeanAwtUtilities.invoke_JSplitPane_setDividerLocation(managerExtensionProxy, dividerLocation, returnOldLocation, expression);		
 	}
 }
