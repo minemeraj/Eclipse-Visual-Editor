@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-18 19:31:04 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-19 17:15:26 $ 
  */
 
 
@@ -32,9 +32,11 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 
+import org.eclipse.ve.internal.cdm.Annotation;
+
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
-import org.eclipse.ve.internal.cdm.Annotation;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 /**
@@ -62,24 +64,10 @@ public abstract class XYLayoutEditPolicy extends org.eclipse.gef.editpolicies.XY
 	protected boolean allowGridding = true;
 
 	private IFigure sizeOnDropFeedback = null;
+	private boolean showGridPreference = CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED);		
+	private EditPartListener editPartSelectionListener;
 	
 	
-/**
- * creates the EditPartListener for observing when children are added to the host.
- * Need to override this to force the grid figure to the beginning when a child is added.
- * @return EditPartListener
- */
-protected EditPartListener createListener() {
-	return new EditPartListener.Stub() {
-		public void childAdded(EditPart child, int index) {
-			decorateChild(child);
-			if (gridController != null && gridFigure != null && gridController.isGridShowing()) {
-				getHostFigure().remove(gridFigure);
-				getHostFigure().add(gridFigure, 0);
-			}
-		}
-	};
-}
 /**
  * If gridding is not wanted, then set this to false.
  * The default is true.
@@ -115,12 +103,16 @@ public void activate() {
 		gridController = new GridController();
 		if (gridController != null) {
 			gridFigure = createGridFigure();
-			gridFigure.setVisible(gridController.isGridShowing());
+			gridFigure.setVisible(false);
 			IFigure fig = ((GraphicalEditPart) getHost()).getFigure();
-			fig.add(gridFigure, 0);	// grid needs to be first so it doesn't overlay the children
+			fig.add(gridFigure);	// grid needs to be first so it doesn't overlay the children
 			gridController.addGridListener(this);
 			GridController.registerEditPart(getHost(), gridController);
 			initializeGrid();
+			if (showGridPreference) {
+				editPartSelectionListener = createEditPartSelectionListener();
+				getHost().addEditPartListener(editPartSelectionListener);
+			}
 		}
 	}
 	
@@ -165,6 +157,10 @@ public void deactivate() {
 		gridFigure = null;		
 	}	
 	undecorateChildren();
+	if (editPartSelectionListener != null) {
+		getHost().removeEditPartListener(editPartSelectionListener);
+		editPartSelectionListener = null;
+	}
 	super.deactivate();
 }
 
@@ -212,8 +208,6 @@ public void gridMarginChanged(int newMargin, int oldMargin) {
  */
 public void gridVisibilityChanged(boolean showGrid) {
 	gridFigure.setVisible(showGrid);
-	getHostFigure().remove(gridFigure);
-	getHostFigure().add(gridFigure, 0);
 	if (showGrid) {
 		// Set out layout constrainer and also decorate the figure.
 		layoutConstrainer = createGridConstrainer();
@@ -767,6 +761,28 @@ protected void undecorateChild(EditPart child){
 	 */
 	protected void decorateChild(EditPart child) {		
 		super.decorateChild(child);
+	}
+	/*
+	 * Create an editpart listener for the host edit part that will show the grid
+	 * if the editpart is selected. This is based on the SHOW_GRID_WHEN_SELECTED preferences.
+	 */
+	private EditPartListener createEditPartSelectionListener() {
+		return new EditPartListener.Stub() {
+			public void childAdded(EditPart editpart, int index) {
+			}
+			public void removingChild(EditPart editpart, int index) {
+			}
+			public void selectedStateChanged(EditPart editpart) {
+				if (editpart == null || editpart == getHost()
+						&& (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
+					if (gridController != null)
+						gridController.setGridShowing(true);
+				} else {
+					if (gridController != null)
+						gridController.setGridShowing(false);
+				}
+			}
+		};
 	}
 
 }
