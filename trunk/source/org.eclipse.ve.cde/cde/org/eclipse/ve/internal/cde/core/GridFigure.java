@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridFigure.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-19 17:14:43 $ 
  */
 
 
@@ -161,7 +161,12 @@ public class GridFigure extends Figure {
 	protected Rectangle[] getChildRectangles(){
 	
 		ArrayList childRectangles = new ArrayList(10);
-		Iterator siblings = getParent().getChildren().iterator();
+		IFigure parent = getParent();
+		Iterator siblings = null;
+		if (parent instanceof ContentPaneFigure)
+			siblings = ((ContentPaneFigure)parent).getContentPane().getChildren().iterator();
+		else
+			siblings = parent.getChildren().iterator();
 		while (siblings.hasNext()) {
 			IFigure sibling = (Figure) siblings.next();
 			if (sibling != this && sibling.isVisible())
@@ -191,6 +196,15 @@ public class GridFigure extends Figure {
 		gd.gridBorder = getParent().getClientArea();
 		gd.gridBorder.shrink(gd.gridMargin, gd.gridMargin);	// Inset it by the margin.
 		gd.gridController = gridController;		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.draw2d.Figure#containsPoint(int, int)
+	 * 
+	 * Need to return false so hit test doesn't apply to this figure.
+	 */
+	public boolean containsPoint(int x, int y) {
+		return false;
 	}
 	
 }
