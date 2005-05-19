@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.14 $ $Date: 2005-05-17 23:49:28 $
+ * $Revision: 1.15 $ $Date: 2005-05-19 14:40:14 $
  */
 import java.util.HashSet;
 import java.util.List;
@@ -495,10 +495,6 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 	 */
 	private EditPartListener createEditPartSelectionListener() {
 		return new EditPartListener.Stub() {
-			public void childAdded(EditPart editpart, int index) {
-			}
-			public void removingChild(EditPart editpart, int index) {
-			}
 			public void selectedStateChanged(EditPart editpart) {
 				if (editpart == null || editpart == getHost()
 						&& (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
