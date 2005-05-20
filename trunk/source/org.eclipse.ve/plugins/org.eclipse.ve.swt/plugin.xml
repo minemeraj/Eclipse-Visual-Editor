@@ -168,6 +168,26 @@
          </action>
       </objectContribution>
    	 <!-- 
+	 	Snap to Grid
+	 -->
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.internal.swt.snaptogridaction.popup.object">
+         <filter
+               name="BEANTYPE"
+               value="org.eclipse.swt.widgets.Composite">
+         </filter>
+         <filter
+               name="EDITPOLICY#snaptogrid"
+               value="false">
+         </filter>
+         <action
+               label="%PopupMenus.SnapToGridAction.Label  Snap To Grid"
+               class="org.eclipse.ve.internal.cde.core.SnapToGridObjectActionDelegate"
+               id="org.eclipse.ve.internal.swt.snaptogridaction">
+         </action>
+      </objectContribution>
+   	 <!-- 
 	 	Change Parent on a Shell widget
 	 -->
      <objectContribution

@@ -11,11 +11,12 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-19 17:15:26 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-20 21:53:21 $ 
  */
 
 
 
+import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -66,6 +67,12 @@ public abstract class XYLayoutEditPolicy extends org.eclipse.gef.editpolicies.XY
 	private IFigure sizeOnDropFeedback = null;
 	private boolean showGridPreference = CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED);		
 	private EditPartListener editPartSelectionListener;
+
+	private boolean fShowGrid = false;
+
+	protected boolean fSnapToGrid = false;
+
+	private PropertyChangeListener fPropertyChangeListener;
 	
 	
 /**
@@ -100,21 +107,37 @@ public void activate() {
 	}
 	
 	if (allowGridding) {
-		gridController = new GridController();
-		if (gridController != null) {
-			gridFigure = createGridFigure();
-			gridFigure.setVisible(false);
-			IFigure fig = ((GraphicalEditPart) getHost()).getFigure();
-			fig.add(gridFigure);	// grid needs to be first so it doesn't overlay the children
-			gridController.addGridListener(this);
-			GridController.registerEditPart(getHost(), gridController);
-			initializeGrid();
-			if (showGridPreference) {
-				editPartSelectionListener = createEditPartSelectionListener();
-				getHost().addEditPartListener(editPartSelectionListener);
+			// Set the snap to grid capability based on the global setting in the viewer
+			EditPartViewer primaryViewer = getHost().getRoot().getViewer();
+			Object snapToGrid = primaryViewer.getProperty(SnapToGrid.PROPERTY_GRID_ENABLED);
+			if (snapToGrid != null)
+				fSnapToGrid = ((Boolean) snapToGrid).booleanValue();
+			// Add a listener to know when the snap to grid action is toggled
+			primaryViewer.addPropertyChangeListener(fPropertyChangeListener = new PropertyChangeListener() {
+
+				public void propertyChange(java.beans.PropertyChangeEvent evt) {
+					if (evt.getPropertyName().equals(SnapToGrid.PROPERTY_GRID_VISIBLE)
+							|| evt.getPropertyName().equals(SnapToGrid.PROPERTY_GRID_ENABLED)) {
+						fSnapToGrid = ((Boolean) evt.getNewValue()).booleanValue();
+					}
+				};
+			});
+
+			gridController = new GridController();
+			if (gridController != null) {
+				gridFigure = createGridFigure();
+				gridFigure.setVisible(false);
+				IFigure fig = ((GraphicalEditPart) getHost()).getFigure();
+				fig.add(gridFigure); // grid needs to be first so it doesn't overlay the children
+				gridController.addGridListener(this);
+				GridController.registerEditPart(getHost(), gridController);
+				initializeGrid();
+				if (showGridPreference) {
+					editPartSelectionListener = createEditPartSelectionListener();
+					getHost().addEditPartListener(editPartSelectionListener);
+				}
 			}
 		}
-	}
 	
 	CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), AlignmentXYGridPropertiesPage.class);
 	CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(), AlignmentXYComponentPage.class);	
@@ -161,6 +184,8 @@ public void deactivate() {
 		getHost().removeEditPartListener(editPartSelectionListener);
 		editPartSelectionListener = null;
 	}
+	if (fPropertyChangeListener != null)
+		getHost().getRoot().getViewer().removePropertyChangeListener(fPropertyChangeListener);
 	super.deactivate();
 }
 
@@ -207,14 +232,29 @@ public void gridMarginChanged(int newMargin, int oldMargin) {
  * Set the grid decoration on the edit part to be a fixed grid
  */
 public void gridVisibilityChanged(boolean showGrid) {
-	gridFigure.setVisible(showGrid);
-	if (showGrid) {
-		// Set out layout constrainer and also decorate the figure.
+	if (showGrid)
+		showGridFigure();
+	else
+		eraseGridFigure();
+
+	fShowGrid = showGrid;
+}
+
+private void showGridFigure() {
+	if (!fShowGrid  && gridFigure != null) {
+		gridFigure.setVisible(true);
 		layoutConstrainer = createGridConstrainer();
-	} else {
+	}
+
+}
+
+private void eraseGridFigure() {
+	if (gridFigure != null) {
+		gridFigure.setVisible(false);
 		layoutConstrainer = null;
 	}
 }
+
 public Command getCommand(Request request){
 	if (RequestConstantsCDE.REQ_DISTRIBUTE_CHILD.equals(request.getType()))
 		return getDistributeChildCommand(request);
@@ -454,7 +494,7 @@ public Object getConstraintFor(Point p) {
 		rect.setLocation(zoomController.unzoomCoordinate(rect.x), zoomController.unzoomCoordinate(rect.y));
 	}
 	// Let the layout constrainer adjust it
-	if ( layoutConstrainer != null ) {
+	if ( layoutConstrainer != null && fSnapToGrid) {
 		rect = layoutConstrainer.adjustConstraintFor(rect);
 	}
 	return rect;
@@ -471,7 +511,7 @@ public Object getConstraintFor(Rectangle r) {
 		rect.setLocation(zoomController.unzoomCoordinate(rect.x), zoomController.unzoomCoordinate(rect.y));
 	}
 	// Let the layout constrainer adjust it
-	if ( layoutConstrainer != null ) {
+	if ( layoutConstrainer != null && fSnapToGrid) {
 		rect = layoutConstrainer.adjustConstraintFor(rect);
 	}
 	return rect;
@@ -485,42 +525,44 @@ protected IFigure createDragTargetFeedbackFigure(Rectangle rect) {
 	// Use a ghost rectangle for feedback
 	RectangleFigure r = new RectangleFigure();
 	FigureUtilities.makeGhostShape(r);
-	r.setLineStyle(Graphics.LINE_DASHDOT);
-	r.setForegroundColor(ColorConstants.white);
+	r.setLineStyle(Graphics.LINE_DOT);
+	r.setForegroundColor(ColorConstants.darkGray);
 	r.setBounds(rect);
 	return r;
 }
 /* Remove the overall figure feedback and each target figure feedback.
  */
-protected void eraseLayoutTargetFeedback(Request request) {
-	super.eraseLayoutTargetFeedback(request);
-	if (cursorLabel != null) {
-		cursorLabel = null;
-	}
-	if (yCursorLabel != null) {
-		yCursorLabel = null;
-	}
-	if (fCursorFigure != null) {
-		fCursorFigure = null;
-	}
-	if (fCursorHelper != null) {
-		fCursorHelper.dispose();
-		fCursorHelper = null;
-	}
-	if (feedbackList != null) {
-		for (int i=0; i < feedbackList.size(); i++) {
-			removeFeedback((IFigure)feedbackList.get(i));
+	protected void eraseLayoutTargetFeedback(Request request) {
+		if (!fShowGrid)
+			eraseGridFigure();
+		super.eraseLayoutTargetFeedback(request);
+		if (cursorLabel != null) {
+			cursorLabel = null;
 		}
-		feedbackList = null;
-	}
-	if (sizeOnDropFeedback != null) {
-		removeFeedback(sizeOnDropFeedback);
-		sizeOnDropFeedback  = null;
-	}
-	if (targetFeedback != null) {
-		removeFeedback(targetFeedback);
-		targetFeedback = null;
-	}
+		if (yCursorLabel != null) {
+			yCursorLabel = null;
+		}
+		if (fCursorFigure != null) {
+			fCursorFigure = null;
+		}
+		if (fCursorHelper != null) {
+			fCursorHelper.dispose();
+			fCursorHelper = null;
+		}
+		if (feedbackList != null) {
+			for (int i = 0; i < feedbackList.size(); i++) {
+				removeFeedback((IFigure) feedbackList.get(i));
+			}
+			feedbackList = null;
+		}
+		if (sizeOnDropFeedback != null) {
+			removeFeedback(sizeOnDropFeedback);
+			sizeOnDropFeedback = null;
+		}
+		if (targetFeedback != null) {
+			removeFeedback(targetFeedback);
+			targetFeedback = null;
+		}
 }
 /*
  * Provide feedback on the overall figure and the request figure.
@@ -674,7 +716,7 @@ protected Object getConstraintFor (ChangeBoundsRequest request, GraphicalEditPar
 //	Rectangle rect = child.getFigure().getBounds().getTranslated(getHostFigure().getClientArea().getLocation().negate()); // Remove the inset
 	// Call our own getTransformedRectangle(...) to adjust it according to the zoom factor.
 //	getTransformedRectangle(rect, request);
-	if ( layoutConstrainer != null ) {
+	if ( layoutConstrainer != null && fSnapToGrid) {
 		// Let the layout constrainer adjust it
 		rect = layoutConstrainer.adjustConstraintFor(rect);
 	}
@@ -702,6 +744,7 @@ protected XYLayoutGridConstrainer createGridConstrainer() {
 }
 
 protected void showLayoutTargetFeedback(Request request) {
+	showGridFigure();
 	getRectangleFeedback(request);
 	showCursorFeedback(request);
 }
@@ -743,6 +786,8 @@ public boolean testAttribute(Object target, String name, String value) {
 			gridController.isGridShowing() )
 		return true;
 	else if (name.startsWith(CustomizeLayoutPage.LAYOUT_POLICY_KEY) && value.equals(LAYOUT_ID)) //$NON-NLS-1$
+		return true;
+	else if (name.startsWith("snaptogrid"))
 		return true;
 		
 	return false;
