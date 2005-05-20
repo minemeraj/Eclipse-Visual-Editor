@@ -280,10 +280,13 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 			getModelChangeController().execAtEndOfTransaction(new Runnable() {
 
 				public void run() {
-					fControlManager.captureImage();
-					imSupport.fireImageChanged(fControlManager.getImageData());
+					if (fControlManager!=null) { 
+					  // We were not disposed by the time we got here 
+					  fControlManager.captureImage();
+					  imSupport.fireImageChanged(fControlManager.getImageData());
+					}
 				}
-			}, "image");
+			}, new ModelChangeController.HashKey(this, "image"));
 
 		}
 	}
