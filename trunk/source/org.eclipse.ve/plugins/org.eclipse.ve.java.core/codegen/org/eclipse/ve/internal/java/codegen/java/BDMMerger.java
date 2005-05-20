@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.48 $  $Date: 2005-05-17 23:36:01 $ 
+ *  $Revision: 1.49 $  $Date: 2005-05-20 16:29:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -51,6 +51,7 @@ public class BDMMerger {
 	
 	protected List needToRedecodeExpressions = new ArrayList();
 	protected HashMap newBDMToMainBDMBeanPartMap = new HashMap();
+	protected HashMap expressionEquivalencyMap = new HashMap();
 	
 	/**
 	 * 
@@ -104,7 +105,47 @@ public class BDMMerger {
 			merged = merged && clean() ;
 		}
 		needToRedecodeExpressions.clear();
+		expressionEquivalencyMap.clear();
+		newBDMToMainBDMBeanPartMap.clear();
 		return merged ;
+	}
+	
+	private int determineEquivalency(CodeExpressionRef exp1, CodeExpressionRef exp2) throws CodeGenException{
+		boolean exp1_exp2_cacheFound = false;
+		boolean exp2_exp1_cacheFound = false;
+		if(expressionEquivalencyMap.containsKey(exp1)){
+			HashMap exp1Map = (HashMap) expressionEquivalencyMap.get(exp1);
+			if(exp1Map!=null){
+				if(exp1Map.containsKey(exp2)){
+					exp1_exp2_cacheFound = true;
+				}
+			}
+		}
+		if(!exp2_exp1_cacheFound && expressionEquivalencyMap.containsKey(exp2)){
+			HashMap exp2Map = (HashMap) expressionEquivalencyMap.get(exp2);
+			if(exp2Map!=null){
+				if(exp2Map.containsKey(exp1)){
+					exp2_exp1_cacheFound = true;
+				}
+			}
+		}
+		
+		int equivalency ;
+		if(exp1_exp2_cacheFound || exp2_exp1_cacheFound){
+			HashMap map = (HashMap) (exp1_exp2_cacheFound?expressionEquivalencyMap.get(exp1):expressionEquivalencyMap.get(exp2));
+			Integer eqInt = (Integer) map.get(exp1_exp2_cacheFound?exp2:exp1);
+			equivalency = eqInt.intValue();
+		}else{
+			// no cache - call isEquivalent
+			HashMap map = (HashMap) expressionEquivalencyMap.get(exp1);
+			if(map==null){
+				map = new HashMap();
+				expressionEquivalencyMap.put(exp1, map);
+			}
+			equivalency = exp1.isEquivalent(exp2);
+			map.put(exp2, new Integer(equivalency));
+		}
+		return equivalency;
 	}
 	
 	/**
@@ -589,7 +630,7 @@ public class BDMMerger {
 				if (mainExp != null && updExp != null && !updExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
 					int equivalency = -1;
 					try {
-						equivalency = mainExp.isEquivalent(updExp);
+						equivalency = determineEquivalency(mainExp, updExp);
 					} catch (CodeGenException e) {} 
 					if ( equivalency < 0) 
 						continue ; // Not the same expressions
@@ -666,7 +707,7 @@ public class BDMMerger {
 				return 1;
 			}return -1;
 		}else{
-			return mainExp.isEquivalent(updExp) ;
+			return determineEquivalency(mainExp, updExp) ;
 		}
 	}
 
@@ -688,7 +729,7 @@ public class BDMMerger {
 				if (mainExp != null && updExp != null && !updExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
 					int equivalency = -1;
 					try {
-						equivalency = mainExp.isEquivalent(updExp) ;
+						equivalency = determineEquivalency(mainExp, updExp) ;
 					} catch (CodeGenException e) {} 
 					if ( equivalency < 0) 
 						continue ; // Not the same expressions
@@ -772,7 +813,7 @@ public class BDMMerger {
 				break;
 			}
 			else {
-				int eqv = e.isEquivalent(exp);
+				int eqv = determineEquivalency(e, exp);
 				if (eqv < 0) {
 					// no match
 					continue;
