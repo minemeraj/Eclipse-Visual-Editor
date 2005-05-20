@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridController.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-17 23:27:25 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-20 15:47:17 $ 
  */
 
 import java.util.*;
@@ -67,8 +67,8 @@ public class GridController {
 	protected HashMap registeredEPs = new HashMap(2);
 	
 	private boolean showGrid = false;
-	private int gridWidth = 20;
-	private int gridHeight = 20;
+	private int gridWidth = 12;
+	private int gridHeight = 12;
 	private int gridMargin = 0; 
 	
 	public GridController(){
