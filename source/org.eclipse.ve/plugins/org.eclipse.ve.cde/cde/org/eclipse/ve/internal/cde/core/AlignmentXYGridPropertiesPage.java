@@ -10,15 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYGridPropertiesPage.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-20 15:45:53 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-20 21:53:21 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.*;
+import org.eclipse.gef.ui.actions.ToggleGridAction;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
@@ -42,13 +44,18 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 	protected Scale fGridHeightScale;
 	protected Scale fGridMarginScale;
 	protected Button fShowGridCheckBox;
+	protected Button fSnapToGridCheckBox;
 
 	// working values
 	protected int fGridWidth;
 	protected int fGridHeight;
 	protected int fGridMargin;
 	protected boolean fWidthHeightSync = true;
-	protected boolean fShowGrid =  true;
+	protected boolean fShowGrid =  false;
+	protected boolean fSnapToGrid =  false;
+	private boolean initializing = false;
+	private PropertyChangeListener fPropertyChangeListener;
+
 	private IGridListener gridListener = new IGridListener() {
 		public void gridHeightChanged(int gridHeight,int oldGridHeight) {};
 		public void gridVisibilityChanged(boolean isShowing) {
@@ -59,7 +66,6 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		public void gridMarginChanged(int gridMargin,int oldGridMargin) {};
 		public void gridWidthChanged(int gridWidth,int oldGridWidth) {};
 	};
-	private boolean initializing = false;
 
 
 	public Control getControl(Composite parent) {
@@ -108,6 +114,31 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
 				if (gridController != null)
 					gridController.removeGridListener(gridListener);
+			};
+		});
+
+		// Create show grid checkbox
+		fSnapToGridCheckBox = new Button(fieldsGroup, SWT.CHECK);
+		fSnapToGridCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Snap_To_Grid")); //$NON-NLS-1$
+		data = new GridData();
+		data.horizontalSpan = 3;
+		fSnapToGridCheckBox.setLayoutData(data);
+		fSnapToGridCheckBox.setSelection(fSnapToGrid);
+		fSnapToGridCheckBox.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent e) {
+				if (!initializing && fSnapToGridCheckBox.getSelection() != fSnapToGrid) {
+					fSnapToGrid = fSnapToGridCheckBox.getSelection();
+					ToggleGridAction snapToGridAction = new ToggleGridAction((GraphicalViewer)fEditPart.getRoot().getViewer());
+					snapToGridAction.run();
+				}
+				;
+			}
+		});
+		fShowGridCheckBox.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
+				if (fPropertyChangeListener != null)
+					fEditPart.getRoot().getViewer().removePropertyChangeListener(fPropertyChangeListener);
 			};
 		});
 
@@ -293,6 +324,8 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 				// check to see if this is a container with a GridLayout
 				if (isValidTarget(firstParent)) {
 					fEditPart = firstParent;
+					if (fPropertyChangeListener != null)
+						fEditPart.getRoot().getViewer().removePropertyChangeListener(fPropertyChangeListener);
 					if (gridController != null)
 						gridController.removeGridListener(gridListener);
 					gridController = GridController.getGridController(fEditPart);
@@ -328,6 +361,8 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 					// If the parent is the same, enable all the actions and see if all the anchor & fill values are the same.
 					if (enableAll) {
 						fEditPart = firstParent;
+						if (fPropertyChangeListener != null)
+							fEditPart.getRoot().getViewer().removePropertyChangeListener(fPropertyChangeListener);
 						if (gridController != null)
 							gridController.removeGridListener(gridListener);
 						gridController = GridController.getGridController(fEditPart);
@@ -342,6 +377,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		}
 		fEditPart = null;
 		gridController = null;
+		fPropertyChangeListener = null;
 		return false;
 	}
 
@@ -367,10 +403,31 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 				fGridMarginText.setText(String.valueOf(fGridMargin));
 			if (fShowGridCheckBox != null)
 				fShowGridCheckBox.setSelection(fShowGrid);
+			initializeSnapToGrid();
 			initializing = false;
 		}
 	}
 
+	private void initializeSnapToGrid() {
+		// Set the snap to grid capability based on the global setting in the viewer
+		EditPartViewer primaryViewer = fEditPart.getRoot().getViewer();
+		Object snapToGrid = primaryViewer.getProperty(SnapToGrid.PROPERTY_GRID_ENABLED);
+		if (snapToGrid != null)
+			fSnapToGrid = ((Boolean) snapToGrid).booleanValue();
+		// Add a listener to know when the snap to grid action is toggled
+		primaryViewer.addPropertyChangeListener(fPropertyChangeListener = new PropertyChangeListener() {
+
+			public void propertyChange(java.beans.PropertyChangeEvent evt) {
+				if (evt.getPropertyName().equals(SnapToGrid.PROPERTY_GRID_ENABLED)) {
+					fSnapToGrid = ((Boolean) evt.getNewValue()).booleanValue();
+					fSnapToGridCheckBox.setSelection(fSnapToGrid);
+				}
+			};
+		});
+
+		if (fSnapToGridCheckBox != null)
+			fSnapToGridCheckBox.setSelection(fSnapToGrid);
+	}
 	/*
 	 * Return true if the parent's layout policy is a XYLayout. If parent is a tree editpart (selected from the Beans viewer, we need to get its
 	 * corresponding graphical editpart from the Graph viewer in order to check its layout policy.
