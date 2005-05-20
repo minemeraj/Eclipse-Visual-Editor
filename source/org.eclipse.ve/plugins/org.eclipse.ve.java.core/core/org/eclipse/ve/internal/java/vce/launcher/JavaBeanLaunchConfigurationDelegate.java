@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-13 21:54:02 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-20 20:54:06 $ 
  */
 
 
@@ -22,9 +22,9 @@ package org.eclipse.ve.internal.java.vce.launcher;
  */
 
 import java.io.File;
+import java.net.URL;
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunch;
@@ -37,7 +37,9 @@ import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
 
-import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.ProxyLaunchSupport.LaunchInfo;
+import org.eclipse.jem.internal.proxy.remote.LocalFileConfigurationContributorController;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
@@ -137,26 +139,25 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	String launchersList = JFC_LAUNCHER_TYPE_NAME;	
 	
 	// Now add in ours.
+	// TODO: refactor launchers into appropriate packages
 	
-//	// TODO: remove SWT hack
-	if (configuration.getAttribute("isSWT", false)) { //$NON-NLS-1$
-		// Add in the SWT lib if the user hasn't added it already
-		launchersList = launchersList + "," + SWT_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
-		if (!args.toString().matches(".*java.library.path=")) { //$NON-NLS-1$
-			
-		
-		}
-	}
-	
-	// TODO: RCP hack
 	if ( isJFaceProject(verifyJavaProject(configuration)) ){
 		launchersList = launchersList + "," + RCP_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
 		
+		// Ensure necessary classes are available for the launcher.
+		setupClasspath(configuration, args);
+		
+		// Add IDE preferences to the argument buffer for use on the VM.
 		int fTabPosition = WorkbenchPlugin.getDefault().getPreferenceStore().getInt(IPreferenceConstants.VIEW_TAB_POSITION);
 		boolean fTraditionalTabs = PrefUtil.getAPIPreferenceStore().getBoolean(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS);
 		
 		args.append(" -Drcp.launcher.tabPosition=" + fTabPosition); //$NON-NLS-1$
 		args.append(" -Drcp.launcher.traditionalTabs=" + fTraditionalTabs); //$NON-NLS-1$
+	}
+	
+	if (configuration.getAttribute("isSWT", false)) { //$NON-NLS-1$
+		// SWT support is provided by the included library, so just add the launcher.
+		launchersList = launchersList + "," + SWT_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
 	}
 	
 	args.append(" -Dvce.launchers=\"" + launchersList + "\""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -212,5 +213,42 @@ private boolean isJFaceProject(IJavaProject proj) {
 	} catch (JavaModelException e) {
 	}
 	return false;
+}
+
+protected void setupClasspath(ILaunchConfiguration configuration, StringBuffer args){
+	
+	try{
+		
+		// Now let's get the classpaths created through the contributors.
+		URL[] classpath = ProxyLaunchSupport.convertStringPathsToURL(getClasspath(configuration));
+		URL[][] bootpathInfo = new URL[][]{	};
+				
+		IConfigurationContributor[] emptyList = {};
+		LaunchInfo launchInfo = new LaunchInfo();
+		
+		final IConfigurationContributor[] contributors = 
+			ProxyLaunchSupport.fillInLaunchInfo(emptyList, launchInfo, verifyJavaProject(configuration).getElementName());
+		final LocalFileConfigurationContributorController controller = 
+			new LocalFileConfigurationContributorController(classpath, bootpathInfo, launchInfo);
+		
+		if (contributors != null) {		
+			for (int i = 0; i < contributors.length; i++) {
+				contributors[i].initialize(launchInfo.getConfigInfo());
+				contributors[i].contributeClasspaths(controller);
+			}
+		}
+		Iterator libPaths = controller.getFinalJavaLibraryPath().iterator();
+		StringBuffer javaPath = new StringBuffer("");
+		while(libPaths.hasNext()){
+			String curLib = ((URL)libPaths.next()).getPath();
+			if(curLib.startsWith("/"))
+				curLib = curLib.substring(1);
+			javaPath.append(curLib);
+		}
+		if (!args.toString().matches(".*java.library.path=")) //$NON-NLS-1$
+			args.append(" -Djava.library.path=\"" + javaPath + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+	} catch(Exception e){
+		e.printStackTrace();
+	}
 }
 }
