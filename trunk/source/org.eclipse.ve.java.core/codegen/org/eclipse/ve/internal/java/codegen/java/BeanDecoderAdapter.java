@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.18 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.19 $  $Date: 2005-05-20 21:02:32 $ 
  */
 
 import java.util.*;
@@ -137,27 +137,31 @@ protected  class BeanDecoderRefAdapter extends BeanDecoderAdapter {
 	 * @see org.eclipse.emf.common.notify.Adapter#notifyChanged(Notification)
 	 */
 	public void notifyChanged(Notification notification) {
-		
+				
 		
 		Object[] added = fDecoder.getAddedInstance() ;
 	    EObject root = null ;
-	    if (added.length>=2)
+	    int msgType = -1;
+	    if (added.length>=2) {
 	       root = (EObject)added[1] ;
-	       
-	    int msgType ;
-	    switch (notification.getEventType()) {
-	    	case Notification.ADD:
-	    	case Notification.ADD_MANY:
-	    	case Notification.MOVE:
-	    	case Notification.REMOVE:
-	    	case Notification.REMOVE_MANY:
-	    	case Notification.SET:
-	    	case Notification.UNSET:
-	    	          // Overide here, as this may be a SET for an intermediate feature
-	    	          msgType= fMsg ;
-	    	          break ;
-	    	default: msgType = notification.getEventType() ;
+	       if (root.eContainer() == null)
+	    	   msgType = Notification.UNSET;
 	    }
+	       
+	    if (msgType<0)
+		    switch (notification.getEventType()) {
+		    	case Notification.ADD:
+		    	case Notification.ADD_MANY:
+		    	case Notification.MOVE:
+		    	case Notification.REMOVE:
+		    	case Notification.REMOVE_MANY:
+		    	case Notification.SET:
+		    	case Notification.UNSET:
+		    	          // Overide here, as this may be a SET for an intermediate feature
+		    	          msgType= fMsg ;
+		    	          break ;
+		    	default: msgType = notification.getEventType() ;
+		    }	    
 
 		Notification n = new ENotificationImpl((InternalEObject)notification.getNotifier(), 
 		                                       msgType,
