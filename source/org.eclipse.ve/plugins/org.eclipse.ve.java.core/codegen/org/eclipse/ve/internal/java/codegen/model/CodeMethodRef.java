@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.37 $  $Date: 2005-05-18 21:15:05 $ 
+ *  $Revision: 1.38 $  $Date: 2005-05-20 13:25:32 $ 
  */
 
 import java.util.*;
@@ -392,6 +392,24 @@ protected  boolean isGrouping (BeanPart bp, List expressions, int index) {
 	return result;
 }
 
+protected int getGroupLastIndex(List sortedList, BeanPart bp) {
+	int idx=0;
+	while (idx<sortedList.size()) {
+		CodeExpressionRef exp = (CodeExpressionRef)sortedList.get(idx);
+		if (exp.getBean()==bp && exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+			while (idx<sortedList.size()) {
+				CodeExpressionRef exp2 = (CodeExpressionRef)sortedList.get(idx);
+				if (exp2.getBean()!=bp)
+					return idx-1;
+				idx++;
+			}
+			return idx-1;
+		}
+		idx++;
+	}
+	return -1;
+}
+
 /**
  * Sorting goes as following:
  * 
@@ -437,7 +455,7 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		// Start from the end, as expression may not be sorted
 		// according to the priorities and dependencies.
 		int first = -1, last = -1 ;
-		boolean firstBean = true;
+		boolean firstBean = true;  // should we insert this exp. at index 0		
 				
 		for (int i = sortedList.size()-1; i>=0 && first<0 ; i--) {
 			
@@ -456,7 +474,7 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		   if (sameBean) {
 		   	 if (exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
 		   	 	    // new expression must come before this expression
-		   	 		last = i;
+		   	 		last = i;					
 		   	 		continue;
 		   	 }
 		   	 else if (cExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
@@ -478,8 +496,8 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 			   if ((indexsSet && // Z order comparison is needed					
 				   cExp.getPriority().compareIndex(expPriority)>0) // Z order forces us to come after 
 				   ||  
-				   (dependantBeans.contains(cExp.getBean().getEObject()) && // we are dependant
-				    (isGrouping(cExp.getBean(), sortedList, i)) //||
+				   (dependantBeans.contains(cExp.getBean().getEObject()) //&& // we are dependant
+//				    (isGrouping(cExp.getBean(), sortedList, i)) //||
 				     //!cExp.getPriority().isIndexed())  // It is part of the bean init or its group of expressions
 				   )) { 
 		   
@@ -500,7 +518,7 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 			   }
 			   else if (indexsSet && // Z order forced us to come before					
 					   cExp.getPriority().compareIndex(expPriority)<0) {
-				       last = i;
+				       last = i;					   
 			        }
 			   continue;
 		   }
@@ -511,7 +529,7 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		               first = (i+1)>=sortedList.size()? sortedList.size() : i+1;
 		               break;
 		      case  0: // exp == cExp
-		      		   if (last<0) { // first one
+		      		   if (last<0 || last>getGroupLastIndex(sortedList,exp.getBean())) { // first one
 		      		   	 // bottom most
 		      		     last = (i+1)>=sortedList.size()? sortedList.size() : i+1;
 		      		   }
