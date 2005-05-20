@@ -17,7 +17,8 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
-import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
+import org.eclipse.emf.ecore.EcorePackage;
+
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -34,6 +35,10 @@ public class MethodSortTests extends TestCase {
 	BeanPartDecleration decl2 = new BeanPartDecleration("DummyBean 2","noType");
 	BeanPart bp1 = new BeanPart (decl1);
 	BeanPart bp2 = new BeanPart (decl2);
+	Object   sf = new Object();
+	
+	int REGULAR = 10;
+	int LOW = 5;
 	
 	class DummyExpression extends  CodeExpressionRef {		
 	
@@ -54,7 +59,40 @@ public class MethodSortTests extends TestCase {
 			pri=p;
 		}
 		public String toString() {
-		   return fBean.getSimpleName()+": "+pri.toString() + "offset("+offset+")"+"filler<"+ filler +">";
+			StringBuffer sb = new StringBuffer();
+			sb.append(fBean.getSimpleName()+": ");
+			
+			String states = "States: "; //$NON-NLS-1$
+			if(isStateSet(STATE_EXIST))
+				states = states.concat("EXIST#"); //$NON-NLS-1$
+			if(isStateSet(STATE_EXP_IN_LIMBO))
+				states = states.concat("INLIMBO#"); //$NON-NLS-1$
+			if(isStateSet(STATE_IMPLICIT))
+				states = states.concat("IMPLICIT#"); //$NON-NLS-1$
+			if(isStateSet(STATE_IN_SYNC))
+				states = states.concat("INSYNC#"); //$NON-NLS-1$	
+			if(isStateSet(STATE_INIT_EXPR))
+				states = states.concat("INIT#"); //$NON-NLS-1$			
+			if(isStateSet(STATE_SRC_LOC_FIXED))
+				states = states.concat("SRCLOCFIXED#"); //$NON-NLS-1$
+			if(isStateSet(STATE_UPDATING_SOURCE))
+				states = states.concat("UPDATINGSRC#"); //$NON-NLS-1$
+		    if(isStateSet(STATE_EXP_NOT_PERSISTED))
+		        states = states.concat("NOTPERSISTED#"); //$NON-NLS-1$    
+		    if(isStateSet(STATE_MASTER))
+		        states = states.concat("MASTER#"); //$NON-NLS-1$
+		    if(isStateSet(STATE_MASTER_DELETED))
+		        states = states.concat("MASTER_DELETED#"); //$NON-NLS-1$
+		    if(isStateSet(STATE_DELETE))
+		    	states = states.concat("DELETE#"); //$NON-NLS-1$    
+		    if (isStateSet(STATE_NO_SRC))
+		   	    states = states.concat("STATE_NO_SRC#"); //$NON-NLS-1$
+		   	if (isStateSet(STATE_NO_MODEL))
+		   		states = states.concat("STATE_NO_MODEL#"); //$NON-NLS-1$    
+		    sb.append(states);
+		    sb.append(":Priority="+pri.toString());
+			sb.append("offset("+offset+")"+"filler<"+ filler +">");
+			return sb.toString();
 		}
 		
 		/* (non-Javadoc)
@@ -82,43 +120,98 @@ public class MethodSortTests extends TestCase {
 			offset = off;
 		}
 	}
+	
+	int offset;
+	/**
+	 * 
+	 * @param bp  Bean
+	 * @param fixed true if this expression position is fixed
+	 * @param init true if init expression
+	 * @param reference if it reference the other bean (not bp)
+	 * @param pri priority structure
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	DummyExpression createExpression(BeanPart bp, boolean fixed, boolean init, boolean reference, VEexpressionPriority pri) {
+		DummyExpression exp = new DummyExpression(bp);
+		exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, fixed);
+		exp.setState(CodeExpressionRef.STATE_INIT_EXPR,init);
+		exp.setState (CodeExpressionRef.STATE_IN_SYNC,true);
+		offset+=10;
+		exp.setOffset(offset);
+		if (reference) {
+			if (bp.getEObject()==null) {
+				try {
+			       bp1.setEObject(EcorePackage.eINSTANCE.getEJavaObject());
+				}
+				catch (Exception e) {};
+				try {
+			       bp2.setEObject(EcorePackage.eINSTANCE.getEJavaObject());
+				}
+				catch (Exception e) {};
+			}
+			if (bp==bp1)
+				exp.getReferences().add(bp2.getEObject());
+			else
+				exp.getReferences().add(bp1.getEObject());
+		}
+		exp.setPriority(pri);		
+		return exp;		
+	}
+	
+	/**
+	 * 
+	 * @param zOrder if >=0 set up a priority order
+	 * @param regular priority of REGULAR if true, LOW if false
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	VEexpressionPriority getPriority(int zOrder, boolean regular) {
+		Object[] z ;
+		if (zOrder>=0) 
+			z = new Object[] { new Integer(zOrder), sf };
+		else
+			z = null;
+		
+		if (regular)
+			return new VEexpressionPriority(REGULAR,z);
+		else
+			return new VEexpressionPriority(LOW,z);
+	}
 
-	/**     b1      b2      b1     b2      b1       b2      b1      b2     b1       b2
-     *  [[9, 3], [9, 2], [9, 1], [8, 3], [8, 2], [8, 1], [7, 3], [7, 2], [7, 1], [6, 3]]
-     **/		
+	
 	protected void buildMethod() {
 	
 	    method = new CodeMethodRef(tr, "dummyMethod") ;
-	   // Add dummy expressions... high to low priorities
-	   int pri= 10;
-	   BeanPart bp ;
-	   
-	   for (int i=0; i< 12; i++) {
-		   if (i<=4) {
-			   pri = 4-i;
-			   bp = bp1;
-		   }
-		   else if (i<=8) {
-			   pri = 8-i;
-			   bp = bp2;
-		   }
-		   else {
-			   if (i<=10) {
-				   bp = bp1;
-				   pri = 10-i;
-			   }
-			   else {
-				   bp = bp2;
-				   pri = 12-i;
-			   }			   
-		   }
-	       
-	       VEexpressionPriority p = new VEexpressionPriority(pri,null) ;
-	       DummyExpression exp = new DummyExpression(bp);
-	       exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
-	       exp.setOffset(10*i);
-	       exp.setPriority(p);	       
-	   }	   
+		offset=0;			
+		
+		
+		// b1 init expression z order = 1
+		// b1 regular expression
+		// b1 regular expression
+		// b1 low priority expression
+		
+		// b2 init expression z order = 2
+		// b2 regular expression
+		// b2 regular expression
+		// b2 low priority expression
+		
+		// b1 regular expression z order 4
+		
+		createExpression(bp1, true, true, false, getPriority(1,true));
+		createExpression(bp1, true, false, false, getPriority(-1,true));		   
+		createExpression(bp1, true, false, false, getPriority(-1,true));
+		createExpression(bp1, true, false, false, getPriority(-1,false));
+		
+		createExpression(bp2, true, true, false, getPriority(2,true));
+		createExpression(bp2, true, false, false, getPriority(-1,true));		   
+		createExpression(bp2, true, false, false, getPriority(-1,true));
+		createExpression(bp2, true, false, false, getPriority(-1,false));
+		
+		createExpression(bp1, true, false, true, getPriority(4,true));
+		
 	}
 	
 	protected CodeExpressionRef getExp (int index) {	   
@@ -129,6 +222,15 @@ public class MethodSortTests extends TestCase {
 		return null;
 	}
 	
+	/**
+	 * @deprecated
+	 * @param bp
+	 * @param pri
+	 * @param index
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
 	protected CodeExpressionRef create (BeanPart bp, int pri, int index) {
 	   	VEexpressionPriority p = new VEexpressionPriority(pri, null);
 		DummyExpression exp = new DummyExpression(bp);
@@ -137,184 +239,150 @@ public class MethodSortTests extends TestCase {
 	}
 	
 	/**
-     *  Add element with low priority to the end of the expressions list
+     *  Add element with low priority to bp1
      **/
 	public void test1() {
 	
-		CodeExpressionRef exp = create(bp1, 3, 0);
+		CodeExpressionRef exp = createExpression(bp1, false, false, false, getPriority(-1,false));
 		try {
 			method.updateExpressionOrder();
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals("Failed to add low priority expression",exp,getExp(10)) ;
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(4)) ;
 	}
 	
 	/**
-     *  Add element with NO Priority at the end
+     *  Add element with high priority to bp1
      **/
 	public void test2() {
 	
-		VEexpressionPriority p = IJavaFeatureMapper.NOPriority;
-		DummyExpression exp = new DummyExpression(bp1);
-		exp.setPriority(p);			
+		CodeExpressionRef exp = createExpression(bp1, false, false, false, getPriority(-1,true));
 		try {
 			method.updateExpressionOrder();
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals("Failed to add low priority expression",exp,getExp(10)) ;
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(3)) ;
 	}
 	
 	/**
-     *  Add element with High priority
+     *  Add element with regular priority to bp2
      **/
 	public void test3() {
 	
-		CodeExpressionRef exp = create(bp1, 20, 0);
+		CodeExpressionRef exp = createExpression(bp2, false, false, false, getPriority(-1,false));
 		try {
 			method.updateExpressionOrder();
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals("Failed to add high priority expression",exp,getExp(0)) ;
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(8)) ;
 	}
 	
-
+	/**
+     *  Add element with regular priority to bp2
+     **/
 	public void test4() {
-	   //    b1      b2      b1     b2      b1       b2      b1      b2     b1             b2        
-	   // [[9, 3], [9, 2], [9, 1], [8, 3], [8, 2], [8, 1], [7, 3], [7, 2], [7, 1], <***> [6, 3]]
-	   //    0        1       2       3      4       5        6       7        8            9
-		CodeExpressionRef exp = create(bp1, 7, 1);
+		CodeExpressionRef exp = createExpression(bp2, false, false, false, getPriority(-1,true));
 		try {
 			method.updateExpressionOrder();
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals(exp,getExp(9)) ;
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(7)) ;
 	}	
 
 
 	/**
-     *  
+     *  Add element with high priority to bp1
      **/
 	public void test5() {
-	   //    b1      b2      b1     b2      b1       b2      b1      b2      b1            b2        
-	   // [[9, 3], [9, 2], [9, 1], [8, 3], [8, 2], [8, 1], [7, 3], [7, 2], [7, 1], <***> [6, 3]]
-	   //    0        1       2       3      4       5        6       7      8              9
-		CodeExpressionRef exp = create(bp2, 7, 1);
+		VEexpressionPriority p = getPriority(-1,true);
+		p = new VEexpressionPriority(REGULAR+1,p.getProiorityIndex());
+		CodeExpressionRef exp = createExpression(bp1, false, false, false, p);
 		try {
 			method.updateExpressionOrder();
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals(exp,getExp(9)) ;
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(1)) ;
 	}	
 
 	/**
-     *  
+     *  Add low priority b2 element with Z order of 4
      **/
 	public void test6() {
-	   //    b1      b2      b1     b2      b1       b2      b1      b2       b1           b2        
-	   // [[9, 3], [9, 2], [9, 1], [8, 3], [8, 2], [8, 1], [7, 3], [7, 2],  [7, 1], <**> [6, 3]]
-	   //    0        1       2       3      4       5        6       7        8            9
-		BeanPartDecleration decl = new BeanPartDecleration("DummyBean 3","noType");
-		CodeExpressionRef exp = create(new BeanPart (decl), 7, 1);
+		CodeExpressionRef exp = createExpression(bp2, false, false, false, getPriority(5,false));
 		try {
 			method.updateExpressionOrder();
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals(exp,getExp(9)) ;
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(9)) ;
 	}	
 
 	/**
-     *  
+     *  Add regular priority b2 element with Z order of 3
      **/
 	public void test7() {
-	   //          b1      b2      b1     b2      b1       b2      b1      b2       b1           b2        
-	   // [<***> [9, 3], [9, 2], [9, 1], [8, 3], [8, 2], [8, 1], [7, 3], [7, 2],  [7, 1], [6, 3]]
-	   //          0        1       2       3      4       5        6       7        8            9
-		CodeExpressionRef exp = create(bp1, 9, 5);
+		CodeExpressionRef exp = createExpression(bp2, false, false, false, getPriority(3,true));
 		try {
 			method.updateExpressionOrder();
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals(exp,getExp(0)) ;
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(7)) ;
 	}			
-		
+	/**
+     *  Add regular priority b1 that is dependant on b2
+     **/		
 	public void test8() {
-	   //   b1      b2              b1     b2      b1       b2      b1      b2       b1           b2        
-	   // [9, 3], [9, 2], <***> [9, 1], [8, 3], [8, 2], [8, 1], [7, 3], [7, 2],  [7, 1], [6, 3]]
-	   //   0       1              2       3      4       5        6       7        8            9
-		CodeExpressionRef exp = create(bp1, 9, 2);
+		CodeExpressionRef exp = createExpression(bp1, false, false, true, getPriority(-1,true));
 		try {
 			method.updateExpressionOrder();
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals(exp,getExp(2)) ;
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(8)) ;
 	}			
 	
-	
+	/**
+     *  Add regular priority b2 that is dependant on b1
+     **/			
 	public void test9() {
-	   //   b1       b2      b1     b2      b1       b2               b1      b2       b1      b2        
-	   // [9, 3],  [9, 2], [9, 1], [8, 3], [8, 2], [8, 1], <***>   [7, 3], [7, 2],  [7, 1], [6, 3]]
-	   //   0        1      2       3      4       5                  6       7        8         9
-		CodeExpressionRef exp = create(bp1, 7, 4);
+		CodeExpressionRef exp = createExpression(bp2, false, false, true, getPriority(-1,true));
 		try {
 			method.updateExpressionOrder();
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals(exp,getExp(6)) ;
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(9)) ;
 	}
-	
+	/**
+     *  Add a brand new bean
+     **/		
 	public void test10() {
-		   //   b1       b2      b1     b2      b1       b2       b1      b2       b1      b2        
-		   // [9, 3],  [9, 2], [9, 1], [8, 3], [8, 2], [8, 1],  [7, 3], [7, 2],  [7, 1], [6, 3] <***>]
-		   //   0        1      2       3      4       5          6       7        8         9
-			CodeExpressionRef exp = create(bp1, 6, 3);
-			try {
-				method.updateExpressionOrder();
-			} catch (CodeGenException e) {
-				e.printStackTrace();
-			}
-		    assertEquals(exp,getExp(10)) ;
+		CodeExpressionRef exp = createExpression(new BeanPart(decl1), false, true, false, getPriority(-1,true));
+		try {
+			method.updateExpressionOrder();
+		} catch (CodeGenException e) {
+			e.printStackTrace();
+		}
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(0)) ;
 		}
 	
-	
+	/**
+     *  Add a brand new bean that is dependant on b1
+     **/			
 	public void test11() {
-		   //   b1       b2      b1     b2      b1       b2       b1      b2       b1     b1     b2     b2        
-		   // [9, 3],  [9, 2], [9, 1], [8, 3], [8, 2], [8, 1],  [7, 3], [7, 2],  [7, 1],<1111> <222> [6, 3]]
-		   //   0        1      2       3      4       5          6       7        8       9     10
-		   //																				  <333>
-			CodeExpressionRef exp = create(bp1, 7, 1);
-			try {
-				method.updateExpressionOrder();
-			} catch (CodeGenException e) {
-				e.printStackTrace();
-			}
-		    assertEquals(exp,getExp(9)) ;
-		    
-			exp = create(bp2, 7, 1);
-			try {
-				method.updateExpressionOrder();
-			} catch (CodeGenException e) {
-				e.printStackTrace();
-			}
-		    assertEquals(exp,getExp(10)) ;
-		    
-			exp = create(bp1, 7, 1);
-			try {
-				method.updateExpressionOrder();
-			} catch (CodeGenException e) {
-				e.printStackTrace();
-			}
-		    assertEquals(exp,getExp(10)) ;
-
-
+		CodeExpressionRef exp = createExpression(new BeanPart(decl1), false, true, true, getPriority(-1,true));
+		try {
+			method.updateExpressionOrder();
+		} catch (CodeGenException e) {
+			e.printStackTrace();
+		}
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(9)) ;		
 		}					
 	
 	/**
