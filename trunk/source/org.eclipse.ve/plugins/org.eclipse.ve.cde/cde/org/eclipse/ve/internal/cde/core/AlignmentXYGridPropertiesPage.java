@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYGridPropertiesPage.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-18 19:31:04 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-20 15:45:53 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -49,6 +49,18 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 	protected int fGridMargin;
 	protected boolean fWidthHeightSync = true;
 	protected boolean fShowGrid =  true;
+	private IGridListener gridListener = new IGridListener() {
+		public void gridHeightChanged(int gridHeight,int oldGridHeight) {};
+		public void gridVisibilityChanged(boolean isShowing) {
+			fShowGrid = isShowing;
+			if (fShowGridCheckBox != null)
+				fShowGridCheckBox.setSelection(isShowing);
+		};
+		public void gridMarginChanged(int gridMargin,int oldGridMargin) {};
+		public void gridWidthChanged(int gridWidth,int oldGridWidth) {};
+	};
+	private boolean initializing = false;
+
 
 	public Control getControl(Composite parent) {
 
@@ -82,12 +94,21 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		fShowGridCheckBox.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
-				if (fShowGridCheckBox.getSelection() != fShowGrid) {
-					fShowGrid = fShowGridCheckBox.getSelection();
-					gridController.setGridShowing(fShowGrid);
+				if (!initializing && fShowGridCheckBox.getSelection() != fShowGrid) {
+					gridController = GridController.getGridController(fEditPart);
+					if (gridController != null ) {
+						fShowGrid = fShowGridCheckBox.getSelection();
+						gridController.setGridShowing(fShowGrid);
+					}
 				}
 				;
 			}
+		});
+		fShowGridCheckBox.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
+				if (gridController != null)
+					gridController.removeGridListener(gridListener);
+			};
 		});
 
 		// Create width/height sync checkbox
@@ -138,7 +159,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		fGridWidthText.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent anEvent) {
-				if (isInputValid() && fGridWidth != gridController.getGridWidth()){
+				if (!initializing && isInputValid() && fGridWidth != gridController.getGridWidth()){
 					gridController.setGridWidth(fGridWidth);
 					if (fWidthHeightSync && fGridHeight != fGridWidth) {
 						fGridHeightScale.setSelection(fGridWidthScale.getSelection());
@@ -180,7 +201,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		fGridHeightText.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent anEvent) {
-				if (isInputValid() && fGridHeight != gridController.getGridHeight()) {
+				if (!initializing && isInputValid() && fGridHeight != gridController.getGridHeight()) {
 					gridController.setGridHeight(fGridHeight);
 					if (fWidthHeightSync && fGridHeight != fGridWidth) {
 						fGridWidthScale.setSelection(fGridHeightScale.getSelection());
@@ -220,7 +241,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		fGridMarginText.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent anEvent) {
-				if (isInputValid() && fGridMargin != gridController.getGridMargin())
+				if (!initializing && isInputValid() && fGridMargin != gridController.getGridMargin())
 					gridController.setGridMargin(fGridMargin);
 			}
 		});
@@ -272,9 +293,14 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 				// check to see if this is a container with a GridLayout
 				if (isValidTarget(firstParent)) {
 					fEditPart = firstParent;
-					gridController = GridController.getGridController(fEditPart);
 					if (gridController != null)
+						gridController.removeGridListener(gridListener);
+					gridController = GridController.getGridController(fEditPart);
+					if (gridController != null) {
+						initializeValues();
+						gridController.addGridListener(gridListener);
 						return true;
+					}
 				}
 			}
 			// Else check to see if the parent of all the selected components is a XY layout
@@ -302,9 +328,14 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 					// If the parent is the same, enable all the actions and see if all the anchor & fill values are the same.
 					if (enableAll) {
 						fEditPart = firstParent;
-						gridController = GridController.getGridController(fEditPart);
 						if (gridController != null)
+							gridController.removeGridListener(gridListener);
+						gridController = GridController.getGridController(fEditPart);
+						if (gridController != null) {
+							initializeValues();
+							gridController.addGridListener(gridListener);
 							return true;
+						}
 					}
 				}
 			}
@@ -312,6 +343,32 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		fEditPart = null;
 		gridController = null;
 		return false;
+	}
+
+	private void initializeValues() {
+		initializing = true;
+		gridController = GridController.getGridController(fEditPart);
+		if (gridController != null) {
+			fGridHeight = gridController.getGridHeight();
+			fGridWidth = gridController.getGridWidth();
+			fGridMargin = gridController.getGridMargin();
+			fShowGrid = gridController.isGridShowing();
+			if (fGridHeightScale != null)
+				fGridHeightScale.setSelection(fGridHeight);
+			if (fGridHeightText != null)
+				fGridHeightText.setText(String.valueOf(fGridHeight));
+			if (fGridWidthScale != null)
+				fGridWidthScale.setSelection(fGridWidth);
+			if (fGridWidthText != null)
+				fGridWidthText.setText(String.valueOf(fGridWidth));
+			if (fGridMarginScale != null)
+				fGridMarginScale.setSelection(fGridMargin);
+			if (fGridMarginText != null)
+				fGridMarginText.setText(String.valueOf(fGridMargin));
+			if (fShowGridCheckBox != null)
+				fShowGridCheckBox.setSelection(fShowGrid);
+			initializing = false;
+		}
 	}
 
 	/*
@@ -406,7 +463,19 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		return fMessageLine.getText().length() > 0 ? false : true;
 	}
 
-	protected boolean selectionIsContainer(ISelection newSelection) {
-		return true;
+	protected boolean selectionIsContainer(ISelection oldSelection) {
+		ISelection newSelection = getSelection();
+		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
+			List editparts = ((IStructuredSelection) newSelection).toList();
+			EditPart firstParent;
+
+			// Check to see if this is a single selected container
+			if (editparts.size() == 1 && editparts.get(0) instanceof EditPart) {
+				firstParent = (EditPart) editparts.get(0);
+				// check to see if this is a container with a GridLayout
+				if (isValidTarget(firstParent)) { return true; }
+			}
+		}
+		return false;
 	}
 }
