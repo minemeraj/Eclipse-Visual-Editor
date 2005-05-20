@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayManager.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-18 18:39:15 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-20 16:32:56 $ 
  */
 package org.eclipse.jem.internal.proxy.swt;
 
@@ -206,7 +206,7 @@ public class DisplayManager {
 			try {
 				return doRun(displayProxy);
 			} finally {
-				expression.transferThread();
+				expression.beginTransferThread();
 			}
 		}
 		
@@ -237,7 +237,7 @@ public class DisplayManager {
 	public static Object syncExec(IBeanProxy displayProxy, ExpressionDisplayRunnable runnable) throws ThrowableProxy, RunnableException {
 		runnable.expression.beginTransferThread();
 		try {
-			return syncExec(displayProxy, runnable);
+			return syncExec(displayProxy, (DisplayRunnable) runnable);
 		} finally {
 			runnable.expression.transferThread();
 		}
