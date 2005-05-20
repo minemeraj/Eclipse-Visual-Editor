@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTLauncher.java,v $
- *  $Revision: 1.9 $  $Date: 2005-04-20 15:40:10 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-20 20:36:45 $ 
  */
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 
@@ -383,7 +383,7 @@ public class SWTLauncher implements ILauncher {
 		try {
 			switch (controlCtorType) {
 				case DEFAULTCTOR:
-					System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithNullConstructor_INFO"), new Object[]{clazz.getName()})); //$NON-NLS-1$
+					System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.BeanWithNullConstructor_INFO_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
 					Shell shell = (Shell) controlCtor.newInstance(null);
 					runEventLoop(shell);
 					break;
