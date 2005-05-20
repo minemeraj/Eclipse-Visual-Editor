@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ModelChangeController.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-18 19:31:04 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-20 18:41:13 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -295,7 +295,10 @@ public abstract class ModelChangeController {
         	// This must be done outside of the synchronized because it would be possible that 
         	// UI thread is trying to do something with the model controller at the same time, 
         	// and so it would be locked. That would prevent the executeAsyncRunnables from running.
-        	if (display != null)
+			// If we have a display, and we are currently not on the display's thread, then do
+			// an asyncExec for it to get processed over there. Else we have no display, or
+			// we are on the display's thread, so we can execute directly.
+        	if (display != null && Display.getCurrent() != display)
         		display.asyncExec(new Runnable() {
 					public void run() {
 						executeAsyncRunnables();
