@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.38 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.39 $  $Date: 2005-05-20 16:32:56 $ 
  */
 
 import java.util.*;
@@ -54,7 +54,8 @@ public class BeanProxyAdapter extends AdapterImpl implements IBeanProxyHost, IIn
 	// The other time it is needed is if applying a multivalue, it must terminate any more
 	// multi-applies and try again.
 	protected class ReinstantiationNeeded extends RuntimeException {
-		public ReinstantiationNeeded() {
+		public ReinstantiationNeeded(String msg) {
+			super(msg);
 		}
 	};
 		
@@ -324,7 +325,7 @@ protected synchronized final void reinstantiateBeanProxy() {
 	// IF we are in instantiation, so we can't do let the parent do the reinstantiation.
 	// Only we know how we are trying to instantiate, and the catcher of this exception can handle that.
 	if (inInstantiation)
-		throw new ReinstantiationNeeded();
+		throw new ReinstantiationNeeded('('+getTarget().toString()+')');
 	primReinstantiateBeanProxy();
 }
 	
@@ -405,7 +406,7 @@ protected void processError(EStructuralFeature sf, Throwable exc, Object object)
 	
 	// Now need to throw reinstation needed so that multi-values do not continue trying to apply follow on values. There
 	// could be a problem of duplicate adds in that case.
-	throw new ReinstantiationNeeded();
+	throw new ReinstantiationNeeded('('+getTarget().toString()+')');
 }
 /**
  * If a JavaBean fails to be created record the error and notify any interested listeners
