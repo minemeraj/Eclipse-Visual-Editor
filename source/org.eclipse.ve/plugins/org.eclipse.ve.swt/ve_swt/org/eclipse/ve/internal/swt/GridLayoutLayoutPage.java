@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-19 17:16:18 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-20 15:44:02 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -227,6 +227,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 						gridController = GridController.getGridController(fEditPart);
 						if (gridController != null) {
 							initializeValues();
+							gridController.addGridListener(gridListener);
 							return true;
 						}
 					}
