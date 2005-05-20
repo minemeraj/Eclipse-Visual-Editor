@@ -4,8 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.part.ViewPart;
 
 public class RCPLauncher implements ILauncher {
@@ -29,6 +28,7 @@ public class RCPLauncher implements ILauncher {
 			// Make sure we can intantiate it in case the class it not public
 			ctor.setAccessible(true);
 			javaBean = ctor.newInstance(null);
+			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Msg.ViewPartHost_INFO_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
 		} catch (SecurityException e1) {
 			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
 			e1.printStackTrace();	
@@ -95,9 +95,12 @@ public class RCPLauncher implements ILauncher {
 		beanShell.pack();
 		beanShell.open();
 		
-		while (!beanShell.isDisposed()) {
-			if (!display.readAndDispatch()) display.sleep ();
+		try{
+			while (!beanShell.isDisposed()) {
+				if (!display.readAndDispatch()) display.sleep ();
+			}
+		} catch (Exception e){
+			display.dispose();
 		}
-		display.dispose();	
 	}
 }
