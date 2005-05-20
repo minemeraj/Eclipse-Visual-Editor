@@ -99,8 +99,9 @@ public class RCPLauncher implements ILauncher {
 			while (!beanShell.isDisposed()) {
 				if (!display.readAndDispatch()) display.sleep ();
 			}
-		} catch (Exception e){
-			display.dispose();
-		}
+		} catch (Exception e){ }
+			
+		display.dispose();
+
 	}
 }
