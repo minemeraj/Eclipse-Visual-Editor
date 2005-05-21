@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.11 $  $Date: 2005-03-18 18:45:05 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-21 06:33:51 $ 
  */
 
 import java.util.List;
@@ -22,6 +22,7 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.jem.internal.beaninfo.BeanDecorator;
+import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -29,6 +30,7 @@ import org.eclipse.jem.java.JavaClass;
 
 public class CustomizeAction extends SelectionAction {
 	public static final String ACTION_ID = "jcm.CUSTOMIZE"; //$NON-NLS-1$
+	protected boolean explicitPropertyChange;
 
 	public CustomizeAction(IWorkbenchPart anEditorPart) {
 		super(anEditorPart);
@@ -55,12 +57,16 @@ public class CustomizeAction extends SelectionAction {
 			return null; // Only work with an EditPart
 		Object model = ((EditPart) editParts.get(0)).getModel();
 		if (model instanceof IJavaObjectInstance) {
-			// TODO This is quick hack to not use thisPart for customization. Need to get a better way of doing this."); //$NON-NLS-1$
 			IBeanProxyHost ba = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) model);
 			if (ba instanceof BeanProxyAdapter && ((BeanProxyAdapter) ba).isThisPart())
 				return null;
 			JavaClass beanClass = (JavaClass) ((EObject) model).eClass();
 			BeanDecorator beanDecor = Utilities.getBeanDecorator(beanClass);
+			// The BeanInfo on the target VM holds a key of "EXPLICIT_PROPERTY_CHANGE" that takes Boolean values
+			// The purpose of this is so that the BeanInfo can indicate that it wishes to fire property change events to signal what has changed
+			// versus having the VE automatically try to determine the set of changed properties
+			FeatureAttributeValue beanInfoChangeFlag = (FeatureAttributeValue) beanDecor.getAttributes().get("EXPLICIT_PROPERTY_CHANGE");
+			explicitPropertyChange = beanInfoChangeFlag != null ? ((Boolean)beanInfoChangeFlag.getValue()).booleanValue() : false;
 			return beanDecor != null ? beanDecor.getCustomizerClass() : null;	// If class invalid, bean decor will be null.
 		}
 		return null;

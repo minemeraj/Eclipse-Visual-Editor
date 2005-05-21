@@ -46,7 +46,8 @@ public class Area extends Canvas {
 	public final static int FRIDAY = 5;
 
 
-	public final static int SATURDAY = 6;	
+	public final static int SATURDAY = 6;
+	private Object fObject;	
 	
  // Font so we can test custom editors
 /**
@@ -172,5 +173,10 @@ public int getEvenNumber(){
 public void setEvenNumber(int aNumber){
 	fEvenNumber = aNumber;
 }
-
+public Object getObject(){
+	return fObject;
+}
+public void setObject(Object anObject){
+	fObject = anObject;
+}
 }

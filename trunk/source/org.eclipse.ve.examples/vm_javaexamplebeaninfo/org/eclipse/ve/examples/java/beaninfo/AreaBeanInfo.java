@@ -20,10 +20,11 @@ import org.eclipse.ve.examples.java.vm.Area;
  */
 public class AreaBeanInfo extends SimpleBeanInfo {
 /**
- * Get the bean descriptor with the customizer
+ * Get the bean descriptor with the customizer 
  */
 public BeanDescriptor getBeanDescriptor(){
 	  BeanDescriptor result = new BeanDescriptor(Area.class,AreaCustomizer.class);
+	  result.setValue("EXPLICIT_PROPERTY_CHANGE",Boolean.TRUE);
 	  return result;
 }
 /**
@@ -46,6 +47,7 @@ public PropertyDescriptor[] getPropertyDescriptors()
 			"day",
 			"shape",
 			"font",
+			"object"
 		};
 				
 		PropertyDescriptor[] propertyArray = new PropertyDescriptor[propertyNameArray.length];

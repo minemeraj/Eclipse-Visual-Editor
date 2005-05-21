@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanPropertyEditorDialog.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:29:42 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-21 06:33:30 $ 
  */
 
 import java.awt.Component;
@@ -41,4 +41,9 @@ public void removeListener(IPropertyEditorDialogListener aListener);
  * Set the property editor
  */
 public void setPropertyEditor(Component aComponent);
+/**
+ * Specify whether OK and Cancel buttons should be put onto the dialog
+ * true unless explicitly set otherwise
+ */
+public void decorateWithButtons(boolean abool);
 }

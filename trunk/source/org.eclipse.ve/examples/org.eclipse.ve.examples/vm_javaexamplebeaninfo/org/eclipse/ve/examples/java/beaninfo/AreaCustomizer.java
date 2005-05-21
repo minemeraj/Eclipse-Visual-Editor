@@ -76,8 +76,6 @@ protected void addListListener(){
 			Color selectedColor = (Color) fColors.get(fColorList.getSelectedItem());
 			// Change the color of the object
 			changeFillColor(selectedColor);
-			// Fire a change event
-			pcSupport.firePropertyChange("fillColor",null,selectedColor);
 		}
 	});
 
@@ -96,10 +94,11 @@ protected void addTextBoxListener(){
 	fTxtFldBorderWidth.addTextListener(new TextListener(){
 		public void textValueChanged(TextEvent anEvent){
 			// Set the border width
-			Integer newValue = new Integer(fTxtFldBorderWidth.getText());
-			changeBorderWidth(newValue.intValue());
-			// Signal an event
-			pcSupport.firePropertyChange("border",null,newValue);
+			try {
+				Integer newValue = new Integer(fTxtFldBorderWidth.getText());
+				changeBorderWidth(newValue.intValue());
+			} catch (NumberFormatException e) {
+			}
 		}
 	});
 
@@ -110,7 +109,7 @@ protected void addTextBoxListener(){
 protected void changeBorderWidth(int borderValue){
 
 	fArea.setBorderWidth(borderValue);
-	pcSupport.firePropertyChange("borderValue" , null , new Integer(borderValue));
+	pcSupport.firePropertyChange("borderWidth" , null , new Integer(borderValue));
 
 }
 /**
@@ -192,7 +191,44 @@ protected void initialize(){
 	diamondCheckboxConstraint.insets = inset;
 	// Add the checkboxes to the panel and listen for when they change
 	add(fDiamondCheckbox,diamondCheckboxConstraint);
-	addCheckboxListeners();
+	
+	addCheckboxListeners();	
+	
+	// Add a button group for various tests
+	Panel buttonGroup = new Panel();
+	GridBagConstraints buttonGroupConstraints = new GridBagConstraints();
+	buttonGroupConstraints.gridy = 3;
+	buttonGroupConstraints.gridwidth = 3;
+	add(buttonGroup,buttonGroupConstraints);
+	
+	// Add a button that signals a property change for a non-existent property
+	Button badPropertySignalBtn = new Button("Signal bad property");
+	buttonGroup.add(badPropertySignalBtn);
+	badPropertySignalBtn.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e) {
+			pcSupport.firePropertyChange("fooBar",null,null);
+		}		
+	});
+	
+	// Add a button that signals a change for the "object" property that has a TypeReferenceCellEditor
+	Button objectChangeBtn = new Button("Signal \"object\" change");
+	buttonGroup.add(objectChangeBtn);
+	objectChangeBtn.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e) {
+			fArea.setObject("Time = " + System.currentTimeMillis());
+			pcSupport.firePropertyChange("object",null,null);
+		}		
+	});
+	
+	
+	// Throw an exception in the customizer to test whether it hangs the IDE or not	
+	Button exceptionSignalBtn = new Button("Throw deliberate exception");
+	buttonGroup.add(exceptionSignalBtn);
+	exceptionSignalBtn.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e) {
+			throw new RuntimeException("I am not happy - don't ask why - just don't crash and burn on me");
+		}		
+	});
 }
 /**
  * Remove the property change listener 
