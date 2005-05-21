@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyEditorFrame.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:29:42 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-21 06:33:30 $ 
  */
 
 import java.awt.*;
@@ -46,20 +46,6 @@ public final class BeanPropertyEditorFrame extends Frame implements IBeanPropert
 		propertyEditorContainer = new Panel();
 		propertyEditorContainer.setLayout(new PropertyCustomComponentLayout());
 		add(propertyEditorContainer, BorderLayout.CENTER);
-
-		buttonRow = new Panel();
-		buttonRow.setLayout(new FlowLayout(FlowLayout.RIGHT));
-
-		Panel buttonGrid = new Panel();
-		buttonRow.add(buttonGrid);
-		buttonGrid.setLayout(new GridLayout(1, 0, 5, 0));
-
-		buttonGrid.add(getOKButton());
-		//buttonGrid.add( getApplyButton() );
-		//buttonGrid.add( getRevertButton() );
-		buttonGrid.add(getCancelButton());
-
-		add(buttonRow, BorderLayout.SOUTH); //$NON-NLS-1$
 
 		addWindowListenersToFrame(this);
 
@@ -217,7 +203,9 @@ public final class BeanPropertyEditorFrame extends Frame implements IBeanPropert
 			removeListener((IPropertyEditorDialogListener) propertyEditorComponent);
 		}
 
-		buttonRow.setBackground(null);	// Restore the button background to default.
+		if(buttonRow != null){
+			buttonRow.setBackground(null);	// Restore the button background to default.
+		}
 		propertyEditorComponent = aComponent;
 		if (propertyEditorComponent != null) {
 			propertyEditorContainer.add(propertyEditorComponent);
@@ -227,10 +215,23 @@ public final class BeanPropertyEditorFrame extends Frame implements IBeanPropert
 			
 			// Set the background of the button row to match the background of the propertyEditorComponent
 			// so that we don't see differences at the row border. Only if not the default.
-			if (propertyEditorComponent.getBackground() != propertyEditorContainer.getBackground())
+			if (propertyEditorComponent.getBackground() != propertyEditorContainer.getBackground() && buttonRow != null)
 				buttonRow.setBackground(propertyEditorComponent.getBackground());
 				
 					
+		}
+	}
+	public void decorateWithButtons(boolean abool) {
+		if(abool){
+			buttonRow = new Panel();
+			buttonRow.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+			Panel buttonGrid = new Panel();
+			buttonRow.add(buttonGrid);
+			buttonGrid.setLayout(new GridLayout(1, 0, 5, 0));
+			buttonGrid.add(getOKButton());
+			buttonGrid.add(getCancelButton());
+			add(buttonRow, BorderLayout.SOUTH); //$NON-NLS-1$
 		}
 	}
 }

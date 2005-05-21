@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.remotevm;
 /*
  *  $RCSfile: WindowLauncher.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-21 06:33:30 $ 
  */
 
 import java.awt.*;
@@ -37,11 +37,18 @@ public class WindowLauncher implements ICallback {
 	Window fWindow;
 	java.util.List fWindowListeners = new ArrayList(1);
 	int windowState = Common.WIN_OPENED;
+	private boolean explicitPropertyChange = false;
 	
 public WindowLauncher(Component aComponent){
 	fComponent = aComponent;
 	launchEditor();
 	listenToComponent();
+}
+public WindowLauncher(Component aComponent, boolean aBoolean){
+	explicitPropertyChange = aBoolean;
+	fComponent = aComponent;
+	launchEditor();
+	listenToComponent();	
 }
 /**
  * The listener initialize for callback server.
@@ -67,7 +74,7 @@ protected void callbackSaveValue(){
 /**
  * Calls the IDE-side WindowLauncher that window was closed
  */
-protected void callbackWindowClosed(){
+protected void callbackWindowClosed(){	
 	// Prevents race conditions, where OK was pressed, and window was closed later.
 	if(windowState == Common.WIN_OPENED) {
 		windowState = Common.WIN_CLOSED;
@@ -93,6 +100,9 @@ void launchEditor(){
 		fDialog = new BeanPropertyEditorJFrame();
 	} else { 
 		fDialog = new BeanPropertyEditorFrame();
+	}
+	if(!explicitPropertyChange){
+		fDialog.decorateWithButtons(true);
 	}
 	fDialog.setPropertyEditor(fComponent);
 	fWindow = (Window)fDialog;

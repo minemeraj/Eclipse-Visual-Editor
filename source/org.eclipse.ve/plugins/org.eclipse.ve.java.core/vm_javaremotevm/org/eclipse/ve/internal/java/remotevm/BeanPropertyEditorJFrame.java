@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyEditorJFrame.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:29:42 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-21 06:33:30 $ 
  */
 
 import java.awt.*;
@@ -46,22 +46,6 @@ public final class BeanPropertyEditorJFrame extends JFrame implements IBeanPrope
 		propertyEditorContainer = new JPanel();
 		propertyEditorContainer.setLayout(new PropertyCustomComponentLayout());
 		getContentPane().add(propertyEditorContainer, BorderLayout.CENTER);
-
-		buttonRow = new JPanel();
-		buttonRow.setLayout(new FlowLayout(FlowLayout.RIGHT));
-
-		buttonGrid = new JPanel();
-		buttonRow.add(buttonGrid);
-		buttonGrid.setLayout(new GridLayout(1, 0, 5, 0));
-
-		buttonGrid.add(getOKButton());
-		//buttonGrid.add( getApplyButton() );
-		//buttonGrid.add( getRevertButton() );
-		buttonGrid.add(getCancelButton());
-
-		getContentPane().add(buttonRow, BorderLayout.SOUTH); //$NON-NLS-1$
-
-		getRootPane().setDefaultButton(getOKButton());
 
 		addWindowListenersToFrame(this);
 	}
@@ -237,6 +221,24 @@ public final class BeanPropertyEditorJFrame extends JFrame implements IBeanPrope
 			if (propertyEditorComponent.getBackground() != propertyEditorContainer.getBackground())
 				buttonRow.setBackground(propertyEditorComponent.getBackground());
 				buttonGrid.setBackground(propertyEditorComponent.getBackground());
+		}
+	}
+	public void decorateWithButtons(boolean abool){
+		if(abool){
+			buttonRow = new JPanel();
+			buttonRow.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+			buttonGrid = new JPanel();
+			buttonRow.add(buttonGrid);
+			buttonGrid.setLayout(new GridLayout(1, 0, 5, 0));
+
+			buttonGrid.add(getOKButton());
+			//buttonGrid.add( getApplyButton() );
+			//buttonGrid.add( getRevertButton() );
+			buttonGrid.add(getCancelButton());
+
+			getContentPane().add(buttonRow, BorderLayout.SOUTH); //$NON-NLS-1$
+			getRootPane().setDefaultButton(getOKButton());			
 		}
 	}
 }
