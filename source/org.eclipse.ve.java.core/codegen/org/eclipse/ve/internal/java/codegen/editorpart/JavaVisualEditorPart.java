@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.113 $  $Date: 2005-05-18 18:39:19 $ 
+ *  $Revision: 1.114 $  $Date: 2005-05-22 22:44:40 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -451,7 +451,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 			try {
 				if (currentSetRoot != root && currentSetRoot != null)
-					((CompositionProxyAdapter) EcoreUtil.getExistingAdapter(currentSetRoot, CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)).releaseBeanProxy();
+					((CompositionProxyAdapter) EcoreUtil.getExistingAdapter(currentSetRoot, CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)).releaseBeanProxy(false);
 			} finally {
 				currentSetRoot = root;
 			}
@@ -1812,8 +1812,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							CompositionProxyAdapter.BEAN_COMPOSITION_PROXY);
 					if (!loadModel && lRestartVM && a != null) {
 						// We have a new vm but same model, and an adapter, so we need to release all of the beans
-						// before we go on.
-						a.releaseBeanProxy();
+						// before we go on, we will also remove the adapters so that they will get new ones. This
+						// is necessary because sometimes the reload will result in a different adapter type.
+						a.releaseBeanProxy(true);
 					}
 					
                     if (lRestartVM)

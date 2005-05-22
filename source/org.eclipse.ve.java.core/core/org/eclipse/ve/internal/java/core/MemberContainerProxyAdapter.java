@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainerProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-18 18:39:19 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-22 22:44:40 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -38,7 +38,7 @@ import org.eclipse.ve.internal.jcm.MemberContainer;
  
 
 /**
- * Basic MemberContainer proxy adapter. This handles the release of proxy adapters
+ * Basic MemberContainer proxy adapter. This handles the release or removal of proxy adapters
  * from the member container. This will handle the Members and Properties features.
  * @since 1.1.0
  */
@@ -116,7 +116,7 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 					try {
 						IJavaInstance o = (IJavaInstance) release[i];
 						if (!isMemberContained(o))
-							releaseSetting(o, expression);
+							releaseSetting(o, expression, false);
 					} catch (ClassCastException e) { 
 					}
 				}
@@ -143,7 +143,7 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	public void notifyChanged(Notification msg) {
 		switch (msg.getEventType()) {
 			case Notification.REMOVING_ADAPTER:
-				releaseBeanProxy();
+				releaseBeanProxy(true);
 				break;
 			case Notification.ADD:
 			case Notification.SET:
@@ -232,10 +232,10 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	 * Release the given setting.
 	 * @param v
 	 * @param expression expression to use, or <code>null</code> if there is no registry, such as it was terminated, and we need to just clean up.
-	 * 
+	 * @param remove remove the adapter too.
 	 * @since 1.1.0
 	 */
-	protected void releaseSetting(Object v, final IExpression expression) {
+	protected void releaseSetting(Object v, final IExpression expression, final boolean remove) {
 		if (v instanceof IJavaInstance) {
 			// Get existing adapter, if it doesn't have one, don't create it.
 			final IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter((Notifier) v, IBeanProxyHost.BEAN_PROXY_TYPE);
@@ -251,6 +251,8 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 							((IInternalBeanProxyHost2) value).releaseBeanProxy(expression);
 						else
 							value.releaseBeanProxy();
+						if (remove)
+							value.getTarget().eAdapters().remove(value);
 					}
 				});
 			}
@@ -259,15 +261,16 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	
 	/**
 	 * Release all of the bean proxies.
+	 * @param remove <code>true</code> will remove the  bean proxy adapters too.
 	 * 
 	 * 
 	 * @since 1.1.0
 	 */
-	public final void releaseBeanProxy() {
+	public final void releaseBeanProxy(boolean remove) {
 		if (proxyDomain.getProxyFactoryRegistry().isValid()) {
 			IExpression expression = proxyDomain.getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
 			try {
-				releaseBeanProxy(expression);
+				releaseBeanProxy(expression, remove);
 			} finally {
 				try {
 					if (expression.isValid())
@@ -283,7 +286,7 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 				}
 			}
 		} else
-			releaseBeanProxy(null);	// Tell everyone to clean up but no registry.
+			releaseBeanProxy(null, remove);	// Tell everyone to clean up but no registry.
 		
 		
 	}
@@ -291,19 +294,19 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	/**
 	 * Release all of the bean proxies. This is the actual implementations. Subclasses may override but should call super to
 	 * release the basics.
-	 * 
 	 * @param expression expression to use, or <code>null</code> if there is no registry, such as it was terminated, and we need to just clean up.
+	 * @param remove remove the adapter too.
 	 * 
 	 * @since 1.1.0
 	 */
-	protected void releaseBeanProxy(IExpression expression) {
+	protected void releaseBeanProxy(IExpression expression, boolean remove) {
 		Iterator settings = ((MemberContainer) target).getMembers().iterator(); // Get only the attrs and composite refs.
 		while (settings.hasNext()) {
-			releaseSetting(settings.next(), expression);
+			releaseSetting(settings.next(), expression, remove);
 		}
 		settings = ((MemberContainer) target).getProperties().iterator(); // Get only the attrs and composite refs.
 		while (settings.hasNext()) {
-			releaseSetting(settings.next(), expression);
+			releaseSetting(settings.next(), expression, remove);
 		}
 		
 		// Now signal release to all of the inner ones too.
@@ -318,13 +321,13 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 							MemberContainer mc = (MemberContainer) setItr.next();
 							MemberContainerProxyAdapter mcpa = (MemberContainerProxyAdapter) EcoreUtil.getExistingAdapter(mc, MEMBER_CONTAINER_ADAPTER_TYPE);
 							if (mcpa != null)
-								mcpa.releaseBeanProxy(expression);
+								mcpa.releaseBeanProxy(expression, remove);
 						}
 					} else {
 						MemberContainer mc = (MemberContainer) t.eGet(feature);
 						MemberContainerProxyAdapter mcpa = (MemberContainerProxyAdapter) EcoreUtil.getExistingAdapter(mc, MEMBER_CONTAINER_ADAPTER_TYPE);
 						if (mcpa != null)
-							mcpa.releaseBeanProxy(expression);						
+							mcpa.releaseBeanProxy(expression, remove);						
 					}
 				}
 			}

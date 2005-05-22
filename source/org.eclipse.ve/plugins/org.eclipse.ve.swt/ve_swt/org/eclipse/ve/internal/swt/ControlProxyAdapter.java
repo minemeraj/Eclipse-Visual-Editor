@@ -356,18 +356,18 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	public void setTarget(Notifier newTarget) {
 		super.setTarget(newTarget);
 		// See whether or not we are on the free form
-		EObject beanComposition = InverseMaintenanceAdapter.getFirstReferencedBy(newTarget, JCMPackage.eINSTANCE.getBeanComposition_Components());
-		if (beanComposition != null) {
-			Adapter existingAdapter = EcoreUtil.getExistingAdapter(beanComposition, FreeFormControlHostAdapter.class);
-			if (existingAdapter == null) {
-				FreeFormControlHostAdapter adapter = new FreeFormControlHostAdapter(getBeanProxyDomain(), (BeanComposition) beanComposition);
-				adapter.setTarget(beanComposition);
-				beanComposition.eAdapters().add(adapter);
-				adapter.add(this);
-			}
-
-		}
 		if (newTarget != null) {
+			EObject beanComposition = InverseMaintenanceAdapter.getFirstReferencedBy(newTarget, JCMPackage.eINSTANCE.getBeanComposition_Components());
+			if (beanComposition != null) {
+				Adapter existingAdapter = EcoreUtil.getExistingAdapter(beanComposition, FreeFormControlHostAdapter.class);
+				if (existingAdapter == null) {
+					FreeFormControlHostAdapter adapter = new FreeFormControlHostAdapter(getBeanProxyDomain(), (BeanComposition) beanComposition);
+					adapter.setTarget(beanComposition);
+					beanComposition.eAdapters().add(adapter);
+					adapter.add(this);
+				}
+
+			}			
 			sfComponentBounds = JavaInstantiation.getSFeature((IJavaObjectInstance) newTarget, SWTConstants.SF_CONTROL_BOUNDS);
 		}
 	}
