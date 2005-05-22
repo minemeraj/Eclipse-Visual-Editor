@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-21 06:33:51 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-22 22:44:40 $ 
  */
 
 import java.util.List;
@@ -62,12 +62,15 @@ public class CustomizeAction extends SelectionAction {
 				return null;
 			JavaClass beanClass = (JavaClass) ((EObject) model).eClass();
 			BeanDecorator beanDecor = Utilities.getBeanDecorator(beanClass);
-			// The BeanInfo on the target VM holds a key of "EXPLICIT_PROPERTY_CHANGE" that takes Boolean values
-			// The purpose of this is so that the BeanInfo can indicate that it wishes to fire property change events to signal what has changed
-			// versus having the VE automatically try to determine the set of changed properties
-			FeatureAttributeValue beanInfoChangeFlag = (FeatureAttributeValue) beanDecor.getAttributes().get("EXPLICIT_PROPERTY_CHANGE");
-			explicitPropertyChange = beanInfoChangeFlag != null ? ((Boolean)beanInfoChangeFlag.getValue()).booleanValue() : false;
-			return beanDecor != null ? beanDecor.getCustomizerClass() : null;	// If class invalid, bean decor will be null.
+			 // If class invalid, bean decor will be null.
+			if (beanDecor != null) {
+				// The BeanInfo on the target VM holds a key of "EXPLICIT_PROPERTY_CHANGE" that takes Boolean values
+				// The purpose of this is so that the BeanInfo can indicate that it wishes to fire property change events to signal what has changed
+				// versus having the VE automatically try to determine the set of changed properties
+				FeatureAttributeValue beanInfoChangeFlag = (FeatureAttributeValue) beanDecor.getAttributes().get("EXPLICIT_PROPERTY_CHANGE");
+				explicitPropertyChange = beanInfoChangeFlag != null ? ((Boolean) beanInfoChangeFlag.getValue()).booleanValue() : false;
+				return beanDecor.getCustomizerClass();
+			}
 		}
 		return null;
 	}

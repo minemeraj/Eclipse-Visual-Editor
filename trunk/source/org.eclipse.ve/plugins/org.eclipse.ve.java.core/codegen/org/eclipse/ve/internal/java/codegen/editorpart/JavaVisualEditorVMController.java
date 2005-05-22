@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-17 23:36:01 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-22 22:44:41 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -663,28 +663,43 @@ public class JavaVisualEditorVMController {
 		 * @see org.eclipse.jem.internal.adapters.jdom.JavaModelListener#processJavaElementChanged(org.eclipse.jdt.core.IJavaProject, org.eclipse.jdt.core.IJavaElementDelta)
 		 */
 		protected void processJavaElementChanged(IJavaProject element, IJavaElementDelta delta) {
+			IProject project = element.getProject();
 			switch (delta.getKind()) {
 				case IJavaElementDelta.REMOVED:
-					processRemovedProject(element.getProject(), true);	// Need to wait because the project is going away and we can't have the registry hold onto files.
-					processChangedReferencedProject(element.getProject());
+					processRemovedProject(project, true);	// Need to wait because the project is going away and we can't have the registry hold onto files.
+					processChangedReferencedProject(project);
 					break;
 				case IJavaElementDelta.ADDED:
-					processChangedReferencedProject(element.getProject());
+					processChangedReferencedProject(project);
 					break;
 				case IJavaElementDelta.CHANGED:
 					if ((delta.getFlags() & IJavaElementDelta.F_CLOSED) != 0) {
 						// Treat as a project removed.
-						processRemovedProject(element.getProject(), false);
-						processChangedReferencedProject(element.getProject());
+						processRemovedProject(project, false);
+						processChangedReferencedProject(project);
 					} else if (isClasspathResourceChange(delta)) {
 						// This means this project's .classpath file was changed. This is a major
 						// change (though it could be simply attach source), so to be on the safe
 						// side process any referenced project like an add or remove. Plus the project
 						// itself.
-						processChangedProject(element.getProject());
-						processChangedReferencedProject(element.getProject());	
+						processChangedProject(project);
+						processChangedReferencedProject(project);	
+					} else {
+						processChildren(element, delta);
 					}
 					break;
+			}
+		}
+		
+		protected void processJavaElementChanged(IPackageFragmentRoot element, IJavaElementDelta delta) {
+			if (isClassPathChange(delta)) {
+				// This means this project's classpath (a container changed some element of the container) was changed. This is a major
+				// change (though it could be simply attach source), so to be on the safe
+				// side process any referenced project like an add or remove. Plus the project
+				// itself.
+				IProject project = element.getJavaProject().getProject();
+				processChangedProject(project);
+				processChangedReferencedProject(project);	
 			}
 		}
 		

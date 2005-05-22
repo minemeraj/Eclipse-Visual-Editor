@@ -12,12 +12,14 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.16 $  $Date: 2005-05-18 18:39:19 $ 
+ *  $Revision: 1.17 $  $Date: 2005-05-22 22:44:40 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.IExpression;
@@ -107,7 +109,7 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 						IExpression expression = proxyDomain.getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
 						try {
 							if (!msg.isTouch() && msg.getOldValue() != null)
-								releaseSetting(msg.getOldValue(), expression);									
+								releaseSetting(msg.getOldValue(), expression, false);									
 							initSetting(msg.getNewValue(), expression, false);
 						} catch (IllegalStateException e) {
 							JavaVEPlugin.log(e, Level.WARNING);
@@ -136,7 +138,7 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 					// its parentage will be changing and it needs to be released for this to work.
 					IExpression expression = proxyDomain.getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
 					try {
-						releaseSetting(msg.getOldValue(), expression);
+						releaseSetting(msg.getOldValue(), expression, false);
 					} catch (IllegalStateException e) {
 						JavaVEPlugin.log(e, Level.WARNING);
 					} finally {
@@ -194,7 +196,7 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 						while (itr.hasNext()) {
 							int mark = expression.mark();
 							try {
-								releaseSetting(itr.next(), expression);
+								releaseSetting(itr.next(), expression, false);
 							} finally {
 								expression.endMark(mark);
 							}
@@ -328,13 +330,13 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 		}
 	}
 
-	protected void releaseBeanProxy(IExpression expression) {
+	protected void releaseBeanProxy(IExpression expression, boolean remove) {
 		// Also release the this part since that is not a member or property.
 		if (target instanceof BeanSubclassComposition) {
-			releaseSetting(((BeanSubclassComposition) target).getThisPart(), expression);
+			releaseSetting(((BeanSubclassComposition) target).getThisPart(), expression, remove);
 		}
 		
-		super.releaseBeanProxy(expression);
+		super.releaseBeanProxy(expression, remove);
 		
 		if (freeformHosts != null && !freeformHosts.isEmpty()) {
 			Iterator iter = freeformHosts.values().iterator();
@@ -388,10 +390,10 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.core.MemberContainerProxyAdapter#releaseSetting(java.lang.Object, org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
-	protected void releaseSetting(Object v, IExpression expression) {
-		super.releaseSetting(v, expression);
-		if (v instanceof IJavaInstance) {
-			IBeanProxyHost settingBean = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) v);
+	protected void releaseSetting(Object v, IExpression expression, boolean remove) {
+		super.releaseSetting(v, expression, remove);
+		if (!remove && v instanceof IJavaInstance) {
+			IBeanProxyHost settingBean = (IBeanProxyHost) EcoreUtil.getExistingAdapter((Notifier) v, IBeanProxyHost.BEAN_PROXY_TYPE);
 			if (settingBean instanceof IInternalBeanProxyHost2) {
 				IInternalBeanProxyHost2 ib = (IInternalBeanProxyHost2) settingBean;
 				ib.removeFromFreeForm();
