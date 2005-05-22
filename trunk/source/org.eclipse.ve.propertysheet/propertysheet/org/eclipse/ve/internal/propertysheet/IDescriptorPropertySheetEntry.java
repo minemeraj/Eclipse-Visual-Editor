@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: IDescriptorPropertySheetEntry.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:47:33 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-22 20:09:48 $ 
  */
 
 
@@ -120,5 +120,16 @@ public interface IDescriptorPropertySheetEntry extends IPropertySheetEntry {
 	 * Answer the values that were set into the entry.
 	 */
 	public Object[] getValues();
+	
+	/**
+	 * Get the sort display name, not the adorned property sheet entry displayname. This is so
+	 * that sorting (using EToolsPropertySheetSorter) will be done on this instead of the adorned 
+	 * displayname. For example, we may put '>' in front to indicate a changed property, but
+	 * we don't want the '>' to participate in the sort.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public String getSortDisplayName();
 				
 }

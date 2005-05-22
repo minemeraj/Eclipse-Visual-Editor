@@ -11,11 +11,10 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: AbstractPropertySheetEntry.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-18 16:42:57 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-22 20:09:48 $ 
  */
 
 
-import java.text.Collator;
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
@@ -261,22 +260,7 @@ nextDesc:
 	}
 
 	// Sort the descriptors	
-	List descriptors = new ArrayList(intersection.values());
-	Collections.sort(descriptors, new Comparator() {
-		Collator coll = Collator.getInstance(Locale.getDefault());
-		public int compare(Object a, Object b) {
-			// Sort using the first descriptor from each array. They will all have the same id in the array, so the first is sufficient
-			IPropertyDescriptor d1, d2;
-			String dname1, dname2;
-			d1 = ((IPropertyDescriptor[]) a)[0];
-			dname1 = d1.getDisplayName();
-			d2 = ((IPropertyDescriptor[]) b)[0];
-			dname2 = d2.getDisplayName();
-			return coll.compare(dname1, dname2);
-		}
-	});
-
-	return descriptors;
+	return new ArrayList(intersection.values());
 }
 
 /**
@@ -432,6 +416,20 @@ public String getDisplayName() {
 		String name = fDescriptors[0].getDisplayName();
 		if (fShowSet && fValueIsSet)
 			name = '>'+name;
+		return name;
+	} catch (RuntimeException e) {
+		// Don't want to let this go on up. Causes problems later on.
+		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e)); //$NON-NLS-1$
+		return PropertysheetMessages.getString("AbstractPropertySheetEntry.DisplayName.Error"); //$NON-NLS-1$
+	}	
+}
+
+public String getSortDisplayName() {
+	if (entryStale)
+		return PropertysheetMessages.getString("AbstractPropertySheetEntry.DisplayName.StaleEntry"); //$NON-NLS-1$
+	
+	try {
+		String name = fDescriptors[0].getDisplayName();
 		return name;
 	} catch (RuntimeException e) {
 		// Don't want to let this go on up. Causes problems later on.
