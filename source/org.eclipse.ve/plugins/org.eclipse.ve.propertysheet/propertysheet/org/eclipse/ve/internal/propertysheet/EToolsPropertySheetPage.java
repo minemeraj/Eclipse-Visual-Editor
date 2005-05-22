@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: EToolsPropertySheetPage.java,v $
- *  $Revision: 1.7 $  $Date: 2005-03-15 23:29:52 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-22 20:09:48 $ 
  */
 
 
@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPageSite;
+import org.eclipse.ui.views.properties.*;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 /**
@@ -42,6 +43,25 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 	protected Viewer propertySheetViewer;	// They hide it so we can't do anything with it and we need it so we will get and use reflection on it.
 	protected Method deactivateCellEditorMethod;
 	protected IDescriptorPropertySheetEntry rootEntry;
+	
+	public static class EToolsPropertySheetSorter extends PropertySheetSorter {
+		public int compare(IPropertySheetEntry entryA, IPropertySheetEntry entryB) {
+			String a;
+			try {
+				a = ((IDescriptorPropertySheetEntry) entryA).getSortDisplayName();
+			} catch (ClassCastException e) {
+				a = entryA.getDisplayName();
+			}
+			String b;
+			try {
+				b = ((IDescriptorPropertySheetEntry) entryB).getSortDisplayName();
+			} catch (ClassCastException e) {
+				b = entryA.getDisplayName();
+			}
+			
+			return getCollator().compare(a,b);
+		}	
+	}
 	
 	/**
 	 * This is an interface to know when the control has been created. It really
@@ -72,6 +92,7 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 	public void init(IPageSite pageSite) {
 		super.init(pageSite);
 		pageSite.setSelectionProvider(this);
+		setSorter(new EToolsPropertySheetSorter());
 	}	
 	
 	public void handleEntrySelection(ISelection selection) {
