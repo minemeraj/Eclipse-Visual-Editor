@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentManager.java,v $ $Revision: 1.10 $ $Date: 2005-05-18 22:53:55 $
+ * $RCSfile: ComponentManager.java,v $ $Revision: 1.11 $ $Date: 2005-05-22 19:41:47 $
  */
 
 import java.io.InputStream;
@@ -1227,7 +1227,7 @@ public class ComponentManager {
 		private Runnable invalidateRunnable = new Runnable() {
 
 			public void run() {
-				if (feedbackControllerProxy != null) {
+				if (feedbackControllerProxy != null && ((IBeanProxy) feedbackControllerProxy).isValid()) {
 					IExpression exp = ((IBeanProxy) feedbackControllerProxy).getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
 					try {
 						for (Iterator itr = pendingInvalidates.iterator(); itr.hasNext();) {
@@ -1246,7 +1246,8 @@ public class ComponentManager {
 					} finally {
 						exp.close();
 					}
-				}
+				} else
+					pendingInvalidates.clear();
 			}
 		};
 
