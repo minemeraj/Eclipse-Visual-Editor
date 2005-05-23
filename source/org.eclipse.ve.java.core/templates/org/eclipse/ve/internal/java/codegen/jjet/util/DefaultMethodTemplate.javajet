@@ -1,8 +1,6 @@
 <%
 /*
  * This was created from the javajet file: 
- *  $RCSfile: DefaultMethodTemplate.javajet,v $
- *  $Revision: 1.4 $
  */
  
  // This Method is expected to generate a getter-like, lazy initializaton method skelaton 

@@ -1,8 +1,6 @@
 <%
 /*
  * This was created from the javajet file: 
- *  $RCSfile: PropChangeAnonymousTemplate.javajet,v $
- *  $Revision: 1.1 $ $Date: 2003-10-27 17:48:30 $
  */
  
  // This Method is expected to generate a complete Anonymous event listener for a bound property. 
