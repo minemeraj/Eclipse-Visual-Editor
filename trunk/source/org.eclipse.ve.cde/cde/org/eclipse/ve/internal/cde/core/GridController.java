@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridController.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-20 21:53:21 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-23 19:06:45 $ 
  */
 
 import java.util.*;
@@ -67,11 +67,12 @@ public class GridController {
 	protected HashMap registeredEPs = new HashMap(2);
 	
 	private boolean showGrid = false;
-	private int gridWidth = 12;
-	private int gridHeight = 12;
+	private int gridWidth = 15;
+	private int gridHeight = 15;
 	private int gridMargin = 0; 
 	
 	public GridController(){
+		gridWidth = gridHeight = CDEPlugin.getPlugin().getPluginPreferences().getInt(CDEPlugin.XY_GRID_SPACING);
 	}
 	
 	/**

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.15 $ $Date: 2005-05-19 14:40:14 $
+ * $Revision: 1.16 $ $Date: 2005-05-23 19:06:44 $
  */
 import java.util.HashSet;
 import java.util.List;
@@ -50,7 +50,6 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 	private final int HEIGHT_PADDING = 4;
 
 	boolean fShowGrid = false;
-	private boolean showGridPreference = CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED);		
 
 	GridLayoutPolicyHelper helper = new GridLayoutPolicyHelper();
 	int [][] layoutDimensions = null;
@@ -100,10 +99,8 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 			getHostFigure().addFigureListener(hostFigureListener);	// need to know when the host figure changes so we can refresh the grid
 
 			initializeGrid();
-			if (showGridPreference) {
-				editPartSelectionListener = createEditPartSelectionListener();
-				getHost().addEditPartListener(editPartSelectionListener);
-			}
+			editPartSelectionListener = createEditPartSelectionListener();
+			getHost().addEditPartListener(editPartSelectionListener);
 		}
 		super.activate();
 		CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), GridLayoutLayoutPage.class);
@@ -495,13 +492,20 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 	 */
 	private EditPartListener createEditPartSelectionListener() {
 		return new EditPartListener.Stub() {
+
 			public void selectedStateChanged(EditPart editpart) {
-				if (editpart == null || editpart == getHost()
-						&& (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
-					if (gridController != null)
-						gridController.setGridShowing(true);
+				if (CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)) {
+					if (editpart == null || editpart == getHost()
+							&& (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
+						if (gridController != null)
+							gridController.setGridShowing(true);
+					} else {
+						if (gridController != null)
+							gridController.setGridShowing(false);
+					}
 				} else {
-					if (gridController != null)
+					// Hide the grid just in case we were show before and changed the prefs
+					if (gridController != null && gridController.isGridShowing())
 						gridController.setGridShowing(false);
 				}
 			}
