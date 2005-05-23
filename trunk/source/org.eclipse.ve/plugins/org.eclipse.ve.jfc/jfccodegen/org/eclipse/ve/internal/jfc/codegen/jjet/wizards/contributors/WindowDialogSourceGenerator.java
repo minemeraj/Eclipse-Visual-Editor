@@ -26,8 +26,6 @@ public String generateSource(String typeName, String superClassName, HashMap arg
     
 /*
  * This was created from the javajet file: 
- *  $RCSfile: WindowDialogSourceGenerator.java,v $
- *  $Revision: 1.1 $ $Date: 2005-05-23 19:34:06 $
  */
 
     stringBuffer.append(TEXT_1);
