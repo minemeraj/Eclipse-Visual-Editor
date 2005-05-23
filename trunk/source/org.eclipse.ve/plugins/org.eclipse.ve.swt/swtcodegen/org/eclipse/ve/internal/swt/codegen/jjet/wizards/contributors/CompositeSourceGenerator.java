@@ -32,8 +32,6 @@ public String generateSource(String typeName, String superClassName, HashMap arg
     
 /*
  * This was created from the javajet file: 
- *  $RCSfile: CompositeSourceGenerator.java,v $
- *  $Revision: 1.2 $ $Date: 2005-05-23 19:31:22 $
  */
 
     

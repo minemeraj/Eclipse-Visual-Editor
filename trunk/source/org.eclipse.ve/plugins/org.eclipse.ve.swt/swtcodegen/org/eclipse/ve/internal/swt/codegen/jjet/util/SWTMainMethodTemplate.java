@@ -37,8 +37,6 @@ public class SWTMainMethodTemplate implements IMethodTemplate {
     
 /*
  * This was created from the javajet file: 
- *  $RCSfile: SWTMainMethodTemplate.java,v $
- *  $Revision: 1.1 $
  */
  
  // This Method is expected to generate a Main method for a SWT based application.

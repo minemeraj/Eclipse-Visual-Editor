@@ -1,8 +1,6 @@
 <%
 /*
  * This was created from the javajet file: 
- *  $RCSfile: SWTMainMethodTemplate.javajet,v $
- *  $Revision: 1.4 $
  */
  
  // This Method is expected to generate a Main method for a SWT based application.
