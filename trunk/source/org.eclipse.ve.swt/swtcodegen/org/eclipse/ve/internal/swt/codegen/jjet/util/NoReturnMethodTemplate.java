@@ -38,8 +38,6 @@ public class NoReturnMethodTemplate implements IMethodTemplate {
     
 /*
  * This was created from the javajet file: 
- *  $RCSfile: NoReturnMethodTemplate.java,v $
- *  $Revision: 1.1 $
  */
  
  // This Method is expected to generate a method skelaton with no returns and no arguments
