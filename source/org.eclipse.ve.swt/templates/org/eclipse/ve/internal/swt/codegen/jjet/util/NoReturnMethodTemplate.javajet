@@ -1,8 +1,6 @@
 <%
 /*
  * This was created from the javajet file: 
- *  $RCSfile: NoReturnMethodTemplate.javajet,v $
- *  $Revision: 1.2 $
  */
  
  // This Method is expected to generate a method skelaton with no returns and no arguments
