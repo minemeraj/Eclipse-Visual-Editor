@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-20 21:53:21 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-23 14:01:19 $ 
  */
 
 import java.net.MalformedURLException;
@@ -44,6 +44,7 @@ public final class CDEPlugin extends AbstractUIPlugin {
 
 	private static CDEPlugin CDE_PLUGIN = null;
 	public static final String SHOW_GRID_WHEN_SELECTED = "SHOW_GRID_WHEN_SELECTED"; //$NON-NLS-1$	
+	public static final String XY_GRID_SPACING = "XY_GRID_SPACING"; //$NON-NLS-1$	
 
 	public CDEPlugin() {
 		CDE_PLUGIN = this;
@@ -222,7 +223,8 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	}
 	
 	public static void initializeDefaultPluginPreferences(Preferences aStore) {
-		aStore.setDefault(SHOW_GRID_WHEN_SELECTED,false);		
+		aStore.setDefault(SHOW_GRID_WHEN_SELECTED,true);		
+		aStore.setDefault(XY_GRID_SPACING, 15);		
 		aStore.setDefault(PREF_SHOW_OVERVIEW_KEY, false);
 		aStore.setDefault(SHOW_XML, false);
 		aStore.setDefault(CUSTOMIZELAYOUTWINDOW_X, 0);

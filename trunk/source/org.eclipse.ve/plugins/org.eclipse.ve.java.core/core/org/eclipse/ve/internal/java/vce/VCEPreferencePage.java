@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.23 $  $Date: 2005-05-18 14:35:42 $ 
+ *  $Revision: 1.24 $  $Date: 2005-05-23 14:01:18 $ 
  */
 
 import java.util.ArrayList;
@@ -64,6 +64,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected ArrayList fLookAndFeelClasses = new ArrayList(4);
 	protected Button showGridCheckBox;
 	protected Button renameAskCheckbox;
+	protected Text xyGridSpacingText;
 	
 	protected Button showWindowCheckBox;
 	protected Button showXMLTextCheckBox;
@@ -157,14 +158,15 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 	}
 
-	protected Text createLabelText(Composite parent, String label, int noCharacters) {
+	protected Text createLabelText(Composite parent, String label, int noCharacters, int indent) {
 
 		Composite c = new Composite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.marginHeight = 0;
 		gridLayout.numColumns = 2;
-		//	c.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
-		c.setLayoutData(new GridData());
+		GridData cData = new GridData();
+		cData.horizontalIndent = indent;
+		c.setLayoutData(cData);
 		c.setLayout(gridLayout);
 
 		Label l = createLabel(c, label, null);
@@ -323,6 +325,10 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		// the XML text for the JVE object model can be seen, both of which help debugging
 		
 		showGridCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowGridWhenSelected"), 15); //$NON-NLS-1$
+
+		// Create controls for setting the XY grid spacing default
+		xyGridSpacingText = createLabelText(appearanceComposite, "X/Y Grid Spacing:", 10, 12);
+
 		renameAskCheckbox = createCheckBox(appearanceComposite, VCEMessages.getString("VCEPreferencePage.Checkbox.PromptNameOnCreation.Text"), 15); //$NON-NLS-1$
 
 		showWindowCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowLiveWindow"), 15); //$NON-NLS-1$
@@ -686,6 +692,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		openPropertiesViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_PROPERTIES_VIEW));
 		openJavaBeansViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW));
 		showGridCheckBox.setSelection(cdeStore.getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED));
+		xyGridSpacingText.setText(String.valueOf(cdeStore.getDefaultInt(CDEPlugin.XY_GRID_SPACING)));
 		renameAskCheckbox.setSelection(fStore.getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 		showWindowCheckBox.setSelection(fStore.getBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showXMLTextCheckBox.setSelection(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_XML));
@@ -784,6 +791,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		fStore.setValue(VCEPreferences.NOTEBOOK_PAGE, notebookRadioButton.getSelection());
 		
 		cdeStore.setValue(CDEPlugin.SHOW_GRID_WHEN_SELECTED,showGridCheckBox.getSelection());
+		cdeStore.setValue(CDEPlugin.XY_GRID_SPACING, new Integer(xyGridSpacingText.getText()).intValue());
 		fStore.setValue(VCEPreferences.RENAME_INSTANCE_ASK_KEY, renameAskCheckbox.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_PROPERTIES_VIEW, openPropertiesViewIfRequired.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_JAVABEANS_VIEW, openJavaBeansViewIfRequired.getSelection());
@@ -831,6 +839,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		showWindowCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showClipboardCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.USE_TEXT_FOR_CLIPBOARD));		
 		showGridCheckBox.setSelection(cdeStore.getDefaultBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED));
+		xyGridSpacingText.setText(String.valueOf(cdeStore.getDefaultString(CDEPlugin.XY_GRID_SPACING)));
 		renameAskCheckbox.setSelection(fStore.getDefaultBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 		// Initialize the tree to just show the DEFAULT and the plugin defined look and feel classes
 		TableItem[] items = lookAndFeelTable.getItems();
