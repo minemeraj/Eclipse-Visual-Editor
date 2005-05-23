@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-20 15:44:02 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-23 19:06:44 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -23,7 +23,6 @@ import org.eclipse.gef.*;
 import org.eclipse.gef.commands.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionFilter;
@@ -35,8 +34,8 @@ import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.GridController;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
 import org.eclipse.ve.internal.java.core.*;
@@ -49,7 +48,7 @@ import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
  */
 public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	
-	public final static int SHOW_GRID_CHANGED = 1;
+//	public final static int SHOW_GRID_CHANGED = 1;
 	public final static int NUM_COLUMNS_CHANGED = 2;
 	public final static int HORIZONTAL_SPACING_CHANGED = 3;
 	public final static int VERTICAL_SPACING_CHANGED = 4;
@@ -73,15 +72,15 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	boolean initialized = false;
 	
 	private GridLayoutLayoutComposite gridComposite = null;
-	private IGridListener gridListener = new IGridListener() {
-		public void gridHeightChanged(int gridHeight,int oldGridHeight) {};
-		public void gridVisibilityChanged(boolean isShowing) {
-			if (gridComposite != null)
-				gridComposite.setShowGrid(isShowing);
-		};
-		public void gridMarginChanged(int gridMargin,int oldGridMargin) {};
-		public void gridWidthChanged(int gridWidth,int oldGridWidth) {};
-	};
+//	private IGridListener gridListener = new IGridListener() {
+//		public void gridHeightChanged(int gridHeight,int oldGridHeight) {};
+//		public void gridVisibilityChanged(boolean isShowing) {
+//			if (gridComposite != null)
+//				gridComposite.setShowGrid(isShowing);
+//		};
+//		public void gridMarginChanged(int gridMargin,int oldGridMargin) {};
+//		public void gridWidthChanged(int gridWidth,int oldGridWidth) {};
+//	};
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#handleSelectionProviderInitialization(org.eclipse.jface.viewers.ISelectionProvider)
@@ -96,12 +95,12 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	public Control getControl(Composite parent) {
 		gridComposite = new GridLayoutLayoutComposite(this, parent, SWT.NONE);
 		initializeValues();
-		gridComposite.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
-				if (gridController != null)
-					gridController.removeGridListener(gridListener);
-			};
-		});
+//		gridComposite.addDisposeListener(new DisposeListener() {
+//			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
+//				if (gridController != null)
+//					gridController.removeGridListener(gridListener);
+//			};
+//		});
 		return gridComposite;
 	}
 
@@ -111,12 +110,12 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	protected void propertyChanged (int type, Object value) {
 		int intValue;
 		switch (type) {
-			case SHOW_GRID_CHANGED:
-				boolean isShowing = ((Boolean)value).booleanValue();
-				gridController = GridController.getGridController(fEditPart);
-				if (gridController != null && isShowing != gridController.isGridShowing())
-					gridController.setGridShowing(isShowing);
-				break;
+//			case SHOW_GRID_CHANGED:
+//				boolean isShowing = ((Boolean)value).booleanValue();
+//				gridController = GridController.getGridController(fEditPart);
+//				if (gridController != null && isShowing != gridController.isGridShowing())
+//					gridController.setGridShowing(isShowing);
+//				break;
 			case NUM_COLUMNS_CHANGED:
 				intValue = new Integer((String)value).intValue();
 				if (numColumnsValue != intValue) {
@@ -182,12 +181,12 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				if (isValidTarget(firstParent)) {
 					fEditPart = firstParent;
 					initialized = false;
-					if (gridController != null)
-						gridController.removeGridListener(gridListener);
+//					if (gridController != null)
+//						gridController.removeGridListener(gridListener);
 					gridController = GridController.getGridController(fEditPart);
 					if (gridController != null) {
 						initializeValues();
-						gridController.addGridListener(gridListener);
+//						gridController.addGridListener(gridListener);
 						return true;
 					}
 				}
@@ -222,12 +221,12 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 					if (enableAll) {
 						fEditPart = firstParent;
 						initialized = false;
-						if (gridController != null)
-							gridController.removeGridListener(gridListener);
+//						if (gridController != null)
+//							gridController.removeGridListener(gridListener);
 						gridController = GridController.getGridController(fEditPart);
 						if (gridController != null) {
 							initializeValues();
-							gridController.addGridListener(gridListener);
+//							gridController.addGridListener(gridListener);
 							return true;
 						}
 					}
@@ -235,8 +234,8 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 			}
 		}
 		fEditPart = null;
-		if (gridController != null)
-			gridController.removeGridListener(gridListener);
+//		if (gridController != null)
+//			gridController.removeGridListener(gridListener);
 		gridController = null;
 		// By default if the initial checks failed, disable and uncheck all the actions.
 		return false;

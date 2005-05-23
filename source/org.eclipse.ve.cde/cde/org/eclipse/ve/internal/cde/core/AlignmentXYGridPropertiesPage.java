@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYGridPropertiesPage.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-20 21:53:21 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-23 19:06:45 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -43,7 +43,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 	protected Scale fGridWidthScale;
 	protected Scale fGridHeightScale;
 	protected Scale fGridMarginScale;
-	protected Button fShowGridCheckBox;
+//	protected Button fShowGridCheckBox;
 	protected Button fSnapToGridCheckBox;
 
 	// working values
@@ -51,21 +51,21 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 	protected int fGridHeight;
 	protected int fGridMargin;
 	protected boolean fWidthHeightSync = true;
-	protected boolean fShowGrid =  false;
+//	protected boolean fShowGrid =  false;
 	protected boolean fSnapToGrid =  false;
 	private boolean initializing = false;
 	private PropertyChangeListener fPropertyChangeListener;
 
-	private IGridListener gridListener = new IGridListener() {
-		public void gridHeightChanged(int gridHeight,int oldGridHeight) {};
-		public void gridVisibilityChanged(boolean isShowing) {
-			fShowGrid = isShowing;
-			if (fShowGridCheckBox != null)
-				fShowGridCheckBox.setSelection(isShowing);
-		};
-		public void gridMarginChanged(int gridMargin,int oldGridMargin) {};
-		public void gridWidthChanged(int gridWidth,int oldGridWidth) {};
-	};
+//	private IGridListener gridListener = new IGridListener() {
+//		public void gridHeightChanged(int gridHeight,int oldGridHeight) {};
+//		public void gridVisibilityChanged(boolean isShowing) {
+//			fShowGrid = isShowing;
+//			if (fShowGridCheckBox != null)
+//				fShowGridCheckBox.setSelection(isShowing);
+//		};
+//		public void gridMarginChanged(int gridMargin,int oldGridMargin) {};
+//		public void gridWidthChanged(int gridWidth,int oldGridWidth) {};
+//	};
 
 
 	public Control getControl(Composite parent) {
@@ -91,33 +91,33 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		fieldsGroup.setLayoutData(data);
 
 		// Create show grid checkbox
-		fShowGridCheckBox = new Button(fieldsGroup, SWT.CHECK);
-		fShowGridCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Show_Grid")); //$NON-NLS-1$
-		data = new GridData();
-		data.horizontalSpan = 3;
-		fShowGridCheckBox.setLayoutData(data);
-		fShowGridCheckBox.setSelection(gridController.isGridShowing());
-		fShowGridCheckBox.addSelectionListener(new SelectionAdapter() {
+//		fShowGridCheckBox = new Button(fieldsGroup, SWT.CHECK);
+//		fShowGridCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Show_Grid")); //$NON-NLS-1$
+//		data = new GridData();
+//		data.horizontalSpan = 3;
+//		fShowGridCheckBox.setLayoutData(data);
+//		fShowGridCheckBox.setSelection(gridController.isGridShowing());
+//		fShowGridCheckBox.addSelectionListener(new SelectionAdapter() {
+//
+//			public void widgetSelected(SelectionEvent e) {
+//				if (!initializing && fShowGridCheckBox.getSelection() != fShowGrid) {
+//					gridController = GridController.getGridController(fEditPart);
+//					if (gridController != null ) {
+//						fShowGrid = fShowGridCheckBox.getSelection();
+//						gridController.setGridShowing(fShowGrid);
+//					}
+//				}
+//				;
+//			}
+//		});
+//		fShowGridCheckBox.addDisposeListener(new DisposeListener() {
+//			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
+//				if (gridController != null)
+//					gridController.removeGridListener(gridListener);
+//			};
+//		});
 
-			public void widgetSelected(SelectionEvent e) {
-				if (!initializing && fShowGridCheckBox.getSelection() != fShowGrid) {
-					gridController = GridController.getGridController(fEditPart);
-					if (gridController != null ) {
-						fShowGrid = fShowGridCheckBox.getSelection();
-						gridController.setGridShowing(fShowGrid);
-					}
-				}
-				;
-			}
-		});
-		fShowGridCheckBox.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
-				if (gridController != null)
-					gridController.removeGridListener(gridListener);
-			};
-		});
-
-		// Create show grid checkbox
+		// Create Snap to grid checkbox
 		fSnapToGridCheckBox = new Button(fieldsGroup, SWT.CHECK);
 		fSnapToGridCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Snap_To_Grid")); //$NON-NLS-1$
 		data = new GridData();
@@ -135,7 +135,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 				;
 			}
 		});
-		fShowGridCheckBox.addDisposeListener(new DisposeListener() {
+		fSnapToGridCheckBox.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
 				if (fPropertyChangeListener != null)
 					fEditPart.getRoot().getViewer().removePropertyChangeListener(fPropertyChangeListener);
@@ -326,12 +326,12 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 					fEditPart = firstParent;
 					if (fPropertyChangeListener != null)
 						fEditPart.getRoot().getViewer().removePropertyChangeListener(fPropertyChangeListener);
-					if (gridController != null)
-						gridController.removeGridListener(gridListener);
+//					if (gridController != null)
+//						gridController.removeGridListener(gridListener);
 					gridController = GridController.getGridController(fEditPart);
 					if (gridController != null) {
 						initializeValues();
-						gridController.addGridListener(gridListener);
+//						gridController.addGridListener(gridListener);
 						return true;
 					}
 				}
@@ -363,12 +363,12 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 						fEditPart = firstParent;
 						if (fPropertyChangeListener != null)
 							fEditPart.getRoot().getViewer().removePropertyChangeListener(fPropertyChangeListener);
-						if (gridController != null)
-							gridController.removeGridListener(gridListener);
+//						if (gridController != null)
+//							gridController.removeGridListener(gridListener);
 						gridController = GridController.getGridController(fEditPart);
 						if (gridController != null) {
 							initializeValues();
-							gridController.addGridListener(gridListener);
+//							gridController.addGridListener(gridListener);
 							return true;
 						}
 					}
@@ -388,7 +388,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 			fGridHeight = gridController.getGridHeight();
 			fGridWidth = gridController.getGridWidth();
 			fGridMargin = gridController.getGridMargin();
-			fShowGrid = gridController.isGridShowing();
+//			fShowGrid = gridController.isGridShowing();
 			if (fGridHeightScale != null)
 				fGridHeightScale.setSelection(fGridHeight);
 			if (fGridHeightText != null)
@@ -401,8 +401,8 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 				fGridMarginScale.setSelection(fGridMargin);
 			if (fGridMarginText != null)
 				fGridMarginText.setText(String.valueOf(fGridMargin));
-			if (fShowGridCheckBox != null)
-				fShowGridCheckBox.setSelection(fShowGrid);
+//			if (fShowGridCheckBox != null)
+//				fShowGridCheckBox.setSelection(fShowGrid);
 			initializeSnapToGrid();
 			initializing = false;
 		}

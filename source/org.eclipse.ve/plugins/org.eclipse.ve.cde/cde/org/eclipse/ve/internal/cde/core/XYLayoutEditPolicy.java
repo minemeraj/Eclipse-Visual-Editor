@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-20 21:53:21 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-23 19:06:45 $ 
  */
 
 
@@ -65,7 +65,6 @@ public abstract class XYLayoutEditPolicy extends org.eclipse.gef.editpolicies.XY
 	protected boolean allowGridding = true;
 
 	private IFigure sizeOnDropFeedback = null;
-	private boolean showGridPreference = CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED);		
 	private EditPartListener editPartSelectionListener;
 
 	private boolean fShowGrid = false;
@@ -132,10 +131,8 @@ public void activate() {
 				gridController.addGridListener(this);
 				GridController.registerEditPart(getHost(), gridController);
 				initializeGrid();
-				if (showGridPreference) {
-					editPartSelectionListener = createEditPartSelectionListener();
-					getHost().addEditPartListener(editPartSelectionListener);
-				}
+				editPartSelectionListener = createEditPartSelectionListener();
+				getHost().addEditPartListener(editPartSelectionListener);
 			}
 		}
 	
@@ -813,17 +810,20 @@ protected void undecorateChild(EditPart child){
 	 */
 	private EditPartListener createEditPartSelectionListener() {
 		return new EditPartListener.Stub() {
-			public void childAdded(EditPart editpart, int index) {
-			}
-			public void removingChild(EditPart editpart, int index) {
-			}
+
 			public void selectedStateChanged(EditPart editpart) {
-				if (editpart == null || editpart == getHost()
-						&& (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
-					if (gridController != null)
-						gridController.setGridShowing(true);
+				if (CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)) {
+					if (editpart == null || editpart == getHost()
+							&& (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
+						if (gridController != null)
+							gridController.setGridShowing(true);
+					} else {
+						if (gridController != null)
+							gridController.setGridShowing(false);
+					}
 				} else {
-					if (gridController != null)
+					// Hide the grid just in case we were show before and changed the prefs
+					if (gridController != null && gridController.isGridShowing())
 						gridController.setGridShowing(false);
 				}
 			}

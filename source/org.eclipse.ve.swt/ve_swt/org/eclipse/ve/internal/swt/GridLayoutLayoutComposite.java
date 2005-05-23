@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutComposite.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-18 18:22:24 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-23 19:06:44 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -23,7 +23,7 @@ public class GridLayoutLayoutComposite extends Composite {
 
 
 	private Button equalWidthCheckBox;
-	private boolean showGrid = false;
+//	private boolean showGrid = false;
 	private GridLayoutLayoutPage parentPage;
 
 	private Spinner numColumnsSpinner;
@@ -36,7 +36,7 @@ public class GridLayoutLayoutComposite extends Composite {
 
 	private Composite composite = null;
 
-	private Button showGridCheckBox = null;
+//	private Button showGridCheckBox = null;
 
 	protected ModifyListener spinnerModify = new ModifyListener() {
 
@@ -107,15 +107,15 @@ public class GridLayoutLayoutComposite extends Composite {
 	private void createComposite() {
 		composite = new Composite(this, SWT.NONE);		   
 		composite.setLayout(new GridLayout());
-		showGridCheckBox = new Button(composite, SWT.CHECK);
-		showGridCheckBox.setText(SWTMessages.getString("GridLayoutLayoutComposite.Checkbox.ShowGrid.Text")); //$NON-NLS-1$
-		showGridCheckBox.setSelection(showGrid);
-		showGridCheckBox.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				if (initialized)
-					parentPage.propertyChanged(GridLayoutLayoutPage.SHOW_GRID_CHANGED, new Boolean(showGridCheckBox.getSelection()));
-			}
-		});
+//		showGridCheckBox = new Button(composite, SWT.CHECK);
+//		showGridCheckBox.setText(SWTMessages.getString("GridLayoutLayoutComposite.Checkbox.ShowGrid.Text")); //$NON-NLS-1$
+//		showGridCheckBox.setSelection(showGrid);
+//		showGridCheckBox.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
+//			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+//				if (initialized)
+//					parentPage.propertyChanged(GridLayoutLayoutPage.SHOW_GRID_CHANGED, new Boolean(showGridCheckBox.getSelection()));
+//			}
+//		});
 
 		Group colGroup = new Group(composite, SWT.NONE);
 		GridData gd0 = new GridData();
@@ -149,11 +149,11 @@ public class GridLayoutLayoutComposite extends Composite {
 	}
 
 	
-	public void setShowGrid(boolean showGrid) {
-		this.showGrid = showGrid;
-		if (showGridCheckBox != null && showGridCheckBox.getSelection() != showGrid)
-			showGridCheckBox.setSelection(showGrid);
-	}
+//	public void setShowGrid(boolean showGrid) {
+//		this.showGrid = showGrid;
+//		if (showGridCheckBox != null && showGridCheckBox.getSelection() != showGrid)
+//			showGridCheckBox.setSelection(showGrid);
+//	}
 	/*
 	 * Initial values from the parent page. Order is
 	 * 1. Show grid (boolean)
@@ -167,7 +167,7 @@ public class GridLayoutLayoutComposite extends Composite {
 	protected void setInitialValues (Object [] values) {
 		if (values == null || values.length != 7)
 			return;
-		showGridCheckBox.setSelection(((Boolean)values[0]).booleanValue());
+//		showGridCheckBox.setSelection(((Boolean)values[0]).booleanValue());
 		numColumnsSpinner.setSelection(((Integer)values[1]).intValue());
 		horizontalSpinner.setSelection(((Integer)values[2]).intValue());
 		verticalSpinner.setSelection(((Integer)values[3]).intValue());
