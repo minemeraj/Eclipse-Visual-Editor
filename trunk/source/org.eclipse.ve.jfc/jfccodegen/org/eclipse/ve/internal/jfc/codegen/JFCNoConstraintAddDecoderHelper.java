@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JFCNoConstraintAddDecoderHelper.java,v $
- *  $Revision: 1.14 $  $Date: 2005-04-09 01:19:20 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-23 22:08:05 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -136,6 +136,17 @@ protected BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException 
       	  }      	  
       	}
       }
+      else if (args.get(getAddedPartArgIndex(args.size())) instanceof StringLiteral) {
+        	if (fAddedInstance==null) {
+        	  String clazzName = "java.lang.String"; //$NON-NLS-1$
+        	  IJavaObjectInstance obj = (IJavaObjectInstance) CodeGenUtil.createInstance(clazzName,fbeanPart.getModel().getCompositionModel()) ;
+        	  JavaClass c = (JavaClass) obj.getJavaType() ;
+        	  if (c.isExistingType()) {
+        	  	fAddedInstance = obj ;
+        	    fAddedInstance.setAllocation(getAllocation((Expression)args.get(getAddedPartArgIndex(args.size()))));
+        	  }      	  
+        	}
+       }
 	return bp ;
 }
 
