@@ -11,13 +11,14 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-23 14:01:19 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-23 18:05:50 $ 
  */
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -222,7 +223,7 @@ public final class CDEPlugin extends AbstractUIPlugin {
 			return ImageDescriptor.getMissingImageDescriptor();
 	}
 	
-	public static void initializeDefaultPluginPreferences(Preferences aStore) {
+	protected void initializeDefaultPreferences(IPreferenceStore aStore) {
 		aStore.setDefault(SHOW_GRID_WHEN_SELECTED,true);		
 		aStore.setDefault(XY_GRID_SPACING, 15);		
 		aStore.setDefault(PREF_SHOW_OVERVIEW_KEY, false);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.25 $  $Date: 2005-05-23 15:09:48 $ 
+ *  $Revision: 1.26 $  $Date: 2005-05-23 18:05:49 $ 
  */
 
 import java.util.ArrayList;
@@ -692,10 +692,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		openPropertiesViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_PROPERTIES_VIEW));
 		openJavaBeansViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW));
 		showGridCheckBox.setSelection(cdeStore.getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED));
-		int gridSpacing = cdeStore.getDefaultInt(CDEPlugin.XY_GRID_SPACING);
-		if (gridSpacing == 0)
-			gridSpacing = 15;
-		xyGridSpacingText.setText(String.valueOf(gridSpacing));
+		xyGridSpacingText.setText(String.valueOf(cdeStore.getInt(CDEPlugin.XY_GRID_SPACING)));
 		renameAskCheckbox.setSelection(fStore.getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 		showWindowCheckBox.setSelection(fStore.getBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showXMLTextCheckBox.setSelection(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_XML));
@@ -798,8 +795,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			int gridSpacing = Integer.parseInt(xyGridSpacingText.getText());
 			if (gridSpacing > 1)
 				cdeStore.setValue(CDEPlugin.XY_GRID_SPACING, gridSpacing);
-		} catch (Exception e) {
-			// TODO: handle exception
+		} catch (NumberFormatException e) {
+			// must be a number
 		}
 		fStore.setValue(VCEPreferences.RENAME_INSTANCE_ASK_KEY, renameAskCheckbox.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_PROPERTIES_VIEW, openPropertiesViewIfRequired.getSelection());
@@ -842,16 +839,12 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	}
 	
 	protected void performDefaults() {
-
-		Preferences store = VCEPreferences.getPlugin().getPluginPreferences();
+		Preferences store = getStore();
 		showXMLTextCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.SELECT_SOURCE));
 		showWindowCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showClipboardCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.USE_TEXT_FOR_CLIPBOARD));		
 		showGridCheckBox.setSelection(cdeStore.getDefaultBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED));
-		int gridSpacing = cdeStore.getDefaultInt(CDEPlugin.XY_GRID_SPACING);
-		if (gridSpacing == 0)
-			gridSpacing = 15;
-		xyGridSpacingText.setText(String.valueOf(gridSpacing));
+		xyGridSpacingText.setText(String.valueOf(cdeStore.getDefaultInt(CDEPlugin.XY_GRID_SPACING)));
 		renameAskCheckbox.setSelection(fStore.getDefaultBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 		// Initialize the tree to just show the DEFAULT and the plugin defined look and feel classes
 		TableItem[] items = lookAndFeelTable.getItems();
