@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.24 $  $Date: 2005-05-23 14:01:18 $ 
+ *  $Revision: 1.25 $  $Date: 2005-05-23 15:09:48 $ 
  */
 
 import java.util.ArrayList;
@@ -692,7 +692,10 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		openPropertiesViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_PROPERTIES_VIEW));
 		openJavaBeansViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW));
 		showGridCheckBox.setSelection(cdeStore.getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED));
-		xyGridSpacingText.setText(String.valueOf(cdeStore.getDefaultInt(CDEPlugin.XY_GRID_SPACING)));
+		int gridSpacing = cdeStore.getDefaultInt(CDEPlugin.XY_GRID_SPACING);
+		if (gridSpacing == 0)
+			gridSpacing = 15;
+		xyGridSpacingText.setText(String.valueOf(gridSpacing));
 		renameAskCheckbox.setSelection(fStore.getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 		showWindowCheckBox.setSelection(fStore.getBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showXMLTextCheckBox.setSelection(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_XML));
@@ -791,7 +794,13 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		fStore.setValue(VCEPreferences.NOTEBOOK_PAGE, notebookRadioButton.getSelection());
 		
 		cdeStore.setValue(CDEPlugin.SHOW_GRID_WHEN_SELECTED,showGridCheckBox.getSelection());
-		cdeStore.setValue(CDEPlugin.XY_GRID_SPACING, new Integer(xyGridSpacingText.getText()).intValue());
+		try {
+			int gridSpacing = Integer.parseInt(xyGridSpacingText.getText());
+			if (gridSpacing > 1)
+				cdeStore.setValue(CDEPlugin.XY_GRID_SPACING, gridSpacing);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		fStore.setValue(VCEPreferences.RENAME_INSTANCE_ASK_KEY, renameAskCheckbox.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_PROPERTIES_VIEW, openPropertiesViewIfRequired.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_JAVABEANS_VIEW, openJavaBeansViewIfRequired.getSelection());
@@ -839,7 +848,10 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		showWindowCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showClipboardCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.USE_TEXT_FOR_CLIPBOARD));		
 		showGridCheckBox.setSelection(cdeStore.getDefaultBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED));
-		xyGridSpacingText.setText(String.valueOf(cdeStore.getDefaultString(CDEPlugin.XY_GRID_SPACING)));
+		int gridSpacing = cdeStore.getDefaultInt(CDEPlugin.XY_GRID_SPACING);
+		if (gridSpacing == 0)
+			gridSpacing = 15;
+		xyGridSpacingText.setText(String.valueOf(gridSpacing));
 		renameAskCheckbox.setSelection(fStore.getDefaultBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 		// Initialize the tree to just show the DEFAULT and the plugin defined look and feel classes
 		TableItem[] items = lookAndFeelTable.getItems();
