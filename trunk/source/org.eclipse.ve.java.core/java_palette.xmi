@@ -11,10 +11,6 @@
       <cmpEntries xsi:type="palette:SelectionCreationToolEntry" xmi:id="choosebean" selectorClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.choosebean.ChooseBeanSelector" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/cview16/selectbean_view.gif">
 	    <entryLabel xsi:type="utility:TranslatableString" key="entry.ChooseJavaBean" bundle="jcm_bundle"/>
       </cmpEntries>    
-      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.cde/images/paste_obj.gif"
-        prototypeURI="platform:/plugin/org.eclipse.ve.swt/CheckBox.xmi#CheckBox_1">
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Paste (test)"/>
-      </cmpEntries>          
     </cmpControlGroup>
   </palette:PaletteCmp>
   <utility:URLResourceBundle xmi:id="bundle" bundleName="cde_palette">
