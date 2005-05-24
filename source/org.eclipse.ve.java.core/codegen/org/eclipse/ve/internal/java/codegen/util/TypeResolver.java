@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-24 21:10:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -1648,6 +1648,11 @@ public class TypeResolver {
 	protected IType[] getAllSuperTypes() {
 		getMainTypeHierarchy();	// This forces the wait for it to complete so that we get a new set of supertypes if necessary.
 		return allSuperTypes;
+	}
+
+	
+	public IType getMainType() {
+		return mainType;
 	}
 	
 }
