@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.75 $  $Date: 2005-05-18 14:35:42 $ 
+ *  $Revision: 1.76 $  $Date: 2005-05-24 19:36:30 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -544,9 +544,11 @@ public static final String LOADING_PHASE = "LOADING_PHASE";//$NON-NLS-1$
 
 
 /**
- * load the model from a file
+ * @param input File input
+ * @param removeVECache true if a cache exists it will be removed.  
+ *        If it is false, and a cache exists it will be used.
  */
-public  void loadModel(final IFileEditorInput input, final IProgressMonitor pm) throws CodeGenException  {	
+public  void loadModel(final IFileEditorInput input, boolean removeVECache, final IProgressMonitor pm) throws CodeGenException  {	
     
     // Push the code through the change controller which is the gatekeeper for all model updates   
     ModelChangeController changeController = (ModelChangeController) getEditDomain().getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
@@ -565,7 +567,9 @@ public  void loadModel(final IFileEditorInput input, final IProgressMonitor pm) 
             }
         }
         fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_LOAD")); //$NON-NLS-1$
-        fFile = input.getFile();		   					
+        fFile = input.getFile();	
+        if (removeVECache)
+        	VEModelCacheUtility.removeCache(fFile);
         decodeDocument(fFile, pm);					    					
         pm.done();
     } finally {

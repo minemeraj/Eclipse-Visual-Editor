@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: IDiagramModelBuilder.java,v $
- *  $Revision: 1.14 $  $Date: 2005-04-22 20:57:55 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-24 19:36:30 $ 
  */
 
 
@@ -42,7 +42,7 @@ public interface IDiagramModelBuilder  {
 	 * @param pm  
 	 * @since 1.0.0
 	 */
-	public void loadModel(IFileEditorInput file, IProgressMonitor pm) throws CodeGenException ;
+	public void loadModel(IFileEditorInput file, boolean useCache, IProgressMonitor pm) throws CodeGenException ;
 	
 	/**
 	 * Get the root of the model.

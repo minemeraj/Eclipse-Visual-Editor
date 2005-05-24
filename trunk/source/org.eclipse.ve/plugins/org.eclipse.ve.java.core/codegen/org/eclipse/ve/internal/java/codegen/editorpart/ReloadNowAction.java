@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ReloadNowAction.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.4 $  $Date: 2005-05-24 19:36:30 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -48,7 +48,7 @@ public class ReloadNowAction extends Action {
 	 * @see org.eclipse.jface.action.Action#run()
 	 */
 	public void run() {
-		reloadCallback.reload();
+		reloadCallback.reload(true);
 	}
 
 }
