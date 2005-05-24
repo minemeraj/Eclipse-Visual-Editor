@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.114 $  $Date: 2005-05-22 22:44:40 $ 
+ *  $Revision: 1.115 $  $Date: 2005-05-24 19:36:30 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -311,8 +311,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				modelChangeController.setHoldState(ModelChangeController.NO_UPDATE_STATE, null);	// So no updates while paused.
 				modelBuilder.pause();
 			}
-			public void reload() {
-				loadModel(true, false, true);
+			public void reload(boolean removeVECache) {
+				loadModel(true, false, true, removeVECache);
 			}
 		};
 		
@@ -330,11 +330,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		// The input has changed.
 		super.doSetInput(input);
-		loadModel(true, true, true);
+		loadModel(true, true, true, false);
 	}
 	
 	protected Setup setupJob = null; 
-	protected void loadModel(boolean resetVMRecycleCounter, boolean restartVM, boolean loadModel) {
+	protected void loadModel(boolean resetVMRecycleCounter, boolean restartVM, boolean loadModel, boolean removeVECache) {
 		if(!((IFileEditorInput) getEditorInput()).getFile().isAccessible())
 			return;	// File not there for some reason. Can't load. Leave alone. The next time the editor gets focus the text editor portion is smart enough to close down in this case.
 		if (resetVMRecycleCounter)
@@ -347,9 +347,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		loadingFigureController.showLoadingFigure(true);	// Start the loading figure.	
 		// Kick off the setup thread. Doing so that system stays responsive.
 		if (setupJob == null) {
-			setupJob = new Setup(CodegenEditorPartMessages.getString("JavaVisualEditorPart.SetupJVE")); //$NON-NLS-1$
+			setupJob = new Setup(CodegenEditorPartMessages.getString("JavaVisualEditorPart.SetupJVE"), removeVECache); //$NON-NLS-1$
 			setupJob.setPriority(Job.SHORT); 
 		}
+		else
+			setupJob.setRemoveVECache(removeVECache);
 		setupJob.scheduleJob(restartVM, loadModel);
 	}
 
@@ -1145,7 +1147,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 */
 	private void restartVM() {
 		restartVMNeeded = false;
-		loadModel(false, true, false);
+		loadModel(false, true, false, false);
 	}
 
 	protected SelectionSynchronizer getSelectionSynchronizer() {
@@ -1640,9 +1642,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		}
 		
 		CreateRegistry registryCreateJob;	// Not null if we have one.
+		
+		boolean removeVECache;
 
-		public Setup(String name) {
+		public Setup(String name, boolean removeVECache) {
 			super(name);
+			this.removeVECache = removeVECache;
 		}
 			
         
@@ -1771,7 +1776,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
                     if (doTimerStep)
                         PerformanceMonitorUtil.getMonitor().snapshot(114); // Starting codegen loading for the first time
 
-                    modelBuilder.loadModel((IFileEditorInput) getEditorInput(),
+                    modelBuilder.loadModel((IFileEditorInput) getEditorInput(), removeVECache,
                             new SubProgressMonitor(monitor, 100));
 
                     if (doTimerStep)
@@ -2043,7 +2048,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				public void reloadIsNeeded(){
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							loadModel(true, false, true);
+							loadModel(true, false, true, false);
 						}
 					});
 				}
@@ -2114,6 +2119,16 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			} catch (NoSuchMethodException e) {
 				// Can't happen, but it throws it
 			}
+		}
+
+		
+		public boolean isRemoveVECache() {
+			return removeVECache;
+		}
+
+		
+		public void setRemoveVECache(boolean removeVECache) {
+			this.removeVECache = removeVECache;
 		}
 	};
 
