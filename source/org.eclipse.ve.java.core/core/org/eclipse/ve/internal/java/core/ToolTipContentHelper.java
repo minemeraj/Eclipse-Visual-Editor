@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipContentHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-24 15:22:26 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -62,10 +62,6 @@ public class ToolTipContentHelper {
 		}
 		public void addContentProcessor(ToolTipAssistFactory.TooltipDetails p) {
 			fContentAssistProcessors.add(p) ;
-		}	
-		public void paint(Graphics graphics) {
-			// TODO Auto-generated method stub
-			super.paint(graphics);
 		}
 	}
 	
