@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-23 19:06:45 $ 
+ *  $Revision: 1.16 $  $Date: 2005-05-24 21:48:39 $ 
  */
 
 
@@ -145,22 +145,23 @@ public void activate() {
  * reshow the grid in case a reload from scratch occurs.
  * The data is a HashSet with the annotation name as the key
  */	
-protected void initializeGrid() {
-	
-	EditDomain domain = EditDomain.getEditDomain(getHost());
-	HashSet gridStateData = (HashSet) domain.getData(GridController.GRID_STATE_KEY);
-	if (gridStateData != null) {
-		AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
-		Annotation ann = policy.getAnnotation(getHost().getModel());
-		if (ann != null) {
-			String name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
-			if (name == null)
-				name = GridController.GRID_THIS_PART;
-			if (gridStateData.contains(name))
-				if (gridController != null)
-					gridController.setGridShowing(true);
+
+	protected void initializeGrid() {
+		EditDomain domain = EditDomain.getEditDomain(getHost());
+		HashSet gridStateData = (HashSet) domain.getData(GridController.GRID_STATE_KEY);
+		if (gridStateData != null) {
+			AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
+			Annotation ann = policy.getAnnotation(getHost().getModel());
+			if (ann != null) {
+				String name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+				if (name == null)
+					name = GridController.GRID_THIS_PART;
+				if (gridStateData.contains(name) && CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)
+						&& (getHost().getSelected() == EditPart.SELECTED || getHost().getSelected() == EditPart.SELECTED_PRIMARY))
+					if (gridController != null)
+						gridController.setGridShowing(true);
+			}
 		}
-	}
 }
 
 public void deactivate() {
