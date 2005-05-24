@@ -12,17 +12,16 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.18 $  $Date: 2005-05-18 14:35:42 $ 
+ *  $Revision: 1.19 $  $Date: 2005-05-24 12:27:54 $ 
  */
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.ui.dialogs.StatusUtil;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.*;
@@ -334,10 +333,54 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 			// If the user is changing the superclass by hand then we must blank out the template otherwise we get errors
 			// with using the wrong template for the superclass
 			if(!isSelectingTemplate && styleTreeViewer != null){
-				styleTreeViewer.setSelection(null);
+				handleSuperclassChanged();
 			}			
 		}
 		super.handleFieldChanged(fieldName);
+	}
+
+	private void handleSuperclassChanged() {
+		
+		boolean superCheckNeeded = true;
+		if(selectedElement!=null){
+			String selectedSuperString = selectedElement.getSuperClass();
+			String textSuperString = getSuperClass();
+			if(textSuperString!=null)
+				superCheckNeeded = !textSuperString.equals(selectedSuperString);
+		}
+		
+		if(superCheckNeeded){
+			boolean setProperly = false;
+			if(treeRoot!=null){
+				String textSuperString = getSuperClass();
+				Object[] styles = treeRoot.getStyles();
+				if(styles!=null){
+					VisualElementModel toSelectVisualElement = null;
+					for (int stylesCount = 0; stylesCount < styles.length; stylesCount++) {
+						Object[] children = ((CategoryModel)styles[stylesCount]).getChildren();
+						if(children!=null){
+							for (int childCount = 0; childCount < children.length; childCount++) {
+								VisualElementModel childElementModel = (VisualElementModel) children[childCount];
+								if(textSuperString.equals(childElementModel.getSuperClass())){
+									toSelectVisualElement = childElementModel;
+									break;
+								}
+							}
+						}
+						if(toSelectVisualElement!=null)
+							break;
+					}
+					
+					if(toSelectVisualElement!=null){
+						setProperly = true;
+						styleTreeViewer.setSelection(new StructuredSelection(toSelectVisualElement), true);
+					}
+				}
+			}
+			
+			if(!setProperly)
+				styleTreeViewer.setSelection(null);
+		}
 	}
 
 	protected Composite createComposite(Composite aParent, int numColumns) {
