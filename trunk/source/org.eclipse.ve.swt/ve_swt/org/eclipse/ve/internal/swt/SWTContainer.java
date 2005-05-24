@@ -297,13 +297,13 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		public void modelsChanged(PluginModelDelta delta) {
 			// TODO can be more efficient here; for now anyting is a refresh
 			try {
-				JavaCore.setClasspathContainer(
-						getPath(),
-						new IJavaProject[] {project},
-						new IClasspathContainer[] { SWTContainer.this },
-						null);
-				project.setRawClasspath(project.getRawClasspath(),null);
+				// Clean up, and create a new container instance
+				removelisteners();
+				ClasspathContainerInitializer initializer = JavaCore.getClasspathContainerInitializer(getPath().segment(0));
+				initializer.initialize(getPath(),project);
 			} catch (JavaModelException e) {
+				JavaVEPlugin.log(e);
+			} catch (CoreException e) {
 				JavaVEPlugin.log(e);
 			}
 		}			
