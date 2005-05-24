@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipAssistFactory.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-24 15:22:26 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -166,7 +166,12 @@ public class ToolTipAssistFactory {
 		 */
 		public IFigure createFigure() {
 			display = Display.getCurrent();
-			figure = new Panel();
+			figure = new Panel(){
+				public void removeNotify(){
+					super.removeNotify();
+					errNotifier.removeErrorListener(errorListener);	
+				}
+			};
 			FlowLayout layout = new FlowLayout(false);
 			layout.setMajorSpacing(0);
 			layout.setMinorSpacing(0);						
@@ -177,6 +182,7 @@ public class ToolTipAssistFactory {
 			errNotifier.addErrorListener(errorListener);
 			return figure;
 		}
+		
 		private void updateFigure(){
 			Iterator errors = errNotifier.getErrors().iterator();
 			figure.removeAll();
