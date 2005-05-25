@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: EToolsPropertySheetPage.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-25 22:31:34 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-25 23:07:06 $ 
  */
 
 
@@ -142,14 +142,6 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 
-		Control control = getControl();
-		if (control != null && !fListeners.isEmpty()) {
-			Object [] listeners = fListeners.getListeners();
-			for (int i = 0; i < listeners.length; i++) {
-				((EToolsPropertySheetPage.Listener)listeners[i]).controlCreated(control);
-			}
-		}
-		
 		// Kludge: They hide the propertysheetviewer and are things that need to be done with it
 		// because we are far more active then they expect. So we will need to access it reflectively.
 		try {
@@ -161,6 +153,18 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 		} catch (NoSuchFieldException e) {
 		} catch (IllegalAccessException e) {
 		} catch (NoSuchMethodException e) {
+		}
+
+		Control tree = getControl();
+		if (!fListeners.isEmpty()) {
+			// Signal the fact that the control has been created to any
+			// listeners.  This is so that people who want to listen to the control
+			// know the point after which the control has been created
+			Object[] listeners = fListeners.getListeners();
+			for (int i = 0; i < listeners.length; i++) {
+				((Listener) listeners[i]).controlCreated(tree);
+			}
+			fListeners.clear();	// Since no longer needed and we are never recreated once disposed.
 		}
 	}
 	
