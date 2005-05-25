@@ -14,7 +14,7 @@
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
      	graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ScrolledCompositeGraphicalEditPart:true"
     	treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ScrolledCompositeTreeEditPart">
-      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"/>
+      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/scrolledcomposite_obj.gif"/>
     </addedEObjects>
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
         beanLocation="GLOBAL_GLOBAL"    
