@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: EToolsPropertySheetPage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-22 20:09:48 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-25 22:31:34 $ 
  */
 
 
@@ -141,6 +141,14 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 	
 	public void createControl(Composite parent) {
 		super.createControl(parent);
+
+		Control control = getControl();
+		if (control != null && !fListeners.isEmpty()) {
+			Object [] listeners = fListeners.getListeners();
+			for (int i = 0; i < listeners.length; i++) {
+				((EToolsPropertySheetPage.Listener)listeners[i]).controlCreated(control);
+			}
+		}
 		
 		// Kludge: They hide the propertysheetviewer and are things that need to be done with it
 		// because we are far more active then they expect. So we will need to access it reflectively.
