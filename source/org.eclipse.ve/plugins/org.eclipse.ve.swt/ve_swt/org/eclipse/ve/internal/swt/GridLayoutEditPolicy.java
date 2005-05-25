@@ -11,9 +11,8 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.16 $ $Date: 2005-05-23 19:06:44 $
+ * $Revision: 1.17 $ $Date: 2005-05-25 14:49:32 $
  */
-import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.draw2d.*;
@@ -29,12 +28,8 @@ import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
-import org.eclipse.ve.internal.cdm.Annotation;
-
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -98,36 +93,17 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 				beanProxy.addImageListener(getGridImageListener());
 			getHostFigure().addFigureListener(hostFigureListener);	// need to know when the host figure changes so we can refresh the grid
 
-			initializeGrid();
+			// show grid if host editpart is selected and prefs is set
+			if (CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)
+					&& (getHost().getSelected() == EditPart.SELECTED || getHost().getSelected() == EditPart.SELECTED_PRIMARY))
+				gridController.setGridShowing(true);
+			// Add editpart listener to show grid when selected if prefs is set
 			editPartSelectionListener = createEditPartSelectionListener();
 			getHost().addEditPartListener(editPartSelectionListener);
 		}
 		super.activate();
 		CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), GridLayoutLayoutPage.class);
 		CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(), GridLayoutComponentPage.class);
-	}
-	
-	/*
-	 * Get grid state data from the edit domain to determine whether to turn on/off the grid.
-	 * The state is set during deactivation in order to reshow the grid in case a reload from scratch occurred.
-	 * The data is a HashSet with the annotation name as the key
-	 */	
-	protected void initializeGrid() {
-		EditDomain domain = EditDomain.getEditDomain(getHost());
-		HashSet gridStateData = (HashSet) domain.getData(GridController.GRID_STATE_KEY);
-		if (gridStateData != null) {
-			AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
-			Annotation ann = policy.getAnnotation(getHost().getModel());
-			if (ann != null) {
-				String name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
-				if (name == null)
-					name = GridController.GRID_THIS_PART;
-				if (gridStateData.contains(name)) {
-					if (gridController != null)
-						gridController.setGridShowing(true);
-				}
-			}
-		}
 	}
 	
 	public void deactivate() {
