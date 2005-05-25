@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualInfoXYLayoutEditPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-18 19:31:04 $ 
+ *  $Revision: 1.9 $  $Date: 2005-05-25 20:55:01 $ 
  */
 
 import java.util.Iterator;
@@ -404,12 +404,18 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		 * Signal the refresh from current state.
 		 */
 		private void signalRefresh() {
+			Object kv = getCurrentConstraint();
+			queueRefreshFromEditPart(kv);
+		}
+
+
+		private Object getCurrentConstraint() {
 			Object kv = null;
 			VisualInfo vi = VisualInfoPolicy.getVisualInfo(getHost());
 			if (vi != null) {
 				kv = vi.getKeyedValues().get(CDMModelConstants.VISUAL_CONSTRAINT_KEY);
 			}
-			queueRefreshFromEditPart(kv);
+			return kv;
 		}
 		
 		private void queueRefreshFromEditPart(final Object constraint) {
@@ -417,7 +423,7 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 				CDEUtilities.displayExec(getHost(), "REFRESH_FROM_EDITPART", new Runnable() { //$NON-NLS-1$
 				public void run() {
 					if (!deactivated)
-						refreshFromEditPart(getHost(), constraint);
+						refreshFromEditPart(getHost(), getCurrentConstraint());
 				}
 			});
 		}		
