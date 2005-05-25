@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.16 $  $Date: 2005-05-24 21:48:39 $ 
+ *  $Revision: 1.17 $  $Date: 2005-05-25 14:49:33 $ 
  */
 
 
@@ -33,10 +33,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 
-import org.eclipse.ve.internal.cdm.Annotation;
-
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
-import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
@@ -130,7 +127,9 @@ public void activate() {
 				fig.add(gridFigure); // grid needs to be first so it doesn't overlay the children
 				gridController.addGridListener(this);
 				GridController.registerEditPart(getHost(), gridController);
-				initializeGrid();
+				if (CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)
+						&& (getHost().getSelected() == EditPart.SELECTED || getHost().getSelected() == EditPart.SELECTED_PRIMARY))
+					gridController.setGridShowing(true);
 				editPartSelectionListener = createEditPartSelectionListener();
 				getHost().addEditPartListener(editPartSelectionListener);
 			}
@@ -146,25 +145,7 @@ public void activate() {
  * The data is a HashSet with the annotation name as the key
  */	
 
-	protected void initializeGrid() {
-		EditDomain domain = EditDomain.getEditDomain(getHost());
-		HashSet gridStateData = (HashSet) domain.getData(GridController.GRID_STATE_KEY);
-		if (gridStateData != null) {
-			AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
-			Annotation ann = policy.getAnnotation(getHost().getModel());
-			if (ann != null) {
-				String name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
-				if (name == null)
-					name = GridController.GRID_THIS_PART;
-				if (gridStateData.contains(name) && CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)
-						&& (getHost().getSelected() == EditPart.SELECTED || getHost().getSelected() == EditPart.SELECTED_PRIMARY))
-					if (gridController != null)
-						gridController.setGridShowing(true);
-			}
-		}
-}
-
-public void deactivate() {
+	public void deactivate() {
 	if (zoomController != null) {
 		zoomController.removeZoomListener(this);
 		zoomController = null;
