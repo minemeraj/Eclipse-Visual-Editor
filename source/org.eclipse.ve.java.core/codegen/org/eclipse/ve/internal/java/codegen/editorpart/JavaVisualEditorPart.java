@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.115 $  $Date: 2005-05-24 19:36:30 $ 
+ *  $Revision: 1.116 $  $Date: 2005-05-25 22:20:01 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -2358,7 +2358,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// force the removal of the cache... may be an overkill, but
 		// better no cache than stale cache.  It is possible that reverse parse
 		// built a bad model, and generated a cache
-		modelBuilder.doSave(null);
+		if (parseError) // on error, a save will clear the cache			
+		   modelBuilder.doSave(null);
 	}
 	
 	/* (non-Javadoc)
