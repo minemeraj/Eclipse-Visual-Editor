@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.30 $  $Date: 2005-05-17 15:43:19 $ 
+ *  $Revision: 1.31 $  $Date: 2005-05-25 21:28:03 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -480,9 +480,15 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 	public void setFilter(String string) {
 		filterString = string;
 	}
+	
+	private void updateStatus(){
+		TypeInfo[] typeSelection = bv.getSelection();
+		TypeInfo selected = (typeSelection==null || typeSelection.length<1) ? null : typeSelection[0];
+		updateStatus(ChooseBeanDialogUtilities.getClassStatus(selected, pkg.getElementName(), resourceSet, javaSearchScope));
+	}
 
 	public void widgetSelected(SelectionEvent e) {
-		updateStatus(ChooseBeanDialogUtilities.getClassStatus(bv.getSelection()[0], pkg.getElementName(), resourceSet, javaSearchScope));
+		updateStatus();
 	}
 
 	public void widgetDefaultSelected(SelectionEvent e) {
