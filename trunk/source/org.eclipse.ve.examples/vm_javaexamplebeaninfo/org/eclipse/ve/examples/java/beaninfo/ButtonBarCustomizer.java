@@ -13,6 +13,8 @@ package org.eclipse.ve.examples.java.beaninfo;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 import org.eclipse.ve.examples.java.vm.ButtonBar;
 
@@ -34,6 +36,23 @@ public class ButtonBarCustomizer extends Panel implements Customizer {
 	protected Panel fButtonRow;
 	protected Button fAddButton;
 	protected Button fRemoveButton;
+	private List fColorList;
+	private static Hashtable fColors = new Hashtable(5);
+	static {
+		fColors.put("red",Color.red);
+		fColors.put("blue",Color.blue);
+		fColors.put("green",Color.green);
+		fColors.put("yellow",Color.yellow);
+		fColors.put("black",Color.black);
+		fColors.put("cyan",Color.cyan);
+		fColors.put("orange",Color.orange);
+		fColors.put("darkGray",Color.darkGray);
+		fColors.put("gray",Color.gray);
+		fColors.put("lightGray",Color.lightGray);
+		fColors.put("magenta",Color.magenta);
+		fColors.put("pink",Color.pink);
+		fColors.put("white",Color.white);
+	}	
 /**
  * ButtonBarOneCustomizer constructor comment.
  */
@@ -61,6 +80,19 @@ protected void buildListContents(){
 	}
 	fRemoveButton.setEnabled(fComponentList.getSelectedItem()!=null);
 	
+}
+protected void addListListener(){
+
+	fColorList.addItemListener(new ItemListener(){
+		public void itemStateChanged(ItemEvent anEvent){
+			// Get the selected color
+			Color selectedColor = (Color) fColors.get(fColorList.getSelectedItem());
+			// Change the color of the object
+			fButtonBar.setBackground(selectedColor);
+			fPCSupport.firePropertyChange("backgroundColor" , null , selectedColor);
+		}
+	});
+
 }
 /**
  * Add a button to ButtonBar
@@ -102,7 +134,7 @@ protected void initialize(){
 	// We are in Border layout.  Add a "Center" list and a "South" button bar
 	setLayout(new BorderLayout());
 	fComponentList = new List();
-	add(fComponentList,"Center");
+	add(fComponentList,BorderLayout.CENTER);
 	fComponentList.setSize(110,700);
 	fComponentList.addItemListener(new ItemListener(){
 		public void itemStateChanged(ItemEvent anEvent){
@@ -111,7 +143,7 @@ protected void initialize(){
 	});
 	fButtonRow = new Panel();
 	fButtonRow.setLayout(new OrientableFlowLayout(OrientableFlowLayout.VERTICAL));
-	add(fButtonRow,"East");
+	add(fButtonRow,BorderLayout.EAST);
 	fAddButton = new Button("Add");
 	// Create an add button to add new Button objects to the ButtonBar
 	fButtonRow.add(fAddButton);
@@ -128,6 +160,21 @@ protected void initialize(){
 			removeComponent();
 		}
 	});
+	// Add a list of available colors at the bottom
+	fColorList = new java.awt.List(fColors.size(),false);
+	Enumeration enumer = fColors.keys();
+	while ( enumer.hasMoreElements() ) {
+		fColorList.add( (String)enumer.nextElement() );
+	}
+	Panel panel = new Panel();
+	add(panel,BorderLayout.SOUTH);
+	panel.setLayout(new GridBagLayout());
+	GridBagConstraints gd = new GridBagConstraints();
+	panel.add(new Label("Background color:"),gd);
+	gd.gridy = 1;
+	panel.add(fColorList,gd);
+	addListListener();
+	
 }
 /**
  * Remove a component from the ButtonBar

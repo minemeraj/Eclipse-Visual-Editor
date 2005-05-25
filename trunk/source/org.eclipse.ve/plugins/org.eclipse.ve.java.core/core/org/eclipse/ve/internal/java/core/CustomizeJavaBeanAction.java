@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-21 06:35:35 $ 
+ *  $Revision: 1.16 $  $Date: 2005-05-25 14:03:40 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -43,6 +43,7 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.properties.AbstractPropertyDescriptorAdapter;
 
 import org.eclipse.ve.internal.java.common.Common;
+import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
 
@@ -134,13 +135,15 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 								EStructuralFeature sf = bean.getJavaType().getEStructuralFeature(eventName);
 								if(sf != null){
 									IBeanProxy oldValue = (IBeanProxy) oldValues.get(sf);
-									IBeanProxy currentValue = beanProxyHost.getBeanPropertyProxyValue(sf);				
+									IBeanProxy currentValue = beanProxyHost.getBeanPropertyProxyValue(sf);	
+									RuledCommandBuilder cmdBuilder = new RuledCommandBuilder(fEditDomain); 
 									recordProperyChange(
 										currentValue,
 										oldValue,
 										bean,
 										sf,
-										null);
+										cmdBuilder);
+									fEditDomain.getCommandStack().execute(cmdBuilder.getCommand());
 								} else {
 									JavaVEPlugin.getPlugin().getLogger().log(MessageFormat.format(
 											Messages.getString("CustomizePropertyNotFound_ERROR"),new Object[]{eventName,bean.getJavaType().getName()}));																		
@@ -212,7 +215,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 		// a)   The default is that the set of properties when the customizer was launched are compared against 
 		//      the current values
 		// b)   The propertyChangeEvents fired by the customizer are used.		
-		CommandBuilder commandBuilder = new CommandBuilder();
+		CommandBuilder commandBuilder = new RuledCommandBuilder(fEditDomain);
 		
 		Iterator keys = oldValues.keySet().iterator();
 		// We need a shell for the cell editors we will create to get the init strings.	
@@ -292,16 +295,10 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 		// however if there is no oldBean refValue then we need to tell the command
 		// the oldBeanProxy so it can apply this when it does an undo.
 		// This is all done in the ApplyCustomizedValueCommand
-
-		ApplyCustomizedValueCommand applyCmd = new ApplyCustomizedValueCommand(); // (3)
-		applyCmd.setTarget(aBean);
-		applyCmd.setValue(newBean);
-		applyCmd.setFeature(sf);
-		applyCmd.setOldBeanProxy(oldValue);
-		if (commandBuilder != null){
-			commandBuilder .append(applyCmd);
-		} else {
-			fEditDomain.getCommandStack().execute(applyCmd);
-		}		
+		
+		commandBuilder.applyAttributeSetting(
+				aBean,
+				sf,
+				newBean);
 	}
 }
