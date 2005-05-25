@@ -11,10 +11,11 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-11 22:41:21 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-25 14:48:50 $ 
  */
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.*;
@@ -33,14 +34,11 @@ import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 
-import org.eclipse.ve.internal.cdm.Annotation;
-
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
@@ -73,6 +71,8 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 				helper.refresh();
 		}
 	};
+	private EditPartListener editPartSelectionListener;
+
 
 	private class GridBagImageListener implements IImageListener {
 		public void imageChanged(ImageData data) {
@@ -90,7 +90,13 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		if (gridController != null) {
 			gridController.addGridListener(this);
 			GridController.registerEditPart(getHost(), gridController);
-			initializeGrid();
+			// show grid if host editpart is selected and prefs is set
+			if (CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)
+					&& (getHost().getSelected() == EditPart.SELECTED || getHost().getSelected() == EditPart.SELECTED_PRIMARY))
+				gridController.setGridShowing(true);
+			// Add editpart listener to show grid when selected if prefs is set
+			editPartSelectionListener = createEditPartSelectionListener();
+			getHost().addEditPartListener(editPartSelectionListener);
 		}
 		super.activate();
 		containerPolicy.setContainer(getHost().getModel());
@@ -100,34 +106,13 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		sfConstraintComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_CONSTRAINT_COMPONENT);
 		sfGridX = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_GRIDX);
 		sfGridY = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_GRIDY);
-		IImageNotifier imageNotifier = (IImageNotifier) BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance)getHost().getModel());
+		IImageNotifier imageNotifier = (IImageNotifier) BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) getHost().getModel());
 		if (imageNotifier != null)
 			imageNotifier.addImageListener(getGrigBagImageListener());
-		getHostFigure().addFigureListener(hostFigureListener);	// need to know when the host figure changes so we can refresh the grid
-		CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(), GridBagComponentPage.class);	
+		getHostFigure().addFigureListener(hostFigureListener); // need to know when the host figure changes so we can refresh the grid
+		CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(), GridBagComponentPage.class);
 	}
 	
-	/*
-	 * Get grid state data from the edit domain to determine whether to turn on/off the grid.
-	 * The state is set during deactivation in order to reshow the grid in case a reload from scratch occurred.
-	 * The data is a HashSet with the annotation name as the key
-	 */	
-	protected void initializeGrid() {
-		EditDomain domain = EditDomain.getEditDomain(getHost());
-		HashSet gridStateData = (HashSet) domain.getData(GridController.GRID_STATE_KEY);
-		if (gridStateData != null) {
-			AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
-			Annotation ann = policy.getAnnotation(getHost().getModel());
-			if (ann != null) {
-				String name = (String) ann.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
-				if (name == null)
-					name = GridController.GRID_THIS_PART;
-				if (gridStateData.contains(name))
-					if (gridController != null)
-						gridController.setGridShowing(true);
-			}
-		}
-	}
 	public void deactivate() {
 		containerPolicy.setContainer(null);
 		GridController gridController = GridController.getGridController(getHost());
@@ -140,6 +125,10 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		if (imageNotifier != null)
 			imageNotifier.removeImageListener(getGrigBagImageListener());
 		getHostFigure().removeFigureListener(hostFigureListener);
+		if (editPartSelectionListener != null) {
+			getHost().removeEditPartListener(editPartSelectionListener);
+			editPartSelectionListener = null;
+		}
 		super.deactivate();
 	}
 	protected EditPolicy createChildEditPolicy(EditPart child) {
@@ -723,6 +712,31 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		addFeedback(fGridBagLayoutCellFigure);
 		// Cursor feedback (cell locations) as we move the pointer
 		showCursorFeedback(spanToPosition, request);
+	}
+	/*
+	 * Create an editpart listener for the host edit part that will show the grid
+	 * if the editpart is selected. This is based on the SHOW_GRID_WHEN_SELECTED preferences.
+	 */
+	private EditPartListener createEditPartSelectionListener() {
+		return new EditPartListener.Stub() {
+
+			public void selectedStateChanged(EditPart editpart) {
+				if (CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)) {
+					if (editpart == null || editpart == getHost()
+							&& (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
+						if (gridController != null)
+							gridController.setGridShowing(true);
+					} else {
+						if (gridController != null)
+							gridController.setGridShowing(false);
+					}
+				} else {
+					// Hide the grid just in case we were showing before and changed the prefs
+					if (gridController != null && gridController.isGridShowing())
+						gridController.setGridShowing(false);
+				}
+			}
+		};
 	}
 
 }
