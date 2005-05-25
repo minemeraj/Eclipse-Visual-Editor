@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.20 $  $Date: 2005-05-18 21:15:05 $ 
+ *  $Revision: 1.21 $  $Date: 2005-05-25 19:57:51 $ 
  */
 
 import java.util.*;
@@ -255,8 +255,7 @@ public BeanPart getABean(String name) {
  * It is possible that an object was entered to the VE model, but we did not generate it 
  * yet.  If we refer to it, that means it is type to create it.
  * @param obj
- * @return
- * @throws CodeGenException
+ * @return the prompted BeanPart
  * 
  * @since 1.1.0
  */
@@ -430,7 +429,7 @@ public void addMethodInitializingABean (CodeMethodRef methodRef) {
 }
 /**
  *  methodRef, using the IMethod handle string 
- *  @return 
+ *  @return the method associated with the handle
  */
 public CodeMethodRef getMethodInitializingABean (String methodHandle) {
 	// TODO  Need to deal with more than one bean
