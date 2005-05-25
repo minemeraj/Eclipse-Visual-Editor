@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanCellRenderer.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-20 18:44:07 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-25 00:07:04 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -111,7 +111,7 @@ public class BeanCellRenderer extends LabelProvider implements IExecutableExtens
             return null;
         
         PropertyEditorBeanProxyWrapper wrapper = (PropertyEditorBeanProxyWrapper) registry.getConstants(this);
-		if (!rebuildWrapper)
+		if (!rebuildWrapper && wrapper != null)
 			return wrapper;	// no rebuild requested.
 
 		rebuildWrapper = false;
