@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-20 20:54:06 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-26 20:10:19 $ 
  */
 
 
@@ -32,6 +32,8 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.launching.*;
+import org.eclipse.jface.preference.JFacePreferences;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
@@ -150,9 +152,15 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 		// Add IDE preferences to the argument buffer for use on the VM.
 		int fTabPosition = WorkbenchPlugin.getDefault().getPreferenceStore().getInt(IPreferenceConstants.VIEW_TAB_POSITION);
 		boolean fTraditionalTabs = PrefUtil.getAPIPreferenceStore().getBoolean(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS);
+		String activeLinkColor = JFaceResources.getColorRegistry().getRGB(JFacePreferences.ACTIVE_HYPERLINK_COLOR).toString();
+		String errorColor = JFaceResources.getColorRegistry().getRGB(JFacePreferences.ERROR_COLOR).toString();
+		String linkColor = JFaceResources.getColorRegistry().getRGB(JFacePreferences.HYPERLINK_COLOR).toString();
 		
 		args.append(" -Drcp.launcher.tabPosition=" + fTabPosition); //$NON-NLS-1$
 		args.append(" -Drcp.launcher.traditionalTabs=" + fTraditionalTabs); //$NON-NLS-1$
+		args.append(" -Drcp.launcher.activeLink=\"" + activeLinkColor + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+		args.append(" -Drcp.launcher.error=\"" + errorColor + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+		args.append(" -Drcp.launcher.link=\"" + linkColor + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	if (configuration.getAttribute("isSWT", false)) { //$NON-NLS-1$
