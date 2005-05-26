@@ -11,7 +11,7 @@
 package org.eclipse.ve.tests.codegen.java.templates;
 /*
  *  $RCSfile: TemplateObjectFactoryTest.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:59:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-26 19:31:38 $ 
  */
 import java.io.File;
 import java.io.FileWriter;
@@ -51,7 +51,7 @@ public class TemplateObjectFactoryTest extends TestCase {
  						"public String toString() {"+NL+
  						"return \"\" ;"+NL+"}"+NL+"}" ;						 
 
-	String template = "<%@ jet skeleton=\""+skelatonName+"\" package=\"a.b.c\" imports=\"java.lang.*\" class=\""+generatedClassName+
+	String template = "<%@ jet skeleton=\""+skelatonName+"\" package=\"a.b.c\" class=\""+generatedClassName+
 	                  "\" %>"+NL +
 	                  "This output is generated for the class "+generatedClassName+NL+
 	                  "This objects overrides the toString() method."+NL+
