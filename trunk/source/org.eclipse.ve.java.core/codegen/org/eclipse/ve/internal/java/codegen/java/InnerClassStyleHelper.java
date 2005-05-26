@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InnerClassStyleHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-20 21:55:11 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-26 21:06:50 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -80,6 +80,19 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 				    l = getIsClassListener(clazz) ;
 				if (l == null)
 					return false;
+				
+				// 92611 : The listener returned could be a live one which will 
+				// be disposed if things are different and the previous values are
+				// cleared. Hence check if they are, and if so put in a new listener.
+				if(l==fEventInvocation.getListener()){
+					// l will be disposed if clearPrevious is called in addInvocationToModel()
+					// Hence create a new one
+					ListenerType listenerType = getListenerType(clazz.getName().replace('$', '.'),false,null,null,null) ;
+					Listener newListener = org.eclipse.ve.internal.jcm.JCMFactory.eINSTANCE.createListener() ;
+					newListener.setListenerType(listenerType) ;
+					l = newListener;
+				}
+				
 				ee.setListener(l);
 				List impl = getExplicitTypeEventMethods(clazz);
 				for (Iterator itr = impl.iterator(); itr.hasNext();) {
