@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.14 $$  $$Date: 2005-05-07 00:55:19 $$ 
+ *  $$Revision: 1.15 $$  $$Date: 2005-05-26 22:14:02 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -184,11 +184,8 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 			children = new ArrayList(1);
 			children.add(child);			
 		}
-		if(areFieldNamesShared(children,containmentSF)){
-			return UnexecutableCommand.INSTANCE;			
-		} else {
-			return super.getDeleteDependentCommand(child, containmentSF);
-		}
+
+		return super.getDeleteDependentCommand(child, containmentSF);
 	}
 	
 	protected Command getMoveChildrenCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
@@ -201,6 +198,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		}
 	}	
 	
+
 	protected boolean areFieldNamesShared(List children, EStructuralFeature containmentSF){
 	
 		IJavaInstance swtComposite = (IJavaInstance) getContainer();

@@ -18,7 +18,7 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-17 23:36:56 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-26 22:14:05 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -138,7 +138,20 @@ public class BeanPartDecleration {
 		if (!beanParts.contains(bp))
 			beanParts.add(bp);			
 	}
-	public void removeBeanPart (BeanPart bp) {
+	
+	public void refreshDeclerationSource() {
+		CodeExpressionRef exp = null;
+		for (int i = 0; i < beanParts.size(); i++) {
+			CodeExpressionRef e = ((BeanPart)beanParts.get(i)).getInitExpression();
+			if ( exp == null ||
+				(e!=null && e.getOffset()<exp.getOffset()))
+				exp = e;			
+		}
+		if (exp!=null)
+			exp.getExpressionDecoder().reflectMOFchange();
+	}
+	
+	public void removeBeanPart (BeanPart bp) {		
 		beanParts.remove(bp);
 		// If this is the last declared bean, remove this from the BDM
 		if (beanParts.size()==0) {
@@ -189,7 +202,6 @@ public class BeanPartDecleration {
 	/**
 	 * 
 	 * @param method if null, it implies an Instance Variable
-	 * @param bp
 	 * 
 	 * @since 1.1.0
 	 */
@@ -213,7 +225,6 @@ public class BeanPartDecleration {
 	 * A call to this method will set the model, and set the BeanPart with the a 
 	 * common decleration.
 	 * 
-	 * @param bp  BeanPart that set its model
 	 * @param model
 	 * 
 	 * @since 1.1.0

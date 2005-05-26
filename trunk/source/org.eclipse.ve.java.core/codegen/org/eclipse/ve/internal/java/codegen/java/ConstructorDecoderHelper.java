@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.40 $  $Date: 2005-05-17 23:36:01 $ 
+ *  $Revision: 1.41 $  $Date: 2005-05-26 22:14:05 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -458,6 +458,21 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),expOfMethod, fOwner.getExprRef().getOffset(), fbeanPart.getModel(), getExpressionReferences()));
 		return true;
 	}	
+	/**
+	 * If a BeanPart is a reUsed local variable, a decleration
+	 * should not be generated
+	 * @return true, if it is the first seclared local variable
+	 * 
+	 * @since 1.1.0
+	 */
+	protected boolean isDeclerationNeeded() {
+		boolean result = true;
+		if (!fbeanPart.getDecleration().isInstanceVar()) {
+			// Local Variable
+			result = fbeanPart.getDecleration().getBeanPartIndex(fbeanPart)==0;
+		}				
+		return result;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#generate(java.lang.Object[])
@@ -469,11 +484,13 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		if (!fbeanPart.getDecleration().isInstanceVar()) {
 			String type = fbeanPart.getType();
 			fOwner.getExprRef().getReqImports().add(type);
-			int idx = type.lastIndexOf('.');
-			if (idx>=0)
-				type = type.substring(idx+1);
-			type = type.replace('$','.');	// Change for qualified for reflection to formal qualified form.
-			sb.append(type+" "); //$NON-NLS-1$
+			if (isDeclerationNeeded()) {
+			   int idx = type.lastIndexOf('.');
+			   if (idx>=0)
+				  type = type.substring(idx+1);
+			      type = type.replace('$','.');	// Change for qualified for reflection to formal qualified form.
+			      sb.append(type+" "); //$NON-NLS-1$
+			}
 		}
 		sb.append(fbeanPart.getSimpleName());
 		sb.append(" = "); //$NON-NLS-1$
