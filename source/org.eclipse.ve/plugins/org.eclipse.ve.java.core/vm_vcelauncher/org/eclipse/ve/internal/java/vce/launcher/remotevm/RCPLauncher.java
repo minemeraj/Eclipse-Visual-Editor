@@ -3,8 +3,13 @@ package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.StringTokenizer;
 
-import org.eclipse.swt.widgets.*;
+import org.eclipse.jface.preference.JFacePreferences;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 
 public class RCPLauncher implements ILauncher {
@@ -21,8 +26,14 @@ public class RCPLauncher implements ILauncher {
 	 */
 	public void launch(Class clazz, String[] args) {
 
+		Display display = Display.getDefault();
 		Object javaBean = null;
+		
 		try {
+			
+			// setup the jface color preferences for this launch
+			setupColorPreferences(display);
+			
 			// new up an instance of the java bean
 			Constructor ctor = clazz.getDeclaredConstructor(null);
 			// Make sure we can intantiate it in case the class it not public
@@ -90,6 +101,58 @@ public class RCPLauncher implements ILauncher {
 		
 	}
 	
+	private RGB stringToRGB(String str) {
+
+		str = str.substring(str.indexOf("{") + 1, str.indexOf("}"));
+		StringTokenizer tokens = new StringTokenizer(str, ",");
+		
+		int red = 0;
+		int green = 0;
+		int blue = 0;
+
+		try{
+			red = Integer.parseInt(tokens.nextToken().trim());
+			green = Integer.parseInt(tokens.nextToken().trim());
+			blue = Integer.parseInt(tokens.nextToken().trim());
+		} catch(Exception e){
+			return null;
+		}
+		
+		return new RGB(red, green, blue);
+	}
+	
+	private void setupColorPreferences(Display display){
+		
+		String activeLinkPref = "";
+		String errorPref = "";
+		String linkPref = "";
+		
+		RGB activeLinkRGB = null;
+		RGB errorRGB = null;
+		RGB linkRGB = null;
+		
+		try{
+			activeLinkPref = System.getProperty("rcp.launcher.activeLink"); //$NON-NLS-1$
+			errorPref = System.getProperty("rcp.launcher.error"); //$NON-NLS-1$
+			linkPref = System.getProperty("rcp.launcher.link"); //$NON-NLS-1$
+			
+			activeLinkRGB = stringToRGB(activeLinkPref);
+			errorRGB = stringToRGB(errorPref);
+			linkRGB = stringToRGB(linkPref);
+			
+			if(activeLinkRGB != null)
+				JFaceResources.getColorRegistry().put(JFacePreferences.ACTIVE_HYPERLINK_COLOR, activeLinkRGB);
+			if(errorRGB != null)
+				JFaceResources.getColorRegistry().put(JFacePreferences.ERROR_COLOR, errorRGB);
+			if(linkRGB != null)
+				JFaceResources.getColorRegistry().put(JFacePreferences.HYPERLINK_COLOR, linkRGB);
+			
+			display.update();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 	protected void runEventLoop(Shell beanShell) {
 		Display display = beanShell.getDisplay();
 		beanShell.pack();
