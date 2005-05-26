@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.41 $  $Date: 2005-05-26 22:14:05 $ 
+ *  $Revision: 1.42 $  $Date: 2005-05-26 22:17:08 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -229,7 +229,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		 * Create the bean part expression for this bean part.
 		 * @param ref
 		 * @param bp
-		 * @return
+		 * @return PT expression referencing bp
 		 * 
 		 * @since 1.0.2
 		 */
@@ -368,7 +368,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 
 		/**
 		 * @param type
-		 * @return
+		 * @return true if Immutable
 		 * 
 		 * @since 1.0.2
 		 */
