@@ -11,13 +11,13 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.42 $  $Date: 2005-05-18 21:15:05 $ 
+ *  $Revision: 1.43 $  $Date: 2005-05-26 22:14:05 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
@@ -609,7 +609,8 @@ public BeanPart createFromJVEModel(IJavaObjectInstance component, ICompilationUn
  */
 //TODO need to reUse the dispose() here, rather to duplicate this logic
 public void removeBeanPart (BeanPart bean) {
-	boolean jdtChangesMade = false ; // MethodRef offsets not being updated - hence check.
+	boolean jdtChangesMade = false ; 	 // MethodRef offsets not being updated - hence check.
+	BeanPartDecleration needRefresh = null; // Deleting a BeanPart may need refreshing of a reUse instance's init expression 
 	IType tp = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit()) ;
 	if (bean.getDecleration().isInstanceVar()) { 	  
 	  IField f = tp.getField(bean.getSimpleName()) ;
@@ -617,7 +618,6 @@ public void removeBeanPart (BeanPart bean) {
 		try {
 			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 				JavaVEPlugin.log("\tRemoving Field: "+f, Level.FINE) ; //$NON-NLS-1$
-//		  String handle = (f.getHandleIdentifier()) ;
 		  f.delete(true,null) ;
 		  jdtChangesMade = true;
 		}
@@ -625,6 +625,11 @@ public void removeBeanPart (BeanPart bean) {
 	  }
 	  else if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 	     JavaVEPlugin.log ("BeanPartGenerator.removeBeanPart: field is not in source: "+bean.getUniqueName()+"  <--- check me", Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+	else {
+		// It is a local variable, and it is possible that
+		// It is a reusable instance.
+		needRefresh=bean.getDecleration();
 	}
 	 
 	// TODO  Need to maintain Bean Ref Count in method, and remove it when the last ref. is gone
@@ -639,19 +644,6 @@ public void removeBeanPart (BeanPart bean) {
 	Collection beansInMethod = mr==null?new ArrayList():fBeanModel.getBeansInitilizedByMethod(mr);
 	List deleteDependentBeans = new ArrayList();
 	Iterator bitr = beansInMethod.iterator();
-//	while(bitr.hasNext()){
-//		BeanPart bp = (BeanPart) bitr.next();
-//		if(bp.equals(bean))
-//			continue;
-//		BeanPart parent = bp.getBackRefs();
-//		while(parent!=null){
-//			if(parent.equals(bean)){
-//				deleteDependentBeans.add(bp);
-//				break;
-//			}
-//			parent = parent.getBackRefs();
-//		};
-//	}
 	
 	boolean areOtherInstancesFound = false;
 	boolean isAnyNonInstanceVariableBeingReturned = false;
@@ -729,18 +721,17 @@ public void removeBeanPart (BeanPart bean) {
 		  	((CodeExpressionRef) deleteList.get(i)).setState(CodeExpressionRef.STATE_DELETE, true);
 		  }
 	}
-
-	
-	
-	
-
-    
 	
 	if (shouldMethodBeRemoved) {
 	  fBeanModel.removeMethodRef(mr) ;	
 	  mr.dispose() ;		
 	}
     bean.dispose();
+    if (needRefresh!=null) {
+    	// A local variable is deleted, and a reused one
+    	// need to regenerate and create the formal (type) decleration 
+    	needRefresh.refreshDeclerationSource();
+    }
 }
 
 public BeanPart createThisBeanPartIfNeeded(CodeMethodRef initMethod) {
