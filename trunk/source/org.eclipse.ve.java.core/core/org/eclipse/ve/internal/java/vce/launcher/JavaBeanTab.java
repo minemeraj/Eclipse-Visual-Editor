@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.13 $  $Date: 2005-05-26 03:36:48 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -179,6 +179,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		localeLayout.marginWidth = 0;
 		localeComp.setLayout(localeLayout);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 3;
 		localeComp.setLayoutData(gd);
 		
 
@@ -193,16 +194,12 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		
 		fLocaleText = new Text(localeComp,SWT.BORDER);
 		fLocaleText.setEnabled(false);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.grabExcessHorizontalSpace = true;
-		gd.horizontalAlignment = GridData.HORIZONTAL_ALIGN_FILL;
-		fLocaleText.setData(gd);
+		fLocaleText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		fLocaleText.setText(Locale.getDefault().toString());
 		
 		Label fSuggestionLabel = new Label(localeComp,SWT.NONE);
 		fSuggestionLabel.setText(VCELauncherMessages.getString("BeanTab.localesuggest.label")); //$NON-NLS-1$
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		fSuggestionLabel.setLayoutData(gd);		
+		fSuggestionLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
 		fDefaultLocaleButton.addSelectionListener(new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent event){
