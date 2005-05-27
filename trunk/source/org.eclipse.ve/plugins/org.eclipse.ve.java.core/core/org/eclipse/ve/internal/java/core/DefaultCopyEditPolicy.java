@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-21 06:36:39 $ 
+ *  $Revision: 1.11 $  $Date: 2005-05-27 12:51:28 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -33,6 +33,8 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.java.impl.JavaPackageImpl;
+
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -43,6 +45,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	public static int nextID = 0;
 	protected List objectsToCopy = new ArrayList(100);
 	protected List visitedObjects = new ArrayList(100);
+	protected EcoreUtil.Copier copier;
 	
 	public Command getCommand(Request request) {
 		if(CopyAction.REQ_COPY.equals(request.getType())){
@@ -62,15 +65,15 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				IJavaInstance javaBeanToCopy = (IJavaInstance) getHost().getModel();
 				// Create a new EMF Resource for the copied object		
 				Resource newEMFResource = javaBeanToCopy.eResource().getResourceSet().createResource(javaBeanToCopy.eResource().getURI().appendSegment("" + javaBeanToCopy.hashCode()));				 //$NON-NLS-1$
-				
-				copyProperty(null, javaBeanToCopy);				
-				
+
 				// Use the ECore.Copier to put everything from the copy set into the resource set
-				EcoreUtil.Copier copier = new EcoreUtil.Copier();
-				copier.copyAll(objectsToCopy);
+				copier = new EcoreUtil.Copier();				
+				copyProperty(null, javaBeanToCopy);	
+		
+				// Expand the references
 				copier.copyReferences();
 				
-				cleanup(javaBeanToCopy,copier);
+				cleanup(javaBeanToCopy);
 				
 				// Add copies of all the objects we want to copy to the new resource set
 				Iterator iter = objectsToCopy.iterator();
@@ -103,7 +106,10 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				Clipboard cb = new Clipboard(Display.getCurrent());
 				cb.setContents(new Object[] {template}, new Transfer[] {TextTransfer.getInstance()});				
 				
-				cb.dispose();				
+				cb.dispose();		
+				objectsToCopy.clear();
+				visitedObjects.clear();
+				copier = null;
 			}
 
 		};
@@ -131,7 +137,12 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	
 	
 	protected boolean shouldCopyFeature(EStructuralFeature feature, Object eObject){
-		if(feature == null)return true;
+		if(feature == null)
+			return true;
+		// Do not copy things like JavaPackage or JavaMethod
+		if(eObject.getClass().getPackage() ==  JavaPackageImpl.class.getPackage())
+			return false;
+		
 		// By default copy references that are not containment and are not on the free form
 		return  
 			feature instanceof EReference
@@ -156,14 +167,12 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	}
 	
 	private void copyProperty(EStructuralFeature feature, EObject ePropertyValue){
-		
-		if(ePropertyValue instanceof IJavaInstance){
-			// This method allows additional work to be done to clean up a particular JavaBean
-			normalize((IJavaInstance)ePropertyValue);
-		}
+	
 		// Add the property value to the set of objects being copied		
 		if(objectsToCopy.indexOf(ePropertyValue) == -1 && shouldCopyFeature(feature, ePropertyValue)){
 			objectsToCopy.add(ePropertyValue);
+			copier.copy(ePropertyValue);
+			preExpand((IJavaInstance)ePropertyValue);			
 		}
 		// Keep walking because the object being copied might not have been added to the copy set
 		// but it might have children that are
@@ -202,12 +211,15 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				});
 			}			
 		}
-	}	
-	
-	protected void cleanup(IJavaInstance javaBeanToCopy, EcoreUtil.Copier copier){
-	}	
-	
-	protected void normalize(final IJavaInstance javaBean){
 	}
+		
+	protected void cleanup(IJavaInstance javaBeanToCopy){
+	}	
+	/**
+	/* This method allows additional work to be done to clean up a particular JavaBean prior to it being analyzed further and expanded
+	 * 
+	 */	 
+	 protected void preExpand(final IJavaInstance javaBean){
+	 }
 
 }
