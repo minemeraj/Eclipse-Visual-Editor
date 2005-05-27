@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.7 $ $Date: 2005-05-11 22:41:32 $
+ * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.8 $ $Date: 2005-05-27 15:44:23 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -24,6 +24,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
+import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
@@ -129,6 +130,10 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter {
 		//feature to be hidden in property sheet
 		return super.includeFeature(aFeature);
 
+	}
+	
+	protected boolean shouldAllowAnnotationRename() {
+		return !(((IJavaInstance)getTarget()).getAllocation() instanceof ImplicitAllocation);
 	}
 
 	/*
