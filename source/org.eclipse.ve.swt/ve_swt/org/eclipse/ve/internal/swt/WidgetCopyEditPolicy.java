@@ -10,34 +10,27 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetCopyEditPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-12 23:08:23 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-27 12:49:22 $ 
  */
 
 package org.eclipse.ve.internal.swt;
 
 import java.util.List;
-
-import org.eclipse.emf.ecore.util.EcoreUtil;
-
-import org.eclipse.jem.internal.instantiation.InstantiationFactory;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.PTClassInstanceCreation;
-import org.eclipse.jem.internal.instantiation.PTExpression;
-import org.eclipse.jem.internal.instantiation.PTInstanceReference;
-import org.eclipse.jem.internal.instantiation.PTName;
-import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
 import org.eclipse.ve.internal.java.core.DefaultCopyEditPolicy;
 
 public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 	
-	protected void normalize(IJavaInstance javaBean,EcoreUtil.Copier aCopier) {
-		super.normalize(javaBean);
+	
+	protected void preExpand(IJavaInstance javaBean) {
+		super.preExpand(javaBean);
 		// Only normalize our host otherwise we end up turning children to point to the {parentComposite}
 		// when they should still point to use
 		if(!(javaBean == getHost().getModel())) return;
 		
-		IJavaInstance copiedJavaBean = (IJavaInstance) aCopier.get(javaBean);
+		IJavaInstance copiedJavaBean = (IJavaInstance) copier.get(javaBean);
 		// The allocation may contain references to the parent Composite
 		// These should be replaced with the {parentComposite} for when it is pasted into the new target
 		JavaAllocation allocation = copiedJavaBean.getAllocation();
