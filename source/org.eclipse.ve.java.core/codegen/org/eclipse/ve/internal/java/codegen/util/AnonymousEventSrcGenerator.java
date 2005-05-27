@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AnonymousEventSrcGenerator.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-27 18:47:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -105,7 +105,7 @@ protected IEventTemplate getEventMethodTemplate() {
 }
 
 public String generateEvent() {	
-	return getEventTemplate().generateEvent(getInfo()) ;
+	return getEventTemplate().createNLTemplate(getSeperator()).generateEvent(getInfo()) ;
 }
      
   
@@ -116,7 +116,7 @@ public String generateEvent() {
 	 */
 	public String generateEventMethod(Callback[] callbacks) {
 		EventInfo info = new EventInfo(callbacks) ;
-		return getEventMethodTemplate().generateEvent(info) ;
+		return getEventMethodTemplate().createNLTemplate(getSeperator()).generateEvent(info) ;
 	}
 
 	/* (non-Javadoc)

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IEventTemplate.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-27 18:47:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -21,5 +21,6 @@ package org.eclipse.ve.internal.java.codegen.util;
 public interface IEventTemplate {
 
   public String generateEvent(AbstractEventSrcGenerator.EventInfo info) ;
+  public IEventTemplate createNLTemplate(String nl);
 
 }

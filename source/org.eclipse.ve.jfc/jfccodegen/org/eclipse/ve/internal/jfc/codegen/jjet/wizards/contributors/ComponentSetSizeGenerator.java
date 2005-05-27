@@ -15,7 +15,16 @@ import java.util.HashMap;
 
 public class ComponentSetSizeGenerator implements org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceGenerator {
 
-  protected final String NL = System.getProperties().getProperty("line.separator");
+  protected static String nl;
+  public static synchronized ComponentSetSizeGenerator create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    ComponentSetSizeGenerator result = new ComponentSetSizeGenerator();
+    nl = null;
+    return result;
+  }
+
+  protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = NL + "public class ";
   protected final String TEXT_2 = " {" + NL + "" + NL + "\t/**" + NL + "\t * This is the default constructor" + NL + "\t */" + NL + "\tpublic ";
   protected final String TEXT_3 = "() {" + NL + "\t\tsuper();" + NL + "\t\t";

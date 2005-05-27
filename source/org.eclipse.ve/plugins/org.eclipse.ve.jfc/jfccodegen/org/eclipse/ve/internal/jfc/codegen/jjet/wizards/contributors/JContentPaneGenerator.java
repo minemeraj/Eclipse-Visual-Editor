@@ -15,7 +15,16 @@ import java.util.HashMap;
 
 public class JContentPaneGenerator implements org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceGenerator {
 
-  protected final String NL = System.getProperties().getProperty("line.separator");
+  protected static String nl;
+  public static synchronized JContentPaneGenerator create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    JContentPaneGenerator result = new JContentPaneGenerator();
+    nl = null;
+    return result;
+  }
+
+  protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "import javax.swing.JPanel;" + NL + "import java.awt.BorderLayout;" + NL + "" + NL + "public class ";
   protected final String TEXT_2 = " {" + NL + "" + NL + "\tprivate JPanel jContentPane = null;" + NL + "\t" + NL + "\t/**" + NL + "\t * This is the default constructor" + NL + "\t */" + NL + "\tpublic ";
   protected final String TEXT_3 = "() {" + NL + "\t\tsuper();" + NL + "\t\t";
