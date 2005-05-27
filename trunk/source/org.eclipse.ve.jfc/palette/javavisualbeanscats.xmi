@@ -246,13 +246,6 @@ advanced features we'll supoort later -->
         <entryLabel xsi:type="utility:ConstantString" string="JMenu"/>
       </cmpEntries> 
       
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/menubar_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JMenuBar"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jJMenuBar"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JMenuBar"/>
-      </cmpEntries> 
-      
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/popupmenu_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
           creationClassURI="java:/javax.swing#JPopupMenu"/>
