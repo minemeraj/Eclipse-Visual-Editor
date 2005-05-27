@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.116 $  $Date: 2005-05-25 22:20:01 $ 
+ *  $Revision: 1.117 $  $Date: 2005-05-27 12:54:56 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -817,9 +817,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				openActionGroup.setContext(null);					
 				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(ActionFactory.UNDO.getId()));
 				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, getAction(ActionFactory.REDO.getId()));
-				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, cutBeanAction);				
-				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, copyBeanAction);				
-				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, pasteBeanAction);					
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_COPY, cutBeanAction);				
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_COPY, copyBeanAction);				
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_COPY, pasteBeanAction);					
 				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, graphicalActionRegistry.getAction(ActionFactory.DELETE.getId()));			
 				IAction customize = graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
 				if (customize.isEnabled()) 

@@ -10,25 +10,22 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-11 19:01:30 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-27 12:48:47 $ 
  */
 package org.eclipse.ve.internal.jface;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.gef.EditPart;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.IConstraintHandler;
-import org.eclipse.ve.internal.cde.core.VisualComponentsLayoutPolicy;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.BeanUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+
+import org.eclipse.ve.internal.java.core.*;
+
 import org.eclipse.ve.internal.swt.ControlGraphicalEditPart;
 import org.eclipse.ve.internal.swt.SwtPlugin;
 
@@ -75,7 +72,8 @@ public class ViewPartGraphicalEditPart extends ControlGraphicalEditPart {
 	
 	protected void createEditPolicies() {
 		super.createEditPolicies();
-		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(true));		
+		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(true));
+		removeEditPolicy(CopyAction.REQ_COPY); // A ViewPart cannot be copied		
 	}
 		
 	public List getModelChildren() {

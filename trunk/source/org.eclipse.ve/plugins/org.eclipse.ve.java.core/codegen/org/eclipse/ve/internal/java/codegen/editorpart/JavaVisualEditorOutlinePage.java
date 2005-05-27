@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-12 21:43:30 $ 
+ *  $Revision: 1.16 $  $Date: 2005-05-27 12:51:43 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -52,9 +52,6 @@ import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.cde.emf.DefaultTreeEditPartFactory;
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.CustomizeJavaBeanAction;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.java.core.PasteJavaBeanAction;
 import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsTreeEditPart;
  
 /*
@@ -161,8 +158,9 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	private ShowOverviewAction showOverviewAction;
 	private CollapseAllAction collapseAllAction;
 	private DeleteAction deleteAction;
-	private CopyJavaBeanAction copyAction;
-	private PasteJavaBeanAction pasteAction;
+	private CutJavaBeanAction cutBeanAction;
+	private CopyJavaBeanAction copyBeanAction;
+	private PasteJavaBeanAction pasteBeanAction;
 	
 	// The jve status field for when property sheet is in focus. It will be kept up to date through
 	// updateStatusField method in JavaVisualEditorPart. 
@@ -190,13 +188,43 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		// with the content outline without having to separately contribute these
 		// to the outline page's toolbar
 		deleteAction = new DeleteAction((IWorkbenchPart)jve);
-		copyAction = new CopyJavaBeanAction(jve);
-		pasteAction = new PasteJavaBeanAction(jve,jve.editDomain);
-		pasteAction.executeImmediately = true;
+		copyBeanAction = new CopyJavaBeanAction(jve);
+		pasteBeanAction = new PasteJavaBeanAction(jve,jve.editDomain);
+		pasteBeanAction.executeImmediately = true;
+		
+		ISharedImages images = PlatformUI.getWorkbench().getSharedImages();		
+		
+		copyBeanAction = new CopyJavaBeanAction(jve){
+			public void run(){
+				super.run();
+				// When the clipboard puts stuff into the clipboard the paste action needs to refresh
+				// whether it should or shouldn't be enabled
+				pasteBeanAction.update();
+			}
+		};
+		copyBeanAction.setSelectionProvider(this);
+		copyBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		copyBeanAction.setText(CodegenEditorPartMessages.getString("Action.Copy.Label"));		//$NON-NLS-1$
+		
+		cutBeanAction = new CutJavaBeanAction(jve){
+			public void run(){
+				super.run();
+				// When the clipboard puts stuff into the clipboard the paste action needs to refresh
+				// whether it should or shouldn't be enabled
+				pasteBeanAction.update();
+			}
+		};		
+		cutBeanAction.setSelectionProvider(this);
+		cutBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
+		cutBeanAction.setText(CodegenEditorPartMessages.getString("Action.Cut.Label"));		//$NON-NLS-1$
+		
+		pasteBeanAction.setSelectionProvider(this);
+		pasteBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
+		pasteBeanAction.setText(CodegenEditorPartMessages.getString("Action.Paste.Label"));	//$NON-NLS-1$			
 		
 		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
-		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);		
-		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);		
+		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyBeanAction);		
+		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteBeanAction);		
 		
 		actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), jve.getAction(ActionFactory.UNDO.getId()));
 		actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), jve.getAction(ActionFactory.REDO.getId()));
@@ -267,7 +295,10 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 				jve.openActionGroup.fillContextMenu(menuMgr);
 				jve.openActionGroup.setContext(null);					
 				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, jve.getAction(ActionFactory.UNDO.getId()));
-				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, jve.getAction(ActionFactory.REDO.getId()));										
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_UNDO, jve.getAction(ActionFactory.REDO.getId()));
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_COPY, cutBeanAction);				
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_COPY, copyBeanAction);				
+				menuMgr.appendToGroup(GEFActionConstants.GROUP_COPY, pasteBeanAction);					
 				menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, deleteAction);
 				IAction customize = jve.graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
 				if (customize.isEnabled()) 
@@ -282,8 +313,8 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				deleteAction.update();
-				copyAction.update();
-				pasteAction.update();
+				copyBeanAction.update();
+				pasteBeanAction.update();
 			}
 		});
 	}
@@ -323,7 +354,7 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	}
 
 	public PasteJavaBeanAction getPasteAction() {
-		return pasteAction;
+		return pasteBeanAction;
 	}
 }
 
