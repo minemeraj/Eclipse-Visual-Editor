@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.117 $  $Date: 2005-05-27 12:54:56 $ 
+ *  $Revision: 1.118 $  $Date: 2005-05-27 21:58:27 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -70,6 +70,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.*;
@@ -145,6 +146,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected JaveVisualEditorLoadingFigureController loadingFigureController;
 
 	protected IDiagramModelBuilder modelBuilder;
+	
+	protected EditorSettings editorSettings ;
 	
 	// Is the model ready. This is needed because sometimes the viewers come up before the model has been
 	// instantiated but it is in the modelBuilder. This causes NPE's. So only when we are about
@@ -330,7 +333,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		// The input has changed.
 		super.doSetInput(input);
-		loadModel(true, true, true, false);
+		if (editorSettings==null)			
+		    editorSettings = EditorSettings.getEditorSetting(this);
+		else
+			editorSettings.setInput((FileEditorInput)input);
+		loadModel(true, true, true, false);		
 	}
 	
 	protected Setup setupJob = null; 
@@ -523,6 +530,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						// So that we can get the editor up and displaying as soon as possible we will push this off to
 						// the next async cycle.	
 						openVCEViewersIfRequired(getEditorSite());
+						editorSettings.apply();
 					}			
 				} catch (PartInitException e) {
 					JavaVEPlugin.log(e);
@@ -563,6 +571,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			
 		// JVE/Text editor split on the right under editorComposite
 		CustomSashForm editorParent = new CustomSashForm(paletteSplitter, SWT.VERTICAL);
+		editorSettings.addSetting(new SashSetting(editorParent));
 		createPrimaryViewer(editorParent);		
 
 		// Let the super java text editor fill it in.			
@@ -765,7 +774,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// this is ok if not the first time. If not the first time it will simply ignore it since same root.
 		// But for the first time it will wait until now to actually build the entire palette visuals.
 		paletteRoot.setChildren(newChildren);
-		editDomain.setPaletteRoot(paletteRoot);			
+		// Need to set the palette model settings before the palette is created
+		editorSettings.addSettingAndApply(new PaletteDrawersSetting(editDomain, paletteRoot));
+		editDomain.setPaletteRoot(paletteRoot);	
+
 	}
 	
 
@@ -1208,6 +1220,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 			graphicalActionRegistry.dispose();
 			commonActionRegistry.dispose();
+			editorSettings.dispose();
 			
 			if (!queuedJobDispose)
 				finalDispose();
@@ -1219,6 +1232,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				TimerTests.basicTest.testState(false);
 		}
 		super.dispose();
+		
 	}
 	
 	private void finalDispose() {
@@ -1303,11 +1317,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		propertySheetPage.setRootEntry(rootPropertySheetEntry);
 
 		propertySheetPage.addListener(new EToolsPropertySheetPage.Listener() {
-			public void controlCreated(Control control) {
+			public void controlCreated(final Control control) {
+				editorSettings.addSetting(new PropertySheetSetting((Tree)control));
 				control.addDisposeListener(new DisposeListener() {
 					public void widgetDisposed(DisposeEvent e) {
 						propertySheetPage = null; // We no longer have one.
-						currentPropertySheetEntry = rootPropertySheetEntry = null;
+						currentPropertySheetEntry = rootPropertySheetEntry = null;						
 					}
 				});
 			}
