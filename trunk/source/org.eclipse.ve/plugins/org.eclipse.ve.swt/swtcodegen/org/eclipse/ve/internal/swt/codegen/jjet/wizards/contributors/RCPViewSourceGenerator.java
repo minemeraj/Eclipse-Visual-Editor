@@ -15,7 +15,16 @@ import java.util.HashMap;
 
 public class RCPViewSourceGenerator implements org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceGenerator {
 
-  protected final String NL = System.getProperties().getProperty("line.separator");
+  protected static String nl;
+  public static synchronized RCPViewSourceGenerator create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    RCPViewSourceGenerator result = new RCPViewSourceGenerator();
+    nl = null;
+    return result;
+  }
+
+  protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "import org.eclipse.ui.part.ViewPart;" + NL + "import org.eclipse.swt.widgets.Composite;" + NL + "import org.eclipse.swt.SWT;" + NL + "" + NL + "public class ";
   protected final String TEXT_2 = " extends ViewPart {" + NL + "" + NL + "\tpublic static final String ID = \"";
   protected final String TEXT_3 = ".";

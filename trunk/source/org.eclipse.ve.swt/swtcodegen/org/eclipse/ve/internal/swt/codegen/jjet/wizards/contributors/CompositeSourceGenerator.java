@@ -15,7 +15,16 @@ import java.util.HashMap;
 
 public class CompositeSourceGenerator implements org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceGenerator {
 
-  protected final String NL = System.getProperties().getProperty("line.separator");
+  protected static String nl;
+  public static synchronized CompositeSourceGenerator create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    CompositeSourceGenerator result = new CompositeSourceGenerator();
+    nl = null;
+    return result;
+  }
+
+  protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "";
   protected final String TEXT_2 = NL + "import org.eclipse.swt.layout.FillLayout;" + NL + "import org.eclipse.swt.widgets.Shell;" + NL + "import org.eclipse.swt.widgets.Display;" + NL + "import org.eclipse.swt.SWT;";
   protected final String TEXT_3 = NL + "import org.eclipse.swt.graphics.Point;" + NL + "" + NL + "" + NL + "public class ";

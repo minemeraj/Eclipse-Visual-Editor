@@ -10,13 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropChangedAnonymosEventSrcGenerator.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-27 18:47:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
 import java.util.List;
 
 import org.eclipse.ve.internal.jcm.*;
+
 import org.eclipse.ve.internal.java.codegen.java.PropertyChangedAllocationStyleHellper;
 import org.eclipse.ve.internal.java.vce.templates.*;
 
@@ -114,7 +115,7 @@ public class PropChangedAnonymosEventSrcGenerator extends AbstractEventSrcGenera
  }
 
  public String generateEvent() {	
-	 return getEventTemplate().generateEvent(getInfo()) ;
+		return getEventTemplate().createNLTemplate(getSeperator()).generateEvent(getInfo()) ;
  }
      
   
@@ -125,7 +126,7 @@ public class PropChangedAnonymosEventSrcGenerator extends AbstractEventSrcGenera
 	  */
 	 public String generateEventMethod(Callback[] callbacks) {
 		 EventInfo info = new EventInfo(callbacks) ;
-		 return getEventMethodTemplate().generateEvent(info) ;
+		 return getEventMethodTemplate().createNLTemplate(getSeperator()).generateEvent(info) ;
 	 }
 
 
@@ -145,7 +146,7 @@ public class PropChangedAnonymosEventSrcGenerator extends AbstractEventSrcGenera
 	 */
 	public String generatePropertiesBlocks(PropertyEvent[] props) {
 		EventInfo info = new EventInfo(props) ;
-		return getEventPropertyTemplate().generateEvent(info) ;
+		return getEventPropertyTemplate().createNLTemplate(getSeperator()).generateEvent(info) ;
 	}
 
 }

@@ -22,7 +22,16 @@ import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
  *********************************************************************/
 public class SWTMainMethodTemplate implements IMethodTemplate {
 	
-  protected final String NL = System.getProperties().getProperty("line.separator");
+  protected static String nl;
+  public static synchronized SWTMainMethodTemplate create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    SWTMainMethodTemplate result = new SWTMainMethodTemplate();
+    nl = null;
+    return result;
+  }
+
+  protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "\t/*" + NL + "\t * Temporary main generation " + NL + "\t */    " + NL + "\tpublic static void main(String[] args) {" + NL + "\t\t// before you run this, make sure to set up the following in" + NL + "\t\t// the launch configuration (Arguments->VM Arguments) for the correct SWT lib. path" + NL + "\t\t// the following is a windows example," + NL + "\t\t// -Djava.library.path=\"installation_directory\\plugins\\org.eclipse.swt.win32_3.0.1\\os\\win32\\x86\"" + NL + "\t\torg.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();\t\t" + NL + "\t\t";
   protected final String TEXT_2 = " test = new ";
   protected final String TEXT_3 = "();" + NL + "\t\ttest.";

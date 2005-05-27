@@ -22,7 +22,16 @@ import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
  *********************************************************************/
 public class TryCatchMethodTemplate implements IMethodTemplate {
 	
-  protected final String NL = System.getProperties().getProperty("line.separator");
+  protected static String nl;
+  public static synchronized TryCatchMethodTemplate create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    TryCatchMethodTemplate result = new TryCatchMethodTemplate();
+    nl = null;
+    return result;
+  }
+
+  protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "\t/**";
   protected final String TEXT_2 = NL + "\t * ";
   protected final String TEXT_3 = "\t";

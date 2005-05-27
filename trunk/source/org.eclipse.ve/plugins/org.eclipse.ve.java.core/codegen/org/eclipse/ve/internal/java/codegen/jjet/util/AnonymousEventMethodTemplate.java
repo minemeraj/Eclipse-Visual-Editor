@@ -21,8 +21,17 @@ import org.eclipse.ve.internal.java.codegen.util.IEventTemplate;
  * 
  *********************************************************************/
 public class AnonymousEventMethodTemplate implements IEventTemplate {
-	
-  protected final String NL = System.getProperties().getProperty("line.separator");
+
+  protected static String nl;
+  public static synchronized AnonymousEventMethodTemplate create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    AnonymousEventMethodTemplate result = new AnonymousEventMethodTemplate();
+    nl = null;
+    return result;
+  }
+
+  protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "   ";
   protected final String TEXT_2 = NL;
   protected final String TEXT_3 = "\tpublic void ";
@@ -37,6 +46,9 @@ public class AnonymousEventMethodTemplate implements IEventTemplate {
   protected final String TEXT_12 = NL;
   protected final String TEXT_13 = "\t}";
 
+	public IEventTemplate createNLTemplate(String nl) {
+		return create(nl);
+	}
 	public String generateEvent(AbstractEventSrcGenerator.EventInfo info)
   {
     StringBuffer stringBuffer = new StringBuffer();

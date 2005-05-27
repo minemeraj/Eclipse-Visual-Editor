@@ -21,9 +21,13 @@ import org.eclipse.ve.internal.java.codegen.util.IEventTemplate;
  * 
  *********************************************************************/
 public class EventSkelaton implements IEventTemplate {
-	
+
+	public IEventTemplate createNLTemplate(String nl) {
+		return create(nl);
+	}
 	public String generateEvent(AbstractEventSrcGenerator.EventInfo info) {
 		return null ;		
-	}	
+	}
+
 
 }

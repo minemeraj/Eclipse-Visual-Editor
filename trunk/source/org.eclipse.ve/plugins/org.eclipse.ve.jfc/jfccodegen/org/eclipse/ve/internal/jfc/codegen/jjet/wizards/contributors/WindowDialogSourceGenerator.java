@@ -15,7 +15,16 @@ import java.util.HashMap;
 
 public class WindowDialogSourceGenerator implements org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceGenerator {
 
-  protected final String NL = System.getProperties().getProperty("line.separator");
+  protected static String nl;
+  public static synchronized WindowDialogSourceGenerator create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    WindowDialogSourceGenerator result = new WindowDialogSourceGenerator();
+    nl = null;
+    return result;
+  }
+
+  protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "import java.awt.Frame;" + NL + "" + NL + "public class ";
   protected final String TEXT_2 = " {" + NL + "" + NL + "\t/**" + NL + "\t * @param owner" + NL + "\t */" + NL + "\tpublic ";
   protected final String TEXT_3 = "(Frame owner) {" + NL + "\t\tsuper(owner);" + NL + "\t\tinitialize();" + NL + "\t}" + NL + "\t" + NL + "\t/**" + NL + "\t * This method initializes this" + NL + "\t * " + NL + "\t * @return void" + NL + "\t */" + NL + "\tpublic void initialize(){" + NL + "\t\tthis.setSize(300,200);" + NL + "\t}" + NL + "}";
