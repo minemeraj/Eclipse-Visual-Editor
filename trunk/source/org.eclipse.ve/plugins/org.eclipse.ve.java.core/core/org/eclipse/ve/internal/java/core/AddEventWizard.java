@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: AddEventWizard.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-17 23:37:26 $ 
+ *  $Revision: 1.10 $  $Date: 2005-05-27 17:34:53 $ 
  */
 
 import java.text.Collator;
@@ -488,7 +488,10 @@ public class AddEventWizard extends Wizard {
 						
 			PropertyData propData = (PropertyData)treeItem.getData();
 			propDecor = propData.propDecor;
-			label.setText(propData.propDecor.getShortDescription());
+			if(propDecor.getShortDescription() != null)
+				label.setText(propDecor.getShortDescription().trim());
+			else
+				label.setText(JavaMessages.getString("AddEventWizard.Label.NoDescription")); //$NON-NLS-1$
 			
 			// If there is no existing PropertyEvent, and there is an existing listener then it can be re-used
 			boolean canUseExistingListener = false;	
