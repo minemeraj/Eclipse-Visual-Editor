@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.49 $  $Date: 2005-05-17 23:36:56 $ 
+ *  $Revision: 1.50 $  $Date: 2005-05-27 22:40:55 $ 
  */
 
 
@@ -988,7 +988,7 @@ public String toString(){
    	    states = states.concat("STATE_NO_SRC#"); //$NON-NLS-1$
    	if (isStateSet(STATE_NO_MODEL))
    		states = states.concat("STATE_NO_MODEL#"); //$NON-NLS-1$    
-	states = states.concat("}"+" Offset: "+getOffset()+" upTo:"+getOffset()+getLen()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	states = states.concat("}"+" Offset: "+getOffset()+" upTo:"+(getOffset()+getLen())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	if (isStateSet(STATE_NO_SRC) && fMasteredExpression != null)
 		return fMasteredExpression.getContent() + states;
 	else

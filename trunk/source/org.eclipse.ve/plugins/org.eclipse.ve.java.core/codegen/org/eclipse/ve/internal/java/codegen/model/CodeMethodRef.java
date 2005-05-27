@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.38 $  $Date: 2005-05-20 13:25:32 $ 
+ *  $Revision: 1.39 $  $Date: 2005-05-27 22:40:55 $ 
  */
 
 import java.util.*;
@@ -597,8 +597,15 @@ public  void updateExpressionOrder() throws CodeGenException {
 	ArrayList sortedList = sortExpressions(fExpressions);
 	fExpressions = sortedList;
 	
-	sortedList = sortExpressions(fEventExpressions);
-	fEventExpressions = sortedList;
+	// sorting of events has to take into consideration the sorted
+	// order of regular expressions as well. 
+	if(fEventExpressions!=null && fEventExpressions.size()>0){
+		List allExpressions = new ArrayList(fExpressions);
+		allExpressions.addAll(fEventExpressions);
+		sortedList = sortExpressions(allExpressions); // sort all expressions in the method
+		sortedList.removeAll(fExpressions); // remove the regular expressions as they were added only for reference
+		fEventExpressions = sortedList; // now we have the sorted events only list
+	}
 }
 
 /**
