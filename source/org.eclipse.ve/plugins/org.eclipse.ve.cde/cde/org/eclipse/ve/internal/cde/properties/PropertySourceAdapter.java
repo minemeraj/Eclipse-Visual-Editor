@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: PropertySourceAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:15 $ 
+ *  $Revision: 1.7 $  $Date: 2005-05-27 15:44:22 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -124,12 +124,16 @@ public class PropertySourceAdapter extends AdapterImpl implements IPropertySourc
 			}
 		}
 
-		if (domain != null)
+		if (shouldAllowAnnotationRename())
 			descList.addAll(AnnotationPolicy.getAnnotationPropertyDescriptors(getTarget(), domain));
 
 		return (IPropertyDescriptor[]) descList.toArray(new IPropertyDescriptor[descList.size()]);
 	}
 	
+	protected boolean shouldAllowAnnotationRename() {
+		return domain != null;
+	}
+
 	protected List getAllFeatures(EClass cls) {
 		return cls.getEAllStructuralFeatures();
 	}
