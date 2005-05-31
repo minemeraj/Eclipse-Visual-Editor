@@ -11,7 +11,7 @@ package org.eclipse.ve.examples.cdm.dept.dinner.ui;
  *******************************************************************************/
 /*
  *  $RCSfile: DinnerGraphicalEditorPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-16 00:30:22 $ 
+ *  $Revision: 1.3 $  $Date: 2005-05-31 23:49:40 $ 
  */
 
 import java.util.List;
@@ -56,13 +56,16 @@ public class DinnerGraphicalEditorPart extends EMFGraphicalEditorPart {
 	private void fillPalette(PaletteRoot root) {
 		fillControlGroup(root);
 		
+		PaletteGroup dinnerGroup = new PaletteGroup("Dinner Group");
+		root.add(dinnerGroup);
+
 		// Create the prototype of a entree (which is a DiagramFigure, and type is set to DinnerConstants.ENTREE_CHILD_TYPE).
 		DiagramFigure proto = CDMFactory.eINSTANCE.createDiagramFigure();
 		proto.setType(DinnerConstants.ENTREE_CHILD_TYPE);
 
 		CreationToolEntry tool =
 			new CreationToolEntry("Entree", "Create a new entree", new EMFPrototypeFactory(proto), null, null);
-		root.add(tool);
+		dinnerGroup.add(tool);
 		
 		// Create the prototype of a employee (which is a DiagramFigure, and type is set to DinnerConstants.EMPLOYEE_CHILD_TYPE).
 		proto = CDMFactory.eINSTANCE.createDiagramFigure();
@@ -70,9 +73,10 @@ public class DinnerGraphicalEditorPart extends EMFGraphicalEditorPart {
 
 		tool =
 			new CreationToolEntry("Employee", "Add an employee", new EMFPrototypeFactory(proto), null, null);
-		root.add(tool);
+		dinnerGroup.add(tool);
 		
 	}
+
 
 	private void fillControlGroup(PaletteRoot root) {
 		PaletteGroup controlGroup = new PaletteGroup("Control Group");
