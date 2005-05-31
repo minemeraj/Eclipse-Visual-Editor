@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-27 12:51:28 $ 
+ *  $Revision: 1.12 $  $Date: 2005-05-31 11:07:35 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -181,36 +181,38 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		}
 	}
 	
-	protected void removeReferenceTo(EObject javaBeanToCopy, String featureName, final EcoreUtil.Copier aCopier) {
+	protected void removeReferenceTo(EObject javaBeanToCopy, String featureName, EObject originalJavaBean) {
 	
 		EStructuralFeature structuralFeature = javaBeanToCopy.eClass().getEStructuralFeature(featureName);
-		removeReferenceTo(javaBeanToCopy,structuralFeature,aCopier);
+		javaBeanToCopy.eUnset(structuralFeature);
+		removeReferenceTo(javaBeanToCopy,structuralFeature,originalJavaBean);
 
 	}
 
-	protected void removeReferenceTo(EObject javaBeanToCopy, EStructuralFeature feature, final EcoreUtil.Copier aCopier){
+	protected void removeReferenceTo(EObject javaBeanToCopy, EStructuralFeature feature, EObject originalJavaBean){
 		
-		Object propertyValue = javaBeanToCopy.eGet(feature);
-		removeReferenceBetween(javaBeanToCopy,propertyValue,aCopier);
+		Object propertyValue = originalJavaBean.eGet(feature);
+		removeReferenceBetween(javaBeanToCopy,propertyValue,originalJavaBean);
 		
 	}
 	
-	protected void removeReferenceBetween(EObject javaBeanToCopy, final Object propertyValue, final EcoreUtil.Copier aCopier){
+	protected void removeReferenceBetween(EObject javaBeanToCopy, final Object propertyValue, EObject originalJavaBean){
 	
 		if(propertyValue != null){
-			aCopier.remove(propertyValue);
+			copier.remove(propertyValue);
 			// Remove all properties from the copier that are contained by the object just removed
 			if(propertyValue instanceof EObject){
 				FeatureValueProvider.FeatureValueProviderHelper.visitSetFeatures((EObject) propertyValue, new FeatureValueProvider.Visitor(){
 					public Object isSet(EStructuralFeature feature, Object value) {
 						if(feature instanceof EReference && ((EReference)feature).isContainment()){
-							removeReferenceBetween((EObject)propertyValue,value,aCopier);
+							EObject copiedPropertyValue = (EObject) copier.get(propertyValue);
+							removeReferenceBetween(copiedPropertyValue,value,(EObject)propertyValue);
 						}
 						return null;
 					}
 				});
-			}			
-		}
+			}
+		} 
 	}
 		
 	protected void cleanup(IJavaInstance javaBeanToCopy){

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.118 $  $Date: 2005-05-27 21:58:27 $ 
+ *  $Revision: 1.119 $  $Date: 2005-05-31 11:07:35 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -512,6 +512,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		} else {
 			createSplitpaneEditor(parent, store);
 		}
+		
+		// We must register the retarget actions to ensure the key bindings are directed correctly
+		replaceJavaEditorAction(cutAction);
+		replaceJavaEditorAction(copyAction);
+		replaceJavaEditorAction(pasteAction);			
 
 		// Now we can add the focus listener.
 		primaryViewer.getControl().addFocusListener(focusListener);
@@ -576,11 +581,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 		// Let the super java text editor fill it in.			
 		super.createPartControl(editorParent);
-		
-		// We must register the retarget actions to ensure the key bindings are directed correctly
-		replaceJavaEditorAction(cutAction);
-		replaceJavaEditorAction(copyAction);
-		replaceJavaEditorAction(pasteAction);		
 		
 		editorParent.setSashBorders(new boolean[] { true, true });
 		paletteSplitter.setGraphicalControl(editorParent);
