@@ -11,7 +11,7 @@
 package org.eclipse.ve.examples.cdm.dept.ui;
 /*
  *  $RCSfile: CompanyGraphicalEditorPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:13 $ 
+ *  $Revision: 1.6 $  $Date: 2005-05-31 23:49:41 $ 
  */
 
 import java.io.*;
@@ -75,13 +75,17 @@ public class CompanyGraphicalEditorPart extends GraphicalEditorWithPalette {
 		fillPalette(dinnerPalette);
 		return dinnerPalette;
 	}
-
+	
 	private void fillPalette(PaletteRoot root) {
 		fillControlGroup(root);
 		
-		root.add(new CreationToolEntry("Department", "Create a new department",new DepartmentFactory(), null, null));
-		root.add(new CreationToolEntry("Employee", "Create a new employee", new EmployeeFactory(), null, null));
+		PaletteGroup companyGroup = new PaletteGroup("Company Group");
+		root.add(companyGroup);
+
+		companyGroup.add(new CreationToolEntry("Department", "Create a new department",new DepartmentFactory(), null, null));
+		companyGroup.add(new CreationToolEntry("Employee", "Create a new employee", new EmployeeFactory(), null, null));		
 	}
+
 
 	private void fillControlGroup(PaletteRoot root) {
 		PaletteGroup controlGroup = new PaletteGroup("Control Group");
