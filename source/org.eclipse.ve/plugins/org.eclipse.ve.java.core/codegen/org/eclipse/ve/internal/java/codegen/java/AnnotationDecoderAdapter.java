@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.21 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.22 $  $Date: 2005-05-31 15:33:50 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -121,6 +121,15 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 		
 		public SimpleName getVariableName(){
 			return variableName;
+		}
+
+		public boolean visit(SingleVariableDeclaration node) {
+			if(isSimpleType && (isInValidMethod || isInValidField) && variableName==null){
+				// The type name is of interest
+				if(node.getName().getIdentifier().equals(varName))
+					variableName = node.getName();
+			}
+			return super.visit(node);
 		}
 	}
 	

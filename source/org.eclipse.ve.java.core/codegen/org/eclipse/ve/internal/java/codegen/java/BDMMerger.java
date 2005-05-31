@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.49 $  $Date: 2005-05-20 16:29:15 $ 
+ *  $Revision: 1.50 $  $Date: 2005-05-31 15:33:50 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -1270,10 +1270,15 @@ public class BDMMerger {
 		BeanPartDecleration decl = mainModel.getModelDecleration(refBPHandle);
 		int uniqueIndex = 0;
 		if(decl==null){
-			if (referenceBP.getFieldDecl() instanceof FieldDeclaration)
-				decl = new BeanPartDecleration((FieldDeclaration)referenceBP.getFieldDecl()) ;
-			else
-				decl = new BeanPartDecleration((VariableDeclarationStatement)referenceBP.getFieldDecl());
+			ASTNode fd = referenceBP.getFieldDecl();
+			if(fd!=null){
+				if (referenceBP.getFieldDecl() instanceof FieldDeclaration)
+					decl = new BeanPartDecleration((FieldDeclaration)referenceBP.getFieldDecl()) ;
+				else
+					decl = new BeanPartDecleration((VariableDeclarationStatement)referenceBP.getFieldDecl());
+			}else{
+				decl = new BeanPartDecleration(referenceBP.getDecleration().getName(), referenceBP.getDecleration().getType());
+			}
 		}else{
 			//find the least valued unique number
 			uniqueIndex=Integer.MAX_VALUE;

@@ -10,35 +10,22 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceMethodVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-26 21:39:44 $ 
+ *  $Revision: 1.2 $  $Date: 2005-05-31 15:33:51 $ 
  */
 package org.eclipse.ve.internal.jface.codegen;
 
-import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jdt.core.ISourceRange;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.*;
 
-import org.eclipse.ve.internal.java.codegen.java.JavaBeanModelBuilder;
 import org.eclipse.ve.internal.java.codegen.java.MethodVisitor;
-import org.eclipse.ve.internal.java.codegen.java.rules.IVisitorFactoryRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
+import org.eclipse.ve.internal.java.codegen.util.IMethodArgumentCodegenHelper;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
  
 
 public class JFaceMethodVisitor extends MethodVisitor {
 
-	public void initialize(MethodDeclaration node, IBeanDeclModel model, List reTryList, CodeMethodRef m, IVisitorFactoryRule visitorFactory) {
-		super.initialize(node, model, reTryList, m, visitorFactory);
-		processJFaceContributions(node, model);
-	}
-	
-	public void initialize(MethodDeclaration node, IBeanDeclModel model, List reTryList, CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content, IVisitorFactoryRule visitorFactory) {
-		super.initialize(node, model, reTryList, typeRef, methodHandle, range, content, visitorFactory);
-		processJFaceContributions(node, model);
-	}
 	
 	public void processJFaceContributions(MethodDeclaration method, IBeanDeclModel model) {
 		// This visitor is for WorkbenchPart class only
@@ -66,81 +53,44 @@ public class JFaceMethodVisitor extends MethodVisitor {
 			return;
 		
 		// Determine init method
-		CodeMethodRef initMethod = null;
-		Iterator methodItr = model.getAllMethods();
-		while (methodItr.hasNext()) {
-			CodeMethodRef methodRef = (CodeMethodRef) methodItr.next();
-			if(methodRef.getDeclMethod()!=null && methodRef.getDeclMethod().equals(method)){
-				initMethod = methodRef;
-				break;
-			}
-		}
+		CodeMethodRef initMethod = fMethod;
+		
+		// Create the 'Statement' AST node as we cannot handle non-statement expressions
+		AST ast = svd.getAST();
+		VariableDeclarationFragment varDeclFragment = ast.newVariableDeclarationFragment();
+		varDeclFragment.setFlags(svd.getFlags());
+		varDeclFragment.setExtraDimensions(svd.getExtraDimensions());
+		if(svd.getInitializer()!=null)
+			varDeclFragment.setInitializer((Expression) ASTNode.copySubtree(ast, svd.getInitializer()));
+		varDeclFragment.setName((SimpleName) ASTNode.copySubtree(ast, svd.getName()));
+		VariableDeclarationStatement varDeclStatement = ast.newVariableDeclarationStatement(varDeclFragment);
+		varDeclStatement.setType((Type) ASTNode.copySubtree(ast, svd.getType()));
+		WorkbenchPartArgumentCodegenHelper helper = new WorkbenchPartArgumentCodegenHelper("delegate_control", svd);
+		varDeclStatement.setProperty(IMethodArgumentCodegenHelper.KEY_METHODARGUMENT_CODEGENHELPER, helper);
+		varDeclStatement.setSourceRange(svd.getStartPosition(), svd.getLength());
 		
 		
 		// Create the bean part
-		BeanPartDecleration decl = new BeanPartDecleration(svd.getName().getFullyQualifiedName(), "org.eclipse.swt.widgets.Composite") ; //$NON-NLS-1$
+		BeanPartDecleration decl = new BeanPartDecleration(varDeclStatement) ; //$NON-NLS-1$
 		decl.setDeclaringMethod(initMethod);
 		BeanPart bp = new BeanPart(decl);			
 		model.addBean(bp) ;
 
 		bp.addInitMethod(initMethod);
-	    //	 Force the creation of a method adapter 
-		if (fModel.getCompositionModel().isFromCache())
-			initMethod.restore();
-		else
-		    initMethod.getCompMethod();
-
-		
-		
-		
-		// Find out the 'this' BeanPart
-		BeanPart thisPart = model.getABean(BeanPart.THIS_NAME); //$NON-NLS-1$
 		
 		// Create the expression 
-		CodeExpressionRef exp = new CodeExpressionRef(initMethod, bp);
+		CodeExpressionRef exp = new CodeExpressionRef(varDeclStatement, initMethod);
 		exp.setBean(bp);
 		exp.setNoSrcExpression(true);
-		exp.setDecoder(new ImplicitAllocationDecoder(thisPart, bp, exp, "delegate_control")); //$NON-NLS-1$
 		exp.setOffset(svd.getStartPosition()-method.getStartPosition());
 		exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
-		updateContentParser(svd, model, exp);
 		bp.addRefExpression(exp);
 		exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
 	}
 
-	/**
-	 * The content parser is necessary for the snippet update mechanism to work properly,
-	 * in determining of expressions are equivalent etc.
-	 * 
-	 * @param svd
-	 * @param model
-	 * @param exp
-	 * 
-	 * @since 1.0.2
-	 */
-	protected void updateContentParser(SingleVariableDeclaration svd, IBeanDeclModel model, CodeExpressionRef exp) {
-		int start = svd.getStartPosition();
-		int len = svd.getLength();
-		String source = svd.toString();
-		if(svd.getRoot()==null){
-			start = 0;
-			len = source.length();
-		}else{
-			String rootSource = (String) svd.getRoot().getProperty(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY);
-			if(rootSource==null || rootSource.length()<1){
-				start = 0;
-				len = source.length();
-			}else{
-				source = rootSource;
-			}
-		}
-		exp.setContent(
-				new FixedContentExpressionParser(
-						source,
-						start,
-						len,
-						model
-				));
+	public void visit() {
+		processJFaceContributions((MethodDeclaration) fVisitedNode, fModel);
+		super.visit();
 	}
 
 }

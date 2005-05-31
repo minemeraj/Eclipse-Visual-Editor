@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.16 $  $Date: 2005-04-25 12:33:28 $ 
+ *  $Revision: 1.17 $  $Date: 2005-05-31 15:33:51 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -100,12 +100,15 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 	}
 	protected void initialFeatureMapper() {
 		// If setBounds() or setSize() on composite, reduce its priority as re-lays out its children
+		if(fFeatureMapper!=null)
+			fFeatureMapper.setRefObject(null); // reset it as super.initalFeatureMappers could set one, else we blast one later
 		if(	isMethodNamePresent(ISWTFeatureMapper.COMPOSITE_BOUNDS_NAME) || 
 			isMethodNamePresent(ISWTFeatureMapper.COMPOSITE_SIZE_NAME)){
 			fFeatureMapper = new CompositePropertyFeatureMapper();
 		}else
 			super.initialFeatureMapper() ;
-		fFeatureMapper.setRefObject((IJavaInstance) fbeanPart.getEObject());
+		if(fFeatureMapper.getRefObject()==null)
+			fFeatureMapper.setRefObject((IJavaInstance) fbeanPart.getEObject());
 		if (fFeatureMapper.getFeature(fExpr) == null) {
 			// not a regular property, but given that it was parsed in... this could be
 			// a control feature

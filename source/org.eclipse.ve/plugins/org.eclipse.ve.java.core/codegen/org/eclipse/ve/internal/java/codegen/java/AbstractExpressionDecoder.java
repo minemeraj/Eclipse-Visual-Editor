@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.19 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.20 $  $Date: 2005-05-31 15:33:48 $ 
  */
 import java.util.logging.Level;
 
@@ -93,7 +93,8 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 
 		if (fFeatureMapper == null)
 			initialFeatureMapper();
-		fFeatureMapper.setRefObject((IJavaInstance) fbeanPart.getEObject());
+		if(fFeatureMapper.getRefObject()==null)
+			fFeatureMapper.setRefObject((IJavaInstance) fbeanPart.getEObject());
 
 		// Make sure we could resolve the proper PD/SF           		
 		if (fFeatureMapper.getFeature(fExpr) == null && !fExprRef.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) {
