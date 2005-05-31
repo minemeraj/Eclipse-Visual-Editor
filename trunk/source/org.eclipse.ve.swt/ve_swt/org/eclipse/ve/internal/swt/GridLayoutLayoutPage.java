@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-23 19:06:44 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-31 20:06:47 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -35,7 +35,6 @@ import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.GridController;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
 import org.eclipse.ve.internal.java.core.*;
@@ -57,7 +56,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	public final static int MAKE_COLS_EQUAL_WIDTH_CHANGED = 7;
 
 	EditPart fEditPart = null;
-	protected GridController gridController;
+//	protected GridController gridController;
 	
 	ResourceSet rset;
 	
@@ -183,12 +182,12 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 					initialized = false;
 //					if (gridController != null)
 //						gridController.removeGridListener(gridListener);
-					gridController = GridController.getGridController(fEditPart);
-					if (gridController != null) {
-						initializeValues();
+//					gridController = GridController.getGridController(fEditPart);
+//					if (gridController != null) {
+					initializeValues();
 //						gridController.addGridListener(gridListener);
-						return true;
-					}
+					return true;
+//					}
 				}
 			}
 			
@@ -223,12 +222,12 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 						initialized = false;
 //						if (gridController != null)
 //							gridController.removeGridListener(gridListener);
-						gridController = GridController.getGridController(fEditPart);
-						if (gridController != null) {
-							initializeValues();
+//						gridController = GridController.getGridController(fEditPart);
+//						if (gridController != null) {
+						initializeValues();
 //							gridController.addGridListener(gridListener);
-							return true;
-						}
+						return true;
+//						}
 					}
 				}
 			}
@@ -236,7 +235,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		fEditPart = null;
 //		if (gridController != null)
 //			gridController.removeGridListener(gridListener);
-		gridController = null;
+//		gridController = null;
 		// By default if the initial checks failed, disable and uncheck all the actions.
 		return false;
 	}
@@ -292,8 +291,8 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	private void initializeValues() {
 		getResourceSet(fEditPart);
 		// break out early if getControl() hasn't been called yet.
-		gridController = GridController.getGridController(fEditPart);
-		if (gridComposite == null || gridController == null) { return; }
+//		gridController = GridController.getGridController(fEditPart);
+		if (gridComposite == null) { return; }
 		Object[] values = new Object[7];
 		numColumnsValue = getIntValue(fEditPart, sfNumColumns);
 		horizontalSpacingValue = getIntValue(fEditPart, sfHorizontalSpacing);
@@ -301,7 +300,8 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		marginHeightValue = getIntValue(fEditPart, sfMarginHeight);
 		marginWidthValue = getIntValue(fEditPart, sfMarginWidth);
 		makeColsEqualWidthValue = getBooleanValue(fEditPart, sfMakeColumnsEqualWidth);
-		values[0] = new Boolean(gridController.isGridShowing());
+		values[0] = new Boolean(true);
+//		values[0] = new Boolean(gridController.isGridShowing());
 		values[1] = new Integer(numColumnsValue);
 		values[2] = new Integer(horizontalSpacingValue);
 		values[3] = new Integer(verticalSpacingValue);
