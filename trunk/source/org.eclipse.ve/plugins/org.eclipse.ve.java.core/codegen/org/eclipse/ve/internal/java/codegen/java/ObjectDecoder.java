@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ObjectDecoder.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-11 22:41:31 $ 
+ *  $Revision: 1.14 $  $Date: 2005-05-31 15:33:48 $ 
  */
 
 
@@ -20,6 +20,7 @@ import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -27,6 +28,7 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.model.*;
+import org.eclipse.ve.internal.java.codegen.util.IMethodArgumentCodegenHelper;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
@@ -35,7 +37,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  *  An Object Decoder will only work on Simple Attributes
  */
 public class ObjectDecoder extends AbstractExpressionDecoder {
-     
+     protected IMethodArgumentCodegenHelper methodArgumentHelper = null;
 
 public ObjectDecoder (CodeExpressionRef expr, IBeanDeclModel model, IVEModelInstance cm, BeanPart part) {
 	super (expr,model,cm,part) ;
@@ -53,17 +55,30 @@ public static EStructuralFeature getAllocationFeature (IJavaObjectInstance obj) 
 }
 
 protected void initialFeatureMapper(){	
-	     if (fExprRef.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) // initialization expression
-	     	fFeatureMapper = new AllocationFeatureMapper(fbeanPart.getEObject());
-	     else  // Use a Simple Attribute Mapper
+	methodArgumentHelper = null;
+	     if (fExprRef.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
+	    	 // initialization expression
+	    	 if(fExpr instanceof VariableDeclarationStatement && 
+		    		 fExpr.getProperty(IMethodArgumentCodegenHelper.KEY_METHODARGUMENT_CODEGENHELPER)!=null){
+		    	 // Method Argument variable declaration
+		    	 methodArgumentHelper = (IMethodArgumentCodegenHelper) fExpr.getProperty(IMethodArgumentCodegenHelper.KEY_METHODARGUMENT_CODEGENHELPER);
+		    	 fFeatureMapper = methodArgumentHelper.getNewFeatureMapper(fbeanPart, fExpr);
+		    	 //TODO RefObject should come from the helper aslo just like the SF
+		     }else
+		    	 fFeatureMapper = new AllocationFeatureMapper(fbeanPart.getEObject());
+	     }
+	     else // Use a Simple Attribute Mapper
             fFeatureMapper = new PropertyFeatureMapper()  ;                      
 }
 
 protected void initialFeatureMapper(EStructuralFeature sf) {
 	if (sf.equals(getAllocationFeature((IJavaObjectInstance)fbeanPart.getEObject()))){
 		fFeatureMapper = new AllocationFeatureMapper(fbeanPart.getEObject()) ;
-	}
-	else {
+	} else if(methodArgumentHelper!=null && methodArgumentHelper.getSFName().equals(sf.getName())) {
+		fFeatureMapper = new HardCodedFeatureMapper(methodArgumentHelper.getSFName(), null);
+		fFeatureMapper.setFeature(sf);
+		fFeatureMapper.setRefObject((IJavaInstance) getBeanModel().getABean(BeanPart.THIS_NAME).getEObject());
+	} else {
          fFeatureMapper = new PropertyFeatureMapper() ;        
 	}
 	fFeatureMapper.setFeature(sf) ;
@@ -75,11 +90,15 @@ protected void initialFeatureMapper(EStructuralFeature sf) {
 		if (fFeatureMapper.getFeature(null).equals(getAllocationFeature((IJavaObjectInstance) fbeanPart.getEObject())))
 			fhelper = new ConstructorDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
 		else if (isChildValue(fFeatureMapper.getFeature(null), (IJavaObjectInstance) fbeanPart.getEObject(), false)) {
-			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+			if(methodArgumentHelper!=null){
+				fhelper = methodArgumentHelper.getNewExpressionDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
+			} else {
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 				JavaVEPlugin.log("ObjectDecoder using *Delegate Helper* for " + fFeatureMapper.getFeature(null), //$NON-NLS-1$
 						Level.FINE);
-			fhelper = new ChildRelationshipDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
-		} else
+				fhelper = new ChildRelationshipDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
+			}
+		} else 
 			fhelper = new SimpleAttributeDecoderHelper(fbeanPart, fExpr, fFeatureMapper, this);
 	}
 

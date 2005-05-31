@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.50 $  $Date: 2005-05-27 22:40:55 $ 
+ *  $Revision: 1.51 $  $Date: 2005-05-31 15:33:47 $ 
  */
 
 
@@ -84,14 +84,6 @@ public final static int                STATE_INIT_EXPR         	= 0x1000 ;
 /*******/
 	
 
-public CodeExpressionRef (Statement exp, CodeMethodRef method, BeanPart bean) {
-    
-    
-
-    setOffset(-1) ;
-    setBean(bean)	;
-	
-}
 /**
  * exp/method may not have been generated from the same source
  * if not, offset will have to be provided to normalize these two

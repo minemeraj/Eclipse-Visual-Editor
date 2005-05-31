@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-11 22:41:31 $ 
+ *  $Revision: 1.15 $  $Date: 2005-05-31 15:33:50 $ 
  */
 
 import java.text.MessageFormat;
@@ -35,7 +35,7 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 
 public class MethodVisitor extends SourceVisitor {
 	
-	CodeMethodRef fMethod = null ;
+	protected CodeMethodRef fMethod = null ;
 	IVisitorFactoryRule visitorFactory = null;
 	
 	/**
