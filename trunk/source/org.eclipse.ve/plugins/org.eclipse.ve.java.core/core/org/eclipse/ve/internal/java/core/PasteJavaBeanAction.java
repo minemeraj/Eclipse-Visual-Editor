@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PasteJavaBeanAction.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-17 23:38:18 $ 
+ *  $Revision: 1.5 $  $Date: 2005-05-31 11:07:35 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
@@ -94,8 +93,9 @@ public class PasteJavaBeanAction extends SelectionAction {
 		try {
 			clipboardResource.load(is, null);
 			return new EMFPrototypeCreationFactory("/0", clipboardResource); //$NON-NLS-1$
-		} catch (IOException e) {
-			JavaVEPlugin.log(e);
+		} catch (Exception e) {
+			// If the XMI is for objects and features not in the current project's resource set (i.e. build path)
+			// an exception will be thrown trying to parse the XMI.  In this case paste is not allowed			
 			return null;
 		} finally {
 			targetResourceSet.getResources().remove(clipboardResource);
