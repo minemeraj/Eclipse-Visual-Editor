@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYGridPropertiesPage.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-23 19:06:45 $ 
+ *  $Revision: 1.8 $  $Date: 2005-05-31 20:06:46 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -328,7 +328,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 						fEditPart.getRoot().getViewer().removePropertyChangeListener(fPropertyChangeListener);
 //					if (gridController != null)
 //						gridController.removeGridListener(gridListener);
-					gridController = GridController.getGridController(fEditPart);
+					gridController = getGridController();
 					if (gridController != null) {
 						initializeValues();
 //						gridController.addGridListener(gridListener);
@@ -365,7 +365,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 							fEditPart.getRoot().getViewer().removePropertyChangeListener(fPropertyChangeListener);
 //						if (gridController != null)
 //							gridController.removeGridListener(gridListener);
-						gridController = GridController.getGridController(fEditPart);
+						gridController = getGridController();
 						if (gridController != null) {
 							initializeValues();
 //							gridController.addGridListener(gridListener);
@@ -381,6 +381,19 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		return false;
 	}
 
+	private GridController getGridController() {
+		if (fEditPart instanceof TreeEditPart) {
+			EditDomain ed = EditDomain.getEditDomain(fEditPart);
+			EditPartViewer viewer = (EditPartViewer) ed.getEditorPart().getAdapter(EditPartViewer.class);
+			if (viewer != null) {
+				// Get the graphical editpart using the model that is common between the two viewers
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(fEditPart.getModel());
+				if (ep != null)
+					fEditPart = ep;
+			}
+		}
+		return GridController.getGridController(fEditPart);
+	}
 	private void initializeValues() {
 		initializing = true;
 		gridController = GridController.getGridController(fEditPart);
