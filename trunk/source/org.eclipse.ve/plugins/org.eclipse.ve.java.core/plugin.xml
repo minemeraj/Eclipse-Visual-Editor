@@ -332,8 +332,10 @@
             default="false"
             contributorClass="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorActionContributor"
             name="%jveeditor Visual Editor"
-            id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor"
-            extensions="java">
+            id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
+			<contentTypeBinding
+               contentTypeId="org.eclipse.jdt.core.javaSource"
+            /> 
       </editor>
    </extension>
 <!-- =============================================================================== -->
