@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.31 $  $Date: 2005-05-17 23:36:56 $ 
+ *  $Revision: 1.32 $  $Date: 2005-06-01 14:31:45 $ 
  */
 
 import java.io.IOException;
@@ -464,5 +464,9 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			return vem.getCategory() + "-" + vem.getName() + "-" + fPage.getSuperClass();  //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return ""; //$NON-NLS-1$
+	}
+
+	public IJavaElement getCreatedElement() {
+		return fPage.getCreatedType();
 	}
 }
