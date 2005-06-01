@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentCopyEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-27 12:49:39 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-01 13:58:56 $ 
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -29,17 +29,19 @@ public class ComponentCopyEditPolicy extends DefaultCopyEditPolicy {
 	protected void cleanup(IJavaInstance javaBeanToCopy) {
 
 		super.cleanup(javaBeanToCopy);
+		IJavaInstance copiedObject = (IJavaInstance) copier.get(javaBeanToCopy);		
 		// Get the ConstraintComponent object that points to us and strip our constraint
 		EObject constraintComponent = InverseMaintenanceAdapter.getFirstReferencedBy(
 				javaBeanToCopy,JavaInstantiation.getReference(
 						javaBeanToCopy.eResource().getResourceSet(),JFCConstants.SF_CONSTRAINT_COMPONENT));		
 		if(constraintComponent != null){
-			removeReferenceTo(constraintComponent,"constraint",copier); //$NON-NLS-1$
+			EObject copiedConstraintComponent = (EObject) copier.get(constraintComponent);
+			removeReferenceTo(copiedConstraintComponent,"constraint",constraintComponent); //$NON-NLS-1$
 		}
 		// Strip bounds, size and location
-		removeReferenceTo(javaBeanToCopy,"bounds",copier); //$NON-NLS-1$
-		removeReferenceTo(javaBeanToCopy,"size",copier); //$NON-NLS-1$
-		removeReferenceTo(javaBeanToCopy,"location",copier);		 //$NON-NLS-1$
+		removeReferenceTo(copiedObject,"bounds",javaBeanToCopy); //$NON-NLS-1$
+		removeReferenceTo(copiedObject,"size",javaBeanToCopy); //$NON-NLS-1$
+		removeReferenceTo(copiedObject,"location",javaBeanToCopy); //$NON-NLS-1$
 	}
 	
 }
