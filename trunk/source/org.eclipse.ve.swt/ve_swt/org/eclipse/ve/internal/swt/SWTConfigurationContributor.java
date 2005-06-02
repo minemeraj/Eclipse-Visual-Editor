@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.27 $  $Date: 2005-05-13 21:11:21 $ 
+ *  $Revision: 1.28 $  $Date: 2005-06-02 20:44:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -102,6 +102,12 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		// session
 		libraryCaches.add((srcJarFile+argSeperator+relativePath).intern());
 		File f = new File(srcJarFile);
+		if (f.isDirectory())
+			try {
+				return f.toURL();
+			} catch (MalformedURLException e2) {
+				JavaVEPlugin.log(e2);
+			}
 		// Create a root path for each version of .dlls
 		IPath root = JavaVEPlugin.VE_GENERATED_LIBRARIES_CACHE.append(Integer.toString(f.getAbsolutePath().hashCode()));
 		File target = root.append(relativePath).toFile();
@@ -291,14 +297,25 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 	}
 	
 	public static IClasspathEntry getPDEPath (String pluginID, String srcPluginID, boolean lib) {		
-		IPluginModelBase base = PDECore.getDefault().getModelManager().findModel(pluginID);
+		IPluginModelBase base = PDECore.getDefault().getModelManager().findModel(pluginID);		
+		IResource r = ResourcesPlugin.getWorkspace().getRoot().findMember(base.getBundleDescription().getName());
 		IPath baseLocation = new Path (base.getInstallLocation());
-		IPath location = baseLocation;
+		IClasspathAttribute[] attr = new IClasspathAttribute[0];
+		if (r!=null && r instanceof IProject) { 
+			IPath pLocation = r.getLocation();
+			if (pLocation.equals(baseLocation)) {
+				// Classpath is a project in an IDE workspace
+				if (lib)
+				    attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, baseLocation.toFile().toURI().getRawPath())};
+				return JavaCore.newProjectEntry(r.getFullPath() ,new IAccessRule[0], false, attr, false);
+			}
+		}
+		IPath location = baseLocation;			
 		IPath libLocation = lib? getFilePath(generateLibCacheIfNeeded(base.getBundleDescription().getLocation(),"")): null;		 //$NON-NLS-1$
 		String srcPath = "src.zip"; //$NON-NLS-1$
 		IPath srcLocation = getPDESrceLocationFor(base, baseLocation.lastSegment(), srcPath, srcPluginID);
 		
-		IClasspathAttribute[] attr = new IClasspathAttribute[0];
+		
 		if (libLocation!=null)			
 			attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toFile().toURI().getRawPath())};
 		return JavaCore.newLibraryEntry(location, srcLocation, null, new IAccessRule [0], attr, false);		
@@ -365,13 +382,13 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		else {
 			// This is only to suppor the SWT's Libraries
 			PluginModelManager pm = PDECore.getDefault().getModelManager();
-			IPluginModelBase swtEntry = pm.findModel("org.eclipse.swt"); //$NON-NLS-1$
+			final IPluginModelBase swtEntry = pm.findModel("org.eclipse.swt"); //$NON-NLS-1$
 			Version version = swtEntry.getBundleDescription().getVersion();
 			// TODO: this is a temporary stop gap measure... we should generalize plugin projects into the LocalFileConfigurationContributorController			
 			if (version.getMajor() < 3 || version.getMinor() < 1)
 				contributeLegacyPluginLibrary(controller);
-			else
-				contributePluginLibrary(controller);	
+			else // 3.1 and up
+			    contributePluginLibrary(controller);
 		}
 	}
 
