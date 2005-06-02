@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.16 $  $Date: 2005-05-27 12:51:43 $ 
+ *  $Revision: 1.17 $  $Date: 2005-06-02 14:04:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -200,7 +200,7 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 				// When the clipboard puts stuff into the clipboard the paste action needs to refresh
 				// whether it should or shouldn't be enabled
 				pasteBeanAction.update();
-			}
+			}		
 		};
 		copyBeanAction.setSelectionProvider(this);
 		copyBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
@@ -314,6 +314,7 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 			public void selectionChanged(SelectionChangedEvent event) {
 				deleteAction.update();
 				copyBeanAction.update();
+				cutBeanAction.update();
 				pasteBeanAction.update();
 			}
 		});
