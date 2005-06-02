@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-31 11:07:35 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-02 23:05:00 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -142,7 +142,8 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		// Do not copy things like JavaPackage or JavaMethod
 		if(eObject.getClass().getPackage() ==  JavaPackageImpl.class.getPackage())
 			return false;
-		
+		// Do not copy events
+		if(feature.getName().equals("events")) return false;
 		// By default copy references that are not containment and are not on the free form
 		return  
 			feature instanceof EReference
@@ -150,6 +151,9 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	}
 	
 	protected boolean shouldExpandFeature(EStructuralFeature feature, Object eObject){
+		if(feature != null && feature.getName().equals("events")){
+			return false;
+		}
 		return true;
 	}
 	
