@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.17 $  $Date: 2005-06-02 14:04:36 $ 
+ *  $Revision: 1.18 $  $Date: 2005-06-02 17:18:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -223,7 +223,8 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		pasteBeanAction.setText(CodegenEditorPartMessages.getString("Action.Paste.Label"));	//$NON-NLS-1$			
 		
 		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
-		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyBeanAction);		
+		actionBars.setGlobalActionHandler(ActionFactory.CUT.getId(), cutBeanAction);	
+		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyBeanAction);				
 		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteBeanAction);		
 		
 		actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), jve.getAction(ActionFactory.UNDO.getId()));
