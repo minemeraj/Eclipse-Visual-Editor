@@ -19,6 +19,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.graphics.Point;
 
+import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
@@ -223,7 +225,7 @@ public class BeanSWTUtilities {
     	}
         if (constants.getParentMethodProxy != null) {
         	final IMethodProxy getParentMethodProxy = constants.getParentMethodProxy;
-            return (IRectangleBeanProxy) JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aControlProxy.getProxyFactoryRegistry(),
+            return (IBeanProxy) JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aControlProxy.getProxyFactoryRegistry(),
                     new DisplayManager.DisplayRunnable() {
 
                         public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
@@ -288,6 +290,12 @@ public class BeanSWTUtilities {
     }
 
 	public static boolean isValidBeanLocation(EditDomain domain, EObject childComponent, EObject targetContainer) {
+		try{
+			if(((IJavaInstance)childComponent).getAllocation() instanceof ImplicitAllocation){
+				return false;
+			}
+		} catch (ClassCastException e){	
+		}
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
 		EReference sfControls = JavaInstantiation.getReference(rset, SWTConstants.SF_COMPOSITE_CONTROLS);
 		// Check the child's init method and the target init method. It's valid if the same
@@ -299,6 +307,7 @@ public class BeanSWTUtilities {
 			return true;
 
 		EObject parent = InverseMaintenanceAdapter.getFirstReferencedBy(childComponent, sfControls);
+		if(parent == null) return false;
 		EObject parentRef = InverseMaintenanceAdapter.getFirstReferencedBy(parent, JCMPackage.eINSTANCE.getJCMMethod_Initializes());
 		/* 
 		 * The only valid case is one in which the child's init method is different
