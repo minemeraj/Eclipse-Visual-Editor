@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CoolBarGraphicalEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-18 16:48:00 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-02 22:32:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -59,20 +59,18 @@ public class CoolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 		((EObject) getModel()).eAdapters().add(containerAdapter);
 	}
 
-	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
 
-		public void run() {
-			if (isActive()) {
-				refreshChildren();
-				List children = getChildren();
-				int s = children.size();
-				for (int i = 0; i < s; i++) {
-					EditPart ep = (EditPart) children.get(i);
-					if (ep instanceof ControlGraphicalEditPart)
-						setPropertySource((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
-				}
-				getCoolBarProxyAdapter().revalidateBeanProxy();
+		protected void doRun() {
+			refreshChildren();
+			List children = getChildren();
+			int s = children.size();
+			for (int i = 0; i < s; i++) {
+				EditPart ep = (EditPart) children.get(i);
+				if (ep instanceof ControlGraphicalEditPart)
+					setPropertySource((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
 			}
+			getCoolBarProxyAdapter().revalidateBeanProxy();
 		}
 
 		public void notifyChanged(Notification msg) {

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ToolBarGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-05-18 16:48:00 $
+ * $RCSfile: ToolBarGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-06-02 22:32:30 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -66,12 +66,10 @@ public class ToolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 		((EObject) getModel()).eAdapters().add(containerAdapter);
 	}
 
-	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
 
-		public void run() {
-			if (isActive()) {
-				refreshChildren();
-			}
+		protected void doRun() {
+			refreshChildren();
 		}
 
 		public void notifyChanged(Notification msg) {

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ToolItemGraphicalEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-05-18 16:48:00 $
+ * $RCSfile: ToolItemGraphicalEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-06-02 22:32:30 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -44,7 +44,7 @@ public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart impleme
 
 	protected IBeanProxyHost.ErrorListener fBeanProxyErrorListener;
 	
-	protected Adapter adapter = new EditPartAdapterRunnable() {
+	protected Adapter adapter = new EditPartAdapterRunnable(this) {
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getEventType() == Notification.REMOVING_ADAPTER)
@@ -53,9 +53,8 @@ public class ToolItemGraphicalEditPart extends AbstractGraphicalEditPart impleme
 			queueExec(ToolItemGraphicalEditPart.this, "REFRESH"); //$NON-NLS-1$
 		}
 
-		public void run() {
-			if (isActive())
-				((ToolBarGraphicalEditPart) getParent()).refreshItems();
+		protected void doRun() {
+			((ToolBarGraphicalEditPart) getParent()).refreshItems();
 		}
 	};
 	

@@ -293,7 +293,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 						}
 					});
 				}
-			}, new ModelChangeController.HashKey(this, "layout"));
+			}, ModelChangeController.createHashKey(this, "layout"));
 			if (parentProxyAdapter != null)
 				super.childValidated(childProxy);
 		}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnGraphicalEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-18 16:48:00 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-02 22:32:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -19,8 +19,6 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
@@ -34,7 +32,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.*;
 
@@ -49,21 +46,6 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart impl
 	private TableColumnProxyAdapter tableColumnProxyAdapter;
 	protected EStructuralFeature sfDirectEditProperty = null;
 	protected DirectEditManager manager = null;
-
-	protected Adapter adapter = new EditPartAdapterRunnable() {
-
-		public void notifyChanged(Notification notification) {
-			if (notification.getEventType() == Notification.REMOVING_ADAPTER)
-				return;
-			// Else assume a refresh is needed.
-			queueExec(TableColumnGraphicalEditPart.this, "REFRESH"); //$NON-NLS-1$
-		}
-
-		public void run() {
-//			if (isActive())
-//				((TableGraphicalEditPart) getParent()).refreshItems();
-		}
-	};
 
 	public Object getAdapter(Class type) {
 		if (type == IPropertySource.class)

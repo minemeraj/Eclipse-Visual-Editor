@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-05-18 16:36:07 $
+ * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-06-02 22:32:28 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -51,25 +51,23 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 		super(model);
 	}
 
-	private Adapter containerAdapter = new EditPartAdapterRunnable() {
-		public void run() {
-			if (isActive()) {
-				refreshChildren();
-				// Now we need to run through the children and set the Property source correctly.
-				// This is needed because the child could of been removed and then added back in with
-				// a different ConstraintComponent BEFORE the refresh could happen. In that case GEF
-				// doesn't see the child as being different so it doesn't create a new child editpart, and
-				// so we don't get the new property source that we should. We didn't keep a record of which
-				// one changed, so we just touch them all.
-				List children = getChildren();
-				int s = children.size();
-				for (int i = 0; i < s; i++) {
-					EditPart ep = (EditPart) children.get(i);
-					try {
-						setupComponent((ComponentTreeEditPart) ep, (EObject) ep.getModel());
-					} catch (ClassCastException e) {
-						// For the rare case it is not a component tree edit part, such as undefined class.
-					}
+	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
+		protected void doRun() {
+			refreshChildren();
+			// Now we need to run through the children and set the Property source correctly.
+			// This is needed because the child could of been removed and then added back in with
+			// a different ConstraintComponent BEFORE the refresh could happen. In that case GEF
+			// doesn't see the child as being different so it doesn't create a new child editpart, and
+			// so we don't get the new property source that we should. We didn't keep a record of which
+			// one changed, so we just touch them all.
+			List children = getChildren();
+			int s = children.size();
+			for (int i = 0; i < s; i++) {
+				EditPart ep = (EditPart) children.get(i);
+				try {
+					setupComponent((ComponentTreeEditPart) ep, (EObject) ep.getModel());
+				} catch (ClassCastException e) {
+					// For the rare case it is not a component tree edit part, such as undefined class.
 				}
 			}
 		}

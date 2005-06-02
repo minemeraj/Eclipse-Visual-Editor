@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JSplitPaneGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-05-18 16:36:07 $
+ * $RCSfile: JSplitPaneGraphicalEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-06-02 22:32:28 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -40,10 +40,9 @@ import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
  */
 public class JSplitPaneGraphicalEditPart extends ComponentGraphicalEditPart {
 
-	private Adapter containerAdapter = new EditPartAdapterRunnable() {
-		public void run() {
-			if (isActive())
-				refreshChildren();
+	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
+		protected void doRun() {
+			refreshChildren();
 		}
 
 		public void notifyChanged(Notification msg) {

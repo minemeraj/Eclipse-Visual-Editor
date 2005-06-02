@@ -286,7 +286,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 					  imSupport.fireImageChanged(fControlManager.getImageData());
 					}
 				}
-			}, new ModelChangeController.HashKey(this, "image"));
+			}, ModelChangeController.createHashKey(this, "image"));
 
 		}
 	}

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.22 $ $Date: 2005-05-18 16:48:00 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.23 $ $Date: 2005-06-02 22:32:30 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -122,20 +122,18 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 	 * When the controls relationship is updated refresh the children, and when the layout property is updated recalculate the edit policy for the
 	 * specific layout
 	 */
-	private Adapter containerAdapter = new EditPartAdapterRunnable() {
-		public void run() {
-			if (isActive())
-				refreshChildren();
+	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
+		protected void doRun() {
+			refreshChildren();
 		}
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sf_compositeControls)
 				queueExec(CompositeGraphicalEditPart.this, "CONTROLS"); //$NON-NLS-1$
 			else if (notification.getFeature() == sf_compositeLayout) {
-				queueExec(CompositeGraphicalEditPart.this, "LAYOUT", new Runnable() { //$NON-NLS-1$
-					public void run() {
-						if (isActive())
-							createLayoutEditPolicy();
+				queueExec(CompositeGraphicalEditPart.this, "LAYOUT", new OtherRunnable() { //$NON-NLS-1$
+					protected void doRun() {
+						createLayoutEditPolicy();
 					}
 				});
 			}

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JMenuTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-05-18 16:36:07 $
+ * $RCSfile: JMenuTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-06-02 22:32:28 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -36,10 +36,9 @@ import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 public class JMenuTreeEditPart extends ComponentTreeEditPart {
 	protected EStructuralFeature sfItems;
 
-	private Adapter containerAdapter = new EditPartAdapterRunnable() {
-		public void run() {
-			if (isActive())
-				refreshChildren();
+	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
+		protected void doRun() {
+			refreshChildren();
 		}
 
 		public void notifyChanged(Notification notification) {

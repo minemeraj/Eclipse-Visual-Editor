@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-05-18 13:45:17 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-06-02 22:32:31 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -95,31 +95,29 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 	protected Adapter getListenerAdapter() {
 		if (listenerAdapter == null) {
-			listenerAdapter = new EditPartAdapterRunnable() {
-				public void run() {
-					if (isActive()) {
-						// When we refresh our entire children we should remove any listeners that we have on the eventInvocation
-						// instances
-						// that we may have put there last time round when we got the children
-						if (eventInvocationsListenedTo != null) {
-							Iterator iter = eventInvocationsListenedTo.iterator();
-							while (iter.hasNext()) {
-								AbstractEventInvocation eventInvocation = (AbstractEventInvocation) iter.next();
-								eventInvocation.eAdapters().remove(getEventInvocationAdapter());
-							}
-							eventInvocationsListenedTo.clear();
+			listenerAdapter = new EditPartAdapterRunnable(this) {
+				protected void doRun() {
+					// When we refresh our entire children we should remove any listeners that we have on the eventInvocation
+					// instances
+					// that we may have put there last time round when we got the children
+					if (eventInvocationsListenedTo != null) {
+						Iterator iter = eventInvocationsListenedTo.iterator();
+						while (iter.hasNext()) {
+							AbstractEventInvocation eventInvocation = (AbstractEventInvocation) iter.next();
+							eventInvocation.eAdapters().remove(getEventInvocationAdapter());
 						}
-						// We also remove any listening from any PropertyChangeEventInvocations
-						if (propertyChangeEventInvocationsListenedTo != null) {
-							Iterator iter = propertyChangeEventInvocationsListenedTo.iterator();
-							while (iter.hasNext()) {
-								AbstractEventInvocation eventInvocation = (AbstractEventInvocation) iter.next();
-								eventInvocation.eAdapters().remove(getPropertyChangeEventInvocationAdapter());
-							}
-						}
-						refreshChildren();
-						refreshVisuals();
+						eventInvocationsListenedTo.clear();
 					}
+					// We also remove any listening from any PropertyChangeEventInvocations
+					if (propertyChangeEventInvocationsListenedTo != null) {
+						Iterator iter = propertyChangeEventInvocationsListenedTo.iterator();
+						while (iter.hasNext()) {
+							AbstractEventInvocation eventInvocation = (AbstractEventInvocation) iter.next();
+							eventInvocation.eAdapters().remove(getPropertyChangeEventInvocationAdapter());
+						}
+					}
+					refreshChildren();
+					refreshVisuals();
 				}
 
 				public void notifyChanged(Notification notification) {
@@ -337,9 +335,9 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 	protected Adapter getEventInvocationAdapter() {
 		if (eventInvocationAdapter == null) {
-			eventInvocationAdapter = new EditPartAdapterRunnable() {
+			eventInvocationAdapter = new EditPartAdapterRunnable(this) {
 
-				public void run() {
+				protected void doRun() {
 					refreshChildren();
 					refreshVisuals();
 				}
@@ -355,8 +353,8 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 	protected Adapter getPropertyChangeEventInvocationAdapter() {
 		if (propertyChangeEventInvocationAdapter == null) {
-			propertyChangeEventInvocationAdapter = new EditPartAdapterRunnable() {
-				public void run() {
+			propertyChangeEventInvocationAdapter = new EditPartAdapterRunnable(this) {
+				protected void doRun() {
 					refreshChildren();
 					refreshVisuals();
 				}
