@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SwingChooseBeanContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-17 15:43:17 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-02 23:30:42 $ 
  */
 package org.eclipse.ve.internal.jfc.codegen;
 
@@ -35,6 +35,6 @@ public class SwingChooseBeanContributor extends YesNoListChooseBeanContributor {
 		super(ChooseBeanMessages.getString("SwingChooseBeanContributor.Name"), SWING_BASE_TYPES, null); //$NON-NLS-1$
 	}
 	public Image getImage() {
-		return CDEPlugin.getImageFromPlugin(JFCVisualPlugin.getPlugin(), "icons/full/clcl16/swingbean_obj.gif"); //$NON-NLS-1$
+		return CDEPlugin.getImageFromPlugin(JFCVisualPlugin.getPlugin(), "icons/full/obj16/swingbean.gif"); //$NON-NLS-1$
 	}
 }
