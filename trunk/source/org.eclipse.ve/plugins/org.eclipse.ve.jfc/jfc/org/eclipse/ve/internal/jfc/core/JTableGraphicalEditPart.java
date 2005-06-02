@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: JTableGraphicalEditPart.java,v $ $Revision: 1.15 $ $Date: 2005-05-18 16:36:07 $
+ * $RCSfile: JTableGraphicalEditPart.java,v $ $Revision: 1.16 $ $Date: 2005-06-02 22:32:28 $
  */
 
 import java.util.Collections;
@@ -97,11 +97,10 @@ public class JTableGraphicalEditPart extends ComponentGraphicalEditPart {
 	/*
 	 * Listen for columns being added/removed, and if so refresh the children.
 	 */
-	private Adapter jTableAdapter = new EditPartAdapterRunnable() {
+	private Adapter jTableAdapter = new EditPartAdapterRunnable(this) {
 
-		public void run() {
-			if (isActive())
-				refreshChildren();
+		protected void doRun() {
+			refreshChildren();
 		}
 
 		public void notifyChanged(Notification notification) {

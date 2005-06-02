@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: DiagramContentsTreeEditPart.java,v $ $Revision: 1.5 $ $Date: 2005-05-18 19:31:37 $
+ * $RCSfile: DiagramContentsTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-06-02 22:32:29 $
  */
 package org.eclipse.ve.internal.cde.emf;
 
@@ -45,9 +45,12 @@ public abstract class DiagramContentsTreeEditPart extends AbstractTreeEditPart {
 	protected DiagramAdapter diagramAdapter = createModelAdapter();
 
 	protected class DiagramAdapter extends EditPartAdapterRunnable {
-		public void run() {
-			if (isActive())
-				refreshChildren();
+		public DiagramAdapter() {
+			super(DiagramContentsTreeEditPart.this);
+		}
+
+		protected void doRun() {
+			refreshChildren();
 		}
 
 		/*

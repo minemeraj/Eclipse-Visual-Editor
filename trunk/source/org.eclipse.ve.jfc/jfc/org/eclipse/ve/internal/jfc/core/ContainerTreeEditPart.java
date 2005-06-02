@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-05-18 16:36:07 $
+ * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.14 $ $Date: 2005-06-02 22:32:28 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -69,23 +69,21 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 		return children;
 	}
 
-	protected Adapter containerAdapter = new EditPartAdapterRunnable() {
-		public void run() {
-			if (isActive()) {
-				refreshChildren();
-				// Now we need to run through the children and set the Property source correctly.
-				// This is needed because the child could of been removed and then added back in with
-				// a different ConstraintComponent BEFORE the refresh could happen. In that case GEF
-				// doesn't see the child as being different so it doesn't create a new child editpart, and
-				// so we don't get the new property source that we should. We didn't keep a record of which
-				// one changed, so we just touch them all.
-				List children = getChildren();
-				int s = children.size();
-				for (int i = 0; i < s; i++) {
-					EditPart ep = (EditPart) children.get(i);
-					if (ep instanceof ComponentTreeEditPart) 
-						setupComponent((ComponentTreeEditPart) ep, (EObject) ep.getModel());
-				}
+	protected Adapter containerAdapter = new EditPartAdapterRunnable(this) {
+		protected void doRun() {
+			refreshChildren();
+			// Now we need to run through the children and set the Property source correctly.
+			// This is needed because the child could of been removed and then added back in with
+			// a different ConstraintComponent BEFORE the refresh could happen. In that case GEF
+			// doesn't see the child as being different so it doesn't create a new child editpart, and
+			// so we don't get the new property source that we should. We didn't keep a record of which
+			// one changed, so we just touch them all.
+			List children = getChildren();
+			int s = children.size();
+			for (int i = 0; i < s; i++) {
+				EditPart ep = (EditPart) children.get(i);
+				if (ep instanceof ComponentTreeEditPart) 
+					setupComponent((ComponentTreeEditPart) ep, (EObject) ep.getModel());
 			}				
 		}
 
@@ -93,10 +91,9 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 			if (notification.getFeature() == sf_containerComponents)
 				queueExec(ContainerTreeEditPart.this, "COMPONENTS"); //$NON-NLS-1$
 			else if (notification.getFeature() == sf_containerLayout) {
-				queueExec(ContainerTreeEditPart.this, "LAYOUT", new Runnable() { //$NON-NLS-1$
-					public void run() {
-						if (isActive())
-							createLayoutPolicyHelper();
+				queueExec(ContainerTreeEditPart.this, "LAYOUT", new OtherRunnable() { //$NON-NLS-1$
+					protected void doRun() {
+						createLayoutPolicyHelper();
 					}
 				});
 			}

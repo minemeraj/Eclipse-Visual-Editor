@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JTabbedPaneGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-05-18 16:36:07 $
+ * $RCSfile: JTabbedPaneGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-06-02 22:32:28 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -68,47 +68,45 @@ public class JTabbedPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 		super(model);
 	}
 
-	private Adapter containerAdapter = new EditPartAdapterRunnable() {
-		public void run() {
-			if (isActive()) {
-				refreshChildren();
-				// With changes to the editpart structure (deletes and moves), its hard to determine
-				// which page should be hidden and which should be shown so we'll just query the live
-				// JTabbedPane and find out which page is selected...then show it's corresponding
-				// editpart. Then hide the rest if they are visible.
-				int selectedIndex = getJTabbedPaneProxyAdapter().getSelectedIndex();
-				if (selectedIndex != -1) {
-					if (selectedIndex < getChildren().size()
-							&& ((IJavaObjectInstance) ((EditPart) getChildren().get(selectedIndex)).getModel()) != fSelectedPage) {
-						List childen = getChildren();
-						for (int i = 0; i < children.size(); i++) {
-							GraphicalEditPart ep = (GraphicalEditPart) childen.get(i);
-							if (i == selectedIndex) {
-								if (!ep.getFigure().isVisible()) {
-									setPageVisible(ep, true);
-									fSelectedPage = (IJavaObjectInstance) ep.getModel();
-								}
-							} else if (ep.getFigure().isVisible())
-								setPageVisible(ep, false);
-						}
+	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
+		protected void doRun() {
+			refreshChildren();
+			// With changes to the editpart structure (deletes and moves), its hard to determine
+			// which page should be hidden and which should be shown so we'll just query the live
+			// JTabbedPane and find out which page is selected...then show it's corresponding
+			// editpart. Then hide the rest if they are visible.
+			int selectedIndex = getJTabbedPaneProxyAdapter().getSelectedIndex();
+			if (selectedIndex != -1) {
+				if (selectedIndex < getChildren().size()
+						&& ((IJavaObjectInstance) ((EditPart) getChildren().get(selectedIndex)).getModel()) != fSelectedPage) {
+					List childen = getChildren();
+					for (int i = 0; i < children.size(); i++) {
+						GraphicalEditPart ep = (GraphicalEditPart) childen.get(i);
+						if (i == selectedIndex) {
+							if (!ep.getFigure().isVisible()) {
+								setPageVisible(ep, true);
+								fSelectedPage = (IJavaObjectInstance) ep.getModel();
+							}
+						} else if (ep.getFigure().isVisible())
+							setPageVisible(ep, false);
 					}
 				}
-				// Now we need to run through the children and set the Property source/error notifier correctly.
-				// This is needed because the child could of been removed and then added back in with
-				// a different ConstraintComponent BEFORE the refresh could happen. In that case GEF
-				// doesn't see the child as being different so it doesn't create a new child editpart, and
-				// so we don't get the new property source that we should. We didn't keep a record of which
-				// one changed, so we just touch them all.
-				List children = getChildren();
-				int s = children.size();
-				for (int i = 0; i < s; i++) {
-					EditPart ep = (EditPart) children.get(i);
-					try {
-						setupComponent((ComponentGraphicalEditPart) ep, (EObject) ep.getModel());
-					} catch (ClassCastException e) {
-						// For the rare case it is not a component graphical editpart such as undefined class.
-					}
-				}				
+			}
+			// Now we need to run through the children and set the Property source/error notifier correctly.
+			// This is needed because the child could of been removed and then added back in with
+			// a different ConstraintComponent BEFORE the refresh could happen. In that case GEF
+			// doesn't see the child as being different so it doesn't create a new child editpart, and
+			// so we don't get the new property source that we should. We didn't keep a record of which
+			// one changed, so we just touch them all.
+			List children = getChildren();
+			int s = children.size();
+			for (int i = 0; i < s; i++) {
+				EditPart ep = (EditPart) children.get(i);
+				try {
+					setupComponent((ComponentGraphicalEditPart) ep, (EObject) ep.getModel());
+				} catch (ClassCastException e) {
+					// For the rare case it is not a component graphical editpart such as undefined class.
+				}
 			}
 		}
 		

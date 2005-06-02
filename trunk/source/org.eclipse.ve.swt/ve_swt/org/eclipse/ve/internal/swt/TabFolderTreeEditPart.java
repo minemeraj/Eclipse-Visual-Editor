@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderTreeEditPart.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-18 16:48:00 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-02 22:32:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -49,18 +49,16 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 		super.deactivate();
 	}
 
-	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
 
-		public void run() {
-			if (isActive()) {
-				refreshChildren();
-				List children = getChildren();
-				int s = children.size();
-				for (int i = 0; i < s; i++) {
-					EditPart ep = (EditPart) children.get(i);
-					if (ep instanceof ControlTreeEditPart)
-						setPropertySource((ControlTreeEditPart) ep, (EObject) ep.getModel());
-				}
+		protected void doRun() {
+			refreshChildren();
+			List children = getChildren();
+			int s = children.size();
+			for (int i = 0; i < s; i++) {
+				EditPart ep = (EditPart) children.get(i);
+				if (ep instanceof ControlTreeEditPart)
+					setPropertySource((ControlTreeEditPart) ep, (EObject) ep.getModel());
 			}
 		}
 

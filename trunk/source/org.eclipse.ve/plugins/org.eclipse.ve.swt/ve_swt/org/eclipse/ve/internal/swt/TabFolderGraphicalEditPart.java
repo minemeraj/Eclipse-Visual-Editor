@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-18 16:48:00 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-02 22:32:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -83,31 +83,29 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 		super.deactivate();
 	}
 
-	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
 	
-		public void run() {
-			if (isActive()) {
-				if (fSelectedItem != null) {
-					EditPart currentPage = getEditPartFromModel(fSelectedItem);
-					setPageVisible(currentPage, false);
-				}
-				// Then show the newly selected page
-				refreshChildren();
-				List children = getChildren();
-				int s = children.size();
-				for (int i = 0; i < s; i++) {
-					EditPart ep = (EditPart) children.get(i);
-					if (ep instanceof ControlGraphicalEditPart)
-						setPropertySource((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
-				}
-				EditPart page = getEditPartFromModel(fSelectedItem);
-				if(page == null && s > 0){
-					page = (EditPart) children.get(0);
-				}
-				setPageVisible(page, true);
-				pageSelected(page);
-				getTabFolderProxyAdapter().revalidateBeanProxy();
+		protected void doRun() {
+			if (fSelectedItem != null) {
+				EditPart currentPage = getEditPartFromModel(fSelectedItem);
+				setPageVisible(currentPage, false);
 			}
+			// Then show the newly selected page
+			refreshChildren();
+			List children = getChildren();
+			int s = children.size();
+			for (int i = 0; i < s; i++) {
+				EditPart ep = (EditPart) children.get(i);
+				if (ep instanceof ControlGraphicalEditPart)
+					setPropertySource((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
+			}
+			EditPart page = getEditPartFromModel(fSelectedItem);
+			if(page == null && s > 0){
+				page = (EditPart) children.get(0);
+			}
+			setPageVisible(page, true);
+			pageSelected(page);
+			getTabFolderProxyAdapter().revalidateBeanProxy();
 		}
 	
 		public void notifyChanged(Notification msg) {

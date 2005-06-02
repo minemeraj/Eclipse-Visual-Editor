@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: TableTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-05-18 16:48:00 $
+ * $RCSfile: TableTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-06-02 22:32:30 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -38,10 +38,9 @@ public class TableTreeEditPart extends ControlTreeEditPart {
 		super(model);
 	}
 
-	private Adapter compositeAdapter = new EditPartAdapterRunnable() {
-		public void run() {
-			if (isActive())
-				refreshChildren();
+	private Adapter compositeAdapter = new EditPartAdapterRunnable(this) {
+		protected void doRun() {
+			refreshChildren();
 		}
 
 		public void notifyChanged(Notification msg) {

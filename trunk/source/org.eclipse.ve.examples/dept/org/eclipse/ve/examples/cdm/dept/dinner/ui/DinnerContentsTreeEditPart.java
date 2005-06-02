@@ -11,7 +11,7 @@
 package org.eclipse.ve.examples.cdm.dept.dinner.ui;
 /*
  *  $RCSfile: DinnerContentsTreeEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-16 00:30:22 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-02 22:32:29 $ 
  */
 
 import org.eclipse.emf.common.notify.Notification;
@@ -57,7 +57,7 @@ public class DinnerContentsTreeEditPart extends DiagramContentsTreeEditPart {
 			public void notifyChanged(Notification notification) {
 				Notification kvMsg = KeyedValueNotificationHelper.notifyChanged(notification, DinnerConstants.COMPANY_URL);
 				if (kvMsg != null)
-					refreshChildren();
+					queueExec(DinnerContentsTreeEditPart.this, "COMPANYS"); //$NON-NLS-1$
 				else
 					super.notifyChanged(notification);
 			}

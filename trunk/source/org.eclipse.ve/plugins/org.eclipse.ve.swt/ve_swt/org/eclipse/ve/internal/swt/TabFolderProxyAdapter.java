@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-24 21:47:56 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-02 22:32:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -59,7 +59,7 @@ public class TabFolderProxyAdapter extends ItemParentProxyAdapter {
 							addAllTabItems();
 						}
 					}
-				}, new ModelChangeController.HashKey(this, "TabFolder Changed"));
+				}, ModelChangeController.createHashKey(this, "TabFolder Changed"));
 			}
 		}
 	}

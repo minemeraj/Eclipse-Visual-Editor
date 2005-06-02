@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolBarTreeEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-18 16:48:00 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-02 22:32:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -69,11 +69,10 @@ public class ToolBarTreeEditPart extends ControlTreeEditPart {
 		((EObject) getModel()).eAdapters().add(compositeAdapter);
 	}
 
-	private Adapter compositeAdapter = new EditPartAdapterRunnable() {
+	private Adapter compositeAdapter = new EditPartAdapterRunnable(this) {
 
-		public void run() {
-			if (isActive())
-				refreshChildren();
+		protected void doRun() {
+			refreshChildren();
 		}
 
 		public void notifyChanged(Notification msg) {

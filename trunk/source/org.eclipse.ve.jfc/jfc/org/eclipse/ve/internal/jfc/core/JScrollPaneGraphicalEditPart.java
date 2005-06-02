@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JScrollPaneGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-05-18 16:36:07 $
+ * $RCSfile: JScrollPaneGraphicalEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-06-02 22:32:28 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -45,11 +45,10 @@ public class JScrollPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 		super(model);
 	}
 
-	private Adapter containerAdapter = new EditPartAdapterRunnable() {
+	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
 
-		public void run() {
-			if (isActive())
-				refreshChildren();
+		protected void doRun() {
+			refreshChildren();
 		}
 
 		public void notifyChanged(Notification msg) {

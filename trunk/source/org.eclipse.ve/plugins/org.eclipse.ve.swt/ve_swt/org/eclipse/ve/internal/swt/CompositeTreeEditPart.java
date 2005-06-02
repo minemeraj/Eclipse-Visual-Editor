@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-05-18 16:48:00 $
+ * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-06-02 22:32:30 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -52,20 +52,18 @@ public class CompositeTreeEditPart extends ControlTreeEditPart {
 		return (List) ((EObject) getModel()).eGet(sf_compositeControls);
 	}
 
-	protected Adapter compositeAdapter = new EditPartAdapterRunnable() {
-		public void run() {
-			if (isActive())
-				refreshChildren();
+	protected Adapter compositeAdapter = new EditPartAdapterRunnable(this) {
+		protected void doRun() {
+			refreshChildren();
 		}
 
 		public void notifyChanged(Notification notification) {
 			if (notification.getFeature() == sf_compositeControls)
 				queueExec(CompositeTreeEditPart.this, "CONTROLS"); //$NON-NLS-1$
 			else if (notification.getFeature() == sf_compositeLayout) {
-				queueExec(CompositeTreeEditPart.this, "LAYOUT", new Runnable() { //$NON-NLS-1$
-					public void run() {
-						if (isActive())
-							createLayoutPolicyHelper();
+				queueExec(CompositeTreeEditPart.this, "LAYOUT", new OtherRunnable() { //$NON-NLS-1$
+					protected void doRun() {
+						createLayoutPolicyHelper();
 					}
 				});
 			}

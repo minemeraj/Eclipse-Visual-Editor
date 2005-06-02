@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableGraphicalEditPart.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-18 16:48:00 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-02 22:32:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -89,13 +89,11 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 		}
 	};
 
-	private Adapter tableAdapter = new EditPartAdapterRunnable() {
+	private Adapter tableAdapter = new EditPartAdapterRunnable(this) {
 
-		public void run() {
-			if (isActive()) {
-				refreshChildren();
-				refreshColumns();
-			}
+		protected void doRun() {
+			refreshChildren();
+			refreshColumns();
 		}
 
 		public void notifyChanged(Notification notification) {
