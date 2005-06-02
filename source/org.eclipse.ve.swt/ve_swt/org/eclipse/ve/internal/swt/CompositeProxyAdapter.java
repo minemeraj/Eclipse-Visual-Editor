@@ -20,6 +20,8 @@ import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.IControlProxyHost;
 import org.eclipse.jem.java.JavaClass;
 
+import org.eclipse.ve.internal.cde.core.ModelChangeController;
+
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.java.visual.VisualUtilities;
@@ -272,21 +274,29 @@ public class CompositeProxyAdapter extends ControlProxyAdapter implements IHoldP
 	
 	public void childValidated(IControlProxyHost childProxy) {
 		// Hold up layout processing if we are executing a HoldProcessingCommand
-	    if (!holding()) {
-	        // We are the top with no parents, do a layout() on us
-	        invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
-	
-	            public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-	            	// Not sure why the bean proxy is null here but need to check for it
-	            	if (getBeanProxy() != null)
-	            		// Call the layout() method
-	            		return layoutMethodProxy().invoke(getBeanProxy());
-	            	return null;
-	            }
-	        });
-	        if (imSupport != null) refreshImage();
-	        if (parentProxyAdapter != null) super.childValidated(childProxy);
-	    }
+		if (!holding()) {
+			getModelChangeController().execAtEndOfTransaction(new Runnable() {
+
+				public void run() {				
+					// We are the top with no parents, do a layout() on us
+					invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
+
+						public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+							// Not sure why the bean proxy is null here but need to check for it
+							if (getBeanProxy() != null) {
+								// Call the layout() method
+								layoutMethodProxy().invoke(getBeanProxy());
+								if (imSupport != null && imSupport.hasImageListeners())
+									refreshImage();								
+							}
+							return null;
+						}
+					});
+				}
+			}, new ModelChangeController.HashKey(this, "layout"));
+			if (parentProxyAdapter != null)
+				super.childValidated(childProxy);
+		}
 	}	
 	private int holdCount = 0;
 	
