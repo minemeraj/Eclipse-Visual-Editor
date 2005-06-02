@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: EToolsPropertySheetPage.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-25 23:07:06 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-02 18:01:12 $ 
  */
 
 
@@ -26,8 +26,6 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.properties.*;
-import org.eclipse.ui.views.properties.IPropertySheetEntry;
-import org.eclipse.ui.views.properties.PropertySheetPage;
 /**
  * This is the property sheet page to use with eTools Property Sheet.
  * It allows the interaction with actions added to the tool bar with
@@ -45,22 +43,11 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 	protected IDescriptorPropertySheetEntry rootEntry;
 	
 	public static class EToolsPropertySheetSorter extends PropertySheetSorter {
-		public int compare(IPropertySheetEntry entryA, IPropertySheetEntry entryB) {
-			String a;
-			try {
-				a = ((IDescriptorPropertySheetEntry) entryA).getSortDisplayName();
-			} catch (ClassCastException e) {
-				a = entryA.getDisplayName();
-			}
-			String b;
-			try {
-				b = ((IDescriptorPropertySheetEntry) entryB).getSortDisplayName();
-			} catch (ClassCastException e) {
-				b = entryA.getDisplayName();
-			}
-			
-			return getCollator().compare(a,b);
-		}	
+		public void sort(IPropertySheetEntry[] entries) {
+			// Don't sort here because we sort the property descriptors in the AbstractPropertySheetEntry
+			// so that we could reuse entries... building new entries is slow... see https://bugs.eclipse.org/bugs/show_bug.cgi?id=97593
+			return;
+		}
 	}
 	
 	/**

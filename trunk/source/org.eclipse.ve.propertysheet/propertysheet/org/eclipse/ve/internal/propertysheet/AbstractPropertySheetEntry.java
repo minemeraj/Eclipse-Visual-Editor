@@ -11,10 +11,11 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: AbstractPropertySheetEntry.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-22 20:09:48 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-02 18:01:12 $ 
  */
 
 
+import java.text.Collator;
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
@@ -260,7 +261,23 @@ nextDesc:
 	}
 
 	// Sort the descriptors	
-	return new ArrayList(intersection.values());
+	// Sort here because we need to reuse entries... building new entries is slow... 
+	// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=97593
+	List descriptors = new ArrayList(intersection.values());
+		Collections.sort(descriptors, new Comparator() {
+			Collator coll = Collator.getInstance(Locale.getDefault());
+			public int compare(Object a, Object b) {
+				// Sort using the first descriptor from each array. They will all have the same id in the array, so the first is sufficient
+				IPropertyDescriptor d1, d2;
+				String dname1, dname2;
+				d1 = ((IPropertyDescriptor[]) a)[0];
+				dname1 = d1.getDisplayName();
+				d2 = ((IPropertyDescriptor[]) b)[0];
+				dname2 = d2.getDisplayName();
+				return coll.compare(dname1, dname2);
+			}
+		});
+		return descriptors;
 }
 
 /**
