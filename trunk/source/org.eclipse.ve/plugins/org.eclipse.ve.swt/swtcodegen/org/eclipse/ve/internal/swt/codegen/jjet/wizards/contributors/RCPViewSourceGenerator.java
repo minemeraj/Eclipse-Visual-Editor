@@ -27,19 +27,27 @@ public class RCPViewSourceGenerator implements org.eclipse.ve.internal.java.code
   protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "import org.eclipse.ui.part.ViewPart;" + NL + "import org.eclipse.swt.widgets.Composite;" + NL + "import org.eclipse.swt.SWT;" + NL + "" + NL + "public class ";
   protected final String TEXT_2 = " extends ViewPart {" + NL + "" + NL + "\tpublic static final String ID = \"";
-  protected final String TEXT_3 = ".";
-  protected final String TEXT_4 = "\"; // TODO Needs to be whatever is mentioned in plugin.xml" + NL + "\t" + NL + "\tprivate Composite top = null;" + NL + "\t" + NL + "\tpublic void createPartControl(Composite parent) {" + NL + "\t\ttop = new Composite(parent, SWT.NONE);\t\t   " + NL + "\t}" + NL + "}";
+  protected final String TEXT_3 = "\"; // TODO Needs to be whatever is mentioned in plugin.xml" + NL + "\t" + NL + "\tprivate Composite top = null;" + NL + "\t" + NL + "\tpublic void createPartControl(Composite parent) {" + NL + "\t\ttop = new Composite(parent, SWT.NONE);\t\t   " + NL + "\t}" + NL + "}";
 
 public String generateSource(String typeName, String superClassName, HashMap argumentMatrix)
   {
     StringBuffer stringBuffer = new StringBuffer();
+    
+	String packageName = argumentMatrix != null ? (String)argumentMatrix.get(TARGET_PACKAGE_NAME) : "";
+	if(packageName==null){
+		packageName="";
+	}else{
+		packageName = packageName.trim();
+		if(packageName.length()>0)
+			packageName += ".";
+	}
+	
     stringBuffer.append(TEXT_1);
     stringBuffer.append(typeName);
     stringBuffer.append(TEXT_2);
-    stringBuffer.append(superClassName);
-    stringBuffer.append(TEXT_3);
+    stringBuffer.append(packageName);
     stringBuffer.append(typeName);
-    stringBuffer.append(TEXT_4);
+    stringBuffer.append(TEXT_3);
     return stringBuffer.toString();
   }
 }

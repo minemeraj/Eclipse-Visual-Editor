@@ -12,16 +12,17 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.19 $  $Date: 2005-05-24 12:27:54 $ 
+ *  $Revision: 1.20 $  $Date: 2005-06-02 18:58:41 $ 
  */
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.ui.dialogs.StatusUtil;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.*;
@@ -34,7 +35,6 @@ import org.eclipse.swt.widgets.*;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
-import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -45,12 +45,6 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	TreeViewer styleTreeViewer;
 
 	CategoryModel treeRoot;
-
-	public static final String CREATE_MAIN = "createMain"; //$NON-NLS-1$
-
-	public static final String CREATE_SUPER_CONSTRUCTORS = "createSuperConstructors"; //$NON-NLS-1$
-
-	public static final String CREATE_INHERITED_ABSTRACT = "createInheritedAbstract"; //$NON-NLS-1$
 
 	boolean isSettingSuperclass;
 
@@ -91,7 +85,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		((GridLayout) labelGroup.getLayout()).marginHeight = 0;
 		GridData labelData = (GridData) labelGroup.getLayoutData();
 		labelData.horizontalSpan = 5;
-		createLabel(labelGroup, CodegenMessages.getString("NewVisualClassCreationWizard.Style.Tree.Title")); //$NON-NLS-1$
+		createLabel(labelGroup, "Style:"); 
 
 		styleTreeViewer = new TreeViewer(composite, SWT.SINGLE | SWT.BORDER);
 		GridData treeGridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
@@ -304,7 +298,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 								if (!javaProject.isOnClasspath(getPackageFragmentRoot())){							
 									fSourceFolderStatus = new StatusInfo(
 										IStatus.ERROR,
-										CodegenWizardsMessages.getFormattedString("SourceFolder.RCP_ERROR",project.getName()), //$NON-NLS-1$
+										"", 
 										JavaVEPlugin.PLUGIN_ID);
 								}
 								else {
@@ -315,7 +309,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 									if (!uiIncluded)
 										fSourceFolderStatus = new StatusInfo(
 												IStatus.ERROR,
-												CodegenWizardsMessages.getFormattedString("SourceFolder.NON_UI_ERROR",project.getName()), //$NON-NLS-1$
+												"", 
 												JavaVEPlugin.PLUGIN_ID);
 								}
 							}
@@ -335,6 +329,13 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 			if(!isSelectingTemplate && styleTreeViewer != null){
 				handleSuperclassChanged();
 			}			
+		} else if (fieldName == ENCLOSINGSELECTION){
+			String ERROR_MESSAGE = CodegenWizardsMessages.getString("NewVisualClassWizardPage.EnclosedType_ERROR_"); //$NON-NLS-1$
+			if(getEnclosingType()!=null){
+				fContributorStatus = new Status(IStatus.ERROR, JavaVEPlugin.PLUGIN_ID, IStatus.ERROR, ERROR_MESSAGE , null);
+			}else if(fContributorStatus!=null && fContributorStatus.getSeverity()==IStatus.ERROR && fContributorStatus.getMessage().equals(ERROR_MESSAGE)){
+				fContributorStatus = StatusInfo.OK_STATUS;
+			}
 		}
 		super.handleFieldChanged(fieldName);
 	}
@@ -457,9 +458,10 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	 */
 	public HashMap getArgumentMatrix() {
 		HashMap argumentMatrix = new HashMap();
-		argumentMatrix.put(CREATE_MAIN, isCreateMain() == true ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
-		argumentMatrix.put(CREATE_SUPER_CONSTRUCTORS, isCreateConstructors() == true ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
-		argumentMatrix.put(CREATE_INHERITED_ABSTRACT, isCreateInherited() == true ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
+		argumentMatrix.put(IVisualClassCreationSourceGenerator.CREATE_MAIN, isCreateMain() == true ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
+		argumentMatrix.put(IVisualClassCreationSourceGenerator.CREATE_SUPER_CONSTRUCTORS, isCreateConstructors() == true ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
+		argumentMatrix.put(IVisualClassCreationSourceGenerator.CREATE_INHERITED_ABSTRACT, isCreateInherited() == true ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
+		argumentMatrix.put(IVisualClassCreationSourceGenerator.TARGET_PACKAGE_NAME, getPackageText());
 		return argumentMatrix;
 	}
 

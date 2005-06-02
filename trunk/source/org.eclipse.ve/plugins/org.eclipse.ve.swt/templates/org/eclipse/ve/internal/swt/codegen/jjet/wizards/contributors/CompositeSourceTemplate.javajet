@@ -7,7 +7,7 @@
 	skeleton="VisualClassSourceWizardSkeleton.java" 
 	package="org.eclipse.ve.internal.swt.codegen.jjet.wizards.contributors"
 	class="CompositeSourceGenerator" %><%
-	boolean createMain = (argumentMatrix != null && ((String)argumentMatrix.get(org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassWizardPage.CREATE_MAIN)).equals("true"));
+	boolean createMain = (argumentMatrix != null && ((String)argumentMatrix.get(CREATE_MAIN)).equals("true"));
 	 %>
 
 <%if(createMain){%>
