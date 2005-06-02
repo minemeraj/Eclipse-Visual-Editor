@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter2.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-18 18:39:19 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-02 19:12:33 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -1181,11 +1181,10 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	}
 	
 	/**
-	 * Just instantiate the bean proxy using the expression processer. Subclasses may override to do different things.
-	 * It must return the Expression proxy. Settings will be applied separately.
+	 * Just instantiate the bean proxy using the expression processer.
 	 * <p>
-	 * <b>Note:</b> Let any thrown Exceptions continue on out. This is to make sure that they are handled correctly. This is only
-	 * for exceptions that cannot be handled within the implementation and when handled can result in a valid instantiation.
+	 * Subclasses should override only to provide additional function. To change the function, they should instead override
+	 * primInstantiateDroppedPart and primInstantiateThisPart instead.
 	 * 
 	 * @param expression the expression will be valid upon return if valid upon entry. If AllocationException thrown, the expression state
 	 * will be as it was upon entry.
@@ -1196,20 +1195,32 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 */
 	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
 		if (!isThisPart()) {
-			if (getJavaObject().isSetAllocation()) {
-				JavaAllocation allocation = getJavaObject().getAllocation();
-				ownsProxy = true;
-				return getBeanProxyDomain().getAllocationProcesser().allocate(allocation, expression);
-			}
-			
-			// otherwise just create it using the default ctor.
-			String qualifiedClassName = getJavaObject().getJavaType().getQualifiedNameForReflection();
-			IProxyBeanType targetClass = getBeanTypeProxy(qualifiedClassName, expression);					
-			ownsProxy = true; // Since we created it, obviously we own it.
-			return BasicAllocationProcesser.instantiateWithString(null, targetClass, expression);
+			return primInstantiateDroppedPart(expression);
 		} else {
 			return primInstantiateThisPart(expression);
 		}
+	}
+
+
+	/**
+	 * This is for instantiating non-this part proxies.
+	 * @param expression
+	 * @return
+	 * @throws AllocationException
+	 * 
+	 * @since 1.1.0
+	 */
+	protected IProxy primInstantiateDroppedPart(IExpression expression) throws AllocationException {
+		if (getJavaObject().isSetAllocation()) {
+			JavaAllocation allocation = getJavaObject().getAllocation();
+			ownsProxy = true;
+			return getBeanProxyDomain().getAllocationProcesser().allocate(allocation, expression);
+		}
+		// otherwise just create it using the default ctor.
+		String qualifiedClassName = getJavaObject().getJavaType().getQualifiedNameForReflection();
+		IProxyBeanType targetClass = getBeanTypeProxy(qualifiedClassName, expression);
+		ownsProxy = true; // Since we created it, obviously we own it.
+		return BasicAllocationProcesser.instantiateWithString(null, targetClass, expression);
 	}
 	
 	/**

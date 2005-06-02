@@ -10,15 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IAllocationProcesser.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-02 19:12:33 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
+import org.eclipse.jem.internal.instantiation.PTExpression;
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IExpression;
 
 /**
  * The processer for allocating the appropriate proxy.
@@ -64,12 +63,12 @@ public interface IAllocationProcesser {
 	public IBeanProxy allocate(JavaAllocation allocation) throws AllocationException;
 	
 	/**
-	 * This method performs the actual allocation and return the appropriate IBeanProxy.
+	 * This method performs the actual allocation and return the appropriate IProxy.
 	 * 
 	 * <p>If any exceptions are thrown, the exceptions should already be logged by the Allocation adapter implementation.
 	 * The problem is there is no way to know what all possible exceptions can be thrown. The list depends on the implementation.
 	 * <p>
-	 * This will use the given expression to do the allocation.
+	 * This will use the given allocation to do the allocation.
 	 *  
 	 * @param allocation
 	 * @param expression the expression to use. The expression will be valid after the call, even if AllocationException is thrown. In that case the
@@ -80,6 +79,23 @@ public interface IAllocationProcesser {
 	 * @since 1.1.0
 	 */
 	public IProxy allocate(JavaAllocation allocation, IExpression expression) throws AllocationException;
+	
+	/**
+	 * This method performs the actual allocation and return the appropriate IProxy.
+	 * 
+	 * <p>If any exceptions are thrown, the exceptions should already be logged by the Allocation adapter implementation.
+	 * The problem is there is no way to know what all possible exceptions can be thrown. The list depends on the implementation.
+	 * <p>
+	 * This will use the given expression to do the allocation.
+
+	 * @param parseTreeExpression
+	 * @param expression
+	 * @return
+	 * @throws AllocationException
+	 * 
+	 * @since 1.1.0
+	 */
+	public IProxy allocate(PTExpression parseTreeExpression, IExpression expression) throws AllocationException;
 	
 	/**
 	 * Set the domain to use with this processer. 
