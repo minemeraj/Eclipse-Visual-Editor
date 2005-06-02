@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-02 19:12:33 $ 
  */
 package org.eclipse.ve.internal.java.core;
  
@@ -145,8 +145,8 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		} catch (RuntimeException e) {
 			throw new AllocationException(e);
 		}
-	
 	}
+	
 	/**
 	 * Allocate with an initstring and an expression.
 	 * @param initString
@@ -219,7 +219,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 	}
 	
 	/**
-	 * Allocate for a parse tree
+	 * Allocate for a parse tree with immediate evaluation.
 	 * @param parseTree
 	 * @param domain
 	 * @return The allocation.
@@ -240,6 +240,18 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 			throw new AllocationException(e);
 		}
 	}
+	
+	public IProxy allocate(PTExpression parseTreeExpression, IExpression expression) throws AllocationException {
+		ParseAllocation allocator = new ParseAllocation(domain.getThisType());
+		try {
+			return allocator.getProxy(parseTreeExpression, expression);
+		} catch (ProcessingException e) {
+			throw new AllocationException(e.getCause());
+		} catch (RuntimeException e) {
+			throw new AllocationException(e);
+		}
+
+	}	
 
 	/**
 	 * A helper method. There are just times where you need to instantiate using an init string and it is not a IJavaObject.
