@@ -288,6 +288,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	
 	private IPath containerPath;	// path for container, NOT path for resolved entry
 	private IJavaProject project;
+	private boolean initialized = false;
 		
 	private ContainerType containerType = null;
 	
@@ -656,7 +657,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					 }
 					 else if (containerType.isCustomPath())
 						 initCustom(containerPath);
-					 
+					 initialized = true;
 					} catch (IOException e) {
 						JavaVEPlugin.log(e, Level.INFO);
 					}							
@@ -703,6 +704,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				JavaVEPlugin.log(e, Level.INFO);
 			}
 		}
+		if (!initialized)
+			pdeModelListener.modelsChanged(null);
 		return fClasspathEntries;
 	}
 
