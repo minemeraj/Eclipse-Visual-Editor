@@ -266,7 +266,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		initializeControlManager();
 		// TODO This needs to be queued so that in the situation where a composite
 		// does a recycle of a number of controls there is just a single refresh
-		if (imSupport != null)
+		if (imSupport != null && imSupport.hasImageListeners())
 			refreshImage();
 	}
 
