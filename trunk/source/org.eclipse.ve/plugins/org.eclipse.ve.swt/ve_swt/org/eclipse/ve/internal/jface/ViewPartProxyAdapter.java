@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-18 16:45:32 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-02 23:21:53 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -29,6 +29,7 @@ import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.*;
 
 import org.eclipse.ve.internal.cde.core.*;
+
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.swt.*;
 
@@ -196,32 +197,47 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 	public void refreshImage() {
 		initializeControlManager();
 		if (fControlManager != null) {
-			fControlManager.captureImage();
-			imSupport.fireImageChanged(fControlManager.getImageData());
+			getModelChangeController().execAtEndOfTransaction(new Runnable() {
+
+				public void run() {
+					if (fControlManager!=null) { 
+					  // We were not disposed by the time we got here 
+					  fControlManager.captureImage();
+					  imSupport.fireImageChanged(fControlManager.getImageData());
+					}
+				}
+			}, ModelChangeController.createHashKey(this, "image"));
+
 		}
 	}
 	
 	public void removeImageListener(IImageListener listener) {
 		imSupport.removeImageListener(listener);
 	}
-	public void childValidated(IControlProxyHost childProxy) {
-        // We are the top with no parents, do a layout() on us
-		invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
 	
-            public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-            	// Not sure why the bean proxy is null here but need to check for it
-            	if (getBeanProxy() != null) {
-            		// Call the layout() method on the target VM's					
-					IBeanTypeProxy viewPartHostTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(TARGETVM_VIEWPARTHOST);
-					IMethodProxy layoutViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("layoutViewPart","org.eclipse.ui.part.WorkbenchPart"); //$NON-NLS-1$ //$NON-NLS-2$
-				    layoutViewPartMethodProxy.invokeCatchThrowableExceptions(viewPartHostTypeProxy,getBeanProxy());					
-            	}
-					
-            	return null;
-            }
-        });
-        if (imSupport != null) refreshImage();	
-	}
+	public void childValidated(IControlProxyHost childProxy) {
+		getModelChangeController().execAtEndOfTransaction(new Runnable() {
+
+			public void run() {				
+				// We are the top with no parents, do a layout() on us
+				invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
+
+					public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+						// Not sure why the bean proxy is null here but need to check for it
+						if (getBeanProxy() != null) {						
+							// Call the layout() method on the target VM's					
+							IBeanTypeProxy viewPartHostTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(TARGETVM_VIEWPARTHOST);
+							IMethodProxy layoutViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("layoutViewPart","org.eclipse.ui.part.WorkbenchPart"); //$NON-NLS-1$ //$NON-NLS-2$
+							layoutViewPartMethodProxy.invokeCatchThrowableExceptions(viewPartHostTypeProxy,getBeanProxy());					
+							if (hasImageListeners())
+								refreshImage();								
+						}
+						return null;
+					}
+				});
+			}
+		}, ModelChangeController.createHashKey(this, "layout"));
+	}		
 	
 	protected void setupBeanProxy(IBeanProxy beanProxy) {
 		ProxyFactoryRegistry registry = beanProxy.getProxyFactoryRegistry();
