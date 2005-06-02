@@ -317,33 +317,28 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 	public void validateBeanProxy() {
 		super.validateBeanProxy();
-		Display.getDefault().asyncExec(new Runnable() {
+		if (isBeanProxyInstantiated()) {
 
-			public void run() {
-				if (isBeanProxyInstantiated()) {
-
-					// Still live at when invoked later.
-					// Go up the chain and find all image listeners.
-					List allImageListeners = new ArrayList(5);
-					IVisualComponent nextParentBean = (IVisualComponent) parentProxyAdapter;
-					IVisualComponent parentBean = ControlProxyAdapter.this;
-					if (parentBean.hasImageListeners())
-						allImageListeners.add(parentBean);
-					while (nextParentBean != null) {
-						parentBean = nextParentBean;
-						if (parentBean.hasImageListeners()) {
-							allImageListeners.add(parentBean);
-						}
-						nextParentBean = (IVisualComponent) ((IControlProxyHost) parentBean).getParentProxyHost();
-					}
-					// Now refresh all of the components that notify.
-					Iterator listeners = allImageListeners.iterator();
-					while (listeners.hasNext()) {
-						((IVisualComponent) listeners.next()).refreshImage();
-					}
+			// Still live at when invoked later.
+			// Go up the chain and find all image listeners.
+			List allImageListeners = new ArrayList(5);
+			IVisualComponent nextParentBean = (IVisualComponent) parentProxyAdapter;
+			IVisualComponent parentBean = ControlProxyAdapter.this;
+			if (parentBean.hasImageListeners())
+				allImageListeners.add(parentBean);
+			while (nextParentBean != null) {
+				parentBean = nextParentBean;
+				if (parentBean.hasImageListeners()) {
+					allImageListeners.add(parentBean);
 				}
+				nextParentBean = (IVisualComponent) ((IControlProxyHost) parentBean).getParentProxyHost();
 			}
-		});
+			// Now refresh all of the components that notify.
+			Iterator listeners = allImageListeners.iterator();
+			while (listeners.hasNext()) {
+				((IVisualComponent) listeners.next()).refreshImage();
+			}
+		}
 		childValidated(this);
 	}
 
