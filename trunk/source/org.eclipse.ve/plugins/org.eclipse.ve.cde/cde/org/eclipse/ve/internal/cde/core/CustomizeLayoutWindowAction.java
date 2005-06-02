@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-02 20:06:36 $ 
  */
 
 import java.util.ArrayList;
@@ -320,6 +320,7 @@ public class CustomizeLayoutWindowAction extends Action {
 				fDialog.getShell().addControlListener(new ControlListener() {
 					public void controlMoved(ControlEvent event) {
 						fDialogLoc = fDialog.getShell().getLocation();
+						fDialog.setLocation(fDialogLoc);
 					}
 					public void controlResized(ControlEvent event) {
 					}
