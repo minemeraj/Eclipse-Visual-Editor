@@ -1,14 +1,23 @@
 <%@ jet 
 	skeleton="VisualClassSourceWizardSkeleton.java" 
 	package="org.eclipse.ve.internal.swt.codegen.jjet.wizards.contributors"
-	class="RCPViewSourceGenerator" %>
+	class="RCPViewSourceGenerator" %><%
+	String packageName = argumentMatrix != null ? (String)argumentMatrix.get(TARGET_PACKAGE_NAME) : "";
+	if(packageName==null){
+		packageName="";
+	}else{
+		packageName = packageName.trim();
+		if(packageName.length()>0)
+			packageName += ".";
+	}
+	%>
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.SWT;
 
 public class <%=typeName%> extends ViewPart {
 
-	public static final String ID = "<%=superClassName%>.<%=typeName%>"; // TODO Needs to be whatever is mentioned in plugin.xml
+	public static final String ID = "<%=packageName%><%=typeName%>"; // TODO Needs to be whatever is mentioned in plugin.xml
 	
 	private Composite top = null;
 	

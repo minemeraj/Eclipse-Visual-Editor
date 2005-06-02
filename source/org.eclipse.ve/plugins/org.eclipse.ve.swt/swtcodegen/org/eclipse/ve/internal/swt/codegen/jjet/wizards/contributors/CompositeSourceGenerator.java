@@ -44,7 +44,7 @@ public String generateSource(String typeName, String superClassName, HashMap arg
  */
 
     
-	boolean createMain = (argumentMatrix != null && ((String)argumentMatrix.get(org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassWizardPage.CREATE_MAIN)).equals("true"));
+	boolean createMain = (argumentMatrix != null && ((String)argumentMatrix.get(CREATE_MAIN)).equals("true"));
 	 
     stringBuffer.append(TEXT_1);
     if(createMain){
