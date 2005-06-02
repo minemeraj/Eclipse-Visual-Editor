@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyEditorJFrame.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-27 14:04:46 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-02 22:41:31 $ 
  */
 
 import java.awt.*;
@@ -211,13 +211,15 @@ public final class BeanPropertyEditorJFrame extends JFrame implements IBeanPrope
 		
 		if(buttonRow != null){
 			buttonRow.setBackground(null);	// Restore the button background to default.
-			propertyEditorComponent = aComponent;
-			if (propertyEditorComponent != null) {
-				propertyEditorContainer.add(propertyEditorComponent);
-				if (aComponent instanceof IPropertyEditorDialogListener) {
-					addListener((IPropertyEditorDialogListener) aComponent);
-				}
+		}
+		propertyEditorComponent = aComponent;
+		if (propertyEditorComponent != null) {
+			propertyEditorContainer.add(propertyEditorComponent);
+			if (aComponent instanceof IPropertyEditorDialogListener) {
+				addListener((IPropertyEditorDialogListener) aComponent);
+			}
 			
+			if(buttonRow != null){
 				// 	Set the background of the button row to match the background of the propertyEditorComponent
 				// 	so that we don't see differences at the row border. Only if not the default.
 				if (propertyEditorComponent.getBackground() != propertyEditorContainer.getBackground())
