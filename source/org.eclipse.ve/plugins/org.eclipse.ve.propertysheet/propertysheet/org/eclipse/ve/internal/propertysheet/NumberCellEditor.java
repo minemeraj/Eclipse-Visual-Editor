@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: NumberCellEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:34 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-03 19:21:09 $ 
  */
 
 
@@ -30,6 +30,31 @@ import org.eclipse.core.runtime.*;
  */
 
 public class NumberCellEditor extends ObjectCellEditor implements IExecutableExtension {
+	
+	protected static final Short MAX_SHORT = new Short(Short.MAX_VALUE);
+
+	protected static final Short MIN_SHORT = new Short(Short.MIN_VALUE);
+
+	protected static final Long MAX_LONG = new Long(Long.MAX_VALUE);
+
+	protected static final Long MIN_LONG = new Long(Long.MIN_VALUE);
+
+	protected static final Integer MAX_INTEGER = new Integer(Integer.MAX_VALUE);
+
+	protected static final Integer MIN_INTEGER = new Integer(Integer.MIN_VALUE);
+
+	protected static final Float MAX_FLOAT = new Float(Float.MAX_VALUE);
+
+	protected static final Float MIN_FLOAT = new Float(Float.MIN_VALUE);
+
+	protected static final Double MAX_DOUBLE = new Double(Double.MAX_VALUE);
+
+	protected static final Double MIN_DOUBLE = new Double(Double.MIN_VALUE);
+
+	protected static final Byte MAX_BYTE = new Byte(Byte.MAX_VALUE);
+
+	protected static final Byte MIN_BYTE = new Byte(Byte.MIN_VALUE);
+
 	public static final int
 		// Type of number to be returned.
 		NUMBER = 0,	// Whatever it produces
@@ -42,18 +67,20 @@ public class NumberCellEditor extends ObjectCellEditor implements IExecutableExt
 		
 	protected static final MinmaxValidator[] sMinMaxValidators = {
 		null,
-		new MinmaxValidator(new Byte(Byte.MIN_VALUE), new Byte(Byte.MAX_VALUE)),
-		new MinmaxValidator(new Double(Double.MIN_VALUE), new Double(Double.MAX_VALUE)),
-		new MinmaxValidator(new Float(Float.MIN_VALUE), new Float(Float.MAX_VALUE)),
-		new MinmaxValidator(new Integer(Integer.MIN_VALUE), new Integer(Integer.MAX_VALUE)),
-		new MinmaxValidator(new Long(Long.MIN_VALUE), new Long(Long.MAX_VALUE)),
-		new MinmaxValidator(new Short(Short.MIN_VALUE), new Short(Short.MAX_VALUE))
+		new MinmaxValidator(MIN_BYTE, MAX_BYTE),
+		new MinmaxValidator(MIN_DOUBLE, MAX_DOUBLE),
+		new MinmaxValidator(MIN_FLOAT, MAX_FLOAT),
+		new MinmaxValidator(MIN_INTEGER, MAX_INTEGER),
+		new MinmaxValidator(MIN_LONG, MAX_LONG),
+		new MinmaxValidator(MIN_SHORT, MAX_SHORT)
 	};
 		
-	protected static final String sNotNumberError, sNotIntegerError;
+	protected static final String sNotNumberError, sNotIntegerError, sMinValue, sMaxValue;
 	static {
 		sNotNumberError = PropertysheetMessages.getString(PropertysheetMessages.NOT_NUMBER);
-		sNotIntegerError = PropertysheetMessages.getString(PropertysheetMessages.NOT_INTEGER);		
+		sNotIntegerError = PropertysheetMessages.getString(PropertysheetMessages.NOT_INTEGER);
+		sMinValue = PropertysheetMessages.getString(PropertysheetMessages.MIN_NUMBER);	
+		sMaxValue = PropertysheetMessages.getString(PropertysheetMessages.MAX_NUMBER);	
 	}	
 	
 	protected NumberFormat fFormatter;
@@ -123,6 +150,9 @@ public class NumberCellEditor extends ObjectCellEditor implements IExecutableExt
 	
 	protected String isCorrectString(String value) {
 		String text = value.trim();
+		if (sMinValue.equalsIgnoreCase(text) || sMaxValue.equalsIgnoreCase(text))
+			return null;
+		
 		Number result = null;
 		if ((fNumberType == DOUBLE || fNumberType == FLOAT) && (text.indexOf('e') != -1 || text.indexOf('E') != -1)) {
 			// We have a double/float with an exponent. This is scientific notation. Formatter handles them badly, so use parse instead.
@@ -149,7 +179,7 @@ public class NumberCellEditor extends ObjectCellEditor implements IExecutableExt
 			// Now see if it is valid for the requested type.
 			MinmaxValidator v = sMinMaxValidators[fNumberType];			
 			
-			// Double/Float are special because the min/max are on the absolute value, not signed value.
+			// Double/Float are special because the min/MIN are on the absolute value, not signed value.
 			if (fNumberType == DOUBLE || fNumberType == FLOAT) {
 				double d = result.doubleValue();
 				if (d == 0.0 || d == -0.0)
@@ -175,6 +205,42 @@ public class NumberCellEditor extends ObjectCellEditor implements IExecutableExt
 			if (v == null)
 				return v;
 			Number n = null;
+			if (sMaxValue.equalsIgnoreCase(v)) {
+				switch (fNumberType) {
+					case BYTE:
+						return MAX_BYTE;
+					case DOUBLE:
+						return MAX_DOUBLE;
+					case FLOAT:
+						return MAX_FLOAT;
+					case INTEGER:
+						return MAX_INTEGER;
+					case LONG:
+						return MAX_LONG;
+					case SHORT:
+						return MAX_SHORT;
+					default:
+						return null;
+				}
+			} else 	if (sMinValue.equalsIgnoreCase(v)) {
+				switch (fNumberType) {
+					case BYTE:
+						return MIN_BYTE;
+					case DOUBLE:
+						return MIN_DOUBLE;
+					case FLOAT:
+						return MIN_FLOAT;
+					case INTEGER:
+						return MIN_INTEGER;
+					case LONG:
+						return MIN_LONG;
+					case SHORT:
+						return MIN_SHORT;
+					default:
+						return null;
+				}
+			}
+
 			// Float and Double are done separately below because parseFloat and parseDouble can
 			// result in different values when casting a double back to a float.
 			switch (fNumberType) {
@@ -215,25 +281,66 @@ public class NumberCellEditor extends ObjectCellEditor implements IExecutableExt
 	 */
 	protected String doGetString(Object value) {
 		if ( value instanceof Number ) {
+			Number num = (Number) value;
 			switch (fNumberType) {
+				case BYTE:
+					if (num.byteValue() == Byte.MAX_VALUE)
+						return sMaxValue;
+					else if (num.byteValue() == Byte.MIN_VALUE)
+						return sMinValue;
+					else
+						break;
+						
 				case DOUBLE:
+					if (num.doubleValue() == Double.MAX_VALUE)
+						return sMaxValue;
+					else if (num.doubleValue() == Double.MIN_VALUE)
+						return sMinValue;					
 				case FLOAT:
-					// The formatter doesn't handle big/small floats. (i.e. more than the max digits we set).
+					if (fNumberType == FLOAT) {
+						if (num.floatValue() == Float.MAX_VALUE)
+							return sMaxValue;
+						else if (num.floatValue() == Float.MIN_VALUE)
+							return sMinValue;	
+					}
+					// The formatter doesn't handle big/small floats. (i.e. more than the MIN digits we set).
 					// It doesn't go to scientific notation as necessary. The only way to test this is to
 					// roundtrip the number. If they come up to be the same, then it is ok. Else format using
 					// toString.
 					String result = fFormatter.format(value);
 					try {
 						Number roundTrip = fFormatter.parse(result);
-						if (roundTrip.doubleValue() != ((Number) value).doubleValue())
+						if (roundTrip.doubleValue() != num.doubleValue())
 							result = value.toString();
 					} catch (ParseException e) {
 						result = value.toString();
 					}
 					return result;
+				case INTEGER:
+					if (num.intValue() == Integer.MAX_VALUE)
+						return sMaxValue;
+					else if (num.intValue() == Integer.MIN_VALUE)
+						return sMinValue;	
+					else
+						break;
+				case LONG:
+					if (num.longValue() == Long.MAX_VALUE)
+						return sMaxValue;
+					else if (num.longValue() == Long.MIN_VALUE)
+						return sMinValue;	
+					else
+						break;
+				case SHORT:
+					if (num.shortValue() == Short.MAX_VALUE)
+						return sMaxValue;
+					else if (num.shortValue() == Short.MIN_VALUE)
+						return sMinValue;	
+					else
+						break;
 				default:
-					return fFormatter.format(value);
+					break;
 			}
+			return fFormatter.format(value);
 		} else 
 			return null;	// Invalid or null. No string to display.
 	}

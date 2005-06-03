@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: PropertysheetMessages.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:47:33 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-03 19:21:09 $ 
  */
 
 import java.util.MissingResourceException;
@@ -30,6 +30,10 @@ public class PropertysheetMessages {
 		MINMAX_BAD = "minmax_bad_WARN_", //$NON-NLS-1$
 		MIN_BAD = "min_bad_WARN_", //$NON-NLS-1$
 		MAX_BAD = "max_bad_WARN_", //$NON-NLS-1$
+		
+		MAX_NUMBER = "maxvalue", //$NON-NLS-1$
+		MIN_NUMBER = "minvalue", //$NON-NLS-1$
+		
 		NOT_NUMBER = "not_number_WARN_", //$NON-NLS-1$
 		
 		NOT_INTEGER = "not_integer_WARN_", //$NON-NLS-1$
