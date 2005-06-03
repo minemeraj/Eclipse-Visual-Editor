@@ -288,7 +288,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	
 	private IPath containerPath;	// path for container, NOT path for resolved entry
 	private IJavaProject project;
-	private boolean initialized = false;
+	boolean initialized = false;
 		
 	private ContainerType containerType = null;
 	
@@ -333,14 +333,17 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	private IElementChangedListener javaModelListener = new IElementChangedListener() {	
 		public void elementChanged(ElementChangedEvent event) {
 			if (isClassPathChanged(new IJavaElementDelta[] {event.getDelta()})) {
-				// Check to see if we are still "the" SWT container for this project
-				try {
-					// Container could be cached on the projet even if it is not on the classpath.
-					IClasspathContainer c = JavaCore.getClasspathContainer(containerType.getContainerPath(), project);
-					if (c==null || c!=SWTContainer.this)						
-						removelisteners();
-				} catch (JavaModelException e) {
-					JavaVEPlugin.log(e);
+				synchronized (this) {
+						// Check to see if we are still "the" SWT container for this project
+					try {
+						// Container could be cached on the projet even if it is not on the classpath.
+						IClasspathContainer c = JavaCore.getClasspathContainer(containerType.getContainerPath(), project);
+						if (c==null || c!=SWTContainer.this)						
+							removelisteners();
+						clear();						
+					} catch (JavaModelException e) {
+						JavaVEPlugin.log(e);
+					}
 				}
 			}
 		}	
@@ -639,73 +642,85 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		fClasspathEntries = (IClasspathEntry[]) entries.toArray(new IClasspathEntry[entries.size()]);
 	}
 
-	
-	public SWTContainer(final IPath containerPath, IJavaProject project) {
-		this.containerPath = containerPath;
-		this.project = project;
-		containerType = new ContainerType(containerPath);
-					    
+	protected void computeEntries() {
 		try {
-			// Wrap this in a runnable so that we can add errors to the problems view
-			ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
-				public void run(IProgressMonitor monitor) throws CoreException {
-					try {						
-					 if (containerType.isPlatformPath())						
-							initPlatformPath(containerPath);
-					 else if (containerType.isPDEPath()) {
-						    initPDEPath(containerPath);
-					 }
-					 else if (containerType.isCustomPath())
-						 initCustom(containerPath);
-					 initialized = true;
-					} catch (IOException e) {
-						JavaVEPlugin.log(e, Level.INFO);
-					}							
-				}
-			}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());						
-		} catch (CoreException e) {
-			JavaVEPlugin.log(e, Level.INFO);
-		}
-		addListeners();
-	}
-	public IClasspathEntry[] getClasspathEntries() {
-		if (containerType.isPDEPath()) { // Target may have changed		
-			// noOp if target did not change
-			try {
-				// Allow record problems
-				ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
-					public void run(IProgressMonitor monitor) throws CoreException {
-						try {
-							initPDEPath(containerPath);
-						} catch (IOException e) {
-							JavaVEPlugin.log(e, Level.INFO);
-						}							
-					}
-				}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
-			} catch (CoreException e) {
-				JavaVEPlugin.log(e, Level.INFO);
-			}								
-		}
-		else if (containerType.isCustomPath()) {  // Variable content may have changed
-			// noOp if Variable/content did not change
-			try {
-				// Allow record problems
-				ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
-					public void run(IProgressMonitor monitor) throws CoreException {
-						try {
-							initCustom(containerPath);
-						} catch (IOException e) {
-							JavaVEPlugin.log(e, Level.INFO);
-						}							
-					}
-				}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+			// the run method is dependent on job locks
+			synchronized (this) {
+				if (initialized)
+					return ;
 				
+				if (containerType.isPlatformPath())
+					initPlatformPath(containerPath);
+				else if (containerType.isPDEPath()) {
+					initPDEPath(containerPath);
+				} else if (containerType.isCustomPath())
+					initCustom(containerPath);
+				
+				addListeners();
+				initialized=true;	
+				try {
+					JavaCore.setClasspathContainer(containerType.getContainerPath() , new IJavaProject[] {project}, new IClasspathContainer[] {SWTContainer.this}, null);
+				} catch (JavaModelException e) {
+					JavaVEPlugin.log(e, Level.INFO);
+				}
+			}
+		} catch (IOException e1) {
+			JavaVEPlugin.log(e1, Level.INFO);
+		}		
+	}
+	protected void init() {
+				
+		IWorkspace ws = ResourcesPlugin.getWorkspace();
+		if (ws.isTreeLocked())  //TODO: Can not run under a runable
+			computeEntries();
+		else {
+			try {
+				// Wrap this in a runnable so that we can add errors to the problems view
+				ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+					public void run(IProgressMonitor monitor) throws CoreException {
+						computeEntries();
+					}
+				}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
 			} catch (CoreException e) {
 				JavaVEPlugin.log(e, Level.INFO);
 			}
 		}
+	}
+	
+	public SWTContainer(final IPath containerPath, IJavaProject project) {
+		this.containerPath = containerPath;
+		this.project = project;
+		containerType = new ContainerType(containerPath);		
+	}
+	
+	private void clear() {		
+		initialized=false;
+		fClasspathEntries = new IClasspathEntry[0];
+		currentCustomPath=null;
+		currentPDEPath=null;
+	}
+	
+	protected boolean hasChanged() {
+		if (containerType.isPDEPath()) {
+			ContainerType ct = new ContainerType(containerPath);
+			if (currentPDEPath==null || !currentPDEPath.equals(ct.getPdePath())) 
+				return true;
+		}
+		else if (containerType.isCustomPath()) {
+			IPath resolvedPath= JavaCore.getResolvedVariablePath(new Path(containerType.getCustomPath()));
+			if (currentCustomPath==null || !currentCustomPath.equals(resolvedPath.toPortableString()))
+				return true ;
+		}
+		return fClasspathEntries.length==0;
+	}
+	
+	public  IClasspathEntry[] getClasspathEntries() {
 		if (!initialized)
-			pdeModelListener.modelsChanged(null);
+			init();
+		else  if (hasChanged()) {
+			clear();
+			init();
+		}		
 		return fClasspathEntries;
 	}
 
@@ -749,5 +764,16 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	 */
 	public void contributeToRegistry(ProxyFactoryRegistry registry) {
 		configContribute.contributeToRegistry(registry);
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(project.getElementName());
+		sb.append("\ninitialized=");
+		sb.append(initialized+"\n");
+		for (int i = 0; i < fClasspathEntries.length; i++) {
+			sb.append(fClasspathEntries[i].getPath().toPortableString());			
+		}
+		return sb.toString();
 	}
 }
