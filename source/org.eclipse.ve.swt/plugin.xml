@@ -331,6 +331,12 @@
          icon="icons/full/clcl16/rcp_app.gif"
          name="%NewStyleComponent.View"
          type="org.eclipse.ui.part.ViewPart"/>
+   <visualElement
+         category="org.eclipse.ve.rcp.cat"
+         contributor="org.eclipse.ve.internal.jface.codegen.wizards.contributors.RCPEditorClassCreationSourceContributor"
+         icon="icons/full/clcl16/rcp_editor.gif"
+         name="%NewStyleComponent.Editor"
+         type="org.eclipse.ui.part.EditorPart"/>
   </extension>   
 
 </plugin>

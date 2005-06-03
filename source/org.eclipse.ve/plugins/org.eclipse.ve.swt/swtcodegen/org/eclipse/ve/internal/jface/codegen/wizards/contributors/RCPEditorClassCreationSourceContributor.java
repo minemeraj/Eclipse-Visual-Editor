@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: RCPViewClassCreationSourceContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-03 21:33:03 $ 
+ *  $RCSfile: RCPEditorClassCreationSourceContributor.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-06-03 21:33:03 $ 
  */
 package org.eclipse.ve.internal.jface.codegen.wizards.contributors;
 
@@ -21,11 +21,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.ve.internal.swt.SwtPlugin;
  
 
-public class RCPViewClassCreationSourceContributor extends AbstractRCPClassCreationSourceContributor{
+public class RCPEditorClassCreationSourceContributor extends AbstractRCPClassCreationSourceContributor{
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.wizards.IVisualClassCreationSourceContributor#getTemplateLocation()
 	 */
 	public URL getTemplateLocation() {
-		return SwtPlugin.getDefault().find(new Path("templates/org/eclipse/ve/internal/swt/codegen/jjet/wizards/contributors/RCPViewTemplate.javajet")); //$NON-NLS-1$
+		return SwtPlugin.getDefault().find(new Path("templates/org/eclipse/ve/internal/swt/codegen/jjet/wizards/contributors/RCPEditorTemplate.javajet")); //$NON-NLS-1$
 	}
 }
