@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.31 $  $Date: 2005-05-25 21:28:03 $ 
+ *  $Revision: 1.32 $  $Date: 2005-06-03 13:33:48 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -22,7 +22,6 @@ import java.util.logging.Level;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
@@ -46,9 +45,10 @@ import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
-import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 
@@ -316,12 +316,12 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 					String realFQN = type.getFullyQualifiedName('$');
 					// If there is a prototype factory use this to create the default instance
 					PrototypeFactory prototypeFactory = null;
-					EClass eClass = Utilities.getJavaClass(realFQN, resourceSet);					
+					JavaClass javaClass = Utilities.getJavaClass(realFQN, resourceSet);					
 					try {
 						
 						ClassDescriptorDecorator decorator =
 							(ClassDescriptorDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(
-									eClass,
+									javaClass,
 									ClassDescriptorDecorator.class,
 									PrototypeFactory.PROTOTYPE_FACTORY_KEY);
 						if(decorator != null){
@@ -333,13 +333,19 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 					}
 					EObject eObject = null;
 					if(prototypeFactory == null){
-						eObject = eClass.getEPackage().getEFactoryInstance().create(eClass);
+						eObject = javaClass.getEPackage().getEFactoryInstance().create(javaClass);
 					} else {
-						eObject = prototypeFactory.createPrototype(eClass);
+						eObject = prototypeFactory.createPrototype(javaClass);
+					}
+					if(beanName==null || beanName.trim().length()<1){
+						beanName = ((IJavaObjectInstance) eObject).getJavaType().getJavaName();
+						if (beanName.indexOf('.') > 0)
+							beanName = beanName.substring(beanName.lastIndexOf('.') + 1);
+						beanName = CDEUtilities.lowCaseFirstCharacter(beanName);
 					}
 					ChooseBeanDialogUtilities.setBeanName(eObject, beanName, editDomain);
 					newResults[(i*2)] = eObject;
-					newResults[(i*2)+1] = eClass;
+					newResults[(i*2)+1] = javaClass;
 				}
 			}
 			return newResults;
