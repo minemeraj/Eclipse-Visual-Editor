@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-06-02 23:21:53 $ 
+ *  $Revision: 1.12 $  $Date: 2005-06-03 15:06:36 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -18,6 +18,8 @@ import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.draw2d.geometry.*;
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.internal.IPreferenceConstants;
@@ -31,6 +33,7 @@ import org.eclipse.jem.internal.proxy.swt.*;
 import org.eclipse.ve.internal.cde.core.*;
 
 import org.eclipse.ve.internal.java.core.*;
+
 import org.eclipse.ve.internal.swt.*;
 
 
@@ -46,11 +49,12 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 	
 	private IControlProxyHost parentProxyHost;
 	protected final Object imageAccessorSemaphore = new Object();	// Semaphore for access to image	
+	private EStructuralFeature sf_delegate_control;
 
 	public ViewPartProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);				
 	}
-	
+
 	public synchronized void addDelegateComposite(final IJavaInstance aComposite){
 		
 		IControlProxyHost compositeProxyHost = (IControlProxyHost) BeanProxyUtilities.getBeanProxyHost(aComposite);
@@ -68,18 +72,36 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 		childValidated(ViewPartProxyAdapter.this);		
 		
 	}
+		
+	public void reinstantiateChild(IBeanProxyHost aChildProxyHost) {
+		// Following a rename in the source the child gets created first with a ParseTreeAllocation which then gets
+		// modified to an ImplicitAllocation.  We have to therefore recycle the child bean otherwise we get two children
+		Object delegateControl = ((EObject)getTarget()).eGet(sf_delegate_control);
+		if(aChildProxyHost.getTarget() == delegateControl){
+			IControlProxyHost compositeProxyHost = (IControlProxyHost)aChildProxyHost;
+			aChildProxyHost.releaseBeanProxy();
+			compositeProxyHost.setParentProxyHost(null);		
+			aChildProxyHost.instantiateBeanProxy();
+			compositeProxyHost.setParentProxyHost(ViewPartProxyAdapter.this);
+		}
+	}
 	
 	protected void applied(EStructuralFeature sf,Object newValue,int position){
-		if(SwtPlugin.DELEGATE_CONTROL.equals(sf.getName())){
+		if(sf == sf_delegate_control){
 			addDelegateComposite((IJavaInstance)newValue);
 		} else {
 			super.applied(sf,newValue,position);
 		}		
 	}
 	
+	public void setTarget(Notifier target) {
+		sf_delegate_control = ((EObject)target).eClass().getEStructuralFeature(SwtPlugin.DELEGATE_CONTROL);
+		super.setTarget(target);
+	}
+	
 	public IBeanProxy getBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttribute) {
 
-		if(SwtPlugin.DELEGATE_CONTROL.equals(aBeanPropertyAttribute.getName())){
+		if(sf_delegate_control == aBeanPropertyAttribute){
 			return compositeBeanProxy;
 		} else {
 			return super.getBeanPropertyProxyValue(aBeanPropertyAttribute);

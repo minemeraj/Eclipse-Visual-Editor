@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartGraphicalEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-27 12:48:47 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-03 15:06:36 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -18,11 +18,15 @@ import java.util.*;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
+import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.*;
 
@@ -44,12 +48,14 @@ public class ViewPartGraphicalEditPart extends ControlGraphicalEditPart {
 	}
 	
 	protected IBeanProxyHost compositeProxyHost;
+	private EStructuralFeature sf_delegate_control;
 
 	public ViewPartGraphicalEditPart(Object model) {
 		super(model);
 	}
 	
 	public void setModel(Object aModel) {
+		sf_delegate_control = ((EObject)aModel).eClass().getEStructuralFeature(SwtPlugin.DELEGATE_CONTROL);		
 		super.setModel(aModel);
 	}
 	
@@ -109,4 +115,26 @@ public class ViewPartGraphicalEditPart extends ControlGraphicalEditPart {
 		}
 		return super.getAdapter(type);
 	}	
+	public void activate() {
+		super.activate();
+		((EObject) getModel()).eAdapters().add(viewPartAdapter);
+	}
+
+	public void deactivate() {
+		super.deactivate();
+		((EObject) getModel()).eAdapters().remove(viewPartAdapter);
+	}	
+	
+	protected Adapter viewPartAdapter = new EditPartAdapterRunnable(this) {
+		public void doRun() {
+			if (isActive())
+				refreshChildren();
+		}
+
+		public void notifyChanged(Notification notification) {
+			if (notification.getFeature() == sf_delegate_control) {
+				queueExec(ViewPartGraphicalEditPart.this, "DELEGATE_CONTROL"); //$NON-NLS-1$
+			}
+		}
+	};	
 }

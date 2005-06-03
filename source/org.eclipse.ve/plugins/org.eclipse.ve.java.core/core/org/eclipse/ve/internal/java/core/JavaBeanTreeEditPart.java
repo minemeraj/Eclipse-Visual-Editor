@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-06-02 22:32:31 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.14 $ $Date: 2005-06-03 15:10:56 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -131,7 +131,9 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 	public void deactivate() {
 		((EObject) getModel()).eAdapters().remove(getListenerAdapter());
-		getErrorNotifier().removeErrorListener(fErrorListener);
+		if(getErrorNotifier() != null){
+			getErrorNotifier().removeErrorListener(fErrorListener);
+		}
 		// Make sure we not listening to stale event invocations as these may still try and signal us when we are deactivated
 		if (eventInvocationsListenedTo != null) {
 			Iterator iter = eventInvocationsListenedTo.iterator();
