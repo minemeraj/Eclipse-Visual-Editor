@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.22 $  $Date: 2005-05-31 15:33:50 $ 
+ *  $Revision: 1.23 $  $Date: 2005-06-03 13:50:12 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -59,11 +59,13 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 		boolean isInValidField = false;
 		boolean isSimpleType = false;
 		SimpleName variableName = null;
+		Stack isInValidMethodStack = null;
 		
 		public BPVarFinderVisitor(String varName, String methodName, String[] methodParamTypes){
 			this.varName = varName;
 			this.methodName = methodName;
 			this.methodParamTypes = methodParamTypes;
+			this.isInValidMethodStack = new Stack();
 		}
 		
 		public boolean visit(FieldDeclaration node) {
@@ -76,6 +78,7 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 			super.endVisit(node);
 		}
 		public boolean visit(MethodDeclaration node) {
+			isInValidMethodStack.push(new Boolean(isInValidMethod));
 			if(methodName!=null && methodName.length()>0 && methodParamTypes!=null){
 				if(methodName.equals(node.getName().getIdentifier())){
 					List params = node.parameters();
@@ -96,7 +99,7 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 			return super.visit(node);
 		}
 		public void endVisit(MethodDeclaration node) {
-			isInValidMethod = false;
+			isInValidMethod = ((Boolean) isInValidMethodStack.pop()).booleanValue();
 			super.endVisit(node);
 		}
 		public boolean visit(VariableDeclarationFragment node) {
