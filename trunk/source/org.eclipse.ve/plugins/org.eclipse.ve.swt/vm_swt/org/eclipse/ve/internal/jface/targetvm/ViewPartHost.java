@@ -1,5 +1,6 @@
 package org.eclipse.ve.internal.jface.targetvm;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,13 @@ public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitl
     folder.setMaximizeVisible(true);
     folder.setMinimizeVisible(true);
 	
-	folder.setSimple(fTraditionalTabs);
+	// Having simple and traditional tabs is not available on all target platforms so use reflection
+	// folder.setSimple(fTraditionalTabs);
+	try{
+		Method setSimpleMethod = folder.getClass().getMethod("setSimple",new Class[] {Boolean.TYPE});
+		setSimpleMethod.invoke(folder,new Object[]{fTraditionalTabs ? Boolean.TRUE : Boolean.FALSE});
+	} catch (Exception e){	
+	}
 	folder.setTabPosition(fTabPosition);
 
     ViewForm viewForm = new ViewForm(folder, SWT.NONE);
