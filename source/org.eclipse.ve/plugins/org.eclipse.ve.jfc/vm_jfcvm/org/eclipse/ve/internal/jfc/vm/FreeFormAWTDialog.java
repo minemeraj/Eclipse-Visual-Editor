@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAWTDialog.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-18 18:39:17 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-03 19:18:41 $ 
  */
 
 import java.awt.*;
@@ -27,6 +27,29 @@ public class FreeFormAWTDialog extends Dialog {
 	protected boolean isValidating;
 	protected Dimension minSize;
 	protected boolean isDisposing = false;
+	
+	protected static FreeFormAWTDialog AWT_DIALOG;
+	
+	/**
+	 * Get the one awt dialog in the jvm.
+	 * @param x
+	 * @param y
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public static FreeFormAWTDialog getFreeFormDialog(int x, int y) {
+		// Note: We have only one for the entire jvm's life. First this is more efficient.
+		// Everytime we did a reload from scratch we used to dispose of the dialog and then
+		// re-get it when needed. But this actually showed up a problem. On some jvm
+		// implementations if you have two dialogs open, the close
+		// of the second dialog causes a problem. This way we only have one open.
+		if (AWT_DIALOG == null)
+			AWT_DIALOG = new FreeFormAWTDialog(x,y);
+		else
+			AWT_DIALOG.setLocation(x, y);
+		return AWT_DIALOG;
+	}
 /**
  * FreeFormDialog constructor comment.
  */

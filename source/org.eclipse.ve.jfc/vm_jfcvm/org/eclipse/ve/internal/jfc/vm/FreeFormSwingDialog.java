@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormSwingDialog.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-18 18:39:17 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-03 19:18:41 $ 
  */
 
 import java.awt.*;
@@ -28,6 +28,30 @@ public class FreeFormSwingDialog extends JDialog {
 	protected boolean isValidating;
 	protected Dimension minSize;
 	protected boolean isDisposing = false;
+	
+	protected static FreeFormSwingDialog SWING_DIALOG;
+	
+	/**
+	 * Get the one swing dialog in the jvm.
+	 * @param x
+	 * @param y
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public static FreeFormSwingDialog getFreeFormDialog(int x, int y) {
+		// Note: We have only one for the entire jvm's life. First this is more efficient.
+		// Everytime we did a reload from scratch we used to dispose of the dialog and then
+		// re-get it when needed. But this actually showed up a problem. On some jvm
+		// implementations if you have two dialogs open, the close
+		// of the second dialog causes a problem. This way we only have one open.
+		if (SWING_DIALOG == null)
+			SWING_DIALOG = new FreeFormSwingDialog(x,y);
+		else
+			SWING_DIALOG.setLocation(x, y);
+		return SWING_DIALOG;
+	}
+	
 /**
  * FreeFormDialog constructor comment.
  */
