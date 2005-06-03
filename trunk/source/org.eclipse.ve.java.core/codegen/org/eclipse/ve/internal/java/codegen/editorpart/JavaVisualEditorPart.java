@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.119 $  $Date: 2005-05-31 11:07:35 $ 
+ *  $Revision: 1.120 $  $Date: 2005-06-03 14:43:20 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -459,8 +459,19 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 
 			try {
-				if (currentSetRoot != root && currentSetRoot != null)
-					((CompositionProxyAdapter) EcoreUtil.getExistingAdapter(currentSetRoot, CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)).releaseBeanProxy(false);
+				if (currentSetRoot != root && currentSetRoot != null) {
+					// Move the release off into a job, no need to tie up ui with it. It is already unused by anyone else.
+					final BeanSubclassComposition releaseRoot = currentSetRoot; 
+					Job releaseJob = new Job(CodegenEditorPartMessages.getString("JavaVisualEditorPart.ReleasingModel")) {	//$NON-NLS-1$
+						protected IStatus run(IProgressMonitor monitor) {
+							((CompositionProxyAdapter) EcoreUtil.getExistingAdapter(releaseRoot, CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)).releaseBeanProxy(false);							
+							return Status.OK_STATUS;
+						};
+					};
+					releaseJob.setPriority(Job.SHORT);
+					releaseJob.setSystem(true);	// Don't want to bother having it normally show up.
+					releaseJob.schedule();
+				}
 			} finally {
 				currentSetRoot = root;
 			}
