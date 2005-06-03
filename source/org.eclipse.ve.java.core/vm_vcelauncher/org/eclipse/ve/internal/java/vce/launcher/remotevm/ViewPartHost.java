@@ -1,5 +1,6 @@
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,13 @@ public class ViewPartHost {
 	    folder.setMinimizeVisible(true);
 
 		folder.setTabPosition(fTabPosition);
-		folder.setSimple(fTraditionalTabs);
+		// The method CTabFolder.setSimple(boolean) is only available in 3.1 and higher so we must use reflection
+		// to simulat the method call folder.setSimple(fTraditionalTabs);
+		try{
+			Method setSimpleMethod = folder.getClass().getMethod("setSimple",new Class[] {Boolean.TYPE});
+			setSimpleMethod.invoke(folder,new Object[]{fTraditionalTabs ? Boolean.TRUE : Boolean.FALSE});
+		} catch (Exception e){
+		}		
 	
 	    ViewForm viewForm = new ViewForm(folder, SWT.NONE);
 	    viewForm.marginHeight = 0;

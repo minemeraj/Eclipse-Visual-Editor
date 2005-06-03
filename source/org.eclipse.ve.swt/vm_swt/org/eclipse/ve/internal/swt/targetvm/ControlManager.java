@@ -12,6 +12,9 @@ package org.eclipse.ve.internal.swt.targetvm;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -34,6 +37,7 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	protected Composite fParentComposite;	
 	protected IVMServer fServer;
 	protected int fCallbackID;	
+	protected Method layoutControlsMethod;	
 
 	public void initializeCallback(IVMServer vmServer, int callbackID) {
 		fServer = vmServer;
@@ -47,11 +51,36 @@ public abstract class ControlManager implements ICallback , ControlListener {
 	public void setParentComposite(final Composite aComposite){
 		final boolean[] queue = new boolean[1];
 		Environment.getDisplay().syncExec(new Runnable() {
+
 			public void run() {
 				fParentComposite = aComposite;
 				try {
-					fControl.getShell().layout(new Control[] { fControl});
+					// We need to force a layout.  The Composite.layout(Control[]) cannot be used
+					// as this is not compatible with pre 3.1 versions of Eclipse as the PDE target
+					// Use reflection to try the method call fControl.getShell().layout(new Control[] { fControl});
+					if(layoutControlsMethod == null){
+						layoutControlsMethod = Composite.class.getMethod("layout",new Class[] {Control[].class});
+					}
+					Control[] controls = new Control[] {fControl};
+					layoutControlsMethod.invoke(fControl.getShell(),new Object[] {controls});
+				} catch (NoSuchMethodException e){
+					// We are prior to 3.1 so try to manually layout all of the parents
+					ArrayList parents = new ArrayList();
+					Composite currentParent = fControl.getParent();
+					while(currentParent != null){
+						parents.add(fControl.getParent());
+						currentParent = currentParent.getParent();
+					}
+					// 	Layout each composite in turn
+					for(int i=parents.size()-1;i<-1;i--){
+						Composite parentToLayout = (Composite) parents.get(i);
+						parentToLayout.layout(true);
+					}					
 				} catch (ClassCastException e) {
+					// Under some circumstances the layout throws a class cast if the layoutData does not match
+					// the layout's expected type so we catch this and continue silently
+				} catch (InvocationTargetException e){
+				} catch (IllegalAccessException e){					
 				}
 				queue[0] = true;	
 			}
