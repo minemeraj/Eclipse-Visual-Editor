@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-02 20:06:36 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-03 19:22:15 $ 
  */
 
 import java.util.ArrayList;
@@ -245,7 +245,7 @@ public class CustomizeLayoutWindowAction extends Action {
 
 		editorPart = anEditorPart;
 		if (editorPart != null && editorPart.getEditorSite().getActionBarContributor() == contributor) {
-			run(); // Bring it up if necessary
+			runWithoutUpdate(); // Bring it up if necessary
 		} else if (fDialog != null) {
 			// Switching to no editor or to an editor that is not of interest, so hide the dialog. 
 			// Also set no editor into dialog so that the editor is not held onto while hidden or gone.
@@ -297,6 +297,11 @@ public class CustomizeLayoutWindowAction extends Action {
 		}
 	}
 	public void run() {
+		runWithoutUpdate();
+		update(workbenchWindow.getSelectionService().getSelection());			
+	}
+
+	protected void runWithoutUpdate () {
 		// If we are checked then close the dialog
 		if (!isChecked()) {
 			if (fDialog != null) {
@@ -336,10 +341,8 @@ public class CustomizeLayoutWindowAction extends Action {
 			} else
 				fDialog.open();	// Reshow it.				
 			fDialog.setEditorPart(editorPart); // Reinitialize it
-			update(workbenchWindow.getSelectionService().getSelection());			
 		}
 	}
-
 	protected void persistPreferences() {
 		if (fDialogLoc != null) {
 			Preferences preferences = CDEPlugin.getPlugin().getPluginPreferences();
