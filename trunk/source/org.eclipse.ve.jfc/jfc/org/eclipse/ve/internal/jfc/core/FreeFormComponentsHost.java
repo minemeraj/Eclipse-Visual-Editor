@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FreeFormComponentsHost.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-18 18:39:17 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-03 19:18:41 $ 
  */
 
 import org.eclipse.draw2d.geometry.Point;
@@ -54,9 +54,9 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 			Point loc = BeanAwtUtilities.getOffScreenLocation();
 			dialogTypeProxy = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, dialogTypeName);
 			dialogProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
-			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, dialogTypeProxy, 2);
-			expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, loc.x);
-			expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, loc.y);
+			expression.createMethodInvocation(ForExpression.ASSIGNMENT_RIGHT, dialogTypeProxy.getMethodProxy(expression, "getFreeFormDialog", new String[] {"int" , "int"}), false, 2);	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			expression.createPrimitiveLiteral(ForExpression.METHOD_ARGUMENT, loc.x);
+			expression.createPrimitiveLiteral(ForExpression.METHOD_ARGUMENT, loc.y);
 			
 			((ExpressionProxy) dialogProxy).addProxyListener(new ExpressionProxy.ProxyAdapter(){
 				public void proxyResolved(ProxyEvent event) {
@@ -145,11 +145,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 		 * dispose of the proxy.
 		 */
 		protected void dispose(IExpression expression) {
-			if (expression != null && dialogProxy != null && dialogProxy.isBeanProxy() && ((IBeanProxy) dialogProxy).isValid()) {
-				// We don't want to recreate on a dispose. That would fluff it up for no reason.
-				IProxyMethod dispose = BeanAwtUtilities.getWindowDisposeMethodProxy(expression);
-				expression.createSimpleMethodInvoke(dispose, null, new IProxy[] {dialogProxy},false);
-			}
+			dialogProxy = null;	// No longer needed. Since it is static on the remote vm, no need to dispose.
 		}
 	}
 	
