@@ -17,7 +17,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindow.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-18 21:10:35 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-03 19:22:15 $ 
  */
 
 import java.util.ArrayList;
@@ -437,6 +437,11 @@ public class CustomizeLayoutWindow extends Window {
 			}
 		}
 		
+		for (int i = 0; i < layoutPages.size(); i++) {
+			CustomizeLayoutPage page = (CustomizeLayoutPage) layoutPages.get(i);
+			if (page != null)
+				page.setEditorPart(editorPart);
+		}
 		for (int i = 0; i < componentPages.size(); i++) {
 			CustomizeLayoutPage page = (CustomizeLayoutPage) componentPages.get(i);
 			if (page != null)
