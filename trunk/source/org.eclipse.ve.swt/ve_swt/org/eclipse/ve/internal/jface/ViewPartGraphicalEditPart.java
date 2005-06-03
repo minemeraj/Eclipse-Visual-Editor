@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartGraphicalEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-03 15:06:36 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-03 19:10:04 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -127,8 +127,7 @@ public class ViewPartGraphicalEditPart extends ControlGraphicalEditPart {
 	
 	protected Adapter viewPartAdapter = new EditPartAdapterRunnable(this) {
 		public void doRun() {
-			if (isActive())
-				refreshChildren();
+			refreshChildren();
 		}
 
 		public void notifyChanged(Notification notification) {
