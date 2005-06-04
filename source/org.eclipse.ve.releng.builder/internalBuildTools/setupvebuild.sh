@@ -22,7 +22,7 @@ downve() {
 	echo "Downloading VE builder"
 	read release rest < relengMaps/veTag
 	rm -rf org.eclipse.ve.releng.builder
-	cvs -d '$cvsuser@dev.eclipse.org:/home/tools' export -r $release org.eclipse.ve.releng.builder
+	cvs -d $cvsuser'@dev.eclipse.org:/home/tools' export -r $release org.eclipse.ve.releng.builder
 	if [ ! -x org.eclipse.ve.releng.builder/buildall.sh ]; then
 		chmod +x org.eclipse.ve.releng.builder/buildall.sh 
 	fi
@@ -46,7 +46,7 @@ usage() {
 
 parseMapTags() {
 	rm -rf tempmaps
-	cvs -d '$cvsuser@dev.eclipse.org:/home/tools' export -r $mapfiletag -d tempmaps org.eclipse.ve.releng/maps/builderRelengMaps
+	cvs -d $cvsuser'@dev.eclipse.org:/home/tools' export -r $mapfiletag -d tempmaps org.eclipse.ve.releng/maps/builderRelengMaps
 
 	if [ ! -e relengMaps/baseTag ] ; then
 		downbase=yes ;
