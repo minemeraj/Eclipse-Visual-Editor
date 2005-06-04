@@ -10,7 +10,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.part.*;
 
 public class RCPLauncher implements ILauncher {
 
@@ -18,7 +18,7 @@ public class RCPLauncher implements ILauncher {
 	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.ILauncher#supportsLaunching(java.lang.Class, java.lang.Object)
 	 */
 	public boolean supportsLaunching(Class clazz) {
-		return ViewPart.class.isAssignableFrom(clazz);
+		return WorkbenchPart.class.isAssignableFrom(clazz);
 	}
 
 	/* (non-Javadoc)
@@ -89,14 +89,14 @@ public class RCPLauncher implements ILauncher {
 			System.exit(0);
 		}
 		
-		ViewPart viewPart = (ViewPart) javaBean;
+		WorkbenchPart workbenchPart = (WorkbenchPart) javaBean;
 		ViewPartHost viewPartHost = new ViewPartHost();
-		String className = viewPart.getClass().getName();
+		String className = workbenchPart.getClass().getName();
 		if(className.indexOf(".") != -1){ //$NON-NLS-1$
 			className = className.substring(className.lastIndexOf(".") + 1); //$NON-NLS-1$
 		}
 		viewPartHost.setDetails(fTraditionalTabs, fTabPosition, clazz.getName());
-		viewPartHost.addViewPart(viewPart, className);
+		viewPartHost.addViewPart(workbenchPart, className);
 		runEventLoop((Shell)viewPartHost.getWorkbenchShell());
 		
 	}
