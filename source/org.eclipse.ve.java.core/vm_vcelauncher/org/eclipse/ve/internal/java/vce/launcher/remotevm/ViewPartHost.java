@@ -11,13 +11,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.part.WorkbenchPart;
+import org.eclipse.ui.part.*;
 
 public class ViewPartHost {
 
 	Shell shell;
 	Map viewPartToParentComposite = new HashMap(1);
-	private Image IMAGE;
+	private Image WORKBENCH_PART_IMAGE;
+	private Image EDITOR_PART_IMAGE;	
 	private int fx;
 	private int fy;
 	public final int MIN_X = 300;
@@ -72,7 +73,11 @@ public class ViewPartHost {
 		viewPartArgument.setLayout(new FillLayout(SWT.HORIZONTAL));
 		viewForm.setContent(viewPartArgument);
 	    folder.setSelection(item);	
-		item.setImage(getDummyImage());
+		if(aWorkbenchPart instanceof EditorPart){
+			item.setImage(getEditorPartImage());
+		} else {
+			item.setImage(getWorkbenchPartImage());			
+		}
 		item.setControl(viewForm);
 	
 		viewPartToParentComposite.put(aWorkbenchPart,viewPartArgument);
@@ -82,13 +87,21 @@ public class ViewPartHost {
 		
 	}
 	
-	private Image getDummyImage(){
+	private Image getWorkbenchPartImage(){
 		
-		if(IMAGE == null){
-			IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_app.gif")); //$NON-NLS-1$
+		if(WORKBENCH_PART_IMAGE == null){
+			WORKBENCH_PART_IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_app.gif")); //$NON-NLS-1$
 		}
-		return IMAGE;
+		return WORKBENCH_PART_IMAGE;
 	}
+	
+	private Image getEditorPartImage(){
+		
+		if(EDITOR_PART_IMAGE == null){
+			EDITOR_PART_IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_editor.gif")); //$NON-NLS-1$
+		}
+		return EDITOR_PART_IMAGE;
+	}	
 	
 	public Composite getWorkbenchShell(){
 		

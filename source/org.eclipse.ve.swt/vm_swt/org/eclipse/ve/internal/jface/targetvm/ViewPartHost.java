@@ -8,24 +8,29 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.*;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.part.WorkbenchPart;
+
 import org.eclipse.ve.internal.swt.targetvm.PreventShellCloseMinimizeListener;
 
 public class ViewPartHost {
 
 	static Shell shell;
 	static Map viewPartToParentComposite = new HashMap(1);
-	private static Image IMAGE;
+	private static Image WORKBENCH_PART_IMAGE;
+	private static Image EDITOR_PART_IMAGE;	
 	private static int fx;
 	private static int fy;
 	private static boolean fTraditionalTabs;	// Style for whether tabs are square or rounded
 	public static final int MIN_X = 300;
 	public static final int MIN_Y = 175;
 	private static int fTabPosition; // Location of the tab position (top or bottom)
+	private static final int EDITOR_PART_GRAPHIC = 1;
+	private static final int WORKBENCH_PART_GRAPHIC = 0;	
 
-public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle){
+public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle, int graphicType){
 
 	Composite parent = new Composite(getWorkbenchShell(),SWT.NONE);
 	parent.setLayout(new FillLayout());
@@ -64,8 +69,16 @@ public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitl
     };
 	viewPartArgument.setLayout(new FillLayout(SWT.HORIZONTAL));
 	viewForm.setContent(viewPartArgument);
-    folder.setSelection(item);	
-	item.setImage(getDummyImage());
+    folder.setSelection(item);
+	// Set the type of graphic.  We can't check the type of aWorkbenchPart as usually the one being subclassed
+	// is abstract and the ViewPartProxyAdapter has to create a dummy one that can host the composites 	
+	switch (graphicType) {
+		case EDITOR_PART_GRAPHIC:
+			item.setImage(getEditorPartImage());			
+			break;
+		default:
+			item.setImage(getWorkbenchPartImage());
+	}
 	item.setControl(viewForm);
 	// Record a map entry of the workbenchPart against the Composite argument and the CTabFolder that represents its trim
 	viewPartToParentComposite.put(aWorkbenchPart,new Composite[] {viewPartArgument, folder});
@@ -81,11 +94,17 @@ public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitl
 		
 }
 
-public static Image getDummyImage(){
-	if(IMAGE == null){
-		IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_app.gif")); //$NON-NLS-1$
+public static Image getWorkbenchPartImage(){
+	if(WORKBENCH_PART_IMAGE == null){
+		WORKBENCH_PART_IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_app.gif")); //$NON-NLS-1$
 	}
-	return IMAGE;
+	return WORKBENCH_PART_IMAGE;
+}
+public static Image getEditorPartImage(){
+	if(EDITOR_PART_IMAGE == null){
+		EDITOR_PART_IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_editor.gif")); //$NON-NLS-1$
+	}
+	return EDITOR_PART_IMAGE;
 }
 
 public static void removeViewPart(WorkbenchPart aWorkbenchPart){
@@ -107,7 +126,7 @@ public static void layoutViewPart(WorkbenchPart aWorkbenchPart){
 public static void main(String[] args) {
 	
 	TestViewPartTest testViewPart = new TestViewPartTest(); 
-	addViewPart(testViewPart,JFaceTargetVMMessages.getString("ViewPartHost.ViewPart.Name")); //$NON-NLS-1$
+	addViewPart(testViewPart,JFaceTargetVMMessages.getString("ViewPartHost.ViewPart.Name"),WORKBENCH_PART_GRAPHIC); //$NON-NLS-1$
 	layoutViewPart(testViewPart);
 	while(!shell.isDisposed()){
 		if(!shell.getDisplay().readAndDispatch())shell.getDisplay().sleep();
