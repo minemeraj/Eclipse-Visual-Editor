@@ -117,7 +117,7 @@ while [ "$#" -gt 0 ]; do
 	shift 1
 done
 
-if [ $cvsuseroverride == "yes ] ; then
+if [ $cvsuseroverride == "yes" ] ; then
 	export CVS_RSH=ssh
 fi
 
