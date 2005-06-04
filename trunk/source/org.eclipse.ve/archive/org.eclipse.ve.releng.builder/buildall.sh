@@ -76,7 +76,7 @@ while [ "$#" -gt 0 ] ; do
                 	;;
 				'-cvsuser')
 						cvsuser="-Dcvsuser=$2";
-						export $CVS_RSH=ssh
+						export CVS_RSH=ssh
 						shift 1
 					;;                	
 		        *)
