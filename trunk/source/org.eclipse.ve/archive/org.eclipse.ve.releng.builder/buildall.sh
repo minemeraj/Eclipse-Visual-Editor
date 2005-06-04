@@ -1,7 +1,7 @@
 # !/bin/sh
 
 usage() {
-	echo "usage: buildAll [-mapVersionTag HEAD|<branch name>] [-vm <url to java executable to run build>] [-bc <bootclasspath>] [-target <buildall target to execute>] [-buildID <buildID, e.g. 2.1.2>]  [-ftp <userid> <password>] [-rsync <rsync password file>] I|M"
+	echo "usage: buildAll [-mapVersionTag HEAD|<branch name>] [-cvsuser cvsuser] [-vm <url to java executable to run build>] [-bc <bootclasspath>] [-target <buildall target to execute>] [-buildID <buildID, e.g. 2.1.2>]  [-ftp <userid> <password>] [-rsync <rsync password file>] I|M"
 }
 
 # tag to use when checking out .map file project
@@ -31,6 +31,9 @@ rsyncPWFile=""
 
 # NOTEST flags
 notest=""
+
+# CVS Flags
+cvsuser=
 
 if [ "x$1" == "x" ] ; then
         usage
@@ -71,8 +74,13 @@ while [ "$#" -gt 0 ] ; do
                 '-notest')
                 		notest="-Dnotest=true"
                 	;;
-                *)
-                        buildType=$1
+				'-cvsuser')
+						cvsuser="-Dcvsuser=$2";
+						export $CVS_RSH=ssh
+						shift 1
+					;;                	
+		        *)
+    	                buildType=$1
                     ;;
         esac
         shift 1
@@ -88,4 +96,4 @@ if [[ -n $buildType ]] ; then
 	buildTypeArg="-DbuildType=$buildType"
 fi
 
-$vm -cp ../org.eclipse.releng.basebuilder/startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -Dplatform=LinuxGTK -DmapVersionTag=$mapVersionTag $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword
+$vm -cp ../org.eclipse.releng.basebuilder/startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $bootclasspath -DbuildingOSGi=true -Dplatform=LinuxGTK -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword
