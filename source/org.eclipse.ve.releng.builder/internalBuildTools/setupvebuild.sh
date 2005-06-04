@@ -22,7 +22,7 @@ downve() {
 	echo "Downloading VE builder"
 	read release rest < relengMaps/veTag
 	rm -rf org.eclipse.ve.releng.builder
-	cvs -d ':pserver:anonymous@dev.eclipse.org:/home/tools' export -r $release org.eclipse.ve.releng.builder
+	cvs -d '$cvsuser@dev.eclipse.org:/home/tools' export -r $release org.eclipse.ve.releng.builder
 	if [ ! -x org.eclipse.ve.releng.builder/buildall.sh ]; then
 		chmod +x org.eclipse.ve.releng.builder/buildall.sh 
 	fi
@@ -34,18 +34,19 @@ clrbuild() {
 }
 
 usage() {
-	echo "usage: setupvebuild {-mapfiletag tag} [-clean] | [-clearbuild]"
+	echo "usage: setupvebuild {-mapfiletag tag} {-cvsuser cvsuser} [-clean] | [-clearbuild]"
 	echo "Builds will be in `pwd`/builddir"
 	echo "-mapfiletag: The map file tag to use, or HEAD if omitted. Will be used to determine the base and ve releng directories and download only if needed."
 	echo "-clean: Clear out everything and start from scratch and download base and ve releng directories."
 	echo "-clearbuild: Erase just the last build."
 	echo "-downonly: Only check download files and download as needed. Do not clean or clear."
+	echo "-cvsuser: Supply a cvs user to log into when using cvs to access dev.eclipse.org:/home/tools. The default is ":pserver:anonymous". Use ":ext:userid" and it will automatically set CVS_RSH to ssh. It is assummed that the logged on user is setup for ssh."
 	echo "  Either clean, clearbuild, or downonly must be supplied or nothing will occur."
 }
 
 parseMapTags() {
 	rm -rf tempmaps
-	cvs -d ':pserver:anonymous@dev.eclipse.org:/home/tools' export -r $mapfiletag -d tempmaps org.eclipse.ve.releng/maps/builderRelengMaps
+	cvs -d '$cvsuser@dev.eclipse.org:/home/tools' export -r $mapfiletag -d tempmaps org.eclipse.ve.releng/maps/builderRelengMaps
 
 	if [ ! -e relengMaps/baseTag ] ; then
 		downbase=yes ;
@@ -86,6 +87,8 @@ downonly=no
 mapfiletag=HEAD
 basetag=HEAD
 vetag=HEAD
+cvsuser=:pserver:anonymous
+cvsuseroverride=no
 while [ "$#" -gt 0 ]; do 
 	case $1 in	
 		'-clean') 
@@ -101,6 +104,11 @@ while [ "$#" -gt 0 ]; do
 		'-downonly')
 			downonly=yes
 			;;
+		'-cvsuser')
+			cvsuser=$2
+			shift 1
+			cvsuseroverride=yes
+			;;
 		*) 
 			usage;
 			exit 0;
@@ -109,10 +117,14 @@ while [ "$#" -gt 0 ]; do
 	shift 1
 done
 
+if [ $cvsuseroverride == "yes ] ; then
+	export $CVS_RSH=ssh
+fi
+
 if [[ $cleanmode == "no" && $clearbuild == "no" && downonly == "no"  ]] ; then
 	exit 0
 fi
-
+ 
 if [ ! -d `pwd`/builddir ] ; then
 	mkdir builddir;
 fi

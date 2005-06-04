@@ -1,7 +1,8 @@
 <project default="run">
 
+	<target name="init" depends="preinit,update.map.cvsuser"/>
 
-	<target name="init">
+	<target name="preinit">
 		<property name="buildDirectory" location="${basedir}/../src/eclipse" />
 		<property name="testBase" location="${basedir}/../testing" />
 		<available file="${buildDirectory}/label.properties" property="label.properties.exists" />
@@ -37,6 +38,14 @@
 		</condition>
 	</target>
 
+	<target name="update.map.cvsuser" depends="preinit" if="cvsuser">
+		<!-- cvs user is set explicitly, so modify map file to point to cvsuser for /home/tools references -->
+		<replace file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/ve.map">
+		 	<!--  Insert url for supported eclipse drop-->
+			<replacefilter token=":pserver:anonymous@dev.eclipse.org:/home/tools" value="${cvsuser}@dev.eclipse.org:/home/tools"/>
+		</replace>
+	</target>
+	
 	<target name="create.label.properties" unless="label.properties.exists">
 		<mkdir dir="${buildDirectory}" />
 		<tstamp/>

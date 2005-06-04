@@ -1,5 +1,10 @@
 <project name="Build specific targets and properties" default="noDefault" basedir=".">
 
+	<target name="init">
+		<property name="cvsuser" value=":pserver:anonymous"/>
+
+	</target>
+	
 <!-- ===================================================================== -->
 <!-- Run a given ${target} on all elements being built -->
 <!-- ===================================================================== -->
@@ -32,10 +37,10 @@
 	<available property="mapsLocal" file="${buildDirectory}/maps/org.eclipse.ve.releng" />
 </target>
 
-<target name="getMapFiles" depends="checkLocal" unless="mapsLocal">
+<target name="getMapFiles" depends="init,checkLocal" unless="mapsLocal">
 
 	<!-- ***  change the repo info -->
-	<property name="mapCvsRoot" value=":pserver:anonymous@dev.eclipse.org:/home/tools" />
+	<property name="mapCvsRoot" value="${cvsuser}@dev.eclipse.org:/home/tools" />
 
 	<property name="mapVersionTag" value="HEAD" />
 	<cvs cvsRoot="${mapCvsRoot}"
