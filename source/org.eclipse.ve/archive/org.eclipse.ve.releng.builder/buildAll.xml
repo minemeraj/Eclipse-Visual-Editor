@@ -8,6 +8,7 @@
 		<available file="${buildDirectory}/label.properties" property="label.properties.exists" />
 		<antcall target="create.label.properties" />
 		<property file="${buildDirectory}/label.properties" />
+		<property file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg" />
 		<condition property="isReleaseBuild">
 			<equals arg1="${buildType}" arg2="R"/>
 		</condition>		
