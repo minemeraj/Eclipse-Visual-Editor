@@ -118,7 +118,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 if [ $cvsuseroverride == "yes ] ; then
-	export $CVS_RSH=ssh
+	export CVS_RSH=ssh
 fi
 
 if [[ $cleanmode == "no" && $clearbuild == "no" && downonly == "no"  ]] ; then
