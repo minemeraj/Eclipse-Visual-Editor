@@ -8,7 +8,6 @@
 		<available file="${buildDirectory}/label.properties" property="label.properties.exists" />
 		<antcall target="create.label.properties" />
 		<property file="${buildDirectory}/label.properties" />
-		<property file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/build.cfg" />
 		<condition property="isReleaseBuild">
 			<equals arg1="${buildType}" arg2="R"/>
 		</condition>		
@@ -39,7 +38,13 @@
 	</target>
 
 	<target name="update.map.cvsuser" depends="preinit" if="cvsuser">
-		<!-- cvs user is set explicitly, so modify map file to point to cvsuser for /home/tools references -->
+		<!-- cvs user is set explicitly, so download and modify map file to point to cvsuser for /home/tools references -->
+		<property name="mapVersionTag" value="HEAD" />
+		<cvs cvsRoot="${cvsuser}@dev.eclipse.org:/home/tools"
+			package="org.eclipse.ve.releng"
+			dest="${buildDirectory}/maps"
+			tag="${mapVersionTag}"
+		/>
 		<replace file="${buildDirectory}/maps/org.eclipse.ve.releng/maps/ve.map">
 		 	<!--  Insert url for supported eclipse drop-->
 			<replacefilter token=":pserver:anonymous@dev.eclipse.org:/home/tools" value="${cvsuser}@dev.eclipse.org:/home/tools"/>
