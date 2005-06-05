@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<META name="GENERATOR" content="IBM WebSphere Studio">
+<TITLE>proxyLaunchConfiguration.html</TITLE>
+</HEAD>
+<BODY><html><body>
+<table border=0 cellspacing=5 cellpadding=2 width="100%">
+<tr>
+<td align=left valign=top colspan="3" bgcolor="#0080c0"><b><font color="#ffffff" face="Arial,Helvetica">
+Launch Configurations for Proxy remote VM's</font></b></td>
+</tr>
+</table>
+
+
+<br><font size=2 face="sans-serif">Currently when we launch the remote
+vm that we use for BeanInfo introspection and for hosting the live objects
+from an editor we have a hard-coded configuration. We want to change this
+so that the configuration can be modified by users. This is sometimes necessary
+because the standard configuration is not sufficient. One hope is that
+in the future, maybe we can launch the simulator for a PDA or something,
+and those probably won't launch as a standard vm.</font>
+<br>
+<br><font size=2 face="sans-serif">To get around this we want to be able
+to supply a configuration for a project and/or a particular class from
+the java visual editor. (Maybe for a particular class is overkill because
+if a class being opened in the editor requires a different configuration
+then for the project there could be problems with the introspection since
+the introspection is done on a separate vm, and that one would use the
+project's configuration and not the class' configuration).</font>
+
+<br>
+<br><font size=2 face="sans-serif">We want it to be a different launch
+configuration type and category so that these configurations don't show
+up on the standard debug/run launch menus. That is because they aren't
+to be used directly from the standard launch. Now the question then is
+how do we make these available for creation and modification. One way would
+be to add another run button on the toolbar (like the standard debug, run,
+and run external tool buttons). We could do this, but it could clutter
+the toolbar. Do we want to do this, or just make it available from the
+context menu on a Java project?</font>
+<br>
+<br><font size=2 face="sans-serif">The actual content of this configuration
+will be dictated by the needs of the proxy plugin. So my basic questions
+for the group are:</font>
+<br>
+<ol>
+<li value=1><font size=2 face="sans-serif">Should we put it on the toolbar
+or should we put it on the context menu for a project?<br>
+The advantage of the context menu for a project is then it can be specific
+for the project and we can control it and not have more than one. If on
+the toolbar they can create as many as they wish for a project, making
+it harder to decide which to use. We would have to pop up each time asking
+which one to use, or we would have to have another menu saying use this
+one and not that one from now on until this selection is changed.<br>
+<br>
+The advantage of the toolbar is that it is a familiar paradigm.<br>
+<br>
+As an example, Ant launch configurations have the ability to launch directly
+from the external tools launcher (here you select the launch to use), or
+you can launch it from a context menu on the ant file itself in the navigator.
+In that case if there is more than one for that file it pops up a selection
+dialog to ask which one to use. So that would be a similar paradigm to
+what we would need to use if we put in on the toolbar.<br>
+
+</font>
+<li value=2><font size=2 face="sans-serif">Should we only have it available
+on project level at the current time, and not put it at the file level
+too until we figure out if we really want that much flexibility?</font></ol>
+</body></html></BODY>
+</HTML>
