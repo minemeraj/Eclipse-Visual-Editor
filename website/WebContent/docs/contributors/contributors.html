@@ -1,0 +1,506 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<META name="GENERATOR" content="IBM WebSphere Studio">
+<TITLE>contributors.html</TITLE>
+</HEAD>
+<BODY><html><body>
+<table border=0 cellspacing=5 cellpadding=2 width="100%">
+<tr>
+<td align=left valign=top colspan="3" bgcolor="#0080c0"><b><font color="#ffffff" face="Arial,Helvetica">
+Classpath Container Contributions
+</font></b></td>
+</tr>
+</table>
+
+
+
+<br><font size=2 face="sans-serif">The VE has several needs for contributions
+to configure dynamically what happens. Most of the contributions are based
+upon the classpath. If a certain &quot;path&quot; is in the project's classpath,
+then certain contributions need to be processed. Also, these contributions
+come from plugins that provide libraries to be used by the VE. For example,
+the ve.swt plugin provides the contributions for working with SWT. One
+of things it can contribute is the SWT jar itself.</font>
+
+<br>
+<br><font size=2 face="sans-serif">There are many ways to get &quot;paths&quot;
+into the classpath, e.g. external jars, variables, or containers. In the
+past we supported variables. However variables are restrictive in that
+they are basically one path for the entire workspace and that is it. Containers
+are much more flexible, they allow different sets of paths to be contributed
+to each individual project. </font>
+<br>
+<br><font size=2 face="sans-serif">My proposal is that contributions will
+be based upon containers only, and not variables (we never supported external
+jars for contributions). One question would be that should we continue
+to support variables. The predecessor from Websphere(TM) Application Developer
+didn't officially support the extensions we are talking about. They were
+there and disclosed to customers through articles, but it was made clear
+that the API's being used can and will change in the future. For one thing,
+all of the package names have changed from com.ibm... to org.eclipse....</font>
+<br>
+<br><font size=2 face="sans-serif">Here is the list of contributions that
+we currently have based upon classpath:</font>
+<br>
+<ul>
+<li><font size=2 face="sans-serif">Proxy configuration contributions (e.g.
+jars to go into classpath, dll's to go into java.library.path, arguments
+to send to the remote vm, other configuration changes, etc).</font>
+<li><font size=2 face="sans-serif">Beaninfo contributions (e.g. beaninfo
+jars and search paths, and override files)</font>
+
+<li><font size=2 face="sans-serif">VE contributions (e.g. palette categories)</font></ul>
+<br>
+<br><font size=2 face="sans-serif">To allow for simplicity we will have
+one combined extension point that should handle the majority of the cases.
+This can be seen later in the &quot;<b>Putting it all together</b>&quot;
+section below. For full flexibility there will be specific extention points
+for proxy, BeanInfo, and VE contributions. These are discussed below in
+their own sections.</font>
+<br>
+<br><font size=2 face="sans-serif">Let's start with full flexibility. Proxy,
+Beaninfo, and VE will have individual container contribution extension
+points. However, to simplify code, when looking for the contribution for
+a particular container, these plugins will first check the standard java
+container (retrieved from JavaCore) for the given container path and see
+if it implements the particular contribution interface in question. If
+it does, it will go to the container and request the information. Then
+it will go through its own extension point looking for contributions for
+that container and have each one have a go at it.</font>
+<br>
+<br><font size=2 face="sans-serif">By doing it this way, a developer can
+have one contribution, the java classpath container contribution, handle
+all of the contribution types. And there won't be a need to specify all
+three types of contributions separately. By also then going on to look
+through the rest of the contributions, it allows plugins to extend the
+contributions that were specified in a different plugin. For instance,
+this allows us to supply java JFC contributions, even though the JRE container
+was contributed by a base Eclipse plugin.</font>
+<br>
+<br><font size=2 face="sans-serif">To simplify things even further for
+a developer, we will supply a class that implements all three contribution
+types plus the java classpath container that can then be customized through
+the plugin.xml. That way a simple contribution can be handled easily without
+having to write all of these contributors.</font>
+
+<br>
+<br>
+<br><font size=3 face="sans-serif"><b>Proxy Contributions:</b></font>
+<br>
+<br><font size=2 face="sans-serif">These configuration contributors only
+affect the configuration used to launch the remote vm. The remote vm is
+used for BeanInfo and for the VE java editor. They do not affect the build
+classpath. That can only be affected by the IClasspathContainer and the
+user. The build path cannot be extended in any other way.</font>
+<br>
+<br><font size=2 face="sans-serif">Within org.eclipse.jem.proxy:</font>
+<br>
+<br><font size=2 face="Courier New">&lt;extension-point id=&quot;contributor&quot;
+name=&quot;Proxy Configuration Contributor&quot;/&gt;</font>
+
+<br>
+<br><font size=2 face="sans-serif">And when used:</font>
+<br>
+<br><font size=2 face="Courier New">&lt;extension point=&quot;org.eclipse.jem.proxy.contributor&quot;&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &lt;contributor id=&quot;container-id&quot;
+class=&quot;<i>configurationclass</i>&quot;/&gt;</font>
+<br><font size=2 face="Courier New">&lt;/extension&gt;</font>
+
+<br>
+<br><font size=2 face="sans-serif">Where for the container with &quot;<i>container-id</i>&quot;
+the configurationClass is instantiated and used as a contributor.</font>
+<br><font size=2 face="sans-serif">Where &quot;<i>configurationClass</i>&quot;
+implements the interface org.eclipse.jem.proxy.core.IConfigurationContributor.</font>
+<br>
+<br><font size=2 face="sans-serif">So whenever a container entry is found
+in the classpath, that container entry is first used to find the JavaCore
+IClasspathContainer, and if it exists and it implements IConfigurationContributor,
+it will be used to contribute. Then the contributor extension point will
+be used to find any other registered contributors for that container.</font>
+<br>
+<br><font size=2 face="sans-serif">We will supply a default abstract implementation
+of this contributor that developers may subclass. It will provide some
+convienent functions for working with the configuration.</font>
+
+<br>
+<br><font size=2 face="sans-serif">This allows for complicated contributors
+(i.e. something beyond a jar to be added to classpath, we which we discuss
+next), either in one place through the IClasspathContainer, or through
+registered contributors. The registered contributors point would most likely
+be used if extending any existing classpath container from another plugin,
+such as what we do with java for the JFC.</font>
+<br>
+<br><font size=2 face="sans-serif">The order of processing will be:</font>
+<br>
+<ol>
+<li value=1><font size=2 face="sans-serif">IClasspathContainer (if it implements
+IConfigurationContributor) for the container path.</font>
+<li value=2><font size=2 face="sans-serif">In plugin order, (i.e. from
+the plugin with no dependencies to the leaves, such that no plugin will
+be processed before one of its required plugins), the plugin is the one
+where the extension is located. Contributor extension point entries for
+the container path in the plugin (there may be more than one, though it
+doesn't make sense, the order processed is undefined within a particular
+plugin)</font></ol>
+<br>
+<br><font size=3 face="sans-serif"><b>BeanInfo Contributions:</b></font>
+<br>
+<br><font size=2 face="sans-serif">These contributions are used to contribute
+a beaninfo jar(s) and override file(s) for a container path. (Note: We
+did support variables too, but we will not supporting them for BeanInfo
+extension point contributions).</font>
+
+<br>
+<br><font size=2 face="sans-serif">Within org.eclipse.jem.beaninfo:</font>
+<br>
+<br><font size=2 face="Courier New">&lt;extension-point id=&quot;contributor&quot;
+name=&quot;BeanInfo Contributor&quot;/&gt;</font>
+<br>
+<br><font size=2 face="sans-serif">And when used:</font>
+<br>
+<br><font size=2 face="Courier New">&lt;extension point=&quot;org.eclipse.jem.beaninfo.contributor&quot;&gt;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &lt;contributor id=&quot;<i>container-id</i>&quot;
+class=&quot;<i>contributorClass</i>&quot;/&gt;</font>
+<br><font size=2 face="Courier New">&lt;/extension&gt;</font>
+<br>
+<br><font size=2 face="sans-serif">Where for the container with &quot;<i>container-id</i>&quot;
+the contributorClass is instantiated and used as a contributor.</font>
+<br><font size=2 face="sans-serif">Where &quot;<i>contributorClass</i>&quot;
+
+implements the interface org.eclipse.jem.beaninfo.core.IBeanInfoContributor.</font>
+<br>
+<br><font size=2 face="sans-serif">So whenever a container entry is found
+in the classpath, that container entry is first used to find the JavaCore
+IClasspathContainer, and if it exists and it implements IBeanInfoContributor,
+it will be used to contribute. Then the contributor extension point will
+be used to find any other registered contributors for that container.</font>
+<br>
+<br><font size=2 face="sans-serif">This allows for complicated contributors
+(i.e. something beyond a beaninfo jar to be added to classpath or overrides,
+we which we discuss next), either in one place through the IClasspathContainer,
+or through registered contributors. The registered contributors point would
+most likely be used if extending any existing classpath container from
+another plugin, such as what we do with java for the JFC.</font>
+<br>
+<br><font size=2 face="sans-serif">There will be one more simplified extension
+point for contributing just the beaninfo jar/searchpath/overrides. If there
+are no complications to the contribution, this will be a simpler way to
+do it.</font>
+<br>
+<br><font size=2 face="sans-serif">Within org.eclipse.jem.beaninfo:</font>
+<br>
+<br><font size=2 face="Courier New">&lt;extension-point id=&quot;registration&quot;
+
+name=&quot;BeanInfo registrations&quot;/&gt;</font>
+<br>
+<br><font size=2 face="sans-serif">And when used:</font>
+<br>
+<br><font size=2 face="Courier New">&lt;extension point=&quot;org.eclipse.jem.beaninfo.registration&quot;&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &lt;container id=&quot;<i>container-id</i>&quot;&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &lt;beaninfo path=&quot;<i>beaninfo-library-path</i>&quot;&gt;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &lt;searchpath
+package=&quot;<i>java-package-to-search</i>&quot;/&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &lt;/beaninfo&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &lt;override package=&quot;<i>package-name</i>&quot;
+path=&quot;<i>override-file-path</i>&quot;/&gt;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &lt;/container&gt;</font>
+<br><font size=2 face="Courier New">&lt;/extension&gt;</font>
+<br>
+<br><font size=2 face="sans-serif">There may be one or more </font><font size=2 face="Courier New">&lt;container&gt;</font><font size=2 face="sans-serif">
+elements, and there may be zero or more </font><font size=2 face="Courier New">&lt;beaninfo&gt;</font><font size=2 face="sans-serif">
+elements for a container, zero or more </font><font size=2 face="Courier New">&lt;searchpath&gt;</font><font size=2 face="sans-serif">
+elements for a beaninfo element, and zero or more </font><font size=2 face="Courier New">&lt;override&gt;</font><font size=2 face="sans-serif">
+
+elements for a container.</font>
+<br>
+<br><font size=2 face="sans-serif">Where for the container with &quot;<i>container-id</i>&quot;
+the given beaninfo and overrides will be applied. The <i>beaninfo-library-path</i>
+will be a path to a jar in a plugin. If it is not absolute (i.e. doesn't
+start with a '/') then it will be assumed to be relative to the plugin
+that is defining the extension. Otherwise the first segment of the path
+will be the name of the plugin where the file will be found. The rest of
+the path will be relative to that plugin. &nbsp;Note we will handle debug
+mode where if started from another Eclipse IDE we can automatically detect
+that the library is not found, using the debug proxy.jars file protocol,
+the build output folder is found instead. It must be in a plugin somewhere.
+Since this is for plugin contributions, it doesn't make sense to have a
+path to hard-coded directory like &quot;c:/something&quot;. It couldn't
+be distributed properly in that case.</font>
+<br>
+<br><font size=2 face="sans-serif"><b>Note</b>: The old format also had
+a </font><font size=2 face="Courier New">kind=&quot;plugin&quot;</font><font size=2 face="sans-serif">
+
+attribute on the beaninfo element, but the other kinds, like project or
+variable, really don't make sense for a plugin contribution, so we are
+simplifying it down to just kind=&quot;plugin&quot; by default, and so
+not specify it.</font>
+<br>
+<br><font size=2 face="sans-serif">Where &quot;<i>java-package-to-search</i>&quot;
+is the BeanInfo package containing BeanInfos for this jar. The package
+name will be added to the BeanInfo searchpath.</font>
+<br>
+<br><font size=2 face="sans-serif">Where &quot;<i>package-name</i>&quot;
+is the package or package fragment (i.e. part of a package, such as org.eclipse
+is a package fragment of org.eclipse.ve) and the override file to use when
+that package fragment is found when the container is in the class path.
+&quot;<i>override-file-path</i>&quot; is the path to a directory containing
+
+</font><font size=2 face="Courier New">*.override</font><font size=2 face="sans-serif">
+files. For instance, if the package fragment was &quot;java.awt&quot;,
+then in directory pointed to would be files like &quot;Container.override&quot;.
+If the fragment was not a leaf fragment (e.g. &quot;java&quot;), then under
+that directory would be more directories containing the rest of the package
+name. For example, there could be a directory &quot;lang&quot; with a file
+named &quot;Object.override&quot; in that directory.</font>
+<br>
+
+<br><font size=2 face="sans-serif">The override file path, if not absolute
+(i.e. doesn't start with a &quot;/&quot;) then it will be assumed to be
+relative to the plugin that is defining the extension. Otherwise the first
+segment of the path will be the name of the plugin where the directory
+will be bound. The rest of the path will be relative to that plugin. Since
+this is for plugin contributions, it doesn't make sense to have a path
+to hard-coded directory like &quot;c:/something&quot;. It couldn't be distributed
+properly in that case.</font>
+<br>
+<br><font size=2 face="sans-serif"><b>Note</b>: The old format used a URL
+instead here, but we always used &quot;platform:/plugin/pluginname/...&quot;
+anyway, so it makes sense to simplify it down to just be in a plugin.</font>
+<br>
+<br>
+<br><font size=2 face="sans-serif">The order of processing will be:</font>
+
+<br>
+<ol>
+<li value=1><font size=2 face="sans-serif">IClasspathContainer (if it implements
+IBeanInfoContributor) for the container path.</font>
+<li value=2><font size=2 face="sans-serif">The following in plugin order,
+(i.e. from the plugin with no dependencies to the leaves, such that no
+plugin will be processed before one of its required plugins), the plugin
+is the one where the extension is located:</font>
+<li value=3><font size=2 face="sans-serif">Contributor extension point
+entries for the container path in the plugin (there may be more than one,
+though it doesn't make sense, the order processed is undefined within a
+particular plugin)</font>
+<li value=4><font size=2 face="sans-serif">Registration extension point
+entries for the container path in the plugin. (the order processed is undefined
+within a particular plugin).</font></ol>
+<br>
+<br><font size=3 face="sans-serif"><b>VE (Java Editor) Contributions:</b></font>
+<br>
+<br><font size=2 face="sans-serif">Currently the only VE (Java editor)
+specific contribution pertaining to container path is the palette categories
+to add to the palette. There will probably be more in the future.</font>
+<br>
+
+<br><font size=2 face="sans-serif">Within org.eclipse.ve.java.core:</font>
+<br>
+<br><font size=2 face="Courier New">&lt;extension-point id=&quot;contributor&quot;
+name=&quot;VE Java Editor Contributor&quot;/&gt;</font>
+<br>
+<br><font size=2 face="sans-serif">And when used:</font>
+<br>
+<br><font size=2 face="Courier New">&lt;extension point=&quot;org.eclipse.ve.java.core.contributor&quot;&gt;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &lt;contributor id=&quot;<i>container-id</i>&quot;
+class=&quot;<i>contributorClass</i>&quot;/&gt;</font>
+<br><font size=2 face="Courier New">&lt;/extension&gt;</font>
+<br>
+<br><font size=2 face="sans-serif">Where for the container with &quot;<i>container-id</i>&quot;
+the contributorClass is instantiated and used as a contributor.</font>
+<br><font size=2 face="sans-serif">Where &quot;<i>contributorClass</i>&quot;
+
+implements the interface org.eclipse.ve.java.core.IVEContributor.</font>
+<br>
+<br><font size=2 face="sans-serif">So whenever a container entry is found
+in the classpath, that container entry is first used to find the JavaCore
+IClasspathContainer, and if it exists and it implements IVEContributor,
+it will be used to contribute. Then the contributor extension point will
+be used to find any other registered contributors for that container.</font>
+<br>
+<br><font size=2 face="sans-serif">This will probably rarely used. Instead
+the next section, &quot;<b>Putting it all together</b>&quot; will be more
+applicable.</font>
+<br>
+<br><font size=3 face="sans-serif"><b>Putting it all together:</b></font>
+<br>
+<br><font size=2 face="sans-serif">Now putting it all together for the
+simple case. This is the case where a plugin is contributing a container,
+a jar, a beaninfo jar, override files, and a palette cat. For this case,
+we will supply several prepackaged configurable classes to use in certain
+extension points to pull it all together.</font>
+
+<br>
+<br><font size=2 face="sans-serif">The first class is &nbsp;</font><font size=2 face="Courier New">org.eclipse.ve.java.wizard.DefaultClasspathContainerWizardPage</font><font size=2 color=#008000 face="Courier New">.
+</font><font size=2 face="sans-serif">This is used to have your container
+show up in the Add Library page. The current one changes the container
+over to be a variable, but we won't be doing that now. It will simply add
+a classpath entry to the specified container with no extended path info.</font>
+<br>
+<br><font size=2 face="sans-serif">The next class is </font><font size=2 face="Courier New">org.eclipse.ve.java.core.DefaultClasspathContainerInitializer</font><font size=2 face="sans-serif">.
+This is a default classpath container initializer. It will create a special
+default IClasspathContainer &nbsp;(</font><font size=2 face="Courier New">org.eclipse.ve.java.core.DefaultClasspathContainer</font><font size=2 face="sans-serif">)
+that also implements IConfigurationContributor from Proxy, the IBeanInfoContributor
+from BeanInfo, and the IVEContributor from VE. This classpath container
+will use a new extension point, discussed below, which glombs together
+most of the previous extension points into one registration.</font>
+<br>
+<br><font size=2 face="sans-serif">The new registration that will be used
+be </font><font size=2 face="Courier New">org.eclipse.ve.java.core.DefaultClasspathContainer</font><font size=2 face="sans-serif">
+
+will be:</font>
+<br>
+<br><font size=2 face="sans-serif">Within org.eclipse.ve.java.core:</font>
+<br>
+<br><font size=2 face="Courier New">&lt;extension-point id=&quot;registration&quot;
+name=&quot;Standard registrations&quot;/&gt;</font>
+<br>
+<br><font size=2 face="sans-serif">And when used:</font>
+<br>
+
+<br><font size=2 face="Courier New">&lt;extension point=&quot;org.eclipse.ve.java.core.registration&quot;&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &lt;registration id=&quot;<i>container-id</i>&quot;
+</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; configurationContributor=&quot;<i>configurationContributorClass</i>&quot;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; paletteCats=&quot;<i>palette-xmi-file</i>&quot;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; paletteLoc=&quot;last&quot;&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &lt;library runtime=&quot;<i>library-path</i>&quot;
+source=&quot;<i>source-path</i>&quot; sourceroot=&quot;<i>root-path</i>&quot;&gt;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &lt;beaninfo path=&quot;<i>beaninfo-library-path</i>&quot;&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &lt;searchpath
+package=&quot;<i>java-package-to-search</i>&quot;/&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &lt;/beaninfo&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &lt;override package=&quot;<i>package-name</i>&quot;
+
+path=&quot;<i>override-file-path</i>&quot;/&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &lt;/registration&gt;</font>
+<br><font size=2 face="Courier New">&lt;/extension&gt;</font>
+<br>
+<br>
+<br><font size=2 face="sans-serif">All of the elements/attributes are optional.
+If not found, the default will occur.</font>
+<br>
+<br><font size=2 face="sans-serif">There can zero or more </font><font size=2 face="Courier New">&lt;library&gt;
+
+</font><font size=2 face="sans-serif">elements. There can be zero or more
+</font><font size=2 face="Courier New">&lt;beaninfo&gt;</font><font size=2 face="sans-serif">
+and </font><font size=2 face="Courier New">&lt;override&gt;</font><font size=2 face="sans-serif">
+elements.</font>
+<br>
+<br><font size=2 face="sans-serif">This is what happens with DefaultClasspathContainer
+in its IClasspathContainer role. It will find all of the </font><font size=2 face="Courier New">&lt;library&gt;</font><font size=2 face="sans-serif">
+elements at the registration level and create classpath entries for each
+of them. The &quot;<i>library-path</i>&quot; and &quot;<i>source-path</i>&quot;
+
+must be relative to a plugin (just like discussed above, if no leading
+&quot;/&quot; then it is the plugin where the extension is declared). </font>
+<br>
+<br><font size=2 face="sans-serif">This is what happens with DefaultClasspathContainer
+in its IConfigurationContributor role. It will instantiate the &quot;<i>configurationContributorClass</i>&quot;
+and pass on the configuration requests to it.</font>
+<br>
+<br><font size=2 face="sans-serif">This is what happens with DefaultClasspathContainer
+in its IBeanInfoContributor role. It will find all of the </font><font size=2 face="Courier New">&lt;beaninfo&gt;</font><font size=2 face="sans-serif">
+and </font><font size=2 face="Courier New">&lt;override&gt;</font><font size=2 face="sans-serif">
+
+elements and add them appropriately.</font>
+<br>
+<br><font size=2 face="sans-serif">This is what happens with DefaultClasspathContainer
+in its IVEContributor role. It will find the paletteCats attribute and
+add it at the position indicated by paletteloc. The only valid value for
+paletteLoc is &quot;last&quot;. If not specified, the palette cats will
+be inserted at the beginning of the palette. The &quot;<i>palette-xmi-file</i>&quot;
+must be relative to the plugin defining the extension. </font>
+<br>
+<br><font size=2 face="sans-serif"><b>Note</b>: The paletteCats used to
+be a URL, but it makes more sense that is relative to the plugin instead.</font>
+<br>
+<br><font size=2 face="sans-serif">So it all will look like this:</font>
+
+<br>
+<br><font size=2 color=#000080 face="Courier New">&lt;extension</font><font size=2 face="Courier New">
+</font><font size=2 color=#000080 face="Courier New">point=</font><font size=2 color=#008000 face="Courier New">&quot;org.eclipse.jdt.ui.classpathContainerPage&quot;</font><font size=2 color=#000080 face="Courier New">&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; </font><font size=2 color=#000080 face="Courier New">&lt;classpathContainerPage</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; </font><font size=2 color=#000080 face="Courier New">name=</font><font size=2 color=#008000 face="Courier New">&quot;Examples&quot;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; </font><font size=2 color=#000080 face="Courier New">class=</font><font size=2 color=#008000 face="Courier New">&quot;org.eclipse.ve.java.wizard.DefaultClasspathWizardPage&quot;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &nbsp; </font><font size=2 color=#000080 face="Courier New">id=</font><font size=2 color=#008000 face="Courier New">&quot;<i>container-id</i>&quot;</font><font size=2 color=#000080 face="Courier New">&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; </font><font size=2 color=#000080 face="Courier New">&lt;/classpathContainerPage&gt;</font>
+<br><font size=2 color=#000080 face="Courier New">&lt;/extension&gt;</font>
+<br>
+<br><font size=2 color=#000080 face="Courier New">&lt;extension</font><font size=2 face="Courier New">
+</font><font size=2 color=#000080 face="Courier New">point=</font><font size=2 color=#008000 face="Courier New">&quot;org.eclipse.jdt.core.classpathContainerInitializer&quot;</font><font size=2 color=#000080 face="Courier New">&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; </font><font size=2 color=#000080 face="Courier New">&lt;classpathContainerInitializer</font>
+
+<br><font size=2 face="Courier New">&nbsp; &nbsp; </font><font size=2 color=#000080 face="Courier New">class=</font><font size=2 color=#008000 face="Courier New">&quot;org.eclipse.ve.java.core.DefaultClasspathContainerInitializer&quot;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; </font><font size=2 color=#000080 face="Courier New">id=</font><font size=2 color=#008000 face="Courier New">&quot;<i>container-id</i>&quot;</font><font size=2 color=#000080 face="Courier New">&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; </font><font size=2 color=#000080 face="Courier New">&lt;/classpathContainerInitializer&gt;</font>
+<br><font size=2 color=#000080 face="Courier New">&lt;/extension&gt;</font>
+<br>
+<br><font size=2 face="Courier New">&nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">&lt;extension</font><font size=2 face="Courier New">
+
+</font><font size=2 color=#000080 face="Courier New">point=</font><font size=2 color=#008000 face="Courier New">&quot;org.eclipse.ve.java.core.registration&quot;</font><font size=2 color=#000080 face="Courier New">&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">&lt;registration
+id=</font><font size=2 color=#008000 face="Courier New">&quot;JAVA_EXAMPLE&quot;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">configurationContributor=</font><font size=2 color=#008000 face="Courier New">&quot;org.eclipse.ve.examples.java.JavaExampleContributor&quot;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">palettecats=</font><font size=2 color=#008000 face="Courier New">&quot;examplecats.xmi&quot;</font><font size=2 color=#000080 face="Courier New">&gt;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">&lt;library</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">
+&nbsp; &nbsp;runtime=</font><font size=2 color=#008000 face="Courier New">&quot;vm/javaexamplebeans.jar&quot;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+&nbsp;</font><font size=2 color=#000080 face="Courier New">source=</font><font size=2 color=#008000 face="Courier New">&quot;vm/javaexamplebeanssrc.zip&quot;</font><font size=2 color=#000080 face="Courier New">/&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">&lt;additionalLibrary&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">
+&nbsp;&lt;library&gt;</font><font size=2 color=#008000 face="Courier New">archiver.jar</font><font size=2 color=#000080 face="Courier New">&lt;library&gt;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">&lt;library&gt;</font><font size=2 color=#008000 face="Courier New">crimson.jar</font><font size=2 color=#000080 face="Courier New">&lt;library&gt;</font>
+<br><font size=2 color=#008000 face="sans-serif"><i>&nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; </i></font><font size=2 color=#000080 face="Courier New">&lt;/additionalLibrary&gt;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">&lt;beaninfo</font><font size=2 face="Courier New">
+</font><font size=2 color=#000080 face="Courier New">path=</font><font size=2 color=#008000 face="Courier New">&quot;vm/javaexamplebeaninfo.jar&quot;</font><font size=2 color=#000080 face="Courier New">&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">&lt;searchpath</font><font size=2 face="Courier New">
+</font><font size=2 color=#000080 face="Courier New">package=</font><font size=2 color=#008000 face="Courier New">&quot;org.eclipse.ve.examples.java.beaninfo&quot;</font><font size=2 color=#000080 face="Courier New">/&gt;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">&lt;/beaninfo&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; </font><font size=2 color=#000080 face="Courier New">&lt;override</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+</font><font size=2 color=#000080 face="Courier New">package=</font><font size=2 color=#008000 face="Courier New">&quot;org.eclipse.ve.examples.java.vm&quot;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+</font><font size=2 color=#000080 face="Courier New">path=</font><font size=2 color=#008000 face="Courier New">&quot;overrides/org/eclipse/ve/examples/java/vm&quot;</font><font size=2 color=#000080 face="Courier New">&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp; </font><font size=2 color=#000080 face="Courier New">&lt;/override&gt;</font>
+<br><font size=2 face="Courier New">&nbsp; &nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">&lt;/registration&gt;</font>
+
+<br><font size=2 face="Courier New">&nbsp; &nbsp;</font><font size=2 color=#000080 face="Courier New">&lt;/extension&gt;</font>
+<br>
+<br><font size=2 face="sans-serif">Where &quot;<i>container-id</i>&quot;
+is the id of the container for this simple contribution (such as JRE_CONTAINER,
+though we couldn't use that because already used).</font>
+<br>
+<br><font size=2 face="sans-serif"><b>Note</b>: In the current classpath
+wizard page we also pass in the variable id, but technically not necessary
+because we can get access to the &quot;id&quot; attribute from the classpathContainerPage
+element itself.</font>
+<br>
+
+<br><font size=3 face="sans-serif"><b>In summary:</b></font>
+<br>
+<br><font size=2 face="sans-serif">By having these different extension
+points we can allow for simplicity for 90% of the cases, but allowing full
+flexibility if required by the full set of extension points.</font>
+<br>
+<br><font size=2 face="sans-serif"></font>
+</body>
+</html>
+</BODY>
+</HTML>
