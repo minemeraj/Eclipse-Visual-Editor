@@ -1,0 +1,96 @@
+Changes done to com.ibm.wtp stuff within jem:
+
+com.ibm.wtp.logger.proxyrender 			-> org.eclipse.jem.util.logger.proxyrender
+com.ibm.wtp.common.logger.proxy			-> org.eclipse.jem.util.logger.proxy
+com.ibm.wtp.common.logger			-> org.eclipse.jem.util.logger
+com.ibm.wtp.common.util				-> org.eclipse.jem.util
+com.ibm.wtp.common				-> org.eclipse.jem.util
+
+com.ibm.wtp.internal.emf.workbench.nls		-> org.eclipse.jem.internal.util.emf.workbench.nls
+com.ibm.wtp.internal.emf.workbench.nature	-> org.eclipse.jem.internal.util.emf.workbench.nature
+com.ibm.wtp.internal.emf.workbench		-> org.eclipse.jem.internal.util.emf
+
+com.ibm.wtp.emf.workbench.nature		-> org.eclipse.jem.util.emf.workbench.nature
+
+com.ibm.wtp.emf.workbench.plugin.EMFWorkbenchPlugin -> org.eclipse.jem.util.plugin.JEMUtilPlugin
+
+com.ibm.wtp.emf.workbench			-> org.eclipse.jem.util.emf.workbench
+
+Extension points:
+com.ibm.wtp.emf.workbench.ResourceHandlerExtension		-> org.eclipse.jem.util.ResourceHandlerExtension
+com.ibm.wtp.emf.workbench.globalPluginResourceLoad		-> org.eclipse.jem.util.globalPluginResourceLoad
+com.ibm.wtp.emf.workbench.nature_registration			-> org.eclipse.jem.util.nature_registration
+com.ibm.wtp.emf.workbench.internalWorkbenchContextFactory	-> org.eclipse.jem.util.internalWorkbenchContextFactory
+
+com.ibm.wtp.common.util.uiContextSensitiveClass			-> org.eclipse.jem.util.uiContextSensitiveClass
+com.ibm.wtp.common.util.uiTester				-> org.eclipse.jem.util.uiTester
+
+Moved methods:
+Since there is now only one plugin class, references from WTPCommonUtilPlugin will be needed to reference JEMUtilPlugin instead. 
+
+Since we wanted jdt to be optional (not required), there where many methods of com.ibm.wtp.enf.workbench.ProjectUtilities
+that were JDT specific. To alleviate this, the class has been split into two classes:
+  1) org.eclipse.jem.util.ProjectUtilities <- this contains all of the static methods that were not JDT specific.
+  2) org.eclipse.jem.util.JavaProjectUtilities <- all of the jdt specific methods were moved to here
+     The moved methods are:
+	appendJavaClassPath(IProject, IClasspathEntry)
+	appendJavaClassPath(IProject, List)
+	forceClasspathReload(IProject)
+	getClasspathAsURLArray(IJavaProject)
+	getJavaModel()
+	getJavaProject(IProject)
+	getJavaProjectOutputAbsoluteLocation(IProject)
+	getJavaProjectOutputContainer(IProject)
+	getJavaProjectOutputLocation(IProject)
+	getLibraryContainers(IProject)
+	getLocalJARPathsFromClasspath(IProject)
+	getSourceContainers(IProject)
+	getSourceFolderOrFirst(IProject, String)
+	getSourceFolders(IProject)
+	getSourcePackageFragmentRoots(IJavaProject)
+	getSourcePathOrFirst(IProject, String)
+	removeFromJavaClassPath(IProject, IClasspathEntry)
+	removeFromJavaClassPath(IProject, IPath)
+	removeFromJavaClassPath(IProject, IResource)
+	removeFromJavaClassPath(IProject, List)
+	updateClasspath(IJavaProject)
+
+Note: If anyone subclassed ProjectUtilities and tried to use the JDT specific methods, then they should
+subclass JavaProjectUtilities instead.
+
+Also, the ReflectionAdapter structural features that were used to notify out FLUSH and REFLECTION have been hidden.
+They are not accessed through a utility instead. They are replaced with:
+
+org.eclipse.jem.java.util.NotificationUtil:
+
+	/**
+	 * Answer whether this notification is a reflection notification. If it is, then it means that the JavaClass has
+	 * just had reflection performed on it.
+	 * @param msg
+	 * @return <code>true</code> if this is a reflection event.
+	 * 
+	 * @since 1.1.0
+	 */
+	public static boolean isReflectionEvent(Notification msg);
+	
+	/**
+	 * Answer whether this notification is a reflection flush event of a JavaClass with existing code. If it is, then it means that the 
+	 * JavaClass has just had the reflection results flushed, AND this was a class that had either source or binary code on it..
+	 * @param msg
+	 * @return <code>true</code> if this is a flush event.
+	 * 
+	 * @since 1.1.0
+	 */
+	public static boolean isFlushEvent(Notification msg);
+
+	/**
+	 * Answer whether this notification is a reflection flush event of a JavaClass that is new and doesn't have existing code.
+	 * If it is, then it means that the JavaClass has just had the reflection results flushed, AND this was a class that was new and
+	 * had no code behind it.
+	 * @param msg
+	 * @return <code>true</code> if this is a flush event of new class.
+	 * 
+	 * @since 1.1.0
+	 */
+	public static boolean isFlushNewEvent(Notification msg;
+
