@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<META name="GENERATOR" content="IBM WebSphere Studio">
+<TITLE>initstring.html</TITLE>
+</HEAD>
+<BODY><html><body>
+<table border=0 cellspacing=5 cellpadding=2 width="100%">
+<tr>
+<td align=left valign=top colspan="3" bgcolor="#0080c0"><b><font color="#ffffff" face="Arial,Helvetica">Promotion of Parts when Dropped: Design</font></b></td>
+</tr>
+</table>
+<br><font size=2 face="sans-serif">Problem:</font>
+<br>
+<br><font size=2 face="sans-serif">VCEPreSetCommand is responsible for
+the scoping of Java elements that are added to the JEM model. &nbsp;It
+has four possible scopes:</font>
+
+<DL>
+	<DT>GLOBAL_GLOBAL</DT>
+	<DD><FONT size="2" face="sans-serif">This is an instance variable and
+	it also has its own method that initializes and returns it</FONT></DD>
+	<DT>GLOBAL_LOCAL</DT>
+	<DD><FONT size="2" face="sans-serif">This is an instance variable, but
+	it is initialized in the method that initializes the parent</FONT></DD>
+	<DT>LOCAL</DT>
+	<DD><FONT size="2" face="sans-serif">This is local to the method that
+	uses the object</FONT></DD>
+	<DT>PROPERTY</DT>
+	<DD><FONT size="2" face="sans-serif">There is no instance variable and
+	it is a method argument</FONT></DD>
+</DL>
+
+<P>
+<font size=2 face="sans-serif">Right now the decision of the scope is
+hard coded. &nbsp;For example, the code in VCEPresSetCommand right now
+hard codes AWT and SWT to scope in a particular way.</font>
+</P>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; </font><font size="1" color=#820040 face="Courier New"><b>protected</b></font><font size="1" face="Courier New">
+
+</font><font size="1" color=#820040 face="Courier New"><b>int</b></font><font size="1" face="Courier New">
+settingType(EObject property) {</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; </font><font size="1" color=#820040 face="Courier New"><b>if</b></font><font size="1" face="Courier New">
+(classAWTComponent.isInstance(property))</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </font><font size="1" color=#820040 face="Courier New"><b>return</b></font><font size="1" face="Courier New">
+GLOBAL_GLOBAL; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp;</font><font size="1" color=#3f8080 face="Courier New">// Hard
+code AWT components to be global and globally initialized (in their own
+getJavaBean() method)</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; </font><font size="1" color=#820040 face="Courier New"><b>else</b></font><font size="1" face="Courier New">
+
+</font><font size="1" color=#820040 face="Courier New"><b>if</b></font><font size="1" face="Courier New">(classSWTShell
+!= </font><font size="1" color=#820040 face="Courier New"><b>null</b></font><font size="1" face="Courier New">
+&amp;&amp; classSWTShell.isInstance(property))</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </font><font size="1" color=#820040 face="Courier New"><b>return</b></font><font size="1" face="Courier New">
+
+GLOBAL_GLOBAL;</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; </font><font size="1" color=#820040 face="Courier New"><b>else</b></font><font size="1" face="Courier New">
+</font><font size="1" color=#820040 face="Courier New"><b>if</b></font><font size="1" face="Courier New">
+(classSWTControl != </font><font size="1" color=#820040 face="Courier New"><b>null</b></font><font size="1" face="Courier New">
+
+&amp;&amp; classSWTControl.isInstance(property))</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </font><font size="1" color=#820040 face="Courier New"><b>return</b></font><font size="1" face="Courier New">
+
+GLOBAL_LOCAL; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp;</font><font size="1" color=#3f8080 face="Courier New">// Hard
+code SWT controls to be globally declared and initialized in their parent
+method</font>
+
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; </font><font size="1" color=#820040 face="Courier New"><b>else</b></font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </font><font size="1" color=#820040 face="Courier New"><b>return</b></font><font size="1" face="Courier New">
+
+PROPERTY;</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; }</font>
+<br>
+<P><font size=2 face="sans-serif">We need to make this more flexible.
+&nbsp;For one thing It means the ve.java package has knowledge of AWT and
+SWT (which should be described just their respective jfc and swt plugins),
+and for another it means that other people like Canoo cannot leverage the
+logic.</font>
+</P>
+<br><font size=2 face="sans-serif">Proposal:</font>
+<br>
+<br><font size=2 face="sans-serif">Introduce an Enum property on org.eclipse.ve.internal.jcm.BeanFeatureDecorator
+called scope.</font>
+
+<br><font size=2 face="sans-serif">Introduce an Enum property on org.eclipse.ve.internal.jcm.BeanDecorator
+called scope.</font>
+<br>
+<br><font size=2 face="sans-serif">This would look like:</font>
+<br>
+<samp>
+<br><font size="1" face="Courier New">&nbsp; &lt;!-- The enumeration for
+code generation scope. --&gt;</font>
+<br><font size="1" face="Courier New">&nbsp; &lt;eClassifiers xsi:type=&quot;ecore:EEnum&quot;
+xmi:id=&quot;Scope&quot; name=&quot;Scope&quot; &gt;</font>
+
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &lt;eLiterals name=&quot;global_global&quot;
+value=&quot;2&quot;/&gt; &nbsp;</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &lt;eLiterals name=&quot;global_local&quot;
+value=&quot;3&quot;/&gt;</font>
+
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &lt;eLiterals name=&quot;local&quot;
+value=&quot;1&quot;/&gt;</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &lt;eLiterals name=&quot;property&quot;
+value=&quot;0&quot;/&gt;</font>
+
+<br><font size="1" face="Courier New">&nbsp; &lt;/eClassifiers&gt;</font>
+<br><font size="1" face="Courier New">&nbsp;</font>
+</samp><br>
+<br><font size=2 face="sans-serif">The logic in VCEPreSetCommand would
+be to check the BeanDecorator scope of the newValue and use this. &nbsp;If
+it wasn't set then the BeanFeatureDecorator of the feature would be used.
+&nbsp;If neither were present then the default would be PROPERTY;</font>
+<br>
+<br><font size=2 face="sans-serif">Examples:</font>
+<br>
+<br><font size=2 face="sans-serif">All AWT components are scoped in their
+own method<BR>
+&nbsp; &nbsp; &nbsp; &nbsp;- &nbsp; &nbsp; &nbsp;
+&nbsp;java/awt/Component.override</font>
+
+<br>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &lt;addedEObjects xsi:type=&quot;org.eclipse.ve.internal.jcm:BeanDecorator&quot;</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; beanProxyClassName=&quot;org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter&quot;</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; scope=&quot;global_global&quot;/&gt;</font>
+
+<br>
+<br><font size=2 face="sans-serif">JLabel wants to be scoped in the method
+of the parent that declares it <BR>
+&nbsp; &nbsp; &nbsp; &nbsp;- &nbsp; &nbsp; &nbsp;
+&nbsp;javax/swing/JLabel.override</font>
+<br>
+<br><font size="1" face="Courier New">&nbsp; &nbsp;&lt;addedEObjects xsi:type=&quot;org.eclipse.ve.internal.jcm:BeanDecorator&quot;
+scope=&quot;local&quot;/&gt;</font>
+
+<br>
+<br><font size=2 face="sans-serif">All SWT controls should be scoped in
+the parent method but an instance var in the class<BR>
+&nbsp; &nbsp; &nbsp; &nbsp; - &nbsp; &nbsp; &nbsp;
+&nbsp;org/eclipse/swt/widgets/Control.override</font>
+<br>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &lt;addedEObjects xsi:type=&quot;org.eclipse.ve.internal.jcm:BeanDecorator&quot;</font>
+
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; beanProxyClassName=&quot;org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlProxyAdapter&quot;</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; scope=&quot;global_local&quot;/&gt;</font>
+<br>
+<br><font size=2 face="sans-serif">except for SWT Composites that always
+want to be in their own method<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;org/eclipse/swt/widgets/Composite.override</font>
+
+<br>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &lt;addedEObjects xsi:type=&quot;org.eclipse.ve.internal.jcm:BeanDecorator&quot;
+&nbsp; </font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; beanProxyClassName=&quot;org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter&quot;</font>
+<br><font size="1" face="Courier New">&nbsp; &nbsp; &nbsp; &nbsp; scope=&quot;global_global&quot;/&gt;</font>
+
+<br>
+<br><font size=2 face="sans-serif">The default for everyone who doesn't
+have a scope is &quot;property&quot;. &nbsp;For anyone else who has their
+own custom parent/child relationship they can override the scope on a per
+class or per relationship basis.</font>
+<br>
+<br><font size=2 face="sans-serif">Thanks,</font>
+<br>
+<br><font size=2 face="sans-serif">Joe and Rich</font>
+<!--X-Body-of-Message-End-->
+<!--X-MsgBody-End-->
+<!--X-Follow-Ups-->
+<hr></HTML>
