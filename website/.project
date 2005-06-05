@@ -40,6 +40,6 @@
 		<nature>com.ibm.wtp.web.StaticWebNature</nature>
 		<nature>com.ibm.etools.j2ee.StaticWebNature</nature>
 		<nature>com.ibm.etools.webpage.template.templatenature</nature>
-		<nature>com.ibm.etools.siteedit.WebSiteNature</nature>	
+		<nature>com.ibm.etools.siteedit.WebSiteNature</nature>
 	</natures>
 </projectDescription>
