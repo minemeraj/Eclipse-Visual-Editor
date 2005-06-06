@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PDEUtilities.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-06 12:07:31 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-06 13:09:35 $ 
  */
 package org.eclipse.ve.internal.java.vce;
 
@@ -19,7 +19,9 @@ import java.util.*;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.apache.crimson.parser.XMLReaderImpl;
+import javax.xml.parsers.*;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -35,7 +37,6 @@ public class PDEUtilities {
 	// Note: This should not really be in the package it is.  The problem is the JavaBeanLaunchConfigurationDelegate and
 	// the fact that this has to prep all of the -D arguments to the target VM launchers from a common point.  Until we refactor and
 	// publish the launcher API this will have to live here for now
-	private XMLReaderImpl xmlReader;
 	private HashMap viewClasses = new HashMap();
 	private IProject currentProject;
 	private static String VIEW_PART_ICON_PATH;	// Location on disk of the project resource /icons/full/clcl16/rcp_app.gif
@@ -158,39 +159,41 @@ public class PDEUtilities {
 			try{
 				pluginTimeStamp = pluginXMLFile.getLocalTimeStamp();
 				InputStream pluginXMLis = pluginXMLFile.getContents(true);
-				InputSource pluginXMLsource = new InputSource(pluginXMLis);
-				xmlReader = new XMLReaderImpl();
-				xmlReader.setContentHandler(new DefaultHandler(){
-					private int processing;	// Flag to show what kind of extension point we are parsing currently
-					public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {					
-						String tag = localName.trim().toLowerCase(Locale.US); // Always use US locale for system strings
+				DefaultHandler xmlHandler = new DefaultHandler(){
+					static final int VIEW = 1;
+					static final int EDITOR = 2;					
+					static final int DEFAULT = 0;				
+					private int processing = DEFAULT;	// Flag to show what kind of extension point we are parsing currently					
+					public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+						String tag = qName.trim().toLowerCase(Locale.US); // Always use US locale for system strings
 						// If we are an extension of "org.eclipse.ui.views" then flag this as our next set of tags
 						if(tag.equals("extension")){
 							String extensionPointName = attributes.getValue("point");
 							if(extensionPointName == null) return;
 							if(extensionPointName.equalsIgnoreCase("org.eclipse.ui.views")){
-								processing = 1;
+								processing = VIEW;
 							} else if (extensionPointName.equalsIgnoreCase("org.eclipse.ui.editors")){
-								processing = 2;								
+								processing = EDITOR;								
 							} else {
-								processing = 0;
+								processing = DEFAULT;
 							}
 						}
-						if (tag.equalsIgnoreCase("view") && processing == 1){			
+						if (tag.equalsIgnoreCase("view") && processing == VIEW){			
 							processView(attributes);
-						} else if (tag.equalsIgnoreCase("editor") && processing == 2){
+						} else if (tag.equalsIgnoreCase("editor") && processing == EDITOR){
 							processView(attributes);
 						}
 					}
-				});
-				xmlReader.parse(pluginXMLsource);	
-				pluginXMLis.close();
-			} catch (CoreException e) {
-			} catch (IOException e) {
+				};
+				SAXParserFactory.newInstance().newSAXParser().parse(pluginXMLis, xmlHandler);
+			} catch (IOException exc){
 			} catch (SAXException e) {
+			} catch (ParserConfigurationException e) {
+			} catch (FactoryConfigurationError e) {
+			} catch (CoreException e) {
 			}
 		}
-	}
+	}	
 	private void processView(Attributes attributes){
 		// class, icon and name are what we are interested in
 		String nameName = attributes.getValue("name");
@@ -198,5 +201,4 @@ public class PDEUtilities {
 		String className = attributes.getValue("class");
 		viewClasses.put(className,new String[] {nameName,iconName});
 	}
-
 }
