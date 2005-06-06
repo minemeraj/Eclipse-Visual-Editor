@@ -6,7 +6,7 @@ plugin@com.ibm.etools.emf.event=N20050606b,:pserver:anonymous@dev.eclipse.org:/h
 !*** Special ones from eclipse.
 plugin@org.eclipse.test=v20050226,:pserver:anonymous@dev.eclipse.org:/home/eclipse,
 fragment@org.eclipse.ant.optional.junit=v20050226,:pserver:anonymous@dev.eclipse.org:/home/eclipse,
-plugin@org.eclipse.perfmsr.core=N20050606,:pserver:anonymous@dev.eclipse.org:/home/eclipse,,org.eclipse.sdk.tests-feature/plugins/org.eclipse.perfmsr.core,
+plugin@org.eclipse.perfmsr.core=v20050603,:pserver:anonymous@dev.eclipse.org:/home/eclipse,,org.eclipse.sdk.tests-feature/plugins/org.eclipse.perfmsr.core,
 feature@phony.perfcore=N20050114f,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.releng.builder/perfcore/phony.perfcore-feature,
 
 !*** The standard contributions
