@@ -10,622 +10,601 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt.targetvm;
 
-import java.util.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.*;
+
+/**
+ * Since Eclipse 3.1 GridLayout took away the access to the column widths and row heights
+ * needed to show grid lines and feedback for the GridLayout policy helper, we need to calculate
+ * this ourselves using the same algorithms that GridLayout.layout uses. The main work is done
+ * in the computeValues method which does much of what the GridLayout.layout method except it doesn't
+ * layout the controls... just gets the column widths and row heights.
+ * 
+ * Note: In the future, if SWT GridLayout changes it's layout method or GridData changes it's 
+ * protected fields, this class will have to be refactored to handle those changes. 
+ * 
+ * This class accesses and sets the following package protected GridData fields:
+ *    cacheWidth, cacheHeight
+ *    
+ * It also executes the following package protected method:
+ * 		computeSize(Control, int, int, boolean)
+ */
 
 public class GridLayoutHelper {
 
 	private Composite fComposite;
-	public int[] columnWidths;
-	public int[] rowHeights;
-	public int[] expandableColumns;
-	public int[] expandableRows;
+	public int[] widths;
+	public int[] heights;
 	private GridLayout fGridLayout;
-	private java.util.List grid = new ArrayList();
+	private Field cacheWidthField;	// GridData package protected field
+	private Field cacheHeightField;	// GridData package protected field
+	private Method computeSizeMethod;	// GridData package protected method
 
 	public void setComposite(Composite aComposite) {
-
 		fComposite = aComposite;
 		fGridLayout = (GridLayout) aComposite.getLayout();
 		computeValues();
-
-	}	
-	
-	protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
-		Control[] children = composite.getChildren();
-		int numChildren = children.length;
-
-		if (numChildren == 0) return new Point(0,0);
-
-		if (flushCache) {
-			// Cause the grid and its related information to be calculated
-			// again.
-			grid.clear();
-		}
-		return computeLayoutSize(composite, wHint, hHint, flushCache);
-	}	
-	
-	GridData[] emptyRow() {
-		GridData[] row = new GridData[fGridLayout.numColumns];
-		for (int i = 0; i < fGridLayout.numColumns; i++) {
-			row[i] = null;}
-		return row;
 	}
-	
-	Point getFirstEmptyCell(int row, int column) {
-		GridData[] rowData = (GridData[]) grid.get(row);
-		while (column < fGridLayout.numColumns && rowData[column] != null) {
-			column++;
-		}
-		if (column == fGridLayout.numColumns) {
-			row++;
-			column = 0;
-			if (row  == grid.size()) {
-				grid.add(emptyRow());
+
+	private void runComputeSize(GridData aGridData, Object [] args) {
+		if (computeSizeMethod == null) {
+			try {
+				computeSizeMethod = GridData.class
+						.getDeclaredMethod("computeSize", new Class[] { Control.class, int.class, int.class, boolean.class});
+				computeSizeMethod.setAccessible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			return getFirstEmptyCell(row, column);
 		}
-		return new Point(row, column);
-	}
-	Point getLastEmptyCell(int row, int column) {
-		GridData[] rowData = (GridData[])grid.get(row);
-		while (column < fGridLayout.numColumns && rowData[column] == null ) {
-			column++;
+		try {
+			if (computeSizeMethod != null)
+				computeSizeMethod.invoke(aGridData, args);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return new Point(row, column - 1);
-	}	
+	}
 	
-	Point getCell(int row, int column, int width, int height) {
-		Point start = getFirstEmptyCell(row, column);
-		Point end = getLastEmptyCell(start.x, start.y);
-		if (end.y + 1 - start.y >= width) return start;
-		GridData[] rowData = (GridData[]) grid.get(start.x);
-		for (int j = start.y; j < end.y + 1; j++) {
-			GridData spacerSpec = new GridData();
-			rowData[j] = spacerSpec;
+	private int getCacheWidth(GridData aGridData) {
+		if (cacheWidthField == null) {
+			try {
+				cacheWidthField = GridData.class.getDeclaredField("cacheWidth");
+				cacheWidthField.setAccessible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		return getCell(end.x, end.y, width, height);
-	}	
-	
-	private HashMap dataIndexes = new HashMap();
-	void putChildIndex(GridData aData, int index){
-		dataIndexes.put(aData,new Integer(index));
+		try {
+			Integer cacheWidth = (Integer) cacheWidthField.get(aGridData);
+			return cacheWidth.intValue();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
-	int getChildIndex(GridData aData){
-		Integer index = (Integer)dataIndexes.get(aData);
-		return index == null ? 0 : index.intValue();
-	}
-	
-	private HashMap itemData = new HashMap();
-	void putItemData(GridData aData, boolean isItemData){
-		itemData.put(aData,isItemData ? Boolean.TRUE : Boolean.FALSE);
-	}
-	boolean isItemData(GridData aData){
-		Boolean isItemData = (Boolean)itemData.get(aData);
-		return isItemData == null ? true : isItemData.booleanValue();
-	}
-	
-	private HashMap childGridData = new HashMap();
-	void putChildGridData(Control child,GridData data){
-		childGridData.put(child,data);
-	}
-	
-	void createGrid(Composite composite) {
-		int row, column, rowFill, columnFill;
-		Control[] children;
-		GridData spacerSpec;
 
-		// 
-		children = composite.getChildren();
+	private int getCacheHeight(GridData aGridData) {
+		if (cacheHeightField == null) {
+			try {
+				cacheHeightField = GridData.class.getDeclaredField("cacheHeight");
+				cacheHeightField.setAccessible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			Integer cacheWidth = (Integer) cacheHeightField.get(aGridData);
+			return cacheWidth.intValue();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 
-		// 
-		grid.add(emptyRow());
-		row = 0;
-		column = 0;
+	private void putCacheWidth(GridData aGridData, int value) {
+		if (cacheWidthField == null) {
+			try {
+				cacheWidthField = GridData.class.getDeclaredField("cacheWidth");
+				cacheWidthField.setAccessible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			cacheWidthField.setInt(aGridData, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private void putCacheHeight(GridData aGridData, int value) {
+		if (cacheHeightField == null) {
+			try {
+				cacheHeightField = GridData.class.getDeclaredField("cacheHeight");
+				cacheHeightField.setAccessible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			cacheHeightField.setInt(aGridData, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * This method is basically a copy of the code used in 
+	 * GridLayout.layout (Composite composite, boolean move, int x, int y, int width, int height, boolean flushCache)
+	 */
+	private void computeValues() {
 
-		// Loop through the children and place their associated layout specs in the
-		// grid.  Placement occurs left to right, top to bottom (i.e., by row).
+		Rectangle clientArea = fComposite.getClientArea();
+		int width = clientArea.width;
+		int height = clientArea.height;
+
+		if (fGridLayout.numColumns < 1) { return; }
+		;
+
+		int count = 0;
+		Control[] children = fComposite.getChildren();
 		for (int i = 0; i < children.length; i++) {
-			// Find the first available spot in the grid.
+			Control control = children[i];
+			GridData data = (GridData) control.getLayoutData();
+			if (data == null || !data.exclude) {
+				children[count++] = children[i];
+			}
+		}
+
+		/* Build the grid */
+		int row = 0, column = 0, rowCount = 0, columnCount = fGridLayout.numColumns;
+		Control[][] grid = new Control[4][columnCount];
+		for (int i = 0; i < count; i++) {
 			Control child = children[i];
-			GridData spec = (GridData) child.getLayoutData();
-			if (spec == null) {
-				spec = new GridData();
-			} 
-			putChildGridData(child,spec);
-			spec.horizontalSpan = Math.min(spec.horizontalSpan, fGridLayout.numColumns);
-			Point p = getCell(row, column, spec.horizontalSpan, spec.verticalSpan);
-			row = p.x; column = p.y;
-
-			// The vertical span for the item will be at least 1.  If it is > 1,
-			// add other rows to the grid.
-			for (int j = 2; j <= spec.verticalSpan; j++) {
-				if (row + j > grid.size()) {
-					grid.add(emptyRow());
+			GridData data = (GridData) child.getLayoutData();
+			if (data == null)
+				data = new GridData();
+			int hSpan = Math.max(1, Math.min(data.horizontalSpan, columnCount));
+			int vSpan = Math.max(1, data.verticalSpan);
+			while (true) {
+				int lastRow = row + vSpan;
+				if (lastRow >= grid.length) {
+					Control[][] newGrid = new Control[lastRow + 4][columnCount];
+					System.arraycopy(grid, 0, newGrid, 0, grid.length);
+					grid = newGrid;
 				}
-			}
-
-			// Store the layout spec.  Also cache the childIndex.  NOTE: That we assume the children of a
-			// composite are maintained in the order in which they are created and added to the composite.
-			((GridData[]) grid.get(row))[column] = spec;
-			putChildIndex(spec,i);
-
-			// Put spacers in the grid to account for the item's vertical and horizontal
-			// span.
-			rowFill = spec.verticalSpan - 1;
-			columnFill = spec.horizontalSpan - 1;
-			for (int r = 1; r <= rowFill; r++) {
-				for (int c = 0; c < spec.horizontalSpan; c++) {
-					spacerSpec = new GridData();
-					((GridData[]) grid.get(row + r))[column + c] = spacerSpec;
+				if (grid[row] == null) {
+					grid[row] = new Control[columnCount];
 				}
-			}
-			for (int c = 1; c <= columnFill; c++) {
-				for (int r = 0; r < spec.verticalSpan; r++) {
-					spacerSpec = new GridData();
-					putItemData(spacerSpec,false);
-					((GridData[]) grid.get(row + r))[column + c] = spacerSpec;
+				while (column < columnCount && grid[row][column] != null) {
+					column++;
 				}
-			}
-			column = column + spec.horizontalSpan - 1;
-		}
-
-		// Fill out empty grid cells with spacers.
-		for (int r = row; r < grid.size(); r++) {
-			GridData[] rowData = (GridData[]) grid.get(r);
-			for (int c = 0; c < fGridLayout.numColumns; c++) {
-				if (rowData[c] == null) {
-					spacerSpec = new GridData();
-					putItemData(spacerSpec,false);
-					rowData[c] = spacerSpec;
-				}
-			}
-		}
-	}
-	
-	void calculateGridDimensions(Composite composite, boolean flushCache) {
-		int maxWidth, childWidth, maxHeight, childHeight;
-		
-		//
-		Control[] children = composite.getChildren();
-		Point[] childSizes = new Point[children.length];
-		columnWidths = new int[fGridLayout.numColumns];
-		rowHeights = new int[grid.size()];
-		
-		// Loop through the grid by column to get the width that each column needs to be.
-		// Each column will be as wide as its widest control.
-		for (int column = 0; column < fGridLayout.numColumns; column++) {
-			maxWidth = 0;
-			for (int row = 0; row < grid.size(); row++) {
-				GridData spec = ((GridData[]) grid.get(row))[column];
-				if (isItemData(spec)) {
-					Control child = children[getChildIndex(spec)];
-					childSizes[getChildIndex(spec)] = child.computeSize(spec.widthHint, spec.heightHint, flushCache);
-					childWidth = childSizes[getChildIndex(spec)].x + spec.horizontalIndent;
-					if (spec.horizontalSpan == 1) {
-						maxWidth = Math.max(maxWidth, childWidth);
+				int endCount = column + hSpan;
+				if (endCount <= columnCount) {
+					int index = column;
+					while (index < endCount && grid[row][index] == null) {
+						index++;
 					}
+					if (index == endCount)
+						break;
+					column = index;
+				}
+				if (column + hSpan >= columnCount) {
+					column = 0;
+					row++;
 				}
 			}
-			// Cache the values for later use.
-			columnWidths[column] = maxWidth;
-		}
-
-		// 
-		if (fGridLayout.makeColumnsEqualWidth) {
-			maxWidth = 0;
-			// Find the largest column size that is necessary and make each column that size.
-			for (int i = 0; i < fGridLayout.numColumns; i++) {
-				maxWidth = Math.max(maxWidth,columnWidths[i]);
-			}
-			maxWidth += fGridLayout.horizontalSpacing;
-			for (int i = 0; i < fGridLayout.numColumns; i++) {
-				columnWidths[i] = maxWidth;
-			}
-		}
-
-		// Loop through the grid by row to get the height that each row needs to be.
-		// Each row will be as high as its tallest control.
-		for (int row = 0; row < grid.size(); row++) {
-			maxHeight = 0;
-			for (int column = 0; column < fGridLayout.numColumns; column++) {
-				GridData spec = ((GridData[]) grid.get(row))[column];
-				if (isItemData(spec)) {
-					childHeight = childSizes[getChildIndex(spec)].y;
-					if (spec.verticalSpan == 1) {
-						maxHeight = Math.max(maxHeight, childHeight);
-					}
+			for (int j = 0; j < vSpan; j++) {
+				if (grid[row + j] == null) {
+					grid[row + j] = new Control[columnCount];
+				}
+				for (int k = 0; k < hSpan; k++) {
+					grid[row + j][column + k] = child;
 				}
 			}
-			// Cache the values for later use.
-			rowHeights[row] = maxHeight;
-		}
-	}	
-	
-	void computeExpandableCells() {
-		// If a control grabs excess horizontal space, the last column that the control spans
-		// will be expandable.  Similarly, if a control grabs excess vertical space, the 
-		// last row that the control spans will be expandable.
-		Hashtable growColumns = new Hashtable();
-		Hashtable growRows = new Hashtable();
-		for (int col = 0; col < fGridLayout.numColumns; col++) {
-			for (int row = 0; row < grid.size(); row++) {
-				GridData spec = ((GridData[]) grid.get(row))[col];
-				if (spec.grabExcessHorizontalSpace) {
-					growColumns.put(new Integer(col + spec.horizontalSpan - 1), new Object());
-				}
-				if (spec.grabExcessVerticalSpace) {
-					growRows.put(new Integer(row + spec.verticalSpan - 1), new Object());
-				}
-			}
+			rowCount = Math.max(rowCount, row + vSpan);
+			column += hSpan;
 		}
 
-		// Cache the values.  These values are used later during children layout.
-		int i = 0;
-		Enumeration enumeration = growColumns.keys();
-		expandableColumns = new int[growColumns.size()];
-		while (enumeration.hasMoreElements()) {
-			expandableColumns[i] = ((Integer)enumeration.nextElement()).intValue();
-			i = i + 1;
-		}
-		i = 0;
-		enumeration = growRows.keys();
-		expandableRows = new int[growRows.size()];
-		while (enumeration.hasMoreElements()) {
-			expandableRows[i] = ((Integer)enumeration.nextElement()).intValue();
-			i = i + 1;
-		}
-	}
-	
-	void adjustGridDimensions(Composite composite, boolean flushCache) {
-		// Ensure that controls that span more than one row or column have enough space.
-		for (int row = 0; row < grid.size(); row++) {
-			for (int column = 0; column < fGridLayout.numColumns; column++) {
-				GridData spec = ((GridData[]) grid.get(row))[column];
-				if (isItemData(spec)) {
-					// Widgets spanning columns.
-					if (spec.horizontalSpan > 1) {
-						Control child = composite.getChildren()[getChildIndex(spec)];
-						Point extent = child.computeSize(spec.widthHint, spec.heightHint, flushCache);
-
-						// Calculate the size of the control's spanned columns.
-						int lastSpanIndex = column + spec.horizontalSpan;
-						int spannedSize = 0;
-						for (int c = column; c < lastSpanIndex; c++) {
-							spannedSize = spannedSize + columnWidths[c] + fGridLayout.horizontalSpacing;
+		/* Column widths */
+		int availableWidth = width - fGridLayout.horizontalSpacing * (columnCount - 1) - (fGridLayout.marginLeft + fGridLayout.marginWidth * 2 + fGridLayout.marginRight);
+		int expandCount = 0;
+		widths = new int[columnCount];
+		int[] minWidths = new int[columnCount];
+		boolean[] expandColumn = new boolean[columnCount];
+		for (int j = 0; j < columnCount; j++) {
+			for (int i = 0; i < rowCount; i++) {
+				GridData data = getData(grid, i, j, rowCount, columnCount, true);
+				if (data != null) {
+					int hSpan = Math.max(1, Math.min(data.horizontalSpan, columnCount));
+					if (hSpan == 1) {
+						int w = getCacheWidth(data) + data.horizontalIndent;
+						widths[j] = Math.max(widths[j], w);
+						if (data.grabExcessHorizontalSpace) {
+							if (!expandColumn[j]) expandCount++;
+							expandColumn[j] = true;
 						}
-						spannedSize = spannedSize - fGridLayout.horizontalSpacing;
-
-						// If the spanned columns are not large enough to display the control, adjust the column
-						// sizes to account for the extra space that is needed.
-						if (extent.x + spec.horizontalIndent > spannedSize) {
-							int extraSpaceNeeded = extent.x + spec.horizontalIndent - spannedSize;
-							int lastColumn = column + spec.horizontalSpan - 1;
-							int colWidth;
-							if (fGridLayout.makeColumnsEqualWidth) {
-								// Evenly distribute the extra space amongst all of the columns.
-								int columnExtra = extraSpaceNeeded / fGridLayout.numColumns;
-								int columnRemainder = extraSpaceNeeded % fGridLayout.numColumns;
-								for (int i = 0; i < columnWidths.length; i++) {
-									colWidth = columnWidths[i] + columnExtra;
-									columnWidths[i] = colWidth;
-								}
-								colWidth = columnWidths[lastColumn] + columnRemainder;
-								columnWidths[lastColumn] = colWidth;
+						if (!data.grabExcessHorizontalSpace || data.minimumWidth != 0) {
+							w = !data.grabExcessHorizontalSpace || data.minimumWidth == SWT.DEFAULT ? getCacheWidth(data) : data.minimumWidth;
+							w += data.horizontalIndent;
+							minWidths[j] = Math.max(minWidths[j], w);
+						}
+					}
+				}
+			}
+			for (int i = 0; i < rowCount; i++) {
+				GridData data = getData(grid, i, j, rowCount, columnCount, false);
+				if (data != null) {
+					int hSpan = Math.max(1, Math.min(data.horizontalSpan, columnCount));
+					if (hSpan > 1) {
+						int spanWidth = 0, spanMinWidth = 0, spanExpandCount = 0;
+						for (int k = 0; k < hSpan; k++) {
+							spanWidth += widths[j - k];
+							spanMinWidth += minWidths[j - k];
+							if (expandColumn[j - k]) spanExpandCount++;
+						}
+						if (data.grabExcessHorizontalSpace && spanExpandCount == 0) {
+							expandCount++;
+							expandColumn[j] = true;
+						}
+						int w = getCacheWidth(data) + data.horizontalIndent - spanWidth - (hSpan - 1) * fGridLayout.horizontalSpacing;
+						if (w > 0) {
+							if (spanExpandCount == 0) {
+								widths[j] += w;
 							} else {
-								Vector localExpandableColumns = new Vector();
-								for (int i = column; i <= lastColumn; i++) {
-									for (int j = 0; j < expandableColumns.length; j++) {
-										if (expandableColumns[j] == i) {
-											localExpandableColumns.addElement(new Integer(i));
+								int delta = w / spanExpandCount;
+								int remainder = w % spanExpandCount, last = -1;
+								for (int k = 0; k < hSpan; k++) {
+									if (expandColumn[j - k]) {
+										widths[last = j - k] += delta;
+									}
+								}
+								if (last > -1) widths[last] += remainder;
+							}
+						}
+						if (!data.grabExcessHorizontalSpace || data.minimumWidth != 0) {
+							w = !data.grabExcessHorizontalSpace || data.minimumWidth == SWT.DEFAULT ? getCacheWidth(data) : data.minimumWidth;
+							w += data.horizontalIndent - spanMinWidth - (hSpan - 1) * fGridLayout.horizontalSpacing;
+							if (w > 0) {
+								if (spanExpandCount == 0) {
+									minWidths[j] += w;
+								} else {
+									int delta = w / spanExpandCount;
+									int remainder = w % spanExpandCount, last = -1;
+									for (int k = 0; k < hSpan; k++) {
+										if (expandColumn[j - k]) {
+											minWidths[last = j - k] += delta;
+										}
+									}
+									if (last > -1) minWidths[last] += remainder;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		if (fGridLayout.makeColumnsEqualWidth) {
+			int minColumnWidth = 0;
+			int columnWidth = 0;
+			for (int i = 0; i < columnCount; i++) {
+				minColumnWidth = Math.max(minColumnWidth, minWidths[i]);
+				columnWidth = Math.max(columnWidth, widths[i]);
+			}
+			columnWidth = width == SWT.DEFAULT || expandCount == 0 ? columnWidth : Math.max(minColumnWidth, availableWidth / columnCount);
+			for (int i = 0; i < columnCount; i++) {
+				expandColumn[i] = expandCount > 0;
+				widths[i] = columnWidth;
+			}
+		} else {
+			if (width != SWT.DEFAULT && expandCount > 0) {
+				int totalWidth = 0;
+				for (int i = 0; i < columnCount; i++) {
+					totalWidth += widths[i];
+				}
+				int c = expandCount;
+				int delta = (availableWidth - totalWidth) / c;
+				int remainder = (availableWidth - totalWidth) % c;
+				int last = -1;
+				while (totalWidth != availableWidth) {
+					for (int j = 0; j < columnCount; j++) {
+						if (expandColumn[j]) {
+							if (widths[j] + delta > minWidths[j]) {
+								widths[last = j] = widths[j] + delta;
+							} else {
+								widths[j] = minWidths[j];
+								expandColumn[j] = false;
+								c--;
+							}
+						}
+					}
+					if (last > -1) widths[last] += remainder;
+
+					for (int j = 0; j < columnCount; j++) {
+						for (int i = 0; i < rowCount; i++) {
+							GridData data = getData(grid, i, j, rowCount, columnCount, false);
+							if (data != null) {
+								int hSpan = Math.max(1, Math.min(data.horizontalSpan, columnCount));
+								if (hSpan > 1) {
+									if (!data.grabExcessHorizontalSpace || data.minimumWidth != 0) {
+										int spanWidth = 0, spanExpandCount = 0;
+										for (int k = 0; k < hSpan; k++) {
+											spanWidth += widths[j - k];
+											if (expandColumn[j - k]) spanExpandCount++;
+										}
+										int w = !data.grabExcessHorizontalSpace || data.minimumWidth == SWT.DEFAULT ? getCacheWidth(data)
+												: data.minimumWidth;
+										w += data.horizontalIndent - spanWidth - (hSpan - 1) * fGridLayout.horizontalSpacing;
+										if (w > 0) {
+											if (spanExpandCount == 0) {
+												widths[j] += w;
+											} else {
+												int delta2 = w / spanExpandCount;
+												int remainder2 = w % spanExpandCount, last2 = -1;
+												for (int k = 0; k < hSpan; k++) {
+													if (expandColumn[j - k]) {
+														widths[last2 = j - k] += delta2;
+													}
+												}
+												if (last2 > -1) widths[last2] += remainder2;
+											}
 										}
 									}
 								}
-								if (localExpandableColumns.size() > 0) {
-									// If any of the control's columns grab excess space, allocate the space amongst those columns.
-									int columnExtra = extraSpaceNeeded / localExpandableColumns.size();
-									int columnRemainder = extraSpaceNeeded % localExpandableColumns.size();
-									for (int i = 0; i < localExpandableColumns.size(); i++) {
-										int expandableCol = ((Integer) localExpandableColumns.elementAt(i)).intValue();
-										colWidth = columnWidths[expandableCol] + columnExtra;
-										columnWidths[expandableCol] = colWidth;
-									}
-									colWidth = columnWidths[lastColumn] + columnRemainder;
-									columnWidths[lastColumn] = colWidth;
+							}
+						}
+					}
+					if (c == 0) break;
+					totalWidth = 0;
+					for (int i = 0; i < columnCount; i++) {
+						totalWidth += widths[i];
+					}
+					delta = (availableWidth - totalWidth) / c;
+					remainder = (availableWidth - totalWidth) % c;
+					last = -1;
+				}
+			}
+		}
+		/* Wrapping */
+		GridData [] flush = null;
+		int flushLength = 0;
+		if (width != SWT.DEFAULT) {
+			for (int j=0; j<columnCount; j++) {
+				for (int i=0; i<rowCount; i++) {
+					GridData data = getData (grid, i, j, rowCount, columnCount, false);
+					if (data != null) {
+						if (data.heightHint == SWT.DEFAULT) {
+							Control child = grid [i][j];
+							//TEMPORARY CODE
+							int hSpan = Math.max (1, Math.min (data.horizontalSpan, columnCount));
+							int currentWidth = 0;
+							for (int k=0; k<hSpan; k++) {
+								currentWidth += widths [j-k];
+							}
+							currentWidth += (hSpan - 1) * fGridLayout.horizontalSpacing - data.horizontalIndent;
+							if ((currentWidth != getCacheWidth(data) && data.horizontalAlignment == SWT.FILL) || (getCacheWidth(data) > currentWidth)) {
+								int trim = 0;
+								if (child instanceof Scrollable) {
+									Rectangle rect = ((Scrollable) child).computeTrim(0, 0, 0, 0);
+									trim = rect.width;
 								} else {
-									// Add the extra space to the control's last column if none of its columns grab excess space.
-									colWidth = columnWidths[lastColumn] + extraSpaceNeeded;
-									columnWidths[lastColumn] = colWidth;
+									trim = child.getBorderWidth() * 2;
+								}
+								putCacheWidth(data, SWT.DEFAULT);
+								putCacheHeight(data, SWT.DEFAULT);
+								runComputeSize(data, new Object[] {child, new Integer(Math.max(0, currentWidth - trim)),
+										new Integer(data.heightHint), new Boolean(false)});
+								if (data.grabExcessVerticalSpace && data.minimumHeight > 0) {
+									putCacheHeight(data, Math.max(getCacheHeight(data), data.minimumHeight));
+								}
+								if (flush == null)
+									flush = new GridData[count];
+								// now that we've changed the actual GridData for this control we need
+								// to store for later on when we'll reset it back.
+								flush[flushLength++] = data;
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+		/* Row heights */
+		int availableHeight = height - fGridLayout.verticalSpacing * (rowCount - 1)	- (fGridLayout.marginTop + fGridLayout.marginHeight * 2 + fGridLayout.marginBottom);
+		expandCount = 0;
+		heights = new int[rowCount];
+		int[] minHeights = new int[rowCount];
+		boolean[] expandRow = new boolean[rowCount];
+		for (int i = 0; i < rowCount; i++) {
+			for (int j = 0; j < columnCount; j++) {
+				GridData data = getData(grid, i, j, rowCount, columnCount, true);
+				if (data != null) {
+					int vSpan = Math.max(1, Math.min(data.verticalSpan, rowCount));
+					if (vSpan == 1) {
+						int h = getCacheHeight(data) + data.verticalIndent;
+						heights[i] = Math.max(heights[i], h);
+						if (data.grabExcessVerticalSpace) {
+							if (!expandRow[i]) expandCount++;
+							expandRow[i] = true;
+						}
+						if (!data.grabExcessVerticalSpace || data.minimumHeight != 0) {
+							h = !data.grabExcessVerticalSpace || data.minimumHeight == SWT.DEFAULT ? getCacheHeight(data) : data.minimumHeight;
+							h += data.verticalIndent;
+							minHeights[i] = Math.max(minHeights[i], h);
+						}
+					}
+				}
+			}
+			for (int j = 0; j < columnCount; j++) {
+				GridData data = getData(grid, i, j, rowCount, columnCount, false);
+				if (data != null) {
+					int vSpan = Math.max(1, Math.min(data.verticalSpan, rowCount));
+					if (vSpan > 1) {
+						int spanHeight = 0, spanMinHeight = 0, spanExpandCount = 0;
+						for (int k = 0; k < vSpan; k++) {
+							spanHeight += heights[i - k];
+							spanMinHeight += minHeights[i - k];
+							if (expandRow[i - k]) spanExpandCount++;
+						}
+						if (data.grabExcessVerticalSpace && spanExpandCount == 0) {
+							expandCount++;
+							expandRow[i] = true;
+						}
+						int h = getCacheHeight(data) + data.verticalIndent - spanHeight - (vSpan - 1) * fGridLayout.verticalSpacing;
+						if (h > 0) {
+							if (spanExpandCount == 0) {
+								heights[i] += h;
+							} else {
+								int delta = h / spanExpandCount;
+								int remainder = h % spanExpandCount, last = -1;
+								for (int k = 0; k < vSpan; k++) {
+									if (expandRow[i - k]) {
+										heights[last = i - k] += delta;
+									}
+								}
+								if (last > -1) heights[last] += remainder;
+							}
+						}
+						if (!data.grabExcessVerticalSpace || data.minimumHeight != 0) {
+							h = !data.grabExcessVerticalSpace || data.minimumHeight == SWT.DEFAULT ? getCacheHeight(data) : data.minimumHeight;
+							h += data.verticalIndent - spanMinHeight - (vSpan - 1) * fGridLayout.verticalSpacing;
+							if (h > 0) {
+								if (spanExpandCount == 0) {
+									minHeights[i] += h;
+								} else {
+									int delta = h / spanExpandCount;
+									int remainder = h % spanExpandCount, last = -1;
+									for (int k = 0; k < vSpan; k++) {
+										if (expandRow[i - k]) {
+											minHeights[last = i - k] += delta;
+										}
+									}
+									if (last > -1) minHeights[last] += remainder;
 								}
 							}
 						}
 					}
-
-					// Widgets spanning rows.
-					if (spec.verticalSpan > 1) {
-						Control child = composite.getChildren()[getChildIndex(spec)];
-						Point extent = child.computeSize(spec.widthHint, spec.heightHint, flushCache);
-
-						// Calculate the size of the control's spanned rows.
-						int lastSpanIndex = row + spec.verticalSpan;
-						int spannedSize = 0;
-						for (int r = row; r < lastSpanIndex; r++) {
-							spannedSize = spannedSize + rowHeights[r] + fGridLayout.verticalSpacing;
+				}
+			}
+		}
+		if (height != SWT.DEFAULT && expandCount > 0) {
+			int totalHeight = 0;
+			for (int i = 0; i < rowCount; i++) {
+				totalHeight += heights[i];
+			}
+			int c = expandCount;
+			int delta = (availableHeight - totalHeight) / c;
+			int remainder = (availableHeight - totalHeight) % c;
+			int last = -1;
+			while (totalHeight != availableHeight) {
+				for (int i = 0; i < rowCount; i++) {
+					if (expandRow[i]) {
+						if (heights[i] + delta > minHeights[i]) {
+							heights[last = i] = heights[i] + delta;
+						} else {
+							heights[i] = minHeights[i];
+							expandRow[i] = false;
+							c--;
 						}
-						spannedSize = spannedSize - fGridLayout.verticalSpacing;
-						// If the spanned rows are not large enough to display the control, adjust the row
-						// sizes to account for the extra space that is needed.
-						if (extent.y > spannedSize) {
-							int extraSpaceNeeded = extent.y - spannedSize;
-							int lastRow = row + spec.verticalSpan - 1;
-							int rowHeight;
-							Vector localExpandableRows = new Vector();
-							for (int i = row; i <= lastRow; i++) {
-								for (int j = 0; j < expandableRows.length; j++) {
-									if (expandableRows[j] == i) {
-										localExpandableRows.addElement(new Integer(i));
+					}
+				}
+				if (last > -1) heights[last] += remainder;
+
+				for (int i = 0; i < rowCount; i++) {
+					for (int j = 0; j < columnCount; j++) {
+						GridData data = getData(grid, i, j, rowCount, columnCount, false);
+						if (data != null) {
+							int vSpan = Math.max(1, Math.min(data.verticalSpan, rowCount));
+							if (vSpan > 1) {
+								if (!data.grabExcessVerticalSpace || data.minimumHeight != 0) {
+									int spanHeight = 0, spanExpandCount = 0;
+									for (int k = 0; k < vSpan; k++) {
+										spanHeight += heights[i - k];
+										if (expandRow[i - k]) spanExpandCount++;
+									}
+									int h = !data.grabExcessVerticalSpace || data.minimumHeight == SWT.DEFAULT ? getCacheHeight(data) : data.minimumHeight;
+									h += data.verticalIndent - spanHeight - (vSpan - 1) * fGridLayout.verticalSpacing;
+									if (h > 0) {
+										if (spanExpandCount == 0) {
+											heights[i] += h;
+										} else {
+											int delta2 = h / spanExpandCount;
+											int remainder2 = h % spanExpandCount, last2 = -1;
+											for (int k = 0; k < vSpan; k++) {
+												if (expandRow[i - k]) {
+													heights[last2 = i - k] += delta2;
+												}
+											}
+											if (last2 > -1) heights[last2] += remainder2;
+										}
 									}
 								}
 							}
-							if (localExpandableRows.size() > 0) {
-								// If any of the control's rows grab excess space, allocate the space amongst those rows.
-								int rowExtra = extraSpaceNeeded / localExpandableRows.size();
-								int rowRemainder = extraSpaceNeeded % localExpandableRows.size();
-								for (int i = 0; i < localExpandableRows.size(); i++) {
-									int expandableRow = ((Integer) localExpandableRows.elementAt(i)).intValue();
-									rowHeight = rowHeights[expandableRow] + rowExtra;
-									rowHeights[expandableRow] = rowHeight;
-								}
-								rowHeight = rowHeights[lastRow] + rowRemainder;
-								rowHeights[lastRow] = rowHeight;
-							} else {
-								// Add the extra space to the control's last row if no rows grab excess space.
-								rowHeight = rowHeights[lastRow] + extraSpaceNeeded;
-								rowHeights[lastRow] = rowHeight;
-							}
 						}
 					}
 				}
+				if (c == 0) break;
+				totalHeight = 0;
+				for (int i = 0; i < rowCount; i++) {
+					totalHeight += heights[i];
+				}
+				delta = (availableHeight - totalHeight) / c;
+				remainder = (availableHeight - totalHeight) % c;
+				last = -1;
 			}
 		}
-	}	
-	
-	Point computeLayoutSize(Composite composite, int wHint, int hHint, boolean flushCache) {
-		int totalMarginHeight, totalMarginWidth;
-		int totalWidth, totalHeight;
-		int cols, rows;
-
-		// Initialize the grid and other cached information that help with the grid layout.
-		if (grid.size() == 0) {
-			createGrid(composite);
-			calculateGridDimensions(composite, flushCache);
-			computeExpandableCells();
-			adjustGridDimensions(composite, flushCache);
+		// clean up cache - resets the GridData for those that were changed during the wrapping process
+		for (int i = 0; i < flushLength; i++) {
+			putCacheHeight(flush[i], -1);
+			putCacheWidth(flush[i], -1);
 		}
 
-		//
-		cols = fGridLayout.numColumns;
-		rows = grid.size();
-		totalMarginHeight = fGridLayout.marginHeight;
-		totalMarginWidth = fGridLayout.marginWidth;
-
-		// The total width is the margin plus border width plus space between each column, 
-		// plus the width of each column.
-		totalWidth = (totalMarginWidth * 2) + ((cols - 1) * fGridLayout.horizontalSpacing);
-
-		//Add up the width of each column. 
-		for (int i = 0; i < columnWidths.length; i++) {
-			totalWidth = totalWidth + columnWidths[i];
-		}
-
-		// The total height is the margin plus border height, plus space between each row, 
-		// plus the height of the tallest child in each row.
-		totalHeight = (totalMarginHeight * 2) + ((rows - 1) * fGridLayout.verticalSpacing);
-
-		//Add up the height of each row. 
-		for (int i = 0; i < rowHeights.length; i++) {
-			totalHeight = totalHeight + rowHeights[i];
-		}
-
-		if (wHint != SWT.DEFAULT) totalWidth = wHint;
-		if (hHint != SWT.DEFAULT) totalHeight = hHint;
-		// The preferred extent is the width and height that will accomodate the grid's controls.
-		return new Point(totalWidth, totalHeight);
-	}	
-	
-	protected void computeValues() {
-		int[] columnWidths;
-		int[] rowHeights;
-		int rowSize, rowY, columnX;
-		int compositeWidth, compositeHeight;
-		int excessHorizontal, excessVertical;
-		Control[] children;
-		grid.clear();
-		children = fComposite.getChildren();
-		if (children.length == 0)
-			return;
-
-		Point extent = computeSize(fComposite, SWT.DEFAULT, SWT.DEFAULT, true);
-		columnWidths = new int[fGridLayout.numColumns];
-		for (int i = 0; i < columnWidths.length; i++) {
-			columnWidths[i] = columnWidths[i];
-		}
-		rowHeights = new int[grid.size()];
-		for (int i = 0; i < rowHeights.length; i++) {
-			rowHeights[i] = rowHeights[i];
-		}
-		int columnWidth = 0;
-		rowSize = Math.max(1, grid.size());
-
-		// 
-		compositeWidth = extent.x;
-		compositeHeight = extent.y;
-
-		// Calculate whether or not there is any extra space or not enough space due to a resize 
-		// operation.  Then allocate/deallocate the space to columns and rows that are expandable.  
-		// If a control grabs excess space, its last column or row will be expandable.
-		excessHorizontal = fComposite.getClientArea().width - compositeWidth;
-		excessVertical = fComposite.getClientArea().height - compositeHeight;
-
-		// Allocate/deallocate horizontal space.
-		if (expandableColumns.length != 0) {
-			int excess, remainder, last;
-			int colWidth;
-			excess = excessHorizontal / expandableColumns.length;
-			remainder = excessHorizontal % expandableColumns.length;
-			last = 0;
-			for (int i = 0; i < expandableColumns.length; i++) {
-				int expandableCol = expandableColumns[i];
-				colWidth = columnWidths[expandableCol];
-				colWidth = colWidth + excess;
-				columnWidths[expandableCol] = colWidth;
-				last = Math.max(last, expandableCol);
-			}
-			colWidth = columnWidths[last];
-			colWidth = colWidth + remainder;
-			columnWidths[last] = colWidth;
-		}
-
-		// Go through all specs in each expandable column and get the maximum specified
-		// widthHint.  Use this as the minimumWidth for the column.
-		for (int i = 0; i < expandableColumns.length; i++) {
-			int expandableCol = expandableColumns[i];
-			int colWidth = columnWidths[expandableCol];
-			int minWidth = 0;
-			for (int j = 0; j < grid.size(); j++) {
-				GridData[] row = (GridData[]) grid.get(j);
-				GridData spec = row[expandableCol];
-				if (spec.horizontalSpan == 1) {
-					minWidth = Math.max(minWidth, spec.widthHint);
-				}
-			}
-			columnWidths[expandableCol] = Math.max(colWidth, minWidth);
-		}
-		// Allocate/deallocate vertical space.
-		if (expandableRows.length != 0) {
-			int excess, remainder, last;
-			int rowHeight;
-			excess = excessVertical / expandableRows.length;
-			remainder = excessVertical % expandableRows.length;
-			last = 0;
-			for (int i = 0; i < expandableRows.length; i++) {
-				int expandableRow = expandableRows[i];
-				rowHeight = rowHeights[expandableRow];
-				rowHeight = rowHeight + excess;
-				rowHeights[expandableRow] = rowHeight;
-				last = Math.max(last, expandableRow);
-			}
-			rowHeight = rowHeights[last];
-			rowHeight = rowHeight + remainder;
-			rowHeights[last] = rowHeight;
-		}
-		// Go through all specs in each expandable row and get the maximum specified
-		// heightHint.  Use this as the minimumHeight for the row.
-		for (int i = 0; i < expandableRows.length; i++) {
-			int expandableRow = expandableRows[i];
-			int rowHeight = rowHeights[expandableRow];
-			int minHeight = 0;
-			GridData[] row = (GridData[]) grid.get(expandableRow);
-			for (int j = 0; j < fGridLayout.numColumns; j++) {
-				GridData spec = row[j];
-				if (spec.verticalSpan == 1) {
-					minHeight = Math.max(minHeight, spec.heightHint);
-				}
-			}
-			rowHeights[expandableRow] = Math.max(rowHeight, minHeight);
-		}
-
-		// Get the starting x and y.
-		columnX = fGridLayout.marginWidth + fComposite.getClientArea().x;
-		rowY = fGridLayout.marginHeight + fComposite.getClientArea().y;
-
-		// Layout the control left to right, top to bottom.
-		for (int r = 0; r < rowSize; r++) {
-			int rowHeight = rowHeights[r];
-			GridData[] row = (GridData[]) grid.get(r);
-
-			// 
-			for (int c = 0; c < row.length; c++) {
-				int spannedWidth = 0, spannedHeight = 0;
-				int hAlign = 0, vAlign = 0;
-				int widgetX = 0, widgetY = 0;
-
-				//
-				GridData spec = row[c];
-				if (fGridLayout.makeColumnsEqualWidth) {
-					columnWidth = fComposite.getClientArea().width - 2 * (fGridLayout.marginWidth)  - ((fGridLayout.numColumns - 1) * fGridLayout.horizontalSpacing);
-					columnWidth = columnWidth / fGridLayout.numColumns;
-					for (int i = 0; i < columnWidths.length; i++) {
-						columnWidths[i] = columnWidth;
-					}
-				} else {
-					columnWidth = columnWidths[c];
-				}
-
-				//
-				spannedWidth = columnWidth;
-				for (int k = 1; k < spec.horizontalSpan; k++) {
-					if ((c + k) <= fGridLayout.numColumns) {
-						if (!fGridLayout.makeColumnsEqualWidth) {
-							columnWidth = columnWidths[c + k];
-						}
-						spannedWidth = spannedWidth + columnWidth + fGridLayout.horizontalSpacing;
-					}
-				}
-
-				//
-				spannedHeight = rowHeight;
-				for (int k = 1; k < spec.verticalSpan; k++) {
-					if ((r + k) <= grid.size()) {
-						spannedHeight = spannedHeight + rowHeights[r + k] + fGridLayout.verticalSpacing;
-					}
-				}
-
-				//
-				if (isItemData(spec)) {
-					Control child = children[getChildIndex(spec)];
-					Point childExtent = child.computeSize(spec.widthHint, spec.heightHint, true);
-					hAlign = spec.horizontalAlignment;
-					widgetX = columnX;
-
-					// Calculate the x and width values for the control.
-					if (hAlign == GridData.CENTER || hAlign == SWT.CENTER) {
-						widgetX = widgetX + (spannedWidth / 2) - (childExtent.x / 2);
-					} else
-						if (hAlign == GridData.END || hAlign == SWT.END || hAlign == SWT.RIGHT) {
-							widgetX = widgetX + spannedWidth - childExtent.x - spec.horizontalIndent;
-						} else {
-							widgetX = widgetX + spec.horizontalIndent;
-						}
-					if (hAlign == GridData.FILL) {
-						widgetX = columnX + spec.horizontalIndent;
-					}
-
-					// Calculate the y and height values for the control.
-					vAlign = spec.verticalAlignment;
-					widgetY = rowY;
-					if (vAlign == GridData.CENTER || vAlign == SWT.CENTER) {
-						widgetY = widgetY + (spannedHeight / 2) - (childExtent.y / 2);
-					} else
-						if (vAlign == GridData.END || vAlign == SWT.END || vAlign == SWT.BOTTOM) {
-							widgetY = widgetY + spannedHeight - childExtent.y;
-						}
-					if (vAlign == GridData.FILL) {
-						widgetY = rowY;
-					} 
-				}
-				// Update the starting x value.
-				columnX = columnX + columnWidths[c] + fGridLayout.horizontalSpacing;
-			}
-			// Update the starting y value and since we're starting a new row, reset the starting x value.
-			rowY = rowY + rowHeights[r] + fGridLayout.verticalSpacing;
-			columnX = fGridLayout.marginWidth + fComposite.getClientArea().x;
-		}
 	}
+
+	protected GridData getData(Control[][] grid, int row, int column, int rowCount, int columnCount, boolean first) {
+		Control control = grid[row][column];
+		if (control != null) {
+			GridData data = (GridData) control.getLayoutData();
+			if (data == null)
+				data = new GridData();
+			int hSpan = Math.max(1, Math.min(data.horizontalSpan, columnCount));
+			int vSpan = Math.max(1, data.verticalSpan);
+			int i = first ? row + vSpan - 1 : row - vSpan + 1;
+			int j = first ? column + hSpan - 1 : column - hSpan + 1;
+			if (0 <= i && i < rowCount) {
+				if (0 <= j && j < columnCount) {
+					if (control == grid[i][j])
+						return data;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static void main(String[] args) {
+
+		Display d = new Display();
+		Shell s = new Shell();
+		s.setLayout(new GridLayout());
+
+		new Label(s, SWT.NONE).setText("Label");
+		new Button(s, SWT.NONE).setText("Button");
+
+		s.open();
+
+		GridLayoutHelper helper = new GridLayoutHelper();
+		helper.setComposite(s);
+
+		while (!s.isDisposed()) {
+			if (!d.readAndDispatch())
+				d.sleep();
+		}
+		d.dispose();
+	}
+
 }

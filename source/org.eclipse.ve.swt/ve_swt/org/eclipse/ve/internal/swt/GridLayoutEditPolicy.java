@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.17 $ $Date: 2005-05-25 14:49:32 $
+ * $Revision: 1.18 $ $Date: 2005-06-06 22:34:20 $
  */
 import java.util.List;
 
@@ -196,10 +196,8 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 		if (fGridLayoutGridFigure == null) {
 			IFigure f = ((GraphicalEditPart) getHost()).getContentPane();
 			int [][] layoutDimensions = null;
-			int [][] expandableDimensions = null;
 			Rectangle layoutSpacing = null;
 			Rectangle clientArea = null;
-			boolean columnsEqualWidth = false;
 			/*
 			 * If the container is empty, we can't depend on the layout dimensions or layout origin
 			 * from the GridLayout, just use the default values.
@@ -208,17 +206,12 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 				layoutDimensions = new int [2][0];
 				layoutDimensions[0] = new int[0];
 				layoutDimensions[1] = new int[0];
-				expandableDimensions = new int [2][0];
-				expandableDimensions[0] = new int[0];
-				expandableDimensions[1] = new int[0];
 			} else {
 				layoutDimensions = helper.getContainerLayoutDimensions();
-				expandableDimensions = helper.getContainerExpandableDimensions();
 				layoutSpacing = helper.getContainerLayoutSpacing();
-				columnsEqualWidth = helper.isContainerColumnsEqualWidth();
 			}
 			clientArea = helper.getContainerClientArea();
-			fGridLayoutGridFigure = new GridLayoutGridFigure(f.getBounds().getCopy(), layoutDimensions, expandableDimensions, columnsEqualWidth, layoutSpacing, clientArea );
+			fGridLayoutGridFigure = new GridLayoutGridFigure(f.getBounds().getCopy(), layoutDimensions, layoutSpacing, clientArea );
 		}
 		return fGridLayoutGridFigure;
 	}

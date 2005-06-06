@@ -11,12 +11,10 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: GridLayoutGridFigure.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-04 22:12:15 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-06 22:34:20 $ 
  */
 
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
@@ -28,19 +26,17 @@ import org.eclipse.swt.layout.GridLayout;
 public class GridLayoutGridFigure extends Figure {
 	Rectangle clientArea = new Rectangle();
 	Point mousePosition = null;
-	int[] columnWidths = null, rowHeights = null, expandableColumns = null, expandableRows = null, columnPositions = null, rowPositions = null;
+	int[] columnWidths = null, rowHeights = null, columnPositions = null, rowPositions = null;
 	Point [] rowStartPositions = null, rowEndPositions = null;
 	Point [] columnStartPositions = null, columnEndPositions = null;
 	
 	int marginWidth, marginHeight, verticalSpacing, horizontalSpacing, bonusWidth = 0, bonusHeight = 0;
-	boolean columnsEqualWidth = false;
 
-public GridLayoutGridFigure (Rectangle bounds, int [][] layoutDimensions, int[][] expandableDimensions, boolean columnsEqualWidth, Rectangle spacing, Rectangle clientArea) {
+public GridLayoutGridFigure (Rectangle bounds, int [][] layoutDimensions, Rectangle spacing, Rectangle clientArea) {
 	super();
 	setBounds(bounds);
 	setForegroundColor(ColorConstants.cyan);
 	this.clientArea = clientArea;
-	this.columnsEqualWidth = columnsEqualWidth;
 	if (spacing == null) {
 		// Get the default spacings from GridLayout.
 		GridLayout example = new GridLayout();
@@ -57,11 +53,6 @@ public GridLayoutGridFigure (Rectangle bounds, int [][] layoutDimensions, int[][
 	if (layoutDimensions != null) {
 		columnWidths = layoutDimensions[0];
 		rowHeights = layoutDimensions[1];
-		if (expandableDimensions != null) {
-			expandableColumns = expandableDimensions[0];
-			expandableRows = expandableDimensions[1];
-			calculateBonusSizes();
-		}
 		calculateColumnDividers();
 		calculateRowDividers();
 	}
@@ -78,37 +69,6 @@ protected void paintFigure(Graphics g){
 	g.setForegroundColor(orgColor);
 }
 
-
-private void calculateBonusSizes() {
-	if (clientArea == null || expandableColumns == null || expandableRows == null) return;
-	
-	if (expandableColumns.length != 0) {
-		int containerWidth = 0;
-		for (int i = 0; i < columnWidths.length; i++) {
-			containerWidth += columnWidths[i];
-		}
-		// add width for the spacing
-		containerWidth += marginWidth * 2;
-		containerWidth += horizontalSpacing * (columnWidths.length - 1);
-
-		// Subtract the total unexpanded width from the client area's width, and divide by the number of
-		// columns requesting expansion
-		bonusWidth = (clientArea.width - containerWidth) / expandableColumns.length;	
-	}
-	
-	if (expandableRows.length != 0) {
-		int containerHeight = 0;
-		for (int i = 0; i < rowHeights.length; i++) {
-			containerHeight += rowHeights[i];
-		}
-		// add height for the spacing
-		containerHeight += marginHeight * 2;
-		containerHeight += verticalSpacing * (rowHeights.length - 1);
-
-		bonusHeight = (clientArea.height - containerHeight) / expandableRows.length;
-	}
-}
-
 /**
  * Draw the column dividers based on the GridBagLayout's origin and the column widths.
  * Note: Column widths from GridBagLayout that equal zero indicate there are no components
@@ -119,8 +79,6 @@ protected void calculateColumnDividers() {
 	
 	int spacingTop = (int)Math.ceil((double)horizontalSpacing / 2);
 	int spacingBottom = (int)Math.floor((double)horizontalSpacing / 2);
-	boolean isExpanding = bonusWidth != 0;
-	int equalWidth = 0;
 		
 	Rectangle r = getBounds();
 	int containerHeight = 0;
@@ -143,12 +101,6 @@ protected void calculateColumnDividers() {
 	int yMin = r.y + clientArea.y;
 	int yMax = r.y + clientArea.y + containerHeight;
 	
-	// Calculate the width value if the columns are equal width
-	if (columnsEqualWidth) {
-		int padding = marginWidth * 2 + horizontalSpacing * (columnWidths.length - 1);
-		equalWidth = (clientArea.width - padding) / columnWidths.length;
-	}
-	
 	// draw the first divider
 	columnPositions[0] = xPos;
 	columnStartPositions[0] = new Point(xPos, yMin);
@@ -159,14 +111,7 @@ protected void calculateColumnDividers() {
 	
 	// draw the dividers in between and at the end
 	for (int i = 0; i < columnWidths.length; i++) {
-		if (columnsEqualWidth) {
-			xPos += equalWidth;
-		} else {
-			xPos += columnWidths[i];
-			if (isExpanding && arrayContains(expandableColumns, i)) {
-				xPos += bonusWidth;
-			}
-		}
+		xPos += columnWidths[i];
 		
 		// Place the position in the middle of the the horizontal spacing gap
 		if (i != columnWidths.length - 1) {
@@ -207,7 +152,6 @@ protected void calculateRowDividers() {
 	
 	int spacingLeft = (int)Math.ceil((double)verticalSpacing / 2);
 	int spacingRight = (int)Math.floor((double)verticalSpacing / 2);
-	boolean isExpanding = bonusHeight != 0;
 	
 	Rectangle r = getBounds();
 	int containerWidth = 0;
@@ -241,10 +185,7 @@ protected void calculateRowDividers() {
 	// draw the dividers in between and at the end
 	for (int i = 0; i < rowHeights.length; i++) {
 		yPos += rowHeights[i];
-		if (isExpanding && arrayContains(expandableRows, i)) {
-			yPos += bonusHeight;
-		}
-		
+	
 		if (yPos >= r.y+r.height) 
 			yPos = r.y+r.height-1;
 
@@ -273,15 +214,6 @@ protected void drawRowDividers(Graphics g) {
 		return;
 	for (int i = 0; i < rowStartPositions.length; i++) 
 		g.drawLine(rowStartPositions[i], rowEndPositions[i]);
-}
-
-private boolean arrayContains(int[] array, int value) {
-	for (int i = 0; i < array.length; i++) {
-		if (array[i] == value) {
-			return true;
-		}
-	}
-	return false;
 }
 
 public Point getCellLocation(Point p) {
