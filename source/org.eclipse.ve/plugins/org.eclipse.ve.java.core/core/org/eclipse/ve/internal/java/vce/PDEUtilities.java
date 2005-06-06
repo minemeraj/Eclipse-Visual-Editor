@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PDEUtilities.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-06 15:13:11 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-06 19:00:06 $ 
  */
 package org.eclipse.ve.internal.java.vce;
 
@@ -88,7 +88,9 @@ public class PDEUtilities {
 					Properties properties = new Properties();
 					properties.load(inputStream);
 					// Strip the leading % and trailing % before looking up the properties value
-					String bundleValue = properties.getProperty(viewName.substring(1,viewName.length()-1));
+					String propertyKey = viewName.substring(1);
+					if(propertyKey.endsWith("%")) propertyKey = propertyKey.substring(0,propertyKey.length()-1);
+					String bundleValue = properties.getProperty(propertyKey);
 					if(bundleValue == null) return viewName;
 					// We have a bundle value.  Substitute it in the map so we don't have to re-retrieve it
 					pluginData[0] = bundleValue;
