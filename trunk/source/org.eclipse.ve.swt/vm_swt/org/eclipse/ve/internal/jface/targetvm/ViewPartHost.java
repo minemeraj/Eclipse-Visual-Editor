@@ -1,3 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: ViewPartHost.java,v $
+ *  $Revision: 1.11 $  $Date: 2005-06-06 00:52:37 $ 
+ */
 package org.eclipse.ve.internal.jface.targetvm;
 
 import java.lang.reflect.Method;
@@ -6,6 +20,8 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.*;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -19,18 +35,17 @@ public class ViewPartHost {
 
 	static Shell shell;
 	static Map viewPartToParentComposite = new HashMap(1);
-	private static Image WORKBENCH_PART_IMAGE;
-	private static Image EDITOR_PART_IMAGE;	
 	private static int fx;
 	private static int fy;
 	private static boolean fTraditionalTabs;	// Style for whether tabs are square or rounded
 	public static final int MIN_X = 300;
 	public static final int MIN_Y = 175;
 	private static int fTabPosition; // Location of the tab position (top or bottom)
-	private static final int EDITOR_PART_GRAPHIC = 1;
-	private static final int WORKBENCH_PART_GRAPHIC = 0;	
+	private static Image image;
+	public static final String VIEW_PART = "VIEW_PART";
+	public static final String EDITOR_PART = "EDITOR_PART";	
 
-public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle, int graphicType){
+public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle, String iconLocation){
 
 	Composite parent = new Composite(getWorkbenchShell(),SWT.NONE);
 	parent.setLayout(new FillLayout());
@@ -70,14 +85,28 @@ public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitl
 	viewPartArgument.setLayout(new FillLayout(SWT.HORIZONTAL));
 	viewForm.setContent(viewPartArgument);
     folder.setSelection(item);
-	// Set the type of graphic.  We can't check the type of aWorkbenchPart as usually the one being subclassed
-	// is abstract and the ViewPartProxyAdapter has to create a dummy one that can host the composites 	
-	switch (graphicType) {
-		case EDITOR_PART_GRAPHIC:
-			item.setImage(getEditorPartImage());			
-			break;
-		default:
-			item.setImage(getWorkbenchPartImage());
+	// Load the icon disposing the old one if required
+	if(iconLocation != null){
+		// If no icon location is read from the plugin.xml the ViewPartProxyAdapter determinesd the type of WorkbenchPart
+		// and passes this in as the literals VIEW_PART or EDITOR_PART
+		if(VIEW_PART.equals(iconLocation)){
+			image = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_app.gif"));
+		} else if (EDITOR_PART.equals(iconLocation)){
+			image = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_editor.gif"));			
+		} else {
+			try{
+				image = new Image(null,iconLocation);
+			} catch (Exception e){
+			}
+		}
+		item.setImage(image);
+		item.addDisposeListener(new DisposeListener(){
+			public void widgetDisposed(DisposeEvent e) {
+				if(image != null && !image.isDisposed()){
+					image.dispose();
+				}
+			}			
+		});
 	}
 	item.setControl(viewForm);
 	// Record a map entry of the workbenchPart against the Composite argument and the CTabFolder that represents its trim
@@ -92,19 +121,6 @@ public static Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitl
 	getWorkbenchShell().layout(true);
 	return new Composite[] {folder,viewPartArgument};
 		
-}
-
-public static Image getWorkbenchPartImage(){
-	if(WORKBENCH_PART_IMAGE == null){
-		WORKBENCH_PART_IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_app.gif")); //$NON-NLS-1$
-	}
-	return WORKBENCH_PART_IMAGE;
-}
-public static Image getEditorPartImage(){
-	if(EDITOR_PART_IMAGE == null){
-		EDITOR_PART_IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_editor.gif")); //$NON-NLS-1$
-	}
-	return EDITOR_PART_IMAGE;
 }
 
 public static void removeViewPart(WorkbenchPart aWorkbenchPart){
@@ -126,7 +142,7 @@ public static void layoutViewPart(WorkbenchPart aWorkbenchPart){
 public static void main(String[] args) {
 	
 	TestViewPartTest testViewPart = new TestViewPartTest(); 
-	addViewPart(testViewPart,JFaceTargetVMMessages.getString("ViewPartHost.ViewPart.Name"),WORKBENCH_PART_GRAPHIC); //$NON-NLS-1$
+	addViewPart(testViewPart,JFaceTargetVMMessages.getString("ViewPartHost.ViewPart.Name"),"VIEW_PART"); //$NON-NLS-1$
 	layoutViewPart(testViewPart);
 	while(!shell.isDisposed()){
 		if(!shell.getDisplay().readAndDispatch())shell.getDisplay().sleep();

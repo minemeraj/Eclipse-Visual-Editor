@@ -23,6 +23,7 @@
      <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
        beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.ViewPartProxyAdapter"/>
      <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator" 
+       labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.ViewPartLabelProvider"     
        treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.ViewPartTreeEditPart"
 	   graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.ViewPartGraphicalEditPart">     
         <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" 
