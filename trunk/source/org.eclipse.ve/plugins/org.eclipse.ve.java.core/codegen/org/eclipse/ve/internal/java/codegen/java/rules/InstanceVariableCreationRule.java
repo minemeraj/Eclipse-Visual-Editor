@@ -11,12 +11,16 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.16 $  $Date: 2005-05-17 17:22:33 $ 
+ *  $Revision: 1.17 $  $Date: 2005-06-06 22:14:40 $ 
  */
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
@@ -32,8 +36,7 @@ import org.eclipse.ve.internal.jcm.JCMMethod;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderFactory;
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
@@ -232,8 +235,12 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		if (base.charAt(base.length() - 1) == '"')
 			base = base.substring(0, base.length() - 2);
 
-		if (isInternalType(obj, rs))
-			base += Integer.toString(internalIndex++);
+		if (isInternalType(obj, rs)){
+			// 98395: since it is internal we need to look at the method 
+			// in source to see if any other variable has this name.
+			if(existsMethodVariable(base, obj, bdm))
+				base += Integer.toString(internalIndex++);
+		}
 
 		String name = base;
 
@@ -264,6 +271,31 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 		return name;
 	}
 
+	private boolean existsMethodVariable(final String base, EObject obj, IBeanDeclModel bdm) {
+		BeanPart b = bdm.getABean(obj);
+		CodeMethodRef initMethod = b.getInitMethod();
+		String methodContent = initMethod.getContent();
+		ASTParser parser = ASTParser.newParser(AST.JLS2);
+		parser.setSource(methodContent.toCharArray());
+		parser.setKind(ASTParser.K_CLASS_BODY_DECLARATIONS);
+		ASTNode node = parser.createAST(null);
+		final List visitorReturn = new ArrayList(); // just so we can get return of anon astvisitor
+		node.accept(new ASTVisitor(){
+			public boolean visit(VariableDeclarationFragment node) {
+				if(base.equals(node.getName().getFullyQualifiedName()))
+					visitorReturn.add(Boolean.TRUE);
+				return visitorReturn.size()<1 && super.visit(node);
+			}
+			public boolean visit(SingleVariableDeclaration node) {
+				if(base.equals(node.getName().getFullyQualifiedName()))
+					visitorReturn.add(Boolean.TRUE);
+				return visitorReturn.size()<1 && super.visit(node);
+			}
+		});
+		if(visitorReturn.size()>0)
+			return ((Boolean)visitorReturn.get(0)).booleanValue();
+		return false;
+	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.rules.IRule#setRegistry(org.eclipse.ve.internal.cde.rules.IRuleRegistry)
 	 */
