@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RCPLauncher.java,v $
- *  $Revision: 1.10 $  $Date: 2005-06-06 12:07:31 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-06 16:25:09 $ 
  */
 
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
@@ -184,7 +184,11 @@ public class RCPLauncher implements ILauncher {
 		
 		try{
 			while (!beanShell.isDisposed()) {
-				if (!display.readAndDispatch()) display.sleep ();
+				try{
+					if (!display.readAndDispatch()) display.sleep ();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		} catch (Exception e){
 			e.printStackTrace();
