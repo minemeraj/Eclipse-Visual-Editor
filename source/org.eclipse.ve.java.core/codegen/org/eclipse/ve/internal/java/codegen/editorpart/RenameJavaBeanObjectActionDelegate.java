@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
 
 /*
  *  $RCSfile: RenameJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.12 $  $Date: 2005-06-06 22:14:40 $ 
  */
 
 import java.util.ArrayList;
@@ -21,7 +21,6 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -189,14 +188,6 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 				if(!(selectedList.get(count) instanceof EditPart)){
 					selectedList.remove(count);
 					count--;
-				}else{
-					EditPart selectedEP = (EditPart) selectedList.get(count);
-					EObject model = (EObject) selectedEP.getModel();
-					BeanDecoderAdapter bda = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(model, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
-					if(bda == null || bda.getAdapter(IJavaElement.class) == null){
-						selectedList.remove(count);
-						count--;
-					}
 				}
 			}
 			
