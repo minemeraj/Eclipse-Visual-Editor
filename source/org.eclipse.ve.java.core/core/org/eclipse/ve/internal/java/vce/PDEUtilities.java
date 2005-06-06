@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PDEUtilities.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-06 00:52:37 $ 
+ *  $Revision: 1.1 $  $Date: 2005-06-06 12:07:31 $ 
  */
-package org.eclipse.ve.internal.jface;
+package org.eclipse.ve.internal.java.vce;
 
 import java.io.*;
+import java.util.*;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -31,8 +32,9 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 
 
 public class PDEUtilities {
-	
-	EditDomain fEditDomain;
+	// Note: This should not really be in the package it is.  The problem is the JavaBeanLaunchConfigurationDelegate and
+	// the fact that this has to prep all of the -D arguments to the target VM launchers from a common point.  Until we refactor and
+	// publish the launcher API this will have to live here for now
 	private XMLReaderImpl xmlReader;
 	private HashMap viewClasses = new HashMap();
 	private IProject currentProject;
@@ -42,8 +44,14 @@ public class PDEUtilities {
 	private long propertiesTimeStamp;
 	
 	private PDEUtilities(EditDomain anEditDomain){
-		fEditDomain = anEditDomain;
-		initialize();
+		// Find the plugin.xml file if one exists
+		IFileEditorInput fileEditorInput = (IFileEditorInput) anEditDomain.getEditorPart().getEditorInput();
+		IFile fileBeingEdited = fileEditorInput.getFile();
+		currentProject = fileBeingEdited.getProject();		
+	}
+	
+	private PDEUtilities(IProject aProject){
+		currentProject = aProject;
 	}
 	
 	public static PDEUtilities getUtilities(EditDomain anEditDomain){
@@ -51,8 +59,15 @@ public class PDEUtilities {
 		if(aPDEUtilities == null){
 			aPDEUtilities = new PDEUtilities(anEditDomain);
 			anEditDomain.setData(PDEUtilities.class,aPDEUtilities);
+			aPDEUtilities.initialize();			
 		}
 		return aPDEUtilities;		
+	}
+	
+	public static PDEUtilities getUtilities(IProject aProject){
+		PDEUtilities aPDEUtilities = new PDEUtilities(aProject);
+		aPDEUtilities.initialize();
+		return aPDEUtilities;
 	}
 	
 	public String getViewName(String viewClassName){
@@ -136,12 +151,8 @@ public class PDEUtilities {
 		return EDITOR_PART_ICON_PATH;
 	}
 	
-	private void initialize(){
+	private synchronized void initialize(){
 		viewClasses = new HashMap();		
-		// Find the plugin.xml file if one exists
-		IFileEditorInput fileEditorInput = (IFileEditorInput) fEditDomain.getEditorPart().getEditorInput();
-		IFile fileBeingEdited = fileEditorInput.getFile();
-		currentProject = fileBeingEdited.getProject();		
 		IFile pluginXMLFile = currentProject.getFile("plugin.xml");
 		if (pluginXMLFile.exists()){
 			try{
@@ -150,9 +161,24 @@ public class PDEUtilities {
 				InputSource pluginXMLsource = new InputSource(pluginXMLis);
 				xmlReader = new XMLReaderImpl();
 				xmlReader.setContentHandler(new DefaultHandler(){
+					private int processing;	// Flag to show what kind of extension point we are parsing currently
 					public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {					
-						String tag = localName.trim();
-						if (tag.equalsIgnoreCase("view")) {			
+						String tag = localName.trim().toLowerCase(Locale.US); // Always use US locale for system strings
+						// If we are an extension of "org.eclipse.ui.views" then flag this as our next set of tags
+						if(tag.equals("extension")){
+							String extensionPointName = attributes.getValue("point");
+							if(extensionPointName == null) return;
+							if(extensionPointName.equalsIgnoreCase("org.eclipse.ui.views")){
+								processing = 1;
+							} else if (extensionPointName.equalsIgnoreCase("org.eclipse.ui.editors")){
+								processing = 2;								
+							} else {
+								processing = 0;
+							}
+						}
+						if (tag.equalsIgnoreCase("view") && processing == 1){			
+							processView(attributes);
+						} else if (tag.equalsIgnoreCase("editor") && processing == 2){
 							processView(attributes);
 						}
 					}
@@ -171,5 +197,6 @@ public class PDEUtilities {
 		String iconName = attributes.getValue("icon"); 
 		String className = attributes.getValue("class");
 		viewClasses.put(className,new String[] {nameName,iconName});
-	}	
+	}
+
 }
