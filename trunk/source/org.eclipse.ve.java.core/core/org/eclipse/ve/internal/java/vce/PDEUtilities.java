@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PDEUtilities.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-06 13:09:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-06 15:13:11 $ 
  */
 package org.eclipse.ve.internal.java.vce;
 
@@ -77,7 +77,7 @@ public class PDEUtilities {
 		if(pluginData != null){
 			// The view name could come from plugin.propeties entry
 			String viewName = pluginData[0];
-			if(viewName.startsWith("%") && viewName.endsWith("%")){
+			if(viewName.startsWith("%")){
 				// We must open the plugin.properties and find the value associated with the key as the name has been externalized
 				IFile propertiesFile = currentProject.getFile("plugin.properties");
 				if(!propertiesFile.exists()) return viewName;
