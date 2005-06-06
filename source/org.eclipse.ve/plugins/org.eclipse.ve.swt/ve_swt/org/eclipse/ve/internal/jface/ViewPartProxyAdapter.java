@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2005-06-04 18:39:17 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-06 00:52:37 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -295,10 +295,29 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 	protected void initializeViewPart(final IBeanProxy aBeanProxy){
 		invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable(){
 			public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
+				
+				PDEUtilities pdeUtilities = PDEUtilities.getUtilities(getBeanProxyDomain().getEditDomain());
+				// The name of the View comes from the plugin.xml or if none supplied use the type name
+				String javaTypeName = ((IJavaInstance)getTarget()).getJavaType().getQualifiedName();		
+				String viewTitle = pdeUtilities.getViewName(javaTypeName);
+				if(viewTitle == null){
+					viewTitle = javaTypeName;
+				}
+				
+				// The path for the icon comes from the plugin.xml or if none exists a default is used
+				// depending on whether our type inherits from ViewPart or EditorPart
+				String iconLocation = pdeUtilities.getIconPath(javaTypeName);
+				if(iconLocation == null){
+					JavaClass editorPartClass = Utilities.getJavaClass("org.eclipse.ui.part.EditorPart",getEObject().eResource().getResourceSet());
+					iconLocation = editorPartClass.isAssignableFrom(getEObject().eClass()) ? 
+					    "EDITOR_PART" : "VIEW_PART";						
+				}
+				
 				// Now we have a ViewPart subclass, we want to get it correctly instantiated on the target VM
 				// 1) org.eclipse.ve.jface.targetvm.ViewPartHost.addViewPart(WorkbenchPart,String,int) with the ViewPart as the argument
 				//    the second argument the name of the text to appear as the ViewPart title
-				//    the third an indication of what graphic to show.  0=ViewPart and 1=WorkbenchPart
+				//    the third the absolute location of the icon to use that the target VM loads or else the literal VIEW_PART or EDITOR_PART if none is found
+				//        depending on the hierarchy of the WorkbenchPart
 			
 				IBeanTypeProxy viewPartHostTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(TARGETVM_VIEWPARTHOST);
 				// Ensure the view part host is positioned off screen and that it has the correct tab style and theme colors
@@ -312,7 +331,7 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 				// Tab location (top or bottom)
 				int tabPosition = WorkbenchPlugin.getDefault().getPreferenceStore().getInt(IPreferenceConstants.VIEW_TAB_POSITION);
 				IIntegerBeanProxy tabPositionBeanProxy = beanProxyFactory.createBeanProxyWith(tabPosition);
-				
+								
 				// Invoking the method setDetails(...) on the ViewPartHost that passes in the
 				// details in a single method call to reduce target VM round trips (as opposed to lots of different method calls for each setting)
 				IMethodProxy setDetailsMethodProxy = viewPartHostTypeProxy.getMethodProxy("setDetails", //$NON-NLS-1$
@@ -329,19 +348,15 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 				
 				// Get the name of the type of ViewPart and use it as the title of the Tab folder
 				// This is an approximation as in the final runtime it will come from the plugin.xml
-				String javaTypeName = ((IJavaInstance)getTarget()).getJavaType().getName();
-				IBeanProxy javaTypeNameProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(javaTypeName);
+				IBeanProxy viewTitleProxy = beanProxyFactory.createBeanProxyWith(viewTitle);
 				
-				// An int argument is created that lets the ViewPartHost display an appropiate graphic
-				// 0=WorkbenchPart and 1=EditorPart
-				JavaClass editorPartClass = Utilities.getJavaClass("org.eclipse.ui.part.EditorPart",getEObject().eResource().getResourceSet());
-				int graphicType = editorPartClass.isAssignableFrom(getEObject().eClass()) ? 1 : 0;
-				IBeanProxy graphicTypeProxy = beanProxyFactory.createBeanProxyWith(graphicType);				
+				// The icon location
+				IBeanProxy iconLocationProxy = iconLocation == null ? null : beanProxyFactory.createBeanProxyWith(iconLocation);								
 				
-				IMethodProxy addViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("addViewPart", new String[] {"org.eclipse.ui.part.WorkbenchPart","java.lang.String","int"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ // $NON-NLS-4$
+				IMethodProxy addViewPartMethodProxy = viewPartHostTypeProxy.getMethodProxy("addViewPart", new String[] {"org.eclipse.ui.part.WorkbenchPart","java.lang.String","java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ // $NON-NLS-4$
 				// The method addViewPart returns a two element array typed to org.eclipse.swt.Composite
 				// The first is the composite for the outer ViewPane, the second for the inner composite that is the argument to createPartControl(Composite)
-				IArrayBeanProxy compositeArrayBeanProxy = (IArrayBeanProxy) addViewPartMethodProxy.invoke(viewPartHostTypeProxy,new IBeanProxy[] {aBeanProxy,javaTypeNameProxy,graphicTypeProxy});
+				IArrayBeanProxy compositeArrayBeanProxy = (IArrayBeanProxy) addViewPartMethodProxy.invoke(viewPartHostTypeProxy,new IBeanProxy[] {aBeanProxy,viewTitleProxy,iconLocationProxy});
 				
 				viewPaneBeanProxy = compositeArrayBeanProxy.get(0);
 				compositeBeanProxy = compositeArrayBeanProxy.get(1);
