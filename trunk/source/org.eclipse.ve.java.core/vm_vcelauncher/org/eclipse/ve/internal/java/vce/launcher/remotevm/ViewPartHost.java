@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (c) 2001,2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: ViewPartHost.java,v $
+ *  $Revision: 1.7 $  $Date: 2005-06-06 12:07:31 $ 
+ */
+
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 
 import java.lang.reflect.Method;
@@ -7,6 +22,8 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.*;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -17,8 +34,6 @@ public class ViewPartHost {
 
 	Shell shell;
 	Map viewPartToParentComposite = new HashMap(1);
-	private Image WORKBENCH_PART_IMAGE;
-	private Image EDITOR_PART_IMAGE;	
 	private int fx;
 	private int fy;
 	public final int MIN_X = 300;
@@ -26,8 +41,9 @@ public class ViewPartHost {
 	private int fTabPosition = 0;
 	private boolean fTraditionalTabs = true;
 	private String className = ""; //$NON-NLS-1$
+	private Image image;
 
-	public Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle){
+	public Composite[] addViewPart(WorkbenchPart aWorkbenchPart, String aTitle, String iconPath){
 
 		Composite parent = new Composite(getWorkbenchShell(),SWT.NONE);
 		parent.setLayout(new FillLayout());
@@ -73,10 +89,29 @@ public class ViewPartHost {
 		viewPartArgument.setLayout(new FillLayout(SWT.HORIZONTAL));
 		viewForm.setContent(viewPartArgument);
 	    folder.setSelection(item);	
-		if(aWorkbenchPart instanceof EditorPart){
-			item.setImage(getEditorPartImage());
-		} else {
-			item.setImage(getWorkbenchPartImage());			
+		// Use the passed in icon which comes from the plugin.xml on the IDE if the EditorPart or ViewPart is defined
+		// in the plugin.xml with an icon= attribute
+		// If none is passed in use a default depending on the hierarchy of the class		
+		try{
+			if(iconPath != null){
+				image = new Image(getWorkbenchShell().getDisplay(),iconPath);
+			} else if(aWorkbenchPart instanceof EditorPart){
+				image = new Image(getWorkbenchShell().getDisplay(),ViewPartHost.class.getResourceAsStream("rcp_editor.gif")); //$NON-NLS-1$				
+			} else {
+				image = new Image(getWorkbenchShell().getDisplay(),ViewPartHost.class.getResourceAsStream("rcp_app.gif")); //$NON-NLS-1$
+			}
+		} catch (Exception exc){
+			exc.printStackTrace();
+		}		
+		if(image != null){
+			item.setImage(image);
+			item.addDisposeListener(new DisposeListener(){
+				public void widgetDisposed(DisposeEvent e) {
+					if(image != null){
+						image.dispose();
+					}
+				}				
+			});
 		}
 		item.setControl(viewForm);
 	
@@ -86,23 +121,7 @@ public class ViewPartHost {
 		return new Composite[] {folder,viewPartArgument};
 		
 	}
-	
-	private Image getWorkbenchPartImage(){
 		
-		if(WORKBENCH_PART_IMAGE == null){
-			WORKBENCH_PART_IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_app.gif")); //$NON-NLS-1$
-		}
-		return WORKBENCH_PART_IMAGE;
-	}
-	
-	private Image getEditorPartImage(){
-		
-		if(EDITOR_PART_IMAGE == null){
-			EDITOR_PART_IMAGE = new Image(null,ViewPartHost.class.getResourceAsStream("rcp_editor.gif")); //$NON-NLS-1$
-		}
-		return EDITOR_PART_IMAGE;
-	}	
-	
 	public Composite getWorkbenchShell(){
 		
 		if(shell == null){

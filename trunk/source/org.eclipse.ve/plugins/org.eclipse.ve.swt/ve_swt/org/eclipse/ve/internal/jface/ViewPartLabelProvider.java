@@ -10,13 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartLabelProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-06 00:52:37 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-06 12:07:45 $ 
  */
 package org.eclipse.ve.internal.jface;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.ve.internal.cde.emf.DefaultLabelProvider;
+
+import org.eclipse.ve.internal.java.vce.PDEUtilities;
 
 public class ViewPartLabelProvider extends DefaultLabelProvider{
 	

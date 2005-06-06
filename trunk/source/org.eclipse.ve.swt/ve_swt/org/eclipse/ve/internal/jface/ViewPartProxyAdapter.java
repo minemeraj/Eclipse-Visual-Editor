@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.14 $  $Date: 2005-06-06 00:52:37 $ 
+ *  $Revision: 1.15 $  $Date: 2005-06-06 12:07:45 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -35,6 +35,7 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.cde.core.*;
 
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.vce.PDEUtilities;
 
 import org.eclipse.ve.internal.swt.*;
 
@@ -301,7 +302,8 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 				String javaTypeName = ((IJavaInstance)getTarget()).getJavaType().getQualifiedName();		
 				String viewTitle = pdeUtilities.getViewName(javaTypeName);
 				if(viewTitle == null){
-					viewTitle = javaTypeName;
+					// If no title in the XML use the unqualified name of the type
+					viewTitle = ((IJavaInstance)getTarget()).getJavaType().getName();
 				}
 				
 				// The path for the icon comes from the plugin.xml or if none exists a default is used

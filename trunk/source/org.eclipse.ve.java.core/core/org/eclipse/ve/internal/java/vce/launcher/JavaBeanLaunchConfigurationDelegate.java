@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-26 20:10:19 $ 
+ *  $Revision: 1.16 $  $Date: 2005-06-06 12:07:31 $ 
  */
 
 
@@ -44,6 +44,7 @@ import org.eclipse.jem.internal.proxy.core.ProxyLaunchSupport.LaunchInfo;
 import org.eclipse.jem.internal.proxy.remote.LocalFileConfigurationContributorController;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.vce.PDEUtilities;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class JavaBeanLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
@@ -57,6 +58,7 @@ public class JavaBeanLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 	static String APPLET_PARMS_NUMBER = "APPLET_PARMS_NUMBER"; //$NON-NLS-1$
 	static String APPLET_PARM_NAME = "APPLET_PARM_NAME"; //$NON-NLS-1$
 	static String APPLET_PARM_VALUE = "APPLET_PARM_VALUE"; //$NON-NLS-1$
+	static String QUOTE_DELIM = "\"";
 	
 public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 	
@@ -143,7 +145,8 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	// Now add in ours.
 	// TODO: refactor launchers into appropriate packages
 	
-	if ( isJFaceProject(verifyJavaProject(configuration)) ){
+	IJavaProject project = verifyJavaProject(configuration);
+	if ( isJFaceProject(project) ){
 		launchersList = launchersList + "," + RCP_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
 		
 		// Ensure necessary classes are available for the launcher.
@@ -158,9 +161,21 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 		
 		args.append(" -Drcp.launcher.tabPosition=" + fTabPosition); //$NON-NLS-1$
 		args.append(" -Drcp.launcher.traditionalTabs=" + fTraditionalTabs); //$NON-NLS-1$
-		args.append(" -Drcp.launcher.activeLink=\"" + activeLinkColor + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-		args.append(" -Drcp.launcher.error=\"" + errorColor + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-		args.append(" -Drcp.launcher.link=\"" + linkColor + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+		args.append(" -Drcp.launcher.activeLink=\"" + activeLinkColor + QUOTE_DELIM); //$NON-NLS-1$ //$NON-NLS-2$
+		args.append(" -Drcp.launcher.error=\"" + errorColor + QUOTE_DELIM); //$NON-NLS-1$ //$NON-NLS-2$
+		args.append(" -Drcp.launcher.link=\"" + linkColor + QUOTE_DELIM); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		// If we are launching a WorkbenchPart then we want to read the plugin.xml to see if it is defined as a view
+		// or editor and if so get its name and the location of its icon so that the target VM can render its title bar correctly
+		PDEUtilities pdeUtilities = PDEUtilities.getUtilities(project.getProject());
+		String viewName = pdeUtilities.getViewName(javaBeanName);
+		if(viewName != null){
+			args.append(" -Drcp.launcher.viewName=\"" + viewName + QUOTE_DELIM); //$NON-NLS-1$			
+		}
+		String iconPath = pdeUtilities.getIconPath(javaBeanName);		
+		if(iconPath != null){
+			args.append(" -Drcp.launcher.iconPath=\"" + iconPath + QUOTE_DELIM); //$NON-NLS-1$			
+		}		
 	}
 	
 	if (configuration.getAttribute("isSWT", false)) { //$NON-NLS-1$

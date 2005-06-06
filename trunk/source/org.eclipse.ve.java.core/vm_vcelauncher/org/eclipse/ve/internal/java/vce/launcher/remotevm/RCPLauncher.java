@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (c) 2001,2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: RCPLauncher.java,v $
+ *  $Revision: 1.10 $  $Date: 2005-06-06 12:07:31 $ 
+ */
+
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 
 import java.lang.reflect.Constructor;
@@ -13,6 +28,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.*;
 
 public class RCPLauncher implements ILauncher {
+
+	private String viewName;
+	private String iconPath;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.ILauncher#supportsLaunching(java.lang.Class, java.lang.Object)
@@ -33,6 +51,10 @@ public class RCPLauncher implements ILauncher {
 			
 			// setup the jface color preferences for this launch
 			setupColorPreferences(display);
+			
+			// Set up the view/editorPart title and icon
+			viewName = System.getProperty("rcp.launcher.viewName"); //$NON-NLS-1$		
+			iconPath = System.getProperty("rcp.launcher.iconPath"); //$NON-NLS-1$		
 			
 			// new up an instance of the java bean
 			Constructor ctor = clazz.getDeclaredConstructor(null);
@@ -96,7 +118,9 @@ public class RCPLauncher implements ILauncher {
 			className = className.substring(className.lastIndexOf(".") + 1); //$NON-NLS-1$
 		}
 		viewPartHost.setDetails(fTraditionalTabs, fTabPosition, clazz.getName());
-		viewPartHost.addViewPart(workbenchPart, className);
+		// The arguments are the workbench part, the title and the icon path
+		String title = viewName == null ? className : viewName; 
+		viewPartHost.addViewPart(workbenchPart, title, iconPath);
 		runEventLoop((Shell)viewPartHost.getWorkbenchShell());
 		
 	}
