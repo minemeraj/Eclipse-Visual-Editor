@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:30 $
+ *  $Revision: 1.9 $  $Date: 2005-06-06 22:34:20 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -24,14 +24,17 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.ui.IActionFilter;
+
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.ui.IActionFilter;
+
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -311,8 +314,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			e.printStackTrace();
 		}
 
-		IFieldProxy getColumnWidthsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("columnWidths"); //$NON-NLS-1$
-		IFieldProxy getRowHeightsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("rowHeights"); //$NON-NLS-1$
+		IFieldProxy getColumnWidthsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("widths"); //$NON-NLS-1$
+		IFieldProxy getRowHeightsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("heights"); //$NON-NLS-1$
 		try {
 			// Get the column widths and row heights from the target VM helper
 			IArrayBeanProxy arrayProxyColumnWidths = (IArrayBeanProxy) getColumnWidthsFieldProxy.get(gridLayoutHelperProxy);
@@ -331,57 +334,11 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				}
 				result[1] = rowHeights;
 			}
-			// Get the expandableColumns and expandablerows from the target VM helper
-			IFieldProxy getExpandableColumnsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("expandableColumns"); //$NON-NLS-1$
-			IFieldProxy getExpandableRowsFieldProxy = gridLayoutHelperType.getDeclaredFieldProxy("expandableRows"); //$NON-NLS-1$
-			IArrayBeanProxy arrayProxyExpandableColumns = (IArrayBeanProxy) getExpandableColumnsFieldProxy.get(gridLayoutHelperProxy);
-			if (arrayProxyExpandableColumns != null) {
-				expandableColumns = new int[arrayProxyExpandableColumns.getLength()];
-				for (int i = 0; i < arrayProxyExpandableColumns.getLength(); i++) {
-					expandableColumns[i] = ((IIntegerBeanProxy) arrayProxyExpandableColumns.get(i)).intValue();
-				}
-			}
-			getExpandableRowsFieldProxy.setAccessible(true);
-			IArrayBeanProxy arrayProxyExpandableRows = (IArrayBeanProxy) getExpandableRowsFieldProxy.get(gridLayoutHelperProxy);
-			if (arrayProxyExpandableRows != null) {
-				expandableRows = new int[arrayProxyExpandableRows.getLength()];
-				for (int i = 0; i < arrayProxyExpandableRows.getLength(); i++) {
-					expandableRows[i] = ((IIntegerBeanProxy) arrayProxyExpandableRows.get(i)).intValue();
-				}
-			}
 		} catch (ThrowableProxy exc) {
 			return null;
 		}
 		
 		return result;
-	}
-
-	/**
-	 * Return the value of the GridLayout's makeColumnsEqualWidth field.
-	 */
-	public boolean isContainerColumnsEqualWidth() {
-		boolean result = false;
-
-		IFieldProxy getColumnsEqualWidthsFieldProxy = getLayoutManagerBeanProxy().getTypeProxy().getDeclaredFieldProxy("makeColumnsEqualWidth"); //$NON-NLS-1$
-		//$NON-NLS-1$
-		try {
-			IBooleanBeanProxy booleanProxyEqualWidths = (IBooleanBeanProxy) getColumnsEqualWidthsFieldProxy.get(getLayoutManagerBeanProxy());
-			result = booleanProxyEqualWidths.booleanValue();
-		} catch (ThrowableProxy exc) {
-		}
-
-		return result;
-	}
-
-	/**
-	 * Return the GridLayout expandable dimensions which is 2 dimensional array that contains 2 arrays:
-	 *  1. an int array of all the expandable columns
-	 * 2. an int array of all the expandable rows
-	 */
-	public int[][] getContainerExpandableDimensions() {
-
-		return new int[][] {expandableColumns,expandableRows};
-
 	}
 
 	/**
