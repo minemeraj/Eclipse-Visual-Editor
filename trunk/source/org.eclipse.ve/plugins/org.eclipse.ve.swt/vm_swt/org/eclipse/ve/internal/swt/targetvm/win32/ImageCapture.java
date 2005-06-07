@@ -94,6 +94,13 @@ public class ImageCapture implements IImageCapture{
 			print_bits = print_bits | PRF_CHILDREN;	
 		}
 		GC gc = new GC (image);
+		
+		// Need to handle cases where the GC font isn't automatically set by the control's image (e.g. CLabel)
+		// see bug 98830 (https://bugs.eclipse.org/bugs/show_bug.cgi?id=98830)
+		Font f = aControl.getFont();
+		if (f != null)
+			gc.setFont(f);
+
 		OS.SendMessage (aControl.handle, WM_PRINT, gc.handle, print_bits);
 
 		gc.dispose ();
