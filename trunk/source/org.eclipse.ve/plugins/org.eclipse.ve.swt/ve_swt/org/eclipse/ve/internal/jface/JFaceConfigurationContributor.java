@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceConfigurationContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-04 22:23:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-07 20:12:15 $ 
  */
 
 package org.eclipse.ve.internal.jface;
@@ -24,7 +24,8 @@ public class JFaceConfigurationContributor extends ConfigurationContributorAdapt
 	 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
 	 */
 	public void contributeToRegistry(ProxyFactoryRegistry registry) {
-		JFaceColorProxyRegistration.initialize(registry); // Prime the JFace ColorRegistry in the remote VM
+		JFaceColorProxyRegistration.initialize(registry);	// Prime the JFace ColorRegistry in the remote VM
+		JFaceFontProxyRegistration.initialize(registry);	// Prime the JFace FontRegistry in the remote VM
 	}
 
 }
