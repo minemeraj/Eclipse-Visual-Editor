@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.13 $  $Date: 2005-06-02 22:32:30 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-07 19:22:42 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -194,17 +194,22 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 
 	/*
-	 * The selected page of the JTabbedPane has changed. Bring this page to the front.
+	 * The selected page of the TabFolder has changed. Bring this page to the front.
 	 */
 	protected void pageSelected(EditPart page) {
 		if (page != null) {
+			if (fSelectedItem != null) {
+				EditPart currentPage = getEditPartFromModel(fSelectedItem);
+				setPageVisible(currentPage, false);
+			}
+			setPageVisible(page, true);
 			fSelectedItem = (IJavaObjectInstance) page.getModel(); // save for later checks... see createPageListener()
 			getTabFolderProxyAdapter().setSelection(getChildren().indexOf(page));
 		}
 	}
 
 	/*
-	 * If the parent of this editpart is the JTabbedPane, we're on the page. If not recursely call up through the parent chain until we find the
+	 * If the parent of this editpart is the TabFolder, we're on the page. If not recursely call up through the parent chain until we find the
 	 * editpart (page) that the original editpart was found in.
 	 */
 	protected EditPart getPageOfSelectedEditpart(EditPart ep) {
@@ -225,7 +230,7 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 
 	/*
-	 * Search through the JTabbedPane's pages (children) to find the page that matches the page model that is selected.
+	 * Search through the TabFolder's pages (children) to find the page that matches the page model that is selected.
 	 */
 	protected EditPart getEditPartFromModel(IJavaObjectInstance pageModel) {
 		Iterator children = getChildren().iterator();
@@ -276,5 +281,45 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 		Iterator childen = ep.getChildren().iterator();
 		while (childen.hasNext())
 			addPageListenerToChildren((EditPart) childen.next());
+	}
+	
+	/**
+	 * Get current page index.
+	 */
+	public int getCurrentPageIndex() {
+		List children = getChildren();
+		for (int i = 0; i < children.size(); i++) {
+			if (((EditPart) children.get(i)).getModel() == fSelectedItem)
+				return i;
+		}
+		return -1;
+	}
+
+	/**
+	 * Select the next page
+	 */
+	public void selectNextPage() {
+		if (fSelectedItem != null) {
+			List children = getChildren();
+			int cp = getCurrentPageIndex();
+			if (++cp < children.size()) {
+				EditPart nextpage = (EditPart) children.get(cp);
+				pageSelected(nextpage);
+			}
+		}
+	}
+
+	/**
+	 * Select the previous page
+	 */
+	public void selectPreviousPage() {
+		if (fSelectedItem != null) {
+			List children = getChildren();
+			int cp = getCurrentPageIndex();
+			if (--cp >= 0) {
+				EditPart prevpage = (EditPart) children.get(cp);
+				pageSelected(prevpage);
+			}
+		}
 	}
 }

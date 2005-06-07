@@ -110,7 +110,37 @@
    
    <extension
          point="org.eclipse.ui.popupMenus">
-   	 <!-- 
+	 <!--
+         Switch Tabs on a TabFolder
+      -->
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.swt.TabFolderGraphicalEditPart"
+            id="org.eclipse.ve.java.editorpart.tabfolder.action.popup.object">
+         <action
+               label="%PopupMenus.SwitchToAction.Label Switch to"
+               style="pulldown"
+               class="org.eclipse.ve.internal.swt.TabFolderSwitchToObjectActionDelegate"
+               menubarPath="additions"
+               enablesFor="1"
+               id="org.eclipse.ve.java.editorpart.tabfolder.switchto">
+         </action>
+      </objectContribution>
+      	 <!--
+         Switch Tabs on a CTabFolder
+      -->
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.swt.CTabFolderGraphicalEditPart"
+            id="org.eclipse.ve.java.editorpart.ctabfolder.action.popup.object">
+         <action
+               label="%PopupMenus.SwitchToAction.Label Switch to"
+               style="pulldown"
+               class="org.eclipse.ve.internal.swt.CTabFolderSwitchToObjectActionDelegate"
+               menubarPath="additions"
+               enablesFor="1"
+               id="org.eclipse.ve.java.editorpart.ctabfolder.switchto">
+         </action>
+      </objectContribution>
+     <!-- 
 	 	Set Text option on swt controls
 	 -->
      <objectContribution
