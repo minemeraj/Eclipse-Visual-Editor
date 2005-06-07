@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartProxyAdapter.java,v $
- *  $Revision: 1.15 $  $Date: 2005-06-06 12:07:45 $ 
+ *  $Revision: 1.16 $  $Date: 2005-06-07 13:58:26 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -21,6 +21,8 @@ import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.internal.IPreferenceConstants;
 import org.eclipse.ui.internal.WorkbenchPlugin;
@@ -194,8 +196,21 @@ public class ViewPartProxyAdapter extends BeanProxyAdapter implements IVisualCom
 				}
 				fControlManager.setControlBeanProxy(viewPaneBeanProxy);				
 			}
+		} else if (getErrorStatus() == ERROR_SEVERE){
+			// If the BeanProxy doesn't exist but we got a severe error then we need to die gracefully so the VE can continue
+			fControlManager = new ControlManager(){
+				Image errorImage = IErrorHolder.ErrorType.getSevereErrorImage();	
+				public Dimension getSize() {
+					return new Dimension(errorImage.getBounds().width,errorImage.getBounds().height);
+				}
+				public Rectangle getBounds() {
+					return new Rectangle(errorImage.getBounds());
+				}
+				public ImageData getImageData() {
+					return errorImage.getImageData();
+				}
+			};
 		}
-
 	}	
 	
 	public synchronized void removeComponentListener(IVisualComponentListener aListener) {
