@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEActionFilter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:15 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-07 23:13:12 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -106,11 +106,11 @@ public class CDEActionFilter implements IActionFilter {
 	
 	protected boolean editPartFilterTest(Object target, String value, String arg, EditPart ep) {
 		if (ep instanceof IActionFilter)
-			return ((IActionFilter)ep).testAttribute(target, arg, value);
+			return ((IActionFilter)ep).testAttribute(ep, arg, value);
 		else {
 			IActionFilter af = (IActionFilter)((IAdaptable)ep).getAdapter(IActionFilter.class);
 			if (af != null)
-				return af.testAttribute(target, arg, value);
+				return af.testAttribute(ep, arg, value);
 		}
 		return false;
 	}
