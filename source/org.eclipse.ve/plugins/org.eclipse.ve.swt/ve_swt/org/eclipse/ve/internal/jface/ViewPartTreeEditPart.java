@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartTreeEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-07 13:38:08 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-07 13:52:41 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -84,7 +84,7 @@ public class ViewPartTreeEditPart extends JavaBeanTreeEditPart {
 		// as currently this creates bad code
 		return new CompositeTreeEditPart(model){
 			protected VisualContainerPolicy getContainerPolicy() {
-				return new CompositeNoOpContainerPolicy(EditDomain.getEditDomain(this));				
+				return new DisallowCompositeChildrenContainerPolicy(EditDomain.getEditDomain(this));				
 			}
 		};
 	}
