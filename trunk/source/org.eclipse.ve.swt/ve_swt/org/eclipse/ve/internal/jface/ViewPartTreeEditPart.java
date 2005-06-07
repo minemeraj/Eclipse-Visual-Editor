@@ -10,24 +10,28 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartTreeEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-03 19:10:04 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-07 13:38:08 $ 
  */
 package org.eclipse.ve.internal.jface;
 
 import java.util.*;
 
-import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.EditPart;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
-import org.eclipse.ve.internal.swt.SwtPlugin;
+import org.eclipse.ve.internal.swt.*;
 
 
 public class ViewPartTreeEditPart extends JavaBeanTreeEditPart {
@@ -75,4 +79,13 @@ public class ViewPartTreeEditPart extends JavaBeanTreeEditPart {
 			}
 		}
 	};
+	protected EditPart createChildEditPart(Object model) {
+		// The child will be a CompositeTreeEditPart if we have a single child composite.  The problem is that we cannot allow any more children to be dropped onto it
+		// as currently this creates bad code
+		return new CompositeTreeEditPart(model){
+			protected VisualContainerPolicy getContainerPolicy() {
+				return new CompositeNoOpContainerPolicy(EditDomain.getEditDomain(this));				
+			}
+		};
+	}
 }

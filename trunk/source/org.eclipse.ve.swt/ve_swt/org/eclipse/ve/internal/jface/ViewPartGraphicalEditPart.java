@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-03 19:10:04 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-07 13:38:08 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -18,20 +18,17 @@ import java.util.*;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
-import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
-
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
-
 import org.eclipse.ve.internal.java.core.*;
-
-import org.eclipse.ve.internal.swt.ControlGraphicalEditPart;
-import org.eclipse.ve.internal.swt.SwtPlugin;
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+import org.eclipse.ve.internal.swt.*;
 
 public class ViewPartGraphicalEditPart extends ControlGraphicalEditPart {
 	
@@ -98,13 +95,17 @@ public class ViewPartGraphicalEditPart extends ControlGraphicalEditPart {
 		return BeanUtilities.getFeatureValue((IJavaInstance)getModel(),SwtPlugin.DELEGATE_CONTROL);		
 	}
 	
-	protected EditPart createChild(Object model) {
-		// Out child edit part is transparent as we are the top level one on the free form
-		EditPart ep = super.createChild(model);
-		if (ep instanceof ControlGraphicalEditPart) {
-			((ControlGraphicalEditPart) ep).setTransparent(true);
-		}
-		return ep;
+	protected EditPart createChild(Object model) {		
+		// The child will be a CompositeTreeEditPart if we have a single child composite.  The problem is that we cannot allow any more children to be dropped onto it
+		// as currently this creates bad code
+		CompositeGraphicalEditPart result = new CompositeGraphicalEditPart(model){			
+			protected VisualContainerPolicy getContainerPolicy() {
+				return new CompositeNoOpContainerPolicy(EditDomain.getEditDomain(this));
+			}
+		};
+		// Our child edit part is transparent as we are the top level one on the free form			
+		result.setTransparent(true);
+		return result;
 	}
 
 	public Object getAdapter(Class type) {
