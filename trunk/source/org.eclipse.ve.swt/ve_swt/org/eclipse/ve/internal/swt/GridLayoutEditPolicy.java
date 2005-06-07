@@ -11,8 +11,9 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.18 $ $Date: 2005-06-06 22:34:20 $
+ * $Revision: 1.19 $ $Date: 2005-06-07 14:42:47 $
  */
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.draw2d.*;
@@ -59,7 +60,7 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 				helper.refresh();
 		}
 	};
-	private EditPartListener editPartSelectionListener;
+	private EditPartListener editPartListener;
 
 	
 	private class GridImageListener implements IImageListener {
@@ -98,8 +99,12 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 					&& (getHost().getSelected() == EditPart.SELECTED || getHost().getSelected() == EditPart.SELECTED_PRIMARY))
 				gridController.setGridShowing(true);
 			// Add editpart listener to show grid when selected if prefs is set
-			editPartSelectionListener = createEditPartSelectionListener();
-			getHost().addEditPartListener(editPartSelectionListener);
+			editPartListener = createEditPartListener();
+			getHost().addEditPartListener(editPartListener);
+			List children = getHost().getChildren();
+			Iterator iterator = children.iterator();
+			while (iterator.hasNext())
+				((EditPart) iterator.next()).addEditPartListener(editPartListener);
 		}
 		super.activate();
 		CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), GridLayoutLayoutPage.class);
@@ -118,9 +123,13 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 		if (beanProxy != null)
 			beanProxy.removeImageListener(getGridImageListener());
 		getHostFigure().removeFigureListener(hostFigureListener);
-		if (editPartSelectionListener != null) {
-			getHost().removeEditPartListener(editPartSelectionListener);
-			editPartSelectionListener = null;
+		if (editPartListener != null) {
+			getHost().removeEditPartListener(editPartListener);
+			List children = getHost().getChildren();
+			Iterator iterator = children.iterator();
+			while (iterator.hasNext())
+				((EditPart) iterator.next()).removeEditPartListener(editPartListener);
+			editPartListener = null;
 		}
 		super.deactivate();
 	}
@@ -310,24 +319,21 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 	 * @see org.eclipse.ve.internal.cde.core.IGridListener#gridHeightChanged(int, int)
 	 */
 	public void gridHeightChanged(int gridHeight, int oldGridHeight) {
-		// TODO Auto-generated method stub
-		
+		// nothing to do here
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.IGridListener#gridWidthChanged(int, int)
 	 */
 	public void gridWidthChanged(int gridWidth, int oldGridWidth) {
-		// TODO Auto-generated method stub
-		
+		// nothing to do here
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.IGridListener#gridMarginChanged(int, int)
 	 */
 	public void gridMarginChanged(int gridMargin, int oldGridMargin) {
-		// TODO Auto-generated method stub
-		
+		// nothing to do here
 	}
 	
 	// modifying the feedback behavior from FlowLayoutEditPolicy
@@ -459,12 +465,12 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 	 * Create an editpart listener for the host edit part that will show the grid
 	 * if the editpart is selected. This is based on the SHOW_GRID_WHEN_SELECTED preferences.
 	 */
-	private EditPartListener createEditPartSelectionListener() {
+	private EditPartListener createEditPartListener() {
 		return new EditPartListener.Stub() {
 
 			public void selectedStateChanged(EditPart editpart) {
 				if (CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)) {
-					if (editpart == null || editpart == getHost()
+					if ((editpart == null || editpart == getHost() || isChildEditPart(editpart))
 							&& (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
 						if (gridController != null)
 							gridController.setGridShowing(true);
@@ -478,7 +484,28 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 						gridController.setGridShowing(false);
 				}
 			}
+			public void childAdded(EditPart editpart, int index) {
+				if (editPartListener != null)
+					editpart.addEditPartListener(editPartListener);
+			}
+
+			public void removingChild(EditPart editpart, int index) {
+				if (editPartListener != null)
+					editpart.removeEditPartListener(editPartListener);
+			}
 		};
+	}
+
+	/*
+	 * Return true if ep is a child editpart of the host container
+	 */
+	private boolean isChildEditPart (EditPart ep) {
+		if (ep != null) {
+			List children = getHost().getChildren();
+			if (!children.isEmpty())
+				return (children.indexOf(ep) != -1);
+		}
+		return false;
 	}
 
 }
