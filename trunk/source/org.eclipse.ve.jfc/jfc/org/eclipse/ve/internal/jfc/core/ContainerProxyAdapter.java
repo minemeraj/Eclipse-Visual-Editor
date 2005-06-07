@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.17 $  $Date: 2005-05-18 18:39:17 $ 
+ *  $Revision: 1.18 $  $Date: 2005-06-07 16:24:55 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -137,7 +137,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 								if (notification.isPrerelease()) {
 									// Remove the bean from the container because it is about to go away. We need to do this prerelease because after release 
 									// we no longer have the old component proxy available to remove. It would stay in the container and we couldn't touch it.
-									removeComponent((EObject) notification.getNotifier(), notification.getExpression());
+									removeComponent((EObject) notification.getNotifier(), true, notification.getExpression());
 								} else {
 									// Add the new bean back into the container.
 									addComponentWithConstraint((EObject) notification.getNotifier(), getConstraintComponentPosition((EObject) notification.getNotifier()), notification
@@ -362,7 +362,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 	 */
 	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {
 		if (feature == sfContainerComponents) {
-			removeComponent((EObject) oldValue, expression);
+			removeComponent((EObject) oldValue, false, expression);
 			removeAdapters((Notifier) oldValue);	// Going away, so remove the adapter too.
 		} else if (!inInstantiation() && feature == sfLayout) {
 			layoutChanged(expression);
@@ -557,14 +557,15 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 		return null;
 	}
 	
-	/*
+	/**
 	 * Remove the component from the container on the vm.
 	 * @param aConstraintComponent
+	 * @param aboutToRelease <code>true </code> if we are about to release and dispose of the control, not just remove.
 	 * @param expression
 	 * 
 	 * @since 1.1.0
 	 */
-	private void removeComponent(EObject aConstraintComponent, IExpression expression) {
+	private void removeComponent(EObject aConstraintComponent, boolean aboutToRelease, IExpression expression) {
 		ComponentConstraintAdapter ccAdapter = (ComponentConstraintAdapter) EcoreUtil.getExistingAdapter(aConstraintComponent, this);
 		if (ccAdapter != null)
 			clearError(sfContainerComponents); 
@@ -575,8 +576,10 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 			if (!layoutChangePending) {
 				BeanAwtUtilities.invoke_removeComponent(getProxy(), componentProxyHost.getBeanProxy(), expression);
 			}
-			componentProxyHost.restoreVisibility(expression);	// Always want to restore, even when in layout change pending.
-			componentRemoved(aConstraintComponent, expression);
+			// Always want to restore, even when in layout change pending. Except if about to release then we don't need to because it will reinstantiate if needed.
+			if (!aboutToRelease)
+				componentProxyHost.restoreVisibility(expression);	
+			componentRemoved(aConstraintComponent, expression, aboutToRelease);
 		}
 	}
 	
@@ -584,10 +587,10 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 	 * Notification that a component was removed. Subclasses may override to do something.
 	 * @param aConstraintComponent
 	 * @param expression
-	 * 
+	 * @param aboutToRelease <code>true</code> if the component is about to be released and disposed. <code>false</code> if just a cancel (a release may follow but we don't know that).
 	 * @since 1.1.0
 	 */
-	protected void componentRemoved(EObject aConstraintComponent, IExpression expression) {
+	protected void componentRemoved(EObject aConstraintComponent, IExpression expression, boolean aboutToRelease) {
 		
 	}
 
