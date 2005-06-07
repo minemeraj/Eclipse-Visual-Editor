@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartGraphicalEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-07 13:38:08 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-07 13:52:41 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -100,7 +100,7 @@ public class ViewPartGraphicalEditPart extends ControlGraphicalEditPart {
 		// as currently this creates bad code
 		CompositeGraphicalEditPart result = new CompositeGraphicalEditPart(model){			
 			protected VisualContainerPolicy getContainerPolicy() {
-				return new CompositeNoOpContainerPolicy(EditDomain.getEditDomain(this));
+				return new DisallowCompositeChildrenContainerPolicy(EditDomain.getEditDomain(this));
 			}
 		};
 		// Our child edit part is transparent as we are the top level one on the free form			
