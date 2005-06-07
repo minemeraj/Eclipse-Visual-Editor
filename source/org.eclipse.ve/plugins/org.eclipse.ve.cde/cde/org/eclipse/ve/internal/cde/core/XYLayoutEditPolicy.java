@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.17 $  $Date: 2005-05-25 14:49:33 $ 
+ *  $Revision: 1.18 $  $Date: 2005-06-07 15:08:31 $ 
  */
 
 
@@ -62,7 +62,7 @@ public abstract class XYLayoutEditPolicy extends org.eclipse.gef.editpolicies.XY
 	protected boolean allowGridding = true;
 
 	private IFigure sizeOnDropFeedback = null;
-	private EditPartListener editPartSelectionListener;
+	private EditPartListener editPartListener;
 
 	private boolean fShowGrid = false;
 
@@ -130,8 +130,12 @@ public void activate() {
 				if (CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)
 						&& (getHost().getSelected() == EditPart.SELECTED || getHost().getSelected() == EditPart.SELECTED_PRIMARY))
 					gridController.setGridShowing(true);
-				editPartSelectionListener = createEditPartSelectionListener();
-				getHost().addEditPartListener(editPartSelectionListener);
+				editPartListener = createEditPartListener();
+				getHost().addEditPartListener(editPartListener);
+				List children = getHost().getChildren();
+				Iterator iterator = children.iterator();
+				while (iterator.hasNext())
+					((EditPart) iterator.next()).addEditPartListener(editPartListener);
 			}
 		}
 	
@@ -159,9 +163,13 @@ public void activate() {
 		gridFigure = null;		
 	}	
 	undecorateChildren();
-	if (editPartSelectionListener != null) {
-		getHost().removeEditPartListener(editPartSelectionListener);
-		editPartSelectionListener = null;
+	if (editPartListener != null) {
+		getHost().removeEditPartListener(editPartListener);
+		List children = getHost().getChildren();
+		Iterator iterator = children.iterator();
+		while (iterator.hasNext())
+			((EditPart) iterator.next()).removeEditPartListener(editPartListener);
+		editPartListener = null;
 	}
 	if (fPropertyChangeListener != null)
 		getHost().getRoot().getViewer().removePropertyChangeListener(fPropertyChangeListener);
@@ -790,12 +798,12 @@ protected void undecorateChild(EditPart child){
 	 * Create an editpart listener for the host edit part that will show the grid
 	 * if the editpart is selected. This is based on the SHOW_GRID_WHEN_SELECTED preferences.
 	 */
-	private EditPartListener createEditPartSelectionListener() {
+	private EditPartListener createEditPartListener() {
 		return new EditPartListener.Stub() {
 
 			public void selectedStateChanged(EditPart editpart) {
 				if (CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)) {
-					if (editpart == null || editpart == getHost()
+					if ((editpart == null || editpart == getHost() || isChildEditPart(editpart))
 							&& (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
 						if (gridController != null)
 							gridController.setGridShowing(true);
@@ -809,7 +817,27 @@ protected void undecorateChild(EditPart child){
 						gridController.setGridShowing(false);
 				}
 			}
+			public void childAdded(EditPart editpart, int index) {
+				if (editPartListener != null)
+					editpart.addEditPartListener(editPartListener);
+			}
+
+			public void removingChild(EditPart editpart, int index) {
+				if (editPartListener != null)
+					editpart.removeEditPartListener(editPartListener);
+			}
 		};
+	}
+	/*
+	 * Return true if ep is a child editpart of the host container
+	 */
+	private boolean isChildEditPart (EditPart ep) {
+		if (ep != null) {
+			List children = getHost().getChildren();
+			if (!children.isEmpty())
+				return (children.indexOf(ep) != -1);
+		}
+		return false;
 	}
 
 }
