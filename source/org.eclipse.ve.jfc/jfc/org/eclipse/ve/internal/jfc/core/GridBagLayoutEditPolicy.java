@@ -11,11 +11,10 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-25 14:48:50 $ 
+ *  $Revision: 1.16 $  $Date: 2005-06-07 15:30:41 $ 
  */
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.*;
@@ -71,7 +70,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 				helper.refresh();
 		}
 	};
-	private EditPartListener editPartSelectionListener;
+	private EditPartListener editPartListener;
 
 
 	private class GridBagImageListener implements IImageListener {
@@ -95,8 +94,12 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 					&& (getHost().getSelected() == EditPart.SELECTED || getHost().getSelected() == EditPart.SELECTED_PRIMARY))
 				gridController.setGridShowing(true);
 			// Add editpart listener to show grid when selected if prefs is set
-			editPartSelectionListener = createEditPartSelectionListener();
-			getHost().addEditPartListener(editPartSelectionListener);
+			editPartListener = createEditPartListener();
+			getHost().addEditPartListener(editPartListener);
+			List children = getHost().getChildren();
+			Iterator iterator = children.iterator();
+			while (iterator.hasNext())
+				((EditPart) iterator.next()).addEditPartListener(editPartListener);
 		}
 		super.activate();
 		containerPolicy.setContainer(getHost().getModel());
@@ -125,9 +128,13 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		if (imageNotifier != null)
 			imageNotifier.removeImageListener(getGrigBagImageListener());
 		getHostFigure().removeFigureListener(hostFigureListener);
-		if (editPartSelectionListener != null) {
-			getHost().removeEditPartListener(editPartSelectionListener);
-			editPartSelectionListener = null;
+		if (editPartListener != null) {
+			getHost().removeEditPartListener(editPartListener);
+			List children = getHost().getChildren();
+			Iterator iterator = children.iterator();
+			while (iterator.hasNext())
+				((EditPart) iterator.next()).removeEditPartListener(editPartListener);
+			editPartListener = null;
 		}
 		super.deactivate();
 	}
@@ -717,12 +724,12 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	 * Create an editpart listener for the host edit part that will show the grid
 	 * if the editpart is selected. This is based on the SHOW_GRID_WHEN_SELECTED preferences.
 	 */
-	private EditPartListener createEditPartSelectionListener() {
+	private EditPartListener createEditPartListener() {
 		return new EditPartListener.Stub() {
 
 			public void selectedStateChanged(EditPart editpart) {
 				if (CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED)) {
-					if (editpart == null || editpart == getHost()
+					if ((editpart == null || editpart == getHost() || isChildEditPart(editpart))
 							&& (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
 						if (gridController != null)
 							gridController.setGridShowing(true);
@@ -736,7 +743,27 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 						gridController.setGridShowing(false);
 				}
 			}
+			public void childAdded(EditPart editpart, int index) {
+				if (editPartListener != null)
+					editpart.addEditPartListener(editPartListener);
+			}
+
+			public void removingChild(EditPart editpart, int index) {
+				if (editPartListener != null)
+					editpart.removeEditPartListener(editPartListener);
+			}
 		};
+	}
+	/*
+	 * Return true if ep is a child editpart of the host container
+	 */
+	private boolean isChildEditPart (EditPart ep) {
+		if (ep != null) {
+			List children = getHost().getChildren();
+			if (!children.isEmpty())
+				return (children.indexOf(ep) != -1);
+		}
+		return false;
 	}
 
 }
