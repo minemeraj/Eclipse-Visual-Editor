@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-02 22:32:30 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-07 19:22:42 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -198,6 +198,11 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	 */
 	protected void pageSelected(EditPart page) {
 		if (page != null) {
+			if (fSelectedItem != null) {
+				EditPart currentPage = getEditPartFromModel(fSelectedItem);
+				setPageVisible(currentPage, false);
+			}
+			setPageVisible(page, true);
 			fSelectedItem = (IJavaObjectInstance) page.getModel(); // save for later checks... see createPageListener()
 			getCTabFolderProxyAdapter().setSelection(getChildren().indexOf(page));
 		}
@@ -276,5 +281,45 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 		Iterator childen = ep.getChildren().iterator();
 		while (childen.hasNext())
 			addPageListenerToChildren((EditPart) childen.next());
+	}
+	
+	/**
+	 * Get current page index.
+	 */
+	public int getCurrentPageIndex() {
+		List children = getChildren();
+		for (int i = 0; i < children.size(); i++) {
+			if (((EditPart) children.get(i)).getModel() == fSelectedItem)
+				return i;
+		}
+		return -1;
+	}
+
+	/**
+	 * Select the next page
+	 */
+	public void selectNextPage() {
+		if (fSelectedItem != null) {
+			List children = getChildren();
+			int cp = getCurrentPageIndex();
+			if (++cp < children.size()) {
+				EditPart nextpage = (EditPart) children.get(cp);
+				pageSelected(nextpage);
+			}
+		}
+	}
+
+	/**
+	 * Select the previous page
+	 */
+	public void selectPreviousPage() {
+		if (fSelectedItem != null) {
+			List children = getChildren();
+			int cp = getCurrentPageIndex();
+			if (--cp >= 0) {
+				EditPart prevpage = (EditPart) children.get(cp);
+				pageSelected(prevpage);
+			}
+		}
 	}
 }
