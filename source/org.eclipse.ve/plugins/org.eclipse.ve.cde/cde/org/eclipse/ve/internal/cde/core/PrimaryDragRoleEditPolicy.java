@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PrimaryDragRoleEditPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-03-28 14:14:29 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-08 23:08:35 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -19,17 +19,13 @@ import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 
 /**
- * The Primary Drag Role EditPolicy in CDE that handles the layout policy
- * being griddable. Certain special things need to be done. This policy
- * wrappers the real one and handles just the grid stuff. It also handles
- * the alignment/distribution requests.
+ * The Primary Drag Role EditPolicy in CDE that the alignment/distribution requests.
  * 
  * It forwards adaptable requests to the dragRolePolicy so it can handle accessibility.
  */
 public class PrimaryDragRoleEditPolicy implements EditPolicy, IAdaptable {
 	protected EditPart host;
 	protected EditPolicy dragRolePolicy;
-	protected GridController gridController;
 	protected boolean allowAlignment;
 	
 	/* (non-Javadoc)
@@ -42,8 +38,7 @@ public class PrimaryDragRoleEditPolicy implements EditPolicy, IAdaptable {
 			return null;
 	}
 	
-	public PrimaryDragRoleEditPolicy(GridController gridController, EditPolicy dragRolePolicy, boolean allowAlignment) {
-		this.gridController = gridController;
+	public PrimaryDragRoleEditPolicy(EditPolicy dragRolePolicy, boolean allowAlignment) {
 		this.dragRolePolicy = dragRolePolicy;
 		this.allowAlignment = allowAlignment;
 	}
@@ -102,11 +97,7 @@ public class PrimaryDragRoleEditPolicy implements EditPolicy, IAdaptable {
 	}
 	
 	public void showSourceFeedback(Request request) {
-		// Don't show source feedback if the grid is showing
-		if (gridController != null && gridController.isGridShowing())
-			return;
-		else
-			dragRolePolicy.showSourceFeedback(request);
+		dragRolePolicy.showSourceFeedback(request);
 	}
 	
 	public void showTargetFeedback(Request request) {

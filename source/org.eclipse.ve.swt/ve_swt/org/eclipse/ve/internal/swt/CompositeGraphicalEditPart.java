@@ -9,28 +9,31 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.23 $ $Date: 2005-06-02 22:32:30 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.24 $ $Date: 2005-06-08 23:08:35 $
  */
 
 package org.eclipse.ve.internal.swt;
 
 import java.util.List;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPolicy;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.gef.*;
+
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
+
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -158,6 +161,27 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 			sf_compositeLayout = JavaInstantiation.getReference(rset, SWTConstants.SF_COMPOSITE_LAYOUT);
 			sf_compositeControls = JavaInstantiation.getReference(rset, SWTConstants.SF_COMPOSITE_CONTROLS);
 		}
+	}
+
+	/*
+	 * Provide a SnapToGrid helper if the option is set and this has a gridcontroller
+	 */
+	public Object getAdapter(Class type) {
+		if (type == SnapToHelper.class) {
+			EditPartViewer viewer = getRoot().getViewer();
+			Object snapToGrid = viewer.getProperty(SnapToGrid.PROPERTY_GRID_ENABLED);
+			if (snapToGrid != null && ((Boolean) snapToGrid).booleanValue()) {
+				GridController gridController = GridController.getGridController(this);
+				if (gridController != null) {
+					viewer.setProperty(SnapToGrid.PROPERTY_GRID_SPACING, new Dimension(gridController.getGridWidth(), gridController.getGridHeight()));
+					int margin = gridController.getGridMargin();
+					viewer.setProperty(SnapToGrid.PROPERTY_GRID_ORIGIN, new Point(getFigure().getBounds().x + margin, getFigure().getBounds().y + margin));
+					return new SnapToGrid(this);
+				}
+			}
+			return null;
+		}
+		return super.getAdapter(type);
 	}
 
 }
