@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RCPLauncher.java,v $
- *  $Revision: 1.11 $  $Date: 2005-06-06 16:25:09 $ 
+ *  $Revision: 1.12 $  $Date: 2005-06-08 14:54:08 $ 
  */
 
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
@@ -22,10 +22,11 @@ import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.part.*;
+import org.eclipse.ui.part.WorkbenchPart;
 
 public class RCPLauncher implements ILauncher {
 
@@ -51,6 +52,7 @@ public class RCPLauncher implements ILauncher {
 			
 			// setup the jface color preferences for this launch
 			setupColorPreferences(display);
+			setupFontPreferences(display);
 			
 			// Set up the view/editorPart title and icon
 			viewName = System.getProperty("rcp.launcher.viewName"); //$NON-NLS-1$		
@@ -170,6 +172,44 @@ public class RCPLauncher implements ILauncher {
 				JFaceResources.getColorRegistry().put(JFacePreferences.ERROR_COLOR, errorRGB);
 			if(linkRGB != null)
 				JFaceResources.getColorRegistry().put(JFacePreferences.HYPERLINK_COLOR, linkRGB);
+			
+			display.update();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	private void setupFontPreferences(Display display){
+		
+		String defaultFont = "";
+		String dialogFont = "";
+		String bannerFont = "";
+		String headerFont = "";
+		String textFont = "";
+		
+		try{
+			defaultFont = System.getProperty("rcp.launcher.defaultFont"); //$NON-NLS-1$
+			dialogFont = System.getProperty("rcp.launcher.dialogFont"); //$NON-NLS-1$
+			bannerFont = System.getProperty("rcp.launcher.bannerFont"); //$NON-NLS-1$
+			headerFont = System.getProperty("rcp.launcher.headerFont"); //$NON-NLS-1$
+			textFont = System.getProperty("rcp.launcher.textFont"); //$NON-NLS-1$
+			
+			FontData[] defaultFontData = { new FontData(defaultFont) };
+			FontData[] dialogFontData = { new FontData(dialogFont) };
+			FontData[] bannerFontData = { new FontData(bannerFont) };
+			FontData[] headerFontData = { new FontData(headerFont) };
+			FontData[] textFontData = { new FontData(textFont) };
+			
+			if(defaultFontData != null)
+				JFaceResources.getFontRegistry().put(JFaceResources.DEFAULT_FONT, defaultFontData);
+			if(dialogFontData != null)
+				JFaceResources.getFontRegistry().put(JFaceResources.DIALOG_FONT, dialogFontData);
+			if(bannerFontData != null)
+				JFaceResources.getFontRegistry().put(JFaceResources.BANNER_FONT, bannerFontData);
+			if(headerFontData != null)
+				JFaceResources.getFontRegistry().put(JFaceResources.HEADER_FONT, headerFontData);
+			if(textFontData != null)
+				JFaceResources.getFontRegistry().put(JFaceResources.TEXT_FONT, textFontData);
 			
 			display.update();
 		} catch (Exception e){

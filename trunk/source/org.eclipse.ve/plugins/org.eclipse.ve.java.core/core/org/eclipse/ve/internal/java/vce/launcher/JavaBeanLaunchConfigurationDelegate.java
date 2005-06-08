@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.16 $  $Date: 2005-06-06 12:07:31 $ 
+ *  $Revision: 1.17 $  $Date: 2005-06-08 14:54:08 $ 
  */
 
 
@@ -158,12 +158,22 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 		String activeLinkColor = JFaceResources.getColorRegistry().getRGB(JFacePreferences.ACTIVE_HYPERLINK_COLOR).toString();
 		String errorColor = JFaceResources.getColorRegistry().getRGB(JFacePreferences.ERROR_COLOR).toString();
 		String linkColor = JFaceResources.getColorRegistry().getRGB(JFacePreferences.HYPERLINK_COLOR).toString();
+		String defaultFont = JFaceResources.getDefaultFont().getFontData()[0].toString();
+		String dialogFont = JFaceResources.getDialogFont().getFontData()[0].toString();
+		String bannerFont = JFaceResources.getBannerFont().getFontData()[0].toString();
+		String headerFont = JFaceResources.getHeaderFont().getFontData()[0].toString();
+		String textFont = JFaceResources.getTextFont().getFontData()[0].toString();
 		
 		args.append(" -Drcp.launcher.tabPosition=" + fTabPosition); //$NON-NLS-1$
 		args.append(" -Drcp.launcher.traditionalTabs=" + fTraditionalTabs); //$NON-NLS-1$
-		args.append(" -Drcp.launcher.activeLink=\"" + activeLinkColor + QUOTE_DELIM); //$NON-NLS-1$ //$NON-NLS-2$
-		args.append(" -Drcp.launcher.error=\"" + errorColor + QUOTE_DELIM); //$NON-NLS-1$ //$NON-NLS-2$
-		args.append(" -Drcp.launcher.link=\"" + linkColor + QUOTE_DELIM); //$NON-NLS-1$ //$NON-NLS-2$
+		args.append(" -Drcp.launcher.activeLink=\"" + activeLinkColor + QUOTE_DELIM); //$NON-NLS-1$
+		args.append(" -Drcp.launcher.error=\"" + errorColor + QUOTE_DELIM); //$NON-NLS-1$
+		args.append(" -Drcp.launcher.link=\"" + linkColor + QUOTE_DELIM); //$NON-NLS-1$
+		args.append(" -Drcp.launcher.defaultFont=\"" + defaultFont + QUOTE_DELIM); //$NON-NLS-1$
+		args.append(" -Drcp.launcher.dialogFont=\"" + dialogFont + QUOTE_DELIM); //$NON-NLS-1$
+		args.append(" -Drcp.launcher.bannerFont=\"" + bannerFont + QUOTE_DELIM); //$NON-NLS-1$
+		args.append(" -Drcp.launcher.headerFont=\"" + headerFont + QUOTE_DELIM); //$NON-NLS-1$
+		args.append(" -Drcp.launcher.textFont=\"" + textFont + QUOTE_DELIM); //$NON-NLS-1$
 		
 		// If we are launching a WorkbenchPart then we want to read the plugin.xml to see if it is defined as a view
 		// or editor and if so get its name and the location of its icon so that the target VM can render its title bar correctly
