@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.18 $  $Date: 2005-06-07 15:08:31 $ 
+ *  $Revision: 1.19 $  $Date: 2005-06-08 23:08:35 $ 
  */
 
 
@@ -55,7 +55,6 @@ public abstract class XYLayoutEditPolicy extends org.eclipse.gef.editpolicies.XY
 	protected CursorHelper fCursorHelper = null;
 	private Label cursorLabel = null;
 	private Label yCursorLabel = null;
-	protected XYLayoutGridConstrainer layoutConstrainer;
 	ArrayList feedbackList;
 	
 	protected boolean allowZooming = false;
@@ -104,20 +103,20 @@ public void activate() {
 	
 	if (allowGridding) {
 			// Set the snap to grid capability based on the global setting in the viewer
-			EditPartViewer primaryViewer = getHost().getRoot().getViewer();
-			Object snapToGrid = primaryViewer.getProperty(SnapToGrid.PROPERTY_GRID_ENABLED);
-			if (snapToGrid != null)
-				fSnapToGrid = ((Boolean) snapToGrid).booleanValue();
-			// Add a listener to know when the snap to grid action is toggled
-			primaryViewer.addPropertyChangeListener(fPropertyChangeListener = new PropertyChangeListener() {
-
-				public void propertyChange(java.beans.PropertyChangeEvent evt) {
-					if (evt.getPropertyName().equals(SnapToGrid.PROPERTY_GRID_VISIBLE)
-							|| evt.getPropertyName().equals(SnapToGrid.PROPERTY_GRID_ENABLED)) {
-						fSnapToGrid = ((Boolean) evt.getNewValue()).booleanValue();
-					}
-				};
-			});
+//			EditPartViewer primaryViewer = getHost().getRoot().getViewer();
+//			Object snapToGrid = primaryViewer.getProperty(SnapToGrid.PROPERTY_GRID_ENABLED);
+//			if (snapToGrid != null)
+//				fSnapToGrid = ((Boolean) snapToGrid).booleanValue();
+//			// Add a listener to know when the snap to grid action is toggled
+//			primaryViewer.addPropertyChangeListener(fPropertyChangeListener = new PropertyChangeListener() {
+//
+//				public void propertyChange(java.beans.PropertyChangeEvent evt) {
+//					if (evt.getPropertyName().equals(SnapToGrid.PROPERTY_GRID_VISIBLE)
+//							|| evt.getPropertyName().equals(SnapToGrid.PROPERTY_GRID_ENABLED)) {
+//						fSnapToGrid = ((Boolean) evt.getNewValue()).booleanValue();
+//					}
+//				};
+//			});
 
 			gridController = new GridController();
 			if (gridController != null) {
@@ -230,7 +229,6 @@ public void gridVisibilityChanged(boolean showGrid) {
 private void showGridFigure() {
 	if (!fShowGrid  && gridFigure != null) {
 		gridFigure.setVisible(true);
-		layoutConstrainer = createGridConstrainer();
 	}
 
 }
@@ -238,7 +236,6 @@ private void showGridFigure() {
 private void eraseGridFigure() {
 	if (gridFigure != null) {
 		gridFigure.setVisible(false);
-		layoutConstrainer = null;
 	}
 }
 
@@ -314,7 +311,7 @@ protected EditPolicy createChildEditPolicy(final EditPart aPart){
 	EditPolicy dragRolePolicy = isChildResizeable(aPart) ?
 		new org.eclipse.gef.editpolicies.ResizableEditPolicy() :
 		new org.eclipse.gef.editpolicies.NonResizableEditPolicy();
-	return new PrimaryDragRoleEditPolicy(gridController, dragRolePolicy, true);
+	return new PrimaryDragRoleEditPolicy(dragRolePolicy, true);
 }
 
 /**
@@ -480,10 +477,6 @@ public Object getConstraintFor(Point p) {
 		// the coordinate is from the canvas, so it is zoomed, need to unzoom it for a constraint.
 		rect.setLocation(zoomController.unzoomCoordinate(rect.x), zoomController.unzoomCoordinate(rect.y));
 	}
-	// Let the layout constrainer adjust it
-	if ( layoutConstrainer != null && fSnapToGrid) {
-		rect = layoutConstrainer.adjustConstraintFor(rect);
-	}
 	return rect;
 }
 /*
@@ -497,10 +490,6 @@ public Object getConstraintFor(Rectangle r) {
 		// the coordinate is from the canvas, so it is zoomed, need to unzoom it for a constraint.
 		rect.setLocation(zoomController.unzoomCoordinate(rect.x), zoomController.unzoomCoordinate(rect.y));
 	}
-	// Let the layout constrainer adjust it
-	if ( layoutConstrainer != null && fSnapToGrid) {
-		rect = layoutConstrainer.adjustConstraintFor(rect);
-	}
 	return rect;
 }
 
@@ -512,7 +501,7 @@ protected IFigure createDragTargetFeedbackFigure(Rectangle rect) {
 	// Use a ghost rectangle for feedback
 	RectangleFigure r = new RectangleFigure();
 	FigureUtilities.makeGhostShape(r);
-	r.setLineStyle(Graphics.LINE_DOT);
+//	r.setLineStyle(Graphics.LINE_DOT);
 	r.setForegroundColor(ColorConstants.darkGray);
 	r.setBounds(rect);
 	return r;
@@ -550,30 +539,6 @@ protected IFigure createDragTargetFeedbackFigure(Rectangle rect) {
 			removeFeedback(targetFeedback);
 			targetFeedback = null;
 		}
-}
-/*
- * Provide feedback on the overall figure and the request figure.
- * If there is a layout constrainer, let it handle the feedback.
- */
-protected IFigure getRectangleFeedback(Request request) {
-	if (REQ_ADD.equals(request.getType()) ||
-		REQ_MOVE.equals(request.getType()) ||
-		REQ_RESIZE.equals(request.getType()) )
-	{
-		getRectangleFeedback((ChangeBoundsRequest)request);
-	}
-	
-	// provide feedback on the overall target figure
-	if (targetFeedback == null){
-		RectangleFigure rf;
-		targetFeedback = rf = new RectangleFigure();
-		rf.setFill(false);
-
-		Rectangle rect = new Rectangle(getHostFigure().getBounds());
-		rf.setBounds(rect.shrink(5,5));
-		addFeedback(targetFeedback);
-	}
-	return targetFeedback;	
 }
 
 /**
@@ -652,46 +617,6 @@ protected Point getLocationFromRequest(Request request) {
 		return ((ChangeBoundsRequest) request).getLocation();
 	return null;
 }
-/*
- * Handle when the figure is moved or resized.
- * Provide feedback on the overall figure and the request figure.
- * If there is a layout constrainer, let it handle the feedback.
- */
-protected void getRectangleFeedback(ChangeBoundsRequest request) {
-	if (layoutConstrainer != null) {
-		GraphicalEditPart child;
-		Rectangle rect;
-		IFigure targetFigure;
-		List children = request.getEditParts();
-		Point inset = getHostFigure().getClientArea().getLocation();
-		if (feedbackList == null)
-			feedbackList = new ArrayList(children.size());
-		// For each figure in the ChangeBoundsRequest, create a target
-		// feedback based on the constraint.
-		for (int i=0; i < children.size(); i++) {
-			child = (GraphicalEditPart)children.get(i);
-			rect = (Rectangle)getConstraintFor(request, child);
-			if (zoomController != null) {
-				// Need to zoom it back up
-				rect.setLocation(zoomController.zoomCoordinate(rect.x), zoomController.zoomCoordinate(rect.y));
-			}
-			// Retain original size, not size from request.
-			Rectangle childRect = child.getFigure().getBounds();			
-			rect.width = childRect.width;
-			rect.height = childRect.height;
-			rect.translate(inset);	// Add the insets in. any set bounds require this.
-			// If this is the first time through, the feedback figure has to be created.
-			if ( i > feedbackList.size()-1 ) {
-				targetFigure = createDragTargetFeedbackFigure(rect);
-				addFeedback(targetFigure);
-				feedbackList.add(targetFigure);
-			} else {
-				// the figure already exists. just update its position.
-				((IFigure)feedbackList.get(i)).setBounds(rect);
-			}
-		}
-	}
-}
 /**
  * Returns a draw2d constraint object for the given request.
  * The returned object can be translated to the model using
@@ -700,13 +625,6 @@ protected void getRectangleFeedback(ChangeBoundsRequest request) {
  */
 protected Object getConstraintFor (ChangeBoundsRequest request, GraphicalEditPart child){
 	Rectangle rect = (Rectangle) super.getConstraintFor(request, child);
-//	Rectangle rect = child.getFigure().getBounds().getTranslated(getHostFigure().getClientArea().getLocation().negate()); // Remove the inset
-	// Call our own getTransformedRectangle(...) to adjust it according to the zoom factor.
-//	getTransformedRectangle(rect, request);
-	if ( layoutConstrainer != null && fSnapToGrid) {
-		// Let the layout constrainer adjust it
-		rect = layoutConstrainer.adjustConstraintFor(rect);
-	}
 	return rect;
 }
 
@@ -726,34 +644,8 @@ protected GridFigure createGridFigure() {
 	return new GridFigure(gridController, zoomController);
 }
 
-protected XYLayoutGridConstrainer createGridConstrainer() {
-	return 	new XYLayoutGridConstrainer(gridFigure);
-}
-
 protected void showLayoutTargetFeedback(Request request) {
-	showGridFigure();
-	getRectangleFeedback(request);
 	showCursorFeedback(request);
-}
-
-protected void showSizeOnDropFeedback(CreateRequest request) {	
-	super.showSizeOnDropFeedback(request);
-//	if (sizeOnDropFeedback == null) {
-//		sizeOnDropFeedback  = createDragTargetFeedbackFigure(new Rectangle());
-//		addFeedback(sizeOnDropFeedback);
-//	}
-//	Point p = new Point(request.getLocation().getCopy());
-//	Dimension size = request.getSize().getCopy();
-////	IFigure feedback = getSizeOnDropFeedback(request);
-////	sizeOnDropFeedback.translateToRelative(p);
-////	sizeOnDropFeedback.translateFromParent(p);
-////	sizeOnDropFeedback.translateToRelative(size);
-//	Rectangle rect = new Rectangle(p, size);
-//	if ( layoutConstrainer != null ) {
-//		// Let the layout constrainer adjust it
-//		rect = layoutConstrainer.adjustConstraintFor(rect);
-//	}
-//	sizeOnDropFeedback.setBounds(rect);
 }
 
 /**

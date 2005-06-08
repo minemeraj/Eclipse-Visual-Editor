@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridFigure.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-19 17:14:43 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-08 23:08:35 $ 
  */
 
 
@@ -148,7 +148,7 @@ public class GridFigure extends Figure {
 						}
 					}
 					// If we are here then we do not lie within any component
-					g.drawLine( x , y , x , y );
+					g.drawPoint( x , y);
 				}
 			}
 			g.setForegroundColor(oldForeground);
