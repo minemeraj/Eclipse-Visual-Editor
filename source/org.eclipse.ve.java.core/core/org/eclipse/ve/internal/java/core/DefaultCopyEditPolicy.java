@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.13 $  $Date: 2005-06-02 23:05:00 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-08 11:17:17 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -43,8 +43,8 @@ import org.eclipse.swt.widgets.Display;
 public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	
 	public static int nextID = 0;
-	protected List objectsToCopy = new ArrayList(100);
-	protected List visitedObjects = new ArrayList(100);
+	protected List objectsToCopy = new ArrayList(20);
+	protected List visitedObjects = new ArrayList(20);
 	protected EcoreUtil.Copier copier;
 	
 	public Command getCommand(Request request) {
@@ -67,7 +67,9 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				Resource newEMFResource = javaBeanToCopy.eResource().getResourceSet().createResource(javaBeanToCopy.eResource().getURI().appendSegment("" + javaBeanToCopy.hashCode()));				 //$NON-NLS-1$
 
 				// Use the ECore.Copier to put everything from the copy set into the resource set
-				copier = new EcoreUtil.Copier();				
+				copier = new EcoreUtil.Copier();	
+				objectsToCopy.clear();
+				visitedObjects.clear();				
 				copyProperty(null, javaBeanToCopy);	
 		
 				// Expand the references
