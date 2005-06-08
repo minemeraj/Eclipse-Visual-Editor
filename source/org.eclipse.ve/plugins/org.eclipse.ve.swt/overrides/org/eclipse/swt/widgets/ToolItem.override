@@ -8,7 +8,8 @@
     xmlns:org.eclipse.jem.java="java.xmi">
     
   <event:AddMany featureName="eAnnotations">
-     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+         labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ToolItemLabelProvider:text">
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/button_obj.gif"/>
     </addedEObjects>
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
