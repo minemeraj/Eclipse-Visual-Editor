@@ -11,7 +11,7 @@
 package org.eclipse.ve.tests.codegen.java.templates;
 /*
  *  $RCSfile: TemplateObjectFactoryTest.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-07 22:37:10 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-08 15:55:44 $ 
  */
 import java.io.File;
 import java.io.FileWriter;
@@ -88,7 +88,7 @@ public class TemplateObjectFactoryTest extends TestCase {
 	}
 	
 	
-	public void DO_NOT_RUN_testJetTemplateTimeStampChange() {
+	public void testJetTemplateTimeStampChange() {
 		// TODO - temporarily disabled until bug 98670 is fixed.
 		 Object instance=null, newInstance = null ;
 

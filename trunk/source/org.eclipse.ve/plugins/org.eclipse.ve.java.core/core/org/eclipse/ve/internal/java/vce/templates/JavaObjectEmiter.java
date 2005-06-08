@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaObjectEmiter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-08 15:55:43 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -18,11 +18,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.*;
+import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.internal.compiler.*;
 import org.eclipse.jdt.internal.compiler.batch.FileSystem;
 import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
@@ -309,6 +311,8 @@ public class JavaObjectEmiter {
 			buf.append(scanner.getSource()) ;
 			buf.replace(left,right,getClassName()) ;
 			fSrc = buf.toString().toCharArray() ;
+			
+			refreshInnerStaticClassName();
 		}
 		catch (InvalidInputException e) {
 			throw new TemplatesException (e.getMessage()) ;
@@ -316,6 +320,89 @@ public class JavaObjectEmiter {
     	
     }
     
+    /*
+     * EMF now creates a <class> create(String newNL){} method which returns the 
+     * same class with the passed in NL set. Here also the <class>name is hardcoded and
+     * needs to be updated.
+     * 
+     * @param scanner
+     * @param src
+     * 
+     * @since 1.1
+     */
+	private void refreshInnerStaticClassName() {
+		// 98670 : Need to refresh inner static create(String NL) method to use correct class name
+		ASTParser parser = ASTParser.newParser(AST.JLS2);
+		parser.setSource(fSrc);
+		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		ASTNode node = parser.createAST(null);
+		if (node instanceof CompilationUnit) {
+			CompilationUnit cu = (CompilationUnit) node;
+			if(cu.types()!=null && cu.types().size()>0){
+				TypeDeclaration td = (TypeDeclaration) cu.types().get(0);
+				if(td.getMethods()!=null && td.getMethods().length>0){
+					MethodDeclaration[] methods = td.getMethods();
+					for (int mc = 0; mc < methods.length; mc++) {
+						if("create".equals(methods[mc].getName().getFullyQualifiedName()) && //$NON-NLS-1$
+								(methods[mc].getModifiers()&Modifier.STATIC )==Modifier.STATIC  && 
+								(methods[mc].getModifiers()&Modifier.SYNCHRONIZED )==Modifier.SYNCHRONIZED  ){
+							// determine offset/lengths of the class names in the method
+							MethodDeclaration createMethod = methods[mc];
+							int returnTypeStart = createMethod.getReturnType().getStartPosition();
+							int returnTypeEnd = returnTypeStart + createMethod.getReturnType().getLength();
+							
+							int decl1Start = -1, decl1End = -1;
+							int decl2Start = -1, decl2End = -1;
+							Iterator statementItr = createMethod.getBody().statements().iterator();
+							while (statementItr.hasNext()) {
+								Statement statement = (Statement) statementItr.next();
+								if (statement instanceof VariableDeclarationStatement) {
+									VariableDeclarationStatement vds = (VariableDeclarationStatement) statement;
+									decl1Start = vds.getType().getStartPosition();
+									decl1End = decl1Start + vds.getType().getLength() ;
+									VariableDeclarationFragment vdf = (VariableDeclarationFragment) vds.fragments().get(0);
+									if (vdf.getInitializer() instanceof ClassInstanceCreation) {
+										ClassInstanceCreation cic = (ClassInstanceCreation) vdf.getInitializer();
+										decl2Start = cic.getName().getStartPosition();
+										decl2End = decl2Start + cic.getName().getLength() ;
+									}
+									break;
+								}
+							}
+							
+							// replace class names based on determined offset/lengths
+							int difference = 0;
+							StringBuffer sb = new StringBuffer();
+							sb.append(fSrc);
+							String newClassName = getClassName();
+						
+							if(returnTypeStart>-1 && returnTypeEnd>-1){
+								sb.replace(returnTypeStart, returnTypeEnd, newClassName);
+								difference = newClassName.length() - (returnTypeEnd-returnTypeStart);
+							}
+							if(decl1Start>-1 && decl1End>-1){
+								decl1Start += difference;
+								decl1End += difference;
+								sb.replace(decl1Start, decl1End, newClassName);
+								difference += newClassName.length() - (decl1End - decl1Start);
+							}
+							if(decl2Start>-1 && decl2End>-1){
+								decl2Start += difference;
+								decl2End += difference;
+								sb.replace(decl2Start, decl2End, newClassName);
+								difference += newClassName.length() - (decl2End - decl2Start);
+							}
+							
+							// Assign back to fSrc
+							fSrc = sb.toString().toCharArray();
+							break;
+						}
+					} 
+				}
+			}
+		}
+	}
+
 	/**
 	 * getClass() will try to load the class first.
 	 * (one that has a timesamp>fSrcTimestamp)
