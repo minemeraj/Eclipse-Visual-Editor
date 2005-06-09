@@ -134,6 +134,10 @@
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/ToolItem-Dropdown.xmi#ToolItemDropdown_1">
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="ToolItem.Dropdown"/>
       </cmpEntries>      
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolitemseparator_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/ToolItem-Separator.xmi#ToolItemSeparator_1">
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="ToolItem.Separator"/>
+      </cmpEntries>   
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry13" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/browser_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry13obj"
           creationClassURI="java:/org.eclipse.swt.browser#Browser"/>
