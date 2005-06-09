@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.13 $  $Date: 2005-06-02 19:12:33 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-09 21:42:40 $ 
  */
 package org.eclipse.ve.internal.java.core;
  
@@ -66,7 +66,8 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		 * @see org.eclipse.jem.internal.instantiation.ParseVisitor#visit(org.eclipse.jem.internal.instantiation.PTInstanceReference)
 		 */
 		public boolean visit(PTInstanceReference node) {
-			IBeanProxy reference = BeanProxyUtilities.getBeanProxy(node.getObject());
+			IInternalBeanProxyHost2 proxyHost = (IInternalBeanProxyHost2) EcoreUtil.getExistingAdapter(node.getObject(), IBeanProxyHost.BEAN_PROXY_TYPE);
+			IProxy reference = proxyHost.getProxy();
 			getExpression().createProxyExpression(getNextExpression(), reference);				
 			return false;
 		}
