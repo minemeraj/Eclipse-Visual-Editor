@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-22 22:44:41 $ 
+ *  $Revision: 1.15 $  $Date: 2005-06-09 21:47:20 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -524,7 +524,7 @@ public class JavaVisualEditorVMController {
 	 * @since 1.0.0
 	 */
 	static RegistryResult getRegistry(IFile file) throws CoreException {
-	
+stopDeadlock(file);	
 		if (IN_DEBUG_MODE)
 			return createRegistryForDebug(file);
 	
@@ -556,6 +556,22 @@ public class JavaVisualEditorVMController {
 		return perProjectEntry.getSpare();
 	}
 	
+	
+	
+	private static void stopDeadlock(IFile file) {
+		// This is just a temp kludge to try to stop a deadlock. Get all of the classpath containers
+		// for this project initialized before locking anything.
+		IProject project = file.getProject();
+		IJavaProject jproject = JavaCore.create(project);
+		try {
+			jproject.getResolvedClasspath(true);
+		} catch (JavaModelException e) {
+		}
+		
+	}
+
+
+
 	/**
 	 * This is called by the JavaVisualEditorPart to tell us that it is being disposed, and this is
 	 * the file that it was working on. This is used to update lastActivity counter for the project. That is 
