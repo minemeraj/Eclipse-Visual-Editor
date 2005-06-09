@@ -2,9 +2,9 @@
 
 #environment variables
 PATH=.:/bin:/usr/bin:/usr/bin/X11:/usr/local/bin:/usr/X11R6/bin:`pwd`/../linux;export PATH
-MOZILLA_FIVE_HOME=/usr/lib/mozilla-1.7.8/;export MOZILLA_FIVE_HOME
+#MOZILLA_FIVE_HOME=/usr/lib/mozilla-1.7.8/;export MOZILLA_FIVE_HOME
 LD_ASSUME_KERNEL=2.2.5
-LD_LIBRARY_PATH=.:$MOZILLA_FIVE_HOME
+LD_LIBRARY_PATH=.
 USERNAME=`whoami`
 PREVXUTHORITY=$XAUTHORITY
 export XAUTHORITY=
