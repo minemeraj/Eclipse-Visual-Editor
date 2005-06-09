@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolItemLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-09 17:32:29 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-09 20:53:34 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -40,7 +40,9 @@ public class ToolItemLabelProvider extends DefaultLabelProviderWithNameAndAttrib
 	
 	private static final String DROP_DOWN = "platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/choice_obj.gif"; //$NON-NLS-1$
 	
-	private static Image CHECK_BOX_IMAGE, RADIO_BUTTON_IMAGE, DROP_DOWN_IMAGE;
+	private static final String SEPARATOR = "platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolitemseparator_obj.gif"; //$NON-NLS-1$
+	
+	private static Image CHECK_BOX_IMAGE, RADIO_BUTTON_IMAGE, DROP_DOWN_IMAGE, SEPARATOR_IMAGE;
 	
 	/**
 	 * Get the Check box image.
@@ -94,6 +96,14 @@ public class ToolItemLabelProvider extends DefaultLabelProviderWithNameAndAttrib
 							DROP_DOWN_IMAGE = ImageDescriptor.getMissingImageDescriptor().createImage();
 						}
 					return DROP_DOWN_IMAGE;
+				} else if ((style & SWT.SEPARATOR) != 0) {
+					if (SEPARATOR_IMAGE == null)
+						try {
+							SEPARATOR_IMAGE = ImageDescriptor.createFromURL(new URL(SEPARATOR)).createImage();
+						} catch (MalformedURLException mue) {
+							SEPARATOR_IMAGE = ImageDescriptor.getMissingImageDescriptor().createImage();
+						}
+					return SEPARATOR_IMAGE;
 				}
 			}
 		} 
