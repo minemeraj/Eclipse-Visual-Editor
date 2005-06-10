@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-10 17:49:29 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -43,6 +43,9 @@ public BeanDescriptor getBeanDescriptor() {
 			} } ,
 			{ "readOnly" , TextMessages.getString("TextBeanInfo.StyleBits.ReadOnly.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 				TextMessages.getString("TextBeanInfo.StyleBits.ReadOnly.Value.ReadOnly") , "org.eclipse.swt.SWT.READ_ONLY" , new Integer(SWT.READ_ONLY)					 //$NON-NLS-1$ //$NON-NLS-2$
+			} },
+			{ "password" , TextMessages.getString("TextBeanInfo.StyleBits.Password.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				TextMessages.getString("TextBeanInfo.StyleBits.Password.Value.Password") , "org.eclipse.swt.SWT.PASSWORD" , new Integer(SWT.PASSWORD)					 //$NON-NLS-1$ //$NON-NLS-2$
 			} },
 			{ "lines" , TextMessages.getString("TextBeanInfo.StyleBits.Lines.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 				TextMessages.getString("TextBeanInfo.StyleBits.Lines.Value.Single") , "org.eclipse.swt.SWT.SINGLE" , new Integer(SWT.SINGLE) ,					 //$NON-NLS-1$ //$NON-NLS-2$
