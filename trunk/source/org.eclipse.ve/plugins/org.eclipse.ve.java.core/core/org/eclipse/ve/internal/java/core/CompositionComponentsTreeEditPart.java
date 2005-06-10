@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositionComponentsTreeEditPart.java,v $ $Revision: 1.6 $ $Date: 2005-05-18 13:45:17 $
+ * $RCSfile: CompositionComponentsTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-06-10 17:47:02 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import org.eclipse.ve.internal.cde.core.*;
 
+import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.jcm.BeanComposition;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
@@ -74,6 +75,13 @@ public class CompositionComponentsTreeEditPart extends AbstractTreeEditPart {
 		super.deactivate();
 		if (getModel() != null) ((BeanComposition) getModel()).eAdapters().remove(compositionAdapter);
 	}
+	
+	public void setModel(Object model) {
+		if (getModel() != null)
+			((BeanSubclassComposition) getModel()).eAdapters().remove(compositionAdapter);		
+		super.setModel(model);
+	}
+
 
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new TreeContainerEditPolicy(getContainerPolicy()));
