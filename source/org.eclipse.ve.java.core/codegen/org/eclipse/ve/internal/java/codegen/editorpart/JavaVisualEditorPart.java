@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.120 $  $Date: 2005-06-03 14:43:20 $ 
+ *  $Revision: 1.121 $  $Date: 2005-06-10 16:05:15 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -434,11 +434,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			while (itr.hasNext()) {
 				EditPartViewer viewer = (EditPartViewer) itr.next();
 				EditPart rootEP = viewer.getContents();
-				rootEP.deactivate();
+//				rootEP.deactivate();
 				rootEP.setModel(root);
 				rootEP.refresh();
-				rootEP.activate();
-				rootEP.refresh();
+//				rootEP.activate();
+//				rootEP.refresh();
 			}
 
 			if (root != null) {
