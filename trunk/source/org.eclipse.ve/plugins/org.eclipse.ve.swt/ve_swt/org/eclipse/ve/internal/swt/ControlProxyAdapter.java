@@ -53,12 +53,15 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 	protected EReference sf_layoutData;
 
-	protected EStructuralFeature sfComponentBounds;
+	protected EStructuralFeature sfComponentBounds, sfComponentLocation, sfComponentSize;
 
 	public ControlProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
 		sf_layoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
+		sfComponentBounds = JavaInstantiation.getSFeature(rset, SWTConstants.SF_CONTROL_BOUNDS);
+		sfComponentLocation = JavaInstantiation.getSFeature(rset, SWTConstants.SF_CONTROL_LOCATION);
+		sfComponentSize = JavaInstantiation.getSFeature(rset, SWTConstants.SF_CONTROL_SIZE);
 	}
 
 	/*
@@ -363,7 +366,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 				}
 
 			}			
-			sfComponentBounds = JavaInstantiation.getSFeature((IJavaObjectInstance) newTarget, SWTConstants.SF_CONTROL_BOUNDS);
+			
 		}
 	}
 
@@ -387,6 +390,12 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		if (sf == sf_layoutData) {
 			applyBeanPropertyProxyValue(sf, null);
 		} else {
+			if (sf == sfComponentBounds && (getJavaObject().eIsSet(sfComponentLocation) || getJavaObject().eIsSet(sfComponentSize)))
+				return;	// Don't cancel because it will wipe out the location or size.
+			if (sf == sfComponentSize && getJavaObject().eIsSet(sfComponentBounds))
+				return;	// Don't cancel because it will wipe out the bounds
+			if (sf == sfComponentLocation && getJavaObject().eIsSet(sfComponentBounds))
+				return;	// Don't cancel because it will wipe out the bounds			
 			super.canceled(sf, oldValue, position);
 		}
 	}
