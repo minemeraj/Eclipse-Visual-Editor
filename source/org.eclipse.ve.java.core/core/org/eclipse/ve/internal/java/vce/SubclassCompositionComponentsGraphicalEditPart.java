@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  * $RCSfile: SubclassCompositionComponentsGraphicalEditPart.java,v $ $Revision:
- * 1.1 $ $Date: 2005-05-12 12:09:56 $
+ * 1.1 $ $Date: 2005-06-10 17:47:02 $
  */
 import java.util.*;
 
@@ -77,5 +77,10 @@ public class SubclassCompositionComponentsGraphicalEditPart
 		if (getModel() != null)
 			((BeanSubclassComposition) getModel()).eAdapters().remove(
 					compositionAdapter);
+	}
+	public void setModel(Object model) {
+		if (getModel() != null)
+			((BeanSubclassComposition) getModel()).eAdapters().remove(compositionAdapter);		
+		super.setModel(model);
 	}
 }

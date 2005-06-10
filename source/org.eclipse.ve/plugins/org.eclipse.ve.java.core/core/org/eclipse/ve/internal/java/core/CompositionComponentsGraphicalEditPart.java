@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CompositionComponentsGraphicalEditPart.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-18 13:45:17 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-10 17:47:02 $ 
  */
 
 import java.util.*;
@@ -30,6 +30,7 @@ import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.core.*;
 
+import org.eclipse.ve.internal.jcm.*;
 import org.eclipse.ve.internal.jcm.BeanComposition;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 /**
@@ -97,6 +98,12 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 		super.deactivate();
 		if (getModel() != null)
 			((BeanComposition) getModel()).eAdapters().remove(compositionAdapter);
+	}
+
+	public void setModel(Object model) {
+		if (getModel() != null)
+			((BeanSubclassComposition) getModel()).eAdapters().remove(compositionAdapter);		
+		super.setModel(model);
 	}
 
 	protected EditPart createChild(Object model) {

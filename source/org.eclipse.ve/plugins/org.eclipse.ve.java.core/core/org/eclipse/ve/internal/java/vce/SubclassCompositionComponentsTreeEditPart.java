@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: SubclassCompositionComponentsTreeEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-05-12 12:09:56 $
+ * $RCSfile: SubclassCompositionComponentsTreeEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-06-10 17:47:02 $
  */
 package org.eclipse.ve.internal.java.vce;
 
@@ -72,6 +72,11 @@ public class SubclassCompositionComponentsTreeEditPart extends CompositionCompon
 		super.deactivate();
 		if (getModel() != null)
 			((BeanSubclassComposition) getModel()).eAdapters().remove(compositionAdapter);
+	}
+	public void setModel(Object model) {
+		if (getModel() != null)
+			((BeanSubclassComposition) getModel()).eAdapters().remove(compositionAdapter);		
+		super.setModel(model);
 	}
 
 	/*
