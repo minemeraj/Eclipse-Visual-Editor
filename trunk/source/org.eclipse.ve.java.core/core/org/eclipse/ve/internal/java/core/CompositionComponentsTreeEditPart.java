@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositionComponentsTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-06-10 17:47:02 $
+ * $RCSfile: CompositionComponentsTreeEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-06-10 20:42:28 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -99,20 +99,22 @@ public class CompositionComponentsTreeEditPart extends AbstractTreeEditPart {
 
 	protected void refreshVisuals() {
 		super.refreshVisuals();
-		Tree tree = (Tree)getWidget();
-		TreeItem[] items = (tree).getItems();
-		// GTK requires parent to be expanded, and child to have children at
-		// time expand is called, otherwise expansion state is not maintained.
-		// Because of this we need to expand entire tree here because this 
-		// is only place these conditions are met fully.
-		for(int i=0;i<items.length;i++){
-			expandTree(items[i]);
-		}
-		// Windows will scroll tree to last expandable node. This can cause tree to scroll down
-		// to the bottom. This is annoying. Instead we will scroll back to the top and select the first item.
-		if (items.length > 0) {
-			tree.setSelection(new TreeItem[] {items[0]});
-			tree.showSelection();
+		if (isActive()) {
+			Tree tree = (Tree) getWidget();
+			TreeItem[] items = (tree).getItems();
+			// GTK requires parent to be expanded, and child to have children at
+			// time expand is called, otherwise expansion state is not maintained.
+			// Because of this we need to expand entire tree here because this 
+			// is only place these conditions are met fully.
+			for (int i = 0; i < items.length; i++) {
+				expandTree(items[i]);
+			}
+			// Windows will scroll tree to last expandable node. This can cause tree to scroll down
+			// to the bottom. This is annoying. Instead we will scroll back to the top and select the first item.
+			if (items.length > 0) {
+				tree.setSelection(new TreeItem[] { items[0]});
+				tree.showSelection();
+			}
 		}
 	}
 
