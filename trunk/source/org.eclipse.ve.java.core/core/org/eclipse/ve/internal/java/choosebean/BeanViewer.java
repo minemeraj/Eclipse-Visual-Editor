@@ -32,7 +32,7 @@ public class BeanViewer extends TypeInfoViewer{
 			if(showOnlyBeans && image==null)
 				image = JavaVEPlugin.getJavaBeanImage();
 			if(image==null)
-				image = super.getImage(element);
+				image = super.getImageDescriptor(element).createImage();
 			return image;
 		}
 	}
