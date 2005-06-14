@@ -48,7 +48,7 @@ matched. For VE to work they must match.
 <p><span style="color: blue;"><b><u>Note:</u>
 <ul>
 <li>JRE must be version 1.4.2 or greater for BeanInfo of SWT to work correctly.</li>
-<li>This build works with Eclipse 3.1M7 or Eclipse 3.1RC1 <u>only</u>.
+<li>This build works with Eclipse 3.1RC2.
 </ul></b></span>
 </p><br>
 <table>
