@@ -14,6 +14,7 @@ import org.eclipse.jdt.internal.corext.util.TypeInfo;
 import org.eclipse.jdt.internal.corext.util.TypeInfoFilter;
 import org.eclipse.jdt.internal.ui.dialogs.TypeInfoViewer;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -27,13 +28,26 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 public class BeanViewer extends TypeInfoViewer{
 	
 	public class BeanLabelProvider extends TypeInfoLabelProvider{
-		public Image getImage(Object element) {
+		private HashMap imageToDescriptorMap = null;
+		public BeanLabelProvider(){
+			imageToDescriptorMap = new HashMap();
+		}
+		public ImageDescriptor getImageDescriptor(Object element) {
 			Image image = ChooseBeanDialogUtilities.getContributorImage(selectedContributor);
 			if(showOnlyBeans && image==null)
 				image = JavaVEPlugin.getJavaBeanImage();
-			if(image==null)
-				image = super.getImageDescriptor(element).createImage();
-			return image;
+			ImageDescriptor imageDescriptor = null;
+			if(image==null){
+				imageDescriptor = super.getImageDescriptor(element);
+			}else{
+				if(imageToDescriptorMap.containsKey(image)){
+					imageDescriptor = (ImageDescriptor) imageToDescriptorMap.get(image);
+				}else{
+					imageDescriptor = ImageDescriptor.createFromImage(image);
+					imageToDescriptorMap.put(image, imageDescriptor);
+				}
+			}
+			return imageDescriptor;
 		}
 	}
 	
