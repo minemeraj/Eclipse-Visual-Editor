@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.32 $  $Date: 2005-06-03 13:33:48 $ 
+ *  $Revision: 1.33 $  $Date: 2005-06-14 15:09:26 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -35,6 +35,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -81,6 +83,9 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 	
 	// Status maintainers
 	protected String filterString = null;
+	private CLabel pkgName;
+	private TypeInfoLabelProvider pkgLabelProvider = new TypeInfoLabelProvider(
+			TypeInfoLabelProvider.SHOW_TYPE_CONTAINER_ONLY + TypeInfoLabelProvider.SHOW_ROOT_POSTFIX);
 	
 	protected ChooseBeanDialog(Shell parent, boolean multi, IJavaSearchScope scope) {
 		super(parent);//, multi, PlatformUI.getWorkbench().getProgressService(), scope, elementKinds);
@@ -195,6 +200,13 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 		gd.horizontalSpan=2;
 		bv.getTable().setLayoutData(gd);
 		bv.getTable().addSelectionListener(this);
+		
+		ViewForm pkgViewForm = new ViewForm(area, SWT.BORDER|SWT.FLAT);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan=2;
+		pkgViewForm.setLayoutData(gd);
+		pkgName = new CLabel(pkgViewForm, SWT.NONE);
+		pkgViewForm.setContent(pkgName);
 		
 		// Styles group
 		if(unmodifieableContributors.size()>0){
@@ -490,6 +502,13 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 	private void updateStatus(){
 		TypeInfo[] typeSelection = bv.getSelection();
 		TypeInfo selected = (typeSelection==null || typeSelection.length<1) ? null : typeSelection[0];
+		if(selected==null){
+			pkgName.setImage(null);
+			pkgName.setText("");
+		}else{
+			pkgName.setImage(pkgLabelProvider.getImage(selected));
+			pkgName.setText(pkgLabelProvider.getText(selected));
+		}
 		updateStatus(ChooseBeanDialogUtilities.getClassStatus(selected, pkg.getElementName(), resourceSet, javaSearchScope));
 	}
 
