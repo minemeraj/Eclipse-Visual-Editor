@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.15 $ $Date: 2005-06-03 19:02:38 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.16 $ $Date: 2005-06-15 20:19:37 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -51,11 +51,10 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 	protected IErrorNotifier.ErrorListener fErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 
 		public void errorStatusChanged() {
-			CDEUtilities.displayExec(JavaBeanTreeEditPart.this, "REFRESH_VISUALS", new Runnable() { //$NON-NLS-1$
+			CDEUtilities.displayExec(JavaBeanTreeEditPart.this, "REFRESH_VISUALS", new EditPartRunnable(JavaBeanTreeEditPart.this) { //$NON-NLS-1$
 
-				public void run() {
-					if (isActive())
-						refreshVisuals();
+				protected void doRun() {
+					refreshVisuals();
 				}
 			});
 		}

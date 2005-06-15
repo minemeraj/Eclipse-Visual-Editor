@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.18 $  $Date: 2005-06-07 16:24:55 $ 
+ *  $Revision: 1.19 $  $Date: 2005-06-15 20:19:27 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -469,7 +469,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 				// The component to actually add is within the ConstraintComponent too.
 				IJavaInstance component = (IJavaInstance) constraintComponent.eGet(sfConstraintComponent);
 				IBeanProxyHost2 componentProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost(component);
-				IProxy componentProxy = instantiateSettingBean(componentProxyHost, expression, sfConstraintComponent, component, ccAdapter);
+				IProxy componentProxy = instantiateSettingBean(componentProxyHost, expression, sfConstraintComponent, component, null);
 				if (componentProxy == null)
 					return; // It failed creation, don't go any further. 
 
@@ -557,7 +557,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 		return null;
 	}
 	
-	/**
+	/*
 	 * Remove the component from the container on the vm.
 	 * @param aConstraintComponent
 	 * @param aboutToRelease <code>true </code> if we are about to release and dispose of the control, not just remove.
@@ -578,7 +578,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 			}
 			// Always want to restore, even when in layout change pending. Except if about to release then we don't need to because it will reinstantiate if needed.
 			if (!aboutToRelease)
-				componentProxyHost.restoreVisibility(expression);	
+				componentProxyHost.restoreVisibility(expression);	// Always want to restore, even when in layout change pending.
 			componentRemoved(aConstraintComponent, expression, aboutToRelease);
 		}
 	}

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.30 $  $Date: 2005-05-18 22:53:55 $ 
+ *  $Revision: 1.31 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 import java.util.List;
@@ -47,6 +47,11 @@ import org.eclipse.ve.internal.java.visual.VisualUtilities;
  * Helper class with useful methods for working with awt bean proxies
  */
 public class BeanAwtUtilities {
+
+	public static final String WINDOWMANAGEREXTENSION_CLASSNAME = "org.eclipse.ve.internal.jfc.vm.WindowManagerExtension";	//$NON-NLS-1$
+	public static final String COMPONENTMANAGER_CLASSNAME = "org.eclipse.ve.internal.jfc.vm.ComponentManager";	//$NON-NLS-1$
+	public static final String FEEDBACKCONTROLLER_CLASSNAME = COMPONENTMANAGER_CLASSNAME+"$ComponentManagerFeedbackController";	//$NON-NLS-1$
+	public static final String COMPONENTMANAGEREXTENSION_CLASSNAME = COMPONENTMANAGER_CLASSNAME+"$ComponentManagerExtension";	//$NON-NLS-1$
 
 	public static Point getOffScreenLocation() {
 
@@ -117,7 +122,8 @@ public class BeanAwtUtilities {
 			MANAGER_JTABBEDPANE_INSERTTAB = MANAGER_JTABBEDPANE_SETTABTITLE + 1,
 			MANAGER_JTABBEDPANE_INSERTTAB_DEFAULT = MANAGER_JTABBEDPANE_INSERTTAB + 1,
 			MANAGER_JSPLITPANE_SETDIVIDERLOCATION = MANAGER_JTABBEDPANE_INSERTTAB_DEFAULT + 1,
-			MAX_METHODS = MANAGER_JSPLITPANE_SETDIVIDERLOCATION + 1;
+			WINDOW_APPLYTITLE = MANAGER_JSPLITPANE_SETDIVIDERLOCATION + 1,
+			MAX_METHODS = WINDOW_APPLYTITLE + 1;
 
 	private IProxyMethod[] methods = new IProxyMethod[MAX_METHODS];
 
@@ -202,7 +208,7 @@ public class BeanAwtUtilities {
 		if (constants.componentManagerFeedbackController == null) {
 			ExpressionProxy feedbackProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT,
-					"org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController", 0); //$NON-NLS-1$
+					FEEDBACKCONTROLLER_CLASSNAME, 0); //$NON-NLS-1$
 			constants.componentManagerFeedbackController = new ComponentManager.FeedbackController(feedbackProxy);
 			expression.getRegistry().getCallbackRegistry().registerCallback(feedbackProxy, constants.componentManagerFeedbackController, expression);
 			feedbackProxy.addProxyListener(new ExpressionProxy.ProxyListener() {
@@ -314,7 +320,7 @@ public class BeanAwtUtilities {
 		IProxyMethod method = constants.methods[MANAGER_INVALIDATE_COMPONENT];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
+					.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
 							expression, "invalidate"); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_INVALIDATE_COMPONENT);
 		}
@@ -522,10 +528,33 @@ public class BeanAwtUtilities {
 		IProxyMethod method = constants.methods[WINDOW_DISPOSE];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			IStandardBeanTypeProxyFactory beanTypeProxyFactory = expression.getRegistry().getBeanTypeProxyFactory();
-			method = beanTypeProxyFactory.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.WindowManagerExtension").getMethodProxy( //$NON-NLS-1$
+			method = beanTypeProxyFactory.getBeanTypeProxy(expression, WINDOWMANAGEREXTENSION_CLASSNAME).getMethodProxy( //$NON-NLS-1$
 					expression, "disposeWindow", //$NON-NLS-1$
 					new IProxyBeanType[] {beanTypeProxyFactory.getBeanTypeProxy(expression, "java.awt.Window")}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, WINDOW_DISPOSE);
+		}
+		return method;
+	}
+	
+	/**
+	 * Get the window manager apply frame title proxy. It is {@link org.eclipse.ve.internal.jfc.vm.WindowManagerExtension#applyFrameTitle(Frame, String, boolean)}.
+	 * <p>
+	 * <package-protected> because only FrameProxyAdapter should access it.
+	 * @param expression
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	static IProxyMethod getWindowApplyFrameTitleMethodProxy(IExpression expression) {
+		BeanAwtUtilities constants = getConstants(expression.getRegistry());
+
+		IProxyMethod method = constants.methods[WINDOW_APPLYTITLE];
+		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
+			IStandardBeanTypeProxyFactory beanTypeProxyFactory = expression.getRegistry().getBeanTypeProxyFactory();
+			method = beanTypeProxyFactory.getBeanTypeProxy(expression, WINDOWMANAGEREXTENSION_CLASSNAME).getMethodProxy( //$NON-NLS-1$
+					expression, "applyFrameTitle", //$NON-NLS-1$
+					new IProxyBeanType[] {beanTypeProxyFactory.getBeanTypeProxy(expression, "java.awt.Frame"), beanTypeProxyFactory.getBeanTypeProxy(expression, "java.lang.String"), beanTypeProxyFactory.getBeanTypeProxy(expression, "boolean")}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			processExpressionProxy(method, constants.methods, WINDOW_APPLYTITLE);
 		}
 		return method;
 	}
@@ -563,7 +592,7 @@ public class BeanAwtUtilities {
 		IProxyMethod method = constants.methods[MANAGER_WINDOW_PACK_ON_CHANGE];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.WindowManagerExtension").getMethodProxy( //$NON-NLS-1$
+					.getBeanTypeProxy(expression, WINDOWMANAGEREXTENSION_CLASSNAME).getMethodProxy( //$NON-NLS-1$
 							expression, "setPackOnChange", //$NON-NLS-1$
 							new String[] { "boolean"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_WINDOW_PACK_ON_CHANGE);
@@ -910,10 +939,10 @@ public class BeanAwtUtilities {
 			method = expression
 					.getRegistry()
 					.getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
+					.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
 							expression,
 							"setComponent", //$NON-NLS-1$
-							new String[] { "java.awt.Component", "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController"} //$NON-NLS-1$ //$NON-NLS-2$
+							new String[] { "java.awt.Component", FEEDBACKCONTROLLER_CLASSNAME} //$NON-NLS-1$ //$NON-NLS-2$
 					);
 			processExpressionProxy(method, constants.methods, MANAGER_SET_COMPONENT);
 		}
@@ -934,7 +963,7 @@ public class BeanAwtUtilities {
 		IProxyMethod method = constants.methods[MANAGER_APPLY_BOUNDS];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
+					.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
 							expression, "applyBounds", //$NON-NLS-1$
 							new String[] { "java.awt.Rectangle", "java.awt.Rectangle"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_APPLY_BOUNDS);
@@ -955,34 +984,12 @@ public class BeanAwtUtilities {
 		IProxyMethod method = constants.methods[MANAGER_APPLY_LOCATION];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
+					.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
 							expression, "applyLocation", //$NON-NLS-1$
 							new String[] { "java.awt.Point", "java.awt.Point"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_APPLY_LOCATION);
 		}
 		return method;
-	}
-
-	/**
-	 * Get the ComponentManager.overrideLocation method.
-	 * <package-protected> because only ComponentManager should access it.
-	 * 
-	 * @param registry
-	 * @return
-	 * 
-	 * @since 1.1.0
-	 */
-	static IMethodProxy getOverrideLocationMethodProxy(ProxyFactoryRegistry registry) {
-		BeanAwtUtilities constants = getConstants(registry);
-
-		IProxyMethod method = constants.methods[MANAGER_OVERRIDE_LOCATION];
-		if (method == null || method.isExpressionProxy()) {
-			constants.methods[MANAGER_OVERRIDE_LOCATION] = method = registry.getBeanTypeProxyFactory().getBeanTypeProxy(
-					"org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
-					"overrideLoc", //$NON-NLS-1$
-					new String[] { "int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return (IMethodProxy) method;
 	}
 
 	/**
@@ -1000,7 +1007,7 @@ public class BeanAwtUtilities {
 		IProxyMethod method = constants.methods[MANAGER_OVERRIDE_LOCATION];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
+					.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
 							expression, "overrideLoc", //$NON-NLS-1$
 							new String[] { "int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_OVERRIDE_LOCATION);
@@ -1021,7 +1028,7 @@ public class BeanAwtUtilities {
 
 		if (constants.getManagerDefaultBoundsMethodProxy == null) {
 			constants.getManagerDefaultBoundsMethodProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy(
-					"org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
+					COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
 					"getDefaultBounds" //$NON-NLS-1$
 			);
 		}
@@ -1041,7 +1048,7 @@ public class BeanAwtUtilities {
 
 		if (constants.getManagerDefaultLocationMethodProxy == null) {
 			constants.getManagerDefaultLocationMethodProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy(
-					"org.eclipse.ve.internal.jfc.vm.ComponentManager").getMethodProxy( //$NON-NLS-1$
+					COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
 					"getDefaultLocation" //$NON-NLS-1$
 			);
 		}

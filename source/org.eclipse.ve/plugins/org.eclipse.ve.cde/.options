@@ -1,0 +1,3 @@
+org.eclipse.ve.cde/debug/logtrace=default
+org.eclipse.ve.cde/debug/logtracefile=default
+org.eclipse.ve.cde/debug/loglevel=default

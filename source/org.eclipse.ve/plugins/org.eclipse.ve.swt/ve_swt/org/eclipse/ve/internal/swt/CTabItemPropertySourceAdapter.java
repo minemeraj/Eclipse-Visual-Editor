@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabItemPropertySourceAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-05 19:42:25 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -27,14 +27,13 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 import org.eclipse.ve.internal.java.rules.RuledWrapperedPropertyDescriptor;
-
-import org.eclipse.ve.internal.propertysheet.command.WrapperedPropertyDescriptor;
 
 
 public class CTabItemPropertySourceAdapter extends PropertySourceAdapter {
@@ -105,6 +104,7 @@ public class CTabItemPropertySourceAdapter extends PropertySourceAdapter {
 		IPropertyDescriptor[] mine = super.getPropertyDescriptors();
 		IPropertyDescriptor[] wrappedMine = new IPropertyDescriptor[mine.length];
 		int wi = 0;
+		EditDomain ed = cTabFolderProxyHost.getBeanProxyDomain().getEditDomain();
 		for (int i = 0; i < mine.length; i++) {
 			IPropertyDescriptor pd = mine[i];
 			if (pd.getId() instanceof EStructuralFeature) {
@@ -112,29 +112,29 @@ public class CTabItemPropertySourceAdapter extends PropertySourceAdapter {
 				String fn = ((EStructuralFeature) pd.getId()).getName();
 				if ("text".equals(fn)) { //$NON-NLS-1$
 					String tabtext = SWTMessages.getString("CTabItemPropertySourceAdapter.tabText"); //$NON-NLS-1$
-					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), tabtext, this, pd);
+					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, tabtext, this, pd);
 					continue;
 				} else if ("image".equals(fn)) { //$NON-NLS-1$
 					String tabImage = SWTMessages.getString("CTabItemPropertySourceAdapter.tabImage"); //$NON-NLS-1$
-					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), tabImage, this, pd);
+					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, tabImage, this, pd);
 					continue;
 				} else if ("toolTipText".equals(fn)) { //$NON-NLS-1$
 					String tabToolTipText = SWTMessages.getString("CTabItemPropertySourceAdapter.tabToolTipText"); //$NON-NLS-1$
-					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), tabToolTipText, this, pd);
+					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, tabToolTipText, this, pd);
 					continue;
 				}else if ("font".equals(fn)) { //$NON-NLS-1$
 					String tabFont = SWTMessages.getString("CTabItemPropertySourceAdapter.tabFont"); //$NON-NLS-1$
-					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), tabFont, this, pd);
+					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, tabFont, this, pd);
 					continue;
 				} else if ("control".equals(fn)) //$NON-NLS-1$
 					continue;
 			}
-			wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(cTabFolderProxyHost.getBeanProxyDomain().getEditDomain(), controlPS, pd);
+			wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, controlPS, pd);
 		}
 		IPropertyDescriptor[] theirs = controlPS.getPropertyDescriptors();
 		IPropertyDescriptor[] wrappedTheirs = new IPropertyDescriptor[theirs.length];
 		for (int i = 0; i < theirs.length; i++)
-			wrappedTheirs[i] = new RuledWrapperedPropertyDescriptor(cTabFolderProxyHost.getBeanProxyDomain().getEditDomain(), controlPS, theirs[i]);
+			wrappedTheirs[i] = new RuledWrapperedPropertyDescriptor(ed, controlPS, theirs[i]);
 		//Save the ID's for later compares.
 		myDescriptors = new ArrayList(wi);
 		for (int i = 0; i < wi; i++) {

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: AppletProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-18 18:39:17 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 import org.eclipse.jem.internal.proxy.core.*;
@@ -37,11 +37,6 @@ public class AppletProxyAdapter extends ContainerProxyAdapter {
 		super(domain);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#primInstantiateBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
 	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
 		// We need to initialize the applet after creation. Applets should actually be instantiated using java.lang.reflect.Beans.instantiate()
 		// but we don't recognize this. So we do normal instantiation and then initialize with our dummy applet stub that we provide.

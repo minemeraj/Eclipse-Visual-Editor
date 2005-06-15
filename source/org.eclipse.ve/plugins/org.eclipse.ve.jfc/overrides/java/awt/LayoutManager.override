@@ -54,13 +54,13 @@
        the decorators from BoxLayout for the layout policy factory. -->
   <event:Add notifierURI="java:/javax.swing#BoxLayoutX_Axis" featureName="eAnnotations">
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.jfc.core.layoutpolicyfactoryclassnamekey"
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey"
           value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.BoxLayoutPolicyFactory"/>
     </addedEObjects>
   </event:Add>
   <event:Add notifierURI="java:/javax.swing#BoxLayoutY_Axis" featureName="eAnnotations">
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.jfc.core.layoutpolicyfactoryclassnamekey"
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey"
           value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.BoxLayoutPolicyFactory"/>
     </addedEObjects>
   </event:Add>

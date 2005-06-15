@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CoolBarTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-06-02 22:32:30 $
+ * $RCSfile: CoolBarTreeEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-06-15 20:19:21 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -21,61 +21,116 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gef.*;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IErrorNotifier;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
+/**
+ * swt CoolBar Tree editpart 
+ * 
+ * @since 1.1.0
+ */
 public class CoolBarTreeEditPart extends CompositeTreeEditPart {
 
-	private EReference sf_items;
-
-	private EReference sf_coolItemControl;
+	private EReference sf_items, sf_coolItemControl;
 
 	public CoolBarTreeEditPart(Object model) {
 		super(model);
 	}
 
-	protected void setPropertySource(ControlTreeEditPart childEP, EObject child) {
-		EObject tab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sf_items, sf_coolItemControl, child);
-		// This is the property source of the actual child, which is the tabitem.
-		if (tab != null)
-			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class));
-		else
-			childEP.setPropertySource(null);
-	}
-
-	/*
-	 * Model children is the items feature. However, this returns the CoolItems, but we want to return instead the controls themselves. They are the
-	 * "model" that gets sent to the createChild and control edit part.
-	 */
-	protected List getChildJavaBeans() {
-		List coolitems = (List) ((EObject) getModel()).eGet(sf_items);
-		ArrayList children = new ArrayList(coolitems.size());
-		Iterator itr = coolitems.iterator();
-		while (itr.hasNext()) {
-			EObject coolitem = (EObject) itr.next();
-			// Get the control out of the CoolItem
-			children.add(coolitem.eGet(sf_coolItemControl));
+	public void deactivate() {
+		((EObject) getModel()).eAdapters().remove(containerAdapter);
+		// Need to remove the label decorator from each of the children
+		for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
+			disposeLabelDecorator((EditPart) iter.next());
 		}
-		return children;
+		super.deactivate();
 	}
 
-	protected EditPart createChildEditPart(Object model) {
-		EditPart ep = super.createChildEditPart(model);
-		setPropertySource((ControlTreeEditPart) ep, (EObject) model);
-		return ep;
+	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
+
+		protected void doRun() {
+			refreshChildren();
+			List children = getChildren();
+			int s = children.size();
+			for (int i = 0; i < s; i++) {
+				EditPart ep = (EditPart) children.get(i);
+				try {
+					setupControl((ControlTreeEditPart) ep, (EObject) ep.getModel());
+				} catch (ClassCastException e) {
+					// Would only occur if child was invalid. So not a problem, already have marked this as an error.
+				}
+			}
+		}
+
+		public void notifyChanged(Notification msg) {
+			if (msg.getFeature() == sf_items)
+				queueExec(CoolBarTreeEditPart.this, "ITEMS"); //$NON-NLS-1$
+		}
+	};
+
+	public void activate() {
+		super.activate();
+		// We need add a listener to dispose of the special decorator used for the
+		// TabFolder's children when the child is removed.
+		addEditPartListener(new EditPartListener.Stub() {
+
+			public void removingChild(EditPart editpart, int index) {
+				disposeLabelDecorator(editpart);
+			}
+		});
+
+		((EObject) getModel()).eAdapters().add(containerAdapter);
 	}
 
 	protected void createEditPolicies() {
 		super.createEditPolicies();
 		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(new CoolBarContainerPolicy(
 				EditDomain.getEditDomain(this))));
+	}
+
+	protected void setupControl(ControlTreeEditPart childEP, EObject child) {
+		// Get the TabItem's error notifier for the child (which is a control) and add it in to the control gep. That way TabItem
+		// errors will show on the child.
+		EObject tab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sf_items, sf_coolItemControl, child);
+		disposeLabelDecorator(childEP);
+		if (childEP != null) {
+			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class));
+			childEP.setErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter(tab, IErrorNotifier.ERROR_NOTIFIER_TYPE));
+			childEP.setLabelDecorator(new ItemChildTreeLabelDecorator(tab));
+		} else {
+			childEP.setPropertySource(null);
+			childEP.setErrorNotifier(null);
+			childEP.setLabelDecorator(null);
+		}
+	}
+
+	/**
+	 * Dispose the label decorator on the child editpart.
+	 * 
+	 * @param editpart
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void disposeLabelDecorator(EditPart editpart) {
+		try {
+			ControlTreeEditPart ctep = (ControlTreeEditPart) editpart;
+			ILabelDecorator labelDecorator2 = ctep.getLabelDecorator();
+			if (labelDecorator2 != null) {
+				ctep.setLabelDecorator(null);
+				labelDecorator2.dispose();
+			}
+		} catch (ClassCastException e) {
+		}
 	}
 
 	/*
@@ -88,32 +143,18 @@ public class CoolBarTreeEditPart extends CompositeTreeEditPart {
 		sf_coolItemControl = JavaInstantiation.getReference(rset, SWTConstants.SF_COOLITEM_CONTROL);
 	}
 
-	public void deactivate() {
-		((EObject) getModel()).eAdapters().remove(containerAdapter);
-		super.deactivate();
+	
+	protected List getChildJavaBeans() {
+		List tabitems = (List) ((EObject) getModel()).eGet(sf_items);
+		ArrayList children = new ArrayList(tabitems.size());
+		Iterator itr = tabitems.iterator();
+		while (itr.hasNext()) {
+			// Get the control out of the TabItem
+			Object childControl = ((EObject) itr.next()).eGet(sf_coolItemControl);
+			if (childControl != null)
+				children.add(childControl);
+		}
+		return children;
 	}
 
-	public void activate() {
-		super.activate();
-		((EObject) getModel()).eAdapters().add(containerAdapter);
-	}
-
-	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
-
-		protected void doRun() {
-			refreshChildren();
-			List children = getChildren();
-			int s = children.size();
-			for (int i = 0; i < s; i++) {
-				EditPart ep = (EditPart) children.get(i);
-				if (ep instanceof ControlTreeEditPart)
-					setPropertySource((ControlTreeEditPart) ep, (EObject) ep.getModel());
-			}
-		}
-
-		public void notifyChanged(Notification msg) {
-			if (msg.getFeature() == sf_items)
-				queueExec(CoolBarTreeEditPart.this, "ITEMS"); //$NON-NLS-1$
-		}
-	};
 }

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: JTabbedPaneProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-18 18:39:17 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 import java.util.Iterator;
@@ -208,7 +208,7 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 				component = (IJavaInstance) jtab.eGet(sfJTabComponent);
 				componentProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost(component);
 				expression.createTry();
-				componentProxy = instantiateSettingBean(componentProxyHost, expression, sfJTabComponent, component, tabAdapter);
+				componentProxy = instantiateSettingBean(componentProxyHost, expression, sfJTabComponent, component, null);
 				if (componentProxy != null && componentProxy.isExpressionProxy()) {
 					// We don't want to just terminate here, we will just change the assignment to be null component.
 					expression.createTryCatchClause(getBeanInstantiationExceptionTypeProxy(expression), false);

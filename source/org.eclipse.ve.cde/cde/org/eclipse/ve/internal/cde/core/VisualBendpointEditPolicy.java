@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualBendpointEditPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:15 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-15 20:19:34 $ 
  */
 
 import java.util.*;
@@ -70,8 +70,7 @@ public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZ
 							case Notification.UNSET : // It was removed
 								CDEUtilities.displayExec(getHost(), REFRESH_BENDPOINTS, new Runnable() {
 									public void run() {
-										// if goes inactive, then diagram will be null
-										if (diagram != null)
+										if (diagram != null && getHost() != null && getHost().isActive())
 											refreshBendpoints(((BasicEMap.Entry) kvMsg.getNewValue()).getValue());
 									}
 								});
@@ -86,7 +85,7 @@ public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZ
 				CDEUtilities.displayExec(getHost(), REFRESH_BENDPOINTS, new Runnable() {
 					public void run() {
 						// if goes inactive, then diagram will be null
-						if (diagram != null)
+						if (diagram != null && getHost() != null && getHost().isActive())
 							refreshBendpoints();
 					}
 				});
@@ -97,7 +96,7 @@ public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZ
 				CDEUtilities.displayExec(getHost(), REFRESH_BENDPOINTS, new Runnable() {
 					public void run() {
 						// if goes inactive, then diagram will be null
-						if (diagram != null)
+						if (diagram != null && getHost() != null && getHost().isActive())
 							refreshBendpoints();
 					}
 				});
@@ -118,6 +117,7 @@ public class VisualBendpointEditPolicy extends BendpointEditPolicy implements IZ
 			viListener.removeListening();
 		viListener = null;
 
+		setHost(null);
 		super.deactivate();
 	}
 

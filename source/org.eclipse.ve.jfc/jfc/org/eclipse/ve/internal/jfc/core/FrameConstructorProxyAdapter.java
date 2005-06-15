@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-18 18:39:17 $ 
+ *  $Revision: 1.12 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 import java.util.List;
@@ -46,37 +46,30 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 		super(domain);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.jfc.core.WindowProxyAdapter#primInstantiateBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
-	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
+	protected IProxy primInstantiateDroppedPart(IExpression expression) throws AllocationException {
 		// Override to see if the allocation has a "new java.awt.Frame" in it. If it does, we need to
 		// grab that frame so that we can dispose it later.
 		// TODO This is really a bad way to do this. We should never have a temporary like this.
 		// The code shouldn't even generate something like this.
 		disposeParentOnRelease = false;
-		if (!isThisPart()) {
-			if (getJavaObject().isSetAllocation()) {
-				JavaAllocation allocation = getJavaObject().getAllocation();
-				if (allocation instanceof ParseTreeAllocation) {
-					// Can only handle parse tree, and only if Frame is first argument.
-					PTExpression allocExp = ((ParseTreeAllocation) allocation).getExpression();
-					if (allocExp instanceof PTClassInstanceCreation) {
-						PTClassInstanceCreation newClass = (PTClassInstanceCreation) allocExp;
-						List args = newClass.getArguments();
-						if (args.size() == 1) {
-							PTExpression arg1 = (PTExpression) args.get(0);
-							disposeParentOnRelease = arg1 instanceof PTClassInstanceCreation
-									&& "java.awt.Frame".equals(((PTClassInstanceCreation) arg1).getType()); //$NON-NLS-1$
-						}
+		if (getJavaObject().isSetAllocation()) {
+			JavaAllocation allocation = getJavaObject().getAllocation();
+			if (allocation instanceof ParseTreeAllocation) {
+				// Can only handle parse tree, and only if Frame is first argument.
+				PTExpression allocExp = ((ParseTreeAllocation) allocation).getExpression();
+				if (allocExp instanceof PTClassInstanceCreation) {
+					PTClassInstanceCreation newClass = (PTClassInstanceCreation) allocExp;
+					List args = newClass.getArguments();
+					if (args.size() == 1) {
+						PTExpression arg1 = (PTExpression) args.get(0);
+						disposeParentOnRelease = arg1 instanceof PTClassInstanceCreation
+								&& "java.awt.Frame".equals(((PTClassInstanceCreation) arg1).getType()); //$NON-NLS-1$
 					}
 				}
 			}
 		}
 
-		return super.primInstantiateBeanProxy(expression);
+		return super.primInstantiateDroppedPart(expression);
 	}
 
 	/*

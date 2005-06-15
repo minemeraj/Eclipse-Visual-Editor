@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CompositionComponentsGraphicalEditPart.java,v $
- *  $Revision: 1.13 $  $Date: 2005-06-10 17:47:02 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-15 20:19:38 $ 
  */
 
 import java.util.*;
@@ -31,8 +31,6 @@ import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.ve.internal.cde.core.*;
 
 import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.jcm.BeanComposition;
-import org.eclipse.ve.internal.jcm.JCMPackage;
 /**
  * Composition Graphical Edit Part for Java Beans Compositions.
  */
@@ -79,11 +77,9 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 	 * @since 1.0.0
 	 */
 	protected void queueRefreshChildren() {
-		CDEUtilities.displayExec(this, "REFRESH_CHILDREN", new Runnable() { //$NON-NLS-1$
-			public void run() {
-				// Test if active because this could of been queued up and not run until AFTER it was deactivated.
-				if (isActive())
-					refreshChildren();
+		CDEUtilities.displayExec(this, "REFRESH_CHILDREN", new EditPartRunnable(this) { //$NON-NLS-1$
+			protected void doRun() {
+				refreshChildren();
 			}
 		});
 	}

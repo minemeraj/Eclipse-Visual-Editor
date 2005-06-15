@@ -9,17 +9,15 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.14 $ $Date: 2005-05-18 23:33:52 $
+ * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.15 $ $Date: 2005-06-15 20:19:21 $
  */
 package org.eclipse.ve.internal.swt;
 
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.swt.DisplayManager;
-import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.IExpression;
 
-import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
+import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 
 /**
  * Proxy adapter for resources (not Controls) that need to be allocated on the display thread, and disposed when released. For example, Font, Cursor,
@@ -27,35 +25,16 @@ import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationExceptio
  * 
  * @since 1.0.0
  */
-public class ResourceProxyAdapter extends BeanProxyAdapter2 {
+public class ResourceProxyAdapter extends UIThreadOnlyProxyAdapter {
 
 	public ResourceProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 	}
 
-	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
-		JavaAllocation allocation = getJavaObject().isSetAllocation() ? getJavaObject().getAllocation() : null;
-		try {
-			return (IProxy) JavaStandardSWTBeanConstants.invokeSyncExec(getBeanProxyDomain().getProxyFactoryRegistry(),
-					new DisplayManager.ExpressionDisplayRunnable(expression) {
-
-						protected Object doRun(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
-							try {
-								return ResourceProxyAdapter.super.primInstantiateBeanProxy(expression);
-							} catch (AllocationException e) {
-								throw new RunnableException(e);	// Wrapper it so we know an AllocationException was thrown.
-							}
-						}
-					});
-		} catch (ThrowableProxy e) {
-			throw new IAllocationProcesser.AllocationException(e);
-		} catch (DisplayManager.DisplayRunnable.RunnableException e) {
-			throw (IAllocationProcesser.AllocationException) e.getCause();	// Now throw the allocation exception.
-		} finally {
-			if(isSharedInstance(allocation)){
-				setOwnsProxy(false);	// It is a shared instance, so we don't own the proxy.
-			}
-		}
+	protected void setupBeanProxy(IBeanProxy beanProxy) {
+		super.setupBeanProxy(beanProxy);
+		if (isSharedInstance(getJavaObject().getAllocation()))
+			setOwnsProxy(false);
 	}
 	
 	protected boolean isSharedInstance(JavaAllocation allocation){
@@ -85,19 +64,11 @@ public class ResourceProxyAdapter extends BeanProxyAdapter2 {
 		return false;
 	}
 
-	protected void primReleaseBeanProxy(IExpression expression) {
+	protected void primPrimReleaseBeanProxy(IExpression expression) {
 		if(isOwnsProxy() && isBeanProxyInstantiated()) {
-			JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(getBeanProxyDomain().getProxyFactoryRegistry(),
-				new DisplayManager.ExpressionDisplayRunnable(expression) {
-					protected Object doRun(IBeanProxy displayProxy) throws ThrowableProxy {
-						IBeanProxy resourceBeanProxy = getBeanProxy();
-						expression.createSimpleMethodInvoke(resourceBeanProxy.getTypeProxy().getMethodProxy(expression, "dispose"), resourceBeanProxy, //$NON-NLS-1$
-								null, false);
-						return null;
-					}
-				}
-			);
+			IBeanProxy resourceBeanProxy = getBeanProxy();
+			expression.createSimpleMethodInvoke(resourceBeanProxy.getTypeProxy().getMethodProxy(expression, "dispose"), resourceBeanProxy, //$NON-NLS-1$
+				null, false);
 		}
-		super.primReleaseBeanProxy(expression);
 	}
 }

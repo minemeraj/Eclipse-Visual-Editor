@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CoolBarGraphicalEditPart.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-02 22:32:30 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -30,10 +30,9 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IErrorNotifier;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-
-import org.eclipse.ve.internal.java.core.*;
 
 /**
  * 
@@ -43,20 +42,25 @@ public class CoolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 
 	private EReference sf_items, sf_coolItemControl;
 
-	protected BeanProxyAdapter coolBarProxyAdapter;
+	protected TabFolderProxyAdapter tabFolderProxyAdapter;
 
+	/**
+	 * @param model
+	 * 
+	 * @since 1.0.0
+	 */
 	public CoolBarGraphicalEditPart(Object model) {
 		super(model);
-	}
-
-	public void deactivate() {
-		((EObject) getModel()).eAdapters().remove(containerAdapter);
-		super.deactivate();
 	}
 
 	public void activate() {
 		super.activate();
 		((EObject) getModel()).eAdapters().add(containerAdapter);
+	}
+
+	public void deactivate() {
+		((EObject) getModel()).eAdapters().remove(containerAdapter);
+		super.deactivate();
 	}
 
 	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
@@ -67,10 +71,12 @@ public class CoolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 			int s = children.size();
 			for (int i = 0; i < s; i++) {
 				EditPart ep = (EditPart) children.get(i);
-				if (ep instanceof ControlGraphicalEditPart)
-					setPropertySource((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
+				try {
+					setupControl((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
+				} catch (ClassCastException e) {
+					// Would only occur if child was invalid. So not a problem, already have marked this as an error.
+				}
 			}
-			getCoolBarProxyAdapter().revalidateBeanProxy();
 		}
 
 		public void notifyChanged(Notification msg) {
@@ -79,45 +85,8 @@ public class CoolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 		}
 	};
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#createChild(java.lang.Object)
-	 */
-	protected EditPart createChild(Object model) {
-		EditPart ep = super.createChild(model);
-		if (ep instanceof ControlGraphicalEditPart)
-			setPropertySource((ControlGraphicalEditPart) ep, (EObject) model);
-		return ep;
-	}
-
 	protected void createLayoutEditPolicy() {
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DefaultLayoutEditPolicy(new CoolBarContainerPolicy(EditDomain.getEditDomain(this))));
-	}
-
-	protected void setPropertySource(ControlGraphicalEditPart childEP, EObject child) {
-		EObject tab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sf_items, sf_coolItemControl, child);
-		// This is the property source of the actual child, which is the coolitem.
-		if (tab != null)
-			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class));
-		else
-			childEP.setPropertySource(null);
-	}
-
-	/*
-	 * Model children is the items feature. However, this returns the CoolItems, but we want to return instead the controls themselves. They are the
-	 * "model" that gets sent to the createChild and control edit part.
-	 */
-	protected List getModelChildren() {
-		List tabitems = (List) ((EObject) getModel()).eGet(sf_items);
-		ArrayList children = new ArrayList(tabitems.size());
-		Iterator itr = tabitems.iterator();
-		while (itr.hasNext()) {
-			EObject tabitem = (EObject) itr.next();
-			// Get the control out of the TabItem
-			children.add(tabitem.eGet(sf_coolItemControl));
-		}
-		return children;
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new UnknownLayoutInputPolicy(new CoolBarContainerPolicy(EditDomain.getEditDomain(this))));
 	}
 
 	/*
@@ -131,14 +100,44 @@ public class CoolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 
 	/*
-	 * Return the proxy adapter associated with this CoolBar.
+	 * Model children is the items feature. However, this returns the TabItems, but we want to return instead the controls themselves. They are the
+	 * "model" that gets sent to the createChild and control edit part.
 	 */
-	protected BeanProxyAdapter getCoolBarProxyAdapter() {
-		if (coolBarProxyAdapter == null) {
-			IBeanProxyHost coolBarProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) getModel());
-			coolBarProxyAdapter = (BeanProxyAdapter) coolBarProxyHost;
+	protected List getModelChildren() {
+		List tabitems = (List) ((EObject) getModel()).eGet(sf_items);
+		ArrayList children = new ArrayList(tabitems.size());
+		Iterator itr = tabitems.iterator();
+		while (itr.hasNext()) {
+			EObject tabitem = (EObject) itr.next();
+			// Get the control out of the TabItem
+			if (tabitem.eGet(sf_coolItemControl) != null)
+				children.add(tabitem.eGet(sf_coolItemControl));
 		}
-		return coolBarProxyAdapter;
+		return children;
 	}
 
+	protected void setupControl(ControlGraphicalEditPart childEP, EObject child) {
+		// Get the TabItem's error notifier for the child (which is a control) and add it in to the control gep. That way TabItem
+		// errors will show on the child.
+		IJavaObjectInstance tab = getCoolItemForChild(child);
+		if (childEP != null) {
+			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class));
+			childEP.setErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter(tab, IErrorNotifier.ERROR_NOTIFIER_TYPE));
+		} else {
+			childEP.setPropertySource(null);
+			childEP.setErrorNotifier(null);
+		}
+	}
+
+	/**
+	 * Get the TabItem for the given child control.
+	 * 
+	 * @param child
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected IJavaObjectInstance getCoolItemForChild(EObject child) {
+		return (IJavaObjectInstance) InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sf_items, sf_coolItemControl, child);
+	}
 }

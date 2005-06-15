@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.122 $  $Date: 2005-06-10 20:41:49 $ 
+ *  $Revision: 1.123 $  $Date: 2005-06-15 20:19:38 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -411,7 +411,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					else {
 						List paths = new ArrayList(selected.size());
 						for (int i = 0; i < selected.size(); i++) {
-							EditPartNamePath editPartNamePath = CDEUtilities.getEditPartNamePath((EditPart) selected.get(i), editDomain);
+							EditPart editPart = (EditPart) selected.get(i);
+							if (!editPart.isActive())
+								continue;	// We could be shutting down and the editparts are no longer active.
+							EditPartNamePath editPartNamePath = CDEUtilities.getEditPartNamePath(editPart, editDomain);
 							if (editPartNamePath == null)
 								continue; // If the root is selected, then treat as not selected.
 							paths.add(editPartNamePath);

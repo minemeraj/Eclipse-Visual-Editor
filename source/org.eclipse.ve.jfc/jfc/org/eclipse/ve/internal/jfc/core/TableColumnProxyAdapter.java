@@ -6,7 +6,7 @@
  ****************************************************************************************************************************************************/
 /*
  *  $RCSfile: TableColumnProxyAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-15 20:19:27 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -41,11 +41,7 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter2 {
 
 	}
 	
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#invalidateBeanProxy()
-	 */
-	public void invalidateBeanProxy() {
+	public void revalidateBeanProxy() {
 		//  When we invalidate we need to revalidate the JTable as well to cause the image to refresh.
 		EObject table = InverseMaintenanceAdapter.getFirstReferencedBy(getTarget(), sfTableColumns);
 		// If we are on the freeform then container will not be an instance of table

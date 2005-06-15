@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CoolItemPropertySourceAdapter.java,v $ $Revision: 1.6 $ $Date: 2005-04-05 21:40:17 $
+ * $RCSfile: CoolItemPropertySourceAdapter.java,v $ $Revision: 1.7 $ $Date: 2005-06-15 20:19:21 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -26,14 +26,13 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 import org.eclipse.ve.internal.java.rules.RuledWrapperedPropertyDescriptor;
-
-import org.eclipse.ve.internal.propertysheet.command.WrapperedPropertyDescriptor;
 
 public class CoolItemPropertySourceAdapter extends PropertySourceAdapter {
 
@@ -102,6 +101,7 @@ public class CoolItemPropertySourceAdapter extends PropertySourceAdapter {
 				JavaInstantiation.getSFeature(getEObject().eResource().getResourceSet(), SWTConstants.SF_COOLITEM_CONTROL));
 		controlPS = (IPropertySource) EcoreUtil.getRegisteredAdapter(component, IPropertySource.class);
 
+		EditDomain ed = tabFolderProxyHost.getBeanProxyDomain().getEditDomain();
 		IPropertyDescriptor[] mine = super.getPropertyDescriptors();
 		IPropertyDescriptor[] wrappedMine = new IPropertyDescriptor[mine.length];
 		int wi = 0;
@@ -112,37 +112,37 @@ public class CoolItemPropertySourceAdapter extends PropertySourceAdapter {
 				String fn = ((EStructuralFeature) pd.getId()).getName();
 				if ("text".equals(fn)) { //$NON-NLS-1$
 					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemText"); //$NON-NLS-1$
-					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
+					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("image".equals(fn)) { //$NON-NLS-1$
 					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemImage"); //$NON-NLS-1$
-					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
+					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("toolTipText".equals(fn)) { //$NON-NLS-1$
 					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemToolTipText"); //$NON-NLS-1$
-					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
+					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("preferredSize".equals(fn)) { //$NON-NLS-1$
 					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemPreferredSize"); //$NON-NLS-1$
-					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
+					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("minimumSize".equals(fn)) { //$NON-NLS-1$
 					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemMinimumSize"); //$NON-NLS-1$
-					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
+					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("size".equals(fn)) { //$NON-NLS-1$
 					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemSize"); //$NON-NLS-1$
-					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
+					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("bounds".equals(fn)) { //$NON-NLS-1$
 					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemBounds"); //$NON-NLS-1$
-					wrappedMine[wi++] = new WrapperedPropertyDescriptor(pd.getId(), displayname, this, pd);
+					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("control".equals(fn)) //$NON-NLS-1$
 					// don't show control property
 					continue;
 			}
-			wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(tabFolderProxyHost.getBeanProxyDomain().getEditDomain(), controlPS, pd);
+			wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, controlPS, pd);
 		}
 		IPropertyDescriptor[] theirs = controlPS.getPropertyDescriptors();
 		IPropertyDescriptor[] wrappedTheirs = new IPropertyDescriptor[theirs.length];

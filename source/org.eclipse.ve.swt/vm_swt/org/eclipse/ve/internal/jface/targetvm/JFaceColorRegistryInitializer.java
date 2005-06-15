@@ -10,12 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceColorRegistryInitializer.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-04 22:25:51 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.jface.targetvm;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.RGB;
@@ -29,14 +30,14 @@ import org.eclipse.ve.internal.swt.targetvm.Environment;
  */
 public class JFaceColorRegistryInitializer {
 
-	public static void init(final Map rgbMap) {
-		Environment.getDisplay().asyncExec(new Runnable() {
+	public static void init(final Map rgbMap, Environment environment) {
+		environment.getDisplay().asyncExec(new Runnable() {
 
 			public void run() {
-				Iterator iter = rgbMap.keySet().iterator();
+				Iterator iter = rgbMap.entrySet().iterator();
 				while (iter.hasNext()) {
-					String symbolicName = (String) iter.next();
-					JFaceResources.getColorRegistry().put(symbolicName, (RGB) rgbMap.get(symbolicName));
+					Map.Entry entry = (Entry) iter.next();
+					JFaceResources.getColorRegistry().put((String) entry.getKey(), (RGB) entry.getValue());
 				}
 			}
 		});

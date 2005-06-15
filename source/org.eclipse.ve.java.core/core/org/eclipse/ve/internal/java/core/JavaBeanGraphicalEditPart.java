@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-05-18 13:45:17 $
+ * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-06-15 20:19:37 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -63,11 +63,10 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 
 			public void errorStatusChanged() {
-				CDEUtilities.displayExec(JavaBeanGraphicalEditPart.this, "STATUS_CHANGED", new Runnable() { //$NON-NLS-1$
+				CDEUtilities.displayExec(JavaBeanGraphicalEditPart.this, "STATUS_CHANGED", new EditPartRunnable(JavaBeanGraphicalEditPart.this) {
 
-					public void run() {
-						if (JavaBeanGraphicalEditPart.this.isActive())
-							setSeverity(getErrorNotifier().getErrorStatus());
+					protected void doRun() {
+						setSeverity(getErrorNotifier().getErrorStatus());
 					}
 				});
 			}
@@ -76,6 +75,8 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 		IErrorNotifier errorNotifier = getErrorNotifier();
 		setSeverity(errorNotifier.getErrorStatus()); // Set the initial status
 		errorNotifier.addErrorListener(fBeanProxyErrorListener);
+		
+		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
 	}
 
 	protected void setSeverity(int severity) {
@@ -83,6 +84,7 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 	}
 
 	public void deactivate() {
+		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).deactivate();
 		if (fBeanProxyErrorListener != null) {
 			getErrorNotifier().removeErrorListener(fBeanProxyErrorListener);
 			fBeanProxyErrorListener = null;

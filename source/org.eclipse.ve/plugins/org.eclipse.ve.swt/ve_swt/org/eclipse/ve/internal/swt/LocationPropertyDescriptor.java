@@ -11,16 +11,19 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: LocationPropertyDescriptor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-11 19:01:30 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-15 20:19:21 $ 
  */
 
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.core.IRectangleBeanProxy;
+import org.eclipse.jem.internal.proxy.core.*;
+
+import org.eclipse.ve.internal.cde.core.XYLayoutUtility;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
@@ -59,6 +62,23 @@ public class LocationPropertyDescriptor extends BeanPropertyDescriptorAdapter im
 			}
 		}
 			
+		// If there are any "preferred" settings on the bounds, we need to use ApplyNullLauoutConstraintCommand instead to handle these.
+		IBeanProxyHost sh = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) setValue);
+		IBeanProxy point = sh.instantiateBeanProxy();
+		if (point instanceof IPointBeanProxy) {
+			IPointBeanProxy pointProxy = (IPointBeanProxy) point;
+			int x = pointProxy.getX();
+			int y = pointProxy.getY();
+			if (XYLayoutUtility.constraintContainsPreferredSettings(x, y, 0, 0, true, false)) {
+				ApplyNullLayoutConstraintCommand apply = new ApplyNullLayoutConstraintCommand();
+				apply.setTarget(comp);
+				apply.setDomain(h.getBeanProxyDomain().getEditDomain());
+				apply.setConstraint(new Rectangle(x, y, 0, 0), true, false);
+				cb.append(apply);
+				return cb.getCommand();
+			}
+		}
+		
 		cb.applyAttributeSetting(comp, (EStructuralFeature) getTarget(), setValue);
 		return cb.getCommand();
 	}

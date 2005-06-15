@@ -21,11 +21,11 @@
   
   <event:AddMany featureName="eAnnotations">
      <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
-       beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.ViewPartProxyAdapter"/>
+       beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.WorkbenchPartProxyAdapter"/>
      <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator" 
-       labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.ViewPartLabelProvider"     
-       treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.ViewPartTreeEditPart"
-	   graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.ViewPartGraphicalEditPart">     
+       labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.WorkbenchPartLabelProvider"     
+       treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.WorkbenchPartTreeEditPart"
+	   graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.WorkbenchPartGraphicalEditPart">     
         <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" 
           resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/rcp_app.gif"/>
 	 </addedEObjects>

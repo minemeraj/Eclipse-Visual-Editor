@@ -10,14 +10,16 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScrolledCompositeProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IExpression;
 
 import org.eclipse.ve.internal.java.core.*;
 
@@ -28,23 +30,20 @@ public class ScrolledCompositeProxyAdapter extends CompositeProxyAdapter {
 
 	public ScrolledCompositeProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
-	}
-	
-	public void setTarget(Notifier newTarget) {
-		super.setTarget(newTarget);
-		if (newTarget != null) {
-			sf_containerContent = JavaInstantiation.getReference((IJavaObjectInstance) newTarget, SWTConstants.SF_SCROLLEDCOMPOSITE_CONTENT);
-		}
+		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
+		sf_containerContent = JavaInstantiation.getReference(rset, SWTConstants.SF_SCROLLEDCOMPOSITE_CONTENT);
 	}
 
-	public void releaseBeanProxy() {
-		if (isBeanProxyInstantiated()) {
+	protected void primPrimReleaseBeanProxy(IExpression expression) {
+		boolean releaseChild = isBeanProxyInstantiated();
+		super.primPrimReleaseBeanProxy(expression);
+		if (releaseChild) {
             IJavaInstance content = (IJavaInstance) ((IJavaObjectInstance) getTarget()).eGet(sf_containerContent);
 			
-			IBeanProxyHost value = BeanProxyUtilities.getBeanProxyHost(content);
+			IBeanProxyHost2 value = (IBeanProxyHost2) EcoreUtil.getExistingAdapter(content, IBeanProxyHost.BEAN_PROXY_TYPE);
 			if (value != null)
-				value.releaseBeanProxy();
-		}
-		super.releaseBeanProxy();
+				value.releaseBeanProxy(expression);
+		}		
+
 	}
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DefaultTreeEditPart.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-18 19:31:37 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-15 20:19:34 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -24,17 +24,26 @@ import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.ve.internal.cde.core.*;
 /**
- * A simple tree editpart for a EMF object. It is simply
- * an icon (somepart.gif) with a label which is the EMF ID of the
- * object. This can be used as a default for any object that don't
- * know what to do with. This is marked in ClassDescriptorDecoratorPolicy
- * as the default graph edit part.
+ *  A base tree editpart for EMF objects that will be using the CDE extensions paradighm. 
+ *  (I.e. gets label provider from ClassDescriptorDecoratorPolicy, among other things.
+ *  
+ *  @since 1.0.0
  */
 public class DefaultTreeEditPart extends AbstractTreeEditPart {
 
 	protected ILabelDecorator labelDecorator;
 	protected DefaultLabelProviderNotifier labelProviderNotifier;
 
+	/**
+	 * Construct with model.
+	 * @param model
+	 * 
+	 * @since 1.1.0
+	 */
+	public DefaultTreeEditPart(Object model) {
+		setModel(model);
+	}
+	
 	public void activate() {
 		super.activate();
 		ILabelProvider provider = getDecoratedLabelProvider();
@@ -45,11 +54,10 @@ public class DefaultTreeEditPart extends AbstractTreeEditPart {
 				EditDomain.getEditDomain(this),
 				new DefaultLabelProviderNotifier.IDefaultLabelProviderListener() {
 			public void refreshLabel(ILabelProvider provider) {
-				CDEUtilities.displayExec(DefaultTreeEditPart.this, "REFRESH_VISUALS", new Runnable() { //$NON-NLS-1$
+				CDEUtilities.displayExec(DefaultTreeEditPart.this, "REFRESH_VISUALS", new EditPartRunnable(DefaultTreeEditPart.this) { //$NON-NLS-1$
 
-					public void run() {
-						if (isActive())
-							DefaultTreeEditPart.this.refreshVisuals();
+					protected void doRun() {
+						DefaultTreeEditPart.this.refreshVisuals();
 					}
 				});
 			}
@@ -79,10 +87,6 @@ public class DefaultTreeEditPart extends AbstractTreeEditPart {
 		super.deactivate();
 	}
 
-	public DefaultTreeEditPart(Object model) {
-		setModel(model);
-	}
-
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DefaultComponentEditPolicy());
 		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new TreePrimaryDragRoleEditPolicy());
@@ -90,9 +94,14 @@ public class DefaultTreeEditPart extends AbstractTreeEditPart {
 
 
 	/**
-	 * This is used to add a label decorator to the label provider.
+	 * Add a label decorator to the editpart. This is used to provide additional decoration to the 
+	 * default label provider. 
+	 * <p>
 	 * The decorator is not owned by this edit part. If it needs to
-	 * be disposed, that is the responsibility of the caller.
+	 * be disposed, and that is the responsibility of the caller.
+	 * @param decorator
+	 * 
+	 * @since 1.0.0
 	 */
 	public void setLabelDecorator(ILabelDecorator decorator) {
 		labelDecorator = decorator;
@@ -110,7 +119,7 @@ public class DefaultTreeEditPart extends AbstractTreeEditPart {
 
 	public Object getAdapter(Class key) {
 		if (key == IPropertySource.class)
-			return EcoreUtil.getRegisteredAdapter((EObject) getModel(), IPropertySource.class);
+			return EcoreUtil.getRegisteredAdapter((EObject) getModel(), IPropertySource.class);	// For the property sheet.
 		else
 			return super.getAdapter(key);
 	}
@@ -130,7 +139,8 @@ public class DefaultTreeEditPart extends AbstractTreeEditPart {
 	}
 
 	/**
-	 * @return Returns the labelDecorator.
+	 * Get the label decorator, if any.
+	 * @return Returns the labelDecorator or <code>null</code> if there isn't one.
 	 */
 	public ILabelDecorator getLabelDecorator() {
 		return labelDecorator;

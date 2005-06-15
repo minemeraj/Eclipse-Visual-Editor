@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.23 $  $Date: 2005-05-18 22:53:56 $ 
+ *  $Revision: 1.24 $  $Date: 2005-06-15 20:19:27 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -29,7 +29,6 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
-import org.eclipse.jem.internal.proxy.initParser.tree.NoExpressionValueException;
 import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.core.*;
@@ -105,52 +104,61 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#primInstantiateBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
-	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
-		if (ffHost != null) {
-			// We are on the freeform, instantiate for this. This needs to be done for each instantiation because it is reset in the release.
-			overrideVisibility(true, expression);
-			overrideLocation(new Point());
-		}
-
-		IProxy newbean = super.primInstantiateBeanProxy(expression);
-
-		if (isThisPart()) {
-			// KLUDGE: Something special for component and "this" part. Since Component is Abstract, someone may of tried create an abstract subclass.
-			// In that case
-			// the bean proxy that comes in would be for Object. So what we will do is since we are not a component, we will throw away the
-			// object that came in and change it a Canvas (that way something will display).
-			// Don't need to worry about any other kind of class because all of the subclasses of Component that we are implementing
-			// are non-abstract.
-			// 
-			// If we find one of the notinstantiated classes is component, then we know we went to far, so we will recreate it
-			// as gray canvas.
-			//   newBean = new java.awt.Canvas();
-			//   newBean.setBackground(lightGray);
-			//   return newBean;
-			for (int i = 0; i < notInstantiatedClasses.size(); i++) {
-				if (((JavaHelpers) notInstantiatedClasses.get(i)).getQualifiedName().equals("java.awt.Component")) { //$NON-NLS-1$
-					expression.createProxyReassignmentExpression(ForExpression.ROOTEXPRESSION, (ExpressionProxy) newbean);
-					IProxyBeanType componentType = getBeanTypeProxy("java.awt.Component", expression); //$NON-NLS-1$
-					expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, getBeanTypeProxy("java.awt.Canvas", expression), 0); //$NON-NLS-1$
-					expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, componentType.getMethodProxy(expression, "setBackground", //$NON-NLS-1$
-							new String[] { "java.awt.Color"}), true, 1); //$NON-NLS-1$
-					expression.createProxyExpression(ForExpression.METHOD_RECEIVER, newbean);
-					expression.createFieldAccess(ForExpression.METHOD_ARGUMENT, "lightGray", true); //$NON-NLS-1$
-					expression.createTypeReceiver(getBeanTypeProxy("java.awt.Color", expression)); //$NON-NLS-1$
-					notInstantiatedClasses.remove(notInstantiatedClasses.size() - 1); // The last one WILL be for Component. We want to be able to
-					// apply component settings.
-					break;
-				}
+	protected IProxy primInstantiateThisPart(IProxyBeanType targetClass, IExpression expression) throws AllocationException {
+		preInstantiateStuff(expression);
+		IProxy newbean = super.primInstantiateThisPart(targetClass, expression);
+		
+		// KLUDGE: Something special for component and "this" part. Since Component is Abstract, someone may of tried create an abstract subclass.
+		// In that case
+		// the bean proxy that comes in would be for Object. So what we will do is since we are not a component, we will throw away the
+		// object that came in and change it a Canvas (that way something will display).
+		// Don't need to worry about any other kind of class because all of the subclasses of Component that we are implementing
+		// are non-abstract.
+		// 
+		// If we find one of the notinstantiated classes is component, then we know we went to far, so we will recreate it
+		// as gray canvas.
+		//   newBean = new java.awt.Canvas();
+		//   newBean.setBackground(lightGray);
+		//   return newBean;
+		for (int i = 0; i < notInstantiatedClasses.size(); i++) {
+			if (((JavaHelpers) notInstantiatedClasses.get(i)).getQualifiedName().equals("java.awt.Component")) { //$NON-NLS-1$
+				expression.createProxyReassignmentExpression(ForExpression.ROOTEXPRESSION, (ExpressionProxy) newbean);
+				IProxyBeanType componentType = getBeanTypeProxy("java.awt.Component", expression); //$NON-NLS-1$
+				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, getBeanTypeProxy("java.awt.Canvas", expression), 0); //$NON-NLS-1$
+				expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, componentType.getMethodProxy(expression, "setBackground", //$NON-NLS-1$
+						new String[] { "java.awt.Color"}), true, 1); //$NON-NLS-1$
+				expression.createProxyExpression(ForExpression.METHOD_RECEIVER, newbean);
+				expression.createFieldAccess(ForExpression.METHOD_ARGUMENT, "lightGray", true); //$NON-NLS-1$
+				expression.createTypeReceiver(getBeanTypeProxy("java.awt.Color", expression)); //$NON-NLS-1$
+				notInstantiatedClasses.remove(notInstantiatedClasses.size() - 1); // The last one WILL be for Component. We want to be able to
+				// apply component settings.
+				break;
 			}
 		}
+		
+		postInstantiateStuff(expression, newbean);
+		return newbean;
 
+	}
+	
+	protected IProxy primInstantiateDroppedPart(IExpression expression) throws AllocationException {
+		preInstantiateStuff(expression);
+
+		IProxy newbean = super.primInstantiateDroppedPart(expression);
+
+		postInstantiateStuff(expression, newbean);
+		return newbean;
+	}
+
+	/**
+	 * Stuff to do after instantiation. I.e. set up component manager and handle ffHost stuff.
+	 * @param expression
+	 * @param newbean
+	 * 
+	 * @since 1.1.0
+	 */
+	private void postInstantiateStuff(IExpression expression, IProxy newbean) {
 		getComponentManager().setComponentBeanProxy(newbean, expression, getModelChangeController());
-
 		if (ffHost != null) {
 			// Now finish the instantiation on the freeform.
 			try {
@@ -181,7 +189,20 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 				processInstantiationError(new ExceptionError(e, ERROR_SEVERE));
 			}
 		}
-		return newbean;
+	}
+
+	/**
+	 * Called by the primInstantiates to do preInstantiate stuff (i.e. handle ffhost).
+	 * @param expression
+	 * 
+	 * @since 1.1.0
+	 */
+	private void preInstantiateStuff(IExpression expression) {
+		if (ffHost != null) {
+			// We are on the freeform, instantiate for this. This needs to be done for each instantiation because it is reset in the release.
+			overrideVisibility(true, expression);
+			overrideLocation(new Point(), expression);	// Go to (0,0) because we are in a freeform dialog which will control position.
+		}
 	}
 
 	/*
@@ -303,11 +324,17 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 	protected IProxy applyBeanProperty(PropertyDecorator propertyDecorator, IProxy settingProxy, IExpression expression, boolean getOriginalValue)
 			throws NoSuchMethodException, NoSuchFieldException {
 		// Override for loc and bounds so that it goes through the component manager.
-		if (propertyDecorator.getEModelElement() == sfComponentBounds)
+		if (propertyDecorator.getEModelElement() == sfComponentBounds) {
+			if (ffProxy != null)
+				ffProxy.useComponentSize(getProxy(), true, expression);			
 			return getComponentManager().applyBounds(settingProxy, getOriginalValue, expression, getModelChangeController());
-		else if (propertyDecorator.getEModelElement() == sfComponentLocation)
+		} else if (propertyDecorator.getEModelElement() == sfComponentLocation)
 			return getComponentManager().applyLocation(settingProxy, getOriginalValue, expression, getModelChangeController());
-		else
+		else if (propertyDecorator.getEModelElement() == sfComponentSize) {
+			if (ffProxy != null)
+				ffProxy.useComponentSize(getProxy(), true, expression);
+			return super.applyBeanProperty(propertyDecorator, settingProxy, expression, getOriginalValue);		
+		} else
 			return super.applyBeanProperty(propertyDecorator, settingProxy, expression, getOriginalValue);
 	}
 
@@ -318,6 +345,15 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 	 *      org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {
+		// Little tricker, need to see if the other setting is still set.
+		if (ffProxy != null) {
+			if ((feature == sfComponentBounds && !getEObject().eIsSet(sfComponentSize)) || 
+					(feature == sfComponentSize && !getEObject().eIsSet(sfComponentBounds))) {
+				// The complementary feature is not set, so we need to reset to use the preferred size.
+				ffProxy.useComponentSize(getProxy(), false, expression);
+			}
+		}
+
 		if (feature == sfComponentBounds && (getEObject().eIsSet(sfComponentSize) || getEObject().eIsSet(sfComponentLocation)))
 			return; // Don't apply the cancel for bounds because loc and size are set and this would wipe them out.
 		else if ((feature == sfComponentSize || feature == sfComponentLocation) && getEObject().eIsSet(sfComponentBounds))
@@ -331,11 +367,12 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 	 * through to the settings of location/bounds in the java object.
 	 * 
 	 * @param loc
+	 * @param expression
 	 * 
 	 * @since 1.1.0
 	 */
-	public void overrideLocation(Point loc) {
-		getComponentManager().overrideLocation(loc);
+	public void overrideLocation(Point loc, IExpression expression) {
+		getComponentManager().overrideLocation(loc, expression);
 	}
 
 	/**
@@ -429,7 +466,14 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 	 * @see org.eclipse.ve.internal.cde.core.IVisualComponent#getAbsoluteLocation()
 	 */
 	public Point getAbsoluteLocation() {
-		return getLocation(); // For components, the location and the absolute location are the same.
+
+		if (isBeanProxyInstantiated()) {
+			return fComponentManager.getAbsoluteLocation();
+		} else {
+			// No proxy. Either called too soon, or there was an instantiation error and we can't get
+			// a live component. So return just a default.
+			return new Point();
+		}
 	}
 
 	/*
@@ -500,87 +544,6 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#notifyChanged(org.eclipse.emf.common.notify.Notification)
-	 */
-	public void notifyChanged(Notification notification) {
-		if (ffProxy != null) {
-			// May be changing useComponentSize setting. This must be done before the
-			// actual apply/cancel so that it is set for when the apply occurs. Otherwise
-			// timing could cause it to think it should pack to the wrong size.
-			EStructuralFeature sf = (EStructuralFeature) notification.getFeature();
-			if (sf == sfComponentBounds || sf == sfComponentSize) {
-				switch (notification.getEventType()) {
-					case Notification.SET:
-						if (!CDEUtilities.isUnset(notification)) {
-							if (!notification.wasSet()) {
-								if (isBeanProxyInstantiated()) {
-									// TODO See if we can actually group the expression up to all notifications for this transaction instead of just
-									// this one notification.
-									IExpression expression = getBeanProxyFactory().createExpression();
-									try {
-										ffProxy.useComponentSize(getBeanProxy(), true, expression);
-									} finally {
-										try {
-											if (expression.isValid())
-												expression.invokeExpression();
-											else
-												expression.close();
-										} catch (IllegalStateException e) {
-											// Shouldn't occur. Should be taken care of in applied.
-											JavaVEPlugin.log(e, Level.WARNING);
-										} catch (ThrowableProxy e) {
-											// Shouldn't occur. Should be taken care of in applied.
-											JavaVEPlugin.log(e, Level.WARNING);
-										} catch (NoExpressionValueException e) {
-											// Shouldn't occur. Should be taken care of in applied.
-											JavaVEPlugin.log(e, Level.WARNING);
-										}
-									}
-								}
-							}
-							break;
-						} // Else flow into unset.
-					case Notification.UNSET:
-						if (isBeanProxyInstantiated()) {
-							// Little tricker, need to see if the other setting is still set.
-							if (sf == sfComponentBounds)
-								if (getEObject().eIsSet(sfComponentSize))
-									break; // The other is still set, so leave alone.
-							if (sf == sfComponentSize)
-								if (getEObject().eIsSet(sfComponentBounds))
-									break; // The other is still set, so leave alone.
-
-							// TODO See if we can actually group the expression up to all notifications for this transaction instead of just this one
-							// notification.
-							IExpression expression = getBeanProxyFactory().createExpression();
-							try {
-								ffProxy.useComponentSize(getBeanProxy(), false, expression);
-							} finally {
-								try {
-									if (expression.isValid())
-										expression.invokeExpression();
-								} catch (IllegalStateException e) {
-									// Shouldn't occur. Should be taken care of in applied.
-									JavaVEPlugin.log(e, Level.WARNING);
-								} catch (ThrowableProxy e) {
-									// Shouldn't occur. Should be taken care of in applied.
-									JavaVEPlugin.log(e, Level.WARNING);
-								} catch (NoExpressionValueException e) {
-									// Shouldn't occur. Should be taken care of in applied.
-									JavaVEPlugin.log(e, Level.WARNING);
-								}
-							}
-						}
-						break;
-				}
-			}
-		}
-		super.notifyChanged(notification);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.ve.internal.cde.core.IImageNotifier#invalidateImage()
 	 */
 	public void invalidateImage() {
@@ -600,12 +563,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#invalidateBeanProxy()
-	 */
-	public void invalidateBeanProxy() {
+	public void revalidateBeanProxy() {
 		if (isBeanProxyInstantiated())
 			getComponentManager().invalidate(getModelChangeController());
 	}

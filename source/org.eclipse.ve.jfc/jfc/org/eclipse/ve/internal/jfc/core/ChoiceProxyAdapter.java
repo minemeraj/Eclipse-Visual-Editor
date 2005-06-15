@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChoiceProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-15 20:19:27 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -41,11 +41,6 @@ public class ChoiceProxyAdapter extends ComponentProxyAdapter {
 		super(domain);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#primInstantiateBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
 	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
 		IProxy bean = super.primInstantiateBeanProxy(expression);
 		// See header of this class as to why we are doing what we are doing here.

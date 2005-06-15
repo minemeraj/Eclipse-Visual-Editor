@@ -11,18 +11,17 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: CDEDefaultTreeEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-18 19:31:04 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-15 20:19:34 $ 
  */
 
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
 import org.eclipse.swt.graphics.Image;
 /**
- * A simple tree editpart for a EMF object. It is simply
+ * A simple tree editpart for a non-EMF object. It is simply
  * an icon (somepart.gif) with a label which is the EMF ID of the
  * object. This can be used as a default for any object that don't
- * know what to do with. This is marked in ClassDescriptorDecoratorPolicy
- * as the default graph edit part.
+ * know what to do with.
  */
 public class CDEDefaultTreeEditPart extends AbstractTreeEditPart {
 

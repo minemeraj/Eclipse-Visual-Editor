@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.11 $  $Date: 2005-05-18 19:31:04 $ 
+ *  $Revision: 1.12 $  $Date: 2005-06-15 20:19:34 $ 
  */
 
 
@@ -203,7 +203,7 @@ public class CDEUtilities {
 	 * It will then queue it up to the end of the transaction.
 	 * @param ep the editpart. If the editpart is not active then nothing added.
 	 * @param Object once key to run once, it will be merged with the editpart, so that the combination of the two will determine the once. 
-	 * @param runnable
+	 * @param runnable the runnable. It is best to use an {@link EditPartRunnable} for this so that it will make sure the editpart is still active at the time of execution.
 	 * 
 	 * @see ModelChangeController#execAtEndOfTransaction(Runnable, Object)
 	 * @see ModelChangeController#createHashKey(Object, Object)
@@ -219,7 +219,7 @@ public class CDEUtilities {
 	 * Utility method to run the runnable at end of current transaction. Takes a GEF editpart as a convenience to find the model change controller.
 	 * It will then queue it up to the end of the transaction.
 	 * @param ep the editpart. If the editpart is not active then nothing added.
-	 * @param runnable
+	 * @param runnable the runnable. It is best to use an {@link EditPartRunnable} for this so that it will make sure the editpart is still active at the time of execution.
 	 * 
 	 * @see ModelChangeController#execAtEndOfTransaction(Runnable)
 	 * @since 1.0.0

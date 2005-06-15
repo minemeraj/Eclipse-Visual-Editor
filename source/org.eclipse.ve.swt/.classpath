@@ -4,6 +4,10 @@
 		<attributes>
 		</attributes>
 	</classpathentry>
+	<classpathentry output="common_bin" kind="src" path="swtcommon">
+		<attributes>
+		</attributes>
+	</classpathentry>
 	<classpathentry output="vm_bin" kind="src" path="vm_swt">
 		<attributes>
 		</attributes>

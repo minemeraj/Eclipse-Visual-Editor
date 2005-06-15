@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceFontRegistryInitializer.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-07 20:12:15 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.jface.targetvm;
 
@@ -21,7 +21,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.FontData;
 
 import org.eclipse.ve.internal.swt.targetvm.Environment;
- 
+
 /**
  * Initialize the JFace FontRegistry with the JFaceResources fonts from the IDE.
  * 
@@ -29,14 +29,14 @@ import org.eclipse.ve.internal.swt.targetvm.Environment;
  */
 public class JFaceFontRegistryInitializer {
 
-	public static void init(final Map fontDataMap) {
-		Environment.getDisplay().asyncExec(new Runnable() {
+	public static void init(final Map fontDataMap, Environment environment) {
+		environment.getDisplay().asyncExec(new Runnable() {
 
 			public void run() {
-				Iterator iter = fontDataMap.keySet().iterator();
+				Iterator iter = fontDataMap.entrySet().iterator();
 				while (iter.hasNext()) {
-					String symbolicName = (String) iter.next();
-					JFaceResources.getFontRegistry().put(symbolicName, new FontData[] { (FontData) fontDataMap.get(symbolicName)});
+					Map.Entry entry = (Map.Entry) iter.next();
+					JFaceResources.getFontRegistry().put((String) entry.getKey(), (FontData[]) entry.getValue());
 				}
 			}
 		});

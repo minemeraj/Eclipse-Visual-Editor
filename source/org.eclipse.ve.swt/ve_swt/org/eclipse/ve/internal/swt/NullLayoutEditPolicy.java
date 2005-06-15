@@ -38,15 +38,15 @@ import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 public class NullLayoutEditPolicy extends XYLayoutEditPolicy {
 	protected ContainerPolicy containerPolicy;		// Handles the containment functions
 	protected NullLayoutPolicyHelper helper;	
-	protected Rectangle clientBox;
+	protected Point originOffset;
 
 /**
  * Create with the container policy for handling DiagramFigures.
  */
-public NullLayoutEditPolicy(VisualContainerPolicy containerPolicy, Rectangle aClientBox) {
+public NullLayoutEditPolicy(VisualContainerPolicy containerPolicy, Point originOffset) {
 	this.containerPolicy = containerPolicy;
 	helper = new NullLayoutPolicyHelper(containerPolicy);	
-	clientBox = aClientBox;
+	this.originOffset = originOffset;
 }
 
 public void activate() {
@@ -157,8 +157,8 @@ protected Object translateToModelConstraint(Object aFigureConstraint) {
 	
 	Rectangle figureConstraint = (Rectangle)aFigureConstraint;
 	Rectangle result = new Rectangle(
-		figureConstraint.x - clientBox.x,
-		figureConstraint.y - clientBox.y,
+		figureConstraint.x - originOffset.x,
+		figureConstraint.y - originOffset.y,
 		figureConstraint.width,
 		figureConstraint.height);
 	return result;

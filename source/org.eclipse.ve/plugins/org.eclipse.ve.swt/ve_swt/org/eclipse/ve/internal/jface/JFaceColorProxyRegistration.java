@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceColorProxyRegistration.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-13 21:14:10 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -19,78 +19,94 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.RGB;
 
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
+import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 
 /**
- * Initialize the JFace ColorRegistry with the JFacePreferences colors from the IDE. 
- * The ColorRegistry is normally primed from the WorkBench themes but because the WorkBench 
- * isn't loaded in the remote VM, it never gets set and when you set the color of a SWT control
- * using the JFace preferences colors, it doesn't show correctly in the remote VM. 
- * For RCP applications, the workbench will be loaded in the running application so the
+ * Initialize the JFace ColorRegistry with the JFacePreferences colors from the IDE. The ColorRegistry is normally primed from the WorkBench themes
+ * but because the WorkBench isn't loaded in the remote VM, it never gets set and when you set the color of a SWT control using the JFace preferences
+ * colors, it doesn't show correctly in the remote VM. For RCP applications, the workbench will be loaded in the running application so the
  * ColorRegistry should be primed as well and show up correctly.
  * 
  * @since 1.1.0
  */
 public class JFaceColorProxyRegistration {
 
-	public static void initialize(ProxyFactoryRegistry registry) {
+	/**
+	 * Initialize the color registry from the IDE settings.
+	 * 
+	 * @param expression
+	 * 
+	 * @since 1.1.0
+	 */
+	public static void initialize(IExpression expression) {
 		// To handle the case in which this is being called but there is no SWT in the remote vm,
 		// check to see if the SWT RGB class even exists. If not, just return.
-		if (registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.graphics.RGB") == null) //$NON-NLS-1$
-			return;
-		
-		RGB errorColor_RGB = JFaceResources.getColorRegistry().getRGB(JFacePreferences.ERROR_COLOR);
-		RGB hyperLinkColor_RGB = JFaceResources.getColorRegistry().getRGB(JFacePreferences.HYPERLINK_COLOR);
-		RGB activeHyperLinkColor_RGB = JFaceResources.getColorRegistry().getRGB(JFacePreferences.ACTIVE_HYPERLINK_COLOR);
+		// Use try {
+		// ...init...
+		// } catch (ClassNotFoundException e) {
+		// }
+		IStandardBeanTypeProxyFactory beanTypeFactory = expression.getRegistry().getBeanTypeProxyFactory();
+		expression.createTry();
 
-		// JFaceColorRegistryInitializer - remote vm helper used to prime the JFace ColorRegistry.
-		IBeanTypeProxy jfaceColorInitBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.jface.targetvm.JFaceColorRegistryInitializer"); //$NON-NLS-1$
-		
-		IBeanTypeProxy hashMapBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("java.util.HashMap"); //$NON-NLS-1$
-		IBeanTypeProxy objectBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("java.lang.Object"); //$NON-NLS-1$
-		IMethodProxy initMethodProxy = jfaceColorInitBeanTypeProxy.getMethodProxy("init", new IBeanTypeProxy[] { registry.getBeanTypeProxyFactory().getBeanTypeProxy("java.util.Map")}); //$NON-NLS-1$ //$NON-NLS-2$
-		IMethodProxy putMethodProxy = hashMapBeanTypeProxy.getMethodProxy("put", new IBeanTypeProxy[] { objectBeanTypeProxy, objectBeanTypeProxy}); //$NON-NLS-1$
-		IBeanProxy hashMapBeanProxy;
-		try {
-			// Create a HashMap
-			hashMapBeanProxy = hashMapBeanTypeProxy.newInstance();
-		} catch (ThrowableProxy e) {
-			return; 
-		}
+		IProxyBeanType hashMapBeanTypeProxy = beanTypeFactory.getBeanTypeProxy(expression, "java.util.HashMap"); //$NON-NLS-1$
+		IProxyBeanType objectBeanTypeProxy = beanTypeFactory.getBeanTypeProxy(expression, "java.lang.Object"); //$NON-NLS-1$
+		IProxyMethod putMethodProxy = hashMapBeanTypeProxy.getMethodProxy(expression,
+				"put", new IProxyBeanType[] { objectBeanTypeProxy, objectBeanTypeProxy}); //$NON-NLS-1$
+		IProxyBeanType rgbBeanTypeProxy = beanTypeFactory.getBeanTypeProxy(expression, "org.eclipse.swt.graphics.RGB"); //$NON-NLS-1$
+
+		// hashMap = new HashMap();
+		IProxy hashMapProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
+		expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, hashMapBeanTypeProxy, 0);
+
 		// Now populate the map with the JFace color preferences found in JFacePreferences
-		IStringBeanProxy symbolicNameBeanProxy = registry.getBeanProxyFactory().createBeanProxyWith(JFacePreferences.ERROR_COLOR);
-		IBeanProxy rgbBeanProxy = getRGBBeanProxy(registry, errorColor_RGB);
-		putMethodProxy.invokeCatchThrowableExceptions(hashMapBeanProxy, new IBeanProxy[] { symbolicNameBeanProxy, rgbBeanProxy});
 
-		symbolicNameBeanProxy = registry.getBeanProxyFactory().createBeanProxyWith(JFacePreferences.HYPERLINK_COLOR);
-		rgbBeanProxy = getRGBBeanProxy(registry, hyperLinkColor_RGB);
-		putMethodProxy.invokeCatchThrowableExceptions(hashMapBeanProxy, new IBeanProxy[] { symbolicNameBeanProxy, rgbBeanProxy});
+		// hashmap.put(JFacePreferences.ERROR_COLOR, new RGB(errorcolor));
+		expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, putMethodProxy, true, 2);
+		expression.createProxyExpression(ForExpression.METHOD_RECEIVER, hashMapProxy);
+		expression.createStringLiteral(ForExpression.METHOD_ARGUMENT, JFacePreferences.ERROR_COLOR);
+		getRGBBeanProxy(JFaceResources.getColorRegistry().getRGB(JFacePreferences.ERROR_COLOR), expression, rgbBeanTypeProxy);
 
-		symbolicNameBeanProxy = registry.getBeanProxyFactory().createBeanProxyWith(JFacePreferences.ACTIVE_HYPERLINK_COLOR);
-		rgbBeanProxy = getRGBBeanProxy(registry, activeHyperLinkColor_RGB);
-		putMethodProxy.invokeCatchThrowableExceptions(hashMapBeanProxy, new IBeanProxy[] { symbolicNameBeanProxy, rgbBeanProxy});
-		
-		// Finally... call the helper method in the remote vm to iterate throught the map and prime the ColorRegistry
-		initMethodProxy.invokeCatchThrowableExceptions(jfaceColorInitBeanTypeProxy, hashMapBeanProxy);
+		// hashmap.put(JFacePreferences.HYPERLINK_COLOR, new RGB(HYPERLINK_COLOR));
+		expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, putMethodProxy, true, 2);
+		expression.createProxyExpression(ForExpression.METHOD_RECEIVER, hashMapProxy);
+		expression.createStringLiteral(ForExpression.METHOD_ARGUMENT, JFacePreferences.HYPERLINK_COLOR);
+		getRGBBeanProxy(JFaceResources.getColorRegistry().getRGB(JFacePreferences.HYPERLINK_COLOR), expression, rgbBeanTypeProxy);
+
+		// hashmap.put(JFacePreferences.ACTIVE_HYPERLINK_COLOR, new RGB(ACTIVE_HYPERLINK_COLOR));
+		expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, putMethodProxy, true, 2);
+		expression.createProxyExpression(ForExpression.METHOD_RECEIVER, hashMapProxy);
+		expression.createStringLiteral(ForExpression.METHOD_ARGUMENT, JFacePreferences.ACTIVE_HYPERLINK_COLOR);
+		getRGBBeanProxy(JFaceResources.getColorRegistry().getRGB(JFacePreferences.ACTIVE_HYPERLINK_COLOR), expression, rgbBeanTypeProxy);
+
+		// JFaceColorRegistry.init(hashmap);
+		IProxyBeanType jfaceColorInitBeanTypeProxy = beanTypeFactory.getBeanTypeProxy(expression,
+				"org.eclipse.ve.internal.jface.targetvm.JFaceColorRegistryInitializer"); //$NON-NLS-1$
+		expression.createSimpleMethodInvoke(jfaceColorInitBeanTypeProxy.getMethodProxy(expression, "init", new String[] { "java.util.Map",	//$NON-NLS-1$ //$NON-NLS-2$
+				"org.eclipse.ve.internal.swt.targetvm.Environment"}), null, new IProxy[] { hashMapProxy,	//$NON-NLS-1$
+				JavaStandardSWTBeanConstants.getConstants(expression.getRegistry()).getEnvironmentProxy()}, false);
+
+		// catch (ClassNotFoundException) {
+		// }
+		expression.createTryCatchClause("java.lang.ClassNotFoundException", false);	//$NON-NLS-1$
+		expression.createTryEnd();
 	}
 
-	protected static IBeanProxy getRGBBeanProxy(ProxyFactoryRegistry registry, RGB rgb) {
-		IBeanTypeProxy rgbBeanTypeProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.graphics.RGB"); //$NON-NLS-1$
-		IBeanProxy rgbBeanProxy = null;
-		StringBuffer rgbInitString = new StringBuffer("new org.eclipse.swt.graphics.RGB("); //$NON-NLS-1$
-		rgbInitString.append(rgb.red);
-		rgbInitString.append(','); //$NON-NLS-1$
-		rgbInitString.append(rgb.green);
-		rgbInitString.append(','); //$NON-NLS-1$
-		rgbInitString.append(rgb.blue);
-		rgbInitString.append(')'); //$NON-NLS-1$
-		try {
-			rgbBeanProxy = rgbBeanTypeProxy.newInstance(rgbInitString.toString());
-		} catch (ThrowableProxy e) {
-			return null;
-		} catch (InstantiationException e) {
-			return null; // shouldn't occur
-		}
-		return rgbBeanProxy;
+	/**
+	 * Called to make an RGB Beanproxy as a method argument.
+	 * 
+	 * @param rgb
+	 * @param expression
+	 * @param beantypeFactory
+	 * @param beanFactory
+	 * 
+	 * @since 1.1.0
+	 */
+	private static void getRGBBeanProxy(RGB rgb, IExpression expression, IProxyBeanType rgbBeanTypeProxy) {
+		expression.createClassInstanceCreation(ForExpression.METHOD_ARGUMENT, rgbBeanTypeProxy, 3);
+		expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, rgb.red);
+		expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, rgb.green);
+		expression.createPrimitiveLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, rgb.blue);
 	}
 
 }

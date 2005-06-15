@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.15 $ $Date: 2005-06-09 15:17:27 $
+ * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.16 $ $Date: 2005-06-15 20:19:27 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -33,8 +33,7 @@ import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+import org.eclipse.ve.internal.cde.emf.*;
 
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 
@@ -118,7 +117,7 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 
 		protected void doRun() {
 			refreshChildren();
-			// Now we need to run through the children and set the Property source/Error Notifier correctly.
+			// Now we need to run through the children and set the Property source/Error ComponentManagerFeedbackControllerNotifier correctly.
 			// This is needed because the child could of been removed and then added back in with
 			// a different ConstraintComponent BEFORE the refresh could happen. In that case GEF
 			// doesn't see the child as being different so it doesn't create a new child editpart, and
@@ -140,7 +139,7 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 			if (notification.getFeature() == sf_containerComponents) {
 				queueExec(ContainerGraphicalEditPart.this, "COMPONENTS"); //$NON-NLS-1$
 			} else if (notification.getFeature() == sf_containerLayout) {
-				queueExec(ContainerGraphicalEditPart.this, "LAYOUT", new OtherRunnable() { //$NON-NLS-1$
+				queueExec(ContainerGraphicalEditPart.this, "LAYOUT", new EditPartRunnable(getHost()) { //$NON-NLS-1$
 
 					protected void doRun() {
 						createLayoutEditPolicy();
@@ -164,12 +163,12 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 
 	protected EditPart createChild(Object model) {
 		EditPart ep = super.createChild(model);
-			try {
-				ComponentGraphicalEditPart componentGraphicalEditPart = (ComponentGraphicalEditPart) ep;
-				setupComponent(componentGraphicalEditPart, (EObject) model);
-				componentGraphicalEditPart.setTransparent(true); // So that it doesn't create an image, we subsume it here.
-			} catch (ClassCastException e) {
-				// For the rare case not a component graphical edit part, such as undefined class.
+		try {
+			ComponentGraphicalEditPart componentGraphicalEditPart = (ComponentGraphicalEditPart) ep;
+			setupComponent(componentGraphicalEditPart, (EObject) model);
+			componentGraphicalEditPart.setTransparent(true); // So that it doesn't create an image, we subsume it here.
+		} catch (ClassCastException e) {
+			// For the rare case not a component graphical edit part, such as undefined class.
 		}
 		return ep;
 	}

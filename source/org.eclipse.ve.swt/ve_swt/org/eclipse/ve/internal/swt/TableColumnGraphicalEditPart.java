@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnGraphicalEditPart.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-02 22:32:30 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -18,13 +18,13 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -32,24 +32,24 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 import org.eclipse.ve.internal.java.core.*;
 
 /**
- * org.eclipse.swt.widgets.TableColumn does not inherit from org.eclipse.swt.widgets.Control The edit part should create a figure that has the height
- * of the parent Table the width of getWidth() from the TableColumn and the x based on the width of all the preceeding columns
+ * org.eclipse.swt.widgets.TableColumn.
  * 
  * @since 1.0.0
  */
-public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart implements IDirectEditableEditPart {
+public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart {
 
-	private TableColumnProxyAdapter tableColumnProxyAdapter;
-	protected EStructuralFeature sfDirectEditProperty = null;
+	protected IPropertyDescriptor sfDirectEditProperty = null;
+
 	protected DirectEditManager manager = null;
 
 	public Object getAdapter(Class type) {
 		if (type == IPropertySource.class)
-				return EcoreUtil.getRegisteredAdapter((IJavaObjectInstance) getModel(), IPropertySource.class);
+			return EcoreUtil.getRegisteredAdapter((IJavaObjectInstance) getModel(), IPropertySource.class);
 		Object result = super.getAdapter(type);
 		if (result != null) {
 			return result;
@@ -77,20 +77,19 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart impl
 		}
 	}
 
-	private EStructuralFeature getDirectEditTargetProperty() {
-		EStructuralFeature target = null;
-		IJavaObjectInstance column = (IJavaObjectInstance) getModel();
-		JavaClass modelType = (JavaClass) column.eClass();
+	private IPropertyDescriptor getDirectEditTargetProperty() {
+		EStructuralFeature feature = null;
+		IJavaObjectInstance component = (IJavaObjectInstance) getModel();
+		JavaClass modelType = (JavaClass) component.eClass();
 		// Hard coded string properties to direct edit.
-		target = modelType.getEStructuralFeature("text"); //$NON-NLS-1$
-		return target;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.jfc.core.IDirectEditableEditPart#getSfDirectEditProperty()
-	 */
-	public EStructuralFeature getSfDirectEditProperty() {
-		return sfDirectEditProperty;
+		// If more than one is available, it'll choose the first in the list
+		// below
+		feature = modelType.getEStructuralFeature("text"); //$NON-NLS-1$
+		if (feature != null) {
+			IPropertySource source = (IPropertySource) getAdapter(IPropertySource.class);
+			return PropertySourceAdapter.getDescriptorForID(source, feature);
+		} else
+			return null;
 	}
 
 	protected IFigure createFigure() {
@@ -101,51 +100,14 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart impl
 		return figure;
 	}
 
-	/*
-	 * Return the proxy adapter associated with this TabFolder.
-	 */
-	protected TableColumnProxyAdapter getTableColumnProxyAdapter() {
-		if (tableColumnProxyAdapter == null) {
-			IBeanProxyHost tableColumnProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) getModel());
-			tableColumnProxyAdapter = (TableColumnProxyAdapter) tableColumnProxyHost;
-		}
-		return tableColumnProxyAdapter;
-	}
-
-	protected TableColumnProxyAdapter getControlProxy() {
-		return getTableColumnProxyAdapter();
-	}
-
-	public IJavaInstance getBean() {
-		return (IJavaInstance) getModel();
-	}
-
-	protected Rectangle bounds = null;
-	public Rectangle getBounds() {
-		return bounds;
-	}
-	public void setBounds(Rectangle bounds) {
-		this.bounds = bounds;
-	}
-
 	public void performRequest(Request request) {
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT && sfDirectEditProperty != null)
 			performDirectEdit();
 	}
-	
-	private void performDirectEdit(){
-		if(manager == null)
-			manager = new BeanDirectEditManager(this, TextCellEditor.class, new ControlCellEditorLocator(getFigure()), sfDirectEditProperty);
+
+	private void performDirectEdit() {
+		if (manager == null)
+			manager = new BeanDirectEditManager(this, TextCellEditor.class, new BeanDirectEditCellEditorLocator(getFigure()), sfDirectEditProperty);
 		manager.show();
 	}
-
-	public void refresh(){
-		super.refresh();
-		if (bounds != null) {
-			getFigure().setBounds(getBounds());
-		}
-		
-	}
-	
-
 }

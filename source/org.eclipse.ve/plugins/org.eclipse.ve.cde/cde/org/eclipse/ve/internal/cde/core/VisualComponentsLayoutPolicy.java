@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualComponentsLayoutPolicy.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-18 19:31:04 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-15 20:19:34 $ 
  */
 
 import java.util.Iterator;
@@ -274,6 +274,7 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 			if (visualComponent!= null) 
 				visualComponent.removeComponentListener(this);
 			visualComponent = null;
+			setHost(null);
 		}
 		
 		/*
@@ -297,6 +298,8 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 				Rectangle oBounds = visualComponent.getBounds();
 				if (DO_VC_TRACING)
 					System.out.println("VC Component notification: "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " refreshed to: "+oBounds);				 //$NON-NLS-1$ //$NON-NLS-2$
+				// Note: Not using EditPartRunnable because it could be that we've been deactivated but the editpart has not. Need to make the
+				// test inside the run.
 				CDEUtilities.displayExec(getHost(), "REFRESH", new Runnable() { //$NON-NLS-1$
 					public void run() {
 						EditPart ep = getHost();
@@ -343,7 +346,7 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 				System.out.println("VC Component notification: "+((IJavaObjectInstance) getHost().getModel()).eClass().getName()+ " moved to ("+x+','+y+')'); //$NON-NLS-1$ //$NON-NLS-2$
 			CDEUtilities.displayExec(getHost(), "MOVED", new Runnable() { //$NON-NLS-1$
 				public void run() {
-					if (getHost().isActive()) {
+					if (getHost() != null && getHost().isActive()) {
 						IFigure parent = child.getParent();
 						Rectangle bounds = (Rectangle) parent.getLayoutManager().getConstraint(child);
 						if (bounds != null) {
@@ -373,7 +376,7 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 			final IFigure child = ((GraphicalEditPart) getHost()).getFigure();
 			CDEUtilities.displayExec(getHost(), "SIZED", new Runnable() { //$NON-NLS-1$
 				public void run() {
-					if (getHost().isActive()) {
+					if (getHost() != null && getHost().isActive()) {
 						IFigure parent = child.getParent();
 						Rectangle bounds = (Rectangle) parent.getLayoutManager().getConstraint(child);
 						if (bounds != null) {

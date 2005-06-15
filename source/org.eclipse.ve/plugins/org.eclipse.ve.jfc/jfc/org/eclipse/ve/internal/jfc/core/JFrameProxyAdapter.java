@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: JFrameProxyAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -39,7 +39,7 @@ public class JFrameProxyAdapter extends FrameProxyAdapter {
 	}
 
 	/*
-	 * @see Adapter#setTarget(Notifier)
+	 * @see Adapter#setTarget(ComponentManagerFeedbackControllerNotifier)
 	 */
 	public void setTarget(Notifier newTarget) {
 		super.setTarget(newTarget);

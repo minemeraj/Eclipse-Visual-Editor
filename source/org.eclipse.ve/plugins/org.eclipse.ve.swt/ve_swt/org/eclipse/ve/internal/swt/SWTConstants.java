@@ -18,6 +18,7 @@ public class SWTConstants {
 		SF_CONTROL_BOUNDS,
 		SF_CONTROL_LOCATION,
 		SF_CONTROL_SIZE,
+		SF_CONTROL_VISIBLE,
 		SF_CONTROL_LAYOUTDATA,		
 		SF_DECORATIONS_TEXT,		
 		SF_COMPOSITE_LAYOUT,
@@ -67,7 +68,8 @@ public class SWTConstants {
 		SF_COOLBAR_ITEMS,
 		SF_COOLITEM_CONTROL,
 		SF_TOOLBAR_ITEMS,
-		SF_MENU_ITEMS;
+		SF_MENU_ITEMS,
+		SF_ITEM_TEXT;
 		
 	public static final String
 		POINT_CLASS_NAME,
@@ -81,7 +83,8 @@ public class SWTConstants {
 	static {
 		SF_CONTROL_BOUNDS = URI.createURI("java:/org.eclipse.swt.widgets#Control/bounds");		 //$NON-NLS-1$
 		SF_CONTROL_LOCATION = URI.createURI("java:/org.eclipse.swt.widgets#Control/location");		 //$NON-NLS-1$
-		SF_CONTROL_SIZE = URI.createURI("java:/org.eclipse.swt.widgets#Control/size");		 //$NON-NLS-1$							
+		SF_CONTROL_SIZE = URI.createURI("java:/org.eclipse.swt.widgets#Control/size");		 //$NON-NLS-1$
+		SF_CONTROL_VISIBLE = URI.createURI("java:/org.eclipse.swt.widgets#Control/visible");		 //$NON-NLS-1$		
 		SF_CONTROL_LAYOUTDATA = URI.createURI("java:/org.eclipse.swt.widgets#Control/layoutData");		 //$NON-NLS-1$		
 		SF_COMPOSITE_LAYOUT = URI.createURI("java:/org.eclipse.swt.widgets#Composite/layout");		 //$NON-NLS-1$
 		SF_COMPOSITE_CONTROLS = URI.createURI("java:/org.eclipse.swt.widgets#Composite/controls");		 //$NON-NLS-1$
@@ -133,5 +136,7 @@ public class SWTConstants {
 		SF_COOLITEM_CONTROL = URI.createURI("java:/org.eclipse.swt.widgets#CoolItem/control");	 //$NON-NLS-1$
 		SF_TOOLBAR_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#ToolBar/items");	 //$NON-NLS-1$
 		SF_MENU_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#Menu/items");	 //$NON-NLS-1$
+		
+		SF_ITEM_TEXT = URI.createURI("java:/org.eclipse.swt.widgets#Item/text");	 //$NON-NLS-1$
 	}
 }	

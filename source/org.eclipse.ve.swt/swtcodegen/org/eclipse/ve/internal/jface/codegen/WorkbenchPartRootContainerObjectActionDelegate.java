@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartRootContainerObjectActionDelegate.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-07 23:13:11 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.jface.codegen;
 
@@ -41,13 +41,12 @@ import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
-import org.eclipse.ve.internal.jface.ViewPartGraphicalEditPart;
-import org.eclipse.ve.internal.jface.ViewPartTreeEditPart;
+import org.eclipse.ve.internal.jface.*;
 import org.eclipse.ve.internal.swt.SwtPlugin;
  
 
 /**
- * 
+ * Create the "top" control for a WorkbenchPart action.
  * @since 1.1
  */
 public class WorkbenchPartRootContainerObjectActionDelegate extends ActionDelegate implements IObjectActionDelegate {
@@ -63,6 +62,7 @@ public class WorkbenchPartRootContainerObjectActionDelegate extends ActionDelega
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {}
 
 	public void selectionChanged(IAction action, ISelection selection) {
+		// TODO This is done outside the command stack AND so undo will not work correctly.
 		methodRef = null;
 		methodDeclaration = null;
 		argumentBP = null;
@@ -79,7 +79,7 @@ public class WorkbenchPartRootContainerObjectActionDelegate extends ActionDelega
 				IJavaObjectInstance model = (IJavaObjectInstance) ep.getModel();
 				EditPart argumentEditPart = null;
 				EditPart workbenchEditPart = null;
-				if (ep instanceof ViewPartGraphicalEditPart || ep instanceof ViewPartTreeEditPart) {
+				if (ep instanceof WorkbenchPartGraphicalEditPart || ep instanceof WorkbenchPartTreeEditPart) {
 					workbenchEditPart =  ep;
 					EStructuralFeature sfDelegateControl = ((JavaClass) model.getJavaType()).getEStructuralFeature(SwtPlugin.DELEGATE_CONTROL); 
 					if (sfDelegateControl != null || model.eIsSet(sfDelegateControl)) {
@@ -195,8 +195,7 @@ public class WorkbenchPartRootContainerObjectActionDelegate extends ActionDelega
 						List imports = new ArrayList(); imports.add("org.eclipse.swt.SWT");
 						CodeExpressionRef.handleImportStatements(fModel.getCompilationUnit(), fModel, imports);
 					} catch (JavaModelException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						JavaVEPlugin.log(e, Level.WARNING);
 					}finally{
 						fModel.resumeSynchronizer(); // resume snippet update
 					}

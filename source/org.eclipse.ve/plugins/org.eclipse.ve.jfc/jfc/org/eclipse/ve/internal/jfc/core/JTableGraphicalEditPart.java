@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: JTableGraphicalEditPart.java,v $ $Revision: 1.16 $ $Date: 2005-06-02 22:32:28 $
+ * $RCSfile: JTableGraphicalEditPart.java,v $ $Revision: 1.17 $ $Date: 2005-06-15 20:19:27 $
  */
 
 import java.util.Collections;
@@ -147,9 +147,9 @@ public class JTableGraphicalEditPart extends ComponentGraphicalEditPart {
 	 * Refresh the columns. It is a runnable so that it can be queued off on to the
 	 * UI thread at the end of the transaction.
 	 */
-	private Runnable fRefreshColumnsRunnable = new Runnable() {
+	private Runnable fRefreshColumnsRunnable = new EditPartRunnable(this) {
 
-		public void run() {
+		protected void doRun() {
 			if (getComponentProxy().isBeanProxyInstantiated()) {
 				IArrayBeanProxy columnRectsProxy = BeanAwtUtilities.invoke_JTable_getAllColumnRects(getComponentProxy().getBeanProxy());
 				if (columnRectsProxy != null) {

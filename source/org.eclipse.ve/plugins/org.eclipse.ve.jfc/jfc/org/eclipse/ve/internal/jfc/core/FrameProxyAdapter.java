@@ -10,20 +10,22 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FrameProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-15 20:19:27 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
-import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.jem.internal.proxy.core.IExpression;
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
+import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
 
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
+import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 /**
  * Frame Proxy Adapter.
@@ -48,51 +50,57 @@ public class FrameProxyAdapter extends WindowProxyAdapter {
 		sfTitle = JavaInstantiation.getReference(EMFEditDomainHelper.getResourceSet(domain.getEditDomain()), JFCConstants.SF_FRAME_TITLE);
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.jfc.core.ContainerProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean, org.eclipse.jem.internal.proxy.core.IExpression, boolean)
-	 */
-	protected void applied(EStructuralFeature feature, Object value, int index, boolean isTouch, IExpression expression, boolean testValidity) {
-		// If title, and override for title set, and valid to set, we will remove the override.
-		// Note: use false for honorOverrides because we know override is set and we want to ignore the override for the test.
-		// We are doing this in applied because we need to get rid of the override right away. If we didn't, it wouldn't
-		// get past the applied and actually be applied.
-		if (feature == sfTitle && isOverridePropertySet(feature) && testApplyValidity(expression, testValidity, feature, value, false)) {
-			// We are now applying a title and it was previously overridden. So we can remove the override property.
-			removeOverrideProperty(feature, expression);
-		}
-		super.applied(feature, value, index, isTouch, expression, testValidity);
-	}
-
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
-	protected void canceled(EStructuralFeature feature, Object value, int index, IExpression expression) {
-		if (feature == sfTitle && !isOverridePropertySet(feature)) {
-			// We are canceling title and we are not currently overridding, so we need to override now to default.
-			overrideTitle(expression);
-		}
-		super.canceled(feature, value, index, expression);
-	}
-
-	private void overrideTitle(IExpression expression) {
-		overrideProperty(sfTitle, getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(
-				JFCMessages.getString("FrameDefaultTitle")), expression); //$NON-NLS-1$
-	}
-
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Handle the frame title. It is used when instantiating and no title set, or when apply and applying
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#setTarget(org.eclipse.emf.common.notify.Notifier)
+	 * @param frame
+	 * @param title
+	 * @param replaceOld
+	 * @param wantOld	<code>true</code> if want the old value.
+	 * @param expression
+	 * 
+	 * @return old value proxy if wantOld is <code>true</code> else return null.
+	 * @since 1.1.0
 	 */
-	public void setTarget(Notifier newTarget) {
-		if (newTarget != null && !((EObject) newTarget).eIsSet(sfTitle)) {
-			// No title has been set, so put in the default title.
-			overrideTitle(null);
-		}
-
-		super.setTarget(newTarget);
+	protected IProxy handleFrameTitle(IProxy frame, IProxy title, boolean replaceOld, boolean wantOld, IExpression expression) {
+		return expression.createSimpleMethodInvoke(BeanAwtUtilities.getWindowApplyFrameTitleMethodProxy(expression),
+				null, new IProxy[] {frame, title, expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(replaceOld)}, wantOld);
 	}
+	
+	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
+		IProxy result = super.primInstantiateBeanProxy(expression);
+		if (!getJavaObject().eIsSet(sfTitle)) {
+			// Handle applying a default title, and get original value to be used later if title is explicitly set.
+			IProxy origValue = handleFrameTitle(result, null, false, true, expression);
+			if (origValue == null || origValue.isBeanProxy()) {
+				// No original value or it is already resolved, just put it in the original table.
+				getOriginalSettingsTable().put(sfTitle, origValue);
+			} else {
+				// It is an expression, so save it when resolved.
+				((ExpressionProxy) origValue).addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
+					public void proxyResolved(ProxyEvent event) {
+						getOriginalSettingsTable().put(sfTitle, event.getProxy());
+					}
+				});
+			}
+		}
+		return result;
+	}
+	
+	protected IProxy applyBeanProperty(PropertyDecorator propertyDecorator, IProxy settingProxy, IExpression expression, boolean getOriginalValue) throws NoSuchMethodException, NoSuchFieldException {
+		if (propertyDecorator.getEModelElement() == sfTitle) {
+			return handleFrameTitle(getProxy(), settingProxy, true, getOriginalValue, expression);
+		} else
+			return super.applyBeanProperty(propertyDecorator, settingProxy, expression, getOriginalValue);
+	}
+	
+	public IProxy getBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttribute, IExpression exp, ForExpression forExpression) {
+		if (aBeanPropertyAttribute == sfTitle && isSettingInOriginalSettingsTable(aBeanPropertyAttribute)) {
+			// This is title, it was not explicitly set, and we have an original settings, so return that instead of
+			// default string we use as a title.
+			return (IProxy) getOriginalSettingsTable().get(aBeanPropertyAttribute);
+		}
+		return super.getBeanPropertyProxyValue(aBeanPropertyAttribute, exp, forExpression);
+	}
 }

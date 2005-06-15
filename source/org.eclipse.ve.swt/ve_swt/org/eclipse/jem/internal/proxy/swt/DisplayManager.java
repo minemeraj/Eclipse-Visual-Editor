@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayManager.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-20 16:32:56 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.jem.internal.proxy.swt;
 
@@ -239,7 +239,8 @@ public class DisplayManager {
 		try {
 			return syncExec(displayProxy, (DisplayRunnable) runnable);
 		} finally {
-			runnable.expression.transferThread();
+			if (runnable.expression.isValid())
+				runnable.expression.transferThread();
 		}
 	}
 
@@ -362,10 +363,9 @@ public class DisplayManager {
 		
 		/*
 		 * Get the Display proxy for the current thread and registry (since this Constants instance is per-registry).
-		 * The Display proxy will only be set on a a/syncExec callback. This is so that we know that we are in a syncExec
+		 * The Display proxy will only be set on a syncExec callback. This is so that we know that we are in a syncExec
 		 * for the given display.
-		 * 
-		 * @return displayProxy for the current thread if in a a/syncExec callback, or <code>null</code> if not in a callback.
+		 * @return displayProxy for the current thread if in a syncExec callback, or <code>null</code> if not in a callback.
 		 * 
 		 * @since 1.0.0
 		 */
@@ -424,6 +424,18 @@ public class DisplayManager {
 	 */
 	public static IBeanProxy findDisplay(IBeanProxy threadProxy) {
 		return Constants.getConstants(threadProxy.getProxyFactoryRegistry()).getFindDisplay().invokeCatchThrowableExceptions(null, threadProxy);
+	}
+	
+	/**
+	 * Return the current display. If current thread is executing within an UI callback, then this is the display that the callback is working with.
+	 * If not currently within a callback then this will be <code>null</code>.
+	 * @param registry
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public static IBeanProxy getCurrentDisplay(ProxyFactoryRegistry registry) {
+		return Constants.getConstants(registry).getTheadSyncDisplay();
 	}
 	
 	/**

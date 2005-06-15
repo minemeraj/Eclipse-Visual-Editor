@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentManager.java,v $ $Revision: 1.11 $ $Date: 2005-05-22 19:41:47 $
+ * $RCSfile: ComponentManager.java,v $ $Revision: 1.12 $ $Date: 2005-06-15 20:19:27 $
  */
 
 import java.io.InputStream;
@@ -65,7 +65,7 @@ import org.eclipse.ve.internal.jfc.common.ImageDataConstants;
  * use {@link ComponentManager#addComponentExtension(CompomentManagerExtension, IExpression)} to add extensions to the manager instead.
  * @since 1.0.0
  */
-public class ComponentManager {
+public class ComponentManager implements ComponentManagerFeedbackControllerNotifier, IVisualComponent {
 
 	public interface IComponentImageListener extends IImageListener {
 
@@ -122,9 +122,6 @@ public class ComponentManager {
 	private static final int VALID = 3; // Image is valid.
 
 	private ListenerList componentImageListeners; // KLUDGE need an extra list because we want to signal status and ImageNotifier doesn't signal image status.
-	
-	private static final String COMPONENTMANAGER_CLASSNAME = "org.eclipse.ve.internal.jfc.vm.ComponentManager";	//$NON-NLS-1$
-	private static final String COMPONENTMANAGEREXTENSION_CLASSNAME = COMPONENTMANAGER_CLASSNAME+"$ComponentManagerExtension";	//$NON-NLS-1$
 	
 	private List extensions;
 	
@@ -252,14 +249,14 @@ public class ComponentManager {
 	
 	private void addExtensionProxy(ComponentManagerExtension extension, IExpression expression) {
 		expression.createSimpleMethodInvoke(expression.getRegistry().getBeanTypeProxyFactory()
-				.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy(expression, "addExtension", new String[] {COMPONENTMANAGEREXTENSION_CLASSNAME}), 	//$NON-NLS-1$
+				.getBeanTypeProxy(expression, BeanAwtUtilities.COMPONENTMANAGER_CLASSNAME).getMethodProxy(expression, "addExtension", new String[] {BeanAwtUtilities.COMPONENTMANAGEREXTENSION_CLASSNAME}), 	//$NON-NLS-1$
 				fComponentManagerProxy, new IProxy[] {extension.getExtensionProxy(expression)}, false);		
 		
 	}
 	
 	private void removeExtensionProxy(ComponentManagerExtension extension, IExpression expression) {
 		expression.createSimpleMethodInvoke(expression.getRegistry().getBeanTypeProxyFactory()
-				.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy(expression, "removeExtension", new String[] {COMPONENTMANAGEREXTENSION_CLASSNAME}), 	//$NON-NLS-1$
+				.getBeanTypeProxy(expression, BeanAwtUtilities.COMPONENTMANAGER_CLASSNAME).getMethodProxy(expression, "removeExtension", new String[] {BeanAwtUtilities.COMPONENTMANAGEREXTENSION_CLASSNAME}), 	//$NON-NLS-1$
 				fComponentManagerProxy, new IProxy[] {extension.getExtensionProxy(expression)}, false);		
 		
 	}
@@ -337,6 +334,17 @@ public class ComponentManager {
 	public boolean isDisposed() {
 		return fComponentManagerProxy == null;
 	}
+	
+	/**
+	 * Get the feedback controller for this manager. This is only valid after this manager has been
+	 * initialized with a component bean.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public FeedbackController getFeedbackController() {
+		return BeanAwtUtilities.getFeedbackController(getRegistry());
+	}
 
 	/**
 	 * Set the component bean proxy using the given expression.
@@ -348,23 +356,20 @@ public class ComponentManager {
 	 * @since 1.1.0
 	 */
 	public void setComponentBeanProxy(IProxy componentProxy, IExpression expression, ModelChangeController changeController) {
-		// Deregister any listening from the previous non null component bean proxy
 		final FeedbackController feedbackController = BeanAwtUtilities.getFeedbackController(expression);
-		if (fComponentBeanProxy != null)
-			expression.createSimpleMethodInvoke(BeanAwtUtilities.getSetComponentMethodProxy(expression), fComponentManagerProxy, new IProxy[] {
-					fComponentBeanProxy, feedbackController.getProxy()}, false);
+		boolean hadComponentBeanProxy = fComponentBeanProxy != null;
 		fComponentBeanProxy = null;
 		if (componentProxy != null) {
 			if (fComponentManagerProxy == null) {
 				ExpressionProxy newManager = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 				fComponentManagerProxy = newManager;
 				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, expression.getRegistry().getBeanTypeProxyFactory()
-						.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME), 0);
+						.getBeanTypeProxy(expression, BeanAwtUtilities.COMPONENTMANAGER_CLASSNAME), 0);
 				newManager.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
 					public void proxyResolved(ProxyEvent event) {
 						fComponentManagerProxy = event.getProxy();
-						feedbackController.registerComponentManager(ComponentManager.this, (IBeanProxy) fComponentManagerProxy);
+						feedbackController.registerFeedbackNotifier(ComponentManager.this, (IBeanProxy) fComponentManagerProxy);
 					}
 
 					public void proxyNotResolved(ProxyEvent event) {
@@ -401,18 +406,14 @@ public class ComponentManager {
 
 			feedbackController.queueInitialRefresh(changeController);
 			feedbackController.queueInvalidate(this, changeController); // Also queue up an invalidate and an image refresh to occur also.
+		} else if (hadComponentBeanProxy && fComponentManagerProxy != null){
+			// We are just unsetting, don't have a new one. And we have manager active. So tell it to clear out the old.
+			expression.createSimpleMethodInvoke(BeanAwtUtilities.getSetComponentMethodProxy(expression), fComponentManagerProxy, new IProxy[] {
+				null, feedbackController.getProxy()}, false);
 		}
 	}
 
-	/**
-	 * This will be called from the feedback controller when there is more than one parm.
-	 * 
-	 * @param msgID
-	 * @param parms
-	 * 
-	 * @since 1.1.0
-	 */
-	protected void calledBack(int msgID, Object[] parms) {
+	public void calledBack(int msgID, Object[] parms) {
 		switch (msgID) {
 			case Common.CL_HIDDEN:
 				componentHidden();
@@ -473,6 +474,7 @@ public class ComponentManager {
 	 */
 	protected void componentResized(int width, int height) {
 		fLastSignalledSize = new Dimension(width, height);
+		printmoved("resized"); //$NON-NLS-1$
 		vcSupport.fireComponentResized(width, height);
 	}
 
@@ -540,7 +542,7 @@ public class ComponentManager {
 		if (fComponentManagerProxy != null) {
 			if (expression != null && fComponentManagerProxy.isBeanProxy() && ((IBeanProxy)fComponentManagerProxy).isValid()) {
 				FeedbackController feedback = BeanAwtUtilities.getFeedbackController(expression);
-				feedback.deregisterComponentManager((IBeanProxy) fComponentManagerProxy);
+				feedback.deregisterFeedbackNotifier((IBeanProxy) fComponentManagerProxy);
 				if (getComponentManagerBeanProxy().isValid()) {
 					expression.createSimpleMethodInvoke(BeanAwtUtilities.getSetComponentMethodProxy(expression), fComponentManagerProxy,
 							new IProxy[] { null, feedback.getProxy()}, false);
@@ -594,7 +596,7 @@ public class ComponentManager {
 
 		if (fLastSignalledLocation != null && fLastSignalledSize != null) {
 			if (VisualComponentsLayoutPolicy.DO_VC_TRACING)
-				System.out.println("Requested bounds (" + hashCode() + ") cntr:" + movedCtr + " loc: " + fLastSignalledLocation); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				System.out.println("Requested bounds (" + hashCode() + ") cntr:" + movedCtr + " bounds: " + fLastSignalledLocation +' '+fLastSignalledSize); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return new Rectangle(fLastSignalledLocation.x, fLastSignalledLocation.y, fLastSignalledSize.width, fLastSignalledSize.height);
 		} else
 			return new Rectangle();
@@ -703,14 +705,13 @@ public class ComponentManager {
 	 * 
 	 * @since 1.1.0
 	 */
-	public void overrideLocation(Point point) {
+	public void overrideLocation(Point point, IExpression expression) {
 		if (isComponentManagerProxyValid() && fComponentManagerProxy.isBeanProxy()) {
 			// Apply directly
 			ProxyFactoryRegistry registry = getComponentManagerBeanProxy().getProxyFactoryRegistry();
-			BeanAwtUtilities.getOverrideLocationMethodProxy(registry).invokeCatchThrowableExceptions(
-					getComponentManagerBeanProxy(),
-					new IBeanProxy[] { registry.getBeanProxyFactory().createBeanProxyWith(point.x),
-							registry.getBeanProxyFactory().createBeanProxyWith(point.y)});
+			expression.createSimpleMethodInvoke(BeanAwtUtilities.getOverrideLocationMethodProxy(expression), getComponentManagerBeanProxy(),
+					new IProxy[] { registry.getBeanProxyFactory().createBeanProxyWith(point.x),
+							registry.getBeanProxyFactory().createBeanProxyWith(point.y)}, false);
 		}
 		locationOverride = point; // Save for when instantiate occurs.
 	}
@@ -766,8 +767,7 @@ public class ComponentManager {
 	 * @since 1.1.0
 	 */
 	public void invalidate(ModelChangeController controller) {
-		FeedbackController feedback = BeanAwtUtilities.getFeedbackController(getRegistry());
-		feedback.queueInvalidate(this, controller);
+		getFeedbackController().queueInvalidate(this, controller);
 	}
 
 	/**
@@ -991,8 +991,8 @@ public class ComponentManager {
 	 * @since 1.1.0
 	 */
 	protected static class FeedbackController implements ICallback {
-
-		private Map managerProxyToManager = new HashMap(); // Map from proxy to manager.
+		
+		private Map managerProxyToNotifier = new HashMap(); // Map from proxy to notifier.
 
 		private IProxy feedbackControllerProxy;
 
@@ -1045,7 +1045,7 @@ public class ComponentManager {
 			});
 
 			IProxyMethod postInitial = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
-					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController", //$NON-NLS-1$
+					feedbackControllerProxy.getExpression(), BeanAwtUtilities.FEEDBACKCONTROLLER_CLASSNAME,
 					"postInitialRefresh", null); //$NON-NLS-1$
 			if (postInitial.isBeanProxy()) {
 				postInitialRefresh = (IMethodProxy) postInitial;
@@ -1059,7 +1059,7 @@ public class ComponentManager {
 			}
 
 			IProxyMethod postImages = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
-					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController", //$NON-NLS-1$
+					feedbackControllerProxy.getExpression(), BeanAwtUtilities.FEEDBACKCONTROLLER_CLASSNAME, 
 					"postInvalidImages", null); //$NON-NLS-1$
 			if (postImages.isBeanProxy()) {
 				postInvalidImages = (IMethodProxy) postImages;
@@ -1073,7 +1073,7 @@ public class ComponentManager {
 			}
 
 			startingChanges = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
-					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController", //$NON-NLS-1$
+					feedbackControllerProxy.getExpression(), BeanAwtUtilities.FEEDBACKCONTROLLER_CLASSNAME,
 					"startingChanges", null); //$NON-NLS-1$
 			if (startingChanges.isExpressionProxy()) {
 				((ExpressionProxy) startingChanges).addProxyListener(new ExpressionProxy.ProxyAdapter() {
@@ -1085,7 +1085,7 @@ public class ComponentManager {
 			}
 
 			IProxyMethod postChangesDone = feedbackControllerProxy.getExpression().getRegistry().getMethodProxyFactory().getMethodProxy(
-					feedbackControllerProxy.getExpression(), "org.eclipse.ve.internal.jfc.vm.ComponentManager$ComponentManagerFeedbackController", //$NON-NLS-1$
+					feedbackControllerProxy.getExpression(), BeanAwtUtilities.FEEDBACKCONTROLLER_CLASSNAME,
 					"postChanges", null); //$NON-NLS-1$
 			if (postChangesDone.isBeanProxy()) {
 				this.postChangesDone = (IMethodProxy) postChangesDone;
@@ -1189,26 +1189,26 @@ public class ComponentManager {
 		}
 
 		/**
-		 * Register the proxy for the manager so that the controller knows who's who.
+		 * Register the proxy for the notifier so that the controller knows who's who.
 		 * 
-		 * @param manager
-		 * @param managerProxy
+		 * @param notifier
+		 * @param notifierProxy
 		 * 
 		 * @since 1.1.0
 		 */
-		void registerComponentManager(ComponentManager manager, IBeanProxy managerProxy) {
-			managerProxyToManager.put(managerProxy, manager);
+		public void registerFeedbackNotifier(ComponentManagerFeedbackControllerNotifier notifier, IBeanProxy notifierProxy) {
+			managerProxyToNotifier.put(notifierProxy, notifier);
 		}
 
 		/**
 		 * Deregister the manager.
 		 * 
-		 * @param managerProxy
+		 * @param notifierProxy
 		 * 
 		 * @since 1.1.0
 		 */
-		void deregisterComponentManager(IBeanProxy managerProxy) {
-			managerProxyToManager.remove(managerProxy);
+		public void deregisterFeedbackNotifier(IBeanProxy notifierProxy) {
+			managerProxyToNotifier.remove(notifierProxy);
 		}
 
 		/**
@@ -1271,10 +1271,11 @@ public class ComponentManager {
 					System.out.println("Start feedback transaction. #trans=" + parms.length / 3); //$NON-NLS-1$
 				// This will be called with parms. They will be 3-tuples of (ComponentManagerProxy, callbackID, parms);
 				for (int i = 0; i < parms.length;) {
-					ComponentManager compm = (ComponentManager) managerProxyToManager.get(parms[i++]);
-					if (compm != null) {
-						compm.calledBack(((IIntegerBeanProxy) parms[i++]).intValue(), (Object[]) parms[i++]);
-					}
+					ComponentManagerFeedbackControllerNotifier notifier = (ComponentManagerFeedbackControllerNotifier) managerProxyToNotifier.get(parms[i++]);
+					if (notifier != null) {
+						notifier.calledBack(((IIntegerBeanProxy) parms[i++]).intValue(), (Object[]) parms[i++]);
+					} else
+						i+=2;	// To compensate for missing manager.
 				}
 				if (VisualComponentsLayoutPolicy.DO_VC_TRACING)
 					System.out.println("Stop feedback transaction."); //$NON-NLS-1$
@@ -1299,5 +1300,9 @@ public class ComponentManager {
 		public void calledBackStream(int msgID, InputStream is) {
 			throw new RuntimeException("A component listener has been called back incorrectly"); //$NON-NLS-1$
 		}
+	}
+	
+	public Point getAbsoluteLocation() {
+		return getLocation();
 	}
 }

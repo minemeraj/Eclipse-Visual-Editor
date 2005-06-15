@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentTreeEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-12 12:10:00 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -19,27 +19,28 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IErrorNotifier;
+import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
-import org.eclipse.ve.internal.java.core.CopyAction;
-import org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart;
+import org.eclipse.ve.internal.java.core.*;
 /**
  * Tree EditPart for an awt component.
  */
 public class ComponentTreeEditPart extends JavaBeanTreeEditPart {
 
-	private EStructuralFeature sfDirectEditProperty;
+	private IPropertyDescriptor sfDirectEditProperty;
 	protected IPropertySource propertySource;
 	private IErrorNotifier otherNotifier;
 	protected IErrorNotifier.CompoundErrorNotifier errorNotifier = new IErrorNotifier.CompoundErrorNotifier();	
 	
-	TreeDirectEditManager manager;
+	private BeanTreeDirectEditManager manager;
 
 	public ComponentTreeEditPart(Object model) {
 		super(model);
@@ -109,24 +110,25 @@ public class ComponentTreeEditPart extends JavaBeanTreeEditPart {
 	 * 
 	 * @return  the property's structural feature
 	 */
-	private EStructuralFeature getDirectEditTargetProperty() {
-		EStructuralFeature target = null;
-		IJavaObjectInstance component = (IJavaObjectInstance)getModel();
+	protected IPropertyDescriptor getDirectEditTargetProperty() {
+		EStructuralFeature feature = null;
+		IJavaObjectInstance component = (IJavaObjectInstance) getModel();
 		JavaClass modelType = (JavaClass) component.eClass();
-	
 		// Hard coded string properties to direct edit.
-		// If more than one is available, it'll choose the first in the list below
-			
-		target = modelType.getEStructuralFeature("text"); //$NON-NLS-1$
-		if (target != null) {
-			return target;			
+		// If more than one is available, it'll choose the first in the list
+		// below
+		feature = modelType.getEStructuralFeature("text"); //$NON-NLS-1$
+		if (feature == null) {
+			feature = modelType.getEStructuralFeature("label"); //$NON-NLS-1$
 		}
-		target = modelType.getEStructuralFeature("label"); //$NON-NLS-1$
-		if (target != null) {
-			return target;
+		if (feature == null) {
+			feature = modelType.getEStructuralFeature("title"); //$NON-NLS-1$	
 		}
-		target = modelType.getEStructuralFeature("title"); //$NON-NLS-1$
-		return target;
+		if (feature != null) {
+			IPropertySource source = (IPropertySource) getAdapter(IPropertySource.class);
+			return PropertySourceAdapter.getDescriptorForID(source, feature);
+		} else
+			return null;
 	}
 	
 	protected void createEditPolicies() {
@@ -136,11 +138,7 @@ public class ComponentTreeEditPart extends JavaBeanTreeEditPart {
 		if (sfDirectEditProperty != null) {
 			EditDomain ed = EditDomain.getEditDomain(this);
 			EditPartViewer viewer = getRoot().getViewer();
-			manager = (TreeDirectEditManager)ed.getViewerData(viewer, TreeDirectEditManager.VIEWER_DATA_KEY);
-			if( manager == null ) {
-				manager = new TreeDirectEditManager(viewer);
-				ed.setViewerData(viewer, TreeDirectEditManager.VIEWER_DATA_KEY, manager);
-			}
+			manager = BeanTreeDirectEditManager.getDirectEditManager(ed, viewer);
 		}
 		installEditPolicy(CopyAction.REQ_COPY,new ComponentCopyEditPolicy());		
 	}
@@ -153,6 +151,8 @@ public class ComponentTreeEditPart extends JavaBeanTreeEditPart {
 	public void performRequest(Request request){
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT && sfDirectEditProperty != null)
 			performDirectEdit();
+		else
+			super.performRequest(request);
 	}
 	
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-07 19:22:42 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -30,6 +30,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IErrorNotifier;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
@@ -41,8 +42,10 @@ import org.eclipse.ve.internal.java.core.IBeanProxyHost;
  * @since 1.1
  */
 public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
-	private EReference sf_items, sf_cTabItemControl;
-	protected CTabFolderProxyAdapter cTabFolderProxyAdapter;
+
+	private EReference sf_items, sf_ctabItemControl;
+
+	protected CTabFolderProxyAdapter ctabFolderProxyAdapter;
 
 	private EditPartListener pageListener;
 
@@ -51,7 +54,7 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	/**
 	 * @param model
 	 * 
-	 * @since 1.1
+	 * @since 1.0.0
 	 */
 	public CTabFolderGraphicalEditPart(Object model) {
 		super(model);
@@ -84,7 +87,7 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 
 	private Adapter containerAdapter = new EditPartAdapterRunnable(this) {
-	
+
 		protected void doRun() {
 			if (fSelectedItem != null) {
 				EditPart currentPage = getEditPartFromModel(fSelectedItem);
@@ -96,34 +99,27 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 			int s = children.size();
 			for (int i = 0; i < s; i++) {
 				EditPart ep = (EditPart) children.get(i);
-				if (ep instanceof ControlGraphicalEditPart)
-					setPropertySource((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
+				try {
+					setupControl((ControlGraphicalEditPart) ep, (EObject) ep.getModel());
+				} catch (ClassCastException e) {
+					// Would only occur if child was invalid. So not a problem, already have marked this as an error.
+				}
 			}
 			EditPart page = getEditPartFromModel(fSelectedItem);
-			if(page == null && s > 0){
+			if (page == null && s > 0) {
 				page = (EditPart) children.get(0);
 			}
 			setPageVisible(page, true);
 			pageSelected(page);
 			getCTabFolderProxyAdapter().revalidateBeanProxy();
 		}
-	
+
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sf_items)
-				queueExec(CTabFolderGraphicalEditPart.this);
+				queueExec(CTabFolderGraphicalEditPart.this, "ITEMS"); //$NON-NLS-1$
 		}
 	};
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#createChild(java.lang.Object)
-	 */
-	protected EditPart createChild(Object model) {
-		EditPart ep = super.createChild(model);
-		if (ep instanceof ControlGraphicalEditPart)
-			setPropertySource((ControlGraphicalEditPart) ep, (EObject) model);
-		return ep;
-	}
-	
 	protected void createLayoutEditPolicy() {
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new UnknownLayoutInputPolicy(new CTabFolderContainerPolicy(EditDomain.getEditDomain(this))));
 	}
@@ -142,15 +138,6 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 		}
 	}
 
-	protected void setPropertySource(ControlGraphicalEditPart childEP, EObject child) {
-		EObject tab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sf_items, sf_cTabItemControl, child);
-		// This is the property source of the actual child, which is the tabitem.
-		if (tab != null)
-			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class));
-		else
-			childEP.setPropertySource(null);
-	}
-
 	/*
 	 * @see EditPart#setModel(Object)
 	 */
@@ -158,22 +145,22 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 		super.setModel(model);
 		ResourceSet rset = ((EObject) model).eResource().getResourceSet();
 		sf_items = JavaInstantiation.getReference(rset, SWTConstants.SF_CTABFOLDER_ITEMS);
-		sf_cTabItemControl = JavaInstantiation.getReference(rset, SWTConstants.SF_CTABITEM_CONTROL);
+		sf_ctabItemControl = JavaInstantiation.getReference(rset, SWTConstants.SF_CTABITEM_CONTROL);
 	}
 
 	/*
-	 * Model children is the items feature. However, this returns the CTabItems, but we want to return instead the controls themselves. They
-	 * are the "model" that gets sent to the createChild and control edit part.
+	 * Model children is the items feature. However, this returns the TabItems, but we want to return instead the controls themselves. They are the
+	 * "model" that gets sent to the createChild and control edit part.
 	 */
 	protected List getModelChildren() {
-		List cTabitems = (List) ((EObject) getModel()).eGet(sf_items);
-		ArrayList children = new ArrayList(cTabitems.size());
-		Iterator itr = cTabitems.iterator();
+		List tabitems = (List) ((EObject) getModel()).eGet(sf_items);
+		ArrayList children = new ArrayList(tabitems.size());
+		Iterator itr = tabitems.iterator();
 		while (itr.hasNext()) {
-			EObject ctabitem = (EObject) itr.next();
-			// Get the control out of the CTabItem
-			if (ctabitem.eGet(sf_cTabItemControl) != null)
-				children.add(ctabitem.eGet(sf_cTabItemControl));
+			EObject tabitem = (EObject) itr.next();
+			// Get the control out of the TabItem
+			if (tabitem.eGet(sf_ctabItemControl) != null)
+				children.add(tabitem.eGet(sf_ctabItemControl));
 		}
 		return children;
 	}
@@ -194,7 +181,7 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 
 	/*
-	 * The selected page of the CTabFolder has changed. Bring this page to the front.
+	 * The selected page of the JTabbedPane has changed. Bring this page to the front.
 	 */
 	protected void pageSelected(EditPart page) {
 		if (page != null) {
@@ -204,12 +191,12 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 			}
 			setPageVisible(page, true);
 			fSelectedItem = (IJavaObjectInstance) page.getModel(); // save for later checks... see createPageListener()
-			getCTabFolderProxyAdapter().setSelection(getChildren().indexOf(page));
+			getCTabFolderProxyAdapter().setSelection(getTabForChild(fSelectedItem));
 		}
 	}
 
 	/*
-	 * If the parent of this editpart is the CTabFolder, we're on the page. If not recursely call up through the parent chain until we find the
+	 * If the parent of this editpart is the JTabbedPane, we're on the page. If not recursely call up through the parent chain until we find the
 	 * editpart (page) that the original editpart was found in.
 	 */
 	protected EditPart getPageOfSelectedEditpart(EditPart ep) {
@@ -219,18 +206,18 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 
 	/*
-	 * Return the proxy adapter associated with this CTabFolder.
+	 * Return the proxy adapter associated with this TabFolder.
 	 */
 	protected CTabFolderProxyAdapter getCTabFolderProxyAdapter() {
-		if (cTabFolderProxyAdapter == null) {
-			IBeanProxyHost cTabFolderProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) getModel());
-			cTabFolderProxyAdapter = (CTabFolderProxyAdapter) cTabFolderProxyHost;
+		if (ctabFolderProxyAdapter == null) {
+			IBeanProxyHost ctabFolderProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) getModel());
+			ctabFolderProxyAdapter = (CTabFolderProxyAdapter) ctabFolderProxyHost;
 		}
-		return cTabFolderProxyAdapter;
+		return ctabFolderProxyAdapter;
 	}
 
 	/*
-	 * Search through the CTabFolder's pages (children) to find the page that matches the page model that is selected.
+	 * Search through the JTabbedPane's pages (children) to find the page that matches the page model that is selected.
 	 */
 	protected EditPart getEditPartFromModel(IJavaObjectInstance pageModel) {
 		Iterator children = getChildren().iterator();
@@ -282,6 +269,32 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 		while (childen.hasNext())
 			addPageListenerToChildren((EditPart) childen.next());
 	}
+
+	protected void setupControl(ControlGraphicalEditPart childEP, EObject child) {
+		// Get the TabItem's error notifier for the child (which is a control) and add it in to the control gep. That way TabItem
+		// errors will show on the child.
+		IJavaObjectInstance tab = getTabForChild(child);
+		if (childEP != null) {
+			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class));
+			childEP.setErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter(tab, IErrorNotifier.ERROR_NOTIFIER_TYPE));
+		} else {
+			childEP.setPropertySource(null);
+			childEP.setErrorNotifier(null);
+		}
+	}
+
+	/**
+	 * Get the TabItem for the given child control.
+	 * 
+	 * @param child
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected IJavaObjectInstance getTabForChild(EObject child) {
+		return (IJavaObjectInstance) InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sf_items, sf_ctabItemControl, child);
+	}
+
 	
 	/**
 	 * Get current page index.
@@ -322,4 +335,5 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 			}
 		}
 	}
+
 }

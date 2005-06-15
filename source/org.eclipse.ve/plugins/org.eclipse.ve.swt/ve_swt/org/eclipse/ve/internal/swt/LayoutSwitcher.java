@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: LayoutSwitcher.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-15 20:19:20 $ 
  */
 
 import java.util.List;
@@ -24,7 +24,6 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.HoldProcessingCommand;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.*;
 /**
@@ -62,7 +61,7 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 		if (!components.isEmpty())
 			cb.append(getChangeConstraintsCommand(components));
 			
-		return new HoldProcessingCommand(cb.getCommand(), compositeBean);
+		return cb.getCommand();
 	}
 	
 	/**
@@ -93,7 +92,7 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 		if (!controls.isEmpty())
 			cb.append(getChangeConstraintsCommand(controls));
 			
-		return new HoldProcessingCommand(cb.getCommand(), containerBean);
+		return cb.getCommand();
 	}	
 	
 	/**

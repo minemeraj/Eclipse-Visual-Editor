@@ -18,9 +18,8 @@
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"
         propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositePropertySourceAdapter"/>
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
-        beanLocation="GLOBAL_GLOBAL"    
+        beanLocation="GLOBAL_GLOBAL" 
         beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter"/>
-        
     <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
         expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.CompositeDecoder"/>    
   </event:AddMany>

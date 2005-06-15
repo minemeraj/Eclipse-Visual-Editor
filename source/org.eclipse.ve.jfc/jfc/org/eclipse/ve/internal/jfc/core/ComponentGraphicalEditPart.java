@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.24 $ $Date: 2005-05-18 16:36:07 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.25 $ $Date: 2005-06-15 20:19:27 $
  */
 import java.util.*;
 
@@ -29,6 +29,7 @@ import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.IActionFilter;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -37,6 +38,7 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.ImageFigure;
+import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 import org.eclipse.ve.internal.java.core.*;
 
@@ -53,7 +55,7 @@ import org.eclipse.ve.internal.java.core.*;
  * The initialization data is used to configure whether this edit part should show borders on the figure or not. The default is false. The
  * initialization data can be "true" or "false", case-insensitive. This init data can be placed in the xmi to determine what it should be.
  */
-public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor, IDirectEditableEditPart {
+public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor {
 
 	protected boolean transparent = false; // Whether there should be an image or not.
 	protected ImageFigureController imageFigureController;
@@ -66,7 +68,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	protected boolean border = false; // Whether there should be a border or not around the figure.
 	protected DirectEditManager manager = null;
 
-	protected EStructuralFeature sfDirectEditProperty = null;
+	protected IPropertyDescriptor sfDirectEditProperty = null;
 	protected IJavaInstance bean;
 
 	public ComponentGraphicalEditPart(Object model) {
@@ -305,8 +307,8 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		// Listen to the error notifier so it tells us when errors occur
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 			public void errorStatusChanged() {
-				CDEUtilities.displayExec(ComponentGraphicalEditPart.this, "STATUS_CHANGED", new Runnable() { //$NON-NLS-1$
-					public void run() {
+				CDEUtilities.displayExec(ComponentGraphicalEditPart.this, "STATUS_CHANGED", new EditPartRunnable(ComponentGraphicalEditPart.this) {
+					protected void doRun() {
 						setSeverity(errorNotifier.getErrorStatus());
 					}
 				}); 
@@ -316,6 +318,8 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		errorNotifier.addErrorListener(fBeanProxyErrorListener);
 		errorNotifier.addErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE));	// This will signal initial severity if not none.
 		errorNotifier.addErrorNotifier(otherNotifier);
+		
+		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
 	}
 
 	protected void setSeverity(int severity) {
@@ -324,6 +328,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	}
 
 	public void deactivate() {
+		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).deactivate();
 		if (imageFigureController != null)
 			imageFigureController.deactivate();
 		if (fBeanProxyErrorListener != null) {
@@ -345,30 +350,38 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		installEditPolicy(CopyAction.REQ_COPY,new ComponentCopyEditPolicy());		
 	}
 
-	private EStructuralFeature getDirectEditTargetProperty() {
-		EStructuralFeature target = null;
+	protected IPropertyDescriptor getDirectEditTargetProperty() {
+		EStructuralFeature feature = null;
 		IJavaObjectInstance component = (IJavaObjectInstance) getModel();
 		JavaClass modelType = (JavaClass) component.eClass();
 		// Hard coded string properties to direct edit.
 		// If more than one is available, it'll choose the first in the list
 		// below
-		target = modelType.getEStructuralFeature("text"); //$NON-NLS-1$
-		if (target != null) { return target; }
-		target = modelType.getEStructuralFeature("label"); //$NON-NLS-1$
-		if (target != null) { return target; }
-		target = modelType.getEStructuralFeature("title"); //$NON-NLS-1$
-		return target;
+		feature = modelType.getEStructuralFeature("text"); //$NON-NLS-1$
+		if (feature == null) {
+			feature = modelType.getEStructuralFeature("label"); //$NON-NLS-1$
+		}
+		if (feature == null) {
+			feature = modelType.getEStructuralFeature("title"); //$NON-NLS-1$	
+		}
+		if (feature != null) {
+			IPropertySource source = (IPropertySource) getAdapter(IPropertySource.class);
+			return PropertySourceAdapter.getDescriptorForID(source, feature);
+		} else
+			return null;
 	}
 
 	private void performDirectEdit() {
 		if (manager == null)
-			manager = new BeanDirectEditManager(this, TextCellEditor.class, new ComponentCellEditorLocator(getFigure()), sfDirectEditProperty);
+			manager = new BeanDirectEditManager(this, TextCellEditor.class, new BeanDirectEditCellEditorLocator(getFigure()), sfDirectEditProperty);
 		manager.show();
 	}
 
 	public void performRequest(Request request) {
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT && sfDirectEditProperty != null)
 			performDirectEdit();
+		else
+			super.performRequest(request);
 	}
 
 	/**
@@ -401,10 +414,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	public void setTransparent(boolean transparent) {
 		this.transparent = transparent;
 	}
-	
-	public boolean getTransparent(){
-		return transparent;
-	}
+
 
 	/**
 	 * Return the visual component. Creation date: (3/15/00 12:33:41 PM)
@@ -428,13 +438,6 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 			result.add(i.next());
 		}
 		return result.isEmpty() ? Collections.EMPTY_LIST : result;
-	}
-
-	/**
-	 * @return
-	 */
-	public EStructuralFeature getSfDirectEditProperty() {
-		return sfDirectEditProperty;
 	}
 
 	/**

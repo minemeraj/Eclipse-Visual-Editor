@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipAssistFactory.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-24 15:22:26 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-15 20:19:38 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -58,7 +58,32 @@ public class ToolTipAssistFactory {
 	 * @since 1.0.0
 	 */
 	public static interface TooltipDetails{
+		/**
+		 * Return the figure to use. This will be called only once, the first time the assist is used.
+		 * This may not occur for awhile. It will occur on the first hover over the tooltip.
+		 * 
+		 * @return
+		 * 
+		 * @since 1.1.0
+		 */
 		IFigure createFigure();
+		/**
+		 * The details is being activated. This will be called the first time after the figure is created,
+		 * and whenever the details is reactivated at a later time. It should do things like start listening if
+		 * it needs to listen for anything.
+		 * 
+		 * 
+		 * @since 1.1.0
+		 */
+		void activate();
+
+		/**
+		 * The details is being deactivated. It should do things like stop listening if it is listening.
+		 * 
+		 * 
+		 * @since 1.1.0
+		 */
+		void deactivate();
 	}	
 		
 	static  class NullTTAdapter implements IJavaToolTipProposalAdapter {
@@ -107,8 +132,17 @@ public class ToolTipAssistFactory {
 		 * Return a draw2D figure
 		 */
 		public IFigure createFigure() {
-			// TODO
 			return getTTAdapter().getInstanceDisplayInformation();
+		}
+
+		public void activate() {
+			// TODO in the future, if rename ever gets fixed such that it doesn't do an remove/add under the covers, this should reget the
+			// display info because it could of changed. Need to handle removing the old display info, or changing
+			// such that the figure is another figure which simply has the instancedisplayinfo as a child. That way we can easily
+			// remove the old info and add in new info in its place.
+		}
+
+		public void deactivate() {
 		}
     }
     
@@ -132,6 +166,16 @@ public class ToolTipAssistFactory {
 			public IFigure createFigure() {
 				// TODO - This is incomplete
 				return getTTAdapter().getReturnMethodDisplayInformation();				
+			}
+			public void activate() {
+				// TODO in the future, if rename ever gets fixed such that it doesn't do an remove/add under the covers, this should reget the
+				// display info because it could of changed. Need to handle removing the old display info, or changing
+				// such that the figure is another figure which simply has the returndisplayinfo as a child. That way we can easily
+				// remove the old info and add in new info in its place.
+			}
+			
+			public void deactivate() {
+				
 			}
 		}
 	
@@ -166,12 +210,7 @@ public class ToolTipAssistFactory {
 		 */
 		public IFigure createFigure() {
 			display = Display.getCurrent();
-			figure = new Panel(){
-				public void removeNotify(){
-					super.removeNotify();
-					errNotifier.removeErrorListener(errorListener);	
-				}
-			};
+			figure = new Panel();
 			FlowLayout layout = new FlowLayout(false);
 			layout.setMajorSpacing(0);
 			layout.setMinorSpacing(0);						
@@ -193,6 +232,20 @@ public class ToolTipAssistFactory {
 				l.setText(error.getMessage());
 				figure.add(l);
 			}
+		}
+
+		public void activate() {
+			if (figure != null) {
+				// We've been created at least once, so just update and add errNotifier listening.
+				// Get the errors
+				updateFigure();
+				// The error severity could change, in which case we must refresh our figure
+				errNotifier.addErrorListener(errorListener);				
+			}
+		}
+
+		public void deactivate() {
+			errNotifier.removeErrorListener(errorListener);
 		}
 	}
 	/**
@@ -230,6 +283,16 @@ public class ToolTipAssistFactory {
 			} else {
 				return null;
 			}
+		}
+
+		public void activate() {
+			// TODO in the future, if rename ever gets fixed such that it doesn't do an remove/add under the covers, this should reget the
+			// display info because it could of changed. Need to handle removing the old display info, or changing
+			// such that the figure is another figure which simply has the get displayinfo as a child. That way we can easily
+			// remove the old info and add in new info in its place.
+		}
+
+		public void deactivate() {
 		}
 	}
         
