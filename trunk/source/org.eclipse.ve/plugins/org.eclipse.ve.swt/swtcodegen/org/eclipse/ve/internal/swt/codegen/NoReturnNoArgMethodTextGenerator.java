@@ -10,15 +10,19 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoReturnNoArgMethodTextGenerator.java,v $
- *  $Revision: 1.5 $  $Date: 2005-04-05 20:11:46 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-15 18:58:20 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jdt.core.formatter.CodeFormatter;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
+import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.AbstractMethodTextGenerator;
 import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
  
@@ -102,8 +106,9 @@ public class NoReturnNoArgMethodTextGenerator extends AbstractMethodTextGenerato
 		IMethodTemplate mt = getMethodTemplate(MAIN_TEMPLATE_NAME,MAIN_TEMPLATE_CLASS_NAME) ;
 		fMethodTemplate=null;
 		getInfo().finitBeanType=className;
-		String r = mt.generateMethod(getInfo());
+		String r = mt.generateMethod(getInfo());		
 		fInfo=null;
-		return r;
+		Map options = fModel.getCompilationUnit().getJavaProject().getOptions(true);		
+		return DefaultClassGenerator.format(r, CodeFormatter.K_CLASS_BODY_DECLARATIONS, options, fModel.getLineSeperator() );		
 	}
 }

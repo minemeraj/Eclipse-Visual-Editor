@@ -10,16 +10,16 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.19 $  $Date: 2005-05-18 22:53:26 $ 
+ *  $Revision: 1.20 $  $Date: 2005-06-15 18:58:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jdt.core.formatter.CodeFormatter;
 
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -116,7 +116,9 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 		if (imports!=null)
 			setInitBeanType(obj.getJavaType().getSimpleName());
 				
-		return getMethodTemplate().generateMethod(getInfo()) ;				
+		String content = getMethodTemplate().generateMethod(getInfo()) ;
+		Map options = fModel.getCompilationUnit().getJavaProject().getOptions(true);		
+		return DefaultClassGenerator.format(content, CodeFormatter.K_CLASS_BODY_DECLARATIONS, options, fModel.getLineSeperator() ); 					
 	}
 
 	protected IMethodTemplate getMethodTemplate(String name, String className) {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.35 $  $Date: 2005-05-18 22:53:26 $ 
+ *  $Revision: 1.36 $  $Date: 2005-06-15 18:58:22 $ 
  */
 
 import java.util.List;
@@ -190,6 +190,8 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	 *  Get the initialization string currently held in the composition model
 	 */
 	protected String primGetInitString() {
+		if (fbeanPart.isDisposed())
+			return null;
 		Object currentVal = fbeanPart.getEObject().eGet(fFmapper.getFeature(fExpr));
 		if (currentVal==null || currentVal instanceof IJavaInstance) {
 			fPropInstance = (IJavaInstance) currentVal;

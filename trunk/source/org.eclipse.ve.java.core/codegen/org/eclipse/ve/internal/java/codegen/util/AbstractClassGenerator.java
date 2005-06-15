@@ -14,12 +14,13 @@
 
 /*
 *  $RCSfile: AbstractClassGenerator.java,v $
-*  $Revision: 1.6 $
+*  $Revision: 1.7 $
 */
 
 package org.eclipse.ve.internal.java.codegen.util;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.*;
@@ -34,7 +35,6 @@ import org.eclipse.ve.internal.java.vce.templates.*;
 public abstract class AbstractClassGenerator {
 	public final static String  JAVAJET_EXT = ".javajet" ; //$NON-NLS-1$	
 	
-	
 	public interface IClassTemplate {
 		public String generateClassContent(AbstractClassGenerator.ClassInfo info) ;
 	};
@@ -45,7 +45,8 @@ public abstract class AbstractClassGenerator {
 	protected   String		   	fPackageName=null;
 	protected  	String		   	fClassName=null;
 	protected	IJavaProject    fProject=null;
-	protected	boolean 		fFormatTemplate = true ;  // use the JDT formatter on the template 
+	protected	boolean 		fFormatTemplate = true ;  // use the JDT formatter on the template
+	protected   Map				fProjectOptions = null;
 		
 	protected	IClassTemplate  fTemplate = null ;
 			
@@ -151,6 +152,7 @@ public abstract class AbstractClassGenerator {
 	 */
 	public void setProject(IJavaProject project) {
 		fProject = project;
+		fProjectOptions = project.getOptions(true);
 	}
 	/**
 	 * @param formatTemplate The fFormatTemplate to set.

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodTextGenerator.java,v $
- *  $Revision: 1.22 $  $Date: 2005-05-18 22:53:26 $ 
+ *  $Revision: 1.23 $  $Date: 2005-06-15 18:58:22 $ 
  */
 
 import java.util.*;
@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.core.jdom.IDOMMethod;
 
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
@@ -333,8 +334,8 @@ public String generateMethod(CodeMethodRef method,String methodName,String beanN
     appendNewSource(sb,bp,new ArrayList(),true) ;     
     sb.append(template.getPostfix()) ;
     
-    return (sb.toString()) ;
-        
+    Map options = fModel.getCompilationUnit().getJavaProject().getOptions(true);		
+	return DefaultClassGenerator.format(sb.toString(), CodeFormatter.K_CLASS_BODY_DECLARATIONS, options, fModel.getLineSeperator() );              
 }
 
 public String toString() {
