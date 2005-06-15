@@ -12,9 +12,6 @@ package org.eclipse.ve.example.customwidget;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.gef.GraphicalEditPart;
-
-import org.eclipse.ve.internal.cde.core.ImageFigure;
-
 import org.eclipse.ve.internal.swt.ControlGraphicalEditPart;
 
 
@@ -26,7 +23,7 @@ public class CustomWidgetGraphicalEditPart extends ControlGraphicalEditPart {
 
 	protected IFigure createFigure() {
 
-		ImageFigure figure = (ImageFigure) super.createFigure();
+		IFigure figure = super.createFigure();
 		Label customFigure = new Label("VE Rules",CustomwidgetPlugin.getCustomImage());
 		customFigure.setForegroundColor(ColorConstants.red);
 		customFigure.setTextPlacement(PositionConstants.SOUTH);
