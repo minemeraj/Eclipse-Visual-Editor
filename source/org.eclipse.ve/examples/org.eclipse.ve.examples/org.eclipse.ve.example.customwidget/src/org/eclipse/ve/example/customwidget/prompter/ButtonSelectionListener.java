@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.ve.example.customwidget.prompter;
 
+import java.util.EventListener;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.internal.SWTEventListener;
 
-public interface ButtonSelectionListener extends SWTEventListener {
+public interface ButtonSelectionListener extends EventListener {
 
 	public void buttonSelected(SelectionEvent e);
 		
