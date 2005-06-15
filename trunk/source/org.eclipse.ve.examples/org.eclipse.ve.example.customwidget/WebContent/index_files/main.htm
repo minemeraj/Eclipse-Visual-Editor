@@ -39,8 +39,8 @@ introduce custom editor behavior.&nbsp; The reader of this tutorial is
 intended to be someone who wishes to customize the Visual Editor for a
 particular widget and understands there are a number of touch points
 that can be used to achieve this.</p>
-  <p><b>Gili Mendel, IBM<br>
-  </b><b> Dave Orme, db4objects</b><br>
+  <p><b> Dave Orme, db4objects</b><br>
+  <b>Gili Mendel, IBM</b><br>
   <b>Joe Winchester, IBM<br>
   </b></p>
   <p><font size="1"><!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->June
@@ -923,12 +923,13 @@ downloaded directly from <a
 CVS</a> to avoid re-entry.<br>
 <br>
 </p>
-<pre>  &lt;xmi:XMI xmi:version="2.0"<br>    xmlns:xmi="http://www.omg.org/XMI"<br>    xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"<br>    xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"&gt;<br><img
+<pre>  &lt;xmi:XMI xmi:version="2.0"<br>    xmlns:xmi="http://www.omg.org/XMI"<br>    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"   <br>    xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"<br>    xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"&gt;<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">  &lt;palette:CategoryCmp&gt;<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_2.gif">  &lt;categoryLabel xsi:type="utility:ConstantString" string="Custom"/&gt;<br>      &lt;cmpGroups xsi:type="palette:GroupCmp"&gt;<br><br><img
  style="width: 23px; height: 13px;" alt="" src="images/tag_3.gif">      &lt;cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" icon16Name="platform:/plugin/org.eclipse.ve.example.customwidget/icons/custom.gif"&gt;<br>          &lt;objectCreationEntry xsi:type="palette:EMFCreationToolEntry"<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag_4.gif">         creationClassURI<b>=</b>"java:/org.eclipse.ve.example.customwidget.prompter#MyCustomPrompter"/&gt;<br><img
- style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">       &lt;entryLabel xsi:type="utility:ConstantString" string="Prompter"/&gt;<br>        &lt;/cmpEntries&gt;<br><br>      &lt;/cmpGroups&gt;<br>    &lt;/palette:CategoryCmp&gt;<br>  &lt;/xmi:XMI&gt;<br></pre>
+ style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">       &lt;entryLabel xsi:type="utility:ConstantString" string="Prompter"/&gt;<br><img
+ style="width: 24px; height: 13px;" alt="" src="images/tag_6.gif">       &lt;values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="customPrompter"/&gt;          <br>        &lt;/cmpEntries&gt;<br><br>      &lt;/cmpGroups&gt;<br>    &lt;/palette:CategoryCmp&gt;<br>  &lt;/xmi:XMI&gt;<br></pre>
 <p>The&nbsp;<img style="width: 24px; height: 13px;" alt=""
  src="images/tag1.gif"> &lt;palette:categoryCmp&gt; tag describes a
 palette category that has a label and groups, each group containing a
@@ -948,7 +949,11 @@ separator.&nbsp; The group has a single entry that defines the&nbsp;<img
 graphic, the qualified&nbsp;<img style="width: 24px; height: 13px;"
  alt="" src="images/tag_4.gif"> name of the class and the literal <img
  style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">
-string that is displayed on the palette entry.&nbsp; The&nbsp;<img
+string that is displayed on the palette entry.&nbsp; To ensure that a
+good default name is used each time the user drops an instance of the
+CustomPrompter a&nbsp;<img style="width: 24px; height: 13px;" alt=""
+ src="images/tag_6.gif"> default <span style="font-style: italic;">nameincomposition
+</span>is specified to be "customPrompter". &nbsp; The&nbsp;<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_3.gif">
 graphic points to the URL of where the image is located, in this case
 the entry points to a file <span style="font-style: italic;">custom.gif</span>
@@ -1009,7 +1014,8 @@ done is by SWT that has to add runtime packages such as DLLs or
 packages to the VM's arguments, or a plugin that might wish to remove
 some of the existing palette entries (such as the JFC ones) for
 projects configured with their container present.</p>
-<p><img width="62" height="13" alt="Tip: " src="main_data/tip.htm"> As
+<p><img style="height: 13px; width: 62px;" alt="Tip:"
+ src="images/tip.gif"> As
 well as defining containers to be the trigger point for Visual Editor
 custom behavior you can also use plugins by direct name&nbsp;using the <span
  style="font-style: italic;">plugin=</span> tag. An example of where
@@ -2196,7 +2202,7 @@ be specialized to create the draw2D desired effects.</p>
 represents elements in the original file written for the <span
  style="font-style: italic;">text</span> property custom editor and the
 black the new lines to add)</p>
-<pre><span style="color: rgb(192, 192, 192);"><br>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>  &lt;xmi:XMI xmi:version="2.0" <br>    xmlns:xmi="http://www.omg.org/XMI" <br>    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;<br></span><span
+<pre><span style="color: rgb(153, 153, 153);"><br>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>  &lt;xmi:XMI xmi:version="2.0" <br>    xmlns:xmi="http://www.omg.org/XMI" <br>    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;<br></span><span
  style="color: rgb(153, 153, 153);"><img
  style="width: 24px; height: 13px;" alt="" src="images/tag1.gif"></span> <span
  style="color: rgb(153, 153, 153);">xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"</span><br><span
@@ -2493,7 +2499,7 @@ CustomPrompterDecoderHelper.java</a>.</p>
  style="color: rgb(153, 0, 0);">public</span> String generate(Object[] noArgs) <span
  style="color: rgb(153, 0, 0);">throws</span> CodeGenException {<br>       String result = <span
  style="color: rgb(153, 0, 0);">super</span>.generate(noArgs);<br>    <span
- style="color: rgb(0, 153, 0);">// Add a comment at the end of the expression</span><br>       <span
+ style="color: rgb(0, 153, 0);">   // Add a comment at the end of the expression</span><br>       <span
  style="color: rgb(153, 0, 0);">int</span> idx = result.lastIndexOf(<span
  style="color: rgb(51, 51, 255);">';'</span>) + 1;<br><img
  style="width: 24px; height: 13px;" alt="" src="images/tag1.gif">    <span
@@ -2530,7 +2536,49 @@ be added is displayed to the user.</p>
 <p><span style="font-family: monospace;">MyCustomPrompter class</span>
 has the methods <span style="font-family: monospace;">addButtonSelectionEvent(ButtonSelectionEvent
 anEvent)</span> and <span style="font-family: monospace;">removeButtonSelectionEvent(ButtonSelectionEvent
-anEvent).</span>&nbsp; In the absence of any specific customization
+anEvent).</span>&nbsp; This allows anyone developing a class that uses
+the custom prompter to be able to get called back anytime the user
+presses its button.&nbsp; This is the button on the right hand side of
+the prompter that is labelled ..., <span style="font-style: italic;">Open
+or More </span>based on the <span style="font-style: italic;">type </span>property
+setting.&nbsp; If a button listener is added to the custom prompter the
+code generated is as below, and can be used for example to launch an
+additional dialog or perform user logic.<br>
+</p>
+<p><span style="font-family: monospace;"><span
+ style="color: rgb(153, 0, 0);">private void </span>createCustomPrompter()
+{</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; customPrompter
+= <span style="color: rgb(153, 0, 0);">new </span>MyCustomPrompter(sShell,
+SWT.NONE);&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><span
+ style="font-family: monospace;"></span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+customPrompter.addButtonSelectionListener(<span
+ style="color: rgb(153, 0, 0);">new </span>ButtonSelectionListener() {
+</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<span style="color: rgb(153, 0, 0);">public void</span>
+buttonSelected(org.eclipse.swt.events.SelectionEvent e)
+{&nbsp;&nbsp;&nbsp; </span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(<span
+ style="color: rgb(51, 51, 255);">"buttonSelected()"</span>); <span
+ style="color: rgb(0, 153, 0);">// TODO Auto-generated Event stub
+buttonSelected()</span></span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; }</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; });</span><span
+ style="font-family: monospace;"></span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">}</span><br>
+</p>
+<p>The purpose of this section is to show how to make it such that the <span
+ style="font-style: italic;">buttonSelected </span>event is the
+preferred event offered to the user because it is the one that will be
+most commonly used.<br>
+</p>
+<p>In the absence of any specific customization
 rules the Visual Editor will by default use JavaBeans reflection and
 associate these together with an event named <span
  style="font-style: italic;">buttonSelection</span>.&nbsp; This will be
@@ -2538,7 +2586,8 @@ available for the user to add events to from the <span
  style="font-style: italic;">Add Event</span> wizard that is launched
 from the <span style="font-weight: bold;">Events &gt; Add Event ..</span>.
 pop-up menu option.</p>
-<p>The desired effect is to override the behavior of the Visual Editor
+<p>The desired effect though is to override the behavior of the Visual
+Editor
 such as the buttonSelected event appears on the first level of the <span
  style="font-weight: bold;">Events</span> cascaded menu, as shown in
 the figure below.&nbsp; The result of this would be that the usability
@@ -2594,10 +2643,8 @@ pop-up menu displays an item for <span style="font-style: italic;">buttonSelecte
 <h1><a name="A_complete_example"></a>A complete example</h1>
 <p>This tutorial has gone through the steps required to create the
 plugin <span style="font-style: italic;">org.eclipse.ve.example.customwidget</span>.&nbsp;
-The completed plugin is also available <a
- href="https://bugs.eclipse.org/bugs/org.eclipse.ve.example.customwidget_1.0.0.zip">org.eclipse.ve.example.customwidget_1.0.0.zip</a>
-or can be downloaded from <a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/WebContent/customwidget.zip?cvsroot=Tools_Project">
+The completed plugin is available <a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/WebContent/customwidgetexample.zip?cvsroot=Tools_Project">
 here</a> or can be obtained directly from CVS.<br>
 <br>
 To install the plugin from CVS into an Eclipse development environment
