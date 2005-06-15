@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,99 +9,33 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.9 $ $Date: 2005-05-11 19:01:30 $
+ * $RCSfile: ToolItemProxyAdapter.java,v $ $Revision: 1.10 $ $Date: 2005-06-15 20:19:21 $
  */
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.ecore.*;
-
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
-import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
+import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 
-public class ToolItemProxyAdapter extends WidgetProxyAdapter {
-	private EReference sf_items;
-	protected BeanProxyAdapter toolBarProxyAdapter;
-
+/**
+ * swt ToolItem proxy adapter.
+ * 
+ * @since 1.1.0
+ */
+public class ToolItemProxyAdapter extends ItemProxyAdapter {
 
 	public ToolItemProxyAdapter(IBeanProxyDomain domain) {
-		super(domain);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#beanProxyAllocation(org.eclipse.jem.internal.instantiation.JavaAllocation)
-	 */
-	protected IBeanProxy beanProxyAllocation(final JavaAllocation allocation) throws AllocationException {
-		try {
-			Object result = invokeSyncExec(new DisplayManager.DisplayRunnable() {
-
-				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
-					try {
-						return beanProxyAdapterBeanProxyAllocation(allocation);
-					} catch (AllocationException e) {
-						throw new RunnableException(e);
-					}
-				}
-			});
-			return (IBeanProxy) result;
-		} catch (ThrowableProxy e) {
-			throw new AllocationException(e);
-		} catch (DisplayManager.DisplayRunnable.RunnableException e) {
-			throw (AllocationException) e.getCause(); // We know it is an allocation exception because that is the only runnable exception we throw.
-		}
-	}
-
-	/*
-	 * Return the proxy adapter associated with this TabFolder.
-	 */
-	protected BeanProxyAdapter getToolBarProxyAdapter() {
-		if (toolBarProxyAdapter == null) {
-			EObject parent = InverseMaintenanceAdapter.getFirstReferencedBy(getTarget(), sf_items);
-			IBeanProxyHost toolBarProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) parent);
-			toolBarProxyAdapter = (BeanProxyAdapter) toolBarProxyHost;
-		}
-		return toolBarProxyAdapter;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
-	 */
-	protected void applied(EStructuralFeature sf, Object newValue, int position) {
-		if (!isBeanProxyInstantiated()  && !isInstantiationFeature(sf))
-			return; // Nothing to apply to yet or could not construct.
-		super.applied(sf, newValue, position); // We letting the settings go through
-		if (getToolBarProxyAdapter() != null)
-			getToolBarProxyAdapter().revalidateBeanProxy();
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int)
-	 */
-	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
-		if (!isBeanProxyInstantiated())
-			return; // Nothing to cancel to yet or could not construct.
-		super.canceled(sf, oldValue, position);
-		if (getToolBarProxyAdapter() != null)
-			getToolBarProxyAdapter().revalidateBeanProxy();
+		super(domain, JavaInstantiation.getReference(EMFEditDomainHelper.getResourceSet(domain.getEditDomain()), SWTConstants.SF_TOOLBAR_ITEMS));
 	}
 
 	public IRectangleBeanProxy getBounds() {
 		if (isBeanProxyInstantiated()) {
-	 		return (IRectangleBeanProxy) invokeSyncExecCatchThrowableExceptions(new DisplayManager.DisplayRunnable() {
-	
+			return (IRectangleBeanProxy) invokeSyncExecCatchThrowable(new DisplayManager.DisplayRunnable() {
+
 				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
 					// Call the layout() method
 					IBeanProxy rectProxy = getBoundsMethodProxy().invoke(getBeanProxy());
@@ -113,21 +47,7 @@ public class ToolItemProxyAdapter extends WidgetProxyAdapter {
 	}
 
 	protected IMethodProxy getBoundsMethodProxy() {
-        return getBeanProxy().getTypeProxy().getMethodProxy("getBounds"); //$NON-NLS-1$
-	}
-
-	/*
-	 * Use to call BeanProxyAdapter's beanProxyAllocation.
-	 */
-	protected IBeanProxy beanProxyAdapterBeanProxyAllocation(JavaAllocation allocation) throws AllocationException {
-		return super.beanProxyAllocation(allocation);
-	}
-
-	public void setTarget(Notifier newTarget) {
-		super.setTarget(newTarget);
-		if (newTarget != null) {
-			sf_items = JavaInstantiation.getReference((IJavaObjectInstance) newTarget, SWTConstants.SF_TOOLBAR_ITEMS);
-		}
+		return getBeanProxy().getTypeProxy().getMethodProxy("getBounds"); //$NON-NLS-1$
 	}
 
 }

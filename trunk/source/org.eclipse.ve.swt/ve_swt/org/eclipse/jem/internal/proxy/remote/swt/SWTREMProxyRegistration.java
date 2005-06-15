@@ -13,12 +13,17 @@ package org.eclipse.jem.internal.proxy.remote.swt;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.remote.*;
 
-public class SWTREMProxyRegistration {
-	
-public static void initialize(ProxyFactoryRegistry registry){
-	REMProxyFactoryRegistry remRegistry = (REMProxyFactoryRegistry)registry;
-	new REMStandardSWTBeanTypeProxyFactory(remRegistry);
-	new REMStandardSWTBeanProxyFactory(remRegistry);		
-}
+/**
+ * The SWT Remote Proxy registration extension. Contributed through the plugin.xml.
+ * 
+ * @since 1.1.0
+ */
+public class SWTREMProxyRegistration implements IExtensionRegistration {
+
+	public void register(BaseProxyFactoryRegistry baseRegistry) {
+		REMProxyFactoryRegistry remRegistry = (REMProxyFactoryRegistry) baseRegistry;
+		REMStandardSWTBeanTypeProxyFactory.registerBeanTypeProxyFactory(remRegistry);
+		REMStandardSWTBeanProxyFactory.registerBeanTypeProxyFactory(remRegistry);
+	}
 
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.common;
  *******************************************************************************/
 /*
  *  $RCSfile: Common.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 /**
@@ -43,14 +43,4 @@ public interface Common {
 		CL_TRANSACTIONS = 5,
 		CL_IMAGEINVALID = 6;
 		
-	/**
-	 * JSplitPane manager message ids.
-	 *
-	 * The format of the data that is returned in
-	 * callback will be:
-	 *   invalidateImage: null
-	 */
-	public static final int 
-		JSP_INVALIDATE = 0;		
-
 }

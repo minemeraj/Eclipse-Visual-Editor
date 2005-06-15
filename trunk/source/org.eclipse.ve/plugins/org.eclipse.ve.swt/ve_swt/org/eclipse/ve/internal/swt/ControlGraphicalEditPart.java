@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.21 $ $Date: 2005-05-18 16:48:00 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.22 $ $Date: 2005-06-15 20:19:21 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -30,6 +30,7 @@ import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -38,10 +39,11 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.ImageFigure;
+import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 import org.eclipse.ve.internal.java.core.*;
 
-public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor, IDirectEditableEditPart {
+public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor {
 	
 	protected ImageFigureController imageFigureController;
 	protected IJavaInstance bean;
@@ -53,7 +55,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	protected boolean border = false; // Whether there should be a border or not around the figure.
 	
 	protected DirectEditManager manager = null;
-	protected EStructuralFeature sfDirectEditProperty = null;
+	protected IPropertyDescriptor sfDirectEditProperty = null;
 
 	public ControlGraphicalEditPart(Object model) {
 		setModel(model);
@@ -81,6 +83,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		return getContentPaneFigure().getContentPane();
 	}
 	
+	protected IErrorNotifier.CompoundErrorNotifier errorNotifier = new IErrorNotifier.CompoundErrorNotifier();
 	
 	protected IFigure createFigure() {
 		ContentPaneFigure cfig = new ContentPaneFigure();
@@ -95,7 +98,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		cfig.setContentPane(ifig);
 		fErrorIndicator = new ErrorFigure();
 		cfig.add(fErrorIndicator);
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean(), (IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE)));
+		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean(), errorNotifier));
 		cfig.setToolTip(ToolTipFig);
 		return cfig;
 	}
@@ -107,28 +110,73 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 			imageFigureController.setImageNotifier(getVisualComponent());
 		}
 			
-		// Listen to the IBeanProxyHost so it tells us when errors occur
-		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter(){
-			public void errorStatusChanged(){
-				CDEUtilities.displayExec(ControlGraphicalEditPart.this, "ERROR_STATUS_CHANGED", new Runnable() { //$NON-NLS-1$
-					public void run() {
-						setSeverity(getControlProxy().getErrorStatus());
+		// Listen to the error notifier so it tells us when errors occur
+		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
+			public void errorStatusChanged() {
+				CDEUtilities.displayExec(ControlGraphicalEditPart.this, "STATUS_CHANGED", new EditPartRunnable(ControlGraphicalEditPart.this) { //$NON-NLS-1$
+					protected void doRun() {
+						setSeverity(errorNotifier.getErrorStatus());
 					}
-				});
+				}); 
 			}
 		};
 	
-		setSeverity(getControlProxy().getErrorStatus());	// Set the initial status
-		getControlProxy().addErrorListener(fBeanProxyErrorListener);
+		errorNotifier.addErrorListener(fBeanProxyErrorListener);
+		errorNotifier.addErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE));	// This will signal initial severity if not none.
+		errorNotifier.addErrorNotifier(otherNotifier);
 	
+		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
 	}
+	
 	public void setTransparent(boolean aBool){
 		transparent = aBool;
 	}
+	
+	public void deactivate() {
+		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).deactivate();
+		
+		if (imageFigureController != null)
+			imageFigureController.deactivate();
+		if (fBeanProxyErrorListener != null) {
+			errorNotifier.removeErrorListener(fBeanProxyErrorListener);
+		}
+		errorNotifier.dispose();
+		super.deactivate();
+	}
 
+	/**
+	 * Used by other graphical editparts to say even though this is modeling an awt.Component, use this
+	 * guy as the property source. This is used by ContainerGraphicalEditPart, or JTabbedPaneEditPart, or
+	 * any other container type editpart that uses an intermediate object. The intermediate object will
+	 * be responsible for showing through the correct awt.Component properties.
+	 * @param source
+	 * 
+	 * @since 1.1.0
+	 */
 	public void setPropertySource(IPropertySource source) {
 		propertySource = source;
 	}
+	
+	private IErrorNotifier otherNotifier;
+	
+	/**
+	 * Used by other graphical editparts to say even though this is modeling an awt.Component, use this
+	 * guy as an error notifier. This is used by CompositeGraphicalEditPart, or TabFolderEditPart, or
+	 * any other container type editpart that uses an intermediate object. This control will then
+	 * show the errors from itself (the swt.Control) and from the error notifier set in. Only
+	 * one can be set at a time. A new set will remove the old one from the list.
+	 * @param otherNotifier
+	 * 
+	 * @since 1.1.0
+	 */
+	public void setErrorNotifier(IErrorNotifier otherNotifier) {
+		if (this.otherNotifier != null)
+			errorNotifier.removeErrorNotifier(this.otherNotifier);
+		this.otherNotifier = otherNotifier;
+		if (isActive())
+			errorNotifier.addErrorNotifier(this.otherNotifier);	// Don't do if not active. When activated it will add it.
+	}
+	
 	public Object getAdapter(Class type) {
 		if (type == IVisualComponent.class)
 			return getVisualComponent();
@@ -145,7 +193,8 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		}
 		else if (type == IActionFilter.class)
 			return getControlActionFilter();
-		
+		else if (type == IErrorHolder.class)
+			return errorNotifier;
 		Object result = super.getAdapter(type);
 		if ( result != null ) {
 			return result;
@@ -166,9 +215,12 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	}		
 
 	protected void setSeverity(int severity) {
-		fErrorIndicator.setSeverity(severity);
-		getFigure().setVisible(!(severity == IErrorHolder.ERROR_SEVERE));
+		if (isActive()) {
+			fErrorIndicator.setSeverity(severity);
+			getFigure().setVisible(!(severity == IErrorHolder.ERROR_SEVERE));
+		}
 	}
+	
 	protected void createEditPolicies() {
 		// Default component role allows delete and basic behavior of a component within a parent edit part that contains it
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DefaultComponentEditPolicy());
@@ -179,11 +231,12 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		}
 		installEditPolicy(CopyAction.REQ_COPY,new ControlCopyEditPolicy());
 	}
+	
 	protected IVisualComponent getVisualComponent() {
 		return (IVisualComponent) BeanProxyUtilities.getBeanProxyHost(getBean());
 	}
-	protected IBeanProxyHost getControlProxy() {
-		return BeanProxyUtilities.getBeanProxyHost(getBean());
+	protected ControlProxyAdapter getControlProxy() {
+		return (ControlProxyAdapter) BeanProxyUtilities.getBeanProxyHost(getBean());
 	}
 	public IJavaInstance getBean() {
 		if(bean == null){
@@ -261,6 +314,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 			modelConstraint.height = bounds.height;		
 		}
 	}
+
 	public List getEditPolicies() {
 		List result = new ArrayList();
 		AbstractEditPart.EditPolicyIterator i = super.getEditPolicyIterator();
@@ -270,39 +324,39 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		return result.isEmpty() ? Collections.EMPTY_LIST : result;
 	}
 	
-	private EStructuralFeature getDirectEditTargetProperty() {
-		EStructuralFeature target = null;
-		IJavaObjectInstance component = (IJavaObjectInstance)getModel();
+	private IPropertyDescriptor getDirectEditTargetProperty() {
+
+		EStructuralFeature feature = null;
+		IJavaObjectInstance component = (IJavaObjectInstance) getModel();
 		JavaClass modelType = (JavaClass) component.eClass();
-		
 		// Hard coded string properties to direct edit.
-		// If more than one is available, it'll choose the first in the list below
-				
-		target = modelType.getEStructuralFeature("text"); //$NON-NLS-1$
-		if (target != null) {
-			return target;			
+		// If more than one is available, it'll choose the first in the list
+		// below
+		feature = modelType.getEStructuralFeature("label"); //$NON-NLS-1$
+		if (feature == null) {
+			feature = modelType.getEStructuralFeature("text"); //$NON-NLS-1$
 		}
-		target = modelType.getEStructuralFeature("label"); //$NON-NLS-1$
-		if (target != null) {
-			return target;
+		if (feature == null) {
+			feature = modelType.getEStructuralFeature("title"); //$NON-NLS-1$	
 		}
-		target = modelType.getEStructuralFeature("title"); //$NON-NLS-1$
-		return target;
+		if (feature != null) {
+			IPropertySource source = (IPropertySource) getAdapter(IPropertySource.class);
+			return PropertySourceAdapter.getDescriptorForID(source, feature);
+		} else
+			return null;
 	}
 	
 	private void performDirectEdit(){
 		if(manager == null)
 			manager = new BeanDirectEditManager(this, 
-				TextCellEditor.class, new ControlCellEditorLocator(getFigure()), sfDirectEditProperty);
+				TextCellEditor.class, new BeanDirectEditCellEditorLocator(getFigure()), sfDirectEditProperty);
 		manager.show();
 	}
 
 	public void performRequest(Request request){
 		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT && sfDirectEditProperty != null)
 			performDirectEdit();
-	}
-	
-	public EStructuralFeature getSfDirectEditProperty() {
-		return sfDirectEditProperty;
+		else
+			super.performRequest(request);
 	}
 }  

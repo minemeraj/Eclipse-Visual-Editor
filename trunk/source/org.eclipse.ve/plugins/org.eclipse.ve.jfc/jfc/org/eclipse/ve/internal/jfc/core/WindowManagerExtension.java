@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WindowManagerExtension.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-18 22:53:56 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-15 20:19:27 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -27,7 +27,7 @@ public class WindowManagerExtension extends ComponentManager.ComponentManagerExt
 	protected IProxy windowManagerProxy;
 	
 	protected String getExtensionClassname() {
-		return "org.eclipse.ve.internal.jfc.vm.WindowManagerExtension"; //$NON-NLS-1$
+		return BeanAwtUtilities.WINDOWMANAGEREXTENSION_CLASSNAME;
 	}
 	
 	protected IProxy primGetExtensionProxy() {

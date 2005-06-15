@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,464 +10,499 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
 
-import java.util.*;
+import java.text.MessageFormat;
+import java.util.List;
 
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.ecore.*;
+import org.eclipse.draw2d.geometry.*;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.graphics.ImageData;
 
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
-import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.swt.DisplayManager;
-import org.eclipse.jem.internal.proxy.swt.IControlProxyHost;
+import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
+import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-
-import org.eclipse.ve.internal.jcm.BeanComposition;
-import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
-import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.java.visual.RectangleJavaClassCellEditor;
 
-public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualComponent, IControlProxyHost {
+import org.eclipse.ve.internal.swt.common.ImageDataConstants;
 
-	protected List fControlListeners = null; // Listeners for IComponentNotification.
+/**
+ * Proxy adapter for swt.Control
+ * 
+ * @since 1.1.0
+ */
+public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualComponent {
 
-	protected ControlManager fControlManager; // The listener on the IDE
+	// Need these features often, but they depend upon the class we are in,
+	// can't get them as statics because they would be different for each Eclipse project.
+	protected EStructuralFeature sfControlVisible, sfControlLocation, sfControlBounds, sfControlSize, sfLayoutData;
 
-	protected ImageNotifierSupport imSupport;
-
-	public IMethodProxy environmentFreeFormHostMethodProxy;
-
-	protected IControlProxyHost parentProxyAdapter;
-
-	protected EReference sf_layoutData;
-
-	protected EStructuralFeature sfComponentBounds, sfComponentLocation, sfComponentSize;
-
+	private ControlManager controlManager;
+	private static final Object IMAGE_DATA_COLLECTION_ERROR_KEY = new Object();
+	
 	public ControlProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
-		sf_layoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
-		sfComponentBounds = JavaInstantiation.getSFeature(rset, SWTConstants.SF_CONTROL_BOUNDS);
-		sfComponentLocation = JavaInstantiation.getSFeature(rset, SWTConstants.SF_CONTROL_LOCATION);
-		sfComponentSize = JavaInstantiation.getSFeature(rset, SWTConstants.SF_CONTROL_SIZE);
+		sfLayoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
+		sfControlVisible = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_VISIBLE);
+		sfControlBounds = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_BOUNDS);
+		sfControlLocation = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LOCATION);
+		sfControlSize = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_SIZE);
 	}
 
-	/*
-	 * Use to call BeanProxyAdapter's beanProxyAllocation.
-	 */
-	protected IBeanProxy beanProxyAdapterBeanProxyAllocation(JavaAllocation allocation) throws AllocationException {
-		return super.beanProxyAllocation(allocation);
-	}
 
-	protected IBeanProxy beanProxyAdapterInitializationStringAllocation(String aString, IBeanTypeProxy targetClass) throws AllocationException {
-		return super.basicInitializationStringAllocation(aString, targetClass);
-	}
-
-	/*
-	 * The initString is evaluated using a static method on the Environment target VM class that ensures it is evaluated on the Display thread
-	 */
-	protected IBeanProxy basicInitializationStringAllocation(final String aString, final IBeanTypeProxy targetClass)
-			throws IAllocationProcesser.AllocationException {
-		try {
-			Object result = invokeSyncExec(new DisplayManager.DisplayRunnable() {
-
-				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
-					try {
-						if (aString != null)
-							return ControlProxyAdapter.super.basicInitializationStringAllocation(aString, targetClass);
-
-						// We are doing subclassing if the string is null.
-						// Get FF host as parent.
-						org.eclipse.swt.graphics.Point offscreen = BeanSWTUtilities.getOffScreenLocation();
-						IIntegerBeanProxy intXBeanProxy = displayProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(
-								offscreen.x);
-						IIntegerBeanProxy intYBeanProxy = displayProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(
-								offscreen.y);
-						IBeanProxy parentBeanProxy = getEnvironmentFreeFormHostMethodProxy().invoke(null,
-								new IBeanProxy[] { intXBeanProxy, intYBeanProxy});
-
-						// Get the constructor to create the control, new Control(Composite,int);
-						// First get the arg types.
-						IBeanTypeProxy compositeBeanTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory()
-								.getBeanTypeProxy("org.eclipse.swt.widgets.Composite"); //$NON-NLS-1$
-
-						IBeanTypeProxy intBeanTypeProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
-								"int"); //$NON-NLS-1$
-
-						// Now we have the target type and the argument types, get the constructor
-						IConstructorProxy createControlProxy = targetClass.getConstructorProxy(new IBeanTypeProxy[] { compositeBeanTypeProxy,
-								intBeanTypeProxy});
-						// Create a proxy for the value zero
-						IBeanProxy zeroBeanProxy = getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(0);
-						return createControlProxy.newInstance(new IBeanProxy[] { parentBeanProxy, zeroBeanProxy});
-
-					} catch (AllocationException e) {
-						throw new RunnableException(e);
-					}
-				}
-			});
-			return (IBeanProxy) result;
-		} catch (ThrowableProxy e) {
-			throw new AllocationException(e);
-		} catch (DisplayManager.DisplayRunnable.RunnableException e) {
-			throw (AllocationException) e.getCause();
+	protected FreeFormComponentsHost ffHost;
+	
+	public void addToFreeForm(CompositionProxyAdapter compositionAdapter) {
+		ffHost = (FreeFormComponentsHost) compositionAdapter.getFreeForm(FreeFormComponentsHost.class);
+		if (ffHost == null) {
+			// Doesn't exist yet, need to create it.
+			ffHost = new FreeFormComponentsHost(compositionAdapter);
 		}
+	}
+	
+	public void removeFromFreeForm() {
+		ffHost = null; // No longer on freeform.
+	}
+	
+	/**
+	 * Override the location with this location. This is used when on the freeform. This is so that the true location on the freeform does not filter
+	 * through to the settings of location/bounds in the java object.
+	 * 
+	 * @param loc
+	 * @param expression
+	 * 
+	 * @since 1.1.0
+	 */
+	public void overrideLocation(Point loc, IExpression expression) {
+		getControlManager().overrideLocation(loc, expression);
+	}
+
+	/**
+	 * Override the visibility with this setting. An example of this is used when on the freeform for non-window components to make sure they are
+	 * visible no matter what the original setting and any subsequent settings are. This must be called before instantiation.
+	 * 
+	 * @param visibility
+	 * @param expression expression to use if the component is already instantiated. If not yet instantiated then this parm will be ignored.
+	 * 
+	 * @since 1.1.0
+	 */
+	public void overrideVisibility(boolean visibility, IExpression expression) {
+		overrideProperty(sfControlVisible, getBeanProxyFactory().createBeanProxyWith(visibility), expression);
+	}
+	
+	/**
+	 * Remove the override of the visibility.
+	 * @param expression
+	 * 
+	 * @since 1.1.0
+	 */
+	public void removeVisibilityOverride(IExpression expression) {
+		removeOverrideProperty(sfControlVisible, expression);
+	}
+	
+	/**
+	 * Create the control manager. Subclasses that want to add in a Extension manager at this time should
+	 * override and do so after calling super.createControlManager.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected ControlManager createControlManager() {
+		return new ControlManager();
+	}
+
+	/**
+	 * Get the component manager. This should be used for all access so that it is lazily created.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected final ControlManager getControlManager() {
+		if (controlManager == null)
+			controlManager = createControlManager();
+		return controlManager;
+	}
+
+	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
+		IProxy newbean = super.primInstantiateBeanProxy(expression);
+		if (newbean != null)
+			getControlManager().setControlBeanProxy(newbean, expression, getModelChangeController());
+		return newbean;
+	}
+	
+	protected IProxy primInstantiateThisPart(IProxyBeanType targetClass, IExpression expression) throws AllocationException {
+		if (ffHost != null) {
+			// We are the this part. This means we should be on the freeform. Currently only thispart can be on freeform, so we are putting the
+			// code for that here.
+			// We are on the freeform, instantiate for this. This needs to be done for each instantiation because it is reset in the release.
+			// Subclasses (such as Shell) will want to do freeform differently so ffHost will be null and we won't go through here.
+			overrideVisibility(true, expression);
+			overrideLocation(new Point(), expression); // Go to (0,0) because we are in a freeform dialog which will control position.
+
+			boolean changedTarget = false;
+			// KLUDGE: Something special for control and "this" part. Since Control is Abstract, someone may of tried create an abstract subclass.
+			// In that case
+			// the bean proxy that comes in would be for Object. So what we will do is since we are not a control, we will change it a Canvas (that
+			// way something will display).
+			// Don't need to worry about any other kind of class because all of the subclasses of Control that we are implementing
+			// are non-abstract.
+			// 
+			// If we find one of the notinstantiated classes is control, then we know we went to far, so we will create it
+			// as gray canvas.
+			// newBean = new java.awt.Canvas();
+			// newBean.setBackground(lightGray);
+			// return newBean;
+			for (int i = 0; i < notInstantiatedClasses.size(); i++) {
+				if (!changedTarget && ((JavaHelpers) notInstantiatedClasses.get(i)).getQualifiedName().equals("org.eclipse.swt.widgets.Control")) { //$NON-NLS-1$
+					targetClass = getBeanTypeProxy("org.eclipse.swt.widgets.Canvas", expression);
+					changedTarget = true;
+				}
+				if (changedTarget) {
+					notInstantiatedClasses.remove(i--);	// Remove "control" and any above control because we want to be able to apply "control" properties to the live bean.
+				}
+			}
+
+			// Now create using new Control(ffparent, SWT.NONE);
+			IProxy parent = ffHost.add(getEObject().eIsSet(sfControlBounds) || getEObject().eIsSet(sfControlSize), expression);
+
+			// newbean = new targetClass(Composite parent, int SWT.NONE);
+			ExpressionProxy newbean = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
+			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass, 2);
+			expression.createProxyExpression(ForExpression.CLASSINSTANCECREATION_ARGUMENT, parent);
+			expression.createFieldAccess(ForExpression.CLASSINSTANCECREATION_ARGUMENT, getBeanTypeProxy("org.eclipse.swt.SWT", expression)
+					.getFieldProxy(expression, "NONE"), false);
+
+			if (changedTarget) {
+				expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, targetClass.getMethodProxy(expression, "setBackground", //$NON-NLS-1$
+						new String[] { "org.eclipse.swt.graphics.Color"}), true, 1); //$NON-NLS-1$
+				expression.createProxyExpression(ForExpression.METHOD_RECEIVER, newbean);
+				expression.createFieldAccess(ForExpression.METHOD_ARGUMENT, "lightGray", true); //$NON-NLS-1$
+				expression.createProxyExpression(ForExpression.FIELD_RECEIVER, JavaStandardSWTBeanConstants.getConstants(expression.getRegistry()).getEnvironmentProxy());
+			}
+			return newbean;
+		} else
+			return null;	// This shouldn't happen.
+
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.cde.core.IVisualComponent#addComponentListener(org.eclipse.ve.internal.cde.core.IVisualComponentListener)
+	 */
+	public synchronized void addComponentListener(IVisualComponentListener aListener) {
+		getControlManager().addComponentListener(aListener);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#beanProxyAllocation(org.eclipse.jem.internal.instantiation.JavaAllocation)
+	 * @see org.eclipse.ve.internal.cde.core.IVisualComponent#removeComponentListener(org.eclipse.ve.internal.cde.core.IVisualComponentListener)
 	 */
-	protected IBeanProxy beanProxyAllocation(final JavaAllocation allocation) throws AllocationException {
-		try {
-			Object result = invokeSyncExec(new DisplayManager.DisplayRunnable() {
+	public void removeComponentListener(IVisualComponentListener aListener) {
+		if (controlManager != null)
+			getControlManager().removeComponentListener(aListener);
+	}
 
-				public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
-					try {
-						return beanProxyAdapterBeanProxyAllocation(allocation);
-					} catch (AllocationException e) {
-						throw new RunnableException(e);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.jfc.core.IComponentProxyHost#getVisualComponentBeanProxy()
+	 */
+	public IBeanProxy getVisualComponentBeanProxy() {
+		return getBeanProxy();
+	}
+
+	private IImageListener imageListener; // A local one used to process image errors.
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.cde.core.IImageNotifier#addImageListener(org.eclipse.ve.internal.cde.core.IImageListener)
+	 */
+	public synchronized void addImageListener(IImageListener aListener) {
+		if (imageListener == null) {
+			imageListener = new ControlManager.IControlImageListener() {
+
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see org.eclipse.ve.internal.jfc.core.ComponentManager.IComponentImageListener#imageStatus(int)
+				 */
+				public void imageStatus(int status) {
+					switch (status) {
+						case ImageDataConstants.COMPONENT_IMAGE_CLIPPED:
+							// Bit of kludge, but if image clipped, create an info message for it.
+							ErrorType err = new MessageError(SWTMessages.getString("ControlProxyAdapter.Picture_too_large_WARN_"), //$NON-NLS-1$
+									IErrorHolder.ERROR_INFO);
+							processError(err, IMAGE_DATA_COLLECTION_ERROR_KEY);
+							break;
+						default:
+							// Other status, even aborted or error we don't register as an error. We just clear it.
+							clearError(IMAGE_DATA_COLLECTION_ERROR_KEY);
+							break;
 					}
 				}
-			});
-			return (IBeanProxy) result;
-		} catch (ThrowableProxy e) {
-			throw new AllocationException(e);
-		} catch (DisplayManager.DisplayRunnable.RunnableException e) {
-			throw (AllocationException) e.getCause(); // We know it is an allocation exception because that is the only runnable exception we throw.
+
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see org.eclipse.ve.internal.jfc.core.ComponentManager.IComponentImageListener#imageException(org.eclipse.jem.internal.proxy.core.ThrowableProxy)
+				 */
+				public void imageException(final ThrowableProxy exception) {
+					String eMsg = exception.getProxyLocalizedMessage();
+					if (eMsg == null) {
+						// No localized msg. Get the exception type.
+						IBeanTypeProxy eType = exception.getTypeProxy();
+						eMsg = MessageFormat
+								.format(
+										SWTMessages.getString("ControlProxyAdapter.Image_collection_exception_EXC_"), new Object[] { eType.getTypeName()}); //$NON-NLS-1$
+					}
+					ErrorType err = new MessageError(MessageFormat.format(SWTMessages
+							.getString("ControlProxyAdapter.Image_collection_failed_ERROR_"), new Object[] { eMsg}), IErrorHolder.ERROR_INFO); //$NON-NLS-1$
+					processError(err, IMAGE_DATA_COLLECTION_ERROR_KEY);
+				}
+
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see org.eclipse.ve.internal.cde.core.IImageListener#imageChanged(org.eclipse.swt.graphics.ImageData)
+				 */
+				public void imageChanged(ImageData imageData) {
+				}
+			};
+		}
+		getControlManager().addImageListener(imageListener);
+		getControlManager().addImageListener(aListener);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.cde.core.IImageNotifier#removeImageListener(org.eclipse.ve.internal.cde.core.IImageListener)
+	 */
+	public synchronized void removeImageListener(IImageListener aListener) {
+		if (controlManager != null) {
+			// KLUDGE Remove our image listener first, so that after we remove this input listener we can see if there
+			// still any listeners. If there are, we add ours back. If not we don't add ours back. This is because we
+			// don't want to get images sent if we are the only one listening. Our listener is simply to get errors
+			// back if someone is asking for images.
+			if (imageListener != null)
+				getControlManager().removeImageListener(imageListener);
+			getControlManager().removeImageListener(aListener);
+			if (imageListener != null && getControlManager().hasImageListeners())
+				getControlManager().addImageListener(imageListener);
 		}
 	}
 
-	protected IJavaObjectInstance getParentComposite(IJavaObjectInstance control) {
-		return (IJavaObjectInstance) InverseMaintenanceAdapter.getFirstReferencedBy(control, (EReference) JavaInstantiation.getSFeature(control
-				.eResource().getResourceSet(), SWTConstants.SF_COMPOSITE_CONTROLS));
+	protected IProxy primApplyBeanProperty(PropertyDecorator propertyDecorator, IProxy settingProxy, IExpression expression, boolean getOriginalValue)
+			throws NoSuchMethodException, NoSuchFieldException {
+		// Override for loc and bounds so that it goes through the component manager.
+		if (propertyDecorator.getEModelElement() == sfControlBounds) {
+			return getControlManager().applyBounds(settingProxy, getOriginalValue, expression, getModelChangeController());
+		} else if (propertyDecorator.getEModelElement() == sfControlLocation)
+			return getControlManager().applyLocation(settingProxy, getOriginalValue, expression, getModelChangeController());
+		else if (propertyDecorator.getEModelElement() == sfLayoutData)
+			return getControlManager().applyLayoutData(settingProxy, getOriginalValue, expression);
+		else
+			return super.primApplyBeanProperty(propertyDecorator, settingProxy, expression, getOriginalValue);
 	}
 
-	private IMethodProxy getEnvironmentFreeFormHostMethodProxy() {
-		if (environmentFreeFormHostMethodProxy == null) {
-			environmentFreeFormHostMethodProxy = getEnvironmentBeanTypeProxy().getMethodProxy("getFreeFormHost", new String[] { "int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	protected void applySetting(EStructuralFeature feature, Object value, int index, IExpression expression) {
+		if (ffHost != null) {
+			if (feature == sfControlBounds || feature == sfControlSize) {
+				ffHost.setUseComponentSize(getProxy(), true, expression);
+			}			
 		}
-		return environmentFreeFormHostMethodProxy;
-	}
 
+		super.applySetting(feature, value, index, expression);
+	}
+	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {
+		// Little tricker, need to see if the other setting is still set.
+		if (ffHost != null) {
+			if ((feature == sfControlBounds && !getEObject().eIsSet(sfControlSize)) || 
+					(feature == sfControlSize && !getEObject().eIsSet(sfControlBounds))) {
+				// The complementary feature is not set, so we need to reset to use the preferred size.
+				ffHost.setUseComponentSize(getProxy(), false, expression);
+			}
+		}
+
+		if (feature == sfControlBounds && (getEObject().eIsSet(sfControlSize) || getEObject().eIsSet(sfControlLocation)))
+			return; // Don't apply the cancel for bounds because loc and size are set and this would wipe them out.
+		else if ((feature == sfControlSize || feature == sfControlLocation) && getEObject().eIsSet(sfControlBounds))
+			return; // Don't apply the cancel for size or loc because bounds is set and this would wipe that setting out.
+		else
+			super.cancelSetting(feature, oldValue, index, expression);
+	}
+	
+	protected void primPrimReleaseBeanProxy(IExpression expression) {
+		if (imageListener != null) {
+			clearError(IMAGE_DATA_COLLECTION_ERROR_KEY); // In case one is hanging around.
+		}
+
+		if (controlManager != null) {
+			// Be on the safe so no spurious last minute notifications are sent out.
+			if (expression != null) {
+				expression.createTry();
+				controlManager.dispose(expression);
+				expression.createTryCatchClause("java.lang.RuntimeException", false);	//$NON-NLS-1$
+				expression.createTryEnd();
+			} else
+				controlManager.dispose(null);	// Give it a chance to clean up without an expression.
+			// Note: Do not get rid of the control manager. This bean may of had component listeners
+			// and this bean may be about to be reinstantiated. We don't want to loose the listeners
+			// when the reinstantiation occurs.
+		}
+
+		// We need to dispose of stuff above before we do the super.release because by the time the
+		// release comes back the bean proxy will of been released and can't be used. It is needed
+		// to do the above disposes.
+		super.primPrimReleaseBeanProxy(expression);
+	}
+	
+	public IProxy getBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttribute, IExpression exp, ForExpression forExpression) {
+		// Override for loc and bounds so that it goes through the component manager.
+		// Even though an expression is past in, we aren't using it here. Probably could in the future.
+		// The get default bounds and location do not need to be on UI thread. The ControlManager handles this for us.
+		if (aBeanPropertyAttribute == sfControlBounds)
+			return getControlManager().getDefaultBounds();
+		else if (aBeanPropertyAttribute == sfControlLocation)
+			return getControlManager().getDefaultLocation();
+		else
+			return super.getBeanPropertyProxyValue(aBeanPropertyAttribute, exp, forExpression);
+	}
+	
 	public Rectangle getBounds() {
-		if (fControlManager != null) {
-			return fControlManager.getBounds();
+		if (controlManager != null) {
+			return controlManager.getBounds();
 		} else {
 			// No proxy. Either called too soon, or there was an instantiation error and we can't get
 			// a live component. So return just a default.
 			return new Rectangle(0, 0, 0, 0);
 		}
 
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ve.internal.cde.core.IVisualComponent#getAbsoluteLocation()
+	 */
+	public Point getAbsoluteLocation() {
+		if (controlManager != null) {
+			return controlManager.getAbsoluteLocation();
+		} else {
+			// No proxy. Either called too soon, or there was an instantiation error and we can't get
+			// a live component. So return just a default.
+			return new Point();
+		}
 	}
 
 	/**
-	 * Return the rectangle that defines the box of the client area in a coordinate system from the bounds of the control. This is different to
-	 * Composite.getClientArea() that is at 0,0,width,height as this always returns the client area origin as 0,0 getClientBox() returns x and y as
-	 * being the corner of the client area as offset from the bounds location so it's usually 2,2 if there is SWT.BORDER, or could be 4,29 for a shell
-	 * with trim
+	 * Get the origin offset. This is the offset from the upper-left corner of the control to where (0,0) is in the control. Most
+	 * controls will return (0,0) as the offset, but shell is different. With shell when you set something at (0,0), it will actually be
+	 * at some other value relative to the upper-left corner. This is that offset.
+	 * @return
+	 * 
+	 * @since 1.1.0
 	 */
-	public Rectangle getClientBox() {
-		initializeControlManager();
-		if (fControlManager != null)
-			return fControlManager.getClientBox();
+	public Point getOriginOffset() {
+		if (controlManager != null)
+			return controlManager.getOriginOffset();
 		else
-			return new Rectangle(0, 0, 0, 0);
+			return new Point();
 	}
 
 	public Point getLocation() {
-		if (fControlManager != null) {
-			return fControlManager.getLocation();
+		if (controlManager != null) {
+			return controlManager.getLocation();
 		} else {
 			// No proxy. Either called too soon, or there was an instantiation error and we can't get
 			// a live component. So return just a default.
-			return new Point(0, 0);
+			return new Point();
 		}
 	}
 
 	public Dimension getSize() {
-		if (fControlManager != null) {
-			return fControlManager.getSize();
+		if (controlManager != null) {
+			return controlManager.getSize();
 		} else {
 			// No proxy. Either called too soon, or there was an instantiation error and we can't get
 			// a live component. So return just a default.
-			return new Dimension(0, 0);
+			return new Dimension();
 		}
 	}
-
-	public void addComponentListener(IVisualComponentListener aListener) {
-		if (fControlListeners == null)
-			fControlListeners = new ArrayList(1);
-
-		fControlListeners.add(aListener);
-		if (fControlManager != null) {
-			fControlManager.addComponentListener(aListener);
-		} else {
-			if (getBeanProxy() != null && getBeanProxy().isValid()) {
-				initializeControlManager(); // Create the control listener on the bean and add all
-			}
-		}
-	}
-
-	protected void initializeControlManager() {
-		if (isBeanProxyInstantiated()) {
-			// Create an instance of ComponentManager on the target VM
-			if (fControlManager == null) {
-				fControlManager = new ControlManager();
-				// Having created the ComponentManager in the IDE transfer all existing people listening to us
-				// to the component listener
-				if (fControlListeners != null) {
-					Iterator listeners = fControlListeners.iterator();
-					while (listeners.hasNext()) {
-						fControlManager.addComponentListener((IVisualComponentListener) listeners.next());
-					}
-				}
-				fControlManager.setControlBeanProxy(getBeanProxy());
-			}
-		}
-
-	}
-
-	public synchronized void removeComponentListener(IVisualComponentListener aListener) {
-		// Remove from the local list and the proxy list.
-		fControlListeners.remove(aListener);
-		if (fControlManager != null) {
-			fControlManager.removeComponentListener(aListener);
-		}
-	}
-
-	public synchronized void addImageListener(IImageListener aListener) {
-		if (imSupport == null)
-			imSupport = new ImageNotifierSupport();
-		imSupport.addImageListener(aListener);
-	}
-
+	
 	public boolean hasImageListeners() {
-		return (imSupport != null && imSupport.hasImageListeners());
+		return (controlManager != null && getControlManager().hasImageListeners());
 	}
+
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#setupBeanProxy(org.eclipse.jem.internal.proxy.core.IBeanProxy)
+	 * @see org.eclipse.ve.internal.cde.core.IImageNotifier#invalidateImage()
 	 */
-	protected void setupBeanProxy(IBeanProxy beanProxy) {
-		super.setupBeanProxy(beanProxy);
-		initializeControlManager();
-		// TODO This needs to be queued so that in the situation where a composite
-		// does a recycle of a number of controls there is just a single refresh
-		if (hasImageListeners())
-			refreshImage();
-	}
-
 	public void invalidateImage() {
-		// TODO Auto-generated method stub
-	}
-
-	public void refreshImage() {
-		initializeControlManager();
-		if (fControlManager != null) {
-			getModelChangeController().execAtEndOfTransaction(new Runnable() {
-
-				public void run() {
-					if (fControlManager!=null) { 
-					  // We were not disposed by the time we got here 
-					  fControlManager.captureImage();
-					  imSupport.fireImageChanged(fControlManager.getImageData());
-					}
-				}
-			}, ModelChangeController.createHashKey(this, "image"));
-
-		}
-	}
-
-	public void removeImageListener(IImageListener listener) {
-		imSupport.removeImageListener(listener);
-	}
-
-	public void releaseBeanProxy() {
-		if (fControlManager != null)
-			fControlManager.release();
-		super.releaseBeanProxy();
-		fControlManager = null;
-	}
-
-	protected void primReinstantiateBeanProxy() {
-		// If we are owned by a composite this must re-create us so that we are re-inserted in the correct position
-		if (parentProxyAdapter != null) {
-			parentProxyAdapter.reinstantiateChild(this);
-			return;
-		}
-		super.primReinstantiateBeanProxy();
-	}
-
-	protected ModelChangeController getModelChangeController() {
-		return (ModelChangeController) getBeanProxyDomain().getEditDomain().getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-	}
-
-	public void validateBeanProxy() {
-		super.validateBeanProxy();
-		if (isBeanProxyInstantiated()) {
-
-			// Still live at when invoked later.
-			// Go up the chain and find all image listeners.
-			List allImageListeners = new ArrayList(5);
-			IVisualComponent nextParentBean = (IVisualComponent) parentProxyAdapter;
-			IVisualComponent parentBean = ControlProxyAdapter.this;
-			if (parentBean.hasImageListeners())
-				allImageListeners.add(parentBean);
-			while (nextParentBean != null) {
-				parentBean = nextParentBean;
-				if (parentBean.hasImageListeners()) {
-					allImageListeners.add(parentBean);
-				}
-				nextParentBean = (IVisualComponent) ((IControlProxyHost) parentBean).getParentProxyHost();
-			}
-			// Now refresh all of the components that notify.
-			Iterator listeners = allImageListeners.iterator();
-			while (listeners.hasNext()) {
-				((IVisualComponent) listeners.next()).refreshImage();
-			}
-		}
-		childValidated(this);
-	}
-
-	public void childValidated(IControlProxyHost childProxy) {
-		if (parentProxyAdapter != null) {
-			parentProxyAdapter.childValidated(childProxy);
-		}
-	}
-
-	public void setTarget(Notifier newTarget) {
-		super.setTarget(newTarget);
-		// See whether or not we are on the free form
-		if (newTarget != null) {
-			EObject beanComposition = InverseMaintenanceAdapter.getFirstReferencedBy(newTarget, JCMPackage.eINSTANCE.getBeanComposition_Components());
-			if (beanComposition != null) {
-				Adapter existingAdapter = EcoreUtil.getExistingAdapter(beanComposition, FreeFormControlHostAdapter.class);
-				if (existingAdapter == null) {
-					FreeFormControlHostAdapter adapter = new FreeFormControlHostAdapter(getBeanProxyDomain(), (BeanComposition) beanComposition);
-					adapter.setTarget(beanComposition);
-					beanComposition.eAdapters().add(adapter);
-					adapter.add(this);
-				}
-
-			}			
-			
-		}
-	}
-
-	public void setParentProxyHost(IControlProxyHost adapter) {
-		parentProxyAdapter = adapter;
-		if (fControlManager != null) {
-			fControlManager.setControlParentBeanProxy(parentProxyAdapter != null ? parentProxyAdapter.getVisualControlBeanProxy() : null);
-		}
+		if (controlManager != null)
+			getControlManager().invalidateImage();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int) We need to
-	 *      apply null to the layout data when it's cancelled to prevent ClassCastExceptions caused by a mismatch of the wrong layoutData with a
-	 *      specific layout (e.g GridData on a RowLayout).
-	 * 
-	 * Note: The Layout switcher is responsible to cancel or set the layoutdata for each of the controls.
+	 * @see org.eclipse.ve.internal.cde.core.IImageNotifier#refreshImage()
 	 */
-	protected void canceled(EStructuralFeature sf, Object oldValue, int position) {
-		if (sf == sf_layoutData) {
-			applyBeanPropertyProxyValue(sf, null);
-		} else {
-			if (sf == sfComponentBounds && (getJavaObject().eIsSet(sfComponentLocation) || getJavaObject().eIsSet(sfComponentSize)))
-				return;	// Don't cancel because it will wipe out the location or size.
-			if (sf == sfComponentSize && getJavaObject().eIsSet(sfComponentBounds))
-				return;	// Don't cancel because it will wipe out the bounds
-			if (sf == sfComponentLocation && getJavaObject().eIsSet(sfComponentBounds))
-				return;	// Don't cancel because it will wipe out the bounds			
-			super.canceled(sf, oldValue, position);
+	public void refreshImage() {
+		if (isBeanProxyInstantiated() && controlManager != null) {
+			clearError(IMAGE_DATA_COLLECTION_ERROR_KEY);
+			getControlManager().refreshImage();
 		}
 	}
 
-	protected void applied(EStructuralFeature as, Object newValue, int position) {
-		// If the allocation is being applied then we must try to instantiate - bugzilla 91519
-		if (!isBeanProxyInstantiated() && !isInstantiationFeature(as))
-			return; // Nothing to apply to yet or could not construct.
-		if (as == sfComponentBounds)
-			appliedBounds(as, newValue, position); // Handle bounds
-		else
-			super.applied(as, newValue, position); // We letting the settings go through
+	public void revalidateBeanProxy() {
+		if (isBeanProxyInstantiated())
+			getControlManager().invalidate(getModelChangeController());
 	}
 
-	protected void appliedBounds(final EStructuralFeature as, Object newValue, int position) {
-		IRectangleBeanProxy rect = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) newValue);
-		if (rect != null
-				&& (rect.getWidth() == -1 || rect.getHeight() == -1 || (rect.getX() == Integer.MIN_VALUE && rect.getY() == Integer.MIN_VALUE))) {
-			Rectangle bounds = new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
-
-			ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
-			IJavaInstance inst = BeanUtilities.createJavaObject("int", rset, String.valueOf(-1)); //$NON-NLS-1$
-			IIntegerBeanProxy defval = (IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(inst);
-
-			IJavaObjectInstance control = (IJavaObjectInstance) getTarget();
-			IJavaObjectInstance composite = getParentComposite(control);
-			if (NullLayoutEditPolicy.adjustForPreferredSizeAndPosition(getBeanProxy(), composite, bounds, 15, 5, defval, defval)) {
-				String initString = RectangleJavaClassCellEditor.getJavaInitializationString(bounds, SWTConstants.RECTANGLE_CLASS_NAME);
-				final IJavaInstance rectBean = BeanUtilities.createJavaObject(SWTConstants.RECTANGLE_CLASS_NAME, ((EObject) target).eResource()
-						.getResourceSet(), initString);//$NON-NLS-1$
-				Display.getDefault().asyncExec(new Runnable() {
-
-					/**
-					 * @see java.lang.Runnable#run()
-					 */
-					public void run() {
-						// We may not be within the context of a change control, so we need to get a controller to handle the change.
-						getModelChangeController().doModelChanges(new Runnable() {
-
-							public void run() {
-								// Set the constraints on the component bean. This will change the size of the component
-								// Because we will be called back with notify and apply the constraints rectangle to the live bean
-								//
-								// Note: Need to use RuledCommandBuilder.
-								RuledCommandBuilder cbld = new RuledCommandBuilder(getBeanProxyDomain().getEditDomain());
-								cbld.applyAttributeSetting((EObject) target, as, rectBean);
-								cbld.getCommand().execute();
-							}
-						}, true);
-					}
-				});
-				return; // Let the notify back from the set here do the actual apply.
-			}
+	/**
+	 * Return the first instantiated (or in instantiation) proxy at or after the given index.
+	 * Return null if no setting after the given position are instantiated or are in instantiation.
+	 * <p>
+	 * This is a useful method for working with isMany features for doing the add() on the
+	 * target vm. It is usually used so that we put it in the right place (since the index
+	 * may not actually coorespond to the correct index on the target vm due to superclasses
+	 * may of added their own settings that we don't see).
+	 * 
+	 * @param position position to start looking at
+	 * @param feature feature to look into (must be an isMany() feature).
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected IProxy getProxyAt(int position, EStructuralFeature feature) {
+		List settings = (List) getEObject().eGet(feature);
+		for (int i=position; i<settings.size(); i++) {
+			IJavaInstance setting = (IJavaInstance) settings.get(i);
+			IInternalBeanProxyHost2 settingProxyHost =
+				(IInternalBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost(setting);
+			if (settingProxyHost.isBeanProxyInstantiated() || settingProxyHost.inInstantiation())
+				return settingProxyHost.getProxy();
 		}
-		super.applied(as, newValue, position);
+		
+		return null;
 	}
 
-	public IControlProxyHost getParentProxyHost() {
-		return parentProxyAdapter;
-	}
-
-	public IBeanProxy getVisualControlBeanProxy() {
-		return getBeanProxy();
-	}
-
-	public Point getAbsoluteLocation() {
-		if (fControlManager != null) {
-			return fControlManager.getAbsoluteLocation();
-		} else {
-			// No proxy. Either called too soon, or there was an instantiation error and we can't get
-			// a live component. So return just a default.
-			return new Point(0, 0);
-		}
-	}
 }

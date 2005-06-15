@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-23 18:05:50 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-15 20:19:34 $ 
  */
 
 import java.net.MalformedURLException;
@@ -23,6 +23,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
+
+import org.eclipse.jem.util.logger.proxy.Logger;
+import org.eclipse.jem.util.logger.proxyrender.EclipseLogger;
 
 /**
  * This is the top-level class of the Common Diagram Editor plugin
@@ -61,6 +64,20 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	public String getPluginID() {
 		return getBundle().getSymbolicName();
 	}
+	
+	private Logger logger;
+	
+	/**
+	 * Get the logger.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public Logger getLogger() {
+		if (logger == null)
+			logger = EclipseLogger.getEclipseLogger(this);
+		return logger;
+	}
 
 	/**
 	 * Handle getting a class from the string. The format of the string is either:
@@ -75,6 +92,17 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	 */
 	static public Class getClassFromString(String pluginFormatedClassName) throws ClassNotFoundException {
 		return getClassFromString(null, pluginFormatedClassName);
+	}
+	
+	/**
+	 * Answers whether there is any initialization data in the string.
+	 * @param pluginFormatedClassName
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	static public boolean hasInitializationData(String pluginFormatedClassName) {
+		return pluginFormatedClassName.indexOf(':') != -1;
 	}
 
 	/**

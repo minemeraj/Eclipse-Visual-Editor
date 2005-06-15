@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: LayoutPropertyDescriptor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-15 20:19:21 $ 
  */
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -78,7 +78,7 @@ public Command setValue(IPropertySource source, Object setValue){
 	// Same value, or had no switcher, so we just apply the new setting.
 	RuledCommandBuilder cbld = new RuledCommandBuilder(domain);
 	cbld.applyAttributeSetting(container, (EStructuralFeature) getTarget(), setValue);
-	return new HoldProcessingCommand(cbld.getCommand(), container);
+	return cbld.getCommand();
 }
 
 public Command resetValue(IPropertySource source){
@@ -110,7 +110,7 @@ public Command resetValue(IPropertySource source){
 	// No switcher, so we just cancel the setting.	The constraints of any children will probably be bad.
 	RuledCommandBuilder cbld = new RuledCommandBuilder(domain);
 	cbld.cancelAttributeSetting(container, (EStructuralFeature) getTarget());	
-	return new HoldProcessingCommand(cbld.getCommand(), container);
+	return cbld.getCommand();
 }
 
 }

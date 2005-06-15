@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneChildTreeLabelDecorator.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:21 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 import java.text.MessageFormat;
@@ -27,9 +27,8 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
 
-import org.eclipse.jem.internal.instantiation.base.*;
-
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 
@@ -51,9 +50,9 @@ public class JTabbedPaneChildTreeLabelDecorator extends Object implements ILabel
 
 	protected EObject tabComponent;
 
-	public JTabbedPaneChildTreeLabelDecorator(EObject model) {
-		initializeSFs(model);
-		tabComponent = InverseMaintenanceAdapter.getFirstReferencedBy(model, sfTabComponent);
+	public JTabbedPaneChildTreeLabelDecorator(EObject tabComponent) {
+		initializeSFs(tabComponent);
+		this.tabComponent = tabComponent;
 		if (tabComponent != null)
 			tabComponent.eAdapters().add(getTabComponentAdapter());
 	}

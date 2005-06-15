@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualUtilities.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-21 18:18:50 $ 
+ *  $Revision: 1.12 $  $Date: 2005-06-15 20:19:38 $ 
  */
 package org.eclipse.ve.internal.java.visual;
 
@@ -40,7 +40,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class VisualUtilities {
 	
-	public static final String LAYOUT_POLICY_FACTORY_CLASSNAME_KEY = "org.eclipse.ve.internal.jfc.core.layoutpolicyfactoryclassnamekey"; //$NON-NLS-1$	
+	public static final String LAYOUT_POLICY_FACTORY_CLASSNAME_KEY = "org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey"; //$NON-NLS-1$	
 	
 public static ILayoutPolicyFactory getLayoutPolicyFactory(IBeanTypeProxy layoutBeanTypeProxy, EditDomain editDomain){ 
 		

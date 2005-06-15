@@ -10,11 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanExceptionError.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-15 20:19:38 $ 
  */
 package org.eclipse.ve.internal.java.core;
-
-import java.util.logging.Level;
 
 import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 
@@ -36,7 +34,6 @@ public class BeanExceptionError extends ExceptionError {
 	 */
 	public BeanExceptionError(Throwable error, int severity) {
 		super(error, severity);
-		JavaVEPlugin.log(error, Level.FINEST);	// Only show when finest so we can see during debugging.
 	}
 	
 	

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.rules;
  *******************************************************************************/
 /*
  *  $RCSfile: RuledWrapperedPropertyDescriptor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-15 20:19:38 $ 
  */
 
 import org.eclipse.gef.commands.Command;
@@ -36,12 +36,20 @@ public class RuledWrapperedPropertyDescriptor implements ICommandPropertyDescrip
 	protected IPropertySource fSource;
 	protected EditDomain domain;
 	protected Object fID;
+	private String fDisplayName;
+	
 	/**
 	 * MergedPropertyDescriptor constructor comment.
 	 */
 	public RuledWrapperedPropertyDescriptor(EditDomain domain, IPropertySource source, IPropertyDescriptor descriptor) {
 		this(domain, descriptor.getId(), source, descriptor);
 	}
+	
+	public RuledWrapperedPropertyDescriptor(EditDomain domain, String displayName, IPropertySource source, IPropertyDescriptor descriptor) {
+		this(domain, descriptor.getId(), source, descriptor);
+		fDisplayName = displayName;
+	}
+
 	
 	public Object getHelpContextIds(){
 		return fDescriptor.getHelpContextIds();
@@ -94,8 +102,9 @@ public class RuledWrapperedPropertyDescriptor implements ICommandPropertyDescrip
 	 * getDisplayName method comment.
 	 */
 	public String getDisplayName() {
-		return fDescriptor.getDisplayName();
+		return fDisplayName == null ? fDescriptor.getDisplayName() : fDisplayName;
 	}
+	
 	/**
 	 * getFilterFlags method comment.
 	 */

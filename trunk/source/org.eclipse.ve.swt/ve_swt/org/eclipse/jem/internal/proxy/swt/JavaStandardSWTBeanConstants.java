@@ -13,8 +13,12 @@ package org.eclipse.jem.internal.proxy.swt;
 
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.Platform;
+
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
+
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 import org.eclipse.ve.internal.swt.SwtPlugin;
 
@@ -38,8 +42,9 @@ public final class JavaStandardSWTBeanConstants {
 		
 	public static final Object REGISTRY_KEY = new Object();
 			
-	final IBeanTypeProxy environmentBeanTypeProxy;
+	IBeanTypeProxy environmentBeanTypeProxy;
 	IBeanProxy displayProxy;
+	IBeanProxy environmentProxy;
 	final IFieldProxy pointXProxy;
 	final IFieldProxy pointYProxy;
 	final IFieldProxy rectangleHeightProxy;
@@ -73,7 +78,15 @@ public JavaStandardSWTBeanConstants(ProxyFactoryRegistry registry, boolean isReg
 	rectangleXProxy = rectangleTypeProxy.getFieldProxy("x");//$NON-NLS-1$
 	rectangleYProxy = rectangleTypeProxy.getFieldProxy("y");//$NON-NLS-1$
 	
-	environmentBeanTypeProxy = typeFactory.getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.Environment"); //$NON-NLS-1$
+	String envTypeName;
+	if (Platform.OS_WIN32.equals(Platform.getOS()))
+		envTypeName = "org.eclipse.ve.internal.swt.targetvm.win32.Environment"; //$NON-NLS-1$
+	else if (Platform.WS_GTK.equals(Platform.getWS()))
+		envTypeName = "org.eclipse.ve.internal.swt.targetvm.unix.Environment"; //$NON-NLS-1$
+	else
+		return;	// We don't have one.
+
+	environmentBeanTypeProxy = typeFactory.getBeanTypeProxy(envTypeName);
 }
 /**
  * getPointXFieldProxy method comment.
@@ -112,13 +125,21 @@ public IFieldProxy getRectangleYFieldProxy() {
 	return rectangleYProxy;
 }
 
-public IBeanTypeProxy getEnvironmentBeanTypeProxy(){
-	return environmentBeanTypeProxy;
+public IBeanProxy getEnvironmentProxy(){
+	if (environmentProxy == null) {
+		// Get one.
+		try {
+			environmentProxy = environmentBeanTypeProxy.newInstance();
+		} catch (ThrowableProxy e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		}
+	}
+	return environmentProxy;
 }
 
 public IBeanProxy getDisplayProxy() {
 	if (displayProxy == null)
-		displayProxy = environmentBeanTypeProxy.getMethodProxy("getDisplay").invokeCatchThrowableExceptions(null); //$NON-NLS-1$
+		displayProxy = environmentBeanTypeProxy.getMethodProxy("getDisplay").invokeCatchThrowableExceptions(getEnvironmentProxy()); //$NON-NLS-1$
 	return displayProxy;
 }
 
@@ -140,6 +161,22 @@ public static Object invokeSyncExec(ProxyFactoryRegistry registry, DisplayManage
 }
 
 /**
+ * Invoke the runnable on the display thread on the given display. It will not return until completed. It will use
+ * the display associated with the vm that was started for this editor. There is a default one created for this.
+ * 
+ * @param displayProxy displayProxy to use. 
+ * @param runnable the runnable to execute
+ * @return the result, it will be either a IBeanProxy, IBeanProxy[], or <code>null</code>.
+ * @throws ThrowableProxy if a remote vm error occurred.
+ * @throws RunnableException if either a RuntimeException, or another specifically caught exception had occurred on this side.
+ * 
+ * @since 1.0.0
+ */
+public static Object invokeSyncExec(IBeanProxy displayProxy, DisplayManager.DisplayRunnable runnable) throws ThrowableProxy, RunnableException {
+	return DisplayManager.syncExec(displayProxy, runnable);
+}
+
+/**
  * Invoke the runnable on the display thread on the given display. This is used when expression are involved
  * so that they will cross the thread boundary correctly. It will not return until completed. It will use
  * the display associated with the vm that was started for this editor. There is a default one created for this.
@@ -158,6 +195,23 @@ public static Object invokeSyncExec(ProxyFactoryRegistry registry, DisplayManage
 }
 
 /**
+ * Invoke the runnable on the display thread on the given display. This is used when expression are involved
+ * so that they will cross the thread boundary correctly. It will not return until completed. It will use
+ * the display associated with the vm that was started for this editor. There is a default one created for this.
+ * 
+ * @param displayProxy display proxy to use
+ * @param runnable the runnable to execute 
+ * @return the result, it will be either a IBeanProxy, IBeanProxy[], or <code>null</code>.
+ * @throws ThrowableProxy if a remote vm error occurred.
+ * @throws RunnableException if either a RuntimeException, or another specifically caught exception had occurred on this side.
+ * 
+ * @since 1.0.0
+ */
+public static Object invokeSyncExec(IBeanProxy displayProxy, DisplayManager.ExpressionDisplayRunnable runnable) throws ThrowableProxy, RunnableException {
+	return DisplayManager.syncExec(displayProxy, runnable);
+}
+
+/**
  * Invoke the runnable on the display thread on the given display. It will not return until completed. It will use
  * the display associated with the vm that was started for this editor. There is a default one created for this.
  * <p>
@@ -172,6 +226,29 @@ public static Object invokeSyncExec(ProxyFactoryRegistry registry, DisplayManage
 public static Object invokeSyncExecCatchThrowableExceptions(ProxyFactoryRegistry registry, DisplayManager.DisplayRunnable runnable) {
 	try {
 		return invokeSyncExec(registry, runnable);
+	} catch (ThrowableProxy e) {
+		SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
+	} catch (DisplayManager.DisplayRunnable.RunnableException e) {
+		SwtPlugin.getDefault().getLogger().log(e.getCause(), Level.WARNING);
+	}
+	return null;
+}
+
+/**
+ * Invoke the runnable on the display thread on the given display. It will not return until completed. It will use
+ * the display associated with the vm that was started for this editor. There is a default one created for this.
+ * <p>
+ * This one will catch and log all exceptions, either on this side or the VM side. It will return <code>null</code> in this case.
+ * 
+ * @param displayProxy display proxy to use.
+ * @param runnable the runnable to execute
+ * @return the result, an <code>IBeanProxy</code>, <code>null</code>. If there were any exceptions, <code>null</code> will also be returned.
+ * 
+ * @since 1.0.0
+ */
+public static Object invokeSyncExecCatchThrowableExceptions(IBeanProxy displayProxy, DisplayManager.DisplayRunnable runnable) {
+	try {
+		return invokeSyncExec(displayProxy, runnable);
 	} catch (ThrowableProxy e) {
 		SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
 	} catch (DisplayManager.DisplayRunnable.RunnableException e) {
@@ -203,4 +280,29 @@ public static Object invokeSyncExecCatchThrowableExceptions(ProxyFactoryRegistry
 	}
 	return null;
 }
+
+/**
+ * Invoke the runnable on the display thread on the given display. This is used when expressions are involved and
+ * need to cross thread boundaries. It will not return until completed. It will use
+ * the display associated with the vm that was started for this editor. There is a default one created for this.
+ * <p>
+ * This one will catch and log all exceptions, either on this side or the VM side. It will return <code>null</code> in this case.
+ * 
+ * @param displayProxy display proxy to use.
+ * @param runnable the runnable to execute
+ * @return the result, an <code>IBeanProxy</code>, <code>null</code>. If there were any exceptions, <code>null</code> will also be returned.
+ * 
+ * @since 1.0.0
+ */
+public static Object invokeSyncExecCatchThrowableExceptions(IBeanProxy displayProxy, DisplayManager.ExpressionDisplayRunnable runnable) {
+	try {
+		return invokeSyncExec(displayProxy, runnable);
+	} catch (ThrowableProxy e) {
+		SwtPlugin.getDefault().getLogger().log(e, Level.WARNING);
+	} catch (DisplayManager.DisplayRunnable.RunnableException e) {
+		SwtPlugin.getDefault().getLogger().log(e.getCause(), Level.WARNING);
+	}
+	return null;
+}
+
 }

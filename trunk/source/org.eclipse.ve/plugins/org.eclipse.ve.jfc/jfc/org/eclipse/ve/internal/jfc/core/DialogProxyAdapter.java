@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: DialogProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -35,7 +35,7 @@ public class DialogProxyAdapter extends FrameConstructorProxyAdapter {
 	}
 	
 	/*
-	 * @see Adapter#setTarget(Notifier)
+	 * @see Adapter#setTarget(ComponentManagerFeedbackControllerNotifier)
 	 */
 	public void setTarget(Notifier newTarget) {
 		super.setTarget(newTarget);

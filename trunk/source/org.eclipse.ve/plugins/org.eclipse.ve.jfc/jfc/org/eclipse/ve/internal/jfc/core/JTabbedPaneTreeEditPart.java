@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-06-02 22:32:28 $
+ * $RCSfile: JTabbedPaneTreeEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-06-15 20:19:27 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -105,8 +105,6 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 		try {
 			ComponentTreeEditPart componentTreeEditPart = (ComponentTreeEditPart) ep;
 			setupComponent(componentTreeEditPart, (EObject) model);
-			// keep the following for the future so we can show the tab title in the beans viewer.
-			componentTreeEditPart.setLabelDecorator(new JTabbedPaneChildTreeLabelDecorator((EObject) model));
 		} catch (ClassCastException e) {
 			// For rare case not component tree editpart, such as undefined class.
 		}
@@ -145,12 +143,22 @@ public class JTabbedPaneTreeEditPart extends ComponentTreeEditPart {
 	
 	protected void setupComponent(ComponentTreeEditPart childEP, EObject child) {
 		EObject tab = InverseMaintenanceAdapter.getIntermediateReference((EObject) getModel(), sfTabs, sfComponent, child);
+		ILabelDecorator oldLabelDecorator = childEP.getLabelDecorator();
+		if (oldLabelDecorator != null) {
+			// Get rid of the old one. The only reason there would be one is if the child control was reordered. In that case it
+			// would be the same child, but a different tab. So we would need to get rid of the old label decorator.
+			childEP.setLabelDecorator(null);
+			oldLabelDecorator.dispose();
+		}
 		if (tab != null) {
 			childEP.setPropertySource((IPropertySource) EcoreUtil.getRegisteredAdapter(tab, IPropertySource.class)); // This is the property source of the actual model which is part of the tab.
 			childEP.setErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter(tab, IErrorNotifier.ERROR_NOTIFIER_TYPE));
+			childEP.setLabelDecorator(new JTabbedPaneChildTreeLabelDecorator(tab));
+
 		} else {
 			childEP.setPropertySource(null);	// No tab.
 			childEP.setErrorNotifier(null);
+			childEP.setLabelDecorator(null);
 		}
 	}
 

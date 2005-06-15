@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositionComponentsTreeEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-06-10 20:42:28 $
+ * $RCSfile: CompositionComponentsTreeEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-06-15 20:19:38 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -26,8 +26,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ve.internal.cde.core.*;
 
 import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.jcm.BeanComposition;
-import org.eclipse.ve.internal.jcm.JCMPackage;
 
 /**
  * Composition Graphical Edit Part for bean compositions
@@ -57,11 +55,9 @@ public class CompositionComponentsTreeEditPart extends AbstractTreeEditPart {
 	 * @since 1.0.0
 	 */
 	protected void queueRefreshChildren() {
-		CDEUtilities.displayExec(this, "REFRESH_CHILDREN", new Runnable() { //$NON-NLS-1$
-			public void run() {
-				// Test if active because this could of been queued up and not run until AFTER it was deactivated.
-				if (isActive())
-					refreshChildren();
+		CDEUtilities.displayExec(this, "REFRESH_CHILDREN", new EditPartRunnable(this) { //$NON-NLS-1$
+			protected void doRun() {
+				refreshChildren();
 			}
 		});
 	}	
@@ -81,7 +77,6 @@ public class CompositionComponentsTreeEditPart extends AbstractTreeEditPart {
 			((BeanSubclassComposition) getModel()).eAdapters().remove(compositionAdapter);		
 		super.setModel(model);
 	}
-
 
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new TreeContainerEditPolicy(getContainerPolicy()));

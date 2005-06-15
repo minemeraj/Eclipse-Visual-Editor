@@ -10,28 +10,35 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEDirectEditManager.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:15 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-15 20:19:34 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 public abstract class CDEDirectEditManager extends DirectEditManager {
 
 	private Font scaledFont;
-	private EStructuralFeature sfProperty;
+	private IPropertyDescriptor sfProperty;
 
-	public CDEDirectEditManager(GraphicalEditPart source, Class editorType, CellEditorLocator locator, EStructuralFeature property) {
+	public CDEDirectEditManager(GraphicalEditPart source, Class editorType, CellEditorLocator locator, IPropertyDescriptor property) {
 		super(source, editorType, locator);
 		sfProperty = property;
+	}
+	
+	protected DirectEditRequest createDirectEditRequest() {
+		DirectEditRequest req = super.createDirectEditRequest();
+		req.setDirectEditFeature(sfProperty);
+		return req;
 	}
 
 	/**
@@ -67,12 +74,12 @@ public abstract class CDEDirectEditManager extends DirectEditManager {
 
 	/**
 	 * <P>
-	 * Gets the string value of the property specified by the structure feature sfProperty.
-	 * @param sfProperty
+	 * Gets the string value of the property specified by the property.
+	 * @param property
 	 * @return a String value 
 	 * 
 	 * @since 1.1.0
 	 */
-	protected abstract String getPropertyValue(EStructuralFeature sfProperty);
+	protected abstract String getPropertyValue(IPropertyDescriptor property);
 
 }

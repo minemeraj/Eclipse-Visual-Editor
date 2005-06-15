@@ -10,20 +10,21 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDirectEditManager.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-15 20:19:38 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.tools.CellEditorLocator;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySource;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IStringBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.CDEDirectEditManager;
+import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 /**
  * Direct edit manager for Java Beans.
@@ -33,25 +34,26 @@ import org.eclipse.ve.internal.cde.core.CDEDirectEditManager;
 
 public class BeanDirectEditManager extends CDEDirectEditManager {
 
-	public BeanDirectEditManager(GraphicalEditPart source, Class editorType, CellEditorLocator locator, EStructuralFeature property) {
+	public BeanDirectEditManager(GraphicalEditPart source, Class editorType, CellEditorLocator locator, IPropertyDescriptor property) {
 		super(source, editorType, locator, property);
 	}
 
-	/*
-	 * Gets the property value for the specified structural feature sfProperty
-	 */
-	protected String getPropertyValue(EStructuralFeature sfProperty) {
+	protected String getPropertyValue(IPropertyDescriptor property) {
 		String initialText = ""; //$NON-NLS-1$
 		// retrieve the property's value from the model
-		IJavaObjectInstance bean = (IJavaObjectInstance) getEditPart().getModel();
-		if (bean.eIsSet(sfProperty)) {
-			EObject textObj = (EObject) bean.eGet(sfProperty);
+		IPropertySource ps = (IPropertySource) getEditPart().getAdapter(IPropertySource.class);
+		if (PropertySourceAdapter.isPropertySet(ps, property)) {
+			Object textObj = PropertySourceAdapter.getPropertyValue(ps, property);
 			if (textObj != null) {
+				if (textObj instanceof IPropertySource)
+					textObj = ((IPropertySource) textObj).getEditableValue();
 				// Get the value from the remote vm of the externalized string
 				try {
-					IBeanProxyHost host = BeanProxyUtilities.getBeanProxyHost(bean);
-					IBeanProxy propProxy = host.getBeanPropertyProxyValue(sfProperty);
-					initialText = ((IStringBeanProxy) propProxy).stringValue();
+					IBeanProxyHost host = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) textObj);
+					if (host.isBeanProxyInstantiated()) {
+						IBeanProxy propProxy = host.getBeanProxy();
+						initialText = ((IStringBeanProxy) propProxy).stringValue();
+					}
 				} catch (Exception e) {
 				}
 			}

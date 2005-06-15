@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: SizePropertyDescriptor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-15 20:19:27 $ 
  */
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EReference;
@@ -55,7 +55,7 @@ public class SizePropertyDescriptor extends BeanPropertyDescriptorAdapter implem
 				// and SET Location with it so we don't loose that.
 				IJavaInstance boundsObject = (IJavaInstance) comp.eGet(sfComponentBounds);
 				IRectangleBeanProxy bounds = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy(boundsObject);
-				Object newLoc = BeanUtilities.createJavaObject("java.awt.Point", //$NON-NLS-1$
+				Object newLoc = BeanUtilities.createJavaObject(JFCConstants.POINT_CLASS_NAME, 
 					comp.eResource().getResourceSet(),
 					PointJavaClassCellEditor.getJavaInitializationString(bounds.getX(), bounds.getY(),JFCConstants.POINT_CLASS_NAME));
 				cb.applyAttributeSetting(comp, sfComponentLocation, newLoc);
@@ -66,9 +66,9 @@ public class SizePropertyDescriptor extends BeanPropertyDescriptorAdapter implem
 		IBeanProxyHost sh = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) setValue);
 		IBeanProxy dim = sh.instantiateBeanProxy();
 		if (dim instanceof IDimensionBeanProxy) {
-			IDimensionBeanProxy pointProxy = (IDimensionBeanProxy) dim;
-			int width = pointProxy.getWidth();
-			int height = pointProxy.getHeight();
+			IDimensionBeanProxy sizeProxy = (IDimensionBeanProxy) dim;
+			int width = sizeProxy.getWidth();
+			int height = sizeProxy.getHeight();
 			if (XYLayoutUtility.constraintContainsPreferredSettings(0, 0, width, height, false, true)) {
 				ApplyNullLayoutConstraintCommand apply = new ApplyNullLayoutConstraintCommand();
 				apply.setTarget(comp);

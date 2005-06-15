@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ToolBarGraphicalEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-06-02 22:32:30 $
+ * $RCSfile: ToolBarGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-06-15 20:19:21 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -27,7 +27,12 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
-public class ToolBarGraphicalEditPart extends CompositeGraphicalEditPart {
+/**
+ * swt ToolBar Graphical editpart.
+ * 
+ * @since 1.1.0
+ */
+public class ToolBarGraphicalEditPart extends ItemParentGraphicalEditPart {
 
 	private EReference sf_items;
 
@@ -78,21 +83,9 @@ public class ToolBarGraphicalEditPart extends CompositeGraphicalEditPart {
 		}
 	};
 
-	/**
-	 * ToolItemGraphicalEditPart is not allowed on the free form as it is specially designed for a ToolBar and is subclassed from Item. Therefore
-	 * instead of it being defined in the .override for the ToolItem it is instantiated directly by the ToolBarGraphicalEditPart
-	 */
 	protected EditPart createChild(Object child) {
-		ToolItemGraphicalEditPart result = new ToolItemGraphicalEditPart();
-		result.setModel(child);
-		//result.setBounds(getColumnBounds(getChildren().size()));
-		return result;
-	}
-	
-	protected void refreshItems() {
-		List children = getChildren();
-		for (int i = 0; i < children.size(); i++) {
-			((ToolItemGraphicalEditPart) children.get(i)).refreshVisuals();
-		}
+		// ToolItemGraphicalEditPart is not allowed on the free form as it is specially designed for a ToolBar and is subclassed from Item. Therefore
+		// instead of it being defined in the .override for the ToolItem it is instantiated directly by the ToolBarGraphicalEditPart
+		return new ToolItemGraphicalEditPart(child);
 	}
 }

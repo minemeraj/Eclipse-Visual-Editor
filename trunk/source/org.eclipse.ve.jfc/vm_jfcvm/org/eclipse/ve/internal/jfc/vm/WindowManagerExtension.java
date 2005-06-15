@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WindowManagerExtension.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-18 22:53:55 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-15 20:19:27 $ 
  */
 package org.eclipse.ve.internal.jfc.vm;
 
-import java.awt.EventQueue;
-import java.awt.Window;
+import java.awt.*;
  
 
 /**
@@ -46,6 +45,34 @@ public class WindowManagerExtension extends ComponentManager.ComponentManagerExt
 				}
 			}
 		});
+	}
+	
+	/**
+	 * Apply the frame title. We need to be able to put in a default title if the
+	 * title is not already set, or are applying null or "". This is so that it has a title because the window shows
+	 * on the taskbar of the system and without a title people get confused.
+	 * <p>
+	 * It will return the old title.
+	 * 
+	 * @param frame
+	 * @param title
+	 * @param replaceOld Only used if title is empty, then if <code>true</code> should replace old (this would be for a normal set),
+	 * <code>false</code> shouldn't replace old if old title is not empty (this would be for a initial setup
+	 * where no title was explicitly set on the client side. This allows us to replace an empty old title with the
+	 * default string, or not replace it if old title was good).
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public static String applyFrameTitle(Frame frame, String title, boolean replaceOld) {
+		String oldTitle = frame.getTitle();
+		if (title == null || title.length() == 0) {
+			if (replaceOld || (oldTitle == null || oldTitle.length() == 0))
+				frame.setTitle(VisualVMMessages.getString("FrameDefaultTitle"));	 //$NON-NLS-1$
+		} else
+			frame.setTitle(title);
+		
+		return oldTitle;
 	}
 	
 	/**

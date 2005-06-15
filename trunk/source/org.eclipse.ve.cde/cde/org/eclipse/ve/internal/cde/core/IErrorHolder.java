@@ -12,11 +12,12 @@ package org.eclipse.ve.internal.cde.core;
 
 /*
  *  $RCSfile: IErrorHolder.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-18 19:31:04 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-15 20:19:34 $ 
  */
  
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.swt.SWT;
@@ -290,6 +291,7 @@ public interface IErrorHolder {
 		public ExceptionError(Throwable error, int severity) {
 			super(severity);
 			this.error = error;
+			CDEPlugin.getPlugin().getLogger().log(error, Level.INFO);
 		}
 		
 		/**

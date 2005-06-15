@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ColorCustomPropertyEditor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-22 20:15:51 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -202,7 +202,7 @@ public class ColorCustomPropertyEditor extends Composite {
 		initStringLabel = new Label(this, SWT.NONE);
 		initStringLabel.setText(""); //$NON-NLS-1$
 		initStringLabel.setLayoutData(gridData3);
-		initStringLabel.setForeground(org.eclipse.swt.widgets.Display.getDefault().getSystemColor(org.eclipse.swt.SWT.COLOR_BLUE));
+		initStringLabel.setForeground(org.eclipse.swt.widgets.Display.getCurrent().getSystemColor(org.eclipse.swt.SWT.COLOR_BLUE));
 		
 		updateSelections();
 	}
@@ -228,7 +228,7 @@ public class ColorCustomPropertyEditor extends Composite {
 							break;
 						}
 					}
-				} else if (methodName.equals("getDefault")) { //$NON-NLS-1$
+				} else if (methodName.equals("getDefault") || methodName.equals("getCurrent")) { //$NON-NLS-1$	//$NON-NLS-2$
 					if (arg instanceof PTFieldAccess) {
 						int selection = -1;
 						String fieldname = ((PTFieldAccess) arg).getField().replaceAll("COLOR_", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -855,11 +855,11 @@ public class ColorCustomPropertyEditor extends Composite {
 			return result;
 		if (value != null) {
 			if (!isNamed) {
-				result = "new org.eclipse.swt.graphics.Color(org.eclipse.swt.widgets.Display.getDefault(), " + value.getRed() + ", " + value.getGreen() + ", " + value.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				result = "new org.eclipse.swt.graphics.Color(org.eclipse.swt.widgets.Display.getCurrent(), " + value.getRed() + ", " + value.getGreen() + ", " + value.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			} else if (isBasic) {
-				result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + basicColorConstants[basicColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+				result = "org.eclipse.swt.widgets.Display.getCurrent().getSystemColor(" + COLOR_PREFIX + basicColorConstants[basicColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			} else if (isSystem) {
-				result = "org.eclipse.swt.widgets.Display.getDefault().getSystemColor(" + COLOR_PREFIX + systemColorConstants[systemColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+				result = "org.eclipse.swt.widgets.Display.getCurrent().getSystemColor(" + COLOR_PREFIX + systemColorConstants[systemColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			} else if (isJFace) { return "org.eclipse.jface.resource.JFaceResources.getColorRegistry().get(" + jfaceColorInitStrings[jfaceColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
 			}
@@ -939,11 +939,11 @@ public class ColorCustomPropertyEditor extends Composite {
 		String result = "null"; //$NON-NLS-1$
 		String SWT_PREFIX = "SWT."; //$NON-NLS-1$
 		if (!isNamed) {
-			result = "new Color(Display.getDefault(), " + value.getRed() + ", " + value.getGreen() + ", " + value.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			result = "new Color(Display.getCurrent(), " + value.getRed() + ", " + value.getGreen() + ", " + value.getBlue() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else if (isBasic) {
-			result = "Display.getDefault().getSystemColor(" + SWT_PREFIX + basicColorConstants[basicColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			result = "Display.getCurrent().getSystemColor(" + SWT_PREFIX + basicColorConstants[basicColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else if (isSystem) {
-			result = "Display.getDefault().getSystemColor(" + SWT_PREFIX + systemColorConstants[systemColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			result = "Display.getCurrent().getSystemColor(" + SWT_PREFIX + systemColorConstants[systemColorSelection] + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else if (isJFace) {
 			String jfaceConstantName = jfaceColorInitStrings[jfaceColorSelection].replaceAll("org.eclipse.jface.preference.JFacePreferences", //$NON-NLS-1$
 					"JFacePreferences"); //$NON-NLS-1$

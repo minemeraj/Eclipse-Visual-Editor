@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: PropertySourceAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-27 15:44:22 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-15 20:19:34 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -36,10 +36,67 @@ import org.eclipse.ve.internal.cde.decorators.PropertyDescriptorDecorator;
 import org.eclipse.ve.internal.cde.decorators.PropertyDescriptorInformation;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.propertysheet.INeedData;
+import org.eclipse.ve.internal.propertysheet.ISourcedPropertyDescriptor;
 
 public class PropertySourceAdapter extends AdapterImpl implements IPropertySource, INeedData {
 	protected EditDomain domain;
 
+	/**
+	 * Helper method to return the descriptor with the given id.
+	 * @param source
+	 * @param propertyID
+	 * @return descriptor with that id or <code>null</code> if not found.
+	 * 
+	 * @since 1.1.0
+	 */
+	public static IPropertyDescriptor getDescriptorForID(IPropertySource source, Object propertyID) {
+		IPropertyDescriptor[] descriptors = source.getPropertyDescriptors();
+		for (int i = 0; i < descriptors.length; i++) {
+			if (propertyID.equals(descriptors[i].getId()))
+				return descriptors[i];
+		}
+		return null;
+	}
+	
+	/**
+	 * A helper method to handle command/sourced property descriptors without having to do the
+	 * checks over and over.
+	 * 
+	 * @param source
+	 * @param descriptor
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public static boolean isPropertySet(IPropertySource source, IPropertyDescriptor descriptor) {
+		// If the descriptor is also an ISourcedPropertyDescriptor, then
+		// route over to it, but use the wrappered source instead. Else
+		// Use the standard mechanism for testing the value from the wrappered source.
+		if (descriptor instanceof ISourcedPropertyDescriptor)
+			return ((ISourcedPropertyDescriptor) descriptor).isSet(source);
+		else
+			return source.isPropertySet(descriptor.getId());
+		
+	}
+	
+	/**
+	 * A helper method to handle command/sourced property descriptors without having to checks over and over.
+	 * @param source
+	 * @param descriptor
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public static Object getPropertyValue(IPropertySource source, IPropertyDescriptor descriptor) {
+		// If the descriptor is also an ISourcedPropertyDescriptor, then
+		// route over to it, but use the wrappered source instead. Else
+		// Use the standard mechanism for getting the value from the wrappered source.
+		if (descriptor instanceof ISourcedPropertyDescriptor)
+			return ((ISourcedPropertyDescriptor) descriptor).getValue(source);
+		else
+			return source.getPropertyValue(descriptor.getId());
+	}
+	
 	public PropertySourceAdapter() {
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:38 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -22,15 +22,13 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
-
-import org.eclipse.ve.internal.swt.targetvm.IImageCapture;
  
 
 /**
- * 
+ * GTK version of Image Capture
  * @since 1.0.0
  */
-public class ImageCapture implements IImageCapture{
+public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapture{
 
 	static{
 		try{
@@ -44,14 +42,14 @@ public class ImageCapture implements IImageCapture{
 	
 	private native int[] getPixels(int handle, int includeChildren, int arg2, int arg3, int arg4);
 	
-	protected Point getTopLeftOfClientare(Decorations decorations){
+	protected Point getTopLeftOfClientarea(Decorations decorations){
 		Point trim = decorations.toControl(decorations.getLocation());
 		trim.x = -trim.x;
 		trim.y = -trim.y;
 		if(decorations.getMenuBar()!=null){
 			Menu menu = decorations.getMenuBar();
 			try{
-				Class osClass = getClass().getClassLoader().loadClass("org.eclipse.swt.internal.gtk.OS"); //$NON-NLS-1$
+				Class osClass = Class.forName("org.eclipse.swt.internal.gtk.OS"); //$NON-NLS-1$
 				Method method = osClass.getMethod("GTK_WIDGET_HEIGHT", new Class[]{int.class}); //$NON-NLS-1$
 				Object ret = method.invoke(menu, new Object[]{new Integer(menu.handle)});
 				if(ret!=null){
@@ -78,14 +76,18 @@ public class ImageCapture implements IImageCapture{
 		if (control instanceof Decorations) {
 			Decorations decorations = (Decorations) control;
 			Rectangle shellBounds = decorations.getBounds();
-			Point topLeft = getTopLeftOfClientare(decorations);
+			Point topLeft = getTopLeftOfClientarea(decorations);
 			Image realShellImage = new Image(decorations.getDisplay(), shellBounds.width, shellBounds.height);
-			simulateDecoration(decorations, realShellImage, decorations.getBounds(), decorations.getClientArea(), topLeft);
-			GC gc = new GC(realShellImage);
-			gc.drawImage(image, topLeft.x, topLeft.y);
-			gc.dispose();
-			image.dispose();
-			image = realShellImage;
+			Image origImage = image;
+			try {
+				simulateDecoration(decorations, realShellImage, decorations.getBounds(), decorations.getClientArea(), topLeft);
+				GC gc = new GC(realShellImage);
+				gc.drawImage(image, topLeft.x, topLeft.y);
+				gc.dispose();
+				image = realShellImage;
+			} finally {
+				origImage.dispose();
+			}
 		}
 		return image;
 	}
@@ -152,98 +154,101 @@ public class ImageCapture implements IImageCapture{
 	 */
 	private void simulateDecoration(Decorations decoration, Image realShellImage, Rectangle bounds, Rectangle clientArea, Point topLeft) {
 		GC gc = new GC(realShellImage);
-		gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-		gc.fillRectangle(0,0,bounds.width, bounds.height);
-		gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-		gc.drawRectangle(topLeft.x-1,topLeft.y-1,clientArea.width+2, clientArea.height+2);
-		
-		// little squares at bottom corners
-		gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
-		gc.fillRectangle(0,bounds.height-topLeft.y, topLeft.y, bounds.height);
-		gc.fillRectangle(bounds.width-topLeft.y,bounds.height-topLeft.y, bounds.width, bounds.height);
-		
-		// title bar
-		if((decoration.getStyle()&(SWT.TITLE|SWT.CLOSE|SWT.MAX|SWT.MIN))!=0 && topLeft.y>2){
-			int barHeight = topLeft.y - 2;
-			// There will be a title bar - draw the text
-			gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
-			gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-			gc.fillGradientRectangle(0,0,bounds.width, barHeight,false);
-			gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-			gc.drawText(decoration.getText(), topLeft.y, 2, true);
-			if(decoration.getImage()!=null && !decoration.getImage().isDisposed()) {
-				Rectangle imageBounds = decoration.getImage().getBounds();
-				if (imageBounds.height <= barHeight) {
-					gc.drawImage(decoration.getImage(), 0,0);
-				} else {
-					ImageData imageData = decoration.getImage().getImageData();
-					double factor = (double)barHeight / (double)imageBounds.height;
-					int newWidth = (int)(imageBounds.width * factor);
-					imageData = imageData.scaledTo(newWidth, barHeight);
-					Image newImage = new Image(decoration.getDisplay(), imageData);
-					gc.drawImage(newImage, 0, 0);
-					newImage.dispose();
+		try {
+			gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+			gc.fillRectangle(0, 0, bounds.width, bounds.height);
+			gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
+			gc.drawRectangle(topLeft.x - 1, topLeft.y - 1, clientArea.width + 2, clientArea.height + 2);
+
+			// little squares at bottom corners
+			gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
+			gc.fillRectangle(0, bounds.height - topLeft.y, topLeft.y, bounds.height);
+			gc.fillRectangle(bounds.width - topLeft.y, bounds.height - topLeft.y, bounds.width, bounds.height);
+
+			// title bar
+			if ((decoration.getStyle() & (SWT.TITLE | SWT.CLOSE | SWT.MAX | SWT.MIN)) != 0 && topLeft.y > 2) {
+				int barHeight = topLeft.y - 2;
+				// There will be a title bar - draw the text
+				gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
+				gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
+				gc.fillGradientRectangle(0, 0, bounds.width, barHeight, false);
+				gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
+				gc.drawText(decoration.getText(), topLeft.y, 2, true);
+				if (decoration.getImage() != null && !decoration.getImage().isDisposed()) {
+					Rectangle imageBounds = decoration.getImage().getBounds();
+					if (imageBounds.height <= barHeight) {
+						gc.drawImage(decoration.getImage(), 0, 0);
+					} else {
+						ImageData imageData = decoration.getImage().getImageData();
+						double factor = (double) barHeight / (double) imageBounds.height;
+						int newWidth = (int) (imageBounds.width * factor);
+						imageData = imageData.scaledTo(newWidth, barHeight);
+						Image newImage = new Image(decoration.getDisplay(), imageData);
+						gc.drawImage(newImage, 0, 0);
+						newImage.dispose();
+					}
 				}
-			}			
-			
-			int rightx = bounds.width-topLeft.y;
 
-			// title bar buttons
-			if((decoration.getStyle()&SWT.CLOSE)!=0){
-				gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-				gc.fillRectangle(rightx,0,topLeft.y,topLeft.y);
-				gc.setLineWidth(1);
-				gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-				gc.drawRectangle(rightx,0,topLeft.y,topLeft.y);
-				int lineWidth = topLeft.y/6;
-				if(lineWidth<1)
-					lineWidth = 1;
-				gc.setLineWidth(lineWidth);
-				lineWidth=lineWidth*2;
-				gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BORDER));
-				gc.drawLine(rightx+lineWidth,lineWidth,rightx+topLeft.y-lineWidth,topLeft.y-lineWidth);
-				gc.drawLine(rightx+lineWidth,topLeft.y-lineWidth,rightx+topLeft.y-lineWidth,lineWidth);
-				rightx -= topLeft.y;
-			}
-			if((decoration.getStyle()&SWT.MAX)!=0){
-				gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-				gc.fillRectangle(rightx,0,topLeft.y,topLeft.y);
-				gc.setLineWidth(1);
-				gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-				gc.drawRectangle(rightx,0,topLeft.y,topLeft.y);
-				int lineWidth = topLeft.y/6;
-				if(lineWidth<1)
-					lineWidth = 1;
-				gc.setLineWidth(lineWidth);
-				lineWidth=lineWidth*2;
-				gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BORDER));
-				gc.drawRectangle(rightx+lineWidth,lineWidth,topLeft.y-(2*lineWidth),topLeft.y-(2*lineWidth));
-				rightx -= topLeft.y;
-			}
-			if((decoration.getStyle()&SWT.MIN)!=0){
-				gc.setLineWidth(1);
-				gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-				gc.fillRectangle(rightx,0,topLeft.y-1,topLeft.y-1);
-				gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-				gc.drawRectangle(rightx,0,topLeft.y-1,topLeft.y-1);
-				int lineWidth = topLeft.y/6;
-				if(lineWidth<1)
-					lineWidth = 1;
-				gc.setLineWidth(lineWidth);
-				lineWidth=lineWidth*2;
-				gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BORDER));
-				gc.drawLine(rightx+lineWidth,topLeft.y-lineWidth,rightx+topLeft.y-lineWidth,topLeft.y-lineWidth);
-				rightx -= topLeft.y;
-			}
+				int rightx = bounds.width - topLeft.y;
 
-			gc.setLineWidth(1);
-			gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-			gc.drawLine(0, topLeft.y-1, bounds.width, topLeft.y-1);
+				// title bar buttons
+				if ((decoration.getStyle() & SWT.CLOSE) != 0) {
+					gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+					gc.fillRectangle(rightx, 0, topLeft.y, topLeft.y);
+					gc.setLineWidth(1);
+					gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
+					gc.drawRectangle(rightx, 0, topLeft.y, topLeft.y);
+					int lineWidth = topLeft.y / 6;
+					if (lineWidth < 1)
+						lineWidth = 1;
+					gc.setLineWidth(lineWidth);
+					lineWidth = lineWidth * 2;
+					gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BORDER));
+					gc.drawLine(rightx + lineWidth, lineWidth, rightx + topLeft.y - lineWidth, topLeft.y - lineWidth);
+					gc.drawLine(rightx + lineWidth, topLeft.y - lineWidth, rightx + topLeft.y - lineWidth, lineWidth);
+					rightx -= topLeft.y;
+				}
+				if ((decoration.getStyle() & SWT.MAX) != 0) {
+					gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+					gc.fillRectangle(rightx, 0, topLeft.y, topLeft.y);
+					gc.setLineWidth(1);
+					gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
+					gc.drawRectangle(rightx, 0, topLeft.y, topLeft.y);
+					int lineWidth = topLeft.y / 6;
+					if (lineWidth < 1)
+						lineWidth = 1;
+					gc.setLineWidth(lineWidth);
+					lineWidth = lineWidth * 2;
+					gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BORDER));
+					gc.drawRectangle(rightx + lineWidth, lineWidth, topLeft.y - (2 * lineWidth), topLeft.y - (2 * lineWidth));
+					rightx -= topLeft.y;
+				}
+				if ((decoration.getStyle() & SWT.MIN) != 0) {
+					gc.setLineWidth(1);
+					gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+					gc.fillRectangle(rightx, 0, topLeft.y - 1, topLeft.y - 1);
+					gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
+					gc.drawRectangle(rightx, 0, topLeft.y - 1, topLeft.y - 1);
+					int lineWidth = topLeft.y / 6;
+					if (lineWidth < 1)
+						lineWidth = 1;
+					gc.setLineWidth(lineWidth);
+					lineWidth = lineWidth * 2;
+					gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BORDER));
+					gc.drawLine(rightx + lineWidth, topLeft.y - lineWidth, rightx + topLeft.y - lineWidth, topLeft.y - lineWidth);
+					rightx -= topLeft.y;
+				}
+
+				gc.setLineWidth(1);
+				gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
+				gc.drawLine(0, topLeft.y - 1, bounds.width, topLeft.y - 1);
+			}
+		} finally {
+			gc.dispose();
 		}
-		
-		gc.dispose();
 	}
 	
+	protected Map fieldAccessors = new HashMap();	// Map of Class->fieldName->field reflect
 	/**
 	 * @param object
 	 * @param fieldName
@@ -253,15 +258,36 @@ public class ImageCapture implements IImageCapture{
 	 */
 	private int readIntFieldValue(Class klass, Object object, String fieldName) {
 		try {
-			Field field = klass.getDeclaredField(fieldName);
-			field.setAccessible(true);
-			return field.getInt(object);
-		} catch (SecurityException e) {
-		} catch (NoSuchFieldException e) {
+			Field field = getField(klass, fieldName);
+			return field != null ? field.getInt(object) : 0;
 		} catch (IllegalArgumentException e) {
 		} catch (IllegalAccessException e) {
 		}
 		return -1;
+	}
+	
+	private static final Object NO_FIELD = new Object();
+	
+	private Field getField(Class klass, String fieldName) {
+		Map nameToField = (Map) fieldAccessors.get(klass);
+		if (nameToField == null) {
+			fieldAccessors.put(klass, nameToField = new HashMap());
+		}
+		Object field = nameToField.get(fieldName);
+		if (field == null) {
+			try {
+				field = klass.getDeclaredField(fieldName);
+				((Field) field).setAccessible(true);
+			} catch (SecurityException e) {
+				field = NO_FIELD;
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				field = NO_FIELD;
+				e.printStackTrace();
+			}
+			nameToField.put(klass, field);
+		}
+		return (Field) (field != NO_FIELD ? field : null);
 	}
 	
 	/**
@@ -273,24 +299,14 @@ public class ImageCapture implements IImageCapture{
 	 */
 	private void writeIntFieldValue(Class klass, Object object, String fieldName, int newInt) {
 		try {
-			Field field = klass.getDeclaredField(fieldName);
-			field.setAccessible(true);
+			Field field = getField(klass, fieldName);
 			field.setInt(object, newInt);
-		} catch (SecurityException e) {
-		} catch (NoSuchFieldException e) {
 		} catch (IllegalArgumentException e) {
 		} catch (IllegalAccessException e) {
 		}
 	}
 	
-	/**
-	 * @param shell
-	 * @param selection
-	 * @return
-	 * 
-	 * @since 1.0.0
-	 */
-	public Image getImage(Control control, boolean includeChildren) {
+	protected Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren) {
 		int ic = includeChildren?1:0;
 		Map map = new HashMap();
 		changeObscured(control, map, false);

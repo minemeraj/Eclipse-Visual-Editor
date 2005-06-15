@@ -9,13 +9,23 @@ package org.eclipse.jem.internal.proxy.remote.swt;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.remote.*;
 
+/**
+ * The standard REM SWT BeanType proxy factory extension. Used for SWT bean type proxies.
+ * 
+ * @since 1.1.0
+ */
 public class REMStandardSWTBeanTypeProxyFactory implements IREMBeanTypeProxyFactory {
 
 	static final String BEAN_TYPE_FACTORY_KEY = "org.eclipse.swt.graphics"; //$NON-NLS-1$
 
 	protected final REMProxyFactoryRegistry fFactoryRegistry;
 
-	public REMStandardSWTBeanTypeProxyFactory(REMProxyFactoryRegistry aRegistry) {
+	public static void registerBeanTypeProxyFactory(REMProxyFactoryRegistry aRegistry) {
+		if (aRegistry.getBeanTypeProxyFactoryExtension(BEAN_TYPE_FACTORY_KEY) == null)
+			new REMStandardSWTBeanTypeProxyFactory(aRegistry);
+	}
+	
+	private REMStandardSWTBeanTypeProxyFactory(REMProxyFactoryRegistry aRegistry) {
 		fFactoryRegistry = aRegistry;
 		fFactoryRegistry.registerBeanTypeProxyFactory(BEAN_TYPE_FACTORY_KEY, this);
 	}

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.15 $ $Date: 2005-06-03 19:17:25 $
+ * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.16 $ $Date: 2005-06-15 20:19:27 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -29,10 +29,8 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IErrorNotifier;
-import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.emf.*;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.*;
@@ -91,7 +89,7 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 			if (notification.getFeature() == sf_containerComponents)
 				queueExec(ContainerTreeEditPart.this, "COMPONENTS"); //$NON-NLS-1$
 			else if (notification.getFeature() == sf_containerLayout) {
-				queueExec(ContainerTreeEditPart.this, "LAYOUT", new OtherRunnable() { //$NON-NLS-1$
+				queueExec(ContainerTreeEditPart.this, "LAYOUT", new EditPartRunnable(getHost()) { //$NON-NLS-1$
 					protected void doRun() {
 						createLayoutPolicyHelper();
 					}

@@ -8,6 +8,9 @@
    class="org.eclipse.ve.internal.swt.SwtPlugin">
 
    <runtime>
+      <library name="swtCommon.jar">
+         <export name="*"/>
+      </library>
       <library name="ve_swt.jar">
          <export name="*"/>
       </library>
@@ -63,9 +66,29 @@
          point="org.eclipse.jem.proxy.contributors">
       <contributor
             plugin="org.eclipse.swt"
-            class="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.SWTConfigurationContributor">
+            class="org.eclipse.ve.internal.swt.SWTConfigurationContributor">
+      </contributor>
+      <!-- If the plugin org.eclipse.jface is in the build path enable the contributor which adds the correct target VM jars -->  
+      <contributor
+            plugin="org.eclipse.jface"
+            class="org.eclipse.ve.internal.jface.JFaceConfigurationContributor">
       </contributor>
    </extension>
+   
+   <extension
+         point="org.eclipse.jem.proxy.extensions">
+      <registration
+            class="org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration"
+            container="SWT_CONTAINER"
+            plugin="org.eclipse.swt"
+            registryType="org.eclipse.jem.REMOTE">
+      </registration>
+      <registration
+            class="org.eclipse.jem.internal.proxy.ide.swt.SWTIDEProxyRegistration"
+            container="SWT_CONTAINER"
+            plugin="org.eclipse.swt"
+            registryType="org.eclipse.jem.IDE"/>
+   </extension>   
    <extension
          point="org.eclipse.jem.beaninfo.registrations">
       <registration
@@ -98,12 +121,20 @@
                path="overrides/org/eclipse/swt/custom">
          </override>
       </registration>
+      <!-- Register the override folders for JFace -->
+      <registration 
+            plugin="org.eclipse.ui.workbench">
+         <override
+               package="org.eclipse.ui.part"
+               path="overrides/org/eclipse/ui/part">
+         </override>  
+      </registration>           
    </extension>
    <extension
          point="org.eclipse.ve.java.core.contributors">
       <palette
             container="SWT_CONTAINER"
-            categories="swtpalette.xmi"
+            categories="palette/swtpalette.xmi"
             plugin="org.eclipse.swt">
       </palette>
    </extension>
@@ -148,7 +179,7 @@
             id="org.eclipse.ve.internal.swt.editorpart.settextaction.popup.object">
          <filter
                name="BEANTYPE"
-               value="org.eclipse.swt.widgets.Control">
+               value="org.eclipse.swt.widgets.Widget">
          </filter>
          <filter
                name="PROPERTY"
@@ -349,30 +380,7 @@
         point="org.eclipse.core.resources.markers">
      <super type="org.eclipse.core.resources.problemmarker"/>
   </extension>
-
-<!-- JFace extensions -->
-<!-- Register the override folders for JFace -->
     
-  <extension point="org.eclipse.jem.beaninfo.registrations">
-    <registration 
-      plugin="org.eclipse.ui.workbench">
-      <override
-        package="org.eclipse.ui.part"
-        path="overrides/org/eclipse/ui/part">
-      </override>  
-    </registration>       
-  </extension>
-  
-<!-- If the plugin org.eclipse.jface is in the build path enable the contributor which adds the correct target VM jars -->  
-  
-  <extension
-    point="org.eclipse.jem.proxy.contributors">
-    <contributor
-      plugin="org.eclipse.jface"
-      class="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.JFaceConfigurationContributor">
-    </contributor>
-  </extension>  
-  
 <!-- RCP ViewPart is a new style on the Create Visual Class Wizard -->  
   
    <extension

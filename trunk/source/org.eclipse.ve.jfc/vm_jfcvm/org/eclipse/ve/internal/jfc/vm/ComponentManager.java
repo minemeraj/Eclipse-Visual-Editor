@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.vm;
 
 /*
  *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-18 22:53:55 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 import java.awt.*;
@@ -191,6 +191,64 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		private boolean changesHeld;	// Changes are being queued.
 
 		private List transactions = new ArrayList(); // List of transactions to send.
+		private Map uniquesMap = new HashMap();	// Map of unique transactions (ComponentManager,ID, index in transactions array). (key and value the same object). Used to keep only the last unique one in list.
+		/*
+		 * The Unique set object for the uniquesSet. The hash key for it will be for (ComponentManagerFeedbackControllerNotifier,ID). It will also
+		 * contain the index, which will be changed if a new unique comes along.
+		 */
+		private static class UniqueEntry {
+			protected final Object notifier;
+			protected final int ID;
+			private int index;
+			
+			/**
+			 * Construct with cm and ID.
+			 * @param notifier
+			 * @param ID
+			 * 
+			 * @since 1.1.0
+			 */
+			public UniqueEntry(Object notifier, int ID) {
+				this.notifier = notifier;
+				this.ID = ID;
+			}
+
+			public int hashCode() {
+				return 31*(31 + notifier.hashCode())+ID;
+			}
+			
+			public boolean equals(Object obj) {
+				if (obj == this)
+					return true;
+				else {
+					try {
+						UniqueEntry ue = (UniqueEntry) obj;
+						return (this.notifier == ue.notifier && this.ID == ue.ID);
+					} catch (ClassCastException e) {
+						// We should never get this because this set will only have UniqueEntry as entries.
+						return false;
+					}
+				}
+			}
+			
+			/**
+			 * @param index The index to set.
+			 * 
+			 * @since 1.1.0
+			 */
+			public void setIndex(int index) {
+				this.index = index;
+			}
+
+			/**
+			 * @return Returns the index.
+			 * 
+			 * @since 1.1.0
+			 */
+			public int getIndex() {
+				return index;
+			}
+		}
 
 		private List queuedRefreshRequests;
 
@@ -283,7 +341,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 							Component component = (Component) itr.next();
 							ComponentManager cmanager = (ComponentManager) componentToComponentManagers.get(component);
 							if (cmanager != null) {
-								appendTransaction(cmanager, Common.CL_IMAGEINVALID, null);
+								appendTransaction(cmanager, Common.CL_IMAGEINVALID, null, true);
 							}
 						}
 					}
@@ -312,17 +370,19 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		 * Add the transaction to the feedback controller and queue it up. These are to be called from ComponentManager and ComponentManager
 		 * subclasses only.
 		 * 
-		 * @param manager
-		 *            manager that this transaction is from.
+		 * @param notifier
+		 *            notifier that this transaction is from. This notifier must be registered on the IDE side to permit notification to work. It will
+		 *            be ignored if not registered.
 		 * @param callbackID
 		 *            the if of the callback.
 		 * @param parms
 		 *            array of parms for the callback. <code>null</code> if there are no parms.
-		 * 
+		 * @param unique
+		 *            <code>true</code> if this is a unique transaction and should replace previous one of same manager/id.
 		 * @since 1.1.0
 		 */
-		public void addTransaction(ComponentManager manager, int callbackID, Object[] parms) {
-			appendTransaction(manager, callbackID, parms);
+		public void addTransaction(Object notifier, int callbackID, Object[] parms, boolean unique) {
+			appendTransaction(notifier, callbackID, parms, unique);
 			boolean queueNow;
 			synchronized (this) {
 				queueNow = !changesHeld;
@@ -332,13 +392,28 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		}
 
 		/*
-		 * Append the transaction to the transaction list. @param manager @param callbackID @param parms
+		 * Append the transaction to the transaction list.
 		 * 
 		 * @since 1.1.0
 		 */
-		private void appendTransaction(ComponentManager manager, int callbackID, Object[] parms) {
+		private void appendTransaction(Object notifier, int callbackID, Object[] parms, boolean unique) {
 			synchronized (transactions) {
-				transactions.add(manager);
+				if (unique) {
+					UniqueEntry newUE = new UniqueEntry(notifier, callbackID);
+					UniqueEntry ue = (UniqueEntry) uniquesMap.get(newUE);
+					if (ue != null) {
+						// Clear out the old transaction.
+						int index = ue.getIndex();
+						transactions.set(index++, null);
+						transactions.set(index++, null);
+						transactions.set(index++, null);
+					} else {
+						ue = newUE;
+						uniquesMap.put(ue, ue);
+					}
+					ue.setIndex(transactions.size());
+				}
+				transactions.add(notifier);
 				transactions.add(new Integer(callbackID));
 				transactions.add(parms != null ? new ICallbackHandler.TransmitableArray(parms) : (Object) parms);
 			}
@@ -373,7 +448,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 							for (int i = 0; i < queued.size(); i++) {
 								ComponentManager manager = (ComponentManager) queued.get(i);
 								if (manager.fComponent != null) {
-									appendTransaction(manager, Common.CL_REFRESHED, manager.getRefreshParms());
+									appendTransaction(manager, Common.CL_REFRESHED, manager.getRefreshParms(), true);
 									manager.startComponentListening(); // Start the component listening now.
 								}
 							} 
@@ -425,6 +500,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 					return; // Nothing to do.
 				trans = transactions.toArray();
 				transactions.clear();
+				uniquesMap.clear();
 			}
 			try {
 				fServer.doCallback(new ICallbackRunnable() {
@@ -528,6 +604,16 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	 */
 	protected Component getComponent() {
 		return fComponent;
+	}
+	
+	/**
+	 * Return the feedback controller. Used by extensions so they can add transactions.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public ComponentManagerFeedbackController getFeedbackController() {
+		return feedbackController;
 	}
 
 	/**
@@ -639,7 +725,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	 */
 	public void componentResized(ComponentEvent e) {
 		Component c = e.getComponent();
-		feedbackController.addTransaction(this, Common.CL_RESIZED, new Object[] { new Integer(c.getWidth()), new Integer(c.getHeight())});
+		feedbackController.addTransaction(this, Common.CL_RESIZED, new Object[] { new Integer(c.getWidth()), new Integer(c.getHeight())}, true);
 		if (extensions != null) {
 			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
 			for (int i = 0; i < lcl.length; i++) {
@@ -664,7 +750,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	 * @since 1.1.0
 	 */
 	protected void fireMoved() {
-		feedbackController.addTransaction(this, Common.CL_MOVED, getLocation());
+		feedbackController.addTransaction(this, Common.CL_MOVED, getLocation(), true);
 		if (extensions != null) {
 			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
 			for (int i = 0; i < lcl.length; i++) {
@@ -679,7 +765,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	 * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
 	 */
 	public void componentShown(final ComponentEvent e) {
-		feedbackController.addTransaction(this, Common.CL_SHOWN, null);
+		feedbackController.addTransaction(this, Common.CL_SHOWN, null, true);
 		if (extensions != null) {
 			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
 			for (int i = 0; i < lcl.length; i++) {
@@ -694,7 +780,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	 * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
 	 */
 	public void componentHidden(final ComponentEvent e) {
-		feedbackController.addTransaction(this, Common.CL_HIDDEN, null);
+		feedbackController.addTransaction(this, Common.CL_HIDDEN, null, true);
 		if (extensions != null) {
 			ComponentManagerExtension[] lcl = extensions;	// In case it changes to a new array while we are walking it.
 			for (int i = 0; i < lcl.length; i++) {
@@ -722,14 +808,14 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	 * @since 1.1.0
 	 */
 	public void queueRefresh() {
-		feedbackController.addTransaction(this, Common.CL_REFRESHED, getRefreshParms());
+		feedbackController.addTransaction(this, Common.CL_REFRESHED, getRefreshParms(), true);
 		// We are queueing up the request BEFORE queueing it up again so that if there are any layout's pending
 		// they will be processed before the transaction can be queued up and get the parms at that time
 		// instead of now.
 		EventQueue.invokeLater(new Runnable() {
 
 			public void run() {
-				feedbackController.addTransaction(ComponentManager.this, Common.CL_REFRESHED, getRefreshParms());
+				feedbackController.addTransaction(ComponentManager.this, Common.CL_REFRESHED, getRefreshParms(), true);
 			}
 		});
 		

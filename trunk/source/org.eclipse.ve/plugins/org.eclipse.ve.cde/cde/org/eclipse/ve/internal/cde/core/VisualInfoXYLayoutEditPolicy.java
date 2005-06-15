@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualInfoXYLayoutEditPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-25 20:55:01 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-15 20:19:34 $ 
  */
 
 import java.util.Iterator;
@@ -351,10 +351,8 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	protected class VisualConstraintRefreshPolicy extends AbstractEditPolicy implements IConstraintHandler.IConstraintHandlerListener {
 		private VisualInfoPolicy.VisualInfoListener viListener;
 		private IConstraintHandler handler;
-		private boolean deactivated;	// set to true when deactivated in case we get a late async notification for resizing
 
 		public void activate() {
-			deactivated = false;
 			super.activate();
 			// Add listener to visual constraint.
 			EditPartViewer viewer = getHost().getRoot().getViewer();
@@ -422,15 +420,15 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			if (getHost() != null)
 				CDEUtilities.displayExec(getHost(), "REFRESH_FROM_EDITPART", new Runnable() { //$NON-NLS-1$
 				public void run() {
-					if (!deactivated)
+					if (getHost() != null && getHost().isActive())
 						refreshFromEditPart(getHost(), getCurrentConstraint());
 				}
 			});
 		}		
 
 		public void deactivate() {
-			deactivated = true;
 			super.deactivate();
+			setHost(null);
 			if (viListener != null)
 				viListener.removeListening();
 			viListener = null;
@@ -446,7 +444,7 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		public void sizeChanged(final int width, final int height) {
 			CDEUtilities.displayExec(getHost(), new Runnable() {
 				public void run() {
-					if (!deactivated) {
+					if (getHost() != null && getHost().isActive()) {
 						setNewSize(getHost(), width, height);
 					}
 				}

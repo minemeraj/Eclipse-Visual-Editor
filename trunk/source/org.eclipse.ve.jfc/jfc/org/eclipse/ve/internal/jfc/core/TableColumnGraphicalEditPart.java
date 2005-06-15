@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-15 20:19:27 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -24,6 +24,7 @@ import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -31,9 +32,9 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
-import org.eclipse.ve.internal.java.core.BeanDirectEditManager;
-import org.eclipse.ve.internal.java.core.BeanDirectEditPolicy;
+import org.eclipse.ve.internal.java.core.*;
 
 /**
  * TableColumn Graphical Editpart.
@@ -43,9 +44,9 @@ import org.eclipse.ve.internal.java.core.BeanDirectEditPolicy;
  * 
  * @since 1.0.0
  */
-public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart implements IDirectEditableEditPart {
+public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart {
 
-	protected EStructuralFeature sfDirectEditProperty = null;
+	protected IPropertyDescriptor sfDirectEditProperty = null;
 
 	protected DirectEditManager manager = null;
 
@@ -97,22 +98,24 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart impl
 		}
 	}
 
-	private EStructuralFeature getDirectEditTargetProperty() {
-		EStructuralFeature target = null;
+	protected IPropertyDescriptor getDirectEditTargetProperty() {
+		EStructuralFeature feature = null;
 		IJavaObjectInstance component = (IJavaObjectInstance) getModel();
 		JavaClass modelType = (JavaClass) component.eClass();
 		// Hard coded string properties to direct edit.
-		target = modelType.getEStructuralFeature("headerValue"); //$NON-NLS-1$
-		return target;
-	}
-
-	public EStructuralFeature getSfDirectEditProperty() {
-		return sfDirectEditProperty;
+		// If more than one is available, it'll choose the first in the list
+		// below
+		feature = modelType.getEStructuralFeature("headerValue"); //$NON-NLS-1$
+		if (feature != null) {
+			IPropertySource source = (IPropertySource) getAdapter(IPropertySource.class);
+			return PropertySourceAdapter.getDescriptorForID(source, feature);
+		} else
+			return null;
 	}
 
 	private void performDirectEdit() {
 		if (manager == null)
-			manager = new BeanDirectEditManager(this, TextCellEditor.class, new ComponentCellEditorLocator(getFigure()), sfDirectEditProperty);
+			manager = new BeanDirectEditManager(this, TextCellEditor.class, new BeanDirectEditCellEditorLocator(getFigure()), sfDirectEditProperty);
 		manager.show();
 	}
 

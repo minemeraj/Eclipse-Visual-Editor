@@ -10,19 +10,24 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanDirectEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-21 22:48:06 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-15 20:19:38 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
 import org.eclipse.gef.requests.DirectEditRequest;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IDirectEditableEditPart;
-import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
+
+import org.eclipse.ve.internal.java.rules.RuledPropertySetCommand;
+
+import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
 
 /**
  * Direct edit policy for Java Beans
@@ -34,11 +39,14 @@ public class BeanDirectEditPolicy extends DirectEditPolicy {
 	protected Command getDirectEditCommand(DirectEditRequest request) {
 		String newText = (String) request.getCellEditor().getValue();
 		EditDomain domain = EditDomain.getEditDomain(getHost());
-		RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-		IJavaObjectInstance component = (IJavaObjectInstance) getHost().getModel();
-		IJavaObjectInstance stringObject = BeanUtilities.createString(component.eResource().getResourceSet(), newText);
-		cb.applyAttributeSetting(component, ((IDirectEditableEditPart) getHost()).getSfDirectEditProperty(), stringObject);
-		return cb.getCommand();
+		// We'll use property source so that wrappered properties may also be used.
+		IPropertySource ps = (IPropertySource) getHost().getAdapter(IPropertySource.class);
+		IPropertyDescriptor property = (IPropertyDescriptor) request.getDirectEditFeature();
+		IJavaObjectInstance stringObject = BeanUtilities.createString(EMFEditDomainHelper.getResourceSet(domain), newText);		
+		if (property instanceof ICommandPropertyDescriptor)
+			return ((ICommandPropertyDescriptor) property).setValue(ps, stringObject);
+		else
+			return new RuledPropertySetCommand(domain, ps, property.getId(), stringObject);
 	}
 
 	protected void showCurrentEditValue(DirectEditRequest request) {

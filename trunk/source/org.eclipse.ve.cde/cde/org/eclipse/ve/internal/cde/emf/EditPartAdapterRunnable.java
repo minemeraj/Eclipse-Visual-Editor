@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EditPartAdapterRunnable.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-02 22:32:29 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-15 20:19:34 $ 
  */
 package org.eclipse.ve.internal.cde.emf;
 
@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.*;
 import org.eclipse.gef.EditPart;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.core.EditPartRunnable;
  
 
 /**
@@ -28,7 +29,7 @@ import org.eclipse.ve.internal.cde.core.CDEUtilities;
  * It would typically be used in the following manner.
  * 
  * <pre><code>
- * 	private Adapter adapter = new EditPartAdapterRunnable() {
+ * 	private Adapter adapter = new EditPartAdapterRunnable(this) {
  * 		public void notifyChanged(Notification notification) {
  * 			if (..notification is of interest..)
  * 				queueExec(MyOuterEditpart.this);
@@ -52,45 +53,11 @@ import org.eclipse.ve.internal.cde.core.CDEUtilities;
  * 
  * @since 1.0.0
  */
-public abstract class EditPartAdapterRunnable implements Adapter, Runnable {
-	
-	public abstract class OtherRunnable implements Runnable {
-		public final void run() {
-			if (getHost().isActive())
-				doRun();
-		}
-		
-		/**
-		 * Subclasses should implement this method to do the actual run.
-		 * 
-		 * 
-		 * @since 1.1.0
-		 */
-		protected abstract void doRun();
-	}
-	
-	private EditPart editPart;
+public abstract class EditPartAdapterRunnable extends EditPartRunnable implements Adapter{
 	
 	public EditPartAdapterRunnable(EditPart editPart) {
-		this.editPart = editPart;
+		super(editPart);
 	}
-	
-	public final void run() {
-		if (editPart.isActive())
-			doRun();
-	}
-	
-	protected EditPart getHost() {
-		return editPart;
-	}
-	
-	/**
-	 * Subclasses should provide this method to actually do the running.
-	 * 
-	 * 
-	 * @since 1.1.0
-	 */
-	protected abstract void doRun();
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.emf.common.notify.Adapter#getTarget()
@@ -135,7 +102,7 @@ public abstract class EditPartAdapterRunnable implements Adapter, Runnable {
 	 * @see EditPartAdapterRunnable#queueExec(EditPart)
 	 * @since 1.0.0
 	 */
-	protected void queueExec(EditPart ep, OtherRunnable runnable) {
+	protected void queueExec(EditPart ep, EditPartRunnable runnable) {
 		CDEUtilities.displayExec(ep, runnable);
 	}
 	
@@ -164,7 +131,7 @@ public abstract class EditPartAdapterRunnable implements Adapter, Runnable {
 	 * 
 	 * @since 1.1.0
 	 */
-	protected void queueExec(EditPart ep, Object once, OtherRunnable runnable) {
+	protected void queueExec(EditPart ep, Object once, EditPartRunnable runnable) {
 		CDEUtilities.displayExec(ep, once, runnable);
 	}
 }

@@ -10,13 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceConfigurationContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-07 20:12:15 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-15 20:19:21 $ 
  */
 
 package org.eclipse.ve.internal.jface;
 
-import org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter;
-import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
+import java.util.logging.Level;
+
+import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.initParser.tree.NoExpressionValueException;
+
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class JFaceConfigurationContributor extends ConfigurationContributorAdapter {
 
@@ -24,8 +28,18 @@ public class JFaceConfigurationContributor extends ConfigurationContributorAdapt
 	 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
 	 */
 	public void contributeToRegistry(ProxyFactoryRegistry registry) {
-		JFaceColorProxyRegistration.initialize(registry);	// Prime the JFace ColorRegistry in the remote VM
-		JFaceFontProxyRegistration.initialize(registry);	// Prime the JFace FontRegistry in the remote VM
+		IExpression expression = registry.getBeanProxyFactory().createExpression();
+		try {
+			JFaceColorProxyRegistration.initialize(expression);	// Prime the JFace ColorRegistry in the remote VM
+			JFaceFontProxyRegistration.initialize(expression);	// Prime the JFace FontRegistry in the remote VM
+			expression.invokeExpression();
+		} catch (IllegalStateException e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		} catch (ThrowableProxy e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		} catch (NoExpressionValueException e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		}
 	}
 
 }

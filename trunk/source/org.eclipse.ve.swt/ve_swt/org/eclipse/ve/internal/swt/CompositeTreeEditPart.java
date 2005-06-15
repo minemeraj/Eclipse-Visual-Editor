@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-06-02 22:32:30 $
+ * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-06-15 20:19:21 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -20,19 +20,27 @@ import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.EditPartRunnable;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
-import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 import org.eclipse.ve.internal.java.visual.*;
+
+import org.eclipse.ve.internal.swt.CompositeProxyAdapter.ControlLayoutDataAdapter;
 
 /**
  * TreeEditPart for a SWT Container.
+ * 
+ * @since 1.1.0
  */
 public class CompositeTreeEditPart extends ControlTreeEditPart {
 
@@ -61,23 +69,12 @@ public class CompositeTreeEditPart extends ControlTreeEditPart {
 			if (notification.getFeature() == sf_compositeControls)
 				queueExec(CompositeTreeEditPart.this, "CONTROLS"); //$NON-NLS-1$
 			else if (notification.getFeature() == sf_compositeLayout) {
-				queueExec(CompositeTreeEditPart.this, "LAYOUT", new OtherRunnable() { //$NON-NLS-1$
+				queueExec(CompositeTreeEditPart.this, "LAYOUT", new EditPartRunnable(getHost()) { //$NON-NLS-1$
 					protected void doRun() {
 						createLayoutPolicyHelper();
 					}
 				});
 			}
-		}
-
-		public Notifier getTarget() {
-			return null;
-		}
-
-		public void setTarget(Notifier newTarget) {
-		}
-
-		public boolean isAdapterForType(Object type) {
-			return false;
 		}
 	};
 
@@ -89,6 +86,24 @@ public class CompositeTreeEditPart extends ControlTreeEditPart {
 	public void deactivate() {
 		super.deactivate();
 		((EObject) getModel()).eAdapters().remove(compositeAdapter);
+	}
+
+	protected CompositeProxyAdapter getCompositeProxyAdapter() {
+		return (CompositeProxyAdapter) EcoreUtil.getExistingAdapter((Notifier) getModel(), IBeanProxyHost.BEAN_PROXY_TYPE);
+	}
+
+	protected EditPart createChildEditPart(Object model) {
+		EditPart ep = super.createChildEditPart(model);
+		if (ep instanceof ControlTreeEditPart)
+			setupControl((ControlTreeEditPart) ep, (EObject) model);
+		return ep;
+	}
+
+	protected void setupControl(ControlTreeEditPart childEP, EObject child) {
+		ControlLayoutDataAdapter controlLayoutDataAdapter = getCompositeProxyAdapter().getControlLayoutDataAdapter(child);
+		// Could be null due to instantiation error.
+		if (controlLayoutDataAdapter != null)
+			childEP.setErrorNotifier(controlLayoutDataAdapter.getErrorNotifier());
 	}
 
 	protected void createEditPolicies() {

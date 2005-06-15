@@ -16,7 +16,7 @@
     </addedEObjects>
     
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
-    	beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableColumnProxyAdapter"/>
+    	beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ItemProxyAdapter:java:/org.eclipse.swt.widgets#Table/tableColumns"/>
     <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
     	expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTWidgetChildDecoder" modelled="true"/>
     

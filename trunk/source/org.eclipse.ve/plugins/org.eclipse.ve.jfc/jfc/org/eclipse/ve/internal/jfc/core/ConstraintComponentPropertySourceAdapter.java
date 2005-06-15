@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ConstraintComponentPropertySourceAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:27 $ 
  */
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
@@ -51,7 +51,7 @@ public class ConstraintComponentPropertySourceAdapter extends PropertySourceAdap
 	
 	
 	/*
-	 * @see Adapter#setTarget(Notifier)
+	 * @see Adapter#setTarget(ComponentManagerFeedbackControllerNotifier)
 	 */
 	public void setTarget(Notifier newTarget) {
 		super.setTarget(newTarget);

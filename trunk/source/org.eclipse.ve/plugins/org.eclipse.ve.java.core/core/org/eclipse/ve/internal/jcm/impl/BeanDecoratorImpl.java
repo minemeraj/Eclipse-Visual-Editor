@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanDecoratorImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:38 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -604,6 +604,7 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	
 	private Class beanProxyAdapterClass;
 	private Constructor beanProxyAdapterClassConstructor;
+	private String initializationData;
 	private boolean hasRetrievedBeanProxyAdapterClass;
 	
 	/**
@@ -622,7 +623,10 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 					else if (getBeanProxyClassName().equals("org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter")) //$NON-NLS-1$
 						beanProxyAdapterClass = PrimitiveProxyAdapter.class;
 					else {
-						beanProxyAdapterClass = CDEPlugin.getClassFromString(getBeanProxyClassName());
+						initializationData = getBeanProxyClassName();
+						beanProxyAdapterClass = CDEPlugin.getClassFromString(initializationData);
+						if (!CDEPlugin.hasInitializationData(initializationData))
+							initializationData = null;
 						if (beanProxyAdapterClass != null) {
 							try {
 								// There must be a constructor that takes an argument with the IBeanProxyDomain.
@@ -645,7 +649,10 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 		// Use the cache'd constructor is one is available
 		if(beanProxyAdapterClassConstructor != null){
 			try {			
-				return (IBeanProxyHost) beanProxyAdapterClassConstructor.newInstance(new Object[] { aBeanProxyDomain });
+				IBeanProxyHost adapter = (IBeanProxyHost) beanProxyAdapterClassConstructor.newInstance(new Object[] { aBeanProxyDomain });
+				if (initializationData != null)
+					CDEPlugin.setInitializationData(adapter, initializationData, null);
+				return adapter;
 			} catch (Exception e) {
 				JavaVEPlugin.log(e, Level.WARNING);
 				return new BeanProxyAdapter(aBeanProxyDomain);

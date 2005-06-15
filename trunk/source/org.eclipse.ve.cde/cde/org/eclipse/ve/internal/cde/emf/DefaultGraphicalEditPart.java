@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DefaultGraphicalEditPart.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-18 19:31:37 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-15 20:19:34 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -51,11 +51,10 @@ public class DefaultGraphicalEditPart extends AbstractGraphicalEditPart {
 				EditDomain.getEditDomain(this),
 				new DefaultLabelProviderNotifier.IDefaultLabelProviderListener() {
 					public void refreshLabel(final ILabelProvider provider) {
-						CDEUtilities.displayExec(DefaultGraphicalEditPart.this, "REFRESH_VISUALS", new Runnable() { //$NON-NLS-1$
+						CDEUtilities.displayExec(DefaultGraphicalEditPart.this, "REFRESH_VISUALS", new EditPartRunnable(DefaultGraphicalEditPart.this) { //$NON-NLS-1$
 
-							public void run() {
-								if (isActive())
-									DefaultGraphicalEditPart.this.refreshVisuals(provider);
+							protected void doRun() {
+								DefaultGraphicalEditPart.this.refreshVisuals(provider);
 							}
 						});
 					}

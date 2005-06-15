@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 import java.awt.*;
@@ -477,7 +477,7 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 						fos.writeInt(row);
 						
 						// Send with simple compression.
-						int javaIndex = javaIndex = off + (scansize * rowOffset);
+						int javaIndex = off + (scansize * rowOffset);
 						int startNonDup = javaIndex;
 						int startDup = javaIndex;
 						byte startDupPixel = pixels[javaIndex];

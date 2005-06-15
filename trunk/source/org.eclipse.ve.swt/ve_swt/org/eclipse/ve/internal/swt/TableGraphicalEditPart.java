@@ -10,15 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableGraphicalEditPart.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-02 22:32:30 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:21 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.List;
+import java.util.logging.Level;
 
-import org.eclipse.draw2d.FigureListener;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -28,23 +27,23 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.swt.graphics.ImageData;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.*;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /**
+ * swt Table Graphical Edit part.
  * 
  * @since 1.0.0
  */
 public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
-	private TableProxyAdapter tableProxyAdapter;
+
+	private IBeanProxyHost beanProxyProxyAdapter;
 
 	public TableGraphicalEditPart(Object aModel) {
 		super(aModel);
@@ -54,10 +53,6 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 
 	protected VisualContainerPolicy getContainerPolicy() {
 		return new TableContainerPolicy(EditDomain.getEditDomain(this)); // SWT standard Composite/Container Edit Policy
-	}
-
-	protected Rectangle getBounds() {
-		return getContentPane().getBounds().getCopy();
 	}
 
 	private TableImageListener fImageListener;
@@ -73,7 +68,7 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 	 * size of table columns.
 	 * 
 	 * @since 1.0.0
-	 *  
+	 * 
 	 */
 	protected class TableImageListener implements IImageListener {
 
@@ -93,7 +88,6 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 
 		protected void doRun() {
 			refreshChildren();
-			refreshColumns();
 		}
 
 		public void notifyChanged(Notification notification) {
@@ -103,12 +97,21 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 		}
 	};
 
+	protected void refreshChildren() {
+		super.refreshChildren();
+		refreshColumns(); // Also refresh the columns to get the latest.
+	}
+
+	protected void refreshVisuals() {
+		super.refreshVisuals();
+		refreshColumns();
+	}
+
 	public void activate() {
 		super.activate();
 		((EObject) getModel()).eAdapters().add(tableAdapter);
 		getFigure().addFigureListener(hostFigureListener);
 		getVisualComponent().addImageListener(getTableImageListener());
-		//		getVisualComponent().addComponentListener(getTableComponentListener());
 	}
 
 	public void deactivate() {
@@ -116,7 +119,13 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 		((EObject) getModel()).eAdapters().remove(tableAdapter);
 		getFigure().removeFigureListener(hostFigureListener);
 		getVisualComponent().removeImageListener(getTableImageListener());
-		tableProxyAdapter = null;
+		beanProxyProxyAdapter = null;
+	}
+
+	protected IFigure createFigure() {
+		ContentPaneFigure cfig = (ContentPaneFigure) super.createFigure();
+		cfig.getContentPane().setLayoutManager(new XYLayout());
+		return cfig;
 	}
 
 	protected void createEditPolicies() {
@@ -142,39 +151,65 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 		return result;
 	}
 
-	protected int getHeaderHeight() {
-		IIntegerBeanProxy intBeanProxy = getTableProxyAdapter().getHeaderHeight();
-		if (intBeanProxy != null) { return intBeanProxy.intValue(); }
-		return 0;
-	}
-
 	/*
 	 * Return the proxy adapter associated with this TabFolder.
 	 */
-	protected TableProxyAdapter getTableProxyAdapter() {
-		if (tableProxyAdapter == null) {
-			IBeanProxyHost tableProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) getModel());
-			tableProxyAdapter = (TableProxyAdapter) tableProxyHost;
+	protected IBeanProxyHost getBeanProxyAdapter() {
+		if (beanProxyProxyAdapter == null) {
+			beanProxyProxyAdapter = BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance) getModel());
 		}
-		return tableProxyAdapter;
+		return beanProxyProxyAdapter;
 	}
 
-	private Runnable fRefreshColumnsRunnable = new Runnable() {
+	private Runnable fRefreshColumnsRunnable = new EditPartRunnable(this) {
 
-		public void run() {
-			int columnWidth = 0;
-			int columnHeight = getHeaderHeight();
-			Rectangle parentRect = getBounds();
-			Point nextColumnLocation = new Point(parentRect.x, parentRect.y);
-			List children = getChildren();
-			for (int i = 0; i < children.size(); i++) {
-				TableColumnGraphicalEditPart columnEP = (TableColumnGraphicalEditPart) children.get(i);
-				TableColumnProxyAdapter proxyAdapter = columnEP.getControlProxy();
-				if (proxyAdapter != null && proxyAdapter.isBeanProxyInstantiated()) {
-					columnWidth = columnEP.getControlProxy().getWidth().intValue();
-					columnEP.setBounds(new Rectangle(nextColumnLocation.x, nextColumnLocation.y, columnWidth, columnHeight));
-					columnEP.refresh();
-					nextColumnLocation.x += columnWidth;
+		protected void doRun() {
+			if (getBeanProxyAdapter().isBeanProxyInstantiated()) {
+				IArrayBeanProxy columnRectsProxy = BeanSWTUtilities.invoke_Table_getAllColumnRects(getBeanProxyAdapter().getBeanProxy());
+				if (columnRectsProxy != null) {
+					try {
+						IBeanProxy[] columnRects = columnRectsProxy.getSnapshot();
+						List children = getChildren();
+						// We can't just use index here because the index here of columnEP's may be different than the live object.
+						// So we need to search for the column in the returns.
+						for (int i = 0; i < children.size(); i++) {
+							TableColumnGraphicalEditPart columnEP = (TableColumnGraphicalEditPart) children.get(i);
+							IBeanProxyHost columnProxyHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) columnEP.getModel());
+							if (!columnProxyHost.isBeanProxyInstantiated()) {
+								columnEP.getFigure().setVisible(false);
+								continue;
+							}
+
+							// Find this column in the returned columns. The actual order may be different than added, so we need to search each time.
+							IBeanProxy cpProxy = columnProxyHost.getBeanProxy();
+							boolean found = false;
+							for (int cpi = 0; cpi < columnRects.length; cpi += 5) {
+								if (columnRects[cpi].sameAs(cpProxy)) {
+									// We found it. Now compute the bounds for it.
+									int ii = cpi;
+									Rectangle bounds = new Rectangle();
+									bounds.x = ((IIntegerBeanProxy) columnRects[++ii]).intValue();
+									bounds.y = ((IIntegerBeanProxy) columnRects[++ii]).intValue();
+									bounds.width = ((IIntegerBeanProxy) columnRects[++ii]).intValue();
+									bounds.height = ((IIntegerBeanProxy) columnRects[++ii]).intValue();
+									setLayoutConstraint(columnEP, columnEP.getFigure(), bounds);
+									found = true;
+									break;
+								}
+							}
+							columnEP.getFigure().setVisible(found);
+						}
+					} catch (ThrowableProxy e) {
+						JavaVEPlugin.log(e, Level.WARNING);
+					}
+				} else {
+					// Hide all of the columns.
+					List children = getChildren();
+					// We can't just use index here because the index here of columnEP's may be different than the live object.
+					// So we need to search for the column in the returns.
+					for (int i = 0; i < children.size(); i++) {
+						((TableColumnGraphicalEditPart) children.get(i)).getFigure().setVisible(false);
+					}
 				}
 			}
 		}

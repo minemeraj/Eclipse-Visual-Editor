@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.18 $  $Date: 2005-05-18 22:53:56 $ 
+ *  $Revision: 1.19 $  $Date: 2005-06-15 20:19:27 $ 
  */
 
 import java.util.logging.Level;
@@ -84,16 +84,11 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 		onFreeForm = false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.jfc.core.ComponentProxyAdapter#primInstantiateBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
-	 */
 	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
 		if (onFreeForm) {
 			// On freeform we want at offscreen and we want to be visible. Apply these BEFORE instantiation.
 			// Actually we will always be on freeform.
-			overrideLocation(BeanAwtUtilities.getOffScreenLocation());
+			overrideLocation(BeanAwtUtilities.getOffScreenLocation(), expression);
 			overrideVisibility(true, expression);
 		}
 		IProxy result = super.primInstantiateBeanProxy(expression);
@@ -103,7 +98,7 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 		
 		return result;
 	}
-
+	
 	protected void primReleaseBeanProxy(IExpression expression) {
 		if (isOwnsProxy() && isBeanProxyInstantiated()) {
 			// If we own the proxy and are instantiated we need to do an actual "dispose". We can't just release it.

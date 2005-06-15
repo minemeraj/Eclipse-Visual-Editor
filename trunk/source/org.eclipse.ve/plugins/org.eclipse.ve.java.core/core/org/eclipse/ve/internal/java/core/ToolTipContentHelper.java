@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipContentHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-24 15:22:26 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-15 20:19:37 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -42,7 +42,38 @@ public class ToolTipContentHelper {
 			for (int i = 0; i < toolTipDetails.length; i++) {
 				addContentProcessor(toolTipDetails[i]) ;
 			}
-		}		
+		}
+		
+		/**
+		 * Activate the tooltip.
+		 * 
+		 * 
+		 * @since 1.1.0
+		 */
+		public void activate() {
+			if (fEntries != null) {
+				Iterator iter = fContentAssistProcessors.iterator();
+				while(iter.hasNext()){
+					((ToolTipAssistFactory.TooltipDetails)iter.next()).activate();
+				}
+			}
+		}
+		
+		/**
+		 * Deactivate the tooltip.
+		 * 
+		 * 
+		 * @since 1.1.0
+		 */
+		public void deactivate() {
+			if (fEntries != null) {
+				Iterator iter = fContentAssistProcessors.iterator();
+				while(iter.hasNext()){
+					((ToolTipAssistFactory.TooltipDetails)iter.next()).deactivate();
+				}
+			}			
+		}
+		
 		/* 
 		 * The tooltip has been displayed - calculate its contents 
 		 */

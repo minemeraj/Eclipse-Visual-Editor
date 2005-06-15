@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.28 $  $Date: 2005-06-02 20:44:55 $ 
+ *  $Revision: 1.29 $  $Date: 2005-06-15 20:19:20 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -36,7 +36,6 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.remote.swt.SWTREMProxyRegistration;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -462,10 +461,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.core.IConfigurationContributor#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
 	 */
-	public void contributeToRegistry(ProxyFactoryRegistry registry) {
-		// TODO the problem with this here is that it is hard-coded REM stuff. Need a better way to do this.
-		SWTREMProxyRegistration.initialize(registry);	// Set the registry up with SWT REM stuff.
-		
+	public void contributeToRegistry(ProxyFactoryRegistry registry) {		
 		// [70275] Need a marker if VM is less than 1.4.2 because of a bug with beaninfo.
 		if (javaProject != null) {
 			boolean versOk = true;	// Default is true, and if for some reason can't parse the version, then it will still be true because we don't know.

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter2.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-02 19:12:33 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:38 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -322,7 +322,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 					// Need to notify.
 					ReinstantiateBeanProxyNotification notification = new ReinstantiateBeanProxyNotification(expression);
 					notification.setPrerelease(false);
-					// Now walk through all references and tell of pre-release.
+					// Now walk through all references and tell of instantiation.
 					InverseMaintenanceAdapter ai = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(getTarget(),
 							InverseMaintenanceAdapter.ADAPTER_KEY);
 					fireReinstantiateNotice(notification, ai);
@@ -331,19 +331,16 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 				// This means there was a bad error occured in instantiation and is not recoverable.
 				// Log this as the instantiate error, but we make it just an info, allocation exceptions
 				// are usually due to errors other than actually trying to instantiate it, such as too complicated.
-				JavaVEPlugin.log(e.getCause(), Level.INFO);
 				processInstantiationError(new ExceptionError(e.getCause(), ERROR_INFO));
 				return null;
 			} catch (IllegalStateException e) {
 				// This means there was a expression creation error occured in instantiation and so is not recoverable.
 				// Log this as the instantiate error.
-				JavaVEPlugin.log(e, Level.SEVERE);
 				processInstantiationError(new ExceptionError(e, ERROR_SEVERE));
 				return null;				
 			} catch (RuntimeException e) {
 				// This means there was a some other kind of error occured in instantiation and so is not recoverable.
 				// Log this as the instantiate error.
-				JavaVEPlugin.log(e, Level.SEVERE);
 				processInstantiationError(new ExceptionError(e, ERROR_SEVERE));
 				return null;								
 			} finally {
@@ -407,14 +404,14 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 
 				public void proxyResolved(ProxyEvent event) {
 					ThrowableProxy throwableProxy = (ThrowableProxy) event.getProxy();
-					JavaVEPlugin.log(throwableProxy, Level.INFO);
 					processInstantiationError(new BeanExceptionError(throwableProxy, ERROR_SEVERE));
 				}
 			});
 			expression.createThrow();
 			expression.createClassInstanceCreation(ForExpression.THROW_OPERAND, getBeanInstantiationExceptionTypeProxy(expression), 0);
 		} finally {
-			expression.createTryEnd();
+			if (expression.isValid())
+				expression.createTryEnd();
 		}
 		
 		//   apply all settings.
@@ -937,7 +934,9 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * @param expression
 	 * @param feature
 	 * @param value
-	 * @param errorNotifier
+	 * @param errorNotifier	errorNotifier to add instantiation error to, or <code>null</code> if error is ignored. null would be used
+	 * for children since the child would be separately displayed in the tree it would have the instantiation error there. Standard
+	 * settings should not use null because there wouldn't be a child for them to show the instantiation error.
 	 * @return
 	 * 
 	 * @since 1.1.0
@@ -947,7 +946,8 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 			return null;	// No setting bean.
 		if (settingBean.isBeanProxyInstantiated())
 			return settingBean.getBeanProxy();
-		errorNotifier.clearError(feature, value);
+		if (errorNotifier != null)
+			errorNotifier.clearError(feature, value);
 		IProxy result = null;
 		// TODO get rid of test when we consolidate back to just IBeanProxyHost
 		if (settingBean instanceof IInternalBeanProxyHost2) {
@@ -963,17 +963,19 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 				expression.createTry();
 				result = ((IBeanProxyHost2) settingBean).instantiateBeanProxy(expression);
 				if (result != null) {
-					ExpressionProxy beanInstantiateException = expression.createTryCatchClause(getBeanInstantiationExceptionTypeProxy(expression), true);
-					beanInstantiateException.addProxyListener(new ExpressionProxy.ProxyAdapter() {
+					ExpressionProxy beanInstantiateException = expression.createTryCatchClause(getBeanInstantiationExceptionTypeProxy(expression), errorNotifier != null);
+					if (errorNotifier != null) {
+						beanInstantiateException.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
-						public void proxyResolved(ProxyEvent event) {
-							processSettingBeanInstantiationErrors(errorNotifier, (IInternalBeanProxyHost2) settingBean, feature, value);
-						}
-						
-						public void proxyNotResolved(ExpressionProxy.ProxyEvent event) {
-							processSettingBeanInstantiationErrors(errorNotifier, (IInternalBeanProxyHost2) settingBean, feature, value);
-						}
-					});
+							public void proxyResolved(ProxyEvent event) {
+								processSettingBeanInstantiationErrors(errorNotifier, (IInternalBeanProxyHost2) settingBean, feature, value);
+							}
+
+							public void proxyNotResolved(ExpressionProxy.ProxyEvent event) {
+								processSettingBeanInstantiationErrors(errorNotifier, (IInternalBeanProxyHost2) settingBean, feature, value);
+							}
+						});
+					}
 					expression.createRethrow();
 				}
 				expression.createTryEnd();
@@ -985,7 +987,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		}
 		
 		// This will handle any immediate instantiation errors (i.e. occurred either in the IDE while creating the expression, or an error from instantiateBeanProxy without an expression).
-		if (((IInternalBeanProxyHost2) settingBean).hasInstantiationErrors()) {
+		if (errorNotifier != null && ((IInternalBeanProxyHost2) settingBean).hasInstantiationErrors()) {
 			processSettingBeanInstantiationErrors(errorNotifier, (IInternalBeanProxyHost2) settingBean, feature, value);
 			return null;
 		}					
@@ -1197,7 +1199,9 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		if (!isThisPart()) {
 			return primInstantiateDroppedPart(expression);
 		} else {
-			return primInstantiateThisPart(expression);
+			ownsProxy = true; // Since we created it, obviously we own it
+			IProxyBeanType targetClass = getValidSuperClass(expression);
+			return primInstantiateThisPart(targetClass, expression);
 		}
 	}
 
@@ -1224,24 +1228,26 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	}
 	
 	/**
-	 * This is used to instantiate as a this part. Called from primInstantiate. The default
-	 * walks up the parent chain until it finds a valid superclass to instantiate.
+	 * This is used to instantiate as a this part. Called from {@link #primInstantiateBeanProxy(IExpression)}. The default
+	 * primInstantiateBeanProxy walks up the parent chain until it finds a valid superclass to instantiate and passes that
+	 * into this call.
 	 * @param expression
 	 * @return
-	 * 
+	 * @throws AllocationException
 	 * @since 1.1.0
 	 */
-	protected IProxy primInstantiateThisPart(IExpression expression) {
-		IProxyBeanType targetClass = getValidSuperClass(expression);
-
-		ownsProxy = true; // Since we created it, obviously we own it				
+	protected IProxy primInstantiateThisPart(IProxyBeanType targetClass, IExpression expression) throws AllocationException {
 		return BasicAllocationProcesser.instantiateWithString(null, targetClass, expression);
 	}
 
 
 	/**
 	 * Get the valid superclass that can be instantiated for a thisPart. This is called by
-	 * primInstantiateThisPart. 
+	 * {@link #primInstantiateBeanProxy(IExpression)}. Subclasses may override to provide
+	 * a valid super class if they don't want the default. However, they must do the same thing
+	 * in putting a valid list of notInstantiatedClasses of all the abstract classes in-between
+	 * up to the concrete valid super class. This is so that is known to not try to set
+	 * properties on those classes since the concrete class doesn't implement those methods.
 	 * 
 	 * @param expression
 	 * @return
