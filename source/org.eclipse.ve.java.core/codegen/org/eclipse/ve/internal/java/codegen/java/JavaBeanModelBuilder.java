@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.28 $  $Date: 2005-04-12 12:34:04 $ 
+ *  $Revision: 1.29 $  $Date: 2005-06-15 18:58:22 $ 
  */
 
 import java.util.*;
@@ -19,9 +19,11 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jface.text.TextUtilities;
 
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
@@ -202,28 +204,36 @@ protected IBeanDeclModel createDefaultModel(EditDomain d){
  *
  */
 void  setLineSeperator() {
+	
 	fModel.setLineSeperator(System.getProperty("line.separator")) ; //$NON-NLS-1$
 	// For Shadow BDM no need to set up a seperator -- no fCU
-	if (fCU==null) return ;
-	try {		
-		IBuffer buff = fCU.getBuffer();
-		int len = buff.getLength();
-		for (int i=0; i<len; i++) {
-			char c = buff.getChar(i);
-			if (c == '\r' || c == '\n' ) {
-				if (c == '\r')
-				   if (i+1<len && buff.getChar(i+1) == '\n')
-				     fModel.setLineSeperator("\r\n") ; //$NON-NLS-1$
-				   else
-				     fModel.setLineSeperator("\r") ; //$NON-NLS-1$
-				else
-				     fModel.setLineSeperator("\n") ; //$NON-NLS-1$
-				break ;
-			}
-		}
-	} catch (JavaModelException e) {
-		JavaVEPlugin.log(e);
-	}
+	
+	if (fCU==null || fModel.getWorkingCopyProvider()!=null || fModel.getWorkingCopyProvider().getDocument()==null)
+		return;
+	
+	fModel.setLineSeperator(TextUtilities.getDefaultLineDelimiter(fModel.getWorkingCopyProvider().getDocument()));
+	
+	
+//	if (fCU==null) return ;
+//	try {		
+//		IBuffer buff = fCU.getBuffer();
+//		int len = buff.getLength();
+//		for (int i=0; i<len; i++) {
+//			char c = buff.getChar(i);
+//			if (c == '\r' || c == '\n' ) {
+//				if (c == '\r')
+//				   if (i+1<len && buff.getChar(i+1) == '\n')
+//				     fModel.setLineSeperator("\r\n") ; //$NON-NLS-1$
+//				   else
+//				     fModel.setLineSeperator("\r") ; //$NON-NLS-1$
+//				else
+//				     fModel.setLineSeperator("\n") ; //$NON-NLS-1$
+//				break ;
+//			}
+//		}
+//	} catch (JavaModelException e) {
+//		JavaVEPlugin.log(e);
+//	}
 }
 
 

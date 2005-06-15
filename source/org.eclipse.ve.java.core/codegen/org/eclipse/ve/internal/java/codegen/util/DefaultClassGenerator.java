@@ -14,19 +14,23 @@
 
 /*
 *  $RCSfile: DefaultClassGenerator.java,v $
-*  $Revision: 1.8 $
+*  $Revision: 1.9 $
 */
 
 
 package org.eclipse.ve.internal.java.codegen.util;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
-import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.ui.CodeGeneration;
 import org.eclipse.jdt.ui.PreferenceConstants;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
+import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 
 
@@ -86,6 +90,28 @@ public class DefaultClassGenerator extends AbstractClassGenerator {
 	public String getTemplteContent() {
 		return getClassTemplate().generateClassContent(getTemplateInfo());
 	}
+
+	/**
+	 * 
+	 * @param src  Text to format 
+	 * @param kind  see <code>CodeFormatter</code>
+	 * @param options project option, or null for default options
+	 * @param lineSeperator
+	 * @return formated text
+	 * 
+	 * @since 1.1.0
+	 */
+	public static String format(String src, int kind, Map options, String lineSeperator) {
+		CodeFormatter formatter = ToolFactory.createCodeFormatter(options);
+		TextEdit te = formatter.format(kind, src, 0, src.length(), 0, lineSeperator);
+		Document d = new Document (src);
+		try {
+			te.apply(d);
+		} 
+		catch (MalformedTreeException e) {} 
+		catch (BadLocationException e) {}
+		return d.get();		
+	}
 	
 	public void generateClass(IProgressMonitor monitor) throws CodeGenException {
 	    if (fProject == null) throw new CodeGenException ("Project is not set") ; //$NON-NLS-1$
@@ -110,13 +136,8 @@ public class DefaultClassGenerator extends AbstractClassGenerator {
 						
 					} catch (CoreException e1) {
 					}
-				}
-				CodeFormatter formatter = ToolFactory.createCodeFormatter(null);
-				String content = wc.getSource();
-				TextEdit te = formatter.format(
-						CodeFormatter.K_COMPILATION_UNIT, content, 0, content.length(), 0, fNL);
-				content = CodeFormatterUtil.evaluateFormatterEdit(content, te,
-						null);
+				}				
+				String content = format (wc.getSource(), CodeFormatter.K_COMPILATION_UNIT, fProjectOptions,  fNL);
 				wc.getBuffer().setContents(content);
 				wc.commitWorkingCopy(true, monitor);
 			}

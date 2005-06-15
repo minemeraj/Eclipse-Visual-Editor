@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.32 $  $Date: 2005-06-01 14:31:45 $ 
+ *  $Revision: 1.33 $  $Date: 2005-06-15 18:58:22 $ 
  */
 
 import java.io.IOException;
@@ -25,9 +25,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
-import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
-import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
@@ -35,6 +33,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
+import org.eclipse.ve.internal.java.codegen.util.DefaultClassGenerator;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.templates.*;
 
@@ -311,9 +310,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			
 			// Format the source 
 			String content = originalCU.getSource();
-			TextEdit te = formatter.format(
-					CodeFormatter.K_COMPILATION_UNIT, content, 0, content.length(), 0, System.getProperties().getProperty("line.separator")); //$NON-NLS-1$
-			content = CodeFormatterUtil.evaluateFormatterEdit(content, te, null);
+			content = DefaultClassGenerator.format(content, CodeFormatter.K_COMPILATION_UNIT, originalCU.getJavaProject().getOptions(true), System.getProperties().getProperty("line.separator")); //$NON-NLS-1$
 			originalCU.getBuffer().setContents(content);
 			originalCU.getBuffer().save(monitor, true);
 			

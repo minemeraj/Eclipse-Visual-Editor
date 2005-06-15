@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2005-03-17 23:31:40 $ 
+ *  $Revision: 1.16 $  $Date: 2005-06-15 18:58:22 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.formatter.CodeFormatter;
 
 import org.eclipse.jem.internal.beaninfo.MethodProxy;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -463,13 +464,36 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 		return false;
 	}
 
+	
+	protected String insertFiller(String src, String ls) {
+		StringBuffer sb = new StringBuffer();
+		StringTokenizer tk = new StringTokenizer(src, ls);
+		
+		boolean first = true;
+		while (tk.hasMoreElements()) {
+			if (!first)
+				sb.append(ls);	
+			first=false;
+			sb.append(fIndentFiller);
+			sb.append(tk.nextToken());							
+		}
+		if (!sb.toString().endsWith(ls))
+			sb.append(ls);
+		return sb.toString();
+	}
+	
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#generate(Object[])
 	 */
 	public String generate(Object[] args) throws CodeGenException {
-		
-        getSrcGenerator(args).setSeperator(fbeanPart.getModel().getLineSeperator()) ;
+		String ls = fbeanPart.getModel().getLineSeperator();
+        getSrcGenerator(args).setSeperator(ls) ;
 		String result = getSrcGenerator(args).generateEvent() ;
+		Map options = fbeanPart.getModel().getCompilationUnit().getJavaProject().getOptions(true);		
+		result = DefaultClassGenerator.format(result, CodeFormatter.K_STATEMENTS, options, ls);
+		// Formatter will remove the filler... and only works with indent levels
+		// We will reInsert them back... as fillers may not be tabs
+		result = insertFiller(result, ls);
 		return result ;
 	}
 
@@ -540,7 +564,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 
 	/**
 	 * Sets the eventDecorator.
-	 * @param eventDecorator The eventDecorator to set
+	 * @param ei The eventDecorator to set
 	 */
 	public boolean setEventInvocation(AbstractEventInvocation ei) {
 		// if the invocation is already in the model (a restore) or
@@ -790,7 +814,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	 * One type statement are possible 
 	 * Expression Statement 
 	 * @param stmt
-	 * @return
+	 * @return Expression associated with the statement
 	 * 
 	 * @since 1.0.0
 	 */
