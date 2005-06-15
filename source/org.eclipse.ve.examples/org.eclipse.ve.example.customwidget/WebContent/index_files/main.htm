@@ -517,7 +517,7 @@ VM.&nbsp; The runtime side jar also contains the BeanInfo class for
 MyCustomPrompter that contains the extensions that conform to the
 JavaBeans component model which is covered more in the sections on the <a
  href="#Using_an_ENUM_cell_editor"><span style="font-style: italic;">type</span>
-property editor</a> and creating the <a href="#Preferred_Event_">preferred
+property editor</a> and creating the <a href="#Preferred_Event">preferred
 event</a>.<br>
 <br>
 <img style="width: 601px; height: 515px;" alt=""
@@ -570,9 +570,9 @@ custom widget which, although a good exercise in using the Visual
 Editor, is outside the scope of what this tutorial is designed to cover
 - you can download it directly from CVS to begin working.&nbsp; You
 should download the two classes <a
- href="https://bugs.eclipse.org/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.java">
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompter.java">
 <font face="Courier New">MyCustomPrompter.java</font></a>, and <a
- href="https://bugs.eclipse.org/src/org/eclipse/ve/example/customwidget/prompter/ButtonSelectionListener.java">
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/ButtonSelectionListener.java">
 <font face="Courier New">ButtonSelectionListener.java</font></a> and
 place them into the plugin project in a package <span
  style="font-style: italic;">org.eclipse.ve.customwidget.prompter.&nbsp;</span>
@@ -718,7 +718,7 @@ page is responsible for configuring the project's build path to
 actually add the container classpath entry.</p>
 <p>To add the <span style="font-style: italic;">Custom Prompter</span>
 entry to the list of available containers add the following to the <a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/plugin.xml?cvsroot=Tools_Project">
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/plugin.xml">
 plugin.xml</a> of the <span style="font-style: italic;">org.eclipse.ve.examples.customwidget</span>
 plugin.</p>
 <pre>  <a name="ContainerPageDefinition"></a>&lt;extension<br>         point="org.eclipse.jdt.ui.classpathContainerPage"&gt;<br>      &lt;classpathContainerPage<br><img
@@ -919,7 +919,7 @@ class to add.<br>
 Create a file called customprompter.xmi in the plugin and open it with
 a text editor.&nbsp; The data for the file is shown below and can be
 downloaded directly from <a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/customprompter.xmi?cvsroot=Tools_Project">
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/customprompter.xmi">
 CVS</a> to avoid re-entry.<br>
 <br>
 </p>
@@ -961,7 +961,8 @@ in the <span style="font-style: italic;">icons</span> directory of the
 plugin called <span style="font-style: italic;">org.eclipse.ve.example.customwidget.&nbsp;</span>
 The graphic used&nbsp;<img style="width: 16px; height: 16px;" alt=""
  src="images/custom.gif"> is available in <a
- href="https://bugs.eclipse.org/icons/custom.gif">CVS</a> and you will
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/icons/custom.gif">CVS</a>
+and you will
 need to create a folder called <span style="font-style: italic;">icons</span>
 in the plugin and copy it there.<br>
 <br>
@@ -1147,7 +1148,7 @@ separate jars, however for the purpose of this tutorial the class <span
 will be created that extends the abstract superclass <span
  style="font-family: monospace;">java.beans.SimpleBeanInfo</span>.</p>
 <p>The full source code for the BeanInfo can be downloaded from <a
- href="https://bugs.eclipse.org/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java">
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java">
 CVS.</a>&nbsp; A BeanInfo class is responsible for describing the list
 of properties used by a tool such as the Visual Editor, and also their
 edit time behavior.&nbsp; This is done by specializing the method <span
@@ -1649,7 +1650,7 @@ instance of&nbsp;<img style="width: 24px; height: 13px;" alt=""
 LabelCellEditor is the class
 org.eclipse.ve.examples.customwidget.LabelDialogContent.&nbsp; This is
 available in CVS <a
- href="https://bugs.eclipse.org/src/org/eclipse/ve/example/customwidget/LabelDialogContent.java">LabelDialogContent.java</a>
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/LabelDialogContent.java">LabelDialogContent.java</a>
 and extends <span style="font-family: monospace;">org.eclipse.swt.Composite</span>
 and was built using the Visual Editor.&nbsp; This has the methods <span
  style="font-family: monospace;">public setString(String aString)</span>
@@ -2262,7 +2263,7 @@ GEF canvas is <span style="font-family: monospace;">createFigure()</span>
 and this is overriden to place a draw2L label on top of the inherited
 behavior (an image of the live visual).&nbsp; The method is shown below
 and the full class list is available at <a
- href="https://bugs.eclipse.org/src/org/eclipse/ve/example/customwidget/CustomWidgetGraphicalEditPart.java">
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomWidgetGraphicalEditPart.java">
 CustomWidgetGraphicalEditPart.java</a>.</p>
 <pre><span style="color: rgb(153, 0, 0);">public class</span> CustomWidgetGraphicalEditPart <span
  style="color: rgb(153, 0, 0);">extends</span> <span
@@ -2469,7 +2470,7 @@ CodeGenHelperClass and defined with the syntax of&nbsp;<img
  style="width: 24px; height: 13px;" alt="" src="images/tag_5.gif">
 pluginName/qualifiedClassName.</p>
 <p><font face="Arial">The <a
- href="https://bugs.eclipse.org/src/org/eclipse/ve/example/customwidget/CustomPrompterDecoder.java">CustomPrompterDecoder.java</a>.
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomPrompterDecoder.java">CustomPrompterDecoder.java</a>.
 is responsible for determining which decoder helper is associated with
 which property.&nbsp; The superclass
 ~org.eclipse.ve.internal.swt.codegen.SWTControlDecoder is used as this
@@ -2492,7 +2493,7 @@ org.eclipse.ve.internal.java.codegen.java.SimpleAttributeDecoderHelper.&nbsp;
 The method responsible for generating the code is generate(Object[])
 and this is specialized as below.&nbsp; The full source file can be
 viewed in CVS <a
- href="https://bugs.eclipse.org/src/org/eclipse/ve/example/customwidget/CustomPrompterDecoderHelper.java">
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/CustomPrompterDecoderHelper.java">
 CustomPrompterDecoderHelper.java</a>.</p>
 <pre>   <span style="color: rgb(153, 0, 0);">public class</span> CustomPrompterDecoderHelper <span
  style="color: rgb(153, 0, 0);">extends</span> SimpleAttributeDecoderHelper {<br><br>     <span
@@ -2598,7 +2599,7 @@ more aware of its preferred API usage.</p>
 <p>Preferred events are defined according to the JavaBeans
 specification with a custom BeanInfo class.&nbsp; Earlier the tutorial
 created a specialized <a
- href="https://bugs.eclipse.org/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java">
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/src/org/eclipse/ve/example/customwidget/prompter/MyCustomPrompterBeanInfo.java">
 MyCustomPrompterBeanInfo.java</a> to define the <span
  style="font-style: italic;">enumerationValues</span> for the <span
  style="font-style: italic;">type</span> property.&nbsp; This was done
@@ -2643,8 +2644,7 @@ pop-up menu displays an item for <span style="font-style: italic;">buttonSelecte
 <h1><a name="A_complete_example"></a>A complete example</h1>
 <p>This tutorial has gone through the steps required to create the
 plugin <span style="font-style: italic;">org.eclipse.ve.example.customwidget</span>.&nbsp;
-The completed plugin is available <a
- href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/WebContent/customwidgetexample.zip?cvsroot=Tools_Project">
+The completed plugin is available <a href="../customwidgetexample.zip">
 here</a> or can be obtained directly from CVS.<br>
 <br>
 To install the plugin from CVS into an Eclipse development environment
