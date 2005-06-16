@@ -12,7 +12,7 @@
  *  Created May 27, 2005 by Gili Mendel
  * 
  *  $RCSfile: SashSetting.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-27 21:58:27 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-16 17:50:30 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -50,7 +50,13 @@ public class SashSetting implements EditorSettings.ISetting {
 	
 	int weights[];
 	
-	
+	/**
+	 * Save both the current weights, and the (potential) save
+	 * weights.  The first value is the size of the 
+	 * current weights
+	 * 
+	 * @since 1.1.0
+	 */
 	protected void updateWeights() {
 		weights = sash.getWeights();
 		StringBuffer sb = new StringBuffer();
@@ -59,6 +65,10 @@ public class SashSetting implements EditorSettings.ISetting {
 				sb.append(EditorSettings.SEPERATOR);
 			sb.append(weights[i]);
 		}
+		sb.append(EditorSettings.SEPERATOR);
+		sb.append(-1);  // seperate between current weights, and saved weights
+		sb.append(EditorSettings.SEPERATOR);
+		sb.append(sash.getSavedWeight());
 		try {
 			resource.setPersistentProperty(name,sb.toString());
 		} catch (CoreException e) {
@@ -99,12 +109,27 @@ public class SashSetting implements EditorSettings.ISetting {
 			if (val!=null) {
 				StringTokenizer st = new StringTokenizer(val,EditorSettings.SEPERATOR);
 				weights = new int[st.countTokens()];
-				int index = 0;
+				int index = 0;				
 				while(st.hasMoreTokens()) {
 					String s = st.nextToken();
 					weights[index++]=Integer.parseInt(s);
 				}
+				for (index = 0; index < weights.length; index++) {
+					if (weights[index]<0)
+						break;					
+				}
+				int saved = -1;
+				if (index<weights.length) {
+					int w[] = new int[index];
+					for (int i = 0; i < w.length; i++) {
+						w[i] = weights[i];						
+					}
+					saved = weights[index+1];					
+					weights=w;
+				}				
 				sash.setWeights(weights);
+				if (saved>=0)
+				   sash.setCurrentSavedWeight(saved);
 			}
 		} catch (CoreException e1) {
 			JavaVEPlugin.log(e1);
