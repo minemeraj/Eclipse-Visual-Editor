@@ -3,7 +3,7 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="jcm"
     nsURI="http:///org/eclipse/ve/internal/jcm.ecore" nsPrefix="org.eclipse.ve.internal.jcm">
-  <eClassifiers xsi:type="ecore:EClass" name="BeanDecorator" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation ../../org.eclipse.ve.cde/model/cdm.ecore#//KeyedValueHolder">
+  <eClassifiers xsi:type="ecore:EClass" name="BeanDecorator" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAnnotation ../../org.eclipse.ve.cde/model/cdm.ecore#//KeyedValueHolder">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Decorates the bean for bean specific inforamation, for example the BeanProxyAdapter class."/>
     </eAnnotations>
@@ -25,7 +25,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BeanFeatureDecorator" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation ../../org.eclipse.ve.cde/model/cdm.ecore#//KeyedValueHolder">
+  <eClassifiers xsi:type="ecore:EClass" name="BeanFeatureDecorator" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAnnotation ../../org.eclipse.ve.cde/model/cdm.ecore#//KeyedValueHolder">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Decorate a bean feature.  For example the mediator for handling bean feature application/canceling in the proxy adapter."/>
     </eAnnotations>
@@ -50,7 +50,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BeanComposition" eSuperTypes="../../org.eclipse.ve.cde/model/cdm.ecore#//DiagramData #//MemberContainer">
     <eStructuralFeatures xsi:type="ecore:EReference" name="components" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="listenerTypes" upperBound="-1"
         eType="#//ListenerType" containment="true"/>
   </eClassifiers>
@@ -80,10 +80,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MemberContainer">
     <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="members" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Listener">
@@ -127,8 +127,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="JCMMethod" eSuperTypes="#//MemberContainer">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="initializes" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="return" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="return" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="InstanceLocation">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -198,6 +198,6 @@
         <details key="documentation" value="Key for the map. It should be a unique name in the model."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="ecore:EClass ../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
   </eClassifiers>
 </ecore:EPackage>

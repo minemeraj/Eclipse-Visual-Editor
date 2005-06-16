@@ -21,7 +21,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Graphic" abstract="true" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EObject #//IGraphic">
+  <eClassifiers xsi:type="ecore:EClass" name="Graphic" abstract="true" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject #//IGraphic">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A Graphic. This is an Abstract class. Subclasses of it will return an IImage."/>
     </eAnnotations>

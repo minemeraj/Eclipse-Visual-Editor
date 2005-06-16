@@ -3,7 +3,7 @@
   xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="decorators"
     nsURI="http:///org/eclipse/ve/internal/cde/decorators.ecore" nsPrefix="org.eclipse.ve.internal.cde.decorators">
-  <eClassifiers xsi:type="ecore:EClass" name="BasePropertyDecorator" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
+  <eClassifiers xsi:type="ecore:EClass" name="BasePropertyDecorator" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAnnotation">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="This is base information for properties. This will be on an EClassifier for how to edit a property of the type of the EClassifier."/>
     </eAnnotations>
@@ -34,7 +34,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PropertySourceAdapterInformation" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
+  <eClassifiers xsi:type="ecore:EClass" name="PropertySourceAdapterInformation" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAnnotation">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="This is the information required to establish a PropertySourceAdapter.&#xD;&#xA;&#xD;&#xA;This will be decorating a EClassifier to indicate what  PropertySourceAdapter to use for this EClassifier."/>
     </eAnnotations>
@@ -61,7 +61,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PropertyDescriptorInformation" eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
+  <eClassifiers xsi:type="ecore:EClass" name="PropertyDescriptorInformation" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAnnotation">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="This is the information required to establish a PropertyDescriptorAdapter or a PropertyDescriptor.&#xD;&#xA;&#xD;&#xA;This will be decorating a RefStructuralFeature to indicate what  PropertyDescriptorAdapter or PropertyDescscriptor  to use for this feature.&#xD;&#xA;&#xD;&#xA;It depends upon whether the type flag is Adapter is true. If the flag is true, then an adapter will be created once for the feature.&#xD;&#xA;&#xD;&#xA;If the flag is false, then it will create a descriptor each time a source is asked for descriptors. It will assume to have either a constructor that takes a RefObject and a RefStructuralFeature or one that takes just a RefObject. The RefObject is the source of the feature. This is useful when the descriptor needs to know the source to be able to answer its questions correctly, such as the celleditor, which may vary depending upon the source."/>
     </eAnnotations>
@@ -71,7 +71,7 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FeatureDescriptorDecorator" abstract="true"
-      eSuperTypes="../../org.eclipse.emf.ecore/src/model/Ecore.ecore#//EAnnotation">
+      eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAnnotation">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="This descriptor decorator for any kind of feature. It contains info that is generalized to features."/>
     </eAnnotations>
