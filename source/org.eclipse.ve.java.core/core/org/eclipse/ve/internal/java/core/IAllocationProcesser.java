@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IAllocationProcesser.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-02 19:12:33 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-16 17:46:06 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -39,6 +39,13 @@ public interface IAllocationProcesser {
 	 */
 	public static class AllocationException extends Exception {
 		
+		/**
+		 * Comment for <code>serialVersionUID</code>
+		 * 
+		 * @since 1.1.0
+		 */
+		private static final long serialVersionUID = -5219460831116485340L;
+
 		/**
 		 * Construct an <code>AllocationException</code>
 		 * 

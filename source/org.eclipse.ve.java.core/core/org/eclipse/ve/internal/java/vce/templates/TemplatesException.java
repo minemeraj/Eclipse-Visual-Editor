@@ -11,13 +11,19 @@ package org.eclipse.ve.internal.java.vce.templates;
  *******************************************************************************/
 /*
  *  $RCSfile: TemplatesException.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:06 $ 
  */
 
 import org.eclipse.core.runtime.*;
 
 public class TemplatesException extends CoreException {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 4400402133644701609L;
 	/**
 	 *  Make it easier to deal with IStatus
 	 */

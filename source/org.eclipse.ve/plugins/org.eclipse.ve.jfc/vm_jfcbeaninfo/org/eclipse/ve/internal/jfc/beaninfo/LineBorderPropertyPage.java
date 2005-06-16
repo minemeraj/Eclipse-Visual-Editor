@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: LineBorderPropertyPage.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.*;
@@ -24,6 +24,13 @@ import javax.swing.event.*;
 
 public class LineBorderPropertyPage extends AbstractBorderPropertyPage implements DocumentListener, ChangeListener {
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -7180063690548288954L;
+
 	private boolean built = false;
 	
 	private static final Color DEFAULT_COLOR = Color.gray;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanInstantiationException.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-16 17:46:06 $ 
  */
 package org.eclipse.ve.internal.java.remotevm;
  
@@ -22,6 +22,13 @@ package org.eclipse.ve.internal.java.remotevm;
  * @since 1.1.0
  */
 public class BeanInstantiationException extends Exception {
+
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 4141977353006039779L;
 
 	/**
 	 * Create.

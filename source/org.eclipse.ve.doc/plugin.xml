@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin
-   id="org.eclipse.ve.doc"
-   name="%pluginName"
-   version="1.1.0"
-   provider-name="%providerName">
+<plugin>
 
-   <runtime>
-   </runtime>
-
-   <extension point="org.eclipse.help.toc">
+    <extension point="org.eclipse.help.toc">
       <toc file="ve_toc.xml" primary="true" />
       <toc file="ve_isv_toc.xml" />
    </extension>

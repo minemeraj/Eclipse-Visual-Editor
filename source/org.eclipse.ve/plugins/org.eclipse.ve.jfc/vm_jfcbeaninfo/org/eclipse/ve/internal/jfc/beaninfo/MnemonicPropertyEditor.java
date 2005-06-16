@@ -18,11 +18,17 @@ import java.util.*;
  *******************************************************************************/
 /*
  *  $RCSfile: MnemonicPropertyEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 public class MnemonicPropertyEditor extends JPanel {
 	
-     private JList constantsList = null;
+     /**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -7164390783177994848L;
+	private JList constantsList = null;
      private JTextField constantField = null;
      private JTextField descriptionField = null;
      

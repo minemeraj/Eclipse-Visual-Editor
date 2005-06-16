@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenSyntaxError.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:06 $ 
  */
 
 /**
@@ -24,6 +24,12 @@ package org.eclipse.ve.internal.java.codegen.util;
  */
 public class CodeGenSyntaxError extends CodeGenException {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -6271589477796727094L;
 	/**
 	 * Constructor for CodeGenSyntaxError.
 	 * @param msg

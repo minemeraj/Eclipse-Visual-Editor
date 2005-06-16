@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: EmptyBorderPropertyPage.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.*;
@@ -24,6 +24,12 @@ import javax.swing.event.DocumentListener;
 
 
 public class EmptyBorderPropertyPage extends AbstractBorderPropertyPage implements DocumentListener {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -6584341079896760410L;
 	private boolean built = false;
 	private JLabel topLabel = new JLabel(VisualBeanInfoMessages.getString("Top")); //$NON-NLS-1$
 	private JTextField topField = new JTextField();

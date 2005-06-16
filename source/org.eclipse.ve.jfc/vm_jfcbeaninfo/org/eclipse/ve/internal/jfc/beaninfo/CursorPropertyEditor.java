@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: CursorPropertyEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:11 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 /**
@@ -20,6 +20,12 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  * @author: Sri
  */
 public class CursorPropertyEditor extends java.awt.Panel implements java.awt.event.ItemListener, java.beans.PropertyChangeListener {
+/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 5976228970540757329L;
 /**
  * CursorPropertyEditor constructor comment.
  */

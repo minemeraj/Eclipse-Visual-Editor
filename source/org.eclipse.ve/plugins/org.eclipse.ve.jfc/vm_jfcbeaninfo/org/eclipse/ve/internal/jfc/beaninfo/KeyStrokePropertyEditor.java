@@ -19,11 +19,17 @@ import java.text.MessageFormat;
  *******************************************************************************/
 /*
  *  $RCSfile: KeyStrokePropertyEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 public class KeyStrokePropertyEditor extends JPanel {
 	
-     private JList constantsList = null;
+     /**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -4909155071277619589L;
+	private JList constantsList = null;
      private JTextField constantField = null;
      private JTextField descriptionField = null;
      private JCheckBox altCheck = null;

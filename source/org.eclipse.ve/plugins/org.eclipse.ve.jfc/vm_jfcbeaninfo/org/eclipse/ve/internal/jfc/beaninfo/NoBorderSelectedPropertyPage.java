@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: NoBorderSelectedPropertyPage.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.BorderLayout;
@@ -21,6 +21,12 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
  
 public class NoBorderSelectedPropertyPage extends AbstractBorderPropertyPage {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -3187739663659179508L;
 	private boolean built = false;
 	public NoBorderSelectedPropertyPage(){
 		super();

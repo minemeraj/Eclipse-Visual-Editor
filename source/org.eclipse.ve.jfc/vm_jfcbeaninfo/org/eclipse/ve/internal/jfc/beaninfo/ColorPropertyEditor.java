@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: ColorPropertyEditor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-05 21:52:42 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.*;
@@ -22,6 +22,13 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.event.ChangeListener;
 
 public class ColorPropertyEditor extends JPanel {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -8120038443381231652L;
+
 	private boolean initialized = false;
 
 	private JColorChooser colorChooser = null;

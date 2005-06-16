@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-22 22:44:40 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-16 17:46:06 $ 
  */
 
 import java.util.List;
@@ -58,7 +58,7 @@ public class CustomizeAction extends SelectionAction {
 		Object model = ((EditPart) editParts.get(0)).getModel();
 		if (model instanceof IJavaObjectInstance) {
 			IBeanProxyHost ba = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) model);
-			if (ba instanceof BeanProxyAdapter && ((BeanProxyAdapter) ba).isThisPart())
+			if (ba instanceof BeanProxyAdapter2 && ((BeanProxyAdapter2) ba).isThisPart())
 				return null;
 			JavaClass beanClass = (JavaClass) ((EObject) model).eClass();
 			BeanDecorator beanDecor = Utilities.getBeanDecorator(beanClass);

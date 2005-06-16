@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: MatteBorderPropertyPage.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.*;
@@ -23,6 +23,12 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.*;
 
 public class MatteBorderPropertyPage extends AbstractBorderPropertyPage implements DocumentListener, ListSelectionListener {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -4850147951715863878L;
 	private static java.util.ResourceBundle resabtedit = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.vceedit");  //$NON-NLS-1$
 	private boolean built = false;
 	public static String[] colorNames =

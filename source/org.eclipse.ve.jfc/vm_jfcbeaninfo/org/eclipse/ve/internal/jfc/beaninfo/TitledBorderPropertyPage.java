@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: TitledBorderPropertyPage.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.*;
@@ -26,7 +26,14 @@ public class TitledBorderPropertyPage
 	extends AbstractBorderPropertyPage
 	implements DocumentListener, ActionListener, ItemListener {
 
-    private static final String NULL = "null"; //$NON-NLS-1$
+    /**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 3133841974545596757L;
+
+	private static final String NULL = "null"; //$NON-NLS-1$
 
 	private boolean built = false;
 

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAWTContainer.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.*;
@@ -26,6 +26,13 @@ import java.awt.*;
 public class FreeFormAWTContainer extends java.awt.Panel {
 
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 3914392199590971966L;
+
 	public static class FreeFormLayoutManager implements LayoutManager2 { 
 
 		public Boolean useComponentSize;	// Until this is set, this layout will not layout child.

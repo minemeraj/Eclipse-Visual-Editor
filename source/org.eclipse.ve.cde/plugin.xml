@@ -1,36 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.eclipse.ve.cde"
-   name="%pluginName"
-   version="1.1.0"
-   provider-name="%providerName"
-   class="org.eclipse.ve.internal.cde.core.CDEPlugin">
+<plugin>
 
-   <runtime>
-      <library name="cdm.jar">
-         <export name="*"/>
-      </library>
-      <library name="cde.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-   <requires>
-      <import plugin="org.eclipse.ve.propertysheet"/>
-      <import plugin="org.eclipse.emf.ecore.xmi"/>
-      <import plugin="org.eclipse.gef"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.ui.workbench"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.jem"/>
-      <import plugin="org.eclipse.jem.util"/>
-   </requires>
-
-
+    
 <!--
     This extension point allows customization of adapter to use for IPropertyDescriptor to be specified by
     the decorator type on the structural feature. The process will be:

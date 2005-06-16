@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: IconPropertyEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 
@@ -24,6 +24,12 @@ import javax.swing.Icon;
 import javax.swing.JPanel;
 
 public class IconPropertyEditor extends JPanel implements PropertyChangeListener {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 8983305473804120771L;
 	private Icon fIcon = null;
 	
 public IconPropertyEditor() {

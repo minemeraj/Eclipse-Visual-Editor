@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormSwingContainer.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import javax.swing.JPanel;
@@ -27,6 +27,12 @@ import org.eclipse.ve.internal.jfc.vm.FreeFormAWTContainer.FreeFormLayoutManager
  */
 public class FreeFormSwingContainer extends JPanel {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 2159900672755043960L;
 	boolean useComponentSize = false;
 
 	public FreeFormSwingContainer() {

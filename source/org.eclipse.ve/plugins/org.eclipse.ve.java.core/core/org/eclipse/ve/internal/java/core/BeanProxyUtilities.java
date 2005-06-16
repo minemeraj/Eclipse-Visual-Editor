@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.15 $  $Date: 2005-06-10 18:37:58 $ 
+ *  $Revision: 1.16 $  $Date: 2005-06-16 17:46:06 $ 
  */
 
 import java.util.List;
@@ -456,12 +456,12 @@ public class BeanProxyUtilities {
 		if (aBean == null) {
 			return null;
 		} else {
-			IBeanProxyHost existing = (IBeanProxyHost) EcoreUtil.getExistingAdapter(aBean,BeanProxyAdapter.BEAN_PROXY_TYPE);
+			IBeanProxyHost existing = (IBeanProxyHost) EcoreUtil.getExistingAdapter(aBean,IBeanProxyHost.BEAN_PROXY_TYPE);
 			return existing != null
 				? existing
-				: (IBeanProxyHost) EcoreUtil.getAdapterFactory(aResourceSet.getAdapterFactories(), BeanProxyAdapter.BEAN_PROXY_TYPE).adaptNew(
+				: (IBeanProxyHost) EcoreUtil.getAdapterFactory(aResourceSet.getAdapterFactories(), IBeanProxyHost.BEAN_PROXY_TYPE).adaptNew(
 					aBean,
-					BeanProxyAdapter.BEAN_PROXY_TYPE);
+					IBeanProxyHost.BEAN_PROXY_TYPE);
 		}
 	}
 
