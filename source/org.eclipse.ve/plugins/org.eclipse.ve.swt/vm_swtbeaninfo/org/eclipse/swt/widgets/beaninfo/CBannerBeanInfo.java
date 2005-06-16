@@ -26,6 +26,24 @@ public class CBannerBeanInfo extends IvjBeanInfo {
 					DISPLAYNAME, CBannerMessages.getString("simpleDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, CBannerMessages.getString("simpleSD"), //$NON-NLS-1$
 				}),
+				// left
+				super.createPropertyDescriptor(getBeanClass(),"left", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CBannerMessages.getString("leftDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CBannerMessages.getString("leftSD"), //$NON-NLS-1$
+					DESIGNTIMEPROPERTY, Boolean.FALSE,
+				}),
+				// right
+				super.createPropertyDescriptor(getBeanClass(),"right", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CBannerMessages.getString("rightDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CBannerMessages.getString("rightSD"), //$NON-NLS-1$
+					DESIGNTIMEPROPERTY, Boolean.FALSE,
+				}),
+				// bottom
+				super.createPropertyDescriptor(getBeanClass(),"bottom", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CBannerMessages.getString("bottomDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CBannerMessages.getString("bottomSD"), //$NON-NLS-1$
+					DESIGNTIMEPROPERTY, Boolean.FALSE,
+				}),
 				// right minimum size
 				super.createPropertyDescriptor(getBeanClass(), "rightMinimumSize", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, CBannerMessages.getString("rightMinimumSizeDN"), //$NON-NLS-1$

@@ -45,8 +45,31 @@ public class ViewFormBeanInfo extends IvjBeanInfo {
 				super.createPropertyDescriptor(getBeanClass(),"topCenterSeparate", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, ViewFormMessages.getString("topCenterSeparateDN"), //$NON-NLS-1$
 					SHORTDESCRIPTION, ViewFormMessages.getString("topCenterSeparateSD"), //$NON-NLS-1$
-				}
-				)
+				}),
+				// topLeft
+				super.createPropertyDescriptor(getBeanClass(),"topLeft", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, ViewFormMessages.getString("topLeftDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, ViewFormMessages.getString("topLeftSD"), //$NON-NLS-1$
+					DESIGNTIMEPROPERTY, Boolean.FALSE,
+				}),
+				// topRight
+				super.createPropertyDescriptor(getBeanClass(),"topRight", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, ViewFormMessages.getString("topRightDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, ViewFormMessages.getString("topRightSD"), //$NON-NLS-1$
+					DESIGNTIMEPROPERTY, Boolean.FALSE,
+				}),
+				// topCenter
+				super.createPropertyDescriptor(getBeanClass(),"topCenter", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, ViewFormMessages.getString("topCenterDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, ViewFormMessages.getString("topCenterSD"), //$NON-NLS-1$
+					DESIGNTIMEPROPERTY, Boolean.FALSE,
+				}),
+				// content
+				super.createPropertyDescriptor(getBeanClass(),"content", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, ViewFormMessages.getString("contentDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, ViewFormMessages.getString("contentSD"), //$NON-NLS-1$
+					DESIGNTIMEPROPERTY, Boolean.FALSE,
+				}),
 			};
 			return aDescriptorList;
 		} catch (Throwable exception) {
