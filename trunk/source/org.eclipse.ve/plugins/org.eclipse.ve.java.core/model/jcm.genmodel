@@ -5,7 +5,7 @@
     editDirectory="/org.eclipse.ve.java.core.edit/src" editorDirectory="/org.eclipse.ve.java.core.editor/src"
     modelPluginID="" modelName="jcm" editPluginClass="org.eclipse.ve.internal.jcm.provider.jcmEditPlugin"
     editorPluginClass="org.eclipse.ve.internal.jcm.presentation.jcmEditorPlugin" updateClasspath="false"
-    usedGenPackages="../../org.eclipse.ve.cde/model/cdmmodel.genmodel#//cdm ../../org.eclipse.jem/model/javaModel.genmodel#//java ../../org.eclipse.jem.beaninfo/model/introspect.genmodel#//beaninfo ../../org.eclipse.jem/model/instance.genmodel#//instantiation ../../org.eclipse.emf.ecore/src/model/Ecore.genmodel#//ecore">
+    usedGenPackages="../../org.eclipse.ve.cde/model/cdmmodel.genmodel#//cdm ../../org.eclipse.jem/model/javaModel.genmodel#//java ../../org.eclipse.jem.beaninfo/model/introspect.genmodel#//beaninfo ../../org.eclipse.jem/model/instance.genmodel#//instantiation ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
   <foreignModel>..\rose\jcmmodel.mdl</foreignModel>
   <foreignModel>WorkspaceRoot</foreignModel>
   <foreignModel>../..</foreignModel>
