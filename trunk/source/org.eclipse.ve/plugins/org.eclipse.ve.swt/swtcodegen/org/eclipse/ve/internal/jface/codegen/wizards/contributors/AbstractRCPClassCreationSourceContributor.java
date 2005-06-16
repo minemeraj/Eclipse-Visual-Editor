@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractRCPClassCreationSourceContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-03 21:33:03 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-16 23:00:50 $ 
  */
 package org.eclipse.ve.internal.jface.codegen.wizards.contributors;
 
@@ -19,9 +19,10 @@ import java.util.logging.Level;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.core.JavaProject;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
@@ -55,9 +56,9 @@ public abstract class AbstractRCPClassCreationSourceContributor implements IVisu
 		if(project == null){
 			isError = true;
 		} else {
-			try {			
-				JavaProject javaProject = (JavaProject) project.getNature(JavaCore.NATURE_ID);
-				if(javaProject == null){
+			try {
+				IJavaProject javaProject = JavaCore.create(project);
+				if(!javaProject.exists()){
 					isError = true;
 				} else {
 					isError = !ProxyPlugin.isPDEProject(javaProject);
