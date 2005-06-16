@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.123 $  $Date: 2005-06-15 20:19:38 $ 
+ *  $Revision: 1.124 $  $Date: 2005-06-16 17:50:30 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -589,7 +589,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		paletteSplitter = new FlyoutPaletteComposite(parent, SWT.NONE, getSite().getPage(),	getPaletteViewerProvider(), getPalettePreferences());
 			
 		// JVE/Text editor split on the right under editorComposite
-		CustomSashForm editorParent = new CustomSashForm(paletteSplitter, SWT.VERTICAL);
+		CustomSashForm editorParent = new CustomSashForm(paletteSplitter, SWT.VERTICAL|SWT.SMOOTH);
 		editorSettings.addSetting(new SashSetting(editorParent));
 		createPrimaryViewer(editorParent);		
 

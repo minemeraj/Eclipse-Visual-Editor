@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomSashForm.java,v $
- *  $Revision: 1.5 $  $Date: 2005-03-22 22:47:32 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-16 17:50:32 $ 
  */
 
 import org.eclipse.swt.SWT;
@@ -302,6 +302,16 @@ public class CustomSashForm extends SashForm {
 							if (currentSashInfo.cursorOver != i) {
 								currentSashInfo.cursorOver = i;
 								currentSashInfo.sash.redraw();
+								switch (locs[ARROW_TYPE_INDEX]) {
+									case UP_ARROW:
+									case DOWN_ARROW:
+										currentSashInfo.sash.setToolTipText(Messages.getString("CustomSashForm.Restore")); //$NON-NLS-1$
+										break;
+									case UP_MAX_ARROW:
+									case DOWN_MAX_ARROW:
+										currentSashInfo.sash.setToolTipText(Messages.getString("CustomSashForm.Maximize")); //$NON-NLS-1$
+										break;
+								}
 							}
 							return;
 						}
@@ -310,6 +320,7 @@ public class CustomSashForm extends SashForm {
 						currentSashInfo.sash.setCursor(null);
 						currentSashInfo.cursorOver = NO_ARROW;
 						currentSashInfo.sash.redraw();
+						currentSashInfo.sash.setToolTipText(null);
 					}
 				}
 				
@@ -326,6 +337,7 @@ public class CustomSashForm extends SashForm {
 						currentSashInfo.sash.setCursor(null);
 						currentSashInfo.cursorOver = NO_ARROW;
 						currentSashInfo.sash.redraw();
+						currentSashInfo.sash.setToolTipText(null);
 					}						
 				}				
 			});
@@ -441,8 +453,12 @@ public class CustomSashForm extends SashForm {
 			}				
 		} else {
 			addArrows = new int[2];
-			drawArrows = new int[2];			
-			if (weights[0] == 0) {
+			drawArrows = new int[2];	
+			// TODO: SashForm as changed the folllwing is a temporary kludge
+			Rectangle sashBounds = currentSashInfo.sash.getBounds();
+			Rectangle clientArea = getClientArea();
+			final int DRAG_MINIMUM = 20; // TODO: kludge see SashForm.DRAG_MINIMUM 
+			if (weights[0] == 0 || (currentSashInfo.weight != NO_WEIGHT && sashBounds.y <= DRAG_MINIMUM)) {  
 				// Slammed to the top.
 				addArrows[0] = DOWN_MAX_ARROW;
 				drawArrows[0] = DOWN_MAX_ARROW;			
@@ -450,7 +466,7 @@ public class CustomSashForm extends SashForm {
 				drawArrows[1] = DOWN_ARROW;	
 				currentSashInfo.sashBorderLeft = false;
 				currentSashInfo.sashBorderRight = sashBorders != null ? sashBorders[1] : false;
-			} else if (weights[1] == 0) {
+			} else if (weights[1] == 0 || (currentSashInfo.weight != NO_WEIGHT && sashBounds.y+sashBounds.height >= clientArea.height-DRAG_MINIMUM)) {
 				// Slammed to the bottom
 				addArrows[0] = UP_ARROW;
 				drawArrows[0] = UP_ARROW;
@@ -793,6 +809,31 @@ public class CustomSashForm extends SashForm {
 		gc.drawLine(x+4, y+3, x+4, y+5);
 		gc.drawLine(x+3, y+1, x+3, y+6);
 		gc.drawLine(x+2, y+1, x+2, y+7);
+	}
+
+	
+	public int getSavedWeight() {
+		if (currentSashInfo!=null)
+			return currentSashInfo.weight;
+		else
+			return -1;
+	}
+
+	
+	protected Sash getSash() {
+		Control[] kids = getChildren();
+		for (int i = 0; i < kids.length; i++) {
+			if (kids[i] instanceof Sash)
+				return (Sash)kids[i];			
+		}
+		return null;
+	}
+	
+	public void setCurrentSavedWeight(int weight) {
+		if (weight>=0 && currentSashInfo!=null) {
+			recomputeSashInfo();
+			currentSashInfo.weight=weight;
+		}
 	}
 
 
