@@ -14,6 +14,12 @@ import javax.swing.*;
 
 public class ShapeJCustomEditor extends JPanel {
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 4988719615706081667L;
 	protected int fShape;
 	protected JList fList;
 	

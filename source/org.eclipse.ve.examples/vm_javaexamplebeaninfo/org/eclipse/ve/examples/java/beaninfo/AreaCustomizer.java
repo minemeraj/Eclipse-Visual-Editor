@@ -21,6 +21,12 @@ import org.eclipse.ve.examples.java.vm.Area;
  * when it does so
  */
 public class AreaCustomizer extends Panel implements Customizer {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 2267203554942258687L;
 	protected PropertyChangeSupport pcSupport = new PropertyChangeSupport(this);
 	protected Area fArea;
 	private java.awt.List fColorList;

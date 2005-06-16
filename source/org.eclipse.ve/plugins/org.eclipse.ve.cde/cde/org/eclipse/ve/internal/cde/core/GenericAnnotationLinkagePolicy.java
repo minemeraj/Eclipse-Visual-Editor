@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GenericAnnotationLinkagePolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 19:27:20 $ 
  */
 
 import java.lang.ref.ReferenceQueue;
@@ -61,6 +61,13 @@ public abstract class GenericAnnotationLinkagePolicy extends AnnotationLinkagePo
 	 * Note: The "source" in the event is the String ID.
 	 */
 	public static class AnnotationLinkageEvent extends EventObject {
+		/**
+		 * Comment for <code>serialVersionUID</code>
+		 * 
+		 * @since 1.1.0
+		 */
+		private static final long serialVersionUID = 7151443223479264022L;
+
 		public static final int 
 			SET = 0,	// Annotation set, old value/new value will be set.
 			UNSET = 1,	// Annotation unset, old value will be old value
@@ -86,6 +93,12 @@ public abstract class GenericAnnotationLinkagePolicy extends AnnotationLinkagePo
 	 */
 	public static class AnnotationLinkageChangeEvent extends AnnotationLinkageEvent {
 
+		/**
+		 * Comment for <code>serialVersionUID</code>
+		 * 
+		 * @since 1.1.0
+		 */
+		private static final long serialVersionUID = -149455833875107330L;
 		protected Annotation oldAnnotation, newAnnotation;
 		
 		public AnnotationLinkageChangeEvent(String id, int type, Annotation oldAnnotation, Annotation newAnnotation) {
@@ -110,6 +123,12 @@ public abstract class GenericAnnotationLinkagePolicy extends AnnotationLinkagePo
 	 */
 	public static class AnnotationIDChangeEvent extends AnnotationLinkageEvent {
 		
+		/**
+		 * Comment for <code>serialVersionUID</code>
+		 * 
+		 * @since 1.1.0
+		 */
+		private static final long serialVersionUID = -1730398443677274046L;
 		protected String oldID;
 		
 		public AnnotationIDChangeEvent(String id, String oldID) {

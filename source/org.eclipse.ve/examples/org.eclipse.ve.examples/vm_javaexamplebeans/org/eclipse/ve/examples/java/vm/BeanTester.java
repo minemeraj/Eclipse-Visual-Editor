@@ -15,6 +15,12 @@ import java.beans.*;
 
 public class BeanTester extends Canvas {
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -9190933947790141938L;
 	static Color DARK_GREEN = new Color(0, 127, 0);
 	
 public Dimension getPreferredSize(){

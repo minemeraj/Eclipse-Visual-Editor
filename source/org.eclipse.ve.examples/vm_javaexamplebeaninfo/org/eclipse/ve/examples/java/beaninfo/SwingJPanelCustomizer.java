@@ -23,6 +23,12 @@ import org.eclipse.ve.examples.java.vm.UsesJPanelForCustomizer;
 
 public class SwingJPanelCustomizer extends JPanel implements Customizer {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -6389798996458770035L;
 	UsesJPanelForCustomizer bean;
 	private JTextField text;
 	/**
