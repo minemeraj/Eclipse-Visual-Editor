@@ -11,7 +11,7 @@ package org.eclipse.ve.examples.cdm.dept;
  *******************************************************************************/
 /*
  *  $RCSfile: Company.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-16 00:30:22 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 19:27:21 $ 
  */
 
 import java.util.*;
@@ -22,6 +22,12 @@ import java.beans.PropertyChangeListener;
  * A company
  */
 public class Company implements Serializable {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -5394792597004813925L;
 	protected String name;
 	protected List departments = new ArrayList(1);
 	transient protected PropertyChangeSupport propChange;

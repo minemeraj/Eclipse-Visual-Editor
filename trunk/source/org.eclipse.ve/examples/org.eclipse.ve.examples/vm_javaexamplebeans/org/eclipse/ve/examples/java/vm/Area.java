@@ -16,6 +16,12 @@ import java.awt.*;
  * It has a number of property editors and customizers
  */
 public class Area extends Canvas {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 4103489323542566189L;
 	public static final int NO_SHAPE = 0;
 	public static final int OVAL = 1;
 	public static final int DIAMOND = 2;

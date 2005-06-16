@@ -17,6 +17,12 @@ package org.eclipse.ve.examples.java.vm;
  */
 public class TestJFrame extends javax.swing.JFrame {
 /**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -3498940054287402575L;
+/**
  * TestJFrame constructor comment.
  */
 public TestJFrame() {

@@ -18,6 +18,13 @@ import java.awt.FlowLayout;
  */
 public class ButtonBar extends java.awt.Panel {
 /**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 4274392503594179719L;
+
+/**
  * ButtonBarOne constructor comment.
  */
 public ButtonBar() {

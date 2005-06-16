@@ -30,6 +30,12 @@ import sun.awt.OrientableFlowLayout;
  * include the buttons
  */
 public class ButtonBarCustomizer extends Panel implements Customizer {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -5284598544929848138L;
 	protected PropertyChangeSupport fPCSupport = new PropertyChangeSupport(this);
 	protected ButtonBar fButtonBar;
 	protected List fComponentList;

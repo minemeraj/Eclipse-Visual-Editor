@@ -11,7 +11,7 @@ package org.eclipse.ve.examples.cdm.dept;
  *******************************************************************************/
 /*
  *  $RCSfile: Department.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-16 00:30:22 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 19:27:21 $ 
  */
 
 import java.util.*;
@@ -22,6 +22,12 @@ import java.beans.PropertyChangeListener;
  * A Department,
  */
 public class Department implements Serializable {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 4935480078853335548L;
 	protected Company company;	// This is only set by company.
 	protected String deptName;
 	protected Employee manager;

@@ -18,6 +18,12 @@ import java.awt.event.ItemListener;
 
 public class DayCustomEditor extends Panel {
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -9100752274828605545L;
 	protected int fDay;
 	protected List fList;
 	

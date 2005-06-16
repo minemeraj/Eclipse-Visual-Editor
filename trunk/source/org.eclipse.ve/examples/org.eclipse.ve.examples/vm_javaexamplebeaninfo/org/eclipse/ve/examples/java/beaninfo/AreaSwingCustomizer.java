@@ -24,6 +24,12 @@ import org.eclipse.ve.examples.java.vm.Area;
  * when it does so
  */
 public class AreaSwingCustomizer extends JPanel implements Customizer {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -5568620188128667597L;
 	protected PropertyChangeSupport pcSupport = new PropertyChangeSupport(this);
 	protected Area fArea;
 	private JList fColorList;
