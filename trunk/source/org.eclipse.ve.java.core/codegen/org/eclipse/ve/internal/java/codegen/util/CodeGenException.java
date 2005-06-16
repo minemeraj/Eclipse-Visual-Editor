@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenException.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:06 $ 
  */
 
 import org.eclipse.core.runtime.IStatus;
@@ -19,6 +19,12 @@ import org.eclipse.core.runtime.Status;
 
 public class CodeGenException extends org.eclipse.core.runtime.CoreException {	 
 
+/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -4111071752944891135L;
 /**
  *  Make it easier to deal with IStatus
  */

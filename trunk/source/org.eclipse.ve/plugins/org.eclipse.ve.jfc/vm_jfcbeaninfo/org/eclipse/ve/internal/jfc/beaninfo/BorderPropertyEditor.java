@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: BorderPropertyEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.*;
@@ -25,6 +25,12 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 public class BorderPropertyEditor extends JPanel implements ItemListener {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -5616560005627773606L;
 	private boolean built = false;
 	private Border fBorder = null;
 	private JComboBox borderCombo = null;

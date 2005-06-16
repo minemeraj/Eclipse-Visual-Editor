@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormSwingDialog.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-03 19:18:41 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.*;
@@ -25,6 +25,12 @@ import javax.swing.JDialog;
  * @author: Joe Winchester
  */
 public class FreeFormSwingDialog extends JDialog {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -1700965019233269959L;
 	protected boolean isValidating;
 	protected Dimension minSize;
 	protected boolean isDisposing = false;

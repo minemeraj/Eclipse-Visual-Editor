@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyEditorJFrame.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-02 22:41:31 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-16 17:46:06 $ 
  */
 
 import java.awt.*;
@@ -25,6 +25,12 @@ import javax.swing.*;
  * This is a JFrame subclass that hosts Java Bean property editors
  */
 public final class BeanPropertyEditorJFrame extends JFrame implements IBeanPropertyEditorDialog {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -431730059961772836L;
 	private transient java.util.List fListeners = new ArrayList(1);
 	private JPanel propertyEditorContainer;
 	private Component propertyEditorComponent;

@@ -1,0 +1,3 @@
+#Thu Jun 16 11:08:42 EDT 2005
+eclipse.preferences.version=1
+selfhosting.binExcludes=/org.eclipse.ve.java.core/vm_bin,/org.eclipse.ve.java.core/vm_bin

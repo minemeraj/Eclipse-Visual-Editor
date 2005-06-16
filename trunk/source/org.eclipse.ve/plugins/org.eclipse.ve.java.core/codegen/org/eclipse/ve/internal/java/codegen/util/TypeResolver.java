@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-24 21:10:57 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-16 17:46:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -1313,6 +1313,12 @@ public class TypeResolver {
 	 */
 	private static class NamesList extends ArrayList {
 		
+		/**
+		 * Comment for <code>serialVersionUID</code>
+		 * 
+		 * @since 1.1.0
+		 */
+		private static final long serialVersionUID = -7972116865333630531L;
 		int testSize;
 		
 		public NamesList(int initialCapacity) {

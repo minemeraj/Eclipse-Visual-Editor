@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: CompoundBorderPropertyPage.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
  
 import java.awt.*;
@@ -26,6 +26,13 @@ import javax.swing.border.CompoundBorder;
 public class CompoundBorderPropertyPage
 	extends AbstractBorderPropertyPage
 	implements ActionListener {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -4505570363226837698L;
+
 	private boolean built = false;
 	
 	private Border outsideBorder = null;

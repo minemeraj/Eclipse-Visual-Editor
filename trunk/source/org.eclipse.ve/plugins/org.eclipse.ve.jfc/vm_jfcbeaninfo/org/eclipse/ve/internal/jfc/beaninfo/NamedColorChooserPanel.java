@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NamedColorChooserPanel.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-16 17:46:03 $ 
  */
 package org.eclipse.ve.internal.jfc.beaninfo;
 
@@ -23,6 +23,13 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.event.*;
 
 public class NamedColorChooserPanel extends AbstractColorChooserPanel {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -6002127476932213193L;
+
 	private static java.util.ResourceBundle resabtedit = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.vceedit");  //$NON-NLS-1$
 
 	public static final Color[] basicColorValues =

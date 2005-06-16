@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: EtchedBorderPropertyPage.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.GridLayout;
@@ -24,6 +24,12 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
 public class EtchedBorderPropertyPage extends AbstractBorderPropertyPage implements ItemListener {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -2992784274154986792L;
 	private boolean built = false;
 	private JRadioButton raisedButton = null;
 	private JRadioButton loweredButton = null;

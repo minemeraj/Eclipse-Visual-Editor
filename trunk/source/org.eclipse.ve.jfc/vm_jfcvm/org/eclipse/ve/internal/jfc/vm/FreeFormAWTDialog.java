@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAWTDialog.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-03 19:18:41 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.*;
@@ -23,6 +23,12 @@ import java.awt.event.ComponentEvent;
  * @author: Joe Winchester
  */
 public class FreeFormAWTDialog extends Dialog {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = 2173221199247584523L;
 	protected Frame fHostingFrame;
 	protected boolean isValidating;
 	protected Dimension minSize;

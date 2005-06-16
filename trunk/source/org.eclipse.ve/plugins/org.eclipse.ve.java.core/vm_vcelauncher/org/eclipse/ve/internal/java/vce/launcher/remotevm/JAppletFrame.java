@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 /*
  *  $RCSfile: JAppletFrame.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:29:42 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-16 17:46:06 $ 
  */
 
 import javax.swing.*;
@@ -28,6 +28,12 @@ import java.awt.event.*;
  */
 public class JAppletFrame extends JFrame implements AppletContext, IAppletFrame {
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -3549103400791238891L;
 	protected JApplet fApplet;
 	protected Map fAppletParms;
 	protected JLabel fLabel;

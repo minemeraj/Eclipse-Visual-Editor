@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayManager.java,v $
- *  $Revision: 1.10 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-16 17:46:13 $ 
  */
 package org.eclipse.jem.internal.proxy.swt;
 
@@ -49,6 +49,13 @@ public class DisplayManager {
 		public static class RunnableException extends Exception {
 		
 			/**
+			 * Comment for <code>serialVersionUID</code>
+			 * 
+			 * @since 1.1.0
+			 */
+			private static final long serialVersionUID = -5382236769210253258L;
+
+			/**
 			 * @param cause
 			 * 
 			 * @since 1.0.0
@@ -67,6 +74,13 @@ public class DisplayManager {
 		 * @see Throwable#getCause()
 		 */		
 		static class RunnableRuntimeException extends Exception {
+			/**
+			 * Comment for <code>serialVersionUID</code>
+			 * 
+			 * @since 1.1.0
+			 */
+			private static final long serialVersionUID = -3026303490137873349L;
+
 			/**
 			 * @param cause
 			 * 

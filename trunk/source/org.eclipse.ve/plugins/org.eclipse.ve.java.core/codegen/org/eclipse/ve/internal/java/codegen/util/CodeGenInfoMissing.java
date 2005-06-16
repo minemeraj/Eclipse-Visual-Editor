@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenInfoMissing.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:06 $ 
  */
 
 /**
@@ -20,6 +20,13 @@ package org.eclipse.ve.internal.java.codegen.util;
  *  executing until a first path is completed).  
  */
 public class CodeGenInfoMissing extends CodeGenException {
+/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -5111559429107726766L;
+
 public CodeGenInfoMissing(String msg) {
 	super(msg) ;
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: LocalePropertyEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.*;
@@ -23,6 +23,13 @@ import java.util.*;
 
 
 public class LocalePropertyEditor extends JPanel implements ListSelectionListener, PropertyChangeListener{
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -795400473092065047L;
+
 	private java.util.Locale fLocaleValue = null;
 		
 	private  LocaleLanguage[] fLocaleLanguages = null;

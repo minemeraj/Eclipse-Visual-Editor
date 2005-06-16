@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.beaninfo;
  *******************************************************************************/
 /*
  *  $RCSfile: SubEditorJDialog.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:44:12 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
  */
 
 import java.awt.*;
@@ -24,6 +24,12 @@ import javax.swing.*;
  */
 public class SubEditorJDialog extends JDialog implements ActionListener {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -8129844147597559027L;
 	public static final int OK = 0;
 	public static final int CANCELLED = 1;
 

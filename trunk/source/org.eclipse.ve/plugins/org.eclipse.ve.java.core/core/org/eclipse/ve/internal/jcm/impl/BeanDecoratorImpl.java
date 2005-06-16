@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanDecoratorImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:38 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-16 17:46:06 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -619,7 +619,7 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 					// class lodaed.  CDEPlugin can do this for us but if the name is BeanProxyAdapter or PrimitiveBeanProxyAdapter we can
 					// just get the default class faster with a .class reference here
 					if (getBeanProxyClassName().equals("org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanProxyAdapter")) //$NON-NLS-1$
-						beanProxyAdapterClass = BeanProxyAdapter.class;
+						beanProxyAdapterClass = BeanProxyAdapter2.class;
 					else if (getBeanProxyClassName().equals("org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter")) //$NON-NLS-1$
 						beanProxyAdapterClass = PrimitiveProxyAdapter.class;
 					else {
@@ -633,16 +633,16 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 								beanProxyAdapterClassConstructor = beanProxyAdapterClass.getConstructor(new Class[] { IBeanProxyDomain.class });
 							} catch (Exception e) {
 								JavaVEPlugin.log(e, Level.WARNING);
-								beanProxyAdapterClass = BeanProxyAdapter.class;
+								beanProxyAdapterClass = BeanProxyAdapter2.class;
 							}
 						}
 					}
 				} catch (ClassNotFoundException e) {
-					beanProxyAdapterClass = BeanProxyAdapter.class;
+					beanProxyAdapterClass = BeanProxyAdapter2.class;
 					JavaVEPlugin.log(e, Level.WARNING);
 				}
 			} else
-				beanProxyAdapterClass = BeanProxyAdapter.class;
+				beanProxyAdapterClass = BeanProxyAdapter2.class;
 			hasRetrievedBeanProxyAdapterClass = true;
 		}
 		
@@ -655,10 +655,10 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 				return adapter;
 			} catch (Exception e) {
 				JavaVEPlugin.log(e, Level.WARNING);
-				return new BeanProxyAdapter(aBeanProxyDomain);
+				return new BeanProxyAdapter2(aBeanProxyDomain);
 			}				
-		} else if (beanProxyAdapterClass == BeanProxyAdapter.class) 
-			return new BeanProxyAdapter(aBeanProxyDomain);
+		} else if (beanProxyAdapterClass == BeanProxyAdapter2.class) 
+			return new BeanProxyAdapter2(aBeanProxyDomain);
 		else
 			return new PrimitiveProxyAdapter(aBeanProxyDomain);
 	}	

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontPropertyEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:44:11 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-16 17:46:03 $ 
  */
 package org.eclipse.ve.internal.jfc.beaninfo;
 
@@ -26,6 +26,12 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 
 public class FontPropertyEditor extends JPanel {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 * 
+	 * @since 1.1.0
+	 */
+	private static final long serialVersionUID = -1100929504872834780L;
 	private static java.util.ResourceBundle resabtedit = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.vceedit");  //$NON-NLS-1$
 	private Font fontValue;
 
@@ -591,6 +597,12 @@ public class FontPropertyEditor extends JPanel {
     // Used to restrict entry in the JTextField to only digits.
 	protected class WholeNumberField extends JTextField {
 	
+		/**
+		 * Comment for <code>serialVersionUID</code>
+		 * 
+		 * @since 1.1.0
+		 */
+		private static final long serialVersionUID = 5053060184460827306L;
 		private NumberFormat integerFormatter;
 
 		public WholeNumberField() {
@@ -625,6 +637,13 @@ public class FontPropertyEditor extends JPanel {
 
 		protected class WholeNumberDocument extends PlainDocument {
 	        
+			/**
+			 * Comment for <code>serialVersionUID</code>
+			 * 
+			 * @since 1.1.0
+			 */
+			private static final long serialVersionUID = 209899837559693967L;
+
 			public void insertString(int offs, String str, AttributeSet a)
 				throws BadLocationException {
 				char[] source = str.toCharArray();
