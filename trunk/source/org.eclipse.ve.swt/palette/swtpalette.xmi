@@ -183,12 +183,24 @@
         <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="coolBar"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="CoolBar"/>
       </cmpEntries>    
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry300" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/cbanner_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry300obj"
+          creationClassURI="java:/org.eclipse.swt.custom#CBanner"/>
+        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="cBanner"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string300" string="CBanner"/>
+      </cmpEntries>
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry307" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/sashform_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry307obj"
           creationClassURI="java:/org.eclipse.swt.custom#SashForm"/>
         <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="sashForm"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string307" string="SashForm"/>
       </cmpEntries> 
+      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry308" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/viewform_obj.gif">
+        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry308obj"
+          creationClassURI="java:/org.eclipse.swt.custom#ViewForm"/>
+        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="viewForm"/>
+        <entryLabel xsi:type="utility:ConstantString" xmi:id="string308" string="ViewForm"/>
+      </cmpEntries>
       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry9" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/canvas_obj.gif">
         <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry9obj"
           creationClassURI="java:/org.eclipse.swt.widgets#Canvas"/>
@@ -201,23 +213,6 @@
         <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="scrolledComposite"/>
         <entryLabel xsi:type="utility:ConstantString" xmi:id="string305" string="ScrolledComposite"/>
       </cmpEntries>
-      
-<!--  Uncomment to add CBanner to palette    
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry300" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/cbanner_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry300obj"
-          creationClassURI="java:/org.eclipse.swt.custom#CBanner"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="cBanner"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string300" string="CBanner"/>
-      </cmpEntries>
--->          
-<!--  Uncomment to add ViewForm to palette    
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry308" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/viewform_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry308obj"
-          creationClassURI="java:/org.eclipse.swt.custom#ViewForm"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="viewForm"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string308" string="ViewForm"/>
-      </cmpEntries>
--->
     </cmpGroups> 
   </palette:CategoryCmp>
   <utility:URLResourceBundle xmi:id="bundle" bundleName="palette">
