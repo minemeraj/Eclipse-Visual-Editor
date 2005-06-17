@@ -25,6 +25,15 @@ public class SWTConstants {
 		SF_COMPOSITE_CONTROLS,
 		SF_SCROLLEDCOMPOSITE_CONTENT,
 		
+		SF_CBANNER_LEFT,
+		SF_CBANNER_RIGHT,
+		SF_CBANNER_BOTTOM,
+		
+		SF_VIEWFORM_TOPLEFT,
+		SF_VIEWFORM_TOPRIGHT,
+		SF_VIEWFORM_TOPCENTER,
+		SF_VIEWFORM_CONTENT,
+		
 		SF_FILL_LAYOUT_MARGIN_HEIGHT,
 		SF_FILL_LAYOUT_MARGIN_WIDTH,
 		SF_FILL_LAYOUT_SPACING,
@@ -89,6 +98,15 @@ public class SWTConstants {
 		SF_COMPOSITE_LAYOUT = URI.createURI("java:/org.eclipse.swt.widgets#Composite/layout");		 //$NON-NLS-1$
 		SF_COMPOSITE_CONTROLS = URI.createURI("java:/org.eclipse.swt.widgets#Composite/controls");		 //$NON-NLS-1$
 		SF_SCROLLEDCOMPOSITE_CONTENT = URI.createURI("java:/org.eclipse.swt.custom#ScrolledComposite/content"); //$NON-NLS-1$
+		
+		SF_CBANNER_LEFT = URI.createURI("java:/org.eclipse.swt.custom#CBanner/left"); //$NON-NLS-1$
+		SF_CBANNER_RIGHT = URI.createURI("java:/org.eclipse.swt.custom#CBanner/right"); //$NON-NLS-1$
+		SF_CBANNER_BOTTOM = URI.createURI("java:/org.eclipse.swt.custom#CBanner/bottom"); //$NON-NLS-1$
+		
+		SF_VIEWFORM_TOPLEFT = URI.createURI("java:/org.eclipse.swt.custom#ViewForm/topLeft"); //$NON-NLS-1$
+		SF_VIEWFORM_TOPRIGHT = URI.createURI("java:/org.eclipse.swt.custom#ViewForm/topRight"); //$NON-NLS-1$
+		SF_VIEWFORM_TOPCENTER = URI.createURI("java:/org.eclipse.swt.custom#ViewForm/topCenter"); //$NON-NLS-1$
+		SF_VIEWFORM_CONTENT = URI.createURI("java:/org.eclipse.swt.custom#ViewForm/content"); //$NON-NLS-1$
 		
 		SF_DECORATIONS_TEXT = URI.createURI("java:/org.eclipse.swt.widgets#Decorations/text");		 //$NON-NLS-1$
 		
