@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.51 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.52 $  $Date: 2005-06-20 17:33:02 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -86,6 +86,8 @@ public class BDMMerger {
 		boolean merged = true;
 		if( mainModel != null && newModel != null ){
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
+			merged = merged && updateTypeRef() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			merged = merged && activateDeactivatedBeans() ;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			merged = merged && removeDeletedBeans() ;
@@ -114,6 +116,14 @@ public class BDMMerger {
 		return merged ;
 	}
 	
+	private boolean updateTypeRef() {
+		CodeTypeRef mainType = mainModel.getTypeRef();
+		CodeTypeRef newType = newModel.getTypeRef();
+		if(mainType!=null && newType!=null)
+			mainType.refresh(newType);
+		return true;
+	}
+
 	/**
 	 * Deactivates beans which are unreferenced. Some beans might 
 	 * have been activated in #activateDeactivatedBeans() 
@@ -319,11 +329,7 @@ public class BDMMerger {
 	protected boolean updateMethodOffsetAndContent(CodeMethodRef mainMethod, CodeMethodRef updatedMethod){
 		if(mainMethod==null || updatedMethod==null)
 			return false ;
-		if(mainMethod.getOffset() != updatedMethod.getOffset())
-			mainMethod.setOffset(updatedMethod.getOffset());
-		if(updatedMethod.getContent()!=null && !updatedMethod.getContent().equals(mainMethod.getContent()))
-			mainMethod.setContent(updatedMethod.getContent());
-		return true ;
+		return mainMethod.refresh(updatedMethod);
 	}
 	
 	protected void updateReturnMethod(BeanPart mainBP, BeanPart updatedBP){

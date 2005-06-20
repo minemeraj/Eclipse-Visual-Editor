@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeTypeRef.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-20 17:33:02 $ 
  */
 
 
@@ -115,6 +115,14 @@ public BeanSubclassComposition getBeanComposition() {
 	return fbeanComposition;
 }
 
+public boolean refresh(CodeTypeRef typeRef){
+	if(typeRef==null)
+		return false;
+	if(typeRef.getTypeDecl()!=null){
+		fdeclType = typeRef.getTypeDecl();
+	}
+	return true;
+}
 }
 
 

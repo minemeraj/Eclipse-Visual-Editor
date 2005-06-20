@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.22 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.23 $  $Date: 2005-06-20 17:33:02 $ 
  */
 
 import java.util.*;
@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
@@ -704,8 +704,9 @@ public void updateBeanNameChange(BeanPart bp) {
 	 * <i>Referenced</i> beanParts are those which:
 	 * <ol>
 	 * 	<li> Have <code>modelled=true</code> in the overrides <b>or</b> is <code>this</code> bean.
-	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 1. <i>(parent-child or property relationships)</i>
-	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 2. <i>(parent-child or property relationships)</i>
+	 * 	<li> Have <code>modelled=false</code> in the overrides but has a <code>//@jve:decl-index=0</code> for the field/variable
+	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 1. or 2. <i>(parent-child or property relationships)</i>
+	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 3. <i>(parent-child or property relationships)</i>
 	 * </ol>
 	 *  
 	 *  This API should detect BeanParts which are disconnected islands and
@@ -751,14 +752,30 @@ public void updateBeanNameChange(BeanPart bp) {
 			BeanPart unrefBP = (BeanPart) unrefItr.next();
 			if(referenced.contains(unrefBP))
 				continue;
+			boolean isReferenced = false;
 			// Rule 1
 			if(	(BeanPart.THIS_NAME.equals(unrefBP.getSimpleName())) || 
 				(unrefBP.getEObject()!=null &&
 				 InstanceVariableCreationRule.isModelled(unrefBP.getEObject().eClass(), getCompositionModel().getModelResourceSet()))){
+				isReferenced = true;
+			}else{
+				// Rule 2 - If not isModelled() and not-referenced, check if decl-index=0 is present
+				ASTNode node = unrefBP.getDecleration().getFieldDecl();
+				if (node instanceof FieldDeclaration) {
+					FieldDeclaration fd = (FieldDeclaration) node;
+					if(AnnotationDecoderAdapter.isDeclarationParseable(fd, this))
+						isReferenced = true;
+				}else if(node instanceof VariableDeclarationStatement){
+					VariableDeclarationStatement vds = (VariableDeclarationStatement) node;
+					if(AnnotationDecoderAdapter.isDeclarationParseable(vds, this))
+						isReferenced = true;
+				}
 				
+			}
+			if(isReferenced){
 				referenced.add(unrefBP);
 				List list = (List) beanDependentsMap.get(unrefBP);
-				// Rule 2
+				// Rule 3&4
 				addReferencedBeans(referenced, list, beanDependentsMap);
 			}
 		}

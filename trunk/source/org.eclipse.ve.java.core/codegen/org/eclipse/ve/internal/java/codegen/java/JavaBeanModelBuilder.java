@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.29 $  $Date: 2005-06-15 18:58:22 $ 
+ *  $Revision: 1.30 $  $Date: 2005-06-20 17:33:02 $ 
  */
 
 import java.util.*;
@@ -153,12 +153,12 @@ protected CompilationUnit ParseJavaCode(IProgressMonitor pm) throws CodeGenExcep
 		    result = (CompilationUnit) parser.createAST(pm);
 		}
 		
-		// The cu AST node now has the property called 'org.eclipse.ve.codegen.source' 
+		// The TypeDeclaration[0] AST node now has the property called 'org.eclipse.ve.codegen.source' 
 		// (ASTNODE_SOURCE_PROPERTY) on it which contains the source of the entire 
 		// file. AST nodes which want the content should go to the cu node, get the 
 		// value of this property and get the sources.
-		if(result!=null)
-			result.setProperty(ASTNODE_SOURCE_PROPERTY, sourceBeingParsed);
+		if(result!=null && result.types()!=null && result.types().size()>0)
+			((TypeDeclaration) result.types().get(0)).setProperty(ASTNODE_SOURCE_PROPERTY, sourceBeingParsed);
 		
 		IProblem[]	problems = result.getProblems();
 		if (problems!=null) {
