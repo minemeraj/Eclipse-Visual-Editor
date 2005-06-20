@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.30 $  $Date: 2005-05-18 14:35:42 $ 
+ *  $Revision: 1.31 $  $Date: 2005-06-20 18:49:38 $ 
  */
 
 import java.util.Map;
@@ -55,7 +55,10 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final String PI_PALETTECATS = "palettecats"; //$NON-NLS-1$
 	public static final String PI_RUNTIME = "runtime"; //$NON-NLS-1$
 	public static final String PI_SOURCE = "source"; //$NON-NLS-1$	
-	public static final String PI_SOURCEPREFIX = "prefix"; //$NON-NLS-1$			
+	public static final String PI_SOURCEPREFIX = "prefix"; //$NON-NLS-1$	
+	
+	public static final String URL_HOMEPAGE = "http://www.eclipse.org/vep"; //$NON-NLS-1$
+	public static final String URL_NEWSGROUP = "news://news.eclipse.org/eclipse.tools.ve"; //$NON-NLS-1$
 	// <contributor ...> or contributor="..." in extension point
 
 	private static JavaVEPlugin PLUGIN;

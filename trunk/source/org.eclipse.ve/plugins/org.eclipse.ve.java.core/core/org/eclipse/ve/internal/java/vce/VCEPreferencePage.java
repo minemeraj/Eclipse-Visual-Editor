@@ -11,9 +11,10 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.26 $  $Date: 2005-05-23 18:05:49 $ 
+ *  $Revision: 1.27 $  $Date: 2005-06-20 18:49:38 $ 
  */
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.UIManager;
@@ -179,6 +180,19 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	}
 	protected Control createContents(Composite parent) {
 
+		Link newsgroupLink = new Link(parent,SWT.NONE);
+		newsgroupLink.setText("Support and resources available on <a>homepage</a> and <a>newsgroup</a>");
+		newsgroupLink.addSelectionListener(new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e) {
+				try{
+					Runtime.getRuntime().exec(JavaVEPlugin.URL_NEWSGROUP);
+				} catch (IOException exc){
+					
+				}
+			};
+		});
+		
+		
 		// The contents area is divided into notebooks to make best use of real estate
 		// Current tabs are for appearance and for code generation
 		tabFolder = new TabFolder(parent, SWT.NONE);

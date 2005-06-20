@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.15 $$  $$Date: 2005-05-26 22:14:02 $$ 
+ *  $$Revision: 1.16 $$  $$Date: 2005-06-20 18:49:41 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -55,42 +55,59 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 	 */
 	public class EnsureCorrectParentCommand extends AbstractCommand{
 		private IJavaObjectInstance javaChild;
+		private boolean changedAllocation = false;
+		IJavaObjectInstance correctParent;
 		public EnsureCorrectParentCommand(IJavaObjectInstance aChild){
 			javaChild = aChild;
 		}
 		public void execute() {
 			if(javaChild.getAllocation() != null){
-				IJavaObjectInstance correctParent = (IJavaObjectInstance)getContainer(); 
+				correctParent = (IJavaObjectInstance)getContainer(); 
 				if(javaChild.getAllocation() instanceof ParseTreeAllocation){
-					PTExpression expression = ((ParseTreeAllocation)javaChild.getAllocation()).getExpression();
+					PTExpression expression = ((ParseTreeAllocation)javaChild.getAllocation()).getExpression();					
 					if(expression instanceof PTClassInstanceCreation){
-						PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) expression;
-						if(classInstanceCreation.getArguments().size() == 2){
-							Object firstArgument = classInstanceCreation.getArguments().get(0);
-							if(firstArgument instanceof PTName && ((PTName)firstArgument).getName().equals(SwtPlugin.PARENT_COMPOSITE_TOKEN)){ //$NON-NLS-1$
-								PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-								parentRef.setObject(correctParent);
-								classInstanceCreation.getArguments().remove(0);
-								classInstanceCreation.getArguments().add(0,parentRef);
-								// 	ReCreate the allocation feature so that CodeGen will reGenerate the constructor
-								ParseTreeAllocation newAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-								newAlloc.setExpression(expression);								
-								javaChild.setAllocation(newAlloc);
-							} else if (firstArgument instanceof PTInstanceReference){
-								PTInstanceReference instanceReference = (PTInstanceReference)firstArgument;
-								if(instanceReference.getObject() != correctParent){
-									instanceReference.setObject(correctParent);
-									// 	ReCreate the allocation feature so that CodeGen will reGenerate the constructor
-									ParseTreeAllocation newAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-									newAlloc.setExpression(expression);								
-									javaChild.setAllocation(newAlloc);
-								}
-							}
-						}
-					} 			
+						visitClassInstanceCreation((PTClassInstanceCreation)expression);
+					} else if (expression instanceof PTMethodInvocation){
+						visitMethodInvocation((PTMethodInvocation)expression);
+					}
+					if(changedAllocation){
+						// ReCreate the allocation feature so that CodeGen will reGenerate the constructor
+						ParseTreeAllocation newAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+						newAlloc.setExpression(expression);								
+						javaChild.setAllocation(newAlloc);					
+					}					
 				}
 			}
 		}
+		private void visitClassInstanceCreation(PTClassInstanceCreation expression){
+			visitArguments(expression.getArguments());
+		}
+		private void visitMethodInvocation(PTMethodInvocation expression){
+			visitArguments(expression.getArguments());
+		}		
+		
+		private void visitArguments(List arguments){
+			// Find all references to {parentComposite} and swop them with a pointer to the real composite parent
+			ArrayList argsCopy = new ArrayList(arguments.size());
+			argsCopy.addAll(arguments);	// Use a copy so we don't access and change the same collection in the loop
+			for (int i = 0; i < argsCopy.size(); i++) {
+				Object argument = argsCopy.get(i);
+				if(argument instanceof PTName && SwtPlugin.PARENT_COMPOSITE_TOKEN.equals(((PTName)argument).getName())){ //$NON-NLS-1$
+					PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+					parentRef.setObject(correctParent);
+					arguments.remove(i);
+					arguments.add(i,parentRef);
+					changedAllocation = true;
+				} else if (argument instanceof PTInstanceReference){
+					PTInstanceReference instanceReference = (PTInstanceReference)argument;
+					if(instanceReference.getObject() != correctParent){
+						instanceReference.setObject(correctParent);
+						changedAllocation = true;
+					}
+				}				
+			}
+		}
+		
 		protected boolean prepare() {
 			return true;
 		}
@@ -102,7 +119,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		// If we already have a java allocation then check to see whether it is a prototype instance with a 
 		// {parentComposite} that needs substituting with the real parent
 		if(javaChild.getAllocation() != null){
-			Command insertCorrectParentCommand = new EnsureCorrectParentCommand((IJavaObjectInstance) child);
+			Command insertCorrectParentCommand = new EnsureCorrectParentCommand(javaChild);
 			return insertCorrectParentCommand.chain(result);
 		} else {
 			return createInitStringCommand((IJavaObjectInstance)child).chain(result);
