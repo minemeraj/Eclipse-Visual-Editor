@@ -11,29 +11,19 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: Category.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:18:01 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
 
-
-import java.util.List;
 
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Category</b></em>'.
- * This is the abstract base category. There are two standard implementations of it:
- * 
- * CategoryCmp: This is a category where the groups is a composite aggregation. (i.e. it is contained within the  CategoryCmp).
- * 
- * CategoryRef: This is a category where the group is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of category allows references to pieces of other palettes to form together a new category.
+ * @deprecated Use {@link org.eclipse.ve.internal.cde.palette.Drawer} instead.
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * This is the abstract base category. There are two standard implementations of it:
- * 
- * CategoryCmp: This is a category where the groups is a composite aggregation. (i.e. it is contained within the  CategoryCmp).
- * 
- * CategoryRef: This is a category where the group is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of category allows references to pieces of other palettes to form together a new category.
+ * This is obsolete. Use Drawer instead.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -47,7 +37,7 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  * @model abstract="true"
  * @generated
  */
-public interface Category extends Container{
+public interface Category extends Drawer{
 
 
 	/**
@@ -58,10 +48,13 @@ public interface Category extends Container{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This is obsolete. Use Entry.entryLabel instead.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Category Label</em>' containment reference.
 	 * @see #setCategoryLabel(AbstractString)
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getCategory_CategoryLabel()
-	 * @model containment="true" required="true"
+	 * @model containment="true" required="true" transient="true" volatile="true"
 	 * @generated
 	 */
 	AbstractString getCategoryLabel();
@@ -76,8 +69,4 @@ public interface Category extends Container{
 	 */
 	void setCategoryLabel(AbstractString value);
 
-	/**
-	 * Return the groups
-	 */
-	public List getGroups();	
 }

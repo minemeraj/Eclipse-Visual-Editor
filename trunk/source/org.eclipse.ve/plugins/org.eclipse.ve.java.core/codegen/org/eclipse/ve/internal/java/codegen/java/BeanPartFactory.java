@@ -11,12 +11,13 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.44 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.45 $  $Date: 2005-06-20 23:54:34 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
@@ -27,9 +28,11 @@ import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
+import org.eclipse.ve.internal.cde.core.CDECreationTool;
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
-import org.eclipse.ve.internal.cde.emf.*;
+import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.jcm.*;
@@ -40,6 +43,7 @@ import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.VECreationPolicy;
 
 
 
@@ -351,24 +355,38 @@ protected void generateNullConstructorIfNeeded(BeanPart b, CodeMethodRef iniMeth
             // if there is any Creation Policy that overides the default5
             JavaClass clazz = (JavaClass)((IJavaObjectInstance)b.getEObject()).getJavaType() ;
             if (clazz.getSupertype() != null) {
-                EMFCreationTool.CreationPolicy  policy = null ;
+                VECreationPolicy  policy = null ;
                 JavaClass superClazz = clazz.getSupertype();
                 ClassDescriptorDecorator decorator = (ClassDescriptorDecorator)ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(superClazz, 
                                                                            ClassDescriptorDecorator.class, 
-                                                                           EMFCreationTool.CREATION_POLICY_KEY);            
+                                                                           CDECreationTool.CREATION_POLICY_KEY);            
                 if ( decorator != null ) {
-                    String creationPolicyClassName = (String)decorator.getKeyedValues().get(EMFCreationTool.CREATION_POLICY_KEY);
-                    // The class name may be from another plugin so we must instantiate it correctly
-                    try {
-                        policy = (EMFCreationTool.CreationPolicy)CDEPlugin.createInstance(null, creationPolicyClassName);
-                    } catch ( Exception exc ) {
-                        // If the class can't be created then just drop down and let the regular command be returned
-                    }
-                    if (policy != null) {
-                        String superOveride = policy.getDefaultSuperString(superClazz) ;
-                        if (superOveride != null)
-                           template.setSuperInitString(superOveride+";") ; //$NON-NLS-1$
-                    }
+                    String creationPolicyClassName = (String)decorator.getKeyedValues().get(CDECreationTool.CREATION_POLICY_KEY);
+                    if (creationPolicyClassName != null) {
+						try {
+							Class cpClass = CDEPlugin.getClassFromString(creationPolicyClassName);
+							if (VECreationPolicy.class.isAssignableFrom(cpClass)) {
+								policy = (VECreationPolicy) cpClass.newInstance();
+								CDEPlugin.setInitializationData(policy, creationPolicyClassName, null);
+							}
+						} catch (ClassCastException e) {
+							JavaVEPlugin.log(e, Level.WARNING);
+						} catch (ClassNotFoundException e) {
+							JavaVEPlugin.log(e, Level.WARNING);
+						} catch (InstantiationException e) {
+							JavaVEPlugin.log(e, Level.WARNING);
+						} catch (IllegalAccessException e) {
+							JavaVEPlugin.log(e, Level.WARNING);
+						} catch (CoreException e) {
+							JavaVEPlugin.log(e, Level.WARNING);
+						}
+						if (policy != null) {
+							String superOveride = policy.getDefaultSuperString(superClazz);
+							if (superOveride != null)
+								template.setSuperInitString(superOveride + ";"); //$NON-NLS-1$
+						}
+						
+					}
                        
                 }
                 

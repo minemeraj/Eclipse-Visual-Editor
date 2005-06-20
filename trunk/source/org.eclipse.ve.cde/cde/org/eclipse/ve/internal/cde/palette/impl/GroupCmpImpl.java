@@ -11,22 +11,21 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: GroupCmpImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:18:00 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-20 23:54:40 $ 
  */
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.ve.internal.cde.palette.Entry;
 import org.eclipse.ve.internal.cde.palette.GroupCmp;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.Permissions;
+
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 /**
  * <!-- begin-user-doc -->
@@ -47,16 +46,6 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	
 
 	/**
-	 * The cached value of the '{@link #getCmpEntries() <em>Cmp Entries</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCmpEntries()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList cmpEntries = null;
-	
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -74,20 +63,12 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 		return PalettePackage.eINSTANCE.getGroupCmp();
 	}
 
-	protected List getGroupEntries() {
-		return getCmpEntries();
-	}
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public EList getCmpEntries() {
-		if (cmpEntries == null) {
-			cmpEntries = new EObjectContainmentEList(Entry.class, this, PalettePackage.GROUP_CMP__CMP_ENTRIES);
-		}
-		return cmpEntries;
+		return getChildren();
 	}
 
 	/**
@@ -98,6 +79,12 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
 		if (featureID >= 0) {
 			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
+				case PalettePackage.GROUP_CMP__ENTRY_LABEL:
+					return basicSetEntryLabel(null, msgs);
+				case PalettePackage.GROUP_CMP__ENTRY_SHORT_DESCRIPTION:
+					return basicSetEntryShortDescription(null, msgs);
+				case PalettePackage.GROUP_CMP__CHILDREN:
+					return ((InternalEList)getChildren()).basicRemove(otherEnd, msgs);
 				case PalettePackage.GROUP_CMP__GROUP_LABEL:
 					return basicSetGroupLabel(null, msgs);
 				case PalettePackage.GROUP_CMP__CMP_ENTRIES:
@@ -116,6 +103,24 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case PalettePackage.GROUP_CMP__ICON16_NAME:
+				return getIcon16Name();
+			case PalettePackage.GROUP_CMP__ICON32_NAME:
+				return getIcon32Name();
+			case PalettePackage.GROUP_CMP__VISIBLE:
+				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.GROUP_CMP__DEFAULT_ENTRY:
+				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.GROUP_CMP__ID:
+				return getId();
+			case PalettePackage.GROUP_CMP__MODIFICATION:
+				return getModification();
+			case PalettePackage.GROUP_CMP__ENTRY_LABEL:
+				return getEntryLabel();
+			case PalettePackage.GROUP_CMP__ENTRY_SHORT_DESCRIPTION:
+				return getEntryShortDescription();
+			case PalettePackage.GROUP_CMP__CHILDREN:
+				return getChildren();
 			case PalettePackage.GROUP_CMP__GROUP_LABEL:
 				return getGroupLabel();
 			case PalettePackage.GROUP_CMP__CMP_ENTRIES:
@@ -131,6 +136,34 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case PalettePackage.GROUP_CMP__ICON16_NAME:
+				setIcon16Name((String)newValue);
+				return;
+			case PalettePackage.GROUP_CMP__ICON32_NAME:
+				setIcon32Name((String)newValue);
+				return;
+			case PalettePackage.GROUP_CMP__VISIBLE:
+				setVisible(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.GROUP_CMP__DEFAULT_ENTRY:
+				setDefaultEntry(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.GROUP_CMP__ID:
+				setId((String)newValue);
+				return;
+			case PalettePackage.GROUP_CMP__MODIFICATION:
+				setModification((Permissions)newValue);
+				return;
+			case PalettePackage.GROUP_CMP__ENTRY_LABEL:
+				setEntryLabel((AbstractString)newValue);
+				return;
+			case PalettePackage.GROUP_CMP__ENTRY_SHORT_DESCRIPTION:
+				setEntryShortDescription((AbstractString)newValue);
+				return;
+			case PalettePackage.GROUP_CMP__CHILDREN:
+				getChildren().clear();
+				getChildren().addAll((Collection)newValue);
+				return;
 			case PalettePackage.GROUP_CMP__GROUP_LABEL:
 				setGroupLabel((AbstractString)newValue);
 				return;
@@ -149,6 +182,33 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 */
 	public void eUnset(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case PalettePackage.GROUP_CMP__ICON16_NAME:
+				setIcon16Name(ICON16_NAME_EDEFAULT);
+				return;
+			case PalettePackage.GROUP_CMP__ICON32_NAME:
+				setIcon32Name(ICON32_NAME_EDEFAULT);
+				return;
+			case PalettePackage.GROUP_CMP__VISIBLE:
+				setVisible(VISIBLE_EDEFAULT);
+				return;
+			case PalettePackage.GROUP_CMP__DEFAULT_ENTRY:
+				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
+				return;
+			case PalettePackage.GROUP_CMP__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case PalettePackage.GROUP_CMP__MODIFICATION:
+				setModification(MODIFICATION_EDEFAULT);
+				return;
+			case PalettePackage.GROUP_CMP__ENTRY_LABEL:
+				setEntryLabel((AbstractString)null);
+				return;
+			case PalettePackage.GROUP_CMP__ENTRY_SHORT_DESCRIPTION:
+				setEntryShortDescription((AbstractString)null);
+				return;
+			case PalettePackage.GROUP_CMP__CHILDREN:
+				getChildren().clear();
+				return;
 			case PalettePackage.GROUP_CMP__GROUP_LABEL:
 				setGroupLabel((AbstractString)null);
 				return;
@@ -166,10 +226,28 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 */
 	public boolean eIsSet(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case PalettePackage.GROUP_CMP__ICON16_NAME:
+				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
+			case PalettePackage.GROUP_CMP__ICON32_NAME:
+				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
+			case PalettePackage.GROUP_CMP__VISIBLE:
+				return visible != VISIBLE_EDEFAULT;
+			case PalettePackage.GROUP_CMP__DEFAULT_ENTRY:
+				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
+			case PalettePackage.GROUP_CMP__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case PalettePackage.GROUP_CMP__MODIFICATION:
+				return modification != MODIFICATION_EDEFAULT;
+			case PalettePackage.GROUP_CMP__ENTRY_LABEL:
+				return entryLabel != null;
+			case PalettePackage.GROUP_CMP__ENTRY_SHORT_DESCRIPTION:
+				return entryShortDescription != null;
+			case PalettePackage.GROUP_CMP__CHILDREN:
+				return children != null && !children.isEmpty();
 			case PalettePackage.GROUP_CMP__GROUP_LABEL:
-				return groupLabel != null;
+				return getGroupLabel() != null;
 			case PalettePackage.GROUP_CMP__CMP_ENTRIES:
-				return cmpEntries != null && !cmpEntries.isEmpty();
+				return !getCmpEntries().isEmpty();
 		}
 		return eDynamicIsSet(eFeature);
 	}

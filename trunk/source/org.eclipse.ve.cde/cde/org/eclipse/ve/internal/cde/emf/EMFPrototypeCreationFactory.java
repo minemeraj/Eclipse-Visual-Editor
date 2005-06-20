@@ -11,19 +11,22 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFPrototypeCreationFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-18 19:31:37 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.requests.CreationFactory;
 
+import org.eclipse.jem.util.logger.proxy.Logger;
+
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 /**
@@ -40,11 +43,9 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
  * @version 	1.0
  * @author
  */
-public class EMFPrototypeCreationFactory implements CreationFactory, IDomainedFactory {
+public class EMFPrototypeCreationFactory extends EMFPrototypeFactory implements IDomainedFactory {
 
 	protected URI prototypeURI;
-	protected List prototypes; // All of the prototypes from the extent
-	protected EObject prototype; // The prototype to return.
 
 	/**
 	 * Constructor for EMFPrototypeCreationFactory.
@@ -56,6 +57,7 @@ public class EMFPrototypeCreationFactory implements CreationFactory, IDomainedFa
 	
 	/**
 	 * Create using the given resource and the fragment referring to the main prototype.
+	 * Unlike a prototype string, this will access the resource immediately to retrieve the prototypes.
 	 * @param protoTypeFragment
 	 * @param prototypeResource
 	 * 
@@ -65,20 +67,22 @@ public class EMFPrototypeCreationFactory implements CreationFactory, IDomainedFa
 		getPrototypes(protoTypeFragment, prototypeResource);
 	}
 
+	/**
+	 * Set the URI for the prototype.
+	 * @param prototypeURI
+	 * 
+	 * @since 1.1.0
+	 */
 	public void setPrototypeURI(URI prototypeURI) {
 		this.prototypeURI = prototypeURI;
 	}
 
-	/**
-	 * @see IDomainedFactory#setEditDomain(EditDomain)
-	 */
 	public void setEditDomain(EditDomain domain) {
 		if (prototypeURI != null) {
 			// Now that we have a domain, find and set the actual prototype
 			// We are being activated, so this is a good time to do it.
 
-			prototype = null;
-			prototypes = null;
+			setPrototype(null, null);
 			if (prototypeURI != null) {
 				ResourceSet rset = EMFEditDomainHelper.getResourceSet(domain);
 				Resource res = rset.getResource(prototypeURI.trimFragment(), true);
@@ -96,35 +100,35 @@ public class EMFPrototypeCreationFactory implements CreationFactory, IDomainedFa
 	 * @since 1.1.0
 	 */
 	private void getPrototypes(String prototypeFragment, Resource res) {
-		prototype = res.getEObject(prototypeFragment);
+		EObject prototype = res.getEObject(prototypeFragment);
 		if (prototype != null) {
+			List prototypes = null;
 			if (prototype.eContainer() != null) {
 				prototype = null;
-				System.out.println("Prototype from URI is not contained directly by the Resource. Res="+res.getURI()+ " Fragment=" + prototypeFragment); //$NON-NLS-1$ //$NON-NLS-2$
+				Logger logger = CDEPlugin.getPlugin().getLogger();
+				if (logger.isLoggingLevel(Level.INFO))
+					logger.log("Prototype from URI is not contained directly by the Resource. Res="+res.getURI()+ " Fragment=" + prototypeFragment, Level.INFO); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				prototypes = new ArrayList(res.getContents()); // Make of copy of the list of all of the prototypes.
+				prototypes = res.getContents();
 			}
-		}
-	}
-
-	/**
-	 * @see Factory#getNewObject()
-	 */
-	public Object getNewObject() {
-		if (prototype != null) {
+		
+			// Make a copy so that they are not pointing to the resource. That would hold the resource in memory too.
 			EcoreUtil.Copier copier = new EcoreUtil.Copier();
-			copier.copyAll(prototypes);
+			if (prototypes == null || !prototypes.contains(prototype))
+				copier.copy(prototype);
+			if (prototypes != null)
+				copier.copyAll(prototypes);
 			copier.copyReferences();
-			return copier.get(prototype);	// Now return the copied prototype, anything it references from the cg will be dragged along (should only be annotations).
-		} else
-			return null;
-	}
-
-	/**
-	 * @see Factory#getObjectType()
-	 */
-	public Object getObjectType() {
-		return prototype != null ? prototype.eClass() : null;
+			List copyPrototypes = null;
+			if (prototypes != null && !prototypes.isEmpty()) {
+				copyPrototypes = new ArrayList(prototypes.size());
+				for (int i = 0; i < prototypes.size(); i++) {
+					copyPrototypes.add(copier.get(prototypes.get(i)));
+				}
+			}
+			
+			setPrototype((EObject) copier.get(prototype), copyPrototypes);
+		}
 	}
 
 }

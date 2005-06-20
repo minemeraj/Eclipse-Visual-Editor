@@ -11,23 +11,23 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: GroupImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:18:00 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-20 23:54:40 $ 
  */
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.gef.palette.PaletteContainer;
-import org.eclipse.gef.palette.PaletteGroup;
+import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.ve.internal.cde.palette.Entry;
+import org.eclipse.gef.palette.*;
+
 import org.eclipse.ve.internal.cde.palette.Group;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.Permissions;
+
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 /**
@@ -44,20 +44,10 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  * @generated
  */
 
-public abstract class GroupImpl extends ContainerImpl implements Group {
+public class GroupImpl extends ContainerImpl implements Group {
 
 	
 
-	/**
-	 * The cached value of the '{@link #getGroupLabel() <em>Group Label</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getGroupLabel()
-	 * @generated
-	 * @ordered
-	 */
-	protected AbstractString groupLabel = null;
-	
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -76,41 +66,12 @@ public abstract class GroupImpl extends ContainerImpl implements Group {
 		return PalettePackage.eINSTANCE.getGroup();
 	}
 
-	public String getLabel() {
-		return getGroupLabel() != null ? getGroupLabel().getStringValue() : ""; //$NON-NLS-1$
-	}
-
-	public List getChildren() {
-		List c = getGroupEntries();
-		ArrayList result = new ArrayList(c.size());
-		for (int i=0; i<c.size(); i++)
-			result.add(((Entry) c.get(i)).getEntry());
-			
-		return result;
-			
-	}		
-
-	/**
-	 * Return the entries
-	 */
-	public List getEntries() {
-		return getGroupEntries();
-	}
-
-	protected List getGroupEntries() {
-		throw new IllegalStateException("Must be implemented by subclass."); //$NON-NLS-1$
-	}
-
-	public Object getType() {
-		return PaletteGroup.PALETTE_TYPE_GROUP;
-	}
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public AbstractString getGroupLabel() {
-		return groupLabel;
+		return getEntryLabel();
 	}
 
 	/**
@@ -119,32 +80,20 @@ public abstract class GroupImpl extends ContainerImpl implements Group {
 	 * @generated
 	 */
 	public NotificationChain basicSetGroupLabel(AbstractString newGroupLabel, NotificationChain msgs) {
-		AbstractString oldGroupLabel = groupLabel;
-		groupLabel = newGroupLabel;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, PalettePackage.GROUP__GROUP_LABEL, oldGroupLabel, newGroupLabel);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
+		// TODO: implement this method to set the contained 'Group Label' containment reference
+		// -> this method is automatically invoked to keep the containment relationship in synch
+		// -> do not modify other features
+		// -> return msgs, after adding any generated Notification to it (if it is null, a NotificationChain object must be created first)
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public void setGroupLabel(AbstractString newGroupLabel) {
-		if (newGroupLabel != groupLabel) {
-			NotificationChain msgs = null;
-			if (groupLabel != null)
-				msgs = ((InternalEObject)groupLabel).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - PalettePackage.GROUP__GROUP_LABEL, null, msgs);
-			if (newGroupLabel != null)
-				msgs = ((InternalEObject)newGroupLabel).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - PalettePackage.GROUP__GROUP_LABEL, null, msgs);
-			msgs = basicSetGroupLabel(newGroupLabel, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.GROUP__GROUP_LABEL, newGroupLabel, newGroupLabel));
+		setEntryLabel(newGroupLabel);
 	}
 
 	/**
@@ -155,6 +104,12 @@ public abstract class GroupImpl extends ContainerImpl implements Group {
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
 		if (featureID >= 0) {
 			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
+				case PalettePackage.GROUP__ENTRY_LABEL:
+					return basicSetEntryLabel(null, msgs);
+				case PalettePackage.GROUP__ENTRY_SHORT_DESCRIPTION:
+					return basicSetEntryShortDescription(null, msgs);
+				case PalettePackage.GROUP__CHILDREN:
+					return ((InternalEList)getChildren()).basicRemove(otherEnd, msgs);
 				case PalettePackage.GROUP__GROUP_LABEL:
 					return basicSetGroupLabel(null, msgs);
 				default:
@@ -171,6 +126,24 @@ public abstract class GroupImpl extends ContainerImpl implements Group {
 	 */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case PalettePackage.GROUP__ICON16_NAME:
+				return getIcon16Name();
+			case PalettePackage.GROUP__ICON32_NAME:
+				return getIcon32Name();
+			case PalettePackage.GROUP__VISIBLE:
+				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.GROUP__DEFAULT_ENTRY:
+				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.GROUP__ID:
+				return getId();
+			case PalettePackage.GROUP__MODIFICATION:
+				return getModification();
+			case PalettePackage.GROUP__ENTRY_LABEL:
+				return getEntryLabel();
+			case PalettePackage.GROUP__ENTRY_SHORT_DESCRIPTION:
+				return getEntryShortDescription();
+			case PalettePackage.GROUP__CHILDREN:
+				return getChildren();
 			case PalettePackage.GROUP__GROUP_LABEL:
 				return getGroupLabel();
 		}
@@ -184,8 +157,26 @@ public abstract class GroupImpl extends ContainerImpl implements Group {
 	 */
 	public boolean eIsSet(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case PalettePackage.GROUP__ICON16_NAME:
+				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
+			case PalettePackage.GROUP__ICON32_NAME:
+				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
+			case PalettePackage.GROUP__VISIBLE:
+				return visible != VISIBLE_EDEFAULT;
+			case PalettePackage.GROUP__DEFAULT_ENTRY:
+				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
+			case PalettePackage.GROUP__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case PalettePackage.GROUP__MODIFICATION:
+				return modification != MODIFICATION_EDEFAULT;
+			case PalettePackage.GROUP__ENTRY_LABEL:
+				return entryLabel != null;
+			case PalettePackage.GROUP__ENTRY_SHORT_DESCRIPTION:
+				return entryShortDescription != null;
+			case PalettePackage.GROUP__CHILDREN:
+				return children != null && !children.isEmpty();
 			case PalettePackage.GROUP__GROUP_LABEL:
-				return groupLabel != null;
+				return getGroupLabel() != null;
 		}
 		return eDynamicIsSet(eFeature);
 	}
@@ -197,6 +188,34 @@ public abstract class GroupImpl extends ContainerImpl implements Group {
 	 */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case PalettePackage.GROUP__ICON16_NAME:
+				setIcon16Name((String)newValue);
+				return;
+			case PalettePackage.GROUP__ICON32_NAME:
+				setIcon32Name((String)newValue);
+				return;
+			case PalettePackage.GROUP__VISIBLE:
+				setVisible(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.GROUP__DEFAULT_ENTRY:
+				setDefaultEntry(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.GROUP__ID:
+				setId((String)newValue);
+				return;
+			case PalettePackage.GROUP__MODIFICATION:
+				setModification((Permissions)newValue);
+				return;
+			case PalettePackage.GROUP__ENTRY_LABEL:
+				setEntryLabel((AbstractString)newValue);
+				return;
+			case PalettePackage.GROUP__ENTRY_SHORT_DESCRIPTION:
+				setEntryShortDescription((AbstractString)newValue);
+				return;
+			case PalettePackage.GROUP__CHILDREN:
+				getChildren().clear();
+				getChildren().addAll((Collection)newValue);
+				return;
 			case PalettePackage.GROUP__GROUP_LABEL:
 				setGroupLabel((AbstractString)newValue);
 				return;
@@ -211,6 +230,33 @@ public abstract class GroupImpl extends ContainerImpl implements Group {
 	 */
 	public void eUnset(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case PalettePackage.GROUP__ICON16_NAME:
+				setIcon16Name(ICON16_NAME_EDEFAULT);
+				return;
+			case PalettePackage.GROUP__ICON32_NAME:
+				setIcon32Name(ICON32_NAME_EDEFAULT);
+				return;
+			case PalettePackage.GROUP__VISIBLE:
+				setVisible(VISIBLE_EDEFAULT);
+				return;
+			case PalettePackage.GROUP__DEFAULT_ENTRY:
+				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
+				return;
+			case PalettePackage.GROUP__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case PalettePackage.GROUP__MODIFICATION:
+				setModification(MODIFICATION_EDEFAULT);
+				return;
+			case PalettePackage.GROUP__ENTRY_LABEL:
+				setEntryLabel((AbstractString)null);
+				return;
+			case PalettePackage.GROUP__ENTRY_SHORT_DESCRIPTION:
+				setEntryShortDescription((AbstractString)null);
+				return;
+			case PalettePackage.GROUP__CHILDREN:
+				getChildren().clear();
+				return;
 			case PalettePackage.GROUP__GROUP_LABEL:
 				setGroupLabel((AbstractString)null);
 				return;
@@ -218,10 +264,7 @@ public abstract class GroupImpl extends ContainerImpl implements Group {
 		eDynamicUnset(eFeature);
 	}
 
-	/**
-	 * @see org.eclipse.ve.internal.cde.palette.impl.ContainerImpl#createPaletteContainer()
-	 */
-	protected PaletteContainer createPaletteContainer() {
+	protected PaletteEntry createPaletteEntry() {
 		return new PaletteGroup(getLabel());
 	}
 

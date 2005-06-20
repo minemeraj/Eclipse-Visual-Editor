@@ -1,140 +1,151 @@
-<?xml version="1.0" encoding="ASCII"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0"
-  xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-  xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.ve.cde/cde"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.ve.cde/cde"
     editDirectory="/org.eclipse.ve.cde.edit/src" editorDirectory="/org.eclipse.ve.cde.editor/src"
     modelPluginID="" modelName="CDE" editPluginClass="org.eclipse.ve.internal.cde.decorators.provider.DecoratorsEditPlugin"
     editorPluginClass="org.eclipse.ve.internal.cde.decorators.presentation.DecoratorsEditorPlugin"
-    updateClasspath="false" usedGenPackages="cdmmodel.genmodel#//cdm ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+    updateClasspath="false" importerID="org.eclipse.emf.importer.rose" usedGenPackages="cdmmodel.genmodel#//cdm ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
   <foreignModel>..\rose\cdeModels.mdl</foreignModel>
   <foreignModel>WorkspaceRoot</foreignModel>
   <foreignModel>../..</foreignModel>
   <genPackages prefix="Palette" basePackage="org.eclipse.ve.internal.cde" adapterFactory="false"
       ecorePackage="palette.ecore#/">
+    <genEnums ecoreEnum="palette.ecore#//Permissions">
+      <genEnumLiterals ecoreEnumLiteral="palette.ecore#//Permissions/Default"/>
+      <genEnumLiterals ecoreEnumLiteral="palette.ecore#//Permissions/Full"/>
+      <genEnumLiterals ecoreEnumLiteral="palette.ecore#//Permissions/HideOnly"/>
+      <genEnumLiterals ecoreEnumLiteral="palette.ecore#//Permissions/Limited"/>
+      <genEnumLiterals ecoreEnumLiteral="palette.ecore#//Permissions/None"/>
+    </genEnums>
+    <genEnums ecoreEnum="palette.ecore#//InitialState">
+      <genEnumLiterals ecoreEnumLiteral="palette.ecore#//InitialState/Open"/>
+      <genEnumLiterals ecoreEnumLiteral="palette.ecore#//InitialState/Closed"/>
+      <genEnumLiterals ecoreEnumLiteral="palette.ecore#//InitialState/PinnedOpen"/>
+    </genEnums>
     <genDataTypes ecoreDataType="palette.ecore#//CreationFactory"/>
-    <genClasses ecoreClass="palette.ecore#//Palette">
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//Palette/paletteLabel"/>
+    <genClasses ecoreClass="palette.ecore#//Root">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference palette.ecore#//Root/defEntry"/>
     </genClasses>
     <genClasses ecoreClass="palette.ecore#//Category">
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//Category/categoryLabel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//Category/categoryLabel"/>
     </genClasses>
     <genClasses ecoreClass="palette.ecore#//Group">
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//Group/groupLabel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//Group/groupLabel"/>
     </genClasses>
     <genClasses ecoreClass="palette.ecore#//Entry">
-      <genFeatures ecoreFeature="ecore:EAttribute palette.ecore#//Entry/icon16Name"/>
-      <genFeatures ecoreFeature="ecore:EAttribute palette.ecore#//Entry/icon32Name"/>
-      <genFeatures ecoreFeature="ecore:EAttribute palette.ecore#//Entry/defaultEntry"/>
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//Entry/entryLabel"/>
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//Entry/entryShortDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/icon16Name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/icon32Name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/visible"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/defaultEntry"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/modification"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//Entry/entryLabel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//Entry/entryShortDescription"/>
     </genClasses>
     <genClasses ecoreClass="palette.ecore#//ToolEntry">
-      <genFeatures ecoreFeature="ecore:EAttribute palette.ecore#//ToolEntry/toolClassName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//ToolEntry/toolClassName"/>
     </genClasses>
-    <genClasses ecoreClass="palette.ecore#//CreationToolEntry">
-      <genOperations ecoreOperation="palette.ecore#//CreationToolEntry/createFactory"/>
-      <genOperations ecoreOperation="palette.ecore#//CreationToolEntry/setFactory">
-        <genParameters ecoreParameter="palette.ecore#//CreationToolEntry/setFactory/factory"/>
-      </genOperations>
-    </genClasses>
-    <genClasses ecoreClass="palette.ecore#//AbstractToolEntry"/>
-    <genClasses ecoreClass="palette.ecore#//PaletteRef">
-      <genFeatures ecoreFeature="ecore:EReference palette.ecore#//PaletteRef/refControlGroup"/>
-      <genFeatures property="None" notify="false" ecoreFeature="ecore:EReference palette.ecore#//PaletteRef/refCategories"/>
+    <genClasses ecoreClass="palette.ecore#//CreationToolEntry"/>
+    <genClasses ecoreClass="palette.ecore#//AbstractToolEntry">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//AbstractToolEntry/stringProperties"/>
     </genClasses>
     <genClasses ecoreClass="palette.ecore#//PaletteCmp">
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//PaletteCmp/cmpCategories"/>
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//PaletteCmp/cmpControlGroup"/>
-    </genClasses>
-    <genClasses ecoreClass="palette.ecore#//CategoryRef">
-      <genFeatures property="None" notify="false" ecoreFeature="ecore:EReference palette.ecore#//CategoryRef/refGroups"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//PaletteCmp/cmpCategories"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//PaletteCmp/cmpControlGroup"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//PaletteCmp/paletteLabel"/>
     </genClasses>
     <genClasses ecoreClass="palette.ecore#//CategoryCmp">
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//CategoryCmp/cmpGroups"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//CategoryCmp/cmpGroups"/>
     </genClasses>
     <genClasses ecoreClass="palette.ecore#//GroupCmp">
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//GroupCmp/cmpEntries"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//GroupCmp/cmpEntries"/>
     </genClasses>
-    <genClasses ecoreClass="palette.ecore#//GroupRef">
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//GroupRef/refEntries"/>
+    <genClasses ecoreClass="palette.ecore#//Container">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference palette.ecore#//Container/children"/>
     </genClasses>
-    <genClasses ecoreClass="palette.ecore#//Container"/>
     <genClasses ecoreClass="palette.ecore#//EMFCreationToolEntry">
-      <genFeatures ecoreFeature="ecore:EAttribute palette.ecore#//EMFCreationToolEntry/creationClassURI"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//EMFCreationToolEntry/creationClassURI"/>
     </genClasses>
     <genClasses ecoreClass="palette.ecore#//EMFPrototypeToolEntry">
-      <genFeatures ecoreFeature="ecore:EAttribute palette.ecore#//EMFPrototypeToolEntry/prototypeURI"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//EMFPrototypeToolEntry/prototypeURI"/>
     </genClasses>
     <genClasses ecoreClass="palette.ecore#//AnnotatedCreationEntry">
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//AnnotatedCreationEntry/objectCreationEntry"/>
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference palette.ecore#//AnnotatedCreationEntry/values"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//AnnotatedCreationEntry/objectCreationEntry"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//AnnotatedCreationEntry/values"/>
     </genClasses>
     <genClasses ecoreClass="palette.ecore#//SelectionCreationToolEntry">
-      <genFeatures ecoreFeature="ecore:EAttribute palette.ecore#//SelectionCreationToolEntry/selectorClassName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//SelectionCreationToolEntry/selectorClassName"/>
     </genClasses>
-    <genClasses ecoreClass="palette.ecore#//ICDEPaletteEntry"/>
+    <genClasses ecoreClass="palette.ecore#//Drawer">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Drawer/initialState"/>
+    </genClasses>
+    <genClasses ecoreClass="palette.ecore#//Stack">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference palette.ecore#//Stack/activeEntry"/>
+    </genClasses>
+    <genClasses ecoreClass="palette.ecore#//Separator"/>
   </genPackages>
   <genPackages prefix="Utility" basePackage="org.eclipse.ve.internal.cde" adapterFactory="false"
       ecorePackage="utility.ecore#/">
     <genClasses ecoreClass="utility.ecore#//AbstractString"/>
     <genClasses ecoreClass="utility.ecore#//ConstantString">
-      <genFeatures ecoreFeature="ecore:EAttribute utility.ecore#//ConstantString/string"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute utility.ecore#//ConstantString/string"/>
     </genClasses>
     <genClasses ecoreClass="utility.ecore#//ResourceBundle"/>
     <genClasses ecoreClass="utility.ecore#//URLResourceBundle">
-      <genFeatures ecoreFeature="ecore:EAttribute utility.ecore#//URLResourceBundle/bundleName"/>
-      <genFeatures ecoreFeature="ecore:EAttribute utility.ecore#//URLResourceBundle/bundleURLs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute utility.ecore#//URLResourceBundle/bundleName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute utility.ecore#//URLResourceBundle/bundleURLs"/>
     </genClasses>
     <genClasses ecoreClass="utility.ecore#//Graphic"/>
     <genClasses ecoreClass="utility.ecore#//GIFFileGraphic">
-      <genFeatures ecoreFeature="ecore:EAttribute utility.ecore#//GIFFileGraphic/resourceName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute utility.ecore#//GIFFileGraphic/resourceName"/>
     </genClasses>
     <genClasses ecoreClass="utility.ecore#//TranslatableString">
-      <genFeatures ecoreFeature="ecore:EAttribute utility.ecore#//TranslatableString/key"/>
-      <genFeatures ecoreFeature="ecore:EReference utility.ecore#//TranslatableString/bundle"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute utility.ecore#//TranslatableString/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference utility.ecore#//TranslatableString/bundle"/>
     </genClasses>
     <genClasses ecoreClass="utility.ecore#//IGraphic"/>
   </genPackages>
   <genPackages prefix="Decorators" basePackage="org.eclipse.ve.internal.cde" adapterFactory="false"
       ecorePackage="decorators.ecore#/">
     <genClasses ecoreClass="decorators.ecore#//BasePropertyDecorator">
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//BasePropertyDecorator/cellEditorValidatorClassnames"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//BasePropertyDecorator/labelProviderClassname"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//BasePropertyDecorator/cellEditorClassname"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//BasePropertyDecorator/nullInvalid"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//BasePropertyDecorator/entryExpandable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//BasePropertyDecorator/cellEditorValidatorClassnames"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//BasePropertyDecorator/labelProviderClassname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//BasePropertyDecorator/cellEditorClassname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//BasePropertyDecorator/nullInvalid"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//BasePropertyDecorator/entryExpandable"/>
     </genClasses>
     <genClasses ecoreClass="decorators.ecore#//PropertySourceAdapterInformation">
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//PropertySourceAdapterInformation/propertySourceAdapterClassname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//PropertySourceAdapterInformation/propertySourceAdapterClassname"/>
     </genClasses>
     <genClasses ecoreClass="decorators.ecore#//PropertyDescriptorDecorator">
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//PropertyDescriptorDecorator/designtimeProperty"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//PropertyDescriptorDecorator/alwaysIncompatible"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//PropertyDescriptorDecorator/designtimeProperty"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//PropertyDescriptorDecorator/alwaysIncompatible"/>
     </genClasses>
     <genClasses ecoreClass="decorators.ecore#//PropertyDescriptorInformation">
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//PropertyDescriptorInformation/adapter"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//PropertyDescriptorInformation/propertyDescriptorClassname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//PropertyDescriptorInformation/adapter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//PropertyDescriptorInformation/propertyDescriptorClassname"/>
     </genClasses>
     <genClasses ecoreClass="decorators.ecore#//FeatureDescriptorDecorator">
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//FeatureDescriptorDecorator/hidden"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//FeatureDescriptorDecorator/helpContextIdsString"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//FeatureDescriptorDecorator/preferred"/>
-      <genFeatures ecoreFeature="ecore:EReference decorators.ecore#//FeatureDescriptorDecorator/categoryString"/>
-      <genFeatures property="None" notify="false" ecoreFeature="ecore:EReference decorators.ecore#//FeatureDescriptorDecorator/filterFlagStrings"/>
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference decorators.ecore#//FeatureDescriptorDecorator/displayNameString"/>
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference decorators.ecore#//FeatureDescriptorDecorator/descriptionString"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//FeatureDescriptorDecorator/hidden"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//FeatureDescriptorDecorator/helpContextIdsString"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//FeatureDescriptorDecorator/preferred"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference decorators.ecore#//FeatureDescriptorDecorator/categoryString"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference decorators.ecore#//FeatureDescriptorDecorator/filterFlagStrings"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference decorators.ecore#//FeatureDescriptorDecorator/displayNameString"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference decorators.ecore#//FeatureDescriptorDecorator/descriptionString"/>
       <genOperations ecoreOperation="decorators.ecore#//FeatureDescriptorDecorator/isFiltered">
         <genParameters ecoreParameter="decorators.ecore#//FeatureDescriptorDecorator/isFiltered/flag"/>
       </genOperations>
     </genClasses>
     <genClasses ecoreClass="decorators.ecore#//ClassDescriptorDecorator">
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/customizerClassname"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/treeViewClassname"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/graphViewClassname"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/modelAdapterClassname"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/defaultPalette"/>
-      <genFeatures ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/labelProviderClassname"/>
-      <genFeatures property="None" children="true" ecoreFeature="ecore:EReference decorators.ecore#//ClassDescriptorDecorator/graphic"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/customizerClassname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/treeViewClassname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/graphViewClassname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/modelAdapterClassname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/defaultPalette"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute decorators.ecore#//ClassDescriptorDecorator/labelProviderClassname"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference decorators.ecore#//ClassDescriptorDecorator/graphic"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

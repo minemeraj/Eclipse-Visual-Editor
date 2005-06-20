@@ -1,15 +1,15 @@
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore" xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
-  <palette:PaletteCmp xmi:id="cde_palette">
-    <cmpControlGroup xsi:type="palette:GroupCmp" xmi:id="control">
-      <groupLabel xsi:type="utility:TranslatableString" xmi:id="string1" key="group.Controls" bundle="bundle"/>
-      <cmpEntries xsi:type="palette:ToolEntry" xmi:id="selection" defaultEntry="true" icon16Name="platform:/plugin/com.ibm.etools.cde/images/arrow16.gif" toolClassName="org.eclipse.gef/org.eclipse.gef.tools.SelectionTool">
-        <entryLabel xsi:type="utility:TranslatableString" xmi:id="string2" key="entry.Selection" bundle="bundle"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:ToolEntry" xmi:id="marqueeselection" icon16Name="platform:/plugin/com.ibm.etools.cde/images/marquee16.gif" toolClassName="org.eclipse.gef/org.eclipse.gef.tools.MarqueeSelectionTool">
-        <entryLabel xsi:type="utility:TranslatableString" xmi:id="string4" key="entry.MarqueeSelection" bundle="bundle"/>
-      </cmpEntries>
-    </cmpControlGroup>
-  </palette:PaletteCmp>
+  <palette:Root xmi:id="cde_palette" defEntry="selection">
+    <children xsi:type="palette:Group">
+      <entryLabel xsi:type="utility:TranslatableString" key="group.Controls" bundle="bundle"/>
+      <children xsi:type="palette:ToolEntry" xmi:id="selection" icon16Name="platform:/plugin/com.ibm.etools.cde/images/arrow16.gif" toolClassName="org.eclipse.ve.cde/org.eclipse.ve.internal.cde.core.CDESelectionTool">
+        <entryLabel xsi:type="utility:TranslatableString" key="entry.Selection" bundle="bundle"/>
+      </children>
+      <children xsi:type="palette:ToolEntry" icon16Name="platform:/plugin/com.ibm.etools.cde/images/marquee16.gif" toolClassName="org.eclipse.gef/org.eclipse.gef.tools.MarqueeSelectionTool">
+        <entryLabel xsi:type="utility:TranslatableString" key="entry.MarqueeSelection" bundle="bundle"/>
+      </children>
+    </children>
+  </palette:Root>
   <utility:URLResourceBundle xmi:id="bundle" bundleName="cde_palette">
     <bundleURLs>platform:/plugin/com.ibm.etools.cde/properties/</bundleURLs>
   </utility:URLResourceBundle>

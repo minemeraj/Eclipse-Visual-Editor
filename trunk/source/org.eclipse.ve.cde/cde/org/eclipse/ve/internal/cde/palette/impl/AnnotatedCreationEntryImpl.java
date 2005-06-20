@@ -11,28 +11,24 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: AnnotatedCreationEntryImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:18:00 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-20 23:54:40 $ 
  */
 import java.util.Collection;
+import java.util.Map;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.gef.Tool;
+import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.gef.requests.CreationFactory;
+import org.eclipse.gef.tools.CreationTool;
 
 import org.eclipse.ve.internal.cde.core.AnnotationCreationFactory;
-import org.eclipse.ve.internal.cde.palette.AnnotatedCreationEntry;
-import org.eclipse.ve.internal.cde.palette.CreationToolEntry;
-import org.eclipse.ve.internal.cde.palette.ICDEToolEntry;
-import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.*;
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 
@@ -83,15 +79,6 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 		super();
 	}
 
-	public Tool getTool() {
-		if (getObjectCreationEntry() != null) {
-			CreationFactory factory = getObjectCreationEntry().createFactory();
-			factory = new AnnotationCreationFactory(getValues(), factory);
-			getObjectCreationEntry().setFactory(factory); // Put the wrappered factory back
-			return getObjectCreationEntry().getTool(); // Now get the tool with the new factory.
-		}
-		return null;
-	}
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -148,6 +135,8 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 					return basicSetEntryLabel(null, msgs);
 				case PalettePackage.ANNOTATED_CREATION_ENTRY__ENTRY_SHORT_DESCRIPTION:
 					return basicSetEntryShortDescription(null, msgs);
+				case PalettePackage.ANNOTATED_CREATION_ENTRY__STRING_PROPERTIES:
+					return ((InternalEList)getStringProperties()).basicRemove(otherEnd, msgs);
 				case PalettePackage.ANNOTATED_CREATION_ENTRY__OBJECT_CREATION_ENTRY:
 					return basicSetObjectCreationEntry(null, msgs);
 				case PalettePackage.ANNOTATED_CREATION_ENTRY__VALUES:
@@ -170,12 +159,20 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 				return getIcon16Name();
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ICON32_NAME:
 				return getIcon32Name();
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__VISIBLE:
+				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__DEFAULT_ENTRY:
 				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__ID:
+				return getId();
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__MODIFICATION:
+				return getModification();
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ENTRY_LABEL:
 				return getEntryLabel();
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				return getEntryShortDescription();
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__STRING_PROPERTIES:
+				return getStringProperties();
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__OBJECT_CREATION_ENTRY:
 				return getObjectCreationEntry();
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__VALUES:
@@ -216,12 +213,20 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__VISIBLE:
+				return visible != VISIBLE_EDEFAULT;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__DEFAULT_ENTRY:
-				return defaultEntry != DEFAULT_ENTRY_EDEFAULT;
+				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__MODIFICATION:
+				return modification != MODIFICATION_EDEFAULT;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ENTRY_LABEL:
 				return entryLabel != null;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				return entryShortDescription != null;
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__STRING_PROPERTIES:
+				return stringProperties != null && !stringProperties.isEmpty();
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__OBJECT_CREATION_ENTRY:
 				return objectCreationEntry != null;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__VALUES:
@@ -243,14 +248,27 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ICON32_NAME:
 				setIcon32Name((String)newValue);
 				return;
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__VISIBLE:
+				setVisible(((Boolean)newValue).booleanValue());
+				return;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__ID:
+				setId((String)newValue);
+				return;
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__MODIFICATION:
+				setModification((Permissions)newValue);
 				return;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)newValue);
 				return;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				setEntryShortDescription((AbstractString)newValue);
+				return;
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__STRING_PROPERTIES:
+				getStringProperties().clear();
+				getStringProperties().addAll((Collection)newValue);
 				return;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__OBJECT_CREATION_ENTRY:
 				setObjectCreationEntry((CreationToolEntry)newValue);
@@ -276,14 +294,26 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ICON32_NAME:
 				setIcon32Name(ICON32_NAME_EDEFAULT);
 				return;
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__VISIBLE:
+				setVisible(VISIBLE_EDEFAULT);
+				return;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
+				return;
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__MODIFICATION:
+				setModification(MODIFICATION_EDEFAULT);
 				return;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)null);
 				return;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				setEntryShortDescription((AbstractString)null);
+				return;
+			case PalettePackage.ANNOTATED_CREATION_ENTRY__STRING_PROPERTIES:
+				getStringProperties().clear();
 				return;
 			case PalettePackage.ANNOTATED_CREATION_ENTRY__OBJECT_CREATION_ENTRY:
 				setObjectCreationEntry((CreationToolEntry)null);
@@ -294,43 +324,16 @@ public class AnnotatedCreationEntryImpl extends AbstractToolEntryImpl implements
 		}
 		eDynamicUnset(eFeature);
 	}
-
-	private class CreationEntry extends org.eclipse.gef.palette.CreationToolEntry implements ICDEToolEntry {
-		
-		private boolean defaultEntry;
-		
-		public CreationEntry() {
-			super(null, null, null, null, null);
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.cde.palette.ICDEToolEntry#isDefaultEntry()
-		 */
-		public boolean isDefaultEntry() {
-			return defaultEntry;
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.cde.palette.ICDEToolEntry#setDefaultEntry(boolean)
-		 */
-		public void setDefaultEntry(boolean defaultEntry) {
-			this.defaultEntry = defaultEntry;
-		}
-
-		/**
-		 * @see org.eclipse.gef.palette.ToolEntry#createTool()
-		 */
-		public Tool createTool() {
-			return getTool();
-		}
-
+	
+	protected PaletteEntry createPaletteEntry() {
+		return getObjectCreationEntry().getEntry();
 	}
-
-	/**
-	 * @see org.eclipse.ve.internal.cde.palette.impl.EntryImpl#createPaletteEntry()
-	 */
-	protected ICDEToolEntry createPaletteEntry() {
-		return new CreationEntry();
+	
+	protected void configurePaletteEntry(PaletteEntry entry, Map entryToPaletteEntry) {
+		super.configurePaletteEntry(entry, entryToPaletteEntry);
+		// Now change the factory to include the annotations we have.
+		org.eclipse.gef.palette.CreationToolEntry ce = (org.eclipse.gef.palette.CreationToolEntry) entry;
+		CreationFactory cf = (CreationFactory) ce.getToolProperty(CreationTool.PROPERTY_CREATION_FACTORY);
+		ce.setToolProperty(CreationTool.PROPERTY_CREATION_FACTORY, new AnnotationCreationFactory(getValues(), cf));
 	}
-
 }

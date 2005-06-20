@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: CategoryCmp.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:18:01 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
 
 
@@ -19,11 +19,11 @@ import org.eclipse.emf.common.util.EList;
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Category Cmp</b></em>'.
- * This is a category where the groups is a composite aggregation. (i.e. it is contained within the  CategoryCmp)
+ * @deprecated Use {@link org.eclipse.ve.internal.cde.palette.Drawer} instead.
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * This is a category where the groups is a composite aggregation. (i.e. it is contained within the  CategoryCmp)
+ * This is obsolete. Use Drawer instead.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -34,7 +34,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getCategoryCmp()
- * @model 
+ * @model
  * @generated
  */
 public interface CategoryCmp extends Category{
@@ -49,6 +49,9 @@ public interface CategoryCmp extends Category{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This is obsolete. Categories can no longer contain groups.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Cmp Groups</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getCategoryCmp_CmpGroups()
 	 * @model type="org.eclipse.ve.internal.cde.palette.Group" containment="true"

@@ -11,19 +11,23 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: PaletteCmp.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:18:01 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
 
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.ve.internal.cde.utility.AbstractString;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Cmp</b></em>'.
  * This is a palette where the categories and control group are composite aggregations. (i.e. they are contained within the  PaletteComp).
+ * @deprecated Use {@link org.eclipse.ve.internal.cde.palette.Root} instead.
+ * <p>
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * This is a palette where the categories and control group are composite aggregations. (i.e. they are contained within the  PaletteComp).
+ * This is obsolete. Use Root instead.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -31,14 +35,15 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.cde.palette.PaletteCmp#getCmpCategories <em>Cmp Categories</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.cde.palette.PaletteCmp#getCmpControlGroup <em>Cmp Control Group</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.cde.palette.PaletteCmp#getPaletteLabel <em>Palette Label</em>}</li>
  * </ul>
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getPaletteCmp()
- * @model 
+ * @model
  * @generated
  */
-public interface PaletteCmp extends Palette{
+public interface PaletteCmp extends Root{
 
 
 	/**
@@ -50,6 +55,9 @@ public interface PaletteCmp extends Palette{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This is obsolete. Add to Container.children instead.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Cmp Categories</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getPaletteCmp_CmpCategories()
 	 * @model type="org.eclipse.ve.internal.cde.palette.Category" containment="true"
@@ -65,6 +73,9 @@ public interface PaletteCmp extends Palette{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This is obsolete. Use Container.children instead.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Cmp Control Group</em>' containment reference.
 	 * @see #setCmpControlGroup(Group)
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getPaletteCmp_CmpControlGroup()
@@ -82,5 +93,31 @@ public interface PaletteCmp extends Palette{
 	 * @generated
 	 */
 	void setCmpControlGroup(Group value);
+
+	/**
+	 * Returns the value of the '<em><b>Palette Label</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Palette Label</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Palette Label</em>' containment reference.
+	 * @see #setPaletteLabel(AbstractString)
+	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getPaletteCmp_PaletteLabel()
+	 * @model containment="true" transient="true" volatile="true"
+	 * @generated
+	 */
+	AbstractString getPaletteLabel();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.ve.internal.cde.palette.PaletteCmp#getPaletteLabel <em>Palette Label</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Palette Label</em>' containment reference.
+	 * @see #getPaletteLabel()
+	 * @generated
+	 */
+	void setPaletteLabel(AbstractString value);
 
 }

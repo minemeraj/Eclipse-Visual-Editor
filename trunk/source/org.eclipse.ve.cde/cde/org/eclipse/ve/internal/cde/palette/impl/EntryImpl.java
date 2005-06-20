@@ -11,24 +11,23 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: EntryImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:18:00 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.jface.resource.ImageDescriptor;
 
-import org.eclipse.ve.internal.cde.palette.Entry;
-import org.eclipse.ve.internal.cde.palette.ICDEToolEntry;
-import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.*;
+
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 /**
  * <!-- begin-user-doc -->
@@ -39,7 +38,10 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.EntryImpl#getIcon16Name <em>Icon16 Name</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.EntryImpl#getIcon32Name <em>Icon32 Name</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.EntryImpl#isVisible <em>Visible</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.EntryImpl#isDefaultEntry <em>Default Entry</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.EntryImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.EntryImpl#getModification <em>Modification</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.EntryImpl#getEntryLabel <em>Entry Label</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.EntryImpl#getEntryShortDescription <em>Entry Short Description</em>}</li>
  * </ul>
@@ -47,7 +49,7 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  *
  * @generated
  */
-public class EntryImpl extends EObjectImpl implements Entry {
+public abstract class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * The default value of the '{@link #getIcon16Name() <em>Icon16 Name</em>}' attribute.
@@ -92,6 +94,26 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	 */
 	protected String icon32Name = ICON32_NAME_EDEFAULT;
 	/**
+	 * The default value of the '{@link #isVisible() <em>Visible</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isVisible()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean VISIBLE_EDEFAULT = true;
+
+	/**
+	 * The cached value of the '{@link #isVisible() <em>Visible</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isVisible()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean visible = VISIBLE_EDEFAULT;
+
+	/**
 	 * The default value of the '{@link #isDefaultEntry() <em>Default Entry</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -102,14 +124,44 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected static final boolean DEFAULT_ENTRY_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isDefaultEntry() <em>Default Entry</em>}' attribute.
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isDefaultEntry()
+	 * @see #getId()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean defaultEntry = DEFAULT_ENTRY_EDEFAULT;
+	protected static final String ID_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected String id = ID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getModification() <em>Modification</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModification()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Permissions MODIFICATION_EDEFAULT = Permissions.DEFAULT_LITERAL;
+
+	/**
+	 * The cached value of the '{@link #getModification() <em>Modification</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModification()
+	 * @generated
+	 * @ordered
+	 */
+	protected Permissions modification = MODIFICATION_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getEntryLabel() <em>Entry Label</em>}' containment reference.
@@ -149,10 +201,12 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	}
 
 	/**
-	 * Answer the 16x16 IIcon for this entry.
-	 * @return IImage
+	 * Get the small icon as an ImageDescriptor.
+	 * @return
+	 * 
+	 * @since 1.1.0
 	 */
-	public ImageDescriptor getSmallIcon() {
+	protected ImageDescriptor getSmallIcon() {
 		if (fIcon16 == null && getIcon16Name() != null) {
 			try {
 				fIcon16 = ImageDescriptor.createFromURL(new URL(getIcon16Name()));
@@ -164,10 +218,12 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	}
 
 	/**
-	 * Answer the 32x32 IIcon for this entry.
-	 * @return IImage
+	 * Get the large icon as an ImageDescriptor
+	 * @return
+	 * 
+	 * @since 1.1.0
 	 */
-	public ImageDescriptor getLargeIcon() {
+	protected ImageDescriptor getLargeIcon() {
 		if (fIcon32 == null && getIcon32Name() != null) {
 			try {
 				fIcon32 = ImageDescriptor.createFromURL(new URL(getIcon32Name()));
@@ -178,13 +234,25 @@ public class EntryImpl extends EObjectImpl implements Entry {
 		return fIcon32;
 	}
 
-	public String getLabel() {
+	/**
+	 * The resolved label.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected String getLabel() {
 		return getEntryLabel() != null ? getEntryLabel().getStringValue() : ""; //$NON-NLS-1$
 	}
 
-	public String getDescription() {
-		return getEntryShortDescription() != null ? getEntryShortDescription().getStringValue() : null;
+	/**
+	 * The resolved description.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected String getDescription() {
 		// no short description is valid
+		return getEntryShortDescription() != null ? getEntryShortDescription().getStringValue() : null;
 	}
 
 	public void setIcon16Name(String value) {
@@ -194,10 +262,6 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	public void setIcon32Name(String value) {
 		fIcon32 = null;
 		this.setIcon32NameGen(value);
-	}
-
-	public boolean isDefault() {
-		return isDefaultEntry();
 	}
 
 	/**
@@ -334,8 +398,14 @@ public class EntryImpl extends EObjectImpl implements Entry {
 				return getIcon16Name();
 			case PalettePackage.ENTRY__ICON32_NAME:
 				return getIcon32Name();
+			case PalettePackage.ENTRY__VISIBLE:
+				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
 			case PalettePackage.ENTRY__DEFAULT_ENTRY:
 				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.ENTRY__ID:
+				return getId();
+			case PalettePackage.ENTRY__MODIFICATION:
+				return getModification();
 			case PalettePackage.ENTRY__ENTRY_LABEL:
 				return getEntryLabel();
 			case PalettePackage.ENTRY__ENTRY_SHORT_DESCRIPTION:
@@ -355,8 +425,14 @@ public class EntryImpl extends EObjectImpl implements Entry {
 				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
 			case PalettePackage.ENTRY__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
+			case PalettePackage.ENTRY__VISIBLE:
+				return visible != VISIBLE_EDEFAULT;
 			case PalettePackage.ENTRY__DEFAULT_ENTRY:
-				return defaultEntry != DEFAULT_ENTRY_EDEFAULT;
+				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
+			case PalettePackage.ENTRY__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case PalettePackage.ENTRY__MODIFICATION:
+				return modification != MODIFICATION_EDEFAULT;
 			case PalettePackage.ENTRY__ENTRY_LABEL:
 				return entryLabel != null;
 			case PalettePackage.ENTRY__ENTRY_SHORT_DESCRIPTION:
@@ -378,8 +454,17 @@ public class EntryImpl extends EObjectImpl implements Entry {
 			case PalettePackage.ENTRY__ICON32_NAME:
 				setIcon32Name((String)newValue);
 				return;
+			case PalettePackage.ENTRY__VISIBLE:
+				setVisible(((Boolean)newValue).booleanValue());
+				return;
 			case PalettePackage.ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.ENTRY__ID:
+				setId((String)newValue);
+				return;
+			case PalettePackage.ENTRY__MODIFICATION:
+				setModification((Permissions)newValue);
 				return;
 			case PalettePackage.ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)newValue);
@@ -404,8 +489,17 @@ public class EntryImpl extends EObjectImpl implements Entry {
 			case PalettePackage.ENTRY__ICON32_NAME:
 				setIcon32Name(ICON32_NAME_EDEFAULT);
 				return;
+			case PalettePackage.ENTRY__VISIBLE:
+				setVisible(VISIBLE_EDEFAULT);
+				return;
 			case PalettePackage.ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
+				return;
+			case PalettePackage.ENTRY__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case PalettePackage.ENTRY__MODIFICATION:
+				setModification(MODIFICATION_EDEFAULT);
 				return;
 			case PalettePackage.ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)null);
@@ -430,8 +524,12 @@ public class EntryImpl extends EObjectImpl implements Entry {
 		result.append(icon16Name);
 		result.append(", icon32Name: ");
 		result.append(icon32Name);
-		result.append(", defaultEntry: ");
-		result.append(defaultEntry);
+		result.append(", visible: ");
+		result.append(visible);
+		result.append(", id: ");
+		result.append(id);
+		result.append(", modification: ");
+		result.append(modification);
 		result.append(')');
 		return result.toString();
 	}
@@ -465,8 +563,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isDefaultEntry() {
-		return defaultEntry;
+	public boolean isVisible() {
+		return visible;
 	}
 
 	/**
@@ -474,58 +572,153 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setDefaultEntry(boolean newDefaultEntry) {
-		boolean oldDefaultEntry = defaultEntry;
-		defaultEntry = newDefaultEntry;
+	public void setVisible(boolean newVisible) {
+		boolean oldVisible = visible;
+		visible = newVisible;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__DEFAULT_ENTRY, oldDefaultEntry, defaultEntry));
+			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__VISIBLE, oldVisible, visible));
 	}
 
 	/**
-	 * @see org.eclipse.ve.internal.cde.palette.ICDEPaletteEntry#getEntry()
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 */
-	public PaletteEntry getEntry() {
-		PaletteEntry e = (PaletteEntry) createPaletteEntry();
-		if (isDefaultEntry())
-			((ICDEToolEntry) e).setDefaultEntry(true);
-		e.setDescription(getDescription());
-		e.setLabel(getLabel());
-		e.setSmallIcon(getSmallIcon());
-		ImageDescriptor large = getLargeIcon();
-		e.setLargeIcon(large == null ? getSmallIcon() : large);
-		return e;		
+	public boolean isDefaultEntry() {
+		return false;
+	}
+
+	private boolean defaultEntry;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 */
+	public void setDefaultEntry(boolean newDefaultEntry) {
+		defaultEntry = newDefaultEntry;
+		
+		// TODO when this gets deleted, delete eBasicSetContainer too.
 	}
 	
-	private static class CDEPaletteEntry extends PaletteEntry implements ICDEToolEntry {
+	protected void eBasicSetContainer(InternalEObject newContainer, int newContainerFeatureID) {
+		super.eBasicSetContainer(newContainer, newContainerFeatureID);
 		
-		private boolean defaultEntry;
-		/**
-		 * Constructor for Entry.
-		 * @param label
-		 * @param shortDescription
-		 */
-		public CDEPaletteEntry() {
-			super(null, null);
+		// This only makes sense when we are in  a palette directly (and not 
+		// through a cat). This is old code that will go away eventually.
+		// We will find the root and try to set it appropriately.
+		if (!defaultEntry || !(this instanceof AbstractToolEntry))
+			return;	// Shouldn't happen, but new root can only take an abstract tool entry as default.
+		EObject container = eContainer();
+		while (container != null) {
+			if (container instanceof Root) {
+				Root root = (Root) container;
+				if (defaultEntry)
+					root.setDefEntry((AbstractToolEntry) this);
+				break;
+			}
+			container = container.eContainer();
 		}
-
-
-		/**
-		 * @see org.eclipse.ve.internal.cde.palette.ICDEToolEntry#isDefaultEntry()
-		 */
-		public boolean isDefaultEntry() {
-			return defaultEntry;
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.cde.palette.ICDEToolEntry#setDefaultEntry(boolean)
-		 */
-		public void setDefaultEntry(boolean defaultEntry) {
-			this.defaultEntry = defaultEntry;
-		}
-
 	}
-	protected ICDEToolEntry createPaletteEntry() {
-		return new CDEPaletteEntry();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setId(String newId) {
+		String oldId = id;
+		id = newId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__ID, oldId, id));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Permissions getModification() {
+		return modification;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setModification(Permissions newModification) {
+		Permissions oldModification = modification;
+		modification = newModification == null ? MODIFICATION_EDEFAULT : newModification;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__MODIFICATION, oldModification, modification));
+	}
+
+	public final PaletteEntry getEntry() {
+		return getEntry(new HashMap());
+	}
+	
+	/**
+	 * Get the entry.
+	 * @param entryToPaletteEntry The map of cde.Entry->PaletteEntry. This is used only during construction to find the created palette entry for a given CDE EMF Entry.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected final PaletteEntry getEntry(Map entryToPaletteEntry) {
+		PaletteEntry e = createPaletteEntry();
+		entryToPaletteEntry.put(this, e);
+		configurePaletteEntry(e, entryToPaletteEntry);
+		return e;				
+	}
+	
+	/**
+	 * Subclasses should return the palette entry. After this configureEntry will be called.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected abstract PaletteEntry createPaletteEntry();
+	
+	/**
+	 * Now configure the palette entry. Subclasses should call super.configfurePaletteEntry.
+	 * 
+	 * @param entry
+	 * @param entryToPaletteEntry TODO
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void configurePaletteEntry(PaletteEntry entry, Map entryToPaletteEntry) {
+		entry.setDescription(getDescription());
+		entry.setLabel(getLabel());
+		entry.setSmallIcon(getSmallIcon());
+		ImageDescriptor large = getLargeIcon();
+		entry.setLargeIcon(large == null ? getSmallIcon() : large);	
+		entry.setVisible(isVisible());
+		entry.setId(getId());
+		if (getModification() != Permissions.DEFAULT_LITERAL) {
+			switch (getModification().getValue()) {
+				case Permissions.FULL:
+					entry.setUserModificationPermission(PaletteEntry.PERMISSION_FULL_MODIFICATION);
+					break;
+				case Permissions.HIDE_ONLY:
+					entry.setUserModificationPermission(PaletteEntry.PERMISSION_HIDE_ONLY);
+					break;
+				case Permissions.LIMITED:
+					entry.setUserModificationPermission(PaletteEntry.PERMISSION_LIMITED_MODIFICATION);
+					break;
+				case Permissions.NONE:
+					entry.setUserModificationPermission(PaletteEntry.PERMISSION_NO_MODIFICATION);
+					break;
+			}
+		}
 	}
 
 }

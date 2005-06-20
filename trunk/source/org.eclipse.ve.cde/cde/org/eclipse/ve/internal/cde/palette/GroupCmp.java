@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: GroupCmp.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:18:01 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
 
 
@@ -20,10 +20,12 @@ import org.eclipse.emf.common.util.EList;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Group Cmp</b></em>'.
  * This is a group where the entries are a composite aggregation. (i.e. it is contained within the  GroupCmp).
+ * @deprecated Use {@link org.eclipse.ve.internal.cde.palette.Group} instead.
+ * <p>
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * This is a group where the entries are a composite aggregation. (i.e. it is contained within the  GroupCmp).
+ * This is obsolete. Use Group instead.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -34,7 +36,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getGroupCmp()
- * @model 
+ * @model
  * @generated
  */
 public interface GroupCmp extends Group{
@@ -49,9 +51,12 @@ public interface GroupCmp extends Group{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This is obsolete. Use Container.children instead.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Cmp Entries</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getGroupCmp_CmpEntries()
-	 * @model type="org.eclipse.ve.internal.cde.palette.Entry" containment="true"
+	 * @model type="org.eclipse.ve.internal.cde.palette.Entry" containment="true" transient="true" volatile="true"
 	 * @generated
 	 */
 	EList getCmpEntries();

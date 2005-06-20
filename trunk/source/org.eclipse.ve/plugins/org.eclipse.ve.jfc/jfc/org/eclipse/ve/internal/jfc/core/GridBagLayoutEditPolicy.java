@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.16 $  $Date: 2005-06-07 15:30:41 $ 
+ *  $Revision: 1.17 $  $Date: 2005-06-20 23:54:32 $ 
  */
 
 import java.util.*;
@@ -387,8 +387,8 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		// We can't do this as it will have been set into the GEF composite canvas, so instead
 		// we set the Cursor.class key to null and the CDECreationTool will pick this up and
 		// dispose the cursor and revert it to a default cursor
-		if ( currentFeedbackCursor != null && request instanceof CDERequest) {
-			((CDERequest)request).put(Cursor.class,null);
+		if ( currentFeedbackCursor != null) {
+			request.getExtendedData().put(Cursor.class,null);
 		}
 	}
 
@@ -509,11 +509,11 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		fCursorHelper.showCursorFigure(fCursorFigure, absolutePosition.x, absolutePosition.y);
 		
 		// Update the cursor with the default cursor if the create request allows it
-		if ( aRequest instanceof CDERequest && ((CDERequest) aRequest).get(Cursor.class) == null ) {
+		if (aRequest.getExtendedData().containsKey(Cursor.class)) {
 			// Need to use the basic Arrow cursor so we can show the row/column number underneath it
 			// If we already have a cursor, don't create another.
 			Cursor defaultCursor = new Cursor(getHost().getViewer().getControl().getDisplay(), SWT.CURSOR_ARROW);
-			((CDERequest)aRequest).put(Cursor.class,defaultCursor);
+			aRequest.getExtendedData().put(Cursor.class,defaultCursor);
 			currentFeedbackCursor = defaultCursor;
 		}
 		

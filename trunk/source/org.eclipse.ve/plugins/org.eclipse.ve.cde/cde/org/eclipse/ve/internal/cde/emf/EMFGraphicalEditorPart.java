@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-18 19:31:37 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-20 23:54:40 $ 
  */
 
 
@@ -67,12 +67,10 @@ import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cdm.DiagramData;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.palette.Palette;
+import org.eclipse.ve.internal.cde.palette.Root;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
-import org.eclipse.ve.internal.propertysheet.AbstractPropertySheetEntry;
-import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
-import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
+import org.eclipse.ve.internal.propertysheet.*;
 import org.eclipse.ve.internal.propertysheet.command.CommandStackPropertySheetEntry;
 /**
  * Base class to use for MOG Graphical Editors.
@@ -796,7 +794,7 @@ protected PaletteRoot getPaletteRoot() {
 	String paletteHRef = getPaletteHRef();
 	if ( paletteHRef != null ) {
 		try {
-			Palette ref = (Palette) getResourceSet().getEObject(URI.createURI(paletteHRef), true);
+			Root ref = (Root) getResourceSet().getEObject(URI.createURI(paletteHRef), true);
 			return (PaletteRoot) ref.getEntry();
 		} catch (RuntimeException e) {
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e));//$NON-NLS-1$

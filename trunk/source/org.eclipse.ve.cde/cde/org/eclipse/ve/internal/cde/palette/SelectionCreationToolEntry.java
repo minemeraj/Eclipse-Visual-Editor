@@ -11,13 +11,13 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: SelectionCreationToolEntry.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:18:01 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
 
 
-import java.util.List;
+import org.eclipse.gef.EditDomain;
+import org.eclipse.gef.tools.CreationTool;
 
-import org.eclipse.ve.internal.cde.emf.EMFCreationTool;
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Selection Creation Tool Entry</b></em>'.
@@ -36,7 +36,7 @@ import org.eclipse.ve.internal.cde.emf.EMFCreationTool;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getSelectionCreationToolEntry()
- * @model 
+ * @model
  * @generated
  */
 public interface SelectionCreationToolEntry extends CreationToolEntry{
@@ -49,33 +49,20 @@ public interface SelectionCreationToolEntry extends CreationToolEntry{
 	 * info, such as the ResourceSet for creating the entry.
 	 */
 	public interface ISelector {
-		/**
-		 * Return a two element array where element [0] is the new object and
+		/** 
+		 * Called to request the selector to return the new object and type.
+		 * @param creationTool
+		 * @param domain
+		 * @return Return a two element array where element [0] is the new object and
 		 * element [1] is the type of the object (e.g. java.lang.Class if a
 		 * java object, or an EClassifier if the object is an instance of a
-		 * EMF EClassifier).
-		 *
-		 * Note: Return null if new object can't be created.
+		 * EMF EClassifier). Return <code>null</code> if object could not be created.
+		 * 
+		 * @since 1.1.0
 		 */
-		public Object[] getNewObjectAndType(SelectionCreationTool selectionCreationTool);
+		public Object[] getNewObjectAndType(CreationTool creationTool, EditDomain domain);
 	}
-	
-	/**
-	 * SelectionCreationTool
-	 */
-	public abstract static class SelectionCreationTool extends EMFCreationTool {
-				
-		/**
-		 * Return the SelectionCreationToolEntry
-		 */
-		public abstract SelectionCreationToolEntry getSelectionToolEntry();
-	}		
 		
-	/**
-	 * Return the selection history list.
-	 */
-	public List getSelectionHistory();
-	
 	/**
 	 * Returns the value of the '<em><b>Selector Class Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -85,12 +72,17 @@ public interface SelectionCreationToolEntry extends CreationToolEntry{
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * This is the classname of the selector class. It must implement the ISelector interface.
+	 * This is the classname of the selector class. It must implement the ISelector interface.  Because it is not known the namespace for the class, you need to use a special format:
+	 * <p>
+	 * <ul>
+	 * <li><b>packagename.classname</b>: This means it must be available from the default class loader. (In Eclipse, this will be the org.eclipse.ve.cde plugin. It must be visible to this to be found).
+	 * <li><b>namespace/packagename.classname</b>: This means it will be found  in the namespace. (In Eclipse the namespace is the name of a bundle. It will look within that bundle to find the class).
+	 * </ul>
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Selector Class Name</em>' attribute.
 	 * @see #setSelectorClassName(String)
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getSelectionCreationToolEntry_SelectorClassName()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getSelectorClassName();

@@ -11,24 +11,28 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: ToolEntryImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:18:00 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
-import java.text.MessageFormat;
+import java.util.Collection;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.gef.Tool;
 
-import org.eclipse.ve.internal.cde.core.CDEMessages;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.eclipse.gef.palette.PaletteEntry;
+import org.eclipse.gef.tools.SelectionTool;
+import org.eclipse.jface.resource.ImageDescriptor;
+
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
-import org.eclipse.ve.internal.cde.palette.ICDEToolEntry;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.Permissions;
 import org.eclipse.ve.internal.cde.palette.ToolEntry;
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 /**
@@ -55,9 +59,6 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 	 * @ordered
 	 */
 	protected static final String TOOL_CLASS_NAME_EDEFAULT = null;
-
-	
-	protected Tool fTool;
 
 	/**
 	 * The cached value of the '{@link #getToolClassName() <em>Tool Class Name</em>}' attribute.
@@ -87,29 +88,6 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 		return PalettePackage.eINSTANCE.getToolEntry();
 	}
 
-	public Tool getTool() {
-		if (fTool != null)
-			return fTool;
-
-		if (getToolClassName() == null)
-			return null;
-
-		// Now create the tool
-		String toolClassName = getToolClassName();
-		try {
-			return (Tool) CDEPlugin.createInstance(null, toolClassName);
-		} catch (InstantiationException e) {
-			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { toolClassName }); //$NON-NLS-1$
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
-		} catch (ClassCastException e) {
-			String msg = MessageFormat.format(CDEMessages.getString("NotInstance_EXC_"), new Object[] { toolClassName, Tool.class }); //$NON-NLS-1$
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
-		} catch (Exception e) {
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$
-		}
-		return null;
-	}
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -119,12 +97,16 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 		return toolClassName;
 	}
 
+	public void setToolClassName(String newToolClassName) {
+		toolClass = null;
+		setToolClassNameGen(newToolClassName);
+	}
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setToolClassName(String newToolClassName) {
+	public void setToolClassNameGen(String newToolClassName) {
 		String oldToolClassName = toolClassName;
 		toolClassName = newToolClassName;
 		if (eNotificationRequired())
@@ -143,6 +125,8 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 					return basicSetEntryLabel(null, msgs);
 				case PalettePackage.TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 					return basicSetEntryShortDescription(null, msgs);
+				case PalettePackage.TOOL_ENTRY__STRING_PROPERTIES:
+					return ((InternalEList)getStringProperties()).basicRemove(otherEnd, msgs);
 				default:
 					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
 			}
@@ -161,12 +145,20 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 				return getIcon16Name();
 			case PalettePackage.TOOL_ENTRY__ICON32_NAME:
 				return getIcon32Name();
+			case PalettePackage.TOOL_ENTRY__VISIBLE:
+				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
 			case PalettePackage.TOOL_ENTRY__DEFAULT_ENTRY:
 				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.TOOL_ENTRY__ID:
+				return getId();
+			case PalettePackage.TOOL_ENTRY__MODIFICATION:
+				return getModification();
 			case PalettePackage.TOOL_ENTRY__ENTRY_LABEL:
 				return getEntryLabel();
 			case PalettePackage.TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				return getEntryShortDescription();
+			case PalettePackage.TOOL_ENTRY__STRING_PROPERTIES:
+				return getStringProperties();
 			case PalettePackage.TOOL_ENTRY__TOOL_CLASS_NAME:
 				return getToolClassName();
 		}
@@ -184,12 +176,20 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
 			case PalettePackage.TOOL_ENTRY__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
+			case PalettePackage.TOOL_ENTRY__VISIBLE:
+				return visible != VISIBLE_EDEFAULT;
 			case PalettePackage.TOOL_ENTRY__DEFAULT_ENTRY:
-				return defaultEntry != DEFAULT_ENTRY_EDEFAULT;
+				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
+			case PalettePackage.TOOL_ENTRY__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case PalettePackage.TOOL_ENTRY__MODIFICATION:
+				return modification != MODIFICATION_EDEFAULT;
 			case PalettePackage.TOOL_ENTRY__ENTRY_LABEL:
 				return entryLabel != null;
 			case PalettePackage.TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				return entryShortDescription != null;
+			case PalettePackage.TOOL_ENTRY__STRING_PROPERTIES:
+				return stringProperties != null && !stringProperties.isEmpty();
 			case PalettePackage.TOOL_ENTRY__TOOL_CLASS_NAME:
 				return TOOL_CLASS_NAME_EDEFAULT == null ? toolClassName != null : !TOOL_CLASS_NAME_EDEFAULT.equals(toolClassName);
 		}
@@ -209,14 +209,27 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 			case PalettePackage.TOOL_ENTRY__ICON32_NAME:
 				setIcon32Name((String)newValue);
 				return;
+			case PalettePackage.TOOL_ENTRY__VISIBLE:
+				setVisible(((Boolean)newValue).booleanValue());
+				return;
 			case PalettePackage.TOOL_ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.TOOL_ENTRY__ID:
+				setId((String)newValue);
+				return;
+			case PalettePackage.TOOL_ENTRY__MODIFICATION:
+				setModification((Permissions)newValue);
 				return;
 			case PalettePackage.TOOL_ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)newValue);
 				return;
 			case PalettePackage.TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				setEntryShortDescription((AbstractString)newValue);
+				return;
+			case PalettePackage.TOOL_ENTRY__STRING_PROPERTIES:
+				getStringProperties().clear();
+				getStringProperties().addAll((Collection)newValue);
 				return;
 			case PalettePackage.TOOL_ENTRY__TOOL_CLASS_NAME:
 				setToolClassName((String)newValue);
@@ -238,14 +251,26 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 			case PalettePackage.TOOL_ENTRY__ICON32_NAME:
 				setIcon32Name(ICON32_NAME_EDEFAULT);
 				return;
+			case PalettePackage.TOOL_ENTRY__VISIBLE:
+				setVisible(VISIBLE_EDEFAULT);
+				return;
 			case PalettePackage.TOOL_ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
+				return;
+			case PalettePackage.TOOL_ENTRY__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case PalettePackage.TOOL_ENTRY__MODIFICATION:
+				setModification(MODIFICATION_EDEFAULT);
 				return;
 			case PalettePackage.TOOL_ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)null);
 				return;
 			case PalettePackage.TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				setEntryShortDescription((AbstractString)null);
+				return;
+			case PalettePackage.TOOL_ENTRY__STRING_PROPERTIES:
+				getStringProperties().clear();
 				return;
 			case PalettePackage.TOOL_ENTRY__TOOL_CLASS_NAME:
 				setToolClassName(TOOL_CLASS_NAME_EDEFAULT);
@@ -269,41 +294,33 @@ public class ToolEntryImpl extends AbstractToolEntryImpl implements ToolEntry {
 		return result.toString();
 	}
 
-	private class CDEToolEntry extends org.eclipse.gef.palette.ToolEntry implements ICDEToolEntry {
-		
-		private boolean defaultEntry;
-		
-		public CDEToolEntry() {
-			super(null, null, null, null);
+	private Class toolClass;
+	private Class getToolClass() {
+		if (toolClass == null) {
+			String toolClassName = getToolClassName();
+			if (toolClassName != null) {
+				try {
+					toolClass = CDEPlugin.getClassFromString(toolClassName);
+				} catch (ClassNotFoundException e) {
+				}
+			}
+			if (toolClass == null) {
+				toolClass = SelectionTool.class;
+			}
 		}
-
-		/**
-		 * @see org.eclipse.ve.internal.cde.palette.ICDEToolEntry#isDefaultEntry()
-		 */
-		public boolean isDefaultEntry() {
-			return defaultEntry;
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.cde.palette.ICDEToolEntry#setDefaultEntry(boolean)
-		 */
-		public void setDefaultEntry(boolean defaultEntry) {
-			this.defaultEntry = defaultEntry;
-		}
-
-		/**
-		 * @see org.eclipse.gef.palette.ToolEntry#createTool()
-		 */
-		public Tool createTool() {
-			return getTool();
-		}
-
+		return toolClass;
 	}
-	/**
-	 * @see org.eclipse.ve.internal.cde.palette.impl.EntryImpl#createPaletteEntry()
-	 */
-	protected ICDEToolEntry createPaletteEntry() {
-		return new CDEToolEntry();
+	
+	private static class GenericToolEntry extends org.eclipse.gef.palette.ToolEntry {
+		public GenericToolEntry(String label, String description, ImageDescriptor iconSmall, ImageDescriptor iconLarge, Class tool) {
+			super(label, description, iconSmall, iconLarge, tool);
+		}
 	}
+	
+	protected PaletteEntry createPaletteEntry() {
+		// Need to return an inner class because ToolEntry is abstract, even though it says it doesn't need to be.
+		return new GenericToolEntry(getLabel(), getDescription(), getSmallIcon(), getLargeIcon(), getToolClass());
+	}
+
 
 }

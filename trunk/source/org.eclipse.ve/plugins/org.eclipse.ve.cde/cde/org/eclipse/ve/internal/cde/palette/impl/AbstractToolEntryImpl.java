@@ -11,16 +11,31 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractToolEntryImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:18:00 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-20 23:54:40 $ 
  */
+import java.util.Collection;
+
+import java.util.*;
+
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EMap;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.gef.Tool;
+
+import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
+
+import org.eclipse.emf.ecore.util.EcoreEMap;
+import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.gef.palette.PaletteEntry;
+import org.eclipse.gef.palette.ToolEntry;
 
 import org.eclipse.ve.internal.cde.palette.AbstractToolEntry;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.Permissions;
+
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 /**
@@ -28,6 +43,10 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  * An implementation of the model object '<em><b>Abstract Tool Entry</b></em>'.
  * <!-- end-user-doc -->
  * <p>
+ * The following features are implemented:
+ * <ul>
+ *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.AbstractToolEntryImpl#getStringProperties <em>String Properties</em>}</li>
+ * </ul>
  * </p>
  *
  * @generated
@@ -37,6 +56,16 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 
 	
 	
+	/**
+	 * The cached value of the '{@link #getStringProperties() <em>String Properties</em>}' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStringProperties()
+	 * @generated
+	 * @ordered
+	 */
+	protected EMap stringProperties = null;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -60,6 +89,18 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EMap getStringProperties() {
+		if (stringProperties == null) {
+			stringProperties = new EcoreEMap(EcorePackage.eINSTANCE.getEStringToStringMapEntry(), EStringToStringMapEntryImpl.class, this, PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES);
+		}
+		return stringProperties;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
 		if (featureID >= 0) {
 			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
@@ -67,6 +108,8 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 					return basicSetEntryLabel(null, msgs);
 				case PalettePackage.ABSTRACT_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 					return basicSetEntryShortDescription(null, msgs);
+				case PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES:
+					return ((InternalEList)getStringProperties()).basicRemove(otherEnd, msgs);
 				default:
 					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
 			}
@@ -85,12 +128,20 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 				return getIcon16Name();
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ICON32_NAME:
 				return getIcon32Name();
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__VISIBLE:
+				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__DEFAULT_ENTRY:
 				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__ID:
+				return getId();
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__MODIFICATION:
+				return getModification();
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ENTRY_LABEL:
 				return getEntryLabel();
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				return getEntryShortDescription();
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES:
+				return getStringProperties();
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -108,14 +159,27 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ICON32_NAME:
 				setIcon32Name((String)newValue);
 				return;
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__VISIBLE:
+				setVisible(((Boolean)newValue).booleanValue());
+				return;
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__ID:
+				setId((String)newValue);
+				return;
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__MODIFICATION:
+				setModification((Permissions)newValue);
 				return;
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)newValue);
 				return;
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				setEntryShortDescription((AbstractString)newValue);
+				return;
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES:
+				getStringProperties().clear();
+				getStringProperties().addAll((Collection)newValue);
 				return;
 		}
 		eDynamicSet(eFeature, newValue);
@@ -134,14 +198,26 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ICON32_NAME:
 				setIcon32Name(ICON32_NAME_EDEFAULT);
 				return;
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__VISIBLE:
+				setVisible(VISIBLE_EDEFAULT);
+				return;
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
+				return;
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__MODIFICATION:
+				setModification(MODIFICATION_EDEFAULT);
 				return;
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)null);
 				return;
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				setEntryShortDescription((AbstractString)null);
+				return;
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES:
+				getStringProperties().clear();
 				return;
 		}
 		eDynamicUnset(eFeature);
@@ -158,18 +234,32 @@ public abstract class AbstractToolEntryImpl extends EntryImpl implements Abstrac
 				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__VISIBLE:
+				return visible != VISIBLE_EDEFAULT;
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__DEFAULT_ENTRY:
-				return defaultEntry != DEFAULT_ENTRY_EDEFAULT;
+				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__MODIFICATION:
+				return modification != MODIFICATION_EDEFAULT;
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ENTRY_LABEL:
 				return entryLabel != null;
 			case PalettePackage.ABSTRACT_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				return entryShortDescription != null;
+			case PalettePackage.ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES:
+				return stringProperties != null && !stringProperties.isEmpty();
 		}
 		return eDynamicIsSet(eFeature);
 	}
 
-	public Tool getTool() {
-		throw new IllegalStateException("Must be implemented by subclass"); //$NON-NLS-1$
+	protected void configurePaletteEntry(PaletteEntry entry, Map entryToPaletteEntry) {
+		super.configurePaletteEntry(entry, entryToPaletteEntry);
+		if (eIsSet(PalettePackage.eINSTANCE.getAbstractToolEntry_StringProperties())) {
+			ToolEntry toolEntry = (ToolEntry) entry;
+			for (Iterator iter = getStringProperties().entrySet().iterator(); iter.hasNext();) {
+				Map.Entry properties = (Map.Entry) iter.next();
+				toolEntry.setToolProperty(properties.getKey(), properties.getValue());
+			}
+		}
 	}
-
 }

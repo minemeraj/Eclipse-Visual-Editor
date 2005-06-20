@@ -11,8 +11,10 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFPrototypeToolEntryImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:18:00 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-20 23:54:40 $ 
  */
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
@@ -20,11 +22,15 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.InternalEList;
+
 import org.eclipse.gef.requests.CreationFactory;
 
 import org.eclipse.ve.internal.cde.emf.EMFPrototypeCreationFactory;
 import org.eclipse.ve.internal.cde.palette.EMFPrototypeToolEntry;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.Permissions;
+
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 /**
@@ -98,12 +104,22 @@ public class EMFPrototypeToolEntryImpl extends CreationToolEntryImpl implements 
 				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__VISIBLE:
+				return visible != VISIBLE_EDEFAULT;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__DEFAULT_ENTRY:
-				return defaultEntry != DEFAULT_ENTRY_EDEFAULT;
+				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__MODIFICATION:
+				return modification != MODIFICATION_EDEFAULT;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ENTRY_LABEL:
 				return entryLabel != null;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				return entryShortDescription != null;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__STRING_PROPERTIES:
+				return stringProperties != null && !stringProperties.isEmpty();
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__KEYED_VALUES:
+				return keyedValues != null && !keyedValues.isEmpty();
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__PROTOTYPE_URI:
 				return PROTOTYPE_URI_EDEFAULT == null ? prototypeURI != null : !PROTOTYPE_URI_EDEFAULT.equals(prototypeURI);
 		}
@@ -123,14 +139,31 @@ public class EMFPrototypeToolEntryImpl extends CreationToolEntryImpl implements 
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ICON32_NAME:
 				setIcon32Name((String)newValue);
 				return;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__VISIBLE:
+				setVisible(((Boolean)newValue).booleanValue());
+				return;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ID:
+				setId((String)newValue);
+				return;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__MODIFICATION:
+				setModification((Permissions)newValue);
 				return;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)newValue);
 				return;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				setEntryShortDescription((AbstractString)newValue);
+				return;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__STRING_PROPERTIES:
+				getStringProperties().clear();
+				getStringProperties().addAll((Collection)newValue);
+				return;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__KEYED_VALUES:
+				getKeyedValues().clear();
+				getKeyedValues().addAll((Collection)newValue);
 				return;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__PROTOTYPE_URI:
 				setPrototypeURI((String)newValue);
@@ -152,14 +185,29 @@ public class EMFPrototypeToolEntryImpl extends CreationToolEntryImpl implements 
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ICON32_NAME:
 				setIcon32Name(ICON32_NAME_EDEFAULT);
 				return;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__VISIBLE:
+				setVisible(VISIBLE_EDEFAULT);
+				return;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
+				return;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__MODIFICATION:
+				setModification(MODIFICATION_EDEFAULT);
 				return;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)null);
 				return;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				setEntryShortDescription((AbstractString)null);
+				return;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__STRING_PROPERTIES:
+				getStringProperties().clear();
+				return;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__KEYED_VALUES:
+				getKeyedValues().clear();
 				return;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__PROTOTYPE_URI:
 				setPrototypeURI(PROTOTYPE_URI_EDEFAULT);
@@ -201,6 +249,10 @@ public class EMFPrototypeToolEntryImpl extends CreationToolEntryImpl implements 
 					return basicSetEntryLabel(null, msgs);
 				case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 					return basicSetEntryShortDescription(null, msgs);
+				case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__STRING_PROPERTIES:
+					return ((InternalEList)getStringProperties()).basicRemove(otherEnd, msgs);
+				case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__KEYED_VALUES:
+					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
 				default:
 					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
 			}
@@ -219,12 +271,22 @@ public class EMFPrototypeToolEntryImpl extends CreationToolEntryImpl implements 
 				return getIcon16Name();
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ICON32_NAME:
 				return getIcon32Name();
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__VISIBLE:
+				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__DEFAULT_ENTRY:
 				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ID:
+				return getId();
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__MODIFICATION:
+				return getModification();
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ENTRY_LABEL:
 				return getEntryLabel();
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				return getEntryShortDescription();
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__STRING_PROPERTIES:
+				return getStringProperties();
+			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__KEYED_VALUES:
+				return getKeyedValues();
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY__PROTOTYPE_URI:
 				return getPrototypeURI();
 		}

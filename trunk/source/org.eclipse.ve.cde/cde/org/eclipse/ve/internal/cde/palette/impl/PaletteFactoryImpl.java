@@ -12,7 +12,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: PaletteFactoryImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:18:00 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
 import org.eclipse.ve.internal.cde.palette.*;
 
@@ -31,7 +31,7 @@ import org.eclipse.gef.requests.CreationFactory;
  */
 public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	/**
-	 * Creates and instance of the factory.
+	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -47,18 +47,19 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	 */
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case PalettePackage.ENTRY: return createEntry();
+			case PalettePackage.ROOT: return createRoot();
+			case PalettePackage.GROUP: return createGroup();
 			case PalettePackage.TOOL_ENTRY: return createToolEntry();
-			case PalettePackage.PALETTE_REF: return createPaletteRef();
 			case PalettePackage.PALETTE_CMP: return createPaletteCmp();
-			case PalettePackage.CATEGORY_REF: return createCategoryRef();
 			case PalettePackage.CATEGORY_CMP: return createCategoryCmp();
 			case PalettePackage.GROUP_CMP: return createGroupCmp();
-			case PalettePackage.GROUP_REF: return createGroupRef();
 			case PalettePackage.EMF_CREATION_TOOL_ENTRY: return createEMFCreationToolEntry();
 			case PalettePackage.EMF_PROTOTYPE_TOOL_ENTRY: return createEMFPrototypeToolEntry();
 			case PalettePackage.ANNOTATED_CREATION_ENTRY: return createAnnotatedCreationEntry();
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY: return createSelectionCreationToolEntry();
+			case PalettePackage.DRAWER: return createDrawer();
+			case PalettePackage.STACK: return createStack();
+			case PalettePackage.SEPARATOR: return createSeparator();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -71,6 +72,16 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	 */
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
+			case PalettePackage.PERMISSIONS: {
+				Permissions result = Permissions.get(initialValue);
+				if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+				return result;
+			}
+			case PalettePackage.INITIAL_STATE: {
+				InitialState result = InitialState.get(initialValue);
+				if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+				return result;
+			}
 			case PalettePackage.CREATION_FACTORY:
 				return createCreationFactoryFromString(eDataType, initialValue);
 			default:
@@ -85,6 +96,10 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	 */
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
+			case PalettePackage.PERMISSIONS:
+				return instanceValue == null ? null : instanceValue.toString();
+			case PalettePackage.INITIAL_STATE:
+				return instanceValue == null ? null : instanceValue.toString();
 			case PalettePackage.CREATION_FACTORY:
 				return convertCreationFactoryToString(eDataType, instanceValue);
 			default:
@@ -97,9 +112,19 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Entry createEntry() {
-		EntryImpl entry = new EntryImpl();
-		return entry;
+	public Root createRoot() {
+		RootImpl root = new RootImpl();
+		return root;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Group createGroup() {
+		GroupImpl group = new GroupImpl();
+		return group;
 	}
 
 	/**
@@ -117,29 +142,9 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PaletteRef createPaletteRef() {
-		PaletteRefImpl paletteRef = new PaletteRefImpl();
-		return paletteRef;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public PaletteCmp createPaletteCmp() {
 		PaletteCmpImpl paletteCmp = new PaletteCmpImpl();
 		return paletteCmp;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public CategoryRef createCategoryRef() {
-		CategoryRefImpl categoryRef = new CategoryRefImpl();
-		return categoryRef;
 	}
 
 	/**
@@ -160,16 +165,6 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	public GroupCmp createGroupCmp() {
 		GroupCmpImpl groupCmp = new GroupCmpImpl();
 		return groupCmp;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public GroupRef createGroupRef() {
-		GroupRefImpl groupRef = new GroupRefImpl();
-		return groupRef;
 	}
 
 	/**
@@ -217,6 +212,36 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Drawer createDrawer() {
+		DrawerImpl drawer = new DrawerImpl();
+		return drawer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Stack createStack() {
+		StackImpl stack = new StackImpl();
+		return stack;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Separator createSeparator() {
+		SeparatorImpl separator = new SeparatorImpl();
+		return separator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public CreationFactory createCreationFactoryFromString(EDataType eDataType, String initialValue) {
 		return (CreationFactory)super.createFromString(eDataType, initialValue);
 	}
@@ -248,4 +273,5 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	public static PalettePackage getPackage() {
 		return PalettePackage.eINSTANCE;
 	}
+
 } //PaletteFactoryImpl
