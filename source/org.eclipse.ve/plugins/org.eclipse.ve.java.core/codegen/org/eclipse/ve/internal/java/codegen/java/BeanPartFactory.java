@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.43 $  $Date: 2005-05-26 22:14:05 $ 
+ *  $Revision: 1.44 $  $Date: 2005-06-20 13:43:47 $ 
  */
 
 import java.util.*;
@@ -751,23 +751,6 @@ public BeanPart createThisBeanPartIfNeeded(CodeMethodRef initMethod) {
         bean.addInitMethod(initMethod) ;
      
      return bean ;	
-}
-
-
-/**
- * Update the IJavaObjectInstance initialization string
- * @deprecated Constructor decoder should update allocation from now on
- */
-public static void updateInstanceInitString(BeanPart bp) {
-    IJavaObjectInstance obj = (IJavaObjectInstance)bp.getEObject() ;
-    if (obj == null) return ;
-    CodeExpressionRef exp = bp!=null? bp.getInitExpression(): null ; 
-    // if there is no constructor decoder, initialize the allocation directly from the code
-    if (exp != null && exp.isStateSet(CodeExpressionRef.STATE_NO_MODEL)) {
-    	// we should not be here anymore !!!!!!!!
-    	if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
-    		JavaVEPlugin.log("BeanPartFactory.updateInstanceInitString(): Should not be here",Level.WARNING);    	 //$NON-NLS-1$
-    }
 }
 
 }

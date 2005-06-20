@@ -11,56 +11,36 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.17 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.18 $  $Date: 2005-06-20 13:43:47 $ 
  */
 
-import java.util.HashMap;
-import java.util.logging.Level;
-
-import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.jdt.core.dom.*;
-
-import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
-import org.eclipse.ve.internal.java.codegen.java.AnnotationDecoderAdapter;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class InstanceVariableRule implements IInstanceVariableRule, IMethodVariableRule {
-
-	static HashMap modelledBeansCache = new HashMap(200);
 
 	String fInitMethod = null;
 	boolean fInitMethodSet = false;
 
 	public boolean ignoreVariable(FieldDeclaration field, TypeResolver resolver, IVEModelInstance di) {
-		//TODO:  Need to filter arrays, 
-		//
+		if(field.getType() instanceof ArrayType)
+			return true;
 		if (resolveType(field.getType(), resolver) == null)
 			return true;	// If not resolved, ignore it.
-
-		if (isModelled(field.getType(), resolver, di))
-			return false;
-		if (AnnotationDecoderAdapter.isDeclarationParseable(field))
-			return false;
 		//TODO: support multi declerations
 		return ignoreVariable((VariableDeclaration)field.fragments().get(0), field.getType(), resolver, di);
 	}
 	
 	public boolean ignoreVariable(VariableDeclarationStatement stmt, TypeResolver resolver, IVEModelInstance di) {
-		//TODO:  Need to filter arrays, 
-		//
+		if(stmt.getType() instanceof ArrayType)
+			return true;
 		if (resolveType(stmt.getType(), resolver) == null)
 			return true;	// If not resolved, ignore it.
-		
-		if (isModelled(stmt.getType(), resolver, di))
-			return false;
-		if (AnnotationDecoderAdapter.isDeclarationParseable(stmt))
-			return false;
 		//TODO: support multi declerations
 		return ignoreVariable((VariableDeclaration)stmt.fragments().get(0), stmt.getType(), resolver, di);
 	}
@@ -83,7 +63,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 			}
 		} 
 		
-		return true;
+		return false;
 	}
 	
 	protected String resolveType(Type t, TypeResolver resolver) {
@@ -91,39 +71,7 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 		return resolved != null ? resolved.getName() : null;
 	}
 
-	/**
-	 * e.g., GridBagConstraint.  The InstanceVariableCreationRule maintains the list
-	 *       of utility objects.
-	 */
-	protected boolean isModelled(Type tp, TypeResolver resolver, IVEModelInstance di) {
-
-		String resolvedType = resolveType(tp, resolver);
-		if (resolvedType == null)
-			return false;
-		
-		// Try to bypass resolving, and isAssignableFrom
-		if (modelledBeansCache == null)
-			modelledBeansCache = new HashMap(200);
-		
-		Boolean internal = (Boolean) modelledBeansCache.get(resolvedType);
-		if (internal != null)
-			return internal.booleanValue();
-		
-		try {
-			EClassifier iClass = JavaRefFactory.eINSTANCE.reflectType(resolvedType, di.getModelResourceSet());
-			boolean result = InstanceVariableCreationRule.isModelled(iClass, iClass.eResource().getResourceSet());
-			modelledBeansCache.put(resolvedType, result ? Boolean.TRUE : Boolean.FALSE);
-			return result;
-		} catch (Exception e) {
-			if (JavaVEPlugin.isLoggingLevel(Level.FINE))
-				JavaVEPlugin.log("InstanceVariableRule.isUtility(): Could not resolve - " + resolvedType, Level.FINE); //$NON-NLS-1$
-		}
-
-		modelledBeansCache.put(resolvedType, Boolean.FALSE);
-		return false;
-	}
 	public static void clearCache() {
-		modelledBeansCache.clear();
 	}
 
 	/* (non-Javadoc)

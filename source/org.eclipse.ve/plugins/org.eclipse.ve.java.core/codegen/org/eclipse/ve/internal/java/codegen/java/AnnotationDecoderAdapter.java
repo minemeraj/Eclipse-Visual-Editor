@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.23 $  $Date: 2005-06-03 13:50:12 $ 
+ *  $Revision: 1.24 $  $Date: 2005-06-20 13:43:47 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -178,137 +178,9 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 		}
 	}
 	
-	protected static boolean isValidMetaComment(LineComment comment, String source){
-		if(	comment==null || 
-				source==null || 
-				source.length()<1 || 
-				comment.getStartPosition()<0 || 
-				(comment.getStartPosition()+comment.getLength())>source.length())
-			return false;
-		String commentSource = source.substring(comment.getStartPosition(), comment.getStartPosition()+comment.getLength());
-		String annotationSource = FreeFormAnnotationTemplate.getCurrentAnnotation(commentSource, new DefaultScannerFactory());
-		if(annotationSource!=null && annotationSource.indexOf(FreeFormAnnotationTemplate.VISUAL_INFO_DECL)>-1)
-			return true;
-		return false;
-	}
-	
-	/**
-	 * Return whether the passed in declaration's annotation has the text 'decl-index=' inside it. If this 
-	 * text is present, then the declaration should be of interest for VE. This method should have the same
-	 * behavior as isDeclarationParseable(VariableDeclarationStatement)
-	 * 
-	 * @param field 
-	 * @return
-	 * @see #isDeclarationParseable(VariableDeclarationStatement)
-	 * @since 1.0.0
-	 */
-	public static boolean isDeclarationParseable(FieldDeclaration field) {
-		try{
-			ASTNode node = field;
-			while(node!=null && !(node instanceof CompilationUnit))
-				node = node.getParent();
-			String astSource = null;
-			if (node instanceof CompilationUnit) {
-				CompilationUnit cuNode = (CompilationUnit) node;
-				Object val = cuNode.getProperty(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY);
-				if (val instanceof String) 
-					astSource = (String) val;
-			}
-			if(node!=null){
-				CompilationUnit cuNode = (CompilationUnit) node;
-				int fieldLineNumber = cuNode.lineNumber(field.getType().getStartPosition()); // we check for the type's location, cos previous comments effect the field's start position
-				List comments = ((CompilationUnit)node).getCommentList();
-				for (int cc = 0; cc < comments.size(); cc++) {
-					if (comments.get(cc) instanceof LineComment){ 
-						LineComment lineComment = (LineComment) comments.get(cc);
-						int commentLine = cuNode.lineNumber(lineComment.getStartPosition());
-						if(commentLine==fieldLineNumber){
-							return isValidMetaComment(lineComment, astSource);
-						}
-						if(commentLine==fieldLineNumber+1){
-							if(isValidMetaComment(lineComment, astSource)){
-								// This line comment is in the next line - check to see that no 
-								// other field declarations are present in that line.
-								FieldDeclaration[] fields = ((TypeDeclaration)cuNode.types().get(0)).getFields();
-								for (int fc = 0; fc < fields.length; fc++) {
-									if(	!fields[fc].equals(field) &&
-											cuNode.lineNumber(fields[fc].getType().getStartPosition())==fieldLineNumber+1)
-										return false;
-								}
-								return true;
-							}
-						}
-					}
-				}
-			}
-		}catch(Throwable e){
-			JavaVEPlugin.log(e, Level.FINE);
-		}
-		return false;
-	}
-	
-	/**
-	 * Return whether the passed in declaration's annotation has the text 'decl-index=' inside it. If this 
-	 * text is present, then the declaration should be of interest for VE. This method should have the same
-	 * behavior as isDeclarationParseable(VariableDeclarationStatement)
-	 * 
-	 * @param field 
-	 * @return
-	 * @see #isDeclarationParseable(FieldDeclaration)
-	 * @since 1.0.0
-	 */
-	public static boolean isDeclarationParseable(VariableDeclarationStatement varDecl) {
-		try{
-			ASTNode node = varDecl;
-			while(node!=null && !(node instanceof CompilationUnit))
-				node = node.getParent();
-			String astSource = null;
-			if (node instanceof CompilationUnit) {
-				CompilationUnit cuNode = (CompilationUnit) node;
-				Object val = cuNode.getProperty(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY);
-				if (val instanceof String) 
-					astSource = (String) val;
-			}
-			if(node!=null){
-				CompilationUnit cuNode = (CompilationUnit) node;
-				int fieldLineNumber = cuNode.lineNumber(varDecl.getStartPosition());
-				List comments = ((CompilationUnit)node).getCommentList();
-				for (int cc = 0; cc < comments.size(); cc++) {
-					if (comments.get(cc) instanceof LineComment){ 
-						LineComment lineComment = (LineComment) comments.get(cc);
-						int commentLine = cuNode.lineNumber(lineComment.getStartPosition());
-						if(commentLine==fieldLineNumber){
-							return isValidMetaComment(lineComment, astSource);
-						}
-						if(commentLine==fieldLineNumber+1){
-							if(isValidMetaComment(lineComment, astSource)){
-								// This line comment is in the next line - check to see that no 
-								// other field declarations are present in that line.
-								if (varDecl.getParent() instanceof Block) {
-									Block block = (Block) varDecl.getParent();
-									for(int sc=0;sc<block.statements().size();sc++){
-										Statement stmt = (Statement) block.statements().get(sc);
-										if(	!stmt.equals(varDecl) &&
-												cuNode.lineNumber(stmt.getStartPosition())==fieldLineNumber+1)
-											return false;
-									}
-									return true;
-								}
-								return false;
-							}
-						}
-					}
-				}
-			}
-		}catch(Throwable e){
-			JavaVEPlugin.log(e, Level.FINE);
-		}
-		return false;
-	}
-	
 	public static boolean isBeanVisible(String commentSource){
 		if(commentSource==null)
-			return true;
+			return false;
 		int index = commentSource.indexOf(FreeFormAnnotationTemplate.ANNOTATION_SIG, 0) ;
 		if(index<0)
 			return true;

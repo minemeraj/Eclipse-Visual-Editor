@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-31 15:33:50 $ 
+ *  $Revision: 1.16 $  $Date: 2005-06-20 13:43:47 $ 
  */
 
 import java.text.MessageFormat;
@@ -20,8 +20,6 @@ import java.util.logging.Level;
 
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
@@ -77,7 +75,8 @@ protected void	processLocalDecleration (VariableDeclarationStatement stmt) {
 	if (init instanceof ClassInstanceCreation || 
 	    init instanceof ArrayCreation ||
 	    init instanceof CastExpression || 
-	    init instanceof MethodInvocation) {
+	    init instanceof MethodInvocation || 
+	    init instanceof StringLiteral) {
 	    // Decleration and initialization
 		ExpressionVisitor v = visitorFactory.getExpressionVisitor();
 		v.initialize(fMethod,stmt,fModel,fReTryLater);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.19 $  $Date: 2005-05-11 22:41:31 $ 
+ *  $Revision: 1.20 $  $Date: 2005-06-20 13:43:47 $ 
  */
 import java.util.*;
 import java.util.Iterator;
@@ -109,7 +109,9 @@ protected void add(BeanPart toAdd,BeanPart target) throws CodeGenException {
 	  if (isChildRelationship()) {      
 	    toAdd.addBackRef(target, (EReference)fFmapper.getFeature(null)) ;
 	    target.addChild(toAdd) ;
-	  }	         
+	  }else{
+		  toAdd.addGenericBackRef(target, (EReference)fFmapper.getFeature(null)) ;
+	  }
       if(previousValue instanceof EList){
       	EList list = (EList) previousValue;
       	if(index<0)
@@ -203,7 +205,10 @@ protected boolean  addComponent () throws CodeGenException {
     if (oldAddedPart != null)
 		// If we are coming from source, the old beanpart might have been disposed - check
        if (fAddedPart != oldAddedPart && !oldAddedPart.isDisposed()) {
-       	oldAddedPart.removeBackRef(fbeanPart,true) ;
+    	   if(isChildRelationship())
+    		   oldAddedPart.removeBackRef(fbeanPart,true) ;
+    	   else
+    		   oldAddedPart.removeGenericBackRef(fbeanPart, true);
        }
           
     	          
@@ -318,7 +323,9 @@ public boolean restore() throws CodeGenException {
 		  if (isChildRelationship()) {      
 		    fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
 		    fbeanPart.addChild(fAddedPart) ;
-		  }	         
+		  }else{
+			  fAddedPart.addGenericBackRef(fbeanPart, (EReference) fFmapper.getFeature(null));
+		  }
 		  return true;
 		}
 	}		
@@ -337,6 +344,7 @@ public void removeFromModel() {
     else	
 	    parent.eUnset(sf) ; 
     fAddedPart.removeBackRef(parent,true) ;
+    fAddedPart.removeGenericBackRef(fbeanPart, true);
 }
 
 
@@ -472,6 +480,8 @@ public String generate(Object[] args) throws CodeGenException {
       if (isChildRelationship()) {
         fbeanPart.addChild(fAddedPart) ;
         fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
+      }else{
+    	  fAddedPart.addGenericBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
       }
       
 	ExpressionTemplate exp = getExpressionTemplate() ;

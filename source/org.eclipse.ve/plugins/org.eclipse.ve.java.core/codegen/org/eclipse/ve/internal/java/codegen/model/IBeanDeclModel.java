@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-18 21:15:05 $ 
+ *  $Revision: 1.15 $  $Date: 2005-06-20 13:43:47 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -122,6 +122,24 @@ public interface IBeanDeclModel extends IScannerFactory {
 	public void removeBeanDecleration (BeanPartDecleration d);
 	public BeanPartDecleration getModelDecleration(BeanPartDecleration d);
 	public BeanPartDecleration getModelDecleration(String handle);
+	
+	/**
+	 * This method returns Unreferenced beanParts which are not <i>referenced</i>.
+	 * <i>Referenced</i> beanParts are those which:
+	 * <ol>
+	 * 	<li> Have <code>modelled=true</code> in the overrides.
+	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 1. <i>(parent-child or property relationships)</i>
+	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 2. <i>(parent-child or property relationships)</i>
+	 * </ol>
+	 *  
+	 *  This API should detect BeanParts which are disconnected islands and
+	 *  return them for deactivation. This API should be called only 
+	 *  after all the decoding of expressions has finished so that the relationships
+	 *  between BeanParts is established. 
+	 *  
+	 *  @since 1.1
+	 */
+	public BeanPart[] getUnreferencedBeanParts();
 }
       
 	

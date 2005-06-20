@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.50 $  $Date: 2005-05-31 15:33:50 $ 
+ *  $Revision: 1.51 $  $Date: 2005-06-20 13:43:47 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -86,6 +86,8 @@ public class BDMMerger {
 		boolean merged = true;
 		if( mainModel != null && newModel != null ){
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
+			merged = merged && activateDeactivatedBeans() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			merged = merged && removeDeletedBeans() ;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			merged = merged && removeDeletedMethods() ;
@@ -100,6 +102,8 @@ public class BDMMerger {
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			merged = merged && mergeAllBeans() ;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
+			merged = merged && deactivateUnreferencedBeans() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			merged = merged && updateFreeForm() ;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			merged = merged && clean() ;
@@ -110,6 +114,40 @@ public class BDMMerger {
 		return merged ;
 	}
 	
+	/**
+	 * Deactivates beans which are unreferenced. Some beans might 
+	 * have been activated in #activateDeactivatedBeans() 
+	 * @return
+	 * @see #activateDeactivatedBeans()
+	 * @since 1.1
+	 */
+	private boolean deactivateUnreferencedBeans() {
+		// Determine unreferenced and deactivate
+		BeanPart[] unreferencedBPs = mainModel.getUnreferencedBeanParts();
+		for (int bpCount = 0; bpCount < unreferencedBPs.length; bpCount++) {
+			unreferencedBPs[bpCount].deactivate();
+		}
+		return true;
+	}
+
+	/**
+	 * Activate deactivated beans. Unnecessary beans will be deactivated in #deactivateUnreferencedBeans()
+	 * @see #deactivateUnreferencedBeans()
+	 * @since 1.1
+	 */
+	private boolean activateDeactivatedBeans() {
+		Iterator mainBeansItr = mainModel.getBeans().iterator();
+		while(mainBeansItr.hasNext()){
+			if (monitor.isCanceled())
+				return false;			
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
+			BeanPart mainBean = (BeanPart) mainBeansItr.next();
+			if(mainBean!=null && !mainBean.isActive())
+				mainBean.activate();
+		}
+		return true;
+	}
+
 	private int determineEquivalency(CodeExpressionRef exp1, CodeExpressionRef exp2) throws CodeGenException{
 		boolean exp1_exp2_cacheFound = false;
 		boolean exp2_exp1_cacheFound = false;
@@ -215,15 +253,16 @@ public class BDMMerger {
 	protected boolean updateFreeForm(){
 		try {
 			// Decoders have analyzed and acted on the Expressions - 
-			// it is time to hook them together withn the Compsition
-			// Model
+			// it is time to hook them together withn the Compsition Model
 			Iterator itr = mainModel.getBeans().iterator() ;
 			while (itr.hasNext()) {
 				if (monitor.isCanceled())
 					return false;
 				if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 				BeanPart bean = (BeanPart) itr.next() ;
-				connectBeanToBSC(bean,mainModel.getCompositionModel().getModelRoot()) ;				
+				if(!bean.isActive())
+					continue;
+				CodeGenUtil.addBeanToBSC(bean,mainModel.getCompositionModel().getModelRoot(), true) ;				
 				if(bean.getFFDecoder()!=null) {
 					monitor.subTask(bean.getSimpleName());
 					bean.getFFDecoder().decode();
@@ -234,29 +273,6 @@ public class BDMMerger {
 			return false;
 		}
 		return true;
-	}
-
-	protected void	connectBeanToBSC(BeanPart bp, BeanSubclassComposition bsc) throws CodeGenException {
-		boolean thisPart = bp.getSimpleName().equals(BeanPart.THIS_NAME) ? true : false ;
-
-		if(!bp.isInJVEModel())
-			bp.addToJVEModel() ;
-		if (thisPart) {
-			//TODO Is this statement needed ? if (!bsc.eIsSet(JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart()))
-			if(bsc.getThisPart()==null || !bsc.getThisPart().equals(bp.getEObject()))
-				bsc.setThisPart((IJavaObjectInstance)bp.getEObject()) ;	 
-		}else 
-			if(bp.getContainer()==null && bp.getDecleration().isInstanceVar()){
-				 if(bp.getFFDecoder().isVisualOnFreeform()){
-				 	// should be on the FF
-				 	if(!bsc.getComponents().contains(bp.getEObject()))
-				 		bsc.getComponents().add(bp.getEObject()) ;
-				 }else{
-				 	// should NOT be on the FF
-				 	if(bsc.getComponents().contains(bp.getEObject()))
-				 		bsc.getComponents().remove(bp.getEObject()) ;
-				 }
-			}
 	}
 	
 	protected boolean removeMethodRef(final CodeMethodRef m){
@@ -1242,19 +1258,6 @@ public class BDMMerger {
 				if (annotatedName != null)
 					CodeGenUtil.addAnnotatedName(an, annotatedName);
 				comp.getAnnotations().add(an);
-				try {
-					BeanPartFactory.updateInstanceInitString(newBP);
-				} catch (IllegalArgumentException e) {
-					JavaVEPlugin.log(e, Level.FINE);
-					if (!err.contains(newBP)) {
-						err.add(newBP);
-						// Children will not be connected to the VCE model
-						Iterator bItr = newBP.getChildren();
-						if (bItr != null)
-							while (bItr.hasNext())
-								err.add(bItr.next());
-					}
-				}
 			}
 		} catch (CodeGenException e) {
 			if (JavaVEPlugin.isLoggingLevel(Level.WARNING))

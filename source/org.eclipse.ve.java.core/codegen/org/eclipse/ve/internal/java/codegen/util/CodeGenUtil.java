@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.39 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.40 $  $Date: 2005-06-20 13:43:47 $ 
  */
 
 
@@ -39,8 +39,7 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
-import org.eclipse.ve.internal.jcm.JCMPackage;
-import org.eclipse.ve.internal.jcm.MemberContainer;
+import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
@@ -962,9 +961,11 @@ public static BeanPart getBeanPart (IBeanDeclModel model, String name, CodeMetho
 		  //TODO: we need to actually find the bean with an init method
 		  //      that calls this method
 		  if (beans.length>0)
-			  return beans[0];
+			  b = beans[0];
 		}
 	}
+	if(b!=null && !b.isActive())
+		b.activate();
 	return b;
 }
 
@@ -997,6 +998,73 @@ public static Collection getReferences(Object o, boolean includeO) {
 	return refs;
 }
 
+	/**
+	 * Adds the bean part to the model. The added bean part is put on the freeform only if it is
+	 * <ol>
+	 * <li> <code>THIS</code>
+	 * <li> <code>Modelled</code> and has no container <code>EObject</code>
+	 * <li> Not <code>Modelled</code>, but referenced by 2. and has <code>visual-constraint</code> in the codegen annotation
+	 * <li> Simple name starts with <code>ivj</code>
+	 * </ol>
+	 * 
+	 * @param bp
+	 * @param bsc
+	 * @param checkForExisting  When true checks for existence of the objects in model before adding
+	 * @throws CodeGenException
+	 * 
+	 * @since 1.1
+	 */
+	public static void addBeanToBSC(BeanPart bp, BeanSubclassComposition bsc, boolean checkForExisting) throws CodeGenException {
+		boolean thisPart = bp.getSimpleName().equals(BeanPart.THIS_NAME) ? true : false;
+
+		if(checkForExisting){
+			if (!bp.isInJVEModel())
+				bp.addToJVEModel();
+		}else{
+			bp.addToJVEModel();
+		}
+		
+		if (thisPart) {
+			if (bsc.eIsSet(JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart())){
+				if(!checkForExisting) 
+					throw new CodeGenException("this Already initialized"); //$NON-NLS-1$
+			}
+			if(checkForExisting){
+				if (!bsc.eIsSet(JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart())){
+					bsc.setThisPart((IJavaObjectInstance) bp.getEObject());
+				}
+			}else{
+				bsc.setThisPart((IJavaObjectInstance) bp.getEObject());
+			}
+		} else if (bp.getEObject() != null) {
+			boolean shouldBeOnFreeform = false;
+			if(bp.getSimpleName().toLowerCase().startsWith("ivj")){
+				// Compatibility with ivj..
+				if(bp.getContainer()==null)
+					shouldBeOnFreeform = true;
+			}else if (InstanceVariableCreationRule.isModelled(bp.getEObject().eClass(), bp.getModel().getCompositionModel().getModelResourceSet())) {
+				// Is modelled
+				if (bp.getContainer() == null)
+					shouldBeOnFreeform = true;
+			} else {
+				// Not modelled
+				BeanPart[] parentChildBackRefs = bp.getBackRefs();
+				BeanPart[] propertyBackRefs = bp.getGenericBackRefs();
+				if ((parentChildBackRefs != null && parentChildBackRefs.length > 0) || (propertyBackRefs != null && propertyBackRefs.length > 0)) {
+					// some references exist - does it have annotation?
+					if (bp.getFFDecoder().isVisualOnFreeform())
+						shouldBeOnFreeform = true;
+				}
+			}
+			if (shouldBeOnFreeform) {
+				if (!bsc.getComponents().contains(bp.getEObject()))
+					bsc.getComponents().add(bp.getEObject());
+			} else {
+				if (bsc.getComponents().contains(bp.getEObject()))
+					bsc.getComponents().remove(bp.getEObject());
+			}
+		}
+	}
 
 }
 

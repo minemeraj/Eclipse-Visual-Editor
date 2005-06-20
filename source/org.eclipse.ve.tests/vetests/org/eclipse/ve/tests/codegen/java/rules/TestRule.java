@@ -12,7 +12,7 @@ package org.eclipse.ve.tests.codegen.java.rules;
 
 /*
  *  $RCSfile: TestRule.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-15 23:59:09 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-20 13:43:43 $ 
  */
 
 import java.util.HashMap;
@@ -28,7 +28,6 @@ import org.eclipse.jem.java.JavaRefFactory;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
-import org.eclipse.ve.internal.java.codegen.java.AnnotationDecoderAdapter;
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
@@ -143,8 +142,6 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 	public boolean ignoreVariable(FieldDeclaration field, TypeResolver resolver, IVEModelInstance di) {
 		if (isModelled(field.getType(), resolver, di))
 			return false;
-		if (AnnotationDecoderAdapter.isDeclarationParseable(field))
-			return false;
 		return ignoreVariable((VariableDeclaration)field.fragments().get(0), field.getType(), resolver, di);
 	}
 
@@ -153,8 +150,6 @@ public class TestRule implements IInstanceVariableRule, IMethodVariableRule {
 	 */
 	public boolean ignoreVariable(VariableDeclarationStatement localField, TypeResolver resolver, IVEModelInstance di) {
 		if (isModelled(localField.getType(), resolver, di))
-			return false;
-		if (AnnotationDecoderAdapter.isDeclarationParseable(localField))
 			return false;
 		return ignoreVariable((VariableDeclaration)localField.fragments().get(0), localField.getType(), resolver, di);
 	}
