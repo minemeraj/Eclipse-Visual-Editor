@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.124 $  $Date: 2005-06-16 17:50:30 $ 
+ *  $Revision: 1.125 $  $Date: 2005-06-20 23:54:34 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -40,8 +40,8 @@ import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackListener;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.*;
+import org.eclipse.gef.palette.CreationToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
-import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.gef.ui.actions.*;
 import org.eclipse.gef.ui.palette.*;
 import org.eclipse.gef.ui.parts.*;
@@ -49,10 +49,10 @@ import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.gef.ui.views.palette.PalettePage;
 import org.eclipse.gef.ui.views.palette.PaletteViewerPage;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.ui.javaeditor.ClipboardOperationAction;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.IContextMenuConstants;
 import org.eclipse.jface.action.*;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.Assert;
@@ -711,8 +711,20 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		if (paletteRoot == null) {
 			try {
 				// Get the default base palette. (Basically only the control group).				
-				Palette ref = (Palette) rset.getEObject(basePaletteRoot, true);
-				paletteRoot = (PaletteRoot) ref.getEntry();
+				Resource res = rset.getResource(BASE_PALLETE, true);
+				// Find the palette root.
+				List contents = res.getContents();
+				Root root = null;
+				for (Iterator itr = contents.iterator(); itr.hasNext();) {
+					EObject obj = (EObject) itr.next();
+					if (obj instanceof Root) {
+						root = (Root) obj;
+						break;
+					}
+				}
+				if (root == null)
+					return;
+				paletteRoot = (PaletteRoot) root.getEntry();
 				// Get the two standard tools. Since we only load this part of the palette once, it can never change.
 				// TODO Need a better way of doing this that isn't so hardcoded.				
 				newChildren = paletteRoot.getChildren();
@@ -742,7 +754,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 								ptMarq.setChecked(tool == froot.getChildren().get(1));
 							
 								String msg = ""; //$NON-NLS-1$
-								if (tool.createTool() instanceof CreationTool ){
+								if (tool instanceof CreationToolEntry ){
 									msg = MessageFormat.format(CodegenEditorPartMessages.getString("JVEActionContributor.Status.Creating(label)"), new Object[]{tool.getLabel()}); //$NON-NLS-1$
 								}
 								setStatusMsg(getEditorSite().getActionBars(),msg,null);																
@@ -771,10 +783,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 		// TODO This is a huge kludge for this release. We're not handling sharing of palette or modifications. We aren't cleaning up.
 		// Now get the extension palette cats and add them.
+		// TODO We shouldn't be opening the first one all of the time. That is user customization and drawer's setting.
 		if (!paletteCategories.isEmpty()) {
 			boolean firstCat = true;
 			for (Iterator iter = paletteCategories.iterator(); iter.hasNext();) {
-				Category element = (Category) iter.next();
+				Drawer element = (Drawer) iter.next();
 				PaletteDrawer drawer = (PaletteDrawer) element.getEntry();
 				if (firstCat) {
 					drawer.setInitialState(PaletteDrawer.INITIAL_STATE_OPEN);
@@ -1057,7 +1070,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		}
 	}
 
-	private static final URI basePaletteRoot = URI.createURI("platform:/plugin/org.eclipse.ve.java.core/java_palette.xmi#java_palette"); //$NON-NLS-1$
+	private static final URI BASE_PALLETE = URI.createURI("platform:/plugin/org.eclipse.ve.java.core/java_palette.xmi"); //$NON-NLS-1$
 	/*
 	 * A default contributor that works with the palette extension point format. This here so that 
 	 * the default registration contributor can do the same thing with its palette contribution.
@@ -2262,7 +2275,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				Iterator itr = commonActionRegistry.getActions();
 				while (itr.hasNext()) {
 					RetargetTextEditorAction action = (RetargetTextEditorAction) itr.next();
-					ClipboardOperationAction replacedJavaEditorAction = (ClipboardOperationAction)replacedJavaEditorActions.get(action.getId());				
+					IAction replacedJavaEditorAction = (IAction)replacedJavaEditorActions.get(action.getId());				
 					if(replacedJavaEditorAction != null){		
 						// Popup comes directly
 						JavaVisualEditorPart.super.setAction(action.getId(),replacedJavaEditorAction);

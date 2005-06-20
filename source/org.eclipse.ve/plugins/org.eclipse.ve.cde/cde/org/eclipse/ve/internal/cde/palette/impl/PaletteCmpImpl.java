@@ -11,25 +11,19 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: PaletteCmpImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:18:00 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-20 23:54:40 $ 
  */
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.common.util.*;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.ve.internal.cde.palette.Category;
-import org.eclipse.ve.internal.cde.palette.Group;
-import org.eclipse.ve.internal.cde.palette.PaletteCmp;
-import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.*;
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 /**
@@ -41,13 +35,14 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.PaletteCmpImpl#getCmpCategories <em>Cmp Categories</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.PaletteCmpImpl#getCmpControlGroup <em>Cmp Control Group</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.PaletteCmpImpl#getPaletteLabel <em>Palette Label</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
 
-public class PaletteCmpImpl extends PaletteImpl implements PaletteCmp {
+public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 
 	
 
@@ -60,6 +55,7 @@ public class PaletteCmpImpl extends PaletteImpl implements PaletteCmp {
 	 * @ordered
 	 */
 	protected EList cmpCategories = null;
+
 	/**
 	 * The cached value of the '{@link #getCmpControlGroup() <em>Cmp Control Group</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -69,7 +65,7 @@ public class PaletteCmpImpl extends PaletteImpl implements PaletteCmp {
 	 * @ordered
 	 */
 	protected Group cmpControlGroup = null;
-	
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -88,12 +84,15 @@ public class PaletteCmpImpl extends PaletteImpl implements PaletteCmp {
 		return PalettePackage.eINSTANCE.getPaletteCmp();
 	}
 
-	protected Group getPaletteControlGroup() {
-		return getCmpControlGroup();
-	}
-
-	protected List getPaletteCategories() {
-		return getCmpCategories();
+	public EList getChildren() {
+		// We have to override so that it returns ControlGroup,Categories. This list cannot be modified.
+		EList cats = getCmpCategories();
+		Group controlGroup = getCmpControlGroup();
+		EList children = new BasicEList(((controlGroup != null) ? 1 : 0)+cats.size());
+		if (controlGroup != null)
+			children.add(controlGroup);
+		children.addAll(cats);
+		return ECollections.unmodifiableEList(children);
 	}
 	/**
 	 * <!-- begin-user-doc -->
@@ -153,17 +152,47 @@ public class PaletteCmpImpl extends PaletteImpl implements PaletteCmp {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 */
+	public AbstractString getPaletteLabel() {
+		return getEntryLabel();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 */
+	public NotificationChain basicSetPaletteLabel(AbstractString newPaletteLabel, NotificationChain msgs) {
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 */
+	public void setPaletteLabel(AbstractString newPaletteLabel) {
+		setEntryLabel(newPaletteLabel);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
 		if (featureID >= 0) {
 			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case PalettePackage.PALETTE_CMP__PALETTE_LABEL:
-					return basicSetPaletteLabel(null, msgs);
+				case PalettePackage.PALETTE_CMP__ENTRY_LABEL:
+					return basicSetEntryLabel(null, msgs);
+				case PalettePackage.PALETTE_CMP__ENTRY_SHORT_DESCRIPTION:
+					return basicSetEntryShortDescription(null, msgs);
+				case PalettePackage.PALETTE_CMP__CHILDREN:
+					return ((InternalEList)getChildren()).basicRemove(otherEnd, msgs);
 				case PalettePackage.PALETTE_CMP__CMP_CATEGORIES:
 					return ((InternalEList)getCmpCategories()).basicRemove(otherEnd, msgs);
 				case PalettePackage.PALETTE_CMP__CMP_CONTROL_GROUP:
 					return basicSetCmpControlGroup(null, msgs);
+				case PalettePackage.PALETTE_CMP__PALETTE_LABEL:
+					return basicSetPaletteLabel(null, msgs);
 				default:
 					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
 			}
@@ -178,12 +207,33 @@ public class PaletteCmpImpl extends PaletteImpl implements PaletteCmp {
 	 */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.PALETTE_CMP__PALETTE_LABEL:
-				return getPaletteLabel();
+			case PalettePackage.PALETTE_CMP__ICON16_NAME:
+				return getIcon16Name();
+			case PalettePackage.PALETTE_CMP__ICON32_NAME:
+				return getIcon32Name();
+			case PalettePackage.PALETTE_CMP__VISIBLE:
+				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.PALETTE_CMP__DEFAULT_ENTRY:
+				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.PALETTE_CMP__ID:
+				return getId();
+			case PalettePackage.PALETTE_CMP__MODIFICATION:
+				return getModification();
+			case PalettePackage.PALETTE_CMP__ENTRY_LABEL:
+				return getEntryLabel();
+			case PalettePackage.PALETTE_CMP__ENTRY_SHORT_DESCRIPTION:
+				return getEntryShortDescription();
+			case PalettePackage.PALETTE_CMP__CHILDREN:
+				return getChildren();
+			case PalettePackage.PALETTE_CMP__DEF_ENTRY:
+				if (resolve) return getDefEntry();
+				return basicGetDefEntry();
 			case PalettePackage.PALETTE_CMP__CMP_CATEGORIES:
 				return getCmpCategories();
 			case PalettePackage.PALETTE_CMP__CMP_CONTROL_GROUP:
 				return getCmpControlGroup();
+			case PalettePackage.PALETTE_CMP__PALETTE_LABEL:
+				return getPaletteLabel();
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -195,12 +245,32 @@ public class PaletteCmpImpl extends PaletteImpl implements PaletteCmp {
 	 */
 	public boolean eIsSet(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.PALETTE_CMP__PALETTE_LABEL:
-				return paletteLabel != null;
+			case PalettePackage.PALETTE_CMP__ICON16_NAME:
+				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
+			case PalettePackage.PALETTE_CMP__ICON32_NAME:
+				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
+			case PalettePackage.PALETTE_CMP__VISIBLE:
+				return visible != VISIBLE_EDEFAULT;
+			case PalettePackage.PALETTE_CMP__DEFAULT_ENTRY:
+				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
+			case PalettePackage.PALETTE_CMP__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case PalettePackage.PALETTE_CMP__MODIFICATION:
+				return modification != MODIFICATION_EDEFAULT;
+			case PalettePackage.PALETTE_CMP__ENTRY_LABEL:
+				return entryLabel != null;
+			case PalettePackage.PALETTE_CMP__ENTRY_SHORT_DESCRIPTION:
+				return entryShortDescription != null;
+			case PalettePackage.PALETTE_CMP__CHILDREN:
+				return children != null && !children.isEmpty();
+			case PalettePackage.PALETTE_CMP__DEF_ENTRY:
+				return defEntry != null;
 			case PalettePackage.PALETTE_CMP__CMP_CATEGORIES:
 				return cmpCategories != null && !cmpCategories.isEmpty();
 			case PalettePackage.PALETTE_CMP__CMP_CONTROL_GROUP:
 				return cmpControlGroup != null;
+			case PalettePackage.PALETTE_CMP__PALETTE_LABEL:
+				return getPaletteLabel() != null;
 		}
 		return eDynamicIsSet(eFeature);
 	}
@@ -212,8 +282,36 @@ public class PaletteCmpImpl extends PaletteImpl implements PaletteCmp {
 	 */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.PALETTE_CMP__PALETTE_LABEL:
-				setPaletteLabel((AbstractString)newValue);
+			case PalettePackage.PALETTE_CMP__ICON16_NAME:
+				setIcon16Name((String)newValue);
+				return;
+			case PalettePackage.PALETTE_CMP__ICON32_NAME:
+				setIcon32Name((String)newValue);
+				return;
+			case PalettePackage.PALETTE_CMP__VISIBLE:
+				setVisible(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.PALETTE_CMP__DEFAULT_ENTRY:
+				setDefaultEntry(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.PALETTE_CMP__ID:
+				setId((String)newValue);
+				return;
+			case PalettePackage.PALETTE_CMP__MODIFICATION:
+				setModification((Permissions)newValue);
+				return;
+			case PalettePackage.PALETTE_CMP__ENTRY_LABEL:
+				setEntryLabel((AbstractString)newValue);
+				return;
+			case PalettePackage.PALETTE_CMP__ENTRY_SHORT_DESCRIPTION:
+				setEntryShortDescription((AbstractString)newValue);
+				return;
+			case PalettePackage.PALETTE_CMP__CHILDREN:
+				getChildren().clear();
+				getChildren().addAll((Collection)newValue);
+				return;
+			case PalettePackage.PALETTE_CMP__DEF_ENTRY:
+				setDefEntry((AbstractToolEntry)newValue);
 				return;
 			case PalettePackage.PALETTE_CMP__CMP_CATEGORIES:
 				getCmpCategories().clear();
@@ -221,6 +319,9 @@ public class PaletteCmpImpl extends PaletteImpl implements PaletteCmp {
 				return;
 			case PalettePackage.PALETTE_CMP__CMP_CONTROL_GROUP:
 				setCmpControlGroup((Group)newValue);
+				return;
+			case PalettePackage.PALETTE_CMP__PALETTE_LABEL:
+				setPaletteLabel((AbstractString)newValue);
 				return;
 		}
 		eDynamicSet(eFeature, newValue);
@@ -233,14 +334,44 @@ public class PaletteCmpImpl extends PaletteImpl implements PaletteCmp {
 	 */
 	public void eUnset(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.PALETTE_CMP__PALETTE_LABEL:
-				setPaletteLabel((AbstractString)null);
+			case PalettePackage.PALETTE_CMP__ICON16_NAME:
+				setIcon16Name(ICON16_NAME_EDEFAULT);
+				return;
+			case PalettePackage.PALETTE_CMP__ICON32_NAME:
+				setIcon32Name(ICON32_NAME_EDEFAULT);
+				return;
+			case PalettePackage.PALETTE_CMP__VISIBLE:
+				setVisible(VISIBLE_EDEFAULT);
+				return;
+			case PalettePackage.PALETTE_CMP__DEFAULT_ENTRY:
+				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
+				return;
+			case PalettePackage.PALETTE_CMP__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case PalettePackage.PALETTE_CMP__MODIFICATION:
+				setModification(MODIFICATION_EDEFAULT);
+				return;
+			case PalettePackage.PALETTE_CMP__ENTRY_LABEL:
+				setEntryLabel((AbstractString)null);
+				return;
+			case PalettePackage.PALETTE_CMP__ENTRY_SHORT_DESCRIPTION:
+				setEntryShortDescription((AbstractString)null);
+				return;
+			case PalettePackage.PALETTE_CMP__CHILDREN:
+				getChildren().clear();
+				return;
+			case PalettePackage.PALETTE_CMP__DEF_ENTRY:
+				setDefEntry((AbstractToolEntry)null);
 				return;
 			case PalettePackage.PALETTE_CMP__CMP_CATEGORIES:
 				getCmpCategories().clear();
 				return;
 			case PalettePackage.PALETTE_CMP__CMP_CONTROL_GROUP:
 				setCmpControlGroup((Group)null);
+				return;
+			case PalettePackage.PALETTE_CMP__PALETTE_LABEL:
+				setPaletteLabel((AbstractString)null);
 				return;
 		}
 		eDynamicUnset(eFeature);

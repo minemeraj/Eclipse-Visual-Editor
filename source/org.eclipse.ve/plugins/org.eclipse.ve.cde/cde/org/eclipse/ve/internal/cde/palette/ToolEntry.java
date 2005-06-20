@@ -1,4 +1,5 @@
 package org.eclipse.ve.internal.cde.palette;
+
 /*******************************************************************************
  * Copyright (c) 2001, 2003 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
@@ -11,7 +12,7 @@ package org.eclipse.ve.internal.cde.palette;
  *******************************************************************************/
 /*
  *  $RCSfile: ToolEntry.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:18:01 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-20 23:54:40 $ 
  */
 
 
@@ -32,7 +33,7 @@ package org.eclipse.ve.internal.cde.palette;
  * @generated
  */
 
-public interface ToolEntry extends AbstractToolEntry {
+public interface ToolEntry extends AbstractToolEntry{
 
 
 	/**
@@ -43,10 +44,20 @@ public interface ToolEntry extends AbstractToolEntry {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Tool class name.
+	 * <p>
+	 * The classname of the tool entry. Because it is not known the namespace for the class, you need to use a special format:
+	 * <p>
+	 * <ul>
+	 * <li><b>packagename.classname</b>: This means it must be available from the default class loader. (In Eclipse, this will be the org.eclipse.ve.cde plugin. It must be visible to this to be found).
+	 * <li><b>namespace/packagename.classname</b>: This means it will be found  in the namespace. (In Eclipse the namespace is the name of a bundle. It will look within that bundle to find the class).
+	 * </ul>
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Tool Class Name</em>' attribute.
 	 * @see #setToolClassName(String)
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getToolEntry_ToolClassName()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getToolClassName();

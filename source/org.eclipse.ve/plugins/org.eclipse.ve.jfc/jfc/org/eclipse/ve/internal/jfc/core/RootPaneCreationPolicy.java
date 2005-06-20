@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: RootPaneCreationPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-20 23:54:32 $ 
  */
 
 import org.eclipse.emf.ecore.*;
@@ -22,7 +22,7 @@ import org.eclipse.gef.requests.CreateRequest;
 
 import org.eclipse.ve.internal.cde.core.AnnotationPolicy;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.EMFCreationTool;
+import org.eclipse.ve.internal.cde.core.CDECreationTool.CreationPolicy;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 import org.eclipse.jem.java.JavaClass;
@@ -39,7 +39,7 @@ import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
  * is a subclass of these and so should not have a content pane created.
  * 
  */
-public class RootPaneCreationPolicy implements EMFCreationTool.CreationPolicy {
+public class RootPaneCreationPolicy implements CreationPolicy {
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.emf.EMFCreationTool.CreationPolicy#getCommand(org.eclipse.gef.commands.Command, org.eclipse.ve.internal.cde.core.EditDomain, org.eclipse.gef.requests.CreateRequest)
@@ -64,14 +64,6 @@ public class RootPaneCreationPolicy implements EMFCreationTool.CreationPolicy {
 		return aCommand;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.emf.EMFCreationTool.CreationPolicy#getDefaultSuperString(org.eclipse.emf.ecore.EClass)
-	 */
-	public String getDefaultSuperString(EClass superClass) {
-		return null;
-	}
-	
-	
 	/**
 	 * Create the command into the command builder to create a content pane for the model passed in.
 	 * @param cbld

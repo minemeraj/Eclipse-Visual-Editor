@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.palette;
  *******************************************************************************/
 /*
  *  $RCSfile: PaletteFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:18:01 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-20 23:54:40 $ 
  */
  
 import org.eclipse.emf.ecore.EFactory;
@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.ve.internal.cde.palette.PalettePackage
  * @generated
  */
-public interface PaletteFactory extends EFactory {
+public interface PaletteFactory extends EFactory{
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->
@@ -34,13 +34,22 @@ public interface PaletteFactory extends EFactory {
 	PaletteFactory eINSTANCE = new org.eclipse.ve.internal.cde.palette.impl.PaletteFactoryImpl();
 
 	/**
-	 * Returns a new object of class '<em>Entry</em>'.
+	 * Returns a new object of class '<em>Root</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Entry</em>'.
+	 * @return a new object of class '<em>Root</em>'.
 	 * @generated
 	 */
-	Entry createEntry();
+	Root createRoot();
+
+	/**
+	 * Returns a new object of class '<em>Group</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Group</em>'.
+	 * @generated
+	 */
+	Group createGroup();
 
 	/**
 	 * Returns a new object of class '<em>Tool Entry</em>'.
@@ -52,15 +61,6 @@ public interface PaletteFactory extends EFactory {
 	ToolEntry createToolEntry();
 
 	/**
-	 * Returns a new object of class '<em>Ref</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Ref</em>'.
-	 * @generated
-	 */
-	PaletteRef createPaletteRef();
-
-	/**
 	 * Returns a new object of class '<em>Cmp</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -68,15 +68,6 @@ public interface PaletteFactory extends EFactory {
 	 * @generated
 	 */
 	PaletteCmp createPaletteCmp();
-
-	/**
-	 * Returns a new object of class '<em>Category Ref</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Category Ref</em>'.
-	 * @generated
-	 */
-	CategoryRef createCategoryRef();
 
 	/**
 	 * Returns a new object of class '<em>Category Cmp</em>'.
@@ -95,15 +86,6 @@ public interface PaletteFactory extends EFactory {
 	 * @generated
 	 */
 	GroupCmp createGroupCmp();
-
-	/**
-	 * Returns a new object of class '<em>Group Ref</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Group Ref</em>'.
-	 * @generated
-	 */
-	GroupRef createGroupRef();
 
 	/**
 	 * Returns a new object of class '<em>EMF Creation Tool Entry</em>'.
@@ -140,6 +122,33 @@ public interface PaletteFactory extends EFactory {
 	 * @generated
 	 */
 	SelectionCreationToolEntry createSelectionCreationToolEntry();
+
+	/**
+	 * Returns a new object of class '<em>Drawer</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Drawer</em>'.
+	 * @generated
+	 */
+	Drawer createDrawer();
+
+	/**
+	 * Returns a new object of class '<em>Stack</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stack</em>'.
+	 * @generated
+	 */
+	Stack createStack();
+
+	/**
+	 * Returns a new object of class '<em>Separator</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Separator</em>'.
+	 * @generated
+	 */
+	Separator createSeparator();
 
 	/**
 	 * Returns the package supported by this factory.

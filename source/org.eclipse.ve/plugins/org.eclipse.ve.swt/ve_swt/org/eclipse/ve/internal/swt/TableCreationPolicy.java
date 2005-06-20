@@ -10,32 +10,39 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableCreationPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-20 23:54:34 $ 
  */
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.EMFCreationTool.CreationPolicy;
+import org.eclipse.ve.internal.cde.core.CDECreationTool.CreationPolicy;
+
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
+/**
+ * Creation policy for SWT Table.
+ * <p>
+ * It, by default, sets header visible and lines visible. Unless those features are not already set.
+ * 
+ * @since 1.1.0
+ */
 public class TableCreationPolicy implements CreationPolicy {
 
-	protected String fHeaderVisible = "headerVisible"; //$NON-NLS-1$
-	protected String fLinesVisible = "linesVisible"; //$NON-NLS-1$
-	protected JavaHelpers fBooleanHelper; // The appropriate classifer for the kind of boolean.
+	protected static final String fHeaderVisible = "headerVisible"; //$NON-NLS-1$
+	protected static final String fLinesVisible = "linesVisible"; //$NON-NLS-1$
 
 	public Command getCommand(Command aCommand, final EditDomain domain, final CreateRequest createRequest) {
 		Command setTableSettingsCommand = new CommandWrapper() {
@@ -46,15 +53,20 @@ public class TableCreationPolicy implements CreationPolicy {
 
 			public void execute() {
 				IJavaObjectInstance model = (IJavaObjectInstance) createRequest.getNewObject();
-				fBooleanHelper = JavaRefFactory.eINSTANCE.reflectType("boolean", JavaEditDomainHelper.getResourceSet(domain)); //$NON-NLS-1$
-				IJavaInstance booleanObj = BeanUtilities.createJavaObject(fBooleanHelper, JavaEditDomainHelper.getResourceSet(domain), "true"); //$NON-NLS-1$
 				EStructuralFeature sf_headerVisible = model.eClass().getEStructuralFeature(fHeaderVisible);
 				EStructuralFeature sf_linesVisible = model.eClass().getEStructuralFeature(fLinesVisible);
 				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-				cb.applyAttributeSetting(model, sf_headerVisible, booleanObj);
-				booleanObj = BeanUtilities.createJavaObject(fBooleanHelper, JavaEditDomainHelper.getResourceSet(domain), "true"); //$NON-NLS-1$
-				cb.applyAttributeSetting(model, sf_linesVisible, booleanObj);
-				cb.getCommand().execute();
+				if (!model.eIsSet(sf_headerVisible)) {
+					IJavaInstance booleanObj = BeanUtilities.createJavaObject((JavaHelpers) sf_headerVisible.getEType(), JavaEditDomainHelper.getResourceSet(domain), "true"); //$NON-NLS-1$
+					cb.applyAttributeSetting(model, sf_headerVisible, booleanObj);
+				}
+				if (!model.eIsSet(sf_linesVisible)) {
+					IJavaInstance booleanObj = BeanUtilities.createJavaObject((JavaHelpers) sf_linesVisible, JavaEditDomainHelper.getResourceSet(domain), "true"); //$NON-NLS-1$
+					cb.applyAttributeSetting(model, sf_linesVisible, booleanObj);
+				}
+				command = cb.getCommand();
+				if (command != null)
+					command.execute();
 
 			}
 		};
@@ -62,10 +74,6 @@ public class TableCreationPolicy implements CreationPolicy {
 		result.append(setTableSettingsCommand);
 		result.append(aCommand);
 		return result;
-	}
-
-	public String getDefaultSuperString(EClass superClass) {
-		return null;
 	}
 
 }

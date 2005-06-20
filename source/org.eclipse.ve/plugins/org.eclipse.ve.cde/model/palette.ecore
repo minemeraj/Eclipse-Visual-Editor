@@ -1,109 +1,174 @@
-<?xml version="1.0" encoding="ASCII"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0"
-  xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="palette"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="palette"
     nsURI="http:///org/eclipse/ve/internal/cde/palette.ecore" nsPrefix="org.eclipse.ve.internal.cde.palette">
-  <eClassifiers xsi:type="ecore:EClass" name="Palette" abstract="true" eSuperTypes="#//Container">
+  <eClassifiers xsi:type="ecore:EClass" name="Root" eSuperTypes="#//Container">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This is the abstract base palette. There are two standard implementations of it:&#xD;&#xA;&#xD;&#xA;PaletteCmp: This is a palette where the categories and control group are composite aggregations. (i.e. they are contained within the  PaletteCmp).&#xD;&#xA;&#xD;&#xA;PaletteRef: This is a palette where the categories and control group are shared aggregations. (i.e. they are actually contained somewhere else and only referenced here). This type of palette allows references to pieces of other palettes to form together a new palette."/>
+      <details key="documentation" value="This is the palette root.&#xD;&#xA;&lt;p>&#xD;&#xA;Its children can be anything except a Tool or a Stack."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="paletteLabel" eType="ecore:EClass utility.ecore#//AbstractString"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="defEntry" eType="#//AbstractToolEntry">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Default Tool Entry&#xD;&#xA;&lt;p>&#xD;&#xA;The entry selected when no entry is explicitly selected."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Category" abstract="true" eSuperTypes="#//Container">
+  <eClassifiers xsi:type="ecore:EClass" name="Category" abstract="true" eSuperTypes="#//Drawer">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This is the abstract base category. There are two standard implementations of it:&#xD;&#xA;&#xD;&#xA;CategoryCmp: This is a category where the groups is a composite aggregation. (i.e. it is contained within the  CategoryCmp).&#xD;&#xA;&#xD;&#xA;CategoryRef: This is a category where the group is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of category allows references to pieces of other palettes to form together a new category."/>
+      <details key="documentation" value="This is obsolete. Use Drawer instead."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="categoryLabel" lowerBound="1"
-        eType="ecore:EClass utility.ecore#//AbstractString" containment="true"/>
+        eType="ecore:EClass utility.ecore#//AbstractString" volatile="true" transient="true"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This is obsolete. Use Entry.entryLabel instead."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Group" abstract="true" eSuperTypes="#//Container">
+  <eClassifiers xsi:type="ecore:EClass" name="Group" eSuperTypes="#//Container">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This is the abstract base group. There are two standard implementations of it:&#xD;&#xA;&#xD;&#xA;GroupCmp: This is a group where the entries are a composite aggregation. (i.e. it is contained within the  GroupCmp).&#xD;&#xA;&#xD;&#xA;GroupRef: This is a group where the entries is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of group allows references to pieces of other palettes to form together a new group."/>
+      <details key="documentation" value="This is a group. &#xD;&#xA;&lt;p>&#xD;&#xA;A group is a container that cannot be collapsed. It can accept any entry type."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="groupLabel" eType="ecore:EClass utility.ecore#//AbstractString"
-        containment="true"/>
+        volatile="true" transient="true" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This is obsolete. Use Entry.entryLabel instead."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Entry" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject #//ICDEPaletteEntry">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="icon16Name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="icon32Name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultEntry" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Entry" abstract="true" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="The root of the palette hierarchy.&#xD;&#xA;&lt;p>&#xD;&#xA;It is not abstract, but it is treated as basically abstract."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="icon16Name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The URL for the 16x16 (small) icon for the entry. If not set, then a default will be used. Some entries do not have an image as a default, others do. For example ToolEntries do not have an image while Drawers do."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="icon32Name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The URL for the 32x32 (large) icon. If not specified then the small icon will be used."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="visible" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Is entry visible? Default is true. false is useful for letting palette modifications occur and user can then turn it on."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultEntry" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        volatile="true" transient="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This is obsolete. Only here for compatibility. It is ignored. Use Palette.defaultEntry instead."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Entry ID. (optional)&#xD;&#xA;&lt;p>&#xD;&#xA;Only used for programatically inserting other palette entries. It provides a reference point for palette contributors to find and add into the section that contains this palette entry."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modification" eType="#//Permissions"
+        defaultValueLiteral="Default"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entryLabel" eType="ecore:EClass utility.ecore#//AbstractString"
-        containment="true"/>
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Label for the entry"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entryShortDescription"
-        eType="ecore:EClass utility.ecore#//AbstractString" containment="true"/>
+        eType="ecore:EClass utility.ecore#//AbstractString" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Short description for the entry (optional)"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ToolEntry" eSuperTypes="#//AbstractToolEntry">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="toolClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CreationToolEntry" abstract="true" eSuperTypes="#//AbstractToolEntry">
-    <eOperations name="createFactory" eType="#//CreationFactory">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Return the creation factory that will be used by this entry."/>
-      </eAnnotations>
-    </eOperations>
-    <eOperations name="setFactory">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Set the factory that will be used by this entry in the creation tool. This allows wrappering the factory returned by createFactory() with another one (such as the AnnotationCreationFactory)."/>
-      </eAnnotations>
-      <eParameters name="factory" eType="#//CreationFactory"/>
-    </eOperations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AbstractToolEntry" abstract="true" eSuperTypes="#//Entry"/>
-  <eClassifiers xsi:type="ecore:EClass" name="PaletteRef" eSuperTypes="#//Palette">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This is a palette where the categories and control group are shared aggregations. (i.e. they are actually contained somewhere else and only referenced here). This type of palette allows references to pieces of other palettes to form together a new palette."/>
+      <details key="documentation" value="Generic ToolEntry&#xD;&#xA;&lt;p>&#xD;&#xA;This is a generic tool entry. You will need to supply the classname and any of the properties for it.&#xD;&#xA;"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="refControlGroup" eType="#//Group"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="refCategories" upperBound="-1"
-        eType="#//Category"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="toolClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Tool class name.&#xD;&#xA;&lt;p>&#xD;&#xA;The classname of the tool entry. Because it is not known the namespace for the class, you need to use a special format:&#xD;&#xA;&lt;p>&#xD;&#xA;&lt;ul>&#xD;&#xA;&lt;li>&lt;b>packagename.classname&lt;/b>: This means it must be available from the default class loader. (In Eclipse, this will be the org.eclipse.ve.cde plugin. It must be visible to this to be found).&#xD;&#xA;&lt;li>&lt;b>namespace/packagename.classname&lt;/b>: This means it will be found  in the namespace. (In Eclipse the namespace is the name of a bundle. It will look within that bundle to find the class).&#xD;&#xA;&lt;/ul>"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PaletteCmp" eSuperTypes="#//Palette">
+  <eClassifiers xsi:type="ecore:EClass" name="CreationToolEntry" abstract="true" eSuperTypes="#//AbstractToolEntry cdm.ecore#//KeyedValueHolder">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This is a palette where the categories and control group are composite aggregations. (i.e. they are contained within the  PaletteComp)."/>
+      <details key="documentation" value="Creation Tool&#xD;&#xA;&lt;p>&#xD;&#xA;This is abstract.&#xD;&#xA;&lt;p>&#xD;&#xA;If there are any annotation values, then an annotation will be created for the object that the factory returns. The annotation values come from the mixin KeyedValueHolder.keyedValues."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractToolEntry" abstract="true" eSuperTypes="#//Entry">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Base ToolEntry."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stringProperties" upperBound="-1"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStringToStringMapEntry"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Key/Value properties.&#xD;&#xA;&lt;p>&#xD;&#xA;This is a map of property name to string property values. These will be applied to the GEF ToolEntry using the key/value setProperty method.&#xD;&#xA;&lt;p>&#xD;&#xA;If string keys and string values is not sufficient, you will need to create your own AbstractToolEntry subclass instead to supply those."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PaletteCmp" eSuperTypes="#//Root">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="This is obsolete. Use Root instead."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cmpCategories" upperBound="-1"
-        eType="#//Category" containment="true"/>
+        eType="#//Category" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This is obsolete. Add to Container.children instead."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cmpControlGroup" eType="#//Group"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CategoryRef" eSuperTypes="#//Category">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This is a catefory where the group is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of category allows references to pieces of other palettes to form together a new category."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="refGroups" upperBound="-1"
-        eType="#//Group"/>
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This is obsolete. Use Container.children instead."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="paletteLabel" eType="ecore:EClass utility.ecore#//AbstractString"
+        volatile="true" transient="true" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CategoryCmp" eSuperTypes="#//Category">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This is a category where the groups is a composite aggregation. (i.e. it is contained within the  CategoryCmp)"/>
+      <details key="documentation" value="This is obsolete. Use Drawer instead."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cmpGroups" upperBound="-1"
-        eType="#//Group" containment="true"/>
+        eType="#//Group" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This is obsolete. Categories can no longer contain groups."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GroupCmp" eSuperTypes="#//Group">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This is a group where the entries are a composite aggregation. (i.e. it is contained within the  GroupCmp)."/>
+      <details key="documentation" value="This is obsolete. Use Group instead."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cmpEntries" upperBound="-1"
-        eType="#//Entry" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GroupRef" eSuperTypes="#//Group">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This is a group where the entries is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of group allows references to pieces of other palettes to form together a new group."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="refEntries" upperBound="-1"
-        eType="#//Entry" containment="true"/>
+        eType="#//Entry" volatile="true" transient="true" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This is obsolete. Use Container.children instead."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="CreationFactory" instanceClassName="org.eclipse.gef.requests.CreationFactory"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Container" abstract="true" eSuperTypes="../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject #//ICDEPaletteEntry"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Container" abstract="true" eSuperTypes="#//Entry">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Basic Palette Container.&#xD;&#xA;&lt;p>&#xD;&#xA;It contains other entries."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
+        eType="#//Entry" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This is the children of the container. Each container subclass can limit the type of children allowed."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EMFCreationToolEntry" eSuperTypes="#//CreationToolEntry">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Creation for creating EMF instances."/>
+      <details key="documentation" value="Creation Tool for creating EMF instances given just the EMF class.&#xD;&#xA;&lt;p>&#xD;&#xA;A default empty instance with no features set will be created."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="creationClassURI" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The URI of the class for which an instance is to be created."/>
+        <details key="documentation" value="The URI of the class for which an instance is to be created. "/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -113,13 +178,13 @@
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="prototypeURI" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="This is the string containing the prototype URI for the prototype. "/>
+        <details key="documentation" value="This is the string containing the prototype URI for the prototype. &#xD;&#xA;&lt;p>&#xD;&#xA;The URI is to the object protoype that is being created. The URI must point to an EObject in a resource. That EObject must be contained directly by the Resource it is in (i.e. it mustn't be contained by another EObject). Also in the resource can be Annotations for any of the EObjects that are part of the template. These will automatically be added in."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AnnotatedCreationEntry" eSuperTypes="#//AbstractToolEntry">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This will wrapper a CreationToolEntry and provide for creating an annotation too. This is the entry that should be in the palette when an annotation entry is desired."/>
+      <details key="documentation" value="This will wrapper a CreationToolEntry and provide for creating an annotation too. This is the entry that should be in the palette when an annotation entry is desired.&#xD;&#xA;&lt;p>&#xD;&#xA;This is obsolete. The CreationToolEntry now can handle this itself."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="objectCreationEntry" lowerBound="1"
         eType="#//CreationToolEntry" containment="true"/>
@@ -133,14 +198,80 @@
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="selectorClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="This is the classname of the selector class. It must implement the ISelector interface."/>
+        <details key="documentation" value="This is the classname of the selector class. It must implement the ISelector interface.  Because it is not known the namespace for the class, you need to use a special format:&#xD;&#xA;&lt;p>&#xD;&#xA;&lt;ul>&#xD;&#xA;&lt;li>&lt;b>packagename.classname&lt;/b>: This means it must be available from the default class loader. (In Eclipse, this will be the org.eclipse.ve.cde plugin. It must be visible to this to be found).&#xD;&#xA;&lt;li>&lt;b>namespace/packagename.classname&lt;/b>: This means it will be found  in the namespace. (In Eclipse the namespace is the name of a bundle. It will look within that bundle to find the class).&#xD;&#xA;&lt;/ul>"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ICDEPaletteEntry" instanceClassName="org.eclipse.ve.internal.cde.palette.ICDEPaletteEntry"
-      abstract="true" interface="true">
+  <eClassifiers xsi:type="ecore:EClass" name="Drawer" eSuperTypes="#//Container">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="This is our CDE interface to the GEF palette."/>
+      <details key="documentation" value="Palette Drawer.&#xD;&#xA;&lt;p>&#xD;&#xA;This is a collapsable collection of entries. It accepts anything except a Group or a Drawer."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="initialState" eType="#//InitialState"
+        defaultValueLiteral="Closed"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Permissions">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="The valid modification permissions for this entry. Used in the palette customizer."/>
+    </eAnnotations>
+    <eLiterals name="Default">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This is the default permission for the entry. Each entry type has a default permission. It may different depending on the entry type."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="Full" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Full modification by the customizer is allowed."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="HideOnly" value="2">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The customizer can only hide/show the entry."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="Limited" value="3">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Limited modification is allowed. It is not allowed to move to another container or to be deleted."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="None" value="4">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="No modification is allowed."/>
+      </eAnnotations>
+    </eLiterals>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="InitialState">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Drawer initial state."/>
+    </eAnnotations>
+    <eLiterals name="Open">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Initially open."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="Closed" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Initially closed."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="PinnedOpen" value="2">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Initially pinned open."/>
+      </eAnnotations>
+    </eLiterals>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Stack" eSuperTypes="#//Container">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Stack Entry.&#xD;&#xA;&lt;p>&#xD;&#xA;A grouping of ToolEntries. They are represented by one entry on the palette and there can be a dropdown list to select from and a current active entry.&#xD;&#xA;&lt;p>&#xD;&#xA;It can only accept ToolEntries."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="activeEntry" eType="#//Entry">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The current active entry, if any. This is the entry that would be selected if the stack was selected."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Separator" eSuperTypes="#//Entry">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Palette Separator&#xD;&#xA;&lt;p>&#xD;&#xA;It is a spacer. But in addition it can be used a section marker for letting other entries be added into the section. The id of the separator can be used for this."/>
     </eAnnotations>
   </eClassifiers>
 </ecore:EPackage>

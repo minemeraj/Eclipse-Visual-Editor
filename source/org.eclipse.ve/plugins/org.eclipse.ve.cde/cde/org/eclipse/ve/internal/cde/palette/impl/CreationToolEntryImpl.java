@@ -11,32 +11,63 @@ package org.eclipse.ve.internal.cde.palette.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CreationToolEntryImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:18:00 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-20 23:54:40 $ 
  */
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EMap;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.gef.Tool;
-import org.eclipse.gef.requests.CreationFactory;
-import org.eclipse.gef.tools.CreationTool;
+import org.eclipse.emf.ecore.*;
 
-import org.eclipse.ve.internal.cde.emf.EMFCreationTool;
+import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.gef.palette.PaletteEntry;
+import org.eclipse.gef.requests.CreationFactory;
+
+
+import org.eclipse.ve.internal.cde.core.AnnotationCreationFactory;
+import org.eclipse.ve.internal.cde.core.CDECreationTool;
 import org.eclipse.ve.internal.cde.palette.CreationToolEntry;
-import org.eclipse.ve.internal.cde.palette.ICDEToolEntry;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.Permissions;
+
 import org.eclipse.ve.internal.cde.utility.AbstractString;
+
+
+import org.eclipse.ve.internal.cdm.CDMPackage;
+import org.eclipse.ve.internal.cdm.KeyedValueHolder;
+
+
+import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Creation Tool Entry</b></em>'.
  * <!-- end-user-doc -->
  * <p>
+ * The following features are implemented:
+ * <ul>
+ *   <li>{@link org.eclipse.ve.internal.cde.palette.impl.CreationToolEntryImpl#getKeyedValues <em>Keyed Values</em>}</li>
+ * </ul>
  * </p>
  *
  * @generated
  */
 public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implements CreationToolEntry {
+
+	/**
+	 * The cached value of the '{@link #getKeyedValues() <em>Keyed Values</em>}' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getKeyedValues()
+	 * @generated
+	 * @ordered
+	 */
+	protected EMap keyedValues = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -57,47 +88,19 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 	}
 
 	/**
-	 * Return the creation factory that will be used by this entry.
-	 * Overrides must return something.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 */
-	public CreationFactory createFactory() {
-		return null;
+	public EMap getKeyedValues() {
+		if (keyedValues == null) {
+			keyedValues = KeyedValueHolderHelper.createKeyedValuesEMap(this, PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES);
+		}
+		return keyedValues;
 	}
-
 	
-	protected CreationFactory factory;
-
-	protected final CreationFactory getFactory() {
-		return factory != null ? factory : createFactory();
-	}
-
-	/**
-	 * Set the factory that will be used by this entry in the creation tool. This allows wrappering the factory returned by createFactory() with another one (such as the AnnotationCreationFactory).
-	 * 
-	 */
-	public final void setFactory(CreationFactory factory) {
-		this.factory = factory;
-	}
-
-	/**
-	* Return the tool.
-	*/
-	public final Tool getTool() {
-		return createTool();
-	}
-
-	/**
-	 * Create a new tool to use for creation.
-	 * All createTool() overrides to this
-	 * method should create a new tool and should
-	 * use getFactory to get the appropriate factory.
-	 * This is because the factory may be set and
-	 * wrapper the one that normally is returned.
-	 */
-	protected Tool createTool() {
-		CreationTool tool = new EMFCreationTool();
-		tool.setFactory(getFactory());
-		return tool;
+	public EObject eObjectForURIFragmentSegment(String uriFragmentSegment) {
+		EObject eo = KeyedValueHolderHelper.eObjectForURIFragmentSegment(this, uriFragmentSegment);
+		return eo == KeyedValueHolderHelper.NOT_KEYED_VALUES_FRAGMENT ? super.eObjectForURIFragmentSegment(uriFragmentSegment) : eo;
 	}
 
 
@@ -113,6 +116,10 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 					return basicSetEntryLabel(null, msgs);
 				case PalettePackage.CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 					return basicSetEntryShortDescription(null, msgs);
+				case PalettePackage.CREATION_TOOL_ENTRY__STRING_PROPERTIES:
+					return ((InternalEList)getStringProperties()).basicRemove(otherEnd, msgs);
+				case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES:
+					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
 				default:
 					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
 			}
@@ -131,12 +138,22 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 				return getIcon16Name();
 			case PalettePackage.CREATION_TOOL_ENTRY__ICON32_NAME:
 				return getIcon32Name();
+			case PalettePackage.CREATION_TOOL_ENTRY__VISIBLE:
+				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
 			case PalettePackage.CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
 				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
+			case PalettePackage.CREATION_TOOL_ENTRY__ID:
+				return getId();
+			case PalettePackage.CREATION_TOOL_ENTRY__MODIFICATION:
+				return getModification();
 			case PalettePackage.CREATION_TOOL_ENTRY__ENTRY_LABEL:
 				return getEntryLabel();
 			case PalettePackage.CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				return getEntryShortDescription();
+			case PalettePackage.CREATION_TOOL_ENTRY__STRING_PROPERTIES:
+				return getStringProperties();
+			case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES:
+				return getKeyedValues();
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -154,14 +171,31 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 			case PalettePackage.CREATION_TOOL_ENTRY__ICON32_NAME:
 				setIcon32Name((String)newValue);
 				return;
+			case PalettePackage.CREATION_TOOL_ENTRY__VISIBLE:
+				setVisible(((Boolean)newValue).booleanValue());
+				return;
 			case PalettePackage.CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(((Boolean)newValue).booleanValue());
+				return;
+			case PalettePackage.CREATION_TOOL_ENTRY__ID:
+				setId((String)newValue);
+				return;
+			case PalettePackage.CREATION_TOOL_ENTRY__MODIFICATION:
+				setModification((Permissions)newValue);
 				return;
 			case PalettePackage.CREATION_TOOL_ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)newValue);
 				return;
 			case PalettePackage.CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				setEntryShortDescription((AbstractString)newValue);
+				return;
+			case PalettePackage.CREATION_TOOL_ENTRY__STRING_PROPERTIES:
+				getStringProperties().clear();
+				getStringProperties().addAll((Collection)newValue);
+				return;
+			case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES:
+				getKeyedValues().clear();
+				getKeyedValues().addAll((Collection)newValue);
 				return;
 		}
 		eDynamicSet(eFeature, newValue);
@@ -180,14 +214,29 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 			case PalettePackage.CREATION_TOOL_ENTRY__ICON32_NAME:
 				setIcon32Name(ICON32_NAME_EDEFAULT);
 				return;
+			case PalettePackage.CREATION_TOOL_ENTRY__VISIBLE:
+				setVisible(VISIBLE_EDEFAULT);
+				return;
 			case PalettePackage.CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
 				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
+				return;
+			case PalettePackage.CREATION_TOOL_ENTRY__ID:
+				setId(ID_EDEFAULT);
+				return;
+			case PalettePackage.CREATION_TOOL_ENTRY__MODIFICATION:
+				setModification(MODIFICATION_EDEFAULT);
 				return;
 			case PalettePackage.CREATION_TOOL_ENTRY__ENTRY_LABEL:
 				setEntryLabel((AbstractString)null);
 				return;
 			case PalettePackage.CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				setEntryShortDescription((AbstractString)null);
+				return;
+			case PalettePackage.CREATION_TOOL_ENTRY__STRING_PROPERTIES:
+				getStringProperties().clear();
+				return;
+			case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES:
+				getKeyedValues().clear();
 				return;
 		}
 		eDynamicUnset(eFeature);
@@ -204,52 +253,94 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
 			case PalettePackage.CREATION_TOOL_ENTRY__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
+			case PalettePackage.CREATION_TOOL_ENTRY__VISIBLE:
+				return visible != VISIBLE_EDEFAULT;
 			case PalettePackage.CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
-				return defaultEntry != DEFAULT_ENTRY_EDEFAULT;
+				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
+			case PalettePackage.CREATION_TOOL_ENTRY__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case PalettePackage.CREATION_TOOL_ENTRY__MODIFICATION:
+				return modification != MODIFICATION_EDEFAULT;
 			case PalettePackage.CREATION_TOOL_ENTRY__ENTRY_LABEL:
 				return entryLabel != null;
 			case PalettePackage.CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
 				return entryShortDescription != null;
+			case PalettePackage.CREATION_TOOL_ENTRY__STRING_PROPERTIES:
+				return stringProperties != null && !stringProperties.isEmpty();
+			case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES:
+				return keyedValues != null && !keyedValues.isEmpty();
 		}
 		return eDynamicIsSet(eFeature);
 	}
 
-	private class CreationEntry extends org.eclipse.gef.palette.CreationToolEntry implements ICDEToolEntry {
-		
-		private boolean defaultEntry;
-		
-		public CreationEntry() {
-			super(null, null, null, null, null);
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass) {
+		if (baseClass == KeyedValueHolder.class) {
+			switch (derivedFeatureID) {
+				case PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES: return CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES;
+				default: return -1;
+			}
 		}
-
-		/**
-		 * @see org.eclipse.ve.internal.cde.palette.ICDEToolEntry#isDefaultEntry()
-		 */
-		public boolean isDefaultEntry() {
-			return defaultEntry;
-		}
-
-		/**
-		 * @see org.eclipse.ve.internal.cde.palette.ICDEToolEntry#setDefaultEntry(boolean)
-		 */
-		public void setDefaultEntry(boolean defaultEntry) {
-			this.defaultEntry = defaultEntry;
-		}
-
-		/**
-		 * @see org.eclipse.gef.palette.ToolEntry#createTool()
-		 */
-		public Tool createTool() {
-			return getTool();
-		}
-
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
 	/**
-	 * @see org.eclipse.ve.internal.cde.palette.impl.EntryImpl#createPaletteEntry()
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
 	 */
-	protected ICDEToolEntry createPaletteEntry() {
-		return new CreationEntry();
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass) {
+		if (baseClass == KeyedValueHolder.class) {
+			switch (baseFeatureID) {
+				case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES: return PalettePackage.CREATION_TOOL_ENTRY__KEYED_VALUES;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
+
+	protected PaletteEntry createPaletteEntry() {
+		org.eclipse.gef.palette.CreationToolEntry ce = new org.eclipse.gef.palette.CreationToolEntry(getLabel(), getDescription(), getFactory(), getSmallIcon(), getLargeIcon());
+		ce.setToolClass(getCreationToolClass());
+		return ce;
+	}
+	
+	/**
+	 * Get the creation tool class to use. The default is CDECreationTool. Subclasses should override if they need a different one. Typically
+	 * a different one is not needed, the factory takes care of the needed differentiation.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected Class getCreationToolClass() {
+		return CDECreationTool.class;
+	}
+	/*
+	 * Create a new factory and wrapper it within an annotation factory if necessary.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	private CreationFactory getFactory() {
+		CreationFactory f = createFactory();
+		if (eIsSet(CDMPackage.eINSTANCE.getKeyedValueHolder_KeyedValues())) {
+			f = new AnnotationCreationFactory(getKeyedValues(), f);
+		}
+		return f;
+	}
+	/**
+	 * Create the factory for this creation tool.
+	 * <p>
+	 * <b>Note:</b> This factory may become wrappered within another factory. This other factory is used to add in any
+	 * annotations (such as NameInComposition") that may be stored in the keyed values.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected abstract CreationFactory createFactory();
 
 }

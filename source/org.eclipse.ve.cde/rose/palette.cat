@@ -1,7 +1,7 @@
 
 (object Petal
-    version    	45
-    _written   	"Rose 7.6.0109.2314"
+    version    	47
+    _written   	"Rose 8.0.0303.1400"
     charSet    	0)
 
 (object Class_Category "palette"
@@ -15,79 +15,106 @@
     quid       	"39D6847401A2"
     exportControl 	"Public"
     logical_models 	(list unit_reference_list
-	(object Class "Palette"
+	(object Class "Root"
 	    quid       	"39D6850202BF"
 	    documentation 	
-|This is the abstract base palette. There are two standard implementations of it:
-|
-|PaletteCmp: This is a palette where the categories and control group are composite aggregations. (i.e. they are contained within the  PaletteCmp).
-|
-|PaletteRef: This is a palette where the categories and control group are shared aggregations. (i.e. they are actually contained somewhere else and only referenced here). This type of palette allows references to pieces of other palettes to form together a new palette.
+|This is the palette root.
+|<p>
+|Its children can be anything except a Tool or a Stack.
 	    
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"3BAA03A10233"
-		    stereotype 	"extend"
 		    supplier   	"Logical View::palette::Container"
-		    quidu      	"3BAA027E000E"))
-	    abstract   	TRUE)
+		    quidu      	"3BAA027E000E")))
 	(object Class "Category"
 	    quid       	"39D6850B02AE"
-	    documentation 	
-|This is the abstract base category. There are two standard implementations of it:
-|
-|CategoryCmp: This is a category where the groups is a composite aggregation. (i.e. it is contained within the  CategoryCmp).
-|
-|CategoryRef: This is a category where the group is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of category allows references to pieces of other palettes to form together a new category.
-	    
+	    documentation 	"This is obsolete. Use Drawer instead."
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"3BAA02FA01CF"
-		    supplier   	"Logical View::palette::Container"
-		    quidu      	"3BAA027E000E"))
+		    supplier   	"Logical View::palette::Drawer"
+		    quidu      	"42B2E21F0274"))
 	    abstract   	TRUE)
 	(object Class "Group"
 	    quid       	"39D6851C01A4"
 	    documentation 	
-|This is the abstract base group. There are two standard implementations of it:
-|
-|GroupCmp: This is a group where the entries are a composite aggregation. (i.e. it is contained within the  GroupCmp).
-|
-|GroupRef: This is a group where the entries is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of group allows references to pieces of other palettes to form together a new group.
+|This is a group. 
+|<p>
+|A group is a container that cannot be collapsed. It can accept any entry type.
 	    
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"3BAA02F1026C"
 		    supplier   	"Logical View::palette::Container"
-		    quidu      	"3BAA027E000E"))
-	    abstract   	TRUE)
+		    quidu      	"3BAA027E000E")))
 	(object Class "Entry"
 	    quid       	"39D68521015B"
+	    documentation 	
+|The root of the palette hierarchy.
+|<p>
+|It is not abstract, but it is treated as basically abstract.
+	    
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"3E39B9250360"
 		    stereotype 	"extend"
 		    supplier   	"Logical View::ecore::EObject"
-		    quidu      	"3C4F1C860123")
-		(object Inheritance_Relationship
-		    quid       	"3EB14CE1030C"
-		    supplier   	"Logical View::palette::ICDEPaletteEntry"
-		    quidu      	"3EB14B8300A6"))
+		    quidu      	"3C4F1C860123"))
 	    class_attributes 	(list class_attribute_list
 		(object ClassAttribute "icon16Name"
 		    quid       	"39D686540012"
+		    documentation 	"The URL for the 16x16 (small) icon for the entry. If not set, then a default will be used. Some entries do not have an image as a default, others do. For example ToolEntries do not have an image while Drawers do."
 		    type       	"String"
 		    exportControl 	"Public")
 		(object ClassAttribute "icon32Name"
 		    quid       	"39D6865E00A2"
+		    documentation 	"The URL for the 32x32 (large) icon. If not specified then the small icon will be used."
 		    type       	"String"
 		    exportControl 	"Public")
-		(object ClassAttribute "defaultEntry"
-		    quid       	"3BA8FE6E0175"
+		(object ClassAttribute "visible"
+		    quid       	"42B2D7E60253"
+		    documentation 	"Is entry visible? Default is true. false is useful for letting palette modifications occur and user can then turn it on."
 		    type       	"boolean"
-		    exportControl 	"Public")))
+		    initv      	"true"
+		    exportControl 	"Public")
+		(object ClassAttribute "defaultEntry"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isTransient"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
+		    quid       	"42B2D88402C8"
+		    documentation 	"This is obsolete. Only here for compatibility. It is ignored. Use Palette.defaultEntry instead."
+		    type       	"boolean")
+		(object ClassAttribute "id"
+		    quid       	"42B2D908006F"
+		    documentation 	
+|Entry ID. (optional)
+|<p>
+|Only used for programatically inserting other palette entries. It provides a reference point for palette contributors to find and add into the section that contains this palette entry.
+		    
+		    type       	"String"
+		    exportControl 	"Public")
+		(object ClassAttribute "modification"
+		    quid       	"42B2E56A015E"
+		    type       	"Permissions"
+		    quidu      	"42B2E357034F"
+		    initv      	"Default"
+		    exportControl 	"Public"))
+	    abstract   	TRUE)
 	(object Class "ToolEntry"
 	    quid       	"39D686B4033B"
+	    documentation 	
+|Generic ToolEntry
+|<p>
+|This is a generic tool entry. You will need to supply the classname and any of the properties for it.
+|
+	    
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"39D68BFD00FC"
@@ -96,72 +123,73 @@
 	    class_attributes 	(list class_attribute_list
 		(object ClassAttribute "toolClassName"
 		    quid       	"39D688A1004B"
+		    documentation 	
+|Tool class name.
+|<p>
+|The classname of the tool entry. Because it is not known the namespace for the class, you need to use a special format:
+|<p>
+|<ul>
+|<li><b>packagename.classname</b>: This means it must be available from the default class loader. (In Eclipse, this will be the org.eclipse.ve.cde plugin. It must be visible to this to be found).
+|<li><b>namespace/packagename.classname</b>: This means it will be found  in the namespace. (In Eclipse the namespace is the name of a bundle. It will look within that bundle to find the class).
+|</ul>
+		    
 		    type       	"String"
 		    exportControl 	"Public")))
 	(object Class "CreationToolEntry"
 	    quid       	"39D686D20294"
+	    documentation 	
+|Creation Tool
+|<p>
+|This is abstract.
+|<p>
+|If there are any annotation values, then an annotation will be created for the object that the factory returns. The annotation values come from the mixin KeyedValueHolder.keyedValues.
+	    
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"39D68C070345"
+		    stereotype 	"extend"
 		    supplier   	"Logical View::palette::AbstractToolEntry"
-		    quidu      	"39DB6F4A033F"))
-	    operations 	(list Operations
-		(object Operation "createFactory"
-		    quid       	"3B5EE40A00CB"
-		    documentation 	"Return the creation factory that will be used by this entry."
-		    result     	"CreationFactory"
-		    concurrency 	"Sequential"
-		    opExportControl 	"Public"
-		    uid        	0
-		    quidu      	"3B5EE3AE019B")
-		(object Operation "setFactory"
-		    quid       	"3B5EE5F60317"
-		    documentation 	"Set the factory that will be used by this entry in the creation tool. This allows wrappering the factory returned by createFactory() with another one (such as the AnnotationCreationFactory)."
-		    parameters 	(list Parameters
-			(object Parameter "factory"
-			    quid       	"3B5EE60C01F6"
-			    type       	"CreationFactory"
-			    quidu      	"3B5EE3AE019B"))
-		    concurrency 	"Sequential"
-		    opExportControl 	"Public"
-		    uid        	0))
+		    quidu      	"39DB6F4A033F")
+		(object Inheritance_Relationship
+		    quid       	"42B2F5DA030D"
+		    supplier   	"Logical View::CDM::KeyedValueHolder"
+		    quidu      	"3B3CBBFB0013"))
 	    abstract   	TRUE)
 	(object Class "AbstractToolEntry"
 	    quid       	"39DB6F4A033F"
+	    documentation 	"Base ToolEntry."
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"39DB6F5F038F"
 		    stereotype 	"extend"
 		    supplier   	"Logical View::palette::Entry"
 		    quidu      	"39D68521015B"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "stringProperties"
+		    quid       	"42B2F231036A"
+		    documentation 	
+|Key/Value properties.
+|<p>
+|This is a map of property name to string property values. These will be applied to the GEF ToolEntry using the key/value setProperty method.
+|<p>
+|If string keys and string values is not sufficient, you will need to create your own AbstractToolEntry subclass instead to supply those.
+		    
+		    stereotype 	"0..*"
+		    type       	"EStringToStringMapEntry"
+		    quidu      	"3DA69D3C00F6"
+		    exportControl 	"Public"))
 	    abstract   	TRUE)
-	(object Class "PaletteRef"
-	    quid       	"3AE82D6C002C"
-	    documentation 	"This is a palette where the categories and control group are shared aggregations. (i.e. they are actually contained somewhere else and only referenced here). This type of palette allows references to pieces of other palettes to form together a new palette."
-	    superclasses 	(list inheritance_relationship_list
-		(object Inheritance_Relationship
-		    quid       	"3AE82D7C0007"
-		    supplier   	"Logical View::palette::Palette"
-		    quidu      	"39D6850202BF")))
 	(object Class "PaletteCmp"
 	    quid       	"3AE83079006B"
-	    documentation 	"This is a palette where the categories and control group are composite aggregations. (i.e. they are contained within the  PaletteComp)."
+	    documentation 	"This is obsolete. Use Root instead."
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"3AE8309A00E1"
-		    supplier   	"Logical View::palette::Palette"
+		    supplier   	"Logical View::palette::Root"
 		    quidu      	"39D6850202BF")))
-	(object Class "CategoryRef"
-	    quid       	"3AE832AD0080"
-	    documentation 	"This is a catefory where the group is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of category allows references to pieces of other palettes to form together a new category."
-	    superclasses 	(list inheritance_relationship_list
-		(object Inheritance_Relationship
-		    quid       	"3AE832B802F3"
-		    supplier   	"Logical View::palette::Category"
-		    quidu      	"39D6850B02AE")))
 	(object Class "CategoryCmp"
 	    quid       	"3AE833120284"
-	    documentation 	"This is a category where the groups is a composite aggregation. (i.e. it is contained within the  CategoryCmp)"
+	    documentation 	"This is obsolete. Use Drawer instead."
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"3AE8332E034D"
@@ -169,18 +197,10 @@
 		    quidu      	"39D6850B02AE")))
 	(object Class "GroupCmp"
 	    quid       	"3AE83402032A"
-	    documentation 	"This is a group where the entries are a composite aggregation. (i.e. it is contained within the  GroupCmp)."
+	    documentation 	"This is obsolete. Use Group instead."
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"3AE8341501C9"
-		    supplier   	"Logical View::palette::Group"
-		    quidu      	"39D6851C01A4")))
-	(object Class "GroupRef"
-	    quid       	"3AE8346F01A0"
-	    documentation 	"This is a group where the entries is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of group allows references to pieces of other palettes to form together a new group."
-	    superclasses 	(list inheritance_relationship_list
-		(object Inheritance_Relationship
-		    quid       	"3AE8347B01A7"
 		    supplier   	"Logical View::palette::Group"
 		    quidu      	"39D6851C01A4")))
 	(object Class "CreationFactory"
@@ -192,20 +212,24 @@
 		    stereotype 	"javaclass")))
 	(object Class "Container"
 	    quid       	"3BAA027E000E"
+	    documentation 	
+|Basic Palette Container.
+|<p>
+|It contains other entries.
+	    
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
-		    quid       	"3E39B9B7005C"
-		    stereotype 	"extend"
-		    supplier   	"Logical View::ecore::EObject"
-		    quidu      	"3C4F1C860123")
-		(object Inheritance_Relationship
-		    quid       	"3EB14C9803D9"
-		    supplier   	"Logical View::palette::ICDEPaletteEntry"
-		    quidu      	"3EB14B8300A6"))
+		    quid       	"42B2DBBD02CE"
+		    supplier   	"Logical View::palette::Entry"
+		    quidu      	"39D68521015B"))
 	    abstract   	TRUE)
 	(object Class "EMFCreationToolEntry"
 	    quid       	"3C5596D000E1"
-	    documentation 	"Creation for creating EMF instances."
+	    documentation 	
+|Creation Tool for creating EMF instances given just the EMF class.
+|<p>
+|A default empty instance with no features set will be created.
+	    
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"3C5596E300A2"
@@ -214,7 +238,7 @@
 	    class_attributes 	(list class_attribute_list
 		(object ClassAttribute "creationClassURI"
 		    quid       	"3CC596D402C9"
-		    documentation 	"The URI of the class for which an instance is to be created."
+		    documentation 	"The URI of the class for which an instance is to be created. "
 		    type       	"String"
 		    exportControl 	"Public")))
 	(object Class "EMFPrototypeToolEntry"
@@ -228,12 +252,20 @@
 	    class_attributes 	(list class_attribute_list
 		(object ClassAttribute "prototypeURI"
 		    quid       	"3CC594830082"
-		    documentation 	"This is the string containing the prototype URI for the prototype. "
+		    documentation 	
+|This is the string containing the prototype URI for the prototype. 
+|<p>
+|The URI is to the object protoype that is being created. The URI must point to an EObject in a resource. That EObject must be contained directly by the Resource it is in (i.e. it mustn't be contained by another EObject). Also in the resource can be Annotations for any of the EObjects that are part of the template. These will automatically be added in.
+		    
 		    type       	"String"
 		    exportControl 	"Public")))
 	(object Class "AnnotatedCreationEntry"
 	    quid       	"3B5DF187034B"
-	    documentation 	"This will wrapper a CreationToolEntry and provide for creating an annotation too. This is the entry that should be in the palette when an annotation entry is desired."
+	    documentation 	
+|This will wrapper a CreationToolEntry and provide for creating an annotation too. This is the entry that should be in the palette when an annotation entry is desired.
+|<p>
+|This is obsolete. The CreationToolEntry now can handle this itself.
+	    
 	    superclasses 	(list inheritance_relationship_list
 		(object Inheritance_Relationship
 		    quid       	"3B5EDB6F0177"
@@ -250,226 +282,297 @@
 	    class_attributes 	(list class_attribute_list
 		(object ClassAttribute "selectorClassName"
 		    quid       	"3BE0424500E7"
-		    documentation 	"This is the classname of the selector class. It must implement the ISelector interface."
+		    documentation 	
+|This is the classname of the selector class. It must implement the ISelector interface.  Because it is not known the namespace for the class, you need to use a special format:
+|<p>
+|<ul>
+|<li><b>packagename.classname</b>: This means it must be available from the default class loader. (In Eclipse, this will be the org.eclipse.ve.cde plugin. It must be visible to this to be found).
+|<li><b>namespace/packagename.classname</b>: This means it will be found  in the namespace. (In Eclipse the namespace is the name of a bundle. It will look within that bundle to find the class).
+|</ul>
+		    
 		    type       	"String"
 		    exportControl 	"Public")))
-	(object Class "ICDEPaletteEntry"
-	    quid       	"3EB14B8300A6"
-	    documentation 	"This is our CDE interface to the GEF palette."
-	    stereotype 	"Interface"
+	(object Class "Drawer"
+	    quid       	"42B2E21F0274"
+	    documentation 	
+|Palette Drawer.
+|<p>
+|This is a collapsable collection of entries. It accepts anything except a Group or a Drawer.
+	    
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"42B2E2830318"
+		    supplier   	"Logical View::palette::Container"
+		    quidu      	"3BAA027E000E"))
 	    class_attributes 	(list class_attribute_list
-		(object ClassAttribute "org.eclipse.ve.internal.cde.palette.ICDEPaletteEntry"
-		    quid       	"3EB14BB10279"
-		    stereotype 	"javaclass")))
+		(object ClassAttribute "initialState"
+		    quid       	"42B2E6190047"
+		    type       	"InitialState"
+		    quidu      	"42B2E5A801FD"
+		    initv      	"Closed"
+		    exportControl 	"Public")))
+	(object Class "Permissions"
+	    quid       	"42B2E357034F"
+	    documentation 	"The valid modification permissions for this entry. Used in the palette customizer."
+	    stereotype 	"enumeration"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "Default"
+		    quid       	"42B2E6A10133"
+		    documentation 	"This is the default permission for the entry. Each entry type has a default permission. It may different depending on the entry type."
+		    exportControl 	"Public")
+		(object ClassAttribute "Full"
+		    quid       	"42B2E45B012C"
+		    documentation 	"Full modification by the customizer is allowed."
+		    exportControl 	"Public")
+		(object ClassAttribute "HideOnly"
+		    quid       	"42B2E4AC006A"
+		    documentation 	"The customizer can only hide/show the entry."
+		    exportControl 	"Public")
+		(object ClassAttribute "Limited"
+		    quid       	"42B2E4D601F1"
+		    documentation 	"Limited modification is allowed. It is not allowed to move to another container or to be deleted."
+		    exportControl 	"Public")
+		(object ClassAttribute "None"
+		    quid       	"42B2E53003B3"
+		    documentation 	"No modification is allowed."
+		    exportControl 	"Public")))
+	(object Class "InitialState"
+	    quid       	"42B2E5A801FD"
+	    documentation 	"Drawer initial state."
+	    stereotype 	"enumeration"
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "Open"
+		    quid       	"42B2E5C8025D"
+		    documentation 	"Initially open."
+		    exportControl 	"Public")
+		(object ClassAttribute "Closed"
+		    quid       	"42B2E5EC020F"
+		    documentation 	"Initially closed."
+		    exportControl 	"Public")
+		(object ClassAttribute "PinnedOpen"
+		    quid       	"42B2E5F50258"
+		    documentation 	"Initially pinned open."
+		    exportControl 	"Public")))
+	(object Class "Stack"
+	    quid       	"42B2E7300355"
+	    documentation 	
+|Stack Entry.
+|<p>
+|A grouping of ToolEntries. They are represented by one entry on the palette and there can be a dropdown list to select from and a current active entry.
+|<p>
+|It can only accept ToolEntries.
+	    
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"42B2E778034F"
+		    supplier   	"Logical View::palette::Container"
+		    quidu      	"3BAA027E000E")))
+	(object Class "Separator"
+	    quid       	"42B2EB51028D"
+	    documentation 	
+|Palette Separator
+|<p>
+|It is a spacer. But in addition it can be used a section marker for letting other entries be added into the section. The id of the separator can be used for this.
+	    
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"42B2EB5A020D"
+		    supplier   	"Logical View::palette::Entry"
+		    quidu      	"39D68521015B")))
 	(object Association "$UNNAMED$0"
-	    quid       	"3AE82DE001E2"
-	    roles      	(list role_list
-		(object Role "refControlGroup"
-		    quid       	"3AE82DE10265"
-		    label      	"refControlGroup"
-		    supplier   	"Logical View::palette::Group"
-		    quidu      	"39D6851C01A4"
-		    client_cardinality 	(value cardinality "0..1")
-		    Containment 	"By Reference"
-		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$1"
-		    quid       	"3AE82DE1026F"
-		    supplier   	"Logical View::palette::PaletteRef"
-		    quidu      	"3AE82D6C002C"
-		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$2"
-	    quid       	"3AE82E8E02D2"
-	    roles      	(list role_list
-		(object Role "refCategories"
-		    quid       	"3AE82E90007C"
-		    label      	"refCategories"
-		    supplier   	"Logical View::palette::Category"
-		    quidu      	"39D6850B02AE"
-		    client_cardinality 	(value cardinality "0..n")
-		    Containment 	"By Reference"
-		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$3"
-		    quid       	"3AE82E900086"
-		    supplier   	"Logical View::palette::PaletteRef"
-		    quidu      	"3AE82D6C002C"
-		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$4"
 	    quid       	"3AE830A00144"
 	    roles      	(list role_list
 		(object Role "cmpCategories"
+		    attributes 	(list Attribute_Set)
 		    quid       	"3AE830A10358"
+		    documentation 	"This is obsolete. Add to Container.children instead."
 		    label      	"cmpCategories"
 		    supplier   	"Logical View::palette::Category"
 		    quidu      	"39D6850B02AE"
 		    client_cardinality 	(value cardinality "0..n")
 		    Containment 	"By Value"
 		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$5"
+		(object Role "$UNNAMED$1"
 		    quid       	"3AE830A10362"
 		    supplier   	"Logical View::palette::PaletteCmp"
 		    quidu      	"3AE83079006B"
 		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$6"
-	    quid       	"3AE832D70149"
-	    roles      	(list role_list
-		(object Role "refGroups"
-		    quid       	"3AE832D80335"
-		    label      	"refGroups"
-		    supplier   	"Logical View::palette::Group"
-		    quidu      	"39D6851C01A4"
-		    client_cardinality 	(value cardinality "0..n")
-		    Containment 	"By Reference"
-		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$7"
-		    quid       	"3AE832D80349"
-		    supplier   	"Logical View::palette::CategoryRef"
-		    quidu      	"3AE832AD0080"
-		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$8"
+	(object Association "$UNNAMED$2"
 	    quid       	"3AE8333302B4"
 	    roles      	(list role_list
 		(object Role "cmpGroups"
 		    quid       	"3AE8333402F1"
+		    documentation 	"This is obsolete. Categories can no longer contain groups."
 		    label      	"cmpGroups"
 		    supplier   	"Logical View::palette::Group"
 		    quidu      	"39D6851C01A4"
 		    client_cardinality 	(value cardinality "0..n")
 		    Containment 	"By Value"
 		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$9"
+		(object Role "$UNNAMED$3"
 		    quid       	"3AE8333402FC"
 		    supplier   	"Logical View::palette::CategoryCmp"
 		    quidu      	"3AE833120284"
 		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$10"
+	(object Association "$UNNAMED$4"
 	    quid       	"3AE8343E02E0"
 	    roles      	(list role_list
 		(object Role "cmpEntries"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isTransient"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
 		    quid       	"3AE8343F02F5"
+		    documentation 	"This is obsolete. Use Container.children instead."
 		    label      	"cmpEntries"
 		    supplier   	"Logical View::palette::Entry"
 		    quidu      	"39D68521015B"
 		    client_cardinality 	(value cardinality "0..n")
 		    Containment 	"By Value"
 		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$11"
+		(object Role "$UNNAMED$5"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isTransient"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
 		    quid       	"3AE8343F02FF"
 		    supplier   	"Logical View::palette::GroupCmp"
 		    quidu      	"3AE83402032A"
 		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$12"
-	    quid       	"3AE8349003A6"
-	    roles      	(list role_list
-		(object Role "refEntries"
-		    quid       	"3AE834920196"
-		    label      	"refEntries"
-		    supplier   	"Logical View::palette::Entry"
-		    quidu      	"39D68521015B"
-		    client_cardinality 	(value cardinality "0..n")
-		    Containment 	"By Value"
-		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$13"
-		    quid       	"3AE8349201A0"
-		    supplier   	"Logical View::palette::GroupRef"
-		    quidu      	"3AE8346F01A0"
-		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$14"
+	(object Association "$UNNAMED$6"
 	    quid       	"3AE830C900F3"
 	    roles      	(list role_list
 		(object Role "cmpControlGroup"
+		    attributes 	(list Attribute_Set)
 		    quid       	"3AE830CA0144"
+		    documentation 	"This is obsolete. Use Container.children instead."
 		    label      	"cmpControlGroup"
 		    supplier   	"Logical View::palette::Group"
 		    quidu      	"39D6851C01A4"
 		    client_cardinality 	(value cardinality "0..1")
 		    Containment 	"By Value"
 		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$15"
+		(object Role "$UNNAMED$7"
+		    attributes 	(list Attribute_Set)
 		    quid       	"3AE830CA0158"
 		    supplier   	"Logical View::palette::PaletteCmp"
 		    quidu      	"3AE83079006B"
 		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$16"
+	(object Association "$UNNAMED$8"
 	    quid       	"3DDBA621026E"
 	    roles      	(list role_list
 		(object Role "entryLabel"
 		    quid       	"3DDBA62201F7"
+		    documentation 	"Label for the entry"
 		    label      	"entryLabel"
 		    supplier   	"Logical View::utility::AbstractString"
 		    quidu      	"39EF148B02BA"
 		    client_cardinality 	(value cardinality "0..1")
 		    Containment 	"By Value"
 		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$17"
+		(object Role "$UNNAMED$9"
 		    quid       	"3DDBA622020B"
 		    supplier   	"Logical View::palette::Entry"
 		    quidu      	"39D68521015B"
 		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$18"
+	(object Association "$UNNAMED$10"
 	    quid       	"3DDBA6500366"
 	    roles      	(list role_list
 		(object Role "entryShortDescription"
 		    quid       	"3DDBA65102B3"
+		    documentation 	"Short description for the entry (optional)"
 		    label      	"entryShortDescription"
 		    supplier   	"Logical View::utility::AbstractString"
 		    quidu      	"39EF148B02BA"
 		    client_cardinality 	(value cardinality "0..1")
 		    Containment 	"By Value"
 		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$19"
+		(object Role "$UNNAMED$11"
 		    quid       	"3DDBA65102BD"
 		    supplier   	"Logical View::palette::Entry"
 		    quidu      	"39D68521015B"
 		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$20"
+	(object Association "$UNNAMED$12"
 	    quid       	"3DDBA6C901CF"
 	    roles      	(list role_list
 		(object Role "groupLabel"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isTransient"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
 		    quid       	"3DDBA6CA0221"
+		    documentation 	"This is obsolete. Use Entry.entryLabel instead."
 		    label      	"groupLabel"
 		    supplier   	"Logical View::utility::AbstractString"
 		    quidu      	"39EF148B02BA"
 		    client_cardinality 	(value cardinality "0..1")
 		    Containment 	"By Value"
 		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$21"
+		(object Role "$UNNAMED$13"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isTransient"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
 		    quid       	"3DDBA6CA0235"
 		    supplier   	"Logical View::palette::Group"
 		    quidu      	"39D6851C01A4"
 		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$22"
+	(object Association "$UNNAMED$14"
 	    quid       	"3DDBA6DC0078"
 	    roles      	(list role_list
 		(object Role "categoryLabel"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isTransient"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
 		    quid       	"3DDBA6DD00E7"
+		    documentation 	"This is obsolete. Use Entry.entryLabel instead."
 		    label      	"categoryLabel"
 		    supplier   	"Logical View::utility::AbstractString"
 		    quidu      	"39EF148B02BA"
 		    client_cardinality 	(value cardinality "1")
 		    Containment 	"By Value"
 		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$23"
+		(object Role "$UNNAMED$15"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isTransient"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
 		    quid       	"3DDBA6DD00FB"
 		    supplier   	"Logical View::palette::Category"
 		    quidu      	"39D6850B02AE"
 		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$24"
-	    quid       	"3DDBA6F20047"
-	    roles      	(list role_list
-		(object Role "paletteLabel"
-		    quid       	"3DDBA6F30193"
-		    label      	"paletteLabel"
-		    supplier   	"Logical View::utility::AbstractString"
-		    quidu      	"39EF148B02BA"
-		    client_cardinality 	(value cardinality "0..1")
-		    Containment 	"By Value"
-		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$25"
-		    quid       	"3DDBA6F301A7"
-		    supplier   	"Logical View::palette::Palette"
-		    quidu      	"39D6850202BF"
-		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$26"
+	(object Association "$UNNAMED$16"
 	    quid       	"3DDBA77E03C4"
 	    roles      	(list role_list
 		(object Role "objectCreationEntry"
@@ -480,12 +583,12 @@
 		    client_cardinality 	(value cardinality "1")
 		    Containment 	"By Value"
 		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$27"
+		(object Role "$UNNAMED$17"
 		    quid       	"3DDBA780021A"
 		    supplier   	"Logical View::palette::AnnotatedCreationEntry"
 		    quidu      	"3B5DF187034B"
 		    is_aggregate 	TRUE)))
-	(object Association "$UNNAMED$28"
+	(object Association "$UNNAMED$18"
 	    quid       	"3DF61B3002A6"
 	    roles      	(list role_list
 		(object Role "values"
@@ -496,11 +599,102 @@
 		    client_cardinality 	(value cardinality "0..n")
 		    Containment 	"By Value"
 		    is_navigable 	TRUE)
-		(object Role "$UNNAMED$29"
+		(object Role "$UNNAMED$19"
 		    quid       	"3DF61B31026B"
 		    supplier   	"Logical View::palette::AnnotatedCreationEntry"
 		    quidu      	"3B5DF187034B"
-		    is_aggregate 	TRUE))))
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$20"
+	    quid       	"42B2E0BB002D"
+	    roles      	(list role_list
+		(object Role "children"
+		    quid       	"42B2E0BC00ED"
+		    documentation 	"This is the children of the container. Each container subclass can limit the type of children allowed."
+		    label      	"children"
+		    supplier   	"Logical View::palette::Entry"
+		    quidu      	"39D68521015B"
+		    client_cardinality 	(value cardinality "0..n")
+		    Containment 	"By Value"
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$21"
+		    quid       	"42B2E0BC00F7"
+		    supplier   	"Logical View::palette::Container"
+		    quidu      	"3BAA027E000E"
+		    Containment 	"By Value"
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$22"
+	    quid       	"42B2E7AA026A"
+	    roles      	(list role_list
+		(object Role "activeEntry"
+		    quid       	"42B2E7AE0266"
+		    documentation 	"The current active entry, if any. This is the entry that would be selected if the stack was selected."
+		    label      	"activeEntry"
+		    supplier   	"Logical View::palette::Entry"
+		    quidu      	"39D68521015B"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$23"
+		    quid       	"42B2E7AE0268"
+		    supplier   	"Logical View::palette::Stack"
+		    quidu      	"42B2E7300355"
+		    Containment 	"By Reference")))
+	(object Association "$UNNAMED$24"
+	    quid       	"42B336CB0395"
+	    roles      	(list role_list
+		(object Role "paletteLabel"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isTransient"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
+		    quid       	"42B336CD01E9"
+		    label      	"paletteLabel"
+		    supplier   	"Logical View::utility::AbstractString"
+		    quidu      	"39EF148B02BA"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Value"
+		    exportControl 	"Private"
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$25"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isTransient"
+			    value      	TRUE)
+			(object Attribute
+			    tool       	"Ecore"
+			    name       	"isVolatile"
+			    value      	TRUE))
+		    quid       	"42B336CD01EB"
+		    supplier   	"Logical View::palette::PaletteCmp"
+		    quidu      	"3AE83079006B"
+		    Containment 	"By Value"
+		    is_aggregate 	TRUE)))
+	(object Association "$UNNAMED$26"
+	    quid       	"42B6E3390331"
+	    roles      	(list role_list
+		(object Role "defEntry"
+		    quid       	"42B6E33B026B"
+		    documentation 	
+|Default Tool Entry
+|<p>
+|The entry selected when no entry is explicitly selected.
+		    
+		    label      	"defEntry"
+		    supplier   	"Logical View::palette::AbstractToolEntry"
+		    quidu      	"39DB6F4A033F"
+		    client_cardinality 	(value cardinality "0..1")
+		    Containment 	"By Reference"
+		    is_navigable 	TRUE)
+		(object Role "$UNNAMED$27"
+		    quid       	"42B6E33B026D"
+		    supplier   	"Logical View::palette::Root"
+		    quidu      	"39D6850202BF"
+		    Containment 	"By Reference"))))
     logical_presentations 	(list unit_reference_list
 	(object ClassDiagram "palette"
 	    quid       	"39D684D703D5"
@@ -508,14 +702,14 @@
 	    zoom       	100
 	    max_height 	28350
 	    max_width  	21600
-	    origin_x   	880
+	    origin_x   	0
 	    origin_y   	0
 	    items      	(list diagram_item_list
 		(object ClassView "Class" "Logical View::palette::ToolEntry" @1
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
-		    location   	(4352, 1472)
+		    location   	(1808, 1616)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -527,10 +721,10 @@
 			default_color 	TRUE)
 		    label      	(object ItemLabel
 			Parent_View 	@1
-			location   	(4128, 1399)
+			location   	(1530, 1535)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	448
+			max_width  	556
 			justify    	0
 			label      	"ToolEntry")
 		    icon_style 	"Icon"
@@ -539,7 +733,7 @@
 		    quidu      	"39D686B4033B"
 		    compartment 	(object Compartment
 			Parent_View 	@1
-			location   	(4128, 1455)
+			location   	(1530, 1596)
 			font       	(object Font
 			    size       	10
 			    face       	"Arial"
@@ -553,16 +747,16 @@
 			fill_color 	16777215
 			anchor     	2
 			nlines     	2
-			max_width  	446)
-		    width      	466
-		    height     	168
+			max_width  	478)
+		    width      	574
+		    height     	186
 		    annotation 	8
 		    autoResize 	TRUE)
 		(object ClassView "Class" "Logical View::palette::AbstractToolEntry" @2
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
-		    location   	(2576, 1056)
+		    location   	(2416, 928)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -574,33 +768,191 @@
 			default_color 	TRUE)
 		    label      	(object ItemLabel
 			Parent_View 	@2
-			location   	(2400, 1007)
+			location   	(1826, 847)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	352
+			max_width  	1180
 			justify    	0
 			label      	"AbstractToolEntry")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
 		    quidu      	"39DB6F4A033F"
-		    width      	370
-		    height     	122
+		    compartment 	(object Compartment
+			Parent_View 	@2
+			location   	(1826, 908)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	TRUE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	1012)
+		    width      	1198
+		    height     	186
 		    annotation 	8
 		    autoResize 	TRUE)
 		(object InheritTreeView "" @3
-		    location   	(2576, 1207)
+		    location   	(2416, 1282)
 		    line_color 	3342489
 		    fill_color 	13434879
 		    supplier   	@2
 		    vertices   	(list Points
-			(2576, 1207)
-			(2576, 1117)))
-		(object ClassView "Class" "Logical View::palette::Container" @4
+			(2416, 1282)
+			(2416, 1021)))
+		(object ClassView "Class" "Logical View::palette::EMFCreationToolEntry" @4
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
-		    location   	(208, 2560)
+		    location   	(1792, 2624)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@4
+			location   	(1493, 2518)
+			fill_color 	13434879
+			nlines     	2
+			max_width  	598
+			justify    	0
+			label      	"EMFCreationToolEntry")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3C5596D000E1"
+		    compartment 	(object Compartment
+			Parent_View 	@4
+			location   	(1493, 2579)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	515)
+		    width      	616
+		    height     	236
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::palette::EMFPrototypeToolEntry" @5
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(2528, 2624)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@5
+			location   	(2255, 2543)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	546
+			justify    	0
+			label      	"EMFPrototypeToolEntry")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3C559AC401EA"
+		    compartment 	(object Compartment
+			Parent_View 	@5
+			location   	(2255, 2604)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	437)
+		    width      	564
+		    height     	186
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::palette::SelectionCreationToolEntry" @6
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(3344, 2624)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@6
+			location   	(3022, 2544)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	644
+			justify    	0
+			label      	"SelectionCreationToolEntry")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3BE041300071"
+		    compartment 	(object Compartment
+			Parent_View 	@6
+			location   	(3022, 2605)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	556)
+		    width      	662
+		    height     	184
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::palette::Entry" @7
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1552, 272)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -611,55 +963,25 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@4
-			location   	(106, 2511)
+			Parent_View 	@7
+			location   	(1134, 66)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	204
+			max_width  	836
 			justify    	0
-			label      	"Container")
+			label      	"Entry")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
-		    quidu      	"3BAA027E000E"
-		    width      	222
-		    height     	122
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::EMFCreationToolEntry" @5
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(2000, 1968)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@5
-			location   	(1758, 1873)
-			fill_color 	13434879
-			nlines     	2
-			max_width  	484
-			justify    	0
-			label      	"EMFCreationToolEntry")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3C5596D000E1"
+		    quidu      	"39D68521015B"
 		    compartment 	(object Compartment
-			Parent_View 	@5
-			location   	(1758, 1929)
+			Parent_View 	@7
+			location   	(1134, 127)
 			font       	(object Font
 			    size       	10
 			    face       	"Arial"
 			    bold       	FALSE
-			    italics    	FALSE
+			    italics    	TRUE
 			    underline  	FALSE
 			    strike     	FALSE
 			    color      	0
@@ -667,74 +989,17 @@
 			icon_style 	"Icon"
 			fill_color 	16777215
 			anchor     	2
-			nlines     	2
-			max_width  	482)
-		    width      	502
-		    height     	212
+			nlines     	7
+			max_width  	718)
+		    width      	854
+		    height     	436
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object InheritView "" @6
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"39D68BFD00FC"
-		    client     	@1
-		    supplier   	@2
-		    line_style 	3
-		    origin_attachment 	(4123, 1387)
-		    terminal_attachment 	(4123, 1207)
-		    drawSupplier 	@3)
-		(object ClassView "Class" "Logical View::palette::EMFPrototypeToolEntry" @7
+		(object ClassView "Class" "Logical View::palette::Group" @8
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
-		    location   	(2560, 1968)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@7
-			location   	(2357, 1873)
-			fill_color 	13434879
-			nlines     	2
-			max_width  	406
-			justify    	0
-			label      	"EMFPrototypeToolEntry")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3C559AC401EA"
-		    compartment 	(object Compartment
-			Parent_View 	@7
-			location   	(2357, 1974)
-			font       	(object Font
-			    size       	10
-			    face       	"Arial"
-			    bold       	FALSE
-			    italics    	FALSE
-			    underline  	FALSE
-			    strike     	FALSE
-			    color      	0
-			    default_color 	TRUE)
-			icon_style 	"Icon"
-			fill_color 	16777215
-			anchor     	2
-			nlines     	2
-			max_width  	405)
-		    width      	424
-		    height     	212
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::SelectionCreationToolEntry" @8
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(3168, 1952)
+		    location   	(736, 1232)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -746,42 +1011,26 @@
 			default_color 	TRUE)
 		    label      	(object ItemLabel
 			Parent_View 	@8
-			location   	(2906, 1879)
+			location   	(640, 1181)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	524
+			max_width  	192
 			justify    	0
-			label      	"SelectionCreationToolEntry")
+			label      	"Group")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
-		    quidu      	"3BE041300071"
-		    compartment 	(object Compartment
-			Parent_View 	@8
-			location   	(2906, 1935)
-			font       	(object Font
-			    size       	10
-			    face       	"Arial"
-			    bold       	FALSE
-			    italics    	FALSE
-			    underline  	FALSE
-			    strike     	FALSE
-			    color      	0
-			    default_color 	TRUE)
-			icon_style 	"Icon"
-			fill_color 	16777215
-			anchor     	2
-			nlines     	2
-			max_width  	522)
-		    width      	542
-		    height     	168
+		    quidu      	"39D6851C01A4"
+		    width      	210
+		    height     	126
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::utility::AbstractString" @9
+		(object ClassView "Class" "Logical View::palette::CreationToolEntry" @9
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
-		    location   	(3120, 640)
+		    ShowOperationSignature 	TRUE
+		    location   	(2608, 2096)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -793,25 +1042,64 @@
 			default_color 	TRUE)
 		    label      	(object ItemLabel
 			Parent_View 	@9
-			location   	(2979, 568)
+			location   	(2401, 2044)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	282
+			max_width  	414
 			justify    	0
-			label      	"AbstractString")
+			label      	"CreationToolEntry")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
-		    quidu      	"39EF148B02BA"
-		    width      	300
-		    height     	168
+		    quidu      	"39D686D20294"
+		    width      	432
+		    height     	128
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::Entry" @10
+		(object InheritView "" @10
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	(object SegLabel @11
+			Parent_View 	@10
+			location   	(2615, 1453)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			anchor     	10
+			anchor_loc 	1
+			nlines     	1
+			max_width  	450
+			justify    	0
+			label      	"<<extend>>"
+			pctDist    	0.772109
+			height     	6
+			orientation 	1)
+		    line_color 	3342489
+		    quidu      	"39D68C070345"
+		    client     	@9
+		    supplier   	@2
+		    line_style 	3
+		    origin_attachment 	(2609, 2032)
+		    terminal_attachment 	(2609, 1282)
+		    drawSupplier 	@3)
+		(object ClassView "Class" "Logical View::palette::Permissions" @12
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
-		    location   	(1840, 672)
+		    location   	(544, 256)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -822,20 +1110,85 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@10
-			location   	(1629, 554)
+			Parent_View 	@12
+			location   	(352, 97)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	422
+			max_width  	384
 			justify    	0
-			label      	"Entry")
+			label      	"Permissions")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@12
+			location   	(352, 47)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	384
+			justify    	0
+			label      	"<<enumeration>>")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
-		    quidu      	"39D68521015B"
+		    quidu      	"42B2E357034F"
 		    compartment 	(object Compartment
-			Parent_View 	@10
-			location   	(1629, 610)
+			Parent_View 	@12
+			location   	(352, 158)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	6
+			max_width  	225)
+		    width      	402
+		    height     	442
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::palette::InitialState" @13
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(704, 1808)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@13
+			location   	(513, 1699)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	382
+			justify    	0
+			label      	"InitialState")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@13
+			location   	(513, 1649)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	382
+			justify    	0
+			label      	"<<enumeration>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"42B2E5A801FD"
+		    compartment 	(object Compartment
+			Parent_View 	@13
+			location   	(513, 1760)
 			font       	(object Font
 			    size       	10
 			    face       	"Arial"
@@ -849,55 +1202,90 @@
 			fill_color 	16777215
 			anchor     	2
 			nlines     	4
-			max_width  	420)
-		    width      	440
-		    height     	258
+			max_width  	281)
+		    width      	400
+		    height     	342
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object InheritView "" @11
+		(object ClassView "Class" "Logical View::palette::Container" @14
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(624, 944)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
 			bold       	FALSE
-			italics    	FALSE
+			italics    	TRUE
 			underline  	FALSE
 			strike     	FALSE
 			color      	0
 			default_color 	TRUE)
-		    stereotype 	(object SegLabel @12
-			Parent_View 	@11
-			location   	(2130, 1047)
-			font       	(object Font
-			    size       	10
-			    face       	"Arial"
-			    bold       	FALSE
-			    italics    	FALSE
-			    underline  	FALSE
-			    strike     	FALSE
-			    color      	0
-			    default_color 	TRUE)
-			anchor     	10
-			anchor_loc 	1
+		    label      	(object ItemLabel
+			Parent_View 	@14
+			location   	(505, 893)
+			fill_color 	13434879
 			nlines     	1
-			max_width  	450
+			max_width  	238
 			justify    	0
-			label      	"<<extend>>"
-			pctDist    	0.403400
-			height     	8
-			orientation 	1)
+			label      	"Container")
+		    icon_style 	"Icon"
 		    line_color 	3342489
-		    quidu      	"39DB6F5F038F"
-		    client     	@2
-		    supplier   	@10
+		    fill_color 	13434879
+		    quidu      	"3BAA027E000E"
+		    width      	256
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritTreeView "" @15
+		    location   	(624, 1097)
+		    line_color 	3342489
+		    fill_color 	13434879
+		    supplier   	@14
 		    vertices   	(list Points
-			(2391, 1055)
-			(1998, 1055)
-			(1998, 801))
+			(624, 1097)
+			(624, 1007)))
+		(object InheritView "" @16
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3BAA02F1026C"
+		    client     	@8
+		    supplier   	@14
 		    line_style 	3
-		    origin_attachment 	(2391, 1055)
-		    terminal_attachment 	(1998, 801))
-		(object AssociationViewNew "$UNNAMED$16" @13
-		    location   	(2517, 516)
+		    origin_attachment 	(736, 1169)
+		    terminal_attachment 	(736, 1097)
+		    drawSupplier 	@15)
+		(object ClassView "Class" "Logical View::palette::Entry" @17
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(176, 528)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@17
+			location   	(80, 476)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	192
+			justify    	0
+			label      	"Entry")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	12615935
+		    quidu      	"39D68521015B"
+		    width      	210
+		    height     	128
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$20" @18
+		    location   	(622, 585)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -909,99 +1297,11 @@
 			default_color 	TRUE)
 		    stereotype 	TRUE
 		    line_color 	3342489
-		    quidu      	"3DDBA621026E"
+		    quidu      	"42B2E0BB002D"
 		    roleview_list 	(list RoleViews
-			(object RoleView "entryLabel" @14
-			    Parent_View 	@13
-			    location   	(677, -156)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @15
-				Parent_View 	@14
-				location   	(2889, 531)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	212
-				justify    	0
-				label      	"+entryLabel"
-				pctDist    	0.800000
-				height     	42
-				orientation 	0)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3DDBA62201F7"
-			    client     	@13
-			    supplier   	@9
-			    vertices   	(list Points
-				(2517, 516)
-				(2608, 495)
-				(2969, 596))
-			    line_style 	0
-			    label      	(object SegLabel @16
-				Parent_View 	@14
-				location   	(2910, 635)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"0..1"
-				pctDist    	0.900000
-				height     	54
-				orientation 	1))
-			(object RoleView "$UNNAMED$17" @17
-			    Parent_View 	@13
-			    location   	(677, -156)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3DDBA622020B"
-			    client     	@13
-			    supplier   	@10
-			    line_style 	0)))
-		(object AssociationViewNew "$UNNAMED$18" @18
-		    location   	(2519, 758)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3DDBA6500366"
-		    roleview_list 	(list RoleViews
-			(object RoleView "entryShortDescription" @19
+			(object RoleView "children" @19
 			    Parent_View 	@18
-			    location   	(679, 86)
+			    location   	(-2, -359)
 			    font       	(object Font
 				size       	10
 				face       	"Arial"
@@ -1013,7 +1313,7 @@
 				default_color 	TRUE)
 			    label      	(object SegLabel @20
 				Parent_View 	@19
-				location   	(2799, 803)
+				location   	(433, 575)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -1026,25 +1326,25 @@
 				anchor     	1
 				anchor_loc 	1
 				nlines     	1
-				max_width  	403
+				max_width  	166
 				justify    	0
-				label      	"+entryShortDescription"
-				pctDist    	0.581074
-				height     	83
-				orientation 	1)
+				label      	"+children"
+				pctDist    	0.621257
+				height     	49
+				orientation 	0)
 			    stereotype 	TRUE
 			    line_color 	3342489
-			    quidu      	"3DDBA65102B3"
+			    quidu      	"42B2E0BC00ED"
 			    client     	@18
-			    supplier   	@9
+			    supplier   	@17
 			    vertices   	(list Points
-				(2519, 758)
-				(2593, 768)
-				(2969, 676))
+				(622, 585)
+				(622, 525)
+				(281, 527))
 			    line_style 	0
 			    label      	(object SegLabel @21
 				Parent_View 	@19
-				location   	(2937, 739)
+				location   	(653, 570)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -1059,138 +1359,61 @@
 				nlines     	1
 				max_width  	15
 				justify    	0
-				label      	"0..1"
-				pctDist    	0.900000
-				height     	54
+				label      	"0..n"
+				pctDist    	0.037406
+				height     	31
 				orientation 	1))
-			(object RoleView "$UNNAMED$19" @22
+			(object RoleView "$UNNAMED$21" @22
 			    Parent_View 	@18
-			    location   	(679, 86)
+			    location   	(-2, -359)
 			    stereotype 	TRUE
 			    line_color 	3342489
-			    quidu      	"3DDBA65102BD"
+			    quidu      	"42B2E0BC00F7"
 			    client     	@18
-			    supplier   	@10
+			    supplier   	@14
 			    line_style 	0)))
-		(object InheritTreeView "" @23
-		    location   	(208, 2711)
-		    line_color 	3342489
-		    fill_color 	13434879
-		    supplier   	@4
-		    vertices   	(list Points
-			(208, 2711)
-			(208, 2621)))
-		(object ClassView "Class" "Logical View::palette::Group" @24
+		(object ClassView "Class" "Logical View::palette::Stack" @23
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
-		    location   	(1008, 2384)
+		    location   	(112, 1232)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
 			bold       	FALSE
-			italics    	TRUE
+			italics    	FALSE
 			underline  	FALSE
 			strike     	FALSE
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@24
-			location   	(927, 2335)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	162
-			justify    	0
-			label      	"Group")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"39D6851C01A4"
-		    height     	122
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritView "" @25
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3BAA02F1026C"
-		    client     	@24
-		    supplier   	@4
-		    line_style 	3
-		    origin_attachment 	(1008, 2445)
-		    terminal_attachment 	(1008, 2711)
-		    drawSupplier 	@23)
-		(object ClassView "Class" "Logical View::palette::Category" @26
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(976, 2896)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	TRUE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@26
-			location   	(880, 2847)
+			Parent_View 	@23
+			location   	(16, 1181)
 			fill_color 	13434879
 			nlines     	1
 			max_width  	192
 			justify    	0
-			label      	"Category")
+			label      	"Stack")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
-		    quidu      	"39D6850B02AE"
+		    quidu      	"42B2E7300355"
 		    width      	210
-		    height     	122
+		    height     	126
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object InheritView "" @27
+		(object InheritView "" @24
 		    stereotype 	TRUE
 		    line_color 	3342489
-		    quidu      	"3BAA02FA01CF"
-		    client     	@26
-		    supplier   	@4
+		    quidu      	"42B2E778034F"
+		    client     	@23
+		    supplier   	@14
 		    line_style 	3
-		    origin_attachment 	(951, 2834)
-		    terminal_attachment 	(951, 2711)
-		    drawSupplier 	@23)
-		(object ClassView "Class" "Logical View::utility::AbstractString" @28
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(1984, 2864)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	TRUE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@28
-			location   	(1843, 2792)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	282
-			justify    	0
-			label      	"AbstractString")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"39EF148B02BA"
-		    width      	300
-		    height     	168
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object AssociationViewNew "$UNNAMED$20" @29
-		    location   	(1465, 2608)
+		    origin_attachment 	(122, 1169)
+		    terminal_attachment 	(122, 1097)
+		    drawSupplier 	@15)
+		(object AssociationViewNew "$UNNAMED$22" @25
+		    location   	(83, 907)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -1202,11 +1425,11 @@
 			default_color 	TRUE)
 		    stereotype 	TRUE
 		    line_color 	3342489
-		    quidu      	"3DDBA6C901CF"
+		    quidu      	"42B2E7AA026A"
 		    roleview_list 	(list RoleViews
-			(object RoleView "groupLabel" @30
-			    Parent_View 	@29
-			    location   	(457, 224)
+			(object RoleView "activeEntry" @26
+			    Parent_View 	@25
+			    location   	(-1021, -325)
 			    font       	(object Font
 				size       	10
 				face       	"Arial"
@@ -1216,9 +1439,9 @@
 				strike     	FALSE
 				color      	0
 				default_color 	TRUE)
-			    label      	(object SegLabel @31
-				Parent_View 	@30
-				location   	(1778, 2716)
+			    label      	(object SegLabel @27
+				Parent_View 	@26
+				location   	(142, 754)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -1231,21 +1454,25 @@
 				anchor     	1
 				anchor_loc 	1
 				nlines     	1
-				max_width  	232
+				max_width  	235
 				justify    	0
-				label      	"+groupLabel"
-				pctDist    	0.800000
-				height     	42
-				orientation 	0)
+				label      	"+activeEntry"
+				pctDist    	0.513435
+				height     	34
+				orientation 	1)
 			    stereotype 	TRUE
 			    line_color 	3342489
-			    quidu      	"3DDBA6CA0221"
-			    client     	@29
-			    supplier   	@28
+			    quidu      	"42B2E7AE0266"
+			    client     	@25
+			    supplier   	@17
+			    vertices   	(list Points
+				(83, 907)
+				(78, 847)
+				(155, 592))
 			    line_style 	0
-			    label      	(object SegLabel @32
-				Parent_View 	@30
-				location   	(1961, 2730)
+			    label      	(object SegLabel @28
+				Parent_View 	@26
+				location   	(187, 664)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -1261,173 +1488,77 @@
 				max_width  	15
 				justify    	0
 				label      	"0..1"
-				pctDist    	1.215518
-				height     	110
-				orientation 	0))
-			(object RoleView "$UNNAMED$21" @33
-			    Parent_View 	@29
-			    location   	(457, 224)
+				pctDist    	0.817201
+				height     	51
+				orientation 	1))
+			(object RoleView "$UNNAMED$23" @29
+			    Parent_View 	@25
+			    location   	(-1021, -325)
 			    stereotype 	TRUE
 			    line_color 	3342489
-			    quidu      	"3DDBA6CA0235"
-			    client     	@29
-			    supplier   	@24
+			    quidu      	"42B2E7AE0268"
+			    client     	@25
+			    supplier   	@23
 			    line_style 	0)))
-		(object AssociationViewNew "$UNNAMED$22" @34
-		    location   	(1457, 2880)
+		(object ClassView "Class" "Logical View::palette::Separator" @30
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1584, 928)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
 			bold       	FALSE
 			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3DDBA6DC0078"
-		    roleview_list 	(list RoleViews
-			(object RoleView "categoryLabel" @35
-			    Parent_View 	@34
-			    location   	(481, -16)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @36
-				Parent_View 	@35
-				location   	(1501, 2912)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	283
-				justify    	0
-				label      	"+categoryLabel"
-				pctDist    	0.114066
-				height     	33
-				orientation 	1)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3DDBA6DD00E7"
-			    client     	@34
-			    supplier   	@28
-			    line_style 	0
-			    label      	(object SegLabel @37
-				Parent_View 	@35
-				location   	(1750, 2908)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"1"
-				pctDist    	0.777895
-				height     	37
-				orientation 	1))
-			(object RoleView "$UNNAMED$23" @38
-			    Parent_View 	@34
-			    location   	(481, -16)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3DDBA6DD00FB"
-			    client     	@34
-			    supplier   	@26
-			    line_style 	0)))
-		(object ClassView "Class" "Logical View::palette::Palette" @39
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(800, 3376)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	TRUE
 			underline  	FALSE
 			strike     	FALSE
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@39
-			location   	(717, 3327)
+			Parent_View 	@30
+			location   	(1463, 877)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	166
+			max_width  	242
 			justify    	0
-			label      	"Palette")
+			label      	"Separator")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
-		    quidu      	"39D6850202BF"
-		    width      	184
-		    height     	122
+		    quidu      	"42B2EB51028D"
+		    width      	260
+		    height     	126
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object InheritView "" @40
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	(object SegLabel @41
-			Parent_View 	@40
-			location   	(681, 3013)
-			font       	(object Font
-			    size       	10
-			    face       	"Arial"
-			    bold       	FALSE
-			    italics    	FALSE
-			    underline  	FALSE
-			    strike     	FALSE
-			    color      	0
-			    default_color 	TRUE)
-			anchor     	10
-			anchor_loc 	1
-			nlines     	1
-			max_width  	450
-			justify    	0
-			label      	"<<extend>>"
-			pctDist    	0.500000
-			height     	120
-			orientation 	0)
+		(object InheritTreeView "" @31
+		    location   	(1552, 580)
 		    line_color 	3342489
-		    quidu      	"3BAA03A10233"
-		    client     	@39
-		    supplier   	@4
+		    fill_color 	13434879
+		    supplier   	@7
+		    vertices   	(list Points
+			(1552, 580)
+			(1552, 490)))
+		(object InheritView "" @32
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"42B2DBBD02CE"
+		    client     	@14
+		    supplier   	@7
 		    line_style 	3
-		    origin_attachment 	(800, 3315)
-		    terminal_attachment 	(800, 2711)
-		    drawSupplier 	@23)
-		(object AssociationViewNew "$UNNAMED$24" @42
-		    location   	(1362, 3132)
+		    origin_attachment 	(711, 881)
+		    terminal_attachment 	(711, 580)
+		    drawSupplier 	@31)
+		(object InheritView "" @33
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"42B2EB5A020D"
+		    client     	@30
+		    supplier   	@7
+		    line_style 	3
+		    origin_attachment 	(1585, 865)
+		    terminal_attachment 	(1585, 580)
+		    drawSupplier 	@31)
+		(object InheritView "" @34
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -1437,208 +1568,68 @@
 			strike     	FALSE
 			color      	0
 			default_color 	TRUE)
+		    stereotype 	FALSE
+		    line_color 	3342489
+		    quidu      	"39DB6F5F038F"
+		    client     	@2
+		    supplier   	@7
+		    line_style 	3
+		    origin_attachment 	(2532, 835)
+		    terminal_attachment 	(2532, 580)
+		    drawSupplier 	@31)
+		(object InheritView "" @35
 		    stereotype 	TRUE
 		    line_color 	3342489
-		    quidu      	"3DDBA6F20047"
-		    roleview_list 	(list RoleViews
-			(object RoleView "paletteLabel" @43
-			    Parent_View 	@42
-			    location   	(562, -244)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @44
-				Parent_View 	@43
-				location   	(1591, 3067)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	243
-				justify    	0
-				label      	"+paletteLabel"
-				pctDist    	0.460292
-				height     	31
-				orientation 	1)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3DDBA6F30193"
-			    client     	@42
-			    supplier   	@28
-			    line_style 	0
-			    label      	(object SegLabel @45
-				Parent_View 	@43
-				location   	(1802, 3066)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"0..1"
-				pctDist    	0.838576
-				height     	113
-				orientation 	1))
-			(object RoleView "$UNNAMED$25" @46
-			    Parent_View 	@42
-			    location   	(562, -244)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3DDBA6F301A7"
-			    client     	@42
-			    supplier   	@39
-			    line_style 	0)))
-		(object ClassView "Class" "Logical View::palette::CreationToolEntry" @47
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    ShowOperationSignature 	TRUE
-		    location   	(2304, 1488)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	TRUE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@47
-			location   	(1957, 1386)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	694
-			justify    	0
-			label      	"CreationToolEntry")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"39D686D20294"
-		    compartment 	(object Compartment
-			Parent_View 	@47
-			location   	(1957, 1445)
-			font       	(object Font
-			    size       	10
-			    face       	"Arial"
-			    bold       	FALSE
-			    italics    	TRUE
-			    underline  	FALSE
-			    strike     	FALSE
-			    color      	0
-			    default_color 	TRUE)
-			icon_style 	"Icon"
-			fill_color 	16777215
-			anchor     	2
-			nlines     	3
-			max_width  	691)
-		    width      	712
-		    height     	228
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritView "" @48
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"39D68C070345"
-		    client     	@47
+		    quidu      	"39D68BFD00FC"
+		    client     	@1
 		    supplier   	@2
 		    line_style 	3
-		    origin_attachment 	(2387, 1374)
-		    terminal_attachment 	(2387, 1207)
+		    origin_attachment 	(1740, 1522)
+		    terminal_attachment 	(1740, 1282)
 		    drawSupplier 	@3)
-		(object InheritTreeView "" @49
-		    location   	(2304, 1715)
+		(object InheritTreeView "" @36
+		    location   	(2608, 2304)
 		    line_color 	3342489
 		    fill_color 	13434879
-		    supplier   	@47
+		    supplier   	@9
 		    vertices   	(list Points
-			(2304, 1715)
-			(2304, 1602)))
-		(object InheritView "" @50
+			(2608, 2304)
+			(2608, 2160)))
+		(object InheritView "" @37
 		    stereotype 	TRUE
 		    line_color 	3342489
 		    quidu      	"3C5596E300A2"
-		    client     	@5
-		    supplier   	@47
+		    client     	@4
+		    supplier   	@9
 		    line_style 	3
-		    origin_attachment 	(2035, 1861)
-		    terminal_attachment 	(2035, 1715)
-		    drawSupplier 	@49)
-		(object InheritView "" @51
+		    origin_attachment 	(1974, 2505)
+		    terminal_attachment 	(1974, 2304)
+		    drawSupplier 	@36)
+		(object InheritView "" @38
 		    stereotype 	TRUE
 		    line_color 	3342489
 		    quidu      	"3C559B5200E0"
-		    client     	@7
-		    supplier   	@47
+		    client     	@5
+		    supplier   	@9
 		    line_style 	3
-		    origin_attachment 	(2565, 1862)
-		    terminal_attachment 	(2565, 1715)
-		    drawSupplier 	@49)
-		(object InheritView "" @52
+		    origin_attachment 	(2528, 2531)
+		    terminal_attachment 	(2528, 2304)
+		    drawSupplier 	@36)
+		(object InheritView "" @39
 		    stereotype 	TRUE
 		    line_color 	3342489
 		    quidu      	"3BE0428B01A6"
-		    client     	@8
-		    supplier   	@47
+		    client     	@6
+		    supplier   	@9
 		    line_style 	3
-		    origin_attachment 	(3168, 1868)
-		    terminal_attachment 	(3168, 1715)
-		    drawSupplier 	@49)
-		(object ClassView "Class" "Logical View::ecore::EObject" @53
-		    ShowCompartmentStereotypes 	TRUE
-		    location   	(3760, 1808)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@53
-			location   	(3671, 1739)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	178
-			justify    	0
-			label      	"EObject")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3C4F1C860123"
-		    width      	196
-		    height     	160
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::AnnotatedCreationEntry" @54
+		    origin_attachment 	(3344, 2532)
+		    terminal_attachment 	(3344, 2304)
+		    drawSupplier 	@36)
+		(object ClassView "Class" "Logical View::palette::AnnotatedCreationEntry" @40
 		    ShowCompartmentStereotypes 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
-		    location   	(3696, 1472)
+		    location   	(1280, 1856)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -1649,215 +1640,36 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@54
-			location   	(3474, 1426)
+			Parent_View 	@40
+			location   	(1000, 1804)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	444
+			max_width  	560
 			justify    	0
 			label      	"AnnotatedCreationEntry")
 		    icon_style 	"Icon"
 		    line_color 	3342489
 		    fill_color 	13434879
 		    quidu      	"3B5DF187034B"
-		    width      	462
-		    height     	114
+		    width      	578
+		    height     	128
 		    annotation 	8
 		    autoResize 	TRUE)
-		(object InheritView "" @55
+		(object InheritView "" @41
 		    stereotype 	TRUE
 		    line_color 	3342489
 		    quidu      	"3B5EDB6F0177"
-		    client     	@54
+		    client     	@40
 		    supplier   	@2
 		    line_style 	3
-		    origin_attachment 	(3561, 1415)
-		    terminal_attachment 	(3561, 1207)
+		    origin_attachment 	(1281, 1792)
+		    terminal_attachment 	(1281, 1282)
 		    drawSupplier 	@3)
-		(object AssociationViewNew "$UNNAMED$26" @56
-		    location   	(3062, 1478)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3DDBA77E03C4"
-		    roleview_list 	(list RoleViews
-			(object RoleView "objectCreationEntry" @57
-			    Parent_View 	@56
-			    location   	(-634, 6)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @58
-				Parent_View 	@57
-				location   	(2955, 1425)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	373
-				justify    	0
-				label      	"+objectCreationEntry"
-				pctDist    	0.265281
-				height     	55
-				orientation 	1)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3DDBA7800218"
-			    client     	@56
-			    supplier   	@47
-			    line_style 	0
-			    label      	(object SegLabel @59
-				Parent_View 	@57
-				location   	(2702, 1536)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"1"
-				pctDist    	0.900000
-				height     	54
-				orientation 	0))
-			(object RoleView "$UNNAMED$27" @60
-			    Parent_View 	@56
-			    location   	(-634, 6)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3DDBA780021A"
-			    client     	@56
-			    supplier   	@54
-			    line_style 	0)))
-		(object AssociationViewNew "$UNNAMED$28" @61
-		    location   	(3725, 1628)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3DF61B3002A6"
-		    roleview_list 	(list RoleViews
-			(object RoleView "values" @62
-			    Parent_View 	@61
-			    location   	(29, 156)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @63
-				Parent_View 	@62
-				location   	(3638, 1636)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	148
-				justify    	0
-				label      	"+values"
-				pctDist    	-0.096339
-				height     	88
-				orientation 	1)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3DF61B310261"
-			    client     	@61
-			    supplier   	@53
-			    line_style 	0
-			    label      	(object SegLabel @64
-				Parent_View 	@62
-				location   	(3810, 1628)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"0..n"
-				pctDist    	0.158925
-				height     	84
-				orientation 	0))
-			(object RoleView "$UNNAMED$29" @65
-			    Parent_View 	@61
-			    location   	(29, 156)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3DF61B31026B"
-			    client     	@61
-			    supplier   	@54
-			    line_style 	0)))))
-	(object ClassDiagram "Composite Palette"
-	    quid       	"3AE82D0F0169"
-	    title      	"Composite Palette"
-	    documentation 	"This contains the palette classes that do composite aggregations of their components."
-	    zoom       	100
-	    max_height 	28350
-	    max_width  	21600
-	    origin_x   	0
-	    origin_y   	0
-	    items      	(list diagram_item_list
-		(object ClassView "Class" "Logical View::palette::Palette" @66
+		(object ClassView "Class" "Logical View::CDM::KeyedValueHolder" @42
 		    ShowCompartmentStereotypes 	TRUE
-		    SuppressAttribute 	TRUE
 		    IncludeAttribute 	TRUE
 		    IncludeOperation 	TRUE
-		    location   	(464, 144)
+		    location   	(1552, 2096)
 		    font       	(object Font
 			size       	10
 			face       	"Arial"
@@ -1868,1588 +1680,74 @@
 			color      	0
 			default_color 	TRUE)
 		    label      	(object ItemLabel
-			Parent_View 	@66
-			location   	(382, 95)
+			Parent_View 	@42
+			location   	(1156, 1992)
 			fill_color 	13434879
 			nlines     	1
-			max_width  	164
+			max_width  	792
 			justify    	0
-			label      	"Palette")
+			label      	"KeyedValueHolder")
 		    icon_style 	"Icon"
 		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"39D6850202BF"
-		    width      	182
-		    height     	122
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::Entry" @67
-		    ShowCompartmentStereotypes 	TRUE
-		    SuppressAttribute 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(512, 1456)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@67
-			location   	(431, 1410)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	162
-			justify    	0
-			label      	"Entry")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"39D68521015B"
-		    height     	114
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::GroupCmp" @68
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(928, 1120)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@68
-			location   	(811, 1074)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	234
-			justify    	0
-			label      	"GroupCmp")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3AE83402032A"
-		    width      	252
-		    height     	114
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object AssociationViewNew "$UNNAMED$10" @69
-		    location   	(719, 1287)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE8343E02E0"
-		    roleview_list 	(list RoleViews
-			(object RoleView "cmpEntries" @70
-			    Parent_View 	@69
-			    location   	(-209, 167)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @71
-				Parent_View 	@70
-				location   	(602, 1312)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	225
-				justify    	0
-				label      	"+cmpEntries"
-				pctDist    	0.609231
-				height     	55
-				orientation 	1)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE8343F02F5"
-			    client     	@69
-			    supplier   	@67
-			    line_style 	0
-			    label      	(object SegLabel @72
-				Parent_View 	@70
-				location   	(648, 1410)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"0..n"
-				pctDist    	0.747604
-				height     	51
-				orientation 	0))
-			(object RoleView "$UNNAMED$11" @73
-			    Parent_View 	@69
-			    location   	(-209, 167)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE8343F02FF"
-			    client     	@69
-			    supplier   	@68
-			    line_style 	0)))
-		(object ClassView "Class" "Logical View::palette::CategoryCmp" @74
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(1360, 432)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@74
-			location   	(1234, 366)
-			fill_color 	13434879
-			nlines     	2
-			max_width  	252
-			justify    	0
-			label      	"CategoryCmp")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3AE833120284"
-		    width      	270
-		    height     	155
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::Category" @75
-		    ShowCompartmentStereotypes 	TRUE
-		    SuppressAttribute 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(1360, 128)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	TRUE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@75
-			location   	(1264, 79)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	192
-			justify    	0
-			label      	"Category")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"39D6850B02AE"
-		    width      	210
-		    height     	122
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritView "" @76
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE8332E034D"
-		    client     	@74
-		    supplier   	@75
-		    line_style 	0)
-		(object ClassView "Class" "Logical View::palette::Group" @77
-		    ShowCompartmentStereotypes 	TRUE
-		    SuppressAttribute 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(928, 864)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	TRUE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@77
-			location   	(847, 815)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	162
-			justify    	0
-			label      	"Group")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"39D6851C01A4"
-		    height     	122
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object AssociationViewNew "$UNNAMED$8" @78
-		    location   	(1135, 655)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE8333302B4"
-		    roleview_list 	(list RoleViews
-			(object RoleView "cmpGroups" @79
-			    Parent_View 	@78
-			    location   	(-225, 223)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @80
-				Parent_View 	@79
-				location   	(1040, 698)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	230
-				justify    	0
-				label      	"+cmpGroups"
-				pctDist    	0.470763
-				height     	38
-				orientation 	1)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE8333402F1"
-			    client     	@78
-			    supplier   	@77
-			    line_style 	0
-			    label      	(object SegLabel @81
-				Parent_View 	@79
-				location   	(1056, 794)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"0..n"
-				pctDist    	0.738057
-				height     	42
-				orientation 	0))
-			(object RoleView "$UNNAMED$9" @82
-			    Parent_View 	@78
-			    location   	(-225, 223)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE8333402FC"
-			    client     	@78
-			    supplier   	@74
-			    line_style 	0)))
-		(object InheritView "" @83
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE8341501C9"
-		    client     	@68
-		    supplier   	@77
-		    line_style 	0)
-		(object ClassView "Class" "Logical View::palette::PaletteCmp" @84
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(464, 464)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@84
-			location   	(339, 418)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	250
-			justify    	0
-			label      	"PaletteCmp")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3AE83079006B"
-		    width      	268
-		    height     	114
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritView "" @85
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE8309A00E1"
-		    client     	@84
-		    supplier   	@66
-		    line_style 	0)
-		(object AssociationViewNew "$UNNAMED$4" @86
-		    location   	(926, 289)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE830A00144"
-		    roleview_list 	(list RoleViews
-			(object RoleView "cmpCategories" @87
-			    Parent_View 	@86
-			    location   	(462, -175)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @88
-				Parent_View 	@87
-				location   	(1111, 186)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	298
-				justify    	0
-				label      	"+cmpCategories"
-				pctDist    	0.596401
-				height     	33
-				orientation 	0)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE830A10358"
-			    client     	@86
-			    supplier   	@75
-			    line_style 	0
-			    label      	(object SegLabel @89
-				Parent_View 	@87
-				location   	(1208, 249)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"0..n"
-				pctDist    	0.797792
-				height     	61
-				orientation 	1))
-			(object RoleView "$UNNAMED$5" @90
-			    Parent_View 	@86
-			    location   	(462, -175)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE830A10362"
-			    client     	@86
-			    supplier   	@84
-			    line_style 	0)))
-		(object AssociationViewNew "$UNNAMED$14" @91
-		    location   	(693, 661)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE830C900F3"
-		    roleview_list 	(list RoleViews
-			(object RoleView "cmpControlGroup" @92
-			    Parent_View 	@91
-			    location   	(229, 197)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @93
-				Parent_View 	@92
-				location   	(707, 712)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	348
-				justify    	0
-				label      	"+cmpControlGroup"
-				pctDist    	0.196875
-				height     	30
-				orientation 	1)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE830CA0144"
-			    client     	@91
-			    supplier   	@77
-			    line_style 	0
-			    label      	(object SegLabel @94
-				Parent_View 	@92
-				location   	(780, 798)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"0..1"
-				pctDist    	0.721821
-				height     	48
-				orientation 	1))
-			(object RoleView "$UNNAMED$15" @95
-			    Parent_View 	@91
-			    location   	(229, 197)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE830CA0158"
-			    client     	@91
-			    supplier   	@84
-			    line_style 	0)))))
-	(object ClassDiagram "RefPalette"
-	    quid       	"3AE82EC30094"
-	    title      	"RefPalette"
-	    documentation 	
-|This contains the palette classes that do shared (reference)  aggregations of their components.
-|
-|This allows the palette to be made up of pieces of another palette in another document.
-	    
-	    zoom       	100
-	    max_height 	28350
-	    max_width  	21600
-	    origin_x   	0
-	    origin_y   	1070
-	    items      	(list diagram_item_list
-		(object ClassView "Class" "Logical View::palette::Palette" @96
-		    ShowCompartmentStereotypes 	TRUE
-		    SuppressAttribute 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(1344, 896)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	TRUE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@96
-			location   	(1261, 847)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	166
-			justify    	0
-			label      	"Palette")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"39D6850202BF"
-		    width      	184
-		    height     	122
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::Category" @97
-		    ShowCompartmentStereotypes 	TRUE
-		    SuppressAttribute 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(2240, 880)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	TRUE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@97
-			location   	(2144, 831)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	192
-			justify    	0
-			label      	"Category")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"39D6850B02AE"
-		    width      	210
-		    height     	122
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::PaletteRef" @98
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(1344, 1200)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@98
-			location   	(1238, 1154)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	212
-			justify    	0
-			label      	"PaletteRef")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3AE82D6C002C"
-		    width      	230
-		    height     	114
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritView "" @99
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE82D7C0007"
-		    client     	@98
-		    supplier   	@96
-		    line_style 	0)
-		(object AssociationViewNew "$UNNAMED$2" @100
-		    location   	(1796, 1037)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE82E8E02D2"
-		    roleview_list 	(list RoleViews
-			(object RoleView "refCategories" @101
-			    Parent_View 	@100
-			    location   	(1332, 589)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @102
-				Parent_View 	@101
-				location   	(1954, 920)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	298
-				justify    	0
-				label      	"+refCategories"
-				pctDist    	0.519828
-				height     	58
-				orientation 	0)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE82E90007C"
-			    client     	@100
-			    supplier   	@97
-			    line_style 	0
-			    label      	(object SegLabel @103
-				Parent_View 	@101
-				location   	(2053, 999)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"0..n"
-				pctDist    	0.712842
-				height     	50
-				orientation 	1))
-			(object RoleView "$UNNAMED$3" @104
-			    Parent_View 	@100
-			    location   	(1332, 589)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE82E900086"
-			    client     	@100
-			    supplier   	@98
-			    line_style 	0)))
-		(object ClassView "Class" "Logical View::palette::Group" @105
-		    ShowCompartmentStereotypes 	TRUE
-		    SuppressAttribute 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(1808, 1616)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	TRUE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@105
-			location   	(1727, 1567)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	162
-			justify    	0
-			label      	"Group")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"39D6851C01A4"
-		    height     	122
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object AssociationViewNew "$UNNAMED$0" @106
-		    location   	(1573, 1405)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE82DE001E2"
-		    roleview_list 	(list RoleViews
-			(object RoleView "refControlGroup" @107
-			    Parent_View 	@106
-			    location   	(1109, 957)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @108
-				Parent_View 	@107
-				location   	(1590, 1450)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	348
-				justify    	0
-				label      	"+refControlGroup"
-				pctDist    	0.192102
-				height     	23
-				orientation 	1)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE82DE10265"
-			    client     	@106
-			    supplier   	@105
-			    line_style 	0
-			    label      	(object SegLabel @109
-				Parent_View 	@107
-				location   	(1701, 1482)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"0..1"
-				pctDist    	0.660944
-				height     	29
-				orientation 	0))
-			(object RoleView "$UNNAMED$1" @110
-			    Parent_View 	@106
-			    location   	(1109, 957)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE82DE1026F"
-			    client     	@106
-			    supplier   	@98
-			    line_style 	0)))
-		(object ClassView "Class" "Logical View::palette::CategoryRef" @111
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(2240, 1184)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@111
-			location   	(2115, 1138)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	250
-			justify    	0
-			label      	"CategoryRef")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3AE832AD0080"
-		    width      	268
-		    height     	114
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritView "" @112
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE832B802F3"
-		    client     	@111
-		    supplier   	@97
-		    line_style 	0)
-		(object AssociationViewNew "$UNNAMED$6" @113
-		    location   	(2025, 1397)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE832D70149"
-		    roleview_list 	(list RoleViews
-			(object RoleView "refGroups" @114
-			    Parent_View 	@113
-			    location   	(665, 965)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @115
-				Parent_View 	@114
-				location   	(1934, 1446)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	208
-				justify    	0
-				label      	"+refGroups"
-				pctDist    	0.450672
-				height     	31
-				orientation 	1)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE832D80335"
-			    client     	@113
-			    supplier   	@105
-			    line_style 	0
-			    label      	(object SegLabel @116
-				Parent_View 	@114
-				location   	(1922, 1528)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"0..n"
-				pctDist    	0.747915
-				height     	20
-				orientation 	0))
-			(object RoleView "$UNNAMED$7" @117
-			    Parent_View 	@113
-			    location   	(665, 965)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE832D80349"
-			    client     	@113
-			    supplier   	@111
-			    line_style 	0)))
-		(object ClassView "Class" "Logical View::palette::Entry" @118
-		    ShowCompartmentStereotypes 	TRUE
-		    SuppressAttribute 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(1360, 2080)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@118
-			location   	(1279, 2034)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	162
-			justify    	0
-			label      	"Entry")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"39D68521015B"
-		    height     	114
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::GroupRef" @119
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(1808, 1856)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@119
-			location   	(1709, 1810)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	198
-			justify    	0
-			label      	"GroupRef")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3AE8346F01A0"
-		    width      	216
-		    height     	114
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritView "" @120
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE8347B01A7"
-		    client     	@119
-		    supplier   	@105
-		    line_style 	0)
-		(object AssociationViewNew "$UNNAMED$12" @121
-		    location   	(1574, 1972)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3AE8349003A6"
-		    roleview_list 	(list RoleViews
-			(object RoleView "refEntries" @122
-			    Parent_View 	@121
-			    location   	(646, 868)
-			    font       	(object Font
-				size       	10
-				face       	"Arial"
-				bold       	FALSE
-				italics    	FALSE
-				underline  	FALSE
-				strike     	FALSE
-				color      	0
-				default_color 	TRUE)
-			    label      	(object SegLabel @123
-				Parent_View 	@122
-				location   	(1505, 1970)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	1
-				anchor_loc 	1
-				nlines     	1
-				max_width  	188
-				justify    	0
-				label      	"+refEntries"
-				pctDist    	0.445161
-				height     	34
-				orientation 	1)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE834920196"
-			    client     	@121
-			    supplier   	@118
-			    line_style 	0
-			    label      	(object SegLabel @124
-				Parent_View 	@122
-				location   	(1502, 2076)
-				font       	(object Font
-				    size       	10
-				    face       	"Arial"
-				    bold       	FALSE
-				    italics    	FALSE
-				    underline  	FALSE
-				    strike     	FALSE
-				    color      	0
-				    default_color 	TRUE)
-				anchor     	2
-				anchor_loc 	1
-				nlines     	1
-				max_width  	15
-				justify    	0
-				label      	"0..n"
-				pctDist    	0.796774
-				height     	60
-				orientation 	0))
-			(object RoleView "$UNNAMED$13" @125
-			    Parent_View 	@121
-			    location   	(646, 868)
-			    stereotype 	TRUE
-			    line_color 	3342489
-			    quidu      	"3AE8349201A0"
-			    client     	@121
-			    supplier   	@119
-			    line_style 	0)))
-		(object ClassView "Class" "Logical View::palette::Container" @126
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(1632, 560)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	TRUE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@126
-			location   	(1530, 511)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	204
-			justify    	0
-			label      	"Container")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3BAA027E000E"
-		    width      	222
-		    height     	122
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritTreeView "" @127
-		    location   	(1632, 711)
-		    line_color 	3342489
-		    fill_color 	13434879
-		    supplier   	@126
-		    vertices   	(list Points
-			(1632, 711)
-			(1632, 621)))
-		(object InheritView "" @128
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	(object SegLabel @129
-			Parent_View 	@128
-			location   	(1406, 773)
-			font       	(object Font
-			    size       	10
-			    face       	"Arial"
-			    bold       	FALSE
-			    italics    	FALSE
-			    underline  	FALSE
-			    strike     	FALSE
-			    color      	0
-			    default_color 	TRUE)
-			anchor     	10
-			anchor_loc 	1
-			nlines     	1
-			max_width  	450
-			justify    	0
-			label      	"<<extend>>"
-			pctDist    	0.500000
-			height     	10
-			orientation 	1)
-		    line_color 	3342489
-		    quidu      	"3BAA03A10233"
-		    client     	@96
-		    supplier   	@126
-		    line_style 	3
-		    origin_attachment 	(1396, 835)
-		    terminal_attachment 	(1396, 711)
-		    drawSupplier 	@127)
-		(object InheritView "" @130
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3BAA02FA01CF"
-		    client     	@97
-		    supplier   	@126
-		    line_style 	3
-		    origin_attachment 	(2240, 819)
-		    terminal_attachment 	(2240, 711)
-		    drawSupplier 	@127)
-		(object InheritView "" @131
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3BAA02F1026C"
-		    client     	@105
-		    supplier   	@126
-		    line_style 	3
-		    origin_attachment 	(1808, 1555)
-		    terminal_attachment 	(1808, 711)
-		    drawSupplier 	@127)
-		(object ClassView "Class" "Logical View::ecore::EObject" @132
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    location   	(1168, 1648)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@132
-			location   	(1079, 1579)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	178
-			justify    	0
-			label      	"EObject")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3C4F1C860123"
-		    width      	196
-		    height     	160
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritView "" @133
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	(object SegLabel @134
-			Parent_View 	@133
-			location   	(1270, 1826)
-			font       	(object Font
-			    size       	10
-			    face       	"Arial"
-			    bold       	FALSE
-			    italics    	FALSE
-			    underline  	FALSE
-			    strike     	FALSE
-			    color      	0
-			    default_color 	TRUE)
-			anchor     	10
-			anchor_loc 	1
-			nlines     	1
-			max_width  	450
-			justify    	0
-			label      	"<<extend>>"
-			pctDist    	0.637161
-			height     	21
-			orientation 	1)
-		    line_color 	3342489
-		    quidu      	"3E39B9250360"
-		    client     	@118
-		    supplier   	@132
-		    line_style 	0)
-		(object ClassView "Class" "Logical View::ecore::EObject" @135
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    location   	(1408, 176)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@135
-			location   	(1319, 107)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	178
-			justify    	0
-			label      	"EObject")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3C4F1C860123"
-		    width      	196
-		    height     	160
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritView "" @136
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    stereotype 	(object SegLabel @137
-			Parent_View 	@136
-			location   	(1534, 389)
-			font       	(object Font
-			    size       	10
-			    face       	"Arial"
-			    bold       	FALSE
-			    italics    	FALSE
-			    underline  	FALSE
-			    strike     	FALSE
-			    color      	0
-			    default_color 	TRUE)
-			anchor     	10
-			anchor_loc 	1
-			nlines     	1
-			max_width  	450
-			justify    	0
-			label      	"<<extend>>"
-			pctDist    	0.449799
-			height     	2
-			orientation 	1)
-		    line_color 	3342489
-		    quidu      	"3E39B9B7005C"
-		    client     	@126
-		    supplier   	@135
-		    line_style 	0)
-		(object ClassView "Class" "Logical View::palette::ICDEPaletteEntry" @138
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(2016, 240)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@138
-			location   	(1843, 213)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	346
-			justify    	0
-			label      	"ICDEPaletteEntry")
-		    stereotype 	(object ItemLabel
-			Parent_View 	@138
-			location   	(1843, 168)
-			fill_color 	13434879
-			anchor     	10
-			nlines     	1
-			max_width  	346
-			justify    	0
-			label      	"<<Interface>>")
-		    icon       	"Interface"
-		    icon_style 	"Label"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3EB14B8300A6"
-		    width      	364
-		    height     	166
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritView "" @139
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3EB14C9803D9"
-		    client     	@126
-		    supplier   	@138
-		    line_style 	0)
-		(object ClassView "Class" "Logical View::palette::ICDEPaletteEntry" @140
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(2016, 240)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@140
-			location   	(1843, 213)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	346
-			justify    	0
-			label      	"ICDEPaletteEntry")
-		    stereotype 	(object ItemLabel
-			Parent_View 	@140
-			location   	(1843, 168)
-			fill_color 	13434879
-			anchor     	10
-			nlines     	1
-			max_width  	346
-			justify    	0
-			label      	"<<Interface>>")
-		    icon       	"Interface"
-		    icon_style 	"Label"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3EB14B8300A6"
-		    width      	364
-		    height     	166
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::ICDEPaletteEntry" @141
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(832, 2000)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@141
-			location   	(665, 1974)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	334
-			justify    	0
-			label      	"ICDEPaletteEntry")
-		    stereotype 	(object ItemLabel
-			Parent_View 	@141
-			location   	(665, 1929)
-			fill_color 	13434879
-			anchor     	10
-			nlines     	1
-			max_width  	334
-			justify    	0
-			label      	"<<Interface>>")
-		    icon       	"Interface"
-		    icon_style 	"Label"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3EB14B8300A6"
-		    width      	352
-		    height     	164
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object InheritView "" @142
-		    stereotype 	TRUE
-		    line_color 	3342489
-		    quidu      	"3EB14CE1030C"
-		    client     	@118
-		    supplier   	@141
-		    line_style 	0)))
-	(object ClassDiagram "GEF Interfaces"
-	    quid       	"3BA8F18C0050"
-	    title      	"GEF Interfaces"
-	    documentation 	"Interfaces to the GEF."
-	    zoom       	100
-	    max_height 	28350
-	    max_width  	21600
-	    origin_x   	0
-	    origin_y   	1405
-	    items      	(list diagram_item_list
-		(object ClassView "Class" "Logical View::palette::CreationFactory" @143
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(784, 2192)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@143
-			location   	(271, 2139)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	1026
-			justify    	0
-			label      	"CreationFactory")
-		    stereotype 	(object ItemLabel
-			Parent_View 	@143
-			location   	(271, 2094)
-			fill_color 	13434879
-			anchor     	10
-			nlines     	1
-			max_width  	1026
-			justify    	0
-			label      	"<<datatype>>")
-		    icon_style 	"Icon"
-		    line_color 	3342489
-		    fill_color 	12615935
-		    quidu      	"3B5EE3AE019B"
-		    width      	1044
-		    height     	218
-		    annotation 	8
-		    autoResize 	TRUE)
-		(object ClassView "Class" "Logical View::palette::ICDEPaletteEntry" @144
-		    ShowCompartmentStereotypes 	TRUE
-		    IncludeAttribute 	TRUE
-		    IncludeOperation 	TRUE
-		    location   	(736, 1568)
-		    font       	(object Font
-			size       	10
-			face       	"Arial"
-			bold       	FALSE
-			italics    	FALSE
-			underline  	FALSE
-			strike     	FALSE
-			color      	0
-			default_color 	TRUE)
-		    label      	(object ItemLabel
-			Parent_View 	@144
-			location   	(185, 1515)
-			fill_color 	13434879
-			nlines     	1
-			max_width  	1102
-			justify    	0
-			label      	"ICDEPaletteEntry")
-		    stereotype 	(object ItemLabel
-			Parent_View 	@144
-			location   	(185, 1470)
-			fill_color 	13434879
-			anchor     	10
-			nlines     	1
-			max_width  	1102
-			justify    	0
-			label      	"<<Interface>>")
-		    icon       	"Interface"
-		    icon_style 	"Label"
-		    line_color 	3342489
-		    fill_color 	13434879
-		    quidu      	"3EB14B8300A6"
+		    fill_color 	16776960
+		    quidu      	"3B3CBBFB0013"
 		    compartment 	(object Compartment
-			Parent_View 	@144
-			location   	(185, 1571)
+			Parent_View 	@42
+			location   	(1156, 2097)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	2
+			max_width  	672)
+		    width      	810
+		    height     	232
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @43
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"42B2F5DA030D"
+		    client     	@9
+		    supplier   	@42
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::palette::Drawer" @44
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(784, 1504)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@44
+			location   	(404, 1423)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	760
+			justify    	0
+			label      	"Drawer")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"42B2E21F0274"
+		    compartment 	(object Compartment
+			Parent_View 	@44
+			location   	(404, 1484)
 			font       	(object Font
 			    size       	10
 			    face       	"Arial"
@@ -3463,8 +1761,180 @@
 			fill_color 	16777215
 			anchor     	2
 			nlines     	2
-			max_width  	0)
-		    width      	1120
-		    height     	218
+			max_width  	653)
+		    width      	778
+		    height     	186
 		    annotation 	8
-		    autoResize 	TRUE)))))
+		    autoResize 	TRUE)
+		(object InheritView "" @45
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"42B2E2830318"
+		    client     	@44
+		    supplier   	@14
+		    line_style 	3
+		    origin_attachment 	(509, 1410)
+		    terminal_attachment 	(509, 1097)
+		    drawSupplier 	@15)
+		(object ClassView "Class" "Logical View::palette::Root" @46
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(352, 1232)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@46
+			location   	(256, 1181)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	192
+			justify    	0
+			label      	"Root")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"39D6850202BF"
+		    width      	210
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @47
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"3BAA03A10233"
+		    client     	@46
+		    supplier   	@14
+		    line_style 	3
+		    origin_attachment 	(268, 1169)
+		    terminal_attachment 	(268, 1097)
+		    drawSupplier 	@15)
+		(object ClassView "Class" "Logical View::palette::AbstractToolEntry" @48
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(352, 2176)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@48
+			location   	(133, 2124)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	438
+			justify    	0
+			label      	"AbstractToolEntry")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	12615935
+		    quidu      	"39DB6F4A033F"
+		    width      	456
+		    height     	128
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "$UNNAMED$26" @49
+		    location   	(352, 1703)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"42B6E3390331"
+		    roleview_list 	(list RoleViews
+			(object RoleView "defEntry" @50
+			    Parent_View 	@49
+			    location   	(112, 471)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @51
+				Parent_View 	@50
+				location   	(246, 2013)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	180
+				justify    	0
+				label      	"+defEntry"
+				pctDist    	0.759804
+				height     	107
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"42B6E33B026B"
+			    client     	@49
+			    supplier   	@48
+			    line_style 	0
+			    label      	(object SegLabel @52
+				Parent_View 	@50
+				location   	(421, 2021)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.781863
+				height     	69
+				orientation 	0))
+			(object RoleView "$UNNAMED$27" @53
+			    Parent_View 	@49
+			    location   	(112, 471)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"42B6E33B026D"
+			    client     	@49
+			    supplier   	@46
+			    line_style 	0)))))))

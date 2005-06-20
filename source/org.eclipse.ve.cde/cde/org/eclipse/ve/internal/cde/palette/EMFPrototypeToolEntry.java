@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: EMFPrototypeToolEntry.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:18:01 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
 
 import java.lang.String;
@@ -34,7 +34,7 @@ import java.lang.String;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getEMFPrototypeToolEntry()
- * @model 
+ * @model
  * @generated
  */
 public interface EMFPrototypeToolEntry extends CreationToolEntry{
@@ -48,11 +48,13 @@ public interface EMFPrototypeToolEntry extends CreationToolEntry{
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * This is the string containing the prototype URI for the prototype. 
+	 * <p>
+	 * The URI is to the object protoype that is being created. The URI must point to an EObject in a resource. That EObject must be contained directly by the Resource it is in (i.e. it mustn't be contained by another EObject). Also in the resource can be Annotations for any of the EObjects that are part of the template. These will automatically be added in.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Prototype URI</em>' attribute.
 	 * @see #setPrototypeURI(String)
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getEMFPrototypeToolEntry_PrototypeURI()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getPrototypeURI();

@@ -11,29 +11,20 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: Group.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:18:01 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
 
-
-import java.util.List;
 
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Group</b></em>'.
- * This is the abstract base group. There are two standard implementations of it:
- * 
- * GroupCmp: This is a group where the entries are a composite aggregation. (i.e. it is contained within the  GroupCmp).
- * 
- * GroupRef: This is a group where the entries is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of group allows references to pieces of other palettes to form together a new group.
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * This is the abstract base group. There are two standard implementations of it:
- * 
- * GroupCmp: This is a group where the entries are a composite aggregation. (i.e. it is contained within the  GroupCmp).
- * 
- * GroupRef: This is a group where the entries is a shared aggregation. (i.e. is is actually contained somewhere else and only referenced here). This type of group allows references to pieces of other palettes to form together a new group.
+ * This is a group. 
+ * <p>
+ * A group is a container that cannot be collapsed. It can accept any entry type.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -44,7 +35,7 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getGroup()
- * @model abstract="true"
+ * @model
  * @generated
  */
 public interface Group extends Container{
@@ -57,11 +48,15 @@ public interface Group extends Container{
 	 * If the meaning of the '<em>Group Label</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
+	 * @deprecated Use {@link Entry#getEntryLabel()} instead.
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This is obsolete. Use Entry.entryLabel instead.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Group Label</em>' containment reference.
 	 * @see #setGroupLabel(AbstractString)
 	 * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getGroup_GroupLabel()
-	 * @model containment="true"
+	 * @model containment="true" transient="true" volatile="true"
 	 * @generated
 	 */
 	AbstractString getGroupLabel();
@@ -69,6 +64,7 @@ public interface Group extends Container{
 	/**
 	 * Sets the value of the '{@link org.eclipse.ve.internal.cde.palette.Group#getGroupLabel <em>Group Label</em>}' containment reference.
 	 * <!-- begin-user-doc -->
+	 * @deprecated Use {@link Entry#setEntryLabel(AbstractString)} instead.
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Group Label</em>' containment reference.
 	 * @see #getGroupLabel()
@@ -76,9 +72,4 @@ public interface Group extends Container{
 	 */
 	void setGroupLabel(AbstractString value);
 
-	/**
-	 * Return the entries
-	 */
-	public List getEntries();
-	
 }

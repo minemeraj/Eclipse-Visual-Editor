@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: AnnotatedCreationEntry.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:18:01 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -19,11 +19,14 @@ import org.eclipse.emf.common.util.EList;
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Annotated Creation Entry</b></em>'.
- * This will wrapper a CreationToolEntry and provide for creating an annotation too. This is the entry that should be in the palette when an annotation entry is desired.
+ * @deprecated Use {@link org.eclipse.gef.palette.CreationToolEntry#getKeyedValues()}
+ * <p>
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
  * This will wrapper a CreationToolEntry and provide for creating an annotation too. This is the entry that should be in the palette when an annotation entry is desired.
+ * <p>
+ * This is obsolete. The CreationToolEntry now can handle this itself.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -35,7 +38,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.palette.PalettePackage#getAnnotatedCreationEntry()
- * @model 
+ * @model
  * @generated
  */
 public interface AnnotatedCreationEntry extends AbstractToolEntry{

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FrameConstructorCreationPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-20 23:54:32 $ 
  */
 
 import java.util.*;
@@ -28,12 +28,13 @@ import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.EMFCreationTool;
+
+import org.eclipse.ve.internal.java.core.VECreationPolicy;
 
 import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
-public class FrameConstructorCreationPolicy implements EMFCreationTool.CreationPolicy {
+public class FrameConstructorCreationPolicy extends VECreationPolicy {
 
 	public Command getCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest) {
 
@@ -111,9 +112,7 @@ public class FrameConstructorCreationPolicy implements EMFCreationTool.CreationP
 		return result;
 	}
 	
-	/*
-	 * @see CreationPolicy#getDefaultSuperString(EClass)
-	 */
+	
 	public String getDefaultSuperString(EClass superClass) {
 		if (superClass instanceof JavaClass) {
 			// Look for a null constructor up the stack, if there is one,
