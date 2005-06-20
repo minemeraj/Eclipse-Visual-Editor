@@ -11,9 +11,11 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.31 $  $Date: 2005-06-20 18:49:38 $ 
+ *  $Revision: 1.32 $  $Date: 2005-06-20 23:51:26 $ 
  */
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -57,8 +59,23 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final String PI_SOURCE = "source"; //$NON-NLS-1$	
 	public static final String PI_SOURCEPREFIX = "prefix"; //$NON-NLS-1$	
 	
-	public static final String URL_HOMEPAGE = "http://www.eclipse.org/vep"; //$NON-NLS-1$
-	public static final String URL_NEWSGROUP = "news://news.eclipse.org/eclipse.tools.ve"; //$NON-NLS-1$
+	public static final URL URL_HOMEPAGE;
+	public static final URL URL_NEWSGROUP;
+	
+	static {
+		URL temp = null;
+		try {
+			temp = new URL("http://www.eclipse.org/vep"); //$NON-NLS-1$
+		} catch (MalformedURLException e) {
+		}
+		URL_HOMEPAGE = temp;
+		temp = null;
+		try {
+			temp = new URL("news://news.eclipse.org/eclipse.tools.ve");	 //$NON-NLS-1$
+		} catch (MalformedURLException e) {
+		}
+		URL_NEWSGROUP = temp;
+	}
 	// <contributor ...> or contributor="..." in extension point
 
 	private static JavaVEPlugin PLUGIN;

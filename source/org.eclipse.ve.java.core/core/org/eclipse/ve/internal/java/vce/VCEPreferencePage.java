@@ -11,10 +11,10 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.27 $  $Date: 2005-06-20 18:49:38 $ 
+ *  $Revision: 1.28 $  $Date: 2005-06-20 23:51:26 $ 
  */
 
-import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.swing.UIManager;
@@ -36,6 +36,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
+import org.eclipse.ui.browser.IWebBrowser;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
@@ -178,16 +180,32 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		text.setLayoutData(data);
 		return text;
 	}
+	
+	private static final String HOMELINK = "hp";	//$NON-NLS-1$
+	private static final String NEWSGROUPLINK = "ng";	//$NON-NLS-1$
 	protected Control createContents(Composite parent) {
 
-		Link newsgroupLink = new Link(parent,SWT.NONE);
-		newsgroupLink.setText("Support and resources available on <a>homepage</a> and <a>newsgroup</a>");
+		Composite contentsParent = new Composite(parent, SWT.NONE);
+		contentsParent.setLayout(new GridLayout());
+		
+		Link newsgroupLink = new Link(contentsParent,SWT.NONE);
+		newsgroupLink.setLayoutData(new GridData(SWT.END, SWT.CENTER, true, false));	// Right align
+		newsgroupLink.setText(VCEMessages.getString("VCEPreferencePage.LinkToResources"));
 		newsgroupLink.addSelectionListener(new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e) {
-				try{
-					Runtime.getRuntime().exec(JavaVEPlugin.URL_NEWSGROUP);
-				} catch (IOException exc){
-					
+				URL url = null;
+				if (HOMELINK.equals(e.text))
+					url = JavaVEPlugin.URL_HOMEPAGE;
+				else if (NEWSGROUPLINK.equals(e.text))
+					url = JavaVEPlugin.URL_NEWSGROUP;
+				if (url != null) {
+					IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
+					try {
+						IWebBrowser browser = support.getExternalBrowser();
+						browser.openURL(url);
+					}
+					catch (PartInitException e2) {
+					}
 				}
 			};
 		});
@@ -196,16 +214,16 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		// The contents area is divided into notebooks to make best use of real estate
 		// Current tabs are for appearance and for code generation
 		tabFolder = new TabFolder(parent, SWT.NONE);
-//		tabFolder.setLayout(new TabFolderLayout());
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));	// Fill both and grab extra both.
 
 		createAppearanceTab();
 		createCodeGenerationTab();
 		createStylesTab();
 		initializeGUIControlsFromStore();
 		
-		applyDialogFont(tabFolder);
+		applyDialogFont(contentsParent);
 
-		return tabFolder;
+		return contentsParent;
 	}
 	protected void createAppearanceTab() {
 
