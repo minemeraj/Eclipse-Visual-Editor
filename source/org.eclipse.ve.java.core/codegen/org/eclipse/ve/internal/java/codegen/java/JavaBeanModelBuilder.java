@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.30 $  $Date: 2005-06-20 17:33:02 $ 
+ *  $Revision: 1.31 $  $Date: 2005-06-20 22:56:05 $ 
  */
 
 import java.util.*;
@@ -208,7 +208,7 @@ void  setLineSeperator() {
 	fModel.setLineSeperator(System.getProperty("line.separator")) ; //$NON-NLS-1$
 	// For Shadow BDM no need to set up a seperator -- no fCU
 	
-	if (fCU==null || fModel.getWorkingCopyProvider()!=null || fModel.getWorkingCopyProvider().getDocument()==null)
+	if (fCU==null || (fModel.getWorkingCopyProvider()!=null && fModel.getWorkingCopyProvider().getDocument()==null))
 		return;
 	
 	fModel.setLineSeperator(TextUtilities.getDefaultLineDelimiter(fModel.getWorkingCopyProvider().getDocument()));
