@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:52 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-20 20:37:01 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -29,4 +29,7 @@ public class ViewFormTreeEditPart extends CompositeTreeEditPart {
 		return new ViewFormContainerPolicy(EditDomain.getEditDomain(this));
 	}
 
+	protected void createLayoutPolicyHelper() {
+		treeContainerPolicy.setPolicyHelper(new ViewFormLayoutPolicyHelper());
+	}
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:29 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-20 20:37:01 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -29,4 +29,7 @@ public class CBannerTreeEditPart extends CompositeTreeEditPart {
 		return new CBannerContainerPolicy(EditDomain.getEditDomain(this));
 	}
 
+	protected void createLayoutPolicyHelper() {
+		treeContainerPolicy.setPolicyHelper(new CBannerLayoutPolicyHelper());
+	}
 }
