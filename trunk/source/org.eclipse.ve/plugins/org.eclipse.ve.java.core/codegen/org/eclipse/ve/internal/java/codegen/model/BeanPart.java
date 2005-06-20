@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.41 $  $Date: 2005-05-17 23:36:56 $ 
+ *  $Revision: 1.42 $  $Date: 2005-06-20 13:43:47 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
@@ -58,6 +59,7 @@ public class BeanPart {
 	ArrayList		fparentExpressions = new ArrayList() ;     // Expressions that needs to move to a parent
 	EObject   		fEObject = null ;							// Mof Instance of this Bean
 	ArrayList    	fbackReferences = new ArrayList() ;		// Mof Object that contains this object 
+	ArrayList    	fGenericbackReferences = new ArrayList() ;		// Mof Object that references this object 
 	EObject			fContainer = null ;                        //  Parent (Container) of this object - null ? part of Composition
 	ArrayList      	fChildren = new ArrayList () ;				// Beans this part may contain components	    
     BeanPart    	fProxyBeanPart = null ;					// This bean part is not in the BeanDecModel    
@@ -68,6 +70,13 @@ public class BeanPart {
     boolean			fSettingProcessingRequired = false ;
     int				uniqueIndex = 0;
     IBeanSourceGenerator generator = null;
+    
+    /*
+     * Determines if this BeanPart is in the EMF model or not. There
+     * can be BeanParts which are not in the EMF model as there are 
+     * no references/usages of it.
+     */
+    private boolean isActive = true;
 	
     
 
@@ -403,10 +412,17 @@ public void setEObject (EObject obj) {
 }
 
 /**
- *
+ * Returns parent-child back references
  */
 public final BeanPart[] getBackRefs() {
 	return (BeanPart[]) fbackReferences.toArray(new BeanPart[fbackReferences.size()]) ;
+}
+
+/**
+ * Returns non parent-child back references
+ */
+public final BeanPart[] getGenericBackRefs() {
+	return (BeanPart[]) fGenericbackReferences.toArray(new BeanPart[fGenericbackReferences.size()]) ;
 }
 
 /**
@@ -428,9 +444,21 @@ public void addBackRef (BeanPart bean, EReference sf) {
       
 }
 
+/**
+ *  Reference target to point to its source (e.g., child to parent)
+ */
+public void addGenericBackRef (BeanPart bean, EReference sf) {
+	if (!fGenericbackReferences.contains(bean))
+	   fGenericbackReferences.add(bean) ;
+}
 
 public void removeBackRef (BeanPart bean, boolean updateFF) {
 	removeBackRef(bean.getEObject(),updateFF);
+}
+
+public void removeGenericBackRef (BeanPart bean, boolean updateFF) {
+	if(fGenericbackReferences.contains(bean))
+		fGenericbackReferences.remove(bean);
 }
 
 /**
@@ -496,6 +524,8 @@ public String toString () {
    String message = super.toString() + "  " + fDecleration.getName() + "(" + fDecleration.getType() + ")";	 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
    if(isDisposed())
 	   message+="[DISPOSED]"; //$NON-NLS-1$
+   if(!isActive())
+	   message+="[INACTIVE]"; //$NON-NLS-1$
    return message;
 }
 
@@ -957,5 +987,147 @@ public   void removeFromJVEModel()  {
 //				array[i].getMethod().updateExpressionIndex(array[i]);
 //			
 //		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @see #isActive
+	 * @since 1.1
+	 */
+	public boolean isActive() {
+		return isActive;
+	}
+
+	
+	private void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	
+	/**
+	 * Activating the beanpart adds the beanpart to the model and adds
+	 * all expressions of the beanpart to the model also. This should
+	 * be called on beans on which #deactivate() has been called. This 
+	 * is useful in handling inactive beans which are modelled by codegen 
+	 * but not by the EMF model (Objects which are not referenced by others etc.)
+	 * 
+	 * @since 1.1
+	 * @see #activate()
+	 * @see #isActive()
+	 * @see #deactivate()
+	 * @see #setActive(boolean)
+	 */
+	public void activate() {
+		setActive(true);
+		try {
+			// Create EMF object
+			addToJVEModel();
+			
+			// Create annotation for name
+			String annotatedName = getSimpleName();
+			Annotation an = CodeGenUtil.addAnnotation(getEObject());
+			if (annotatedName != null)
+				CodeGenUtil.addAnnotatedName(an, annotatedName);
+			getModel().getCompositionModel().getModelRoot().getAnnotations().add(an);
+			
+			// Apply the annotation decoder
+			getFFDecoder().decode();
+		} catch (CodeGenException e) {
+			JavaVEPlugin.log(e, Level.FINE);
+		}
+		// enable expressions and decode them
+		Iterator expItr = getRefExpressions().iterator();
+		while (expItr.hasNext()) {
+			CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+			try {
+				exp.setState(CodeExpressionRef.STATE_NO_MODEL, false);
+				exp.decodeExpression();
+			} catch (CodeGenException e) {
+				JavaVEPlugin.log(e, Level.FINER);
+			}
+		}
+		// enable callback expressions and decode them
+		expItr = getRefCallBackExpressions().iterator();
+		while (expItr.hasNext()) {
+			CodeCallBackRef exp = (CodeCallBackRef) expItr.next();
+			try {
+				exp.setState(CodeExpressionRef.STATE_NO_MODEL, false);
+				exp.decodeExpression();
+			} catch (CodeGenException e) {
+				JavaVEPlugin.log(e, Level.FINER);
+			}
+		}
+		// enable event expressions and decode them
+		expItr = getRefEventExpressions().iterator();
+		while (expItr.hasNext()) {
+			CodeEventRef exp = (CodeEventRef) expItr.next();
+			try {
+				exp.setState(CodeExpressionRef.STATE_NO_MODEL, false);
+				exp.decodeExpression();
+			} catch (CodeGenException e) {
+				JavaVEPlugin.log(e, Level.FINER);
+			}
+		}
+	}
+	/**
+	 * Deactivating the beanpart removes the beanpart from the model and removes all expressions of the beanpart from the model also. This still keeps
+	 * the beanpart in codegen's model though. This is useful in handling inactive beans which are modelled by codegen but not by the EMF model
+	 * (Objects which are not referenced by others etc.)
+	 * 
+	 * @since 1.1
+	 * @see #activate()
+	 * @see #isActive()
+	 * @see #deactivate()
+	 * @see #setActive(boolean)
+	 */
+	public void deactivate(){
+		setActive(false);
+		// Callback expressions
+		Iterator expItr = getRefCallBackExpressions().iterator();
+		while (expItr.hasNext()) {
+			CodeCallBackRef callBack = (CodeCallBackRef) expItr.next();
+			int currentState = callBack.primGetState();
+			callBack.getExpDecoder().dispose();
+			CodeExpressionRef.resetExpressionStates(callBack, currentState);
+			callBack.setState(CodeExpressionRef.STATE_NO_MODEL, true);
+		}
+		// Event expressions
+		expItr = getRefEventExpressions().iterator();
+		while (expItr.hasNext()) {
+			CodeEventRef eventRef = (CodeEventRef) expItr.next();
+			int currentState = eventRef.primGetState();
+			eventRef.getEventDecoder().dispose(); // dipose clears all flags
+			CodeExpressionRef.resetExpressionStates(eventRef, currentState);
+			eventRef.setState(CodeExpressionRef.STATE_NO_MODEL, true);
+		}
+		// Regular expressions
+		expItr = getRefExpressions().iterator();
+		while (expItr.hasNext()) {
+			CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+			int currentState = exp.primGetState();
+			exp.getExpDecoder().dispose();
+			CodeExpressionRef.resetExpressionStates(exp, currentState);
+			exp.setState(CodeExpressionRef.STATE_NO_MODEL, true);
+		}
+		if(isInJVEModel())
+			removeFromJVEModel();
+		else if(getEObject()!=null){
+			EcoreUtil.remove(getEObject());
+			// Now remove any still existing pointers to it since it is going away.
+			InverseMaintenanceAdapter ai = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(getEObject(), InverseMaintenanceAdapter.ADAPTER_KEY);
+			if (ai != null) {
+				EReference[] refs = ai.getFeatures();
+				for (int i = 0; i < refs.length; i++) {
+					EReference ref = refs[i];
+					EObject[] srcs = ai.getReferencedBy(ref);
+					for (int j = 0; j < srcs.length; j++) {
+						EcoreUtil.remove(srcs[j], ref, getEObject());	
+					}
+				}
+			}
+		}
+		getFFDecoder().dispose();
+		fFFDecoder = null;
+		setEObject(null);
 	}
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.51 $  $Date: 2005-05-31 15:33:47 $ 
+ *  $Revision: 1.52 $  $Date: 2005-06-20 13:43:47 $ 
  */
 
 
@@ -800,16 +800,18 @@ public int isEquivalent(AbstractCodeRef code) throws CodeGenException  {
 		}
 		
 		if(beanEquivalency && expEquivalency){
-		    if (isStateSet(STATE_NO_MODEL))
-		       if (exp1.isStateSet(STATE_NO_MODEL)) {
-		       	if (getCodeContent().equals(exp1.getCodeContent())) return 1 ;
-		       	else return 0 ;
-		       }
-		       else return -1 ;
-		    else
-		       if (exp1.isStateSet(STATE_NO_MODEL)) return -1 ;
+		    if (isStateSet(STATE_NO_MODEL) || exp1.isStateSet(STATE_NO_MODEL)) {
+				// One of the expressions is specifically not in model - check
+				// if either has an eobject. If not just return based on content
+				if (getBean().getEObject() == null && exp1.getBean().getEObject() == null) {
+					if (getCodeContent().equals(exp1.getCodeContent()))
+						return 1;
+					else
+						return 0;
+				}
+			}
 
-            // Need to have decoders for equivalency		       
+            // Need to have decoders for equivalency
 		    if (getBean().getEObject() == null &&
 		        exp1.getBean().getEObject() == null) throw new CodeGenException ("Can not determine equivalency") ; //$NON-NLS-1$
 		    
@@ -909,7 +911,7 @@ public String getMethodNameContent(){
 public void dispose() {
 	// A dispose will be called after a delete.
   
-	if (!isStateSet(STATE_DELETE) && primGetDecoder() != null) {
+	if (!isStateSet(STATE_DELETE) && primGetDecoder() != null && !isStateSet(STATE_NO_MODEL)) {
 		primGetDecoder().dispose();		
 	}
 	fDecoder = null ;
@@ -1109,6 +1111,22 @@ public List getReferences() {
 }
 public void setReferences(List references) {
 	fReferences = references;
+}
+
+public static void resetExpressionStates(CodeExpressionRef exp, int states) {
+	exp.setState(STATE_EXIST, (states & STATE_EXIST) > 0);
+	exp.setState(STATE_IN_SYNC, (states & STATE_IN_SYNC) > 0);
+	exp.setState(STATE_NO_MODEL, (states & STATE_NO_MODEL) > 0);
+	exp.setState(STATE_NO_SRC, (states & STATE_NO_SRC) > 0);
+	exp.setState(STATE_DELETE, (states & STATE_DELETE) > 0);
+	exp.setState(STATE_IMPLICIT, (states & STATE_IMPLICIT) > 0);
+	exp.setState(STATE_UPDATING_SOURCE, (states & STATE_UPDATING_SOURCE) > 0);
+	exp.setState(STATE_SRC_LOC_FIXED, (states & STATE_SRC_LOC_FIXED) > 0);
+	exp.setState(STATE_EXP_IN_LIMBO, (states & STATE_EXP_IN_LIMBO) > 0);
+	exp.setState(STATE_EXP_NOT_PERSISTED, (states & STATE_EXP_NOT_PERSISTED) > 0);
+	exp.setState(STATE_MASTER, (states & STATE_MASTER) > 0);
+	exp.setState(STATE_MASTER_DELETED, (states & STATE_MASTER_DELETED) > 0);
+	exp.setState(STATE_INIT_EXPR, (states & STATE_INIT_EXPR) > 0);
 }
 }
 

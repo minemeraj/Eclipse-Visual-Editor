@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.76 $  $Date: 2005-05-24 19:36:30 $ 
+ *  $Revision: 1.77 $  $Date: 2005-06-20 13:43:47 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -40,7 +40,8 @@ import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
-import org.eclipse.ve.internal.jcm.*;
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
+import org.eclipse.ve.internal.jcm.JavaCacheData;
 
 import org.eclipse.ve.internal.java.codegen.editorpart.CodegenEditorPartMessages;
 import org.eclipse.ve.internal.java.codegen.java.*;
@@ -593,7 +594,7 @@ protected EObject  createAJavaInstance(BeanPart bean, JavaCacheData cache, IProg
 	   else {
 	   	  obj = (EObject) cache.getNamesToBeans().get(bean.getUniqueName());
 	   	  bean.setEObject(obj);
-	   	  bean.setIsInJVEModel(true);
+	   	  bean.setIsInJVEModel(obj!=null);
 	   }
 	   pm.worked(1);
        return obj;
@@ -649,45 +650,15 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
          if (annotatedName != null)
            CodeGenUtil.addAnnotatedName(an, annotatedName); 
          comp.getAnnotations().add(an) ;
-	     try {		     
-	       BeanPartFactory.updateInstanceInitString(bean) ;
-	     }
-	     catch (IllegalArgumentException e) {
-	     	JavaVEPlugin.log(e,Level.FINE) ;
-	     	if (!err.contains(bean)) {
-	     	   err.add(bean) ;
-	     	   // Children will not be connected to the VCE model
-	           Iterator bItr = bean.getChildren() ;
-	           if (bItr != null)
-	             while (bItr.hasNext()) 
-	                  err.add(bItr.next()) ;
-	     	}
-	     }
 	   	}
 	   }
 	}	
 	for (int i = 0; i < err.size(); i++) {
 		pm.subTask(CodegenMessages.getString("JavaSourceTranslator.7")+((BeanPart)err.get(i)).getSimpleName()); //$NON-NLS-1$
-        ((BeanPart)err.get(i)).dispose() ;
+        ((BeanPart)err.get(i)).deactivate() ;
     }	
 	pm.done();
 }
-
-
-void	addBeanPart(BeanPart bp, BeanSubclassComposition bsc) throws CodeGenException {
-	
-	boolean thisPart = bp.getSimpleName().equals(BeanPart.THIS_NAME) ? true : false ;
-
-	bp.addToJVEModel() ;
-	if (thisPart) {
-	   if (bsc.eIsSet(JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart())) 
-	        throw new CodeGenException ("this Already initialized") ; //$NON-NLS-1$
-	   bsc.setThisPart((IJavaObjectInstance)bp.getEObject()) ;	 
-	}
-	else if(bp.getContainer()==null && bp.getDecleration().isInstanceVar() && bp.getFFDecoder().isVisualOnFreeform())
-	   bsc.getComponents().add(bp.getEObject()) ; 
-}
-
 
 protected boolean isDown(IProgressMonitor pm) {
 	if (pm!=null)
@@ -765,7 +736,11 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 		}
 		pm.worked(2);
 	
-	
+		BeanPart[] unreferencedBPs = fBeanModel.getUnreferencedBeanParts();
+		for (int bpCount = 0; bpCount < unreferencedBPs.length; bpCount++) {
+			unreferencedBPs[bpCount].deactivate();
+		}
+		
 	      // Decoders have analyzed and acted on the Expressions - 
 	      // it is time to hook them together withn the Compsition
 	      // Model
@@ -775,7 +750,10 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 				return false ;		 		  	
 	         BeanPart bean = (BeanPart) itr.next() ;
 	         bean.getBadExpressions().clear();
-	       
+	         
+	         // If deactivated dont add to model 
+			 if(!bean.isActive())
+				   continue;
 		   // if a bean was added to a container, the decoder will reflect this in the BeamModel
 		   
 		   // Model is build (but annotations).   Turn the model on, as the EditParts may slam dunc
@@ -785,8 +763,7 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 		   
 		   pm.subTask("Adding bean "+bean.getSimpleName()+CodegenMessages.getString("JavaSourceTranslator.4")); //$NON-NLS-1$ //$NON-NLS-2$
 		   if (!fVEModel.isFromCache())
-		     addBeanPart(bean,fVEModel.getModelRoot()) ;
-		   
+		     CodeGenUtil.addBeanToBSC(bean,fVEModel.getModelRoot(), false) ;
 
 			try {
 				fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.22 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.23 $  $Date: 2005-06-20 13:43:47 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -25,7 +25,6 @@ import org.eclipse.ve.internal.cdm.impl.KeyedConstraintImpl;
 import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
 import org.eclipse.ve.internal.cdm.model.Rectangle;
 
-import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableCreationRule;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -65,40 +64,22 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 			return false ;
         ExpressionParser p = new ExpressionParser(f, fBeanpart.getModel());
         String comment = p.getComment();
-        // when absolutely no comment is present (handcoded), we should 
-        // just allow the component to show up on the FF
-        if(comment==null || comment.length()<1)
-        	return true;
         return AnnotationDecoderAdapter.isBeanVisible(comment);          
     }
     
     public String generate(EStructuralFeature sf, Object[] args) throws CodeGenException {
-        Object constraint =  getAnnotationValue() ;
-        boolean isModelled = false;
-        if(	fBeanpart!=null && 
-            fBeanpart.getEObject()!=null && 
-    		fBeanpart.getEObject().eResource()!=null && 
-    		fBeanpart.getEObject().eResource().getResourceSet()!=null){
-            	isModelled = InstanceVariableCreationRule.isModelled(fBeanpart.getEObject().eClass(), fBeanpart.getEObject().eResource().getResourceSet());
-            }else
-            	isModelled = false;
-        if(!isModelled || constraint!=null){
-	        FreeFormAnnotationTemplate fft = getFFtemplate() ;
-	        if (constraint != null) { 
-	        	if (constraint instanceof Rectangle) {
-	        		Rectangle r = (Rectangle) constraint;
-	        	  fft.setPosition(new Point(r.x,r.y)) ;
-	        	}
-	        	else if (constraint instanceof Boolean) {
-	        	  // Free Form or not
-	        	  if (!((Boolean)constraint).booleanValue())
-	        	      fft.setPosition(null);
-	        	}
-	            fContent = fft.toString() ;
-	        }else{
-	        	// NOT modelled, and NO constraint - atleast put the //@jve:decl-index=0:
-	        	fContent = fft.toString();
-	        }
+		Object constraint =  getAnnotationValue() ;
+		if(constraint!=null){
+			FreeFormAnnotationTemplate fft = getFFtemplate() ;
+			if (constraint instanceof Rectangle) {
+				Rectangle r = (Rectangle) constraint;
+				fft.setPosition(new Point(r.x,r.y)) ;
+			}else if (constraint instanceof Boolean) {
+				// Free Form or not
+				if (!((Boolean)constraint).booleanValue())
+					fft.setPosition(null);
+			}
+			fContent = fft.toString() ;
         }else{
         	fContent = ""; //$NON-NLS-1$
         }

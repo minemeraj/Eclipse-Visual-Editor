@@ -18,7 +18,7 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-26 22:14:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-20 13:43:47 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -310,7 +310,11 @@ public class BeanPartDecleration {
 				}
 			}
 		}
-		return exp==null?null:exp.getBean();
+		BeanPart bp = exp==null?null:exp.getBean();
+		if(bp!=null && !bp.isActive()){
+			bp.activate();
+		}
+		return bp;
 	}
 	/**
 	 * 

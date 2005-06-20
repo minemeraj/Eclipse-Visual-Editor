@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.25 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.26 $  $Date: 2005-06-20 13:43:47 $ 
  */
 
 import java.text.MessageFormat;
@@ -26,7 +26,6 @@ import org.eclipse.jem.java.impl.JavaClassImpl;
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
-import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
@@ -279,32 +278,34 @@ protected boolean isStaticCall (String resolvedReciever, String selector, int ar
 			bean = getBeanWithNoInitExpression(name, fMethod);
 			if (bean != null) {
 				fExpression.setBean(bean);
-				boolean initExpr = false;
-				if (stmt.getRightHandSide() instanceof ClassInstanceCreation
-						|| (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression) stmt.getRightHandSide()).getExpression() instanceof ClassInstanceCreation)) {
-					// e.g. ivjTitledBorder = new Border()
-					// e.g. ivjTitledBorder = (TitledBorder) new Border()
-					initExpr = true;
-				} else if (stmt.getRightHandSide() instanceof MethodInvocation
-						|| (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression) stmt.getRightHandSide()).getExpression() instanceof MethodInvocation)) {
-					// e.g., ivjTitledBorder = javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
-					// e.g., ivjTitledBorder = (TitledBorder) javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
-					// Assume the MessageSend is a static that can be resolved by the target VM...
-					// need more work here.
-					// At this point, make sure this is a static method.
-					MethodInvocation m = (MethodInvocation) (stmt.getRightHandSide() instanceof MethodInvocation ? stmt.getRightHandSide()
-							: ((CastExpression) stmt.getRightHandSide()).getExpression());
-					while (m.getExpression() instanceof MethodInvocation)
-						m = (MethodInvocation)m.getExpression();
-					if (m.getExpression() instanceof Name) {
-						TypeResolver.Resolved resolvedReceiver = fModel.getResolver().resolveType((Name) m.getExpression());
-						String resolvedReceiverName = resolvedReceiver != null ? resolvedReceiver.getName() : null;
-						// TODO This should be in a rule: parse methodInvocation Initialization
-						if (isStaticCall(resolvedReceiverName, m.getName().getIdentifier(), (m.arguments() == null ? 0 : m.arguments().size()))) {
-							initExpr = true;
-						}
-					}					
-				}
+				boolean initExpr = true;
+//				if (stmt.getRightHandSide() instanceof ClassInstanceCreation
+//						|| (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression) stmt.getRightHandSide()).getExpression() instanceof ClassInstanceCreation)) {
+//					// e.g. ivjTitledBorder = new Border()
+//					// e.g. ivjTitledBorder = (TitledBorder) new Border()
+//					initExpr = true;
+//				} else if (stmt.getRightHandSide() instanceof MethodInvocation
+//						|| (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression) stmt.getRightHandSide()).getExpression() instanceof MethodInvocation)) {
+//					// e.g., ivjTitledBorder = javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
+//					// e.g., ivjTitledBorder = (TitledBorder) javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
+//					// Assume the MessageSend is a static that can be resolved by the target VM...
+//					// need more work here.
+//					// At this point, make sure this is a static method.
+//					MethodInvocation m = (MethodInvocation) (stmt.getRightHandSide() instanceof MethodInvocation ? stmt.getRightHandSide()
+//							: ((CastExpression) stmt.getRightHandSide()).getExpression());
+//					while (m.getExpression() instanceof MethodInvocation)
+//						m = (MethodInvocation)m.getExpression();
+//					if (m.getExpression() instanceof Name) {
+//						TypeResolver.Resolved resolvedReceiver = fModel.getResolver().resolveType((Name) m.getExpression());
+//						String resolvedReceiverName = resolvedReceiver != null ? resolvedReceiver.getName() : null;
+//						// TODO This should be in a rule: parse methodInvocation Initialization
+//						if (isStaticCall(resolvedReceiverName, m.getName().getIdentifier(), (m.arguments() == null ? 0 : m.arguments().size()))) {
+//							initExpr = true;
+//						}
+//					}					
+//				}else if (stmt.getRightHandSide() instanceof StringLiteral){
+//					initExpr = true;
+//				}
 				if (initExpr) {
 					bean.addInitMethod(fMethod);
 					fExpression.setState(CodeExpressionRef.STATE_IN_SYNC, true);
@@ -335,30 +336,25 @@ protected boolean isStaticCall (String resolvedReciever, String selector, int ar
  * Process a Local Decleration (typically of utility beans like GridBagConstraints)
  */
 protected void processLocalDeclarations() {
-    
-	VariableDeclarationStatement stmt = (VariableDeclarationStatement) fExpression.getExprStmt() ;
-	//TODO: support multi variables per line
-	VariableDeclaration dec = (VariableDeclaration)stmt.fragments().get(0);
-    if (dec.getInitializer() instanceof ClassInstanceCreation ||
-	    dec.getInitializer() instanceof ArrayCreation ||  
-    	dec.getInitializer() instanceof CastExpression || 
-    	dec.getInitializer() instanceof MethodInvocation) {
-    	
-    	 String name = dec.getName().getIdentifier();
-         
-         BeanPart bean = getBeanWithNoInitExpression(name, fMethod); 
-         fExpression.setBean(bean) ;
-         bean.addInitMethod(fMethod) ;
-         //fExpression.setState(fExpression.getState() | fExpression.STATE_IN_SYNC | fExpression.STATE_NO_OP) ;
-         fExpression.setState(CodeExpressionRef.STATE_IN_SYNC, true);
-         fExpression.setState(CodeExpressionRef.STATE_INIT_EXPR, true);         
-         bean.addRefExpression(fExpression) ;
-		 bean.getModel().addMethodInitializingABean(fMethod) ;			
-    }
-}	
+
+	VariableDeclarationStatement stmt = (VariableDeclarationStatement) fExpression.getExprStmt();
+	// TODO: support multi variables per line
+	VariableDeclaration dec = (VariableDeclaration) stmt.fragments().get(0);
+
+	String name = dec.getName().getIdentifier();
+
+	BeanPart bean = getBeanWithNoInitExpression(name, fMethod);
+	fExpression.setBean(bean);
+	bean.addInitMethod(fMethod);
+	// fExpression.setState(fExpression.getState() | fExpression.STATE_IN_SYNC | fExpression.STATE_NO_OP) ;
+	fExpression.setState(CodeExpressionRef.STATE_IN_SYNC, true);
+	fExpression.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
+	bean.addRefExpression(fExpression);
+	bean.getModel().addMethodInitializingABean(fMethod);
+}
 	
 /**
- *  Go for it
+ * Go for it
  */
 public void visit(){
 	getProgressMonitor().subTask(MessageFormat.format(CodeGenJavaMessages.getString("ExpressionVisitor.TypeMethodExpression"), new Object[]{fMethod.getTypeRef().getSimpleName(), fMethod.getMethodName(), fExpression.getCodeContent()})); //$NON-NLS-1$

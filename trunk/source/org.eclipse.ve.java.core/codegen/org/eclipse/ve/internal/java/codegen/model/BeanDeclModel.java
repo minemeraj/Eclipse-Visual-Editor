@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.21 $  $Date: 2005-05-25 19:57:51 $ 
+ *  $Revision: 1.22 $  $Date: 2005-06-20 13:43:47 $ 
  */
 
 import java.util.*;
@@ -28,6 +28,7 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
+import org.eclipse.ve.internal.java.codegen.java.rules.InstanceVariableCreationRule;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -248,7 +249,10 @@ public void removeBean (BeanPart bean) {
  *
  */
 public BeanPart getABean(String name) {
-   return (BeanPart) fBeansKey.get(name)	 ;
+   BeanPart bp = (BeanPart) fBeansKey.get(name)	 ;
+   if(bp!=null && !bp.isActive())
+	   bp.activate();
+   return bp;
 }
 
 /**
@@ -407,7 +411,10 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
  *  return the corresponding bean part.
  */
 public BeanPart getBeanReturned(String methodName) {
-   return (BeanPart) fBeanReturns.get(methodName)	 ;
+   BeanPart bp = (BeanPart) fBeanReturns.get(methodName)	 ;
+   if(bp!=null && !bp.isActive())
+	   bp.activate();
+   return bp;
 }
 /**
  *  The method returns an instance of beanName
@@ -690,5 +697,88 @@ public void updateBeanNameChange(BeanPart bp) {
 	}
 	public BeanPartDecleration getModelDecleration(String handle) {
 		return (BeanPartDecleration) fBeanDecleration.get(handle);
+	}
+	
+	/**
+	 * This method returns Unreferenced beanParts which are not <i>referenced</i>.
+	 * <i>Referenced</i> beanParts are those which:
+	 * <ol>
+	 * 	<li> Have <code>modelled=true</code> in the overrides <b>or</b> is <code>this</code> bean.
+	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 1. <i>(parent-child or property relationships)</i>
+	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 2. <i>(parent-child or property relationships)</i>
+	 * </ol>
+	 *  
+	 *  This API should detect BeanParts which are disconnected islands and
+	 *  return them for deactivation. This API should be called only 
+	 *  after all the decoding of expressions has finished so that the relationships
+	 *  between BeanParts is established. 
+	 *  
+	 *  @since 1.1
+	 */
+	public BeanPart[] getUnreferencedBeanParts(){
+		// determine references first
+		HashMap beanDependentsMap = new HashMap();
+		for (Iterator unrefItr = getBeans().iterator(); unrefItr.hasNext();) {
+			BeanPart bp = (BeanPart) unrefItr.next();
+			BeanPart[] backRefs = bp.getBackRefs();
+			BeanPart[] propertyBackRefs = bp.getGenericBackRefs();
+			if(backRefs!=null){
+				for (int i = 0; i < backRefs.length; i++) {
+					List list = (List) beanDependentsMap.get(backRefs[i]);
+					if(list==null){
+						list = new ArrayList();
+						beanDependentsMap.put(backRefs[i], list);
+					}
+					list.add(bp);
+				}
+			}
+			if(propertyBackRefs!=null){
+				for (int i = 0; i < propertyBackRefs.length; i++) {
+					List list = (List) beanDependentsMap.get(propertyBackRefs[i]);
+					if(list==null){
+						list = new ArrayList();
+						beanDependentsMap.put(propertyBackRefs[i], list);
+					}
+					list.add(bp);
+				}
+			}
+		}
+		
+		List unreferenced = new ArrayList(getBeans());
+		List referenced = new ArrayList();
+		
+		for (Iterator unrefItr = unreferenced.iterator(); unrefItr.hasNext();) {
+			BeanPart unrefBP = (BeanPart) unrefItr.next();
+			if(referenced.contains(unrefBP))
+				continue;
+			// Rule 1
+			if(	(BeanPart.THIS_NAME.equals(unrefBP.getSimpleName())) || 
+				(unrefBP.getEObject()!=null &&
+				 InstanceVariableCreationRule.isModelled(unrefBP.getEObject().eClass(), getCompositionModel().getModelResourceSet()))){
+				
+				referenced.add(unrefBP);
+				List list = (List) beanDependentsMap.get(unrefBP);
+				// Rule 2
+				addReferencedBeans(referenced, list, beanDependentsMap);
+			}
+		}
+		unreferenced.removeAll(referenced);
+		return (BeanPart[]) unreferenced.toArray(new BeanPart[unreferenced.size()]);
+	}
+	/*
+	 * Recursively adds referenced beans to the referencedList.
+	 */
+	private void addReferencedBeans(List referencedList, List currentReferences, HashMap beanDependentsMap) {
+		if(currentReferences==null || currentReferences.size()<1)
+			return;
+		for (Iterator iter = currentReferences.iterator(); iter.hasNext();) {
+			BeanPart bp = (BeanPart) iter.next();
+			if(referencedList.contains(bp))
+				continue;
+			referencedList.add(bp);
+			// Rule 3
+			List list = (List) beanDependentsMap.get(bp);
+			addReferencedBeans(referencedList, list, beanDependentsMap);
+		}
 	}
 }
