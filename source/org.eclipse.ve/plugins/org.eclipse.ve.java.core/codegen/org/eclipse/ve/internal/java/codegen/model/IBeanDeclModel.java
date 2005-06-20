@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.15 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.16 $  $Date: 2005-06-20 17:33:02 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -127,9 +127,10 @@ public interface IBeanDeclModel extends IScannerFactory {
 	 * This method returns Unreferenced beanParts which are not <i>referenced</i>.
 	 * <i>Referenced</i> beanParts are those which:
 	 * <ol>
-	 * 	<li> Have <code>modelled=true</code> in the overrides.
-	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 1. <i>(parent-child or property relationships)</i>
-	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 2. <i>(parent-child or property relationships)</i>
+	 * 	<li> Have <code>modelled=true</code> in the overrides <b>or</b> is <code>this</code> bean.
+	 * 	<li> Have <code>modelled=false</code> in the overrides but has a <code>//@jve:decl-index=0</code> for the field/variable
+	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 1. or 2. <i>(parent-child or property relationships)</i>
+	 * 	<li> Have <code>modelled=false</code>, but are referenced by BeanParts in 3. <i>(parent-child or property relationships)</i>
 	 * </ol>
 	 *  
 	 *  This API should detect BeanParts which are disconnected islands and

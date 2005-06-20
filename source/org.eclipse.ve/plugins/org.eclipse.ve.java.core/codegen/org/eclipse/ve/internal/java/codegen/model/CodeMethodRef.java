@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.39 $  $Date: 2005-05-27 22:40:55 $ 
+ *  $Revision: 1.40 $  $Date: 2005-06-20 17:33:02 $ 
  */
 
 import java.util.*;
@@ -989,5 +989,23 @@ public void updateExpressionIndex(CodeExpressionRef exp) throws CodeGenException
 		exp.setState(CodeExpressionRef.STATE_UPDATING_SOURCE, false);
 	}
 
+}
+
+/**
+ * Refreshes the contents of this MethodRef with the passed in one. 
+ * This includes AST node, offset and content update. This method
+ * does no checking whatsoever, so the appropriate method should 
+ * be passed in. Generally called from snippet update mechanism.
+ */
+public boolean refresh(CodeMethodRef cmr) {
+	if(cmr==null)
+		return false;
+	if(getOffset() != cmr.getOffset())
+		setOffset(cmr.getOffset());
+	if(getContent()!=null && !getContent().equals(cmr.getContent()))
+		setContent(cmr.getContent());
+	if(cmr.getDeclMethod()!=null)
+		setDeclMethod(cmr.getDeclMethod());
+	return true;
 }
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.40 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.41 $  $Date: 2005-06-20 17:33:02 $ 
  */
 
 
@@ -1048,13 +1048,9 @@ public static Collection getReferences(Object o, boolean includeO) {
 					shouldBeOnFreeform = true;
 			} else {
 				// Not modelled
-				BeanPart[] parentChildBackRefs = bp.getBackRefs();
-				BeanPart[] propertyBackRefs = bp.getGenericBackRefs();
-				if ((parentChildBackRefs != null && parentChildBackRefs.length > 0) || (propertyBackRefs != null && propertyBackRefs.length > 0)) {
-					// some references exist - does it have annotation?
-					if (bp.getFFDecoder().isVisualOnFreeform())
+				// does it have visual-constraint="x,y" annotation?
+				if (bp.getContainer()==null && bp.getFFDecoder().isVisualOnFreeform())
 						shouldBeOnFreeform = true;
-				}
 			}
 			if (shouldBeOnFreeform) {
 				if (!bsc.getComponents().contains(bp.getEObject()))
