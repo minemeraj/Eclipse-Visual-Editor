@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: GridPropertiesDialog.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-21 21:40:24 $ 
  */
 
 
@@ -72,7 +72,7 @@ public GridPropertiesDialog(Shell parentShell, GridController gridController) {
 
 protected void configureShell(Shell shell) {
 	super.configureShell(shell);
-	shell.setText(CDEMessages.getString("GridPropertiesDialog.label")); //$NON-NLS-1$
+	shell.setText("Grid properties" ); //$NON-NLS-1$
 	shell.setImage(shell.getDisplay().getSystemImage(SWT.ICON_QUESTION));	
 
 }
@@ -124,7 +124,7 @@ protected Control createDialogArea(Composite parent){
 	
 	// Grid width label
 	Label widthLabel = new Label(fieldsGroup,SWT.NONE);
-	widthLabel.setText(CDEMessages.getString("GridPropertiesDialog.width")); //$NON-NLS-1$
+	widthLabel.setText("Width"); //$NON-NLS-1$
 
 	data = new GridData();
 	data.widthHint = 40;
@@ -158,7 +158,7 @@ protected Control createDialogArea(Composite parent){
 
 	// Grid height label
 	Label heightLabel = new Label(fieldsGroup,SWT.NONE);
-	heightLabel.setText(CDEMessages.getString("GridPropertiesDialog.height")); //$NON-NLS-1$
+	heightLabel.setText("Height"); //$NON-NLS-1$
 	data = new GridData();
 	data.widthHint = 40;
 	heightLabel.setLayoutData(data);
@@ -191,7 +191,7 @@ protected Control createDialogArea(Composite parent){
 
 	// Grid margin label
 	Label marginLabel = new Label(fieldsGroup,SWT.NONE);
-	marginLabel.setText(CDEMessages.getString("GridPropertiesDialog.margin")); //$NON-NLS-1$
+	marginLabel.setText("Margin"); //$NON-NLS-1$
 	data = new GridData();
 	data.widthHint = 40;
 	marginLabel.setLayoutData(data);
@@ -272,11 +272,11 @@ protected void validateInput(){
 		fGridHeight = Integer.parseInt(fGridHeightText.getText());
 		if ( fGridHeight <= 1 ) {
 			fGridHeightText.setBackground(ColorConstants.red);
-			fMessageLine.setText(CDEMessages.getString("GridPropertiesDialog.Height_Must_Be_Larger_Than_One")); //$NON-NLS-1$
+			fMessageLine.setText("Height must be larger than one"); //$NON-NLS-1$
 		} 
 	} catch ( NumberFormatException nfexc ) {
 		fGridHeightText.setBackground(ColorConstants.red);
-		fMessageLine.setText(CDEMessages.getString("GridPropertiesDialog.Height_Must_Be_Integer")); //$NON-NLS-1$
+		fMessageLine.setText("Height must be an integer"); //$NON-NLS-1$
 	}
 
 	// Validate the grid width
@@ -284,22 +284,22 @@ protected void validateInput(){
 		fGridWidth = Integer.parseInt(fGridWidthText.getText());
 		if ( fGridWidth <= 1 ) {
 			fGridWidthText.setBackground(ColorConstants.red);
-			fMessageLine.setText(CDEMessages.getString("GridPropertiesDialog.Width_Must_Be_Larger_Than_One")); //$NON-NLS-1$
+			fMessageLine.setText("Width must be larger than one"); //$NON-NLS-1$
 		} 
 	} catch ( NumberFormatException nfexc ) {
 		fGridWidthText.setBackground(ColorConstants.red);
-		fMessageLine.setText(CDEMessages.getString("GridPropertiesDialog.Width_Must_Be_Integer")); //$NON-NLS-1$
+		fMessageLine.setText("Width must be an integer"); //$NON-NLS-1$
 	}
 	// Validate the grid margin
 	try{
 		fGridMargin = Integer.parseInt(fGridMarginText.getText());
 		if ( fGridMargin < 0 ) {
 			fGridMarginText.setBackground(ColorConstants.red);
-			fMessageLine.setText(CDEMessages.getString("GridPropertiesDialog.Margin_Must_Be_Positive")); //$NON-NLS-1$
+			fMessageLine.setText("Margin must be positive"); //$NON-NLS-1$
 		}
 	} catch ( NumberFormatException nfexc ) {
 		fGridMarginText.setBackground(ColorConstants.red);
-		fMessageLine.setText(CDEMessages.getString("GridPropertiesDialog.Margin_Must_Be_Integer")); //$NON-NLS-1$
+		fMessageLine.setText("Margin must be an integer"); //$NON-NLS-1$
 	}
 
 	// If the message line is empty no error occurred
