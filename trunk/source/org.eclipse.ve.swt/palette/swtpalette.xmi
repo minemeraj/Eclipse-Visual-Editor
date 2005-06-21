@@ -112,7 +112,6 @@
           value="tree"/>
     </children>
     <children xsi:type="org.eclipse.ve.internal.cde.palette:Stack">
-      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="ToolBar Stuff"/>
 	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolbar_obj.gif"
 	      creationClassURI="java:/org.eclipse.swt.widgets#ToolBar">
 	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="ToolBar"/>
