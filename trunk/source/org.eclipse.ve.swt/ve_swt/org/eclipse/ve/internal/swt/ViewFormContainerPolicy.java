@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormContainerPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:52 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-21 15:06:09 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -110,7 +110,7 @@ public class ViewFormContainerPolicy extends CompositeContainerPolicy {
 		orphanControl = cBld.getCommand();
 		
 		if(orphanControl != null)
-			return orphanControl.chain(super.getOrphanChildrenCommand(children, containmentSF));
+			return orphanControl.chain(super.getOrphanChildrenCommand(children));
 		
 		return super.getOrphanChildrenCommand(children);
 	}

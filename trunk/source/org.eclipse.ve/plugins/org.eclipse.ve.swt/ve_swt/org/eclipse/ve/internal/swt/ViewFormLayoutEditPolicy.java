@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:52 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-21 15:06:09 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -20,6 +20,8 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -29,8 +31,11 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.swt.SWT;
 
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -74,6 +79,18 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 			return ((CreateRequest)request).getLocation();
 		if( request instanceof ChangeBoundsRequest)
 			return ((ChangeBoundsRequest)request).getLocation();
+		return null;
+	}
+	
+	/**
+	 * returns the constraint value of the cell at the given point.
+	 */
+	protected java.lang.Object getConstraintFor(Point point) {
+		if (fViewFormLayoutFeedback != null) {
+			Point relativePoint = point.getCopy();
+			getHostFigure().translateToRelative(relativePoint);
+			return fViewFormLayoutFeedback.getCurrentConstraint(relativePoint);
+		}
 		return null;
 	}
 	
@@ -239,11 +256,73 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 	}
 	
 	/**
-	 * getMoveChildCommand method comment.
-	 * We don't perform move/resize since we don't know how.
+	 * allows a child to move from one open cell to another.
 	 */
-	protected Command getMoveChildrenCommand(Request request) {
-		return null;
+	protected Command getMoveChildrenCommand(Request generic) {
+		EObject parent = (EObject) fPolicy.getContainer();
+		
+		EStructuralFeature sfLeftControl = 
+			JavaInstantiation.getSFeature((IJavaObjectInstance) parent, SWTConstants.SF_VIEWFORM_TOPLEFT);
+		EStructuralFeature sfRightControl = 
+			JavaInstantiation.getSFeature((IJavaObjectInstance) parent, SWTConstants.SF_VIEWFORM_TOPRIGHT);
+		EStructuralFeature sfCenterControl = 
+			JavaInstantiation.getSFeature((IJavaObjectInstance) parent, SWTConstants.SF_VIEWFORM_TOPCENTER);
+		EStructuralFeature sfContentControl = 
+			JavaInstantiation.getSFeature((IJavaObjectInstance) parent, SWTConstants.SF_VIEWFORM_CONTENT);
+		
+		IJavaInstance left = (IJavaInstance) parent.eGet(sfLeftControl);
+		IJavaInstance right = (IJavaInstance) parent.eGet(sfRightControl);
+		IJavaInstance center = (IJavaInstance) parent.eGet(sfCenterControl);
+		IJavaInstance content = (IJavaInstance) parent.eGet(sfContentControl);
+		
+		ChangeBoundsRequest request = (ChangeBoundsRequest)generic;
+		List sources = request.getEditParts();
+		
+		// For now only allow one object to be moved
+		if ( sources.size() > 1 ) return null;
+		
+		EditPart child = (EditPart) sources.iterator().next();
+
+		String newConstraint = (String) getConstraintFor(request.getLocation());
+
+		Command moveControl = null;
+		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
+		
+		EStructuralFeature moveFrom = null;
+		EStructuralFeature moveTo = null;
+		
+		if(left != null && left.equals(child.getModel()))
+			moveFrom = sfLeftControl;
+		else if(right != null && right.equals(child.getModel()))
+			moveFrom = sfRightControl;
+		else if(center != null && center.equals(child.getModel()))
+			moveFrom = sfCenterControl;
+		else if(content != null && content.equals(child.getModel()))
+			moveFrom = sfContentControl;
+		
+		if(left == null && 
+				((String) ViewFormLayoutPolicyHelper.REAL_INTERNAL_TAGS.get(ViewFormLayoutPolicyHelper.LEFT_INDEX)).equals(newConstraint))
+			moveTo = sfLeftControl;
+		else if(right == null && 
+				((String) ViewFormLayoutPolicyHelper.REAL_INTERNAL_TAGS.get(ViewFormLayoutPolicyHelper.RIGHT_INDEX)).equals(newConstraint))
+			moveTo = sfRightControl;
+		else if(center == null && 
+				((String) ViewFormLayoutPolicyHelper.REAL_INTERNAL_TAGS.get(ViewFormLayoutPolicyHelper.CENTER_INDEX)).equals(newConstraint))
+			moveTo = sfCenterControl;
+		else if(content == null && 
+				((String) ViewFormLayoutPolicyHelper.REAL_INTERNAL_TAGS.get(ViewFormLayoutPolicyHelper.CONTENT_INDEX)).equals(newConstraint))
+			moveTo = sfContentControl;
+		
+		if(moveFrom != null && moveTo != null){
+			cBld.applyAttributeSetting(parent, moveFrom, null);
+			cBld.applyAttributeSetting(parent, moveTo, child.getModel(), null);
+			moveControl = cBld.getCommand();
+		}
+		
+		if(moveControl == null || !moveControl.canExecute())
+			return NoOpCommand.INSTANCE;		
+
+		return moveControl;
 	}
 	
 	/**
