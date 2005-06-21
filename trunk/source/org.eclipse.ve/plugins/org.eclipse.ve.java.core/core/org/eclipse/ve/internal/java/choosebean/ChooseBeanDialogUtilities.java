@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialogUtilities.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-17 15:43:19 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-21 22:32:23 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -144,7 +144,7 @@ public class ChooseBeanDialogUtilities {
 		if(selected==null){
 			isInstantiable=false;
 			//TODO setClassName(null,false);
-			message = ChooseBeanMessages.getString("SelectionAreaHelper.SecondaryMsg.NoSelectionMade"); //$NON-NLS-1$
+			message = ChooseBeanMessages.SelectionAreaHelper_SecondaryMsg_NoSelectionMade; 
 		}else{
 			try{
 				TypeInfo ti = (TypeInfo) selected;
@@ -196,22 +196,22 @@ public class ChooseBeanDialogUtilities {
 				if(constructorError){
 					if(message.length()>0)
 						message = message.concat(" : "); //$NON-NLS-1$
-					message = message.concat(ChooseBeanMessages.getString("SelectionAreaHelper.SecondaryMsg.NoPublicNullConstructor")); //$NON-NLS-1$ //$NON-NLS-2$
+					message = message.concat(ChooseBeanMessages.SelectionAreaHelper_SecondaryMsg_NoPublicNullConstructor); 
 				}
 				if(!isTypePublic){
 					if(message.length()>0)
 						message = message.concat(" : "); //$NON-NLS-1$
-					message = message.concat(ChooseBeanMessages.getString("SelectionAreaHelper.SecondaryMsg.TypeNonPublic")); //$NON-NLS-1$ //$NON-NLS-2$
+					message = message.concat(ChooseBeanMessages.SelectionAreaHelper_SecondaryMsg_TypeNonPublic); 
 				}
 				if(isTypeAbstract){
 					if(message.length()>0)
 						message = message.concat(" : "); //$NON-NLS-1$
-					message = message.concat(ChooseBeanMessages.getString("ChooseBeanDialog.Message.AbstractType"));  //$NON-NLS-1$
+					message = message.concat(ChooseBeanMessages.ChooseBeanDialog_Message_AbstractType);  
 				}
 				if(isTypeInner && (!isTypeStatic)){
 					if(message.length()>0)
 						message = message.concat(" : "); //$NON-NLS-1$
-					message = message.concat(ChooseBeanMessages.getString("ChooseBeanDialog.Message.NonStaticType"));  //$NON-NLS-1$
+					message = message.concat(ChooseBeanMessages.ChooseBeanDialog_Message_NonStaticType);  
 				}
 				// Instantiable if all are true:
 				//		+ No Constructor is present OR public null constructor present
@@ -227,7 +227,7 @@ public class ChooseBeanDialogUtilities {
 				isInstantiable = false;
 				if(message.length()>0)
 					message = message.concat(" : "); //$NON-NLS-1$
-				message = ChooseBeanMessages.getString("SelectionAreaHelper.SecondaryMsg.Unknown_ERROR_"); //$NON-NLS-1$ //$NON-NLS-2$
+				message = ChooseBeanMessages.SelectionAreaHelper_SecondaryMsg_Unknown_ERROR_; 
 			}
 		}
 		Status status = new Status(

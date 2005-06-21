@@ -27,7 +27,7 @@ public class YesNoFilter implements IFilter {
 		this.pkg = pkg;
 		this.monitor = monitor;
 		int num = (yesTypes==null ? 0 : yesTypes.length/2) + (noTypes==null ? 0 : noTypes.length/2);
-		getMonitor().beginTask(ChooseBeanMessages.getString("YesNoFilter.DependenciesMonitor.Message"), num); //$NON-NLS-1$
+		getMonitor().beginTask(ChooseBeanMessages.YesNoFilter_DependenciesMonitor_Message, num); 
 		getYesTypeFQNs();
 		getNoTypeFQNs();
 		getMonitor().worked(num);
