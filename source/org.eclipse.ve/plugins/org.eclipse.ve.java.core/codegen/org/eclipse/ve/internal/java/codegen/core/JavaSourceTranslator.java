@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.78 $  $Date: 2005-06-21 21:55:01 $ 
+ *  $Revision: 1.79 $  $Date: 2005-06-21 22:12:53 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -70,7 +70,7 @@ boolean					fparseError=false;
 ArrayList				fListeners = new ArrayList();
 
 
-public static String    fPauseSig = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_PAUSED") ;  //$NON-NLS-1$
+public static String    fPauseSig = CodegenEditorPartMessages.JVE_STATUS_MSG_PAUSED ;  
 public static int       fCommitAndFlushNestGuard = 0 ;
 
 
@@ -567,7 +567,7 @@ public  void loadModel(final IFileEditorInput input, boolean removeVECache, fina
                 fBeanModel = null;
             }
         }
-        fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_LOAD")); //$NON-NLS-1$
+        fireStatusChanged(CodegenEditorPartMessages.JVE_STATUS_MSG_LOAD); 
         fFile = input.getFile();	
         if (removeVECache)
         	VEModelCacheUtility.removeCache(fFile);
@@ -852,7 +852,7 @@ protected boolean reverseParse (IProgressMonitor pm) throws CodeGenException {
 	}
 	fmodelLoaded = true;
 	fireProcessingPause(fdisconnected);
-	fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC")); //$NON-NLS-1$
+	fireStatusChanged(CodegenEditorPartMessages.JVE_STATUS_MSG_INSYNC); 
 	TimerTests.basicTest.stopStep("Reverse Parsing"); //$NON-NLS-1$
 	return !errors;
 }
@@ -1269,13 +1269,13 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
 	public void fireSnippetProcessing(boolean flag) {
 	    String msg;
 	    if (fparseError)
-	    	msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"); //$NON-NLS-1$
+	    	msg = CodegenEditorPartMessages.JVE_STATUS_MSG_ERROR; 
 	    else
 	      if (flag) {
-	    	msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_NOT_IN_SYNC") ;  //$NON-NLS-1$.getString("JVE_STATUS_MSG_SYNCHRONIZING") ;  //$NON-NLS-1$
+	    	msg = CodegenEditorPartMessages.JVE_STATUS_MSG_NOT_IN_SYNC ;  
 	      }
 	      else {
-	        msg = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC") ;  //$NON-NLS-1$
+	        msg = CodegenEditorPartMessages.JVE_STATUS_MSG_INSYNC ;  
 	    }
 	    fireStatusChanged(msg);
 	}
@@ -1283,9 +1283,9 @@ public IBackGroundWorkStrategy createSharedToLocalUpdater(){
 	protected void fireParseError(boolean error) {
 		fparseError=error;	
 		if (error)
-		    fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR")); //$NON-NLS-1$
+		    fireStatusChanged(CodegenEditorPartMessages.JVE_STATUS_MSG_ERROR); 
 		else
-			fireStatusChanged(CodegenEditorPartMessages.getString("JVE_STATUS_MSG_INSYNC")); //$NON-NLS-1$
+			fireStatusChanged(CodegenEditorPartMessages.JVE_STATUS_MSG_INSYNC); 
 		for (int i = 0; i < fListeners.size(); i++) {
        		((IBuilderListener)fListeners.get(i)).parsingStatus(error);
 	    }

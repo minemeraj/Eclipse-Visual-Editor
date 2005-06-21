@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.20 $  $Date: 2005-06-02 18:58:41 $ 
+ *  $Revision: 1.21 $  $Date: 2005-06-21 22:19:52 $ 
  */
 
 import java.util.HashMap;
@@ -330,7 +330,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 				handleSuperclassChanged();
 			}			
 		} else if (fieldName == ENCLOSINGSELECTION){
-			String ERROR_MESSAGE = CodegenWizardsMessages.getString("NewVisualClassWizardPage.EnclosedType_ERROR_"); //$NON-NLS-1$
+			String ERROR_MESSAGE = CodegenWizardsMessages.NewVisualClassWizardPage_EnclosedType_ERROR_; 
 			if(getEnclosingType()!=null){
 				fContributorStatus = new Status(IStatus.ERROR, JavaVEPlugin.PLUGIN_ID, IStatus.ERROR, ERROR_MESSAGE , null);
 			}else if(fContributorStatus!=null && fContributorStatus.getSeverity()==IStatus.ERROR && fContributorStatus.getMessage().equals(ERROR_MESSAGE)){

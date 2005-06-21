@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventExpressionVisitor.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-11 22:41:31 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-21 22:15:43 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -113,7 +113,7 @@ protected void processAMessageSend() {
  *  Go for it
  */
 public void visit(){
-	getProgressMonitor().subTask(MessageFormat.format(CodeGenJavaMessages.getString("EventExpressionVisitor.TypeMethodExpression"), new Object[]{fMethod.getTypeRef().getSimpleName(), fMethod.getMethodName(), fExpression.getCodeContent()})); //$NON-NLS-1$
+	getProgressMonitor().subTask(MessageFormat.format(CodeGenJavaMessages.EventExpressionVisitor_TypeMethodExpression, new Object[]{fMethod.getTypeRef().getSimpleName(), fMethod.getMethodName(), fExpression.getCodeContent()})); 
 	if (fExpression.getExprStmt() instanceof ExpressionStatement &&
 	    ((ExpressionStatement)fExpression.getExprStmt()).getExpression() instanceof MethodInvocation)
 	   processAMessageSend () ;

@@ -1,57 +1,40 @@
-/*
- * Created on Apr 21, 2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-package org.eclipse.ve.internal.java.codegen.java.rules;
 /*******************************************************************************
- * Copyright (c)  2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*
- *  $RCSfile: CodegenJavaRulesMessages.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
- */
+package org.eclipse.ve.internal.java.codegen.java.rules;
 
-import java.util.*;
+import org.eclipse.osgi.util.NLS;
 
-/**
- * @author sri
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-public class CodegenJavaRulesMessages {
+public final class CodegenJavaRulesMessages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.ve.internal.java.codegen.java.rules.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.ve.internal.java.codegen.java.rules.messages";//$NON-NLS-1$
 
-	private static final ResourceBundle RESOURCE_BUNDLE =
-		ResourceBundle.getBundle(BUNDLE_NAME);
-
-	/**
-	 * 
-	 */
 	private CodegenJavaRulesMessages() {
-
-		// TODO Auto-generated constructor stub
+		// Do not instantiate
 	}
-	/**
-	 * @param key
-	 * @return
-	 */
-	public static String getString(String key) {
-		// TODO Auto-generated method stub
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}
+
+	public static String VCEPrefContributor_MethodName;
+	public static String VCEPrefContributor_Dialog_Title;
+	public static String VCEPrefContributor_Add;
+	public static String VCEPrefContributor_Edit;
+	public static String VCEPrefContributor_Remove;
+	public static String VCEPrefContributor_InitMethodsList_Text;
+	public static String VCEPrefContributor_Tab_Preference_Text;
+	public static String VCEPrefContributor_Tab_Templates_Text;
+	public static String VCEPrefContributor_Table_Templates_TableColumn_Template;
+	public static String VCEPrefContributor_Table_Templates_TableColumn_Sample;
+	public static String VCEPrefContributor_TemplatePreview_Label_Text;
+	public static String VCEPrefContributor_TemplatePreview_Edit_Button_Text;
+	public static String VCEPrefContributor_Check_UseFormatter_Text;
+
+	static {
+		NLS.initializeMessages(BUNDLE_NAME, CodegenJavaRulesMessages.class);
 	}
 }

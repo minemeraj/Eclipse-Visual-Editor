@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPrefContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-06 22:24:41 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-21 22:17:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
@@ -38,20 +38,17 @@ import org.eclipse.swt.widgets.*;
 public class VCEPrefContributor extends AbstractStyleContributor {
 
 	public final static String DEFAULT_INIT_METHOD = "DEFAULT_INIT_METHOD"; //$NON-NLS-1$
-	public final static String MName = CodegenJavaRulesMessages.getString("VCEPrefContributor.MethodName"); //$NON-NLS-1$
-	public final static String MDialogName = CodegenJavaRulesMessages.getString("VCEPrefContributor.Dialog.Title"); //$NON-NLS-1$
+	public final static String MName = CodegenJavaRulesMessages.VCEPrefContributor_MethodName; 
+	public final static String MDialogName = CodegenJavaRulesMessages.VCEPrefContributor_Dialog_Title; 
 	public final static String[] DefaultMethods = { "jbInit", "initComponents", "initialize" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 
 	private static final String fbuttonsTxt[] = new String[] {
-		/* 0 */
-		CodegenJavaRulesMessages.getString("VCEPrefContributor.Add"), //$NON-NLS-1$
-		/* 1 */
-		CodegenJavaRulesMessages.getString("VCEPrefContributor.Edit"), //$NON-NLS-1$
+		CodegenJavaRulesMessages.VCEPrefContributor_Add, 
+		CodegenJavaRulesMessages.VCEPrefContributor_Edit, 
 		/* 2 */
 		null,
-		/* 3 */
-		CodegenJavaRulesMessages.getString("VCEPrefContributor.Remove") //$NON-NLS-1$
+		CodegenJavaRulesMessages.VCEPrefContributor_Remove
 	};
 
 	private static String[] currentMethods = null;
@@ -206,7 +203,7 @@ public class VCEPrefContributor extends AbstractStyleContributor {
 		}
 		
 		df = new ListDialogField(la, fbuttonsTxt, lp);
-		df.setLabelText(CodegenJavaRulesMessages.getString("VCEPrefContributor.InitMethodsList.Text")); //$NON-NLS-1$
+		df.setLabelText(CodegenJavaRulesMessages.VCEPrefContributor_InitMethodsList_Text); 
 
 		df.setTableColumns(new ListDialogField.ColumnsDescription(new String[] { MName }, true));
 		df.setElements(methods);
@@ -220,7 +217,7 @@ public class VCEPrefContributor extends AbstractStyleContributor {
 
 	protected void createPrefTab(TabFolder tabF) {
 		TabItem tab = new TabItem(tabF, SWT.NONE);
-		tab.setText(CodegenJavaRulesMessages.getString("VCEPrefContributor.Tab.Preference.Text")); //$NON-NLS-1$
+		tab.setText(CodegenJavaRulesMessages.VCEPrefContributor_Tab_Preference_Text); 
 		Composite c = new Composite(tabF, SWT.NONE);
 		c.setLayout(new GridLayout(2, false));
 		GridData cGD = new GridData(GridData.FILL_BOTH);
@@ -235,7 +232,7 @@ public class VCEPrefContributor extends AbstractStyleContributor {
 
 	protected void createTemplateTab(TabFolder tabF) {
 		TabItem tab = new TabItem(tabF, SWT.NONE);
-		tab.setText(CodegenJavaRulesMessages.getString("VCEPrefContributor.Tab.Templates.Text")); //$NON-NLS-1$
+		tab.setText(CodegenJavaRulesMessages.VCEPrefContributor_Tab_Templates_Text); 
 		Composite c = new Composite(tabF, SWT.NONE);
 		GridLayout gl = new GridLayout(2, false);
 		c.setLayout(gl);
@@ -258,23 +255,23 @@ public class VCEPrefContributor extends AbstractStyleContributor {
 		((GridData) f.getLayoutData()).horizontalAlignment = GridData.FILL;
 
 		TableColumn tc = new TableColumn(templates, SWT.NONE);
-		tc.setText(CodegenJavaRulesMessages.getString("VCEPrefContributor.Table.Templates.TableColumn.Template")); //$NON-NLS-1$
+		tc.setText(CodegenJavaRulesMessages.VCEPrefContributor_Table_Templates_TableColumn_Template); 
 		tc.setWidth(200);
 		TableItem ti = new TableItem(templates, SWT.NONE);
-		ti.setText(0, CodegenJavaRulesMessages.getString("VCEPrefContributor.Table.Templates.TableColumn.Sample")); //$NON-NLS-1$
+		ti.setText(0, CodegenJavaRulesMessages.VCEPrefContributor_Table_Templates_TableColumn_Sample); 
 		templates.select(0);
 
-		createLabel(c, CodegenJavaRulesMessages.getString("VCEPrefContributor.TemplatePreview.Label.Text"), null); //$NON-NLS-1$
+		createLabel(c, CodegenJavaRulesMessages.VCEPrefContributor_TemplatePreview_Label_Text, null); 
 		Button bEdit = new Button(c, SWT.PUSH);
 		GridData bgd = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		bEdit.setLayoutData(bgd);
-		bEdit.setText(CodegenJavaRulesMessages.getString("VCEPrefContributor.TemplatePreview.Edit.Button.Text")); //$NON-NLS-1$
+		bEdit.setText(CodegenJavaRulesMessages.VCEPrefContributor_TemplatePreview_Edit_Button_Text); 
 		SourceViewer sv = createPreview(c, 2, 70, 7);
 		Document d = new Document();
 		sv.setDocument(d);
 		d.set("public  JButton getMyButton() {\n    if (myButton == null) {\n         .....\n    }\n    return myButton ;\n}"); //$NON-NLS-1$
 
-		createCheckBox(c, CodegenJavaRulesMessages.getString("VCEPrefContributor.Check.UseFormatter.Text"), SWT.NONE); //$NON-NLS-1$
+		createCheckBox(c, CodegenJavaRulesMessages.VCEPrefContributor_Check_UseFormatter_Text, SWT.NONE); 
 
 	}
 

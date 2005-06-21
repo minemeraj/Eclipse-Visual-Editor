@@ -1,53 +1,37 @@
-/*
- * Created on May 19, 2003
- * by gmendel
- *
-*******************************************************************************
- * Copyright (c)  2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+/*******************************************************************************
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*
- *  $RCSfile: CodeGenJavaMessages.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
- */
 package org.eclipse.ve.internal.java.codegen.java;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.eclipse.osgi.util.NLS;
 
-/**
- * @author gmendel
- */
-public class CodeGenJavaMessages {
+public final class CodeGenJavaMessages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.ve.internal.java.codegen.java.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.ve.internal.java.codegen.java.messages";//$NON-NLS-1$
 
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-
-	/**
-	 * 
-	 */
 	private CodeGenJavaMessages() {
-
-		// TODO Auto-generated constructor stub
+		// Do not instantiate
 	}
-	/**
-	 * @param key
-	 * @return
-	 */
-	public static String getString(String key) {
-		// TODO Auto-generated method stub
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		}
-		catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}
+
+	public static String BeanDecoderAdapter____5;
+	public static String EventExpressionVisitor_TypeMethodExpression;
+	public static String MethodVisitor_TypeMethod;
+	public static String ExpressionVisitor_TypeMethodExpression;
+	public static String JavaBeanModelBuilder_Task_CleanModel;
+	public static String JavaBeanModelBuilder_Task_AnalyzeEvents;
+	public static String JavaBeanModelBuilder_Task_BuildingModel;
+	public static String JavaBeanModelBuilder_Task_ParsingSource;
+	public static String ReturnStmtVisitor_TypeMethodExpression;
+	public static String EventCallBackExpressionVisitor_TypeMethodExpression;
+
+	static {
+		NLS.initializeMessages(BUNDLE_NAME, CodeGenJavaMessages.class);
 	}
 }

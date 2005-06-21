@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.19 $  $Date: 2005-05-20 21:02:32 $ 
+ *  $Revision: 1.20 $  $Date: 2005-06-21 22:15:43 $ 
  */
 
 import java.util.*;
@@ -689,7 +689,7 @@ public Label getReturnMethodDisplayInformation() {
 		if (d == null)
 			d = JavaElementImageProvider.getMethodImageDescriptor(false, 0);
 		l.setIcon(getImageRegistry().get(d));
-		l.setText(fBean.getInitMethod().getMethodName() + CodeGenJavaMessages.getString("BeanDecoderAdapter.()_5")); //$NON-NLS-1$
+		l.setText(fBean.getInitMethod().getMethodName() + CodeGenJavaMessages.BeanDecoderAdapter____5); 
 		fpreviousLabel = l ;
 	}
 	else {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.16 $  $Date: 2005-06-15 20:19:38 $ 
+ *  $Revision: 1.17 $  $Date: 2005-06-21 22:12:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -353,7 +353,7 @@ public class JavaVisualEditorVMController {
 		private void startJob(long delay) {
 			// Start the job. It is assumed the job is already ended. Should not be called otherwise.
 			if (createJob == null) {
-				createJob = new CreateSpareRegistry(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CreateRemoteVMForJVE")); //$NON-NLS-1$
+				createJob = new CreateSpareRegistry(CodegenEditorPartMessages.JavaVisualEditorPart_CreateRemoteVMForJVE); 
 				createJob.setSystem(true);	// Don't want to interrupt user with these being generated. They happen all of the time.
 			}
 			// If the delay is for the spare remote vm, set the job thread priority low (see CreateRegistry.run(IProgressMonitor))
@@ -838,7 +838,7 @@ stopDeadlock(file);
 	 */
 	protected static void addInactiveJob() {
 		// It is assumed that we are sync(perProject) at this point.
-		INACTIVE_JOB = new Job(CodegenEditorPartMessages.getString("JavaVisualEditorVMController.InactiveVMCheckJob.Text")) { //$NON-NLS-1$
+		INACTIVE_JOB = new Job(CodegenEditorPartMessages.JavaVisualEditorVMController_InactiveVMCheckJob_Text) { 
 
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
@@ -938,7 +938,7 @@ stopDeadlock(file);
 	
 	protected static RegistryResult createRegistryForDebug(IFile file) throws CoreException {
 		
-		CreateDebugRegistry job = new CreateDebugRegistry(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CreateRemoteVMForJVE"), file); //$NON-NLS-1$
+		CreateDebugRegistry job = new CreateDebugRegistry(CodegenEditorPartMessages.JavaVisualEditorPart_CreateRemoteVMForJVE, file); 
 		job.schedule(); // Start it up
 		while (true) {
 			try {

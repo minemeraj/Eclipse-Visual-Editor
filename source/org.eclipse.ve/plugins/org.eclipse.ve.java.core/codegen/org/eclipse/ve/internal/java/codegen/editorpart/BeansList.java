@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: BeansList.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-21 22:12:53 $ 
  */
 
 import org.eclipse.ui.IWorkbenchPart;
@@ -37,7 +37,7 @@ protected PageRec doCreatePage(IWorkbenchPart part) {
 }
 protected IPage createDefaultPage(PageBook book) {
 	MessagePage msgPage = (MessagePage) super.createDefaultPage(book);
-	msgPage.setMessage(CodegenEditorPartMessages.getString("BeansList.DefaultPageMessage")); //$NON-NLS-1$
+	msgPage.setMessage(CodegenEditorPartMessages.BeansList_DefaultPageMessage); 
 	return msgPage;
 }
 }
