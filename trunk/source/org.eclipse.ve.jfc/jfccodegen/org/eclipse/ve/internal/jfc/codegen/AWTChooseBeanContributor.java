@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AWTChooseBeanContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-02 23:30:42 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-21 22:28:36 $ 
  */
 package org.eclipse.ve.internal.jfc.codegen;
 
@@ -18,7 +18,6 @@ import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
-import org.eclipse.ve.internal.java.choosebean.ChooseBeanMessages;
 import org.eclipse.ve.internal.java.choosebean.YesNoListChooseBeanContributor;
 
 import org.eclipse.ve.internal.jfc.core.JFCVisualPlugin;
@@ -33,8 +32,7 @@ public class AWTChooseBeanContributor extends YesNoListChooseBeanContributor{
 
 	public static String[] AWT_BASE_TYPE_NAMES = {"java.awt", "Component"}; //$NON-NLS-1$ //$NON-NLS-2$
 	public AWTChooseBeanContributor(){
-		super(ChooseBeanMessages.getString("AWTChooseBeanContributor.Name"),  AWT_BASE_TYPE_NAMES, SwingChooseBeanContributor.SWING_BASE_TYPES); //$NON-NLS-1$
-		
+		super(JFCCodegenMessages.getString("AWTChooseBeanContributor.Label"),  AWT_BASE_TYPE_NAMES, SwingChooseBeanContributor.SWING_BASE_TYPES);  //$NON-NLS-1$
 	}
 	public Image getImage() {
 		return CDEPlugin.getImageFromPlugin(JFCVisualPlugin.getPlugin(), "icons/full/obj16/awtbean.gif"); //$NON-NLS-1$
