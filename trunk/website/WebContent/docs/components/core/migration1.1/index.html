@@ -18,6 +18,39 @@
 	</DT>
 	<DD>The com.ibm.wtp plugins and features have been renamed into org.eclipse.jem plugins. They are now in one plugin called org.eclipse.jem.utilitiy. This is a link to the actual <A
 		href="com.ibm.wtp.renames.txt">renames required</A>.</DD>
+	<DT><B>Palette XMI restructured (as of VE 1.1 driver N20050621)</B></DT>
+	<DD>The Palette XMI has been restructured to match the GEF palette. The old palette XMI classes will still work but have been deprecated. We want to actually pull out the old XMI classes for VE 1.2. We do have a conversion utility available to perform the conversion. It is quick and easy.
+	<BR>
+	<BR>It is important that you do not use any of the new palette structures before conversion. The conversion utility doesn't expect that and may not convert completely because of that.
+	<BR>
+	<BR>
+	</DD>
+	<DD>Here are the instructions:<BR>
+	<OL>
+		<LI>Create a target Eclipse installation with Eclipse SDK 3.1, GEF
+		3.1, EMF 2.1, and VE 1.1</LI>
+		<LI>Download the <A href="ve.migrate.palette.1.1.zip">conversion
+		utility</A>.</LI>
+		<LI>The cleanest thing is to bring up a new workspace, and point the
+		PDE target to the configuration created in (1) above.</LI>
+		<LI>Checkout your projects that contain the palette xmi that need to
+		be converted. It doesn't matter if there are compile errors. We won't
+		be running any of the code. We just need access to the xmi files.</LI>
+		<LI>Do File-&gt;Import...-&gt;Existing Projects into
+		Workspace-&gt;Select Archive File (radio button)-&gt;Browse and select
+		the conversion utility zip file from (2) avove.</LI>
+		<LI>Import the ve.migrate.palette.1.1 project into your workspace.</LI>
+		<LI>Now make sure no editors are open in your workspace. That seems to
+		work best.</LI>
+		<LI>From the Navigator select the palette xmi to convert, bring up the
+		popup menu, select Run As-&gt;Run...</LI>
+		<LI>From there select the launch configuration called <B>Migrate
+		Palette to 1.1 format</B>. And then hit Run button.</LI>
+		<LI>The console should tell you if it worked or not.</LI>
+		<LI>Hit Refresh on the folder that contains you xmi file. That will bring in the changes. There will be a backup file that contains the old version before conversion.</LI>
+		<LI>Check the changes back in.</LI>
+		<LI>After converting them all, and testing using your regular test process, you can get rid of this workspace. You are done.</LI>
+	</OL></DD>
 </DL>
 </BODY>
 </HTML>
