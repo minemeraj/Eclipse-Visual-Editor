@@ -91,7 +91,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	private EStructuralFeature getTypedValueSF() {
 		EStructuralFeature typedValue = eClass().getEStructuralFeature(TYPED_VALUE);
 		if (typedValue == null)
-			throw new IllegalArgumentException(MessageFormat.format(CDMImplMessages.getString("KeyedDynamicImpl.ClassDidNotImplementFeature_EXC_"), new Object[] {eClass().getName(), TYPED_VALUE })); //$NON-NLS-1$
+			throw new IllegalArgumentException(MessageFormat.format(CDMImplMessages.KeyedDynamicImpl_ClassDidNotImplementFeature_EXC_, new Object[] {eClass().getName(), TYPED_VALUE })); 
 		return typedValue;
 	}
 	
@@ -99,7 +99,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	private EStructuralFeature getKeyStringSF() {
 		EStructuralFeature typedValue = eClass().getEStructuralFeature(KEY_STRING);
 		if (typedValue == null)
-			throw new IllegalArgumentException(MessageFormat.format(CDMImplMessages.getString("KeyedDynamicImpl.ClassDidNotImplementFeature_EXC_"), new Object[] {eClass().getName(), KEY_STRING })); //$NON-NLS-1$
+			throw new IllegalArgumentException(MessageFormat.format(CDMImplMessages.KeyedDynamicImpl_ClassDidNotImplementFeature_EXC_, new Object[] {eClass().getName(), KEY_STRING })); 
 		return typedValue;
 	}	
 	

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JaveVisualEditorLoadingFigureController.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-21 21:55:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -59,7 +59,7 @@ class JaveVisualEditorLoadingFigureController {
 	 */
 	public void startListener(GraphicalViewer viewer) {
 		this.viewer = viewer;
-		loadingFigure = new Label(CodegenMessages.getString("CodeGenVisualGraphicalEditorPart.StatusChangeListener.loading")) {//$NON-NLS-1$
+		loadingFigure = new Label(CodegenMessages.CodeGenVisualGraphicalEditorPart_StatusChangeListener_loading) {
 			Locator locator = new Locator() {
 				public void relocate(IFigure target) {
 					// Center the figure in the middle of the canvas

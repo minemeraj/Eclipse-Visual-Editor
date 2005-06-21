@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-21 21:50:16 $ 
  */
 
 import java.text.MessageFormat;
@@ -58,7 +58,7 @@ public class DefaultLabelProvider extends LabelProvider implements INeedData {
 		}
 		
 		// No id or not xml resource. Just use "(classname)"
-		return MessageFormat.format(CDEEmfMessages.getString("DefaultLabelProvider.getText"), new Object[] {CDEUtilities.lowCaseFirstCharacter(el.eClass().getName())}); //$NON-NLS-1$
+		return MessageFormat.format(CDEEmfMessages.DefaultLabelProvider_getText, new Object[] {CDEUtilities.lowCaseFirstCharacter(el.eClass().getName())}); 
 	}
 
 	/**

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.52 $  $Date: 2005-06-20 17:33:02 $ 
+ *  $Revision: 1.53 $  $Date: 2005-06-21 21:55:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -1242,7 +1242,7 @@ public class BDMMerger {
 				}
 			} else { // a this part
 				if (obj != null) {
-					((XMIResource)comp.eResource()).setID(obj,MessageFormat.format(BeanPart.THIS_NAME+CodegenMessages.getString("CodegenMessages.ThisPart.uriID"),new Object[] {mainModel.getWorkingCopyProvider().getFile().getFullPath().toString()})) ; //$NON-NLS-1$
+					((XMIResource)comp.eResource()).setID(obj,MessageFormat.format(BeanPart.THIS_NAME+CodegenMessages.CodegenMessages_ThisPart_uriID,new Object[] {mainModel.getWorkingCopyProvider().getFile().getFullPath().toString()})) ; 
 					// If no annotation, the PS will not allow you to edit the name in composition
 					annotatedName = null;
 				}
