@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: EntryImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-21 19:53:11 $ 
  */
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -584,7 +584,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 */
 	public boolean isDefaultEntry() {
-		return false;
+		return defaultEntry;
 	}
 
 	private boolean defaultEntry;

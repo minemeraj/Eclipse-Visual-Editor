@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IVEContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-21 19:53:10 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -30,17 +30,17 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 public interface IVEContributor {
 	
 	/**
-	 * Contribute to the list of categories to put on the palette. The list may be added to, removed from, reordered,
-	 * but do not modify any of the categories themselves. This is because they are just references to the originals
+	 * Contribute to the list of containers to put on the palette. The list may be added to, removed from, reordered,
+	 * but do not modify any of the containers themselves. This is because they are just references to the originals
 	 * and we cannot reconstruct the palette correctly if they are changed.
 	 * <p>
 	 * This may be called more than once, so do appropriate checks so as not to remodify the list more than necessary.
 	 * 
-	 * @param currentCategories the list of categories for the palette. The entries must be an instance of <code>org.eclipse.ve.internal.cde.palette.Category</code>
-	 * @param rset resource set to use to load categories xmi files into. 
-	 * @return <code>true</code> if contributor modified the categories, <code>false</code> if not touched. This is used to determine whether to rebuild palette or not.
+	 * @param currentContainers the list of categories for the palette. The entries must be an instance of {@link org.eclipse.ve.internal.cde.palette.Container}.
+	 * @param rset resource set to use to load containers xmi files into. 
+	 * @return <code>true</code> if contributor modified the containers, <code>false</code> if not touched. This is used to determine whether to rebuild palette or not.
 	 * 
 	 * @since 1.0.0
 	 */
-	public boolean contributePalleteCats(List currentCategories, ResourceSet rset);
+	public boolean contributePalleteCats(List currentContainers, ResourceSet rset);
 }

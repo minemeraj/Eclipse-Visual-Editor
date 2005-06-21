@@ -1,38 +1,30 @@
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore" 
-	xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
-  <palette:CategoryCmp xmi:id="cat1">
-    <categoryLabel xsi:type="utility:ConstantString" xmi:id="string0" string="Test Classes"/>
-    <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group1">
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry1" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry1obj"
-          creationClassURI="java:/java.lang#String"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="String"/>
-      </cmpEntries>  
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry2" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry2obj"
-          creationClassURI="java:/org.eclipse.ve.examples.java.vm#TestBean"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string2" string="TestBean"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry3" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry4obj"
-          creationClassURI="java:/org.eclipse.ve.examples.java.vm#BasicTypes"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string4" string="BasicTypes"/>
-      </cmpEntries>      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry4" icon16Name="platform:/plugin/org.eclipse.ve.examples.java/icons/canvas16.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry3obj"
-          creationClassURI="java:/org.eclipse.ve.examples.java.vm#Area"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string3" string="Area"/>
-      </cmpEntries>      
- 	  <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry4" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry5obj"
-          creationClassURI="java:/org.eclipse.ve.examples.java.vm#BeanTester"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string3" string="BeanTester"/>
-      </cmpEntries>            
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry4" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry7obj"
-          creationClassURI="java:/org.eclipse.ve.examples.java.vm#ButtonBar"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string3" string="ButtonBar"/>
-      </cmpEntries>          
-    </cmpGroups> 
-  </palette:CategoryCmp>
-</xmi:XMI>
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.ve.internal.cde.palette:Drawer xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.eclipse.ve.internal.cde.palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
+    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
+  <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Test Classes"/>
+  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif"
+      creationClassURI="java:/java.lang#String">
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="String"/>
+  </children>
+  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif"
+      creationClassURI="java:/org.eclipse.ve.examples.java.vm#TestBean">
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="TestBean"/>
+  </children>
+  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif"
+      creationClassURI="java:/org.eclipse.ve.examples.java.vm#BasicTypes">
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="BasicTypes"/>
+  </children>
+  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.examples.java/icons/canvas16.gif"
+      creationClassURI="java:/org.eclipse.ve.examples.java.vm#Area">
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Area"/>
+  </children>
+  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif"
+      creationClassURI="java:/org.eclipse.ve.examples.java.vm#BeanTester">
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="BeanTester"/>
+  </children>
+  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif"
+      creationClassURI="java:/org.eclipse.ve.examples.java.vm#ButtonBar">
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="ButtonBar"/>
+  </children>
+</org.eclipse.ve.internal.cde.palette:Drawer>

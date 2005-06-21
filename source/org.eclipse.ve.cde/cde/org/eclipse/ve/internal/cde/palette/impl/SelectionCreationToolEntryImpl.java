@@ -11,10 +11,11 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: SelectionCreationToolEntryImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-20 23:54:40 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-21 19:53:11 $ 
  */
 import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,6 +24,8 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.gef.palette.PaletteEntry;
+import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.swt.widgets.Display;
 
@@ -74,28 +77,6 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 		return PalettePackage.eINSTANCE.getSelectionCreationToolEntry();
 	}
 
-
-	protected ISelector getSelector() {
-		if (getSelectorClassName() == null)
-			return null;
-
-		// Now create the selector
-		String selectorClassName = getSelectorClassName();
-		try {
-			return (ISelector) CDEPlugin.createInstance(null, selectorClassName);
-		} catch (InstantiationException e) {
-			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { selectorClassName }); //$NON-NLS-1$
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
-		} catch (ClassCastException e) {
-			String msg =
-				MessageFormat.format(CDEMessages.getString("NotInstance_EXC_"), new Object[] { selectorClassName, ISelector.class }); //$NON-NLS-1$
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
-		} catch (Exception e) {
-			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$
-		}
-		return null;
-	}
-
 	protected static class SelectionFactory implements CreationFactory {
 		
 		public Object newObject;
@@ -130,8 +111,10 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 	 * 
 	 * @since 1.1.0
 	 */
-	protected class SelectionCreationTool extends CDECreationTool {
+	protected static class SelectionCreationTool extends CDECreationTool {
 
+		private static final Object PROPERTY_SELECTOR_CLASSNAME = new Object(); 
+		
 		public SelectionCreationTool() {
 		}
 
@@ -153,28 +136,57 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 			return (SelectionFactory) f;
 		}
 		
+		private String selectorClassName;
+		
+		protected void applyProperty(Object key, Object value) {
+			if (key == PROPERTY_SELECTOR_CLASSNAME)
+				selectorClassName = (String) value;
+			else
+				super.applyProperty(key, value);
+		}
+		
 		public void activate() {
 			super.activate();
 			
-			// Need to queue it off so that activation can be completed before we put up dialog, otherwise
-			// palette has problems.
-			Display.getCurrent().asyncExec(new Runnable() {
-				public void run() {
-					Object[] ret = null;					
-					ISelector sel = getSelector();
-					if (sel != null)
-						ret = sel.getNewObjectAndType(SelectionCreationTool.this, SelectionCreationTool.this.getDomain());
-					if (ret != null) {
-						SelectionFactory selFactory = getSelectionFactory();
-						selFactory.newObject = ret[0];
-						selFactory.type = ret[1];
-					} else {
-						// It was canceled.
-						getDomain().loadDefaultTool();
-					}					
-				}
-			});
+			if (selectorClassName != null) {
+				// Need to queue it off so that activation can be completed before we put up dialog, otherwise
+				// palette has problems.
+				Display.getCurrent().asyncExec(new Runnable() {
+
+					public void run() {
+						Object[] ret = null;
+						ISelector sel = getSelector();
+						if (sel != null)
+							ret = sel.getNewObjectAndType(SelectionCreationTool.this, SelectionCreationTool.this.getDomain());
+						if (ret != null) {
+							SelectionFactory selFactory = getSelectionFactory();
+							selFactory.newObject = ret[0];
+							selFactory.type = ret[1];
+						} else {
+							// It was canceled.
+							getDomain().loadDefaultTool();
+						}
+					}
+				});
+			}
 		}
+		
+		private ISelector getSelector() {
+			// Now create the selector
+			try {
+				return (ISelector) CDEPlugin.createInstance(null, selectorClassName);
+			} catch (InstantiationException e) {
+				String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { selectorClassName }); //$NON-NLS-1$
+				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
+			} catch (ClassCastException e) {
+				String msg =
+					MessageFormat.format(CDEMessages.getString("NotInstance_EXC_"), new Object[] { selectorClassName, ISelector.class }); //$NON-NLS-1$
+				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
+			} catch (Exception e) {
+				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", e)); //$NON-NLS-1$
+			}
+			return null;
+		}		
 
 		public void deactivate() {
 			super.deactivate();
@@ -203,6 +215,14 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 		return SelectionCreationTool.class;	// We need ours.
 	}
 
+	protected void configurePaletteEntry(PaletteEntry entry, Map entryToPaletteEntry) {
+		super.configurePaletteEntry(entry, entryToPaletteEntry);
+		// Need to put the selector classname into the properties so that after the selection tool is created using
+		// the default ctor it knows what selector to use.
+		String selectorClassName = getSelectorClassName();
+		if (selectorClassName != null && selectorClassName.length() > 0)
+			((ToolEntry) entry).setToolProperty(SelectionCreationTool.PROPERTY_SELECTOR_CLASSNAME, selectorClassName);
+	}
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

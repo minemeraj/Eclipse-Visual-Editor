@@ -1,413 +1,335 @@
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
-  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
-  xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
-  xmlns:cdm="http:///org/eclipse/ve/internal/cdm.ecore" 
-  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">  
-  <palette:CategoryCmp xmi:id="SwingComponents">
-    <categoryLabel xsi:type="utility:TranslatableString" key="Palette.Category.SwingComponents" bundle="bundle"/>
-    <cmpGroups xsi:type="palette:GroupCmp">
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/button_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JButton"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jButton"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JButton"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/checkbox_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JCheckBox"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jCheckBox"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JCheckBox"/>
-      </cmpEntries>      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/radiobutton_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JRadioButton"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jRadioButton"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JRadioButton"/>
-      </cmpEntries>            
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/toggledbutton_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JToggleButton"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jToggleButton"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JToggleButton"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/label_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JLabel"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jLabel"/>      
-        <entryLabel xsi:type="utility:ConstantString" string="JLabel"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textfield_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JTextField"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jTextField"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JTextField"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/passwordfield_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JPasswordField"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jPasswordField"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JPasswordField"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textarea_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JTextArea"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jTextArea"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JTextArea"/>
-      </cmpEntries>  
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/slider_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JSlider"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jSlider"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JSlider"/>
-      </cmpEntries>      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/scrollbar_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JScrollBar"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jScrollBar"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JScrollBar"/>
-      </cmpEntries>      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/listbox_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JList"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jList"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JList"/>
-      </cmpEntries>            
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/combobox_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JComboBox"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jComboBox"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JComboBox"/>
-      </cmpEntries>      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/tree_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JTree"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jTree"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JTree"/>
-      </cmpEntries>
-      <!-- Don't need AnnotatedCreationEntry because the annotations are in the prototype's xmi file. -->
-      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/tableonscrollpane_obj.gif"
-          prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/JTableWithScrollPane.xmi#JScrollPane_1">
-        <entryLabel xsi:type="utility:TranslatableString" key="Palette.Entry.JTableOnJScrollPane" bundle="bundle"/>
-      </cmpEntries>                   
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/table_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JTable"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jTable"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JTable"/>
-      </cmpEntries> 
-       <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/column_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing.table#TableColumn"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="ivjTableColumn"/>
-        <entryLabel xsi:type="utility:ConstantString" string="TableColumn"/>
-      </cmpEntries>      
-     
- <!-- JToolBarSeparator and JToolBarButton are not referring directly to any swing classes, these are 
-advanced features we'll supoort later -->
- <!--    
-
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/toolbarseparator_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JToolBarSeparator"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jToolBarSeparator"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JToolBarSeparator"/>
-      </cmpEntries>            
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/jtlbtn16.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JToolBarButton"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jToolBarButton"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JToolBarButton"/>
-      </cmpEntries>   
-      -->  
-       
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/progressbar_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JProgressBar"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jProgressBar"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JProgressBar"/>
-      </cmpEntries> 
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/optionpane_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JOptionPane"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jOptionPane"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JOptionPane"/>
-     </cmpEntries>          
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textpane_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JTextPane"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jTextPane"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JTextPane"/>
-      </cmpEntries>          
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/editorpane_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JEditorPane"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jEditorPane"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JEditorPane"/>
-      </cmpEntries>           
-    </cmpGroups>          
-  </palette:CategoryCmp>  
-  
-  <palette:CategoryCmp xmi:id="SwingContainers">
-    <categoryLabel xsi:type="utility:TranslatableString" key="Palette.Category.SwingContainers" bundle="bundle"/>
-    <cmpGroups xsi:type="palette:GroupCmp">
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/frame_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JFrame"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jFrame"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JFrame"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JPanel"/>
-        <values xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jPanel"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JPanel"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/scrollpane_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JScrollPane"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jScrollPane"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JScrollPane"/>
-      </cmpEntries>   
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/splitpane_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JSplitPane"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jSplitPane"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JSplitPane"/>
-      </cmpEntries>   
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/tabbedpane_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry6Bobj"
-          creationClassURI="java:/javax.swing#JTabbedPane"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jTabbedPane"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JTabbedPane"/>
-      </cmpEntries>      
-     <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/desktoppane_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JDesktopPane"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jDesktopPane"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JDesktopPane"/>
-      </cmpEntries>          
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/internalframe_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JInternalFrame"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jInternalFrame"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JInternalFrame"/>
-      </cmpEntries>       
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/dialog_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JDialog"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jDialog"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JDialog"/>
-      </cmpEntries>        
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/window_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JWindow"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jWindow"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JWindow"/>
-      </cmpEntries> 
-
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/toolbar_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JToolBar"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jToolBar"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JToolBar"/>
-      </cmpEntries> 
-   
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/applet_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/javax.swing#JApplet"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jApplet"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JApplet"/>
-      </cmpEntries> 
-    </cmpGroups>  
-  </palette:CategoryCmp>
- 
-   <palette:CategoryCmp xmi:id="SwingMenus">
-    <categoryLabel xsi:type="utility:TranslatableString" key="Palette.Category.SwingMenus" bundle="bundle"/>
-    <cmpGroups xsi:type="palette:GroupCmp">
-    
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/menubar_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JMenuBar"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jJMenuBar"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JMenuBar"/>
-      </cmpEntries> 
-
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/toolbar_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JToolBar"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jJToolBarBar"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JToolBar"/>
-      </cmpEntries> 
- 
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/menu_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JMenu"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jMenu"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JMenu"/>
-      </cmpEntries> 
-      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/popupmenu_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JPopupMenu"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jPopupMenu"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JPopupMenu"/>
-      </cmpEntries> 
- 
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/menuitem_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JMenuItem"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jMenuItem"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JMenuItem"/>
-      </cmpEntries> 
- 
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/checkmenuitem_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JCheckBoxMenuItem"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jCheckBoxMenuItem"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JCheckBoxMenuItem"/>
-      </cmpEntries> 
- 
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/radiomenuitem_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JRadioButtonMenuItem"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jRadioButtonMenuItem"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JRadioButtonMenuItem"/>
-      </cmpEntries> 
-
- <!-- JSeparator not be used... will eventually use JMenu.addSeparator() 
-   	  <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/menuseparator_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/javax.swing#JSeparator"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jSeparator"/>
-        <entryLabel xsi:type="utility:ConstantString" string="JSeparator"/>
-      </cmpEntries> 
-  -->
-
-	 </cmpGroups>
-  </palette:CategoryCmp>   
-  <palette:CategoryCmp xmi:id="AwtCat">
-    <categoryLabel xsi:type="utility:TranslatableString" key="Palette.Category.AWTControls" bundle="bundle"/>
-    <cmpGroups xsi:type="palette:GroupCmp">
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/frame_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#Frame"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="frame"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Frame"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/applet_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.applet#Applet"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="applet"/>          
-        <entryLabel xsi:type="utility:ConstantString" string="Applet"/>
-      </cmpEntries>                                          
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/dialog_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#Dialog"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="dialog"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Dialog"/>
-      </cmpEntries>      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/window_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#Window"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="window"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Window"/>
-      </cmpEntries>            
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#Panel"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="panel"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Panel"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/scrollpane_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#ScrollPane"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="scrollPane"/>
-        <entryLabel xsi:type="utility:ConstantString" string="ScrollPane"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/button_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#Button"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="button"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Button"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/label_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/java.awt#Label"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="label"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Label"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/checkbox_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/java.awt#Checkbox"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="checkbox"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Checkbox"/>
-      </cmpEntries>      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/choice_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#Choice"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="choice"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Choice"/>
-      </cmpEntries>      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/listbox_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#List"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="list"/>
-        <entryLabel xsi:type="utility:ConstantString" string="List"/>
-      </cmpEntries>      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/scrollbar_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#Scrollbar"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="scrollbar"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Scrollbar"/>
-      </cmpEntries>      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textfield_obj.gif" >
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry"
-          creationClassURI="java:/java.awt#TextField"/>
-         <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="textField"/>
-        <entryLabel xsi:type="utility:ConstantString" string="TextField"/>
-      </cmpEntries>      
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textarea_obj.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#TextArea"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="textArea"/>
-        <entryLabel xsi:type="utility:ConstantString" string="TextArea"/>
-      </cmpEntries>                                          
-    </cmpGroups> 
-  </palette:CategoryCmp>
-<!-- Commented out for now - menus require special code
-  <palette:CategoryCmp xmi:id="AwtMenus">
-    <categoryLabel xsi:type="utility:TranslatableString" key="Palette.Category.AWTMenus" bundle="bundle"/>
-    <cmpGroups xsi:type="palette:GroupCmp" xmi:id="groupA1">
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/menubr16.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#MenuBar"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="ivjMenuBar"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Menu Bar"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/popupm16.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#PopupMenu"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="ivjPopupMenu"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Pop up Bar"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/menu16.gif">
-	    <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#Menu"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="ivjMenu"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Menu"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/cboxmi16.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" 
-          creationClassURI="java:/java.awt#CheckboxMenuItem"/>
-        <values xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="ivjCheckboxMenuItem"/>
-        <entryLabel xsi:type="utility:ConstantString" string="Checkbox Menu Item"/>
-      </cmpEntries>
-    </cmpGroups>
-  </palette:CategoryCmp>    
- -->
-  
-  <utility:URLResourceBundle xmi:id="bundle" bundleName="palette">
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:org.eclipse.ve.internal.cde.palette="http:///org/eclipse/ve/internal/cde/palette.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
+  <org.eclipse.ve.internal.cde.palette:Drawer>
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.SwingComponents"
+        bundle="#bundle"/>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/button_obj.gif"
+        creationClassURI="java:/javax.swing#JButton">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JButton"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jButton"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/checkbox_obj.gif"
+        creationClassURI="java:/javax.swing#JCheckBox">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JCheckBox"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jCheckBox"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/radiobutton_obj.gif"
+        creationClassURI="java:/javax.swing#JRadioButton">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JRadioButton"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jRadioButton"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/toggledbutton_obj.gif"
+        creationClassURI="java:/javax.swing#JToggleButton">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JToggleButton"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jToggleButton"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/label_obj.gif"
+        creationClassURI="java:/javax.swing#JLabel">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JLabel"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jLabel"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textfield_obj.gif"
+        creationClassURI="java:/javax.swing#JTextField">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JTextField"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jTextField"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/passwordfield_obj.gif"
+        creationClassURI="java:/javax.swing#JPasswordField">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JPasswordField"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jPasswordField"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textarea_obj.gif"
+        creationClassURI="java:/javax.swing#JTextArea">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JTextArea"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jTextArea"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/slider_obj.gif"
+        creationClassURI="java:/javax.swing#JSlider">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JSlider"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jSlider"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/scrollbar_obj.gif"
+        creationClassURI="java:/javax.swing#JScrollBar">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JScrollBar"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jScrollBar"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/listbox_obj.gif"
+        creationClassURI="java:/javax.swing#JList">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JList"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jList"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/combobox_obj.gif"
+        creationClassURI="java:/javax.swing#JComboBox">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JComboBox"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jComboBox"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/tree_obj.gif"
+        creationClassURI="java:/javax.swing#JTree">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JTree"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jTree"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/tableonscrollpane_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/JTableWithScrollPane.xmi#JScrollPane_1">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Entry.JTableOnJScrollPane"
+          bundle="#bundle"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/table_obj.gif"
+        creationClassURI="java:/javax.swing#JTable">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JTable"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jTable"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/column_obj.gif"
+        creationClassURI="java:/javax.swing.table#TableColumn">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="TableColumn"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="ivjTableColumn"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/progressbar_obj.gif"
+        creationClassURI="java:/javax.swing#JProgressBar">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JProgressBar"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jProgressBar"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/optionpane_obj.gif"
+        creationClassURI="java:/javax.swing#JOptionPane">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JOptionPane"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jOptionPane"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textpane_obj.gif"
+        creationClassURI="java:/javax.swing#JTextPane">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JTextPane"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jTextPane"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/editorpane_obj.gif"
+        creationClassURI="java:/javax.swing#JEditorPane">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JEditorPane"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jEditorPane"/>
+    </children>
+  </org.eclipse.ve.internal.cde.palette:Drawer>
+  <org.eclipse.ve.internal.cde.palette:Drawer>
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.SwingContainers"
+        bundle="#bundle"/>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/frame_obj.gif"
+        creationClassURI="java:/javax.swing#JFrame">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JFrame"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jFrame"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+        creationClassURI="java:/javax.swing#JPanel">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JPanel"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jPanel"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/scrollpane_obj.gif"
+        creationClassURI="java:/javax.swing#JScrollPane">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JScrollPane"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jScrollPane"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/splitpane_obj.gif"
+        creationClassURI="java:/javax.swing#JSplitPane">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JSplitPane"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jSplitPane"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/tabbedpane_obj.gif"
+        creationClassURI="java:/javax.swing#JTabbedPane">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JTabbedPane"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jTabbedPane"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/desktoppane_obj.gif"
+        creationClassURI="java:/javax.swing#JDesktopPane">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JDesktopPane"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jDesktopPane"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/internalframe_obj.gif"
+        creationClassURI="java:/javax.swing#JInternalFrame">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JInternalFrame"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jInternalFrame"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/dialog_obj.gif"
+        creationClassURI="java:/javax.swing#JDialog">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JDialog"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jDialog"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/window_obj.gif"
+        creationClassURI="java:/javax.swing#JWindow">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JWindow"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jWindow"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/toolbar_obj.gif"
+        creationClassURI="java:/javax.swing#JToolBar">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JToolBar"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jToolBar"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/applet_obj.gif"
+        creationClassURI="java:/javax.swing#JApplet">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JApplet"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jApplet"/>
+    </children>
+  </org.eclipse.ve.internal.cde.palette:Drawer>
+  <org.eclipse.ve.internal.cde.palette:Drawer>
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.SwingMenus"
+        bundle="#bundle"/>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/menubar_obj.gif"
+        creationClassURI="java:/javax.swing#JMenuBar">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JMenuBar"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jJMenuBar"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/toolbar_obj.gif"
+        creationClassURI="java:/javax.swing#JToolBar">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JToolBar"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jJToolBarBar"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/menu_obj.gif"
+        creationClassURI="java:/javax.swing#JMenu">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JMenu"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jMenu"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/popupmenu_obj.gif"
+        creationClassURI="java:/javax.swing#JPopupMenu">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JPopupMenu"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jPopupMenu"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/menuitem_obj.gif"
+        creationClassURI="java:/javax.swing#JMenuItem">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JMenuItem"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jMenuItem"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/checkmenuitem_obj.gif"
+        creationClassURI="java:/javax.swing#JCheckBoxMenuItem">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JCheckBoxMenuItem"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jCheckBoxMenuItem"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/radiomenuitem_obj.gif"
+        creationClassURI="java:/javax.swing#JRadioButtonMenuItem">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JRadioButtonMenuItem"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="jRadioButtonMenuItem"/>
+    </children>
+  </org.eclipse.ve.internal.cde.palette:Drawer>
+  <org.eclipse.ve.internal.cde.palette:Drawer>
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.AWTControls"
+        bundle="#bundle"/>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/frame_obj.gif"
+        creationClassURI="java:/java.awt#Frame">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Frame"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="frame"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/applet_obj.gif"
+        creationClassURI="java:/java.applet#Applet">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Applet"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="applet"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/dialog_obj.gif"
+        creationClassURI="java:/java.awt#Dialog">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Dialog"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="dialog"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/window_obj.gif"
+        creationClassURI="java:/java.awt#Window">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Window"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="window"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+        creationClassURI="java:/java.awt#Panel">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Panel"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="panel"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/scrollpane_obj.gif"
+        creationClassURI="java:/java.awt#ScrollPane">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="ScrollPane"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="scrollPane"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/button_obj.gif"
+        creationClassURI="java:/java.awt#Button">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Button"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="button"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/label_obj.gif"
+        creationClassURI="java:/java.awt#Label">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Label"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="label"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/checkbox_obj.gif"
+        creationClassURI="java:/java.awt#Checkbox">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Checkbox"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="checkbox"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/choice_obj.gif"
+        creationClassURI="java:/java.awt#Choice">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Choice"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="choice"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/listbox_obj.gif"
+        creationClassURI="java:/java.awt#List">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="List"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="list"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/scrollbar_obj.gif"
+        creationClassURI="java:/java.awt#Scrollbar">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Scrollbar"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="scrollbar"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textfield_obj.gif"
+        creationClassURI="java:/java.awt#TextField">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="TextField"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="textField"/>
+    </children>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textarea_obj.gif"
+        creationClassURI="java:/java.awt#TextArea">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="TextArea"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="textArea"/>
+    </children>
+  </org.eclipse.ve.internal.cde.palette:Drawer>
+  <org.eclipse.ve.internal.cde.utility:URLResourceBundle xmi:id="bundle" bundleName="palette">
     <bundleURLs>platform:/plugin/org.eclipse.ve.jfc/palette/</bundleURLs>
-  </utility:URLResourceBundle>
-   
+  </org.eclipse.ve.internal.cde.utility:URLResourceBundle>
 </xmi:XMI>
