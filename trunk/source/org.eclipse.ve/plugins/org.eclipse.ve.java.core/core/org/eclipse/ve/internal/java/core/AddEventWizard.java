@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: AddEventWizard.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-27 17:34:53 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-21 22:53:48 $ 
  */
 
 import java.text.Collator;
@@ -108,7 +108,7 @@ public class AddEventWizard extends Wizard {
 		AddEventWizardPage(){
 			super("Add Event"); //$NON-NLS-1$
 			setImageDescriptor(JavaVEPlugin.getWizardTitleImageDescriptor());
-			setTitle(JavaMessages.getString("AddEventWizard.Title")); //$NON-NLS-1$)
+			setTitle(JavaMessages.AddEventWizard_Title); 
 		}
 		public IWizardPage getNextPage() {
 			return null;
@@ -147,7 +147,7 @@ public class AddEventWizard extends Wizard {
 						} else { 
 							propertyComposite.setEnabled(false);
 							listenerComposite.setEnabled(false);
-							label.setText(JavaMessages.getString("AddEventWizard.Tree.TreeItem.Unknown")); //$NON-NLS-1$
+							label.setText(JavaMessages.AddEventWizard_Tree_TreeItem_Unknown); 
 							setPageComplete(false);	
 							adjustSize(false);				
 						}
@@ -189,10 +189,10 @@ public class AddEventWizard extends Wizard {
 			listenerComposite.setLayoutData(listenerCompositeData);
 			// Radio button says whether or not an existing listener should be used, or a new one
 			c0useExistingListener = new Button(listenerComposite,SWT.RADIO);
-			c0useExistingListener.setText(JavaMessages.getString("AddEventWizard.API.Msg.UseExistingListener")); //$NON-NLS-1$
+			c0useExistingListener.setText(JavaMessages.AddEventWizard_API_Msg_UseExistingListener); 
 			c0useExistingListener.setEnabled(false);
 			c0createNewListener = new Button(listenerComposite,SWT.RADIO);
-			c0createNewListener.setText(JavaMessages.getString("AddEventWizard.API.Msg.CreateNewListener")); //$NON-NLS-1$
+			c0createNewListener.setText(JavaMessages.AddEventWizard_API_Msg_CreateNewListener); 
 			c0createNewListener.setEnabled(false);
 			
 			Composite extendImplementComposite = new Composite(listenerComposite,SWT.NONE);
@@ -202,10 +202,10 @@ public class AddEventWizard extends Wizard {
 			
 			extendImplementComposite.setLayout(new GridLayout(1,false));
 			c0extendAdapter = new Button(extendImplementComposite,SWT.RADIO);
-			c0extendAdapter.setText(MessageFormat.format(JavaMessages.getString("AddEventWizard.Extends.Label"), EMPTY_STRING_MSG_PARM)); //$NON-NLS-1$
+			c0extendAdapter.setText(MessageFormat.format(JavaMessages.AddEventWizard_Extends_Label, EMPTY_STRING_MSG_PARM)); 
 			c0extendAdapter.setEnabled(false);
 			c0implenentInterface = new Button(extendImplementComposite,SWT.RADIO);
-			c0implenentInterface.setText(MessageFormat.format(JavaMessages.getString("AddEventWizard.Implements.Label"), EMPTY_STRING_MSG_PARM)); //$NON-NLS-1$
+			c0implenentInterface.setText(MessageFormat.format(JavaMessages.AddEventWizard_Implements_Label, EMPTY_STRING_MSG_PARM)); 
 			c0implenentInterface.setEnabled(false);			
 			
 			// When a new listener is selected, we enable the radio choice for whether it's going to implement the interface
@@ -240,7 +240,7 @@ public class AddEventWizard extends Wizard {
 			propertyComposite.setLayoutData(propertyCompositeData);			
 			
 			Label useExistingListenerMethodLabel = new Label(propertyComposite,SWT.NONE);
-			useExistingListenerMethodLabel.setText(JavaMessages.getString("AddEventWizard.compositeProperty.label.UseExistingListenerMethod")); //$NON-NLS-1$
+			useExistingListenerMethodLabel.setText(JavaMessages.AddEventWizard_compositeProperty_label_UseExistingListenerMethod); 
 			
 			c1useExistingListener = new Button(propertyComposite,SWT.RADIO);
 			GridData useExistingListenerMethodButtonData = new GridData();
@@ -258,7 +258,7 @@ public class AddEventWizard extends Wizard {
 				}
 			});
 			Label createNewListenerLabel = new Label(propertyComposite,SWT.NONE);
-			createNewListenerLabel.setText(JavaMessages.getString("AddEventWizard.compositeProperty.label.CreateNewListenerMethod")); //$NON-NLS-1$
+			createNewListenerLabel.setText(JavaMessages.AddEventWizard_compositeProperty_label_CreateNewListenerMethod); 
 			
 			c1createNewListenerSingleArgumentMethod = new Button(propertyComposite,SWT.RADIO);
 			GridData createNewListenerSingleArgButtonData = new GridData();
@@ -491,7 +491,7 @@ public class AddEventWizard extends Wizard {
 			if(propDecor.getShortDescription() != null)
 				label.setText(propDecor.getShortDescription().trim());
 			else
-				label.setText(JavaMessages.getString("AddEventWizard.Label.NoDescription")); //$NON-NLS-1$
+				label.setText(JavaMessages.AddEventWizard_Label_NoDescription); 
 			
 			// If there is no existing PropertyEvent, and there is an existing listener then it can be re-used
 			boolean canUseExistingListener = false;	
@@ -567,7 +567,7 @@ public class AddEventWizard extends Wizard {
 			if (methodDecor.isSetShortDescription())
 			   label.setText(methodDecor.getShortDescription().trim());
 			else
-			   label.setText(JavaMessages.getString("AddEventWizard.Label.NoDescription")); //$NON-NLS-1$
+			   label.setText(JavaMessages.AddEventWizard_Label_NoDescription); 
 			// Set the BeanEvent and Method so the callback can be created
 			beanMethod = methodProxy.getMethod();
 						
@@ -626,16 +626,16 @@ public class AddEventWizard extends Wizard {
 			// If an adapter is available we use it by default
 			if (listenerExtends != null ){
 				c0adapterName = listenerExtends.getQualifiedName();
-				c0extendAdapter.setText(MessageFormat.format(JavaMessages.getString("AddEventWizard.Extends.Label"), new Object[] {c0adapterName}));	//$NON-NLS-1$
+				c0extendAdapter.setText(MessageFormat.format(JavaMessages.AddEventWizard_Extends_Label, new Object[] {c0adapterName}));	
 				c0extendAdapter.setSelection(true);
 				c0implenentInterface.setSelection(false);
 			} else {
 				c0adapterName = null;
-				c0extendAdapter.setText(MessageFormat.format(JavaMessages.getString("AddEventWizard.Extends.Label"), EMPTY_STRING_MSG_PARM)); //$NON-NLS-1$
+				c0extendAdapter.setText(MessageFormat.format(JavaMessages.AddEventWizard_Extends_Label, EMPTY_STRING_MSG_PARM)); 
 				c0extendAdapter.setSelection(false);
 				c0implenentInterface.setSelection(true);		
 			}
-			c0implenentInterface.setText(MessageFormat.format(JavaMessages.getString("AddEventWizard.Implements.Label"), new Object[] {listenerImplements.getQualifiedName()}));	//$NON-NLS-1$			
+			c0implenentInterface.setText(MessageFormat.format(JavaMessages.AddEventWizard_Implements_Label, new Object[] {listenerImplements.getQualifiedName()}));	
 			listenerComposite.layout(true);	// Force a new and calculated layout.			
 			// Set the label to the short description and set the beanMethod to null
 			// as the user can only add an event if a bean method has been set
@@ -644,7 +644,7 @@ public class AddEventWizard extends Wizard {
 			if (eventSetDecorator.isSetShortDescription())
 			    label.setText(eventSetDecorator.getShortDescription().trim());
 			else
-				label.setText(JavaMessages.getString("AddEventWizard.Label.NoDescription")); //$NON-NLS-1$
+				label.setText(JavaMessages.AddEventWizard_Label_NoDescription); 
 			if (!isMethod) { 
 				adjustSize(false);
 			}			
@@ -695,10 +695,10 @@ public class AddEventWizard extends Wizard {
 		ILabelProvider provider = ClassDescriptorDecoratorPolicy.getPolicy(editPart).getLabelProvider(javaBean.eClass());		
 		if ( provider != null && javaBean != null ) {
 			javaBeanDescription = provider.getText(javaBean);
-			setWindowTitle(JavaMessages.getString("AddEventWizard.addEventTitle") + " - " + javaBeanDescription); //$NON-NLS-1$ //$NON-NLS-2$
+			setWindowTitle(JavaMessages.AddEventWizard_addEventTitle + " - " + javaBeanDescription); 
 			javaBeanImage = provider.getImage(javaBean);
 		} else {
-			setWindowTitle(JavaMessages.getString("AddEventWizard.addEventTitle")); //$NON-NLS-1$
+			setWindowTitle(JavaMessages.AddEventWizard_addEventTitle); 
 		}
 	}
 	public Image getJavaBeanImage(){

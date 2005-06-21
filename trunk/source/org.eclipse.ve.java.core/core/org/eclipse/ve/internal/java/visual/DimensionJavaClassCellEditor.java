@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: DimensionJavaClassCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-21 22:53:48 $ 
  */
 
 import java.util.StringTokenizer;
@@ -67,9 +67,9 @@ protected String getJavaInitializationString(String dimString) {
 protected String isCorrectString(String text) {
 	StringTokenizer st = new StringTokenizer(text, ","); //$NON-NLS-1$
 	
-	String[] tokenMsgs = new String[] {JavaMessages.getString("CellEditor.Dimension.WidthErrorMsg_ERROR_"), JavaMessages.getString("CellEditor.Dimension.HeightErrorMsg_ERROR_")}; //$NON-NLS-1$ //$NON-NLS-2$
+	String[] tokenMsgs = new String[] {JavaMessages.CellEditor_Dimension_WidthErrorMsg_ERROR_, JavaMessages.CellEditor_Dimension_HeightErrorMsg_ERROR_}; 
 	if (st.countTokens() != tokenMsgs.length)
-		return JavaMessages.getString("CellEditor.Dimension.ErrorMsg_ERROR_"); //$NON-NLS-1$
+		return JavaMessages.CellEditor_Dimension_ErrorMsg_ERROR_; 
 	
 	for (int i=0; i<tokenMsgs.length; i++) {
 		String field = st.nextToken().trim();

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutConstraintsPropertyEditor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:22 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-21 22:53:45 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -224,7 +224,7 @@ public String isCorrectObject(Object anObject){
 	} else if (anObject != null)
 		ansString = anObject.toString();
 		
-	return ansString == null ? null : MessageFormat.format(JavaMessages.getString("CellEditors.InvalidSetting"), new Object[] {ansString}); //$NON-NLS-1$
+	return ansString == null ? null : MessageFormat.format("Invalid border layout constraint: {0}", new Object[] {ansString}); 
 }
 
 public void setData(Object data) {

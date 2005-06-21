@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeXMLPersistenceAction.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-18 22:02:38 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-21 22:53:48 $ 
  */
 
 import org.eclipse.ui.IEditorPart;
@@ -23,7 +23,7 @@ public class CustomizeXMLPersistenceAction extends CustomizeAction {
 public CustomizeXMLPersistenceAction(IEditorPart anEditorPart){
 	super(anEditorPart);
 	setId(ACTION_ID);
-	setText(JavaMessages.getString("Action.CustomizeXMLPersistence.Text")); //$NON-NLS-1$
+	setText(JavaMessages.Action_CustomizeXMLPersistence_Text); 
 }
 public void run(){
 	// TODO - commented entire method... need to fix compile errors

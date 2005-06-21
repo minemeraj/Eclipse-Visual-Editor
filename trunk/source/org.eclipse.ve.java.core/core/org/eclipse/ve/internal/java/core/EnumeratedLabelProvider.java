@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.java.core;
 /*
- * $RCSfile: EnumeratedLabelProvider.java,v $ $Revision: 1.8 $ $Date: 2005-02-15 23:23:54 $
+ * $RCSfile: EnumeratedLabelProvider.java,v $ $Revision: 1.9 $ $Date: 2005-06-21 22:53:48 $
  */
 import java.util.logging.Level;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -89,7 +89,7 @@ public class EnumeratedLabelProvider extends org.eclipse.jface.viewers.LabelProv
 	public String getText(Object aJavaInstance) {
 		IBeanProxy[] enumeratedValues = getEnumeratedValues();
 		if (enumeratedValues == null)
-			return JavaMessages.getString("LabelProvider.Enumerated.getText_ERROR_"); //$NON-NLS-1$
+			return JavaMessages.LabelProvider_Enumerated_getText_ERROR_; 
 		IBeanProxy valueProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) aJavaInstance, JavaEditDomainHelper
 				.getResourceSet(editDomain));
 		// Now that we have an array of bean proxies compare the value against the entries
@@ -103,7 +103,7 @@ public class EnumeratedLabelProvider extends org.eclipse.jface.viewers.LabelProv
 			}
 		}
 		// TODO This needs more thought"); //$NON-NLS-1$
-		return JavaMessages.getString("LabelProvider.Enumerated.getText_ERROR_"); //$NON-NLS-1$
+		return JavaMessages.LabelProvider_Enumerated_getText_ERROR_; 
 	}
 	
 	/*

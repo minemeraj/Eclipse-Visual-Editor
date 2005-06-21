@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: CharJavaCellEditor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-21 22:53:48 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -110,26 +110,26 @@ public class CharJavaCellEditor extends ObjectCellEditor implements IExecutableE
 
 		// Check the string for invalid format
 		if (aString.length() == 0) {
-			return JavaMessages.getString("CellEditor.CharJava.ErrMsg_ERROR_"); //$NON-NLS-1$
+			return JavaMessages.CellEditor_CharJava_ErrMsg_ERROR_; 
 		} else if (aString == null) {
-			return JavaMessages.getString("CellEditor.CharJava.InvalidMsg_ERROR_"); //$NON-NLS-1$
+			return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_; 
 		} else if (aString.length() > 1) {
 			if (aString.charAt(0) != '0') {
 				// TODO: Give a more descriptive error message when we're allowed to drop for NLS
 				// Multicharacter string not starting with 0
-				return JavaMessages.getString("CellEditor.CharJava.InvalidMsg_ERROR_"); //$NON-NLS-1$
+				return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_; 
 			} else {
 				try {
 					int num = Integer.parseInt(aString.substring(1));
 					if (num > Character.MAX_VALUE || num < Character.MIN_VALUE) {
 						// TODO: Give a more descriptive error message when we're allowed to drop for NLS
 						// Number outside of char bounds
-						return JavaMessages.getString("CellEditor.CharJava.InvalidMsg_ERROR_"); //$NON-NLS-1$
+						return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_; 
 					}
 				} catch (NumberFormatException e) {
 					// TODO: Give a more descriptive error message when we're allowed to drop for NLS
 					// invalid number after 0
-					return JavaMessages.getString("CellEditor.CharJava.InvalidMsg_ERROR_"); //$NON-NLS-1$
+					return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_; 
 				}
 			}
 		}
@@ -152,7 +152,7 @@ public class CharJavaCellEditor extends ObjectCellEditor implements IExecutableE
 		else
 			// TODO: Give a more descriptive error message when we're allowed to drop for NLS
 			// Not a valid instance of Character class
-			return JavaMessages.getString("CellEditor.CharJava.InvalidMsg_ERROR_"); //$NON-NLS-1$
+			return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_; 
 	}
 
 	/**

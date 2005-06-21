@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipAssistFactory.java,v $
- *  $Revision: 1.14 $  $Date: 2005-06-15 20:19:38 $ 
+ *  $Revision: 1.15 $  $Date: 2005-06-21 22:53:48 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -87,7 +87,7 @@ public class ToolTipAssistFactory {
 	}	
 		
 	static  class NullTTAdapter implements IJavaToolTipProposalAdapter {
-		final static Label l = new Label(JavaMessages.getString("ToolTipAssistFactory.ToolTip_not_available_1")) ; //$NON-NLS-1$
+		final static Label l = new Label(JavaMessages.ToolTipAssistFactory_ToolTip_not_available_1) ; 
 		final static Label l2 = new Label() ;
 				
 		public java.lang.String getInitMethodName() {		
