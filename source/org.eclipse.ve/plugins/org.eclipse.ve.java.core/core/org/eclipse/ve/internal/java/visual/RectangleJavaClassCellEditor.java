@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: RectangleJavaClassCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-21 22:53:48 $ 
  */
 
 import java.util.StringTokenizer;
@@ -68,9 +68,9 @@ protected String getJavaInitializationString(String rectString) {
 protected String isCorrectString(String text) {
 	StringTokenizer st = new StringTokenizer(text, ","); //$NON-NLS-1$
 	
-	String[] tokenMsgs = new String[] {JavaMessages.getString("CellEditor.Rectangle.XErrorMsg_ERROR_"), JavaMessages.getString("CellEditor.Rectangle.YErrorMsg_ERROR_"), JavaMessages.getString("CellEditor.Rectangle.WidthErrorMsg_ERROR_"), JavaMessages.getString("CellEditor.Rectangle.HeightErrorMsg_ERROR_")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	String[] tokenMsgs = new String[] {JavaMessages.CellEditor_Rectangle_XErrorMsg_ERROR_, JavaMessages.CellEditor_Rectangle_YErrorMsg_ERROR_, JavaMessages.CellEditor_Rectangle_WidthErrorMsg_ERROR_, JavaMessages.CellEditor_Rectangle_HeightErrorMsg_ERROR_}; 
 	if (st.countTokens() != tokenMsgs.length)
-		return JavaMessages.getString("CellEditor.Rectangle.ErrorMsg_ERROR_"); //$NON-NLS-1$
+		return JavaMessages.CellEditor_Rectangle_ErrorMsg_ERROR_; 
 	
 	for (int i=0; i<tokenMsgs.length; i++) {
 		String field = st.nextToken().trim();

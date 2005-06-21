@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NameInMemberPropertyDescriptor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-21 21:43:46 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-21 22:53:48 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -56,13 +56,13 @@ public class NameInMemberPropertyDescriptor extends NameInCompositionPropertyDes
 		}
 
 		protected Control createDialogArea(Composite parent) {
-			setTitle(JavaMessages.getString("NameInMemberPropertyDescriptor.NameChangeDialog.Dialog.Title")); //$NON-NLS-1$
-			setMessage(JavaMessages.getString("NameInMemberPropertyDescriptor.NameChangeDialog.Dialog.Message")); //$NON-NLS-1$
+			setTitle(JavaMessages.NameInMemberPropertyDescriptor_NameChangeDialog_Dialog_Title); 
+			setMessage(JavaMessages.NameInMemberPropertyDescriptor_NameChangeDialog_Dialog_Message); 
 			return super.createDialogArea(parent);
 		}
 
 		protected void configureShell(Shell newShell) {
-			newShell.setText(JavaMessages.getString("NameInMemberPropertyDescriptor.NameChangeDialog.Shell.Title")); //$NON-NLS-1$
+			newShell.setText(JavaMessages.NameInMemberPropertyDescriptor_NameChangeDialog_Shell_Title); 
 			super.configureShell(newShell);
 		}
 	}
