@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-17 23:36:56 $ 
+ *  $Revision: 1.16 $  $Date: 2005-06-21 22:18:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -91,7 +91,7 @@ public class VEModelCacheUtility {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 		Resource r = null;
-		monitor.beginTask(Messages.getString("VEModelCacheUtility.2")+ model.getFile().getName(),3); //$NON-NLS-1$
+		monitor.beginTask(Messages.VEModelCacheUtility_2+ model.getFile().getName(),3); 
 		if (isValidCache(model.getFile())) {		 
 		  monitor.worked(1);
 		  try {
@@ -143,7 +143,7 @@ public class VEModelCacheUtility {
 	public static void doSaveCache (IBeanDeclModel bdm, IProgressMonitor monitor) {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();		
-		monitor.beginTask(Messages.getString("VEModelCacheUtility.3"),3); //$NON-NLS-1$
+		monitor.beginTask(Messages.VEModelCacheUtility_3,3); 
 		monitor.worked(1);		
 		if (bdm!=null && bdm.getCompositionModel()!=null) {
 			IVEModelInstance model = bdm.getCompositionModel();
@@ -157,7 +157,7 @@ public class VEModelCacheUtility {
 				else {
 				  File f = getCachedPath(model.getFile()).toFile();
 				  monitor.worked(1);
-				  monitor.subTask(Messages.getString("VEModelCacheUtility.4")+f.getName()); //$NON-NLS-1$
+				  monitor.subTask(Messages.VEModelCacheUtility_4+f.getName()); 
 				  FileOutputStream os = new FileOutputStream(f);				
 				  model.getModelResource().save(os, XML_CACHE_SAVE_OPTIONS);
 				  os.close();

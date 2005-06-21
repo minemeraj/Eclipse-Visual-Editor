@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
 
 /*
  *  $RCSfile: RenameJavaBeanObjectActionDelegate.java,v $
- *  $Revision: 1.12 $  $Date: 2005-06-06 22:14:40 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-21 22:12:53 $ 
  */
 
 import java.util.ArrayList;
@@ -86,12 +86,12 @@ public class RenameJavaBeanObjectActionDelegate implements IObjectActionDelegate
 		 */
 		protected void configureShell(Shell newShell) {
 			super.configureShell(newShell);
-			newShell.setText(CodegenEditorPartMessages.getString("RenameJavaBeanObjectActionDelegate.Shell.Text")); //$NON-NLS-1$
+			newShell.setText(CodegenEditorPartMessages.RenameJavaBeanObjectActionDelegate_Shell_Text); 
 		}
 
 		protected Control createDialogArea(Composite parent) {
-			setTitle(CodegenEditorPartMessages.getString("RenameJavaBeanObjectActionDelegate.FieldNaming.Title")); //$NON-NLS-1$
-			setMessage(CodegenEditorPartMessages.getString("RenameJavaBeanObjectActionDelegate.Message")); //$NON-NLS-1$
+			setTitle(CodegenEditorPartMessages.RenameJavaBeanObjectActionDelegate_FieldNaming_Title); 
+			setMessage(CodegenEditorPartMessages.RenameJavaBeanObjectActionDelegate_Message); 
 			return super.createDialogArea(parent);
 		}
 		

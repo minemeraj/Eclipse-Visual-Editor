@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.31 $  $Date: 2005-06-20 22:56:05 $ 
+ *  $Revision: 1.32 $  $Date: 2005-06-21 22:15:43 $ 
  */
 
 import java.util.*;
@@ -244,7 +244,7 @@ void  setLineSeperator() {
  * This method will remove these instances from the model
  */
 protected void cleanModel () {
-	fMonitor.subTask(CodeGenJavaMessages.getString("JavaBeanModelBuilder.Task.CleanModel")); //$NON-NLS-1$
+	fMonitor.subTask(CodeGenJavaMessages.JavaBeanModelBuilder_Task_CleanModel); 
 	Iterator itr = fModel.getBeans().iterator() ;
 	ArrayList err = new ArrayList() ;
 	
@@ -332,7 +332,7 @@ protected List getInnerTypes() {
 
 protected  void analyzeEvents(IVisitorFactoryRule visitorFactoryRule) {
 	TimerTests.basicTest.startStep("Parse Events"); //$NON-NLS-1$
-	fMonitor.subTask(CodeGenJavaMessages.getString("JavaBeanModelBuilder.Task.AnalyzeEvents")); //$NON-NLS-1$
+	fMonitor.subTask(CodeGenJavaMessages.JavaBeanModelBuilder_Task_AnalyzeEvents); 
 	Iterator itr = fModel.getBeans().iterator() ;
 	// EventParser will cache event information, and will 
 	// Scan methods for event expressions.
@@ -376,8 +376,8 @@ public IBeanDeclModel build () throws CodeGenException {
 
     // Build a AST DOM
     // We do not want the document to change while we take a snippet of it.
-	fMonitor.beginTask(CodeGenJavaMessages.getString("JavaBeanModelBuilder.Task.BuildingModel"), determineWorkAmount()); //$NON-NLS-1$
-	fMonitor.subTask(CodeGenJavaMessages.getString("JavaBeanModelBuilder.Task.ParsingSource")); //$NON-NLS-1$
+	fMonitor.beginTask(CodeGenJavaMessages.JavaBeanModelBuilder_Task_BuildingModel, determineWorkAmount()); 
+	fMonitor.subTask(CodeGenJavaMessages.JavaBeanModelBuilder_Task_ParsingSource); 
     JavaElementInfo[] jdtMethods=null;
     if (fSync!=null) {         	
         fastCU = ParseJavaCode (new SubProgressMonitor(fMonitor, 100)) ;        

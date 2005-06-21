@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ReturnStmtVisitor.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-21 22:15:43 $ 
  */
 
 
@@ -64,7 +64,7 @@ void processAReturnStatement() {
  *  Go for it
  */
 public void visit(){
-	getProgressMonitor().subTask(MessageFormat.format(CodeGenJavaMessages.getString("ReturnStmtVisitor.TypeMethodExpression"), new Object[]{fMethod.getTypeRef().getSimpleName(), fMethod.getMethodName(), fReturnStmt.toString()})); //$NON-NLS-1$
+	getProgressMonitor().subTask(MessageFormat.format(CodeGenJavaMessages.ReturnStmtVisitor_TypeMethodExpression, new Object[]{fMethod.getTypeRef().getSimpleName(), fMethod.getMethodName(), fReturnStmt.toString()})); 
 	IReturnStmtRule returnRule = (IReturnStmtRule) CodeGenUtil.getEditorStyle(fModel).getRule(IReturnStmtRule.RULE_ID) ;
 	if (returnRule != null) {
 		ISourceVisitor override = returnRule.overideReturnVisit(fMethod.getDeclMethod(),fReturnStmt,fModel) ;

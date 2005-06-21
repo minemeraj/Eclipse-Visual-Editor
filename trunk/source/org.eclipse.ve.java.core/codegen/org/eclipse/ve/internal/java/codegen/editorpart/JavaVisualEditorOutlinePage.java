@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.18 $  $Date: 2005-06-02 17:18:36 $ 
+ *  $Revision: 1.19 $  $Date: 2005-06-21 22:12:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -70,18 +70,19 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	
 	private class ShowOverviewAction extends ResourceAction {
 		private static final String RESOURCE_PREFIX = "ShowOverviewAction."; //$NON-NLS-1$
+
 		public ShowOverviewAction() {
-			super(CodegenEditorPartMessages.RESOURCE_BUNDLE, RESOURCE_PREFIX, IAction.AS_CHECK_BOX);
+			super(JavaVisualEditorPart.RESOURCE_BUNDLE, RESOURCE_PREFIX, IAction.AS_CHECK_BOX);
 			setChecked(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.PREF_SHOW_OVERVIEW_KEY));			
 		}			
 
 		public void run() {
 			if (isChecked()) {
-				setText(CodegenEditorPartMessages.getString(RESOURCE_PREFIX+"labelOutline")); //$NON-NLS-1$
-				setToolTipText(CodegenEditorPartMessages.getString(RESOURCE_PREFIX+"tooltipOutline")); //$NON-NLS-1$
+				setText(CodegenEditorPartMessages.ShowOverviewAction_labelOutline); //$NON-NLS-1$
+				setToolTipText(CodegenEditorPartMessages.ShowOverviewAction_tooltipOutline); //$NON-NLS-1$
 			} else {
-				setText(CodegenEditorPartMessages.getString(RESOURCE_PREFIX+"label")); //$NON-NLS-1$
-				setToolTipText(CodegenEditorPartMessages.getString(RESOURCE_PREFIX+"tooltip"));					 //$NON-NLS-1$
+				setText(CodegenEditorPartMessages.ShowOverviewAction_label); //$NON-NLS-1$
+				setToolTipText(CodegenEditorPartMessages.ShowOverviewAction_tooltip);					 //$NON-NLS-1$
 			}
 			showOverview(isChecked());
 			CDEPlugin.getPlugin().getPluginPreferences().setValue(CDEPlugin.PREF_SHOW_OVERVIEW_KEY, isChecked());
@@ -204,7 +205,7 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		};
 		copyBeanAction.setSelectionProvider(this);
 		copyBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		copyBeanAction.setText(CodegenEditorPartMessages.getString("Action.Copy.Label"));		//$NON-NLS-1$
+		copyBeanAction.setText(CodegenEditorPartMessages.Action_Copy_Label);		
 		
 		cutBeanAction = new CutJavaBeanAction(jve){
 			public void run(){
@@ -216,11 +217,11 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		};		
 		cutBeanAction.setSelectionProvider(this);
 		cutBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		cutBeanAction.setText(CodegenEditorPartMessages.getString("Action.Cut.Label"));		//$NON-NLS-1$
+		cutBeanAction.setText(CodegenEditorPartMessages.Action_Cut_Label);		
 		
 		pasteBeanAction.setSelectionProvider(this);
 		pasteBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteBeanAction.setText(CodegenEditorPartMessages.getString("Action.Paste.Label"));	//$NON-NLS-1$			
+		pasteBeanAction.setText(CodegenEditorPartMessages.Action_Paste_Label);	
 		
 		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), deleteAction);
 		actionBars.setGlobalActionHandler(ActionFactory.CUT.getId(), cutBeanAction);	
@@ -254,9 +255,9 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 			showEvents = showEventsInt.intValue();
 		}
 		// Create three actions - No events , Basic events and Expert events
-		ShowHideEventsAction noEventsAction = new ShowHideEventsAction(CodegenEditorPartMessages.getString("JavaVisualEditor.NoEvents"),JavaVEPlugin.EVENTS_NONE, showEvents); //$NON-NLS-1$
-		ShowHideEventsAction basicEventsAction = new ShowHideEventsAction(CodegenEditorPartMessages.getString("JavaVisualEditor.ShowEvents"),JavaVEPlugin.EVENTS_BASIC, showEvents); //$NON-NLS-1$
-		ShowHideEventsAction expertEventsAction = new ShowHideEventsAction(CodegenEditorPartMessages.getString("JavaVisualEditor.ExpertEvents"),JavaVEPlugin.EVENTS_EXPERT, showEvents); //$NON-NLS-1$
+		ShowHideEventsAction noEventsAction = new ShowHideEventsAction(CodegenEditorPartMessages.JavaVisualEditor_NoEvents,JavaVEPlugin.EVENTS_NONE, showEvents); 
+		ShowHideEventsAction basicEventsAction = new ShowHideEventsAction(CodegenEditorPartMessages.JavaVisualEditor_ShowEvents,JavaVEPlugin.EVENTS_BASIC, showEvents); 
+		ShowHideEventsAction expertEventsAction = new ShowHideEventsAction(CodegenEditorPartMessages.JavaVisualEditor_ExpertEvents,JavaVEPlugin.EVENTS_EXPERT, showEvents); 
 		// Put the event actions - None, Basic and Export on the menu	
 		mm.add(noEventsAction);
 		mm.add(basicEventsAction);

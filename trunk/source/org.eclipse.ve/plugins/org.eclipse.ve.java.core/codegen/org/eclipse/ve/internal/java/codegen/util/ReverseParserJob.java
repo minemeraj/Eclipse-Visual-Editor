@@ -12,7 +12,7 @@
  *  Created Jan 11, 2005 by Gili Mendel
  * 
  *  $RCSfile: ReverseParserJob.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-22 20:57:56 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-21 22:18:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -29,7 +29,7 @@ import org.eclipse.jem.internal.proxy.common.ICallbackRunnable;
  */
 public abstract class ReverseParserJob extends Job {
 	
-	public static String    REVERSE_PARSE_JOB_NAME = Messages.getString("ReverseParserJob.0"); //$NON-NLS-1$
+	public static String    REVERSE_PARSE_JOB_NAME = Messages.ReverseParserJob_0; 
 	public static int       DEFAULT_PRIORITY = Thread.MIN_PRIORITY+1;	
 	private Object			family;
 	

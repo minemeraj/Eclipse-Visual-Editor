@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.127 $  $Date: 2005-06-21 21:43:46 $ 
+ *  $Revision: 1.128 $  $Date: 2005-06-21 22:12:53 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -132,7 +132,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	public final static String PI_LOC = "loc"; //$NON-NLS-1$
 	public final static String PI_CATEGORIES = "categories"; //$NON-NLS-1$
 	public final static String PI_LAST = "last"; //$NON-NLS-1$
-	
+
+	public static final ResourceBundle RESOURCE_BUNDLE =
+		ResourceBundle.getBundle("org.eclipse.ve.internal.java.codegen.editorpart.messages"); //$NON-NLS-1$
+
 	protected boolean initialized = false;
 	protected EditDomain editDomain;
 
@@ -232,7 +235,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				if (!proj.hasNature(JavaCore.NATURE_ID))
 					throw new PartInitException(
 						MessageFormat.format(
-							CodegenEditorPartMessages.getString("JavaVisualEditor.notJavaProject_EXC_"), //$NON-NLS-1$
+							CodegenEditorPartMessages.JavaVisualEditor_notJavaProject_EXC_, 
 							new Object[] { proj.getName(), input.getName()}));
 			} catch (CoreException e) {
 				throw new PartInitException(e.getStatus());
@@ -270,24 +273,24 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		// Create the common actions
 		ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
-		RetargetTextEditorAction deleteAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Delete."); //$NON-NLS-1$
+		RetargetTextEditorAction deleteAction = new RetargetTextEditorAction(RESOURCE_BUNDLE, "Action.Delete."); //$NON-NLS-1$
 		deleteAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		deleteAction.setId(ActionFactory.DELETE.getId());
 		commonActionRegistry.registerAction(deleteAction);
 		
-		cutAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Cut."); //$NON-NLS-1$
+		cutAction = new RetargetTextEditorAction(RESOURCE_BUNDLE, "Action.Cut."); //$NON-NLS-1$
 		cutAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
 		cutAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.CUT);
 		cutAction.setId(ActionFactory.CUT.getId());
 		commonActionRegistry.registerAction(cutAction);		
 		
-		copyAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Copy."); //$NON-NLS-1$
+		copyAction = new RetargetTextEditorAction(RESOURCE_BUNDLE, "Action.Copy."); //$NON-NLS-1$
 		copyAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		copyAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
 		copyAction.setId(ActionFactory.COPY.getId());
 		commonActionRegistry.registerAction(copyAction);
 		
-		pasteAction = new RetargetTextEditorAction(CodegenEditorPartMessages.RESOURCE_BUNDLE, "Action.Paste."); //$NON-NLS-1$
+		pasteAction = new RetargetTextEditorAction(RESOURCE_BUNDLE, "Action.Paste."); //$NON-NLS-1$
 		pasteAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.PASTE);
 		pasteAction.setId(ActionFactory.PASTE.getId());
@@ -354,7 +357,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		loadingFigureController.showLoadingFigure(true);	// Start the loading figure.	
 		// Kick off the setup thread. Doing so that system stays responsive.
 		if (setupJob == null) {
-			setupJob = new Setup(CodegenEditorPartMessages.getString("JavaVisualEditorPart.SetupJVE"), removeVECache); //$NON-NLS-1$
+			setupJob = new Setup(CodegenEditorPartMessages.JavaVisualEditorPart_SetupJVE, removeVECache); 
 			setupJob.setPriority(Job.SHORT); 
 		}
 		else
@@ -465,7 +468,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				if (currentSetRoot != root && currentSetRoot != null) {
 					// Move the release off into a job, no need to tie up ui with it. It is already unused by anyone else.
 					final BeanSubclassComposition releaseRoot = currentSetRoot; 
-					Job releaseJob = new Job(CodegenEditorPartMessages.getString("JavaVisualEditorPart.ReleasingModel")) {	//$NON-NLS-1$
+					Job releaseJob = new Job(CodegenEditorPartMessages.JavaVisualEditorPart_ReleasingModel) {	
 						protected IStatus run(IProgressMonitor monitor) {
 							((CompositionProxyAdapter) EcoreUtil.getExistingAdapter(releaseRoot, CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)).releaseBeanProxy(false);							
 							return Status.OK_STATUS;
@@ -662,7 +665,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 		CTabItem jveTab = new CTabItem(folder, SWT.NONE);
 		jveTab.setControl(editorParent);
-		jveTab.setText(CodegenEditorPartMessages.getString("JavaVisualEditorPart.DesignPart")); //$NON-NLS-1$
+		jveTab.setText(CodegenEditorPartMessages.JavaVisualEditorPart_DesignPart); 
 
 		paletteSplitter = new FlyoutPaletteComposite(editorParent, SWT.NONE, getSite().getPage(), getPaletteViewerProvider(), getPalettePreferences());
 		paletteSplitter.setGraphicalControl(createPrimaryViewer(paletteSplitter));
@@ -677,7 +680,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 		CTabItem javaTab = new CTabItem(folder, SWT.NONE);
 		javaTab.setControl(javaParent);
-		javaTab.setText(CodegenEditorPartMessages.getString("JavaVisualEditorPart.SourcePart")); //$NON-NLS-1$
+		javaTab.setText(CodegenEditorPartMessages.JavaVisualEditorPart_SourcePart); 
 		// Let the super java text editor fill it in.
 		super.createPartControl(javaParent);
 
@@ -748,7 +751,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							
 								String msg = ""; //$NON-NLS-1$
 								if (tool instanceof CreationToolEntry ){
-									msg = MessageFormat.format(CodegenEditorPartMessages.getString("JVEActionContributor.Status.Creating(label)"), new Object[]{tool.getLabel()}); //$NON-NLS-1$
+									msg = MessageFormat.format(CodegenEditorPartMessages.JVEActionContributor_Status_Creating_label_, new Object[]{tool.getLabel()}); 
 								}
 								setStatusMsg(getEditorSite().getActionBars(),msg,null);																
 							}
@@ -867,7 +870,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		pasteBeanAction = new PasteJavaBeanAction(this,editDomain);		
 		pasteBeanAction.setSelectionProvider(primaryViewer);
 		pasteBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteBeanAction.setText(CodegenEditorPartMessages.getString("Action.Paste.Label"));	//$NON-NLS-1$			
+		pasteBeanAction.setText(CodegenEditorPartMessages.Action_Paste_Label);	
 		graphicalActionRegistry.registerAction(pasteBeanAction);
 		
 		copyBeanAction = new CopyJavaBeanAction(this){
@@ -880,7 +883,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		};
 		copyBeanAction.setSelectionProvider(primaryViewer);
 		copyBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		copyBeanAction.setText(CodegenEditorPartMessages.getString("Action.Copy.Label"));		//$NON-NLS-1$				
+		copyBeanAction.setText(CodegenEditorPartMessages.Action_Copy_Label);		
 		graphicalActionRegistry.registerAction(copyBeanAction);
 		
 		
@@ -896,7 +899,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		cutAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.CUT);
 		cutAction.setId(ActionFactory.CUT.getId());
 		cutBeanAction.setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		cutBeanAction.setText(CodegenEditorPartMessages.getString("Action.Cut.Label"));		//$NON-NLS-1$
+		cutBeanAction.setText(CodegenEditorPartMessages.Action_Cut_Label);		
 		graphicalActionRegistry.registerAction(cutBeanAction);		
 		
 		final SelectionAction customizeAction = (SelectionAction) graphicalActionRegistry.getAction(CustomizeJavaBeanAction.ACTION_ID);
@@ -989,8 +992,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					processParseError(true);	// Treat it as a parse error, the model parser couldn't even get far enough to signal parse error.
 					setReloadEnablement(true);	// Because it was disabled.							
 					
-					String title = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorTitle"); //$NON-NLS-1$
-					String msg = CodegenEditorPartMessages.getString("JavaVisualEditor.ErrorDesc"); //$NON-NLS-1$
+					String title = CodegenEditorPartMessages.JavaVisualEditor_ErrorTitle; 
+					String msg = CodegenEditorPartMessages.JavaVisualEditor_ErrorDesc; 
 					Shell shell = getSite().getShell();
 					if (e instanceof CoreException)
 						ErrorDialog.openError(shell, title, msg, ((CoreException) e).getStatus());
@@ -1200,7 +1203,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// try to do syncExec for some reason. So we will farm off and join in a thread.
 				setupJob.cancel();
 				final Display d = Display.getCurrent();
-				(new Job(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CleanupJVE")) { //$NON-NLS-1$
+				(new Job(CodegenEditorPartMessages.JavaVisualEditorPart_CleanupJVE) { 
 					protected IStatus run(IProgressMonitor monitor) {
 						while (true) {
 							try {
@@ -1718,7 +1721,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		 * Start the create registry job.
 		 */
 		private void startCreateProxyFactoryRegistry(IFile file) {
-			registryCreateJob = new CreateRegistry(CodegenEditorPartMessages.getString("JavaVisualEditorPart.CreateRemoteVMForJVE"), file); //$NON-NLS-1$
+			registryCreateJob = new CreateRegistry(CodegenEditorPartMessages.JavaVisualEditorPart_CreateRemoteVMForJVE, file); 
 			registryCreateJob.schedule();
 		}
 		
@@ -1815,7 +1818,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
                     modelBuilder.waitforNotBusy(false);
                 }
 				
-				monitor.subTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.InitializingModel")); //$NON-NLS-1$
+				monitor.subTask(CodegenEditorPartMessages.JavaVisualEditorPart_InitializingModel); 
 
 				if (monitor.isCanceled()) {
 					setLoadIsPending(false);
@@ -2666,7 +2669,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			try {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						monitor.beginTask(CodegenEditorPartMessages.getString("JavaVisualEditorPart.26"), 100); //$NON-NLS-1$
+						monitor.beginTask(CodegenEditorPartMessages.JavaVisualEditorPart_26, 100); 
 						 synchronized (loadCompleteSync) {			
 							while (isLoadPending)
 								try {
@@ -2684,7 +2687,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 	}
 	public void doSave(IProgressMonitor progressMonitor) {
-		progressMonitor.beginTask(MessageFormat.format(CodegenEditorPartMessages.getString("JavaVisualEditorPart.27"), new Object[] {getEditorInput().getName()}),100); //$NON-NLS-1$
+		progressMonitor.beginTask(MessageFormat.format(CodegenEditorPartMessages.JavaVisualEditorPart_27, new Object[] {getEditorInput().getName()}),100); 
 		super.doSave(new SubProgressMonitor(progressMonitor, 50));
 		modelBuilder.doSave(new SubProgressMonitor(progressMonitor,50));
 		progressMonitor.done();		

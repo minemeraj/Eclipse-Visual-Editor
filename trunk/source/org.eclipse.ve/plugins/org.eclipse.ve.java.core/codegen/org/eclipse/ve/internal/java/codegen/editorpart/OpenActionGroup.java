@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.editorpart;
  *******************************************************************************/
 /*
  *  $RCSfile: OpenActionGroup.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-21 22:12:53 $ 
  */
 
 import org.eclipse.core.resources.IFile;
@@ -130,7 +130,7 @@ public class OpenActionGroup extends ActionGroup {
 			return; 
 
 		// Create a menu flyout.
-		IMenuManager submenu= new MenuManager(CodegenEditorPartMessages.getString("OpenWithAction.label")); //$NON-NLS-1$
+		IMenuManager submenu= new MenuManager(CodegenEditorPartMessages.OpenWithAction_label); 
 		submenu.add(new OpenWithMenu(site.getPage(), (IFile) resource));
 
 		// Add the submenu.

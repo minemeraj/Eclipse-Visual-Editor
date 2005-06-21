@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FieldNameValidator.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-21 22:12:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -81,13 +81,13 @@ public class FieldNameValidator implements ICellEditorValidator, ISourced {
 			if(name.equals(getCurrentName()))
 				return null;
 			if(name==null || name.length()<1)
-				return CodegenEditorPartMessages.getString("FieldNameValidator.InvalidVariableName_INFO_"); //$NON-NLS-1$
+				return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
 			if(name.length()>0 && !Character.isJavaIdentifierStart(name.charAt(0)))
-				return CodegenEditorPartMessages.getString("FieldNameValidator.InvalidVariableName_INFO_"); //$NON-NLS-1$
+				return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
 			if(name.length()>1){
 				for (int cc = 1; cc < name.length(); cc++) {
 					if(!Character.isJavaIdentifierPart(name.charAt(cc)))
-						return CodegenEditorPartMessages.getString("FieldNameValidator.InvalidVariableName_INFO_"); //$NON-NLS-1$
+						return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
 				}
 			}
 			if(sources!=null && sources.length>0 && sources[0] instanceof EObject){
@@ -97,10 +97,10 @@ public class FieldNameValidator implements ICellEditorValidator, ISourced {
 					ICompilationUnit cu = bp.getModel().getCompilationUnit();
 					if(bp.getDecleration().isInstanceVar()){
 						if(isDuplicateField(cu, name))
-							return CodegenEditorPartMessages.getString("FieldNameValidator.VariableNameExists_INFO_"); //$NON-NLS-1$
+							return CodegenEditorPartMessages.FieldNameValidator_VariableNameExists_INFO_; 
 					}else{
 						if(isDuplicateField(cu, name) || isDuplicateLocalVar(cu, bp, name))
-							return CodegenEditorPartMessages.getString("FieldNameValidator.VariableNameExists_INFO_"); //$NON-NLS-1$
+							return CodegenEditorPartMessages.FieldNameValidator_VariableNameExists_INFO_; 
 					}
 				}
 			}

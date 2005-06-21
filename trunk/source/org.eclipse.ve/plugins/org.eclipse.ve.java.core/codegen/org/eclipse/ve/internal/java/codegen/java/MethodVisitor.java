@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MethodVisitor.java,v $
- *  $Revision: 1.16 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.17 $  $Date: 2005-06-21 22:15:43 $ 
  */
 
 import java.text.MessageFormat;
@@ -200,7 +200,7 @@ protected void	processAStatement(Statement stmt) throws CodeGenException {
  
 public void visit() {
 	
-	getProgressMonitor().subTask(MessageFormat.format(CodeGenJavaMessages.getString("MethodVisitor.TypeMethod"), new Object[]{fMethod.getTypeRef().getSimpleName(),fMethod.getMethodName()})); //$NON-NLS-1$
+	getProgressMonitor().subTask(MessageFormat.format(CodeGenJavaMessages.MethodVisitor_TypeMethod, new Object[]{fMethod.getTypeRef().getSimpleName(),fMethod.getMethodName()})); 
 
 	// A temporary limitation so that if one add local JFrame for example,
 	// and set its content pane with an instance JPanel, we will loose it as

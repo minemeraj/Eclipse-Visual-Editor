@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: StyleTreeLabelProvider.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-05 22:48:22 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-21 22:19:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.wizards;
 
@@ -66,13 +66,13 @@ public class StyleTreeLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 		if (element instanceof CategoryModel) {
 			if (((CategoryModel) element).getName() == null) {
-				return CodegenWizardsMessages.getString("StyleTreeLabelProvider.StyleNameError_ERROR_"); //$NON-NLS-1$
+				return CodegenWizardsMessages.StyleTreeLabelProvider_StyleNameError_ERROR_; 
 			} else {
 				return ((CategoryModel) element).getName();
 			}
 		} else if (element instanceof VisualElementModel) {
 			if (((VisualElementModel) element).getName() == null) {
-				return CodegenWizardsMessages.getString("StyleTreeLabelProvider.ElementNameError_ERROR_"); //$NON-NLS-1$
+				return CodegenWizardsMessages.StyleTreeLabelProvider_ElementNameError_ERROR_; 
 			} else
 				return ((VisualElementModel) element).getName();
 		}

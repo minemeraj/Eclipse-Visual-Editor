@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ReloadAction.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-24 19:36:30 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-21 22:12:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -28,10 +28,10 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class ReloadAction extends Action {
 	// dbk save image descriptors
-	private static final String JVE_STATUS_MSG_ERROR = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_ERROR"); //$NON-NLS-1$
-	private static final String JVE_STATUS_BAR_MSG_PARSE_ERROR = CodegenEditorPartMessages.getString("JVE_STATUS_BAR_MSG_PARSE_ERROR_"); //$NON-NLS-1$
-	private static final String JVE_STATUS_MSG_PAUSE = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_PAUSE"); //$NON-NLS-1$
-	private static final String JVE_STATUS_MSG_RELOAD = CodegenEditorPartMessages.getString("JVE_STATUS_MSG_RELOAD"); //$NON-NLS-1$
+	private static final String JVE_STATUS_MSG_ERROR = CodegenEditorPartMessages.JVE_STATUS_MSG_ERROR; 
+	private static final String JVE_STATUS_BAR_MSG_PARSE_ERROR = CodegenEditorPartMessages.JVE_STATUS_BAR_MSG_PARSE_ERROR_; 
+	private static final String JVE_STATUS_MSG_PAUSE = CodegenEditorPartMessages.JVE_STATUS_MSG_PAUSE; 
+	private static final String JVE_STATUS_MSG_RELOAD = CodegenEditorPartMessages.JVE_STATUS_MSG_RELOAD; 
 	private static final ImageDescriptor PLAY_IMAGE_DESCRIPTOR = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/refresh_obj.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor PAUSE_IMAGE_DESCRIPTOR = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/pause.gif"); //$NON-NLS-1$
 	private static final ImageDescriptor ERROR_IMAGE_DESCRIPTOR = CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/cview16/error_obj.gif"); //$NON-NLS-1$
