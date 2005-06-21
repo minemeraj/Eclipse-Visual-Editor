@@ -1,13 +1,10 @@
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore" 
-	xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
-  <palette:CategoryCmp xmi:id="cat1">
-    <categoryLabel xsi:type="utility:ConstantString" xmi:id="string0" string="Wizzo Widgets"/>
-    <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group1">
-      <cmpEntries xsi:type="palette:AnnotatedCreationEntry" xmi:id="entry1" icon16Name="platform:/plugin/org.eclipse.ve.examples/icons/shape.gif">
-        <objectCreationEntry xsi:type="palette:EMFCreationToolEntry" xmi:id="entry1obj"
-          creationClassURI="java:/com.abc.wizzowidgets#Shape"/>
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Shape"/>
-      </cmpEntries>  
-    </cmpGroups> 
-  </palette:CategoryCmp>
-</xmi:XMI>
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.ve.internal.cde.palette:Drawer xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.eclipse.ve.internal.cde.palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
+    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
+  <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Wizzo Widgets"/>
+  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.examples/icons/shape.gif"
+      creationClassURI="java:/com.abc.wizzowidgets#Shape">
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Shape"/>
+  </children>
+</org.eclipse.ve.internal.cde.palette:Drawer>

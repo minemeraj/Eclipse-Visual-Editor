@@ -1,14 +1,10 @@
-<xmi:XMI xmi:version="2.0" 
-  xmlns:xmi="http://www.omg.org/XMI" 
-  xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
-  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">  
-  <palette:CategoryCmp xmi:id="swtCat0">
-    <categoryLabel xsi:type="utility:ConstantString" string="UI Parts"/>
-    <cmpGroups xsi:type="palette:GroupCmp">
-      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/com.ibm.jve.sample/icons/label_obj.gif"
-          prototypeURI="platform:/plugin/com.ibm.jve.sample/prototypes/UILabelTextPart.xmi#UILabelTextPart_1">
-        <entryLabel xsi:type="utility:ConstantString" string="Label Text"/>
-      </cmpEntries>      
-    </cmpGroups> 
-  </palette:CategoryCmp>
-</xmi:XMI>
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.ve.internal.cde.palette:Drawer xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.eclipse.ve.internal.cde.palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
+    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
+  <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="UI Parts"/>
+  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/com.ibm.jve.sample/icons/label_obj.gif"
+      prototypeURI="platform:/plugin/com.ibm.jve.sample/prototypes/UILabelTextPart.xmi#UILabelTextPart_1">
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Label Text"/>
+  </children>
+</org.eclipse.ve.internal.cde.palette:Drawer>

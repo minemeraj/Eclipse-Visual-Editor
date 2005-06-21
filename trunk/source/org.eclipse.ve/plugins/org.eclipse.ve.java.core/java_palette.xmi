@@ -1,22 +1,32 @@
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:palette="http:///org/eclipse/ve/internal/cde/palette.ecore" xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
-  <palette:PaletteCmp xmi:id="java_palette">
-    <cmpControlGroup xsi:type="palette:GroupCmp" xmi:id="control">
-      <groupLabel xsi:type="utility:TranslatableString" key="group.Controls" bundle="bundle"/>
-      <cmpEntries xsi:type="palette:ToolEntry" defaultEntry="true" icon16Name="platform:/plugin/org.eclipse.ve.cde/images/arrow16.gif" toolClassName="org.eclipse.ve.cde/org.eclipse.ve.internal.cde.core.CDESelectionTool">
-        <entryLabel xsi:type="utility:TranslatableString" key="entry.Selection" bundle="bundle"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:ToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.cde/images/marquee16.gif" toolClassName="org.eclipse.gef/org.eclipse.gef.tools.MarqueeSelectionTool">
-        <entryLabel xsi:type="utility:TranslatableString" key="entry.MarqueeSelection" bundle="bundle"/>
-      </cmpEntries>
-      <cmpEntries xsi:type="palette:SelectionCreationToolEntry" xmi:id="choosebean" selectorClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.choosebean.ChooseBeanSelector" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/cview16/selectbean_view.gif">
-	    <entryLabel xsi:type="utility:TranslatableString" key="entry.ChooseJavaBean" bundle="jcm_bundle"/>
-      </cmpEntries>    
-    </cmpControlGroup>
-  </palette:PaletteCmp>
-  <utility:URLResourceBundle xmi:id="bundle" bundleName="cde_palette">
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.eclipse.ve.internal.cde.palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
+    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
+  <org.eclipse.ve.internal.cde.palette:Root defEntry="#default">
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:Group">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="group.Controls"
+          bundle="#bundle"/>
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:ToolEntry" xmi:id="default" icon16Name="platform:/plugin/org.eclipse.ve.cde/images/arrow16.gif"
+          toolClassName="org.eclipse.ve.cde/org.eclipse.ve.internal.cde.core.CDESelectionTool">
+        <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="entry.Selection"
+            bundle="#bundle"/>
+      </children>
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:ToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.cde/images/marquee16.gif"
+          toolClassName="org.eclipse.gef/org.eclipse.gef.tools.MarqueeSelectionTool">
+        <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="entry.MarqueeSelection"
+            bundle="#bundle"/>
+      </children>
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:SelectionCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.java.core/icons/full/cview16/selectbean_view.gif"
+          selectorClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.choosebean.ChooseBeanSelector">
+        <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="entry.ChooseJavaBean"
+            bundle="#jcm_bundle"/>
+      </children>
+    </children>
+  </org.eclipse.ve.internal.cde.palette:Root>
+  <org.eclipse.ve.internal.cde.utility:URLResourceBundle xmi:id="bundle" bundleName="cde_palette">
     <bundleURLs>platform:/plugin/org.eclipse.ve.cde/properties/</bundleURLs>
-  </utility:URLResourceBundle>
-  <utility:URLResourceBundle xmi:id="jcm_bundle" bundleName="java_palette">
+  </org.eclipse.ve.internal.cde.utility:URLResourceBundle>
+  <org.eclipse.ve.internal.cde.utility:URLResourceBundle xmi:id="jcm_bundle" bundleName="java_palette">
     <bundleURLs>platform:/plugin/org.eclipse.ve.java.core/properties/</bundleURLs>
-  </utility:URLResourceBundle>  
+  </org.eclipse.ve.internal.cde.utility:URLResourceBundle>
 </xmi:XMI>

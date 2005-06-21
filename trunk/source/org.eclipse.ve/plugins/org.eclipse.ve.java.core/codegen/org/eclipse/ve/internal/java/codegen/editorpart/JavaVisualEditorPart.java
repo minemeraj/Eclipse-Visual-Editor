@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.125 $  $Date: 2005-06-20 23:54:34 $ 
+ *  $Revision: 1.126 $  $Date: 2005-06-21 19:53:10 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -685,7 +685,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		folder.setSelection(jveTab);
 	}
 
-	private List paletteCategories = new ArrayList(5);
+	private List paletteDrawers = new ArrayList(5);
 	public CutJavaBeanAction cutBeanAction;	
 	public CopyJavaBeanAction copyBeanAction;
 	public PasteJavaBeanAction pasteBeanAction;
@@ -700,7 +700,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		rebuildPalette = false;
 		PaletteRoot paletteRoot = editDomain.getPaletteRoot();
 
-		List newChildren = null; // New list of children. We will build entire list and then set into palette root to speed it up.
+		List newChildren = new ArrayList(); // New list of children. We will build entire list and then set into palette root to speed it up.
 		// What happens is first time through we will build the palette up before applying into the palette viewer,
 		// that way it gets it all at once. For later times, since palette root can't be replaced, we will instead
 		// get the old children list, copy just the control group over to a new child list, build the rest into
@@ -713,35 +713,28 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// Get the default base palette. (Basically only the control group).				
 				Resource res = rset.getResource(BASE_PALLETE, true);
 				// Find the palette root.
-				List contents = res.getContents();
-				Root root = null;
-				for (Iterator itr = contents.iterator(); itr.hasNext();) {
-					EObject obj = (EObject) itr.next();
-					if (obj instanceof Root) {
-						root = (Root) obj;
-						break;
-					}
-				}
+				Root root = (Root) EcoreUtil.getObjectByType(res.getContents(), PalettePackage.eINSTANCE.getRoot());
 				if (root == null)
 					return;
 				paletteRoot = (PaletteRoot) root.getEntry();
 				// Get the two standard tools. Since we only load this part of the palette once, it can never change.
 				// TODO Need a better way of doing this that isn't so hardcoded.				
-				newChildren = paletteRoot.getChildren();
-				if (newChildren.size() >= 1 && newChildren.get(0) instanceof PaletteContainer) {
-					PaletteContainer controlGroup = (PaletteContainer) newChildren.get(0);
-					newChildren = controlGroup.getChildren();
-					if (newChildren.size() >= 3) {
+				List children = paletteRoot.getChildren();
+				newChildren.addAll(children);
+				if (children.size() >= 1 && children.get(0) instanceof PaletteGroup) {
+					PaletteGroup controlGroup = (PaletteGroup) newChildren.get(0);
+					children = controlGroup.getChildren();
+					if (children.size() >= 3) {
 						final PaletteToolEntryAction ptSel = (PaletteToolEntryAction) graphicalActionRegistry.getAction(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID);
-						ptSel.setToolEntry((ToolEntry) newChildren.get(0));
+						ptSel.setToolEntry((ToolEntry) children.get(0));
 						ptSel.setId(JavaVisualEditorActionContributor.PALETTE_SELECTION_ACTION_ID);	// Because setToolEntry resets it
 						ptSel.setChecked(true);	// Selection always initially checked. (i.e. selected).
 						final PaletteToolEntryAction ptMarq = (PaletteToolEntryAction) graphicalActionRegistry.getAction(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID);
-						ptMarq.setToolEntry((ToolEntry) newChildren.get(1));
+						ptMarq.setToolEntry((ToolEntry) children.get(1));
 						ptMarq.setChecked(false);
 						ptMarq.setId(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID);	// Because setToolEntry resets it
 						final PaletteToolbarDropDownAction ptDropDown = (PaletteToolbarDropDownAction) graphicalActionRegistry.getAction(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID);
-						ptDropDown.setToolEntry((ToolEntry) newChildren.get(2));
+						ptDropDown.setToolEntry((ToolEntry) children.get(2));
 						ptDropDown.setChecked(false);
 						ptDropDown.setPaletteRoot(paletteRoot);
 						ptDropDown.setId(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID);	// Because setToolEntry resets it						
@@ -771,8 +764,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			PaletteToolbarDropDownAction ptDropDown = (PaletteToolbarDropDownAction) graphicalActionRegistry.getAction(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID);
 			ptDropDown.setPaletteRoot(paletteRoot);
 			
-			// Can't just plop new one in (GEF restriction). So we will copy over the control group to the
-			// newChildren.
+			// Can't just plop a new paletteRoot in (GEF restriction). So we will copy over the control group to the
+			// newChildren and set it into the old paletteRoot.
 			List c = paletteRoot.getChildren();
 			newChildren = new ArrayList(c.size());
 			for (int i = 0; i < c.size(); i++) {
@@ -783,21 +776,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 		// TODO This is a huge kludge for this release. We're not handling sharing of palette or modifications. We aren't cleaning up.
 		// Now get the extension palette cats and add them.
-		// TODO We shouldn't be opening the first one all of the time. That is user customization and drawer's setting.
-		if (!paletteCategories.isEmpty()) {
-			boolean firstCat = true;
-			for (Iterator iter = paletteCategories.iterator(); iter.hasNext();) {
-				Drawer element = (Drawer) iter.next();
-				PaletteDrawer drawer = (PaletteDrawer) element.getEntry();
-				if (firstCat) {
-					drawer.setInitialState(PaletteDrawer.INITIAL_STATE_OPEN);
-					firstCat = false;
-				}
-				newChildren.add(drawer);
-			}
-		}
 		
 		// Now set the new children back into the root. We also set the root back into the palette, but
+		if (!paletteDrawers.isEmpty()) {
+			for (Iterator iter = paletteDrawers.iterator(); iter.hasNext();) {
+				Container container = (Container) iter.next();
+				newChildren.add(container.getEntry());
+			}
+		}
 		// this is ok if not the first time. If not the first time it will simply ignore it since same root.
 		// But for the first time it will wait until now to actually build the entire palette visuals.
 		paletteRoot.setChildren(newChildren);
@@ -1111,7 +1097,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			List cats = (List) paletteCategories.get(catsURI);
 			if (cats == null) {			
 				Resource res = rset.getResource(catsURI, true);
-				cats = (List) EcoreUtil.getObjectsByType(res.getContents(), PalettePackage.eINSTANCE.getCategory());
+				cats = (List) EcoreUtil.getObjectsByType(res.getContents(), PalettePackage.eINSTANCE.getContainer());
 				paletteCategories.put(catsURI,cats);				
 			}
 			
@@ -1499,7 +1485,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 										// Default logs fro us.
 									}
 									public void run() throws Exception {
-										rebuildPalette = ((IVEContributor) entry.getKey()).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+										rebuildPalette = ((IVEContributor) entry.getKey()).contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
 									}
 								});
 							} else if (entry.getKey() instanceof IVEContributor1) {
@@ -1508,7 +1494,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 										// Default logs fro us.
 									}
 									public void run() throws Exception {
-										rebuildPalette = ((IVEContributor1) entry.getKey()).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+										rebuildPalette = ((IVEContributor1) entry.getKey()).contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
 									}
 								}); 
 						}
@@ -1533,13 +1519,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 													if (defaultVE[0] == null)
 														defaultVE[0] = new DefaultVEContributor();
 													defaultVE[0].paletteContribution = contributors[ii];
-													rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+													rebuildPalette = defaultVE[0].contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
 												} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
 													Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
 													if (contributor instanceof IVEContributor)
-														rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+														rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
 													else if (contributor instanceof IVEContributor1)
-														rebuildPalette = ((IVEContributor1) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+														rebuildPalette = ((IVEContributor1) contributor).contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
 												}
 											}
 										});
@@ -1567,14 +1553,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 													if (defaultVE[0] == null)
 														defaultVE[0] = new DefaultVEContributor();
 													defaultVE[0].paletteContribution = contributors[ii];
-													rebuildPalette = defaultVE[0].contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+													rebuildPalette = defaultVE[0].contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
 												} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
 													try {
 														Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
 														if (contributor instanceof IVEContributor)
-															rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+															rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
 														else if (contributor instanceof IVEContributor1)
-															rebuildPalette = ((IVEContributor1) contributor).contributePalleteCats(paletteCategories, rset) || rebuildPalette;
+															rebuildPalette = ((IVEContributor1) contributor).contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
 													} catch (CoreException e) {
 														JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
 													}
@@ -1598,7 +1584,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 										// Default logs fro us.
 									}
 									public void run() throws Exception {
-										rebuildPalette = ((IVEContributor1) entry.getKey()).modifyPaletteCatsList(paletteCategories) || rebuildPalette;
+										rebuildPalette = ((IVEContributor1) entry.getKey()).modifyPaletteCatsList(paletteDrawers) || rebuildPalette;
 									}
 								}); 
 						}
@@ -1622,11 +1608,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 													if (defaultVE[0] == null)
 														defaultVE[0] = new DefaultVEContributor();
 													defaultVE[0].paletteContribution = contributors[ii];
-													rebuildPalette = defaultVE[0].modifyPaletteCatsList(paletteCategories) || rebuildPalette;
+													rebuildPalette = defaultVE[0].modifyPaletteCatsList(paletteDrawers) || rebuildPalette;
 												} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
 													Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
 													if (contributor instanceof IVEContributor1)
-														rebuildPalette = ((IVEContributor1) contributor).modifyPaletteCatsList(paletteCategories) || rebuildPalette;
+														rebuildPalette = ((IVEContributor1) contributor).modifyPaletteCatsList(paletteDrawers) || rebuildPalette;
 												}
 											}
 										});
@@ -1654,12 +1640,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 													if (defaultVE[0] == null)
 														defaultVE[0] = new DefaultVEContributor();
 													defaultVE[0].paletteContribution = contributors[ii];
-													rebuildPalette = defaultVE[0].modifyPaletteCatsList(paletteCategories) || rebuildPalette;
+													rebuildPalette = defaultVE[0].modifyPaletteCatsList(paletteDrawers) || rebuildPalette;
 												} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
 													try {
 														Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
 														if (contributor instanceof IVEContributor1)
-															rebuildPalette = ((IVEContributor1) contributor).modifyPaletteCatsList(paletteCategories) || rebuildPalette;
+															rebuildPalette = ((IVEContributor1) contributor).modifyPaletteCatsList(paletteDrawers) || rebuildPalette;
 													} catch (CoreException e) {
 														JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
 													}

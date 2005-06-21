@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: DecoratorsPackageImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-21 19:53:11 $ 
  */
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.impl.EcorePackageImpl;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
@@ -116,8 +117,13 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 
 	public static DecoratorsPackage init() {
 		DecoratorsPackage p = initGen();
-		// Register some default property editors for things like String, Boolean, etc...
-		org.eclipse.ve.internal.cde.properties.PropertyEditorRegistry.registerDefaultEditors();
+		if (EcorePlugin.IS_ECLIPSE_RUNNING) {
+			// Normally this should not need to be tested for eclipse running because CDE is not
+			// meant to run outside of Eclipse. But at one point we needed a standalone migration 
+			// utility for the palette (VE 1.0 -> 1.1) that ran outside of Eclipse, so we need the test for it.
+			// Register some default property editors for things like String, Boolean, etc...
+			org.eclipse.ve.internal.cde.properties.PropertyEditorRegistry.registerDefaultEditors();
+		}
 		return p;
 	}
 	/**
