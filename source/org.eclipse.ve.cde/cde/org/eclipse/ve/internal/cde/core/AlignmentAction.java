@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: AlignmentAction.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-21 21:34:08 $ 
  */
 
 
@@ -31,30 +31,53 @@ public class AlignmentAction extends SelectionAction {
 	// The alignment types can be found in AlignmentCommandRequest.
 	// The following array must match in order the types found
 	// in AlignmentCommandRequest so that the labels are correct.
-	private final static String[] resPrefix = { "AlignmentAction.left.", //$NON-NLS-1$
-		"AlignmentAction.center.", //$NON-NLS-1$
-		"AlignmentAction.right.", //$NON-NLS-1$
-		"AlignmentAction.top.", //$NON-NLS-1$
-		"AlignmentAction.middle.", //$NON-NLS-1$
-		"AlignmentAction.bottom.", //$NON-NLS-1$
-		"AlignmentAction.width.", //$NON-NLS-1$
-		"AlignmentAction.height." }; //$NON-NLS-1$
+	private final static String[] resPrefixLabels = { CDEMessages.getString("AlignmentAction.left.label"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.center.label"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.right.label"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.top.label"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.middle.label"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.bottom.label"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.width.label"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.height.label") }; //$NON-NLS-1$
+	private final static String[] resPrefixTooltips = { CDEMessages.getString("AlignmentAction.left.tooltip"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.center.tooltip"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.right.tooltip"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.top.tooltip"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.middle.tooltip"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.bottom.tooltip"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.width.tooltip"), //$NON-NLS-1$
+		CDEMessages.getString("AlignmentAction.height.tooltip") }; //$NON-NLS-1$
+	private final static String[] resPrefixImages = { "alignleft_obj.gif", //$NON-NLS-1$
+		"aligncenter_obj.gif", //$NON-NLS-1$
+		"alignright_obj.gif", //$NON-NLS-1$
+		"aligntop_obj.gif", //$NON-NLS-1$
+		"alignmiddle_obj.gif", //$NON-NLS-1$
+		"alignbottom_obj.gif", //$NON-NLS-1$
+		"alignwidth_obj.gif", //$NON-NLS-1$
+		"alignheight_obj.gif" }; //$NON-NLS-1$
+	private final static String[] resPrefixIDs = { "AlignmentAction.left", //$NON-NLS-1$
+		"AlignmentAction.center.tooltip", //$NON-NLS-1$
+		"AlignmentAction.right.tooltip", //$NON-NLS-1$
+		"AlignmentAction.top.tooltip", //$NON-NLS-1$
+		"AlignmentAction.middle.tooltip", //$NON-NLS-1$
+		"AlignmentAction.bottom.tooltip", //$NON-NLS-1$
+		"AlignmentAction.width.tooltip", //$NON-NLS-1$
+		"AlignmentAction.height.tooltip" }; //$NON-NLS-1$
 
 	protected int fAlignType;
 
 	public AlignmentAction(int alignType) {
 		super((IWorkbenchPart) null);	// Actual Workbench part will be assigned later.
 		// Default to left alignment if the align type is incorrect
-		if (!(alignType >= 0 && alignType < resPrefix.length))
+		if (!(alignType >= 0 && alignType < resPrefixLabels.length))
 			fAlignType = AlignmentCommandRequest.LEFT_ALIGN;
 		else
 			fAlignType = alignType;
-		String sAlignType = resPrefix[fAlignType];
-		setText(CDEMessages.getString(sAlignType+"label")); //$NON-NLS-1$
-		setToolTipText(CDEMessages.getString(sAlignType+"tooltip")); //$NON-NLS-1$
+		setText(resPrefixLabels[fAlignType]); //$NON-NLS-1$
+		setToolTipText(resPrefixTooltips[fAlignType]); //$NON-NLS-1$
 		// There are three images, one for full color ( that is the hover one )
 		// one for disabled and one for enabled
-		String graphicName = CDEMessages.getString(sAlignType + "image"); //$NON-NLS-1$
+		String graphicName = resPrefixImages[fAlignType];
 		// The file structure of these is that they exist in the plugin directory with three folder names, e.g.
 		// /icons/full/clc16/alignleft_obj.gif for the color one
 		// and elc16 for enabled and dlc16 for disasbled
@@ -70,9 +93,9 @@ public class AlignmentAction extends SelectionAction {
 	 */
 	public static String getActionId(int alignType) {
 		return (
-			(alignType >= 0 && alignType < resPrefix.length)
-				? resPrefix[alignType]
-				: resPrefix[AlignmentCommandRequest.LEFT_ALIGN]);
+			(alignType >= 0 && alignType < resPrefixLabels.length)
+				? resPrefixIDs[alignType]
+				: resPrefixIDs[AlignmentCommandRequest.LEFT_ALIGN]);
 	}
 
 	/**
