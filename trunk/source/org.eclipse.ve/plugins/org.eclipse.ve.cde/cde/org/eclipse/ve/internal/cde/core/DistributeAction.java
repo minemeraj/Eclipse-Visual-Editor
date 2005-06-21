@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: DistributeAction.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-21 21:34:08 $ 
  */
 
 import java.util.*;
@@ -37,21 +37,30 @@ public class DistributeAction extends SelectionAction {
 	// The resource prefix to use for each alignment type
 	// The distribute type id's come from the DistributeCommandRequest.
 	// The labels below must match the same order as those id's.
-	private final static String[] resPrefix = { "DistributeAction.horizontal.", //$NON-NLS-1$
-		"DistributeAction.vertical." }; //$NON-NLS-1$
+	private final static String[] resPrefixLabels = { 
+		CDEMessages.getString("DistributeAction.horizontal.label"), //$NON-NLS-1$
+		CDEMessages.getString("DistributeAction.vertical.label") }; //$NON-NLS-1$
+	private final static String[] resPrefixTooltips = { 
+		CDEMessages.getString("DistributeAction.horizontal.tooltip"), //$NON-NLS-1$
+		CDEMessages.getString("DistributeAction.vertical.tooltip") }; //$NON-NLS-1$
+	private final static String[] resPrefixImages = { 
+		"distributehorz_obj.gif", //$NON-NLS-1$
+		"distributevert_obj.gif" }; //$NON-NLS-1$
+	private final static String[] resPrefixIDs = { 
+		"DistributeAction.horizontal", //$NON-NLS-1$
+		"DistributeAction.vertical" }; //$NON-NLS-1$
 
 	public DistributeAction(int distributeType) {
 		super((IWorkbenchPart) null);	// Actual Workbench part will be assigned later.
 		// Default to horizontal alignment if the align type is incorrect
-		if (!(distributeType >= 0 && distributeType < resPrefix.length))
+		if (!(distributeType >= 0 && distributeType < resPrefixLabels.length))
 			fDistributeType = DistributeCommandRequest.HORIZONTAL;
 		else
 			fDistributeType = distributeType;
-		String sDistributeType = resPrefix[fDistributeType];
-		setText(CDEMessages.getString(sDistributeType + "label")); //$NON-NLS-1$
-		setToolTipText(CDEMessages.getString(sDistributeType + "tooltip")); //$NON-NLS-1$
+		setText(resPrefixLabels[fDistributeType]); //$NON-NLS-1$
+		setToolTipText(resPrefixTooltips[fDistributeType]); //$NON-NLS-1$
 
-		String graphicName = CDEMessages.getString(sDistributeType + "image"); //$NON-NLS-1$
+		String graphicName = resPrefixImages[fDistributeType]; //$NON-NLS-1$
 		// The file structure of these is that they exist in the plugin directory with three folder names, e.g.
 		// /icons/full/clc16/alignleft_obj.gif for the color one
 		// and elc16 for enabled and dlc16 for disasbled
@@ -68,9 +77,9 @@ public class DistributeAction extends SelectionAction {
 	 */
 	public static String getActionId(int distributeType) {
 		return (
-			(distributeType >= 0 && distributeType <= resPrefix.length)
-				? resPrefix[distributeType]
-				: resPrefix[DistributeCommandRequest.HORIZONTAL]);
+			(distributeType >= 0 && distributeType <= resPrefixIDs.length)
+				? resPrefixIDs[distributeType]
+				: resPrefixIDs[DistributeCommandRequest.HORIZONTAL]);
 	}
 
 	/**
