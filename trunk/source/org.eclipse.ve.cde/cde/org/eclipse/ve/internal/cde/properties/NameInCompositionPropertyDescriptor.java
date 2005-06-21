@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: NameInCompositionPropertyDescriptor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-05 22:34:28 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 import java.util.*;
@@ -40,7 +40,7 @@ public class NameInCompositionPropertyDescriptor extends AbstractAnnotationPrope
 	public static final String NAME_IN_COMPOSITION_KEY = "org.eclipse.ve.internal.cde.core.nameincomposition"; // Key for KeyedString for name in composition. //$NON-NLS-1$
 
 	public NameInCompositionPropertyDescriptor() {
-		this(CDEMessages.getString("PropertyDescriptor.NameInComposition.DisplayName")); //$NON-NLS-1$
+		this(CDEMessages.PropertyDescriptor_NameInComposition_DisplayName); 
 	}
 
 	public NameInCompositionPropertyDescriptor(String displayNameToUse) {
@@ -126,7 +126,7 @@ public class NameInCompositionPropertyDescriptor extends AbstractAnnotationPrope
 		if (name != null)
 			baseName = name;
 		else
-			baseName = CDEMessages.getString("PropertyDescriptor.NameInComposition.Default"); // Use a default. //$NON-NLS-1$
+			baseName = CDEMessages.PropertyDescriptor_NameInComposition_Default; // Use a default. //$NON-NLS-1$
 		String componentName = baseName;
 		int incr = 0;
 		main : while (true) {
@@ -183,7 +183,7 @@ public class NameInCompositionPropertyDescriptor extends AbstractAnnotationPrope
 			if (newName.equals(name))
 				return null; // The name didn't change, so it is valid.
 
-			return CDEMessages.getString("PropertyDescriptor.NameInComposition.NonUnique_INFO_"); //$NON-NLS-1$
+			return CDEMessages.PropertyDescriptor_NameInComposition_NonUnique_INFO_; 
 		}
 
 		/**

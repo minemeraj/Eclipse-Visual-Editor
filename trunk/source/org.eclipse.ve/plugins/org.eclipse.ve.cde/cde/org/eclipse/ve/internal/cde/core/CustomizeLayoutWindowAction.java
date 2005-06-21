@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.9 $  $Date: 2005-06-03 19:22:15 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class CustomizeLayoutWindowAction extends Action {
 	protected IWorkbenchWindow workbenchWindow;
 	protected IEditorPart editorPart;
 	protected IEditorActionBarContributor contributor;
-	protected final static String WINDOW_TITLE = CDEMessages.getString("CustomizeLayoutWindow.title"); //$NON-NLS-1$
+	protected final static String WINDOW_TITLE = CDEMessages.CustomizeLayoutWindow_title; 
 	
 	protected static final String CUSTOMIZE_LAYOUT_PAGE_KEY = "customizeLayoutPage_Key"; //$NON-NLS-1$
 
@@ -190,7 +190,7 @@ public class CustomizeLayoutWindowAction extends Action {
 	};
 	
 	public CustomizeLayoutWindowAction(IWorkbenchWindow workbenchWindow, IEditorActionBarContributor contributor) {
-		super(CDEMessages.getString("CustomizeLayoutWindowAction.label"), IAction.AS_CHECK_BOX); //$NON-NLS-1$
+		super(CDEMessages.CustomizeLayoutWindowAction_label, IAction.AS_CHECK_BOX); 
 		setId(ACTION_ID);
 		setImageDescriptor(
 			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/aligndialog_obj.gif")); //$NON-NLS-1$
@@ -212,7 +212,7 @@ public class CustomizeLayoutWindowAction extends Action {
 	}
 	
 	private void setTooltip() {
-		setToolTipText(isChecked() ? CDEMessages.getString("CustomizeLayoutWindowAction.tooltip.hide") : CDEMessages.getString("CustomizeLayoutWindowAction.tooltip.show")); //$NON-NLS-1$ //$NON-NLS-2$
+		setToolTipText(isChecked() ? CDEMessages.CustomizeLayoutWindowAction_tooltip_hide : CDEMessages.CustomizeLayoutWindowAction_tooltip_show); 
 	}
 		
 	protected void updateLayoutTab(final Class layoutPageClass) {

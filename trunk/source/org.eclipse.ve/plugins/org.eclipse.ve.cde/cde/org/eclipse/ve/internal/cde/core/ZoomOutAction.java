@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ZoomOutAction.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 
@@ -26,10 +26,10 @@ public class ZoomOutAction extends EditorPartAction {
 
 public ZoomOutAction(IEditorPart part) {
 	super(part);
-	setText(CDEMessages.getString("ZoomOutAction.label")); //$NON-NLS-1$
-	setToolTipText(CDEMessages.getString("ZoomOutAction.tooltip")); //$NON-NLS-1$
+	setText(CDEMessages.ZoomOutAction_label); 
+	setToolTipText(CDEMessages.ZoomOutAction_tooltip); 
 	setId(ACTION_ID);
-	setImageDescriptor(ImageDescriptor.createFromFile(getClass(),CDEMessages.getString("ZoomOutAction.image"))); //$NON-NLS-1$
+	setImageDescriptor(ImageDescriptor.createFromFile(getClass(),CDEMessages.ZoomOutAction_image)); 
 	setEnabled(true);
 }
 

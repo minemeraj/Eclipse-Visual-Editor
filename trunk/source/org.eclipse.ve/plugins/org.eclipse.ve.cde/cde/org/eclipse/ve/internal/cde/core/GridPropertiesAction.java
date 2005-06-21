@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: GridPropertiesAction.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 
@@ -28,10 +28,10 @@ public class GridPropertiesAction extends EditorPartAction implements IPropertyC
 public GridPropertiesAction(IEditorPart part, ShowGridAction showGridAction) {
 	super(part);
 	
-	setText(CDEMessages.getString("GridPropertiesAction.label")); //$NON-NLS-1$
-	setToolTipText(CDEMessages.getString("GridPropertiesAction.tooltip")); //$NON-NLS-1$
+	setText(CDEMessages.GridPropertiesAction_label); 
+	setToolTipText(CDEMessages.GridPropertiesAction_tooltip); 
 	setId(ACTION_ID);
-	setImageDescriptor(ImageDescriptor.createFromFile(getClass(),CDEMessages.getString("GridPropertiesAction.image"))); //$NON-NLS-1$
+	setImageDescriptor(ImageDescriptor.createFromFile(getClass(),CDEMessages.GridPropertiesAction_image)); 
 	setEnabled(showGridAction.isChecked());
 	showGridAction.addPropertyChangeListener(this);	// It is assumed that both show grid action and gridproperties action go away at the same time so no need to have a removeListener.
 }

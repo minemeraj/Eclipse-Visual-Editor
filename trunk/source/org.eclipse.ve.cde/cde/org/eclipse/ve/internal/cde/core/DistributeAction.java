@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: DistributeAction.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-21 21:34:08 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 import java.util.*;
@@ -38,11 +38,11 @@ public class DistributeAction extends SelectionAction {
 	// The distribute type id's come from the DistributeCommandRequest.
 	// The labels below must match the same order as those id's.
 	private final static String[] resPrefixLabels = { 
-		CDEMessages.getString("DistributeAction.horizontal.label"), //$NON-NLS-1$
-		CDEMessages.getString("DistributeAction.vertical.label") }; //$NON-NLS-1$
+		CDEMessages.DistributeAction_horizontal_label, 
+		CDEMessages.DistributeAction_vertical_label }; 
 	private final static String[] resPrefixTooltips = { 
-		CDEMessages.getString("DistributeAction.horizontal.tooltip"), //$NON-NLS-1$
-		CDEMessages.getString("DistributeAction.vertical.tooltip") }; //$NON-NLS-1$
+		CDEMessages.DistributeAction_horizontal_tooltip, 
+		CDEMessages.DistributeAction_vertical_tooltip }; 
 	private final static String[] resPrefixImages = { 
 		"distributehorz_obj.gif", //$NON-NLS-1$
 		"distributevert_obj.gif" }; //$NON-NLS-1$

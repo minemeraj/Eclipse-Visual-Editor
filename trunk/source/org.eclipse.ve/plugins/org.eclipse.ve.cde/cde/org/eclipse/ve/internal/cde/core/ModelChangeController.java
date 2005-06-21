@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ModelChangeController.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-02 22:32:29 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-21 21:43:42 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -204,7 +204,7 @@ public abstract class ModelChangeController {
             if (msg != null) {
                 holdMsg = msg;
             } else {
-                holdMsg = CDEMessages.getString("ModelChangeController.EditorCannotBeChangedNow"); //$NON-NLS-1$
+                holdMsg = CDEMessages.ModelChangeController_EditorCannotBeChangedNow; 
             }
         } else {
             holdMsg = null;

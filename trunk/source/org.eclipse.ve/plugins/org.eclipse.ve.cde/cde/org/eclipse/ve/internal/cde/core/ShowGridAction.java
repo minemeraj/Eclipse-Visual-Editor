@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ShowGridAction.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-17 23:27:25 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 
@@ -28,10 +28,10 @@ public class ShowGridAction extends EditorPartAction {
 	
 public ShowGridAction(IEditorPart part) {
 	super(part);
-	setText(CDEMessages.getString("ShowGridAction.label")); //$NON-NLS-1$
-	setToolTipText(CDEMessages.getString("ShowGridAction.tooltip")); //$NON-NLS-1$
+	setText(CDEMessages.ShowGridAction_label); 
+	setToolTipText(CDEMessages.ShowGridAction_tooltip); 
 	setId(ACTION_ID);
-	setImageDescriptor(ImageDescriptor.createFromFile(getClass(),CDEMessages.getString("ShowGridAction.image"))); //$NON-NLS-1$
+	setImageDescriptor(ImageDescriptor.createFromFile(getClass(),CDEMessages.ShowGridAction_image)); 
 	setChecked(false);	// It is assumed that the grid controller is initially false.
 	setEnabled(true);
 }
@@ -53,11 +53,11 @@ public void run() {
 	gridController.setGridShowing(!gridController.isGridShowing());
 	setChecked(gridController.isGridShowing());
 	if (isChecked()) {
-		setText(CDEMessages.getString("ShowGridAction.hide.label")); //$NON-NLS-1$
-		setToolTipText(CDEMessages.getString("ShowGridAction.hide.tooltip")); //$NON-NLS-1$
+		setText(CDEMessages.ShowGridAction_hide_label); 
+		setToolTipText(CDEMessages.ShowGridAction_hide_tooltip); 
 	} else {
-		setText(CDEMessages.getString("ShowGridAction.label")); //$NON-NLS-1$
-		setToolTipText(CDEMessages.getString("ShowGridAction.tooltip")); //$NON-NLS-1$
+		setText(CDEMessages.ShowGridAction_label); 
+		setToolTipText(CDEMessages.ShowGridAction_tooltip); 
 	}
 
 	// Let other actions know this property has changed.

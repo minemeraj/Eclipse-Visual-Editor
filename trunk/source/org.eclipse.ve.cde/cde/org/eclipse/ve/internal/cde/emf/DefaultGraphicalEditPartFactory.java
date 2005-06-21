@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DefaultGraphicalEditPartFactory.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -58,7 +58,7 @@ public class DefaultGraphicalEditPartFactory extends AbstractEditPartFactory {
 		} catch (Exception exc){
 			String message =
 				java.text.MessageFormat.format(
-					CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
+					CDEMessages.Object_noinstantiate_EXC_, 
 					new Object[] { DEFAULT_EDIT_PART_CLASS.getName() });
 			Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, exc);
 			CDEPlugin.getPlugin().getLog().log(s);

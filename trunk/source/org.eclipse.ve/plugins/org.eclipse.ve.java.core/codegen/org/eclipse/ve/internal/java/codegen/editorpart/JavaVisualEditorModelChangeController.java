@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorModelChangeController.java,v $
- *  $Revision: 1.8 $  $Date: 2005-03-09 21:45:32 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-21 21:43:46 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -113,9 +113,9 @@ class JavaVisualEditorModelChangeController extends ModelChangeController {
             return holdMsg;
         switch (getHoldState()) {
         case BUSY_STATE:
-            return CDEMessages.getString("ModelChangeController.EditorBusyAndCannotChangeNow"); //$NON-NLS-1$
+            return CDEMessages.ModelChangeController_EditorBusyAndCannotChangeNow; 
         case NO_UPDATE_STATE:
-            return CDEMessages.getString("ModelChangeController.EditorCannotBeChangedNow"); //$NON-NLS-1$
+            return CDEMessages.ModelChangeController_EditorCannotBeChangedNow; 
         }
         return null;
     }

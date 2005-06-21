@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: AlignmentXYComponentPage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:15 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 import java.util.List;
@@ -191,7 +191,7 @@ public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 	protected String getLabelForSelection(ISelection newSelection) {
 		if (newSelection instanceof IStructuredSelection) {
 			if (((IStructuredSelection)newSelection).size() > 1) {
-				return CDEMessages.getString("AlignmentXYComponentPage.multipleSelection"); //$NON-NLS-1$
+				return CDEMessages.AlignmentXYComponentPage_multipleSelection; 
 			}
 		}
 		return null;

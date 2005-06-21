@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NameInMemberPropertyDescriptor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-21 21:43:46 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -215,7 +215,7 @@ public class NameInMemberPropertyDescriptor extends NameInCompositionPropertyDes
 		if (name != null)
 			baseName = name;
 		else
-			baseName = CDEMessages.getString("PropertyDescriptor.NameInComposition.Default"); // Use a default. //$NON-NLS-1$
+			baseName = CDEMessages.PropertyDescriptor_NameInComposition_Default; // Use a default. //$NON-NLS-1$
 		String componentName = baseName;
 		int incr = 0;
 		main : while (true) {
