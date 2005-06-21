@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: ClassDecoratorIterator.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-21 21:50:16 $ 
  */
 
 import java.text.MessageFormat;
@@ -63,7 +63,7 @@ public abstract class ClassDecoratorIterator implements Iterator {
 	}
 
 	public void remove() {
-		throw new UnsupportedOperationException(MessageFormat.format(CDEEmfMessages.getString("ClassDecoratorIterator.UnsupportedRemove(Object)_EXC_"), new Object[] { getClass().getName()})); //$NON-NLS-1$
+		throw new UnsupportedOperationException(MessageFormat.format(CDEEmfMessages.ClassDecoratorIterator_UnsupportedRemove_Object__EXC_, new Object[] { getClass().getName()})); 
 	}
 
 	/**

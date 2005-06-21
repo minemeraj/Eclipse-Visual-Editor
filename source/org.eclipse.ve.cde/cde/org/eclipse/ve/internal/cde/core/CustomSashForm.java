@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomSashForm.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-16 17:50:32 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-21 21:49:00 $ 
  */
 
 import org.eclipse.swt.SWT;
@@ -305,11 +305,11 @@ public class CustomSashForm extends SashForm {
 								switch (locs[ARROW_TYPE_INDEX]) {
 									case UP_ARROW:
 									case DOWN_ARROW:
-										currentSashInfo.sash.setToolTipText(Messages.getString("CustomSashForm.Restore")); //$NON-NLS-1$
+										currentSashInfo.sash.setToolTipText(CDEMessages.CustomSashForm_Restore); 
 										break;
 									case UP_MAX_ARROW:
 									case DOWN_MAX_ARROW:
-										currentSashInfo.sash.setToolTipText(Messages.getString("CustomSashForm.Maximize")); //$NON-NLS-1$
+										currentSashInfo.sash.setToolTipText(CDEMessages.CustomSashForm_Maximize); 
 										break;
 								}
 							}

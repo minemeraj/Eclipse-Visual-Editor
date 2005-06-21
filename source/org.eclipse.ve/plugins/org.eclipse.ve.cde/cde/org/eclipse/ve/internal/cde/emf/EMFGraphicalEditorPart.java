@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.15 $  $Date: 2005-06-21 21:43:42 $ 
+ *  $Revision: 1.16 $  $Date: 2005-06-21 21:50:16 $ 
  */
 
 
@@ -439,7 +439,7 @@ protected void createPartControlWithErrors(Composite parent, IMarker[] markers) 
 				// Include line number in the message if there is one
 				if (markers[i].getAttribute(IMarker.LINE_NUMBER) != null) {
 					Integer linenum = (Integer) markers[i].getAttribute(IMarker.LINE_NUMBER);
-					msg = MessageFormat.format(CDEEmfMessages.getString("Line_number"), new Object[] {msg, linenum.toString()}); //$NON-NLS-1$
+					msg = MessageFormat.format(CDEEmfMessages.Line_number, new Object[] {msg, linenum.toString()}); 
 				}
 				errorMessages[i] = msg;
 			}
@@ -462,7 +462,7 @@ protected void createPartControlWithErrors(Composite parent, IMarker[] markers) 
 	text = new Text(composite,SWT.SINGLE|SWT.READ_ONLY);
 	text.setForeground(text.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 	text.setBackground(text.getDisplay().getSystemColor(SWT.COLOR_GRAY));
-	text.setText(CDEEmfMessages.getString("List_of_errors")); //$NON-NLS-1$
+	text.setText(CDEEmfMessages.List_of_errors); 
 	text.setLayoutData(new GridData());
 
 	org.eclipse.swt.widgets.List list= new org.eclipse.swt.widgets.List(composite, SWT.BORDER|SWT.V_SCROLL|SWT.H_SCROLL);
@@ -843,9 +843,9 @@ protected void initialize() {
 					return;
 				if (!((IFileEditorInput) getEditorInput()).getFile().exists()) {
 					Shell shell = getSite().getShell();
-					String title = CDEEmfMessages.getString("FILE_DELETED_TITLE_UI_"); //$NON-NLS-1$
-					String message = CDEEmfMessages.getString("FILE_DELETED_WITHOUT_SAVE_INFO_"); //$NON-NLS-1$
-					String[] buttons = { CDEEmfMessages.getString("SAVE_BUTTON_UI_"), CDEEmfMessages.getString("CLOSE_BUTTON_UI")}; //$NON-NLS-1$ //$NON-NLS-2$
+					String title = CDEEmfMessages.FILE_DELETED_TITLE_UI_; 
+					String message = CDEEmfMessages.FILE_DELETED_WITHOUT_SAVE_INFO_; 
+					String[] buttons = { CDEEmfMessages.SAVE_BUTTON_UI_, CDEEmfMessages.CLOSE_BUTTON_UI}; 
 					MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.QUESTION, buttons, 0);
 					if (dialog.open() == 0) {
 						if (!performSaveAs())
@@ -913,10 +913,10 @@ public void setFocus(){
 	if (c != null && !c.isDisposed()) {
 		// TODO Remove the following "if block" after a MOF bug is fixed. See resourceListener for details.
 		if (needToCloseEditor) {
-			String msg = java.text.MessageFormat.format(CDEEmfMessages.getString("Resource_changed_please_close_editor_message_WARN_"),  //$NON-NLS-1$
+			String msg = java.text.MessageFormat.format(CDEEmfMessages.Resource_changed_please_close_editor_message_WARN_,  
 						new Object[] {filenameOfChangedResource});
 			Shell shell= getSite().getShell();
-			MessageDialog.openWarning(shell, CDEEmfMessages.getString("Warning_message_dialog_title_WARN_"), msg); //$NON-NLS-1$
+			MessageDialog.openWarning(shell, CDEEmfMessages.Warning_message_dialog_title_WARN_, msg); 
 			needToCloseEditor = false;
 			return;
 		}
@@ -1096,7 +1096,7 @@ protected Resource  readDocument(String uri, InputStream is) throws Exception {
  * Subclasses can override with their own specific error message.
  */
 protected String getErrorTextMessage() {
-	return CDEEmfMessages.getString("Error_text_message_ERROR_"); //$NON-NLS-1$
+	return CDEEmfMessages.Error_text_message_ERROR_; 
 }
 //protected String getErrorMessageFrom(WarningException exc){
 //	String msg = ""; //$NON-NLS-1$

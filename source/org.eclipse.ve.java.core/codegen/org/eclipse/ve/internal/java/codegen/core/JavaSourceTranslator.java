@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.77 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.78 $  $Date: 2005-06-21 21:55:01 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -105,7 +105,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
   	 *  ReLoad the BDM model from stratch
   	 */
   	private  void Reload(Display disp,IProgressMonitor monitor) {
-  		monitor.beginTask(CodegenMessages.getString("JavaSourceTranslator.0"),2); //$NON-NLS-1$
+  		monitor.beginTask(CodegenMessages.JavaSourceTranslator_0,2); 
 
 		// We have no idea when the load will be called by the editor.
 		// We need to stop the synch. from driving snippets, as we are going
@@ -445,10 +445,10 @@ IDiagramSourceDecoder fSourceDecoder = null;
 
 			
 			try {
-				monitor.beginTask(CodegenMessages.getString("JavaSourceTranslator.1"),10);;				 //$NON-NLS-1$
+				monitor.beginTask(CodegenMessages.JavaSourceTranslator_1,10);;				 
 				
 				// We have to call takeCurrentSnapShot to clear events properly
-				monitor.subTask(CodegenMessages.getString("JavaSourceTranslator.2")); //$NON-NLS-1$
+				monitor.subTask(CodegenMessages.JavaSourceTranslator_2); 
 				boolean reloadRequired = takeCurrentSnapshot(editorState, allDocEvents, workingCopy) ;
 				monitor.worked(1);				
 				reloadRequired |= ((fBeanModel == null) && !floadInProgress) ;				
@@ -460,7 +460,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
 						return;
 					}
 					
-					monitor.subTask(CodegenMessages.getString("JavaSourceTranslator.3")); //$NON-NLS-1$
+					monitor.subTask(CodegenMessages.JavaSourceTranslator_3); 
 					CompilationUnit ast = parse(currentSource, new SubProgressMonitor(monitor, 3));
 					monitor.worked(1);
 
@@ -556,7 +556,7 @@ public  void loadModel(final IFileEditorInput input, boolean removeVECache, fina
     changeController.transactionBeginning(LOADING_PHASE);
     try{
         pm.beginTask("", 100); //$NON-NLS-1$
-        pm.subTask(CodegenMessages.getString("JavaSourceTranslator.LoadingFromSource"));	 //$NON-NLS-1$
+        pm.subTask(CodegenMessages.JavaSourceTranslator_LoadingFromSource);	 
         waitforNotBusy(true);
         floadInProgress = true;
         if (fVEModel != null) {
@@ -587,7 +587,7 @@ boolean  decodeExpression(CodeExpressionRef code) throws CodeGenException {
 
 protected EObject  createAJavaInstance(BeanPart bean, JavaCacheData cache, IProgressMonitor pm) throws CodeGenException {
 	
-	   pm.subTask(CodegenMessages.getString("JavaSourceTranslator.5")+bean.getSimpleName()); //$NON-NLS-1$
+	   pm.subTask(CodegenMessages.JavaSourceTranslator_5+bean.getSimpleName()); 
 	   EObject obj = null;
 	   if (cache == null)
 	      obj = bean.createEObject() ;
@@ -654,7 +654,7 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
 	   }
 	}	
 	for (int i = 0; i < err.size(); i++) {
-		pm.subTask(CodegenMessages.getString("JavaSourceTranslator.7")+((BeanPart)err.get(i)).getSimpleName()); //$NON-NLS-1$
+		pm.subTask(CodegenMessages.JavaSourceTranslator_7+((BeanPart)err.get(i)).getSimpleName()); 
         ((BeanPart)err.get(i)).deactivate() ;
     }	
 	pm.done();
@@ -704,7 +704,7 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 		      
 		      //if (getCorrespondingFeature(codeRef,obj) != null)
 		      try {
-		      	expProgressMonitor.subTask(CodegenMessages.getString("JavaSourceTranslator.11")+codeRef.getCodeContent()); //$NON-NLS-1$
+		      	expProgressMonitor.subTask(CodegenMessages.JavaSourceTranslator_11+codeRef.getCodeContent()); 
 			  if (!decodeExpression (codeRef)) {
 			  	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 			  		JavaVEPlugin.log ("JavaSourceTranslator.buildCompositionModel() : Did not Decoded: "+codeRef, Level.FINE) ;						 //$NON-NLS-1$
@@ -729,7 +729,7 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 		itr = badExprssions.iterator() ;
 		while (itr.hasNext()) {
 			CodeExpressionRef codeRef = (CodeExpressionRef) itr.next() ;
-			pm.subTask(CodegenMessages.getString("JavaSourceTranslator.12")+codeRef.getCodeContent()); //$NON-NLS-1$
+			pm.subTask(CodegenMessages.JavaSourceTranslator_12+codeRef.getCodeContent()); 
 			codeRef.getMethod().removeExpressionRef(codeRef) ;
 			codeRef.getBean().removeRefExpression(codeRef) ;
 			codeRef.getBean().addBadExpresion(codeRef);
@@ -761,14 +761,14 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 		   fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false) ;
 		   fBeanModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING,true) ;
 		   
-		   pm.subTask("Adding bean "+bean.getSimpleName()+CodegenMessages.getString("JavaSourceTranslator.4")); //$NON-NLS-1$ //$NON-NLS-2$
+		   pm.subTask("Adding bean "+bean.getSimpleName()+CodegenMessages.JavaSourceTranslator_4); 
 		   if (!fVEModel.isFromCache())
 		     CodeGenUtil.addBeanToBSC(bean,fVEModel.getModelRoot(), false) ;
 
 			try {
 				fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
 				if(bean.getFFDecoder()!=null){
-					pm.subTask(CodegenMessages.getString("JavaSourceTranslator.15")+bean.getSimpleName()); //$NON-NLS-1$
+					pm.subTask(CodegenMessages.JavaSourceTranslator_15+bean.getSimpleName()); 
 					if (fBeanModel.getCompositionModel().isFromCache())
 						bean.getFFDecoder().restore();
 					else
@@ -816,7 +816,7 @@ protected boolean reverseParse (IProgressMonitor pm) throws CodeGenException {
 	boolean errors = false;
     try {
     	fSrcSync.getUpdateStatus().setBottomUpProcessing(true);
-		pm.beginTask(CodegenMessages.getString("JavaSourceTranslator.16"),100); //$NON-NLS-1$
+		pm.beginTask(CodegenMessages.JavaSourceTranslator_16,100); 
 		TimerTests.basicTest.startStep("Reverse Parsing"); //$NON-NLS-1$
 		TimerTests.basicTest.startStep("Parsing"); //$NON-NLS-1$
 		synchronized (fSrcSync.getLockObject()) {
