@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerLayoutEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:29 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-21 15:06:25 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -20,6 +20,8 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -29,8 +31,10 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.swt.SWT;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.*;
 
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -241,7 +245,7 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 	}
 	
 	/**
-	 * getConstraintFor method comment.
+	 * returns the constraint value of the cell at the given point.
 	 */
 	protected java.lang.Object getConstraintFor(Point point) {
 		if (fCBannerLayoutFeedback != null) {
@@ -253,11 +257,65 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 	}
 	
 	/**
-	 * getMoveChildCommand method comment.
-	 * We don't perform move/resize since we don't know how.
+	 * allows a child to move from one open cell to another.
 	 */
 	protected Command getMoveChildrenCommand(Request generic) {
-		return null;
+		EObject parent = (EObject) fPolicy.getContainer();
+		
+		EStructuralFeature sfLeftControl = 
+			JavaInstantiation.getSFeature((IJavaObjectInstance) parent, SWTConstants.SF_CBANNER_LEFT);
+		EStructuralFeature sfRightControl = 
+			JavaInstantiation.getSFeature((IJavaObjectInstance) parent, SWTConstants.SF_CBANNER_RIGHT);
+		EStructuralFeature sfBottomControl = 
+			JavaInstantiation.getSFeature((IJavaObjectInstance) parent, SWTConstants.SF_CBANNER_BOTTOM);
+		
+		IJavaInstance left = (IJavaInstance) parent.eGet(sfLeftControl);
+		IJavaInstance right = (IJavaInstance) parent.eGet(sfRightControl);
+		IJavaInstance bottom = (IJavaInstance) parent.eGet(sfBottomControl);
+		
+		ChangeBoundsRequest request = (ChangeBoundsRequest)generic;
+		List sources = request.getEditParts();
+		
+		// For now only allow one object to be moved
+		if ( sources.size() > 1 ) return null;
+		
+		EditPart child = (EditPart) sources.iterator().next();
+
+		String newConstraint = (String) getConstraintFor(request.getLocation());
+
+		Command moveControl = null;
+		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
+		
+		EStructuralFeature moveFrom = null;
+		EStructuralFeature moveTo = null;
+		
+		if(left != null && left.equals(child.getModel()))
+			moveFrom = sfLeftControl;
+		else if(right != null && right.equals(child.getModel()))
+			moveFrom = sfRightControl;
+		else if(bottom != null && bottom.equals(child.getModel()))
+			moveFrom = sfBottomControl;
+		
+		if(left == null && 
+				((String) CBannerLayoutPolicyHelper.REAL_INTERNAL_TAGS.get(CBannerLayoutPolicyHelper.LEFT_INDEX)).equals(newConstraint))
+			moveTo = sfLeftControl;
+		else if(right == null && 
+				((String) CBannerLayoutPolicyHelper.REAL_INTERNAL_TAGS.get(CBannerLayoutPolicyHelper.RIGHT_INDEX)).equals(newConstraint))
+			moveTo = sfRightControl;
+		else if(bottom == null && 
+				((String) CBannerLayoutPolicyHelper.REAL_INTERNAL_TAGS.get(CBannerLayoutPolicyHelper.BOTTOM_INDEX)).equals(newConstraint))
+			moveTo = sfBottomControl;
+		
+		if(moveFrom != null && moveTo != null){
+			cBld.applyAttributeSetting(parent, moveFrom, null);
+			cBld.applyAttributeSetting(parent, moveTo, child.getModel(), null);
+			moveControl = cBld.getCommand();
+		}
+		
+		if(moveControl == null || !moveControl.canExecute())
+			return NoOpCommand.INSTANCE;		
+
+		return moveControl;
 	}
 	
 	/**
