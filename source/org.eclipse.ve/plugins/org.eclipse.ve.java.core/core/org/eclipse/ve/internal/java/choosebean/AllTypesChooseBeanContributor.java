@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllTypesChooseBeanContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-17 15:43:19 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-21 22:32:23 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -29,7 +29,7 @@ public class AllTypesChooseBeanContributor implements IChooseBeanContributor {
 	 * @see org.eclipse.ve.internal.java.choosebean.IChooseBeanContributor#getName()
 	 */
 	public String getName() {
-		return ChooseBeanMessages.getString("AllTypesChooseBeanContributor.Name"); //$NON-NLS-1$
+		return ChooseBeanMessages.AllTypesChooseBeanContributor_Name; 
 	}
 
 	/* (non-Javadoc)

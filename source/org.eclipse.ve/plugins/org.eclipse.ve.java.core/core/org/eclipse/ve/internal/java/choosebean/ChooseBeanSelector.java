@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.choosebean;
 
 /*
- * $RCSfile: ChooseBeanSelector.java,v $ $Revision: 1.10 $ $Date: 2005-06-20 23:54:34 $
+ * $RCSfile: ChooseBeanSelector.java,v $ $Revision: 1.11 $ $Date: 2005-06-21 22:32:23 $
  */
 
 import java.util.logging.Level;
@@ -36,7 +36,7 @@ public class ChooseBeanSelector implements SelectionCreationToolEntry.ISelector 
 			try {
 				Object[] results = dialog.getResult();
 				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
-					JavaVEPlugin.log(ChooseBeanMessages.getString("ToolSelector.SelectionLogMessage") + results[0], Level.FINE); //$NON-NLS-1$
+					JavaVEPlugin.log(ChooseBeanMessages.ToolSelector_SelectionLogMessage + results[0], Level.FINE); 
 				return results;
 			} catch (Exception e) {
 				return null;

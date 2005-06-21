@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.33 $  $Date: 2005-06-14 15:09:26 $ 
+ *  $Revision: 1.34 $  $Date: 2005-06-21 22:32:23 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -90,8 +90,8 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 	protected ChooseBeanDialog(Shell parent, boolean multi, IJavaSearchScope scope) {
 		super(parent);//, multi, PlatformUI.getWorkbench().getProgressService(), scope, elementKinds);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		setTitle(ChooseBeanMessages.getString("MainDialog.title")); //$NON-NLS-1$
-		setMessage(ChooseBeanMessages.getString("MainDialog.message")); //$NON-NLS-1$
+		setTitle(ChooseBeanMessages.MainDialog_title); 
+		setMessage(ChooseBeanMessages.MainDialog_message); 
 		setStatusLineAboveButtons(true);
 		this.javaSearchScope = scope;
 	}
@@ -222,7 +222,7 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 			GridData sectionLabelData = new GridData(GridData.FILL_HORIZONTAL);
 			sectionLabelData.horizontalSpan=numColumns;
 			sectionLabel.setLayoutData(sectionLabelData);
-			sectionLabel.setText(ChooseBeanMessages.getString("ChooseBeanDialog.Section.Styles")); //$NON-NLS-1$
+			sectionLabel.setText(ChooseBeanMessages.ChooseBeanDialog_Section_Styles); 
 			
 			Label spacer = new Label(stylesComposite, SWT.NONE);
 			spacer.setText(""); // to remove NO READ warning //$NON-NLS-1$
@@ -268,7 +268,7 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 			spacer.setText(""); //$NON-NLS-1$
 			
 			Button showBeansButton = new Button(stylesComposite, SWT.CHECK);
-			showBeansButton.setText(ChooseBeanMessages.getString("ChooseBeanDialog.Checkbox.ShowValidClasses")); //$NON-NLS-1$
+			showBeansButton.setText(ChooseBeanMessages.ChooseBeanDialog_Checkbox_ShowValidClasses); 
 			gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = numColumns-1;
 			showBeansButton.setLayoutData(gd);
@@ -296,7 +296,7 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 			image.setImage(JavaPlugin.getDefault().getImageRegistry().get(JavaPluginImages.IMG_FIELD_PUBLIC));
 			Label beanNameLabel = new Label(beanNameComposite, SWT.NONE);
 			beanNameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			beanNameLabel.setText(ChooseBeanMessages.getString("ChooseBeanDialog.Label.BeanName")); //$NON-NLS-1$
+			beanNameLabel.setText(ChooseBeanMessages.ChooseBeanDialog_Label_BeanName); 
 			Label spacer = new Label(beanNameComposite, SWT.NONE);
 			spacer.setText(""); // to remove NO READ warning //$NON-NLS-1$
 		
