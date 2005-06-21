@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: RestorePreferredSizeAction.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-28 14:14:29 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 import java.util.Iterator;
@@ -30,8 +30,8 @@ public class RestorePreferredSizeAction extends SelectionAction {
 
 	public RestorePreferredSizeAction() {
 		super(null);
-		setText(CDEMessages.getString("RestorePreferredSizeAction.label")); //$NON-NLS-1$
-		setToolTipText(CDEMessages.getString("RestorePreferredSizeAction.tooltip")); //$NON-NLS-1$
+		setText(CDEMessages.RestorePreferredSizeAction_label); 
+		setToolTipText(CDEMessages.RestorePreferredSizeAction_tooltip); 
 		setId(ACTION_ID);
 
 		String graphicName = "resetsize_obj.gif"; //$NON-NLS-1$

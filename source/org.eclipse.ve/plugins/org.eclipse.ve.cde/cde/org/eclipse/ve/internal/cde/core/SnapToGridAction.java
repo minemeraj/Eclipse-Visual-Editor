@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: SnapToGridAction.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:15 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 
@@ -37,11 +37,11 @@ public class SnapToGridAction extends SelectionAction implements IPropertyChange
 
 	public SnapToGridAction(IEditorPart part, ShowGridAction showGridAction) {
 		super(part);
-		setText(CDEMessages.getString("SnapToGridAction.label")); //$NON-NLS-1$
-		setToolTipText(CDEMessages.getString("SnapToGridAction.tooltip")); //$NON-NLS-1$
+		setText(CDEMessages.SnapToGridAction_label); 
+		setToolTipText(CDEMessages.SnapToGridAction_tooltip); 
 		setId(ACTION_ID);
 		setImageDescriptor(
-			ImageDescriptor.createFromFile(getClass(),  CDEMessages.getString("SnapToGridAction.image"))); //$NON-NLS-1$
+			ImageDescriptor.createFromFile(getClass(),  CDEMessages.SnapToGridAction_image)); 
 		setEnabled(false);
 		showGridAction.addPropertyChangeListener(this);
 		// It is assumed that both show grid action and snaptogrid action go away at the same time so no need to have a removeListener.

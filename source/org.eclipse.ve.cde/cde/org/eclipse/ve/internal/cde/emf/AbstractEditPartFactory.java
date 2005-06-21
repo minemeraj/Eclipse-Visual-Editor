@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: AbstractEditPartFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -54,7 +54,7 @@ public abstract class AbstractEditPartFactory implements EditPartFactory {
 		} catch (Exception e) {
 			String message =
 				java.text.MessageFormat.format(
-					CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
+					CDEMessages.Object_noinstantiate_EXC_, 
 					new Object[] { editpartClassString });
 			Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, e);
 			CDEPlugin.getPlugin().getLog().log(s);

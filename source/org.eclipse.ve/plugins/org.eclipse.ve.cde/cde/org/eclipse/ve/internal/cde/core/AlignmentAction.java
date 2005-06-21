@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: AlignmentAction.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-21 21:34:08 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 
@@ -31,22 +31,22 @@ public class AlignmentAction extends SelectionAction {
 	// The alignment types can be found in AlignmentCommandRequest.
 	// The following array must match in order the types found
 	// in AlignmentCommandRequest so that the labels are correct.
-	private final static String[] resPrefixLabels = { CDEMessages.getString("AlignmentAction.left.label"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.center.label"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.right.label"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.top.label"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.middle.label"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.bottom.label"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.width.label"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.height.label") }; //$NON-NLS-1$
-	private final static String[] resPrefixTooltips = { CDEMessages.getString("AlignmentAction.left.tooltip"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.center.tooltip"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.right.tooltip"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.top.tooltip"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.middle.tooltip"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.bottom.tooltip"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.width.tooltip"), //$NON-NLS-1$
-		CDEMessages.getString("AlignmentAction.height.tooltip") }; //$NON-NLS-1$
+	private final static String[] resPrefixLabels = { CDEMessages.AlignmentAction_left_label, 
+		CDEMessages.AlignmentAction_center_label, 
+		CDEMessages.AlignmentAction_right_label, 
+		CDEMessages.AlignmentAction_top_label, 
+		CDEMessages.AlignmentAction_middle_label, 
+		CDEMessages.AlignmentAction_bottom_label, 
+		CDEMessages.AlignmentAction_width_label, 
+		CDEMessages.AlignmentAction_height_label }; 
+	private final static String[] resPrefixTooltips = { CDEMessages.AlignmentAction_left_tooltip, 
+		CDEMessages.AlignmentAction_center_tooltip, 
+		CDEMessages.AlignmentAction_right_tooltip, 
+		CDEMessages.AlignmentAction_top_tooltip, 
+		CDEMessages.AlignmentAction_middle_tooltip, 
+		CDEMessages.AlignmentAction_bottom_tooltip, 
+		CDEMessages.AlignmentAction_width_tooltip, 
+		CDEMessages.AlignmentAction_height_tooltip }; 
 	private final static String[] resPrefixImages = { "alignleft_obj.gif", //$NON-NLS-1$
 		"aligncenter_obj.gif", //$NON-NLS-1$
 		"alignright_obj.gif", //$NON-NLS-1$

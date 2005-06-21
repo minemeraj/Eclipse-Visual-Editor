@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: XYLayoutEditPolicy.java,v $
- *  $Revision: 1.19 $  $Date: 2005-06-08 23:08:35 $ 
+ *  $Revision: 1.20 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 
@@ -569,7 +569,7 @@ protected void showCursorFeedback(Request aRequest) {
 		cursorLabel.setBackgroundColor(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		cursorLabel.setFont(new Font(Display.getDefault(), "Tahoma", 8, SWT.NORMAL)); //$NON-NLS-1$
 	}
-	cursorLabel.setText(MessageFormat.format(CDEMessages.getString("XYLayoutEditPolicy.CursorFeedback.X_Y"), new Object[]{String.valueOf(position.x), String.valueOf(position.y)})); //$NON-NLS-1$
+	cursorLabel.setText(MessageFormat.format(CDEMessages.XYLayoutEditPolicy_CursorFeedback_X_Y, new Object[]{String.valueOf(position.x), String.valueOf(position.y)})); 
 	
 //	if (yCursorLabel == null) {
 //		yCursorLabel = new Label();

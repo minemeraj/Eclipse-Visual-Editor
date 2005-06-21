@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.cde.core;
 
 /*
  *  $RCSfile: IErrorHolder.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-15 20:19:34 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-21 21:43:42 $ 
  */
  
 import java.text.MessageFormat;
@@ -306,7 +306,7 @@ public interface IErrorHolder {
 		
 
 		public String getMessage() {
-			return MessageFormat.format(CDEMessages.getString("Exception.msg"), new Object[] { getExceptionClassname(), getExceptionMessage()}); //$NON-NLS-1$);
+			return MessageFormat.format(CDEMessages.Exception_msg, new Object[] { getExceptionClassname(), getExceptionMessage()}); 
 		}
 		
 		/**
@@ -364,7 +364,7 @@ public interface IErrorHolder {
 		 * @since 1.1.0
 		 */
 		protected static String getPropertyMessageFormat() {
-			return CDEMessages.getString("PropertyError.msg"); //$NON-NLS-1$
+			return CDEMessages.PropertyError_msg; 
 		}
 				
 		/**

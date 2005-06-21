@@ -17,7 +17,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindow.java,v $
- *  $Revision: 1.10 $  $Date: 2005-06-03 19:22:15 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 import java.util.ArrayList;
@@ -96,9 +96,9 @@ public class CustomizeLayoutWindow extends Window {
 			return;
 		}
 		if (description == null) {
-			shell.setText(CDEMessages.getString("CustomizeLayoutWindow.title")); //$NON-NLS-1$
+			shell.setText(CDEMessages.CustomizeLayoutWindow_title); 
 		} else {
-			shell.setText(CDEMessages.getString("CustomizeLayoutWindow.title") + " - " + description); //$NON-NLS-1$ //$NON-NLS-2$
+			shell.setText(CDEMessages.CustomizeLayoutWindow_title + " - " + description); 
 		}
 	}
 
@@ -133,8 +133,8 @@ public class CustomizeLayoutWindow extends Window {
 		
 		// Create the Layout tab
 		TabItem layoutTab = new TabItem(tabFolder, SWT.NONE);
-		layoutTab.setText(CDEMessages.getString("CustomizeLayoutWindow.layoutTabTitle")); //$NON-NLS-1$
-		layoutTab.setToolTipText(CDEMessages.getString("CustomizeLayoutWindow.layoutTabToolTip")); //$NON-NLS-1$
+		layoutTab.setText(CDEMessages.CustomizeLayoutWindow_layoutTabTitle); 
+		layoutTab.setToolTipText(CDEMessages.CustomizeLayoutWindow_layoutTabToolTip); 
 		
 		layoutPage = new Composite(tabFolder, SWT.NONE);
 		layoutPageLayout = new StackLayout();
@@ -143,8 +143,8 @@ public class CustomizeLayoutWindow extends Window {
 		
 		// Create the Component tab
 		TabItem componentTab = new TabItem(tabFolder, SWT.NONE);
-		componentTab.setText(CDEMessages.getString("CustomizeLayoutWindow.componentTabTitle")); //$NON-NLS-1$
-		componentTab.setToolTipText(CDEMessages.getString("CustomizeLayoutWindow.componentTabToolTip")); //$NON-NLS-1$
+		componentTab.setText(CDEMessages.CustomizeLayoutWindow_componentTabTitle); 
+		componentTab.setToolTipText(CDEMessages.CustomizeLayoutWindow_componentTabToolTip); 
 		
 		componentPage = new Composite(tabFolder, SWT.NONE);
 		componentPageLayout = new StackLayout();
@@ -155,7 +155,7 @@ public class CustomizeLayoutWindow extends Window {
 		noLayoutPage = new Composite(layoutPage, SWT.NONE);
 		noLayoutPage.setLayout(new GridLayout());
 		Label noLayoutLabel = new Label(noLayoutPage, SWT.WRAP);
-		noLayoutLabel.setText(CDEMessages.getString("CustomizeLayoutWindow.noLayoutText")); //$NON-NLS-1$
+		noLayoutLabel.setText(CDEMessages.CustomizeLayoutWindow_noLayoutText); 
 		GridData gd = new GridData();
 		gd.widthHint = 200;
 		noLayoutLabel.setLayoutData(gd);
@@ -166,7 +166,7 @@ public class CustomizeLayoutWindow extends Window {
 		noComponentPage = new Composite(componentPage, SWT.NONE);
 		noComponentPage.setLayout(new GridLayout());
 		Label noComponentLabel = new Label(noComponentPage, SWT.WRAP);
-		noComponentLabel.setText(CDEMessages.getString("CustomizeLayoutWindow.noComponentText")); //$NON-NLS-1$
+		noComponentLabel.setText(CDEMessages.CustomizeLayoutWindow_noComponentText); 
 		gd = new GridData();
 		gd.widthHint = 200;
 		noComponentLabel.setLayoutData(gd);

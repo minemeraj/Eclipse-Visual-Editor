@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: ShowDistributeBoxAction.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 import org.eclipse.gef.ui.actions.EditorPartAction;
@@ -25,7 +25,7 @@ public class ShowDistributeBoxAction extends EditorPartAction {
 
 	public ShowDistributeBoxAction() {
 		super(null);
-		setText(CDEMessages.getString("ShowDistributeBoxAction.label")); //$NON-NLS-1$
+		setText(CDEMessages.ShowDistributeBoxAction_label); 
 		setId(ACTION_ID);
 
 		String graphicName = "distributebox_obj.gif"; //$NON-NLS-1$
@@ -35,7 +35,7 @@ public class ShowDistributeBoxAction extends EditorPartAction {
 		this.addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (IAction.CHECKED.equals(event.getProperty()))
-					setToolTipText(isChecked() ? CDEMessages.getString("ShowDistributeBoxAction.tooltip.hide") : CDEMessages.getString("ShowDistributeBoxAction.tooltip.show")); //$NON-NLS-1$ //$NON-NLS-2$
+					setToolTipText(isChecked() ? CDEMessages.ShowDistributeBoxAction_tooltip_hide : CDEMessages.ShowDistributeBoxAction_tooltip_show); 
 			}
 		});
 		setChecked(false); // It is assumed that the box is initially not visible.

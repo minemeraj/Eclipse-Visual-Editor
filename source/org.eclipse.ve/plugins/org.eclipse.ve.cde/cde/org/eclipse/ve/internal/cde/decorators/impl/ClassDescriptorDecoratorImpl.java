@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.decorators.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ClassDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 22:41:15 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -889,7 +889,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 		} catch (Exception e){
 			String message =
 				java.text.MessageFormat.format(
-						CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
+						CDEMessages.Object_noinstantiate_EXC_, 
 							new Object[] { getGraphViewClassname() });
 							Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, e);
 							CDEPlugin.getPlugin().getLog().log(s);
@@ -931,7 +931,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 		} catch (Exception e){
 			String message =
 				java.text.MessageFormat.format(
-						CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
+						CDEMessages.Object_noinstantiate_EXC_, 
 							new Object[] { getTreeViewClassname() });
 							Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, e);
 							CDEPlugin.getPlugin().getLog().log(s);
@@ -961,7 +961,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 				return result;
 			}
 		} catch (Exception exc) {
-			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { labelProviderClass}); //$NON-NLS-1$
+			String msg = MessageFormat.format(CDEMessages.Object_noinstantiate_EXC_, new Object[] { labelProviderClass}); 
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc));
 		}
 		return null;

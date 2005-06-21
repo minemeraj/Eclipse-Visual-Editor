@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYGridPropertiesPage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-31 20:06:46 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-21 21:43:42 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -119,7 +119,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 
 		// Create Snap to grid checkbox
 		fSnapToGridCheckBox = new Button(fieldsGroup, SWT.CHECK);
-		fSnapToGridCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Snap_To_Grid")); //$NON-NLS-1$
+		fSnapToGridCheckBox.setText(CDEMessages.AlignmentXYGridPropertiesPage_Snap_To_Grid); 
 		data = new GridData();
 		data.horizontalSpan = 3;
 		fSnapToGridCheckBox.setLayoutData(data);
@@ -144,7 +144,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 
 		// Create width/height sync checkbox
 		fWidthHeightSyncCheckBox = new Button(fieldsGroup, SWT.CHECK);
-		fWidthHeightSyncCheckBox.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Keep_Width_Height_Same")); //$NON-NLS-1$
+		fWidthHeightSyncCheckBox.setText(CDEMessages.AlignmentXYGridPropertiesPage_Keep_Width_Height_Same); 
 		data = new GridData();
 		data.horizontalSpan = 3;
 		fWidthHeightSyncCheckBox.setLayoutData(data);
@@ -163,7 +163,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 
 		// Grid width label
 		Label widthLabel = new Label(fieldsGroup, SWT.NONE);
-		widthLabel.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.width")); //$NON-NLS-1$
+		widthLabel.setText(CDEMessages.AlignmentXYGridPropertiesPage_width); 
 
 		data = new GridData();
 		data.widthHint = 40;
@@ -206,7 +206,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 
 		// Grid height label
 		Label heightLabel = new Label(fieldsGroup, SWT.NONE);
-		heightLabel.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.height")); //$NON-NLS-1$
+		heightLabel.setText(CDEMessages.AlignmentXYGridPropertiesPage_height); 
 		data = new GridData();
 		data.widthHint = 40;
 		heightLabel.setLayoutData(data);
@@ -247,7 +247,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 
 		// Grid margin label
 		Label marginLabel = new Label(fieldsGroup, SWT.NONE);
-		marginLabel.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.margin")); //$NON-NLS-1$
+		marginLabel.setText(CDEMessages.AlignmentXYGridPropertiesPage_margin); 
 		data = new GridData();
 		data.widthHint = 40;
 		marginLabel.setLayoutData(data);
@@ -300,7 +300,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 	 */
 	protected String getLabelForSelection(ISelection newSelection) {
 		if (newSelection instanceof IStructuredSelection) {
-			if (((IStructuredSelection) newSelection).size() == 1) { return CDEMessages.getString("AlignmentXYGridPropertiesPage.title"); //$NON-NLS-1$
+			if (((IStructuredSelection) newSelection).size() == 1) { return CDEMessages.AlignmentXYGridPropertiesPage_title; 
 			}
 		}
 		return null;
@@ -501,11 +501,11 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 			fGridHeight = Integer.parseInt(fGridHeightText.getText());
 			if (fGridHeight <= 1) {
 				fGridHeightText.setBackground(ColorConstants.red);
-				fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Height_Must_Be_Larger_Than_One")); //$NON-NLS-1$
+				fMessageLine.setText(CDEMessages.AlignmentXYGridPropertiesPage_Height_Must_Be_Larger_Than_One); 
 			}
 		} catch (NumberFormatException nfexc) {
 			fGridHeightText.setBackground(ColorConstants.red);
-			fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Height_Must_Be_Integer")); //$NON-NLS-1$
+			fMessageLine.setText(CDEMessages.AlignmentXYGridPropertiesPage_Height_Must_Be_Integer); 
 		}
 
 		// Validate the grid width
@@ -513,22 +513,22 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 			fGridWidth = Integer.parseInt(fGridWidthText.getText());
 			if (fGridWidth <= 1) {
 				fGridWidthText.setBackground(ColorConstants.red);
-				fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Width_Must_Be_Larger_Than_One")); //$NON-NLS-1$
+				fMessageLine.setText(CDEMessages.AlignmentXYGridPropertiesPage_Width_Must_Be_Larger_Than_One); 
 			}
 		} catch (NumberFormatException nfexc) {
 			fGridWidthText.setBackground(ColorConstants.red);
-			fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Width_Must_Be_Integer")); //$NON-NLS-1$
+			fMessageLine.setText(CDEMessages.AlignmentXYGridPropertiesPage_Width_Must_Be_Integer); 
 		}
 		// Validate the grid margin
 		try {
 			fGridMargin = Integer.parseInt(fGridMarginText.getText());
 			if (fGridMargin < 0) {
 				fGridMarginText.setBackground(ColorConstants.red);
-				fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Margin_Must_Be_Positive")); //$NON-NLS-1$
+				fMessageLine.setText(CDEMessages.AlignmentXYGridPropertiesPage_Margin_Must_Be_Positive); 
 			}
 		} catch (NumberFormatException nfexc) {
 			fGridMarginText.setBackground(ColorConstants.red);
-			fMessageLine.setText(CDEMessages.getString("AlignmentXYGridPropertiesPage.Margin_Must_Be_Integer")); //$NON-NLS-1$
+			fMessageLine.setText(CDEMessages.AlignmentXYGridPropertiesPage_Margin_Must_Be_Integer); 
 		}
 		return fMessageLine.getText().length() > 0 ? false : true;
 	}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: ZoomHelperDialog.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 
@@ -53,7 +53,7 @@ public class ZoomHelperDialog extends Dialog {
 	
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(CDEMessages.getString("ZoomHelperDialog.label")); //$NON-NLS-1$
+		newShell.setText(CDEMessages.ZoomHelperDialog_label); 
 		newShell.setImage(newShell.getDisplay().getSystemImage(SWT.ICON_QUESTION));
 	}
 
@@ -61,7 +61,7 @@ public class ZoomHelperDialog extends Dialog {
 		Composite area = (Composite) super.createDialogArea(parent);
 		
 		Label label = new Label(area, SWT.SHADOW_IN);
-		label.setText(CDEMessages.getString("ZoomHelperDialog.PERCENT")); //$NON-NLS-1$
+		label.setText(CDEMessages.ZoomHelperDialog_PERCENT); 
 		
 		zoomlist= new List(area, SWT.BORDER);
 		zoomlist.setLayoutData(new GridData(GridData.FILL_BOTH));

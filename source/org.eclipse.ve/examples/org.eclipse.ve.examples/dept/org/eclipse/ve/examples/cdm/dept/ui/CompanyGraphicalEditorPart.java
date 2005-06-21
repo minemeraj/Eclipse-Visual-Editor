@@ -11,7 +11,7 @@
 package org.eclipse.ve.examples.cdm.dept.ui;
 /*
  *  $RCSfile: CompanyGraphicalEditorPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-31 23:49:41 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-21 21:43:44 $ 
  */
 
 import java.io.*;
@@ -247,7 +247,7 @@ public class CompanyGraphicalEditorPart extends GraphicalEditorWithPalette {
 		// Check input.
 		if (!(input instanceof IFileEditorInput))
 			throw new PartInitException(
-				MessageFormat.format(CDEMessages.getString("NOT_FILE_INPUT_ERROR_"), new Object[] { input.getName()}));
+				MessageFormat.format(CDEMessages.NOT_FILE_INPUT_ERROR_, new Object[] { input.getName()}));
 
 		// Save input.
 		org.eclipse.ve.internal.cde.core.EditDomain dom = new org.eclipse.ve.internal.cde.core.EditDomain(this);

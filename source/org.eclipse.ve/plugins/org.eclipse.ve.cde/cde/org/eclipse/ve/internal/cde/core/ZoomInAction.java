@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ZoomInAction.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 
@@ -25,10 +25,10 @@ public class ZoomInAction extends EditorPartAction {
 		
 public ZoomInAction(IEditorPart part) {
 	super(part);
-	setText(CDEMessages.getString("ZoomInAction.label")); //$NON-NLS-1$
-	setToolTipText(CDEMessages.getString("ZoomInAction.tooltip")); //$NON-NLS-1$
+	setText(CDEMessages.ZoomInAction_label); 
+	setToolTipText(CDEMessages.ZoomInAction_tooltip); 
 	setId(ACTION_ID);
-	setImageDescriptor(ImageDescriptor.createFromFile(getClass(),CDEMessages.getString("ZoomInAction.image"))); //$NON-NLS-1$
+	setImageDescriptor(ImageDescriptor.createFromFile(getClass(),CDEMessages.ZoomInAction_image)); 
 	setEnabled(true);
 }
 

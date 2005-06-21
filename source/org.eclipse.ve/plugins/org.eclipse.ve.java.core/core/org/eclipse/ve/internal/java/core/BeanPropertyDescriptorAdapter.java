@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.21 $  $Date: 2005-04-20 18:44:07 $ 
+ *  $Revision: 1.22 $  $Date: 2005-06-21 21:43:46 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -178,7 +178,7 @@ public ICellEditorValidator getValidator() {
 		} catch (Exception e) {
 			String msg =
 				MessageFormat.format(
-					CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
+					CDEMessages.Object_noinstantiate_EXC_, 
 					new Object[] { decorator.getCellEditorValidatorClassnames()});
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 		}
@@ -204,7 +204,7 @@ public ICellEditorValidator getValidator() {
 		} catch (Exception e) {
 			String msg =
 				MessageFormat.format(
-					CDEMessages.getString("Object.noinstantiate_EXC_"), //$NON-NLS-1$
+					CDEMessages.Object_noinstantiate_EXC_, 
 					new Object[] { bdec.getCellEditorValidatorClassnames()});
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 		}
@@ -395,7 +395,7 @@ protected CellEditor createCellEditorInstance(Class clazz,Composite aComposite, 
 	} catch (Exception exc) {
 		Logger logger = JavaVEPlugin.getPlugin().getLogger();
 		if (logger.isLoggingLevel(Level.WARNING)) {
-			String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { clazz}); //$NON-NLS-1$
+			String msg = MessageFormat.format(CDEMessages.Object_noinstantiate_EXC_, new Object[] { clazz}); 
 			logger.log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, exc), Level.WARNING);
 		}
 	}

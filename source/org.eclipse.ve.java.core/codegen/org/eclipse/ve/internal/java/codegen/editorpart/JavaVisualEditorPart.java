@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.126 $  $Date: 2005-06-21 19:53:10 $ 
+ *  $Revision: 1.127 $  $Date: 2005-06-21 21:43:46 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -239,7 +239,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		} else
 			throw new PartInitException(
-				MessageFormat.format(CDEMessages.getString("NOT_FILE_INPUT_ERROR_"), new Object[] { input.getName()})); //$NON-NLS-1$
+				MessageFormat.format(CDEMessages.NOT_FILE_INPUT_ERROR_, new Object[] { input.getName()})); 
 
 		if (DO_TIMER_TESTS)
 			System.out.println("------------ Measuring class \"" + input.getName() + "\" ------------"); //$NON-NLS-1$ //$NON-NLS-2$

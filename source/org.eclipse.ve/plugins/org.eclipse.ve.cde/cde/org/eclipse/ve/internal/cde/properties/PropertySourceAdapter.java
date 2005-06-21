@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: PropertySourceAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-15 20:19:34 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-21 21:43:42 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -248,7 +248,7 @@ public class PropertySourceAdapter extends AdapterImpl implements IPropertySourc
 					}
 				}
 			} catch (Exception e) {
-				String msg = MessageFormat.format(CDEMessages.getString("Object.noinstantiate_EXC_"), new Object[] { cname }); //$NON-NLS-1$
+				String msg = MessageFormat.format(CDEMessages.Object_noinstantiate_EXC_, new Object[] { cname }); 
 				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, msg, e));
 			}
 		}
