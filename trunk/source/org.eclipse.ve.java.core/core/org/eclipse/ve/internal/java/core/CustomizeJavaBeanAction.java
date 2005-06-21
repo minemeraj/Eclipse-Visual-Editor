@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.17 $  $Date: 2005-06-21 22:53:48 $ 
+ *  $Revision: 1.18 $  $Date: 2005-06-21 22:56:33 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -146,7 +146,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 									fEditDomain.getCommandStack().execute(cmdBuilder.getCommand());
 								} else {
 									JavaVEPlugin.getPlugin().getLogger().log(MessageFormat.format(
-											Messages.getString("CustomizePropertyNotFound_ERROR"),new Object[]{eventName,bean.getJavaType().getName()}));																		
+											JavaMessages.CustomizePropertyNotFound_ERROR,new Object[]{eventName,bean.getJavaType().getName()}));																		
 								}
 							}							
 						}

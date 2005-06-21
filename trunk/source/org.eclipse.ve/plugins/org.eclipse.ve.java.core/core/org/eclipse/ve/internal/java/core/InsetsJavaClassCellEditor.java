@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: InsetsJavaClassCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-21 22:53:48 $ 
  */
 
 import java.util.StringTokenizer;
@@ -59,9 +59,9 @@ protected String getJavaInitializationString(String insetsString) {
 protected String isCorrectString(String text) {
 	StringTokenizer st = new StringTokenizer(text, ","); //$NON-NLS-1$
 	
-	String[] tokenMsgs = new String[] {JavaMessages.getString("CellEditor.Insets.TopErrorMsg_ERROR_"), JavaMessages.getString("CellEditor.Insets.LeftErrorMsg_ERROR_"), JavaMessages.getString("CellEditor.Insets.BottomErrorMsg_ERROR_"), JavaMessages.getString("CellEditor.Insets.RightErrorMsg_ERROR_")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	String[] tokenMsgs = new String[] {JavaMessages.CellEditor_Insets_TopErrorMsg_ERROR_, JavaMessages.CellEditor_Insets_LeftErrorMsg_ERROR_, JavaMessages.CellEditor_Insets_BottomErrorMsg_ERROR_, JavaMessages.CellEditor_Insets_RightErrorMsg_ERROR_}; 
 	if (st.countTokens() != tokenMsgs.length)
-		return JavaMessages.getString("CellEditor.Insets.ErrorMsg_ERROR_"); //$NON-NLS-1$
+		return JavaMessages.CellEditor_Insets_ErrorMsg_ERROR_; 
 	
 	for (int i=0; i<tokenMsgs.length; i++) {
 		String field = st.nextToken().trim();

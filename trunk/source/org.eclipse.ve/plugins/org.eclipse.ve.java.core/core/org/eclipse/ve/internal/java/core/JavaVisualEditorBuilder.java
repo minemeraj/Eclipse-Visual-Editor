@@ -12,7 +12,7 @@
  *  Created Jan 20, 2005 by Gili Mendel
  * 
  *  $RCSfile: JavaVisualEditorBuilder.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-02 21:36:09 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-21 22:56:33 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -77,14 +77,14 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 				if (files[i].isDirectory())
 					error|= deleteDirectoryConntent(files[i],true);
 				else {
-					currentMonitor.subTask(Messages.getString("JavaVisualEditorBuilder.0")+files[i].getName()); //$NON-NLS-1$
+					currentMonitor.subTask(JavaMessages.JavaVisualEditorBuilder_0+files[i].getName()); 
 					error |= !files[i].delete();
 					currentMonitor.worked(1);
 				}
 			 }
 			}
 			if (deleteRoot) {
-			  currentMonitor.subTask(Messages.getString("JavaVisualEditorBuilder.1")+root.getName()); //$NON-NLS-1$
+			  currentMonitor.subTask(JavaMessages.JavaVisualEditorBuilder_1+root.getName()); 
 			  error |= !root.delete();
 			  currentMonitor.worked(1);
 			}
@@ -104,7 +104,7 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 	}
 	protected void processDelta(IResourceDelta delta) {
 		if (delta!=null) {
-			currentMonitor.beginTask(Messages.getString("JavaVisualEditorBuilder.2"),50); //$NON-NLS-1$
+			currentMonitor.beginTask(JavaMessages.JavaVisualEditorBuilder_2,50); 
 			switch (delta.getKind()) {
 				// CHANGEs can be taken care of with a time stamp... skip processing folders
 				// Keep the build light
@@ -160,7 +160,7 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 	protected void clean(IProgressMonitor monitor) throws CoreException {
 		currentProjectPath = getProject()!=null ? new Path(getProject().getLocation().lastSegment()):null;
 		currentMonitor = monitor != null ? monitor : new NullProgressMonitor();
-		monitor.beginTask(Messages.getString("JavaVisualEditorBuilder.3"),50); //$NON-NLS-1$
+		monitor.beginTask(JavaMessages.JavaVisualEditorBuilder_3,50); 
 		
 		if (currentProjectPath!=null) {			
 		   cleanMetaDirectory(currentProjectPath,false);

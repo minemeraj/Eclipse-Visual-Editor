@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultLabelProviderWithNameAndAttribute.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-21 22:53:48 $ 
  */
 import java.text.MessageFormat;
 
@@ -68,8 +68,8 @@ public class DefaultLabelProviderWithNameAndAttribute extends DefaultJavaBeanLab
 				if (setting instanceof String) {
 					String label = (String) setting;
 					if (label.length() > 20)
-						label = MessageFormat.format(JavaMessages.getString("DefaultLabelProvider.Label.DottedVersion"), new Object[] {label.substring(0, 20)});	// Too large, so truncate it. //$NON-NLS-1$
-					return MessageFormat.format(JavaMessages.getString("DefaultLabelProvider.Label.FullVersion"), new Object[] {mainPart, label}); //$NON-NLS-1$
+						label = MessageFormat.format(JavaMessages.DefaultLabelProvider_Label_DottedVersion, new Object[] {label.substring(0, 20)});	// Too large, so truncate it. //$NON-NLS-1$
+					return MessageFormat.format(JavaMessages.DefaultLabelProvider_Label_FullVersion, new Object[] {mainPart, label}); 
 				}
 			}
 			return mainPart;
