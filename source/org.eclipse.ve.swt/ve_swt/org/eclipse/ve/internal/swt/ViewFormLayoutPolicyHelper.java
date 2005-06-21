@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:52 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-21 15:06:09 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -251,10 +251,10 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 		if (p == null)
 			return null;
 		Rectangle r = boundingRectangle();
-		Rectangle leftRect = new Rectangle( r.x, r.y, r.width / 3, r.height / 2);
-		Rectangle centerRect = new Rectangle(r.x + r.width / 3, r.y, r.width / 3, r.height / 2);
-		Rectangle rightRect = new Rectangle( r.x + 2 * r.width / 3, r.y, r.width / 3, r.height / 2);
-		Rectangle contentRect = new Rectangle( r.x, r.y + r.height / 2, r.width, r.height / 2);
+		Rectangle leftRect = new Rectangle( r.x, r.y, r.width / 3, r.height / 3);
+		Rectangle centerRect = new Rectangle(r.x + r.width / 3, r.y, r.width / 3, r.height / 3);
+		Rectangle rightRect = new Rectangle( r.x + 2 * r.width / 3, r.y, r.width / 3, r.height / 3);
+		Rectangle contentRect = new Rectangle( r.x, r.y + r.height / 3, r.width, 2 * r.height / 3);
 
 		if (leftRect.contains(p))
 			return (String) REAL_INTERNAL_TAGS.get(LEFT_INDEX);
@@ -271,10 +271,10 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 		if (p == null)
 			return null;
 		Rectangle r = boundingRectangle();
-		Rectangle leftRect = new Rectangle( r.x, r.y, r.width / 3, r.height / 2);
-		Rectangle centerRect = new Rectangle(r.x + r.width / 3, r.y, r.width / 3, r.height / 2);
-		Rectangle rightRect = new Rectangle( r.x + 2 * r.width / 3, r.y, r.width / 3, r.height / 2);
-		Rectangle contentRect = new Rectangle( r.x, r.y + r.height / 2, r.width, r.height / 2);
+		Rectangle leftRect = new Rectangle( r.x, r.y, r.width / 3, r.height / 3);
+		Rectangle centerRect = new Rectangle(r.x + r.width / 3, r.y, r.width / 3, r.height / 3);
+		Rectangle rightRect = new Rectangle( r.x + 2 * r.width / 3, r.y, r.width / 3, r.height / 3);
+		Rectangle contentRect = new Rectangle( r.x, r.y + r.height / 3, r.width, 2 * r.height / 3);
 
 		if (leftRect.contains(p))
 			return leftRect;

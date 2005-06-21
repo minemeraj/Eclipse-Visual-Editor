@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutFeedback.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:52 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-21 15:06:09 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -37,10 +37,10 @@ public class ViewFormLayoutFeedback extends RectangleFigure {
 		Rectangle r = getBounds().getCopy();
 		// Fill in the already occupied regions
 		if (getFilledRegions() != null ) {
-			final Rectangle leftRect = new Rectangle( r.x, r.y, r.width / 3, r.height / 2);
-			final Rectangle centerRect = new Rectangle( r.x + r.width / 3, r.y, r.width / 3, r.height / 2);
-			final Rectangle rightRect = new Rectangle( r.x + 2 * r.width / 3, r.y, r.width / 3, r.height / 2);
-			final Rectangle contentRect = new Rectangle( r.x, r.y + r.height / 2, r.width, r.height / 2);
+			final Rectangle leftRect = new Rectangle( r.x, r.y, r.width / 3, r.height / 3);
+			final Rectangle centerRect = new Rectangle( r.x + r.width / 3, r.y, r.width / 3, r.height / 3);
+			final Rectangle rightRect = new Rectangle( r.x + 2 * r.width / 3, r.y, r.width / 3, r.height / 3);
+			final Rectangle contentRect = new Rectangle( r.x, r.y + r.height / 3, r.width, 2 * r.height / 3);
 
 			g.setBackgroundColor(ColorConstants.gray);
 			g.setXORMode(true);
@@ -58,19 +58,19 @@ public class ViewFormLayoutFeedback extends RectangleFigure {
 		g.setForegroundColor(ColorConstants.green);
 		// Draw outlines around each of the drop candidate areas
 		g.drawRectangle(r.x, r.y, r.width - 1, r.height - 1);
-		g.drawLine(r.x, r.y + r.height / 2, r.x + r.width - 1, r.y + r.height / 2);
-		g.drawLine(r.x + r.width / 3 - 1, r.y, r.x + r.width / 3 - 1, r.y + r.height / 2);
-		g.drawLine(r.x + 2 * r.width / 3 - 1, r.y, r.x + 2 * r.width / 3 - 1, r.y + r.height / 2);
+		g.drawLine(r.x, r.y + r.height / 3, r.x + r.width - 1, r.y + r.height / 3);
+		g.drawLine(r.x + r.width / 3 - 1, r.y, r.x + r.width / 3 - 1, r.y + r.height / 3);
+		g.drawLine(r.x + 2 * r.width / 3 - 1, r.y, r.x + 2 * r.width / 3 - 1, r.y + r.height / 3);
 	}
 	
 	public String getCurrentConstraint(Point p) {
 		if (p == null)
 			return null;
 		Rectangle r = getBounds().getCopy();
-		Rectangle leftRect = new Rectangle( r.x, r.y, r.width / 3, r.height / 2);
-		Rectangle centerRect = new Rectangle(r.x + r.width / 3, r.y, r.width / 3, r.height / 2);
-		Rectangle rightRect = new Rectangle( r.x + 2 * r.width / 3, r.y, r.width / 3, r.height / 2);
-		Rectangle contentRect = new Rectangle( r.x, r.y + r.height / 2, r.width, r.height / 2);
+		Rectangle leftRect = new Rectangle( r.x, r.y, r.width / 3, r.height / 3);
+		Rectangle centerRect = new Rectangle(r.x + r.width / 3, r.y, r.width / 3, r.height / 3);
+		Rectangle rightRect = new Rectangle( r.x + 2 * r.width / 3, r.y, r.width / 3, r.height / 3);
+		Rectangle contentRect = new Rectangle( r.x, r.y + r.height / 3, r.width, 2 * r.height / 3);
 
 		if (leftRect.contains(p))
 			return TOP_LEFT_CONTROL;
@@ -87,10 +87,10 @@ public class ViewFormLayoutFeedback extends RectangleFigure {
 		if (p == null)
 			return null;
 		Rectangle r = getBounds().getCopy();
-		Rectangle leftRect = new Rectangle( r.x, r.y, r.width / 3, r.height / 2);
-		Rectangle centerRect = new Rectangle(r.x + r.width / 3, r.y, r.width / 3, r.height / 2);
-		Rectangle rightRect = new Rectangle( r.x + 2 * r.width / 3, r.y, r.width / 3, r.height / 2);
-		Rectangle contentRect = new Rectangle( r.x, r.y + r.height / 2, r.width, r.height / 2);
+		Rectangle leftRect = new Rectangle( r.x, r.y, r.width / 3, r.height / 3);
+		Rectangle centerRect = new Rectangle(r.x + r.width / 3, r.y, r.width / 3, r.height / 3);
+		Rectangle rightRect = new Rectangle( r.x + 2 * r.width / 3, r.y, r.width / 3, r.height / 3);
+		Rectangle contentRect = new Rectangle( r.x, r.y + r.height / 3, r.width, 2 * r.height / 3);
 		
 		if (leftRect.contains(p))
 			return leftRect;
