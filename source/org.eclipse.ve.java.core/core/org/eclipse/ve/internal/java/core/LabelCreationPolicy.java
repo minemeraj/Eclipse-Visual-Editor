@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 
 /*
- * $RCSfile: LabelCreationPolicy.java,v $ $Revision: 1.5 $ $Date: 2005-06-20 23:54:34 $
+ * $RCSfile: LabelCreationPolicy.java,v $ $Revision: 1.6 $ $Date: 2005-06-21 22:53:48 $
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -74,7 +74,11 @@ public class LabelCreationPolicy implements CreationPolicy, IExecutableExtension
 					if (existingLabelProxy == null || ((IStringBeanProxy) existingLabelProxy).stringValue().trim().equals("")) { //$NON-NLS-1$
 						// Thew new label will be "Label". This is held externally
 						// The key to use is LabelPolicy.text.xxx where xxx is a piece of inializationData
-						String labelString = JavaMessages.getString("LabelPolicy.text." + fLabelKey); //$NON-NLS-1$
+						String labelString = ""; //$NON-NLS-1$
+						if("Label".equals(fLabelKey)) //$NON-NLS-1$
+							labelString = JavaMessages.LabelPolicy_text_Label;
+						else if("JLabel".equals(fLabelKey)) //$NON-NLS-1$
+							labelString = JavaMessages.LabelPolicy_text_JLabel;
 						EObject refNewObject = (EObject) newObject;
 						ResourceSet resourceSet = refNewObject.eResource().getResourceSet();
 						IJavaInstance newLabel = BeanUtilities.createJavaObject("java.lang.String", resourceSet, "\"" + labelString + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

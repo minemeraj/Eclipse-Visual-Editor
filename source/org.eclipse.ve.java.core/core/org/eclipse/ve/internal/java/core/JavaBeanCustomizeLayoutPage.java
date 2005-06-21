@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanCustomizeLayoutPage.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-21 22:53:48 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -41,7 +41,7 @@ public abstract class JavaBeanCustomizeLayoutPage extends CustomizeLayoutPage {
 			if (editparts.size() == 0) {
 				return null;
 			} else if (editparts.size() > 1) {
-				return JavaMessages.getString("JavaBeanCustomizeLayoutPage.multipleSelection"); //$NON-NLS-1$
+				return JavaMessages.JavaBeanCustomizeLayoutPage_multipleSelection; 
 			} else {
 				EditPart editPart = (EditPart)editparts.get(0);
 				if (editPart.getModel() instanceof IJavaObjectInstance) {

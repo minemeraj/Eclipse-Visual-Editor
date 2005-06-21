@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.14 $  $Date: 2005-06-16 17:46:06 $ 
+ *  $Revision: 1.15 $  $Date: 2005-06-21 22:53:48 $ 
  */
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class CustomizeAction extends SelectionAction {
 	public CustomizeAction(IWorkbenchPart anEditorPart) {
 		super(anEditorPart);
 		setId(ACTION_ID);
-		setText(JavaMessages.getString("Action.Customize.Text")); //$NON-NLS-1$
+		setText(JavaMessages.Action_Customize_Text); 
 	}
 	/**
 	 * @see org.eclipse.gef.ui.actions.EditorPartAction#calculateEnabled()

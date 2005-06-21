@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.15 $  $Date: 2005-06-09 22:14:12 $ 
+ *  $Revision: 1.16 $  $Date: 2005-06-21 22:53:48 $ 
  */
 package org.eclipse.ve.internal.java.core;
  
@@ -84,7 +84,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 			// can simply return the thisType we have already stored within us.
 			if ("getClass".equals(node.getName()) && (node.getReceiver() == null || node.getReceiver() instanceof PTThisLiteral)) { //$NON-NLS-1$
 				if (thisType == null)
-					throw new IllegalArgumentException(JavaMessages.getString("BasicAllocationProcesser.ThisTypeNotFoundOrInvalid_EXC_")); //$NON-NLS-1$
+					throw new IllegalArgumentException(JavaMessages.BasicAllocationProcesser_ThisTypeNotFoundOrInvalid_EXC_); 
 				try {
 					getExpression().createProxyExpression(getNextExpression(), thisType);
 				} catch (IllegalStateException e) {
@@ -116,7 +116,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		else if (allocClass == InstantiationPackage.eINSTANCE.getImplicitAllocation())
 			return allocate((ImplicitAllocation) allocation);
 		else
-			throw new AllocationException(new IllegalArgumentException(MessageFormat.format(JavaMessages.getString("BasicAllocationProcesser.InvalidAllocationClass_EXC_"), new Object[]{allocClass.toString()}))); //$NON-NLS-1$
+			throw new AllocationException(new IllegalArgumentException(MessageFormat.format(JavaMessages.BasicAllocationProcesser_InvalidAllocationClass_EXC_, new Object[]{allocClass.toString()}))); 
 	}
 	
 	/**
@@ -167,7 +167,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		IProxyBeanType targetClass = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, qualifiedClassName);
 		if (targetClass == null || (targetClass.isBeanProxy() && ((IBeanTypeProxy) targetClass).getInitializationError() != null)) {
 			// The target class is invalid.
-			Throwable exc = new ExceptionInInitializerError(targetClass != null ? ((IBeanTypeProxy) targetClass).getInitializationError() : MessageFormat.format(JavaMessages.getString("Proxy_Class_has_Errors_ERROR_"), new Object[] {JavaMessages.getString("BasicAllocationProcesser.unknown_ERROR_")})); //$NON-NLS-1$ //$NON-NLS-2$
+			Throwable exc = new ExceptionInInitializerError(targetClass != null ? ((IBeanTypeProxy) targetClass).getInitializationError() : MessageFormat.format(JavaMessages.Proxy_Class_has_Errors_ERROR_, new Object[] {JavaMessages.BasicAllocationProcesser_unknown_ERROR_})); 
 			if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
 				JavaVEPlugin.log("Could not instantiate " + (targetClass != null ? targetClass.getTypeName() : "unknown") + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				JavaVEPlugin.log(exc, Level.WARNING);
@@ -272,7 +272,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		throws AllocationException {
 		if (targetClass == null || targetClass.getInitializationError() != null) {
 			// The target class is invalid.
-			Throwable exc = new ExceptionInInitializerError(targetClass != null ? targetClass.getInitializationError() : MessageFormat.format(JavaMessages.getString("Proxy_Class_has_Errors_ERROR_"), new Object[] {JavaMessages.getString("BasicAllocationProcesser.unknown_ERROR_")})); //$NON-NLS-1$ //$NON-NLS-2$
+			Throwable exc = new ExceptionInInitializerError(targetClass != null ? targetClass.getInitializationError() : MessageFormat.format(JavaMessages.Proxy_Class_has_Errors_ERROR_, new Object[] {JavaMessages.BasicAllocationProcesser_unknown_ERROR_})); 
 			if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
 				JavaVEPlugin.log("Could not instantiate " + (targetClass != null ? targetClass.getTypeName() : "unknown") + " with initialization string=" + initializationString, Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				JavaVEPlugin.log(exc, Level.WARNING);
@@ -345,8 +345,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 			else if (allocClass == InstantiationPackage.eINSTANCE.getImplicitAllocation())
 				return allocate((ImplicitAllocation) allocation, expression);
 			else
-				throw new AllocationException(new IllegalArgumentException(MessageFormat.format(JavaMessages
-						.getString("BasicAllocationProcesser.InvalidAllocationClass_EXC_"), new Object[] { allocClass.toString()}))); //$NON-NLS-1$
+				throw new AllocationException(new IllegalArgumentException(MessageFormat.format(JavaMessages.BasicAllocationProcesser_InvalidAllocationClass_EXC_, new Object[] { allocClass.toString()}))); //$NON-NLS-1$
 		} finally {
 			expression.endMark(mark);
 		}

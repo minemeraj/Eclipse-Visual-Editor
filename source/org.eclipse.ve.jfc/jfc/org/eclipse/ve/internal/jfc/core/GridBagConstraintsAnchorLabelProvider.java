@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagConstraintsAnchorLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-21 22:53:45 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -27,8 +27,8 @@ import org.eclipse.jem.internal.proxy.core.*;
  */
 public class GridBagConstraintsAnchorLabelProvider extends LabelProvider implements INeedData {
 	public static String[] ANCHOR_VALUES = new String[] {
-		JavaMessages.getString("CENTER"), JavaMessages.getString("NORTH"), JavaMessages.getString("NORTHEAST"), JavaMessages.getString("EAST"),JavaMessages.getString("SOUTHEAST"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-		JavaMessages.getString("SOUTH"),JavaMessages.getString("SOUTHWEST"),JavaMessages.getString("WEST"),JavaMessages.getString("NORTHWEST") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		JavaMessages.CENTER, JavaMessages.NORTH, JavaMessages.NORTHEAST, JavaMessages.EAST,JavaMessages.SOUTHEAST, 
+		JavaMessages.SOUTH,JavaMessages.SOUTHWEST,JavaMessages.WEST,JavaMessages.NORTHWEST
 	};
 	
 	protected EditDomain editDomain;
@@ -38,25 +38,25 @@ public String getText(Object element){
 	int anchorValue = anchorValueProxy.intValue();
 	switch (anchorValue) {
 		case GridBagConstraint.CENTER: 
-			return JavaMessages.getString("CENTER"); //$NON-NLS-1$
+			return JavaMessages.CENTER; 
 		case GridBagConstraint.NORTH: 
-			return JavaMessages.getString("NORTH"); //$NON-NLS-1$
+			return JavaMessages.NORTH; 
 		case GridBagConstraint.NORTHEAST: 
-			return JavaMessages.getString("NORTHEAST"); //$NON-NLS-1$
+			return JavaMessages.NORTHEAST; 
 		case GridBagConstraint.EAST: 
-			return JavaMessages.getString("EAST"); //$NON-NLS-1$
+			return JavaMessages.EAST; 
 		case GridBagConstraint.SOUTHEAST: 
-			return JavaMessages.getString("SOUTHEAST"); //$NON-NLS-1$
+			return JavaMessages.SOUTHEAST; 
 		case GridBagConstraint.SOUTH: 
-			return JavaMessages.getString("SOUTH"); //$NON-NLS-1$
+			return JavaMessages.SOUTH; 
 		case GridBagConstraint.SOUTHWEST: 
-			return JavaMessages.getString("SOUTHWEST"); //$NON-NLS-1$
+			return JavaMessages.SOUTHWEST; 
 		case GridBagConstraint.WEST: 
-			return JavaMessages.getString("WEST"); //$NON-NLS-1$
+			return JavaMessages.WEST; 
 		case GridBagConstraint.NORTHWEST: 
-			return JavaMessages.getString("NORTHWEST"); //$NON-NLS-1$
+			return JavaMessages.NORTHWEST; 
 		default:
-			return JavaMessages.getString("CENTER"); //$NON-NLS-1$
+			return JavaMessages.CENTER; 
 	}
 }
 	/**

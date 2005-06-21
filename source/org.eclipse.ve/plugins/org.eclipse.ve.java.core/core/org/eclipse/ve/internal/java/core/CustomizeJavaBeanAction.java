@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.16 $  $Date: 2005-05-25 14:03:40 $ 
+ *  $Revision: 1.17 $  $Date: 2005-06-21 22:53:48 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -64,8 +64,8 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 		super(anEditorPart);
 		fEditDomain = anEditDomain;
 		setId(ACTION_ID);
-		setText(JavaMessages.getString("Action.CustomizeJavaBean.Text")); //$NON-NLS-1$
-		setToolTipText(JavaMessages.getString("Action.CustomizeJavaBean.ToolTipText")); //$NON-NLS-1$
+		setText(JavaMessages.Action_CustomizeJavaBean_Text); 
+		setToolTipText(JavaMessages.Action_CustomizeJavaBean_ToolTipText); 
 		setImageDescriptor(IMG_CUSTOMIZE_BEAN);
 		setHoverImageDescriptor(getImageDescriptor());
 		setDisabledImageDescriptor(IMG_CUSTOMIZE_BEAN_DISABLED);

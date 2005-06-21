@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagConstraintsJavaClassLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-21 22:53:45 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -25,7 +25,7 @@ import org.eclipse.ve.internal.java.core.JavaMessages;
  * Label provider for displaying GridBagConstaints
  */
 public class GridBagConstraintsJavaClassLabelProvider extends LabelProvider {
-	private static final String NULL_GRIDBAGCONSTRAINTS_STRING = JavaMessages.getString("Labelprovider.X")+":,"+JavaMessages.getString("Labelprovider.Y")+":,"+JavaMessages.getString("Labelprovider.Width")+":,"+JavaMessages.getString("Labelprovider.Height")+":";	 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+	private static final String NULL_GRIDBAGCONSTRAINTS_STRING = JavaMessages.Labelprovider_X+":,"+JavaMessages.Labelprovider_Y+":,"+JavaMessages.Labelprovider_Width+":,"+JavaMessages.Labelprovider_Height+":";	 
 	
 public String getText(Object element){	
 	if (element instanceof IJavaInstance)
@@ -43,16 +43,16 @@ public static String toString(IJavaInstance anInsets){
 	IBeanProxy beanProxy = BeanProxyUtilities.getBeanProxy(anInsets);
 	if (beanProxy != null) {
 		StringBuffer sb = new StringBuffer(50);
-		sb.append(JavaMessages.getString("Labelprovider.X")+":"); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append(JavaMessages.Labelprovider_X+":"); 
 		IIntegerBeanProxy intProxy = (IIntegerBeanProxy)BeanProxyUtilities.getBeanField("gridx", beanProxy); //$NON-NLS-1$
 		sb.append(intProxy.intValue());
-		sb.append(", "+JavaMessages.getString("Labelprovider.Y")+":"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		sb.append(", "+JavaMessages.Labelprovider_Y+":"); 
 		intProxy = (IIntegerBeanProxy)BeanProxyUtilities.getBeanField("gridy", beanProxy); //$NON-NLS-1$
 		sb.append(intProxy.intValue());
-		sb.append(", "+JavaMessages.getString("Labelprovider.Width")+":"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		sb.append(", "+JavaMessages.Labelprovider_Width+":"); 
 		intProxy = (IIntegerBeanProxy)BeanProxyUtilities.getBeanField("gridwidth", beanProxy); //$NON-NLS-1$
 		sb.append(intProxy.intValue());
-		sb.append(", "+JavaMessages.getString("Labelprovider.Height")+":"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		sb.append(", "+JavaMessages.Labelprovider_Height+":"); 
 		intProxy = (IIntegerBeanProxy)BeanProxyUtilities.getBeanField("gridheight", beanProxy); //$NON-NLS-1$
 		sb.append(intProxy.intValue());
 		return sb.toString();

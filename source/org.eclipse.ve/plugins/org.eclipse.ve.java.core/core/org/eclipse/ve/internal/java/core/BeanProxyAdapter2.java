@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter2.java,v $
- *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:38 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-21 22:53:48 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -52,7 +52,7 @@ import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationExceptio
  */
 public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implements IBeanProxyHost2, IInternalBeanProxyHost2 {
 
-	private static final MessageError NO_BEAN_DUE_TO_PREVIOUS_ERROR = new IErrorHolder.MessageError(JavaMessages.getString("BeanProxyAdapter2.NO_BEAN_DUE_TO_PREVIOUS_ERROR_"), //$NON-NLS-1$
+	private static final MessageError NO_BEAN_DUE_TO_PREVIOUS_ERROR = new IErrorHolder.MessageError(JavaMessages.BeanProxyAdapter2_NO_BEAN_DUE_TO_PREVIOUS_ERROR_, 
 										IErrorHolder.ERROR_INFO);	
 	// The beanproxy being wrappered. It should be accessed only through accessors, even subclasses. During
 	// instantiation it will be a ExpressionProxy.
@@ -798,7 +798,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		if (isBeanProxyInstantiated()) {
 			// Need to use expression to apply the setting now.
 			if (expression == null)
-				throw new IllegalArgumentException(JavaMessages.getString("BeanProxyAdapter2.OverrideProperty.ExpressionMustNotBeNull_EXC_")); //$NON-NLS-1$
+				throw new IllegalArgumentException(JavaMessages.BeanProxyAdapter2_OverrideProperty_ExpressionMustNotBeNull_EXC_); 
 		
 			if (applyOverrideSetting(expression, feature, overrideBean)) { 
 				overrideSettings.put(feature, Boolean.FALSE);
@@ -835,7 +835,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		
 		if (overridden && isBeanProxyInstantiated()) {
 			if (expression == null)
-				throw new IllegalArgumentException(JavaMessages.getString("BeanProxyAdapter2.RemoveOverrideProperty.ExpressionMustNotBeNull_EXC_")); //$NON-NLS-1$
+				throw new IllegalArgumentException(JavaMessages.BeanProxyAdapter2_RemoveOverrideProperty_ExpressionMustNotBeNull_EXC_); 
 			IProxy oldValue = null;
 			if (origSettingProxies != null)
 				oldValue = (IProxy) origSettingProxies.get(feature);
@@ -1600,7 +1600,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		if (beanProxy == null) {
 			// See if we already logged instantiation errors. If we haven't then log this.
 			if (!hasInstantiationErrors())
-				processInstantiationError(new ExceptionError(new IllegalStateException(JavaMessages.getString("BeanProxyAdapter.NoBeanInstantiatedForSomeReason_EXC_")), ERROR_SEVERE)); //$NON-NLS-1$
+				processInstantiationError(new ExceptionError(new IllegalStateException(JavaMessages.BeanProxyAdapter_NoBeanInstantiatedForSomeReason_EXC_), ERROR_SEVERE)); 
 		} else if (!beanProxy.getTypeProxy().isPrimitive()) {
 			// We are trying to set a non-primitive and non-null proxy. Primitives aren't valid here because
 			// this proxy adapter is only valid for non-primitives.
@@ -1647,7 +1647,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 */
 	public void reinstantiateChild(IBeanProxyHost aChildProxyHost) {
 		// TODO Get rid of once we've merged back to IBeanProxyHost
-		throw new IllegalStateException(JavaMessages.getString("BeanProxyAdapter2.ShouldNotBeCalled_EXC_")); //$NON-NLS-1$
+		throw new IllegalStateException(JavaMessages.BeanProxyAdapter2_ShouldNotBeCalled_EXC_); 
 	}
 
 	/**

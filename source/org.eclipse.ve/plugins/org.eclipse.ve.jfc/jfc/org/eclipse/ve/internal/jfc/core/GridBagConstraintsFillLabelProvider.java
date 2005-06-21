@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagConstraintsFillLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-21 22:53:45 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -27,7 +27,7 @@ import org.eclipse.jem.internal.proxy.core.*;
  */
 public class GridBagConstraintsFillLabelProvider extends LabelProvider implements INeedData {
 	public static String[] FILL_VALUES = new String[] {
-		JavaMessages.getString("NONE"),JavaMessages.getString("HORIZONTAL"),JavaMessages.getString("VERTICAL"),JavaMessages.getString("BOTH") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		JavaMessages.NONE,JavaMessages.HORIZONTAL,JavaMessages.VERTICAL,JavaMessages.BOTH
 	};
 	
 	protected EditDomain editDomain;
@@ -37,15 +37,15 @@ public String getText(Object element){
 	int fillValue = fillValueProxy.intValue();
 	switch (fillValue) {
 		case GridBagConstraint.NONE: 
-			return JavaMessages.getString("NONE"); //$NON-NLS-1$
+			return JavaMessages.NONE; 
 		case GridBagConstraint.HORIZONTAL: 
-			return JavaMessages.getString("HORIZONTAL"); //$NON-NLS-1$
+			return JavaMessages.HORIZONTAL; 
 		case GridBagConstraint.VERTICAL: 
-			return JavaMessages.getString("VERTICAL"); //$NON-NLS-1$
+			return JavaMessages.VERTICAL; 
 		case GridBagConstraint.BOTH: 
-			return JavaMessages.getString("BOTH"); //$NON-NLS-1$
+			return JavaMessages.BOTH; 
 		default:
-			return JavaMessages.getString("NONE"); //$NON-NLS-1$
+			return JavaMessages.NONE; 
 	}
 }
 	/**

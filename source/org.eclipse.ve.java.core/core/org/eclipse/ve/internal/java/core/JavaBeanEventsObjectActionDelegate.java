@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanEventsObjectActionDelegate.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-23 23:19:39 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-21 22:53:48 $ 
  */
 
 import java.text.Collator;
@@ -144,7 +144,7 @@ public class JavaBeanEventsObjectActionDelegate implements IObjectActionDelegate
 				final IJavaObjectInstance javaBean = (IJavaObjectInstance)editPart.getModel();
 				// The first item in the menu allows a wizard dialog to be used to add events
 				MenuItem openDialogItem = new MenuItem(menu,SWT.PUSH);
-				openDialogItem.setText(JavaMessages.getString("JavaBeanEventsObjectActionDelegate.MenuItem.AddEvents.Text")); //$NON-NLS-1$
+				openDialogItem.setText(JavaMessages.JavaBeanEventsObjectActionDelegate_MenuItem_AddEvents_Text); 
 				openDialogItem.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(SelectionEvent e) {
 						// TODO Needs to run through commands and also we need to have general purpose no commands so disable menu items
