@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: AnnotationPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-22 16:06:52 $ 
  */
 
 import java.util.*;
@@ -248,17 +248,20 @@ public class AnnotationPolicy
 	 * Return the IPropertyDescriptors that are applicable to the annotation on the given model object.
 	 */
 	public static List getAnnotationPropertyDescriptors(Object modelObject, EditDomain domain) {
-		Annotation annotation = domain.getAnnotationLinkagePolicy().getAnnotation(modelObject);
-		if (annotation != null) {
-			ArrayList descs = new ArrayList(2);
-			Iterator itr = annotation.getKeyedValues().iterator();
-			while (itr.hasNext()) {
-				BasicEMap.Entry kv = (BasicEMap.Entry) itr.next();
-				IPropertyDescriptor desc = domain.getKeyedPropertyDescriptor(kv.getKey());
-				if (desc != null)
-					descs.add(desc);
+		AnnotationLinkagePolicy annotationLinkagePolicy = domain.getAnnotationLinkagePolicy();
+		if (annotationLinkagePolicy != null) {
+			Annotation annotation = annotationLinkagePolicy.getAnnotation(modelObject);
+			if (annotation != null) {
+				ArrayList descs = new ArrayList(2);
+				Iterator itr = annotation.getKeyedValues().iterator();
+				while (itr.hasNext()) {
+					BasicEMap.Entry kv = (BasicEMap.Entry) itr.next();
+					IPropertyDescriptor desc = domain.getKeyedPropertyDescriptor(kv.getKey());
+					if (desc != null)
+						descs.add(desc);
+				}
+				return descs;
 			}
-			return descs;
 		}
 		return Collections.EMPTY_LIST;
 	}
