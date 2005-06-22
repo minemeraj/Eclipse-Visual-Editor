@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.19 $  $Date: 2005-06-21 22:12:53 $ 
+ *  $Revision: 1.20 $  $Date: 2005-06-22 14:36:02 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -69,7 +69,7 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	private static final String TOOL_TIP = ResourceNavigatorMessages.getString("CollapseAllAction.toolTip"); //$NON-NLS-1$
 	
 	private class ShowOverviewAction extends ResourceAction {
-		private static final String RESOURCE_PREFIX = "ShowOverviewAction."; //$NON-NLS-1$
+		private static final String RESOURCE_PREFIX = "ShowOverviewAction_"; //$NON-NLS-1$
 
 		public ShowOverviewAction() {
 			super(JavaVisualEditorPart.RESOURCE_BUNDLE, RESOURCE_PREFIX, IAction.AS_CHECK_BOX);

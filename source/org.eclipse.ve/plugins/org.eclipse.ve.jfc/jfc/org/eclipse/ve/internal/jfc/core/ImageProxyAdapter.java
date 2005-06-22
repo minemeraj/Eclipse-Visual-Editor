@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-02 19:12:34 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-22 14:36:44 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -87,7 +87,7 @@ public class ImageProxyAdapter extends BeanProxyAdapter2 {
 					expression.createBlockBegin();
 					expression.createThrow();
 					expression.createClassInstanceCreation(ForExpression.THROW_OPERAND, expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "java.lang.NullPointerException"), 1);
-					expression.createStringLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, JFCMessages.getString("ImageProxyAdapter.imageurlnotfound"));
+					expression.createStringLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, JFCMessages.ImageProxyAdapter_imageurlnotfound);
 					expression.createBlockEnd();
 					throw new ProcessingException(null);	// This just stops the walking of the rest of the expression.
 				} catch (AllocationException e) {
