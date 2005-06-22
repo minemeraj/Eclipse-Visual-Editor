@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: AbstractPropertySheetEntry.java,v $
- *  $Revision: 1.10 $  $Date: 2005-06-22 15:21:41 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-22 15:28:34 $ 
  */
 
 
@@ -427,7 +427,7 @@ public String getDescription() {
  */
 public String getDisplayName() {
 	if (entryStale)
-		return PropertysheetMessages.getString("AbstractPropertySheetEntry.DisplayName.StaleEntry"); //$NON-NLS-1$
+		return PropertysheetMessages.AbstractPropertySheetEntry_DisplayName_StaleEntry; 
 	
 	try {
 		String name = fDescriptors[0].getDisplayName();
@@ -437,13 +437,13 @@ public String getDisplayName() {
 	} catch (RuntimeException e) {
 		// Don't want to let this go on up. Causes problems later on.
 		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e)); //$NON-NLS-1$
-		return PropertysheetMessages.getString("AbstractPropertySheetEntry.DisplayName.Error"); //$NON-NLS-1$
+		return PropertysheetMessages.AbstractPropertySheetEntry_DisplayName_Error; 
 	}	
 }
 
 public String getSortDisplayName() {
 	if (entryStale)
-		return PropertysheetMessages.getString("AbstractPropertySheetEntry.DisplayName.StaleEntry"); //$NON-NLS-1$
+		return PropertysheetMessages.AbstractPropertySheetEntry_DisplayName_StaleEntry; 
 	
 	try {
 		String name = fDescriptors[0].getDisplayName();
@@ -451,7 +451,7 @@ public String getSortDisplayName() {
 	} catch (RuntimeException e) {
 		// Don't want to let this go on up. Causes problems later on.
 		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e)); //$NON-NLS-1$
-		return PropertysheetMessages.getString("AbstractPropertySheetEntry.DisplayName.Error"); //$NON-NLS-1$
+		return PropertysheetMessages.AbstractPropertySheetEntry_DisplayName_Error; 
 	}	
 }
 
@@ -715,11 +715,11 @@ public Object[] getValues() {
  */
 public String getValueAsString() {
 	if (entryStale)
-		return PropertysheetMessages.getString("AbstractPropertySheetEntry.ValueAsString.StaleEntry"); //$NON-NLS-1$
+		return PropertysheetMessages.AbstractPropertySheetEntry_ValueAsString_StaleEntry; 
 		
 	try {
 		if (editValue == null)
-			return fShowNulls ? PropertysheetMessages.getString("display_null") : "";//$NON-NLS-1$
+			return fShowNulls ? PropertysheetMessages.display_null : "";
 		
 		ILabelProvider provider = fDescriptors[0].getLabelProvider();
 		if (provider == null)
@@ -739,7 +739,7 @@ public String getValueAsString() {
 	} catch (RuntimeException e) {
 		// Don't want to let this go on up. Causes problems later on.
 		PSheetPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, PSheetPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", e)); //$NON-NLS-1$
-		return PropertysheetMessages.getString("AbstractPropertySheetEntry.ValueAsString.Error"); //$NON-NLS-1$
+		return PropertysheetMessages.AbstractPropertySheetEntry_ValueAsString_Error; 
 	}
 }
 

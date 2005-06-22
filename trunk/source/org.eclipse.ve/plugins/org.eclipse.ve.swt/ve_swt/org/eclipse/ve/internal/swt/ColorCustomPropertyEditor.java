@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ColorCustomPropertyEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-22 15:34:15 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -41,8 +41,8 @@ public class ColorCustomPropertyEditor extends Composite {
 	
 	private static final String COLOR_PREFIX = "org.eclipse.swt.SWT.COLOR_"; //$NON-NLS-1$
 	
-	private static final String[] basicColorNames = { ColorPropertyEditorMessages.getString("black"), ColorPropertyEditorMessages.getString("blue"), ColorPropertyEditorMessages.getString("cyan"), ColorPropertyEditorMessages.getString("gray"), ColorPropertyEditorMessages.getString("green"), ColorPropertyEditorMessages.getString("magenta"), ColorPropertyEditorMessages.getString("red"), ColorPropertyEditorMessages.getString("white"), ColorPropertyEditorMessages.getString("yellow"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
-		ColorPropertyEditorMessages.getString("darkBlue"), ColorPropertyEditorMessages.getString("darkCyan"), ColorPropertyEditorMessages.getString("darkGray"), ColorPropertyEditorMessages.getString("darkGreen"), ColorPropertyEditorMessages.getString("darkMagenta"), ColorPropertyEditorMessages.getString("darkRed"), ColorPropertyEditorMessages.getString("darkYellow") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+	private static final String[] basicColorNames = { ColorPropertyEditorMessages.black, ColorPropertyEditorMessages.blue, ColorPropertyEditorMessages.cyan, ColorPropertyEditorMessages.gray, ColorPropertyEditorMessages.green, ColorPropertyEditorMessages.magenta, ColorPropertyEditorMessages.red, ColorPropertyEditorMessages.white, ColorPropertyEditorMessages.yellow, 
+		ColorPropertyEditorMessages.darkBlue, ColorPropertyEditorMessages.darkCyan, ColorPropertyEditorMessages.darkGray, ColorPropertyEditorMessages.darkGreen, ColorPropertyEditorMessages.darkMagenta, ColorPropertyEditorMessages.darkRed, ColorPropertyEditorMessages.darkYellow }; 
 	
 	private static final String[] basicColorConstants = { "BLACK", "BLUE", "CYAN", "GRAY", "GREEN", "MAGENTA", "RED", "WHITE", "YELLOW", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 		"DARK_BLUE", "DARK_CYAN", "DARK_GRAY", "DARK_GREEN", "DARK_MAGENTA", "DARK_RED", "DARK_YELLOW" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
@@ -55,12 +55,12 @@ public class ColorCustomPropertyEditor extends Composite {
 	private static Color[] basicColorValues = new Color[basicColorConstantValues.length];
 	private Image basicColorImages[] = new Image[basicColorValues.length];
 		
-	private static final String[] systemColorNames = { ColorPropertyEditorMessages.getString("infoBackground"), ColorPropertyEditorMessages.getString("infoForeground"),  //$NON-NLS-1$ //$NON-NLS-2$
-		ColorPropertyEditorMessages.getString("listBackground"), ColorPropertyEditorMessages.getString("listForeground"), ColorPropertyEditorMessages.getString("listSeletion"), ColorPropertyEditorMessages.getString("listSelectionText"),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		ColorPropertyEditorMessages.getString("titleBackground"), ColorPropertyEditorMessages.getString("titleBackgroundGradient"), ColorPropertyEditorMessages.getString("titleForeground"), ColorPropertyEditorMessages.getString("titleInactiveBackground"), ColorPropertyEditorMessages.getString("titleInactiveBackgroundGradient"),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-		ColorPropertyEditorMessages.getString("titleInactiveForeground"), //$NON-NLS-1$
-		ColorPropertyEditorMessages.getString("widgetBackground"), ColorPropertyEditorMessages.getString("widgetBorder"), ColorPropertyEditorMessages.getString("widgetDarkShadow"), ColorPropertyEditorMessages.getString("widgetForeground"), ColorPropertyEditorMessages.getString("widgetHighlightShadow"), ColorPropertyEditorMessages.getString("widgetLightShadow"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-		ColorPropertyEditorMessages.getString("widgetNormalShadow") }; //$NON-NLS-1$
+	private static final String[] systemColorNames = { ColorPropertyEditorMessages.infoBackground, ColorPropertyEditorMessages.infoForeground,  
+		ColorPropertyEditorMessages.listBackground, ColorPropertyEditorMessages.listForeground, ColorPropertyEditorMessages.listSeletion, ColorPropertyEditorMessages.listSelectionText,  
+		ColorPropertyEditorMessages.titleBackground, ColorPropertyEditorMessages.titleBackgroundGradient, ColorPropertyEditorMessages.titleForeground, ColorPropertyEditorMessages.titleInactiveBackground, ColorPropertyEditorMessages.titleInactiveBackgroundGradient,  
+		ColorPropertyEditorMessages.titleInactiveForeground, 
+		ColorPropertyEditorMessages.widgetBackground, ColorPropertyEditorMessages.widgetBorder, ColorPropertyEditorMessages.widgetDarkShadow, ColorPropertyEditorMessages.widgetForeground, ColorPropertyEditorMessages.widgetHighlightShadow, ColorPropertyEditorMessages.widgetLightShadow, 
+		ColorPropertyEditorMessages.widgetNormalShadow }; 
 
 	private static final String[] systemColorConstants = { "INFO_BACKGROUND", "INFO_FOREGROUND",  //$NON-NLS-1$ //$NON-NLS-2$
 		"LIST_BACKGROUND", "LIST_FOREGROUND", "LIST_SELECTION", "LIST_SELECTION_TEXT",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -80,7 +80,7 @@ public class ColorCustomPropertyEditor extends Composite {
 	private Image systemColorImages[] = new Image[systemColorValues.length]; 
 
 	// JFace colors from JFacePreferences
-	private static final String[] jfaceColorNames = { ColorPropertyEditorMessages.getString("hyperlink"), ColorPropertyEditorMessages.getString("active_hyperlink"), ColorPropertyEditorMessages.getString("error")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+	private static final String[] jfaceColorNames = { ColorPropertyEditorMessages.hyperlink, ColorPropertyEditorMessages.active_hyperlink, ColorPropertyEditorMessages.error}; 
 	
 	private static final String[] jfaceColorConstantValues = {JFacePreferences.HYPERLINK_COLOR, JFacePreferences.ACTIVE_HYPERLINK_COLOR, JFacePreferences.ERROR_COLOR};
 	protected final static String[] jfaceColorInitStrings = { 
@@ -152,7 +152,7 @@ public class ColorCustomPropertyEditor extends Composite {
 	private static final int smRect = 5;
 	private static final int swatchWidth  = 50;
 	private static final int swatchHeight = 25;
-	private final String previewText = ColorPropertyEditorMessages.getString("previewText"); //$NON-NLS-1$
+	private final String previewText = ColorPropertyEditorMessages.previewText; 
 
 	private boolean lookupIsJFaceProject = true; // lookup JFace plugin only once
 	private boolean isJFaceProject = false;
@@ -271,15 +271,15 @@ public class ColorCustomPropertyEditor extends Composite {
 		tabGD.grabExcessHorizontalSpace = true;
 		tabGD.grabExcessVerticalSpace = true;
 		tabFolder.setLayoutData(tabGD);		
-		namedPage.setText(ColorPropertyEditorMessages.getString("namedTabTitle")); //$NON-NLS-1$
+		namedPage.setText(ColorPropertyEditorMessages.namedTabTitle); 
 		namedPage.setControl(namedValueComposite);
-		rgbPage.setText(ColorPropertyEditorMessages.getString("rgbTabTitle")); //$NON-NLS-1$
+		rgbPage.setText(ColorPropertyEditorMessages.rgbTabTitle); 
 		rgbPage.setControl(rgbComposite);
 		if (isJFaceProject()) {
 			createJfaceColorComposite();
 			TabItem tabItem1 = new TabItem(tabFolder, SWT.NONE);
 			tabItem1.setControl(jfaceColorComposite);
-			tabItem1.setText(ColorPropertyEditorMessages.getString("jfaceTabTitle")); //$NON-NLS-1$
+			tabItem1.setText(ColorPropertyEditorMessages.jfaceTabTitle); 
 		}
 	}
 	
@@ -294,7 +294,7 @@ public class ColorCustomPropertyEditor extends Composite {
 		initializeColorImages(namedValueComposite.getDisplay());
 		
 		basicGroup = new Group(namedValueComposite, SWT.NONE);
-		basicGroup.setText(ColorPropertyEditorMessages.getString("basicColorsGroupTitle")); //$NON-NLS-1$
+		basicGroup.setText(ColorPropertyEditorMessages.basicColorsGroupTitle); 
 		basicGroup.setLayout(new RowLayout());
 		
 		basicTable = new Table(basicGroup, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
@@ -341,7 +341,7 @@ public class ColorCustomPropertyEditor extends Composite {
 		});
 		
 		systemGroup = new Group(namedValueComposite, SWT.NONE);
-		systemGroup.setText(ColorPropertyEditorMessages.getString("SystemColorsGroupTitle")); //$NON-NLS-1$
+		systemGroup.setText(ColorPropertyEditorMessages.SystemColorsGroupTitle); 
 		systemGroup.setLayout(new RowLayout());
 		
 		systemTable = new Table(systemGroup, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
@@ -420,7 +420,7 @@ public class ColorCustomPropertyEditor extends Composite {
 		createRGBPanel();
 		
 		externalChooser = new Button(rgbComposite, SWT.PUSH);
-		externalChooser.setText(ColorPropertyEditorMessages.getString("advancedButton")); //$NON-NLS-1$
+		externalChooser.setText(ColorPropertyEditorMessages.advancedButton); 
 		GridData GD2 = new GridData();
 		GD2.grabExcessHorizontalSpace = true;
 		GD2.grabExcessVerticalSpace = true;
@@ -466,7 +466,7 @@ public class ColorCustomPropertyEditor extends Composite {
 		grid2.marginHeight = 5;
 		grid2.marginWidth = 5;
 		
-		redL.setText(ColorPropertyEditorMessages.getString("redSliderLabel")); //$NON-NLS-1$
+		redL.setText(ColorPropertyEditorMessages.redSliderLabel); 
 		
 		redScale.setMinimum(0);
 		redScale.setMaximum(255);
@@ -477,7 +477,7 @@ public class ColorCustomPropertyEditor extends Composite {
 		redSpinner.setMaximum(255);
 		redSpinner.setSelection(value.getRed());
 
-		greenL.setText(ColorPropertyEditorMessages.getString("greenSliderLabel")); //$NON-NLS-1$
+		greenL.setText(ColorPropertyEditorMessages.greenSliderLabel); 
 
 		greenScale.setMinimum(0);
 		greenScale.setMaximum(255);
@@ -488,7 +488,7 @@ public class ColorCustomPropertyEditor extends Composite {
 		greenSpinner.setMaximum(255);
 		greenSpinner.setSelection(value.getGreen());		
 
-		blueL.setText(ColorPropertyEditorMessages.getString("blueSliderLabel")); //$NON-NLS-1$
+		blueL.setText(ColorPropertyEditorMessages.blueSliderLabel); 
 		
 		blueScale.setMinimum(0);
 		blueScale.setMaximum(255);
@@ -647,7 +647,7 @@ public class ColorCustomPropertyEditor extends Composite {
 		preview.setLayoutData(previewGD);
 		preview.setLayout(new FillLayout()); 
 		previewGroup = new Group(preview, SWT.NONE);
-		previewGroup.setText(ColorPropertyEditorMessages.getString("previewGroupTitle")); //$NON-NLS-1$
+		previewGroup.setText(ColorPropertyEditorMessages.previewGroupTitle); 
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.wrap = false;
 		rowLayout.pack = true;

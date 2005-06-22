@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontCustomPropertyEditor.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-22 20:15:51 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-22 15:35:33 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -39,19 +39,19 @@ import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 public class FontCustomPropertyEditor extends Composite {
 
 	protected final static String[] styleNames = {
-			FontPropertyEditorMessages.getString("normalStyle"), //$NON-NLS-1$
-			FontPropertyEditorMessages.getString("boldStyle"), //$NON-NLS-1$
-			FontPropertyEditorMessages.getString("italicStyle"), //$NON-NLS-1$
-			FontPropertyEditorMessages.getString("boldItalicStyle")}; //$NON-NLS-1$
+			FontPropertyEditorMessages.normalStyle, 
+			FontPropertyEditorMessages.boldStyle, 
+			FontPropertyEditorMessages.italicStyle, 
+			FontPropertyEditorMessages.boldItalicStyle}; 
 	protected final static int[] styleValues = { SWT.NORMAL, SWT.BOLD, SWT.ITALIC, SWT.BOLD | SWT.ITALIC};
 	protected final static int[] sizeValues = { 8, 10, 12, 14, 18, 24, 36, 48, 72};
 
 	protected final static String[] jfaceFontNames = { 
-		FontPropertyEditorMessages.getString("jfaceBannerFontName"), //$NON-NLS-1$
-		FontPropertyEditorMessages.getString("jfaceDefaultFontName"), //$NON-NLS-1$
-		FontPropertyEditorMessages.getString("jfaceDialogFontName"), //$NON-NLS-1$
-		FontPropertyEditorMessages.getString("jfaceHeaderFontName"), //$NON-NLS-1$
-		FontPropertyEditorMessages.getString("jfaceTextFontName")}; //$NON-NLS-1$};
+		FontPropertyEditorMessages.jfaceBannerFontName, 
+		FontPropertyEditorMessages.jfaceDefaultFontName, 
+		FontPropertyEditorMessages.jfaceDialogFontName, 
+		FontPropertyEditorMessages.jfaceHeaderFontName, 
+		FontPropertyEditorMessages.jfaceTextFontName}; 
 	protected final static String[] jfaceNameConstants = { 
 		org.eclipse.jface.resource.JFaceResources.BANNER_FONT, 
 		org.eclipse.jface.resource.JFaceResources.DEFAULT_FONT, 
@@ -65,9 +65,9 @@ public class FontCustomPropertyEditor extends Composite {
 		"org.eclipse.jface.resource.JFaceResources.HEADER_FONT", //$NON-NLS-1$ 
 		"org.eclipse.jface.resource.JFaceResources.TEXT_FONT"}; //$NON-NLS-1$
 	protected final static String[] jfaceStyleNames = {
-			FontPropertyEditorMessages.getString("normalStyle"), //$NON-NLS-1$ 
-			FontPropertyEditorMessages.getString("boldStyle"), //$NON-NLS-1$
-			FontPropertyEditorMessages.getString("italicStyle")}; //$NON-NLS-1$
+			FontPropertyEditorMessages.normalStyle, 
+			FontPropertyEditorMessages.boldStyle, 
+			FontPropertyEditorMessages.italicStyle}; 
 	protected final static String[] jfaceStyleMethodNames = {"get", "getBold", "getItalic"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 	protected final static int JFACE_NORMAL = 0;	// index into jfaceStyleNames
 	protected final static int JFACE_BOLD = 1;		// index into jfaceStyleNames
@@ -157,7 +157,7 @@ public class FontCustomPropertyEditor extends Composite {
 		initializeLists();
 
 		previewText = new Text(this, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL);
-		previewText.setText(FontPropertyEditorMessages.getString("previewText")); //$NON-NLS-1$
+		previewText.setText(FontPropertyEditorMessages.previewText); 
 		GridData gd03 = new GridData();
 		initStringLabel = new Label(this, SWT.NONE);
 		gd03.horizontalAlignment = GridData.FILL;
@@ -515,13 +515,13 @@ public class FontCustomPropertyEditor extends Composite {
 		createComposite();
 		TabItem tabItem1 = new TabItem(tabFolder, SWT.NONE);
 		tabItem1.setControl(namedFontsTab);
-		tabItem1.setText(FontPropertyEditorMessages.getString("NamedFontsTab")); //$NON-NLS-1$
+		tabItem1.setText(FontPropertyEditorMessages.NamedFontsTab); 
 		// If this project has JFace jars in it's class path, add the JFace page.
 		if (isJFaceProject()) {
 			createComposite1();
 			TabItem tabItem2 = new TabItem(tabFolder, SWT.NONE);
 			tabItem2.setControl(jfaceFontsTab);
-			tabItem2.setText(FontPropertyEditorMessages.getString("JFaceFontsTab")); //$NON-NLS-1$
+			tabItem2.setText(FontPropertyEditorMessages.JFaceFontsTab); 
 			initializeJfaceLists();
 		}
 		gridData4.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -541,13 +541,13 @@ public class FontCustomPropertyEditor extends Composite {
 		namedFontsTab = new Composite(tabFolder, SWT.NONE);
 		namedFontsTab.setLayout(gridLayout1);
 		Label nameLabel = new Label(namedFontsTab, SWT.NONE);
-		nameLabel.setText(FontPropertyEditorMessages.getString("nameLabel")); //$NON-NLS-1$
+		nameLabel.setText(FontPropertyEditorMessages.nameLabel); 
 
 		Label styleLabel = new Label(namedFontsTab, SWT.NONE);
-		styleLabel.setText(FontPropertyEditorMessages.getString("styleLabel")); //$NON-NLS-1$
+		styleLabel.setText(FontPropertyEditorMessages.styleLabel); 
 		
 		Label sizeLabel = new Label(namedFontsTab, SWT.NONE);
-		sizeLabel.setText(FontPropertyEditorMessages.getString("sizeLabel")); //$NON-NLS-1$
+		sizeLabel.setText(FontPropertyEditorMessages.sizeLabel); 
 		
 		nameField = new Text(namedFontsTab, SWT.SINGLE | SWT.BORDER);
 		GridData gd01 = new GridData();
@@ -716,8 +716,8 @@ public class FontCustomPropertyEditor extends Composite {
 		jfaceStylesList.setLayoutData(gridData7);
 		jfaceFontsTab.setLayout(gridLayout11);
 		gridLayout11.numColumns = 2;
-		jfaceNameLabel.setText(FontPropertyEditorMessages.getString("FontCustomPropertyEditor.NameLabel.Text")); //$NON-NLS-1$
-		jfaceStyleLabel.setText(FontPropertyEditorMessages.getString("FontCustomPropertyEditor.StyleLabel.text")); //$NON-NLS-1$
+		jfaceNameLabel.setText(FontPropertyEditorMessages.FontCustomPropertyEditor_NameLabel_Text); 
+		jfaceStyleLabel.setText(FontPropertyEditorMessages.FontCustomPropertyEditor_StyleLabel_text); 
 		jfaceNamesList.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {    
 				if (!isUpdating) {

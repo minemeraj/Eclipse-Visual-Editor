@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: BooleanLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-22 15:21:41 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-22 15:28:34 $ 
  */
 
 
@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 public class BooleanLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 		if (element instanceof Boolean)
-			return ((Boolean) element).booleanValue() ? PropertysheetMessages.getString("display_true") : PropertysheetMessages.getString("display_false");
+			return ((Boolean) element).booleanValue() ? PropertysheetMessages.display_true : PropertysheetMessages.display_false;
 			
 		return super.getText(element);
 	}	

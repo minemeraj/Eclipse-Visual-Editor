@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: StandardComboBoxCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-22 15:21:41 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-22 15:28:34 $ 
  */
 
 
@@ -66,7 +66,7 @@ protected String isCorrectObject(Object value) {
 	if (value == null || doGetIndex(value) != NO_SELECTION)
 		return null;
 		
-	return PropertysheetMessages.getString(MessageFormat.format("not_valid_WARN_", new Object[] {value}));
+	return MessageFormat.format(PropertysheetMessages.not_valid_WARN_, new Object[] {value});
 }
 	
 /**

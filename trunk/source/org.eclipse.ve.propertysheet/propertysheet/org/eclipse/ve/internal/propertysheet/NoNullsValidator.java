@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: NoNullsValidator.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-22 15:21:41 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-22 15:28:34 $ 
  */
 
 
@@ -48,7 +48,7 @@ public class NoNullsValidator implements IWrapperedValidator {
 	
 	public String isValid(Object value){
 		if (value == null)
-			return PropertysheetMessages.getString("null_invalid_WARN_");
+			return PropertysheetMessages.null_invalid_WARN_;
 
 		if (fWrapperedValidators != null) {			
 			for (int i=0; i<fWrapperedValidators.length; i++) {

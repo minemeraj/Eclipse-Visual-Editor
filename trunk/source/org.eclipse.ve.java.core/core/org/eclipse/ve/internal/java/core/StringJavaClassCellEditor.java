@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: StringJavaClassCellEditor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-22 15:21:39 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-22 15:28:32 $ 
  */
 
 import org.eclipse.swt.widgets.Composite;
@@ -70,7 +70,7 @@ protected void doSetValue(Object value) {
 }
 
 protected String getNotValidMsg(Object value) {
-	return PropertysheetMessages.getString("not_string_WARN_");
+	return PropertysheetMessages.not_string_WARN_;
 }
 
 protected String isCorrectString(String value) {

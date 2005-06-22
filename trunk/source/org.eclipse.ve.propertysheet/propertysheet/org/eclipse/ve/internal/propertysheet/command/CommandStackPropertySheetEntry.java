@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet.command;
  *******************************************************************************/
 /*
  *  $RCSfile: CommandStackPropertySheetEntry.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-22 15:21:41 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-22 15:28:34 $ 
  */
 
 
@@ -34,8 +34,8 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 public class CommandStackPropertySheetEntry extends AbstractPropertySheetEntry {
 	protected final MessageFormat sApplyFormat, sResetFormat;
 	{
-		sApplyFormat = new MessageFormat(PropertysheetMessages.getString("apply_value"));
-		sResetFormat = new MessageFormat(PropertysheetMessages.getString("reset_value"));		
+		sApplyFormat = new MessageFormat(PropertysheetMessages.apply_value);
+		sResetFormat = new MessageFormat(PropertysheetMessages.reset_value);		
 	}
 	
 	public CommandStackPropertySheetEntry(CommandStack stack, CommandStackPropertySheetEntry parent, IPropertySourceProvider provider) {

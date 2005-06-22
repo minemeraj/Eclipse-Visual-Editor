@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractRCPClassCreationSourceContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-16 23:00:50 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 15:32:54 $ 
  */
 package org.eclipse.ve.internal.jface.codegen.wizards.contributors;
 
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IProject;
@@ -75,9 +76,8 @@ public abstract class AbstractRCPClassCreationSourceContributor implements IVisu
 		if(isError){ 	
 			return new StatusInfo(
 					IStatus.ERROR,
-					JFaceMessages.getFormattedString(
-							"RCPViewCreation.RCP_Project_ERROR_", //$NON-NLS-1$
-							project == null ? null : project.getName()),
+					MessageFormat.format(JFaceMessages.RCPViewCreation_RCP_Project_ERROR_, 
+					new Object[]{project == null ? null : project.getName()}),
 					SwtPlugin.PLUGIN_ID);
 		} else {
 			return StatusInfo.OK_STATUS;

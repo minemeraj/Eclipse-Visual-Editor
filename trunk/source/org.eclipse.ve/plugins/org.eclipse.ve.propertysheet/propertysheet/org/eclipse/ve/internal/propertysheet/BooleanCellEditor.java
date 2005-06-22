@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: BooleanCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-22 15:21:41 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-22 15:28:34 $ 
  */
 
 
@@ -29,8 +29,8 @@ public class BooleanCellEditor extends StandardComboBoxCellEditor {
 	public BooleanCellEditor(Composite parent){
 		super(parent, 
 			new String[] {
-				PropertysheetMessages.getString("display_true"),
-				PropertysheetMessages.getString("display_false")
+				PropertysheetMessages.display_true,
+				PropertysheetMessages.display_false
 			},
 			new Object[] {
 				Boolean.TRUE,
@@ -45,7 +45,7 @@ public class BooleanCellEditor extends StandardComboBoxCellEditor {
 		if (value == null || value instanceof Boolean)
 			return null;
 			
-		return PropertysheetMessages.getString("bad_bool_WARN_");
+		return PropertysheetMessages.bad_bool_WARN_;
 	}		
 	
 }

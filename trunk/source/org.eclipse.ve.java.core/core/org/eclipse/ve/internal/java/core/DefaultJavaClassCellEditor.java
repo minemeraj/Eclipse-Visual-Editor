@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: DefaultJavaClassCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-22 15:21:39 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-22 15:28:32 $ 
  */
 
 import java.text.MessageFormat;
@@ -98,7 +98,7 @@ protected boolean isInstance(Object value) {
  * Not valid plus the toString on the object.
  */
 protected String getNotValidMsg(Object value) {
-	return MessageFormat.format(PropertysheetMessages.getString("not_valid_WARN_"), new Object[] {value});
+	return MessageFormat.format(PropertysheetMessages.not_valid_WARN_, new Object[] {value});
 }
 
 protected JavaHelpers getJavaType() {
