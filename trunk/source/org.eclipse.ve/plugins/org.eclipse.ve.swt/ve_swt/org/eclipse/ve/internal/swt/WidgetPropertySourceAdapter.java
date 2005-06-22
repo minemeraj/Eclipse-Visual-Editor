@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.26 $ $Date: 2005-06-22 16:24:10 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.27 $ $Date: 2005-06-22 17:11:04 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
@@ -35,6 +36,7 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.INumberBeanProxy;
 import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
@@ -166,7 +168,6 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 	private final static String STYLE_NOT_SET_INITSTRING = String.valueOf(STYLE_NOT_SET);	
 	
 	static final String[] UNKNOWN = new String[] { "???", "???"}; //$NON-NLS-1$ //$NON-NLS-2$
-	private ArrayList styleBitPropertyDescriptors; // Cache of property descriptors from the style bits
 
 	public static class StyleBitPropertyDescriptor extends EToolsPropertyDescriptor {
 
@@ -235,7 +236,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		// whomever created them and can't be altered as there is no constructor to re-generate
 		if (((EObject) getTarget()).eContainmentFeature() != JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart()
 			&& !(((IJavaInstance)getTarget()).getAllocation() instanceof ImplicitAllocation))
-			mergeStyleBits(descriptorsList, ((EObject) getTarget()).eClass());
+			mergeStyleBits(descriptorsList, (JavaClass) getBean().getJavaType());
 		
 		return (IPropertyDescriptor[]) descriptorsList.toArray(new IPropertyDescriptor[descriptorsList.size()]);
 
@@ -249,28 +250,20 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 	 * 
 	 * @since 1.0.0
 	 */
-	protected void mergeStyleBits(List propertyDescriptors, EClass eClass) {
+	protected void mergeStyleBits(List propertyDescriptors, JavaClass jClass) {
 
-		BeanDecorator beanDecor = Utilities.getBeanDecorator(eClass);
-		// Find first class that provides style bits in the heirarchy. The BeanInfo would of already done any proper merging of style bits.
-		if(styleBitPropertyDescriptors == null){
-			SweetStyleBits[] styleDetails = getStyleDetails(beanDecor);
-			while (styleDetails == null || styleDetails.length == 0) {
-				eClass = ((JavaClass) eClass).getSupertype();
-				if (eClass == null)
-					return;
-				beanDecor = Utilities.getBeanDecorator(eClass);
-				styleDetails = getStyleDetails(beanDecor);
-			}
-			styleBitPropertyDescriptors = styleDetails == null ? new ArrayList(0) : new ArrayList(styleDetails.length);
-			for (int i = 0; i < styleDetails.length; i++) {
-				styleBitPropertyDescriptors.add(new StyleBitPropertyDescriptor(styleDetails[i]));
-			}
+		StyleBitPropertyDescriptor[] styleDescriptors = getStyleDescriptors(jClass);
+		while (styleDescriptors == null || styleDescriptors.length == 0) {
+			jClass = jClass.getSupertype();
+			if (jClass == null)
+				return;
+			styleDescriptors = getStyleDescriptors(jClass);
 		}
-		// Merge the style bit property descriptors that have been cached
-		for (int i = 0; i < styleBitPropertyDescriptors.size(); i++)
-			propertyDescriptors.add(styleBitPropertyDescriptors.get(i));
-
+		if (styleDescriptors != null) {
+			// Merge the style bit property descriptors that have been cached
+			for (int i = 0; i < styleDescriptors.length; i++)
+				propertyDescriptors.add(styleDescriptors[i]);
+		}
 	}
 
 	public static class SweetStyleBits {
@@ -297,44 +290,55 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		}
 	}
 
-	public static SweetStyleBits[] getStyleDetails(BeanDecorator beanDecorator) {
+	/**
+	 * Get the StyleBitDescriptors for this type.
+	 * @param jType
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public static StyleBitPropertyDescriptor[] getStyleDescriptors(JavaHelpers jType) {
 
-		FeatureAttributeValue value = (FeatureAttributeValue) beanDecorator.getAttributes().get(SWEET_STYLE_ID);
-		// If the value has been previously calculated it is cached so return it
-		if (value != null)
-			if (value.getInternalValue() != null)
-				return (SweetStyleBits[]) value.getInternalValue();
-			else if (value.getValue() != null) {
-				// otherwise derive it from the target values
-				// There are some style bits picked up by introspection
-				// Turn them into an array of IDE style bits that we can use, and then cache these back onto the FeatureAttribute value so
-				// we don't have to re-do this rebuild each time.
-				Object[] outerArray = (Object[]) value.getValue();
-				SweetStyleBits[] styleDetails = new SweetStyleBits[outerArray.length];
-				for (int i = 0; i < outerArray.length; i++) {
-					Object[] innerArray = (Object[]) outerArray[i];
-					// The first element is a String for the internal canonnical name
-					String propertyName = (String) innerArray[0];
-					// The second element is the user visible name
-					String displayName = (String) innerArray[1];
-					// The third element is a Boolean value for whether the property is expert or not
-					boolean expert = ((Boolean) innerArray[2]).booleanValue();
-					// The next is a three element array of name, initString, and actual value * n for the number of allowble values
-					// Iterate over it to extract the names and strings and turn these into two separate String arrays
-					Object[] triplicateArray = (Object[]) innerArray[3];
-					int numberOfValues = triplicateArray.length / 3;
-					String[] names = new String[numberOfValues];
-					String[] initStrings = new String[numberOfValues];
-					Number[] values = new Number[numberOfValues];
-					for (int j = 0, index = 0; j < triplicateArray.length; j+=3, ++index) {
-						names[index] = (String) triplicateArray[j];
-						initStrings[index] = (String) triplicateArray[j+1];
-						values[index] =  (Number) triplicateArray[j+2];
+		BeanDecorator beanDecorator = Utilities.getBeanDecorator(jType);
+		if (beanDecorator != null) {
+			FeatureAttributeValue value = (FeatureAttributeValue) beanDecorator.getAttributes().get(SWEET_STYLE_ID);
+			// If the value has been previously calculated it is cached so return it
+			if (value != null)
+				if (value.getInternalValue() != null)
+					return (StyleBitPropertyDescriptor[]) value.getInternalValue();
+				else if (value.getValue() != null) {
+					// otherwise derive it from the target values
+					// There are some style bits picked up by introspection
+					// Turn them into an array of IDE style bits that we can use, and from that into property descriptor, and then cache these back onto the FeatureAttribute value so
+					// we don't have to re-do this rebuild each time.
+					Object[] outerArray = (Object[]) value.getValue();
+					StyleBitPropertyDescriptor[] styleDescriptors = new StyleBitPropertyDescriptor[outerArray.length];
+					for (int i = 0; i < outerArray.length; i++) {
+						Object[] innerArray = (Object[]) outerArray[i];
+						// The first element is a String for the internal canonnical name
+						String propertyName = (String) innerArray[0];
+						// The second element is the user visible name
+						String displayName = (String) innerArray[1];
+						// The third element is a Boolean value for whether the property is expert or not
+						boolean expert = ((Boolean) innerArray[2]).booleanValue();
+						// The next is a three element array of name, initString, and actual value * n for the number of allowble values
+						// Iterate over it to extract the names and strings and turn these into two separate String arrays
+						Object[] triplicateArray = (Object[]) innerArray[3];
+						int numberOfValues = triplicateArray.length / 3;
+						String[] names = new String[numberOfValues];
+						String[] initStrings = new String[numberOfValues];
+						Number[] values = new Number[numberOfValues];
+						for (int j = 0, index = 0; j < triplicateArray.length; j+=3, ++index) {
+							names[index] = (String) triplicateArray[j];
+							initStrings[index] = (String) triplicateArray[j+1];
+							values[index] =  (Number) triplicateArray[j+2];
+						}
+						SweetStyleBits styleBits = new SweetStyleBits(propertyName, displayName, expert, names, initStrings, values);
+						styleDescriptors[i] = new StyleBitPropertyDescriptor(styleBits);
 					}
-					styleDetails[i] = new SweetStyleBits(propertyName, displayName, expert, names, initStrings, values);
-				}
-				value.setInternalValue(styleDetails);
-				return styleDetails;
+					value.setInternalValue(styleDescriptors);
+					return styleDescriptors;
+			}
 		}
 		return null;
 	}
