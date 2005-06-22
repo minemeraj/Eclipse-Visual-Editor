@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: MinmaxValidator.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:47:33 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 15:21:41 $ 
  */
 
 
@@ -45,10 +45,10 @@ public class MinmaxValidator implements ICellEditorValidator, IExecutableExtensi
 	protected static final MessageFormat sMinMaxError, sMinError, sMaxError;
 	protected static final String sNotNumberError;
 	static {
-		sMinMaxError = new MessageFormat(PropertysheetMessages.getString(PropertysheetMessages.MINMAX_BAD));
-		sMinError = new MessageFormat(PropertysheetMessages.getString(PropertysheetMessages.MIN_BAD));
-		sMaxError = new MessageFormat(PropertysheetMessages.getString(PropertysheetMessages.MAX_BAD));
-		sNotNumberError = PropertysheetMessages.getString(PropertysheetMessages.NOT_NUMBER);
+		sMinMaxError = new MessageFormat(PropertysheetMessages.getString("minmax_bad_WARN_"));
+		sMinError = new MessageFormat(PropertysheetMessages.getString("min_bad_WARN_"));
+		sMaxError = new MessageFormat(PropertysheetMessages.getString("max_bad_WARN_"));
+		sNotNumberError = PropertysheetMessages.getString("not_number_WARN_");
 	}
 		
 	protected static final NumberFormat sNumberFormat;

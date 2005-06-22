@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 
 /*
- * $RCSfile: NumberJavaCellEditor.java,v $ $Revision: 1.6 $ $Date: 2005-06-03 19:21:08 $
+ * $RCSfile: NumberJavaCellEditor.java,v $ $Revision: 1.7 $ $Date: 2005-06-22 15:21:39 $
  */
 
 import java.text.MessageFormat;
@@ -124,7 +124,7 @@ public class NumberJavaCellEditor extends NumberCellEditor implements INeedData,
 	protected String isCorrectObject(Object value) {
 		if (value == null)
 			if (fNumberClassType.isPrimitive())
-				return PropertysheetMessages.getString(PropertysheetMessages.NULL_INVALID); // null is invalid for primitives
+				return PropertysheetMessages.getString("null_invalid_WARN_"); // null is invalid for primitives
 			else
 				return super.isCorrectObject(null);
 		else if (fNumberClassType.isInstance(value))

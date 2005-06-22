@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SetToNullAction.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:47:33 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-22 15:21:41 $ 
  */
 package org.eclipse.ve.internal.propertysheet;
 
@@ -42,8 +42,8 @@ public class SetToNullAction extends EToolsPropertySheetAction {
 
 		setImageDescriptor(NULL_RESET_IMAGE);
 		setDisabledImageDescriptor(NULL_RESET_DISABLE_IMAGE);
-		setText(PropertysheetMessages.getString(PropertysheetMessages.SET_NULLS_LABEL));
-		setToolTipText(PropertysheetMessages.getString(PropertysheetMessages.SET_NULLS_TOOLTIP));
+		setText(PropertysheetMessages.getString("set_nulls.label"));
+		setToolTipText(PropertysheetMessages.getString("set_nulls.tooltip"));
 	}
 
 	/**

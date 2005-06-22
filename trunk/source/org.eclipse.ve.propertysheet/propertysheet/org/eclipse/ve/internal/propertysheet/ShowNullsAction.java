@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: ShowNullsAction.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:47:33 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 15:21:41 $ 
  */
 
 
@@ -25,7 +25,7 @@ import org.eclipse.ui.views.properties.IPropertySheetEntry;
 public class ShowNullsAction extends EToolsPropertySheetAction {
 	public ShowNullsAction(EToolsPropertySheetPage page) {
 		super(page);
-		setText(PropertysheetMessages.getString(PropertysheetMessages.SHOW_NULLS_LABEL));
+		setText(PropertysheetMessages.getString("show_nulls.label"));
 		setChecked(false);
 	}		
 
@@ -51,7 +51,7 @@ public class ShowNullsAction extends EToolsPropertySheetAction {
 	}
 	
 	private void valueChanged(boolean on) {
-		setToolTipText(on ? PropertysheetMessages.getString(PropertysheetMessages.SHOW_NULLS_HIDE_TOOLTIP) : PropertysheetMessages.getString(PropertysheetMessages.SHOW_NULLS_SHOW_TOOLTIP));
+		setToolTipText(on ? PropertysheetMessages.getString("show_nulls.hide.tooltip") : PropertysheetMessages.getString("show_nulls.show.tooltip"));
 	}
 
 }

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: CharJavaCellEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-21 22:53:48 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-22 15:21:39 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -144,7 +144,7 @@ public class CharJavaCellEditor extends ObjectCellEditor implements IExecutableE
 	public String isCorrectObject(Object value) {
 		if (value == null)
 			if (!fIsCharacterClass)
-				return PropertysheetMessages.getString(PropertysheetMessages.NULL_INVALID);	// null is invalid for primitives
+				return PropertysheetMessages.getString("null_invalid_WARN_");	// null is invalid for primitives
 			else
 				return null;
 		else if (fDataType.isInstance(value))

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BooleanJavaCellEditor.java,v $ $Revision: 1.6 $ $Date: 2005-02-15 23:23:54 $
+ * $RCSfile: BooleanJavaCellEditor.java,v $ $Revision: 1.7 $ $Date: 2005-06-22 15:21:39 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -57,13 +57,13 @@ public class BooleanJavaCellEditor extends BooleanCellEditor implements IExecuta
 	protected String isCorrectObject(Object value) {
 		if (value == null)
 			if (!fIsBooleanClass)
-				return PropertysheetMessages.getString(PropertysheetMessages.NULL_INVALID); // Null is invalid for primitives.
+				return PropertysheetMessages.getString("null_invalid_WARN_"); // Null is invalid for primitives.
 			else
 				return null;
 		else if (fBooleanHelper.isInstance(value))
 			return null;
 		else
-			return PropertysheetMessages.getString(PropertysheetMessages.NOT_BOOL);
+			return PropertysheetMessages.getString("bad_bool_WARN_");
 	}
 
 	public String getJavaInitializationString() {
