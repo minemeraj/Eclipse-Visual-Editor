@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-11 22:41:21 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-22 14:36:44 $ 
  */
 
 import java.util.Collections;
@@ -54,15 +54,46 @@ import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  */
 public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	protected IEditorPart fEditorPart;
-	private final static String[] resAnchorPrefix = { "AnchorAction.northwest.", //$NON-NLS-1$
-		"AnchorAction.north.", //$NON-NLS-1$
-		"AnchorAction.northeast.", //$NON-NLS-1$
-		"AnchorAction.west.", //$NON-NLS-1$
-		"AnchorAction.center.", //$NON-NLS-1$
-		"AnchorAction.east.", //$NON-NLS-1$
-		"AnchorAction.southwest.", //$NON-NLS-1$
-		"AnchorAction.south.", //$NON-NLS-1$
-		"AnchorAction.southeast." }; //$NON-NLS-1$
+	private final static String[] resAnchorPrefixIDs = { 
+		"AnchorAction.northwest", //$NON-NLS-1$
+		"AnchorAction.north", //$NON-NLS-1$
+		"AnchorAction.northeast", //$NON-NLS-1$
+		"AnchorAction.west", //$NON-NLS-1$
+		"AnchorAction.center", //$NON-NLS-1$
+		"AnchorAction.east", //$NON-NLS-1$
+		"AnchorAction.southwest", //$NON-NLS-1$
+		"AnchorAction.south", //$NON-NLS-1$
+		"AnchorAction.southeast" }; //$NON-NLS-1$
+	private final static String[] resAnchorPrefixLabels = { 
+		JFCMessages.AnchorAction_northwest_label,
+		JFCMessages.AnchorAction_north_label,
+		JFCMessages.AnchorAction_northeast_label,
+		JFCMessages.AnchorAction_west_label,
+		JFCMessages.AnchorAction_center_label,
+		JFCMessages.AnchorAction_east_label,
+		JFCMessages.AnchorAction_southwest_label,
+		JFCMessages.AnchorAction_south_label,
+		JFCMessages.AnchorAction_southeast_label};
+	private final static String[] resAnchorPrefixImages = { 
+		JFCMessages.AnchorAction_northwest_image,
+		JFCMessages.AnchorAction_north_image,
+		JFCMessages.AnchorAction_northeast_image,
+		JFCMessages.AnchorAction_west_image,
+		JFCMessages.AnchorAction_center_image,
+		JFCMessages.AnchorAction_east_image,
+		JFCMessages.AnchorAction_southwest_image,
+		JFCMessages.AnchorAction_south_image,
+		JFCMessages.AnchorAction_southeast_image};
+	private final static String[] resAnchorPrefixTooltips = { 
+		JFCMessages.AnchorAction_northwest_tooltip,
+		JFCMessages.AnchorAction_north_tooltip,
+		JFCMessages.AnchorAction_northeast_tooltip,
+		JFCMessages.AnchorAction_west_tooltip,
+		JFCMessages.AnchorAction_center_tooltip,
+		JFCMessages.AnchorAction_east_tooltip,
+		JFCMessages.AnchorAction_southwest_tooltip,
+		JFCMessages.AnchorAction_south_tooltip,
+		JFCMessages.AnchorAction_southeast_tooltip};
 
 	protected static String[] anchorInitStrings = new String[] {
 		"java.awt.GridBagConstraints.NORTHWEST", //$NON-NLS-1$
@@ -91,8 +122,18 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	public final static int NW = 0, NORTH = 1, NE = 2, WEST = 3, CENTER = 4, EAST = 5, SW = 6, SOUTH = 7, SE = 8;
 	protected final static int anchorAWTValue[] = { 18, 11, 12, 17, 10, 13, 16, 15, 14 };
 
-	private final static String[] resFillPrefix = { "FillAction.horizontal.", //$NON-NLS-1$
+	private final static String[] resFillPrefixIDs = { 
+		"FillAction.horizontal.", //$NON-NLS-1$
 		"FillAction.vertical."}; //$NON-NLS-1$
+	private final static String[] resFillPrefixLabels = { 
+		JFCMessages.FillAction_horizontal_label,
+		JFCMessages.FillAction_vertical_label};
+	private final static String[] resFillPrefixTooltips = { 
+		JFCMessages.FillAction_horizontal_tooltip,
+		JFCMessages.FillAction_vertical_tooltip};
+	private final static String[] resFillPrefixImages = { 
+		JFCMessages.FillAction_horizontal_image,
+		JFCMessages.FillAction_vertical_image};
 
 	protected static String[] fillInitStrings = new String[] {
 		"java.awt.GridBagConstraints.HORIZONTAL", //$NON-NLS-1$
@@ -129,16 +170,15 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		public AnchorAction(int anchorType) {
 			super(null, Action.AS_CHECK_BOX);
 			// Default to center anchor if the anchor type is incorrect
-			if (!(anchorType >= 0 && anchorType < resAnchorPrefix.length))
+			if (!(anchorType >= 0 && anchorType < resAnchorPrefixLabels.length))
 				fAnchorType = CENTER;
 			else
 				fAnchorType = anchorType;
-			String sAnchorType = resAnchorPrefix[fAnchorType];
-			setText(JFCMessages.getString(sAnchorType + "label")); //$NON-NLS-1$
-			setToolTipText(JFCMessages.getString(sAnchorType + "tooltip")); //$NON-NLS-1$
+			setText(resAnchorPrefixLabels[fAnchorType]); 
+			setToolTipText(resAnchorPrefixTooltips[fAnchorType]); 
 			// There are three images, one for full color ( that is the hover one )
 			// one for disabled and one for enabled
-			String graphicName = JFCMessages.getString(sAnchorType + "image"); //$NON-NLS-1$
+			String graphicName = resAnchorPrefixImages[fAnchorType];
 			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/" + graphicName)); //$NON-NLS-1$
 			setHoverImageDescriptor(getImageDescriptor());
 			setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/" + graphicName)); //$NON-NLS-1$
@@ -150,7 +190,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		 * Static method that returns the action id based on the alignment type.
 		 */
 		public String getActionId(int anchorType) {
-			return ((anchorType >= 0 && anchorType < resAnchorPrefix.length) ? resAnchorPrefix[anchorType] : resAnchorPrefix[CENTER]);
+			return ((anchorType >= 0 && anchorType < resAnchorPrefixIDs.length) ? resAnchorPrefixIDs[anchorType] : resAnchorPrefixIDs[CENTER]);
 		}
 		protected boolean calculateEnabled() {
 			return true;
@@ -190,16 +230,15 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		public FillAction(int fillType) {
 			super(null, Action.AS_CHECK_BOX);
 			// Default to center anchor if the anchor type is incorrect
-			if (!(fillType >= 0 && fillType < resAnchorPrefix.length))
+			if (!(fillType >= 0 && fillType < resFillPrefixLabels.length))
 				fFillType = FILL_HORIZONTAL;
 			else
 				fFillType = fillType;
-			String sFillType = resFillPrefix[fFillType];
-			setText(JFCMessages.getString(sFillType + "label")); //$NON-NLS-1$
-			setToolTipText(JFCMessages.getString(sFillType + "tooltip")); //$NON-NLS-1$
+			setText(resFillPrefixLabels[fFillType]); 
+			setToolTipText(resFillPrefixTooltips[fFillType]); 
 			// There are three images, one for full color ( that is the hover one )
 			// one for disabled and one for enabled
-			String graphicName = JFCMessages.getString(sFillType + "image"); //$NON-NLS-1$
+			String graphicName = resFillPrefixImages[fFillType];
 			// The file structure of these is that they exist in the plugin directory with three folder names, e.g.
 			// /icons/full/clc16/anchorleft_obj.gif for the color one
 			// and elc16 for enabled and dlc16 for disasbled
@@ -214,7 +253,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		 * Static method that returns the action id based on the alignment type.
 		 */
 		public String getActionId(int fillType) {
-			return ((fillType >= 0 && fillType < resFillPrefix.length) ? resFillPrefix[fillType] : resFillPrefix[FILL_HORIZONTAL]);
+			return ((fillType >= 0 && fillType < resFillPrefixIDs.length) ? resFillPrefixIDs[fillType] : resFillPrefixIDs[FILL_HORIZONTAL]);
 		}
 		protected boolean calculateEnabled() {
 			return true;
@@ -413,18 +452,18 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(new GridLayout(3, false));
-		Group anchorGroup = createGroup(mainComposite, JFCMessages.getString("GridBagComponentPage.Anchor"), 3, 0, 0); //$NON-NLS-1$
+		Group anchorGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Anchor, 3, 0, 0); 
 
 		for (int i = 0; i < anchorActions.length; i++) {
 			ActionContributionItem ac = new ActionContributionItem(anchorActions[i]);
 			ac.fill(anchorGroup);
 		}
-		Group fillGroup = createGroup(mainComposite, JFCMessages.getString("GridBagComponentPage.Fill"), 1, 0, 0); //$NON-NLS-1$
+		Group fillGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Fill, 1, 0, 0); 
 		for (int i = 0; i < fillActions.length; i++) {
 			ActionContributionItem ac = new ActionContributionItem(fillActions[i]);
 			ac.fill(fillGroup);
 		}
-		Group insetsGroup = createGroup(mainComposite, JFCMessages.getString("GridBagComponentPage.Insets"), 2, 5, 4); //$NON-NLS-1$
+		Group insetsGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Insets, 2, 5, 4); 
 		createInsetsControl(insetsGroup);
 
 		return mainComposite;
@@ -433,7 +472,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	protected void createInsetsControl(Group insetsGroup) {
 		Label lbl;
 		lbl = new Label(insetsGroup, SWT.NONE);
-		lbl.setText(JFCMessages.getString("GridBagComponentPage.InsetsGroup.Top")); //$NON-NLS-1$
+		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Top); 
 		int top =0, left = 0, bottom = 0, right = 0;
 		if (componentInsets != null) {
 			top = componentInsets.top;
@@ -457,7 +496,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			}
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
-		lbl.setText(JFCMessages.getString("GridBagComponentPage.InsetsGroup.Left")); //$NON-NLS-1$
+		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Left); 
 		leftSpinner = new Spinner(insetsGroup, SWT.NONE, left);
 		leftSpinner.setEnabled(componentInsets != null ? true : false);
 		leftSpinner.addModifyListener(new Listener() {
@@ -474,7 +513,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			}
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
-		lbl.setText(JFCMessages.getString("GridBagComponentPage.InsetsGroup.Bottom")); //$NON-NLS-1$
+		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Bottom); 
 		bottomSpinner = new Spinner(insetsGroup, SWT.NONE, bottom);
 		bottomSpinner.setEnabled(componentInsets != null ? true : false);
 		bottomSpinner.addModifyListener(new Listener() {
@@ -491,7 +530,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			}
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
-		lbl.setText(JFCMessages.getString("GridBagComponentPage.InsetsGroup.Right")); //$NON-NLS-1$
+		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Right); 
 		rightSpinner = new Spinner(insetsGroup, SWT.NONE, right);
 		rightSpinner.setEnabled(componentInsets != null ? true : false);
 		rightSpinner.addModifyListener(new Listener() {
@@ -572,14 +611,14 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getText()
 	 */
 	public String getText() {
-		return JFCMessages.getString("GridBagComponentPage.Gridbag"); //$NON-NLS-1$
+		return JFCMessages.GridBagComponentPage_Gridbag; 
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getToolTipText()
 	 */
 	public String getToolTipText() {
-		return JFCMessages.getString("GridBagComponentPage.ToolTipText"); //$NON-NLS-1$
+		return JFCMessages.GridBagComponentPage_ToolTipText; 
 	}
 
 	/* (non-Javadoc)

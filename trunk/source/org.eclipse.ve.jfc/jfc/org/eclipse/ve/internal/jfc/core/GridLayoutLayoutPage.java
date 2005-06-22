@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-11 22:41:21 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-22 14:36:44 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -89,9 +89,9 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		GridLayout g2 = new GridLayout();
 		g2.numColumns = 2;
 		dimensionsGroup.setLayout(g2);
-		dimensionsGroup.setText(JFCMessages.getString("GridLayoutLayoutPage.gridDimensionsTitle")); //$NON-NLS-1$
+		dimensionsGroup.setText(JFCMessages.GridLayoutLayoutPage_gridDimensionsTitle); 
 		Label label = new Label(dimensionsGroup, SWT.NONE);
-		label.setText(JFCMessages.getString("GridLayoutLayoutPage.columns")); //$NON-NLS-1$
+		label.setText(JFCMessages.GridLayoutLayoutPage_columns); 
 		gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
 		label.setLayoutData(gd);
@@ -100,7 +100,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		columnsSpinner.addModifyListener(spinnerModify);
 		
 		label = new Label(dimensionsGroup, SWT.NONE);
-		label.setText(JFCMessages.getString("GridLayoutLayoutPage.rows")); //$NON-NLS-1$
+		label.setText(JFCMessages.GridLayoutLayoutPage_rows); 
 		gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
 		label.setLayoutData(gd);
@@ -116,10 +116,10 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		GridLayout g3 = new GridLayout();
 		g3.numColumns = 2;
 		spaceGroup.setLayout(g3);
-		spaceGroup.setText(JFCMessages.getString("GridLayoutLayoutPage.spacingTitle")); //$NON-NLS-1$
+		spaceGroup.setText(JFCMessages.GridLayoutLayoutPage_spacingTitle); 
 		
 		label = new Label(spaceGroup, SWT.NONE);
-		label.setText(JFCMessages.getString("GridLayoutLayoutPage.horizontalGap")); //$NON-NLS-1$
+		label.setText(JFCMessages.GridLayoutLayoutPage_horizontalGap); 
 		hgapSpinner = new Spinner(spaceGroup, SWT.NONE, 5);
 		hgapSpinner.addModifyListener(spinnerModify);
 		gd = new GridData();
@@ -127,7 +127,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		label.setLayoutData(gd);
 		
 		label = new Label(spaceGroup, SWT.NONE);
-		label.setText(JFCMessages.getString("GridLayoutLayoutPage.verticalGap")); //$NON-NLS-1$
+		label.setText(JFCMessages.GridLayoutLayoutPage_verticalGap); 
 		vgapSpinner = new Spinner(spaceGroup, SWT.NONE, 5);
 		vgapSpinner.addModifyListener(spinnerModify);
 		gd = new GridData();
