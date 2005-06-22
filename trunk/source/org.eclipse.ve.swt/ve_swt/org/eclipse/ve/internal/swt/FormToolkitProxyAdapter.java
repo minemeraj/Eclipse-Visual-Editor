@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,10 +9,11 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: FormToolkitProxyAdapter.java,v $ $Revision: 1.1 $ $Date: 2005-06-22 14:10:26 $
+ * $RCSfile: FormToolkitProxyAdapter.java,v $ $Revision: 1.2 $ $Date: 2005-06-22 15:51:19 $
  */
 package org.eclipse.ve.internal.swt;
 
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IExpression;
 
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
@@ -25,8 +26,11 @@ public class FormToolkitProxyAdapter extends UIThreadOnlyProxyAdapter {
 	}
 
 	protected void primPrimReleaseBeanProxy(IExpression expression) {
-		// TODO Auto-generated method stub
-
+		if(isOwnsProxy() && isBeanProxyInstantiated()) {
+			IBeanProxy resourceBeanProxy = getBeanProxy();
+			expression.createSimpleMethodInvoke(resourceBeanProxy.getTypeProxy().getMethodProxy(expression, "dispose"), resourceBeanProxy, //$NON-NLS-1$
+				null, false);
+		}		
 	}
 
 }
