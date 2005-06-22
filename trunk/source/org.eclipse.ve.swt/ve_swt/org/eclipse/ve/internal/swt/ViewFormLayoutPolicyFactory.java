@@ -10,9 +10,10 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:52 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-22 16:46:40 $ 
  */
 package org.eclipse.ve.internal.swt;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
@@ -26,8 +27,9 @@ import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.ve.internal.java.visual.*;
  
 /**
+ * LayoutPolicyFactory for ViewForm to initialize the EditPolicy and LayoutPolicyHelper.
  * 
- * @since 1.1.0
+ * @since 1.1
  */
 public class ViewFormLayoutPolicyFactory implements ILayoutPolicyFactory {
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutPolicyHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-22 16:46:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -32,7 +32,12 @@ import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
  
-
+/**
+ * LayoutPolicyHelper for ViewForm to help provide feedback to user about what cells
+ * are occupied and what cells are available for dropping.
+ * 
+ * @since 1.1
+ */
 public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 	
 	protected VisualContainerPolicy policy;
@@ -106,7 +111,9 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 		return null;	
 	}
 	
-	// return a point in the container's parent coordinates
+	/**
+	* return a point in the container's parent coordinates
+	*/
 	public Point convertLocation(Point p) {
 		if (p == null)
 			return null;
@@ -123,9 +130,6 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 	
 	/**
 	 * Return a list of occupied regions
-	 * Collect a list of all of the components of the container.
-	 * Then iterate over these and collect all of their constraints
-	 * and remove from available ones
 	 */
 	public String[] getAvailableRegions() {
 		// Get a COPY of all the regions, else result.remove() will
@@ -309,9 +313,6 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 	
 	/**
 	 * Return a list of occupied regions.
-	 * Collect a list of all of the components of the container.
-	 * Then iterate over these and collect all of their constraints
-	 * and remove from available ones
 	 */
 	public String[] getFilledRegions() {
 		
@@ -365,7 +366,7 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 	}
 	
 	protected void cancelConstraints(CommandBuilder commandBuilder, List children) {
-		// TODO Auto-generated method stub
+		// No action required.
 	}
 	
 }
