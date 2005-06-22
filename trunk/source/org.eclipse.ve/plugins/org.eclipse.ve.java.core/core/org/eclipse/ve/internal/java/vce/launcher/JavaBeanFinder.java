@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanFinder.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-22 13:00:22 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -45,7 +45,7 @@ public class JavaBeanFinder {
 			IRunnableWithProgress runnable= new IRunnableWithProgress() {
 				public void run(IProgressMonitor pm) throws InterruptedException {
 					int nElements= elements.length;
-					pm.beginTask(VCELauncherMessages.getString("JavaBeansFinder.SearchMessage"), nElements); //$NON-NLS-1$
+					pm.beginTask(VCELauncherMessages.JavaBeansFinder_SearchMessage, nElements); 
 					try {
 						for (int i= 0; i < nElements; i++) {
 							try {

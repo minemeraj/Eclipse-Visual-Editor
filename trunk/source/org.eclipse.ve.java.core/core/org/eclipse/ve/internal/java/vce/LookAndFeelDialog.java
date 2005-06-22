@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce;
  *******************************************************************************/
 /*
  *  $RCSfile: LookAndFeelDialog.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-18 20:49:34 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-22 13:04:18 $ 
  */
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -49,7 +49,7 @@ public LookAndFeelDialog(Shell aShell,String aName, String aClass){
 
 protected void configureShell(Shell newShell) {
 	super.configureShell(newShell);
-	newShell.setText(VCEMessages.getString("LookAndFeelDialog.Shell.Text")); //$NON-NLS-1$
+	newShell.setText(VCEMessages.LookAndFeelDialog_Shell_Text); 
 }
 
 protected void createButtonsForButtonBar(Composite parent) {
@@ -65,7 +65,7 @@ protected Control createDialogArea(Composite aComposite){
 	c.setLayout(new GridLayout(2,false));
 	
 	Label lookAndFeelNameLabel = new Label(c,SWT.NONE);
-	lookAndFeelNameLabel.setText(VCEMessages.getString("LookAndFeelDialog.LookAndFeel.Name")); //$NON-NLS-1$
+	lookAndFeelNameLabel.setText(VCEMessages.LookAndFeelDialog_LookAndFeel_Name); 
 	
 	fLookAndFeelNameText = new Text(c,SWT.BORDER);
 	GridData data = new GridData();
@@ -75,7 +75,7 @@ protected Control createDialogArea(Composite aComposite){
 	if ( fName != null ) fLookAndFeelNameText.setText(fName);
 	
 	Label lookAndFeelClassLabel = new Label(c,SWT.NONE);
-	lookAndFeelClassLabel.setText(VCEMessages.getString("LookAndFeelDialog.LookAndFeel.Class")); //$NON-NLS-1$
+	lookAndFeelClassLabel.setText(VCEMessages.LookAndFeelDialog_LookAndFeel_Class); 
 	
 	fLookAndFeelClassText = new Text(c,SWT.BORDER);
 	GridData data1 = new GridData(GridData.FILL_HORIZONTAL);

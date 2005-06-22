@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.28 $  $Date: 2005-06-20 23:51:26 $ 
+ *  $Revision: 1.29 $  $Date: 2005-06-22 13:04:18 $ 
  */
 
 import java.net.URL;
@@ -54,7 +54,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	public static final String DEFAULT_ITEM = "DEFAULT_ITEM"; //$NON-NLS-1$
 	public static final String PROGRAM_ITEM = "PROGRAM_ITEM"; //$NON-NLS-1$
 	public static final String PLUGIN_ITEM = "PLUGIN_ITEM"; //$NON-NLS-1$
-	public static final String LnF_DEFAULT = VCEMessages.getString("PreferencePage.LookAndFeel.Default"); //$NON-NLS-1$
+	public static final String LnF_DEFAULT = VCEMessages.PreferencePage_LookAndFeel_Default; 
 	protected Preferences fStore;
 	protected Preferences cdeStore;	
 	protected TabFolder tabFolder;
@@ -190,7 +190,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		
 		Link newsgroupLink = new Link(contentsParent,SWT.NONE);
 		newsgroupLink.setLayoutData(new GridData(SWT.END, SWT.CENTER, true, false));	// Right align
-		newsgroupLink.setText(VCEMessages.getString("VCEPreferencePage.LinkToResources"));
+		newsgroupLink.setText(VCEMessages.VCEPreferencePage_LinkToResources);
 		newsgroupLink.addSelectionListener(new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e) {
 				URL url = null;
@@ -228,7 +228,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected void createAppearanceTab() {
 
 		appearanceTab = new TabItem(tabFolder, SWT.NONE);
-		appearanceTab.setText(VCEMessages.getString("VCEPreferencePage.Tab.Appearance.Text")); //$NON-NLS-1$
+		appearanceTab.setText(VCEMessages.VCEPreferencePage_Tab_Appearance_Text); 
 		Composite appearanceComposite = new Composite(tabFolder, SWT.NONE);
 		appearanceComposite.setLayout(new GridLayout());
 		appearanceComposite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
@@ -236,22 +236,22 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		appearanceTab.setControl(appearanceComposite);
 
 		// Appearance controls
-		Group group = createGroup(appearanceComposite, VCEMessages.getString("PreferencePage.EditorGroup.Title"), 2); //$NON-NLS-1$
-		splitRadioButton = createRadioButton(group, VCEMessages.getString("PreferencePage.EditorGroup.SplitPaneOrientation")); //$NON-NLS-1$
-		notebookRadioButton = createRadioButton(group, VCEMessages.getString("PreferencePage.EditorGroup.UseNoteBook")); //$NON-NLS-1$
+		Group group = createGroup(appearanceComposite, VCEMessages.PreferencePage_EditorGroup_Title, 2); 
+		splitRadioButton = createRadioButton(group, VCEMessages.PreferencePage_EditorGroup_SplitPaneOrientation); 
+		notebookRadioButton = createRadioButton(group, VCEMessages.PreferencePage_EditorGroup_UseNoteBook); 
 
 		Composite openComposite = new Composite(appearanceComposite, SWT.NONE);
 		openComposite.setLayout(new GridLayout(2, false));
 
-		openPropertiesViewIfRequired = createCheckBox(openComposite, VCEMessages.getString("PreferencePage.OpenView.Properties"), 0); //$NON-NLS-1$
+		openPropertiesViewIfRequired = createCheckBox(openComposite, VCEMessages.PreferencePage_OpenView_Properties, 0); 
 		fPropertiesViewImage = CDEPlugin.getImageFromBundle(Platform.getBundle("org.eclipse.ui"), "icons/full/eview16/prop_ps.gif");	//$NON-NLS-1$ //$NON-NLS-2$
 		createLabel(openComposite, null, fPropertiesViewImage);
 
-		openJavaBeansViewIfRequired = createCheckBox(openComposite, VCEMessages.getString("PreferencePage.OpenView.JavaBeans"), 0); //$NON-NLS-1$
+		openJavaBeansViewIfRequired = createCheckBox(openComposite, VCEMessages.PreferencePage_OpenView_JavaBeans, 0); 
 		fJavaBeansViewImage = CDEPlugin.getImageFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/ctool16/javavisualeditor_co.gif"); //$NON-NLS-1$	
 		createLabel(openComposite, null, fJavaBeansViewImage);
 
-		lookAndFeelLabel = createLabel(appearanceComposite, VCEMessages.getString("PreferencePage.LookAndFeel.Title"), null); //$NON-NLS-1$
+		lookAndFeelLabel = createLabel(appearanceComposite, VCEMessages.PreferencePage_LookAndFeel_Title, null); 
 
 		// Look and feel is a list of known ones plus a button to let users define new look and feel classes
 		Composite lookAndFeelComposite = new Composite(appearanceComposite, SWT.NONE);
@@ -259,7 +259,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		GridData lfData = new GridData(GridData.FILL_HORIZONTAL);
 		lookAndFeelComposite.setLayoutData(lfData);
 
-		lookAndFeelTable = createTable(lookAndFeelComposite, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL, new String[] { VCEMessages.getString("VCEPreferencePage.Tab.Appearance.Table.LookAndFeel.Name"), VCEMessages.getString("VCEPreferencePage.Tab.Appearance.Table.LookAndFeel.Class")}); //$NON-NLS-1$ //$NON-NLS-2$
+		lookAndFeelTable = createTable(lookAndFeelComposite, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL, new String[] { VCEMessages.VCEPreferencePage_Tab_Appearance_Table_LookAndFeel_Name, VCEMessages.VCEPreferencePage_Tab_Appearance_Table_LookAndFeel_Class}); 
 
 		GridData listData = new GridData(GridData.FILL_HORIZONTAL);
 		lookAndFeelTable.setLayoutData(listData);
@@ -274,7 +274,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		lookAndFeelButtons.setLayoutData(lfButtonData);
 		// Create new, edit and remove buttons
 		Button bAdd = new Button(lookAndFeelButtons, SWT.PUSH);
-		bAdd.setText(VCEMessages.getString("VCEPreferencePage.Tab.Appearance.Button.New")); //$NON-NLS-1$
+		bAdd.setText(VCEMessages.VCEPreferencePage_Tab_Appearance_Button_New); 
 		GridData addData = new GridData();
 		addData.horizontalAlignment = GridData.FILL;
 		addData.widthHint = getButtonWidthHint(bAdd);
@@ -286,7 +286,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		});
 
 		final Button bEdit = new Button(lookAndFeelButtons, SWT.PUSH);
-		bEdit.setText(VCEMessages.getString("VCEPreferencePage.Tab.Appearance.Button.Edit")); //$NON-NLS-1$
+		bEdit.setText(VCEMessages.VCEPreferencePage_Tab_Appearance_Button_Edit); 
 		GridData editData = new GridData();
 		editData.horizontalAlignment = GridData.FILL;
 		editData.widthHint = getButtonWidthHint(bEdit);
@@ -302,7 +302,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		});
 
 		final Button bRemove = new Button(lookAndFeelButtons, SWT.PUSH);
-		bRemove.setText(VCEMessages.getString("VCEPreferencePage.Tab.Appearance.Button.Remove")); //$NON-NLS-1$
+		bRemove.setText(VCEMessages.VCEPreferencePage_Tab_Appearance_Button_Remove); 
 		GridData removeData = new GridData();
 		removeData.horizontalAlignment = GridData.FILL;
 		removeData.widthHint = getButtonWidthHint(bRemove);
@@ -356,16 +356,16 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		// with a .options whereby the live AWT/Swing windows can be seen and also
 		// the XML text for the JVE object model can be seen, both of which help debugging
 		
-		showGridCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowGridWhenSelected"), 15); //$NON-NLS-1$
+		showGridCheckBox = createCheckBox(appearanceComposite, VCEMessages.PreferencePage_ShowGridWhenSelected, 15); 
 
 		// Create controls for setting the XY grid spacing default
 		xyGridSpacingText = createLabelText(appearanceComposite, "X/Y Grid Spacing:", 10, 12);
 
-		renameAskCheckbox = createCheckBox(appearanceComposite, VCEMessages.getString("VCEPreferencePage.Checkbox.PromptNameOnCreation.Text"), 15); //$NON-NLS-1$
+		renameAskCheckbox = createCheckBox(appearanceComposite, VCEMessages.VCEPreferencePage_Checkbox_PromptNameOnCreation_Text, 15); 
 
-		showWindowCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowLiveWindow"), 15); //$NON-NLS-1$
-		showXMLTextCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowXMLText"), 15); //$NON-NLS-1$
-		showClipboardCheckBox = createCheckBox(appearanceComposite, VCEMessages.getString("PreferencePage.ShowClipboardText"), 15); //$NON-NLS-1$
+		showWindowCheckBox = createCheckBox(appearanceComposite, VCEMessages.PreferencePage_ShowLiveWindow, 15); 
+		showXMLTextCheckBox = createCheckBox(appearanceComposite, VCEMessages.PreferencePage_ShowXMLText, 15); 
+		showClipboardCheckBox = createCheckBox(appearanceComposite, VCEMessages.PreferencePage_ShowClipboardText, 15); 
 				
 		if (!VCEPreferences.isLiveWindow())
 			showWindowCheckBox.setVisible(false);
@@ -425,16 +425,16 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected void createCodeGenerationTab() {
 
 		codeGenTab = new TabItem(tabFolder, SWT.NONE);
-		codeGenTab.setText(VCEMessages.getString("VCEPreferencePage.Tab.CodeGeneration.Text")); //$NON-NLS-1$
+		codeGenTab.setText(VCEMessages.VCEPreferencePage_Tab_CodeGeneration_Text); 
 		Composite codeGenComposite = new Composite(tabFolder, SWT.NONE);
 		codeGenComposite.setLayout(new GridLayout());
 		codeGenComposite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
 		codeGenTab.setControl(codeGenComposite);
 
-		Group codeGenGroup_Gen = createGroup(codeGenComposite, VCEMessages.getString("PreferencePage.CodeGen.ParsingGeneration_Style_1"), 1); //$NON-NLS-1$
+		Group codeGenGroup_Gen = createGroup(codeGenComposite, VCEMessages.PreferencePage_CodeGen_ParsingGeneration_Style_1, 1); 
 
-		generateExpressionComment = createCheckBox(codeGenGroup_Gen, VCEMessages.getString("PreferencePage.NewExpressionCommentPrompt"), 0); //$NON-NLS-1$
-		generateTryCatchBlock = createCheckBox(codeGenGroup_Gen, VCEMessages.getString("PreferencePage.GenerateTryCatchBlock"), 0); //$NON-NLS-1$
+		generateExpressionComment = createCheckBox(codeGenGroup_Gen, VCEMessages.PreferencePage_NewExpressionCommentPrompt, 0); 
+		generateTryCatchBlock = createCheckBox(codeGenGroup_Gen, VCEMessages.PreferencePage_GenerateTryCatchBlock, 0); 
 
 		// Create a listener to see when the values in text boxes changes so we can trigger revalidation
 		ModifyListener modifyListener = new ModifyListener() {
@@ -444,11 +444,11 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			}
 		};
 
-		sourceSyncGrp = createGroup(codeGenComposite, VCEMessages.getString("PreferencePage.CodeGen.Source_Synchronization_Delay"), 6); //$NON-NLS-1$
+		sourceSyncGrp = createGroup(codeGenComposite, VCEMessages.PreferencePage_CodeGen_Source_Synchronization_Delay, 6); 
 		// The group is 5 wide.
 
 		// The JavaBeansToSource are 6 wide in the group
-		createLabel(sourceSyncGrp, VCEMessages.getString("PreferencePage.CodeGen.SourceToJavaBeans"), null); //$NON-NLS-1$
+		createLabel(sourceSyncGrp, VCEMessages.PreferencePage_CodeGen_SourceToJavaBeans, null); 
 		sourceToVisual = createText(sourceSyncGrp, 11, 1); //$NON-NLS-1$
 		sourceToVisual.addModifyListener(modifyListener);
 		sourceToVisual.setTextLimit(9);
@@ -585,7 +585,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected void createStylesTab() {
 
 		stylesTab = new TabItem(tabFolder, SWT.NONE);
-		stylesTab.setText(VCEMessages.getString("VCEPreferencePage.Tab.Styles.Text")); //$NON-NLS-1$
+		stylesTab.setText(VCEMessages.VCEPreferencePage_Tab_Styles_Text); 
 
 		Composite stylesComposite = new Composite(tabFolder, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
@@ -598,7 +598,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		stylesTab.setControl(stylesComposite);
 
 		// Create the styles table
-		stylesTable = createTable(stylesComposite, SWT.SINGLE | SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL, new String[] { VCEMessages.getString("VCEPreferencePage.Tab.Styles.Table.Styles")}); //$NON-NLS-1$
+		stylesTable = createTable(stylesComposite, SWT.SINGLE | SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL, new String[] { VCEMessages.VCEPreferencePage_Tab_Styles_Table_Styles}); 
 		Label filler = createLabel(stylesComposite, "", null); //$NON-NLS-1$
 		GridData lData = new GridData();
 		lData.heightHint = 55;
@@ -633,7 +633,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		gd.horizontalSpan=2;
 		filler.setLayoutData(gd);
 		noverifyCheckbox = new Button(stylesComposite, SWT.CHECK);
-		noverifyCheckbox.setText(VCEMessages.getString("VCEPreferencePage.NoverifyCheckbox.text")); //$NON-NLS-1$
+		noverifyCheckbox.setText(VCEMessages.VCEPreferencePage_NoverifyCheckbox_text); 
 		noverifyCheckbox.setSelection(ProxyPlugin.getPlugin().getPluginPreferences().getBoolean(ProxyPlugin.PREFERENCES_VM_NOVERIFY_KEY));
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan=2;
@@ -750,12 +750,12 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			int val = Integer.parseInt(sourceToVisual.getText());
 			if (val < VCEPreferences.DEFAULT_SYNC_DELAY) {
 				isValid = false;
-				setErrorMessage(VCEMessages.getString("PreferencePage.CodeGen.Error.DelayTimeMinimum_ERROR_")); //$NON-NLS-1$
+				setErrorMessage(VCEMessages.PreferencePage_CodeGen_Error_DelayTimeMinimum_ERROR_); 
 				setValid(false);
 			}
 		} catch (NumberFormatException ex) {
 			isValid = false;
-			setErrorMessage(VCEMessages.getString("PreferencePage.CodeGen.Error.DelayTimeMustBeInteger_ERROR_")); //$NON-NLS-1$
+			setErrorMessage(VCEMessages.PreferencePage_CodeGen_Error_DelayTimeMustBeInteger_ERROR_); 
 			setValid(false);
 		}
 		// If we got no errors then clear the error message and refresh the total source to visual time

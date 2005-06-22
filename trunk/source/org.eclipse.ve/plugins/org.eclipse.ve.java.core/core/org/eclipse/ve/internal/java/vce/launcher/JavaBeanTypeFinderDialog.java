@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaBeanTypeFinderDialog.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 13:00:22 $ 
  */
 
 /*
@@ -82,7 +82,7 @@ public class JavaBeanTypeFinderDialog extends TwoPaneElementSelector {
 		} catch (InterruptedException e) {
 			return CANCEL;
 		} catch (InvocationTargetException e) {
-			ExceptionHandler.handle(e, VCELauncherMessages.getString("ErrorDialog.Title"), e.getMessage()); //$NON-NLS-1$
+			ExceptionHandler.handle(e, VCELauncherMessages.ErrorDialog_Title, e.getMessage()); 
 			return CANCEL;
 		}
 		

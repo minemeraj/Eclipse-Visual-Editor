@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RegisteredClasspathContainerWizardPage.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-22 13:05:53 $ 
  */
 package org.eclipse.ve.internal.java.wizard;
 
@@ -43,7 +43,7 @@ public class RegisteredClasspathContainerWizardPage extends WizardPage implement
 	protected static Image fExternalJarWithSourceImage;	
 	
 	public RegisteredClasspathContainerWizardPage(){
-		super(InternalMessages.getString("ClasspathWizardPage.PageName")); //$NON-NLS-1$
+		super(InternalMessages.ClasspathWizardPage_PageName); 
 		setImageDescriptor(JavaVEPlugin.getWizardTitleImageDescriptor());
 	}
 	public void createControl(Composite parent) {
@@ -57,15 +57,15 @@ public class RegisteredClasspathContainerWizardPage extends WizardPage implement
 
 		// See if we can find configuration data for the extension
 		if ( configData == null ) {
-			setErrorMessage(MessageFormat.format(InternalMessages.getString("ClasspathWizardPage.NoConfigData.ErrorMessage_ERROR_"), new Object[]{containerid})); //$NON-NLS-1$
-			new Label(c,SWT.NONE).setText(MessageFormat.format(InternalMessages.getString("ClasspathWizardPage.NoConfigData.Label.ErrorMessage_ERROR_"), new Object[]{containerid})); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(InternalMessages.ClasspathWizardPage_NoConfigData_ErrorMessage_ERROR_, new Object[]{containerid})); 
+			new Label(c,SWT.NONE).setText(MessageFormat.format(InternalMessages.ClasspathWizardPage_NoConfigData_Label_ErrorMessage_ERROR_, new Object[]{containerid})); 
 			setControl(c);
 			return;
 		}
 
 		// Create a group that spans two columns - the width of the composite
 		Group g = createGroup(c,2);
-		g.setText(InternalMessages.getString("ClasspathWizardPage.Group.Buildpath.Includes")); //$NON-NLS-1$
+		g.setText(InternalMessages.ClasspathWizardPage_Group_Buildpath_Includes); 
 		if ( fExternalJarImage == null ) {
 			fExternalJarImage = org.eclipse.jdt.internal.ui.JavaPlugin.getDefault().getImageRegistry().get(JavaPluginImages.IMG_OBJS_EXTJAR);
 		}
@@ -90,7 +90,7 @@ public class RegisteredClasspathContainerWizardPage extends WizardPage implement
 			if ( source != null ) {
 				createSpacer(g,1);
 				Label l = createIndentedLabel(g);
-				l.setText(MessageFormat.format(InternalMessages.getString("ClasspathWizardPage.BuildPath.SourceAttachments.Message"), new Object[]{containerid + "/" + source})); //$NON-NLS-1$ //$NON-NLS-2$
+				l.setText(MessageFormat.format(InternalMessages.ClasspathWizardPage_BuildPath_SourceAttachments_Message, new Object[]{containerid + "/" + source})); 
 			} 
 		}
 
@@ -204,7 +204,7 @@ public class RegisteredClasspathContainerWizardPage extends WizardPage implement
 			String ctrid = configs[i].getAttributeAsIs(JavaVEPlugin.PI_CONTAINER);
 			if (containerid.equals(ctrid)) {
 				configData = configs[i];
-				setTitle(MessageFormat.format(InternalMessages.getString("RegisteredClasspathContainerWizardPage.Title"), new Object[] {name, containerid}));				 //$NON-NLS-1$
+				setTitle(MessageFormat.format(InternalMessages.RegisteredClasspathContainerWizardPage_Title, new Object[] {name, containerid}));				 
 				break;
 			} 
 		}				

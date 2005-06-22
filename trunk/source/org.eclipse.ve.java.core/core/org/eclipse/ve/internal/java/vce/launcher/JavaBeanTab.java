@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-26 03:36:48 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-22 13:00:22 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -108,7 +108,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		projComp.setLayoutData(gd);
 		
 		fProjLabel = new Label(projComp, SWT.NONE);
-		fProjLabel.setText(VCELauncherMessages.getString("BeanTab.project.label")); //$NON-NLS-1$
+		fProjLabel.setText(VCELauncherMessages.BeanTab_project_label); 
 		gd = new GridData();
 		gd.horizontalSpan = 2;
 		fProjLabel.setLayoutData(gd);
@@ -122,7 +122,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			}
 		});
 		
-		fProjButton = createPushButton(projComp, VCELauncherMessages.getString("BeanTab.browse.label"), null); //$NON-NLS-1$
+		fProjButton = createPushButton(projComp, VCELauncherMessages.BeanTab_browse_label, null); 
 		fProjButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent evt) {
 				handleProjectButtonSelected();
@@ -139,7 +139,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		mainComp.setLayoutData(gd);
 		
 		fMainLabel = new Label(mainComp, SWT.NONE);
-		fMainLabel.setText(VCELauncherMessages.getString("BeanTab.bean.label")); //$NON-NLS-1$
+		fMainLabel.setText(VCELauncherMessages.BeanTab_bean_label); 
 		gd = new GridData();
 		gd.horizontalSpan = 3;
 		fMainLabel.setLayoutData(gd);
@@ -153,7 +153,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			}
 		});
 		
-		fSearchButton = createPushButton(mainComp,VCELauncherMessages.getString("BeanTab.search.label"), null); //$NON-NLS-1$
+		fSearchButton = createPushButton(mainComp,VCELauncherMessages.BeanTab_search_label, null); 
 		fSearchButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent evt) {
 				handleSearchButtonSelected();
@@ -161,12 +161,12 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		});
 		
 		fSearchExternalJarsCheckButton = new Button(mainComp, SWT.CHECK);
-		fSearchExternalJarsCheckButton.setText(VCELauncherMessages.getString("BeanTab.externaljars.label")); //$NON-NLS-1$
-		fSearchExternalJarsCheckButton.setToolTipText(VCELauncherMessages.getString("BeanTab.externaljars.tooltip")); //$NON-NLS-1$
+		fSearchExternalJarsCheckButton.setText(VCELauncherMessages.BeanTab_externaljars_label); 
+		fSearchExternalJarsCheckButton.setToolTipText(VCELauncherMessages.BeanTab_externaljars_tooltip); 
 
 		// Label for locale
 		Label fLocaleLabel = new Label(mainComp, SWT.NONE);
-		fLocaleLabel.setText(VCELauncherMessages.getString("BeanTab.locale.label")); //$NON-NLS-1$
+		fLocaleLabel.setText(VCELauncherMessages.BeanTab_locale_label); 
 		gd = new GridData();
 		gd.horizontalSpan = 3;
 		fLocaleLabel.setLayoutData(gd);
@@ -189,7 +189,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		fDefaultLocaleButton = new Button(localeComp,SWT.CHECK);
 		gd = new GridData();
 		fDefaultLocaleButton.setData(gd);
-		fDefaultLocaleButton.setText(VCELauncherMessages.getString("BeanTab.default.label")); //$NON-NLS-1$
+		fDefaultLocaleButton.setText(VCELauncherMessages.BeanTab_default_label); 
 		fDefaultLocaleButton.setSelection(true);
 		
 		fLocaleText = new Text(localeComp,SWT.BORDER);
@@ -198,7 +198,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		fLocaleText.setText(Locale.getDefault().toString());
 		
 		Label fSuggestionLabel = new Label(localeComp,SWT.NONE);
-		fSuggestionLabel.setText(VCELauncherMessages.getString("BeanTab.localesuggest.label")); //$NON-NLS-1$
+		fSuggestionLabel.setText(VCELauncherMessages.BeanTab_localesuggest_label); 
 		fSuggestionLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
 		fDefaultLocaleButton.addSelectionListener(new SelectionAdapter(){
@@ -221,8 +221,8 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		
 		// Provide options specific to the Swing/AWT widget sets
 		TabItem swingItem = new TabItem(widgetSetsTabFolder, SWT.NONE);
-		swingItem.setText(VCELauncherMessages.getString("BeanTab.swingtab.text")); //$NON-NLS-1$
-		swingItem.setToolTipText(VCELauncherMessages.getString("BeanTab.swingtab.tooltip")); //$NON-NLS-1$
+		swingItem.setText(VCELauncherMessages.BeanTab_swingtab_text); 
+		swingItem.setToolTipText(VCELauncherMessages.BeanTab_swingtab_tooltip); 
 		
 		Composite swingOptionsComp = new Composite(widgetSetsTabFolder, SWT.NONE);
 		GridLayout swingLayout = new GridLayout();
@@ -231,7 +231,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		
 		// The user can specify which look and feel they want
 		Label fJavaBeanLabel = new Label(swingOptionsComp, SWT.NONE);
-		fJavaBeanLabel.setText(VCELauncherMessages.getString("BeanTab.lookfeel.label")); //$NON-NLS-1$
+		fJavaBeanLabel.setText(VCELauncherMessages.BeanTab_lookfeel_label); 
 		gd = new GridData();
 		gd.horizontalSpan = 3;
 		fJavaBeanLabel.setLayoutData(gd);
@@ -248,7 +248,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		// Let the user specify the size of the component to open 
 		// or whether to pack it
 		Label fSizeLabel = new Label(swingOptionsComp,SWT.NONE);
-		fSizeLabel.setText(VCELauncherMessages.getString("BeanTab.size.label")); //$NON-NLS-1$
+		fSizeLabel.setText(VCELauncherMessages.BeanTab_size_label); 
 		
 		Composite visualComp = new Composite(swingOptionsComp, SWT.NONE);
 		GridLayout visualLayout = new GridLayout();
@@ -260,7 +260,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		visualComp.setLayoutData(gd);		
 		
 		fPackWindow = new Button(visualComp,SWT.CHECK);
-		fPackWindow.setText(VCELauncherMessages.getString("BeanTab.pack.label")); //$NON-NLS-1$
+		fPackWindow.setText(VCELauncherMessages.BeanTab_pack_label); 
 		fPackWindow.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent evt) {
 				updateLaunchConfigurationDialog();
@@ -269,8 +269,8 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 
 		// Provide options specific to the SWT widget set
 		TabItem swtItem = new TabItem(widgetSetsTabFolder, SWT.NONE);
-		swtItem.setText(VCELauncherMessages.getString("BeanTab.swttab.text")); //$NON-NLS-1$
-		swtItem.setToolTipText(VCELauncherMessages.getString("BeanTab.swttab.tooltip")); //$NON-NLS-1$
+		swtItem.setText(VCELauncherMessages.BeanTab_swttab_text); 
+		swtItem.setToolTipText(VCELauncherMessages.BeanTab_swttab_tooltip); 
 		
 		Composite swtOptionsComp = new Composite(widgetSetsTabFolder, SWT.NONE);
 		GridLayout swtLayout = new GridLayout();
@@ -280,7 +280,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		// Let the user specify the size of the component to open 
 		// or whether to pack it
 		Label fSWTSizeLabel = new Label(swtOptionsComp,SWT.NONE);
-		fSWTSizeLabel.setText(VCELauncherMessages.getString("BeanTab.swtsize.label")); //$NON-NLS-1$
+		fSWTSizeLabel.setText(VCELauncherMessages.BeanTab_swtsize_label); 
 		
 		Composite swtVisualComp = new Composite(swtOptionsComp, SWT.NONE);
 		GridLayout swtVisualLayout = new GridLayout();
@@ -292,7 +292,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		swtVisualComp.setLayoutData(gd);		
 		
 		fPackSWTWindow = new Button(swtVisualComp,SWT.CHECK);
-		fPackSWTWindow.setText(VCELauncherMessages.getString("BeanTab.pack.label")); //$NON-NLS-1$
+		fPackSWTWindow.setText(VCELauncherMessages.BeanTab_pack_label); 
 		fPackSWTWindow.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent evt) {
 				updateLaunchConfigurationDialog();
@@ -316,7 +316,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			}
 		}
 		if ( !localeIsValid ) {
-			setErrorMessage(VCELauncherMessages.getString("BeanTab.badlocale.msg_ERROR_") + fLocaleText.getText()); //$NON-NLS-1$
+			setErrorMessage(VCELauncherMessages.BeanTab_badlocale_msg_ERROR_ + fLocaleText.getText()); 
 		}
 		return localeIsValid;
 	}
@@ -497,8 +497,8 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		Shell shell = getShell();
 		JavaBeanTypeFinderDialog dialog = new JavaBeanTypeFinderDialog(shell, getLaunchConfigurationDialog(), elem, constraints);
 		dialog.setFilter(fMainText.getText());
-		dialog.setTitle(VCELauncherMessages.getString("BeanTab.search.title")); //$NON-NLS-1$
-		dialog.setMessage(VCELauncherMessages.getString("BeanTab.search.msg")); //$NON-NLS-1$
+		dialog.setTitle(VCELauncherMessages.BeanTab_search_title); 
+		dialog.setMessage(VCELauncherMessages.BeanTab_search_msg); 
 		if (dialog.open() == Window.CANCEL) {
 			return;
 		}
@@ -545,8 +545,8 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		
 		ILabelProvider labelProvider= new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT);
 		ElementListSelectionDialog dialog= new ElementListSelectionDialog(getShell(), labelProvider);
-		dialog.setTitle(VCELauncherMessages.getString("BeanTab.project.search.title")); //$NON-NLS-1$
-		dialog.setMessage(VCELauncherMessages.getString("BeanTab.project.search.msg")); //$NON-NLS-1$
+		dialog.setTitle(VCELauncherMessages.BeanTab_project_search_title); 
+		dialog.setMessage(VCELauncherMessages.BeanTab_project_search_msg); 
 		dialog.setElements(projects);
 		
 		IJavaProject javaProject = getJavaProject();
@@ -617,14 +617,14 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		String name = fProjText.getText().trim();
 		if (name.length() > 0) {
 			if (!ResourcesPlugin.getWorkspace().getRoot().getProject(name).exists()) {
-				setErrorMessage(VCELauncherMessages.getString("BeanTab.badproject.msg_ERROR_")); //$NON-NLS-1$
+				setErrorMessage(VCELauncherMessages.BeanTab_badproject_msg_ERROR_); 
 				return false;
 			}
 		}
 
 		name = fMainText.getText().trim();
 		if (name.length() == 0) {
-			setErrorMessage(VCELauncherMessages.getString("BeanTab.nobean.msg_ERROR_")); //$NON-NLS-1$
+			setErrorMessage(VCELauncherMessages.BeanTab_nobean_msg_ERROR_); 
 			return false;
 		}
 		IJavaProject jp = getJavaProject();
@@ -633,7 +633,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			try {
 				JavaLaunchConfigurationUtils.getMainType(name, jp);
 			} catch (CoreException e) {
-				setErrorMessage(VCELauncherMessages.getString("BeanTab.badbean.msg_ERROR_")); //$NON-NLS-1$
+				setErrorMessage(VCELauncherMessages.BeanTab_badbean_msg_ERROR_); 
 				return false;
 			}
 		}	
@@ -710,7 +710,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 	 * @see ILaunchConfigurationTab#getName()
 	 */
 	public String getName() {
-		return VCELauncherMessages.getString("BeanTab.title"); //$NON-NLS-1$
+		return VCELauncherMessages.BeanTab_title; 
 	}
 	/**
 	 * Initialize those attributes whose default values are independent of any context.

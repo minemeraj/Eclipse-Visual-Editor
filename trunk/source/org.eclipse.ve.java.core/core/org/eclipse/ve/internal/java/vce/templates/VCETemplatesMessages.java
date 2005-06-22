@@ -1,57 +1,30 @@
-/*
- * Created on Apr 21, 2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-package org.eclipse.ve.internal.java.vce.templates;
 /*******************************************************************************
- * Copyright (c)  2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*
- *  $RCSfile: VCETemplatesMessages.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
- */
+package org.eclipse.ve.internal.java.vce.templates;
 
-import java.util.*;
+import org.eclipse.osgi.util.NLS;
 
-/**
- * @author sri
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-public class VCETemplatesMessages {
+public final class VCETemplatesMessages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.ve.internal.java.vce.templates.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.ve.internal.java.vce.templates.messages";//$NON-NLS-1$
 
-	private static final ResourceBundle RESOURCE_BUNDLE =
-		ResourceBundle.getBundle(BUNDLE_NAME);
-
-	/**
-	 * 
-	 */
 	private VCETemplatesMessages() {
-
-		// TODO Auto-generated constructor stub
+		// Do not instantiate
 	}
-	/**
-	 * @param key
-	 * @return
-	 */
-	public static String getString(String key) {
-		// TODO Auto-generated method stub
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}
+
+	public static String JavaObjectEmiter_Problem_DirectoryDoesntExist_ERROR_;
+	public static String JavaObjectEmiter_Problem_Security_EXC_;
+	public static String JavaObjectEmiter_Problem_IO_EXC_;
+
+	static {
+		NLS.initializeMessages(BUNDLE_NAME, VCETemplatesMessages.class);
 	}
 }
