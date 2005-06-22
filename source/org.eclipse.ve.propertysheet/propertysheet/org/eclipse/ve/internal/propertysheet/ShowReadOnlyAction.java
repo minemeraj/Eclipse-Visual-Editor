@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: ShowReadOnlyAction.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:47:33 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 15:21:41 $ 
  */
 
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
@@ -24,7 +24,7 @@ import org.eclipse.ui.views.properties.IPropertySheetEntry;
 public class ShowReadOnlyAction extends EToolsPropertySheetAction {
 	public ShowReadOnlyAction(EToolsPropertySheetPage page) {
 		super(page);
-		setText(PropertysheetMessages.getString(PropertysheetMessages.SHOW_READ_ONLY_LABEL));
+		setText(PropertysheetMessages.getString("show_read_only.label"));
 		setChecked(false);
 	}		
 
@@ -44,7 +44,7 @@ public class ShowReadOnlyAction extends EToolsPropertySheetAction {
 	}
 	
 	private void valueChanged(boolean on) {
-		setToolTipText(on ? PropertysheetMessages.getString(PropertysheetMessages.SHOW_READ_ONLY_HIDE_TOOLTIP) : PropertysheetMessages.getString(PropertysheetMessages.SHOW_READ_ONLY_SHOW_TOOLTIP));
+		setToolTipText(on ? PropertysheetMessages.getString("show_read_only_hide.tooltip") : PropertysheetMessages.getString("show_read_only_show.tooltip"));
 	}
 
 }

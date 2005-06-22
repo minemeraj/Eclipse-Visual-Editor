@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: StringCellEditor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:47:33 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 15:21:41 $ 
  */
 
 
@@ -40,7 +40,7 @@ public class StringCellEditor extends TextCellEditor {
 			return super.isCorrect(value);
 		} 
 		
-		setErrorMessage(PropertysheetMessages.getString(PropertysheetMessages.NOT_STRING));
+		setErrorMessage(PropertysheetMessages.getString("not_string_WARN_"));
 		return false;
 	}
 	

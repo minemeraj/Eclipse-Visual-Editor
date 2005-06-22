@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.29 $  $Date: 2005-06-22 13:04:18 $ 
+ *  $Revision: 1.30 $  $Date: 2005-06-22 15:21:39 $ 
  */
 
 import java.net.URL;
@@ -775,7 +775,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		try {
 			int total = Integer.parseInt(sourceToVisual.getText());
 			if(total<0 || total>Integer.MAX_VALUE){
-				setErrorMessage(PropertysheetMessages.getString(PropertysheetMessages.NOT_INTEGER));
+				setErrorMessage(PropertysheetMessages.getString("not_integer_WARN_"));
 				return false;
 			}
 			return true;

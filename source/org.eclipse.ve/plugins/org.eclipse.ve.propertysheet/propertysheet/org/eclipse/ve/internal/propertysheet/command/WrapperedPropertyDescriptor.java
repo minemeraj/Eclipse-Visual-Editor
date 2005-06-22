@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet.command;
 /*
  *  $RCSfile: WrapperedPropertyDescriptor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:47:33 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-22 15:21:41 $ 
  */
 
 
@@ -36,8 +36,8 @@ import java.text.MessageFormat;
 public final class WrapperedPropertyDescriptor implements ICommandPropertyDescriptor, ISourcedPropertyDescriptor, IEToolsPropertyDescriptor {
 	protected static final MessageFormat sApplyFormat, sResetFormat;
 	static {
-		sApplyFormat = new MessageFormat(PropertysheetMessages.getString(PropertysheetMessages.APPLY_VALUE));
-		sResetFormat = new MessageFormat(PropertysheetMessages.getString(PropertysheetMessages.RESET_VALUE));		
+		sApplyFormat = new MessageFormat(PropertysheetMessages.getString("apply_value"));
+		sResetFormat = new MessageFormat(PropertysheetMessages.getString("reset_value"));		
 	}
 	
 	protected IPropertyDescriptor fDescriptor;

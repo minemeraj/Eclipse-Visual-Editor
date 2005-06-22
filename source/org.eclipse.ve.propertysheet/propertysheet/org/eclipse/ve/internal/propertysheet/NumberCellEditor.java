@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: NumberCellEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-03 19:21:09 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-22 15:21:41 $ 
  */
 
 
@@ -77,10 +77,10 @@ public class NumberCellEditor extends ObjectCellEditor implements IExecutableExt
 		
 	protected static final String sNotNumberError, sNotIntegerError, sMinValue, sMaxValue;
 	static {
-		sNotNumberError = PropertysheetMessages.getString(PropertysheetMessages.NOT_NUMBER);
-		sNotIntegerError = PropertysheetMessages.getString(PropertysheetMessages.NOT_INTEGER);
-		sMinValue = PropertysheetMessages.getString(PropertysheetMessages.MIN_NUMBER);	
-		sMaxValue = PropertysheetMessages.getString(PropertysheetMessages.MAX_NUMBER);	
+		sNotNumberError = PropertysheetMessages.getString("not_number_WARN_");
+		sNotIntegerError = PropertysheetMessages.getString("not_integer_WARN_");
+		sMinValue = PropertysheetMessages.getString("minvalue");	
+		sMaxValue = PropertysheetMessages.getString("maxvalue");	
 	}	
 	
 	protected NumberFormat fFormatter;
