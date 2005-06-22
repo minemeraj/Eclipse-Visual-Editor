@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaObjectEmiter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-08 15:55:43 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-22 13:01:57 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -129,17 +129,17 @@ public class JavaObjectEmiter {
 						output.close();
 					}
 					else
-						createNewProblem(directory.toOSString().toCharArray(), VCETemplatesMessages.getString("JavaObjectEmiter.Problem.DirectoryDoesntExist_ERROR_"), 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0); //$NON-NLS-1$
+						createNewProblem(directory.toOSString().toCharArray(), VCETemplatesMessages.JavaObjectEmiter_Problem_DirectoryDoesntExist_ERROR_, 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0); 
 
 				}
 			}
 			catch (SecurityException se) {
 				org.eclipse.ve.internal.java.core.JavaVEPlugin.log(se);
-				createNewProblem(getClassName().toCharArray(), VCETemplatesMessages.getString("JavaObjectEmiter.Problem.Security_EXC_") + se.getMessage(), 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0); //$NON-NLS-1$
+				createNewProblem(getClassName().toCharArray(), VCETemplatesMessages.JavaObjectEmiter_Problem_Security_EXC_ + se.getMessage(), 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0); 
 			}
 			catch (java.io.IOException ioe) {
 				org.eclipse.ve.internal.java.core.JavaVEPlugin.log(ioe);
-				createNewProblem(getClassName().toCharArray(), VCETemplatesMessages.getString("JavaObjectEmiter.Problem.IO_EXC_") + ioe.getMessage(), 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0); //$NON-NLS-1$
+				createNewProblem(getClassName().toCharArray(), VCETemplatesMessages.JavaObjectEmiter_Problem_IO_EXC_ + ioe.getMessage(), 0, null, org.eclipse.jdt.internal.compiler.problem.ProblemSeverities.Error, 0, 0, 0); 
 			}
 		}
 		/**

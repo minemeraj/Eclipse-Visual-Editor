@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.12 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-22 13:00:22 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -51,12 +51,12 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 			} catch (InterruptedException e) {
 				return;
 			} catch (InvocationTargetException e) {
-				MessageDialog.openError(getShell(), VCELauncherMessages.getString("Shortcut.ErrDlg.LaunchFailed.Title"), e.getMessage()); //$NON-NLS-1$
+				MessageDialog.openError(getShell(), VCELauncherMessages.Shortcut_ErrDlg_LaunchFailed_Title, e.getMessage()); 
 				return;
 			}
 			IType type = null;
 			if (types.length == 0) {
-				MessageDialog.openError(getShell(), VCELauncherMessages.getString("Shortcut.ErrDlg.LaunchFailed.Title"), VCELauncherMessages.getString("Shortcut.ErrDlg.LaunchFailed.Msg.NoBeanFound_ERROR_")); //$NON-NLS-1$ //$NON-NLS-2$
+				MessageDialog.openError(getShell(), VCELauncherMessages.Shortcut_ErrDlg_LaunchFailed_Title, VCELauncherMessages.Shortcut_ErrDlg_LaunchFailed_Msg_NoBeanFound_ERROR_); 
 			} else if (types.length > 1) {
 				type = chooseType(types, mode);
 			} else {
@@ -77,11 +77,11 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 	protected IType chooseType(IType[] types, String mode) {
 		ElementListSelectionDialog dialog= new ElementListSelectionDialog(getShell(), new JavaElementLabelProvider());
 		dialog.setElements(types);
-		dialog.setTitle(VCELauncherMessages.getString("Shortcut.TypeDlg.Title")); //$NON-NLS-1$
+		dialog.setTitle(VCELauncherMessages.Shortcut_TypeDlg_Title); 
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
-			dialog.setMessage(VCELauncherMessages.getString("Shortcut.TypeDlg.ChooseDebugType")); //$NON-NLS-1$
+			dialog.setMessage(VCELauncherMessages.Shortcut_TypeDlg_ChooseDebugType); 
 		} else {
-			dialog.setMessage(VCELauncherMessages.getString("Shortcut.TypeDlg.ChooseRunType")); //$NON-NLS-1$
+			dialog.setMessage(VCELauncherMessages.Shortcut_TypeDlg_ChooseRunType); 
 		}
 		dialog.setMultipleSelection(false);
 		if (dialog.open() == Window.OK) {
@@ -103,7 +103,7 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 		} catch (CoreException e) {
 			Shell shell = getShell();
 			if (shell != null) {
-				ErrorDialog.openError(shell, VCELauncherMessages.getString("ErrorDialog.Title"), VCELauncherMessages.getString("Shortcut.ErrDlg.Msg.LaunchFailed_ERROR_"), e.getStatus());  //$NON-NLS-1$ //$NON-NLS-2$
+				ErrorDialog.openError(shell, VCELauncherMessages.ErrorDialog_Title, VCELauncherMessages.Shortcut_ErrDlg_Msg_LaunchFailed_ERROR_, e.getStatus());  
 			}
 		}
 	}
@@ -169,11 +169,11 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 		IDebugModelPresentation labelProvider = DebugUITools.newDebugModelPresentation();
 		ElementListSelectionDialog dialog= new ElementListSelectionDialog(getShell(), labelProvider);
 		dialog.setElements(configList.toArray());
-		dialog.setTitle(VCELauncherMessages.getString("Shortcut.ConfigDlg.Title")); //$NON-NLS-1$
+		dialog.setTitle(VCELauncherMessages.Shortcut_ConfigDlg_Title); 
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
-			dialog.setMessage(VCELauncherMessages.getString("Shortcut.ConfigDlg.Msg.DebugConfiguration")); //$NON-NLS-1$
+			dialog.setMessage(VCELauncherMessages.Shortcut_ConfigDlg_Msg_DebugConfiguration); 
 		} else {
-			dialog.setMessage(VCELauncherMessages.getString("Shortcut.ConfigDlg.Msg.RunConfiguration")); //$NON-NLS-1$
+			dialog.setMessage(VCELauncherMessages.Shortcut_ConfigDlg_Msg_RunConfiguration); 
 		}
 		dialog.setMultipleSelection(false);
 		int result = dialog.open();

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.18 $  $Date: 2005-06-15 20:19:38 $ 
+ *  $Revision: 1.19 $  $Date: 2005-06-22 13:00:22 $ 
  */
 
 
@@ -66,7 +66,7 @@ public void launch(ILaunchConfiguration configuration, String mode, ILaunch laun
 			monitor = new NullProgressMonitor();
 		}
 		
-		monitor.beginTask(VCELauncherMessages.getString("LaunchConfigurationDelegate.Msg.Launching"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+		monitor.beginTask(VCELauncherMessages.LaunchConfigurationDelegate_Msg_Launching, IProgressMonitor.UNKNOWN); 
 		// check for cancellation
 		if (monitor.isCanceled()) {
 			return;
@@ -78,7 +78,7 @@ public void launch(ILaunchConfiguration configuration, String mode, ILaunch laun
 
 		IVMRunner runner = vm.getVMRunner(mode);
 		if (runner == null) {
-			abort(MessageFormat.format(VCELauncherMessages.getString("Launcher.jreerror.msg_ERROR_"), new String[]{vm.getId()}), null, IJavaLaunchConfigurationConstants.ERR_VM_RUNNER_DOES_NOT_EXIST); //$NON-NLS-1$
+			abort(MessageFormat.format(VCELauncherMessages.Launcher_jreerror_msg_ERROR_, new String[]{vm.getId()}), null, IJavaLaunchConfigurationConstants.ERR_VM_RUNNER_DOES_NOT_EXIST); 
 		}
 
 		File workingDir = verifyWorkingDirectory(configuration);

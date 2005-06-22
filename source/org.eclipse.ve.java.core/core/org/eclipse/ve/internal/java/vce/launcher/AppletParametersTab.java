@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.vce.launcher;
  *******************************************************************************/
 /*
  *  $RCSfile: AppletParametersTab.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 13:00:22 $ 
  */
 
 import java.text.MessageFormat;
@@ -64,9 +64,9 @@ public class AppletParametersTab extends AbstractLaunchConfigurationTab {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		fParmsTable.setLayoutData(gd);
 		nameColumn = new TableColumn(fParmsTable, SWT.NONE);
-		nameColumn.setText(VCELauncherMessages.getString("AppletParms.name")); //$NON-NLS-1$
+		nameColumn.setText(VCELauncherMessages.AppletParms_name); 
 		valueColumn = new TableColumn(fParmsTable, SWT.NONE);
-		valueColumn.setText(VCELauncherMessages.getString("AppletParms.value")); //$NON-NLS-1$
+		valueColumn.setText(VCELauncherMessages.AppletParms_value); 
 		fTableLayout.addColumnData(new ColumnWeightData(100));
 		fTableLayout.addColumnData(new ColumnWeightData(100));
 		fParmsTable.setHeaderVisible(true);
@@ -134,7 +134,7 @@ public class AppletParametersTab extends AbstractLaunchConfigurationTab {
 					public void modifyText(ModifyEvent event) {
 						// If the text is blank then error
 						if (text.getText() == null || text.getText().trim().length() == 0) {
-							setErrorMessage(VCELauncherMessages.getString("AppletParms.novalue_WARN_")); //$NON-NLS-1$
+							setErrorMessage(VCELauncherMessages.AppletParms_novalue_WARN_); 
 							isValid = false;
 							text.setBackground(ColorConstants.red);
 						} else {
@@ -165,7 +165,7 @@ public class AppletParametersTab extends AbstractLaunchConfigurationTab {
 				GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_FILL);
 		buttonsComp.setLayoutData(data);
 		fAddButton = new Button(buttonsComp, SWT.PUSH);
-		fAddButton.setText(VCELauncherMessages.getString("AppletParms.new")); //$NON-NLS-1$
+		fAddButton.setText(VCELauncherMessages.AppletParms_new); 
 		fAddButton.setLayoutData(new GridData());
 		fAddButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent evt) {
@@ -173,17 +173,17 @@ public class AppletParametersTab extends AbstractLaunchConfigurationTab {
 				// See the index of the new item
 				int newItemIndex = fParmsTable.indexOf(newItem);
 				String nameString =
-					MessageFormat.format(VCELauncherMessages.getString("AppletParms.nameindex"), new Object[] { new Integer(newItemIndex)}); //$NON-NLS-1$
+					MessageFormat.format(VCELauncherMessages.AppletParms_nameindex, new Object[] { new Integer(newItemIndex)}); 
 				newItem.setText(0, nameString);
 				String valueString =
-					MessageFormat.format(VCELauncherMessages.getString("AppletParms.valueindex"), new Object[] { new Integer(newItemIndex)}); //$NON-NLS-1$
+					MessageFormat.format(VCELauncherMessages.AppletParms_valueindex, new Object[] { new Integer(newItemIndex)}); 
 				newItem.setText(1, valueString);
 				updateLaunchConfigurationDialog();	
 			}
 		});
 
 		fRemoveButton = new Button(buttonsComp, SWT.PUSH);
-		fRemoveButton.setText(VCELauncherMessages.getString("AppletParms.remove")); //$NON-NLS-1$
+		fRemoveButton.setText(VCELauncherMessages.AppletParms_remove); 
 		fRemoveButton.setLayoutData(new GridData());
 		fRemoveButton.setEnabled(false);
 		fRemoveButton.addSelectionListener(new SelectionAdapter() {
@@ -288,7 +288,7 @@ public class AppletParametersTab extends AbstractLaunchConfigurationTab {
 	public void setDefaults(ILaunchConfigurationWorkingCopy aConfiguration) {
 	}
 	public String getName() {
-		return VCELauncherMessages.getString("AppletParms.title"); //$NON-NLS-1$
+		return VCELauncherMessages.AppletParms_title; 
 	}
 	public Image getImage(){
 		return JavaVEPlugin.getAppletImage();
