@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-21 15:06:25 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 16:22:09 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -27,7 +27,13 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 
-
+/**
+ * ContainerPolicy for a CBanner.  A CBanner may have three children in a left, right,
+ * or bottom location.  The control is created as a child and then assigned to a location
+ * by the CBanner.
+ * 
+ * @since 1.1
+ */
 public class CBannerContainerPolicy extends CompositeContainerPolicy {
 	
 	EReference sfLeftControl, sfRightControl, sfBottomControl;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerLayoutEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-21 15:06:25 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 16:22:09 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -32,23 +32,27 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.swt.SWT;
 
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
  
 /**
+ * The LayoutEditPolicy for a CBanner will use the helper class to add feedback to regions
+ * based on what is currently being moused over and the availability of the region. 
  * 
- * @since 1.1.0
+ * @since 1.1
  */
 public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 	
-	protected VisualContainerPolicy fPolicy;
+	static protected VisualContainerPolicy fPolicy;
 	protected CBannerLayoutPolicyHelper fLayoutPolicyHelper;
 	protected CBannerLayoutFeedback fCBannerLayoutFeedback = null;
-	protected CBannerLayoutRegionFeedback fRegionFeedback = null;
+	protected CustomLayoutRegionFeedback fRegionFeedback = null;
 	protected Rectangle fCurrentRectangle = null;
 
 	public CBannerLayoutEditPolicy(EditDomain anEditDomain) {
@@ -96,7 +100,7 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 					if (fRegionFeedback != null)
 						removeFeedback(fRegionFeedback);
 					fCurrentRectangle = r;
-					CBannerLayoutRegionFeedback rf = new CBannerLayoutRegionFeedback();
+					CustomLayoutRegionFeedback rf = new CustomLayoutRegionFeedback();
 					rf.setLabel(CBannerLayoutFeedback.getDisplayConstraint(str));
 					fRegionFeedback = rf;
 					fRegionFeedback.setBounds(r);
@@ -116,7 +120,8 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 	}
 	
 	/**
-	 * createAddCommand.
+	 * createAddCommand
+	 * 
 	 * A new child is being moved to the container.
 	 * Create the command to add it.
 	 */
@@ -152,6 +157,9 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 		return addCmd;
 	}
 	
+	/**
+	 * Focus from a region has been lost, erase the previous feedback.
+	 */
 	protected void eraseLayoutTargetFeedback(Request request) {
 		if (fCBannerLayoutFeedback != null) {
 			removeFeedback(fCBannerLayoutFeedback);
@@ -187,6 +195,9 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 		}
 	}
 	
+	/**
+	 * Get the feedback for the CBanner based on the request generated.
+	 */
 	private Figure getCBannerLayoutFeedback(Request request) {
 		// show the banner layout feedback
 		if (fCBannerLayoutFeedback == null) {
@@ -229,13 +240,15 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 		}
 	}
 
-	
+	/**
+	 * Show the target feedback.
+	 */
 	protected void showLayoutTargetFeedback(Request request) {
 		getCBannerLayoutFeedback(request);
 	}
 
 	/**
-	 * getDeleteDependantCommand method comment.
+	 * Get the command to delete one of the CBanner's children.
 	 */
 	protected Command getDeleteDependantCommand(Request request) {
 		Command deleteContributionCmd = fPolicy.getCommand(request);
@@ -330,4 +343,19 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 		return orphanContributionCmd;
 	}
 	
+	/**
+	 * returns if the CBanner is simple 
+	 */
+	public static boolean isSimple(){
+		EObject parent = (EObject) fPolicy.getContainer();
+		
+		EStructuralFeature isSimple = 
+			JavaInstantiation.getSFeature((IJavaObjectInstance) parent, SWTConstants.SF_CBANNER_SIMPLE);
+		IJavaDataTypeInstance simple = (IJavaDataTypeInstance) parent.eGet(isSimple);
+		
+		if(simple != null)
+			return ((IBooleanBeanProxy)BeanProxyUtilities.getBeanProxy(simple)).booleanValue();
+		
+		return true;
+	}
 }

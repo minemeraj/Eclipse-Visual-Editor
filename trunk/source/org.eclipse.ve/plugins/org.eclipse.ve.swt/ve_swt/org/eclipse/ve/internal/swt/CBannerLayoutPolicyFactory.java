@@ -10,9 +10,10 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerLayoutPolicyFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:29 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-22 16:22:09 $ 
  */
 package org.eclipse.ve.internal.swt;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
@@ -26,6 +27,7 @@ import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.ve.internal.java.visual.*;
  
 /**
+ * LayoutPolicyFactory for CBanner to initialize the edit policy and helper class.
  * 
  * @since 1.1.0
  */

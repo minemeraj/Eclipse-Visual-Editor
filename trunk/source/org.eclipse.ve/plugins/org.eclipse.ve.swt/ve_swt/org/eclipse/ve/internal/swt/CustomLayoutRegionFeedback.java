@@ -10,19 +10,21 @@ package org.eclipse.ve.internal.swt;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: CBannerLayoutRegionFeedback.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:29 $ 
+ *  $RCSfile: CustomLayoutRegionFeedback.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-06-22 16:22:09 $ 
  */
 
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
+
 /**
+ * Provides shaded rectangles that will show the available regions of the CBanner.
  */
-public class CBannerLayoutRegionFeedback extends RectangleFigure {
+public class CustomLayoutRegionFeedback extends RectangleFigure {
 	protected String fLabel;
-public CBannerLayoutRegionFeedback() {
+public CustomLayoutRegionFeedback() {
 	super();
 	setLineStyle(SWT.LINE_SOLID);
 }

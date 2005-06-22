@@ -28,6 +28,7 @@ public class SWTConstants {
 		SF_CBANNER_LEFT,
 		SF_CBANNER_RIGHT,
 		SF_CBANNER_BOTTOM,
+		SF_CBANNER_SIMPLE,
 		
 		SF_VIEWFORM_TOPLEFT,
 		SF_VIEWFORM_TOPRIGHT,
@@ -102,6 +103,7 @@ public class SWTConstants {
 		SF_CBANNER_LEFT = URI.createURI("java:/org.eclipse.swt.custom#CBanner/left"); //$NON-NLS-1$
 		SF_CBANNER_RIGHT = URI.createURI("java:/org.eclipse.swt.custom#CBanner/right"); //$NON-NLS-1$
 		SF_CBANNER_BOTTOM = URI.createURI("java:/org.eclipse.swt.custom#CBanner/bottom"); //$NON-NLS-1$
+		SF_CBANNER_SIMPLE = URI.createURI("java:/org.eclipse.swt.custom#CBanner/simple"); //$NON-NLS-1$
 		
 		SF_VIEWFORM_TOPLEFT = URI.createURI("java:/org.eclipse.swt.custom#ViewForm/topLeft"); //$NON-NLS-1$
 		SF_VIEWFORM_TOPRIGHT = URI.createURI("java:/org.eclipse.swt.custom#ViewForm/topRight"); //$NON-NLS-1$
