@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:29 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-22 16:22:09 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -18,7 +18,11 @@ import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
-
+/**
+ * GraphicalEditPart for a CBanner.
+ * 
+ * @since 1.1
+ */
 public class CBannerGraphicalEditPart extends CompositeGraphicalEditPart {
 
 	public CBannerGraphicalEditPart(Object model) {

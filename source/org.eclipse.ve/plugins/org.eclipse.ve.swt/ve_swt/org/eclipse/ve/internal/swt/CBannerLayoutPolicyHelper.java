@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerLayoutPolicyHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-17 18:10:29 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-22 16:22:09 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -32,7 +32,12 @@ import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
  
-
+/**
+ * LayoutPolicyHelper for CBanner control to help show user feedback based on the available
+ * regions in the CBanner. 
+ * 
+ * @since 1.1
+ */
 public class CBannerLayoutPolicyHelper extends LayoutPolicyHelper {
 	
 	protected VisualContainerPolicy policy;
@@ -118,9 +123,6 @@ public class CBannerLayoutPolicyHelper extends LayoutPolicyHelper {
 	
 	/**
 	 * Return a list of occupied regions
-	 * Collect a list of all of the components of the container.
-	 * Then iterate over these and collect all of their constraints
-	 * and remove from available ones
 	 */
 	public String[] getAvailableRegions() {
 		// Get a COPY of all the regions, else result.remove() will
@@ -286,9 +288,6 @@ public class CBannerLayoutPolicyHelper extends LayoutPolicyHelper {
 	
 	/**
 	 * Return a list of occupied regions.
-	 * Collect a list of all of the components of the container.
-	 * Then iterate over these and collect all of their constraints
-	 * and remove from available ones
 	 */
 	public String[] getFilledRegions() {
 		
@@ -338,7 +337,7 @@ public class CBannerLayoutPolicyHelper extends LayoutPolicyHelper {
 	}
 	
 	protected void cancelConstraints(CommandBuilder commandBuilder, List children) {
-		// TODO Auto-generated method stub
+		// No action required.
 	}
 	
 }
