@@ -21,6 +21,7 @@ public final class JFaceMessages extends NLS {
 	}
 
 	public static String RCPViewCreation_RCP_Project_ERROR_;
+	public static String Correct_Empty_Parent_Msg;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, JFaceMessages.class);
