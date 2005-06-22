@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.10 $  $Date: 2005-06-22 14:36:44 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-22 17:13:18 $ 
  */
 
 import java.util.Collections;
@@ -24,27 +24,33 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.*;
 import org.eclipse.gef.editparts.AbstractEditPart;
-import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertySource;
+
+import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.proxy.core.*;
+
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.Spinner;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
 
 /**
@@ -480,11 +486,12 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			bottom = componentInsets.bottom;
 			right = componentInsets.right;
 		}
-		topSpinner = new Spinner(insetsGroup, SWT.NONE, top);
+		topSpinner = new Spinner(insetsGroup, SWT.NONE);
 		topSpinner.setEnabled(componentInsets != null ? true : false);
-		topSpinner.addModifyListener(new Listener() {
-			public void handleEvent(Event e) {
-				int top = topSpinner.getValue();
+		topSpinner.setSelection(top);
+		topSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int top = topSpinner.getSelection();
 				if (componentInsets != null && top != componentInsets.top) {
 					componentInsets.top = top;
 					execute(createInsetsCommand(getSelectedObjects(), componentInsets, INSETS_TOP, topSpinner));
@@ -497,11 +504,12 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Left); 
-		leftSpinner = new Spinner(insetsGroup, SWT.NONE, left);
+		leftSpinner = new Spinner(insetsGroup, SWT.NONE);
 		leftSpinner.setEnabled(componentInsets != null ? true : false);
-		leftSpinner.addModifyListener(new Listener() {
-			public void handleEvent(Event e) {
-				int left = leftSpinner.getValue();
+		leftSpinner.setSelection(left);
+		leftSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int left = leftSpinner.getSelection();
 				if (componentInsets != null && left != componentInsets.left) {
 					componentInsets.left = left;
 					execute(createInsetsCommand(getSelectedObjects(), componentInsets, INSETS_LEFT, leftSpinner));
@@ -514,11 +522,12 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Bottom); 
-		bottomSpinner = new Spinner(insetsGroup, SWT.NONE, bottom);
+		bottomSpinner = new Spinner(insetsGroup, SWT.NONE);
 		bottomSpinner.setEnabled(componentInsets != null ? true : false);
-		bottomSpinner.addModifyListener(new Listener() {
-			public void handleEvent(Event e) {
-				int bottom = bottomSpinner.getValue();
+		bottomSpinner.setSelection(bottom);
+		bottomSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int bottom = bottomSpinner.getSelection();
 				if (componentInsets != null && bottom != componentInsets.bottom) {
 					componentInsets.bottom = bottom;
 					execute(createInsetsCommand(getSelectedObjects(), componentInsets, INSETS_BOTTOM, bottomSpinner));
@@ -531,11 +540,12 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Right); 
-		rightSpinner = new Spinner(insetsGroup, SWT.NONE, right);
+		rightSpinner = new Spinner(insetsGroup, SWT.NONE);
 		rightSpinner.setEnabled(componentInsets != null ? true : false);
-		rightSpinner.addModifyListener(new Listener() {
-			public void handleEvent(Event e) {
-				int right = rightSpinner.getValue();
+		rightSpinner.setSelection(right);
+		rightSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int right = rightSpinner.getSelection();
 				if (componentInsets != null && right != componentInsets.right) {
 					componentInsets.right = right;
 					execute(createInsetsCommand(getSelectedObjects(), componentInsets, INSETS_RIGHT, rightSpinner));
@@ -783,13 +793,13 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			enableInsets(true);
 		
 		if (topSpinner != null)
-			topSpinner.setValue(componentInsets.top);
+			topSpinner.setSelection(componentInsets.top);
 		if (leftSpinner != null)
-			leftSpinner.setValue(componentInsets.left);
+			leftSpinner.setSelection(componentInsets.left);
 		if (bottomSpinner != null)
-			bottomSpinner.setValue(componentInsets.bottom);
+			bottomSpinner.setSelection(componentInsets.bottom);
 		if (rightSpinner != null)
-			rightSpinner.setValue(componentInsets.right);
+			rightSpinner.setSelection(componentInsets.right);
 	}
 
 	protected int getAnchorValue(EditPart ep) {
