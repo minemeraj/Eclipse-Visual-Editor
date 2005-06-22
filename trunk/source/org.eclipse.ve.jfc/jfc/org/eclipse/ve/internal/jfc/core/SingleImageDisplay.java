@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: SingleImageDisplay.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 14:53:04 $ 
  */
 
 import org.eclipse.core.resources.IResource;
@@ -241,12 +241,12 @@ public class SingleImageDisplay extends Canvas{
     			warningMsg = e.getLocalizedMessage();
     			if (warningMsg == null) {
     				// SWT didn't return a msg, so we just put one in
-    				warningMsg = VisualMessages.getString("SingleImageDisplay.ImageNotLoaded_WARN_"); //$NON-NLS-1$
+    				warningMsg = JFCMessages.SingleImageDisplay_ImageNotLoaded_WARN_; 
     				JavaVEPlugin.log(e);	// Log it so we can go back and look
     			}
     			img = IconController.warnIcon;
     		} catch (OutOfMemoryError e) {
-    			warningMsg = VisualMessages.getString("SingleImageDisplay.OutOfMemory_WARN_"); //$NON-NLS-1$
+    			warningMsg = JFCMessages.SingleImageDisplay_OutOfMemory_WARN_; 
     			img = IconController.noMemoryIcon;
     		}
     	}

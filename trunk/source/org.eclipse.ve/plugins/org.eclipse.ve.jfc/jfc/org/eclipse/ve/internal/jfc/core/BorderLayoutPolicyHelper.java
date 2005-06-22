@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutPolicyHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:21 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-22 14:53:04 $ 
  */
 
 import java.util.*;
@@ -72,13 +72,13 @@ public class BorderLayoutPolicyHelper extends LayoutPolicyHelper {
 		REAL_INTERNAL_TAGS.add("After"); //$NON-NLS-1$
 
 		DISPLAY_TAGS= new ArrayList(7);
-		DISPLAY_TAGS.add(VisualMessages.getString("BorderLayout.North")); //$NON-NLS-1$
-		DISPLAY_TAGS.add(VisualMessages.getString("BorderLayout.East")); //$NON-NLS-1$
-		DISPLAY_TAGS.add(VisualMessages.getString("BorderLayout.West")); //$NON-NLS-1$
-		DISPLAY_TAGS.add(VisualMessages.getString("BorderLayout.Center")); //$NON-NLS-1$
-		DISPLAY_TAGS.add(VisualMessages.getString("BorderLayout.South")); //$NON-NLS-1$
-		DISPLAY_TAGS.add(VisualMessages.getString("BorderLayout.BEFORE_LINE_BEGINS")); //$NON-NLS-1$
-		DISPLAY_TAGS.add(VisualMessages.getString("BorderLayout.AFTER_LINE_ENDS")); //$NON-NLS-1$
+		DISPLAY_TAGS.add(JFCMessages.BorderLayout_North); 
+		DISPLAY_TAGS.add(JFCMessages.BorderLayout_East); 
+		DISPLAY_TAGS.add(JFCMessages.BorderLayout_West); 
+		DISPLAY_TAGS.add(JFCMessages.BorderLayout_Center); 
+		DISPLAY_TAGS.add(JFCMessages.BorderLayout_South); 
+		DISPLAY_TAGS.add(JFCMessages.BorderLayout_BEFORE_LINE_BEGINS); 
+		DISPLAY_TAGS.add(JFCMessages.BorderLayout_AFTER_LINE_ENDS); 
 	}
 /**
  * Helper method to return a table that maps BorderLayout constraint display names with their

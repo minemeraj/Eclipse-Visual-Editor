@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTableProxyAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-22 14:53:04 $ 
  */
 
 import java.util.Iterator;
@@ -105,7 +105,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 					public void proxyResolved(ProxyEvent event) {
 						// It has gone true, see if there are columns. Allowed it to be applied, but create a warning.
 						if (!((List) getEObject().eGet(sfColumns)).isEmpty()) {
-							processPropertyError(new IllegalArgumentException(VisualMessages.getString("JTable_ShouldnotSet_EXC_")), sfAutoCreateColumns, value); //$NON-NLS-1$
+							processPropertyError(new IllegalArgumentException(JFCMessages.JTable_ShouldnotSet_EXC_), sfAutoCreateColumns, value); 
 						}						
 					}
 				});
@@ -182,7 +182,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 			super.cancelSetting(feature, oldValue, index, expression);
 			// We canceled auto create. That puts is back to the default of true. So we need to create an warning if we have columns.
 			if (!((List) getEObject().eGet(sfColumns)).isEmpty()) {
-				processPropertyError(new IllegalArgumentException(VisualMessages.getString("JTable_ShouldnotSet_EXC_")), sfAutoCreateColumns, null); //$NON-NLS-1$
+				processPropertyError(new IllegalArgumentException(JFCMessages.JTable_ShouldnotSet_EXC_), sfAutoCreateColumns, null); 
 			}							
 		} else
 			super.cancelSetting(feature, oldValue, index, expression);

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneChildTreeLabelDecorator.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-22 14:53:04 $ 
  */
 
 import java.text.MessageFormat;
@@ -130,7 +130,7 @@ public class JTabbedPaneChildTreeLabelDecorator extends Object implements ILabel
 					String title = BeanProxyUtilities.getBeanProxy(tabTitle).toBeanString();
 					if (title != null)
 						text = MessageFormat.format(
-								VisualMessages.getString("JTabbedPaneChildTreeLabelDecorator.Tab.Title"), new Object[] { text, title}); //$NON-NLS-1$
+								JFCMessages.JTabbedPaneChildTreeLabelDecorator_Tab_Title, new Object[] { text, title}); 
 				}
 			}
 		}

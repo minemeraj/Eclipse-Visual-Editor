@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutManagerLabelProvider.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-22 14:53:04 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -36,7 +36,7 @@ public class LayoutManagerLabelProvider extends LabelProvider implements INeedDa
 			String qualifiedName = getQualifiedName(element);
 			return LayoutManagerCellEditor.getDisplayName(editDomain, qualifiedName);
 		} else {
-			return VisualMessages.getString("Layout.NullLayout"); //$NON-NLS-1$
+			return JFCMessages.Layout_NullLayout; 
 		}
 	}
 

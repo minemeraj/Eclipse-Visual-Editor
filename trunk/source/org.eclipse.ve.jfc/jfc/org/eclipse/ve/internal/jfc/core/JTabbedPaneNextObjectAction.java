@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneNextObjectAction.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 14:53:04 $ 
  */
 
 import org.eclipse.jface.action.Action;
@@ -24,7 +24,7 @@ public class JTabbedPaneNextObjectAction extends Action {
 	protected JTabbedPaneGraphicalEditPart editPart;
 	
 	public JTabbedPaneNextObjectAction(JTabbedPaneGraphicalEditPart editPart) {
-		super(VisualMessages.getString("JTabbedPaneNextObjectAction.Text")); //$NON-NLS-1$
+		super(JFCMessages.JTabbedPaneNextObjectAction_Text); 
 		this.editPart = editPart;
 		// While here set enablement. It shouldn't change because this action should be recreated each time popped up.
 		int cp = editPart.getCurrentPageIndex();
