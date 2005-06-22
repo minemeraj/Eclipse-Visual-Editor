@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutDataPropertyDescriptor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-04-05 20:11:45 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-22 16:03:02 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -80,6 +80,10 @@ public class LayoutDataPropertyDescriptor extends EToolsPropertyDescriptor imple
 
 	public ILabelProvider getLabelProvider() {
 		return new JavaClassLabelProvider();
+	}
+
+	public boolean isPropertyResettable(IPropertySource source) {
+		return true;
 	}
 	
 }

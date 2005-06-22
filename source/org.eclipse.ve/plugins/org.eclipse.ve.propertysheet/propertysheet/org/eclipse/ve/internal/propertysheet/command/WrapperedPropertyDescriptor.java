@@ -11,12 +11,14 @@
 package org.eclipse.ve.internal.propertysheet.command;
 /*
  *  $RCSfile: WrapperedPropertyDescriptor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-22 15:28:34 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-22 16:02:59 $ 
  */
 
 
 import org.eclipse.ui.views.properties.*;
+
 import org.eclipse.ve.internal.propertysheet.*;
+
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.widgets.Composite;
@@ -216,4 +218,17 @@ public final class WrapperedPropertyDescriptor implements ICommandPropertyDescri
 	public String toString() {
 		return getClass().getName() + "(" + fDescriptor.toString() + ")";//$NON-NLS-2$//$NON-NLS-1$
 	}
+	
+	public boolean isPropertyResettable(IPropertySource source) {
+		// If the descriptor is also an ISourcedPropertyDescriptor, then
+		// route over to it, but use the wrappered source instead. Else
+		// Use the standard mechanism for testing the value from the wrappered source.
+		if (fDescriptor instanceof ISourcedPropertyDescriptor)
+			return ((ISourcedPropertyDescriptor) fDescriptor).isPropertyResettable(fSource);
+		else if (fSource instanceof IPropertySource2)
+			return ((IPropertySource2) fSource).isPropertyResettable(fDescriptor.getId());
+		else
+			return true;
+	}
+	
 }

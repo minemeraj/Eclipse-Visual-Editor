@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: NameInCompositionPropertyDescriptor.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-21 21:43:42 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-22 16:03:00 $ 
  */
 
 import java.util.*;
@@ -233,5 +233,9 @@ public class NameInCompositionPropertyDescriptor extends AbstractAnnotationPrope
 			uniqueNames[ac] = getUniqueNameInComposition(domain, names[ac], addedNames);
 		}
 		return uniqueNames;
+	}
+
+	public boolean isPropertyResettable(IPropertySource source) {
+		return false;	// Name is never resettable. It doesn't make sense.
 	}
 }

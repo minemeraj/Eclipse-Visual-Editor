@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet;
  *******************************************************************************/
 /*
  *  $RCSfile: ISourcedPropertyDescriptor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:47:33 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 16:02:59 $ 
  */
 
 
@@ -37,4 +37,18 @@ public interface ISourcedPropertyDescriptor extends IPropertyDescriptor {
 	 * given source using this descriptor.
 	 */
 	public boolean isSet(IPropertySource source);
+	
+    /**
+     * Returns whether the value of this property for the given source is
+     * resettable to a default value.
+     * 
+     * @param id
+     *            the id of the property
+     * @return <code>true</code> if the property with the specified id has a
+     *         meaningful default value to which it can be resetted, and
+     *         <code>false</code> otherwise
+     * @see IPropertySource#resetPropertyValue(Object)
+     * @see IPropertySource#isPropertySet(Object)
+     */
+    boolean isPropertyResettable(IPropertySource source);	
 }
