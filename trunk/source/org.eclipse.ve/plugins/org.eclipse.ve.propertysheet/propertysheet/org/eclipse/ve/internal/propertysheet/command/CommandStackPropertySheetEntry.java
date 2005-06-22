@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.propertysheet.command;
  *******************************************************************************/
 /*
  *  $RCSfile: CommandStackPropertySheetEntry.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-22 15:28:34 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-22 16:02:59 $ 
  */
 
 
@@ -20,8 +20,7 @@ import java.util.Arrays;
 import java.util.EventObject;
 
 import org.eclipse.gef.commands.*;
-import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.ui.views.properties.IPropertySourceProvider;
+import org.eclipse.ui.views.properties.*;
 
 import org.eclipse.ve.internal.propertysheet.*;
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
@@ -192,10 +191,11 @@ public class CommandStackPropertySheetEntry extends AbstractPropertySheetEntry {
 		boolean changed = false;		
 		for (int i = 0; i < propSources.length; i++) {
 			Object id = fDescriptors[i].getId();			
-			boolean isSet;
-			if (fDescriptors[i] instanceof ISourcedPropertyDescriptor)
-				isSet = ((ISourcedPropertyDescriptor) fDescriptors[i]).isSet(propSources[i]);
-			else
+			boolean isSet = false;
+			if (fDescriptors[i] instanceof ISourcedPropertyDescriptor) {
+				if (((ISourcedPropertyDescriptor) fDescriptors[i]).isPropertyResettable(propSources[i]))
+					isSet = ((ISourcedPropertyDescriptor) fDescriptors[i]).isSet(propSources[i]);
+			} else if (!(propSources[i] instanceof IPropertySource2) || ((IPropertySource2) propSources[i]).isPropertyResettable(id))
 				isSet = propSources[i].isPropertySet(id);
 			if (isSet) {
 				changed = true;				
