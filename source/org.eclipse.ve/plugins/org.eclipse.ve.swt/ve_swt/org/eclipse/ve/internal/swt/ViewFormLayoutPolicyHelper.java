@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutPolicyHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-21 15:06:09 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -55,10 +55,10 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 		REAL_INTERNAL_TAGS.add("Content"); //$NON-NLS-1$
 
 		DISPLAY_TAGS= new ArrayList(4);
-		DISPLAY_TAGS.add(SWTMessages.getString("ViewFormLayout.TopLeft")); //$NON-NLS-1$
-		DISPLAY_TAGS.add(SWTMessages.getString("ViewFormLayout.TopRight")); //$NON-NLS-1$
-		DISPLAY_TAGS.add(SWTMessages.getString("ViewFormLayout.TopCenter")); //$NON-NLS-1$
-		DISPLAY_TAGS.add(SWTMessages.getString("ViewFormLayout.Content")); //$NON-NLS-1$
+		DISPLAY_TAGS.add(SWTMessages.ViewFormLayout_TopLeft); 
+		DISPLAY_TAGS.add(SWTMessages.ViewFormLayout_TopRight); 
+		DISPLAY_TAGS.add(SWTMessages.ViewFormLayout_TopCenter); 
+		DISPLAY_TAGS.add(SWTMessages.ViewFormLayout_Content); 
 	}
 	
 	/**

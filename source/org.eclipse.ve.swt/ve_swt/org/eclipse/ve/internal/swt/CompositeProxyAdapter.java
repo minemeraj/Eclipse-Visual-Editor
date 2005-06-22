@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.31 $ $Date: 2005-06-15 20:19:21 $
+ * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.32 $ $Date: 2005-06-22 16:24:10 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -299,7 +299,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 		 * @since 1.1.0
 		 */
 		public void processLayoutDataError(String validLayoutDataType, String invalidLayoutDataType) {
-			errorNotifier.processError(new PropertyError(ERROR_WARNING, new MessageError(MessageFormat.format(SWTMessages.getString("CompositionProxyAdapter.LayoutDataInvalid"), new Object[] {validLayoutDataType, invalidLayoutDataType}), ERROR_WARNING), sfLayoutData, getTarget()));
+			errorNotifier.processError(new PropertyError(ERROR_WARNING, new MessageError(MessageFormat.format(SWTMessages.CompositionProxyAdapter_LayoutDataInvalid, new Object[] {validLayoutDataType, invalidLayoutDataType}), ERROR_WARNING), sfLayoutData, getTarget()));
 		}
 		
 		/**

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ItemChildTreeLabelDecorator.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -121,7 +121,7 @@ public class ItemChildTreeLabelDecorator extends Object implements ILabelDecorat
 				if (tabTitle != null) {
 					String title = BeanProxyUtilities.getBeanProxy(tabTitle).toBeanString();
 					if (title != null)
-						text = MessageFormat.format(SWTMessages.getString("ItemChildTreeLabelDecorator.Tab.Text"), new Object[] { text, title}); //$NON-NLS-1$
+						text = MessageFormat.format(SWTMessages.ItemChildTreeLabelDecorator_Tab_Text, new Object[] { text, title}); 
 				}
 			}
 		}

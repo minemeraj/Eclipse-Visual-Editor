@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChangeParentShellObjectActionDelegate.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-18 20:49:33 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -218,7 +218,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 			mainComposite.setLayout(new GridLayout(2, false));
 
 			Label label1 = new Label(mainComposite, SWT.NONE);
-			label1.setText(SWTMessages.getString("ChangeParentShellObjectActionDelegate.Desc.Label")); //$NON-NLS-1$
+			label1.setText(SWTMessages.ChangeParentShellObjectActionDelegate_Desc_Label); 
 			GridData gd = new GridData();
 			gd.horizontalSpan = 2;
 			label1.setLayoutData(gd);
@@ -254,7 +254,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 			} else {
 				initialIndex = 0;
 			}
-			selectionList.add(SWTMessages.getString("ChangeParentShellObjectActionDelegate.None")); //$NON-NLS-1$
+			selectionList.add(SWTMessages.ChangeParentShellObjectActionDelegate_None); 
 			for (int i = 0; i < shellList.size(); i++) {
 				IJavaObjectInstance shellModel = (IJavaObjectInstance) shellList.get(i);
 				AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
@@ -287,7 +287,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 		 */
 		protected void configureShell(Shell newShell) {
 			super.configureShell(newShell);
-			newShell.setText(SWTMessages.getString("ChangeParentShellObjectActionDelegate.Shell.title")); //$NON-NLS-1$
+			newShell.setText(SWTMessages.ChangeParentShellObjectActionDelegate_Shell_title); 
 		}
 	}
 }

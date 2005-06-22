@@ -12,7 +12,7 @@
  *  Created May 3, 2005 by Gili Mendel
  * 
  *  $RCSfile: SWTContainerWizardContent.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-12 19:56:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -64,27 +64,27 @@ public class SWTContainerWizardContent extends Composite {
 		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		gridData1.horizontalIndent = 20;
 		group = new Group(this, SWT.NONE);		   
-		group.setText(SWTMessages.getString("SWTContainerWizardContent.0")); //$NON-NLS-1$
+		group.setText(SWTMessages.SWTContainerWizardContent_0); 
 		group.setLayoutData(gridData2);
 		group.setLayout(gridLayout4);
 		ideRadio = new Button(group, SWT.RADIO);
-		ideRadio.setText(SWTMessages.getString("SWTContainerWizardContent.1")); //$NON-NLS-1$
-		ideRadio.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.2"));		 //$NON-NLS-1$
+		ideRadio.setText(SWTMessages.SWTContainerWizardContent_1); 
+		ideRadio.setToolTipText(SWTMessages.SWTContainerWizardContent_2);		 
 		platformVersion = new Label(group, SWT.NONE);
 		pdeRadio = new Button(group, SWT.RADIO);
-		pdeRadio.setText(SWTMessages.getString("SWTContainerWizardContent.3")); //$NON-NLS-1$
-		pdeRadio.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.4")); //$NON-NLS-1$
+		pdeRadio.setText(SWTMessages.SWTContainerWizardContent_3); 
+		pdeRadio.setToolTipText(SWTMessages.SWTContainerWizardContent_4); 
 		pdeVersion = new Label(group, SWT.NONE);
 		customRadio = new Button(group, SWT.RADIO);
-		customRadio.setText(SWTMessages.getString("SWTContainerWizardContent.5")); //$NON-NLS-1$
-		customRadio.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.6")); //$NON-NLS-1$
+		customRadio.setText(SWTMessages.SWTContainerWizardContent_5); 
+		customRadio.setToolTipText(SWTMessages.SWTContainerWizardContent_6); 
 		new Label(group, SWT.NONE);
 		customDir = new Text(group, SWT.BORDER);
-		customDir.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.7")); //$NON-NLS-1$
+		customDir.setToolTipText(SWTMessages.SWTContainerWizardContent_7); 
 		customDir.setEditable(false);
 		customDir.setLayoutData(gridData1);
 		browseButton = new Button(group, SWT.NONE);
-		browseButton.setText(SWTMessages.getString("SWTContainerWizardContent.8")); //$NON-NLS-1$
+		browseButton.setText(SWTMessages.SWTContainerWizardContent_8); 
 		browseButton.setEnabled(false);
 		
 		pdeRadio.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
@@ -147,8 +147,8 @@ public class SWTContainerWizardContent extends Composite {
 		createGroup();
 		setSize(new Point(300, 200));
 		jFaceCheckButton = new Button(this, SWT.CHECK);
-		jFaceCheckButton.setText(SWTMessages.getString("SWTContainerWizardPage.includeJFaceCheck")); //$NON-NLS-1$
-		jFaceCheckButton.setToolTipText(SWTMessages.getString("SWTContainerWizardContent.9")); //$NON-NLS-1$
+		jFaceCheckButton.setText(SWTMessages.SWTContainerWizardPage_includeJFaceCheck); 
+		jFaceCheckButton.setToolTipText(SWTMessages.SWTContainerWizardContent_9); 
 		jFaceCheckButton.setLayoutData(gridData3);
 		
 		jFaceCheckButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
@@ -171,7 +171,7 @@ public class SWTContainerWizardContent extends Composite {
 		jFaceCheckButton.setSelection(containerType.includeJFace());
 		jFaceCheckButton.setEnabled(true);
 		setError(null);
-		wizard.setMessage(SWTMessages.getString("SWTContainerWizardContent.10"), IMessageProvider.INFORMATION); //$NON-NLS-1$
+		wizard.setMessage(SWTMessages.SWTContainerWizardContent_10, IMessageProvider.INFORMATION); 
 		group.layout();
 	}
 	protected void setPDE(boolean setSelection) {
@@ -183,7 +183,7 @@ public class SWTContainerWizardContent extends Composite {
 		jFaceCheckButton.setSelection(containerType.includeJFace());
 		jFaceCheckButton.setEnabled(true);
 		setError(null);		
-		wizard.setMessage(SWTMessages.getString("SWTContainerWizardContent.11"), IMessageProvider.INFORMATION); //$NON-NLS-1$
+		wizard.setMessage(SWTMessages.SWTContainerWizardContent_11, IMessageProvider.INFORMATION); 
 		group.layout();
 	}
 	
@@ -209,10 +209,10 @@ public class SWTContainerWizardContent extends Composite {
 		File f = resolvedPath.toFile();
 		if (f.exists()&& f.isDirectory()) { 
 			setError(null);
-			wizard.setMessage(SWTMessages.getString("SWTContainerWizardContent.13"), IMessageProvider.INFORMATION); //$NON-NLS-1$
+			wizard.setMessage(SWTMessages.SWTContainerWizardContent_13, IMessageProvider.INFORMATION); 
 		}
 		else
-			setError(SWTMessages.getString("SWTContainerWizardContent.14")); //$NON-NLS-1$
+			setError(SWTMessages.SWTContainerWizardContent_14); 
 		//TODO: current limitation
 		jFaceCheckButton.setSelection(false);
 		jFaceCheckButton.setEnabled(false);

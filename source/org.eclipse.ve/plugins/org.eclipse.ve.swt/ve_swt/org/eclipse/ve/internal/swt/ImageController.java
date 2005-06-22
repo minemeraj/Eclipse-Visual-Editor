@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ImageController.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-22 16:24:10 $ 
  */
 
 import java.io.File;
@@ -532,7 +532,7 @@ public class ImageController {
 							// It doesn't look as good because you can't tell what project the root is in when there are required projects.
 							String result = super.getText(element);
 							if (element instanceof IPackageFragmentRoot) 
-								result = MessageFormat.format(SWTMessages.getString("ImageController.RootLabel"), new Object[] {result, ((IPackageFragmentRoot) element).getJavaProject().getElementName()}); //$NON-NLS-1$
+								result = MessageFormat.format(SWTMessages.ImageController_RootLabel, new Object[] {result, ((IPackageFragmentRoot) element).getJavaProject().getElementName()}); 
 							return result;
 						}
 					};
@@ -626,7 +626,7 @@ public class ImageController {
 				if (res instanceof IFile) {
 					// A duplicate found.
 					getOKButton().setEnabled(false);
-					dialog.getStatusLineManager().setErrorMessage(MessageFormat.format(SWTMessages.getString("ImageController.HiddenImage_ERROR_"), new Object[] {res.getFullPath().toString()})); //$NON-NLS-1$
+					dialog.getStatusLineManager().setErrorMessage(MessageFormat.format(SWTMessages.ImageController_HiddenImage_ERROR_, new Object[] {res.getFullPath().toString()})); 
 					return;
 				}
 			}
@@ -941,7 +941,7 @@ public class ImageController {
 						ImageController.this.dialog.getStatusLineManager().setErrorMessage("");							 //$NON-NLS-1$
 					}
 				});
-				beginTask(monitor, SWTMessages.getString("ImageController.Status.SearchingForImages"), 1000); //$NON-NLS-1$
+				beginTask(monitor, SWTMessages.ImageController_Status_SearchingForImages, 1000); 
 
 				addImages(f, path, monitor, 1000);
 				allImagesLoaded = !monitor.isCanceled();
@@ -953,7 +953,7 @@ public class ImageController {
 				if (terminateThread)
 					return;
 
-				final String text = (monitor.isCanceled() ? SWTMessages.getString("ImageController.Status.SearchStopped") : SWTMessages.getString("ImageController.Status.SearchDone")); //$NON-NLS-1$ //$NON-NLS-2$
+				final String text = (monitor.isCanceled() ? SWTMessages.ImageController_Status_SearchStopped : SWTMessages.ImageController_Status_SearchDone); 
 				done(monitor);
 
 				// Run sync so that we don't leave until all done.

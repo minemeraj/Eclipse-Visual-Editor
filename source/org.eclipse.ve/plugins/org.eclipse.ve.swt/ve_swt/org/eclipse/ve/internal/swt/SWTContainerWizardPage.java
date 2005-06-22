@@ -28,8 +28,8 @@ public  class SWTContainerWizardPage extends WizardPage implements IClasspathCon
 	
 	public  SWTContainerWizardPage() {
 		super("Standard Widget Toolkit (SWT)"); //$NON-NLS-1$
-		setTitle(SWTMessages.getString("SWTContainerWizardPage.wizardTitle")); //$NON-NLS-1$
-		setMessage(SWTMessages.getString("SWTContainerWizardPage.wizardMessage")); //$NON-NLS-1$
+		setTitle(SWTMessages.SWTContainerWizardPage_wizardTitle); 
+		setMessage(SWTMessages.SWTContainerWizardPage_wizardMessage); 
 		setImageDescriptor(JavaPluginImages.DESC_WIZBAN_ADD_LIBRARY);
 	}	
 	

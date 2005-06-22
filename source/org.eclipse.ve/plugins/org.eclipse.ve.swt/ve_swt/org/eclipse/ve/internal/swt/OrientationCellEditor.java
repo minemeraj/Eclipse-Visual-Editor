@@ -31,7 +31,7 @@ public class OrientationCellEditor extends EnumeratedIntValueCellEditor {
 	
 	public OrientationCellEditor(Composite composite){
 		super(composite,
-			new String[] { SWTMessages.getString("OrientationCellEditor.Horizontal") , SWTMessages.getString("OrientationCellEditor.Vertical") } , //$NON-NLS-1$ //$NON-NLS-2$
+			new String[] { SWTMessages.OrientationCellEditor_Horizontal , SWTMessages.OrientationCellEditor_Vertical } , 
 	        new Integer[] { new Integer(SWT.HORIZONTAL) , new Integer(SWT.VERTICAL) } ,			
 			new String[] { "org.eclipse.swt.SWT.HORIZONTAL" , "org.eclipse.swt.SWT.VERTICAL" }  //$NON-NLS-1$ //$NON-NLS-2$
 		);

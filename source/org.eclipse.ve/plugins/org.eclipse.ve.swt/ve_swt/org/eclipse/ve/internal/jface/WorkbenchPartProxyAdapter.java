@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -313,7 +313,7 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 					switch (status) {
 						case ImageDataConstants.COMPONENT_IMAGE_CLIPPED:
 							// Bit of kludge, but if image clipped, create an info message for it.
-							ErrorType err = new MessageError(SWTMessages.getString("ControlProxyAdapter.Picture_too_large_WARN_"), //$NON-NLS-1$
+							ErrorType err = new MessageError(SWTMessages.ControlProxyAdapter_Picture_too_large_WARN_, 
 									IErrorHolder.ERROR_INFO);
 							processError(err, IMAGE_DATA_COLLECTION_ERROR_KEY);
 							break;
@@ -336,10 +336,9 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 						IBeanTypeProxy eType = exception.getTypeProxy();
 						eMsg = MessageFormat
 								.format(
-										SWTMessages.getString("ControlProxyAdapter.Image_collection_exception_EXC_"), new Object[] { eType.getTypeName()}); //$NON-NLS-1$
+										SWTMessages.ControlProxyAdapter_Image_collection_exception_EXC_, new Object[] { eType.getTypeName()}); 
 					}
-					ErrorType err = new MessageError(MessageFormat.format(SWTMessages
-							.getString("ControlProxyAdapter.Image_collection_failed_ERROR_"), new Object[] { eMsg}), IErrorHolder.ERROR_INFO); //$NON-NLS-1$
+					ErrorType err = new MessageError(MessageFormat.format(SWTMessages.ControlProxyAdapter_Image_collection_failed_ERROR_, new Object[] { eMsg}), IErrorHolder.ERROR_INFO); //$NON-NLS-1$
 					processError(err, IMAGE_DATA_COLLECTION_ERROR_KEY);
 				}
 

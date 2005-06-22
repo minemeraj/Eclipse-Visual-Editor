@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LinkJavaClassCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-04-20 14:40:23 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -62,7 +62,7 @@ public class LinkJavaClassCellEditor extends DefaultJavaClassCellEditor {
 			link.setText(value);
 		} catch (Exception e) {
 			this.infoMessageDisplayed = true;
-			return SWTMessages.getString("LinkJavaClassCellEditor.NoLink_ERROR_"); //$NON-NLS-1$
+			return SWTMessages.LinkJavaClassCellEditor_NoLink_ERROR_; 
 		}
 		return null;
 	}
@@ -86,8 +86,8 @@ public class LinkJavaClassCellEditor extends DefaultJavaClassCellEditor {
 					public void run() {
 						if (!shell.isDisposed()) {
 							String message = MessageFormat.format(
-									SWTMessages.getString("LinkJavaClassCellEditor.NoLink_INFO_"), new Object[] { value}); //$NON-NLS-1$
-							MessageDialog.openInformation(shell, SWTMessages.getString("LinkJavaClassCellEditor.NoLinkInfoTitle"), message); //$NON-NLS-1$
+									SWTMessages.LinkJavaClassCellEditor_NoLink_INFO_, new Object[] { value}); 
+							MessageDialog.openInformation(shell, SWTMessages.LinkJavaClassCellEditor_NoLinkInfoTitle, message); 
 						}
 					}
 				});

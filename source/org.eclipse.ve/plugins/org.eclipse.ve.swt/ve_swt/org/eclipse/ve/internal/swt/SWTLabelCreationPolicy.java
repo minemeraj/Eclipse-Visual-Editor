@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: SWTLabelCreationPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:51:49 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-22 16:24:10 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -46,7 +46,7 @@ public Command getCommand(Command aCommand, final EditDomain domain, final Creat
 			Object newObject = aCreateRequest.getNewObject();
 			// Thew new label will be "Label".  This is held externally
 			// The key to use is LabelPolicy.text.xxx where xxx is a piece of inializationData
-			String labelString = SWTMessages.getString("LabelPolicy.text." + fLabelKey); //$NON-NLS-1$
+			String labelString = SWTMessages.LabelPolicy_text_Label;
 			EObject refNewObject = (EObject)newObject;
 			ResourceSet resourceSet = refNewObject.eResource().getResourceSet();
 			IJavaInstance newLabel = BeanUtilities.createJavaObject("java.lang.String" , resourceSet , "\"" + labelString + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

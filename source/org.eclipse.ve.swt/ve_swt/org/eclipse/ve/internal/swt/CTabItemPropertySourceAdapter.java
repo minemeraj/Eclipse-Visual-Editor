@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabItemPropertySourceAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -111,19 +111,19 @@ public class CTabItemPropertySourceAdapter extends PropertySourceAdapter {
 				// We need to wrapper them to change the names so that don't collide with the properties of the control
 				String fn = ((EStructuralFeature) pd.getId()).getName();
 				if ("text".equals(fn)) { //$NON-NLS-1$
-					String tabtext = SWTMessages.getString("CTabItemPropertySourceAdapter.tabText"); //$NON-NLS-1$
+					String tabtext = SWTMessages.CTabItemPropertySourceAdapter_tabText; 
 					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, tabtext, this, pd);
 					continue;
 				} else if ("image".equals(fn)) { //$NON-NLS-1$
-					String tabImage = SWTMessages.getString("CTabItemPropertySourceAdapter.tabImage"); //$NON-NLS-1$
+					String tabImage = SWTMessages.CTabItemPropertySourceAdapter_tabImage; 
 					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, tabImage, this, pd);
 					continue;
 				} else if ("toolTipText".equals(fn)) { //$NON-NLS-1$
-					String tabToolTipText = SWTMessages.getString("CTabItemPropertySourceAdapter.tabToolTipText"); //$NON-NLS-1$
+					String tabToolTipText = SWTMessages.CTabItemPropertySourceAdapter_tabToolTipText; 
 					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, tabToolTipText, this, pd);
 					continue;
 				}else if ("font".equals(fn)) { //$NON-NLS-1$
-					String tabFont = SWTMessages.getString("CTabItemPropertySourceAdapter.tabFont"); //$NON-NLS-1$
+					String tabFont = SWTMessages.CTabItemPropertySourceAdapter_tabFont; 
 					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, tabFont, this, pd);
 					continue;
 				} else if ("control".equals(fn)) //$NON-NLS-1$

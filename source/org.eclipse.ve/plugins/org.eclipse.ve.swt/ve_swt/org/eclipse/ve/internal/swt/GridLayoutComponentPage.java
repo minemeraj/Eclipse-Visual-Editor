@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-18 18:22:24 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-22 16:24:10 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -58,12 +58,49 @@ import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	protected IEditorPart fEditorPart;
 	
-	private final static String resAlignmentPrefix = "AlignmentAction."; //$NON-NLS-1$
-	
-	private final static String[] resAlignmentValuePrefix = {
-		"beginning.", //$NON-NLS-1$
-		"center.", //$NON-NLS-1$
-		"end.", //$NON-NLS-1$
+	private final static String[] resAlignmentValueLabels = {
+		SWTMessages.AlignmentAction_beginning_beginning_label,
+		SWTMessages.AlignmentAction_beginning_center_label,
+		SWTMessages.AlignmentAction_beginning_end_label,
+		SWTMessages.AlignmentAction_center_beginning_label,
+		SWTMessages.AlignmentAction_center_center_label,
+		SWTMessages.AlignmentAction_center_end_label,
+		SWTMessages.AlignmentAction_end_beginning_label,
+		SWTMessages.AlignmentAction_end_center_label,
+		SWTMessages.AlignmentAction_end_end_label
+	};
+	private final static String[] resAlignmentValueTooltips = {
+		SWTMessages.AlignmentAction_beginning_beginning_tooltip,
+		SWTMessages.AlignmentAction_beginning_center_tooltip,
+		SWTMessages.AlignmentAction_beginning_end_tooltip,
+		SWTMessages.AlignmentAction_center_beginning_tooltip,
+		SWTMessages.AlignmentAction_center_center_tooltip,
+		SWTMessages.AlignmentAction_center_end_tooltip,
+		SWTMessages.AlignmentAction_end_beginning_tooltip,
+		SWTMessages.AlignmentAction_end_center_tooltip,
+		SWTMessages.AlignmentAction_end_end_tooltip
+	};
+	private final static String[] resAlignmentValueImages = {
+		SWTMessages.AlignmentAction_beginning_beginning_image,
+		SWTMessages.AlignmentAction_beginning_center_image,
+		SWTMessages.AlignmentAction_beginning_end_image,
+		SWTMessages.AlignmentAction_center_beginning_image,
+		SWTMessages.AlignmentAction_center_center_image,
+		SWTMessages.AlignmentAction_center_end_image,
+		SWTMessages.AlignmentAction_end_beginning_image,
+		SWTMessages.AlignmentAction_end_center_image,
+		SWTMessages.AlignmentAction_end_end_image
+	};
+	private final static String[] resAlignmentValueIDs = {
+		"AlignmentAction.beginning.beginning", //$NON-NLS-1$
+		"AlignmentAction.beginning.center", //$NON-NLS-1$
+		"AlignmentAction.beginning.end", //$NON-NLS-1$
+		"AlignmentAction.center.beginning", //$NON-NLS-1$
+		"AlignmentAction.center.center", //$NON-NLS-1$
+		"AlignmentAction.center.end", //$NON-NLS-1$
+		"AlignmentAction.end.beginning", //$NON-NLS-1$
+		"AlignmentAction.end.center", //$NON-NLS-1$
+		"AlignmentAction.end.end", //$NON-NLS-1$
 	};
 	
 	public final static int BEGINNING = 0, CENTER = 1, END = 2, FILL = 3;
@@ -105,9 +142,21 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			new AlignmentAction(END, END)
 	};
 	
-	private final static String[] resFillPrefix = {
-			"FillAction.horizontal.", //$NON-NLS-1$
-			"FillAction.vertical." //$NON-NLS-1$
+	private final static String[] resFillIDs = {
+			"FillAction.horizontal", //$NON-NLS-1$
+			"FillAction.vertical" //$NON-NLS-1$
+	};
+	private final static String[] resFillLabels = {
+		SWTMessages.FillAction_horizontal_label,
+		SWTMessages.FillAction_vertical_label
+	};
+	private final static String[] resFillImages = {
+		SWTMessages.FillAction_horizontal_image,
+		SWTMessages.FillAction_vertical_image
+	};
+	private final static String[] resFillTooltips = {
+		SWTMessages.FillAction_horizontal_tooltip,
+		SWTMessages.FillAction_vertical_tooltip
 	};
 	
 	private FillAction[] fillActions = {
@@ -115,9 +164,21 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			new FillAction(VERTICAL)
 	};
 	
-	private final static String[] resGrabPrefix = { 
-			"GrabAction.horizontal.", //$NON-NLS-1$
-			"GrabAction.vertical." //$NON-NLS-1$
+	private final static String[] resGrabIDs = { 
+		"GrabAction.horizontal", //$NON-NLS-1$
+		"GrabAction.vertical" //$NON-NLS-1$
+	};
+	private final static String[] resGrabLabels = { 
+		SWTMessages.GrabAction_horizontal_label,
+		SWTMessages.GrabAction_vertical_label
+	};
+	private final static String[] resGrabTooltips = { 
+		SWTMessages.GrabAction_horizontal_tooltip,
+		SWTMessages.GrabAction_vertical_tooltip
+	};
+	private final static String[] resGrabImages = { 
+		SWTMessages.GrabAction_horizontal_image,
+		SWTMessages.GrabAction_vertical_image
 	};
 	
 	private GrabAction[] grabActions = {
@@ -154,28 +215,26 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			
 			
 			// Default to center anchor if the anchor type is incorrect
-			if (!(horizontalAlign >= 0 && horizontalAlign < resAlignmentValuePrefix.length))
+			if (!(horizontalAlign >= 0 && horizontalAlign < 3))
 				fHorizontalAlign = CENTER;
 			else
 				fHorizontalAlign = horizontalAlign;
-			if (!(verticalAlign >= 0 && verticalAlign < resAlignmentValuePrefix.length))
+			if (!(verticalAlign >= 0 && verticalAlign < 3))
 				fVerticalAlign = CENTER;
 			else
 				fVerticalAlign = verticalAlign;
 
 			
-			String sAlignmentType = getActionId(fHorizontalAlign, fVerticalAlign);
-					
-			setText(SWTMessages.getString(sAlignmentType + "label")); //$NON-NLS-1$
-			setToolTipText(SWTMessages.getString(sAlignmentType + "tooltip")); //$NON-NLS-1$
+			setText(getAlignmentValue(resAlignmentValueLabels, fHorizontalAlign, fVerticalAlign)); 
+			setToolTipText(getAlignmentValue(resAlignmentValueTooltips, fHorizontalAlign, fVerticalAlign)); 
 			// There are three images, one for full color ( that is the hover one )
 			// one for disabled and one for enabled
-			String graphicName = SWTMessages.getString(sAlignmentType + "image"); //$NON-NLS-1$
+			String graphicName = getAlignmentValue(resAlignmentValueImages, fHorizontalAlign, fVerticalAlign);
 			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/" + graphicName)); //$NON-NLS-1$
 			setHoverImageDescriptor(getImageDescriptor());
  			setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/" + graphicName)); //$NON-NLS-1$
 			
-			setId(sAlignmentType);
+			setId(getAlignmentValue(resAlignmentValueIDs, fHorizontalAlign, fVerticalAlign));
 			setEnabled(true);
 		}
 		
@@ -190,11 +249,11 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		/**
 		 * Static method that returns the action id based on the alignment type.
 		 */
-		public String getActionId(int horizontalAlign, int verticalAlign) {
+		public String getAlignmentValue(String[] array, int horizontalAlign, int verticalAlign) {
 			if (horizontalAlign < 0 || horizontalAlign > END) horizontalAlign = CENTER;
 			if (verticalAlign < 0 || verticalAlign > END) verticalAlign = CENTER;
 
-			return resAlignmentPrefix + resAlignmentValuePrefix[horizontalAlign] + resAlignmentValuePrefix[verticalAlign];
+			return array[(horizontalAlign*3)+verticalAlign];
 		}
 		
 		protected boolean calculateEnabled() {
@@ -239,24 +298,22 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			super(null, Action.AS_CHECK_BOX);
 
 			// Default to HORIZONTAL if an invalid orientation is given.
-			if (orientation < 0 || orientation >= resFillPrefix.length) {
+			if (orientation < 0 || orientation >= resFillLabels.length) {
 				fOrientation = HORIZONTAL;
 			} else {
 				fOrientation = orientation;
 			}
 			
-			String sFillType = resFillPrefix[orientation];
-					
-			setText(SWTMessages.getString(sFillType + "label")); //$NON-NLS-1$
-			setToolTipText(SWTMessages.getString(sFillType + "tooltip")); //$NON-NLS-1$
+			setText(resFillLabels[orientation]);
+			setToolTipText(resFillTooltips[orientation]); 
 			// There are three images, one for full color ( that is the hover one )
 			// one for disabled and one for enabled
-			String graphicName = SWTMessages.getString(sFillType + "image"); //$NON-NLS-1$
+			String graphicName = resFillImages[orientation];
 			setImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/elcl16/" + graphicName)); //$NON-NLS-1$
 			setHoverImageDescriptor(getImageDescriptor()); 
 			setDisabledImageDescriptor(CDEPlugin.getImageDescriptorFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/dlcl16/" + graphicName)); //$NON-NLS-1$
 			
-			setId(sFillType);
+			setId(resFillIDs[orientation]);
 			setEnabled(true);
 		}
 
@@ -264,7 +321,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		 * Static method that returns the action id based on the fill type.
 		 */
 		public String getActionId(int orientation) {
-			return (orientation >= 0 && orientation < resFillPrefix.length) ? resFillPrefix[orientation] : resFillPrefix[HORIZONTAL];
+			return (orientation >= 0 && orientation < resFillIDs.length) ? resFillIDs[orientation] : resFillIDs[HORIZONTAL];
 		}
 		
 		protected boolean calculateEnabled() {
@@ -359,16 +416,15 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		public GrabAction(int grabType) {
 			super(null, Action.AS_CHECK_BOX);
 			// Default to center anchor if the anchor type is incorrect
-			if (!(grabType >= 0 && grabType < resGrabPrefix.length))
+			if (!(grabType >= 0 && grabType < resGrabLabels.length))
 				fGrabType = HORIZONTAL;
 			else
 				fGrabType = grabType;
-			String sGrabType = resGrabPrefix[fGrabType];
-			setText(SWTMessages.getString(sGrabType + "label")); //$NON-NLS-1$
-			setToolTipText(SWTMessages.getString(sGrabType + "tooltip")); //$NON-NLS-1$
+			setText(resGrabLabels[fGrabType]); //$NON-NLS-1$
+			setToolTipText(resGrabTooltips[fGrabType]); //$NON-NLS-1$
 			// There are three images, one for full color ( that is the hover one )
 			// one for disabled and one for enabled
-			String graphicName = SWTMessages.getString(sGrabType + "image"); //$NON-NLS-1$
+			String graphicName = resGrabImages[fGrabType];
 			// The file structure of these is that they exist in the plugin directory with three folder names, e.g.
 			// /icons/full/clc16/anchorleft_obj.gif for the color one
 			// and elc16 for enabled and dlc16 for disasbled
@@ -383,7 +439,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		 * Static method that returns the action id based on the alignment type.
 		 */
 		public String getActionId(int grabType) {
-			return ((grabType >= 0 && grabType < resGrabPrefix.length) ? resGrabPrefix[grabType] : resGrabPrefix[HORIZONTAL]);
+			return ((grabType >= 0 && grabType < resGrabIDs.length) ? resGrabIDs[grabType] : resGrabIDs[HORIZONTAL]);
 		}
 		protected boolean calculateEnabled() {
 			return true;
@@ -557,7 +613,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(new GridLayout(3, false));
 		
-		Group alignmentGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Alignment"), 2, 5, 0); //$NON-NLS-1$
+		Group alignmentGroup = createGroup(mainComposite, SWTMessages.GridLayoutComponentPage_Alignment, 2, 5, 0); 
 		GridData gd1 = new GridData();
 		gd1.verticalSpan = 2;
 		gd1.verticalAlignment = GridData.FILL;
@@ -575,13 +631,13 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			ac.fill(alignmentGrid);
 		}
 		
-		Group fillGroup = createGroup(alignmentGroup, SWTMessages.getString("GridLayoutComponentPage.Fill"), 1, 0, 0); //$NON-NLS-1$
+		Group fillGroup = createGroup(alignmentGroup, SWTMessages.GridLayoutComponentPage_Fill, 1, 0, 0); 
 		for (int i = 0; i < fillActions.length; i++) {
 			ActionContributionItem ac = new ActionContributionItem(fillActions[i]);
 			ac.fill(fillGroup);
 		}
 		Label horizontalIndentLabel = new Label(alignmentGroup, SWT.NONE);
-		horizontalIndentLabel.setText(SWTMessages.getString("GridLayoutComponentPage.HorizontalIndent")); //$NON-NLS-1$
+		horizontalIndentLabel.setText(SWTMessages.GridLayoutComponentPage_HorizontalIndent); 
 		
 		horizontalIndentSpinner = new Spinner(alignmentGroup, SWT.NONE);
 		horizontalIndentSpinner.setSelection(horizontalIndentValue);
@@ -595,10 +651,10 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			}
 		});
 
-		Group spanGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Span"), 2, 4, 4); //$NON-NLS-1$
+		Group spanGroup = createGroup(mainComposite, SWTMessages.GridLayoutComponentPage_Span, 2, 4, 4); 
 		createSpanControl(spanGroup);
 		
-		Group grabGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Grab"), 2, 0, 0); //$NON-NLS-1$
+		Group grabGroup = createGroup(mainComposite, SWTMessages.GridLayoutComponentPage_Grab, 2, 0, 0); 
 		for (int i = 0; i < grabActions.length; i++) {
 			ActionContributionItem ac = new ActionContributionItem(grabActions[i]);
 			ac.fill(grabGroup);
@@ -608,13 +664,13 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		gd2.verticalAlignment = GridData.FILL;
 		grabGroup.setLayoutData(gd2);
 		
-		Group hintsGroup = createGroup(mainComposite, SWTMessages.getString("GridLayoutComponentPage.Hints"), 2, 4, 4); //$NON-NLS-1$
+		Group hintsGroup = createGroup(mainComposite, SWTMessages.GridLayoutComponentPage_Hints, 2, 4, 4); 
 		GridData gd3 = new GridData();
 		gd3.horizontalAlignment = GridData.FILL;
 		hintsGroup.setLayoutData(gd3);
 		
 		Label horizontalHintLabel = new Label(hintsGroup, SWT.NONE);
-		horizontalHintLabel.setText(SWTMessages.getString("GridLayoutComponentPage.HeightHint")); //$NON-NLS-1$
+		horizontalHintLabel.setText(SWTMessages.GridLayoutComponentPage_HeightHint); 
 		
 		heightHintSpinner = new org.eclipse.ve.internal.java.core.Spinner(hintsGroup, SWT.NONE, -1);
 		heightHintSpinner.setMinimum(-1);
@@ -630,7 +686,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		});
 
 		Label verticalHintLabel = new Label(hintsGroup, SWT.NONE);
-		verticalHintLabel.setText(SWTMessages.getString("GridLayoutComponentPage.WidthHint")); //$NON-NLS-1$
+		verticalHintLabel.setText(SWTMessages.GridLayoutComponentPage_WidthHint); 
 		
 		widthHintSpinner = new org.eclipse.ve.internal.java.core.Spinner(hintsGroup, SWT.NONE, -1);
 		widthHintSpinner.setMinimum(-1);
@@ -650,7 +706,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		
 		restoreAllButton = new Button(mainComposite, SWT.NONE);
 		restoreAllButton.setEnabled(hasGridDataValue);
-		restoreAllButton.setText(SWTMessages.getString("GridLayoutComponentPage.Button.RestoreDefaults.Text")); //$NON-NLS-1$
+		restoreAllButton.setText(SWTMessages.GridLayoutComponentPage_Button_RestoreDefaults_Text); 
 		restoreAllButton.addSelectionListener(new SelectionAdapter () {
 			public void widgetSelected(SelectionEvent e) {
 				restoreAllDefaultValues();
@@ -687,14 +743,14 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	
 	protected void createSpanControl(Group spanGroup) {
 		Label horizontalLabel = new Label(spanGroup, SWT.NONE);
-		horizontalLabel.setText(SWTMessages.getString("GridLayoutComponentPage.SpanHorizontal")); //$NON-NLS-1$
+		horizontalLabel.setText(SWTMessages.GridLayoutComponentPage_SpanHorizontal); 
 		
 		horizontalSpanSpinner = new Spinner(spanGroup, SWT.NONE);
 		horizontalSpanSpinner.setMinimum(1);
 		horizontalSpanSpinner.setSelection(horizontalSpanValue);
 		
 		Label verticalLabel = new Label(spanGroup, SWT.NONE);
-		verticalLabel.setText(SWTMessages.getString("GridLayoutComponentPage.SpanVertical")); //$NON-NLS-1$
+		verticalLabel.setText(SWTMessages.GridLayoutComponentPage_SpanVertical); 
 		
 		verticalSpanSpinner = new Spinner(spanGroup, SWT.NONE);
 		verticalSpanSpinner.setMinimum(1);
@@ -765,14 +821,14 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getText()
 	 */
 	public String getText() {
-		return SWTMessages.getString("GridLayoutComponentPage.Grid"); //$NON-NLS-1$
+		return SWTMessages.GridLayoutComponentPage_Grid; 
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getToolTipText()
 	 */
 	public String getToolTipText() {
-		return SWTMessages.getString("GridLayoutComponentPage.ToolTipText"); //$NON-NLS-1$
+		return SWTMessages.GridLayoutComponentPage_ToolTipText; 
 	}
 
 	/* (non-Javadoc)

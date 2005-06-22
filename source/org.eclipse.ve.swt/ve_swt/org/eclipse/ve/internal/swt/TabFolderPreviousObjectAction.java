@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderPreviousObjectAction.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-07 19:22:42 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
  
@@ -24,7 +24,7 @@ public class TabFolderPreviousObjectAction extends Action {
 	protected TabFolderGraphicalEditPart editPart;
 	
 	public TabFolderPreviousObjectAction(TabFolderGraphicalEditPart editPart) {
-		super(SWTMessages.getString("TabFolderPreviousObjectAction.Text")); //$NON-NLS-1$
+		super(SWTMessages.TabFolderPreviousObjectAction_Text); 
 		this.editPart = editPart;
 		// While here set enablement. It shouldn't change because this action should be recreated each time popped up.
 		int cp = editPart.getCurrentPageIndex();

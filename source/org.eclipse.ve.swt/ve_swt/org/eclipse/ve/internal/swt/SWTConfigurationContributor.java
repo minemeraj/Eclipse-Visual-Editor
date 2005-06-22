@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.29 $  $Date: 2005-06-15 20:19:20 $ 
+ *  $Revision: 1.30 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -177,7 +177,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		// Run it as a runnable, so that we can update the problems view
 	    ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
 				public void run(IProgressMonitor monitor) throws CoreException {
-					final String msg = SWTMessages.getString("SWTConfigurationContributor.CouldntResolveDLLInPDE_ERROR_"); //$NON-NLS-1$
+					final String msg = SWTMessages.SWTConfigurationContributor_CouldntResolveDLLInPDE_ERROR_; 
 					if (swtModel!=null && swtModel.isEnabled()) {			
 						final URL librarylocation = generateLibCacheIfNeeded(swtModel.getBundleDescription().getLocation(),"");			 //$NON-NLS-1$
 						if (librarylocation!=null) {						
@@ -330,7 +330,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 				os = generateLibCacheIfNeeded(getFilePath(os).toPortableString(), SWTContainer.SWT_CONTAINER_OS.toPortableString());
 		}
 
-        final String msg = SWTMessages.getString("SWTConfigurationContributor.CouldntResolveDLLInPDE_ERROR_"); //$NON-NLS-1$
+        final String msg = SWTMessages.SWTConfigurationContributor_CouldntResolveDLLInPDE_ERROR_; 
         final URL osURL = os;
         ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
@@ -499,9 +499,9 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 					*/
 					public void run(IProgressMonitor monitor) throws CoreException {
 						if (fversok) {
-							removeMarker(SWTMessages.getString("Marker.BuildPathNot142")); //$NON-NLS-1$
+							removeMarker(SWTMessages.Marker_BuildPathNot142); 
 						} else {
-							createMarker(SWTMessages.getString("Marker.BuildPathNot142")); //$NON-NLS-1$
+							createMarker(SWTMessages.Marker_BuildPathNot142); 
 						}
 					}
 				}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTChooseBeanContributor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-02 23:30:42 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -29,7 +29,7 @@ public class SWTChooseBeanContributor extends YesNoListChooseBeanContributor{
 
 	public static String[] SWT_BASE_TYPE_NAMES = {"org.eclipse.swt.widgets", "Widget"}; //$NON-NLS-1$ //$NON-NLS-2$
 	public SWTChooseBeanContributor(){
-		super(SWTMessages.getString("SWTChooseBeanContributor.Name"),  SWT_BASE_TYPE_NAMES, null); //$NON-NLS-1$
+		super(SWTMessages.SWTChooseBeanContributor_Name,  SWT_BASE_TYPE_NAMES, null); 
 	}
 	public Image getImage() {
 		return CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/obj16/swtbean.gif"); //$NON-NLS-1$
