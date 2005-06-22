@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.17 $  $Date: 2005-05-22 22:44:40 $ 
+ *  $Revision: 1.18 $  $Date: 2005-06-22 21:05:23 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -365,23 +365,16 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 			IBeanProxyHost settingBean = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) setting);
 			// We have proxy host,and we have a valid proxy domain.
 			if (settingBean != null && settingBean.getBeanProxyDomain().getProxyFactoryRegistry().isValid()) {
-				if (settingBean instanceof IInternalBeanProxyHost2) {
-					IInternalBeanProxyHost2 ib = (IInternalBeanProxyHost2) settingBean;
-					if (!testValidity || !ib.hasInstantiationErrors()) {
-						if (ib.isBeanProxyInstantiated())
-							ib.releaseBeanProxy(expression);	// In case not already released. We will always reinstantiate. For most components you don't need to, but some require it, so we will do by default.
-						ib.addToFreeForm(this);
-						expression.createTry();
-						ib.instantiateBeanProxy(expression);
-						expression.createTryCatchClause(IBeanProxyHost2.BEAN_INSTANTIATION_EXCEPTION, false);
-						expression.createTryEnd();
-					}
-				} else {
-					if (!testValidity || settingBean.getErrorStatus() != IErrorHolder.ERROR_SEVERE) {						
-						settingBean.releaseBeanProxy();
-						settingBean.instantiateBeanProxy();
-					}
-				}
+				IInternalBeanProxyHost ib = (IInternalBeanProxyHost) settingBean;
+				if (!testValidity || !ib.hasInstantiationErrors()) {
+					if (ib.isBeanProxyInstantiated())
+						ib.releaseBeanProxy(expression);	// In case not already released. We will always reinstantiate. For most components you don't need to, but some require it, so we will do by default.
+					ib.addToFreeForm(this);
+					expression.createTry();
+					ib.instantiateBeanProxy(expression);
+					expression.createTryCatchClause(IInternalBeanProxyHost.BEAN_INSTANTIATION_EXCEPTION, false);
+					expression.createTryEnd();
+				} 
 			}
 		}
 	}
@@ -394,10 +387,8 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 		super.releaseSetting(v, expression, remove);
 		if (!remove && v instanceof IJavaInstance) {
 			IBeanProxyHost settingBean = (IBeanProxyHost) EcoreUtil.getExistingAdapter((Notifier) v, IBeanProxyHost.BEAN_PROXY_TYPE);
-			if (settingBean instanceof IInternalBeanProxyHost2) {
-				IInternalBeanProxyHost2 ib = (IInternalBeanProxyHost2) settingBean;
-				ib.removeFromFreeForm();
-			}
+			if (settingBean != null)
+				((IInternalBeanProxyHost) settingBean).removeFromFreeForm();
 		}		
 	}
 		

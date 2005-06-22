@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.25 $  $Date: 2005-06-22 14:53:04 $ 
+ *  $Revision: 1.26 $  $Date: 2005-06-22 21:05:25 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -43,7 +43,7 @@ import org.eclipse.ve.internal.jfc.common.ImageDataConstants;
  * 
  * @since 1.1.0
  */
-public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualComponent {
+public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualComponent {
 
 	private ComponentManager fComponentManager;
 
@@ -317,7 +317,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applyBeanProperty(org.eclipse.jem.internal.beaninfo.PropertyDecorator,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applyBeanProperty(org.eclipse.jem.internal.beaninfo.PropertyDecorator,
 	 *      org.eclipse.jem.internal.proxy.core.IProxy, org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
 	protected IProxy applyBeanProperty(PropertyDecorator propertyDecorator, IProxy settingProxy, IExpression expression, boolean getOriginalValue)
@@ -340,7 +340,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#cancelSetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#cancelSetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
 	 *      org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {
@@ -534,7 +534,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#removeFromFreeForm()
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#removeFromFreeForm()
 	 */
 	public void removeFromFreeForm() {
 		ffHost = null; // No longer on freeform.
@@ -622,8 +622,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 		List settings = (List) getEObject().eGet(feature);
 		for (int i=position; i<settings.size(); i++) {
 			IJavaInstance setting = (IJavaInstance) settings.get(i);
-			IInternalBeanProxyHost2 settingProxyHost =
-				(IInternalBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost(setting);
+			IInternalBeanProxyHost settingProxyHost = getSettingBeanProxyHost(setting);
 			if (settingProxyHost.isBeanProxyInstantiated() || settingProxyHost.inInstantiation())
 				return settingProxyHost.getProxy();
 		}

@@ -6,7 +6,7 @@
  ****************************************************************************************************************************************************/
 /*
  *  $RCSfile: TableColumnProxyAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.12 $  $Date: 2005-06-22 21:05:25 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -26,7 +26,7 @@ import org.eclipse.ve.internal.java.core.*;
  * 
  * @since 1.0.0
  */
-public class TableColumnProxyAdapter extends BeanProxyAdapter2 {
+public class TableColumnProxyAdapter extends BeanProxyAdapter {
 
 	protected EStructuralFeature sfModelIndex, sfHeaderValue;
 
@@ -56,7 +56,7 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter2 {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applyBeanProperty(org.eclipse.jem.internal.beaninfo.PropertyDecorator,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applyBeanProperty(org.eclipse.jem.internal.beaninfo.PropertyDecorator,
 	 *      org.eclipse.jem.internal.proxy.core.IProxy, org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
 	protected IProxy applyBeanProperty(PropertyDecorator propertyDecorator, IProxy settingProxy, IExpression expression, boolean getOriginalValue)
@@ -70,7 +70,7 @@ public class TableColumnProxyAdapter extends BeanProxyAdapter2 {
 			// Not sure if this would occur - perhaps we could be on the free form although this
 			// is unlikely
 			if (table != null) {
-				IInternalBeanProxyHost2 tableProxyHost = (IInternalBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost(table);
+				IInternalBeanProxyHost tableProxyHost = getSettingBeanProxyHost(table);
 				if (tableProxyHost.getProxy() != null) {
 					IProxyMethod resetHeader = getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager", expression).getMethodProxy(expression, "resetHeaderValue", //$NON-NLS-1$ //$NON-NLS-2$
 							new String[] { "javax.swing.JTable", "javax.swing.table.TableColumn"}); //$NON-NLS-1$ //$NON-NLS-2$

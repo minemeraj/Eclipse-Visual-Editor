@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.16 $  $Date: 2005-06-21 22:53:48 $ 
+ *  $Revision: 1.17 $  $Date: 2005-06-22 21:05:23 $ 
  */
 package org.eclipse.ve.internal.java.core;
  
@@ -66,12 +66,22 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 		 * @see org.eclipse.jem.internal.instantiation.ParseVisitor#visit(org.eclipse.jem.internal.instantiation.PTInstanceReference)
 		 */
 		public boolean visit(PTInstanceReference node) {
-			IBeanProxyHost proxyHost = (IBeanProxyHost) EcoreUtil.getExistingAdapter(node.getObject(), IBeanProxyHost.BEAN_PROXY_TYPE);
-			if (proxyHost instanceof IInternalBeanProxyHost2) {
-				getExpression().createProxyExpression(getNextExpression(), ((IInternalBeanProxyHost2) proxyHost).getProxy());
-			} else {
-				getExpression().createProxyExpression(getNextExpression(), proxyHost.getBeanProxy());
+			// It might be possible that the reference has not yet been instantiated. This could happen because we are refering to an
+			// object in the constructor that is not on the freeform and is not a property or a child of bean that is on the freeform.
+			// In that case it won't be instantiated on its own. So we will need to instantiate here.
+			IInternalBeanProxyHost proxyHost = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(node.getObject());
+			IExpression exp = getExpression();
+			if (!proxyHost.isBeanProxyInstantiated() && !proxyHost.inInstantiation()) {			
+				// Instantiate it.
+				exp.createSubexpression();
+				try {
+					proxyHost.instantiateBeanProxy(exp);
+				} finally {
+					if (exp.isValid())
+						exp.createSubexpressionEnd();
+				}
 			}
+			exp.createProxyExpression(getNextExpression(), proxyHost.getProxy());
 			return false;
 		}
 
@@ -189,11 +199,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 	protected IProxy allocate(ImplicitAllocation implicit, IExpression expression) {
 		EObject source = implicit.getParent();
 		IBeanProxyHost proxyhost = (IBeanProxyHost) EcoreUtil.getExistingAdapter(source, IBeanProxyHost.BEAN_PROXY_TYPE);
-		// TODO Remove when we collapse the proxyhost2 into proxy host.
-		if (proxyhost instanceof IInternalBeanProxyHost2)
-			return ((IInternalBeanProxyHost2) proxyhost).getBeanPropertyProxyValue(implicit.getFeature(), expression, ForExpression.ROOTEXPRESSION);
-		else
-			return proxyhost.getBeanPropertyProxyValue(implicit.getFeature());
+		return ((IInternalBeanProxyHost) proxyhost).getBeanPropertyProxyValue(implicit.getFeature(), expression, ForExpression.ROOTEXPRESSION);
 	}
 	
 	/**

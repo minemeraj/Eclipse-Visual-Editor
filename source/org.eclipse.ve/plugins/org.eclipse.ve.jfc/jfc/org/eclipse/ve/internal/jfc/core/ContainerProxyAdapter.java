@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.19 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.20 $  $Date: 2005-06-22 21:05:25 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -61,7 +61,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean, org.eclipse.jem.internal.proxy.core.IExpression, boolean)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean, org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
 	protected void applied(EStructuralFeature feature, Object value, int index, boolean isTouch, IExpression expression, boolean testValidity) {
 		if (feature == sfContainerComponents) { 
@@ -124,10 +124,10 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 						} 
 					}						
 					break;
-				case NOTIFICATION_LIFECYCLE:
+				case IInternalBeanProxyHost.NOTIFICATION_LIFECYCLE:
 					if (isBeanProxyInstantiated()) {
 						try {
-							NotificationLifeCycle notification = (NotificationLifeCycle) msg;
+							IInternalBeanProxyHost.NotificationLifeCycle notification = (IInternalBeanProxyHost.NotificationLifeCycle) msg;
 							EStructuralFeature sf = (EStructuralFeature) notification.getFeature();
 							if (sf == sfConstraintConstraint) {
 								if (notification.isPostReinstantiation())
@@ -227,7 +227,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 					}
 					break;
 					
-				case NOTIFICATION_LIFECYCLE:
+				case IInternalBeanProxyHost.NOTIFICATION_LIFECYCLE:
 					if (isBeanProxyInstantiated()) {
 						try {
 							ReinstantiateBeanProxyNotification notification = (ReinstantiateBeanProxyNotification) msg;
@@ -249,7 +249,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 	private ComponentNameAdapter cnameAdapter;
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, org.eclipse.jem.internal.proxy.core.IExpression)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected void applySetting(EStructuralFeature feature, Object value, int index, IExpression expression) {
 		if (feature == sfContainerComponents)
@@ -283,7 +283,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 			EObject cc = (EObject) components.next();
 			IJavaInstance component = (IJavaInstance) cc.eGet(sfConstraintComponent);
 			try {
-				ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) BeanProxyUtilities.getBeanProxyHost(component);
+				ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) getSettingBeanProxyHost(component);
 				if (componentProxyHost != null) {
 					componentProxyHost.restoreVisibility(expression);
 				}
@@ -391,7 +391,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 
 			// The component to change is within the ConstraintComponent too.
 			IJavaInstance component = (IJavaInstance) constraintComponent.eGet(sfConstraintComponent);
-			IInternalBeanProxyHost2 componentProxyHost = (IInternalBeanProxyHost2) getSettingBeanProxyHost(component);
+			IInternalBeanProxyHost componentProxyHost = getSettingBeanProxyHost(component);
 			IProxy componentProxy = componentProxyHost.getProxy(); // It is assumed to already be instantiated or there was an error for a change constraint request.
 			if (componentProxy == null)
 				return; // It failed creation, don't go any further. 
@@ -412,7 +412,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 						component.eAdapters().remove(cnameAdapter);
 
 					if (constraintAttributeValue != null) {
-						IBeanProxyHost2 constraintHost = (IBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost(constraintAttributeValue);
+						IInternalBeanProxyHost constraintHost = getSettingBeanProxyHost(constraintAttributeValue);
 						constraintBeanProxy = instantiateSettingBean(constraintHost, expression, sfConstraintConstraint, constraintComponent); // Note: Using feature constraint with value CC.
 						if (constraintHost == null)
 							return; // It failed creation, don't go any further.
@@ -468,7 +468,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 			try {
 				// The component to actually add is within the ConstraintComponent too.
 				IJavaInstance component = (IJavaInstance) constraintComponent.eGet(sfConstraintComponent);
-				IBeanProxyHost2 componentProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost(component);
+				IInternalBeanProxyHost componentProxyHost = getSettingBeanProxyHost(component);
 				IProxy componentProxy = instantiateSettingBean(componentProxyHost, expression, sfConstraintComponent, component, null);
 				if (componentProxy == null)
 					return; // It failed creation, don't go any further. 
@@ -485,7 +485,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 						component.eAdapters().remove(cnameAdapter);
 
 					if (constraintAttributeValue != null) {
-						IBeanProxyHost2 constraintHost = (IBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost(constraintAttributeValue);
+						IInternalBeanProxyHost constraintHost = getSettingBeanProxyHost(constraintAttributeValue);
 						constraintBeanProxy = instantiateSettingBean(constraintHost, expression, sfConstraintConstraint, constraintAttributeValue,
 								ccAdapter);
 						if (constraintHost == null)
@@ -548,8 +548,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 		List components = (List) ((EObject) getTarget()).eGet(sfContainerComponents);
 		for (int i=position; i<components.size(); i++) {
 			EObject componentConstraint = (EObject) components.get(i);
-			IInternalBeanProxyHost2 componentProxyHost =
-				(IInternalBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) componentConstraint.eGet(sfConstraintComponent));
+			IInternalBeanProxyHost componentProxyHost = getSettingBeanProxyHost((IJavaInstance) componentConstraint.eGet(sfConstraintComponent));
 			if (componentProxyHost.isBeanProxyInstantiated() || componentProxyHost.inInstantiation())
 				return componentProxyHost.getProxy();
 		}
@@ -570,7 +569,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 		if (ccAdapter != null)
 			clearError(sfContainerComponents); 
 		IJavaInstance component = (IJavaInstance) aConstraintComponent.eGet(sfConstraintComponent);
-		ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) BeanProxyUtilities.getBeanProxyHost(component);
+		ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) EcoreUtil.getExistingAdapter(component,IBeanProxyHost.BEAN_PROXY_TYPE);
 		// Note: We shouldn't be called during an instantiation of any kind, so we should have a straight instantiated bean.
 		if (componentProxyHost != null && componentProxyHost.isBeanProxyInstantiated()) {
 			if (!layoutChangePending) {
@@ -597,7 +596,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 	
 	/*
 	 *  (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#removingAdapter()
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#removingAdapter()
 	 */
 	protected void removingAdapter() {
 		removeAllComponentAdapters();
@@ -646,7 +645,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 		try {
 			IJavaInstance layoutValue = (IJavaInstance) getEObject().eGet(sfLayout);
 			if (layoutValue != null) {
-				IBeanProxyHost2 layoutProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost(layoutValue);
+				IBeanProxyHost layoutProxyHost = getSettingBeanProxyHost(layoutValue);
 				layoutProxyHost.releaseBeanProxy(expression);
 			} 
 		} catch (IllegalArgumentException e) {

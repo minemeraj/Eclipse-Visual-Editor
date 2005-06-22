@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: BeanProxyAdapter2.java,v $
- *  $Revision: 1.10 $  $Date: 2005-06-21 22:53:48 $ 
+ *  $RCSfile: BeanProxyAdapter.java,v $
+ *  $Revision: 1.41 $  $Date: 2005-06-22 21:05:23 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -18,11 +18,9 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.NotificationImpl;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
@@ -50,7 +48,7 @@ import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationExceptio
  * 
  * @since 1.1.0
  */
-public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implements IBeanProxyHost2, IInternalBeanProxyHost2 {
+public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter implements IInternalBeanProxyHost {
 
 	private static final MessageError NO_BEAN_DUE_TO_PREVIOUS_ERROR = new IErrorHolder.MessageError(JavaMessages.BeanProxyAdapter2_NO_BEAN_DUE_TO_PREVIOUS_ERROR_, 
 										IErrorHolder.ERROR_INFO);	
@@ -93,7 +91,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * 
 	 * @since 1.1.0
 	 */
-	public class ReinstantiateBeanProxyNotification extends NotificationImpl implements NotificationLifeCycle {
+	public class ReinstantiateBeanProxyNotification extends NotificationImpl implements IInternalBeanProxyHost.NotificationLifeCycle {
 		
 		private IExpression expression;
 		private EStructuralFeature feature;
@@ -108,7 +106,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		 * @since 1.1.0
 		 */
 		public ReinstantiateBeanProxyNotification(IExpression expression) {
-			super(NOTIFICATION_LIFECYCLE, BeanProxyAdapter2.this.getTarget(), BeanProxyAdapter2.this.getTarget(), Notification.NO_INDEX, true);
+			super(IInternalBeanProxyHost.NOTIFICATION_LIFECYCLE, BeanProxyAdapter.this.getTarget(), BeanProxyAdapter.this.getTarget(), Notification.NO_INDEX, true);
 			this.expression = expression;
 		}
 
@@ -217,7 +215,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * 
 	 * @since 1.1.0
 	 */
-	public BeanProxyAdapter2(IBeanProxyDomain domain) {
+	public BeanProxyAdapter(IBeanProxyDomain domain) {
 		this.domain = domain;
 	}
 	
@@ -511,7 +509,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	}
 	
 	/**
-	 * Same as {@link BeanProxyAdapter2#processPropertyError(Throwable, EStructuralFeature, Object)} except that
+	 * Same as {@link BeanProxyAdapter#processPropertyError(Throwable, EStructuralFeature, Object)} except that
 	 * a error notifier is provided. This is used for property settings errors on intermediate objects. This is
 	 * rarely used. See jfc.ContainerProxyAdapter for how it could be used.
 	 *  
@@ -549,7 +547,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	/**
 	 * Cancel the setting.
 	 * <p>Subclasses may override to handle the cancel. Normally they do not need to handle thrown exceptions from the expression because
-	 * these will be handled by the caller (@link BeanProxyAdapter2#canceled(EStructuralFeature, Object, int, IExpression)}. However,
+	 * these will be handled by the caller (@link BeanProxyAdapter#canceled(EStructuralFeature, Object, int, IExpression)}. However,
 	 * if they are any IDE exceptions (such as NoSuchMethodError when searching for an IProxyMethod) these should be caught and logged.
 	 * 
 	 * @param feature
@@ -638,7 +636,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * @param index	the index of the setting if in a many valued feature. The current default implementation ignores this. Subclasses may use it if they wish.
 	 * @param isTouch <code>true</code> if this is a touch. This means that the same object was set back into the property. This can be used by overrides to decide not to apply the live value again. By default it does apply it.
 	 * @param expression the expression to build the apply into.
-	 * @param testValidity <code>true</code> if true then the validity of the feature needs to be tested. Use {@link BeanProxyAdapter2#testApplyValidity(IExpression, boolean, EStructuralFeature, Object, boolean) testValidity} for testing in method overrides that don't delgate to super.
+	 * @param testValidity <code>true</code> if true then the validity of the feature needs to be tested. Use {@link BeanProxyAdapter#testApplyValidity(IExpression, boolean, EStructuralFeature, Object, boolean) testValidity} for testing in method overrides that don't delgate to super.
 	 * @since 1.1.0 
 	 */
 	protected void applied(final EStructuralFeature feature, final Object value, final int index, boolean isTouch, IExpression expression, boolean testValidity) {
@@ -698,15 +696,15 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	
 	/**
 	 * Apply the setting.
-	 * <p>Subclasses may override to handle the apply. They should call {@link BeanProxyAdapter2#instantiateSettingBean(IBeanProxyHost, IExpression, EStructuralFeature, Object)}
+	 * <p>Subclasses may override to handle the apply. They should call {@link BeanProxyAdapter#instantiateSettingBean(IBeanProxyHost, IExpression, EStructuralFeature, Object)}
 	 * when they need to instantiate the setting value. Normally they do not need to handle thrown exceptions from the expression because
-	 * these will be handled by the caller (@link BeanProxyAdapter2#applied(EStructuralFeature, Object, int, IExpression, boolean)}. However,
+	 * these will be handled by the caller (@link BeanProxyAdapter#applied(EStructuralFeature, Object, int, IExpression, boolean)}. However,
 	 * if they are any IDE exceptions (such as NoSuchMethodError when searching for an IProxyMethod) these should be caught and logged as:
 	 * <pre><code>
 	 *   processPropertyError(e, feature, value, index);
 	 * </code></pre>
 	 * <p>
-	 * Often a better place to override is {@link BeanProxyAdapter2#applyBeanProperty(PropertyDecorator, IProxy, IExpression, boolean)}. That is
+	 * Often a better place to override is {@link BeanProxyAdapter#applyBeanProperty(PropertyDecorator, IProxy, IExpression, boolean)}. That is
 	 * useful to override when it is still just a setting but needs to applied in a different way. This method here should be overridden if the apply
 	 * is totally different from a normal apply.
 	 * 
@@ -722,7 +720,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		if ((propertyDecorator != null && propertyDecorator.isWriteable())) {
 			try {
 				IJavaInstance javaValue = (IJavaInstance)value;
-				IBeanProxyHost settingBean = getSettingBeanProxyHost(javaValue);						
+				IInternalBeanProxyHost settingBean = getSettingBeanProxyHost(javaValue);						
 				IProxy settingBeanProxy = null;
 				if (settingBean != null) {
 					settingBeanProxy = instantiateSettingBean(settingBean, expression, feature, value);
@@ -863,19 +861,8 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * 
 	 * @since 1.1.0
 	 */
-	protected IBeanProxyHost getSettingBeanProxyHost(IJavaInstance javaValue) {
-		if (javaValue != null) {
-			// The java value should be in a resource.
-			IBeanProxyHost settingBean = (IBeanProxyHost) EcoreUtil.getRegisteredAdapter(javaValue, IBeanProxyHost.BEAN_PROXY_TYPE);
-			if (settingBean == null) {
-				// It isn't in a resource, so we'll get it explicitly from our domain resource.
-				ResourceSet rset = JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain());
-				AdapterFactory f = EcoreUtil.getAdapterFactory(rset.getAdapterFactories(), IBeanProxyHost.BEAN_PROXY_TYPE);
-				settingBean = (IBeanProxyHost) f.adaptNew(javaValue, IBeanProxyHost.BEAN_PROXY_TYPE);
-			}
-			return settingBean;
-		}
-		return null;
+	protected IInternalBeanProxyHost getSettingBeanProxyHost(IJavaInstance javaValue) {
+		return (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(javaValue, getBeanProxyDomain().getEditDomain());
 	}
 
 
@@ -920,12 +907,12 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * 
 	 * @since 1.1.0
 	 */	
-	protected IProxy instantiateSettingBean(IBeanProxyHost settingBean, IExpression expression, EStructuralFeature feature, Object value) {
+	protected IProxy instantiateSettingBean(IInternalBeanProxyHost settingBean, IExpression expression, EStructuralFeature feature, Object value) {
 		return instantiateSettingBean(settingBean, expression, feature, value, this);
 	}
 	
 	/**
-	 * Same as {@link BeanProxyAdapter2#instantiateSettingBean(IBeanProxyHost, IExpression, EStructuralFeature, Object)} except that
+	 * Same as {@link BeanProxyAdapter#instantiateSettingBean(IBeanProxyHost, IExpression, EStructuralFeature, Object)} except that
 	 * you provide an ErrorNotifier to use. This is a bit of kludge, but it is used by subclasses that have an intermediate object for
 	 * their children, and the intermediate object can have its own errors. For example the jfc.ContainerProxyAdapter does this for
 	 * its children.
@@ -941,7 +928,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * 
 	 * @since 1.1.0
 	 */
-	protected IProxy instantiateSettingBean(final IBeanProxyHost settingBean, IExpression expression, final EStructuralFeature feature, final Object value, final ErrorNotifier errorNotifier) {
+	protected IProxy instantiateSettingBean(final IInternalBeanProxyHost settingBean, IExpression expression, final EStructuralFeature feature, final Object value, final ErrorNotifier errorNotifier) {
 		if (settingBean == null)
 			return null;	// No setting bean.
 		if (settingBean.isBeanProxyInstantiated())
@@ -949,46 +936,40 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 		if (errorNotifier != null)
 			errorNotifier.clearError(feature, value);
 		IProxy result = null;
-		// TODO get rid of test when we consolidate back to just IBeanProxyHost
-		if (settingBean instanceof IInternalBeanProxyHost2) {
-			// See if being instantiated, if not then do instantiation.
-			result = ((IInternalBeanProxyHost2) settingBean).getProxy();
-			if (result == null) {
-				// Treated as:
-				// try {
-				//   instantiate
-				// } catch (Exception e) {
-				//   .. process the bean's instantiation error as the error for this property ..
-				// }
-				expression.createTry();
-				result = ((IBeanProxyHost2) settingBean).instantiateBeanProxy(expression);
-				if (result != null) {
-					ExpressionProxy beanInstantiateException = expression.createTryCatchClause(getBeanInstantiationExceptionTypeProxy(expression), errorNotifier != null);
-					if (errorNotifier != null) {
-						beanInstantiateException.addProxyListener(new ExpressionProxy.ProxyAdapter() {
+		// See if being instantiated, if not then do instantiation.
+		result = settingBean.getProxy();
+		if (result == null) {
+			// Treated as:
+			// try {
+			//   instantiate
+			// } catch (Exception e) {
+			//   .. process the bean's instantiation error as the error for this property ..
+			// }
+			expression.createTry();
+			result = settingBean.instantiateBeanProxy(expression);
+			if (result != null) {
+				ExpressionProxy beanInstantiateException = expression.createTryCatchClause(getBeanInstantiationExceptionTypeProxy(expression), errorNotifier != null);
+				if (errorNotifier != null) {
+					beanInstantiateException.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
-							public void proxyResolved(ProxyEvent event) {
-								processSettingBeanInstantiationErrors(errorNotifier, (IInternalBeanProxyHost2) settingBean, feature, value);
-							}
+						public void proxyResolved(ProxyEvent event) {
+							processSettingBeanInstantiationErrors(errorNotifier, settingBean, feature, value);
+						}
 
-							public void proxyNotResolved(ExpressionProxy.ProxyEvent event) {
-								processSettingBeanInstantiationErrors(errorNotifier, (IInternalBeanProxyHost2) settingBean, feature, value);
-							}
-						});
-					}
-					expression.createRethrow();
+						public void proxyNotResolved(ExpressionProxy.ProxyEvent event) {
+							processSettingBeanInstantiationErrors(errorNotifier, settingBean, feature, value);
+						}
+					});
 				}
-				expression.createTryEnd();
-			} else
-				return result;
-		} else {
-			// We need to truly instantiate, this better not reference back to any bean we are trying to instantiate through the expression. That will cause major damage.
-			result = settingBean.instantiateBeanProxy();	
-		}
+				expression.createRethrow();
+			}
+			expression.createTryEnd();
+		} else
+			return result;
 		
 		// This will handle any immediate instantiation errors (i.e. occurred either in the IDE while creating the expression, or an error from instantiateBeanProxy without an expression).
-		if (errorNotifier != null && ((IInternalBeanProxyHost2) settingBean).hasInstantiationErrors()) {
-			processSettingBeanInstantiationErrors(errorNotifier, (IInternalBeanProxyHost2) settingBean, feature, value);
+		if (errorNotifier != null && settingBean.hasInstantiationErrors()) {
+			processSettingBeanInstantiationErrors(errorNotifier, settingBean, feature, value);
 			return null;
 		}					
 		return result;
@@ -997,7 +978,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	/*
 	 * Process the instantiation errors on the setting bean.
 	 */
-	private void processSettingBeanInstantiationErrors(ErrorNotifier errorNotifier, IInternalBeanProxyHost2 settingBean, EStructuralFeature feature, Object value) {
+	private void processSettingBeanInstantiationErrors(ErrorNotifier errorNotifier, IInternalBeanProxyHost settingBean, EStructuralFeature feature, Object value) {
 		List errors = settingBean.getInstantiationError();
 		for (int i = 0; i < errors.size(); i++) {
 			ErrorType errorType = (ErrorType) errors.get(i);
@@ -1019,7 +1000,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 */
 	protected IProxyBeanType getBeanInstantiationExceptionTypeProxy(IExpression expression) {
 		return getBeanTypeProxy(
-				IBeanProxyHost2.BEAN_INSTANTIATION_EXCEPTION, expression);
+				IBeanProxyHost.BEAN_INSTANTIATION_EXCEPTION, expression);
 	}
 	
 	/**
@@ -1694,7 +1675,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 	 * Reinstantiate the bean. The default is to release the bean and do a standard instantiation.
 	 * Subclasses may override to do something specific.
 	 * <p>
-	 * This method should not be called by anything other than {@link BeanProxyAdapter2#reinstantiate(IExpression)}.
+	 * This method should not be called by anything other than {@link BeanProxyAdapter#reinstantiate(IExpression)}.
 	 * It is here for subclasses to provide alternate implementations.
 	 * 
 	 * @param expression the expression will be valid upon return.
@@ -1884,10 +1865,10 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 				}				
 				break;
 				
-			case NOTIFICATION_LIFECYCLE:
+			case IInternalBeanProxyHost.NOTIFICATION_LIFECYCLE:
 				if (isBeanProxyInstantiated()) {
 					try {
-						NotificationLifeCycle reinstantiation = (NotificationLifeCycle) notification;
+						IInternalBeanProxyHost.NotificationLifeCycle reinstantiation = (IInternalBeanProxyHost.NotificationLifeCycle) notification;
 						// Treat this as a set by default. This will cause the proxy to be reapplied.
 						if (reinstantiation.isPostReinstantiation()) {
 							IExpression expression = reinstantiation.getExpression();
@@ -2012,7 +1993,7 @@ public class BeanProxyAdapter2 extends ErrorNotifier.ErrorNotifierAdapter implem
 			IJavaInstance j = (IJavaInstance) value;
 			if (j.eContainer() == null || j.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties()) {
 				// It is not contained, or it is a property, i.e. it is not referenced by anyone else. These should be released too.
-				IBeanProxyHost2 settingBean =  (IBeanProxyHost2) EcoreUtil.getExistingAdapter((EObject) value, IBeanProxyHost.BEAN_PROXY_TYPE);
+				IBeanProxyHost settingBean =  (IBeanProxyHost) EcoreUtil.getExistingAdapter((EObject) value, IBeanProxyHost.BEAN_PROXY_TYPE);
 				if (settingBean != null)
 					settingBean.releaseBeanProxy(expression);
 			}

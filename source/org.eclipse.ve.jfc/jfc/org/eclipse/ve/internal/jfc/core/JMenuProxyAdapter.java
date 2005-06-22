@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JMenuProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-22 21:05:25 $ 
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -24,8 +24,7 @@ import org.eclipse.jem.internal.proxy.core.IExpression;
 import org.eclipse.jem.internal.proxy.core.IProxy;
 import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost2;
+import org.eclipse.ve.internal.java.core.*;
 
 /**
  * @author pwalker
@@ -50,7 +49,7 @@ public class JMenuProxyAdapter extends ComponentProxyAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean,
 	 *      org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
 	protected void applied(EStructuralFeature feature, Object value, int index, boolean isTouch, IExpression expression, boolean testValidity) {
@@ -64,7 +63,7 @@ public class JMenuProxyAdapter extends ComponentProxyAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
 	 *      org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected void applySetting(EStructuralFeature feature, Object value, int index, IExpression expression) {
@@ -77,7 +76,7 @@ public class JMenuProxyAdapter extends ComponentProxyAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#cancelSetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#cancelSetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
 	 *      org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {
@@ -89,7 +88,7 @@ public class JMenuProxyAdapter extends ComponentProxyAdapter {
 
 	private void addComponent(EObject aComponent, int position, IExpression expression) {
 		IJavaInstance component = (IJavaInstance) aComponent;
-		IBeanProxyHost2 componentProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost(component);
+		IInternalBeanProxyHost componentProxyHost = getSettingBeanProxyHost(component);
 		IProxy componentProxy = instantiateSettingBean(componentProxyHost, expression, getSFItems(), aComponent);
 		if (componentProxy == null)
 			return; // It failed creation, don't go any further.
@@ -123,7 +122,7 @@ public class JMenuProxyAdapter extends ComponentProxyAdapter {
 	 * @since 1.1.0
 	 */
 	private void removeComponent(EObject aComponent, IExpression expression) {
-		IBeanProxyHost2 componentProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost((IJavaInstance) aComponent);
+		IBeanProxyHost componentProxyHost = getSettingBeanProxyHost((IJavaInstance) aComponent);
 		// Note: We shouldn't be called during an instantiation of any kind, so we should have a straight instantiated bean.
 		if (componentProxyHost != null && componentProxyHost.isBeanProxyInstantiated()) {
 			BeanAwtUtilities.invoke_JMenu_removeComponent(getProxy(), componentProxyHost.getBeanProxy(), expression);

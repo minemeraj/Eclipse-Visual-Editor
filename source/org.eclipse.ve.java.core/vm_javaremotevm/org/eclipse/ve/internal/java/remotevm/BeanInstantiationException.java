@@ -10,13 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanInstantiationException.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-16 17:46:06 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 21:05:23 $ 
  */
 package org.eclipse.ve.internal.java.remotevm;
  
 
 /**
- * This is thrown by instantiation of a bean in BeanProxyAdapter2 to let everyone know the bean
+ * This is thrown by instantiation of a bean in BeanProxyAdapter to let everyone know the bean
  * did not instantiate. The actual error has already been processed. This is to tell the difference
  * between an instantiation error and an apply error.
  * @since 1.1.0

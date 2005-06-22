@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: PrimitiveProxyAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-11 19:01:20 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-22 21:05:23 $ 
  */
 
 import java.util.*;
@@ -38,7 +38,7 @@ import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationExceptio
  * @version 	1.0
  * @author
  */
-public class PrimitiveProxyAdapter extends AdapterImpl implements IBeanProxyHost2, IInternalBeanProxyHost2 {
+public class PrimitiveProxyAdapter extends AdapterImpl implements IInternalBeanProxyHost {
 
 	private IProxy beanProxy; // It should be accessed only through accessors, even subclasses.
 	private boolean ownsProxy;

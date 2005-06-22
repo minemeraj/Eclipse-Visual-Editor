@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JMenuBarProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-22 21:05:25 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -49,7 +49,7 @@ public class JMenuBarProxyAdapter extends ComponentProxyAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean,
 	 *      org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
 	protected void applied(EStructuralFeature feature, Object value, int index, boolean isTouch, IExpression expression, boolean testValidity) {
@@ -63,7 +63,7 @@ public class JMenuBarProxyAdapter extends ComponentProxyAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
 	 *      org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected void applySetting(EStructuralFeature feature, Object value, int index, IExpression expression) {
@@ -76,7 +76,7 @@ public class JMenuBarProxyAdapter extends ComponentProxyAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#cancelSetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#cancelSetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
 	 *      org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {
@@ -88,7 +88,7 @@ public class JMenuBarProxyAdapter extends ComponentProxyAdapter {
 
 	private void addComponent(EObject aComponent, int position, IExpression expression) {
 		IJavaInstance component = (IJavaInstance) aComponent;
-		IBeanProxyHost2 componentProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost(component);
+		IInternalBeanProxyHost componentProxyHost = getSettingBeanProxyHost(component);
 		IProxy componentProxy = instantiateSettingBean(componentProxyHost, expression, sfMenus, aComponent);
 		if (componentProxy == null)
 			return; // It failed creation, don't go any further.
@@ -109,7 +109,7 @@ public class JMenuBarProxyAdapter extends ComponentProxyAdapter {
 	 * @since 1.1.0
 	 */
 	private void removeComponent(EObject aComponent, IExpression expression) {
-		ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) aComponent);
+		ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) getSettingBeanProxyHost((IJavaInstance) aComponent);
 		// Note: We shouldn't be called during an instantiation of any kind, so we should have a straight instantiated bean.
 		if (componentProxyHost != null && componentProxyHost.isBeanProxyInstantiated()) {
 			BeanAwtUtilities.invoke_removeComponent(getProxy(), componentProxyHost.getBeanProxy(), expression);
