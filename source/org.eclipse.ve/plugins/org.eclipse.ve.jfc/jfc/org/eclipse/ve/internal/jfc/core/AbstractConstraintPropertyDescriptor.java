@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: AbstractConstraintPropertyDescriptor.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:21 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-22 14:53:04 $ 
  */
 import java.util.logging.Level;
 
@@ -49,7 +49,7 @@ public abstract class AbstractConstraintPropertyDescriptor extends EToolsPropert
 	 * Construct with the Constraint Structural Feature from the Constraint class.
 	 */
 	public AbstractConstraintPropertyDescriptor(EStructuralFeature sfConstraintConstraint) {
-		super(sfConstraintConstraint, VisualMessages.getString("ConstraintComponent.constraint"));  //$NON-NLS-1$
+		super(sfConstraintConstraint, JFCMessages.ConstraintComponent_constraint);  
 		setNullInvalid(false);	// By default, nulls are not invalid.
 		setAlwaysIncompatible(true);	//By default, constraints are incompatible.
 	}

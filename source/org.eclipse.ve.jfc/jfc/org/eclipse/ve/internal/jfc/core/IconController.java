@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: IconController.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-22 14:53:04 $ 
  */
 
 import java.io.File;
@@ -532,7 +532,7 @@ public class IconController {
 							// It doesn't look as good because you can't tell what project the root is in when there are required projects.
 							String result = super.getText(element);
 							if (element instanceof IPackageFragmentRoot) 
-								result = MessageFormat.format(VisualMessages.getString("IconController.RootLabel"), new Object[] {result, ((IPackageFragmentRoot) element).getJavaProject().getElementName()}); //$NON-NLS-1$
+								result = MessageFormat.format(JFCMessages.IconController_RootLabel, new Object[] {result, ((IPackageFragmentRoot) element).getJavaProject().getElementName()}); 
 							return result;
 						}
 					};
@@ -626,7 +626,7 @@ public class IconController {
 				if (res instanceof IFile) {
 					// A duplicate found.
 					getOKButton().setEnabled(false);
-					dialog.getStatusLineManager().setErrorMessage(MessageFormat.format(VisualMessages.getString("IconController.HiddenImage_ERROR_"), new Object[] {res.getFullPath().toString()})); //$NON-NLS-1$
+					dialog.getStatusLineManager().setErrorMessage(MessageFormat.format(JFCMessages.IconController_HiddenImage_ERROR_, new Object[] {res.getFullPath().toString()})); 
 					return;
 				}
 			}
@@ -941,7 +941,7 @@ public class IconController {
 						IconController.this.dialog.getStatusLineManager().setErrorMessage("");							 //$NON-NLS-1$
 					}
 				});
-				beginTask(monitor, VisualMessages.getString("IconController.Status.SearchingForImages"), 1000); //$NON-NLS-1$
+				beginTask(monitor, JFCMessages.IconController_Status_SearchingForImages, 1000); 
 
 				addImages(f, path, monitor, 1000);
 				allImagesLoaded = !monitor.isCanceled();
@@ -953,7 +953,7 @@ public class IconController {
 				if (terminateThread)
 					return;
 
-				final String text = (monitor.isCanceled() ? VisualMessages.getString("IconController.Status.SearchStopped") : VisualMessages.getString("IconController.Status.SearchDone")); //$NON-NLS-1$ //$NON-NLS-2$
+				final String text = (monitor.isCanceled() ? JFCMessages.IconController_Status_SearchStopped : JFCMessages.IconController_Status_SearchDone); 
 				done(monitor);
 
 				// Run sync so that we don't leave until all done.

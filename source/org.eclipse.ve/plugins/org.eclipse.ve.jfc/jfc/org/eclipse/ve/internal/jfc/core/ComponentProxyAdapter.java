@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.24 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.25 $  $Date: 2005-06-22 14:53:04 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -253,7 +253,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 					switch (status) {
 						case ImageDataConstants.COMPONENT_IMAGE_CLIPPED:
 							// Bit of kludge, but if image clipped, create an info message for it.
-							ErrorType err = new MessageError(VisualMessages.getString("ComponentProxyAdapter.Picture_too_large_WARN_"), //$NON-NLS-1$
+							ErrorType err = new MessageError(JFCMessages.ComponentProxyAdapter_Picture_too_large_WARN_, 
 									IErrorHolder.ERROR_INFO);
 							processError(err, IMAGE_DATA_COLLECTION_ERROR_KEY);
 							break;
@@ -276,10 +276,9 @@ public class ComponentProxyAdapter extends BeanProxyAdapter2 implements IVisualC
 						IBeanTypeProxy eType = exception.getTypeProxy();
 						eMsg = MessageFormat
 								.format(
-										VisualMessages.getString("ComponentProxyAdapter.Image_collection_exception_EXC_"), new Object[] { eType.getTypeName()}); //$NON-NLS-1$
+										JFCMessages.ComponentProxyAdapter_Image_collection_exception_EXC_, new Object[] { eType.getTypeName()}); 
 					}
-					ErrorType err = new MessageError(MessageFormat.format(VisualMessages
-							.getString("ComponentProxyAdapter.Image_collection_failed_ERROR_"), new Object[] { eMsg}), IErrorHolder.ERROR_INFO); //$NON-NLS-1$
+					ErrorType err = new MessageError(MessageFormat.format(JFCMessages.ComponentProxyAdapter_Image_collection_failed_ERROR_, new Object[] { eMsg}), IErrorHolder.ERROR_INFO); //$NON-NLS-1$
 					processError(err, IMAGE_DATA_COLLECTION_ERROR_KEY);
 				}
 
