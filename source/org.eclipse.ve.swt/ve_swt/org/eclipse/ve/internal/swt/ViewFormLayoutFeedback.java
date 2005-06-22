@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutFeedback.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-21 15:06:09 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 16:46:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -19,7 +19,12 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
  
-
+/**
+ * This class provides feedback for the ViewForm layout.  Open regions appear in a light color while
+ * filled regions appear in a dark color.
+ * 
+ * @since 1.1
+ */
 public class ViewFormLayoutFeedback extends RectangleFigure {
 	protected int fLineWidth = 1;
 	protected int fLineStyle = SWT.LINE_DASHDOT;
@@ -33,6 +38,7 @@ public class ViewFormLayoutFeedback extends RectangleFigure {
 	public ViewFormLayoutFeedback() {
 		super();
 	}
+	
 	public void fillShape(Graphics g) {
 		Rectangle r = getBounds().getCopy();
 		// Fill in the already occupied regions
@@ -56,6 +62,7 @@ public class ViewFormLayoutFeedback extends RectangleFigure {
 			}
 		}
 		g.setForegroundColor(ColorConstants.green);
+		
 		// Draw outlines around each of the drop candidate areas
 		g.drawRectangle(r.x, r.y, r.width - 1, r.height - 1);
 		g.drawLine(r.x, r.y + r.height / 3, r.x + r.width - 1, r.y + r.height / 3);

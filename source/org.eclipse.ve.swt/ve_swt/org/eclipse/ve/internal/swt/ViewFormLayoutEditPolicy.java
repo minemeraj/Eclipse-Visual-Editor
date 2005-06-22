@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-21 15:06:09 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 16:46:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -41,14 +41,17 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
  
 /**
- * @since 1.1.0
+ * The LayoutEditPolicy for a ViewForm will use the helper class to add feedback to regions
+ * based on what is currently being moused over and the availability of the region. 
+ * 
+ * @since 1.1
  */
 public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 	
 	protected VisualContainerPolicy fPolicy;
 	protected ViewFormLayoutPolicyHelper fLayoutPolicyHelper;
 	protected ViewFormLayoutFeedback fViewFormLayoutFeedback = null;
-	protected ViewFormLayoutRegionFeedback fRegionFeedback = null;
+	protected CustomLayoutRegionFeedback fRegionFeedback = null;
 	protected Rectangle fCurrentRectangle = null;
 
 	public ViewFormLayoutEditPolicy(EditDomain anEditDomain) {
@@ -94,6 +97,9 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 		return null;
 	}
 	
+	/**
+	 * show the feedback for the region
+	 */
 	private void addRegionFeedback(Request request) {
 		// Now show feedback on the current available region
 		Point position = getLocationFromRequest(request).getCopy();
@@ -108,7 +114,7 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 					if (fRegionFeedback != null)
 						removeFeedback(fRegionFeedback);
 					fCurrentRectangle = r;
-					ViewFormLayoutRegionFeedback rf = new ViewFormLayoutRegionFeedback();
+					CustomLayoutRegionFeedback rf = new CustomLayoutRegionFeedback();
 					rf.setLabel(ViewFormLayoutFeedback.getDisplayConstraint(str));
 					fRegionFeedback = rf;
 					fRegionFeedback.setBounds(r);
@@ -164,6 +170,9 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 		return addCmd;
 	}
 	
+	/**
+	 * focus has been lost from the layout, so remove the feedback
+	 */
 	protected void eraseLayoutTargetFeedback(Request request) {
 		if (fViewFormLayoutFeedback != null) {
 			removeFeedback(fViewFormLayoutFeedback);
@@ -199,6 +208,9 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 		}
 	}
 	
+	/**
+	 * return the feedback for the layout
+	 */
 	private Figure getViewFormLayoutFeedback(Request request) {
 		// show the view form layout feedback
 		if (fViewFormLayoutFeedback == null) {
@@ -246,7 +258,7 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 	}
 
 	/**
-	 * getDeleteDependantCommand method comment.
+	 * returns the command to delete a child of the ViewForm
 	 */
 	protected Command getDeleteDependantCommand(Request request) {
 		Command deleteContributionCmd = fPolicy.getCommand(request);
@@ -256,7 +268,7 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 	}
 	
 	/**
-	 * allows a child to move from one open cell to another.
+	 * returns the command that allows a child to move from one open cell to another
 	 */
 	protected Command getMoveChildrenCommand(Request generic) {
 		EObject parent = (EObject) fPolicy.getContainer();
@@ -336,5 +348,4 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 			return UnexecutableCommand.INSTANCE; // It can't be created.
 		return orphanContributionCmd;
 	}
-	
 }

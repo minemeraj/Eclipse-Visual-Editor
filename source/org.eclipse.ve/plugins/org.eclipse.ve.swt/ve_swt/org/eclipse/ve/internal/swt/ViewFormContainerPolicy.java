@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-21 15:06:09 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 16:46:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -27,7 +27,12 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 
-
+/**
+ * The ContainerPolicy for a ViewForm allows for four controls to be added as children to
+ * one of the regions: topleft, topright, topcenter, or content.
+ * 
+ * @since 1.1
+ */
 public class ViewFormContainerPolicy extends CompositeContainerPolicy {
 	
 	EReference sfLeftControl, sfRightControl, sfCenterControl, sfContentControl;
