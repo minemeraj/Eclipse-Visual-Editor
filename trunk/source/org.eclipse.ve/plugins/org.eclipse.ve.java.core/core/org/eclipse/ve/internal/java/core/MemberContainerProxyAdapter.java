@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainerProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-22 22:44:40 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-22 21:05:23 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -238,7 +238,7 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	protected void releaseSetting(Object v, final IExpression expression, final boolean remove) {
 		if (v instanceof IJavaInstance) {
 			// Get existing adapter, if it doesn't have one, don't create it.
-			final IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter((Notifier) v, IBeanProxyHost.BEAN_PROXY_TYPE);
+			final IInternalBeanProxyHost value = (IInternalBeanProxyHost) EcoreUtil.getExistingAdapter((Notifier) v, IBeanProxyHost.BEAN_PROXY_TYPE);
 			if (value != null) {
 				Platform.run(new ISafeRunnable() {
 
@@ -247,10 +247,7 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 					}
 
 					public void run() throws Exception {
-						if (value instanceof IInternalBeanProxyHost2)
-							((IInternalBeanProxyHost2) value).releaseBeanProxy(expression);
-						else
-							value.releaseBeanProxy();
+						value.releaseBeanProxy(expression);
 						if (remove)
 							value.getTarget().eAdapters().remove(value);
 					}

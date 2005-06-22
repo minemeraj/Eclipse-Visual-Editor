@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScrolledCompositeProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-22 21:05:27 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -40,7 +40,7 @@ public class ScrolledCompositeProxyAdapter extends CompositeProxyAdapter {
 		if (releaseChild) {
             IJavaInstance content = (IJavaInstance) ((IJavaObjectInstance) getTarget()).eGet(sf_containerContent);
 			
-			IBeanProxyHost2 value = (IBeanProxyHost2) EcoreUtil.getExistingAdapter(content, IBeanProxyHost.BEAN_PROXY_TYPE);
+			IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter(content, IBeanProxyHost.BEAN_PROXY_TYPE);
 			if (value != null)
 				value.releaseBeanProxy(expression);
 		}		

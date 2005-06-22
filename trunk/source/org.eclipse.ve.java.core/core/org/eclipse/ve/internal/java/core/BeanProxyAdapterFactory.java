@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: BeanProxyAdapterFactory.java,v $
- *  $Revision: 1.10 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-22 21:05:23 $ 
  */
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -101,7 +101,7 @@ public class BeanProxyAdapterFactory
 				getBeanProxyClassNameFeature());
 		
 		if(decr == null){
-			return new BeanProxyAdapter2(this);
+			return new BeanProxyAdapter(this);
 		} else {
 			return decr.createBeanProxy(adaptable, this);
 		}

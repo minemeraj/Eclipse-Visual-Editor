@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ItemParentProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-22 21:05:27 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -160,7 +160,7 @@ public class ItemParentProxyAdapter extends CompositeProxyAdapter implements IEx
 	 * @since 1.1.0
 	 */
 	private void createItem(EStructuralFeature feature, Object value, IExpression expression) {
-		IBeanProxyHost settingHost = getSettingBeanProxyHost((IJavaInstance) value);
+		IInternalBeanProxyHost settingHost = getSettingBeanProxyHost((IJavaInstance) value);
 		instantiateSettingBean(settingHost, expression, feature, value, null); // Don't record error here, the item as a child will have it.
 	}
 
@@ -206,8 +206,7 @@ public class ItemParentProxyAdapter extends CompositeProxyAdapter implements IEx
 	 */
 	protected void removeItem(IJavaObjectInstance item, IExpression expression) {
 		// Dispose the item
-		IBeanProxyHost2 itemProxyHost = (IBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost(item);
-		itemProxyHost.releaseBeanProxy(expression);
+		getSettingBeanProxyHost(item).releaseBeanProxy(expression);
 	}
 	
 	/**
@@ -295,7 +294,7 @@ public class ItemParentProxyAdapter extends CompositeProxyAdapter implements IEx
 	 * 
 	 * @since 1.1.0
 	 */
-	public final void reinstantiateItem(final EStructuralFeature feature, final IJavaObjectInstance item, final IBeanProxyHost2 itemProxy, final IExpression expression) {
+	public final void reinstantiateItem(final EStructuralFeature feature, final IJavaObjectInstance item, final IBeanProxyHost itemProxy, final IExpression expression) {
 		// Do the whole reinstantiate on the UI thread -
 		if (onUIThread())
 			primReinstantiateItem(feature, item, itemProxy, expression);
@@ -319,7 +318,7 @@ public class ItemParentProxyAdapter extends CompositeProxyAdapter implements IEx
 	 * 
 	 * @since 1.1.0
 	 */
-	protected void primReinstantiateItem(EStructuralFeature feature, IJavaObjectInstance item, IBeanProxyHost2 itemProxy, IExpression expression) {
+	protected void primReinstantiateItem(EStructuralFeature feature, IJavaObjectInstance item, IBeanProxyHost itemProxy, IExpression expression) {
 		itemProxy.releaseBeanProxy(expression);
 		applyItemSetting(feature, item, ((List) getJavaObject().eGet(feature)).indexOf(item), expression);
 	}

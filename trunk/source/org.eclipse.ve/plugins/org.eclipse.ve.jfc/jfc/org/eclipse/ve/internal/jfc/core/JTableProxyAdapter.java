@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTableProxyAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2005-06-22 14:53:04 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-22 21:05:25 $ 
  */
 
 import java.util.Iterator;
@@ -47,7 +47,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 	
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#instantiateAndInitialize(org.eclipse.jem.internal.proxy.core.IExpression)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#instantiateAndInitialize(org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected void instantiateAndInitialize(IExpression expression) throws IllegalStateException, AllocationException {
 		super.instantiateAndInitialize(expression);
@@ -85,7 +85,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 	
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, org.eclipse.jem.internal.proxy.core.IExpression)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected void applySetting(EStructuralFeature feature, final Object value, final int index, IExpression expression) {
 		if (feature == sfColumns)
@@ -93,7 +93,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 		else if (feature == sfAutoCreateColumns) {
 			super.applySetting(feature, value, index, expression);
 			// Now need to do some other stuff to handle autocreate, in case explicit columns too.
-			IInternalBeanProxyHost2 autocreate = (IInternalBeanProxyHost2) getSettingBeanProxyHost((IJavaInstance) value);
+			IInternalBeanProxyHost autocreate = getSettingBeanProxyHost((IJavaInstance) value);
 			if (autocreate.getProxy() != null) {
 				IProxy autocreateProxy = autocreate.getProxy();
 				expression.createIfElse(!inInstantiation());
@@ -130,7 +130,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 	 * @since 1.1.0
 	 */
 	protected void addColumn(IJavaInstance column, int index, IExpression expression) {
-		IBeanProxyHost2 columnProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost(column);
+		IInternalBeanProxyHost columnProxyHost = getSettingBeanProxyHost(column);
 		IProxy columnProxy = instantiateSettingBean(columnProxyHost, expression, sfColumns, column);
 		if (columnProxy == null)
 			return; // It failed creation, don't go any further.
@@ -149,7 +149,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 	
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean, org.eclipse.jem.internal.proxy.core.IExpression, boolean)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean, org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
 	protected void applied(EStructuralFeature feature, Object value, int index, boolean isTouch, IExpression expression, boolean testValidity) {
 		if ((feature == sfColumns || feature == sfAutoCreateColumns) && isTouch)
@@ -171,7 +171,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 	 */
 	protected void cancelSetting(EStructuralFeature feature, Object oldValue, int index, IExpression expression) {
 		if (feature == sfColumns) {
-			IInternalBeanProxyHost2 columnHost = (IInternalBeanProxyHost2) getSettingBeanProxyHost((IJavaInstance) oldValue);
+			IInternalBeanProxyHost columnHost = getSettingBeanProxyHost((IJavaInstance) oldValue);
 			expression.createSimpleMethodInvoke(BeanAwtUtilities.getJTableRemoveColumn(expression), getProxy(), new IProxy[] {columnHost.getProxy()}, false);
 			if (hasErrorsOfKey(sfAutoCreateColumns) && ((List) getEObject().eGet(sfColumns)).isEmpty()) {
 				// We had autocreate as true and we had columns. Now we do not, so we can clear the error and reapply the autocreate columns.
@@ -194,7 +194,7 @@ public class JTableProxyAdapter extends ComponentProxyAdapter {
 		int index = -1;
 		while (iter.hasNext()) {
 			IJavaObjectInstance column = (IJavaObjectInstance) iter.next();
-			IInternalBeanProxyHost2 columnBeanProxyHost = (IInternalBeanProxyHost2) getSettingBeanProxyHost(column);
+			IInternalBeanProxyHost columnBeanProxyHost = getSettingBeanProxyHost(column);
 			if (columnBeanProxyHost.getProxy() == null)
 				continue;	// Don't apply. It has an error already.
 			addColumn(column, ++index, expression);

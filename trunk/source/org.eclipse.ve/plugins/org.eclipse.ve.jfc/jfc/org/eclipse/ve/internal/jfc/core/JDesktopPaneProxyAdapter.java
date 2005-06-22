@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JDesktopPaneProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-22 21:05:25 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -63,8 +63,7 @@ public class JDesktopPaneProxyAdapter extends JLayeredPaneProxyAdapter {
 		if (feature == sfContainerComponents) {
 			if (((EObject) value).eIsSet(sfConstraintComponent)) {
 				IJavaInstance constraintAttributeValue = (IJavaInstance) ((EObject) value).eGet(sfConstraintComponent);
-				ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) BeanProxyUtilities
-						.getBeanProxyHost(constraintAttributeValue);
+				ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) getSettingBeanProxyHost(constraintAttributeValue);
 				componentProxyHost.overrideVisibility(true, expression);
 			}
 		}				
@@ -78,8 +77,7 @@ public class JDesktopPaneProxyAdapter extends JLayeredPaneProxyAdapter {
 			// Get the value of the constraintComponent attribute of the component, the component in this case is a ConstraintsComponent.
 			if (((EObject) oldValue).eIsSet(sfConstraintComponent)) {
 				IJavaInstance constraintAttributeValue = (IJavaInstance) ((EObject) oldValue).eGet(sfConstraintComponent);
-				ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) BeanProxyUtilities.getBeanProxyHost(constraintAttributeValue);
-				componentProxyHost.removeVisibilityOverride(expression);
+				((ComponentProxyAdapter) getSettingBeanProxyHost(constraintAttributeValue)).removeVisibilityOverride(expression);
 			}
 		}		
 	}

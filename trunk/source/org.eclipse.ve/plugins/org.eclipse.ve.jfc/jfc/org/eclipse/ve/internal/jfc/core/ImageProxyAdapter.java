@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-22 14:36:44 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-22 21:05:25 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -21,7 +21,7 @@ import org.eclipse.jem.internal.proxy.core.IProxy;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
 import org.eclipse.jem.internal.proxy.initParser.tree.InfixOperator;
 
-import org.eclipse.ve.internal.java.core.BeanProxyAdapter2;
+import org.eclipse.ve.internal.java.core.BeanProxyAdapter;
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
  
@@ -41,7 +41,7 @@ import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationExceptio
  * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=97924 .
  * @since 1.1.0
  */
-public class ImageProxyAdapter extends BeanProxyAdapter2 {
+public class ImageProxyAdapter extends BeanProxyAdapter {
 
 	public ImageProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);

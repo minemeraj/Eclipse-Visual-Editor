@@ -12,19 +12,19 @@ package org.eclipse.ve.examples.java;
 
 /*
  *  $RCSfile: BasicTypesBeanProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-18 18:40:39 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-22 21:05:19 $ 
  */
 
 import org.eclipse.jem.internal.proxy.core.*;
 
-import org.eclipse.ve.internal.java.core.BeanProxyAdapter2;
+import org.eclipse.ve.internal.java.core.BeanProxyAdapter;
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
 
 /**
  * This bean proxy adapter sends a dispose method to the live bean when it is disposed. This is because the live bean has a Frame within it that holds
  * onto resources and needs custom code to dispose of its resources.
  */
-public class BasicTypesBeanProxyAdapter extends BeanProxyAdapter2 {
+public class BasicTypesBeanProxyAdapter extends BeanProxyAdapter {
 
 	public BasicTypesBeanProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);

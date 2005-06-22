@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: JTabbedPaneProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-22 21:05:25 $ 
  */
 
 import java.util.Iterator;
@@ -71,7 +71,7 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applied(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int, boolean,
 	 *      org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
 	protected void applied(EStructuralFeature feature, Object value, int index, boolean isTouch, IExpression expression, boolean testValidity) {
@@ -85,7 +85,7 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#applySetting(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
 	 *      org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected void applySetting(EStructuralFeature feature, Object value, int index, IExpression expression) {
@@ -202,11 +202,11 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 
 			// The component to actually add is within the jtab component too.
 			IJavaInstance component = null;
-			IBeanProxyHost2 componentProxyHost = null;
+			IInternalBeanProxyHost componentProxyHost = null;
 			IProxy componentProxy = null;
 			if (jtab.eIsSet(sfJTabComponent)) {
 				component = (IJavaInstance) jtab.eGet(sfJTabComponent);
-				componentProxyHost = (IBeanProxyHost2) getSettingBeanProxyHost(component);
+				componentProxyHost = getSettingBeanProxyHost(component);
 				expression.createTry();
 				componentProxy = instantiateSettingBean(componentProxyHost, expression, sfJTabComponent, component, null);
 				if (componentProxy != null && componentProxy.isExpressionProxy()) {
@@ -385,7 +385,7 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#removingAdapter()
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#removingAdapter()
 	 */
 	protected void removingAdapter() {
 		removeAllJTabAdapters();
@@ -602,10 +602,10 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 					}
 					break;
 
-				case NOTIFICATION_LIFECYCLE:
+				case IInternalBeanProxyHost.NOTIFICATION_LIFECYCLE:
 					if (isBeanProxyInstantiated()) {
 						try {
-							NotificationLifeCycle notification = (NotificationLifeCycle) msg;
+							IInternalBeanProxyHost.NotificationLifeCycle notification = (IInternalBeanProxyHost.NotificationLifeCycle) msg;
 							EStructuralFeature sf = (EStructuralFeature) notification.getFeature();
 							if (sf == sfTitle) {
 								if (notification.isPostReinstantiation())
@@ -710,7 +710,7 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 					}
 					break;
 
-				case NOTIFICATION_LIFECYCLE:
+				case IInternalBeanProxyHost.NOTIFICATION_LIFECYCLE:
 					if (msg.getFeature() == sfName && isBeanProxyInstantiated()) {
 						try {
 							ReinstantiateBeanProxyNotification notification = (ReinstantiateBeanProxyNotification) msg;

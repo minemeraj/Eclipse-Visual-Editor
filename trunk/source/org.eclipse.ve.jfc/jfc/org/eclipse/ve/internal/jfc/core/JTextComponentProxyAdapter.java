@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JTextComponentProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-18 16:36:07 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-22 21:05:25 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -50,7 +50,7 @@ public class JTextComponentProxyAdapter extends ComponentProxyAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#canceled(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object, int,
 	 *      org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected void canceled(EStructuralFeature feature, Object value, int index, IExpression expression) {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 21:05:27 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -21,6 +21,7 @@ import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
@@ -244,7 +245,7 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 			
 			// Don't need to do workbenchparent because that will automatically be disposed too by disposing host.
 			workbenchHost = workbenchParent = null;
-			IBeanProxyHost2 value = (IBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getJavaObject().eGet(sf_delegate_control));
+			IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter((IJavaInstance) getJavaObject().eGet(sf_delegate_control), IBeanProxyHost.BEAN_PROXY_TYPE);
 			if (value != null)
 				value.releaseBeanProxy(expression);
 		}
@@ -462,7 +463,7 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 	protected void applySetting(EStructuralFeature feature, Object value, int index, IExpression expression) {
 		if (feature == sf_delegate_control) {
 			// Just instantiate it.
-			IBeanProxyHost settingBean = getSettingBeanProxyHost((IJavaInstance) value);						
+			IInternalBeanProxyHost settingBean = getSettingBeanProxyHost((IJavaInstance) value);						
 			if (settingBean != null) {
 				expression.createTry();
 				instantiateSettingBean(settingBean, expression, feature, value, null);	// Errors will show on setting itself since it is a child and not a property.

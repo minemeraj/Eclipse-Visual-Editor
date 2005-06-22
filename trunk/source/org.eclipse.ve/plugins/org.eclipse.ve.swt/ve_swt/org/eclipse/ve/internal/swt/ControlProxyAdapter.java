@@ -495,8 +495,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		List settings = (List) getEObject().eGet(feature);
 		for (int i=position; i<settings.size(); i++) {
 			IJavaInstance setting = (IJavaInstance) settings.get(i);
-			IInternalBeanProxyHost2 settingProxyHost =
-				(IInternalBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost(setting);
+			IInternalBeanProxyHost settingProxyHost = getSettingBeanProxyHost(setting);
 			if (settingProxyHost.isBeanProxyInstantiated() || settingProxyHost.inInstantiation())
 				return settingProxyHost.getProxy();
 		}

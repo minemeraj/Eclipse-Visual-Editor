@@ -11,12 +11,13 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.16 $  $Date: 2005-06-16 17:46:06 $ 
+ *  $Revision: 1.17 $  $Date: 2005-06-22 21:05:23 $ 
  */
 
 import java.util.List;
 import java.util.logging.Level;
 
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -428,9 +429,7 @@ public class BeanProxyUtilities {
 		if (aBean == null)
 			return null;
 		IInternalBeanProxyHost aBeanProxyHost = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(aBean, aResourceSet);
-		if (aBeanProxyHost instanceof IInternalBeanProxyHost2 && !((IInternalBeanProxyHost2) aBeanProxyHost).hasInstantiationErrors())
-			aBeanProxyHost.instantiateBeanProxy();
-		else if (aBeanProxyHost.getInstantiationError().isEmpty())
+		if (aBeanProxyHost.hasInstantiationErrors())
 			aBeanProxyHost.instantiateBeanProxy();
 		return aBeanProxyHost.getBeanProxy();
 	}
@@ -463,6 +462,30 @@ public class BeanProxyUtilities {
 					aBean,
 					IBeanProxyHost.BEAN_PROXY_TYPE);
 		}
+	}
+	
+	/**
+	 * Get the beanproxy host, creating one if not already there. It will use the resource set out of the domain if the bean is not
+	 * contained within a resource set that can find the bean proxy host adapter factory.
+	 * @param aBean
+	 * @param domain
+	 * @return the host or <code>null</code> if aBean was null.
+	 * 
+	 * @since 1.1.0
+	 */
+	public static IBeanProxyHost getBeanProxyHost(IJavaInstance aBean, EditDomain domain) {
+		if (aBean != null) {
+			// The java value should be in a resource.
+			IBeanProxyHost settingBean = (IBeanProxyHost) EcoreUtil.getRegisteredAdapter(aBean, IBeanProxyHost.BEAN_PROXY_TYPE);
+			if (settingBean == null) {
+				// It isn't in a resource, so we'll get it explicitly from our domain resource.
+				ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
+				AdapterFactory f = EcoreUtil.getAdapterFactory(rset.getAdapterFactories(), IBeanProxyHost.BEAN_PROXY_TYPE);
+				settingBean = (IBeanProxyHost) f.adaptNew(aBean, IBeanProxyHost.BEAN_PROXY_TYPE);
+			}
+			return settingBean;
+		}
+		return null;
 	}
 
 	/**

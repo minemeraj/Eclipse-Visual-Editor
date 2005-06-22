@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-22 21:05:25 $ 
  */
 
 import java.util.List;
@@ -75,7 +75,7 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter2#primInstantiateThisPart(org.eclipse.jem.internal.proxy.core.IExpression)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#primInstantiateThisPart(org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
 	protected IProxy primInstantiateThisPart(IExpression expression) {
 		// We need to override so that we can generate the fake Frame that is required for Dialogs.

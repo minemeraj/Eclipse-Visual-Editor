@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.32 $ $Date: 2005-06-22 16:24:10 $
+ * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.33 $ $Date: 2005-06-22 21:05:27 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -117,7 +117,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 	 * @since 1.0.2
 	 */
 	protected void addControl(IJavaObjectInstance child, int indexOfChild, IExpression expression) {
-		IBeanProxyHost controlProxyHost = BeanProxyUtilities.getBeanProxyHost(child);
+		IInternalBeanProxyHost controlProxyHost = getSettingBeanProxyHost(child);
 		IProxy childProxy = instantiateSettingBean(controlProxyHost, expression, sfCompositeControls, child, null);
 		if (childProxy == null)
 			return;	// Don't go any further. It failed creation.
@@ -185,8 +185,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
                     .eGet(sfCompositeControls);
             Iterator iter = controls.iterator();
             while (iter.hasNext()) {
-                IBeanProxyHost2 value = (IBeanProxyHost2) BeanProxyUtilities
-                        .getBeanProxyHost((IJavaInstance) iter.next());
+                IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter((IJavaInstance) iter.next(), IBeanProxyHost.BEAN_PROXY_TYPE);
                 if (value != null)
                     value.releaseBeanProxy(expression);
             }
@@ -237,8 +236,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 	 */
 	protected void removeControl(IJavaObjectInstance aControl, IExpression expression) {
 		// Dispose the control. Need to do this through release so that it is actually disposed on the vm.
-		IBeanProxyHost2 controlProxyHost = (IBeanProxyHost2) BeanProxyUtilities.getBeanProxyHost(aControl);
-		controlProxyHost.releaseBeanProxy(expression);
+		getSettingBeanProxyHost(aControl).releaseBeanProxy(expression);
 	}
 	
 	private CompositeManagerExtension compositeManager;
@@ -355,7 +353,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 					}
 					break;
 					
-				case NOTIFICATION_LIFECYCLE:
+				case IInternalBeanProxyHost.NOTIFICATION_LIFECYCLE:
 					if (isBeanProxyInstantiated()) {
 						try {
 							ReinstantiateBeanProxyNotification notification = (ReinstantiateBeanProxyNotification) msg;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: UIThreadOnlyProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-22 21:05:27 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -35,7 +35,7 @@ import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationExceptio
  * 
  * @since 1.1.0
  */
-public abstract class UIThreadOnlyProxyAdapter extends BeanProxyAdapter2 {
+public abstract class UIThreadOnlyProxyAdapter extends BeanProxyAdapter {
 
 	public UIThreadOnlyProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
