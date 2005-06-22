@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: FormToolkitEditPolicy.java,v $$
- *  $$Revision: 1.1 $$  $$Date: 2005-06-20 18:49:41 $$ 
+ *  $$Revision: 1.2 $$  $$Date: 2005-06-22 14:10:26 $$ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -98,7 +98,9 @@ public class FormToolkitEditPolicy extends ContainerEditPolicy {
 			// The format for creating a form toolkit is "new FormToolkit(display)";
 			List args = new ArrayList(1);
 			// Create an expression for "Display.getDefault()";
-//			args.add(((ControlGraphicalEditPart)getHost()).getDisplayLookupExpression());
+			PTMethodInvocation getDisplayExpression = InstantiationFactory.eINSTANCE.createPTMethodInvocation(
+					InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.widgets.Display"),"getDefault",null);
+			args.add(getDisplayExpression);
 			PTClassInstanceCreation formToolkitExpression= InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("org.eclipse.ui.forms.widgets.FormToolkit",args);
 			ParseTreeAllocation formToolkitAllocation = InstantiationFactory.eINSTANCE.createParseTreeAllocation(formToolkitExpression);
 			IJavaObjectInstance newFormToolkit = (IJavaObjectInstance) BeanUtilities.createJavaObject(SwtPlugin.FORM_TOOLKIT_CLASSNAME,((IJavaObjectInstance)getHost().getModel()).eResource().getResourceSet(),formToolkitAllocation);

@@ -87,6 +87,14 @@
                path="overrides/org/eclipse/ui/part">
          </override>  
       </registration>           
+      <!-- Register the override folders for Eclipse forms -->
+      <registration 
+            plugin="org.eclipse.ui.workbench">
+         <override
+               package="org.eclipse.ui.forms.widgets"
+               path="overrides/org/eclipse/ui/forms/widgets">
+         </override>  
+      </registration>       
    </extension>
    <extension
          point="org.eclipse.ve.java.core.contributors">
@@ -96,6 +104,14 @@
             plugin="org.eclipse.swt">
       </palette>
    </extension>
+   
+   <extension
+         point="org.eclipse.ve.java.core.contributors">
+      <palette
+            categories="forms/palette.xmi"
+            plugin="org.eclipse.ui.forms">
+      </palette>
+   </extension>   
    
    <extension
          point="org.eclipse.ui.popupMenus">
