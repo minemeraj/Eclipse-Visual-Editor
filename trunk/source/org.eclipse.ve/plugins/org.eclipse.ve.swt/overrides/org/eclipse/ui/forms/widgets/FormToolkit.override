@@ -10,10 +10,10 @@
 	xmlns:org.eclipse.jem.java="java.xmi"
     xmlns:event="event.xmi">	
   <event:AddMany xmi:version="2.0" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.FormToolkitProxyAdapter"/>
+    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"/>
     </addedEObjects>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
-      beanLocation="GLOBAL_GLOBAL"/>        
+    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanLocation="GLOBAL_GLOBAL"/>        
   </event:AddMany>
 </xmi:XMI>

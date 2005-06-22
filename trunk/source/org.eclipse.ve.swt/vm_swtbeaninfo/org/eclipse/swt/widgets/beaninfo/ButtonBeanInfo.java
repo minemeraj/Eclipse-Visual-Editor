@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ButtonBeanInfo.java,v $
- *  $Revision: 1.9 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-22 14:10:26 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -110,6 +110,14 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ButtonMessages.getString("textDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ButtonMessages.getString("textSD"), //$NON-NLS-1$
+				"FACTORY_ARG" , new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createButton" , new Integer(1) , 
+					new Object[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} }
+			}
+			),
+			// style bit
+			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
+				"FACTORY_ARG" , new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createButton" , new Integer(2) , 
+						new Object[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} }				
 			}
 			),
 		};

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.8 $ $Date: 2005-05-27 15:44:23 $
+ * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.9 $ $Date: 2005-06-22 14:09:37 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -87,7 +87,7 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter {
 		Object value = null;
 		EStructuralFeature sf = (EStructuralFeature) structuralFeature;
 		if (!getEObject().eIsSet(sf)) {
-			// The value was not explicitly set in the MOF Object, so we will get the Bean Proxy Adaptor
+			// The value was not explicitly set in the EMF Object, so we will get the Bean Proxy Adaptor
 			// and ask it for the live value from the real java bean over in the VM.
 			IBeanProxyHost sourceHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getTarget());
 			value = sourceHost.getBeanPropertyValue(sf);

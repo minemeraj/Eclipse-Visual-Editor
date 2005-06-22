@@ -11,18 +11,22 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-04-05 20:11:45 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-22 14:10:26 $ 
  */
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
+import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
+import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.internal.proxy.core.INumberBeanProxy;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
@@ -39,6 +43,155 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
  */
 
 public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
+	
+	private static final Integer NO_FACTORY = new Integer(-1);
+	private Map factoryArguments = new HashMap(2); // Map for factory arguments, keyed by property name and value is argument number of method invocation
+	
+	public boolean isPropertySet(Object descriptorID) {
+		
+		// If we have already looked up this property and found it part of an argument then return
+		Number argumentNumber = (Number)factoryArguments.get(descriptorID);
+		if(argumentNumber == null) {
+			// This is first time lookup
+			factoryArguments.put(descriptorID,NO_FACTORY);
+			try{
+				EStructuralFeature eFeature = null;
+				boolean isStyleBit = false;
+				if(descriptorID instanceof StyleBitPropertyID){
+					eFeature = getBean().getJavaType().getEStructuralFeature("style");
+					// Check for null as only BeanInfo with explicit "style" PropertyDescriptors have features, introspected ones do not
+					if(eFeature == null) return super.isPropertySet(descriptorID);				
+					isStyleBit = true;
+				} else {
+					eFeature = (EStructuralFeature)descriptorID;
+				}
+				ParseTreeAllocation parseTreeAllocation = (ParseTreeAllocation) getBean().getAllocation();			
+				// 	See whether the property value can come from a factory method, e.g. FormToolkit
+				PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator(eFeature);
+				// 	The pattern for how a factory is descriptor is on the bean info is:
+				// key of "FACTORY_ARG",
+				// value is four arg array:
+				// 1 = name of factory receiver, 2 = name of method 3 = index of where in method args property is and 4 = further array of strings of arg types
+				// for example
+				// FACTORY_ARG = new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createButton" , new Integer(1) , 
+				//   new Object[] { "org.eclipse.swt.Composite" , "java.lang.String" , "int"} }
+				EMap attributes = propertyDecorator.getAttributes();
+				Object object = attributes.get("FACTORY_ARG");
+				if(object != null){
+					// The object is a 4 arg array
+					Object[] factoryArgs = (Object[]) ((FeatureAttributeValue)object).getValue();
+					// We are going to walk the allocation and compare it against the factory arguments to see if the property value is contained there
+					PTMethodInvocation methodInvocation = (PTMethodInvocation)parseTreeAllocation.getExpression();
+					PTInstanceReference receiver = (PTInstanceReference)methodInvocation.getReceiver();
+					// See if the method name is the same as the factory one
+					if(methodInvocation.getName().equals(factoryArgs[1])){				
+						// See if this is a call to the factory object itself as the receiver
+						if(receiver.getObject().getJavaType().getQualifiedName().equals(factoryArgs[0])){
+							// Match the argument types
+							Object[] argTypes = (Object[])factoryArgs[3];
+							if (methodInvocation.getArguments().size() == argTypes.length){	
+								// Walk the parse tree arguments and match their name to the requested type
+								for (int i = 0; i < argTypes.length; i++) {
+									PTExpression arg = (PTExpression)methodInvocation.getArguments().get(i);
+									// Get the JavaClass of the arg name being passed in and the argument to see if they are compatible
+									if(!matches(arg,(String)argTypes[i])){
+										return super.isPropertySet(descriptorID);
+									}
+								}
+								// If we are here then the property is part of the parse tree allocation that matches a factory method
+								argumentNumber = (Number)factoryArgs[2];
+								factoryArguments.put(descriptorID,argumentNumber);	// Record the argument number that matches the property for re-retrieval
+								// Style bits always come from the live object whereas other arguments come from the allocation arg itself
+								// The reason style bits still walk into this code is so that the code above that determines the argument number can run
+								// and allow the style bit to be set
+								if(isStyleBit){
+									return super.isPropertySet(descriptorID);
+								} else {
+									Object parseTreeArgument = methodInvocation.getArguments().get(argumentNumber.intValue());
+									return !(parseTreeArgument instanceof PTNullLiteral);
+								}
+							}
+						}
+					}
+				}
+			} catch (ClassCastException exc){
+				
+			}
+		} 
+		return super.isPropertySet(descriptorID);
+	}
+	
+	public void setPropertyValue(Object descriptorID, Object val) {
+		// If the property descriptor comes from a factory argument then we need to do parse tree manipulation
+		Number argumentNumber = (Number)factoryArguments.get(descriptorID);
+		if(argumentNumber == null || argumentNumber == NO_FACTORY){
+			super.setPropertyValue(descriptorID, val);			
+		} else {
+			// Change the allocation so that the argument is replaced
+			if(descriptorID instanceof StyleBitPropertyID){
+				// Change the style bit
+				int intValue = val != null ? ((INumberBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) val)).intValue() : STYLE_NOT_SET;
+				// See if we are changing it. If not, then don't do anything. Don't want to signal an unneeded change.	
+				if (((Number) getPropertyValue(descriptorID)).intValue() == intValue) {
+					return;	// The property has not changed. Don't do anything.			
+				}
+				ParseTreeAllocation allocation = (ParseTreeAllocation) getBean().getAllocation();
+				PTMethodInvocation methodInvocation = (PTMethodInvocation)allocation.getExpression();
+				PTExpression changedStyleExpression = getChangedStyleExpression((PTExpression)methodInvocation.getArguments().get(argumentNumber.intValue()),(StyleBitPropertyID)descriptorID,intValue);
+				methodInvocation.getArguments().set(argumentNumber.intValue(),changedStyleExpression);
+				getBean().setAllocation(allocation);  // Set the allocation back into the bean to trigger notification
+			} else {
+				// Change a regular property		
+				ParseTreeAllocation allocation = (ParseTreeAllocation) getBean().getAllocation();
+				PTMethodInvocation methodInvocation = (PTMethodInvocation)allocation.getExpression();	
+				PTExpression expression = getExpression((IJavaInstance)val);
+				methodInvocation.getArguments().set(argumentNumber.intValue(),expression);
+				getBean().setAllocation(allocation);  // Set the allocation back into the bean to trigger notification				
+			}
+			super.setPropertyValue(descriptorID, val); 
+		}
+	}
+	
+	private PTExpression getExpression(IJavaInstance val){
+		
+		PTInstanceReference reference = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+		reference.setObject((IJavaObjectInstance)val);
+		return reference;				
+		
+	}
+
+	private boolean matches(PTExpression anExpression, String expectedArgument){
+		// null is compatible with any argument
+		if(anExpression instanceof PTNullLiteral){
+			return true;
+		}
+		JavaHelpers expressionClass = getJavaClass(anExpression);
+		if(expressionClass == null) return false;
+		JavaHelpers expectedClass = Utilities.getJavaType(expectedArgument,getBean().eResource().getResourceSet());	
+		return expectedClass.isAssignableFrom(expressionClass);
+	}
+	
+	private JavaHelpers getJavaClass(PTExpression anExpression){
+		if(anExpression instanceof PTName){
+			return getJavaClass((PTName)anExpression);
+		} else if (anExpression instanceof PTInstanceReference){
+			return getJavaClass((PTInstanceReference)anExpression);			
+		} else if (anExpression instanceof PTFieldAccess) {
+			PTFieldAccess fieldAccess = (PTFieldAccess)anExpression;
+			JavaClass receiverClass = (JavaClass)getJavaClass(fieldAccess.getReceiver());
+			Field field = receiverClass.getFieldExtended(fieldAccess.getField());
+			return (JavaHelpers)field.getEType();
+		} else {
+			return null;
+		}
+	}
+	
+	private JavaClass getJavaClass(PTName aName){
+		return Utilities.getJavaClass(aName.getName(),getBean().eResource().getResourceSet());		
+	}
+	private JavaClass getJavaClass(PTInstanceReference anExpression){
+		return (JavaClass) anExpression.getObject().getJavaType();		
+	}
 	
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		

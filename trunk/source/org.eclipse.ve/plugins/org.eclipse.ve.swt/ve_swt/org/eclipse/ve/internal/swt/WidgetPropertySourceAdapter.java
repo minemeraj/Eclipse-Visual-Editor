@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.24 $ $Date: 2005-04-05 21:40:17 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.25 $ $Date: 2005-06-22 14:10:26 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -50,7 +50,7 @@ import org.eclipse.ve.internal.propertysheet.EToolsPropertyDescriptor;
  */
 public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 
-	private static String[] EXPERT_FILTER_FLAGS = new String[] { IPropertySheetEntry.FILTER_ID_EXPERT};
+	private static String[] EXPERT_FILTER_FLAGS = new String[] { IPropertySheetEntry.FILTER_ID_EXPERT};		
 
 	static class StyleBitPropertyID {		
 		// These are the packaged init strings for fields were for each entry in the
@@ -163,8 +163,10 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 	
 	protected static final int STYLE_NOT_SET = -1;
 	protected static final Integer STYLE_NOT_SET_INTEGER = new Integer(STYLE_NOT_SET);
+	private final static String STYLE_NOT_SET_INITSTRING = String.valueOf(STYLE_NOT_SET);	
 	
 	static final String[] UNKNOWN = new String[] { "???", "???"}; //$NON-NLS-1$ //$NON-NLS-2$
+	private ArrayList styleBitPropertyDescriptors; // Cache of property descriptors from the style bits
 
 	public static class StyleBitPropertyDescriptor extends EToolsPropertyDescriptor {
 
@@ -238,8 +240,6 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		return (IPropertyDescriptor[]) descriptorsList.toArray(new IPropertyDescriptor[descriptorsList.size()]);
 
 	}
-
-	private final static String STYLE_NOT_SET_INITSTRING = String.valueOf(STYLE_NOT_SET);
 	
 	/**
 	 * Collects the style bits, creates property descriptors for them, and adds them to the argument
@@ -253,17 +253,23 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 
 		BeanDecorator beanDecor = Utilities.getBeanDecorator(eClass);
 		// Find first class that provides style bits in the heirarchy. The BeanInfo would of already done any proper merging of style bits.
-		SweetStyleBits[] styleDetails = getStyleDetails(beanDecor);
-		while (styleDetails == null || styleDetails.length == 0) {
-			eClass = ((JavaClass) eClass).getSupertype();
-			if (eClass == null)
-				return;
-			beanDecor = Utilities.getBeanDecorator(eClass);
-			styleDetails = getStyleDetails(beanDecor);
+		if(styleBitPropertyDescriptors == null){
+			SweetStyleBits[] styleDetails = getStyleDetails(beanDecor);
+			while (styleDetails == null || styleDetails.length == 0) {
+				eClass = ((JavaClass) eClass).getSupertype();
+				if (eClass == null)
+					return;
+				beanDecor = Utilities.getBeanDecorator(eClass);
+				styleDetails = getStyleDetails(beanDecor);
+			}
+			styleBitPropertyDescriptors = styleDetails == null ? new ArrayList(0) : new ArrayList(styleDetails.length);
+			for (int i = 0; i < styleDetails.length; i++) {
+				styleBitPropertyDescriptors.add(new StyleBitPropertyDescriptor(styleDetails[i]));
+			}
 		}
-
-		for (int i = 0; i < styleDetails.length; i++)
-			propertyDescriptors.add(new StyleBitPropertyDescriptor(styleDetails[i]));
+		// Merge the style bit property descriptors that have been cached
+		for (int i = 0; i < styleBitPropertyDescriptors.size(); i++)
+			propertyDescriptors.add(styleBitPropertyDescriptors.get(i));
 
 	}
 

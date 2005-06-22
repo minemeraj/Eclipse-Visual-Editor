@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.25 $ $Date: 2005-06-15 20:19:21 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.26 $ $Date: 2005-06-22 14:10:26 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -64,6 +64,9 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 
 	protected void createEditPolicies() {
 		super.createEditPolicies();
+
+		// Any occurences of the {formToolkit} token are replaced by a reference to a real FormToolkit instance
+		installEditPolicy(FormToolkitEditPolicy.class,new FormToolkitEditPolicy());
 
 		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(false));
 		// This is a special policy that just
