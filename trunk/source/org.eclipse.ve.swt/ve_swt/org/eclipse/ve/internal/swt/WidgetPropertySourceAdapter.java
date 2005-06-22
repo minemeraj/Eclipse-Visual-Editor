@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.25 $ $Date: 2005-06-22 14:10:26 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.26 $ $Date: 2005-06-22 16:24:10 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -192,7 +192,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 				fInitStrings = styleBits.fInitStrings;
 				fValues = styleBits.fValues;
 			} else {
-				fNames = new String[] { styleBits.fNames[0], SWTMessages.getString("WidgetPropertySourceAdapter.NotSet")}; //$NON-NLS-1$
+				fNames = new String[] { styleBits.fNames[0], SWTMessages.WidgetPropertySourceAdapter_NotSet}; 
 				fInitStrings = new String[] { styleBits.fInitStrings[0], STYLE_NOT_SET_INITSTRING};
 				fValues = new Number[] { styleBits.fValues[0], STYLE_NOT_SET_INTEGER};
 			}

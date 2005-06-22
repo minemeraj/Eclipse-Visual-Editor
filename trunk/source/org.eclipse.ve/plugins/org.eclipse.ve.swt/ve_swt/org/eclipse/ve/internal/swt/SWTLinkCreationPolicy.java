@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTLinkCreationPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-04-11 20:14:04 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -41,7 +41,7 @@ public class SWTLinkCreationPolicy extends LabelCreationPolicy {
 				Object newObject = aCreateRequest.getNewObject();
 				// Thew new link will be "Link".  This is held externally
 				// The key to use is LinkPolicy.text.xxx where xxx is a piece of inializationData
-				String linkString = SWTMessages.getString("LinkPolicy.text.Link"); //$NON-NLS-1$
+				String linkString = SWTMessages.LinkPolicy_text_Link; 
 				EObject refNewObject = (EObject)newObject;
 				ResourceSet resourceSet = refNewObject.eResource().getResourceSet();
 				IJavaInstance newLink = BeanUtilities.createJavaObject("java.lang.String" , resourceSet , "\"" + linkString + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

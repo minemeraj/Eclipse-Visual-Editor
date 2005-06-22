@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ImageDialog.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-18 20:49:33 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-22 16:24:10 $ 
  */
 
 import org.eclipse.core.resources.IProject;
@@ -177,16 +177,16 @@ public class ImageDialog extends Dialog {
 		gl.numColumns = 2;
 
 		// Create BrowseIn group:
-		Group locGroup = createGroup(panel, SWTMessages.getString("ImageDialog.Group.Browse"), 1); //$NON-NLS-1$
+		Group locGroup = createGroup(panel, SWTMessages.ImageDialog_Group_Browse, 1); 
 		data = (GridData) locGroup.getLayoutData();
 		data.verticalSpan = 2;
 
-		projRadioButton = createRadioButton(locGroup, SWTMessages.getString("ImageDialog.Radio.BrowseProject")); //$NON-NLS-1$
+		projRadioButton = createRadioButton(locGroup, SWTMessages.ImageDialog_Radio_BrowseProject); 
 		projRadioButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
-		fileRadioButton = createRadioButton(locGroup, SWTMessages.getString("ImageDialog.Radio.BrowseFiles")); //$NON-NLS-1$
+		fileRadioButton = createRadioButton(locGroup, SWTMessages.ImageDialog_Radio_BrowseFiles); 
 		projRadioButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
 
-		Label locLabel = createLabel(locGroup, SWTMessages.getString("ImageDialog.Label.Location")); //$NON-NLS-1$
+		Label locLabel = createLabel(locGroup, SWTMessages.ImageDialog_Label_Location); 
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		int smallIndent = convertHorizontalDLUsToPixels(IDialogConstants.SMALL_INDENT);
 		data.horizontalIndent = smallIndent;
@@ -199,7 +199,7 @@ public class ImageDialog extends Dialog {
 		data.horizontalIndent = smallIndent;
 		direcTree.setLayoutData(data);
 
-		Button crawlButton = createCheckBox(locGroup, SWTMessages.getString("ImageDialog.Checkbox.SearchSubDirs")); //$NON-NLS-1$
+		Button crawlButton = createCheckBox(locGroup, SWTMessages.ImageDialog_Checkbox_SearchSubDirs); 
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.horizontalIndent = smallIndent;
 		crawlButton.setLayoutData(data);
@@ -208,10 +208,10 @@ public class ImageDialog extends Dialog {
 		int leftMargin = convertHorizontalDLUsToPixels(IDialogConstants.LEFT_MARGIN);
 
 		// Filter
-		Combo filter = createLabelCombo(panel, SWTMessages.getString("ImageDialog.Text.Filter"), SWT.DROP_DOWN); //$NON-NLS-1$
+		Combo filter = createLabelCombo(panel, SWTMessages.ImageDialog_Text_Filter, SWT.DROP_DOWN); 
 		data = (GridData) filter.getLayoutData();
 		data.widthHint = convertWidthInCharsToPixels(20);
-		filter.setToolTipText(SWTMessages.getString("ImageDialog.Msg")); //$NON-NLS-1$
+		filter.setToolTipText(SWTMessages.ImageDialog_Msg); 
 		// Create selection list.
 		String[] patterns = new String[ImageController.VALID_EXTENSIONS.length+1];
 		patterns[0] = "";	// Blank, for search all. //$NON-NLS-1$
@@ -234,7 +234,7 @@ public class ImageDialog extends Dialog {
 		filesComposite.setLayout(filesLayout);
 		filesComposite.setFont(panel.getFont());
 
-		Label filesLabel = createLabel(filesComposite, SWTMessages.getString("ImageDialog.Label.Files")); //$NON-NLS-1$
+		Label filesLabel = createLabel(filesComposite, SWTMessages.ImageDialog_Label_Files); 
 		filesLabel.setLayoutData(new GridData());
 
 		List fileList = createList(filesComposite, SWT.V_SCROLL | SWT.SHADOW_OUT | SWT.BORDER);
@@ -247,7 +247,7 @@ public class ImageDialog extends Dialog {
 		createSpacer(panel);
 
 		// Available Group
-		Group availableImages = createGroup(panel, SWTMessages.getString("ImageDialog.Group.AvailableIcons"), 1); //$NON-NLS-1$
+		Group availableImages = createGroup(panel, SWTMessages.ImageDialog_Group_AvailableIcons, 1); 
 
 		ImageScreenDisplay drawingBoard =
 			createIconScreenDisplay(
@@ -267,7 +267,7 @@ public class ImageDialog extends Dialog {
 		drawingBoard.setLayoutData(data);
 
 		// Selected Image Group
-		Group selectedImage = createGroup(panel, SWTMessages.getString("ImageDialog.Group.SelectedImage"), 1); //$NON-NLS-1$
+		Group selectedImage = createGroup(panel, SWTMessages.ImageDialog_Group_SelectedImage, 1); 
 		data = (GridData) selectedImage.getLayoutData();
 		data.heightHint = 160;
 		data.widthHint = 150;
@@ -277,7 +277,7 @@ public class ImageDialog extends Dialog {
 		imageDisplay.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		// Path field        
-		final Label path = createLabeledLabel(panel, SWTMessages.getString("ImageDialog.Text.PathOfFile"), SWT.NULL); //$NON-NLS-1$
+		final Label path = createLabeledLabel(panel, SWTMessages.ImageDialog_Text_PathOfFile, SWT.NULL); 
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
 		path.getParent().setLayoutData(data);
@@ -320,7 +320,7 @@ public class ImageDialog extends Dialog {
 		});
 		//fileRadioButton.setEnabled( false );
 
-		getShell().setText(SWTMessages.getString("ImageDialog.Shell.Text")); //$NON-NLS-1$
+		getShell().setText(SWTMessages.ImageDialog_Shell_Text); 
 
 		applyDialogFont(panel);
 		return panel;

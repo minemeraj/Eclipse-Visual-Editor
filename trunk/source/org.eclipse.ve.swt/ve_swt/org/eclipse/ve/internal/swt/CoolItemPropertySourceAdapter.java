@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CoolItemPropertySourceAdapter.java,v $ $Revision: 1.7 $ $Date: 2005-06-15 20:19:21 $
+ * $RCSfile: CoolItemPropertySourceAdapter.java,v $ $Revision: 1.8 $ $Date: 2005-06-22 16:24:10 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -111,31 +111,31 @@ public class CoolItemPropertySourceAdapter extends PropertySourceAdapter {
 				String displayname;
 				String fn = ((EStructuralFeature) pd.getId()).getName();
 				if ("text".equals(fn)) { //$NON-NLS-1$
-					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemText"); //$NON-NLS-1$
+					displayname = SWTMessages.CoolItemPropertySourceAdapter_coolItemText; 
 					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("image".equals(fn)) { //$NON-NLS-1$
-					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemImage"); //$NON-NLS-1$
+					displayname = SWTMessages.CoolItemPropertySourceAdapter_coolItemImage; 
 					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("toolTipText".equals(fn)) { //$NON-NLS-1$
-					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemToolTipText"); //$NON-NLS-1$
+					displayname = SWTMessages.CoolItemPropertySourceAdapter_coolItemToolTipText; 
 					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("preferredSize".equals(fn)) { //$NON-NLS-1$
-					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemPreferredSize"); //$NON-NLS-1$
+					displayname = SWTMessages.CoolItemPropertySourceAdapter_coolItemPreferredSize; 
 					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("minimumSize".equals(fn)) { //$NON-NLS-1$
-					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemMinimumSize"); //$NON-NLS-1$
+					displayname = SWTMessages.CoolItemPropertySourceAdapter_coolItemMinimumSize; 
 					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("size".equals(fn)) { //$NON-NLS-1$
-					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemSize"); //$NON-NLS-1$
+					displayname = SWTMessages.CoolItemPropertySourceAdapter_coolItemSize; 
 					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("bounds".equals(fn)) { //$NON-NLS-1$
-					displayname = SWTMessages.getString("CoolItemPropertySourceAdapter.coolItemBounds"); //$NON-NLS-1$
+					displayname = SWTMessages.CoolItemPropertySourceAdapter_coolItemBounds; 
 					wrappedMine[wi++] = new RuledWrapperedPropertyDescriptor(ed, displayname, this, pd);
 					continue;
 				} else if ("control".equals(fn)) //$NON-NLS-1$

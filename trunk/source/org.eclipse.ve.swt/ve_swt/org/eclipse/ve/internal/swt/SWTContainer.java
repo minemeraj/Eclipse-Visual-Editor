@@ -80,7 +80,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	    */
 	   protected void parsePath (IPath containerPath) {
 			if (containerPath!=null && !containerPath.segment(0).equals(SWT_CONTAINER_SIGNITURE))
-				throw new IllegalStateException(SWTMessages.getString("SWTContainer.11")+containerPath); //$NON-NLS-1$
+				throw new IllegalStateException(SWTMessages.SWTContainer_11+containerPath); 
 						
 			pathType=SWT_CONTAINER_PATH_PLATFORM;
 			
@@ -421,11 +421,11 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				 if (e!=null)
 					entries.add(e);
 				 else {					 
-					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.44"), new Object[] {swtLibraries[i].getPluginID()})); //$NON-NLS-1$
+					 addProblem(MessageFormat.format(SWTMessages.SWTContainer_44, new Object[] {swtLibraries[i].getPluginID()})); 
 				 }
 			}
 			else
-				JavaVEPlugin.log(SWTMessages.getString("SWTContainer.45")+swtLibraries[i].getPluginID()); //$NON-NLS-1$
+				JavaVEPlugin.log(SWTMessages.SWTContainer_45+swtLibraries[i].getPluginID()); 
 		}
 
 		if (containerType.includeJFace()) {
@@ -434,7 +434,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				if (e!=null)
 					entries.add(e);
 				 else {					 
-					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.46"), new Object[] {jfaceLibraries[i].getPluginID()})); //$NON-NLS-1$
+					 addProblem(MessageFormat.format(SWTMessages.SWTContainer_46, new Object[] {jfaceLibraries[i].getPluginID()})); 
 				 }
 			}
 		}
@@ -475,7 +475,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				 if (e!=null)
 					entries.add(e);
 				 else {					 
-					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.47"), new Object[] {swtLibraries[i].getLegacyID()})); //$NON-NLS-1$
+					 addProblem(MessageFormat.format(SWTMessages.SWTContainer_47, new Object[] {swtLibraries[i].getLegacyID()})); 
 				 }
 			}
 			else
@@ -490,7 +490,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					if (e!=null)
 						entries.add(e);
 					 else {					 
-						 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.49"), new Object[] {jfaceLibraries[i].getLegacyID()})); //$NON-NLS-1$
+						 addProblem(MessageFormat.format(SWTMessages.SWTContainer_49, new Object[] {jfaceLibraries[i].getLegacyID()})); 
 					 }
 				}
 				else
@@ -507,7 +507,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					if (e!=null)
 						entries.add(e);
 					 else {					 
-						 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.51"), new Object[] {swtGTKLibraries[i].getLegacyID()})); //$NON-NLS-1$
+						 addProblem(MessageFormat.format(SWTMessages.SWTContainer_51, new Object[] {swtGTKLibraries[i].getLegacyID()})); 
 					 }
 				}
 				else
@@ -528,11 +528,11 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				 if (e!=null)
 					entries.add(e);
 				 else {					 
-					 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.53"), new Object[] {swtLibraries[i].getLegacyID()})); //$NON-NLS-1$
+					 addProblem(MessageFormat.format(SWTMessages.SWTContainer_53, new Object[] {swtLibraries[i].getLegacyID()})); 
 				 }
 			}
 			else
-				JavaVEPlugin.log(SWTMessages.getString("SWTContainer.54")+swtLibraries[i].getLegacyID());	//$NON-NLS-1$
+				JavaVEPlugin.log(SWTMessages.SWTContainer_54+swtLibraries[i].getLegacyID());	
 		}
 
 		if (containerType.includeJFace()) {
@@ -543,7 +543,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					if (e!=null)
 						entries.add(e);
 					 else {					 
-						 addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.55"), new Object[] {jfaceLibraries[i].getLegacyID()})); //$NON-NLS-1$
+						 addProblem(MessageFormat.format(SWTMessages.SWTContainer_55, new Object[] {jfaceLibraries[i].getLegacyID()})); 
 					 }
 				}
 				else
@@ -595,7 +595,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		IPath resolvedPath= JavaCore.getResolvedVariablePath(new Path(containerType.getCustomPath()));
 		if (resolvedPath==null)  {
 			removeProblems();
-			addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.57"), new Object[] {containerType.getCustomPath()})); //$NON-NLS-1$
+			addProblem(MessageFormat.format(SWTMessages.SWTContainer_57, new Object[] {containerType.getCustomPath()})); 
 			fClasspathEntries = new IClasspathEntry[0];
 			return;
 		}
@@ -622,12 +622,12 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, 
                         resolvedPath.toFile().toURI().getRawPath())};
 					if (!resolvedPath.toFile().exists())						
-							addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.60"), new Object[] {resolvedPath.toPortableString()})); //$NON-NLS-1$
+							addProblem(MessageFormat.format(SWTMessages.SWTContainer_60, new Object[] {resolvedPath.toPortableString()})); 
 				}
 				
 				IPath jarPath = resolvedPath.append(jarName);
 				if (!jarPath.toFile().exists())
-					addProblem(MessageFormat.format(SWTMessages.getString("SWTContainer.61"), new Object[] {jarPath.toPortableString()})); //$NON-NLS-1$
+					addProblem(MessageFormat.format(SWTMessages.SWTContainer_61, new Object[] {jarPath.toPortableString()})); 
 				IClasspathEntry entry = JavaCore.newLibraryEntry(resolvedPath.append(jarName), resolvedPath.append(jarSrc), null, new IAccessRule [0], attr, false);
 				entries.add(entry);
 			}
@@ -725,7 +725,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	}
 
 	public String getDescription() {
-		return SWTMessages.getString("SWTContainer.Description"); //$NON-NLS-1$
+		return SWTMessages.SWTContainer_Description; 
 	}
 
 	public int getKind() {

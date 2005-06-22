@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FillLayoutLayoutPage.java,v $
- *  $Revision: 1.7 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -89,18 +89,18 @@ public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		c.setLayout(grid);
 		
 		Group orientationGroup = new Group(c, SWT.NONE);
-		orientationGroup.setText(SWTMessages.getString("FillLayoutLayoutPage.orientationGroupTitle")); //$NON-NLS-1$
+		orientationGroup.setText(SWTMessages.FillLayoutLayoutPage_orientationGroupTitle); 
 		GridData gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;
 		orientationGroup.setLayoutData(gd);
 		grid = new GridLayout();
 		orientationGroup.setLayout(grid);
 		
-		typeHorizontalRadio = makeRadio(orientationGroup, SWTMessages.getString("FillLayoutLayoutPage.horizontalLabel")); //$NON-NLS-1$
-		typeVerticalRadio = makeRadio(orientationGroup, SWTMessages.getString("FillLayoutLayoutPage.verticalLabel")); //$NON-NLS-1$
+		typeHorizontalRadio = makeRadio(orientationGroup, SWTMessages.FillLayoutLayoutPage_horizontalLabel); 
+		typeVerticalRadio = makeRadio(orientationGroup, SWTMessages.FillLayoutLayoutPage_verticalLabel); 
 		
 		Group spacingGroup = new Group(c, SWT.NONE);
-		spacingGroup.setText(SWTMessages.getString("FillLayoutLayoutPage.spacingGroupTitle")); //$NON-NLS-1$
+		spacingGroup.setText(SWTMessages.FillLayoutLayoutPage_spacingGroupTitle); 
 		gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;
 		spacingGroup.setLayoutData(gd);
@@ -108,9 +108,9 @@ public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		grid.numColumns = 2;
 		spacingGroup.setLayout(grid);
 		
-		spacingSpinner = makeSpinner(spacingGroup, SWTMessages.getString("FillLayoutLayoutPage.spacingLabel")); //$NON-NLS-1$
-		heightSpinner = makeSpinner(spacingGroup, SWTMessages.getString("FillLayoutLayoutPage.heightLabel")); //$NON-NLS-1$
-		widthSpinner = makeSpinner(spacingGroup, SWTMessages.getString("FillLayoutLayoutPage.widthLabel")); //$NON-NLS-1$		
+		spacingSpinner = makeSpinner(spacingGroup, SWTMessages.FillLayoutLayoutPage_spacingLabel); 
+		heightSpinner = makeSpinner(spacingGroup, SWTMessages.FillLayoutLayoutPage_heightLabel); 
+		widthSpinner = makeSpinner(spacingGroup, SWTMessages.FillLayoutLayoutPage_widthLabel); 
 
 		if (fEditPart != null) {
 			initialized = false;

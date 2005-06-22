@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridDataAlignmentLabelProvider.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -23,7 +23,7 @@ public class GridDataAlignmentLabelProvider extends EnumeratedIntValueLabelProvi
 	
 	public GridDataAlignmentLabelProvider(){
 		super(
-				new String[] { SWTMessages.getString("GridDataAlignmentLabelProvider.Beginning") , SWTMessages.getString("GridDataAlignmentLabelProvider.Center"), SWTMessages.getString("GridDataAlignmentLabelProvider.End"), SWTMessages.getString("GridDataAlignmentLabelProvider.Fill") } , //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				new String[] { SWTMessages.GridDataAlignmentLabelProvider_Beginning , SWTMessages.GridDataAlignmentLabelProvider_Center, SWTMessages.GridDataAlignmentLabelProvider_End, SWTMessages.GridDataAlignmentLabelProvider_Fill } , 
 		        new Integer[] { new Integer(GridData.BEGINNING) , new Integer(GridData.CENTER), new Integer(GridData.END), new Integer(GridData.FILL) }
 		);
 	}

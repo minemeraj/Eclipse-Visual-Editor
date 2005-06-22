@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerLayoutPolicyHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-22 16:22:09 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -58,9 +58,9 @@ public class CBannerLayoutPolicyHelper extends LayoutPolicyHelper {
 		REAL_INTERNAL_TAGS.add("Bottom"); //$NON-NLS-1$
 
 		DISPLAY_TAGS= new ArrayList(3);
-		DISPLAY_TAGS.add(SWTMessages.getString("CBannerLayout.Left")); //$NON-NLS-1$
-		DISPLAY_TAGS.add(SWTMessages.getString("CBannerLayout.Right")); //$NON-NLS-1$
-		DISPLAY_TAGS.add(SWTMessages.getString("CBannerLayout.Bottom")); //$NON-NLS-1$
+		DISPLAY_TAGS.add(SWTMessages.CBannerLayout_Left); 
+		DISPLAY_TAGS.add(SWTMessages.CBannerLayout_Right); 
+		DISPLAY_TAGS.add(SWTMessages.CBannerLayout_Bottom); 
 	}
 	
 	/**

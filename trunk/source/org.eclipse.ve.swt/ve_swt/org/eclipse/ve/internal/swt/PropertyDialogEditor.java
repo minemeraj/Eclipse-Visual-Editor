@@ -38,7 +38,7 @@ public class PropertyDialogEditor extends Dialog {
 	}
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(SWTMessages.getString("PropertyDialogEditor.dialog.title")); //$NON-NLS-1$
+		newShell.setText(SWTMessages.PropertyDialogEditor_dialog_title); 
 	}
 	
 	public Object getValue(){

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutLayoutPage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -101,7 +101,7 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		c.setLayout(grid);
 		
 		Group orientationGroup = new Group(c, SWT.NONE);
-		orientationGroup.setText(SWTMessages.getString("RowLayoutLayoutPage.orientationGroupTitle")); //$NON-NLS-1$
+		orientationGroup.setText(SWTMessages.RowLayoutLayoutPage_orientationGroupTitle); 
 		GridData gd = new GridData();
 		gd.verticalAlignment = GridData.BEGINNING;
 		gd.horizontalAlignment = GridData.FILL;
@@ -109,11 +109,11 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		grid = new GridLayout();
 		orientationGroup.setLayout(grid);
 		
-		typeHorizontalRadio = makeRadio(orientationGroup, SWTMessages.getString("RowLayoutLayoutPage.horizontalLabel")); //$NON-NLS-1$
-		typeVerticalRadio = makeRadio(orientationGroup, SWTMessages.getString("RowLayoutLayoutPage.verticalLabel")); //$NON-NLS-1$
+		typeHorizontalRadio = makeRadio(orientationGroup, SWTMessages.RowLayoutLayoutPage_horizontalLabel); 
+		typeVerticalRadio = makeRadio(orientationGroup, SWTMessages.RowLayoutLayoutPage_verticalLabel); 
 		
 		Group spacingGroup = new Group(c, SWT.NONE);
-		spacingGroup.setText(SWTMessages.getString("RowLayoutLayoutPage.spacingGroupTitle")); //$NON-NLS-1$
+		spacingGroup.setText(SWTMessages.RowLayoutLayoutPage_spacingGroupTitle); 
 		gd = new GridData();
 		gd.verticalAlignment = GridData.FILL;
 		gd.horizontalAlignment = GridData.BEGINNING;
@@ -123,7 +123,7 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		grid.numColumns = 5;
 		spacingGroup.setLayout(grid);
 		
-		spacingSpinner = makeSpinner(spacingGroup, SWTMessages.getString("RowLayoutLayoutPage.spacingLabel")); //$NON-NLS-1$
+		spacingSpinner = makeSpinner(spacingGroup, SWTMessages.RowLayoutLayoutPage_spacingLabel); 
 		
 		Label seperator = new Label(spacingGroup, SWT.SEPARATOR | SWT.VERTICAL);
 		gd = new GridData();
@@ -131,24 +131,24 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		gd.verticalAlignment = GridData.FILL;
 		seperator.setLayoutData(gd);
 		
-		bottomSpinner = makeSpinner(spacingGroup, SWTMessages.getString("RowLayoutLayoutPage.bottomLabel")); //$NON-NLS-1$
-		heightSpinner = makeSpinner(spacingGroup, SWTMessages.getString("RowLayoutLayoutPage.heightLabel")); //$NON-NLS-1$
-		leftSpinner = makeSpinner(spacingGroup, SWTMessages.getString("RowLayoutLayoutPage.leftLabel")); //$NON-NLS-1$
-		widthSpinner = makeSpinner(spacingGroup, SWTMessages.getString("RowLayoutLayoutPage.widthLabel")); //$NON-NLS-1$
-		rightSpinner = makeSpinner(spacingGroup, SWTMessages.getString("RowLayoutLayoutPage.rightLabel")); //$NON-NLS-1$
+		bottomSpinner = makeSpinner(spacingGroup, SWTMessages.RowLayoutLayoutPage_bottomLabel); 
+		heightSpinner = makeSpinner(spacingGroup, SWTMessages.RowLayoutLayoutPage_heightLabel); 
+		leftSpinner = makeSpinner(spacingGroup, SWTMessages.RowLayoutLayoutPage_leftLabel); 
+		widthSpinner = makeSpinner(spacingGroup, SWTMessages.RowLayoutLayoutPage_widthLabel); 
+		rightSpinner = makeSpinner(spacingGroup, SWTMessages.RowLayoutLayoutPage_rightLabel); 
 		
 		Label blank = new Label(spacingGroup, SWT.NONE);
 		gd = new GridData();
 		gd.horizontalSpan = 2;
 		blank.setLayoutData(gd);
 		
-		topSpinner = makeSpinner(spacingGroup, SWTMessages.getString("RowLayoutLayoutPage.topLabel")); //$NON-NLS-1$
+		topSpinner = makeSpinner(spacingGroup, SWTMessages.RowLayoutLayoutPage_topLabel); 
 		
 		// Now set the spacing group tab order so that it goes top/down instead of left/right. Works better.
 		spacingGroup.setTabList(new Control[] {spacingSpinner, heightSpinner, widthSpinner, bottomSpinner, leftSpinner, rightSpinner, topSpinner});
 		
 		Group configGroup = new Group(c, SWT.NONE);
-		configGroup.setText(SWTMessages.getString("RowLayoutLayoutPage.configGroupTitle")); //$NON-NLS-1$
+		configGroup.setText(SWTMessages.RowLayoutLayoutPage_configGroupTitle); 
 		gd = new GridData();
 		gd.verticalAlignment = GridData.FILL;
 		configGroup.setLayoutData(gd);
@@ -156,10 +156,10 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		grid.numColumns = 2;
 		configGroup.setLayout(grid);
 		
-		fillCheck = makeCheck(configGroup, SWTMessages.getString("RowLayoutLayoutPage.fillLabel")); //$NON-NLS-1$
-		justifyCheck = makeCheck(configGroup, SWTMessages.getString("RowLayoutLayoutPage.justifyLabel")); //$NON-NLS-1$
-		packCheck = makeCheck(configGroup, SWTMessages.getString("RowLayoutLayoutPage.packLabel")); //$NON-NLS-1$
-		wrapCheck = makeCheck(configGroup, SWTMessages.getString("RowLayoutLayoutPage.wrapLabel")); //$NON-NLS-1$
+		fillCheck = makeCheck(configGroup, SWTMessages.RowLayoutLayoutPage_fillLabel); 
+		justifyCheck = makeCheck(configGroup, SWTMessages.RowLayoutLayoutPage_justifyLabel); 
+		packCheck = makeCheck(configGroup, SWTMessages.RowLayoutLayoutPage_packLabel); 
+		wrapCheck = makeCheck(configGroup, SWTMessages.RowLayoutLayoutPage_wrapLabel); 
 		
 		// Now set the overall tabbing so that it goes up/down instead of left right. Works better.
 		c.setTabList(new Control[]{orientationGroup, configGroup, spacingGroup});

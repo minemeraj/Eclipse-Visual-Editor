@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTCLabelCreationPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-04 14:04:29 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-22 16:24:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -45,7 +45,7 @@ public class SWTCLabelCreationPolicy extends SWTLabelCreationPolicy {
 				Object newObject = aCreateRequest.getNewObject();
 				// Thew new clabel will be "CLabel".  This is held externally
 				// The key to use is CLabelPolicy.text.xxx where xxx is a piece of inializationData
-				String cLabelString = SWTMessages.getString("CLabelPolicy.text.CLabel"); //$NON-NLS-1$
+				String cLabelString = SWTMessages.CLabelPolicy_text_CLabel; 
 				EObject refNewObject = (EObject)newObject;
 				ResourceSet resourceSet = refNewObject.eResource().getResourceSet();
 				IJavaInstance newCLabel = BeanUtilities.createJavaObject("java.lang.String" , resourceSet , "\"" + cLabelString + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
