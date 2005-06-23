@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-06-22 14:10:26 $ 
+ *  $Revision: 1.12 $  $Date: 2005-06-23 11:24:28 $ 
  */
 import java.util.*;
 
@@ -78,37 +78,41 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				EMap attributes = propertyDecorator.getAttributes();
 				Object object = attributes.get("FACTORY_ARG");
 				if(object != null){
-					// The object is a 4 arg array
-					Object[] factoryArgs = (Object[]) ((FeatureAttributeValue)object).getValue();
-					// We are going to walk the allocation and compare it against the factory arguments to see if the property value is contained there
-					PTMethodInvocation methodInvocation = (PTMethodInvocation)parseTreeAllocation.getExpression();
-					PTInstanceReference receiver = (PTInstanceReference)methodInvocation.getReceiver();
-					// See if the method name is the same as the factory one
-					if(methodInvocation.getName().equals(factoryArgs[1])){				
-						// See if this is a call to the factory object itself as the receiver
-						if(receiver.getObject().getJavaType().getQualifiedName().equals(factoryArgs[0])){
-							// Match the argument types
-							Object[] argTypes = (Object[])factoryArgs[3];
-							if (methodInvocation.getArguments().size() == argTypes.length){	
-								// Walk the parse tree arguments and match their name to the requested type
-								for (int i = 0; i < argTypes.length; i++) {
-									PTExpression arg = (PTExpression)methodInvocation.getArguments().get(i);
-									// Get the JavaClass of the arg name being passed in and the argument to see if they are compatible
-									if(!matches(arg,(String)argTypes[i])){
-										return super.isPropertySet(descriptorID);
+					// The object is a multi arg array for each possible factory method
+					Object[] factories = (Object[]) ((FeatureAttributeValue)object).getValue();
+					factoryLoop: for (int i = 0; i < factories.length; i++) {
+						// The object is a 4 arg array
+						Object[] factoryArgs = (Object[]) factories[i];
+						// We are going to walk the allocation and compare it against the factory arguments to see if the property value is contained there
+						PTMethodInvocation methodInvocation = (PTMethodInvocation)parseTreeAllocation.getExpression();
+						PTInstanceReference receiver = (PTInstanceReference)methodInvocation.getReceiver();
+						// 	See if the method name is the same as the factory one
+						if(methodInvocation.getName().equals(factoryArgs[1])){				
+							// 	See if this is a call to the factory object itself as the receiver
+							if(receiver.getObject().getJavaType().getQualifiedName().equals(factoryArgs[0])){
+								// Match the argument types
+								Object[] argTypes = (Object[])factoryArgs[3];
+								if (methodInvocation.getArguments().size() == argTypes.length){	
+									// 	Walk the parse tree arguments and match their name to the requested type
+									for (int j = 0; j < argTypes.length; j++) {
+										PTExpression arg = (PTExpression)methodInvocation.getArguments().get(j);
+										// Get the JavaClass of the arg name being passed in and the argument to see if they are compatible
+										if(!matches(arg,(String)argTypes[j])){
+											continue factoryLoop;
+										}
 									}
-								}
-								// If we are here then the property is part of the parse tree allocation that matches a factory method
-								argumentNumber = (Number)factoryArgs[2];
-								factoryArguments.put(descriptorID,argumentNumber);	// Record the argument number that matches the property for re-retrieval
-								// Style bits always come from the live object whereas other arguments come from the allocation arg itself
-								// The reason style bits still walk into this code is so that the code above that determines the argument number can run
-								// and allow the style bit to be set
-								if(isStyleBit){
-									return super.isPropertySet(descriptorID);
-								} else {
-									Object parseTreeArgument = methodInvocation.getArguments().get(argumentNumber.intValue());
-									return !(parseTreeArgument instanceof PTNullLiteral);
+									// If we are here then the property is part of the parse tree allocation that matches a factory method
+									argumentNumber = (Number)factoryArgs[2];
+									factoryArguments.put(descriptorID,argumentNumber);	// Record the argument number that matches the property for re-retrieval
+									// Style bits always come from the live object whereas other arguments come from the allocation arg itself
+									// The reason style bits still walk into this code is so that the code above that determines the argument number can run
+									// and allow the style bit to be set
+									if(isStyleBit){
+										return super.isPropertySet(descriptorID);
+									} else {
+										Object parseTreeArgument = methodInvocation.getArguments().get(argumentNumber.intValue());
+										return !(parseTreeArgument instanceof PTNullLiteral);
+									}
 								}
 							}
 						}
@@ -137,8 +141,15 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				}
 				ParseTreeAllocation allocation = (ParseTreeAllocation) getBean().getAllocation();
 				PTMethodInvocation methodInvocation = (PTMethodInvocation)allocation.getExpression();
-				PTExpression changedStyleExpression = getChangedStyleExpression((PTExpression)methodInvocation.getArguments().get(argumentNumber.intValue()),(StyleBitPropertyID)descriptorID,intValue);
-				methodInvocation.getArguments().set(argumentNumber.intValue(),changedStyleExpression);
+				PTExpression existingStyleBitExpression = (PTExpression)methodInvocation.getArguments().get(argumentNumber.intValue());				
+				PTExpression changedStyleExpression = getChangedStyleExpression(existingStyleBitExpression,(StyleBitPropertyID)descriptorID,intValue);
+				// It is possible that the existing style bit is still an argument in which case just set it back at the same position
+				// but if not then add it at the end (this occurs if you do something like go from SWT.ARROW to SWT.ARROW | SWT.UP
+				if(methodInvocation.getArguments().size() == argumentNumber.intValue()){
+					methodInvocation.getArguments().add(changedStyleExpression);					
+				} else {
+					methodInvocation.getArguments().set(argumentNumber.intValue(),changedStyleExpression);
+				}
 				getBean().setAllocation(allocation);  // Set the allocation back into the bean to trigger notification
 			} else {
 				// Change a regular property		
@@ -147,8 +158,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				PTExpression expression = getExpression((IJavaInstance)val);
 				methodInvocation.getArguments().set(argumentNumber.intValue(),expression);
 				getBean().setAllocation(allocation);  // Set the allocation back into the bean to trigger notification				
-			}
-			super.setPropertyValue(descriptorID, val); 
+			} 
 		}
 	}
 	

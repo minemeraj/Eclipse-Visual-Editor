@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: FormToolkitEditPolicy.java,v $$
- *  $$Revision: 1.2 $$  $$Date: 2005-06-22 14:10:26 $$ 
+ *  $$Revision: 1.3 $$  $$Date: 2005-06-23 11:24:28 $$ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -49,7 +49,6 @@ public class FormToolkitEditPolicy extends ContainerEditPolicy {
 		public void execute() {
 			// 1) Make sure there is a FormToolkit object and create one if required
 			// 2) Substitute any {formToolkit} PTNames in the allocation with this instance
-			// Walk the allocation
 			if(javaChild.getAllocation() instanceof ParseTreeAllocation){
 				editDomain = EditDomain.getEditDomain(getHost());
 				PTExpression expression = ((ParseTreeAllocation)javaChild.getAllocation()).getExpression();					
@@ -97,9 +96,9 @@ public class FormToolkitEditPolicy extends ContainerEditPolicy {
 			// We do not have a form toolkit so create one and add it as a component to the BeanComposition
 			// The format for creating a form toolkit is "new FormToolkit(display)";
 			List args = new ArrayList(1);
-			// Create an expression for "Display.getDefault()";
+			// Create an expression for "Display.getCurrent()";
 			PTMethodInvocation getDisplayExpression = InstantiationFactory.eINSTANCE.createPTMethodInvocation(
-					InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.widgets.Display"),"getDefault",null);
+					InstantiationFactory.eINSTANCE.createPTName(SwtPlugin.DISPLAY_CLASSNAME),"getCurrent",null);
 			args.add(getDisplayExpression);
 			PTClassInstanceCreation formToolkitExpression= InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("org.eclipse.ui.forms.widgets.FormToolkit",args);
 			ParseTreeAllocation formToolkitAllocation = InstantiationFactory.eINSTANCE.createParseTreeAllocation(formToolkitExpression);
