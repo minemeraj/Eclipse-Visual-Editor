@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.23 $  $Date: 2005-06-20 17:33:02 $ 
+ *  $Revision: 1.24 $  $Date: 2005-06-23 19:34:49 $ 
  */
 
 import java.util.*;
@@ -721,26 +721,25 @@ public void updateBeanNameChange(BeanPart bp) {
 		HashMap beanDependentsMap = new HashMap();
 		for (Iterator unrefItr = getBeans().iterator(); unrefItr.hasNext();) {
 			BeanPart bp = (BeanPart) unrefItr.next();
-			BeanPart[] backRefs = bp.getBackRefs();
-			BeanPart[] propertyBackRefs = bp.getGenericBackRefs();
-			if(backRefs!=null){
-				for (int i = 0; i < backRefs.length; i++) {
-					List list = (List) beanDependentsMap.get(backRefs[i]);
-					if(list==null){
-						list = new ArrayList();
-						beanDependentsMap.put(backRefs[i], list);
+			if(bp.getRefExpressions()!=null){
+				Iterator expItr = bp.getRefExpressions().iterator();
+				while (expItr.hasNext()) {
+					CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+					List refs = exp.getReferences();
+					if(refs!=null && refs.size()>0){
+						for (Iterator iter = refs.iterator(); iter.hasNext();) {
+							EObject ref = (EObject) iter.next();
+							BeanPart refBP = getABean(ref);
+							if(refBP!=null){
+								List bpList = (List) beanDependentsMap.get(bp);
+								if(bpList==null){
+									bpList = new ArrayList();
+									beanDependentsMap.put(bp, bpList);
+								}
+								bpList.add(refBP);
+							}
+						}
 					}
-					list.add(bp);
-				}
-			}
-			if(propertyBackRefs!=null){
-				for (int i = 0; i < propertyBackRefs.length; i++) {
-					List list = (List) beanDependentsMap.get(propertyBackRefs[i]);
-					if(list==null){
-						list = new ArrayList();
-						beanDependentsMap.put(propertyBackRefs[i], list);
-					}
-					list.add(bp);
 				}
 			}
 		}
