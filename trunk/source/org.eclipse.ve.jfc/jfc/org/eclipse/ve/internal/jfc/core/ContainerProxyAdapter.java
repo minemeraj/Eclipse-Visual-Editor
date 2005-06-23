@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.20 $  $Date: 2005-06-22 21:05:25 $ 
+ *  $Revision: 1.21 $  $Date: 2005-06-23 19:29:57 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -103,7 +103,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 							try {
 								if (!msg.isTouch() && msg.getOldValue() != null)
 									releaseSetting(msg.getOldValue(), expression);
-								changeConstraint((EObject) msg.getNotifier(), expression);
+								layoutChanged(expression);	// This could be coming in from snippet parsing and so we may have incomplete state, so farm off to the end of transaction.
 							} finally {
 								try {
 									if (expression.isValid())
@@ -130,8 +130,10 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 							IInternalBeanProxyHost.NotificationLifeCycle notification = (IInternalBeanProxyHost.NotificationLifeCycle) msg;
 							EStructuralFeature sf = (EStructuralFeature) notification.getFeature();
 							if (sf == sfConstraintConstraint) {
-								if (notification.isPostReinstantiation())
+								if (notification.isPostReinstantiation()) {
+									// Since this is a reinstantiate we can sure it is ok to do now.
 									changeConstraint((EObject) notification.getNotifier(), notification.getExpression());	// Constraint was re-instantiated.
+								}
 							} else if (sf == sfConstraintComponent) {
 								// It is a component life cycle change.
 								if (notification.isPrerelease()) {
@@ -202,9 +204,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 								// TODO See if we can actually group the expression up to all notifications for this transaction instead of just this one notification.
 								IExpression expression = getBeanProxyFactory().createExpression();
 								try {
-									EObject constraintComponent = InverseMaintenanceAdapter.getIntermediateReference(ContainerProxyAdapter.this
-											.getEObject(), sfContainerComponents, sfConstraintComponent, (Notifier) msg.getNotifier());
-									changeConstraint(constraintComponent, expression);
+									layoutChanged(expression);	// This could be coming in from snippet parsing and so we may have incomplete state, so farm off to the end of transaction.
 								} finally {
 									try {
 										if (expression.isValid())
@@ -234,7 +234,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 							if (notification.isPostReinstantiation() && notification.getFeature() == sfName) {
 								EObject constraintComponent = InverseMaintenanceAdapter.getIntermediateReference(ContainerProxyAdapter.this
 										.getEObject(), sfContainerComponents, sfConstraintComponent, (Notifier) msg.getNotifier());
-								changeConstraint(constraintComponent, notification.getExpression());
+								changeConstraint(constraintComponent, notification.getExpression());	// Since this is a reinstantiate we can sure it is ok to do now.
 							}
 						} catch (ClassCastException e) {
 							// Ignore this. It means someone sent their own kind of notification but used out notification type.
@@ -269,6 +269,11 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 	 * to the correct values. So we will at this point simply remove all of the components from the bean so that we get no errors.
 	 * And we will queue up an exec for the end of the transaction to add all of the components back in with their new constraints. 
 	 *
+	 * <p>
+	 * <b>Note:</b> This will also be called if any constraints are changed. Sometimes, especially on undo, the constraints may be changed to an
+	 * invalid value before being changed to a valid value. Or they may be changed to new valid value for a new layout manager, but that new
+	 * layout manager has not yet been applied. So to handle these various cases we will treat it as a layout change. 
+
 	 * @param expression
 	 * 
 	 * @since 1.1.0
@@ -372,7 +377,8 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 	}
 
 	/*
-	 * Change the constraint.
+	 * Change the constraint. This should only be called on reinstantiation of a constraint. Any other change
+	 * constraint should go through layout change pending.
 	 * @param constraintComponent
 	 * @param expression
 	 * 
