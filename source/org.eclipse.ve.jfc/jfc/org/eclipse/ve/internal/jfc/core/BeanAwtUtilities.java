@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.31 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.32 $  $Date: 2005-06-23 20:29:16 $ 
  */
 
 import java.util.List;
@@ -104,8 +104,8 @@ public class BeanAwtUtilities {
 	private static final int MANAGER_INVALIDATE_COMPONENT = 0, MANAGER_ADD_COMPONENT_BEFORE_WITH_CONSTRAINT = MANAGER_INVALIDATE_COMPONENT + 1,
 			MANAGER_ADD_COMPONENT_BEFORE_WITH_NO_CONSTRAINT = MANAGER_ADD_COMPONENT_BEFORE_WITH_CONSTRAINT + 1,
 			MANAGER_CHANGE_CONSTRAINT = MANAGER_ADD_COMPONENT_BEFORE_WITH_NO_CONSTRAINT + 1,
-			MANAGER_REMOVE_COMPONENT = MANAGER_CHANGE_CONSTRAINT + 1, MANAGER_REMOVE_ALL_COMPONENTS = MANAGER_REMOVE_COMPONENT + 1,
-			MANAGER_SET_COMPONENT = MANAGER_REMOVE_ALL_COMPONENTS + 1, MANAGER_APPLY_BOUNDS = MANAGER_SET_COMPONENT + 1,
+			MANAGER_REMOVE_COMPONENT = MANAGER_CHANGE_CONSTRAINT + 1, 
+			MANAGER_SET_COMPONENT = MANAGER_REMOVE_COMPONENT + 1, MANAGER_APPLY_BOUNDS = MANAGER_SET_COMPONENT + 1,
 			MANAGER_APPLY_LOCATION = MANAGER_APPLY_BOUNDS + 1, MANAGER_OVERRIDE_LOCATION = MANAGER_APPLY_LOCATION + 1,
 			WINDOW_DISPOSE = MANAGER_OVERRIDE_LOCATION + 1, COMPONENT_GET_PARENT = WINDOW_DISPOSE + 1,
 			MANAGER_JMENU_REMOVE_COMPONENT = COMPONENT_GET_PARENT + 1, MANAGER_JMENU_ADD_COMPONENT = MANAGER_JMENU_REMOVE_COMPONENT + 1,
@@ -480,39 +480,6 @@ public class BeanAwtUtilities {
 		expression.createSimpleMethodInvoke(getRemoveComponent(expression), null, new IProxy[] {container, component}, false);
 	}
 
-	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.ContainerManager#removeAllComponents() removeAllComponents}proxy method.
-	 * 
-	 * @param expression
-	 * @return
-	 * 
-	 * @since 1.1.0
-	 */
-	private static IProxyMethod getRemoveAllComponents(IExpression expression) {
-		BeanAwtUtilities constants = getConstants(expression.getRegistry());
-
-		IProxyMethod method = constants.methods[MANAGER_REMOVE_ALL_COMPONENTS];
-		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
-							expression, "removeAllComponents", //$NON-NLS-1$
-							new String[] {"java.awt.Container"}); //$NON-NLS-1$
-			processExpressionProxy(method, constants.methods, MANAGER_REMOVE_ALL_COMPONENTS);
-		}
-		return method;
-	}
-	
-	/**
-	 * Remove all components from the container. This is usually used as preparation for a layout manager change.
-	 * @param container
-	 * @param expression
-	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.ContainerManager#removeAllComponents(Container)
-	 * @since 1.1.0
-	 */
-	public static void invoke_removeAllComponents(IProxy container, IExpression expression) {
-		expression.createSimpleMethodInvoke(getRemoveAllComponents(expression), null, new IProxy[] {container}, false);
-	}
 
 	/**
 	 * Get the window dispose method proxy. It is {@link org.eclipse.ve.internal.jfc.vm.WindowManager#disposeWindow(Window)}.

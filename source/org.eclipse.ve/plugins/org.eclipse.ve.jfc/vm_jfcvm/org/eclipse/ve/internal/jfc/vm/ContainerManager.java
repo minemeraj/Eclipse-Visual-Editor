@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerManager.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-23 20:29:16 $ 
  */
 
 import java.awt.Component;
@@ -138,15 +138,6 @@ public class ContainerManager {
 	 */
 	public static void removeComponent(Container container, Component component) {
 		container.remove(component);
-	}
-	
-	/**
-	 * Remove all components from the container. This is typically used to prepare for a layout manager change.
-	 * @param container
-	 * @since 1.1.0
-	 */
-	public static void removeAllComponents(Container container) {
-		container.removeAll();
 	}
 	
 	/**
