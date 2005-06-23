@@ -8,14 +8,15 @@
     xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
     xmlns:event="event.xmi">
     
-  <event:AddMany  featureName="eStructuralFeatures">
+  <event:Add  featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
+          nullInvalid="true"
           cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LinkJavaClassCellEditor"/>
     </addedEObjects>
-  </event:AddMany>
+  </event:Add>
 
-  <event:AddMany featureName="eAnnotations">
+  <event:Add featureName="eAnnotations">
   	<addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
   	      graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LinkGraphicalEditPart:true"
   	      labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text">
@@ -23,5 +24,5 @@
 	      value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.SWTLinkCreationPolicy:Link,text"/>
     	<graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/link_obj.gif"/>
 	</addedEObjects>
-  </event:AddMany>
+  </event:Add>
 </xmi:XMI>

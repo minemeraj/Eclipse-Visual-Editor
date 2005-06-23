@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2005-05-19 21:34:28 $ 
+ *  $Revision: 1.18 $  $Date: 2005-06-23 01:48:08 $ 
  */
 
 import java.util.*;
@@ -28,7 +28,6 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.core.BeanUtilities;
 /**
  *  This helper comes to help build a specialize add, which take arguments for other objects.
  *  e.g., JTabbedPanel's addTab() method.
@@ -418,12 +417,6 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		return result;
 	}
 
-	/**
-	 * Prefix/PostFix quoates.
-	 */
-	protected void setInitString(IJavaObjectInstance obj, String val) {
-		obj.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(BeanUtilities.createStringInitString(val)));
-	}
 	//
 	///**
 	// * Try to figure out where to insert this object, with accordance to its position
