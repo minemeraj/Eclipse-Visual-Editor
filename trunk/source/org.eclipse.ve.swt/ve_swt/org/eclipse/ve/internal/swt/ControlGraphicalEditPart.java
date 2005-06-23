@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.22 $ $Date: 2005-06-15 20:19:21 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.23 $ $Date: 2005-06-23 16:08:45 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -27,7 +27,6 @@ import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.util.ListenerList;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -348,8 +347,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	
 	private void performDirectEdit(){
 		if(manager == null)
-			manager = new BeanDirectEditManager(this, 
-				TextCellEditor.class, new BeanDirectEditCellEditorLocator(getFigure()), sfDirectEditProperty);
+			manager = new CDEDirectEditManager(this, new BeanDirectEditCellEditorLocator(getFigure()), sfDirectEditProperty);
 		manager.show();
 	}
 

@@ -1,6 +1,5 @@
-package org.eclipse.ve.internal.java.core;
 /*******************************************************************************
- * Copyright (c) 2001, 2003 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,23 +10,26 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: StringJavaClassLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-23 01:48:08 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-23 16:08:44 $ 
  */
+
+package org.eclipse.ve.internal.java.core;
+
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 
 public class StringJavaClassLabelProvider extends LabelProvider {
-	
-public String getText(Object element){
-	
-	if (element instanceof IJavaInstance) {
-		IBeanProxy proxy = BeanProxyUtilities.getBeanProxy((IJavaInstance)element);
-		if (proxy == null)
-			return "";	// It shouldn't be null. //$NON-NLS-1$
-		return BeanUtilities.getEscapedString(proxy.toBeanString());
-	} else
-		return super.getText(element);
-}
+
+	public String getText(Object element) {
+
+		if (element instanceof IJavaInstance) {
+			IBeanProxy proxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) element);
+			if (proxy == null)
+				return ""; // It shouldn't be null. //$NON-NLS-1$
+			return BeanUtilities.getEscapedString(proxy.toBeanString());
+		} else
+			return super.getText(element);
+	}
 }

@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: CharJavaCellEditor.java,v $
- *  $Revision: 1.9 $  $Date: 2005-06-22 15:28:32 $ 
+ *  $Revision: 1.10 $  $Date: 2005-06-23 16:08:44 $ 
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -58,22 +58,9 @@ public class CharJavaCellEditor extends ObjectCellEditor implements IExecutableE
 	 * The string to convert will be passed in.
 	 */
 	public Object doGetObject(String aString) {
-		
-		String initString;
 
-		// The first character of the string, to be used as the character
-		char charEntered = aString.charAt(0); //$NON-NLS-1$
+		String initString = BeanUtilities.createCharacterInitString(aString.charAt(0));
 		
-		if ( charEntered == '\'' || charEntered == '\\' ) {
-			// properly escape the ' and \ characters
-			initString = "'\\" + charEntered + "'"; //$NON-NLS-1$ //$NON-NLS-2$
-		} else if (charEntered == '0' && aString.length() > 1) {
-			// handle characters defined by number (preceeded by 0)
-			initString = "(char) " + aString.substring(1); //$NON-NLS-1$
-		} else {
-		    // Create a char so the user gets to see it as a user-visible string in their source
-		    initString = "'" + charEntered + "'"; //$NON-NLS-1$ //$NON-NLS-2$
-		}
 		if (!fIsCharacterClass) {
 			return BeanUtilities.createJavaObject(fDataType, fResourceSet, initString);
 		} else {
@@ -94,7 +81,7 @@ public class CharJavaCellEditor extends ObjectCellEditor implements IExecutableE
 		if (anObject == null) {
 			return ""; //$NON-NLS-1$
 		} else if (anObject instanceof IJavaInstance) {
-			return ((ICharacterBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) anObject, fResourceSet)).characterValue().toString();
+			return BeanUtilities.getEscapedString(((ICharacterBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) anObject, fResourceSet)).characterValue().toString());
 		} else {
 			return getCharacterLabel((IJavaDataTypeInstance) anObject, fEditDomain);
 		}
@@ -108,17 +95,13 @@ public class CharJavaCellEditor extends ObjectCellEditor implements IExecutableE
 	 */
 	public String isCorrectString(String aString) {
 
-		// Check the string for invalid format
+		// Check the string for invalid format 		
 		if (aString.length() == 0) {
 			return JavaMessages.CellEditor_CharJava_ErrMsg_ERROR_; 
 		} else if (aString == null) {
 			return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_; 
 		} else if (aString.length() > 1) {
-			if (aString.charAt(0) != '0') {
-				// TODO: Give a more descriptive error message when we're allowed to drop for NLS
-				// Multicharacter string not starting with 0
-				return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_; 
-			} else {
+			if (aString.charAt(0) == '0') {
 				try {
 					int num = Integer.parseInt(aString.substring(1));
 					if (num > Character.MAX_VALUE || num < Character.MIN_VALUE) {
@@ -131,7 +114,28 @@ public class CharJavaCellEditor extends ObjectCellEditor implements IExecutableE
 					// invalid number after 0
 					return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_; 
 				}
-			}
+			} else if (aString.charAt(0) == '\\') {
+				switch (aString.charAt(1)) {
+					case 'b':
+					case 't':
+					case 'n':
+					case 'r':
+					case '\'':
+					case '"':
+						if (aString.length() > 2)
+							return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_;
+						break;
+					case 'u':
+						if (aString.length() > 6)
+							return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_;
+						for(int i=2; i<6; i++) {
+							if (!Character.isDigit(aString.charAt(i)))
+								return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_;
+						}
+						break;
+				}
+			} else
+				return JavaMessages.CellEditor_CharJava_InvalidMsg_ERROR_;
 		}
 
 		return null;
