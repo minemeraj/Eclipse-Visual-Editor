@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.21 $  $Date: 2005-06-23 19:29:57 $ 
+ *  $Revision: 1.22 $  $Date: 2005-06-23 20:29:16 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -280,30 +280,32 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 	 */
 	protected void layoutChanged(IExpression expression) {
 
-		BeanAwtUtilities.invoke_removeAllComponents(getProxy(), expression);
-		// Do a restoreVisibility on all the components. They will be immediately removed so that should be ok.
-		// They will then be added back if they are still around at the end and the appropriate layout visibility will be reapplied.
-		Iterator components = ((List) getJavaObject().eGet(sfContainerComponents)).iterator();
-		while(components.hasNext()) {
-			EObject cc = (EObject) components.next();
-			IJavaInstance component = (IJavaInstance) cc.eGet(sfConstraintComponent);
-			try {
-				ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) getSettingBeanProxyHost(component);
-				if (componentProxyHost != null) {
-					componentProxyHost.restoreVisibility(expression);
+		if (!layoutChangePending) {
+			// Remove and then do a restoreVisibility on all the components. They will be immediately removed so that should be ok.
+			// They will then be added back if they are still around at the end and the appropriate layout visibility will be reapplied.
+			Iterator components = ((List) getJavaObject().eGet(sfContainerComponents)).iterator();
+			while (components.hasNext()) {
+				EObject cc = (EObject) components.next();
+				IJavaInstance component = (IJavaInstance) cc.eGet(sfConstraintComponent);
+				try {
+					ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) getSettingBeanProxyHost(component);
+					if (componentProxyHost != null && componentProxyHost.isBeanProxyInstantiated()) {
+						BeanAwtUtilities.invoke_removeComponent(getProxy(), componentProxyHost.getProxy(), expression);
+						componentProxyHost.restoreVisibility(expression);
+					}
+				} catch (ClassCastException e) {
+					// Slight possibility it wasn't a ComponentProxyAdapter due to some error like undefined class.
 				}
-			} catch (ClassCastException e) {
-				// Slight possibility it wasn't a ComponentProxyAdapter due to some error like undefined class.
 			}
+			// Should never be excluding because we shouldn't be here during initialization.
+			layoutChangePending = getModelChangeController().execAtEndOfTransaction(new Runnable() {
+
+				public void run() {
+					processPendingLayoutChange();
+				}
+			}, ModelChangeController.createHashKey(this, "LAYOUT CHANGE"), //$NON-NLS-1$
+					new Object[] { ModelChangeController.SETUP_PHASE, ModelChangeController.INIT_VIEWERS_PHASE});
 		}
-		// Should never be excluding because we shouldn't be here during initialization.
-	    layoutChangePending = getModelChangeController().execAtEndOfTransaction(new Runnable(){
-	        public void run(){
-				processPendingLayoutChange();
-	        }
-	    },
-	    ModelChangeController.createHashKey(this,"LAYOUT CHANGE"), //$NON-NLS-1$
-	    new Object[] {ModelChangeController.SETUP_PHASE,ModelChangeController.INIT_VIEWERS_PHASE});
 	}
 	
 	/**
