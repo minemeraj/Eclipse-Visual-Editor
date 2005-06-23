@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanTreeDirectEditManager.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:38 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-23 16:08:44 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -20,15 +20,8 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.IStringBeanProxy;
-
 import org.eclipse.ve.internal.cde.core.CDETreeDirectEditManager;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
-import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 import org.eclipse.ve.internal.java.rules.RuledPropertySetCommand;
 
@@ -65,38 +58,14 @@ public class BeanTreeDirectEditManager extends CDETreeDirectEditManager {
 		super(v);
 	}
 
-	protected Command getDirectEditCommand(String newText, EditPart ep, IPropertyDescriptor property) {
+	protected Command getDirectEditCommand(Object newValue, EditPart ep, IPropertyDescriptor property) {
 		// We'll use property source so that wrappered properties may also be used.
 		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
 		EditDomain domain = EditDomain.getEditDomain(ep);
-		IJavaObjectInstance stringObject = BeanUtilities.createString(EMFEditDomainHelper.getResourceSet(domain), newText);		
 		if (property instanceof ICommandPropertyDescriptor)
-			return ((ICommandPropertyDescriptor) property).setValue(ps, stringObject);
+			return ((ICommandPropertyDescriptor) property).setValue(ps, newValue);
 		else
-			return new RuledPropertySetCommand(domain, ps, property.getId(), stringObject);
-	}
-
-	protected String getPropertyValue(EditPart ep, IPropertyDescriptor property) {
-		// We'll use property source so that wrappered properties may also be used.
-		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
-		if (PropertySourceAdapter.isPropertySet(ps, property)) {
-			Object textObj = PropertySourceAdapter.getPropertyValue(ps, property);
-			if (textObj != null) {
-				if (textObj instanceof IPropertySource)
-					textObj = ((IPropertySource) textObj).getEditableValue();
-				// Get the value from the remote vm of the externalized string
-				try {
-					IBeanProxyHost host = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) textObj);
-					if (host.isBeanProxyInstantiated()) {
-						IBeanProxy propProxy = host.getBeanProxy();
-						return ((IStringBeanProxy) propProxy).stringValue();
-					}
-				} catch (Exception e) {
-				}
-			}
-		}
-
-		return "";
+			return new RuledPropertySetCommand(domain, ps, property.getId(), newValue);
 	}
 
 }

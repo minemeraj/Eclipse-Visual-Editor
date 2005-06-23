@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.28 $  $Date: 2005-06-23 01:48:08 $ 
+ *  $Revision: 1.29 $  $Date: 2005-06-23 16:08:44 $ 
  */
 
 import java.util.regex.Pattern;
@@ -130,8 +130,24 @@ public class BeanUtilities {
 	 * @since 1.1.0
 	 */
 	public static String createStringInitString(String value) {
-		StringBuffer sb = new StringBuffer(value.length());
-		sb.append('"');
+		return createQuotedInitString(value, true);
+	}
+	
+	public static String createCharacterInitString(char value) {
+		return createQuotedInitString(String.valueOf(value), false);
+	}
+
+	/**
+	 * Local util to quote the 
+	 * @param value the value to be quoted
+	 * @param isString quote as a string <code>true</code>, or quote as a char.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected static String createQuotedInitString(String value, boolean isString) {
+		StringBuffer sb = new StringBuffer(value.length()+2);
+		sb.append(isString ? '"' : '\'');
 		int sl = value.length();
 		for (int i = 0; i < sl; i++) {
 			char c = value.charAt(i);
@@ -163,10 +179,13 @@ public class BeanUtilities {
 					sb.append("\\r");
 					break;
 				case '"':
-					sb.append("\\\"");	// Put out an escaped quote.
+					if (isString)
+						sb.append("\\\"");	// Put out an escaped quote. But only for string. Not needed for char.
 					break;
 				case '\'':
-					sb.append("\\\'");	// Put out escaped quote.
+					if (!isString)
+						sb.append("\\\'");	// Put out escaped quote. But we only do this on chars. Strings can handle it unquoted.
+					break;
 				default:	
 					if (c == '\\') {
 						if (i+1 < sl) {
@@ -198,10 +217,10 @@ public class BeanUtilities {
 					break;
 			}
 		}
-		sb.append('"');
+		sb.append(isString ? '"' : '\'');
 		return sb.toString();
 	}
-	
+
 	private static final Pattern NEEDS_ESCAPES = Pattern.compile("(.*\b|\t|\r|\n|\"|\'|\\\\)*.*", java.util.regex.Pattern.DOTALL);
 	/**
 	 * This takes a string that has no escapes and will add escapes in. 

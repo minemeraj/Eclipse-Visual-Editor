@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.25 $ $Date: 2005-06-15 20:19:27 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.26 $ $Date: 2005-06-23 16:08:44 $
  */
 import java.util.*;
 
@@ -26,7 +26,6 @@ import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.util.ListenerList;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -373,7 +372,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 
 	private void performDirectEdit() {
 		if (manager == null)
-			manager = new BeanDirectEditManager(this, TextCellEditor.class, new BeanDirectEditCellEditorLocator(getFigure()), sfDirectEditProperty);
+			manager = new CDEDirectEditManager(this, new BeanDirectEditCellEditorLocator(getFigure()), sfDirectEditProperty);
 		manager.show();
 	}
 

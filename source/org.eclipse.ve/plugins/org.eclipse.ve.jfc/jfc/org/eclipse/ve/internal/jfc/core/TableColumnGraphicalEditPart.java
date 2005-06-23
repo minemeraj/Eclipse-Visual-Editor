@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnGraphicalEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-23 16:08:44 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
@@ -34,7 +33,8 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
-import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.core.BeanDirectEditCellEditorLocator;
+import org.eclipse.ve.internal.java.core.BeanDirectEditPolicy;
 
 /**
  * TableColumn Graphical Editpart.
@@ -115,7 +115,7 @@ public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart {
 
 	private void performDirectEdit() {
 		if (manager == null)
-			manager = new BeanDirectEditManager(this, TextCellEditor.class, new BeanDirectEditCellEditorLocator(getFigure()), sfDirectEditProperty);
+			manager = new CDEDirectEditManager(this, new BeanDirectEditCellEditorLocator(getFigure()), sfDirectEditProperty);
 		manager.show();
 	}
 
