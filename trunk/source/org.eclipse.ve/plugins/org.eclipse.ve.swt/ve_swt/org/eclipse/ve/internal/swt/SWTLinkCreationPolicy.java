@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTLinkCreationPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-23 01:48:08 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -44,7 +44,7 @@ public class SWTLinkCreationPolicy extends LabelCreationPolicy {
 				String linkString = SWTMessages.LinkPolicy_text_Link; 
 				EObject refNewObject = (EObject)newObject;
 				ResourceSet resourceSet = refNewObject.eResource().getResourceSet();
-				IJavaInstance newLink = BeanUtilities.createJavaObject("java.lang.String" , resourceSet , "\"" + linkString + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				IJavaInstance newLink = BeanUtilities.createString(resourceSet , linkString);
 				EStructuralFeature sf_link = refNewObject.eClass().getEStructuralFeature("text"); //$NON-NLS-1$
 				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
 				cb.applyAttributeSetting((EObject) newObject, sf_link, newLink);

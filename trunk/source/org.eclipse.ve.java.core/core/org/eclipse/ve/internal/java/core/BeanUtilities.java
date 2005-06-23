@@ -11,8 +11,10 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.27 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.28 $  $Date: 2005-06-23 01:48:08 $ 
  */
+
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.BasicEMap.Entry;
@@ -107,8 +109,25 @@ public class BeanUtilities {
 		return (IJavaObjectInstance) createJavaObject("java.lang.String", aResourceSet, createStringInitString(unquotedInitializationString)); //$NON-NLS-1$
 	}
 
+	private static final String lineSep = System.getProperties().getProperty("line.separator");
+	
 	/**
-	 * Take a string and turn it into a init string for the String class. I.e. quote it and escape any imbedded quotes or escape chars.
+	 * Take a string and turn it into a quoted string with escape if necessary. This string can already
+	 * have escapes in it. This is useful for the property editors. They show the characters as escaped
+	 * already. But the string could of come directly from an actual live string and so it needs
+	 * the escapes to be added. This can handle both.
+	 * <p>
+	 * <b>Note:</b> This incoming string may be a nice looking string that can be converted to
+	 * a quoted string. But if there were any escapes in the original string, then that string
+	 * is not suitable for being considered the evaluated string. In that case the
+	 * string returned from here must be evaluated to get the true evaulated value to 
+	 * apply to the live objects. This can be done by just seeing if there are any '\' in
+	 * the init string, and if so, then the init string needs to be evaluated to get true 
+	 * apply value.
+	 * @param value
+	 * @return
+	 * 
+	 * @since 1.1.0
 	 */
 	public static String createStringInitString(String value) {
 		StringBuffer sb = new StringBuffer(value.length());
@@ -116,13 +135,126 @@ public class BeanUtilities {
 		int sl = value.length();
 		for (int i = 0; i < sl; i++) {
 			char c = value.charAt(i);
-			if (c == '"' || c == '\\')
-				sb.append('\\'); // We need to escape it.
-			sb.append(c);
+			if (c == lineSep.charAt(0)) {
+				if (lineSep.length()>1) {
+					if (i+1 < sl) {
+						if (lineSep.charAt(1) == value.charAt(i+1)) {
+							i++;
+							sb.append("\\n");	// Change to linesep.
+							continue;
+						}
+					}
+				} else {
+					sb.append("\\n");	// Change to linesep.
+					continue;					
+				}
+			}
+			switch (c) {
+				case '\b':
+					sb.append("\\b");
+					break;
+				case '\t':
+					sb.append("\\t");
+					break;					
+				case '\n':
+					sb.append("\\n");
+					break;
+				case '\r':
+					sb.append("\\r");
+					break;
+				case '"':
+					sb.append("\\\"");	// Put out an escaped quote.
+					break;
+				case '\'':
+					sb.append("\\\'");	// Put out escaped quote.
+				default:	
+					if (c == '\\') {
+						if (i+1 < sl) {
+							// See if we need to escape or not.
+							char nextChar = value.charAt(i + 1);
+							switch (nextChar) {
+								case 'b':
+								case 't':
+								case 'n':
+								case 'r':
+								case '"':
+								case '\'':
+								case '\\':
+								case 'u':
+									sb.append('\\'); // Don't escape it, just put it out as normal text because the next char will make it a valid escape.
+									sb.append(nextChar); // Actually put it out now.
+									i++;
+									continue;
+								default:
+									sb.append("\\\\"); // Put it out as escaped. Wanted the backslash to actually be in the string.
+									continue;
+							}
+						} else {
+							// We are ending with a '\'. This needs to be escaped to be valid.
+							sb.append('\\');
+						}
+					}
+					sb.append(c);
+					break;
+			}
 		}
 		sb.append('"');
 		return sb.toString();
 	}
+	
+	private static final Pattern NEEDS_ESCAPES = Pattern.compile("(.*\b|\t|\r|\n|\"|\'|\\\\)*.*", java.util.regex.Pattern.DOTALL);
+	/**
+	 * This takes a string that has no escapes and will add escapes in. 
+	 * @param value string to escape. <code>null</code> will return as null.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public static String getEscapedString(String value) {
+		if (value != null && NEEDS_ESCAPES.matcher(value).matches()) {
+			StringBuffer sb = new StringBuffer(value.length());
+			int sl = value.length();
+			boolean multiCharSep = lineSep.length() > 1;
+			for (int i = 0; i < sl; i++) {
+				char c = value.charAt(i);
+				// If multichar line sep, see if next char is part of line sep, if so replace with "\\n".
+				// If not multichar line sep, then treat it normally.
+				if (multiCharSep && c == lineSep.charAt(0)) {
+					if (i+1 < sl) {
+						if (lineSep.charAt(1) == value.charAt(i+1)) {
+							i++;
+							sb.append("\\n");	// Change to linesep.
+							continue;
+						}
+					}
+					// Not part of multisep, so treat it normal.
+				}
+				switch (c) {
+					case '\b':
+						sb.append("\\b");
+						break;
+					case '\t':
+						sb.append("\\t");
+						break;					
+					case '\n':
+						sb.append("\\n");
+						break;
+					case '\r':
+						sb.append("\\r");
+						break;
+					case '\\':
+						sb.append("\\\\");
+						break;
+					default:
+						sb.append(c);
+						break;
+				}
+			}
+			return sb.toString();
+		} else
+			return value;
+	}
+
 	
 	/** 
 	 * @param newJavaBean   - A newly created JavaBean

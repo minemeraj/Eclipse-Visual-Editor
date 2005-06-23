@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: SWTLabelCreationPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-23 01:48:08 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -49,7 +49,7 @@ public Command getCommand(Command aCommand, final EditDomain domain, final Creat
 			String labelString = SWTMessages.LabelPolicy_text_Label;
 			EObject refNewObject = (EObject)newObject;
 			ResourceSet resourceSet = refNewObject.eResource().getResourceSet();
-			IJavaInstance newLabel = BeanUtilities.createJavaObject("java.lang.String" , resourceSet , "\"" + labelString + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			IJavaInstance newLabel = BeanUtilities.createString(resourceSet , labelString);
 			EStructuralFeature sf_label = refNewObject.eClass().getEStructuralFeature(fPropertyKey); //$NON-NLS-1$
 			RuledCommandBuilder cb = new RuledCommandBuilder(domain);
 			cb.applyAttributeSetting((EObject) newObject, sf_label, newLabel);

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: StringJavaClassLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-23 01:48:08 $ 
  */
 
 import org.eclipse.jface.viewers.LabelProvider;
@@ -26,7 +26,7 @@ public String getText(Object element){
 		IBeanProxy proxy = BeanProxyUtilities.getBeanProxy((IJavaInstance)element);
 		if (proxy == null)
 			return "";	// It shouldn't be null. //$NON-NLS-1$
-		return proxy.toBeanString();
+		return BeanUtilities.getEscapedString(proxy.toBeanString());
 	} else
 		return super.getText(element);
 }
