@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.41 $  $Date: 2005-06-20 17:33:02 $ 
+ *  $Revision: 1.42 $  $Date: 2005-06-23 18:12:21 $ 
  */
 
 
@@ -1044,8 +1044,12 @@ public static Collection getReferences(Object o, boolean includeO) {
 					shouldBeOnFreeform = true;
 			}else if (InstanceVariableCreationRule.isModelled(bp.getEObject().eClass(), bp.getModel().getCompositionModel().getModelResourceSet())) {
 				// Is modelled
-				if (bp.getContainer() == null)
-					shouldBeOnFreeform = true;
+				if (bp.getContainer() == null){
+					if(bp.getDecleration().isInstanceVar())
+						shouldBeOnFreeform = true;
+					else if(bp.getFFDecoder().isVisualOnFreeform())
+						shouldBeOnFreeform = true;
+				}
 			} else {
 				// Not modelled
 				// does it have visual-constraint="x,y" annotation?
