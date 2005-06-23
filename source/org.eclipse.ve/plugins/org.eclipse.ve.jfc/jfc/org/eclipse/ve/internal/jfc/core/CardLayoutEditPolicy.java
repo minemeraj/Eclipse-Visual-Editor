@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: CardLayoutEditPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-23 19:29:57 $ 
  */
 import java.util.*;
 
@@ -357,14 +357,16 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 			javaStringConstraint = componentProxyHost.getBeanPropertyValue(sfName);
 		}
 		IBeanProxy layoutProxy = BeanAwtUtilities.invoke_getLayout(containerProxy);
-		IMethodProxy showMethodProxy = layoutProxy.getTypeProxy().getMethodProxy("show", //$NON-NLS-1$
-			new String[] { "java.awt.Container", "java.lang.String" }); //$NON-NLS-1$ //$NON-NLS-2$
-		if (showMethodProxy != null && javaStringConstraint != null) {
-			showMethodProxy.invokeCatchThrowableExceptions(
-				layoutProxy,
-				new IBeanProxy[] { containerProxy, BeanProxyUtilities.getBeanProxy(javaStringConstraint)});
+		// Slight possibility that we are in the process of switching layout managers.
+		if (layoutProxy != null) {
+			IMethodProxy showMethodProxy = layoutProxy.getTypeProxy().getMethodProxy("show", //$NON-NLS-1$
+					new String[] { "java.awt.Container", "java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$
+			if (showMethodProxy != null && javaStringConstraint != null) {
+				showMethodProxy.invokeCatchThrowableExceptions(layoutProxy, new IBeanProxy[] { containerProxy,
+						BeanProxyUtilities.getBeanProxy(javaStringConstraint)});
+			}
+			((ContainerProxyAdapter) containerProxyHost).revalidateBeanProxy();
 		}
-		((ContainerProxyAdapter) containerProxyHost).revalidateBeanProxy();
 	}
 	/*
 	 * This card has been selected or deselected. 
