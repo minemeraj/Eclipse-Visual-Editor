@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEDirectEditManager.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-23 16:08:42 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-23 18:36:04 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -48,6 +48,13 @@ public class CDEDirectEditManager extends DirectEditManager {
 	public CDEDirectEditManager(GraphicalEditPart source, CellEditorLocator locator, IPropertyDescriptor property) {
 		super(source, null, locator);
 		sfProperty = property;
+	}
+	
+	public void show() {
+		// TODO This method can be removed when GEF's bug is fixed. 
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=101519
+		super.show();
+		getCellEditor().setFocus();
 	}
 	
 	protected DirectEditRequest createDirectEditRequest() {
