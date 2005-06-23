@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenExpFlattener.java,v $
- *  $Revision: 1.6 $  $Date: 2005-04-09 01:19:15 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-23 19:46:25 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -66,8 +66,15 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 			if (frefList!= null && !frefList.contains(obj))
 				frefList.add(obj);
 		    BeanPart bp = fmodel.getABean(obj);
-		    if (bp!=null)
-		    	  getStringBuffer().append(bp.getSimpleName()) ;
+		    if (bp!=null){
+		    	  if(bp.getReturnedMethod()!=null){
+		    		  // have a return method - use it instead of the 
+		    		  // field which could benot initialized at runtime
+		    		  getStringBuffer().append(bp.getReturnedMethod().getMethodName()+"()") ;//$NON-NLS-1$
+		    	  }else{
+		    		  getStringBuffer().append(bp.getSimpleName());
+		    	  }
+		    }
 		    else {
 		    	if (obj.isSetAllocation()) {
 		    		JavaAllocation alloc = obj.getAllocation();

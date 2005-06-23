@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.45 $  $Date: 2005-06-20 23:54:34 $ 
+ *  $Revision: 1.46 $  $Date: 2005-06-23 19:46:25 $ 
  */
 
 import java.util.*;
@@ -281,7 +281,12 @@ protected void generateInstanceDecleration(BeanPart bp, IJavaObjectInstance comp
 	IType cuType = CodeGenUtil.getMainType(cu);	  
 
 //	InstanceVariableTemplate ft = new InstanceVariableTemplate(varName, ((IJavaObjectInstance) component).getJavaType().getQualifiedName(), INSTANCE_VAR_DEFAULT_COMMENT);
-	// Assume imports will be created by the init expression
+	// Bug 64039 shows that there can be init expressions without new
+	// in them - hence need to handle imports here itself.
+	List imports = new ArrayList();
+	imports.add(component.getJavaType().getQualifiedName());
+	CodeExpressionRef.handleImportStatements(cuType.getCompilationUnit(), bp.getModel(), imports);
+	
 	InstanceVariableTemplate ft = new InstanceVariableTemplate(varName, component.getJavaType().getSimpleName(), INSTANCE_VAR_DEFAULT_COMMENT);
 	// Create it as the last field
 	ft.setSeperator(fBeanModel.getLineSeperator());
