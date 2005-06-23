@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.42 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.43 $  $Date: 2005-06-23 19:34:49 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -59,7 +59,6 @@ public class BeanPart {
 	ArrayList		fparentExpressions = new ArrayList() ;     // Expressions that needs to move to a parent
 	EObject   		fEObject = null ;							// Mof Instance of this Bean
 	ArrayList    	fbackReferences = new ArrayList() ;		// Mof Object that contains this object 
-	ArrayList    	fGenericbackReferences = new ArrayList() ;		// Mof Object that references this object 
 	EObject			fContainer = null ;                        //  Parent (Container) of this object - null ? part of Composition
 	ArrayList      	fChildren = new ArrayList () ;				// Beans this part may contain components	    
     BeanPart    	fProxyBeanPart = null ;					// This bean part is not in the BeanDecModel    
@@ -419,13 +418,6 @@ public final BeanPart[] getBackRefs() {
 }
 
 /**
- * Returns non parent-child back references
- */
-public final BeanPart[] getGenericBackRefs() {
-	return (BeanPart[]) fGenericbackReferences.toArray(new BeanPart[fGenericbackReferences.size()]) ;
-}
-
-/**
  *  Reference target to point to its source (e.g., child to parent)
  */
 public void addBackRef (BeanPart bean, EReference sf) {
@@ -444,21 +436,8 @@ public void addBackRef (BeanPart bean, EReference sf) {
       
 }
 
-/**
- *  Reference target to point to its source (e.g., child to parent)
- */
-public void addGenericBackRef (BeanPart bean, EReference sf) {
-	if (!fGenericbackReferences.contains(bean))
-	   fGenericbackReferences.add(bean) ;
-}
-
 public void removeBackRef (BeanPart bean, boolean updateFF) {
 	removeBackRef(bean.getEObject(),updateFF);
-}
-
-public void removeGenericBackRef (BeanPart bean, boolean updateFF) {
-	if(fGenericbackReferences.contains(bean))
-		fGenericbackReferences.remove(bean);
 }
 
 /**

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.20 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.21 $  $Date: 2005-06-23 19:34:49 $ 
  */
 import java.util.*;
 import java.util.Iterator;
@@ -109,8 +109,6 @@ protected void add(BeanPart toAdd,BeanPart target) throws CodeGenException {
 	  if (isChildRelationship()) {      
 	    toAdd.addBackRef(target, (EReference)fFmapper.getFeature(null)) ;
 	    target.addChild(toAdd) ;
-	  }else{
-		  toAdd.addGenericBackRef(target, (EReference)fFmapper.getFeature(null)) ;
 	  }
       if(previousValue instanceof EList){
       	EList list = (EList) previousValue;
@@ -205,14 +203,14 @@ protected boolean  addComponent () throws CodeGenException {
     if (oldAddedPart != null)
 		// If we are coming from source, the old beanpart might have been disposed - check
        if (fAddedPart != oldAddedPart && !oldAddedPart.isDisposed()) {
+    	   getExpressionReferences().remove(oldAddedPart.getEObject());
     	   if(isChildRelationship())
     		   oldAddedPart.removeBackRef(fbeanPart,true) ;
-    	   else
-    		   oldAddedPart.removeGenericBackRef(fbeanPart, true);
        }
           
-    	          
+    
     if (fAddedPart!= null) {	
+    	   getExpressionReferences().add(fAddedPart.getEObject());
            add(fAddedPart,fbeanPart) ;                  
            return true ;
     }	
@@ -323,8 +321,7 @@ public boolean restore() throws CodeGenException {
 		  if (isChildRelationship()) {      
 		    fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
 		    fbeanPart.addChild(fAddedPart) ;
-		  }else{
-			  fAddedPart.addGenericBackRef(fbeanPart, (EReference) fFmapper.getFeature(null));
+		    getExpressionReferences().add(fAddedPart.getEObject());
 		  }
 		  return true;
 		}
@@ -344,7 +341,6 @@ public void removeFromModel() {
     else	
 	    parent.eUnset(sf) ; 
     fAddedPart.removeBackRef(parent,true) ;
-    fAddedPart.removeGenericBackRef(fbeanPart, true);
 }
 
 
@@ -480,8 +476,6 @@ public String generate(Object[] args) throws CodeGenException {
       if (isChildRelationship()) {
         fbeanPart.addChild(fAddedPart) ;
         fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
-      }else{
-    	  fAddedPart.addGenericBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
       }
       
 	ExpressionTemplate exp = getExpressionTemplate() ;
