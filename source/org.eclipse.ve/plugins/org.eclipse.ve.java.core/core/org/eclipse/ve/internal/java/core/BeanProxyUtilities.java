@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.17 $  $Date: 2005-06-22 21:05:23 $ 
+ *  $Revision: 1.18 $  $Date: 2005-06-23 21:08:30 $ 
  */
 
 import java.util.List;
@@ -100,6 +100,39 @@ public class BeanProxyUtilities {
 		
 		// 1 - Get the mof class for this type of bean proxy.
 		JavaHelpers javaType = getJavaType(aBeanProxy, aResourceSet);
+		// The object could be a class or a primitive type
+		if (!javaType.isPrimitive()) {
+			JavaClass javaClass = (JavaClass) javaType;
+			// TODO For now, if the class can't be found, then there is nothing we can do, so we will return null. This may change when we have our error handling for unfound types."); 
+			if (javaClass.getKind() == TypeKind.UNDEFINED_LITERAL)
+				return null;
+		}
+		// 2 - The factory creates the class.
+		IJavaInstance javaInstance = (IJavaInstance) javaType.getEPackage().getEFactoryInstance().create(javaType);
+		javaInstance.setAllocation(alloc);
+		// 3 - The adaptor factory should be installed so just asking for the adaptor will create it
+		IInternalBeanProxyHost beanProxyHost = (IInternalBeanProxyHost) getBeanProxyHost(javaInstance, aResourceSet);
+		// 4 - Pass the bean proxy that we got in the argument to the proxy host
+		beanProxyHost.setBeanProxy(aBeanProxy);
+		beanProxyHost.setOwnsProxy(ownsProxy);
+		return javaInstance;
+	}
+	
+	/**
+	 * Wrapper the bean as the expected type and not what it is really.
+	 * @param aBeanProxy
+	 * @param aResourceSet
+	 * @param ownsProxy
+	 * @param alloc
+	 * @param javaType
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public static IJavaInstance wrapperBeanProxy(IBeanProxy aBeanProxy, ResourceSet aResourceSet, boolean ownsProxy, JavaAllocation alloc, JavaHelpers javaType) {
+		if (aBeanProxy == null)
+			return null;
+		
 		// The object could be a class or a primitive type
 		if (!javaType.isPrimitive()) {
 			JavaClass javaClass = (JavaClass) javaType;

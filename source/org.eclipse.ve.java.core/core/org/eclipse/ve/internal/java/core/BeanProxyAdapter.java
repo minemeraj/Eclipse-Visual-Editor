@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.41 $  $Date: 2005-06-22 21:05:23 $ 
+ *  $Revision: 1.42 $  $Date: 2005-06-23 21:08:30 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -1358,7 +1358,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		// Don't query if this is a local attribute and we are the this part.	
 		if (isBeanProxyInstantiated() && (!isThisPart() || !isAttributeLocal(aBeanPropertyAttribute))) {
 			IBeanProxy valueProxy = getBeanPropertyProxyValue(aBeanPropertyAttribute);
-			IJavaInstance bean = BeanProxyUtilities.wrapperBeanProxy( valueProxy , JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain()), false , InstantiationFactory.eINSTANCE.createImplicitAllocation(getEObject(), aBeanPropertyAttribute));
+			IJavaInstance bean = BeanProxyUtilities.wrapperBeanProxy( valueProxy , JavaEditDomainHelper.getResourceSet(getBeanProxyDomain().getEditDomain()), false , InstantiationFactory.eINSTANCE.createImplicitAllocation(getEObject(), aBeanPropertyAttribute), (JavaHelpers) aBeanPropertyAttribute.getEType());
 			return bean;
 		}
 		return null;
@@ -1585,13 +1585,25 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		} else if (!beanProxy.getTypeProxy().isPrimitive()) {
 			// We are trying to set a non-primitive and non-null proxy. Primitives aren't valid here because
 			// this proxy adapter is only valid for non-primitives.
-			String qualifiedClassName = beanProxy.getTypeProxy().getFormalTypeName();
-			JavaClass currentType = (JavaClass) ((IJavaInstance) getTarget()).getJavaType();
-			if (!currentType.getQualifiedNameForReflection().equals(qualifiedClassName)) {
-				JavaClass javaClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(qualifiedClassName, currentType.eResource().getResourceSet());
-				// Only perform the change if the new type is assignable to the old type, otherwise leave the old type alone.
-				if (currentType.isAssignableFrom(javaClass)) {
-					((InternalEObject) getTarget()).eSetClass(javaClass);
+			String realTypeClassName = beanProxy.getTypeProxy().getFormalTypeName();
+			JavaClass expectedType = (JavaClass) ((IJavaInstance) getTarget()).getJavaType();
+			if (!expectedType.getQualifiedNameForReflection().equals(realTypeClassName)) {
+				// It will never be an interface because it is a concrete setting.
+				JavaClass javaClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(realTypeClassName, expectedType.eResource()
+						.getResourceSet());
+				while (javaClass != null) {
+					// Find the first type in the heirarchy that is public and assignable to the expected type, otherwise leave it as the expected type.
+					// TODO Technically it could be package or protected and in same package as "this" part.
+					// But that would be too complicated to figure out here.
+					// Even worse it may be protected, but it is a private inner class, so really not visible.
+					if (expectedType.isAssignableFrom(javaClass)) {
+						if (javaClass.isPublic()) {
+							((InternalEObject) getTarget()).eSetClass(javaClass);
+							break;
+						}
+					} else
+						break;	// We reached one that is not compatible with the expected type. So leave it as expected type.
+					javaClass = javaClass.getSupertype();
 				}
 			}
 		}
