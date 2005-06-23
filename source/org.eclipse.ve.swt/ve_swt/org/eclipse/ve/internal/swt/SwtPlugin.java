@@ -29,7 +29,8 @@ public class SwtPlugin extends Plugin {
 	public static final String PLUGIN_ID = "org.eclipse.ve.swt"; //$NON-NLS-1$
 	public static final String PARENT_COMPOSITE_TOKEN = "{parentComposite}"; // Token to represent the parentComposite in a parse tree that will be replaced by the true parent	 //$NON-NLS-1$
 	public static final String FORM_TOOLKIT_CLASSNAME = "org.eclipse.ui.forms.widgets.FormToolkit"; //$NON-NLS-1$
-	public static final String FORM_TOOLKIT_TOKEN = "{formToolkit}"; // Token to represent the formToolkit in a parse tree that will be replaced by a real formtoolkit //$NON-NLS-1$	
+	public static final String FORM_TOOLKIT_TOKEN = "{formToolkit}"; // Token to represent the formToolkit in a parse tree that will be replaced by a real formtoolkit //$NON-NLS-1$
+	public static final String DISPLAY_CLASSNAME = "org.eclipse.swt.widgets.Display"; //$NON-NLS-1$	
 	
 	//The shared instance.
 	private static SwtPlugin plugin;
