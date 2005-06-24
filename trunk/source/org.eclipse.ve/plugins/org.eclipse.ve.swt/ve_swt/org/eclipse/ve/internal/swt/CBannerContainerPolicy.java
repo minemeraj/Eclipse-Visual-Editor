@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerContainerPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-22 16:22:09 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-24 18:57:12 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 
@@ -86,7 +87,11 @@ public class CBannerContainerPolicy extends CompositeContainerPolicy {
 		return super.getDeleteDependentCommand(child, containmentSF);
 	}
 
-	public Command getOrphanChildrenCommand(List children) {
+	protected Command getOrphanTheChildrenCommand(List children) {
+		Command orphanCmd = super.getOrphanTheChildrenCommand(children);
+		if (orphanCmd == null || !orphanCmd.canExecute())
+			return UnexecutableCommand.INSTANCE;
+		
 		Object child = children.get(0);
 		
 		IJavaObjectInstance cBannerBean = (IJavaObjectInstance) getContainer();
@@ -99,17 +104,17 @@ public class CBannerContainerPolicy extends CompositeContainerPolicy {
 		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
 		
 		if(left != null && left.equals(child))
-			cBld.applyAttributeSetting(parent,sfLeftControl,null);
+			cBld.cancelAttributeSetting(parent,sfLeftControl);
 		else if(right != null && right.equals(child))
-			cBld.applyAttributeSetting(parent,sfRightControl,null);
+			cBld.cancelAttributeSetting(parent,sfRightControl);
 		else if(bottom != null && bottom.equals(child))
-			cBld.applyAttributeSetting(parent,sfBottomControl,null);
+			cBld.cancelAttributeSetting(parent,sfBottomControl);
 		
 		orphanControl = cBld.getCommand();
 		
 		if(orphanControl != null)
-			return orphanControl.chain(super.getOrphanChildrenCommand(children));
+			return orphanControl.chain(orphanCmd);
 		
-		return super.getOrphanChildrenCommand(children);
+		return orphanCmd;
 	}
 }

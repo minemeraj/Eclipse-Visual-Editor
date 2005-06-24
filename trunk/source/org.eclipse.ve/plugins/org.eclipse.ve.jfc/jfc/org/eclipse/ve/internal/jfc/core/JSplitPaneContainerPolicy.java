@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneContainerPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:21 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-24 18:57:15 $ 
  */
 
 import java.util.*;
@@ -357,7 +357,7 @@ public class JSplitPaneContainerPolicy extends AbstractJavaContainerPolicy {
 	 * The children could be a mix which may have constraints (i.e. add(aComponent, "left")
 	 * or may have been added using JSplitPane setters (i.e. setLeftComponent(Component)).
 	 */
-	public Command getOrphanChildrenCommand(List children) {
+	protected Command getOrphanTheChildrenCommand(List children) {
 		// We need to unset the components from the constraints after
 		// orphaning the constraints so that they are free of any
 		// containment when they are added to their new parent. If we

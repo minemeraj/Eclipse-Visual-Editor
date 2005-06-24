@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ContainerPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-24 18:57:15 $ 
  */
 
 import java.util.*;
@@ -156,7 +156,7 @@ public class ContainerPolicy extends VisualContainerPolicy {
 	 * Get the orphan command for the list. The children
 	 * are the components, not the constraintComponents.
 	 */
-	public Command getOrphanChildrenCommand(List children) {
+	protected Command getOrphanTheChildrenCommand(List children) {
 		// We need to unset the components from the constraints after
 		// orphaning the constraints so that they are free of any
 		// containment when they are added to their new parent. If we

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabFolderContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-24 18:57:12 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -139,13 +140,11 @@ public class CTabFolderContainerPolicy extends CompositeContainerPolicy {
 		return deleteCTabItemCommand;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.cde.core.ContainerPolicy#getOrphanChildrenCommand(java.util.List)
-	 */
-	public Command getOrphanChildrenCommand(List children) {
-		return getOrphanCTabItemCommand(children).chain(super.getOrphanChildrenCommand(children));
+	protected Command getOrphanTheChildrenCommand(List children) {
+		Command orphanCmd = super.getOrphanTheChildrenCommand(children);
+		if (orphanCmd == null || !orphanCmd.canExecute())
+			return UnexecutableCommand.INSTANCE;
+		return getOrphanCTabItemCommand(children).chain(orphanCmd);
 	}
 
 	private Command getOrphanCTabItemCommand(final List children) {

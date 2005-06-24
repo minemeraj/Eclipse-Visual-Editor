@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaContainerPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-24 18:57:14 $ 
  */
 
 import java.util.Iterator;
@@ -53,7 +53,7 @@ public class JavaContainerPolicy extends AbstractJavaContainerPolicy {
 		return getMoveChildrenCommand(children, positionBeforeChild, containmentSF);
 	}
 	
-	public Command getOrphanChildrenCommand(List children) {
+	protected Command getOrphanTheChildrenCommand(List children) {
 		return getOrphanChildrenCommand(children, containmentSF);
 	}
 	/* (non-Javadoc)

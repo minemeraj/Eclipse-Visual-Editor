@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JavaMultiFeatureContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-24 18:57:14 $ 
  */
 
 import java.util.List;
@@ -91,7 +91,7 @@ public abstract class JavaMultiFeatureContainerPolicy extends AbstractJavaContai
 		return getMoveChildrenCommand(children, positionBeforeChild, containmentSF);
 	}
 	
-	public Command getOrphanChildrenCommand(List children) {
+	protected Command getOrphanTheChildrenCommand(List children) {
 		EStructuralFeature containmentSF = getContainmentSF(children, ORPHAN_REQ);
 		if (containmentSF == null)
 			return UnexecutableCommand.INSTANCE;		

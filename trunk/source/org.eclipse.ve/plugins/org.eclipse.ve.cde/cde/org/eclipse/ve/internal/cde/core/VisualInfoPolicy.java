@@ -11,11 +11,10 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualInfoPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-24 18:57:15 $ 
  */
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -65,6 +64,24 @@ public class VisualInfoPolicy {
 		Diagram diagram = dom.getDiagram(viewer);
 		VisualInfo vi = annot.getVisualInfo(diagram);
 		return vi;
+	}
+	
+	/**
+	 * Get all of the visual infos for the model object.
+	 * @param model
+	 * @param dom
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public static List getAllVisualInfos(Object model, EditDomain dom) {
+		AnnotationLinkagePolicy al = dom.getAnnotationLinkagePolicy();
+		
+		// Get the Annotation for the editpart.
+		Annotation annot = al.getAnnotation(model)		;
+		if (annot == null)
+			return Collections.EMPTY_LIST;	// There is no annotation to store the VisualInfo
+		return annot.getVisualInfos();
 	}
 	
 	

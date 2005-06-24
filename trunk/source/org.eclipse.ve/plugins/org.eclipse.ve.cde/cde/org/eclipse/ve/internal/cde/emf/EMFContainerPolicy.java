@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-24 18:57:15 $ 
  */
 
 import java.util.List;
@@ -51,7 +51,7 @@ public abstract class EMFContainerPolicy extends AbstractEMFContainerPolicy {
 		return getMoveChildrenCommand(children, positionBeforeChild, containmentSF);
 	}
 	
-	public Command getOrphanChildrenCommand(List children) {
+	protected Command getOrphanTheChildrenCommand(List children) {
 		return getOrphanChildrenCommand(children, containmentSF);
 	}
 }
