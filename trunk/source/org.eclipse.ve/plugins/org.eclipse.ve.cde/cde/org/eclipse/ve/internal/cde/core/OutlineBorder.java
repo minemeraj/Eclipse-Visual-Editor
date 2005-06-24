@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: OutlineBorder.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-24 19:48:40 $ 
  */
 
 import org.eclipse.draw2d.*;
@@ -29,6 +29,7 @@ public class OutlineBorder extends AbstractBorder {
 	protected Color 
 		foreground = ColorConstants.black, 
 		background;
+	private int alpha = 255;
 	
 	private boolean borderDisabled;	// Is the border disabled? If it is then it won't draw.
 	private boolean overrideAndDisable;	// A temporary override of the border disabled state. If true, then override and disable, if false no override. 
@@ -38,10 +39,15 @@ public class OutlineBorder extends AbstractBorder {
 
 	public OutlineBorder() {
 	}
-	
+
 	public OutlineBorder(Color foreground, Color background) {
 		this.foreground = foreground;
 		this.background = background;
+	}
+	
+	public OutlineBorder(int alpha, Color foreground, Color background) {
+		this(foreground, background);
+		setAlpha(alpha);
 	}
 	
 	public OutlineBorder(Color foreground, Color background, int lineStyle) {
@@ -49,12 +55,17 @@ public class OutlineBorder extends AbstractBorder {
 		this.lineStyle = lineStyle;
 	}
 
+	public OutlineBorder(int alpha, Color foreground, Color background, int lineStyle) {
+		this(alpha, foreground, background);
+		this.lineStyle = lineStyle;
+	}
 	
 	public void paint(IFigure aFigure, Graphics g, Insets insets) {
 		if (overrideAndDisable || borderDisabled)
 			return;	// Disabled, don't pain.
 		Rectangle r = getPaintRectangle(aFigure, insets);
 		r.resize(-1,-1);	// Make room for the outline.
+		g.setAlpha(getAlpha());
 		g.setForegroundColor(foreground);
 		if (lineStyle != SWT.LINE_SOLID) {
 			// Non-solid lines need a background color to be set. If we have one use it, else compute it.
@@ -129,6 +140,24 @@ public class OutlineBorder extends AbstractBorder {
 	 */
 	public boolean isOverrideAndDisable() {
 		return overrideAndDisable;
+	}
+
+	/**
+	 * @param alpha The alpha to set.
+	 * 
+	 * @since 1.1.0
+	 */
+	public void setAlpha(int alpha) {
+		this.alpha = alpha;
+	}
+
+	/**
+	 * @return Returns the alpha.
+	 * 
+	 * @since 1.1.0
+	 */
+	public int getAlpha() {
+		return alpha;
 	}
 	
 	
