@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JaveVisualEditorLoadingFigureController.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-21 21:55:01 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-24 19:58:18 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -67,7 +67,7 @@ class JaveVisualEditorLoadingFigureController {
 					Dimension prefSize = target.getPreferredSize();
 					int newX = (canvasSize.width - prefSize.width) / 2;
 					int newY = (canvasSize.height - prefSize.height) / 2;
-					Rectangle b = new Rectangle(newX, newY, prefSize.width, prefSize.height);
+					Rectangle b = new Rectangle(newX, newY, prefSize.width, prefSize.height).expand(INSETS);
 					target.translateToRelative(b);
 					target.setBounds(b);
 				}
@@ -80,27 +80,7 @@ class JaveVisualEditorLoadingFigureController {
 		};
 		loadingFigure.setEnabled(true);
 		loadingFigure.setOpaque(true);
-		loadingFigure.setBorder(new AbstractBorder() {
-			public Insets getInsets(IFigure figure) {
-				return INSETS;
-			}
-			public void paint(IFigure figure, Graphics graphics, Insets insets) {
-				graphics.setLineWidth(1);
-				graphics.setLineStyle(Graphics.LINE_SOLID);
-				graphics.setXORMode(false);
-				Rectangle rect = getPaintRectangle(figure, insets);
-				// Draw a Black border out the outside to distinquish between the label and
-				// surroundings,
-				graphics.setForegroundColor(ColorConstants.black);
-				rect.resize(-1, -1);
-				graphics.drawRectangle(rect);
-				// Draw a white border just inside so that we have a white box around it.
-				graphics.setForegroundColor(ColorConstants.white);
-				rect.translate(1, 1);
-				rect.resize(-2, -2);
-				graphics.drawRectangle(rect);
-			}
-		});
+		loadingFigure.setBorder(SimpleEtchedBorder.singleton);
 		if (showingLoadingFigure)
 			showLoadingFigure();
 	}
