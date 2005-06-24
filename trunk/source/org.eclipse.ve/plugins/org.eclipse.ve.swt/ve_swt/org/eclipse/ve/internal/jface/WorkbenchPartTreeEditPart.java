@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-24 20:44:24 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -18,6 +18,8 @@ import java.util.*;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
@@ -53,6 +55,12 @@ public class WorkbenchPartTreeEditPart extends JavaBeanTreeEditPart {
 	public void setModel(Object aModel) {
 		sf_delegate_control = ((EObject)aModel).eClass().getEStructuralFeature(SwtPlugin.DELEGATE_CONTROL);
 		super.setModel(aModel);
+	}
+	
+	protected EditPart createChildEditPart(Object model) {
+		EditPart childEP = super.createChildEditPart(model);
+		childEP.installEditPolicy(EditPolicy.CONTAINER_ROLE, new WorkbenchParentArgumentEditPolicy());	//This will override the Tree_Container_Role that is added by the child.
+		return childEP;
 	}
 
 }
