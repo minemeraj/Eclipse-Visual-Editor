@@ -11,7 +11,7 @@ package org.eclipse.ve.examples.cdm.dept.ui;
  *******************************************************************************/
 /*
  *  $RCSfile: DepartmentContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-16 00:30:22 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-24 18:57:16 $ 
  */
 
 import java.util.*;
@@ -119,7 +119,7 @@ public class DepartmentContainerPolicy extends ContainerPolicy {
 	/**
 	 * Orphan  children.
 	 */
-	public Command getOrphanChildrenCommand(List children) {
+	protected Command getOrphanTheChildrenCommand(List children) {
 		Iterator itr = children.iterator();
 		while (itr.hasNext()) {
 			Object child = itr.next();

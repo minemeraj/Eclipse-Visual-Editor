@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.16 $$  $$Date: 2005-06-20 18:49:41 $$ 
+ *  $$Revision: 1.17 $$  $$Date: 2005-06-24 18:57:12 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -166,7 +166,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		
 	}
 	
-	public Command getOrphanChildrenCommand(List children) {
+	protected Command getOrphanTheChildrenCommand(List children) {
 
 		CompoundCommand cmd = new CompoundCommand();
 		Iterator iter = children.iterator();
@@ -174,7 +174,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 			IJavaObjectInstance child = (IJavaObjectInstance)iter.next();
 			cmd.append(new EnsureCorrectParentCommand(child));
 		}
-		cmd.append(super.getOrphanChildrenCommand(children));
+		cmd.append(super.getOrphanTheChildrenCommand(children));
 		return cmd;
 	}
 	

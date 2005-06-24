@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-24 18:57:15 $ 
  */
 
 import java.util.*;
@@ -19,6 +19,11 @@ import java.util.*;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.*;
+
+import org.eclipse.ve.internal.cdm.VisualInfo;
+import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
+
+import org.eclipse.ve.internal.cde.commands.CancelVisualConstraintCommand;
 
 /**
  * A standard Container Policy for the Common Dialog Editor.
@@ -161,7 +166,63 @@ public abstract Command getDeleteDependentCommand(Object child);
  * Note: Annotations need not be handled in this case because the model object is
  * not being permanently removed from the model, so the annotations will stay.
  */
-public abstract Command getOrphanChildrenCommand(List children);
+protected abstract Command getOrphanTheChildrenCommand(List children);
+
+
+/**
+ * Return the command to orphan the child in the request. Orphan means the children
+ * are being removed from this specified relationship, but is not permanently being
+ * removed from the model, it will be added back somewhere else, or contained already
+ * somewhere else in the model.
+ * <p>
+ * <b>Note</b>: If the child CANNOT be orphaned, then the command returned will probably
+ * be the UnexecutableCommand.INSTANCE so that none of the other parts of the
+ * orphan request (such as constraints being unset or annotations removed) should be 
+ * performed. If it returns null instead, these other parts would still be orphaned,
+ * and this could be an error in the DiagramData. It is up to the developer to
+ * decide if null is valid return value.
+ * <p>
+ * <b>Note</b>: Annotations, except for visual infos, will not be handled in this case because the model object is
+ * not being permanently removed from the model, so the annotations will stay. Visual infos
+ * for all attached diagrams will be canceled because the child is being orphaned then
+ * the visual info wouldn't make sense because it will be somewhere else. Because of this
+ * all diagrams need to be able to handle not having a visual info for a child.
+ * @param children
+ * @return
+ * 
+ * @since 1.1.0
+ */
+public final Command getOrphanChildrenCommand(List children) {
+	Command cmd = getOrphanTheChildrenCommand(children);
+	if (cmd.canExecute()) {
+		Iterator childrenItr = children.iterator();
+		while (childrenItr.hasNext()) {
+			Object child = childrenItr.next();
+			List vis = VisualInfoPolicy.getAllVisualInfos(child, getEditDomain());
+			if (!vis.isEmpty()) {
+				for (Iterator viItr = vis.iterator(); viItr.hasNext();) {
+					VisualInfo vi = (VisualInfo) viItr.next();
+					if (vi.getKeyedValues().containsKey(CDMModelConstants.VISUAL_CONSTRAINT_KEY)) {
+						// Delete the visual constraint, if any. Leave the VI there even if empty.
+						CancelVisualConstraintCommand delCommand = new CancelVisualConstraintCommand();
+						delCommand.setTarget(vi);
+						cmd = cmd.chain(delCommand);
+					}
+				}
+			}
+			IConstraintHandler constraintHandler = getChildConstraintHandler(child);
+			if (constraintHandler != null) {
+				cmd = cmd.chain(constraintHandler.contributeOrphanChildCommand());
+			}
+		}		
+	}
+	return cmd;
+}
+
+protected IConstraintHandler getChildConstraintHandler(Object child) {
+	IModelAdapterFactory factory = CDEUtilities.getModelAdapterFactory(getEditDomain());
+	return factory != null ? (IConstraintHandler) factory.getAdapter(child, IConstraintHandler.class) : null;
+}
 
 /**
  * Return the command to move the children in the request. Insert them before

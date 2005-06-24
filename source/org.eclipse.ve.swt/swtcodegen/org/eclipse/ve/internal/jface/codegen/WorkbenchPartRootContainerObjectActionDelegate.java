@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartRootContainerObjectActionDelegate.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-24 18:57:12 $ 
  */
 package org.eclipse.ve.internal.jface.codegen;
 
@@ -192,8 +192,7 @@ public class WorkbenchPartRootContainerObjectActionDelegate extends ActionDelega
 						fModel.getCompilationUnit().getTypes()[0].createField("private Composite "+childName+" = null;", null, true, null);
 						
 						// Import for the SWT
-						List imports = new ArrayList(); imports.add("org.eclipse.swt.SWT");
-						CodeExpressionRef.handleImportStatements(fModel.getCompilationUnit(), fModel, imports);
+						CodeExpressionRef.handleImportStatements(fModel.getCompilationUnit(), fModel, Collections.singletonList("org.eclipse.swt.SWT"));
 					} catch (JavaModelException e) {
 						JavaVEPlugin.log(e, Level.WARNING);
 					}finally{

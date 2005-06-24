@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: SubclassCompositionContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-24 18:57:14 $ 
  */
 import java.util.List;
 
@@ -54,12 +54,12 @@ public class SubclassCompositionContainerPolicy extends CompositionContainerPoli
 		return super.getMoveChildrenCommand(children, position);
 	}
 	
-	public Command getOrphanChildrenCommand(List children) {	
+	protected Command getOrphanTheChildrenCommand(List children) {	
 		Object thisPart = getComposition().getThisPart();
 		if (thisPart != null) {
 			if (children.contains(thisPart))
 				return UnexecutableCommand.INSTANCE;	// Can't orphan the this part.
 		}
-		return super.getOrphanChildrenCommand(children);
+		return super.getOrphanTheChildrenCommand(children);
 	}
 }

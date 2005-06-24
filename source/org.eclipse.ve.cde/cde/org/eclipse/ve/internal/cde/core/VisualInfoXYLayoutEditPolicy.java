@@ -11,10 +11,8 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualInfoXYLayoutEditPolicy.java,v $
- *  $Revision: 1.10 $  $Date: 2005-06-15 20:19:34 $ 
+ *  $Revision: 1.11 $  $Date: 2005-06-24 18:57:15 $ 
  */
-
-import java.util.Iterator;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.Notification;
@@ -28,8 +26,6 @@ import org.eclipse.gef.requests.GroupRequest;
 
 import org.eclipse.ve.internal.cdm.*;
 import org.eclipse.ve.internal.cdm.model.*;
-
-import org.eclipse.ve.internal.cde.commands.CancelVisualConstraintCommand;
 
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 /**
@@ -153,33 +149,16 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	 * so that it can be added someplace else.
 	 *
 	 * Remove the visual constraint since it may not be appropriate in 
-	 * the new position.
+	 * the new position. 
 	 */
 	protected Command getOrphanChildrenCommand(Request aRequest) {
-		// Now get the orphan command for the child.
+		// Now get the orphan command for the child. The container policy
+		// will make sure that the visual infos are canceled.
 		Command orphanContributionCmd = containerPolicy.getCommand(aRequest);
 		if (orphanContributionCmd == null || !orphanContributionCmd.canExecute())
-			return UnexecutableCommand.INSTANCE; // It can't be orphaned		
-
-		CompoundCommand command = new CompoundCommand(""); //$NON-NLS-1$
-		command.append(orphanContributionCmd);
-		GroupRequest gr = (GroupRequest) aRequest;
-		Iterator children = gr.getEditParts().iterator();
-		while (children.hasNext()) {
-			EditPart childEditPart = (EditPart) children.next();
-			VisualInfo vi = VisualInfoPolicy.getVisualInfo(childEditPart);
-			if (vi != null) {
-				// Delete the visual constraint, if any. Leave the VI there even if empty.
-				CancelVisualConstraintCommand delCommand = new CancelVisualConstraintCommand();
-				delCommand.setTarget(vi);
-				command.append(delCommand);
-			}
-			IConstraintHandler constraintHandler = getConstraintHandler(childEditPart);
-			if (constraintHandler != null) {
-				command.append(constraintHandler.contributeOrphanChildCommand());
-			}
-		}
-		return command;
+			return UnexecutableCommand.INSTANCE; // It can't be orphaned
+		else
+			return orphanContributionCmd;
 	}
 
 	protected Command primChangeConstraintCommand(

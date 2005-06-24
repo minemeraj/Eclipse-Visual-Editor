@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 22:41:21 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-24 18:57:15 $ 
  */
 
 import java.util.*;
@@ -93,7 +93,7 @@ public class JTabbedPaneContainerPolicy extends JavaContainerPolicy {
 	 * Get the orphan command for the list. The children
 	 * are the components, not the JTabComponents.
 	 */
-	public Command getOrphanChildrenCommand(List children) {
+	protected Command getOrphantheChildrenCommand(List children) {
 		// We need to unset the components from the JTabComponent after
 		// orphaning the JTabComponents so that they are free of any
 		// containment when they are added to their new parent. If we

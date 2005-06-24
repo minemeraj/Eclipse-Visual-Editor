@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.swt;
 
 /*
  *  $RCSfile: CoolBarContainerPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-24 18:57:12 $ 
  */
 
 import java.util.*;
@@ -20,6 +20,7 @@ import java.util.*;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -188,13 +189,12 @@ public class CoolBarContainerPolicy extends CompositeContainerPolicy {
 		return getDeleteCoolItemCommand(child).chain(super.getDeleteDependentCommand(child));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.cde.core.ContainerPolicy#getOrphanChildrenCommand(java.util.List)
-	 */
-	public Command getOrphanChildrenCommand(List children) {
-		return getOrphanCoolItemCommand(children).chain(super.getOrphanChildrenCommand(children));
+
+	protected Command getOrphanTheChildrenCommand(List children) {
+		Command orphanCmd = super.getOrphanTheChildrenCommand(children);
+		if (orphanCmd == null || !orphanCmd.canExecute())
+			return UnexecutableCommand.INSTANCE;
+		return getOrphanCoolItemCommand(children).chain(orphanCmd);
 	}
 
 	private Command getOrphanCoolItemCommand(final List children) {
