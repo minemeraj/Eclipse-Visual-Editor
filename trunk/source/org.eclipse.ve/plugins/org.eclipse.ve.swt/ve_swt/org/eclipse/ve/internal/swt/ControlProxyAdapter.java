@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.graphics.ImageData;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -135,8 +136,15 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
 		IProxy newbean = super.primInstantiateBeanProxy(expression);
-		if (newbean != null)
+		if (newbean != null) {
 			getControlManager().setControlBeanProxy(newbean, expression, getModelChangeController());
+			// Also we need to have the original unmolested layout data. This is because if the original
+			// is null, and the layout is grid or row, or some other, the layout will change the layout
+			// data to be one that is valid for that layout. Then if we later set the layout data, we
+			// would not get the true original value. We would instead get the  mucked up one. So
+			// we need to get it now before any layouts occur.
+			setOriginalValue(sfLayoutData, primGetBeanProperyProxyValue(newbean, Utilities.getPropertyDecorator(sfLayoutData), expression, ForExpression.ROOTEXPRESSION));
+		}
 		return newbean;
 	}
 	

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FrameProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.6 $  $Date: 2005-06-24 16:45:10 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -18,8 +18,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
+import org.eclipse.jem.internal.proxy.core.IExpression;
+import org.eclipse.jem.internal.proxy.core.IProxy;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
 
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
@@ -71,19 +71,7 @@ public class FrameProxyAdapter extends WindowProxyAdapter {
 		IProxy result = super.primInstantiateBeanProxy(expression);
 		if (!getJavaObject().eIsSet(sfTitle)) {
 			// Handle applying a default title, and get original value to be used later if title is explicitly set.
-			IProxy origValue = handleFrameTitle(result, null, false, true, expression);
-			if (origValue == null || origValue.isBeanProxy()) {
-				// No original value or it is already resolved, just put it in the original table.
-				getOriginalSettingsTable().put(sfTitle, origValue);
-			} else {
-				// It is an expression, so save it when resolved.
-				((ExpressionProxy) origValue).addProxyListener(new ExpressionProxy.ProxyAdapter() {
-
-					public void proxyResolved(ProxyEvent event) {
-						getOriginalSettingsTable().put(sfTitle, event.getProxy());
-					}
-				});
-			}
+			setOriginalValue(sfTitle, handleFrameTitle(result, null, false, true, expression));
 		}
 		return result;
 	}

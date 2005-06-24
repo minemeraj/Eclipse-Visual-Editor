@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeManagerExtension.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-24 16:45:11 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -118,16 +118,13 @@ public class CompositeManagerExtension extends ControlManagerExtension {
 					Control[] children = parent.getChildren();
 					for (int i = 0; i < children.length; i++) {
 						Control child = children[i];
-						Object data = child.getLayoutData();
-						if (data == null) {
-							data = child.getData(ControlManager.LAYOUT_DATA_KEY);	// Use what it thinks it should be.
-							child.setLayoutData(data);	// Restore it to re-test it. It may now be good.
-						}
+						// Restore to what it should be, either the explicit setting or the default one at construction.
+						Object data = child.getData(ControlManager.LAYOUT_DATA_KEY);	// Use what it thinks it should be.
+						child.setLayoutData(data);	// Restore it to test it. It may of been changed to a good value from a previous pass through this code, we want to retest to make sure it is still bad.
 						if (data != null) {
 							if (!layoutDataType.isInstance(data)) {
 								// This is invalid.
-								child.setData(ControlManager.LAYOUT_DATA_KEY, data);	// Save the old data
-								child.setLayoutData(null);		// We set to null. Hoping all layout editors can handle null.
+								child.setLayoutData(null);		// We set to null. Hoping all layout editors can handle null. They will probably put a default value into the layout data.
 								invalidChildren.add(child);
 								invalidChildren.add(data.getClass().getName());
 							}
