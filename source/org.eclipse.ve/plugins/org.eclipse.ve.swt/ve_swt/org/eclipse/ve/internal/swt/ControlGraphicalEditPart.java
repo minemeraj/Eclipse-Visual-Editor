@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.23 $ $Date: 2005-06-23 16:08:45 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.24 $ $Date: 2005-06-24 19:48:40 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -88,7 +88,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		ContentPaneFigure cfig = new ContentPaneFigure();
 		ImageFigure ifig = new ImageFigure();
 		if (border)
-			ifig.setBorder(new OutlineBorder(ColorConstants.lightGray, null, Graphics.LINE_SOLID));
+			ifig.setBorder(new OutlineBorder(150, ColorConstants.lightGray, null, Graphics.LINE_SOLID));
 		ifig.setOpaque(!transparent);
 		if (!transparent) {
 			imageFigureController = new ImageFigureController();			
