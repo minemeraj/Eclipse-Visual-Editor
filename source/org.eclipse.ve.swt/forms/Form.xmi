@@ -5,22 +5,20 @@
   xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"
   xmlns:org.eclipse.jem.internal.instantiation="http:///org/eclipse/jem/internal/instantiation.ecore"
   xmlns:java="java.xmi"
-  xmlns:swt="java:/org.eclipse.swt.widgets">
-    
-  <swt:Composite xmi:id="Composite_1">
+  xmlns:swt="java:/org.eclipse.swt.widgets"
+  xmlns:forms="java:/org.eclipse.ui.forms.widgets">
+  
+  <forms:Form xmi:id="Form_1">
   	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
-	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="createComposite">
+	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="createForm">
 		<receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{formToolkit}"/>
         <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
-        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="NONE">
-          <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
-        </arguments>        
       </expression>	  	
 	</allocation>
-  </swt:Composite>
+  </forms:Form>
   
-  <cdm:AnnotationEMF annotates="Composite_1">
-    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="composite"/>
+  <cdm:AnnotationEMF annotates="Form_1">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="form"/>
   </cdm:AnnotationEMF>  
 
 </xmi:XMI>

@@ -7,13 +7,33 @@
     <categoryLabel xsi:type="utility:ConstantString" string="Eclipse Forms"/>
     <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group1">       
       <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Form.xmi#Form_1">
+        <entryLabel xsi:type="utility:ConstantString" string="Form"/>
+      </cmpEntries>      
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/ScrolledForm.xmi#ScrolledForm_1">
+        <entryLabel xsi:type="utility:ConstantString" string="ScrolledForm"/>
+      </cmpEntries>          
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Composite.xmi#Composite_1">
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Composite"/>
+        <entryLabel xsi:type="utility:ConstantString" string="Composite"/>
       </cmpEntries>      
       <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/button_obj.gif"
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Button.xmi#Button_1">
-        <entryLabel xsi:type="utility:ConstantString" xmi:id="string1" string="Button"/>
+        <entryLabel xsi:type="utility:ConstantString" string="Button"/>
       </cmpEntries>            
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/checkbox_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Checkbox.xmi#Button_1">
+        <entryLabel xsi:type="utility:ConstantString" string="Checkbox"/>
+      </cmpEntries> 
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/radiobutton_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/RadioButton.xmi#Button_1">
+        <entryLabel xsi:type="utility:ConstantString" string="RadioButton"/>
+      </cmpEntries> 
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/label_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Label.xmi#Label_1">
+        <entryLabel xsi:type="utility:ConstantString" string="Label"/>
+      </cmpEntries>                   
     </cmpGroups> 
   </palette:CategoryCmp>
 </xmi:XMI>

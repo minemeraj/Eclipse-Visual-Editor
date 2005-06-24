@@ -10,20 +10,27 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetCopyEditPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-27 12:49:22 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-24 14:31:24 $ 
  */
 
 package org.eclipse.ve.internal.swt;
 
 import java.util.List;
+
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.core.DefaultCopyEditPolicy;
 
 public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 	
-	
+	private JavaClass formToolkitType;
+
 	protected void preExpand(IJavaInstance javaBean) {
 		super.preExpand(javaBean);
 		// Only normalize our host otherwise we end up turning children to point to the {parentComposite}
@@ -39,20 +46,44 @@ public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 			PTExpression expression = ((ParseTreeAllocation)allocation).getExpression();
 			if(expression instanceof PTClassInstanceCreation){
 				PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation)expression;
-				List arguments = classInstanceCreation.getArguments();
-				if(arguments.size() != 2) return;
-				replaceExplicitParent(javaBean, classInstanceCreation);
+				replaceParentCompositeToken(copiedJavaBean,classInstanceCreation.getArguments()); 
+			} else if (expression instanceof PTMethodInvocation){
+				// Form toolkit factories can reference the FormToolkit which is replaced with the {formToolkit} token
+				PTMethodInvocation methodInvocation = (PTMethodInvocation)expression;
+				replaceFormToolkitToken(methodInvocation.getArguments());
+				replaceParentCompositeToken(copiedJavaBean,methodInvocation.getArguments());				
+			}
+		}
+	}
+	
+	private JavaClass getFormToolkitType(){
+		if(formToolkitType == null){
+			ResourceSet resourceSet = ((EObject)getHost().getModel()).eResource().getResourceSet();
+			formToolkitType = Utilities.getJavaClass(SwtPlugin.FORM_TOOLKIT_CLASSNAME,resourceSet);
+		}
+		return formToolkitType;
+	}
+	
+	private void replaceFormToolkitToken(List arguments) {
+		for(int i=0; i<arguments.size(); i++){
+			Object arg = arguments.get(i);
+			if(arg instanceof PTInstanceReference && getFormToolkitType().isAssignableFrom(((PTInstanceReference)arg).getObject().getJavaType())){
+				// Create a PTName for {formToolkit}
+				PTName parentCompositeName = InstantiationFactory.eINSTANCE.createPTName(SwtPlugin.FORM_TOOLKIT_TOKEN);
+				arguments.set(i,parentCompositeName);				
 			}
 		}
 	}
 
-	private void replaceExplicitParent(IJavaInstance javaBean, PTClassInstanceCreation expression) {
-		Object firstArgument = expression.getArguments().get(0);
-		// The first argment will be a PTJavaObjectInstance that points to the parent
-		if(firstArgument instanceof PTInstanceReference){
-			// Create a PTName for {parentComposite}
-			PTName parentCompositeName = InstantiationFactory.eINSTANCE.createPTName(SwtPlugin.PARENT_COMPOSITE_TOKEN);
-			expression.getArguments().set(0,parentCompositeName);
+	private void replaceParentCompositeToken(IJavaInstance parent, List arguments) {
+		for(int i=0; i<arguments.size(); i++){
+			Object arg = arguments.get(i);
+			// If the argument is an instance reference that points to the parent then replace it with the token
+			if(arg instanceof PTInstanceReference && ((PTInstanceReference)arg).getObject() == parent){
+				// Create a PTName for {parentComposite}
+				PTName parentCompositeName = InstantiationFactory.eINSTANCE.createPTName(SwtPlugin.PARENT_COMPOSITE_TOKEN);
+				arguments.set(i,parentCompositeName);
+			}
 		}
 	}
 }
