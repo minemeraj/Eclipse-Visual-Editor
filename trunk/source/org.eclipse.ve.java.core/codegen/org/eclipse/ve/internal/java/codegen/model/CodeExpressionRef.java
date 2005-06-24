@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.52 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.53 $  $Date: 2005-06-24 18:56:15 $ 
  */
 
 
@@ -619,6 +619,7 @@ protected void updateDocument(int docOff, int len, String newContent) {
 			model.getDocumentBuffer().replace(docOff,len,newContent) ;				
 			model.driveExpressionChangedEvent(getMethod(), docOff, newContent.length()-len) ;
 			handleImportStatements(fBean.getModel().getCompilationUnit(), fBean.getModel(), freqImports);
+			freqImports.clear();
 			setState(STATE_EXP_NOT_PERSISTED,false);
         } catch (Exception e) {
 			JavaVEPlugin.log(e) ;
@@ -678,7 +679,6 @@ public static void handleImportStatements(ICompilationUnit cu, IBeanDeclModel mo
 		} catch (JavaModelException e) {
 			JavaVEPlugin.log(e);
 		}
-		imports.clear();
 	}
 	
 }
