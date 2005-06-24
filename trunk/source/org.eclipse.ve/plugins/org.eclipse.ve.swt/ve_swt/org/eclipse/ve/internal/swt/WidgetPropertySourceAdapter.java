@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.27 $ $Date: 2005-06-22 17:11:04 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.28 $ $Date: 2005-06-24 14:31:24 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -345,7 +345,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 
 	private WidgetProxyAdapter widgetProxyAdapter;
 
-	private WidgetProxyAdapter getWidgetProxyAdapter() {
+	protected WidgetProxyAdapter getWidgetProxyAdapter() {
 		if (widgetProxyAdapter == null) {
 			widgetProxyAdapter = (WidgetProxyAdapter) BeanProxyUtilities.getBeanProxyHost(getBean());
 		}

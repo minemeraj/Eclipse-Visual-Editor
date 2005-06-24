@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-06-23 11:24:28 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-24 14:31:24 $ 
  */
 import java.util.*;
 
@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
+import org.eclipse.jem.beaninfo.vm.BaseBeanInfo;
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
@@ -69,14 +70,17 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				// 	See whether the property value can come from a factory method, e.g. FormToolkit
 				PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator(eFeature);
 				// 	The pattern for how a factory is descriptor is on the bean info is:
-				// key of "FACTORY_ARG",
-				// value is four arg array:
+				// key of "FACTORY_CREATION",
+				// value is an array of factory methods each of which is a four arg array:
 				// 1 = name of factory receiver, 2 = name of method 3 = index of where in method args property is and 4 = further array of strings of arg types
 				// for example
-				// FACTORY_ARG = new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createButton" , new Integer(1) , 
-				//   new Object[] { "org.eclipse.swt.Composite" , "java.lang.String" , "int"} }
+				// FACTORY_CREATION = new Object[] {
+				//   new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(1) , 
+				//   	new String[] { "org.eclipse.swt.Composite" , "java.lang.String" , "int"} }
+				//   new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(1) ,
+				//   	new String[] { "org.eclipse.swt.Composite" , "java.lang.String" } }				
 				EMap attributes = propertyDecorator.getAttributes();
-				Object object = attributes.get("FACTORY_ARG");
+				Object object = attributes.get(BaseBeanInfo.FACTORY_CREATION);
 				if(object != null){
 					// The object is a multi arg array for each possible factory method
 					Object[] factories = (Object[]) ((FeatureAttributeValue)object).getValue();
@@ -121,8 +125,57 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 			} catch (ClassCastException exc){
 				
 			}
-		} 
-		return super.isPropertySet(descriptorID);
+		} else if(argumentNumber.intValue() != -1) {
+			// The property is part of a factory argument
+			PTExpression argument = getFactoryArgument(argumentNumber);
+			if(descriptorID instanceof StyleBitPropertyID){
+				 // For style bits we need to get the target VM value and compare it against the style bit we're querying
+				int currentValue = ((Number) getPropertyValue(descriptorID)).intValue();
+				// If the current property value is -1 then this means it is the "UNSET" value from a single value'd property and by definition must be
+				// not set
+				if (currentValue == STYLE_NOT_SET)
+					return false;
+				// The current value is the one set on the actual target VM
+				// If the explicit style bitAND the current value is 1 then it is set		
+			} else {
+				// For non style bits just see whether the argument is null or not - TODO need to think about prim values having default values maybe ??
+				return !(argument == null || argument instanceof PTNullLiteral);
+			}
+		}
+		return super.isPropertySet(descriptorID);		
+	}
+	
+	protected PTExpression getStyleExpression(PTExpression allocationExp) {
+		if (allocationExp instanceof PTMethodInvocation) {
+			// Find the argument number of the "style" feature in the factory method call
+		}
+		return null; // Not found or not of what we expect.
+	}	
+		
+	private PTExpression getFactoryArgument(Number argumentNumber){
+		ParseTreeAllocation parseTreeAllocation = (ParseTreeAllocation) getBean().getAllocation();
+		PTMethodInvocation methodInvocation = (PTMethodInvocation)parseTreeAllocation.getExpression();
+		return (PTExpression) methodInvocation.getArguments().get(argumentNumber.intValue());		
+	}
+	
+	public void resetPropertyValue(Object descriptorID) {
+		
+		Number argumentNumber = (Number)factoryArguments.get(descriptorID);
+		if(argumentNumber != null && argumentNumber.intValue() != -1){
+			// If we are part of a factory method then a reset means we null out the argument
+			if(descriptorID instanceof StyleBitPropertyID){
+				
+			} else {
+				// Non style bits just get nulled out
+				ParseTreeAllocation parseTreeAllocation = (ParseTreeAllocation) getBean().getAllocation();
+				PTMethodInvocation methodInvocation = (PTMethodInvocation)parseTreeAllocation.getExpression();
+				PTNullLiteral nullLiteral = InstantiationFactory.eINSTANCE.createPTNullLiteral();
+				methodInvocation.getArguments().set(argumentNumber.intValue(),nullLiteral);
+				getBean().setAllocation(parseTreeAllocation);  // Touch the allocation to cause a target VM refresh
+			}
+		} else {
+			super.resetPropertyValue(descriptorID);
+		}
 	}
 	
 	public void setPropertyValue(Object descriptorID, Object val) {
@@ -191,9 +244,15 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 			JavaClass receiverClass = (JavaClass)getJavaClass(fieldAccess.getReceiver());
 			Field field = receiverClass.getFieldExtended(fieldAccess.getField());
 			return (JavaHelpers)field.getEType();
+		} else if (anExpression instanceof PTStringLiteral){
+			return getJavaClass((PTStringLiteral)anExpression);
 		} else {
 			return null;
 		}
+	}
+	
+	private JavaClass getJavaClass(PTStringLiteral aStringLiteral){
+		return Utilities.getJavaClass("java.lang.String",getBean().eResource().getResourceSet());		
 	}
 	
 	private JavaClass getJavaClass(PTName aName){

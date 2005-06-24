@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LabelBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-24 14:31:24 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -95,8 +95,21 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, LabelMessages.getString("textDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, LabelMessages.getString("textSD"), //$NON-NLS-1$
+				FACTORY_CREATION , new Object[] { 
+					new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createLabel" , new Integer(1) , //$NON-NLS-1$ , //$NON-NLS-2$ 
+						new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } , //$NON-NLS-1$ , //$NON-NLS-2$ , //$NON-NLS-3$
+					new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createLabel" , new Integer(1) , //$NON-NLS-1$ , //$NON-NLS-2$ 
+						new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String"} } } //$NON-NLS-1$ , //$NON-NLS-2$ , //$NON-NLS-3$				
 			}
 			),
+			// style bit
+			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
+				FACTORY_CREATION  , new Object[] { 
+						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createLabel" , new Integer(2) , //$NON-NLS-1$ , //$NON-NLS-2$
+								new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } } //$NON-NLS-1$ , //$NON-NLS-2$ , //$NON-NLS-3$
+			}
+			),			
+			
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

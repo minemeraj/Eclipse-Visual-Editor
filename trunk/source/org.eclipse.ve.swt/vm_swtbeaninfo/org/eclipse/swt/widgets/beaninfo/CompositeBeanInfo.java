@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-24 14:31:25 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -75,6 +75,13 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
+			// style bit
+			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
+				FACTORY_CREATION , new Object[] { 
+						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createComposite" , new Integer(1) , 
+								new String[] { "org.eclipse.swt.widgets.Composite" , "int"} } }				
+			}
+			),			
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

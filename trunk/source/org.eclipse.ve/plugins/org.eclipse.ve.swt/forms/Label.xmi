@@ -7,20 +7,21 @@
   xmlns:java="java.xmi"
   xmlns:swt="java:/org.eclipse.swt.widgets">
     
-  <swt:Composite xmi:id="Composite_1">
+  <swt:Label xmi:id="Label_1">
   	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
-	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="createComposite">
-		<receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{formToolkit}"/>
+	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="createLabel">
+		<receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{formToolkit}"/>	  
         <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTNullLiteral"/>
         <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="NONE">
           <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
-        </arguments>        
+        </arguments>
       </expression>	  	
 	</allocation>
-  </swt:Composite>
+  </swt:Label>
   
-  <cdm:AnnotationEMF annotates="Composite_1">
-    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="composite"/>
+  <cdm:AnnotationEMF annotates="Label_1">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="label"/>
   </cdm:AnnotationEMF>  
 
 </xmi:XMI>

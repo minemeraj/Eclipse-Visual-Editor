@@ -90,6 +90,12 @@
       <!-- Register the override folders for Eclipse forms -->
       <registration 
             plugin="org.eclipse.ui.workbench">
+	     <beaninfo
+               path="vm/swtbeaninfo.jar">
+            <searchpath
+                  package="org.eclipse.ui.forms.widgets.beaninfo">
+            </searchpath>
+         </beaninfo>            
          <override
                package="org.eclipse.ui.forms.widgets"
                path="overrides/org/eclipse/ui/forms/widgets">

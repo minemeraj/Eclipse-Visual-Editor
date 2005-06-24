@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-24 14:31:25 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -22,7 +22,7 @@ import java.beans.*;
  *
  */
 public class WidgetBeanInfo extends IvjBeanInfo {
-	
+		
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.widgets.beaninfo.IvjBeanInfo#getBeanClass()
 	 */
