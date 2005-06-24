@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-24 20:44:24 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -162,6 +162,7 @@ public class WorkbenchPartGraphicalEditPart extends AbstractGraphicalEditPart im
 		try {
 			ControlGraphicalEditPart controlep = (ControlGraphicalEditPart) ep;
 			controlep.installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new NonResizableEditPolicy());
+			controlep.installEditPolicy(EditPolicy.CONTAINER_ROLE, new WorkbenchParentArgumentEditPolicy());
 			controlep.setTransparent(true); // So that it doesn't create an image, we subsume it here.
 		} catch (ClassCastException e) {
 			// For the rare times that it is not a ControlGraphicalEditPart (e.g. undefined).
