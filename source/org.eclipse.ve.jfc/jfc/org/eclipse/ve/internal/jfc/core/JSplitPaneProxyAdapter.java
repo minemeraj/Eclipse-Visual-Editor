@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JSplitPaneProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-18 22:53:56 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-24 16:45:10 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -52,7 +52,7 @@ public class JSplitPaneProxyAdapter extends ContainerProxyAdapter {
 		// it, it will use the bogus 60 that comes up after construction. This guy gets there because the
 		// default buttons that splitpane inserts under the covers forces the divider to have an initial location
 		// immediately after construction. And that is the value we see. Not the true default of -1.
-		getOriginalSettingsTable().put(sfDividerLocation, domain.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(-1));
+		setOriginalValue(sfDividerLocation, domain.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(-1));
 
 	}
 

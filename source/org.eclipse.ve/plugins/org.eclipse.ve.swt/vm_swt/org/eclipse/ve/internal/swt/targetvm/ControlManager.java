@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.18 $ $Date: 2005-06-15 20:19:21 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.19 $ $Date: 2005-06-24 16:45:11 $
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -41,6 +41,14 @@ import org.eclipse.ve.internal.swt.common.Common;
  */
 public class ControlManager {
 
+	/**
+	 * The purpose of this key is a little complicated. It is possible that the component has an invalid layout data for the current 
+	 * layout manager. This key is used to store with the component the original layout data by default when created, or the
+	 * one that was explicitly set. Then whenever the layout or some layout data is changed then {@link CompositeManagerExtension#aboutToValidate()}
+	 * will be called. This will change all of the children layoutdata back to this key and run verifications. If it fails the verification,
+	 * a message will be sent back to the host to know that it is invalid for that layout, and then it will set the layout data to null.
+	 * This will allow the layout to at least attempt a layout.
+	 */
 	protected static final String LAYOUT_DATA_KEY = "org.swt.layoutdata";	//$NON-NLS-1$
 	
 	protected Control fControl;
@@ -757,12 +765,14 @@ public class ControlManager {
 		if (fControl != null) {
 			feedbackController.deregisterComponentManager(fControl);
 			locOverridden = false; // Since changing controls we should reset to not overridden.
+			fControl.setData(LAYOUT_DATA_KEY, null);
 		}
 		Control oldControl = fControl;
 		fControl = aControl;
 		if (isValidControl(fControl)) {
 			feedbackController.registerComponentManager(fControl, this);
-			feedbackController.queueInitialRefresh(this); // Queue up the initial refresh request.
+			feedbackController.queueInitialRefresh(this); // Queue up the initial refresh request.			
+			fControl.setData(LAYOUT_DATA_KEY, fControl.getLayoutData());	// Save original value.
 		}
 
 		if (extensions != null) {
@@ -1021,7 +1031,7 @@ public class ControlManager {
 	 */
 	public Object applyLayoutData(Object newData) {
 		Control control = getControl();
-		control.setData(LAYOUT_DATA_KEY, null);
+		control.setData(LAYOUT_DATA_KEY, newData);
 		Object old = control.getLayoutData();
 		control.setLayoutData(newData);
 		return old;

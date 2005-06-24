@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.18 $ $Date: 2005-06-15 20:19:21 $
+ * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.19 $ $Date: 2005-06-24 16:45:11 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
-import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
 import org.eclipse.jem.internal.proxy.initParser.tree.NoExpressionValueException;
 
@@ -74,19 +73,7 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 		IProxy result = super.primInstantiateBeanProxy(expression);
 		if (!getJavaObject().eIsSet(sfText)) {
 			// Handle applying a default title, and get original value to be used later if title is explicitly set.
-			IProxy origValue = handleShellTitle(result, null, false, true, expression);
-			if (origValue == null || origValue.isBeanProxy()) {
-				// No original value or it is already resolved, just put it in the original table.
-				getOriginalSettingsTable().put(sfText, origValue);
-			} else {
-				// It is an expression, so save it when resolved.
-				((ExpressionProxy) origValue).addProxyListener(new ExpressionProxy.ProxyAdapter() {
-
-					public void proxyResolved(ProxyEvent event) {
-						getOriginalSettingsTable().put(sfText, event.getProxy());
-					}
-				});
-			}
+			setOriginalValue(sfText, handleShellTitle(result, null, false, true, expression));
 		}
 		
 		if (onFreeForm)

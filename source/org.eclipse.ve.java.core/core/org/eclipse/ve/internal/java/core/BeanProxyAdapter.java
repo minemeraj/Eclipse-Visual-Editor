@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.42 $  $Date: 2005-06-23 21:08:30 $ 
+ *  $Revision: 1.43 $  $Date: 2005-06-24 16:45:13 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -755,18 +755,30 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		boolean getOriginalValue = !isSettingInOriginalSettingsTable((EStructuralFeature) propertyDecorator.getEModelElement());
 		IProxy origValue = applyBeanProperty(propertyDecorator, settingBeanProxy, expression, getOriginalValue);
 		if (getOriginalValue) {
-			if (origValue == null || origValue.isBeanProxy()) {
-				// No original value or it is already resolved, just put it in the original table.
-				getOriginalSettingsTable().put(propertyDecorator.getEModelElement(), origValue);
-			} else {
-				// It is an expression, so save it when resolved.
-				((ExpressionProxy) origValue).addProxyListener(new ExpressionProxy.ProxyAdapter() {
+			setOriginalValue((EStructuralFeature) propertyDecorator.getEModelElement(), origValue);
+		}
+	}
 
-					public void proxyResolved(ProxyEvent event) {
-						getOriginalSettingsTable().put(propertyDecorator.getEModelElement(), event.getProxy());
-					}
-				});
-			}
+
+	/**
+	 * Set the original value. Can be used to change original value if desired.
+	 * @param propertyDecorator
+	 * @param origValue
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void setOriginalValue(final EStructuralFeature sf, IProxy origValue) {
+		if (origValue == null || origValue.isBeanProxy()) {
+			// No original value or it is already resolved, just put it in the original table.
+			getOriginalSettingsTable().put(sf, origValue);
+		} else {
+			// It is an expression, so save it when resolved.
+			((ExpressionProxy) origValue).addProxyListener(new ExpressionProxy.ProxyAdapter() {
+
+				public void proxyResolved(ProxyEvent event) {
+					getOriginalSettingsTable().put(sf, event.getProxy());
+				}
+			});
 		}
 	}
 
@@ -1955,38 +1967,55 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		// Don't query if this is a local attribute and we are the this part.	
 		if (getProxy() != null && (!isThisPart() || !isAttributeLocal(aBeanPropertyFeature))) {
 			if (overrideSettings == null || !overrideSettings.containsKey(aBeanPropertyFeature)) {
-				PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator(aBeanPropertyFeature);
-				// If we have a property decorator then it has a get method so just call it
-				if (propertyDecorator != null && propertyDecorator.isReadable()) {
-					if (propertyDecorator.getReadMethod() != null) {
-						try {
-							Method method = propertyDecorator.getReadMethod();
-							IProxyMethod getMethodProxy = BeanProxyUtilities.getMethodProxy(expression, method);
-							ExpressionProxy result = expression.createProxyAssignmentExpression(forExpression);
-							expression.createMethodInvocation(ForExpression.ASSIGNMENT_RIGHT, getMethodProxy, true, 0);
-							expression.createProxyExpression(ForExpression.METHOD_RECEIVER, getProxy());
-							return result;
-						} catch (NoSuchMethodException e) {
-							JavaVEPlugin.log(e, Level.WARNING);
-						}
-					} else if (propertyDecorator.getField() != null) {
-						try {
-							Field field = propertyDecorator.getField();
-							IProxyField aField = BeanProxyUtilities.getFieldProxy(expression, field);
-							ExpressionProxy result = expression.createProxyAssignmentExpression(forExpression);
-							expression.createFieldAccess(ForExpression.ASSIGNMENT_RIGHT, aField, true);
-							expression.createProxyExpression(ForExpression.FIELD_RECEIVER, getProxy());
-							return result;
-						} catch (NoSuchFieldException e) {
-							JavaVEPlugin.log(e, Level.WARNING);
-						}
-					}
-				}
+				return primGetBeanProperyProxyValue(getProxy(), Utilities.getPropertyDecorator(aBeanPropertyFeature), expression, forExpression);
 			} else {
 				// We have an existing override.
 				return (IProxy) overrideSettings.get(aBeanPropertyFeature);
 			}
 		}
+		return null;
+	}
+	
+	/**
+	 * A primitive direct way to request the current live value of the bean sent in. The bean is sent in only because this may be
+	 * called before this proxy host has been fully instantiated. It shouldn't be called from other beanproxy hosts, only subclasses.
+	 * This will only go through standard property decorators. It will not go through special overrides if they are needed.
+	 * 
+	 * @param bean
+	 * @param property
+	 * @param expression
+	 * @param forExpression
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	protected IProxy primGetBeanProperyProxyValue(IProxy bean, PropertyDecorator propertyDecorator, IExpression expression, ForExpression forExpression) {
+		// If we have a property decorator then it has a get method so just call it
+		if (propertyDecorator != null && propertyDecorator.isReadable()) {
+			if (propertyDecorator.getReadMethod() != null) {
+				try {
+					Method method = propertyDecorator.getReadMethod();
+					IProxyMethod getMethodProxy = BeanProxyUtilities.getMethodProxy(expression, method);
+					ExpressionProxy result = expression.createProxyAssignmentExpression(forExpression);
+					expression.createMethodInvocation(ForExpression.ASSIGNMENT_RIGHT, getMethodProxy, true, 0);
+					expression.createProxyExpression(ForExpression.METHOD_RECEIVER, bean);
+					return result;
+				} catch (NoSuchMethodException e) {
+					JavaVEPlugin.log(e, Level.WARNING);
+				}
+			} else if (propertyDecorator.getField() != null) {
+				try {
+					Field field = propertyDecorator.getField();
+					IProxyField aField = BeanProxyUtilities.getFieldProxy(expression, field);
+					ExpressionProxy result = expression.createProxyAssignmentExpression(forExpression);
+					expression.createFieldAccess(ForExpression.ASSIGNMENT_RIGHT, aField, true);
+					expression.createProxyExpression(ForExpression.FIELD_RECEIVER, bean);
+					return result;
+				} catch (NoSuchFieldException e) {
+					JavaVEPlugin.log(e, Level.WARNING);
+				}
+			}
+		} 
 		return null;
 	}
 

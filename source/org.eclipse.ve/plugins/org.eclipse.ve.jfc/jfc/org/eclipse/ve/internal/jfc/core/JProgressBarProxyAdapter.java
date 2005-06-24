@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JProgressBarProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-24 16:45:10 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -55,7 +55,7 @@ public class JProgressBarProxyAdapter extends ComponentProxyAdapter {
 		// However, setting the feature to "null" will cause this default function to occur. See the setString()
 		// of JProgressBar to see this. So we just change the "original setting" to null, and let it proceed.
 		if (feature == sfString && isSettingInOriginalSettingsTable(feature))
-			getOriginalSettingsTable().put(feature, null);
+			setOriginalValue(feature, null);
 		super.cancelSetting(feature, oldValue, index, expression);
 	}
 
