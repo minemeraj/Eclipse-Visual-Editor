@@ -9,12 +9,16 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CDECreationTool.java,v $ $Revision: 1.4 $ $Date: 2005-06-20 23:54:40 $
+ * $RCSfile: CDECreationTool.java,v $ $Revision: 1.5 $ $Date: 2005-06-27 22:29:27 $
  */
 package org.eclipse.ve.internal.cde.core;
 
+import org.eclipse.draw2d.*;
+import org.eclipse.draw2d.text.*;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.CreationTool;
@@ -73,6 +77,9 @@ public class CDECreationTool extends CreationTool {
 
 	protected Cursor editPolicyCursor;
 
+	private FlowPage flowPage;
+	private TextFlow textFlow;
+
 	protected CDECreationTool(CreationFactory aFactory) {
 		super(aFactory);
 	}
@@ -125,6 +132,30 @@ public class CDECreationTool extends CreationTool {
 		if (cursor instanceof Cursor) {
 			editPolicyCursor = (Cursor) cursor;
 		}
+		UnExecutableCommandData data = (UnExecutableCommandData) getTargetRequest().getExtendedData().get(UnExecutableCommandData.class);
+		if(data!=null){
+			EditPart targetEP = getTargetEditPart();
+			if(targetEP!=null && targetEP instanceof GraphicalEditPart){
+				GraphicalEditPart gep = (GraphicalEditPart) targetEP;
+				LayerManager layoutManager = LayerManager.Helper.find(gep);
+				if(layoutManager!=null){
+					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.FEEDBACK_LAYER);
+					if(textFlow==null){
+						textFlow = new TextFlow();
+						textFlow.setForegroundColor(ColorConstants.red);
+					}
+					textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_TRUNCATE));
+					if(flowPage==null){
+						flowPage = new FlowPage();
+						flowPage.setBorder(new MarginBorder(10));
+					}
+					flowPage.add(textFlow);
+					textFlow.setText(data.getMessage());
+					feedbackLayer.add(flowPage);
+					flowPage.setBounds(gep.getFigure().getBounds());
+				}
+			}
+		}
 	}
 
 	protected Cursor getEditPolicyCursor() {
@@ -154,6 +185,21 @@ public class CDECreationTool extends CreationTool {
 			setCursor(getDefaultCursor());
 			editPolicyCursor.dispose();
 			editPolicyCursor = null;
+		}
+		if(getTargetRequest().getExtendedData().containsKey(UnExecutableCommandData.class)) // clean it up
+			getTargetRequest().getExtendedData().remove(UnExecutableCommandData.class);
+		if(textFlow!=null){
+			EditPart targetEP = getTargetEditPart();
+			if(targetEP!=null){
+				LayerManager layerManager = LayerManager.Helper.find(targetEP);
+				if(layerManager!=null){
+					IFigure feedbackLayer = layerManager.getLayer(LayerConstants.FEEDBACK_LAYER);
+					feedbackLayer.remove(flowPage);
+					flowPage.remove(textFlow);
+					textFlow = null;
+					flowPage = null;
+				}
+			}
 		}
 	}
 }
