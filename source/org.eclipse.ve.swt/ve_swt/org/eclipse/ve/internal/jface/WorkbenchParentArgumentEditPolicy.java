@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchParentArgumentEditPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-24 20:44:24 $ 
+ *  $Revision: 1.2 $  $Date: 2005-06-27 22:29:28 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -19,6 +19,8 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editpolicies.ContainerEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.GroupRequest;
+
+import org.eclipse.ve.internal.cde.core.UnExecutableCommandData;
  
 
 /**
@@ -33,10 +35,12 @@ import org.eclipse.gef.requests.GroupRequest;
 public class WorkbenchParentArgumentEditPolicy extends ContainerEditPolicy {
 
 	protected Command getAddCommand(GroupRequest request) {
+		request.getExtendedData().put(UnExecutableCommandData.class, new UnExecutableCommandData(JFaceMessages.Correct_Empty_Parent_Msg));
 		return UnexecutableCommand.INSTANCE;	// Can't add through dropping on it.
 	}
 	
 	protected Command getCreateCommand(CreateRequest request) {
+		request.getExtendedData().put(UnExecutableCommandData.class, new UnExecutableCommandData(JFaceMessages.Correct_Empty_Parent_Msg));
 		return UnexecutableCommand.INSTANCE;	// Can't create through dropping on it.
 	}
 	
