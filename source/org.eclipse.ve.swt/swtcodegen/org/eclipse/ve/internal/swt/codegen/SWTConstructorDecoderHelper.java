@@ -10,21 +10,21 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.20 $  $Date: 2005-04-20 20:13:26 $ 
+ *  $Revision: 1.21 $  $Date: 2005-06-28 22:51:35 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import java.util.*;
-import java.util.HashMap;
-import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.dom.Statement;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
@@ -42,6 +42,15 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	BeanPart fParent = null ;
 	protected String constructorSF = null;
 	protected CodeExpressionRef masterExpression = null; // Expression drives the existence of this expression
+
+	private static boolean isWidget(EObject eObject, ResourceSet rs) {
+		JavaHelpers widgetType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Widget", rs) ; //$NON-NLS-1$
+		if(widgetType!=null && widgetType.isAssignableFrom(eObject.eClass())){
+			// first reference is not a widget - use the factory instance approach
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * @param bean
@@ -66,9 +75,16 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	
 	protected BeanPart getParent() {
 		if (fParent!=null) return fParent;
-		if (getExpressionReferences().size()>0)
-		    fParent = fbeanPart.getModel().getABean((IJavaObjectInstance)getExpressionReferences().get(0));
-		else {
+		if (getExpressionReferences().size()>0){
+			Iterator refItr = getExpressionReferences().iterator();
+			while (refItr.hasNext()) {
+				EObject reference = (EObject) refItr.next();
+				if(isWidget(reference, fOwner.getBeanModel().getCompositionModel().getModelResourceSet())){
+					fParent = fbeanPart.getModel().getABean(reference);
+					break;
+				}
+			}
+		} else {
 			// decoder was not active yet
 			fParent = CodeGenUtil.determineParentBeanpart(fbeanPart);			
 		}
@@ -252,6 +268,12 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		BeanPart parent = getParent();
 		if (parent != null && !getExpressionReferences().contains(parent.getEObject()))
 			getExpressionReferences().add(parent.getEObject());
+		Iterator bpItr = CodeGenUtil.getAllocationReferences(fbeanPart).iterator();
+		while (bpItr.hasNext()) {
+			BeanPart bp = (BeanPart) bpItr.next();
+			if(!getExpressionReferences().contains(bp.getEObject()))
+				getExpressionReferences().add(bp.getEObject());
+		}
 		if (isControlFeatureNeeded()) {
 			if (getControlIndex()<0) {
 			// Need to wait here for the control feature first

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.42 $  $Date: 2005-06-23 18:12:21 $ 
+ *  $Revision: 1.43 $  $Date: 2005-06-28 22:51:34 $ 
  */
 
 
@@ -906,32 +906,9 @@ public static BeanPart determineParentBeanpart(final BeanPart child){
 	// SECOND - Try to find parent by parse tree 
 	// (SWT - doesnt allocate parent-child when instantiaing)
 	if(child.getEObject()!=null && child.getEObject() instanceof IJavaObjectInstance){
-		IJavaObjectInstance jo = (IJavaObjectInstance) child.getEObject();
-		JavaAllocation ja = jo.getAllocation();
-		if (ja instanceof ParseTreeAllocation) {
-			ParseTreeAllocation pta = (ParseTreeAllocation) ja;
-			PTExpression expression = pta.getExpression();
-			final BeanPart bps[] = new BeanPart[1];
-			NaiveExpressionFlattener bpFinder = new NaiveExpressionFlattener(){
-				public boolean visit(PTInstanceReference node) {
-					IJavaObjectInstance obj = node.getObject() ;
-				    BeanPart bp = child.getModel().getABean(obj);
-				    if (bp!=null)
-				    	  bps[0] = bp;
-				    else {
-				    	if (obj.isSetAllocation()) {
-				    		JavaAllocation alloc = obj.getAllocation();
-				    		if (alloc instanceof ParseTreeAllocation)
-				    			((ParseTreeAllocation) alloc).getExpression().accept(this);
-				    	} 
-				    }
-					return super.visit(node);
-				}
-			};
-			expression.accept(bpFinder);
-			if(bps[0]!=null)
-				return bps[0];
-		}
+		List bps = getAllocationReferences(child);
+		if(bps.size()>0)
+			return (BeanPart) bps.get(bps.size()-1);
 	}
 	return null;
 }
@@ -1064,6 +1041,45 @@ public static Collection getReferences(Object o, boolean includeO) {
 					bsc.getComponents().remove(bp.getEObject());
 			}
 		}
+	}
+
+	/**
+	 * Returns a list of beanparts which the passed in beanpart's 
+	 * allocation references.
+	 * 
+	 * @param fbeanPart
+	 * @return list of beanparts. Returns empty list if none.
+	 * 
+	 * @since 1.1
+	 */
+	public static List getAllocationReferences(final BeanPart fbeanPart) {
+		final List bps = new ArrayList();
+		if(fbeanPart.getEObject()!=null && fbeanPart.getEObject() instanceof IJavaObjectInstance){
+			IJavaObjectInstance jo = (IJavaObjectInstance) fbeanPart.getEObject();
+			JavaAllocation ja = jo.getAllocation();
+			if (ja instanceof ParseTreeAllocation) {
+				ParseTreeAllocation pta = (ParseTreeAllocation) ja;
+				PTExpression expression = pta.getExpression();
+				NaiveExpressionFlattener bpFinder = new NaiveExpressionFlattener(){
+					public boolean visit(PTInstanceReference node) {
+						IJavaObjectInstance obj = node.getObject() ;
+					    BeanPart bp = fbeanPart.getModel().getABean(obj);
+					    if (bp!=null)
+					    	  bps.add(bp);
+					    else {
+					    	if (obj.isSetAllocation()) {
+					    		JavaAllocation alloc = obj.getAllocation();
+					    		if (alloc instanceof ParseTreeAllocation)
+					    			((ParseTreeAllocation) alloc).getExpression().accept(this);
+					    	} 
+					    }
+						return super.visit(node);
+					}
+				};
+				expression.accept(bpFinder);
+			}
+		}
+		return bps;
 	}
 
 }
