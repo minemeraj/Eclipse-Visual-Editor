@@ -103,13 +103,21 @@ public final class JFCMessages extends NLS {
 	public static String FillAction_vertical_image;
 	public static String GridBagComponentPage_Anchor;
 	public static String GridBagComponentPage_Fill;
+	public static String GridBagComponentPage_Weight;
+	public static String GridBagComponentPage_Padding;
+	public static String GridBagComponentPage_Span;
 	public static String GridBagComponentPage_Gridbag;
 	public static String GridBagComponentPage_ToolTipText;
 	public static String GridBagComponentPage_Insets;
+	public static String GridBagComponentPage_RestoreDefaults;
 	public static String GridBagComponentPage_InsetsGroup_Top;
 	public static String GridBagComponentPage_InsetsGroup_Left;
 	public static String GridBagComponentPage_InsetsGroup_Bottom;
 	public static String GridBagComponentPage_InsetsGroup_Right;
+	public static String GridBagComponentPage_SpanLabel_Width;
+	public static String GridBagComponentPage_SpanLabel_Height;
+	public static String GridBagComponentPage_SpinnerLabel_X;
+	public static String GridBagComponentPage_SpinnerLabel_Y;
 	public static String GridLayout_rowcolumn_not_valid_WARN;
 
 	static {
