@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateObjectFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-28 20:13:15 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -21,6 +21,8 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.emf.codegen.jet.JETCompiler;
 import org.eclipse.emf.codegen.jet.JETException;
 
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+
 /**
  * @author Gili Mendel
  * 
@@ -30,7 +32,6 @@ import org.eclipse.emf.codegen.jet.JETException;
  */
 public class TemplateObjectFactory {
 	
-	public static final IPath OBJECT_DESTINATION_PATH = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append("JetObjects"); //$NON-NLS-1$ //$NON-NLS-2$
 	static Hashtable fEmitters = new Hashtable();
 
 	protected static TemplateObjectEmitter getEmitter(String[] templateURIPath, String template, long ts, String classname) {
@@ -39,9 +40,9 @@ public class TemplateObjectFactory {
 		// only reUse this Emitter if it's time stamp is valid
 		if (e == null || e.getTemplateTimeStamp() < ts) {
 			if (classname != null)
-			   e = new TemplateObjectEmitter(templateURIPath, template, OBJECT_DESTINATION_PATH,classname);
+			   e = new TemplateObjectEmitter(templateURIPath, template, JavaVEPlugin.VE_GENERATED_OBJECTs_DESTINATION,classname);
 		    else
-		       e = new TemplateObjectEmitter(templateURIPath, template, OBJECT_DESTINATION_PATH);
+		       e = new TemplateObjectEmitter(templateURIPath, template, JavaVEPlugin.VE_GENERATED_OBJECTs_DESTINATION);
 			fEmitters.put(tPath, e);
 		}
 		return e;

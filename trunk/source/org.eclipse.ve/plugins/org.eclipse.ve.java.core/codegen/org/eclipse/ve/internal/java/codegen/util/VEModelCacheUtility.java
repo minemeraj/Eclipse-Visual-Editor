@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.16 $  $Date: 2005-06-21 22:18:28 $ 
+ *  $Revision: 1.17 $  $Date: 2005-06-28 20:13:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -18,12 +18,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.*;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+
+import org.eclipse.jem.util.plugin.JEMUtilPlugin;
 
 import org.eclipse.ve.internal.jcm.JCMFactory;
 import org.eclipse.ve.internal.jcm.JavaCacheData;
@@ -55,18 +57,19 @@ public class VEModelCacheUtility {
 		   XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_FORMATTED, Boolean.FALSE);
 	}
 	
-	private static boolean isCacheDirectory = false;
-	
 	public static IPath getCacheDirectory(IFile f) {
+		addCacheResourceListener();	// Make sure we are listening.
+		
 		IProject p = f.getProject();
-		if (!isCacheDirectory) {
-			File  dir =   JavaVEPlugin.getEMFModelCacheDestination(p).toFile();
-			if (dir.exists())
-				isCacheDirectory=true;
+		IPath projectCachePath = VEModelCacheUtility.getEMFModelCacheDestination(p);
+		File  dir =  projectCachePath.toFile();
+		if (!dir.exists())
+			if (dir.mkdirs())
+				return projectCachePath;
 			else
-				isCacheDirectory= dir.mkdirs();
-		}
-		return isCacheDirectory?JavaVEPlugin.getEMFModelCacheDestination(p) : null;			
+				return null;
+		else
+			return projectCachePath;			
 	}
 	
 	public static boolean isValidCache (IFile f) {
@@ -80,7 +83,7 @@ public class VEModelCacheUtility {
 	
 	protected static IPath getCachedPath(IFile f) {
 		IPath savedPath = getCacheDirectory(f).append(f.getProjectRelativePath());
-		return savedPath.removeLastSegments(1).append(savedPath.lastSegment().substring(0,savedPath.lastSegment().indexOf('.'))+".xmi"); //$NON-NLS-1$
+		return savedPath.removeFileExtension().addFileExtension("xmi"); //$NON-NLS-1$
 	}
 	
 	public static URI getCacheURI (IFile f) {
@@ -184,5 +187,138 @@ public class VEModelCacheUtility {
 		}
 	}
 	
+	private static JEMUtilPlugin.CleanResourceChangeListener cacheResourceListener;
+	
+	public static void addCacheResourceListener() {
+		if (cacheResourceListener == null) {
+			JEMUtilPlugin.addCleanResourceChangeListener(cacheResourceListener = new CacheResourceListener(), IResourceChangeEvent.POST_CHANGE);
+		}
+	}
+	
+	public static void removeCacheListener() {
+		if (cacheResourceListener != null) {
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(cacheResourceListener);
+			cacheResourceListener = null;
+		}
+	}
+	
+	/**
+	 * Cache listener to handle the VE model cache.
+	 * 
+	 * @since 1.1.0
+	 */
+	private static class CacheResourceListener extends JEMUtilPlugin.CleanResourceChangeListener implements IResourceDeltaVisitor {
+
+		public CacheResourceListener() {
+			// Create a cleanup job to handle any that may already be sitting around.
+			Job cleanup = new Job(Messages.VEModelCacheUtility_VEModelCache_ReconcileJob) {
+				protected IStatus run(IProgressMonitor monitor) {
+					Thread currentThread = Thread.currentThread();
+					int oldPrio = currentThread.getPriority();
+					try {
+						currentThread.setPriority(Thread.MIN_PRIORITY);
+						// Basically, walk through all open projects, see if there is a ve cache, if there is, see if the folders still exist, 
+						// and if not, get rid of them. Finally if the files are gone, get rid of the file entry.
+						IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+						monitor.beginTask("", projects.length); //$NON-NLS-1$
+						for (int i = 0; i < projects.length; i++) {
+							IProject project = projects[i];
+							if (project.isOpen())
+								processDir(VEModelCacheUtility.getEMFModelCacheDestination(project).toFile(), project, new SubProgressMonitor(monitor, 1));
+							monitor.worked(1);
+						}
+						monitor.done();
+						
+					} finally {
+						currentThread.setPriority(oldPrio);
+					}
+					return Status.OK_STATUS;
+				}
+				
+				private void processDir(File dir, IContainer folder, IProgressMonitor monitor) {
+					if (dir.canRead()) {
+						File[] files = dir.listFiles();
+						monitor.beginTask("", files.length); //$NON-NLS-1$
+						for (int i = 0; i < files.length; i++) {
+							File file = files[i];
+							if (file.isDirectory()) {
+								IResource resource = folder.findMember(file.getName());
+								// See if it exists as folder in the workspace. If it does, go on and process it. IF not, then delete the cache folder.
+								if (resource != null && resource.getType() == IResource.FOLDER)
+									processDir(file, (IContainer) resource, new SubProgressMonitor(monitor, 1));	
+								else
+									JEMUtilPlugin.deleteDirectoryContent(file, true, new SubProgressMonitor(monitor, 1));	
+									
+							} else {
+								// See if the extension is "xmi". If so then see if there is a cooresponding "java" in the workspace.
+								IPath path = new Path(file.getName());
+								if ("xmi".equals(path.getFileExtension())) { //$NON-NLS-1$
+									IResource resource = folder.findMember(path.removeFileExtension().addFileExtension("java")); //$NON-NLS-1$
+									if (resource == null || resource.getType() != IResource.FILE)
+										JEMUtilPlugin.deleteDirectoryContent(file, true, new SubProgressMonitor(monitor, 1));
+								}
+							}
+							monitor.worked(1);
+						}
+						monitor.done();
+					}					
+				}
+			};
+			cleanup.setPriority(Job.LONG);
+			cleanup.schedule(60*1000);	// Schedule for one minute later.
+		}
+		
+		protected void cleanProject(IProject project) {
+			File projectCacheDir = VEModelCacheUtility.getEMFModelCacheDestination(project).toFile();
+			JEMUtilPlugin.deleteDirectoryContent(projectCacheDir, false, new NullProgressMonitor());
+		}
+		
+		public void resourceChanged(IResourceChangeEvent event) {
+			if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
+				IResourceDelta delta = event.getDelta();
+				if (delta != null) {
+					try {
+						delta.accept(this);
+					} catch (CoreException e) {
+						JavaVEPlugin.log(e);
+					}
+				}
+			} else
+				super.resourceChanged(event);
+		}
+
+		public boolean visit(IResourceDelta delta) throws CoreException {
+			IResource res = delta.getResource();
+			switch (delta.getKind()) {
+				case IResourceDelta.ADDED:
+					return false;	// Adds notifications may be too late. We don't want to erase an old cache entry because it may already of been recreated and is good.
+				case IResourceDelta.REMOVED:
+					switch (res.getType()) {
+						case IResource.PROJECT:
+							return false;	// removed projects will automatically have their cache cleaned up.
+						case IResource.FOLDER:
+							// If the folder/project are removed, get rid of any old cache that might of been laying around.
+							JEMUtilPlugin.deleteDirectoryContent(VEModelCacheUtility.getEMFModelCacheDestination(res.getProject()).append(res.getProjectRelativePath()).toFile(), true, new NullProgressMonitor());
+							return false;	// Don't bother with children.
+						case IResource.FILE:
+							if ("java".equals(res.getFileExtension())) { //$NON-NLS-1$
+								// If the file is removed, get rid of any old cache that might of been laying around.
+								JEMUtilPlugin.deleteDirectoryContent(VEModelCacheUtility.getEMFModelCacheDestination(res.getProject()).append(res.getProjectRelativePath()).removeFileExtension().addFileExtension("xmi").toFile(), true, new NullProgressMonitor());	//$NON-NLS-1$ //$NON-NLS-2$							
+							}
+							return false;
+					}
+					break;
+				case IResourceDelta.CHANGED:
+					break;
+			}
+			return true;
+		}
+	}
+
+	protected static IPath getEMFModelCacheDestination(IProject p){
+		return p.getWorkingLocation(JavaVEPlugin.getPlugin().getBundle().getSymbolicName()).append(VEModelCacheUtility.VE_PROJECT_MODEL_CACHE_ROOT);
+	}
+
+	protected static final IPath VE_PROJECT_MODEL_CACHE_ROOT = JavaVEPlugin.VE_CACHE_ROOT_NAME.append("emfmodel"); //$NON-NLS-1$ 
 		
 }

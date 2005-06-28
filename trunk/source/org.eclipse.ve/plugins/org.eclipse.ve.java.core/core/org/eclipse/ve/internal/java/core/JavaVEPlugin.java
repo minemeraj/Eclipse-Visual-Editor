@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.32 $  $Date: 2005-06-20 23:51:26 $ 
+ *  $Revision: 1.33 $  $Date: 2005-06-28 20:13:15 $ 
  */
 
 import java.net.MalformedURLException;
@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -29,6 +30,7 @@ import org.osgi.framework.BundleContext;
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.jem.util.logger.proxyrender.EclipseLogger;
+import org.eclipse.jem.util.plugin.JEMUtilPlugin;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
@@ -37,14 +39,15 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class JavaVEPlugin extends AbstractUIPlugin {
 
+	public static final String PLUGIN_ID = "org.eclipse.ve.java.core"; //$NON-NLS-1$
+	
 	public static final String PI_JBCF_REGISTRATIONS = "registrations"; //$NON-NLS-1$
 	public static final String PI_CONTRIBUTION_EXTENSION_POINT = "org.eclipse.ve.java.core.contributors"; //$NON-NLS-1$
-	public static final String VE_BUILDER_ID = "org.eclipse.ve.java.core.vebuilder"; //$NON-NLS-1$
-	public static final String VE_CACHE_ROOT_NAME = ".cache"; //$NON-NLS-1$
-	public static final IPath  VE_PLUGIN_CACHE_DESTINATION = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append(VE_CACHE_ROOT_NAME);  //$NON-NLS-1$
-	public static final String VE_PROJECT_MODEL_CACHE_ROOT = VE_CACHE_ROOT_NAME+"/emfmodel"; //$NON-NLS-1$ 
-	public static final IPath  VE_GENERATED_OBJECTs_DESTINATION = VE_PLUGIN_CACHE_DESTINATION.append("javajetObjects"); //$NON-NLS-1$ //$NON-NLS-2$
-	public static final IPath  VE_GENERATED_LIBRARIES_CACHE = Platform.getStateLocation(Platform.getBundle("org.eclipse.ve.java.core")).append(".libCache"); //$NON-NLS-1$ //$NON-NLS-2$
+		
+	public static final IPath VE_CACHE_ROOT_NAME = new Path(".cache"); //$NON-NLS-1$
+	public static final IPath  VE_PLUGIN_CACHE_DESTINATION = Platform.getStateLocation(Platform.getBundle(PLUGIN_ID)).append(VE_CACHE_ROOT_NAME);  
+	public static final IPath  VE_GENERATED_OBJECTs_DESTINATION = VE_PLUGIN_CACHE_DESTINATION.append("javajetObjects"); //$NON-NLS-1$ 
+	public static final IPath  VE_GENERATED_LIBRARIES_CACHE = VE_PLUGIN_CACHE_DESTINATION.append(".libCache"); //$NON-NLS-1$
 	// ID of the registrations extension point.
 
 	public static final String TRANSFER_HEADER = "{ *** VE HEADER ***}";	 //$NON-NLS-1$
@@ -52,7 +55,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	public static final String PI_LIBRARY = "library"; // <library> in extension point. //$NON-NLS-1$	
 	public static final String PI_CONTAINER = "container"; // <container> in extension point. //$NON-NLS-1$	
 	public static final String PI_PATH = "path"; // <path="..."> in extension point.	 //$NON-NLS-1$
-	public static final String PLUGIN_ID = "org.eclipse.ve.java.core"; //$NON-NLS-1$
+	
 	public static final String PI_CONTRIBUTOR = "contributor"; //$NON-NLS-1$
 	public static final String PI_PALETTECATS = "palettecats"; //$NON-NLS-1$
 	public static final String PI_RUNTIME = "runtime"; //$NON-NLS-1$
@@ -94,152 +97,11 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		PLUGIN = this;
 	}
 
-//	private Map getVariableContributors() {
-//		if (variableContributors == null) {
-//			variableContributors = new HashMap(30);
-//			processRegistrationExtensionPoint();
-//		}
-//		return variableContributors;
-//	}
-
 	public static JavaVEPlugin getPlugin() {
 		return PLUGIN;
 	}
 
-//	protected void processRegistrationExtensionPoint() {
-//		// Read in the registration information from the extensions.
-//		// We'll first gather together in Lists, and then send as arrays at one time to register them.
-//		HashMap registrations = new HashMap();
-//		IConfigurationElement[] configs = getDescriptor().getExtensionPoint(PI_JBCF_REGISTRATIONS).getConfigurationElements();
-//		for (int i = 0; i < configs.length; i++) {
-//			IConfigurationElement iConfigurationElement = configs[i];
-//			if (PI_VARIABLE.equals(iConfigurationElement.getName())) {
-//				processLibraryEntry(iConfigurationElement,registrations);
-//			}
-//			// This is format for allowing containers or library to be used by a plugin
-//			// <library 
-//			//     container="FOO_CONTAINER"  OR  library="FOO_LIB"
-//			//	   palettecats="platform:/plugin/org.eclipse.ve.swt/swtpalette.xmi"
-// 			//	   contributor="com.foo.FOOConfigurationContributor">
-//			// </library>
-//			if (PI_LIBRARY.equals(iConfigurationElement.getName())) {
-//				if(iConfigurationElement.getAttributeAsIs(PI_VARIABLE) != null){
-//					processLibraryEntry(iConfigurationElement,registrations);
-//				} else if(iConfigurationElement.getAttributeAsIs(PI_CONTAINER) != null){
-//					processContainerEntry(iConfigurationElement,registrations);
-//				}
-//			}			
-//		}
-//
-//		// Now we've processed all of the extensions.
-//		Iterator regItr = registrations.entrySet().iterator();
-//		while (regItr.hasNext()) {
-//			Map.Entry entry = (Map.Entry) regItr.next();
-//			List registrationsList = (List) entry.getValue();
-//			registerRegistration(
-//				(IPath) entry.getKey(),
-//				(IConfigurationElement[]) registrationsList.toArray(new IConfigurationElement[registrationsList.size()]));
-//		}
-//	}
-//	private void processLibraryEntry(IConfigurationElement aConfigurationElement,Map registrations){
-//		if (aConfigurationElement.getAttributeAsIs(PI_CONTRIBUTOR) != null
-//			|| aConfigurationElement.getChildren(PI_CONTRIBUTOR).length > 0
-//			|| aConfigurationElement.getAttributeAsIs(PI_PALETTECATS) != null) {
-//			String varpathstr = aConfigurationElement.getAttributeAsIs(PI_PATH);
-//			if (varpathstr == null)
-//				return; // Not proper format.
-//			IPath varpath = new Path(varpathstr);
-//			List varentry = (List) registrations.get(varpath);
-//			if (varentry == null) {
-//				varentry = new ArrayList(1);
-//				registrations.put(varpath, varentry);
-//			}
-//			varentry.add(aConfigurationElement);
-//		}		
-//	}
-/**	
- * Process the extension point for a container registration
- * Example syntax is 
- * <pre>
- * 	<extension point="org.eclipse.ve.java.core.registrations">
- *	  <library
- *		  container="SWT_CONTAINER"
- *		  palettecats="platform:/plugin/org.eclipse.ve.swt/swtpalette.xmi"
- *		  contributor="org.eclipse.ve.internal.swt.SWTConfigurationContributor">
- *	  </library>
- *	</extension>
- * </pre>
- **/
-//	private void processContainerEntry(IConfigurationElement aConfigurationElement,Map registrations){
-//		if (aConfigurationElement.getAttributeAsIs(PI_CONTRIBUTOR) != null
-//			|| aConfigurationElement.getChildren(PI_CONTRIBUTOR).length > 0
-//			|| aConfigurationElement.getAttributeAsIs(PI_PALETTECATS) != null) {
-//			String containerName = aConfigurationElement.getAttributeAsIs(PI_CONTAINER);
-//			if (containerName == null)
-//				return; // Not proper format.
-//			IPath containerpath = new Path(containerName);
-//			List containerentry = (List) registrations.get(containerpath);
-//			if (containerentry == null) {
-//				containerentry = new ArrayList(1);
-//				registrations.put(containerpath, containerentry);
-//			}
-//			containerentry.add(aConfigurationElement);
-//		}		
-//	}	
-//	/**
-//	 * Register one registration for the path.
-//	 * The path must be a classpath variable for the first segment. It won't be looked for otherwise.
-//	 * If it is only one segment long, then it is for the variable itself, and it will be used
-//	 * for all paths that start with that variable. This allows several different jars within 
-//	 * the variable's path to share the same registration information.
-//	 */
-//	public void registerRegistration(IPath path, IConfigurationElement registration) {
-//		IConfigurationElement[] registered = (IConfigurationElement[]) getVariableContributors().get(path);
-//		if (registered == null)
-//			registered = new IConfigurationElement[] { registration };
-//		else {
-//			IConfigurationElement[] old = registered;
-//			registered = new IConfigurationElement[old.length + 1];
-//			System.arraycopy(old, 0, registered, 0, old.length);
-//			registered[old.length] = registration;
-//		}
-//
-//		getVariableContributors().put(path, registered);
-//	}
-//
-//	/**
-//	 * Register multiple registrations for the path.
-//	 * The path must be a classpath variable for the first segment. It won't be looked for otherwise.
-//	 * If it is only one segment long, then it is for the variable itself, and it will be used
-//	 * for all paths that start with that variable. This allows several different jars within 
-//	 * the variable's path to share the same beaninfo registration information.
-//	 */
-//	public void registerRegistration(IPath path, IConfigurationElement[] registrations) {
-//		IConfigurationElement[] registered = (IConfigurationElement[]) getVariableContributors().get(path);
-//		if (registered == null) {
-//			registered = new IConfigurationElement[registrations.length];
-//			System.arraycopy(registrations, 0, registered, 0, registrations.length);
-//		} else {
-//			IConfigurationElement[] old = registered;
-//			registered = new IConfigurationElement[old.length + registrations.length];
-//			System.arraycopy(old, 0, registered, 0, old.length);
-//			System.arraycopy(registrations, 0, registered, old.length, registrations.length);
-//		}
-//
-//		getVariableContributors().put(path, registered);
-//	}
-//
-//	/**
-//	 * Return the registrations for a specified path. Return null if not registered.
-//	 */
-//	public IConfigurationElement[] getRegistrations(IPath path) {
-//		return (IConfigurationElement[]) getVariableContributors().get(path);
-//	}
 	
-	public static IPath getEMFModelCacheDestination(IProject p){
-		return p.getWorkingLocation(getPlugin().getBundle().getSymbolicName()).append(VE_PROJECT_MODEL_CACHE_ROOT);
-	}
-
 	public Logger getLogger() {
 		if (logger == null)
 			logger = EclipseLogger.getEclipseLogger(this);
@@ -305,8 +167,23 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		super.start(bc);
 		getPluginPreferences().setDefault(SHOW_EVENTS, EVENTS_BASIC);
 		VCEPreferences.initializeDefaultPluginPreferences(getPluginPreferences());
+		JEMUtilPlugin.addCleanResourceChangeListener(cleanResourceListener = new JEMUtilPlugin.CleanResourceChangeListener() {
+		
+			protected void cleanProject(IProject project) {
+			}
+		
+			protected void cleanAll() {
+				// Clean Jet Directory.
+				JEMUtilPlugin.deleteDirectoryContent(VE_GENERATED_OBJECTs_DESTINATION.toFile(), true, new NullProgressMonitor());
+				// Clean extracted libraries directory
+				// TODO This will go away from here when we move this stuff to base JEM.
+				JEMUtilPlugin.deleteDirectoryContent(VE_GENERATED_LIBRARIES_CACHE.toFile(), true, new NullProgressMonitor());
+			}
+		
+		}, 0);
 	}
 	
+	private JEMUtilPlugin.CleanResourceChangeListener cleanResourceListener;
 	
 	/**
 	 * Called by JavaVmController. It is public only because this class is in another package.
@@ -331,6 +208,10 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		if (javaVMControllerDisposer != null) {
 			javaVMControllerDisposer.run();
 			javaVMControllerDisposer = null;
+		}
+		if (cleanResourceListener != null) {
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(cleanResourceListener);
+			cleanResourceListener = null;
 		}
 		super.stop(context);
 	}
