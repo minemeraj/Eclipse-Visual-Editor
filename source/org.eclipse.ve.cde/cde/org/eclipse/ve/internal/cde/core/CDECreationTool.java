@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CDECreationTool.java,v $ $Revision: 1.7 $ $Date: 2005-06-28 21:13:14 $
+ * $RCSfile: CDECreationTool.java,v $ $Revision: 1.8 $ $Date: 2005-06-28 21:39:59 $
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -207,7 +207,6 @@ public class CDECreationTool extends CreationTool {
 				LayerManager layerManager = LayerManager.Helper.find(targetEP);
 				if(layerManager!=null){
 					IFigure feedbackLayer = layerManager.getLayer(LayerConstants.FEEDBACK_LAYER);
-					unexecutableMsgPage.removeAll();
 					feedbackLayer.remove(unexecutableMsgPage);
 					unexecutableMsgPage = null;
 				}
