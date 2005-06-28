@@ -85,10 +85,6 @@ public final class JavaMessages extends NLS {
 	public static String BeanProxyAdapter2_OverrideProperty_ExpressionMustNotBeNull_EXC_;
 	public static String BeanProxyAdapter2_NO_BEAN_DUE_TO_PREVIOUS_ERROR_;
 	public static String BeanProxyAdapter2_ShouldNotBeCalled_EXC_;
-	public static String JavaVisualEditorBuilder_0;
-	public static String JavaVisualEditorBuilder_1;
-	public static String JavaVisualEditorBuilder_2;
-	public static String JavaVisualEditorBuilder_3;
 	public static String AbstractRenameInstanceDialog_Preferences;
 	public static String AbstractRenameInstanceDialog_Checkbox_DontAsk;
 	public static String AbstractRenameInstanceDialog_ErrorMsg_NotUnique;

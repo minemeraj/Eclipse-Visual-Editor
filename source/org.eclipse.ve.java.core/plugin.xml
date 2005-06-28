@@ -485,6 +485,7 @@
 			</visualElement>
 	</extension>
 	
+   <!-- Get rid of this with VE 1.2. It is in 1.1 simply to clean itself out. -->
    <extension
          id="vebuilder"
          name="%Builder.Description"

@@ -28,4 +28,6 @@ public final class Messages extends NLS {
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
+
+	public static String VEModelCacheUtility_VEModelCache_ReconcileJob;
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.129 $  $Date: 2005-06-22 13:04:18 $ 
+ *  $Revision: 1.130 $  $Date: 2005-06-28 20:13:15 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -85,7 +85,6 @@ import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
 import org.eclipse.jem.util.PerformanceMonitorUtil;
 import org.eclipse.jem.util.TimerTests;
 import org.eclipse.jem.util.plugin.JEMUtilPlugin;
-import org.eclipse.jem.workbench.utility.JemProjectUtilities;
 
 import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cdm.DiagramData;
@@ -2102,7 +2101,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		protected void initializeForProject(IFile file) throws CoreException {
 			IProject proj = file.getProject();
 			BeaninfoNature nature = BeaninfoNature.getRuntime(proj);
-			JemProjectUtilities.addToBuildSpec(JavaVEPlugin.VE_BUILDER_ID, proj);
 			ResourceSet rs = nature.newResourceSet();
 			EMFEditDomainHelper.setResourceSet(rs, editDomain);
 			editDomain.setData(NATURE_KEY, nature);	// Need to save the nature so we can check for validity later if project is renamed.
