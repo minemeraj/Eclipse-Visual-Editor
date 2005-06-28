@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.11 $  $Date: 2005-06-22 17:13:18 $ 
+ *  $Revision: 1.12 $  $Date: 2005-06-28 18:11:26 $ 
  */
 
 import java.util.Collections;
@@ -28,8 +28,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -156,10 +155,23 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	protected final static int fillAWTValue[] = {2, 3, 0, 1};
 
 	protected EReference sfComponents, sfConstraintComponent, sfConstraintConstraint;
-	protected EStructuralFeature sfAnchor, sfFill, sfInsets;
+	protected EStructuralFeature sfAnchor, sfFill, sfInsets, sfSpan_X, sfSpan_Y, sfPad_X, sfPad_Y, sfWeight_X, sfWeight_Y;
 	protected ResourceSet rset;
 	protected AnchorAction selectedAnchorAction;
 	protected int currentFillValue;
+	
+	protected final static int X_POS = 0, Y_POS = 1;
+	protected Spinner xSpanSpinner, ySpanSpinner;
+	protected int[] spans;
+	
+	protected Spinner xPaddingSpinner, yPaddingSpinner;
+	protected int[] paddings;
+	
+	protected Text xWeightText, yWeightText;
+	protected double[] weights;
+	
+	private Button restoreAllButton;
+	private boolean hasConstraintData = false;
 	
 	protected Spinner topSpinner, leftSpinner, bottomSpinner, rightSpinner;
 	protected Insets componentInsets = null;
@@ -354,11 +366,12 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 					}
 				}
 			}
+			if (!restoreAllButton.getEnabled())
+				restoreAllButton.setEnabled(true);
 			return cb.getCommand();
 		}
 		return UnexecutableCommand.INSTANCE;
 	}
-
 	/*
 	 * Return the commands to set the fill value for the selected editparts
 	 * The fill value is based on the type of action and is retrieved from the fillAWTValue table.
@@ -380,6 +393,8 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 					}
 				}
 			}
+			if (!restoreAllButton.getEnabled())
+				restoreAllButton.setEnabled(true);
 			return cb.getCommand();
 		}
 		return UnexecutableCommand.INSTANCE;
@@ -417,12 +432,135 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 					}
 				}
 			}
+			if (!restoreAllButton.getEnabled())
+				restoreAllButton.setEnabled(true);
 			cb.append(new EnableSpinnerCommand(spinner));
 			return cb.getCommand();
 		}
 		spinner.setEnabled(true);
 		return UnexecutableCommand.INSTANCE;
 	}
+	/*
+	 * Return the commands to set the GridBagConstraints span value for the selected editparts
+	 */
+	protected Command createSpanCommand(List editparts, int[] span_vals, int spanPosition, Spinner spinner) {
+		if (!editparts.isEmpty()) {
+			CommandBuilder cb = new CommandBuilder();
+			for (int i = 0; i < editparts.size(); i++) {
+				EditPart editpart = (EditPart)editparts.get(i);
+				// Get the spans for this editpart and only change
+				// the specific span position that was modified
+				if (span_vals != null && span_vals.length == 2) {
+					EObject constraintComponent = InverseMaintenanceAdapter.getIntermediateReference((EObject)editpart.getParent().getModel(), sfComponents, sfConstraintComponent, (IJavaObjectInstance)editpart.getModel());
+					if (constraintComponent != null) {
+						IJavaObjectInstance gridbagconstraint = (IJavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
+						if (gridbagconstraint != null) {
+							RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
+							if(spanPosition == X_POS){
+								Object spanObject = 
+									BeanUtilities.createJavaObject("int", rset, Integer.toString(span_vals[X_POS])); //$NON-NLS-1$
+								componentCB.applyAttributeSetting(gridbagconstraint, sfSpan_X, spanObject);
+								componentCB.applyAttributeSetting(constraintComponent, sfConstraintConstraint, gridbagconstraint);
+							} else if(spanPosition == Y_POS) {
+								Object spanObject = 
+									BeanUtilities.createJavaObject("int", rset, Integer.toString(span_vals[Y_POS])); //$NON-NLS-1$
+								componentCB.applyAttributeSetting(gridbagconstraint, sfSpan_Y, spanObject);
+								componentCB.applyAttributeSetting(constraintComponent, sfConstraintConstraint, gridbagconstraint);
+							}
+							cb.append(componentCB.getCommand());
+						}
+					}
+				}
+			}
+			if (!restoreAllButton.getEnabled())
+				restoreAllButton.setEnabled(true);
+			cb.append(new EnableSpinnerCommand(spinner));
+			return cb.getCommand();
+		}
+		spinner.setEnabled(true);
+		return UnexecutableCommand.INSTANCE;
+	}
+	/*
+	 * Return the commands to set the GridBagConstraints padding value for the selected editparts
+	 */
+	protected Command createPadCommand(List editparts, int[] pad_vals, int padPosition, Spinner spinner) {
+		if (!editparts.isEmpty()) {
+			CommandBuilder cb = new CommandBuilder();
+			for (int i = 0; i < editparts.size(); i++) {
+				EditPart editpart = (EditPart)editparts.get(i);
+				// Get the paddings for this editpart and only change
+				// the specific pad position that was modified
+				if (pad_vals != null && pad_vals.length == 2) {
+					EObject constraintComponent = InverseMaintenanceAdapter.getIntermediateReference((EObject)editpart.getParent().getModel(), sfComponents, sfConstraintComponent, (IJavaObjectInstance)editpart.getModel());
+					if (constraintComponent != null) {
+						IJavaObjectInstance gridbagconstraint = (IJavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
+						if (gridbagconstraint != null) {
+							RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
+							if(padPosition == X_POS){
+								Object padObject = 
+									BeanUtilities.createJavaObject("int", rset, Integer.toString(pad_vals[X_POS])); //$NON-NLS-1$
+								componentCB.applyAttributeSetting(gridbagconstraint, sfPad_X, padObject);
+								componentCB.applyAttributeSetting(constraintComponent, sfConstraintConstraint, gridbagconstraint);
+							} else if(padPosition == Y_POS) {
+								Object padObject = 
+									BeanUtilities.createJavaObject("int", rset, Integer.toString(pad_vals[Y_POS])); //$NON-NLS-1$
+								componentCB.applyAttributeSetting(gridbagconstraint, sfPad_Y, padObject);
+								componentCB.applyAttributeSetting(constraintComponent, sfConstraintConstraint, gridbagconstraint);
+							}
+							cb.append(componentCB.getCommand());
+						}
+					}
+				}
+			}
+			if (!restoreAllButton.getEnabled())
+				restoreAllButton.setEnabled(true);
+			cb.append(new EnableSpinnerCommand(spinner));
+			return cb.getCommand();
+		}
+		spinner.setEnabled(true);
+		return UnexecutableCommand.INSTANCE;
+	}
+	/*
+	 * Return the commands to set the GridBagConstraints weight value for the selected editparts
+	 */
+	protected Command createWeightCommand(List editparts, double[] weight_vals, int weightPosition, Text text) {
+		if (!editparts.isEmpty()) {
+			CommandBuilder cb = new CommandBuilder();
+			for (int i = 0; i < editparts.size(); i++) {
+				EditPart editpart = (EditPart)editparts.get(i);
+				// Get the weights for this editpart and only change
+				// the specific pad position that was modified
+				if (weight_vals != null && weight_vals.length == 2) {
+					EObject constraintComponent = InverseMaintenanceAdapter.getIntermediateReference((EObject)editpart.getParent().getModel(), sfComponents, sfConstraintComponent, (IJavaObjectInstance)editpart.getModel());
+					if (constraintComponent != null) {
+						IJavaObjectInstance gridbagconstraint = (IJavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
+						if (gridbagconstraint != null) {
+							RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
+							if(weightPosition == X_POS){
+								Object weightObject = 
+									BeanUtilities.createJavaObject("double", rset, Double.toString(weight_vals[X_POS])); //$NON-NLS-1$
+								componentCB.applyAttributeSetting(gridbagconstraint, sfWeight_X, weightObject);
+								componentCB.applyAttributeSetting(constraintComponent, sfConstraintConstraint, gridbagconstraint);
+							} else if(weightPosition == Y_POS) {
+								Object weightObject = 
+									BeanUtilities.createJavaObject("double", rset, Double.toString(weight_vals[Y_POS])); //$NON-NLS-1$
+								componentCB.applyAttributeSetting(gridbagconstraint, sfWeight_Y, weightObject);
+								componentCB.applyAttributeSetting(constraintComponent, sfConstraintConstraint, gridbagconstraint);
+							}
+							cb.append(componentCB.getCommand());
+						}
+					}
+				}
+			}
+			if (!restoreAllButton.getEnabled())
+				restoreAllButton.setEnabled(true);
+			cb.append(new EnableTextCommand(text));
+			return cb.getCommand();
+		}
+		text.setEnabled(true);
+		return UnexecutableCommand.INSTANCE;
+	}
+	
 	/*
 	 * Command that is used to re-enable the spinner since we don't want the user
 	 * changing the insets while the insets is being updated. This prevents a ConcurrentModificationException
@@ -454,27 +592,87 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		}
 
 	};
+	
+	/*
+	 * Command that is used to re-enable the text since we don't want the user
+	 * changing the weights while the weights are being updated. This prevents a ConcurrentModificationException
+	 * that is caused when the insets are being read from the text side while the apply attribute setting
+	 * command is being executed in a separate thread.
+	 * 
+	 * This command should be the last command executed after all the insets commands are complete
+	 */
+	protected class EnableTextCommand extends AbstractCommand {
+		protected Text text;
+		public EnableTextCommand(Text text) {
+			super();
+			this.text = text;
+		}
+
+		/* 
+		 * Enable the spinner
+		 */
+		public void execute() {
+			if (text != null)
+				text.setEnabled(true);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.gef.commands.Command#canExecute()
+		 */
+		public boolean canExecute() {
+			return true;
+		}
+	};
+	
+	/**
+	 * gets the composite that contains all of the controls on this layout page
+	 */
 	public Control getControl(Composite parent) {
 
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(new GridLayout(3, false));
+		
 		Group anchorGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Anchor, 3, 0, 0); 
-
 		for (int i = 0; i < anchorActions.length; i++) {
 			ActionContributionItem ac = new ActionContributionItem(anchorActions[i]);
 			ac.fill(anchorGroup);
 		}
+		GridData data = (GridData) anchorGroup.getLayoutData();
+		data.heightHint = 93;
+		anchorGroup.setLayoutData(data);
+		
+		Group insetsGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Insets, 2, 5, 4); 
+		createInsetsControl(insetsGroup);
+		
 		Group fillGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Fill, 1, 0, 0); 
 		for (int i = 0; i < fillActions.length; i++) {
 			ActionContributionItem ac = new ActionContributionItem(fillActions[i]);
 			ac.fill(fillGroup);
 		}
-		Group insetsGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Insets, 2, 5, 4); 
-		createInsetsControl(insetsGroup);
+		
+		Group spanningGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Span, 2, 5, 30); 
+		createSpanControl(spanningGroup);
+		
+		Group paddingGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Padding, 2, 5, 30); 
+		createPaddingControl(paddingGroup);
+		
+		Group weightGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Weight, 2, 13, 5); 
+		createWeightControl(weightGroup);
 
+		restoreAllButton = new Button(mainComposite, SWT.NONE);
+		restoreAllButton.setEnabled(hasConstraintData);
+		restoreAllButton.setText(JFCMessages.GridBagComponentPage_RestoreDefaults); 
+		restoreAllButton.addSelectionListener(new SelectionAdapter () {
+			public void widgetSelected(SelectionEvent e) {
+				restoreAllDefaultValues();
+			};
+		});
+		
 		return mainComposite;
-
 	}
+	/**
+	 * create the spinners to go in the insets group
+	 */
 	protected void createInsetsControl(Group insetsGroup) {
 		Label lbl;
 		lbl = new Label(insetsGroup, SWT.NONE);
@@ -487,6 +685,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			right = componentInsets.right;
 		}
 		topSpinner = new Spinner(insetsGroup, SWT.NONE);
+		topSpinner.setMaximum(9999);
 		topSpinner.setEnabled(componentInsets != null ? true : false);
 		topSpinner.setSelection(top);
 		topSpinner.addModifyListener(new ModifyListener() {
@@ -505,6 +704,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Left); 
 		leftSpinner = new Spinner(insetsGroup, SWT.NONE);
+		leftSpinner.setMaximum(9999);
 		leftSpinner.setEnabled(componentInsets != null ? true : false);
 		leftSpinner.setSelection(left);
 		leftSpinner.addModifyListener(new ModifyListener() {
@@ -523,6 +723,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Bottom); 
 		bottomSpinner = new Spinner(insetsGroup, SWT.NONE);
+		bottomSpinner.setMaximum(9999);
 		bottomSpinner.setEnabled(componentInsets != null ? true : false);
 		bottomSpinner.setSelection(bottom);
 		bottomSpinner.addModifyListener(new ModifyListener() {
@@ -541,6 +742,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Right); 
 		rightSpinner = new Spinner(insetsGroup, SWT.NONE);
+		rightSpinner.setMaximum(9999);
 		rightSpinner.setEnabled(componentInsets != null ? true : false);
 		rightSpinner.setSelection(right);
 		rightSpinner.addModifyListener(new ModifyListener() {
@@ -557,23 +759,190 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			}
 		});
 	}
-	
+	/**
+	 * create a group with given parent and title that has a GridLayout with the given number of
+	 * columns and vertical and/or horizontal fill.
+	 */
 	protected Group createGroup(Composite aParent, String title, int numColumns, int verticalSpacing, int horizontalSpacing) {
 		Group group = new Group(aParent, SWT.NONE);
 		group.setText(title);
 		GridLayout gridLayout = new GridLayout(numColumns, false);
-//		gridLayout.numColumns = numColumns;
 		gridLayout.verticalSpacing = verticalSpacing;
 		gridLayout.horizontalSpacing = horizontalSpacing;
 		group.setLayout(gridLayout);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.verticalAlignment = GridData.FILL_VERTICAL;
-//		data.horizontalAlignment = GridData.FILL_HORIZONTAL;
-//		data.grabExcessHorizontalSpace = true;
 		group.setLayoutData(data);
 		return group;
 	}
-
+	/**
+	 * create the spinners to go in the span group
+	 * 
+	 * @since 1.1
+	 */
+	protected void createSpanControl(Group spanGroup) {
+		Label lbl;
+		lbl = new Label(spanGroup, SWT.NONE);
+		lbl.setText(JFCMessages.GridBagComponentPage_SpanLabel_Width); 
+		int x_span = 0, y_span = 0;
+		if (spans != null) {
+			x_span = spans[X_POS];
+			y_span = spans[Y_POS];
+		}
+		xSpanSpinner = new Spinner(spanGroup, SWT.NONE);
+		xSpanSpinner.setMaximum(9999);
+		xSpanSpinner.setEnabled(spans != null ? true : false);
+		xSpanSpinner.setSelection(x_span);
+		xSpanSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int x_span = xSpanSpinner.getSelection();
+				if (spans != null && x_span != spans[X_POS]) {
+					spans[X_POS] = x_span;
+					execute(createSpanCommand(getSelectedObjects(), spans, X_POS, xSpanSpinner));
+				} else {
+					// Need this in the case where no command has been executed and we need to tell the
+					// spinner to reset it's 'command in progress' switch so it can except input again.
+					xSpanSpinner.setEnabled(true);
+				}
+			}
+		});
+		lbl = new Label(spanGroup, SWT.NONE);
+		lbl.setText(JFCMessages.GridBagComponentPage_SpanLabel_Height); 
+		ySpanSpinner = new Spinner(spanGroup, SWT.NONE);
+		ySpanSpinner.setMaximum(9999);
+		ySpanSpinner.setEnabled(spans != null ? true : false);
+		ySpanSpinner.setSelection(y_span);
+		ySpanSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int y_span = ySpanSpinner.getSelection();
+				if (spans != null && y_span != spans[Y_POS]) {
+					spans[Y_POS] = y_span;
+					execute(createSpanCommand(getSelectedObjects(), spans, Y_POS, ySpanSpinner));
+				} else {
+					// Need this in the case where no command has been executed and we need to tell the
+					// spinner to reset it's 'command in progress' switch so it can except input again.
+					ySpanSpinner.setEnabled(true);
+				}
+			}
+		});
+	}
+	/**
+	 * create the spinners to go in the padding group
+	 * 
+	 * @since 1.1
+	 */
+	protected void createPaddingControl(Group paddingGroup) {
+		Label lbl;
+		lbl = new Label(paddingGroup, SWT.NONE);
+		lbl.setText(JFCMessages.GridBagComponentPage_SpinnerLabel_X); 
+		int x_pad = 0, y_pad = 0;
+		if (paddings != null) {
+			x_pad = paddings[X_POS];
+			y_pad = paddings[Y_POS];
+		}
+		xPaddingSpinner = new Spinner(paddingGroup, SWT.NONE);
+		xPaddingSpinner.setMaximum(9999);
+		xPaddingSpinner.setEnabled(spans != null ? true : false);
+		xPaddingSpinner.setSelection(x_pad);
+		xPaddingSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int x_pad = xPaddingSpinner.getSelection();
+				if (paddings != null && x_pad != paddings[X_POS]) {
+					paddings[X_POS] = x_pad;
+					execute(createPadCommand(getSelectedObjects(), paddings, X_POS, xPaddingSpinner));
+				} else {
+					// Need this in the case where no command has been executed and we need to tell the
+					// spinner to reset it's 'command in progress' switch so it can except input again.
+					xPaddingSpinner.setEnabled(true);
+				}
+			}
+		});
+		lbl = new Label(paddingGroup, SWT.NONE);
+		lbl.setText(JFCMessages.GridBagComponentPage_SpinnerLabel_Y); 
+		yPaddingSpinner = new Spinner(paddingGroup, SWT.NONE);
+		yPaddingSpinner.setMaximum(9999);
+		yPaddingSpinner.setEnabled(spans != null ? true : false);
+		yPaddingSpinner.setSelection(y_pad);
+		yPaddingSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int y_pad = yPaddingSpinner.getSelection();
+				if (paddings != null && y_pad != paddings[Y_POS]) {
+					paddings[Y_POS] = y_pad;
+					execute(createPadCommand(getSelectedObjects(), paddings, Y_POS, yPaddingSpinner));
+				} else {
+					// Need this in the case where no command has been executed and we need to tell the
+					// spinner to reset it's 'command in progress' switch so it can except input again.
+					yPaddingSpinner.setEnabled(true);
+				}
+			}
+		});
+	}
+	/**
+	 * create the texts to go in the weight group
+	 * 
+	 * @since 1.1
+	 */
+	protected void createWeightControl(Group weightGroup) {
+		Label lbl;
+		lbl = new Label(weightGroup, SWT.NONE);
+		lbl.setText(JFCMessages.GridBagComponentPage_SpinnerLabel_X); 
+		double x_weight = 0, y_weight = 0;
+		if (weights != null) {
+			x_weight = weights[X_POS];
+			y_weight = weights[Y_POS];
+		}
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		data.grabExcessHorizontalSpace = true;
+		data.minimumWidth = 40;
+		xWeightText = new Text(weightGroup, SWT.NONE);
+		xWeightText.setLayoutData(data);
+		xWeightText.setTextLimit(5);
+		xWeightText.setEnabled(spans != null ? true : false);
+		xWeightText.setText(String.valueOf(x_weight));
+		xWeightText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				double x_weight;
+				try{
+					x_weight = Double.parseDouble(xWeightText.getText());
+				} catch(NumberFormatException nfe){
+					x_weight = 0;
+				}
+				if (weights != null && x_weight != weights[X_POS]) {
+					weights[X_POS] = x_weight;
+					execute(createWeightCommand(getSelectedObjects(), weights, X_POS, xWeightText));
+				} else {
+					// Need this in the case where no command has been executed and we need to tell the
+					// spinner to reset it's 'command in progress' switch so it can except input again.
+					xWeightText.setEnabled(true);
+				}
+			}
+		});
+		lbl = new Label(weightGroup, SWT.NONE);
+		lbl.setText(JFCMessages.GridBagComponentPage_SpinnerLabel_Y); 
+		yWeightText = new Text(weightGroup, SWT.NONE);
+		yWeightText.setLayoutData(data);
+		yWeightText.setTextLimit(5);
+		yWeightText.setEnabled(weights != null ? true : false);
+		yWeightText.setText(String.valueOf(y_weight));
+		yWeightText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				double y_weight;
+				try{
+					y_weight = Double.parseDouble(yWeightText.getText());
+				} catch(NumberFormatException nfe){
+					y_weight = 0;
+				}
+				if (weights != null && y_weight != weights[Y_POS]) {
+					weights[Y_POS] = y_weight;
+					execute(createWeightCommand(getSelectedObjects(), weights, Y_POS, yWeightText));
+				} else {
+					// Need this in the case where no command has been executed and we need to tell the
+					// spinner to reset it's 'command in progress' switch so it can except input again.
+					yWeightText.setEnabled(true);
+				}
+			}
+		});
+	}
 	protected void enableAnchorActions(boolean enable) {
 		for (int i = 0; i < anchorActions.length; i++) {
 			anchorActions[i].setEnabled(enable);
@@ -598,7 +967,24 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		if (rightSpinner != null)
 			rightSpinner.setEnabled(enable);
 	}
-
+	protected void enablePadding(boolean enable) {
+		if (xPaddingSpinner != null)
+			xPaddingSpinner.setEnabled(enable);
+		if (yPaddingSpinner != null)
+			yPaddingSpinner.setEnabled(enable);
+	}
+	protected void enableSpan(boolean enable) {
+		if (xSpanSpinner != null)
+			xSpanSpinner.setEnabled(enable);
+		if (ySpanSpinner != null)
+			ySpanSpinner.setEnabled(enable);
+	}
+	protected void enableWeight(boolean enable) {
+		if (xWeightText != null)
+			xWeightText.setEnabled(enable);
+		if (yWeightText != null)
+			yWeightText.setEnabled(enable);
+	}
 	/*
 	 * Executes the given command
 	 */
@@ -609,28 +995,24 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		if (cmdStack != null)
 			cmdStack.execute(command);
 	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getImage()
 	 */
 	public Image getImage() {
 		return null;
 	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getText()
 	 */
 	public String getText() {
 		return JFCMessages.GridBagComponentPage_Gridbag; 
 	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#getToolTipText()
 	 */
 	public String getToolTipText() {
 		return JFCMessages.GridBagComponentPage_ToolTipText; 
 	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#handleEditorPartChanged(org.eclipse.ui.IEditorPart)
 	 * 
@@ -647,7 +1029,6 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		}
 		resetVariables();
 	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#handleSelectionChanged(org.eclipse.jface.viewers.ISelection)
 	 * 
@@ -690,9 +1071,15 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 						enableAnchorActions(true);
 						enableFillActions(true);
 						enableInsets(true);
-						handleSelectionChangedForAnchorActions(editparts);
-						handleSelectionChangedForFillActions(editparts);
-						handleSelectionChangedForInsets(editparts);
+						enableSpan(true);
+						enablePadding(true);
+						enableWeight(true);
+						refreshAllValues(editparts);
+						if (restoreAllButton != null)
+							if (hasConstraintData(editparts))
+								restoreAllButton.setEnabled(true);
+							else
+								restoreAllButton.setEnabled(false);
 						return true;
 					}
 				}
@@ -704,7 +1091,6 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		enableInsets(false);
 		return false;
 	}
-	
 	/*
 	 * If the anchor value for each component is the same, check the appropriate action
 	 * otherwise, uncheck all of them. 
@@ -734,7 +1120,6 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			selectedAnchorAction = null;
 		}
 	}
-
 	/*
 	 * If the fill value for each component is the same, check the appropriate action
 	 * otherwise, uncheck all of them. 
@@ -773,7 +1158,66 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		}
 	}
 	/*
-	 * Set the insets value bases on the primary selected editpart
+	 * Set the weight values based on the primary selected editpart
+	 */
+	protected void handleSelectionChangedForSpan(List editparts) {
+		for (int i = 0; i < editparts.size(); i++) {
+			EditPart ep = (EditPart) editparts.get(i);
+			if ( ep.getSelected() == AbstractEditPart.SELECTED_PRIMARY && ep.getModel() instanceof IJavaObjectInstance) {
+				spans = getSpanValue(ep);
+				break;
+			}
+		}
+		setSpanValues(spans);
+	}
+	/**
+	 * Set the span values in the span spinners.
+	 * 
+	 * @since 1.1
+	 */
+	protected void setSpanValues(int[] new_spans) {
+		if (spans == null) {
+			enableSpan(false);
+			return;
+		} else
+			enableSpan(true);
+		
+		if (xSpanSpinner != null)
+			xSpanSpinner.setSelection(new_spans[X_POS]);
+		if (ySpanSpinner != null)
+			ySpanSpinner.setSelection(new_spans[Y_POS]);
+	}
+	/*
+	 * Set the padding values based on the primary selected editpart
+	 */
+	protected void handleSelectionChangedForPadding(List editparts) {
+		for (int i = 0; i < editparts.size(); i++) {
+			EditPart ep = (EditPart) editparts.get(i);
+			if ( ep.getSelected() == AbstractEditPart.SELECTED_PRIMARY && ep.getModel() instanceof IJavaObjectInstance) {
+				paddings = getPaddingValue(ep);
+				break;
+			}
+		}
+		setPaddingValues(paddings);
+	}
+	/**
+	 * set the padding values in the padding spinners
+	 * 
+	 * @since 1.1
+	 */
+	protected void setPaddingValues(int[] new_paddings) {
+		if (paddings == null){
+			enablePadding(false);
+			return;
+		} else
+			enablePadding(true);
+		if (xPaddingSpinner != null)
+			xPaddingSpinner.setSelection(new_paddings[X_POS]);
+		if (yPaddingSpinner != null)
+			yPaddingSpinner.setSelection(new_paddings[Y_POS]);
+	}
+	/*
+	 * Set the insets value based on the primary selected editpart
 	 */
 	protected void handleSelectionChangedForInsets(List editparts) {
 		for (int i = 0; i < editparts.size(); i++) {
@@ -800,6 +1244,36 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			bottomSpinner.setSelection(componentInsets.bottom);
 		if (rightSpinner != null)
 			rightSpinner.setSelection(componentInsets.right);
+	}
+	
+	/*
+	 * Set the weight values based on the primary selected editpart
+	 */
+	protected void handleSelectionChangedForWeight(List editparts) {
+		for (int i = 0; i < editparts.size(); i++) {
+			EditPart ep = (EditPart) editparts.get(i);
+			if ( ep.getSelected() == AbstractEditPart.SELECTED_PRIMARY && ep.getModel() instanceof IJavaObjectInstance) {
+				weights = getWeightValue(ep);
+				break;
+			}
+		}
+		setWeightValues(weights);
+	}
+	/**
+	 * Sets the weight values in the weight text fields.
+	 * 
+	 * @since 1.1
+	 */
+	protected void setWeightValues(double[] new_weights) {
+		if (weights == null){
+			enableWeight(false);
+			return;
+		} else
+			enableWeight(true);
+		if (xWeightText != null)
+			xWeightText.setText(String.valueOf(new_weights[X_POS]));
+		if (yWeightText != null)
+			yWeightText.setText(String.valueOf(new_weights[Y_POS]));
 	}
 
 	protected int getAnchorValue(EditPart ep) {
@@ -876,6 +1350,88 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		}
 		return null;
 	}
+	
+	/*
+	 * Return the value of the GridBagConstraints padding for this component
+	 */
+	protected int[] getPaddingValue(EditPart ep) {
+		int x = 0, y = 0;
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
+			IPropertySource gridbagconstraint = (IPropertySource) ps.getPropertyValue(sfConstraintConstraint);
+			if (gridbagconstraint != null) {
+				Object xPadPV = gridbagconstraint.getPropertyValue(sfPad_X);
+				Object yPadPV = gridbagconstraint.getPropertyValue(sfPad_Y);
+				if (xPadPV != null && xPadPV instanceof IJavaDataTypeInstance &&
+					yPadPV != null && yPadPV instanceof IJavaDataTypeInstance) {
+					IIntegerBeanProxy xPadProxy = 
+						(IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) xPadPV, rset);
+					IIntegerBeanProxy yPadProxy = 
+						(IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) yPadPV, rset);
+					if (xPadProxy != null && yPadProxy != null) {
+						x = xPadProxy.intValue();
+						y = yPadProxy.intValue();
+						return new int[]{x,y};
+					}
+				}
+			}
+		}
+		return new int[]{0,0};
+	}
+	/*
+	 * Return the value of the GridBagConstraints weight for this component
+	 */
+	protected double[] getWeightValue(EditPart ep) {
+		double x = 0, y = 0;
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
+			IPropertySource gridbagconstraint = (IPropertySource) ps.getPropertyValue(sfConstraintConstraint);
+			if (gridbagconstraint != null) {
+				Object xWeightPV = gridbagconstraint.getPropertyValue(sfWeight_X);
+				Object yWeightPV = gridbagconstraint.getPropertyValue(sfWeight_Y);
+				if (xWeightPV != null && xWeightPV instanceof IJavaDataTypeInstance &&
+					yWeightPV != null && yWeightPV instanceof IJavaDataTypeInstance) {
+					INumberBeanProxy xWeightProxy = 
+						(INumberBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) xWeightPV, rset);
+					INumberBeanProxy yWeightProxy = 
+						(INumberBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) yWeightPV, rset);
+					if (xWeightProxy != null && yWeightProxy != null) {
+						x = xWeightProxy.doubleValue();
+						y = yWeightProxy.doubleValue();
+						return new double[]{x,y};
+					}
+				}
+			}
+		}
+		return new double[]{0,0};
+	}
+	/*
+	 * Return the value of the GridBagConstraints span for this component
+	 */
+	protected int[] getSpanValue(EditPart ep) {
+		int x = 1, y = 1;
+		IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+		if (ps != null && getResourceSet(ep) != null) {
+			IPropertySource gridbagconstraint = (IPropertySource) ps.getPropertyValue(sfConstraintConstraint);
+			if (gridbagconstraint != null) {
+				Object xSpanPV = gridbagconstraint.getPropertyValue(sfSpan_X);
+				Object ySpanPV = gridbagconstraint.getPropertyValue(sfSpan_Y);
+				if (xSpanPV != null && xSpanPV instanceof IJavaDataTypeInstance &&
+					ySpanPV != null && ySpanPV instanceof IJavaDataTypeInstance) {
+					IIntegerBeanProxy xSpanProxy = 
+						(IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) xSpanPV, rset);
+					IIntegerBeanProxy ySpanProxy = 
+						(IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaDataTypeInstance) ySpanPV, rset);
+					if (xSpanProxy != null && ySpanProxy != null) {
+						x = xSpanProxy.intValue();
+						y = ySpanProxy.intValue();
+						return new int[]{x,y};
+					}
+				}
+			}
+		}
+		return new int[]{1,1};
+	}
 	/*
 	 * reset the resource set and structural features
 	 */
@@ -883,6 +1439,20 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		rset = null;
 		sfConstraintConstraint = null;
 		sfAnchor = null;
+	}
+	/**
+	 * refresh the values for all controls
+	 * 
+	 * @since 1.1
+	 */
+	private void refreshAllValues(List editparts) {
+		handleSelectionChangedForAnchorActions(editparts);
+		handleSelectionChangedForFillActions(editparts);
+		handleSelectionChangedForInsets(editparts);
+		handleSelectionChangedForSpan(editparts);
+		handleSelectionChangedForPadding(editparts);
+		handleSelectionChangedForWeight(editparts);
+		hasConstraintData = hasConstraintData(editparts);
 	}
 	/*
 	 * Return the ResourceSet for this editpart. Initialize the structural features also. 
@@ -896,10 +1466,15 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			sfAnchor = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_ANCHOR);
 			sfFill = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_FILL);
 			sfInsets = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_INSETS);
+			sfPad_X = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_IPADX);
+			sfPad_Y = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_IPADY); 
+			sfWeight_X = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_WEIGHTX);
+			sfWeight_Y = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_WEIGHTY);
+			sfSpan_X = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_GRIDWIDTH);
+			sfSpan_Y = JavaInstantiation.getSFeature(rset, JFCConstants.SF_GRIDBAGCONSTRAINTS_GRIDHEIGHT);
 		}
 		return rset;
 	}
-	
 	protected void handleSelectionProviderInitialization(ISelectionProvider selectionProvider) {
 		// We don't use GEF SelectionActions, so don't need this.
 	}
@@ -924,5 +1499,104 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			return true;
 		}
 		return false;
+	}
+	/**
+	 * Return true if any of the select controls has Constraints set for its GridBag layout.
+	 * 
+	 *  @since 1.1
+	 */
+	protected boolean hasConstraintData(List editparts) {
+		boolean retVal = false;
+		if (!editparts.isEmpty()) {
+			for (int i = 0; i < editparts.size(); i++) {
+				EditPart editpart = (EditPart) editparts.get(i);
+				EObject constraintComponent = 
+					InverseMaintenanceAdapter.getIntermediateReference((EObject)editpart.getParent().getModel(), sfComponents, sfConstraintComponent, (IJavaObjectInstance)editpart.getModel());
+				if(constraintComponent != null){
+					IJavaObjectInstance gridbagconstraint = 
+						(IJavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
+					if (gridbagconstraint != null) {
+						if (gridbagconstraint.eIsSet(sfAnchor))
+							retVal =  true;
+						else if (gridbagconstraint.eIsSet(sfFill))
+							retVal = true;
+						else if (gridbagconstraint.eIsSet(sfInsets))
+							retVal = true;
+						else if (gridbagconstraint.eIsSet(sfPad_X))
+							retVal = true;
+						else if (gridbagconstraint.eIsSet(sfPad_Y))
+							retVal = true;
+						else if (gridbagconstraint.eIsSet(sfSpan_X))
+							retVal = true;
+						else if (gridbagconstraint.eIsSet(sfSpan_Y))
+							retVal = true;
+						else if (gridbagconstraint.eIsSet(sfWeight_X))
+							retVal = true;
+						else if (gridbagconstraint.eIsSet(sfWeight_Y))
+							retVal = true;					
+					}
+				}
+			}
+		}
+		return retVal;
+	}
+	/**
+	 * Restore all the Constraints to default values by removing the non GridX and GridY 
+	 * constraints for each selected control.
+	 * 
+	 * @since 1.1
+	 */
+	protected void restoreAllDefaultValues() {
+		List editparts = getSelectedObjects();
+		if (!editparts.isEmpty()) {
+			Command cmd = createRestoreDefaultsCommand(editparts);
+			if (cmd != UnexecutableCommand.INSTANCE) {
+				execute(createRestoreDefaultsCommand(editparts));
+				refreshAllValues(editparts);
+				restoreAllButton.setEnabled(false);
+			}
+		}
+	}
+	/*
+	 * Return the command to cancel the GridData settings for this control
+	 */
+	protected Command createRestoreDefaultsCommand(List editparts) {
+		if (!editparts.isEmpty()) {
+			CommandBuilder cb = new CommandBuilder();
+			for (int i = 0; i < editparts.size(); i++) {
+				EditPart editpart = (EditPart) editparts.get(i);
+				EObject constraintComponent = 
+					InverseMaintenanceAdapter.getIntermediateReference((EObject)editpart.getParent().getModel(), sfComponents, sfConstraintComponent, (IJavaObjectInstance)editpart.getModel());
+				if(constraintComponent != null){
+					IJavaObjectInstance gridbagconstraint = 
+						(IJavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
+					if (gridbagconstraint != null) {
+						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
+						if (gridbagconstraint.eIsSet(sfAnchor))
+							componentCB.cancelAttributeSetting(gridbagconstraint, sfAnchor);
+						if (gridbagconstraint.eIsSet(sfFill))
+							componentCB.cancelAttributeSetting(gridbagconstraint, sfFill);
+						if (gridbagconstraint.eIsSet(sfInsets))
+							componentCB.cancelAttributeSetting(gridbagconstraint, sfInsets);
+						if (gridbagconstraint.eIsSet(sfPad_X))
+							componentCB.cancelAttributeSetting(gridbagconstraint, sfPad_X);
+						if (gridbagconstraint.eIsSet(sfPad_Y))
+							componentCB.cancelAttributeSetting(gridbagconstraint, sfPad_Y);
+						if (gridbagconstraint.eIsSet(sfSpan_X))
+							componentCB.cancelAttributeSetting(gridbagconstraint, sfSpan_X);
+						if (gridbagconstraint.eIsSet(sfSpan_Y))
+							componentCB.cancelAttributeSetting(gridbagconstraint, sfSpan_Y);
+						if (gridbagconstraint.eIsSet(sfWeight_X))
+							componentCB.cancelAttributeSetting(gridbagconstraint, sfWeight_X);
+						if (gridbagconstraint.eIsSet(sfWeight_Y))
+							componentCB.cancelAttributeSetting(gridbagconstraint, sfWeight_Y);
+						componentCB.applyAttributeSetting(constraintComponent, sfConstraintConstraint, gridbagconstraint);
+						cb.append(componentCB.getCommand());
+					}
+				}
+			}
+			return cb.getCommand();
+		}
+		return UnexecutableCommand.INSTANCE;
 	}
 }
