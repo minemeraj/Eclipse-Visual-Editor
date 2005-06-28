@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchParentArgumentEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-27 22:29:28 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-28 21:13:15 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -20,6 +20,7 @@ import org.eclipse.gef.editpolicies.ContainerEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.GroupRequest;
 
+import org.eclipse.ve.internal.cde.core.IErrorHolder;
 import org.eclipse.ve.internal.cde.core.UnExecutableCommandData;
  
 
@@ -35,12 +36,12 @@ import org.eclipse.ve.internal.cde.core.UnExecutableCommandData;
 public class WorkbenchParentArgumentEditPolicy extends ContainerEditPolicy {
 
 	protected Command getAddCommand(GroupRequest request) {
-		request.getExtendedData().put(UnExecutableCommandData.class, new UnExecutableCommandData(JFaceMessages.Correct_Empty_Parent_Msg));
+		request.getExtendedData().put(UnExecutableCommandData.class, new UnExecutableCommandData(JFaceMessages.Correct_Empty_Parent_Msg, IErrorHolder.ErrorType.getInformationErrorImage()));
 		return UnexecutableCommand.INSTANCE;	// Can't add through dropping on it.
 	}
 	
 	protected Command getCreateCommand(CreateRequest request) {
-		request.getExtendedData().put(UnExecutableCommandData.class, new UnExecutableCommandData(JFaceMessages.Correct_Empty_Parent_Msg));
+		request.getExtendedData().put(UnExecutableCommandData.class, new UnExecutableCommandData(JFaceMessages.Correct_Empty_Parent_Msg, IErrorHolder.ErrorType.getInformationErrorImage()));
 		return UnexecutableCommand.INSTANCE;	// Can't create through dropping on it.
 	}
 	

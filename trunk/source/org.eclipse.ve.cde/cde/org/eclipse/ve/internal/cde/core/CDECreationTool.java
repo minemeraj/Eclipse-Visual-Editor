@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CDECreationTool.java,v $ $Revision: 1.6 $ $Date: 2005-06-28 19:22:56 $
+ * $RCSfile: CDECreationTool.java,v $ $Revision: 1.7 $ $Date: 2005-06-28 21:13:14 $
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -77,8 +77,9 @@ public class CDECreationTool extends CreationTool {
 
 	protected Cursor editPolicyCursor;
 
-	private FlowPage flowPage;
-	private TextFlow textFlow;
+	private FlowPage unexecutableMsgPage;
+	private Label unexecutableImageLabel;
+	private TextFlow unexecutableTextFlow;
 
 	protected CDECreationTool(CreationFactory aFactory) {
 		super(aFactory);
@@ -140,19 +141,31 @@ public class CDECreationTool extends CreationTool {
 				LayerManager layoutManager = LayerManager.Helper.find(gep);
 				if(layoutManager!=null){
 					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.FEEDBACK_LAYER);
-					if(textFlow==null){
-						textFlow = new TextFlow();
-						textFlow.setForegroundColor(ColorConstants.red);
-						textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_TRUNCATE));
+					if(unexecutableMsgPage==null){
+						// show feedback is called many times before
+						// an erase feedback is called. Erase is called
+						// once per target change.
+						unexecutableMsgPage = new FlowPage();
+						unexecutableMsgPage.setBorder(new MarginBorder(5));
+
+						FlowAdapter imageAdapter = new FlowAdapter();
+						imageAdapter.setLayoutManager(new StackLayout());
+						imageAdapter.setBorder(new MarginBorder(0,0,0,5));
+						unexecutableImageLabel = new Label();
+						imageAdapter.add(unexecutableImageLabel);
+						unexecutableMsgPage.add(imageAdapter);
+
+						unexecutableTextFlow = new TextFlow();
+						unexecutableTextFlow.setForegroundColor(ColorConstants.darkBlue);
+						unexecutableTextFlow.setLayoutManager(new ParagraphTextLayout(unexecutableTextFlow, ParagraphTextLayout.WORD_WRAP_TRUNCATE));
+						unexecutableMsgPage.add(unexecutableTextFlow);
 					}
-					if(flowPage==null){
-						flowPage = new FlowPage();
-						flowPage.add(textFlow);
-						flowPage.setBorder(new MarginBorder(10));
-					}
-					textFlow.setText(data.getMessage());
-					feedbackLayer.add(flowPage);
-					flowPage.setBounds(gep.getFigure().getBounds());
+
+					unexecutableImageLabel.setIcon(data.getImage());
+					unexecutableTextFlow.setText(data.getMessage());
+
+					feedbackLayer.add(unexecutableMsgPage);
+					unexecutableMsgPage.setBounds(gep.getFigure().getBounds());
 				}
 			}
 		}
@@ -188,15 +201,15 @@ public class CDECreationTool extends CreationTool {
 		}
 		if(getTargetRequest().getExtendedData().containsKey(UnExecutableCommandData.class)) // clean it up
 			getTargetRequest().getExtendedData().remove(UnExecutableCommandData.class);
-		if(textFlow!=null){
+		if(unexecutableMsgPage!=null){
 			EditPart targetEP = getTargetEditPart();
 			if(targetEP!=null){
 				LayerManager layerManager = LayerManager.Helper.find(targetEP);
 				if(layerManager!=null){
 					IFigure feedbackLayer = layerManager.getLayer(LayerConstants.FEEDBACK_LAYER);
-					feedbackLayer.remove(flowPage);
-					textFlow = null;
-					flowPage = null;
+					unexecutableMsgPage.removeAll();
+					feedbackLayer.remove(unexecutableMsgPage);
+					unexecutableMsgPage = null;
 				}
 			}
 		}
