@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CDECreationTool.java,v $ $Revision: 1.5 $ $Date: 2005-06-27 22:29:27 $
+ * $RCSfile: CDECreationTool.java,v $ $Revision: 1.6 $ $Date: 2005-06-28 19:22:56 $
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -143,13 +143,13 @@ public class CDECreationTool extends CreationTool {
 					if(textFlow==null){
 						textFlow = new TextFlow();
 						textFlow.setForegroundColor(ColorConstants.red);
+						textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_TRUNCATE));
 					}
-					textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_TRUNCATE));
 					if(flowPage==null){
 						flowPage = new FlowPage();
+						flowPage.add(textFlow);
 						flowPage.setBorder(new MarginBorder(10));
 					}
-					flowPage.add(textFlow);
 					textFlow.setText(data.getMessage());
 					feedbackLayer.add(flowPage);
 					flowPage.setBounds(gep.getFigure().getBounds());
@@ -195,7 +195,6 @@ public class CDECreationTool extends CreationTool {
 				if(layerManager!=null){
 					IFigure feedbackLayer = layerManager.getLayer(LayerConstants.FEEDBACK_LAYER);
 					feedbackLayer.remove(flowPage);
-					flowPage.remove(textFlow);
 					textFlow = null;
 					flowPage = null;
 				}
