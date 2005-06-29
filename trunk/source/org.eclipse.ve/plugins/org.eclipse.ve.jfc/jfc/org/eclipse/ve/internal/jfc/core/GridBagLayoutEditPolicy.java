@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.19 $  $Date: 2005-06-29 16:26:57 $ 
+ *  $Revision: 1.20 $  $Date: 2005-06-29 20:07:24 $ 
  */
 
 import java.util.*;
@@ -549,7 +549,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 			fColumnFigure = new AlphaRectangleFigure();
 		Point colStart = fGridBagLayoutGridFigure.getColumnStartPosition(position.x);
 		Point colEnd = fGridBagLayoutGridFigure.getColumnEndPosition(position.x);
-		fColumnFigure.setBounds(new Rectangle(colStart.x-2, colStart.y, 10, colEnd.y - colStart.y));
+		fColumnFigure.setBounds(new Rectangle(colStart.x-4, colStart.y, 12, colEnd.y - colStart.y));
 		fColumnFigure.setBackgroundColor(ColorConstants.yellow);
 		addFeedback(fColumnFigure);
 	}
@@ -570,7 +570,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 			fRowFigure = new AlphaRectangleFigure();
 		Point rowStart = fGridBagLayoutGridFigure.getRowStartPosition(position.y);
 		Point rowEnd = fGridBagLayoutGridFigure.getRowEndPosition(position.y);
-		fRowFigure.setBounds(new Rectangle(rowStart.x, rowStart.y-2, rowEnd.x - rowStart.x, 10));
+		fRowFigure.setBounds(new Rectangle(rowStart.x, rowStart.y-4, rowEnd.x - rowStart.x, 10));
 		fRowFigure.setBackgroundColor(ColorConstants.yellow);
 		addFeedback(fRowFigure);
 	}
