@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.18 $  $Date: 2005-06-29 16:01:58 $ 
+ *  $Revision: 1.19 $  $Date: 2005-06-29 16:26:57 $ 
  */
 
 import java.util.*;
@@ -364,6 +364,9 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		getFeedbackLayer().repaint();
 	}
 	public void eraseTargetFeedback(Request request) {
+		if (fShowgrid){
+			refreshGridFigure();
+		}
 		if (!fShowgrid)
 			if (fGridBagLayoutGridFigure != null && fGridBagLayoutGridFigure.getParent() != null) {
 				removeFeedback(fGridBagLayoutGridFigure);
