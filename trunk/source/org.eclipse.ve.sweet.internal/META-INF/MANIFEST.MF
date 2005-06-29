@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Internal
+Bundle-SymbolicName: org.eclipse.ve.sweet.internal
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
