@@ -59,25 +59,27 @@ public class JavaProperty implements InvocationHandler {
         this.propertyName = propertyName;
 
         // There must be at least a getter or a field...
-        getter = receiverClass.getMethod(realMethodName("get"), noParams);
-        if (getter != null) {
+        try {
+            getter = receiverClass.getMethod(realMethodName("get"), noParams);
             propertyType = getter.getReturnType();
-        } else {
+        } catch (NoSuchMethodException e) {
             try {
                 field = receiverClass.getDeclaredField(propertyName);
-            } catch (Exception e) {
+            } catch (Exception e2) {
                 try {
                     field = receiverClass.getDeclaredField(lowerCaseFirstLetter(propertyName));
                 } catch (Exception e1) {
                     throw new NoSuchMethodException("That property does not exist.");
                 }
             }
-            field.setAccessible(true);
             propertyType = field.getType();
+            field.setAccessible(true);
         }
         
-        setter = receiverClass.getMethod(
-                realMethodName("set"), new Class[] {propertyType});
+        try {
+            setter = receiverClass.getMethod(
+                    realMethodName("set"), new Class[] {propertyType});
+        } catch (NoSuchMethodException e) {}
     }
 
     private String lowerCaseFirstLetter(String name) {
@@ -146,9 +148,10 @@ public class JavaProperty implements InvocationHandler {
         } 
 
         Method realMethod;
-        realMethod = receiverClass.getMethod(
-                realMethodName(method.getName()), method.getParameterTypes());
-        if (realMethod == null) {
+        try {
+            realMethod = receiverClass.getMethod(
+                    realMethodName(method.getName()), method.getParameterTypes());
+        } catch (Exception e) {
             return null;
         }
         return realMethod.invoke(receiver, args);

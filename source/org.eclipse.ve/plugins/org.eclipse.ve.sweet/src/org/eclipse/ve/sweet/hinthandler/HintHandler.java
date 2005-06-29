@@ -9,24 +9,24 @@
  * Contributors:
  *     db4objects - Initial API and implementation
  */
-package org.eclipse.ve.sweet.statusbar;
+package org.eclipse.ve.sweet.hinthandler;
 
-public class StatusBar {
+public class HintHandler {
     
-    private static class NullStatusBar implements IStatusBar {
+    private static class NullStatusBar implements IHintHandler {
         public void setMessage(String message) {
         }
         public void clearMessage() {
         }
     }
     
-    private static IStatusBar statusBar = new NullStatusBar();
+    private static IHintHandler statusBar = new NullStatusBar();
     
-    public static void setStatusBar(IStatusBar statusBar) {
-        StatusBar.statusBar = statusBar;
+    public static void setHintHandler(IHintHandler statusBar) {
+        HintHandler.statusBar = statusBar;
     }
 
-    public static IStatusBar getDefault() {
+    public static IHintHandler getDefault() {
         return statusBar;
     }
 

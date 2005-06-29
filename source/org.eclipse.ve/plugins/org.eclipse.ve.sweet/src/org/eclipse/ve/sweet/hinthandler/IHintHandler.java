@@ -9,9 +9,9 @@
  * Contributors:
  *     db4objects - Initial API and implementation
  */
-package org.eclipse.ve.sweet.statusbar;
+package org.eclipse.ve.sweet.hinthandler;
 
-public interface IStatusBar {
+public interface IHintHandler {
 
     /**
      * Sets the status bar message
