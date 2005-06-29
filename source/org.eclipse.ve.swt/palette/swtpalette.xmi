@@ -118,19 +118,19 @@
 	    <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
 	        value="toolBar"/>
 	  </children>
-	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/button_obj.gif"
+	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolitempush_obj.gif"
 	      prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/ToolItem-Push.xmi#ToolItemPush_1">
 	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="ToolItem.Push"/>
 	  </children>
-	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/checkbox_obj.gif"
+	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolitemcheck_obj.gif"
 	      prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/ToolItem-CheckBox.xmi#ToolItemCheckBox_1">
 	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="ToolItem.Check"/>
 	  </children>
-	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/radiobutton_obj.gif"
+	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolitemradio_obj.gif"
 	      prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/ToolItem-Radio.xmi#ToolItemRadio_1">
 	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="ToolItem.Radio"/>
 	  </children>
-	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/choice_obj.gif"
+	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolitemdrop_obj.gif"
 	      prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/ToolItem-Dropdown.xmi#ToolItemDropdown_1">
 	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="ToolItem.Dropdown"/>
 	  </children>
@@ -177,7 +177,7 @@
       <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
           value="cTabFolder"/>
     </children>
-    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolbar_obj.gif"
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/coolbar_obj.gif"
         creationClassURI="java:/org.eclipse.swt.widgets#CoolBar">
       <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="CoolBar"/>
       <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"

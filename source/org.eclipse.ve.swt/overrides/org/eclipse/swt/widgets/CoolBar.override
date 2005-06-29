@@ -15,7 +15,7 @@
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
         treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CoolBarTreeEditPart"
         graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CoolBarGraphicalEditPart:true">
-      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolbar_obj.gif"/>
+      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/coolbar_obj.gif"/>
     </addedEObjects>
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
     	beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ItemParentProxyAdapter"/>

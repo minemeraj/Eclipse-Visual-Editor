@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolItemLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-09 20:53:34 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-29 18:06:33 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -34,11 +34,11 @@ import org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribut
  */
 public class ToolItemLabelProvider extends DefaultLabelProviderWithNameAndAttribute {
 
-	private static final String CHECK_BOX = "platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/checkbox_obj.gif"; //$NON-NLS-1$
+	private static final String CHECK_BOX = "platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolitemcheck_obj.gif"; //$NON-NLS-1$
 		
-	private static final String RADIO_BUTTON = "platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/radiobutton_obj.gif"; //$NON-NLS-1$
+	private static final String RADIO_BUTTON = "platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolitemradio_obj.gif"; //$NON-NLS-1$
 	
-	private static final String DROP_DOWN = "platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/choice_obj.gif"; //$NON-NLS-1$
+	private static final String DROP_DOWN = "platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolitemdrop_obj.gif"; //$NON-NLS-1$
 	
 	private static final String SEPARATOR = "platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolitemseparator_obj.gif"; //$NON-NLS-1$
 	
