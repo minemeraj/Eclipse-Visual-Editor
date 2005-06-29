@@ -13,6 +13,7 @@ package org.eclipse.ve.sweet.field;
 
 import org.eclipse.ve.sweet.dataeditors.IObjectEditor;
 import org.eclipse.ve.sweet.dataeditors.IPropertyEditor;
+import org.eclipse.ve.sweet.field.swt.SWTFieldControllerFactory;
 
 
 public class FieldControllerFactory {

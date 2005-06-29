@@ -9,7 +9,7 @@
  * Contributors:
  *     db4objects - Initial API and implementatiobn
  */
-package org.eclipse.ve.sweet.field.internal.swt.interfaces;
+package org.eclipse.ve.sweet.field.swt.internal.interfaces;
 
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionListener;

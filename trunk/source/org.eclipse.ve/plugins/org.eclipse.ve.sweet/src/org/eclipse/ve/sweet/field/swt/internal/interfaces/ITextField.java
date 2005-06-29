@@ -9,28 +9,25 @@
  * Contributors:
  *     db4objects - Initial API and implementatiobn
  */
-package org.eclipse.ve.sweet.field.internal.swt.interfaces;
+package org.eclipse.ve.sweet.field.swt.internal.interfaces;
 
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.VerifyListener;
 
-public interface IComboField {
-    Point getSelection();
-    int getSelectionIndex();
-    
-    void select(int index);
-    
-    String getText();
+public interface ITextField {
     void setText(String value);
+    String getText();
     
-    void removeAll();
+    void addVerifyListener(VerifyListener l);
+    void removeVerifyListener(VerifyListener l);
     
-    void add(String item);
-    
-    void addSelectionListener(SelectionListener l);
-    void removeSelectionListener(SelectionListener l);
+    void setSelection(int begin, int end);
 
     void addDisposeListener(DisposeListener l);
     void removeDisposeListener(DisposeListener l);
+    
+    void addFocusListener(FocusListener l);
+    void removeFocusListener(FocusListener l);
+    void setFocus();
 }
