@@ -711,7 +711,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			if (currentCustomPath==null || !currentCustomPath.equals(resolvedPath.toPortableString()))
 				return true ;
 		}
-		return fClasspathEntries.length==0;
+		return false; // platform path will "never" change
 	}
 	
 	public  IClasspathEntry[] getClasspathEntries() {
