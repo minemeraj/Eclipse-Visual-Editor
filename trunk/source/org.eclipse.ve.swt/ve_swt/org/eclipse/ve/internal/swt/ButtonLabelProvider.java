@@ -10,10 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ButtonLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-09 17:32:29 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-29 18:06:33 $ 
  */
 package org.eclipse.ve.internal.swt;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 
@@ -29,6 +33,12 @@ import org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribut
  * @since 1.1.0
  */
 public class ButtonLabelProvider extends DefaultLabelProviderWithNameAndAttribute {
+	
+	private static final String CHECK_BOX = "platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/checkbox_obj.gif"; //$NON-NLS-1$
+	
+	private static final String RADIO_BUTTON = "platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/radiobutton_obj.gif"; //$NON-NLS-1$
+	
+	private static Image CHECK_BOX_IMAGE, RADIO_BUTTON_IMAGE;
 
 	public Image getImage(Object element) {
 		if (element instanceof IJavaObjectInstance) {
@@ -40,8 +50,20 @@ public class ButtonLabelProvider extends DefaultLabelProviderWithNameAndAttribut
 				int style = widgetProxyAdapter.getStyle();
 
 				if ((style & SWT.CHECK) != 0) {
-					return ToolItemLabelProvider.getCheckBox();
-				} else if ((style & SWT.RADIO) != 0) { return ToolItemLabelProvider.getRadio(); }
+					try{
+						CHECK_BOX_IMAGE = ImageDescriptor.createFromURL(new URL(CHECK_BOX)).createImage();
+					} catch(MalformedURLException mue){
+						CHECK_BOX_IMAGE = ImageDescriptor.getMissingImageDescriptor().createImage();
+					}
+					return CHECK_BOX_IMAGE;
+				} else if ((style & SWT.RADIO) != 0) { 
+					try{
+						RADIO_BUTTON_IMAGE = ImageDescriptor.createFromURL(new URL(RADIO_BUTTON)).createImage();
+					} catch(MalformedURLException mue){
+						RADIO_BUTTON_IMAGE = ImageDescriptor.getMissingImageDescriptor().createImage();
+					}
+					return RADIO_BUTTON_IMAGE;
+				}
 			}
 		} 
 		return super.getImage(element);	
