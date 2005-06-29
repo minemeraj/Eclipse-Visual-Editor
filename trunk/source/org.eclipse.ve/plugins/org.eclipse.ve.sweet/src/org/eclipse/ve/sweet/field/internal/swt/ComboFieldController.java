@@ -9,7 +9,7 @@
  * Contributors:
  *     db4objects - Initial API and implementatiobn
  */
-package org.eclipse.ve.sweet.field.swt;
+package org.eclipse.ve.sweet.field.internal.swt;
 
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.dataeditors.IObjectEditor;

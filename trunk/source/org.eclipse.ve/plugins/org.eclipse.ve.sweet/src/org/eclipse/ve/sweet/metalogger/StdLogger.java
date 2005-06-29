@@ -11,6 +11,14 @@
  */
 package org.eclipse.ve.sweet.metalogger;
 
+/**
+ * StdLogger.
+ *
+ * FIXME:  This is a stub because the old code that was referenced
+ * was CPL, so I couldn't include it.
+ * 
+ * @author djo
+ */
 public class StdLogger implements ILogger {
 
     public void message(String message) {
