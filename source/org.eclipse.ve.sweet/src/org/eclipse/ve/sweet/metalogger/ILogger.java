@@ -11,6 +11,14 @@
  */
 package org.eclipse.ve.sweet.metalogger;
 
+/**
+ * ILogger.  
+ * 
+ * FIXME:  This is a stub because the old code that was referenced
+ * was CPL, so I couldn't include it.
+ *
+ * @author djo
+ */
 public interface ILogger {
 
     /**

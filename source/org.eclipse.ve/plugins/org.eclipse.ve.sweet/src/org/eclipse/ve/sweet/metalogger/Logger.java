@@ -11,6 +11,14 @@
  */
 package org.eclipse.ve.sweet.metalogger;
 
+/**
+ * Logger.
+ *
+ * FIXME:  This is a stub because the old code that was referenced
+ * was CPL, so I couldn't include it.
+ * 
+ * @author djo
+ */
 public class Logger {
 
     public static ILogger log() {
