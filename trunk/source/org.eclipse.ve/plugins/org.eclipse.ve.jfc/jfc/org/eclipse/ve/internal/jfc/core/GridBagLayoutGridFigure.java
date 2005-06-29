@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutGridFigure.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-29 16:01:58 $ 
+ *  $Revision: 1.5 $  $Date: 2005-06-29 20:13:49 $ 
  */
 
 import org.eclipse.draw2d.*;
@@ -23,6 +23,8 @@ import org.eclipse.swt.graphics.Color;
  * Draw grid lines on a GridBagLayout when dropping a component into a container
  */
 public class GridBagLayoutGridFigure extends Figure {
+	private static final int CLOSE_TO_SIZE = 4;
+	
 	Point layoutOrigin = new Point(0,0);
 	Point mousePosition = null;
 	int[] columnWidths = null, rowHeights = null, columnPositions = null, rowPositions = null;
@@ -277,7 +279,7 @@ public Point getCellLocation(int x, int y, boolean includeEmptyColumns, boolean 
 			gridx = i;
 			if (includeEmptyColumns) {
 				/*
-				 * Since column positions can be equal if there columns that don't contain components,
+				 * Since column positions can be equal if there are columns that don't contain components,
 				 * iterate back throught the columns positions to get the first one with this position.
 				 */
 				int j;
@@ -294,7 +296,7 @@ public Point getCellLocation(int x, int y, boolean includeEmptyColumns, boolean 
 			gridy = i;
 			if (includeEmptyRows) {
 				/*
-				 * Since row positions can be equal if there rows that don't contain components,
+				 * Since row positions can be equal if there are rows that don't contain components,
 				 * iterate back throught the rows to get the first one with this position.
 				 */
 				int j;
@@ -312,7 +314,19 @@ public Point getCellLocation(int x, int y, boolean includeEmptyColumns, boolean 
 	if (!foundy && (y >= rowPositions[rowPositions.length-1]))
 		// mouse position is beyond the end of the last row
 		gridy = rowPositions.length-1;
-		
+	//close on the left side of a column
+	if (foundx && isPointerNearAColumnLeft(x)){
+		while(isColumnHidden(gridx) && gridx <= columnPositions.length)
+			gridx++;
+		gridx++;
+	}
+	//close on the top side of a row
+	if (foundy && isPointerNearARowTop(y)){
+		while(isRowHidden(gridy) && gridy <= rowPositions.length)
+			gridy++;
+		gridy++;
+
+	}
 	return new Point(gridx,gridy);
 }
 /**
@@ -345,7 +359,9 @@ public Point getColumnStartPosition(int x) {
 	if (columnStartPositions != null) {
 		for (int i = 0; i < columnPositions.length; i++) {
 			int xpos = columnPositions[i];
-			if ((xpos <= x) && (x <= xpos + 5)) 
+			if ((xpos <= x) && (x <= xpos + CLOSE_TO_SIZE)) 
+				return columnStartPositions[i];
+			if ((x < xpos) && (xpos - CLOSE_TO_SIZE < x))
 				return columnStartPositions[i];
 		} 
 	}
@@ -355,7 +371,9 @@ public Point getColumnEndPosition(int x) {
 	if (columnEndPositions != null) {
 		for (int i = 0; i < columnPositions.length; i++) {
 			int xpos = columnPositions[i];
-			if ((xpos <= x) && (x <= xpos + 5)) 
+			if ((xpos <= x) && (x <= xpos + CLOSE_TO_SIZE)) 
+				return columnEndPositions[i];
+			if ((x < xpos) && (xpos - CLOSE_TO_SIZE < x))
 				return columnEndPositions[i];
 		} 
 	}
@@ -365,7 +383,9 @@ public Point getRowStartPosition(int y) {
 	if (rowStartPositions != null) {
 		for (int i = 0; i < rowPositions.length; i++) {
 			int ypos = rowPositions[i];
-			if ((ypos <= y) && (y < ypos + 5)) 
+			if ((ypos <= y) && (y < ypos + CLOSE_TO_SIZE)) 
+				return rowStartPositions[i];
+			if ((y < ypos) && (ypos - CLOSE_TO_SIZE < y))
 				return rowStartPositions[i];
 		}
 	}
@@ -375,7 +395,9 @@ public Point getRowEndPosition(int y) {
 	if (rowStartPositions != null) {
 		for (int i = 0; i < rowPositions.length; i++) {
 			int ypos = rowPositions[i];
-			if ((ypos <= y) && (y < ypos + 5)) 
+			if ((ypos <= y) && (y < ypos + CLOSE_TO_SIZE)) 
+				return rowEndPositions[i];
+			if ((y < ypos) && (ypos - CLOSE_TO_SIZE < y))
 				return rowEndPositions[i];
 		} 
 	}
@@ -388,10 +410,24 @@ public boolean isPointerNearAColumn(int x) {
 
 	for (int i = 0; i < columnPositions.length; i++) {
 		int xpos = columnPositions[i];
-		if ((xpos <= x) && (x <= xpos + 5)) 
+		if ((xpos <= x) && (x <= xpos + CLOSE_TO_SIZE)) 
+			return true;
+		if ((x < xpos) && (xpos - CLOSE_TO_SIZE < x))
 			return true;
 	} 
 	return false;
+}
+public boolean isPointerNearAColumnLeft(int x){
+	if (columnPositions == null)
+		return false;
+
+	for (int i = 0; i < columnPositions.length; i++) {
+		int xpos = columnPositions[i];
+
+		if ((x < xpos) && (xpos - CLOSE_TO_SIZE < x))
+			return true;
+	} 
+	return false;	
 }
 public boolean isPointerNearARow(int y) {
 	if (rowPositions == null)
@@ -399,7 +435,21 @@ public boolean isPointerNearARow(int y) {
 
 	for (int i = 0; i < rowPositions.length; i++) {
 		int ypos = rowPositions[i];
-		if ((ypos <= y) && (y < ypos + 5)) 
+		if ((ypos <= y) && (y < ypos + CLOSE_TO_SIZE)) 
+			return true;
+		if ((y < ypos) && (ypos - CLOSE_TO_SIZE < y))
+			return true;
+	} 
+	return false;
+}
+public boolean isPointerNearARowTop(int y){
+	if (rowPositions == null)
+		return false;
+
+	for (int i = 0; i < rowPositions.length; i++) {
+		int ypos = rowPositions[i];
+
+		if ((y < ypos) && (ypos - CLOSE_TO_SIZE < y))
 			return true;
 	} 
 	return false;
