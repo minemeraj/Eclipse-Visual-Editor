@@ -27,8 +27,8 @@ import org.eclipse.ve.sweet.dataeditors.IObjectEditor;
 import org.eclipse.ve.sweet.dataeditors.IPropertyEditor;
 import org.eclipse.ve.sweet.field.IFieldController;
 import org.eclipse.ve.sweet.field.swt.internal.interfaces.ITextField;
+import org.eclipse.ve.sweet.hinthandler.HintHandler;
 import org.eclipse.ve.sweet.reflect.RelaxedDuckType;
-import org.eclipse.ve.sweet.statusbar.StatusBar;
 import org.eclipse.ve.sweet.verifier.IVerifier;
 import org.eclipse.ve.sweet.verifier.Verifier;
 import org.eclipse.ve.sweet.verifiers.reusable.ReadOnlyVerifier;
@@ -133,10 +133,10 @@ public class TextFieldController implements IFieldController {
 	 */
 	public boolean verify() {
         if (verifier.verifyFullValue(control.getText())) {
-            StatusBar.getDefault().setMessage("");
+            HintHandler.getDefault().setMessage("");
             return true;
         } else {
-            StatusBar.getDefault().setMessage(verifier.getHint());
+            HintHandler.getDefault().setMessage(verifier.getHint());
             return false;
         }
 	}
@@ -181,11 +181,11 @@ public class TextFieldController implements IFieldController {
             String newValue = currentText.substring(0, e.start) + e.text + currentText.substring(e.end);
             if (!verifier.verifyFragment(newValue)) {
                 e.doit = false;
-                StatusBar.getDefault().setMessage(verifier.getHint());
+                HintHandler.getDefault().setMessage(verifier.getHint());
             } else {
                 dirty = true;
                 input.fireObjectListenerEvent();
-                StatusBar.getDefault().clearMessage();
+                HintHandler.getDefault().clearMessage();
             }
         }
     };
