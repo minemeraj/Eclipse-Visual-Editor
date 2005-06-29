@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.130 $  $Date: 2005-06-28 20:13:15 $ 
+ *  $Revision: 1.131 $  $Date: 2005-06-29 20:47:04 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -2021,8 +2021,11 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							recycleCntr = Integer.MAX_VALUE;	// Set it to max to indicate don't reload at this time. This is because our project is being deleted/closed.
 						else
 							recycleCntr = 0; // So that this resets the cntr for premature terminates.
-						if (proxyFactoryRegistry != null)
+						if (proxyFactoryRegistry != null) {
+							if (close)
+								proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
 							proxyFactoryRegistry.terminateRegistry();	// Terminate registry
+						}
 					}
 				});
 			}

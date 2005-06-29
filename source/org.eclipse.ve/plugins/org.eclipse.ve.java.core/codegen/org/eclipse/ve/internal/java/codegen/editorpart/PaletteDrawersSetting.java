@@ -12,7 +12,7 @@
  *  Created May 27, 2005 by Gili Mendel
  * 
  *  $RCSfile: PaletteDrawersSetting.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-21 19:53:10 $ 
+ *  $Revision: 1.3 $  $Date: 2005-06-29 20:47:04 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -144,10 +144,10 @@ public class PaletteDrawersSetting implements EditorSettings.ISetting {
 	}
 
 	public void dispose() {
-		// Editor is closing, persist the palette
-		StringBuffer sb = new StringBuffer();
-		boolean first = true;
-		if (getEditPartRoot() != null) {
+		if (getEditPartRoot() != null && resource.exists()) {
+			// Editor is closing, persist the palette
+			StringBuffer sb = new StringBuffer();
+			boolean first = true;			
 			PaletteViewer paletteViewer = (PaletteViewer) getEditPartRoot().getViewer();
 			List drawers = getEditPartRoot().getChildren();
 			if (drawers != null) {
