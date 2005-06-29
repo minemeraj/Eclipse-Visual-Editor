@@ -9,19 +9,24 @@
  * Contributors:
  *     db4objects - Initial API and implementatiobn
  */
-package org.eclipse.ve.sweet.field.internal.swt.interfaces;
+package org.eclipse.ve.sweet.field.swt.internal.interfaces;
 
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 
-/**
- * ICheckboxButtonField. 
- *
- * @author djo
- */
-public interface ICheckboxButtonField {
-    void setSelection(boolean value);
-    boolean getSelection();
+public interface IComboField {
+    Point getSelection();
+    int getSelectionIndex();
+    
+    void select(int index);
+    
+    String getText();
+    void setText(String value);
+    
+    void removeAll();
+    
+    void add(String item);
     
     void addSelectionListener(SelectionListener l);
     void removeSelectionListener(SelectionListener l);

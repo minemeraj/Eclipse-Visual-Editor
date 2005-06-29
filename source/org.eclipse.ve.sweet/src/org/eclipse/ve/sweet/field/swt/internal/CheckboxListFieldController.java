@@ -9,7 +9,7 @@
  * Contributors:
  *     db4objects - Initial API and implementatiobn
  */
-package org.eclipse.ve.sweet.field.internal.swt;
+package org.eclipse.ve.sweet.field.swt.internal;
 
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.dataeditors.IObjectEditor;
@@ -17,9 +17,9 @@ import org.eclipse.ve.sweet.dataeditors.IPropertyEditor;
 import org.eclipse.ve.sweet.field.IFieldController;
 
 
-public class CheckboxButtonFieldController implements IFieldController {
+public class CheckboxListFieldController implements IFieldController {
 
-    public CheckboxButtonFieldController(Object control, IObjectEditor object, IPropertyEditor property) {
+    public CheckboxListFieldController(Object control, IObjectEditor object, IPropertyEditor property) {
         // TODO Auto-generated constructor stub
     }
 

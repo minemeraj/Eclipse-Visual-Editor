@@ -9,17 +9,19 @@
  * Contributors:
  *     db4objects - Initial API and implementatiobn
  */
-package org.eclipse.ve.sweet.field;
+package org.eclipse.ve.sweet.field.swt;
 
 import org.eclipse.ve.sweet.dataeditors.IObjectEditor;
 import org.eclipse.ve.sweet.dataeditors.IPropertyEditor;
-import org.eclipse.ve.sweet.field.internal.swt.CheckboxButtonFieldController;
-import org.eclipse.ve.sweet.field.internal.swt.CheckboxListFieldController;
-import org.eclipse.ve.sweet.field.internal.swt.ComboFieldController;
-import org.eclipse.ve.sweet.field.internal.swt.TextFieldController;
-import org.eclipse.ve.sweet.field.internal.swt.interfaces.ICheckboxButtonField;
-import org.eclipse.ve.sweet.field.internal.swt.interfaces.ICheckboxListField;
-import org.eclipse.ve.sweet.field.internal.swt.interfaces.IComboField;
+import org.eclipse.ve.sweet.field.IFieldController;
+import org.eclipse.ve.sweet.field.IFieldControllerFactory;
+import org.eclipse.ve.sweet.field.swt.internal.CheckboxButtonFieldController;
+import org.eclipse.ve.sweet.field.swt.internal.CheckboxListFieldController;
+import org.eclipse.ve.sweet.field.swt.internal.ComboFieldController;
+import org.eclipse.ve.sweet.field.swt.internal.TextFieldController;
+import org.eclipse.ve.sweet.field.swt.internal.interfaces.ICheckboxButtonField;
+import org.eclipse.ve.sweet.field.swt.internal.interfaces.ICheckboxListField;
+import org.eclipse.ve.sweet.field.swt.internal.interfaces.IComboField;
 import org.eclipse.ve.sweet.reflect.DuckType;
 
 

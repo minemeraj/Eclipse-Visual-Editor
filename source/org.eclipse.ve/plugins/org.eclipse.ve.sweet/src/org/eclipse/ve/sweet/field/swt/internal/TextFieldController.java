@@ -9,7 +9,7 @@
  * Contributors:
  *     db4objects - Initial API and implementatiobn
  */
-package org.eclipse.ve.sweet.field.internal.swt;
+package org.eclipse.ve.sweet.field.swt.internal;
 
 
 import org.eclipse.swt.events.DisposeEvent;
@@ -26,7 +26,7 @@ import org.eclipse.ve.sweet.converter.IConverter;
 import org.eclipse.ve.sweet.dataeditors.IObjectEditor;
 import org.eclipse.ve.sweet.dataeditors.IPropertyEditor;
 import org.eclipse.ve.sweet.field.IFieldController;
-import org.eclipse.ve.sweet.field.internal.swt.interfaces.ITextField;
+import org.eclipse.ve.sweet.field.swt.internal.interfaces.ITextField;
 import org.eclipse.ve.sweet.reflect.RelaxedDuckType;
 import org.eclipse.ve.sweet.statusbar.StatusBar;
 import org.eclipse.ve.sweet.verifier.IVerifier;
