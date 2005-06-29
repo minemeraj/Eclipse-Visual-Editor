@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,10 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutGridFigure.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.4 $  $Date: 2005-06-29 16:01:58 $ 
  */
 
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
@@ -45,6 +43,9 @@ public GridBagLayoutGridFigure (Rectangle bounds, int [][] layoutDimensions, Poi
 	}
 }
 protected void paintFigure(Graphics g){
+	Rectangle r = getBounds().getCopy();
+	r = new Rectangle(r.x - 15, r.y - 15, r.width + 15, r.height + 30);
+	g.setClip(r);
 	Color orgColor = g.getForegroundColor();
 	g.setForegroundColor(ColorConstants.red);
 	g.setLineStyle(Graphics.LINE_DOT);
@@ -55,6 +56,22 @@ protected void paintFigure(Graphics g){
 	drawColumnHeaders(g);
 	drawRowHeaders(g);
 }
+
+/**
+ * Make sure to repaint area outside border to handle clipping area.
+ *
+ * @since 1.1
+ */
+public void erase() {
+	if (getParent() == null || !isVisible())
+		return;
+	
+	Rectangle r = getBounds().getCopy();
+	r = new Rectangle(r.x - 15, r.y - 15, r.width + 15, r.height + 30);
+	getParent().translateToParent(r);
+	getParent().repaint(r.x, r.y, r.width, r.height);
+}
+
 /**
  * Draw the column dividers based on the GridBagLayout's origin and the column widths.
  * Note: Column widths from GridBagLayout that equal zero indicate there are no components
@@ -103,8 +120,12 @@ protected void calculateColumnDividers() {
 protected void drawColumnDividers(Graphics g) {
 	if (columnStartPositions == null && columnEndPositions == null)
 		return;
+	Rectangle r = getBounds().getCopy();
+	int minX = r.x;
+	int maxX = r.x + r.width;
 	for (int i = 0; i < columnStartPositions.length; i++) 
-		g.drawLine(columnStartPositions[i], columnEndPositions[i]);
+		if( columnStartPositions[i].x >= minX && columnStartPositions[i].x <= maxX)
+			g.drawLine(new Point(columnStartPositions[i].x, r.y), new Point(columnEndPositions[i].x, r.y + r.height));
 }
 
 protected void drawColumnHeaders(Graphics g) {
@@ -129,9 +150,12 @@ protected void drawColumnHeader(Graphics g, int colNumber, Point p) {
 		String colname = Integer.toString(colNumber);
 		int charwidth = g.getFontMetrics().getAverageCharWidth();
 		int charheight = g.getFontMetrics().getHeight();
-		g.fillOval(new Rectangle(p.x-4, p.y-1, (colname.length()* charwidth)+8, charheight+2));
-		g.drawOval(new Rectangle(p.x-4, p.y-1, (colname.length()* charwidth)+8, charheight+2));
-		g.drawText(Integer.toString(colNumber), p);
+		Rectangle r = getBounds().getCopy();
+		if(p.x+1 >= r.x && p.x + (colname.length()* charwidth)- 1 <= r.x + r.width){
+			g.fillRoundRectangle(new Rectangle(p.x-4, p.y-10, (colname.length()* charwidth)+6, charheight+2), 6, 6);
+			g.drawRoundRectangle(new Rectangle(p.x-4, p.y-10, (colname.length()* charwidth)+6, charheight+2), 6, 6);
+			g.drawText(Integer.toString(colNumber), new Point(p.x, p.y - 9));
+		}
 	}
 }
 public void highlightColumnHeadersFromColumn(int colNumber) {
@@ -189,8 +213,12 @@ protected void calculateRowDividers() {
 protected void drawRowDividers(Graphics g) {
 	if (rowStartPositions == null && rowEndPositions == null)
 		return;
-	for (int i = 0; i < rowStartPositions.length; i++) 
-		g.drawLine(rowStartPositions[i], rowEndPositions[i]);
+	Rectangle r = getBounds().getCopy();
+	int minY = r.y;
+	int maxY = r.y + r.height;
+	for (int i = 0; i < rowStartPositions.length; i++)
+		if(rowStartPositions[i].y >= minY && rowStartPositions[i].y <= maxY)
+			g.drawLine(new Point(r.x, rowStartPositions[i].y), new Point(r.x + r.width, rowEndPositions[i].y));
 }
 
 protected void drawRowHeaders(Graphics g) {
@@ -214,9 +242,12 @@ protected void drawRowHeader(Graphics g, int rowNumber, Point p) {
 		String rowname = Integer.toString(rowNumber);
 		int charwidth = g.getFontMetrics().getAverageCharWidth();
 		int charheight = g.getFontMetrics().getHeight();
-		g.fillOval(new Rectangle(p.x, p.y-1, (rowname.length()* charwidth)+8, charheight+2));
-		g.drawOval(new Rectangle(p.x, p.y-1, (rowname.length()* charwidth)+8, charheight+2));
-		g.drawText(Integer.toString(rowNumber), new Point(p.x+4, p.y));
+		Rectangle r = getBounds().getCopy();
+		if(p.y + 5 >= r.y && p.y + charheight - 11 <= r.y + r.height){
+			g.fillRoundRectangle(new Rectangle(p.x - 14, p.y-1, (rowname.length()* charwidth)+6, charheight+2), 6, 6);
+			g.drawRoundRectangle(new Rectangle(p.x - 14, p.y-1, (rowname.length()* charwidth)+6, charheight+2), 6, 6);
+			g.drawText(Integer.toString(rowNumber), new Point(p.x-10, p.y));
+		}
 	}
 }
 public void highlightRowHeadersFromRow(int rowNumber) {
@@ -314,7 +345,7 @@ public Point getColumnStartPosition(int x) {
 	if (columnStartPositions != null) {
 		for (int i = 0; i < columnPositions.length; i++) {
 			int xpos = columnPositions[i];
-			if ((xpos <= x) && (x <= xpos + 3)) 
+			if ((xpos <= x) && (x <= xpos + 5)) 
 				return columnStartPositions[i];
 		} 
 	}
@@ -324,7 +355,7 @@ public Point getColumnEndPosition(int x) {
 	if (columnEndPositions != null) {
 		for (int i = 0; i < columnPositions.length; i++) {
 			int xpos = columnPositions[i];
-			if ((xpos <= x) && (x <= xpos + 3)) 
+			if ((xpos <= x) && (x <= xpos + 5)) 
 				return columnEndPositions[i];
 		} 
 	}
@@ -334,7 +365,7 @@ public Point getRowStartPosition(int y) {
 	if (rowStartPositions != null) {
 		for (int i = 0; i < rowPositions.length; i++) {
 			int ypos = rowPositions[i];
-			if ((ypos <= y) && (y < ypos + 3)) 
+			if ((ypos <= y) && (y < ypos + 5)) 
 				return rowStartPositions[i];
 		}
 	}
@@ -344,7 +375,7 @@ public Point getRowEndPosition(int y) {
 	if (rowStartPositions != null) {
 		for (int i = 0; i < rowPositions.length; i++) {
 			int ypos = rowPositions[i];
-			if ((ypos <= y) && (y < ypos + 3)) 
+			if ((ypos <= y) && (y < ypos + 5)) 
 				return rowEndPositions[i];
 		} 
 	}
@@ -357,7 +388,7 @@ public boolean isPointerNearAColumn(int x) {
 
 	for (int i = 0; i < columnPositions.length; i++) {
 		int xpos = columnPositions[i];
-		if ((xpos <= x) && (x <= xpos + 3)) 
+		if ((xpos <= x) && (x <= xpos + 5)) 
 			return true;
 	} 
 	return false;
@@ -368,7 +399,7 @@ public boolean isPointerNearARow(int y) {
 
 	for (int i = 0; i < rowPositions.length; i++) {
 		int ypos = rowPositions[i];
-		if ((ypos <= y) && (y < ypos + 3)) 
+		if ((ypos <= y) && (y < ypos + 5)) 
 			return true;
 	} 
 	return false;

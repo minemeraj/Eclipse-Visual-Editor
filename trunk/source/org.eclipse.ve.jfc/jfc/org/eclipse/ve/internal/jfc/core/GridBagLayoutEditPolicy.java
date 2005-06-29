@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.17 $  $Date: 2005-06-20 23:54:32 $ 
+ *  $Revision: 1.18 $  $Date: 2005-06-29 16:01:58 $ 
  */
 
 import java.util.*;
@@ -54,7 +54,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	protected Label xCursorLabel = null;
 	protected Label yCursorLabel = null;
 	protected CursorHelper fCursorHelper = null;
-	protected RectangleFigure fColumnFigure = null, fRowFigure = null;
+	protected AlphaRectangleFigure fColumnFigure = null, fRowFigure = null;
 	protected GridBagLayoutPolicyHelper helper = new GridBagLayoutPolicyHelper();
 	protected ContainerPolicy containerPolicy; // Handles the containment functions
 	protected GridController gridController;
@@ -80,10 +80,18 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		}
 	}
 	
+	private class AlphaRectangleFigure extends RectangleFigure {
+		protected void fillShape(Graphics graphics) {
+			graphics.setAlpha(150);
+			super.fillShape(graphics);
+		}
+	}
+	
 	public GridBagLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		this.containerPolicy = (ContainerPolicy)containerPolicy;
 		helper.setContainerPolicy(containerPolicy);
 	}
+	
 	public void activate() {
 		gridController = new GridController();
 		if (gridController != null) {
@@ -282,6 +290,8 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	 * the new position. We need to use the Helper for this.
 	 */
 	protected Command getOrphanChildrenCommand(Request aRequest) {
+		resetHightlightedColumnHeaders();
+		resetHightlightedRowHeaders();
 		return helper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) aRequest));
 	}
 	/**
@@ -351,6 +361,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	protected void showGridFigure() {
 		fShowgrid = true;
 		addFeedback(getGridBagLayoutGridFigure());
+		getFeedbackLayer().repaint();
 	}
 	public void eraseTargetFeedback(Request request) {
 		if (!fShowgrid)
@@ -457,8 +468,8 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		Point cellLocation = getGridBagLayoutGridFigure().getCellLocation(position.x, position.y, includeEmptyColumns, includeEmptyRows);
 		getHostFigure().translateToAbsolute(position);
 		org.eclipse.swt.graphics.Point absolutePosition = getHost().getViewer().getControl().toDisplay(position.x, position.y);
-		absolutePosition.x += 8;
-		absolutePosition.y += 19;
+		absolutePosition.x += 12;
+		absolutePosition.y += 6;
 		/**
 		 * The cursor feedback consists of a PopupHelper that contains a standard Figure with a FlowLayout.
 		 * The Figure contains two Labels, one that contains the X value representing the gridx value,
@@ -532,7 +543,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	 */
 	protected void showNewColumnFeedBack(Point position) {
 		if (fColumnFigure == null)
-			fColumnFigure = new RectangleFigure();
+			fColumnFigure = new AlphaRectangleFigure();
 		Point colStart = fGridBagLayoutGridFigure.getColumnStartPosition(position.x);
 		Point colEnd = fGridBagLayoutGridFigure.getColumnEndPosition(position.x);
 		fColumnFigure.setBounds(new Rectangle(colStart.x-2, colStart.y, 10, colEnd.y - colStart.y));
@@ -553,7 +564,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	 */
 	protected void showNewRowFeedBack(Point position) {
 		if (fRowFigure == null)
-			fRowFigure = new RectangleFigure();
+			fRowFigure = new AlphaRectangleFigure();
 		Point rowStart = fGridBagLayoutGridFigure.getRowStartPosition(position.y);
 		Point rowEnd = fGridBagLayoutGridFigure.getRowEndPosition(position.y);
 		fRowFigure.setBounds(new Rectangle(rowStart.x, rowStart.y-2, rowEnd.x - rowStart.x, 10));
@@ -749,8 +760,13 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 			}
 
 			public void removingChild(EditPart editpart, int index) {
+				EditPart parent = editpart.getParent();
 				if (editPartListener != null)
 					editpart.removeEditPartListener(editPartListener);
+				if(parent != null && parent.isSelectable())
+					parent.getViewer().select(parent);
+				if (gridController != null && !gridController.isGridShowing())
+					gridController.setGridShowing(true);
 			}
 		};
 	}
