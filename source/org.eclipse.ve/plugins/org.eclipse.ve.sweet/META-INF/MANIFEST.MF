@@ -13,7 +13,7 @@ Export-Package: org.eclipse.ve.sweet,
  org.eclipse.ve.sweet.field,
  org.eclipse.ve.sweet.metalogger,
  org.eclipse.ve.sweet.reflect,
- org.eclipse.ve.sweet.statusbar,
+ org.eclipse.ve.sweet.hinthandler,
  org.eclipse.ve.sweet.verifier,
  org.eclipse.ve.sweet.verifiers,
  org.eclipse.ve.sweet.verifiers.reusable
