@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     db4objects - Initial API and implementatiobn
+ *     db4objects - Initial API and implementation
  */
 package org.eclipse.ve.sweet.converter;
 
