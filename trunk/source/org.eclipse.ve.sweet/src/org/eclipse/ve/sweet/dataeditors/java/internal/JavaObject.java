@@ -14,7 +14,6 @@ package org.eclipse.ve.sweet.dataeditors.java.internal;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.dataeditors.IEditedObject;
 import org.eclipse.ve.sweet.dataeditors.IObjectEditor;
@@ -24,6 +23,9 @@ import org.eclipse.ve.sweet.field.FieldControllerFactory;
 import org.eclipse.ve.sweet.field.IFieldController;
 import org.eclipse.ve.sweet.reflect.RelaxedDuckType;
 
+/**
+ * JavaObject. An implementation of IObjectEditor for a regular Java object.
+ */
 public class JavaObject implements IObjectEditor {
     private Object input = null;
     private IEditedObject inputBean = null;

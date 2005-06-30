@@ -19,7 +19,7 @@ import java.lang.reflect.Proxy;
 import org.eclipse.ve.sweet.dataeditors.IPropertyEditor;
 
 /**
- * Db4oBeanProperty. An implementation of IPropertyEditor using dynamic proxies.
+ * JavaProperty. An implementation of IPropertyEditor using dynamic proxies.
  * 
  * @author djo
  */
