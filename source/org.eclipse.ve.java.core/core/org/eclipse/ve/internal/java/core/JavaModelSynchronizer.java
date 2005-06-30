@@ -11,12 +11,11 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaModelSynchronizer.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-30 16:36:53 $ 
  */
 
 import java.util.Iterator;
 
-import org.eclipse.core.resources.*;
 import org.eclipse.jdt.core.*;
 
 import org.eclipse.jem.internal.adapters.jdom.JavaModelListener;
@@ -44,20 +43,6 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	private boolean recycleVM = false;
 	private TerminateRunnable terminateRun;	
 	private String ignoreTypeName;	// The name of the "this" class.
-	private IResourceChangeListener resourceTracker = new IResourceChangeListener() {
-		public void resourceChanged(IResourceChangeEvent e) {
-			// About to close or delete the project and it is ours, so we need to cleanup.
-			// Performance: It has been noted that dres.equals(...) can be slow with the number
-			// of visits done. Checking just the last segment (getName()) first before checking
-			// the entire resource provides faster testing. If the last segment is not equal,
-			// then the entire resource could not be equal.
-			IResource eventResource = e.getResource();
-			if (eventResource.getName().equals(getJavaProject().getElementName()) && eventResource.equals(getJavaProject().getProject())) {
-				terminateRun.run(true);	// This project is going away. (may actually be a rename) so terminate the vm.
-				return;
-			}
-		}
-	};
 	
 
 	public JavaModelSynchronizer(IBeanProxyDomain proxyDomain, IJavaProject aProject, TerminateRunnable terminateRun) {
@@ -66,7 +51,6 @@ public class JavaModelSynchronizer extends JavaModelListener {
 		this.terminateRun = terminateRun;
 		
 		fProject = aProject;
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceTracker, IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
 	}
 	
 	/* (non-Javadoc)
@@ -85,7 +69,6 @@ public class JavaModelSynchronizer extends JavaModelListener {
 	 */
 	public void stopSynchronizer() {
 		JavaCore.removeElementChangedListener(this);
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceTracker);
 	}
 
 	protected void processJavaElementChanged(IJavaProject element, IJavaElementDelta delta) {
