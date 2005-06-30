@@ -27,19 +27,18 @@ public class ComponentSetSizeGenerator implements org.eclipse.ve.internal.java.c
   protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = NL + "public class ";
   protected final String TEXT_2 = " {" + NL + "" + NL + "\t/**" + NL + "\t * This is the default constructor" + NL + "\t */" + NL + "\tpublic ";
-  protected final String TEXT_3 = "() {" + NL + "\t\tsuper();" + NL + "\t\t";
-  protected final String TEXT_4 = "init()";
-  protected final String TEXT_5 = "initialize()";
-  protected final String TEXT_6 = ";" + NL + "\t}" + NL + "\t" + NL + "\t/**" + NL + "\t * This method initializes this" + NL + "\t * " + NL + "\t * @return void" + NL + "\t */" + NL + "\t";
-  protected final String TEXT_7 = "public ";
-  protected final String TEXT_8 = "private ";
-  protected final String TEXT_9 = " void ";
-  protected final String TEXT_10 = "init()";
-  protected final String TEXT_11 = "initialize()";
-  protected final String TEXT_12 = " {" + NL + "\t\tthis.setSize(300,200);";
-  protected final String TEXT_13 = NL + "\t\tthis.setTitle(\"";
-  protected final String TEXT_14 = "\");";
-  protected final String TEXT_15 = NL + "\t}" + NL + "}";
+  protected final String TEXT_3 = "() {" + NL + "\t\tsuper(); ";
+  protected final String TEXT_4 = "initialize();";
+  protected final String TEXT_5 = NL + "\t}" + NL + "\t" + NL + "\t/**" + NL + "\t * This method initializes this" + NL + "\t * " + NL + "\t * @return void" + NL + "\t */" + NL + "\t";
+  protected final String TEXT_6 = "public ";
+  protected final String TEXT_7 = "private ";
+  protected final String TEXT_8 = " void ";
+  protected final String TEXT_9 = "init()";
+  protected final String TEXT_10 = "initialize()";
+  protected final String TEXT_11 = " {" + NL + "\t\tthis.setSize(300,200);";
+  protected final String TEXT_12 = NL + "\t\tthis.setTitle(\"";
+  protected final String TEXT_13 = "\");";
+  protected final String TEXT_14 = NL + "\t}" + NL + "}";
 
 public String generateSource(String typeName, String superClassName, HashMap argumentMatrix)
   {
@@ -55,46 +54,42 @@ public String generateSource(String typeName, String superClassName, HashMap arg
     stringBuffer.append(typeName);
     stringBuffer.append(TEXT_3);
     
-			if("java.applet.Applet".equals(superClassName)){
+			if(!"java.applet.Applet".equals(superClassName)){
 				
     stringBuffer.append(TEXT_4);
     
-			}else{
-				
-    stringBuffer.append(TEXT_5);
-    
 		}
-    stringBuffer.append(TEXT_6);
+    stringBuffer.append(TEXT_5);
     
 		if("java.applet.Applet".equals(superClassName)){
 			
-    stringBuffer.append(TEXT_7);
+    stringBuffer.append(TEXT_6);
     
 		}else{
 			
-    stringBuffer.append(TEXT_8);
+    stringBuffer.append(TEXT_7);
     
 		}
-    stringBuffer.append(TEXT_9);
+    stringBuffer.append(TEXT_8);
     
 			if("java.applet.Applet".equals(superClassName)){
 				
-    stringBuffer.append(TEXT_10);
+    stringBuffer.append(TEXT_9);
     
 			}else{
 				
-    stringBuffer.append(TEXT_11);
+    stringBuffer.append(TEXT_10);
     
 		}
-    stringBuffer.append(TEXT_12);
+    stringBuffer.append(TEXT_11);
     
 	if ("java.awt.Frame".equals(superClassName)) {
-    stringBuffer.append(TEXT_13);
+    stringBuffer.append(TEXT_12);
     stringBuffer.append(superClassName.substring(superClassName.lastIndexOf(".")+1));
-    stringBuffer.append(TEXT_14);
+    stringBuffer.append(TEXT_13);
     
 	}
-    stringBuffer.append(TEXT_15);
+    stringBuffer.append(TEXT_14);
     return stringBuffer.toString();
   }
 }
