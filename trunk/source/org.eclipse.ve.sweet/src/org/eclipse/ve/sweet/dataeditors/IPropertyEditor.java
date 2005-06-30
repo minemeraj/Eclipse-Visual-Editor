@@ -58,9 +58,8 @@ public interface IPropertyEditor {
     public String getType();
     
     /**
-     * Method getVerifier().  Returns the property's verifier or the
-     * default verifier for the property's type if the property has no
-     * verifier.
+     * Method getVerifier().  Returns the property's verifier null if the 
+     * property has no explicitly-defined verifier.
      * 
      * @return IVerifier The property's verifier.
      */
@@ -70,8 +69,8 @@ public interface IPropertyEditor {
      * Method getUIValues().  Returns the set of user interface choices 
      * corresponding to the property's valid values.  This is either 
      * defined as a part of the property or is derived by applying
-     * toString() to each element in the valid values array.  If
-     * no set of valid values has been defined, this method returns
+     * toString() to each element in the legal values array.  If
+     * no set of legal values has been defined, this method returns
      * null.
      * 
      * @return String[] the array of user interface choices corresponding
@@ -80,13 +79,13 @@ public interface IPropertyEditor {
     public String[] getUIValues();
     
     /**
-     * Method getLegalValues.  Returns an array containing all valid values
+     * Method getLegalValues.  Returns an array containing all legal values
      * that this property can accept if the programmer has defined a
      * get<Prop>LegalValues() method for this property.  Otherwise, returns 
      * null.
      * 
-     * @return Object[] an array containing all valid values that this
-     * property can accept if the programmer has defined a validValues
+     * @return Object[] an array containing all legal values that this
+     * property can accept if the programmer has defined a LegalValues
      * method or null otherwise.
      */
     public Object[] getLegalValues();
