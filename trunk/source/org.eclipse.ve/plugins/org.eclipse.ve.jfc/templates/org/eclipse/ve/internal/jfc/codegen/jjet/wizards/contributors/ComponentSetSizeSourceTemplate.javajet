@@ -14,13 +14,10 @@ public class <%=typeName%> {
 	 * This is the default constructor
 	 */
 	public <%=typeName%>() {
-		super();
-		<%
-			if("java.applet.Applet".equals(superClassName)){
-				%>init()<%
-			}else{
-				%>initialize()<%
-		}%>;
+		super(); <%
+			if(!"java.applet.Applet".equals(superClassName)){
+				%>initialize();<%
+		}%>
 	}
 	
 	/**
