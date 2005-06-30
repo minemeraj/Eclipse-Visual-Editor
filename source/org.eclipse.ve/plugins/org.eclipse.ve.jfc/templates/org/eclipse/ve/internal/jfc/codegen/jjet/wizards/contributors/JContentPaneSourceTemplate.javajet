@@ -18,13 +18,10 @@ public class <%=typeName%> {
 	 * This is the default constructor
 	 */
 	public <%=typeName%>() {
-		super();
-		<%
-			if("javax.swing.JApplet".equals(superClassName)){
-				%>init()<%
-			}else{
-				%>initialize()<%
-		}%>;
+		super(); <%
+			if(!"javax.swing.JApplet".equals(superClassName)){
+				%>initialize();<%
+		}%>
 	}
 	
 	/**
