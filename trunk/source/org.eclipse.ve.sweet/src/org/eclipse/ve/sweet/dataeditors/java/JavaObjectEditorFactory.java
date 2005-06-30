@@ -13,7 +13,6 @@ package org.eclipse.ve.sweet.dataeditors.java;
 
 import org.eclipse.ve.sweet.dataeditors.IObjectEditor;
 import org.eclipse.ve.sweet.dataeditors.IObjectEditorFactory;
-import org.eclipse.ve.sweet.dataeditors.java.internal.JavaObject;
 
 public class JavaObjectEditorFactory implements IObjectEditorFactory {
 
