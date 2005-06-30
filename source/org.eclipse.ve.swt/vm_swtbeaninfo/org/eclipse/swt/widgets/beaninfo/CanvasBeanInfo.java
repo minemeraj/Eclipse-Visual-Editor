@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CanvasBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.7 $  $Date: 2005-06-30 10:05:48 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -35,7 +35,10 @@ public BeanDescriptor getBeanDescriptor() {
 	BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
 	descriptor.setValue(
 		SweetHelper.STYLE_BITS_ID,
-	    new Object[] [] {			
+	    new Object[] [] {
+			{ "doubleBuffered" , CanvasMessages.getString("CanvasBeanInfo.StyleBits.DoubleBuffered.Name"), Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoMergePaints.Value.DoubleBuffered") , "org.eclipse.swt.SWT.DOUBLE_BUFFERED" , new Integer(SWT.DOUBLE_BUFFERED)				 //$NON-NLS-1$ //$NON-NLS-2$
+			} } ,				
 			{ "noBackground" , CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoBackground.Name") , Boolean.TRUE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 			    CanvasMessages.getString("CanvasBeanInfo.StyleBits.NoBackground.Value.NoBackground") , "org.eclipse.swt.SWT.NO_BACKGROUND" , new Integer(SWT.NO_BACKGROUND)				 //$NON-NLS-1$ //$NON-NLS-2$
 			} } ,

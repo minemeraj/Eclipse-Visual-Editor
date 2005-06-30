@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-24 14:31:25 $ 
+ *  $Revision: 1.1 $  $Date: 2005-06-30 10:05:48 $ 
  */
 package org.eclipse.ui.forms.widgets.beaninfo;
 
@@ -75,7 +75,11 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
       				"org.eclipse.swt.SWT.RIGHT"//$NON-NLS-1$
     			}				
 			}
-			),									
+			),
+			// body
+			super.createPropertyDescriptor(getBeanClass(),"body", new Object[] { //$NON-NLS-1$
+			}
+			),					
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

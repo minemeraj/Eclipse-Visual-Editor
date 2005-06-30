@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormMessages.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-24 14:31:25 $ 
+ *  $Revision: 1.1 $  $Date: 2005-06-30 10:05:48 $ 
  */
 package org.eclipse.ui.forms.widgets.beaninfo;
 

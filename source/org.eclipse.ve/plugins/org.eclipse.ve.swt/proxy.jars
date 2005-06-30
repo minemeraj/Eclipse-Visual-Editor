@@ -1,2 +1,3 @@
 vm/jbcfswtvm.jar=/org.eclipse.ve.swt/vm_bin/
 vm/swtbeaninfo.jar=/org.eclipse.ve.swt/vm_bin/
+vm/formsbeaninfo.jar=/org.eclipse.ve.swt/vm_bin/
