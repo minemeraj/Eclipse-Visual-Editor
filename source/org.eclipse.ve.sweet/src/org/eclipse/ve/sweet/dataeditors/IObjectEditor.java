@@ -132,7 +132,9 @@ public interface IObjectEditor {
      * Method isDirty.
      * 
      * Returns if any of the objects' fields have been edited (are dirty)
-     * but haven't been saved back to the object.
+     * but haven't been saved back to the object or if the fields have been
+     * saved back to the object but the object itself hasn't been saved to
+     * the persistent store.
      * 
      * @return true if fields have been edited but not saved, false otherwise.
      */
