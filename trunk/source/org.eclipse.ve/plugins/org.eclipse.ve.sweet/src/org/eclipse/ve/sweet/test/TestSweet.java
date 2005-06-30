@@ -90,6 +90,7 @@ public class TestSweet {
         while (!shell.isDisposed()) {
             display.readAndDispatch();
         }
+        display.dispose();
         
         // Print the results
         System.out.println("Name: " + person.name);
