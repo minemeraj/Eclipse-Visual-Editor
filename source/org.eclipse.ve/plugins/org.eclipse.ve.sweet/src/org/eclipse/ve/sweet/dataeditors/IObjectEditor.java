@@ -47,10 +47,10 @@ public interface IObjectEditor {
 	/**
      * Method getProperty.
      * 
-     * Returns an IProperty object specified by the given name.
+     * Returns an IPropertyEditor object specified by the given name.
      * 
 	 * @param name The property name
-	 * @return an IProperty bound to the specified object
+	 * @return an IPropertyEditor bound to the specified object/property
      * @throws NoSuchMethodException if the property does not exist
 	 */
 	public IPropertyEditor getProperty(String name) throws NoSuchMethodException;
