@@ -153,12 +153,18 @@ public class JavaObject implements IObjectEditor {
         
         // Let the bean itself know it is about to be saved
         inputBean.commit();
+        
+        // This is where we would normally commit the changes to our
+        // persistent store (Db4o, Hibernate, EJB3, etc.)
     }
 
     /* (non-Javadoc)
      * @see com.db4o.binding.dataeditors.IObjectEditor#refresh()
      */
     public void refresh() {
+        // This is where we would normally refresh the object from the
+        // persistent store (Db4o, Hibernate, EJB3, etc.)
+
         inputBean.refresh();
         refreshFieldsFromInput();
     }
@@ -167,6 +173,9 @@ public class JavaObject implements IObjectEditor {
      * @see com.db4o.binding.dataeditors.IObjectEditor#rollback()
      */
     public void rollback() {
+        // This is where we would normally rollback the transaction in the
+        // persistent store (Db4o, Hibernate, EJB3, etc.)
+
         inputBean.rollback();
         refresh();
     }
@@ -176,6 +185,9 @@ public class JavaObject implements IObjectEditor {
      */
     public void delete() {
         inputBean.delete();
+
+        // This is where we would normally delete the object from the
+        // persistent store (Db4o, Hibernate, EJB3, etc.)
     }
     
     /* (non-Javadoc)
