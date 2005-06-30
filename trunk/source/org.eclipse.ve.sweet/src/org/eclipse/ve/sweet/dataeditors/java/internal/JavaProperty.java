@@ -13,7 +13,6 @@ package org.eclipse.ve.sweet.dataeditors.java.internal;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
