@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.30 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.31 $  $Date: 2005-06-30 20:28:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -291,7 +291,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		
 		IClasspathAttribute[] attr = new IClasspathAttribute[0];
 		if (libLocation!=null)			
-		    attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toFile().toURI().getRawPath())};
+		    attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toPortableString())};
 		return JavaCore.newLibraryEntry(location, srcLocation, null, new IAccessRule [0], attr, false);		
 	}
 	
@@ -305,7 +305,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 			if (pLocation.equals(baseLocation)) {
 				// Classpath is a project in an IDE workspace
 				if (lib)
-				    attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, baseLocation.toFile().toURI().getRawPath())};
+				    attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, baseLocation.toPortableString())};
 				return JavaCore.newProjectEntry(r.getFullPath() ,new IAccessRule[0], false, attr, false);
 			}
 		}
@@ -316,7 +316,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		
 		
 		if (libLocation!=null)			
-			attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toFile().toURI().getRawPath())};
+			attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, libLocation.toPortableString())};
 		return JavaCore.newLibraryEntry(location, srcLocation, null, new IAccessRule [0], attr, false);		
     }
 		
@@ -671,7 +671,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 					URL libURL = project ? location.toFile().toURL() : 
 						         generateLibCacheIfNeeded(location.toPortableString(), ""); //$NON-NLS-1$
 					attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, 
-									getFilePath(libURL).toFile().toURI().getRawPath())};
+									getFilePath(libURL).toPortableString())};
 				}										
 				return JavaCore.newLibraryEntry(location, src, null, new IAccessRule [0], attr, false);
 			}

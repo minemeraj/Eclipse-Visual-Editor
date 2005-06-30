@@ -620,7 +620,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				IClasspathAttribute[] attr=null;
 				if (swtLibraries[i].isIncludesLibraries()) {				
 					attr = new IClasspathAttribute[]{ JavaCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, 
-                        resolvedPath.toFile().toURI().getRawPath())};
+                        resolvedPath.toPortableString())};
 					if (!resolvedPath.toFile().exists())						
 							addProblem(MessageFormat.format(SWTMessages.SWTContainer_60, new Object[] {resolvedPath.toPortableString()})); 
 				}
