@@ -55,7 +55,7 @@ public class TestSweet {
         
         // Edit our Person object
         ObjectEditorFactory.factory = new JavaObjectEditorFactory();
-        final IObjectEditor personEditor = ObjectEditorFactory.construct(person);
+        final IObjectEditor personEditor = ObjectEditorFactory.edit(person);
         personEditor.bind(name, "Name");
         personEditor.bind(age, "Age");
         

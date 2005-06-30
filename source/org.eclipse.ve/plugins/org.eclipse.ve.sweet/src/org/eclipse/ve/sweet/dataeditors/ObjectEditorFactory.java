@@ -32,7 +32,7 @@ public class ObjectEditorFactory {
      * @param input The initial input object
      * @return The constructed IObjectEditor
      */
-    public static IObjectEditor construct(Object input) {
+    public static IObjectEditor edit(Object input) {
         IObjectEditor result = construct();
         result.setInput(input);
         return result;
