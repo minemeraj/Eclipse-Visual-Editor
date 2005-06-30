@@ -9,7 +9,7 @@
  * Contributors:
  *     db4objects - Initial API and implementation
  */
-package org.eclipse.ve.sweet.dataeditors.java.internal;
+package org.eclipse.ve.sweet.dataeditors.java;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -19,17 +19,22 @@ import org.eclipse.ve.sweet.dataeditors.IEditedObject;
 import org.eclipse.ve.sweet.dataeditors.IObjectEditor;
 import org.eclipse.ve.sweet.dataeditors.IObjectListener;
 import org.eclipse.ve.sweet.dataeditors.IPropertyEditor;
+import org.eclipse.ve.sweet.dataeditors.java.internal.JavaProperty;
 import org.eclipse.ve.sweet.field.FieldControllerFactory;
 import org.eclipse.ve.sweet.field.IFieldController;
 import org.eclipse.ve.sweet.reflect.RelaxedDuckType;
 
 /**
  * JavaObject. An implementation of IObjectEditor for a regular Java object.
+ * 
+ * Persistence frameworks can be supported by inheriting from this class and
+ * overriding the saveObject, commitObject, refreshObject, rollbackObject,
+ * and deleteObject methods.
  */
 public class JavaObject implements IObjectEditor {
     private Object input = null;
     private IEditedObject inputBean = null;
-    
+    private boolean dirty = false;
 
     // The IFieldEditors that are bound to this object
     private LinkedList bindings = new LinkedList();
@@ -65,6 +70,7 @@ public class JavaObject implements IObjectEditor {
                 throw new RuntimeException("Should be able to save if fields and object verify", e);
             }
         }
+        dirty=false;
     }
 
     /* (non-Javadoc)
@@ -97,6 +103,11 @@ public class JavaObject implements IObjectEditor {
         if (result != null) {
             bindings.addLast(result);
         }
+        
+        if (!result.verify()) {
+            dirty=true;
+        }
+        
         return result;
     }
 
@@ -107,6 +118,7 @@ public class JavaObject implements IObjectEditor {
         for (Iterator bindingsIter = bindings.iterator(); bindingsIter.hasNext();) {
             IFieldController field = (IFieldController) bindingsIter.next();
             if (field.isDirty()) {
+                dirty=true;
                 if (!field.verify()) {
                     return false;
                 }
@@ -134,7 +146,28 @@ public class JavaObject implements IObjectEditor {
         if (RelaxedDuckType.includes(input, "verifyObject", new Class[] {}) && !inputBean.verifyObject()) {
             return false;
         }
+        
+        // If the underlying persistent store supports transactions, this is
+        // where the object should be saved back to the persistent store,
+        // but the transaction not committed yet.  The object will appear
+        // dirty until the transaction is committed.
+        saveObject(input);
+        
         return true;
+    }
+
+    /**
+     * Method SaveObject.
+     * 
+     * Override this method to supply your own object saving semantics.
+     * 
+     * If your underlying persistent store does not supply transaction 
+     * semantics, you should leave this empty and override commitObject()
+     * instead.
+     * 
+     * @param toSave The object to save to the persistent store.
+     */
+    protected void saveObject(Object toSave) {
     }
 
     /* (non-Javadoc)
@@ -156,6 +189,21 @@ public class JavaObject implements IObjectEditor {
         
         // This is where we would normally commit the changes to our
         // persistent store (Db4o, Hibernate, EJB3, etc.)
+        commitObject(input);
+        
+        // Now reset the dirty flag
+        dirty=false;
+    }
+
+    /**
+     * Method CommitObject.
+     * 
+     * Commit the current transaction, if the underlying persistent store
+     * supports transactions, otherwise just save the object here.
+     * 
+     * @param toCommit The object to commit.
+     */
+    protected void commitObject(Object toCommit) {
     }
 
     /* (non-Javadoc)
@@ -164,9 +212,21 @@ public class JavaObject implements IObjectEditor {
     public void refresh() {
         // This is where we would normally refresh the object from the
         // persistent store (Db4o, Hibernate, EJB3, etc.)
+        refreshObject(input);
 
         inputBean.refresh();
         refreshFieldsFromInput();
+    }
+
+    /**
+     * Method refreshObject.
+     * 
+     * Refresh the object from the persistent store.  ie: make sure that all
+     * multiuser updates have been applied to the local copy.
+     * 
+     * @param input The input object to refresh.
+     */
+    protected void refreshObject(Object input) {
     }
 
     /* (non-Javadoc)
@@ -175,9 +235,22 @@ public class JavaObject implements IObjectEditor {
     public void rollback() {
         // This is where we would normally rollback the transaction in the
         // persistent store (Db4o, Hibernate, EJB3, etc.)
+        rollbackObject(input);
 
         inputBean.rollback();
         refresh();
+    }
+
+    /**
+     * Method rollbackObject.
+     * 
+     * Rollback the current transaction, if the underlying persistent store
+     * supports transactions.  Refresh() will be called automatically
+     * after this.
+     * 
+     * @param input The input object whose changes should be rolled back.
+     */
+    protected void rollbackObject(Object input) {
     }
 
     /* (non-Javadoc)
@@ -188,8 +261,19 @@ public class JavaObject implements IObjectEditor {
 
         // This is where we would normally delete the object from the
         // persistent store (Db4o, Hibernate, EJB3, etc.)
+        deleteObject(input);
     }
     
+    /**
+     * Method deleteObject.
+     * 
+     * Delete the specified object from the persistent store.
+     * 
+     * @param toDelete The object to delete.
+     */
+    protected void deleteObject(Object toDelete) {
+    }
+
     /* (non-Javadoc)
      * @see com.db4o.binding.dataeditors.IObjectEditor#addObjectListener(com.db4o.binding.dataeditors.IObjectListener)
      */
@@ -218,6 +302,9 @@ public class JavaObject implements IObjectEditor {
      * @see com.db4o.binding.dataeditors.IObjectEditor#isDirty()
      */
     public boolean isDirty() {
+        if (dirty)
+            return true;
+        
         for (Iterator bindingsIter = bindings.iterator(); bindingsIter.hasNext();) {
             IFieldController fieldController = (IFieldController) bindingsIter.next();
             if (fieldController.isDirty()) {
