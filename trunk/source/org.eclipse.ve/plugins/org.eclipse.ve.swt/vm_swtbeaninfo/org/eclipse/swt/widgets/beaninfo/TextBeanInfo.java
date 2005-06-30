@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBeanInfo.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-10 17:49:29 $ 
+ *  $Revision: 1.8 $  $Date: 2005-06-30 10:05:48 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -181,6 +181,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TextMessages.getString("textDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TextMessages.getString("textSD"), //$NON-NLS-1$
+				FACTORY_CREATION , new Object[] { new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(1) , 
+						new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } }				
 			}
 			),
 			// textLimit
@@ -202,7 +204,16 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				SHORTDESCRIPTION, TextMessages.getString("topPixelSD"), //$NON-NLS-1$
 				EXPERT, Boolean.TRUE,
 			}
-			),
+			),			
+			// style bit
+			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
+				FACTORY_CREATION  , new Object[] { 
+						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(2) , 
+								new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } ,
+						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(1) , 
+								new String[] { "org.eclipse.swt.widgets.Composite" , "int"} } }					
+			}
+			),			
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

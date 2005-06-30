@@ -15,7 +15,7 @@
         <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
       </expression>	  	
 	</allocation>
-  </forms:Form>
+  </forms:ScrolledForm>
   
   <cdm:AnnotationEMF annotates="Form_1">
     <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="form"/>

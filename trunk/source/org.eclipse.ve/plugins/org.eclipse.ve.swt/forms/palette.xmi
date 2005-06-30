@@ -6,14 +6,18 @@
   <palette:CategoryCmp xmi:id="swtCat0">
     <categoryLabel xsi:type="utility:ConstantString" string="Eclipse Forms"/>
     <cmpGroups xsi:type="palette:GroupCmp" xmi:id="group1">       
-      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/form_obj.gif"
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Form.xmi#Form_1">
         <entryLabel xsi:type="utility:ConstantString" string="Form"/>
       </cmpEntries>      
-      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/scrolledform_obj.gif"
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/ScrolledForm.xmi#ScrolledForm_1">
         <entryLabel xsi:type="utility:ConstantString" string="ScrolledForm"/>
       </cmpEntries>          
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/scrolledform_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/ScrolledPageBook.xmi#ScrolledPageBook_1">
+        <entryLabel xsi:type="utility:ConstantString" string="PageBook"/>
+      </cmpEntries>                
       <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Composite.xmi#Composite_1">
         <entryLabel xsi:type="utility:ConstantString" string="Composite"/>
@@ -33,7 +37,35 @@
       <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/label_obj.gif"
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Label.xmi#Label_1">
         <entryLabel xsi:type="utility:ConstantString" string="Label"/>
-      </cmpEntries>                   
+      </cmpEntries>     
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/link_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Hyperlink.xmi#Hyperlink_1">
+        <entryLabel xsi:type="utility:ConstantString" string="Hyperlink"/>
+      </cmpEntries>   
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/imagehyperlink_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/ImageHyperlink.xmi#ImageHyperlink_1">
+        <entryLabel xsi:type="utility:ConstantString" string="ImageHyperlink"/>
+      </cmpEntries>                                       
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/formtext_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/FormText.xmi#FormText_1">
+        <entryLabel xsi:type="utility:ConstantString" string="FormText"/>
+      </cmpEntries>   
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/text_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Text.xmi#Text_1">
+        <entryLabel xsi:type="utility:ConstantString" string="Text"/>
+      </cmpEntries>         
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/table_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Table.xmi#Table_1">
+        <entryLabel xsi:type="utility:ConstantString" string="Table"/>
+      </cmpEntries>               
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tree_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Tree.xmi#Tree_1">
+        <entryLabel xsi:type="utility:ConstantString" string="Tree"/>
+      </cmpEntries>         
+      <cmpEntries xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/separator_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/CompositeSeparator.xmi#CompositeSeparator_1">
+        <entryLabel xsi:type="utility:ConstantString" string="Separator"/>
+      </cmpEntries>            
     </cmpGroups> 
   </palette:CategoryCmp>
 </xmi:XMI>

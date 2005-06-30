@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2005-04-05 21:40:17 $ 
+ *  $Revision: 1.9 $  $Date: 2005-06-30 10:05:48 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -109,6 +109,13 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				EXPERT, Boolean.TRUE,
 			}
 			),
+			// style bit
+			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
+				FACTORY_CREATION  , new Object[] { 
+						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createTree" , new Integer(1) , 
+								new String[] { "org.eclipse.swt.widgets.Composite" , "int"} } }				
+			}
+			),			
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2005-06-24 14:31:24 $ 
+ *  $Revision: 1.14 $  $Date: 2005-06-30 10:05:48 $ 
  */
 import java.util.*;
 
@@ -25,8 +25,7 @@ import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.proxy.core.IBeanProxy;
-import org.eclipse.jem.internal.proxy.core.INumberBeanProxy;
+import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -129,14 +128,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 			// The property is part of a factory argument
 			PTExpression argument = getFactoryArgument(argumentNumber);
 			if(descriptorID instanceof StyleBitPropertyID){
-				 // For style bits we need to get the target VM value and compare it against the style bit we're querying
-				int currentValue = ((Number) getPropertyValue(descriptorID)).intValue();
-				// If the current property value is -1 then this means it is the "UNSET" value from a single value'd property and by definition must be
-				// not set
-				if (currentValue == STYLE_NOT_SET)
-					return false;
-				// The current value is the one set on the actual target VM
-				// If the explicit style bitAND the current value is 1 then it is set		
+				return super.isPropertySet(descriptorID);				
 			} else {
 				// For non style bits just see whether the argument is null or not - TODO need to think about prim values having default values maybe ??
 				return !(argument == null || argument instanceof PTNullLiteral);
@@ -148,8 +140,20 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 	protected PTExpression getStyleExpression(PTExpression allocationExp) {
 		if (allocationExp instanceof PTMethodInvocation) {
 			// Find the argument number of the "style" feature in the factory method call
+			Iterator factoryArgumentKeys = factoryArguments.keySet().iterator();
+			while(factoryArgumentKeys.hasNext()){
+				Object key = factoryArgumentKeys.next();
+				if(key instanceof StyleBitPropertyID){
+					Number argNumber = (Number)factoryArguments.get(key);
+					if(argNumber != null && argNumber.intValue() != -1){
+						return (PTExpression) ((PTMethodInvocation)allocationExp).getArguments().get(argNumber.intValue());
+					}
+				}
+			}
+			return super.getStyleExpression(allocationExp);			
+		} else {
+			return super.getStyleExpression(allocationExp);
 		}
-		return null; // Not found or not of what we expect.
 	}	
 		
 	private PTExpression getFactoryArgument(Number argumentNumber){
@@ -205,7 +209,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				}
 				getBean().setAllocation(allocation);  // Set the allocation back into the bean to trigger notification
 			} else {
-				// Change a regular property		
+				// Change a regular property. 	
 				ParseTreeAllocation allocation = (ParseTreeAllocation) getBean().getAllocation();
 				PTMethodInvocation methodInvocation = (PTMethodInvocation)allocation.getExpression();	
 				PTExpression expression = getExpression((IJavaInstance)val);
@@ -217,9 +221,26 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 	
 	private PTExpression getExpression(IJavaInstance val){
 		
-		PTInstanceReference reference = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-		reference.setObject((IJavaObjectInstance)val);
-		return reference;				
+		if(val == null){
+			return InstantiationFactory.eINSTANCE.createPTNullLiteral();
+		}
+		
+		String javaClassName = val.getJavaType().getQualifiedName();
+		if(javaClassName.equals("java.lang.String")){
+			PTStringLiteral stringValue = InstantiationFactory.eINSTANCE.createPTStringLiteral();
+			String targetVMString = ((IStringBeanProxy)BeanProxyUtilities.getBeanProxy(val)).stringValue();
+			stringValue.setLiteralValue(targetVMString);
+			return stringValue;
+		} else if (javaClassName.equals("boolean")){
+			PTBooleanLiteral booleanValue = InstantiationFactory.eINSTANCE.createPTBooleanLiteral();
+			boolean targetVMBoolean = ((IBooleanBeanProxy)BeanProxyUtilities.getBeanProxy(val)).booleanValue();
+			booleanValue.setBooleanValue(targetVMBoolean);
+			return booleanValue; 
+		} else {
+			PTInstanceReference reference = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+			reference.setObject((IJavaObjectInstance)val);
+			return reference;
+		}
 		
 	}
 

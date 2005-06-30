@@ -89,9 +89,9 @@
       </registration>           
       <!-- Register the override folders for Eclipse forms -->
       <registration 
-            plugin="org.eclipse.ui.workbench">
+            plugin="org.eclipse.ui.forms">
 	     <beaninfo
-               path="vm/swtbeaninfo.jar">
+               path="vm/formsbeaninfo.jar">
             <searchpath
                   package="org.eclipse.ui.forms.widgets.beaninfo">
             </searchpath>

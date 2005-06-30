@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.12 $  $Date: 2005-04-05 21:40:17 $ 
+ *  $Revision: 1.13 $  $Date: 2005-06-30 10:05:48 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -157,6 +157,13 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				DISPLAYNAME, TableMessages.getString("topIndexDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TableMessages.getString("topIndexSD"), //$NON-NLS-1$
 				EXPERT, Boolean.TRUE,
+			}
+			),
+			// style bit
+			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
+				FACTORY_CREATION  , new Object[] { 
+						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createTable" , new Integer(1) , 
+								new String[] { "org.eclipse.swt.widgets.Composite" , "int"} } }				
 			}
 			),
 		};

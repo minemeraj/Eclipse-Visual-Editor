@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: FormToolkitEditPolicy.java,v $$
- *  $$Revision: 1.3 $$  $$Date: 2005-06-23 11:24:28 $$ 
+ *  $$Revision: 1.4 $$  $$Date: 2005-06-30 10:05:48 $$ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -103,8 +103,13 @@ public class FormToolkitEditPolicy extends ContainerEditPolicy {
 			PTClassInstanceCreation formToolkitExpression= InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("org.eclipse.ui.forms.widgets.FormToolkit",args);
 			ParseTreeAllocation formToolkitAllocation = InstantiationFactory.eINSTANCE.createParseTreeAllocation(formToolkitExpression);
 			IJavaObjectInstance newFormToolkit = (IJavaObjectInstance) BeanUtilities.createJavaObject(SwtPlugin.FORM_TOOLKIT_CLASSNAME,((IJavaObjectInstance)getHost().getModel()).eResource().getResourceSet(),formToolkitAllocation);
+			// add the form toolkit to the "components" relationship of the BeanComposition
 			builder = new RuledCommandBuilder(editDomain);
 			builder.applyAttributeSetting(beanComposition,JCMPackage.eINSTANCE.getBeanComposition_Components(),newFormToolkit);
+			// Also add a command to be executed that will create a visual info on the annotation that has a keyed value of type "cdm:KeyedBoolean",  
+			// a key of "org.eclipse.ve.internal.cdm.model.visualconstraintkey" and value of true
+			builder.append(BeanUtilities.getSetEmptyVisualContraintsCommand(newFormToolkit,false,editDomain));
+			
 			builder.getCommand().execute();
 			return newFormToolkit;
 		}		
