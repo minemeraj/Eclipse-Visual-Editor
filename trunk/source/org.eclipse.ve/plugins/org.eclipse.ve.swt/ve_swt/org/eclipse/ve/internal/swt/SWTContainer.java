@@ -450,7 +450,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				markers[i].delete();				
 			}
 		} catch (CoreException e) {
-			JavaVEPlugin.log(e, Level.INFO);
+			if (JavaVEPlugin.isLoggingLevel(Level.INFO))
+			   JavaVEPlugin.log(e, Level.INFO);
 		}				
 	}
 	
@@ -461,7 +462,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 			marker.setAttribute(IMarker.MESSAGE, msg);
 		} catch (CoreException e) {
-			JavaVEPlugin.log(e, Level.INFO);
+			if (JavaVEPlugin.isLoggingLevel(Level.INFO))
+			   JavaVEPlugin.log(e, Level.INFO);
 		}	
 	}
 	
@@ -547,8 +549,9 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 					 }
 				}
 				else {
-					// In a PDE environment, it may be a valid problem.  e.g., RCP only imaged does not contain jfacetext 
-					JavaVEPlugin.log("SWTContainer: plugin "+jfaceLibraries[i].getLegacyID()+" is not available on the PDE target", Level.FINE);	 //$NON-NLS-1$ $NON-NLS-2$
+					// In a PDE environment, it may be a valid problem.  e.g., RCP only imaged does not contain jfacetext
+					if (JavaVEPlugin.isLoggingLevel(Level.INFO))
+					   JavaVEPlugin.log("SWTContainer: plugin "+jfaceLibraries[i].getLegacyID()+" is not available on the PDE target", Level.INFO);	 //$NON-NLS-1$ $NON-NLS-2$
 				}
 			}
 		}
