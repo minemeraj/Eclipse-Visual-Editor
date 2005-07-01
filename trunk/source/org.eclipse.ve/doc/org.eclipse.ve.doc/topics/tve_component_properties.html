@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
-<meta name="DC.Title" content="Changing component properties" />
-<meta name="abstract" content="You can change properties for a component by using the Properties view." />
-<meta name="description" content="You can change properties for a component by using the Properties view." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_developing.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_propertyeditdesign.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_add.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_delete.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_reorder.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_resize.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_propertiesview.dita" />
+<meta name="DC.Title" content="Changing component properties in the Properties view" />
+<meta name="abstract" content="You can change a component's properties by using the Properties view." />
+<meta name="description" content="You can change a component's properties by using the Properties view." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_component.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_add.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_reorder.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_delete.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_resize.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_propertyeditdesign.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_propertiesview.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_component_properties" />
 <meta name="DC.Language" content="en-us" />
@@ -29,27 +29,27 @@
 <!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
-<title>Changing component properties</title>
+<title>Changing component properties in the Properties view</title>
 </head>
 <body id="tve_component_properties"><a name="tve_component_properties"><!-- --></a>
 
-<h1 class="topictitle1">Changing component properties</h1>
-<div><p>You can change properties for a component by using the Properties
+<h1 class="topictitle1">Changing component properties in the Properties view</h1>
+<div><p>You can change a component's properties by using the Properties
 view.</p>
-<div class="skipspace"><p>The entries in the Properties view show the properties available
-on the selected component, which are determined by introspection of the class.
-By default, the properties shown in this view are those that have both a <samp class="codeph">get</samp> and
-a <samp class="codeph">set</samp> method, meaning that they can be read and written.</p>
+<div class="section"><p>The entries in the Properties view show the properties available
+on the selected component. By default, the properties shown in this view are
+those that have both a <samp class="codeph">get</samp> and a <samp class="codeph">set</samp> method,
+meaning that they can be read and written.</p>
+<p><img src="../images/propertiesview.gif" alt="Properties view screen shot" /></p>
 <p>To
 view and change the properties for a component:</p>
 </div>
-<ol><li class="skipspace"><span>Open a Java class in the visual editor.</span></li>
-<li class="skipspace"><span>In the Design view or Java Beans view, select the component whose
+<ol><li class="stepexpand"><span>In the Design view or Java Beans view, select the component whose
 properties you want to view or change.</span> <div class="tip"><span class="tiptitle">Tip: </span>Here are
-some tips for working with the Properties view:<ul><li>A plus sign (+) next to a property name indicates that property itself
+a few tips for working with the Properties view:<ul><li>A plus sign (+) next to a property name indicates that property itself
 has other properties. Click the plus sign to expand the view and see all the
-bean properties. A keyboard shortcut for clicking the plus sign is
-the right arrow key.</li>
+bean properties. A keyboard shortcut for clicking the plus sign is the right
+arrow key.</li>
 <li>A right angle bracket (&gt;) next to a property name indicates that the property
 is explicitly set in code, not returned from the live bean. If you select
 the property that is flagged with the &gt; symbol, the line of Java code that
@@ -69,8 +69,9 @@ view menu.</li>
 </ul>
 </div>
 </li>
-<li class="skipspace"><span>Select the property that you want to update, and update the <span class="uicontrol">Value</span> column
-with the new property value.</span><ul><li>To set a value to be explicitly null, click the <span class="uicontrol">Set the
+<li class="stepexpand"><span>In the Properties view, select the property that you want to change,
+then update the <span class="uicontrol">Value</span> column with the new property
+value.</span><ul><li>To set a value to be explicitly null, click the <span class="uicontrol">Set the
 Active Property Being Edited to Null</span> button on the Properties
 view toolbar. The <samp class="codeph">set</samp> method will be called with a null argument.</li>
 <li>To restore a property to its default value, click the <span class="uicontrol">Restore
@@ -83,30 +84,30 @@ in the Source view.</li>
 <li>Some properties, such as color, have their own custom property editors
 that open when you click the ellipse button in the value column. If the property
 editor does not open in front of the main workbench window, select the property
-editor on the task bar and restore it.</li>
+editor on the task bar to bring it to the front.</li>
 </ul>
 </li>
 </ol>
 </div>
-
 <div>
-<blockquote>
-<div class="ulchildlink"><b><a href="../topics/tve_propertyeditdesign.html">Directly editing items in the Design view</a></b><br />
-Some text properties can be directly edited on the Design view of the visual editor.</div>
-</blockquote>
+<ul class="ullinks">
+<li class="ulchildlink"><strong><a href="../topics/tve_component_resize.html">Resizing visual components in the visual editor for Java</a></strong><br />
+In most cases, if a component's container does not control the size of the component, you can use the selection handles to resize visual components, or you can change the size in the Properties view.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_propertyeditdesign.html">Directly editing components in the Design view</a></strong><br />
+Some text properties can be directly edited on the Design view of the visual editor.</li>
+</ul>
 
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_developing.html" title="You can use the visual editor to visually compose and preview Java classes using Standard Widget Toolkit (SWT), Swing, and AWT components.">Developing Java classes with the visual editor</a><br />
-</p>
-<p><b class="relconceptshd">Related concepts</b><br />
-<a href="../topics/cve_propertiesview.html" title="The Properties view shows the properties for the selected Java bean that is selected in either the Design view or the Java Beans view.">The visual editor Properties view</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_component_add.html" title="You can use the palette or the choose component dialog to add components to your Java class.">Adding a component to a class</a><br />
-<a href="../topics/tve_component_delete.html" title="You can use the visual editor to quickly delete a component from a Java class.">Deleting components from a class</a><br />
-<a href="../topics/tve_component_reorder.html" title="The Java Beans view displays components in the order in which they are added to their parent. You can use the Java Beans view to change this order.">Reordering components in a class</a><br />
-<a href="../topics/tve_component_resize.html" title="In most cases, if a component's container does not control the size of the component, you can use the selection handles to resize visual components, or you can change the size in the Properties view.">Resizing visual components</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_component.html" title="With the visual editor for Java, you can add, remove, resize, modify, and change the properties of components, including visual and non-visual elements.">Working with Java components visually</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cve_propertiesview.html" title="The Properties view shows the properties for the Java bean that is selected in either the Design view or the Java Beans view. You can use the Properties view to change the value of a given property.">The visual editor Properties view</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tve_component_add.html" title="You can use the visual editor palette or the Choose a Bean dialog to add components to your visual Java class.">Adding a component to a Java visual class</a></div>
+<div><a href="../topics/tve_component_reorder.html" title="The Java Beans view displays components in the order in which they are added to their parent. You can use the Java Beans view to change this order.">Reordering components in a Java visual class</a></div>
+<div><a href="../topics/tve_component_delete.html" title="You can use the visual editor to quickly delete a component from a Java class.">Deleting components from a Java visual class</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

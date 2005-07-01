@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
-<meta name="DC.Title" content="Laying out components using the visual editor" />
-<meta name="abstract" content="Use the visual editor for Java to visually arrange and lay out visual components in your Java application." />
-<meta name="description" content="Use the visual editor for Java to visually arrange and lay out visual components in your Java application." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_developing.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_null.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_align_xy.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_manager.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_swinglayout.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_swtlayout.dita" />
+<meta name="DC.Title" content="Laying out UI components using the visual editor" />
+<meta name="abstract" content="You can use the visual editor for Java to visually arrange and lay out user interface (UI) components in your Java application. The editor supports various SWT and Swing layout managers." />
+<meta name="description" content="You can use the visual editor for Java to visually arrange and lay out user interface (UI) components in your Java application. The editor supports various SWT and Swing layout managers." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_developing.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_customize.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_null.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_layout_overview" />
 <meta name="DC.Language" content="en-us" />
@@ -29,46 +28,52 @@
 <!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
-<title>Laying out components using the visual editor</title>
+<title>Laying out UI components using the visual editor</title>
 </head>
 <body id="tve_layout_overview"><a name="tve_layout_overview"><!-- --></a>
 
-<h1 class="topictitle1">Laying out components using the visual editor</h1>
-<div><p>Use the visual editor for Java to visually arrange and lay out
-visual components in your Java application.</p>
-<div class="skipspace"><p>When you create a visual class using the visual editor, and when
-you add components to it, the visual editor for Java sets default appearances
-for the layout of containers and alignment of components within those containers.
-Part of designing an application is making the user interface easy to use,
-intuitive, well-organized, and visually appealing. You will want to customize
-the layout and alignment of your application to make it fit your needs.</p>
-<p>You
-can use the visual editor to develop applications using Swing, AWT, or SWT.
-Each of these styles comes with useful container layout managers and alignment
-controls. The visual editor helps you to work with these layout managers and
-makes it easy to visually lay out your application.</p>
+<h1 class="topictitle1">Laying out UI components using the visual editor</h1>
+<div><p>You can use the visual editor for Java to visually arrange and
+lay out user interface (UI) components in your Java application. The editor
+supports various SWT and Swing layout managers.</p>
+<div class="p">Before you can layout UI components, your Java class must contain
+a container, such as JFrame, JPanel, or Shell, that allows for a layout manager
+to be set.</div>
+<div class="section"><p>When you design an application, you should make the user interface
+easy to use, intuitive, well-organized, and visually appealing. You can customize
+the layout of your application to improve its usability and make it fit your
+needs.</p>
+<p>When you add containers in a Java visual class, the editor uses
+default settings for the layout and alignment of components within those containers. For
+example, the default layout manager in the visual editor for JPanel is FlowLayout,
+while other containers have layout set to null.</p>
+<p>To specify a layout
+manager for a container, set the layout property:</p>
 </div>
+<ol><li><span>In the Design view or Java Beans view, select the container that
+you want to specify a layout manager for.</span></li>
+<li><span>In the Properties view, locate the layout property, and click its
+value column.</span></li>
+<li><span>Select the layout manager that you want to use for the container.</span></li>
+</ol>
 </div>
-
 <div>
-<blockquote>
-<div class="ulchildlink"><b><a href="../topics/tve_layout_null.html">Using null layout</a></b><br />
-Rather than using a layout manager that controls the size and position of all components in a container, you can set the layout manager to null. Each component then controls its own position and size using its bounds.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_align_xy.html">Aligning components using X/Y alignment</a></b><br />
-When you set the layout property for a component to null, you can use the Customize Layout window to align components based on their boundaries.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_layout_manager.html">Specifying a layout manager</a></b><br />
-You can specify a layout manager for a container to help you manage the layout and organization of the visual components within that container.</div>
-<div class="ulchildlink"><b><a href="../topics/cve_layoutmanagers.html">Layout managers and containers</a></b><br />
-Layout managers are objects that control the size and position of components within a container.</div>
-<div class="ulchildlink"><b><a href="../topics/cve_swinglayout.html">Swing and AWT layout managers</a></b><br />
-You can work with Swing and AWT layout managers with the visual editor for Java.</div>
-<div class="ulchildlink"><b><a href="../topics/cve_swtlayout.html">SWT layout managers</a></b><br />
-You can work with SWT layout managers with the visual editor for Java.</div>
-</blockquote>
+<ul class="ullinks">
+<li class="ulchildlink"><strong><a href="../topics/cve_layoutmanagers.html">Layout managers and containers</a></strong><br />
+Layout managers are objects that control the size and position of components within a container.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_layout_customize.html">Customizing UI layout in the visual editor</a></strong><br />
+In the visual editor for Java, you can use the Customize Layout window to modify layout settings for the currently selected container and UI component.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_swtlayout.html">Using SWT layout managers</a></strong><br />
+You can work with SWT layout managers with the visual editor for Java.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_swinglayout.html">Using Swing and AWT layout managers</a></strong><br />
+You can work with Swing and AWT layout managers with the visual editor for Java.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_layout_null.html">Using null layout</a></strong><br />
+Layout managers help control the size and position of all components in a container. In containers using null layout, each component defines its own bounds to determine size and location.</li>
+</ul>
 
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_developing.html" title="You can use the visual editor to visually compose and preview Java classes using Standard Widget Toolkit (SWT), Swing, and AWT components.">Developing Java classes with the visual editor</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_developing.html" title="You can use the visual editor to visually compose and preview Java classes using Standard Widget Toolkit (SWT), Swing, and AWT components.">Designing Java classes with the visual editor</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

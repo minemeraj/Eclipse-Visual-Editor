@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -13,12 +13,10 @@
 <meta name="DC.Title" content="BeanInfo classes and introspection" />
 <meta name="abstract" content="If you are creating new components or beans for use within the visual editor (for example, adding components to the palette), you can control their behavior by supplying a BeanInfo class." />
 <meta name="description" content="If you are creating new components or beans for use within the visual editor (for example, adding components to the palette), you can control their behavior by supplying a BeanInfo class." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_extending.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_beaninfo_jre.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_beaninfo_ve.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo_location.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_extending.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_beaninfo_jre.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_beaninfo_ve.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="cve_beaninfo" />
 <meta name="DC.Language" content="en-us" />
@@ -50,9 +48,9 @@ if you are using a third party set of Java bean classes, or if you have develope
 Java beans and BeanInfo classes that you are using.</p>
 <p>To learn more about BeanInfo classes you can download the JavaBeans specification
 from  <a href="http://java.sun.com/products/javabeans/docs" target="_blank">java.sun.com/products/javabeans/docs/</a>.</p>
-<div class="skipspace"><h4 class="sectiontitle">Background</h4><p>The class <tt class="sysout">java.beans.Introspector</tt> 
+<div class="section"><h4 class="sectiontitle">Background</h4><p>The class <tt class="sysout">java.beans.Introspector</tt> 
 is used to locate a BeanInfo class for a Java bean. The time that this occurs
-is referred to as <i>introspection</i>, and is done by the visual editor the
+is referred to as <em>introspection</em>, and is done by the visual editor the
 first time a bean is used. For example, when a button is first dropped from
 the palette, introspection occurs that tries to locate the correct BeanInfo
 class. After introspecting the bean, the results are cached to help performance.
@@ -99,7 +97,7 @@ information.</li>
 does not return it explicitly. Instead, it uses its details to create a temporary
 result class that implements <tt class="sysout">java.beans.BeanInfo</tt>.</p>
 </div>
-<div class="skipspace"><h4 class="sectiontitle">BeanInfo search path</h4><p>The best way to understand
+<div class="section"><h4 class="sectiontitle">BeanInfo search path</h4><p>The best way to understand
 the BeanInfo path is to consider the Java virtual machine that is created
 to perform introspection. This virtual machine is given a class path that
 is made up of following entries:  </p>
@@ -119,7 +117,7 @@ are:  </p>
 build path</li>
 </ul>
 </div>
-<div class="skipspace"><h4 class="sectiontitle">BeanInfo and inherent attributes</h4><p>If the bean you
+<div class="section"><h4 class="sectiontitle">BeanInfo and inherent attributes</h4><p>If the bean you
 are writing is inheriting attributes from a super class, the default BeanInfo
 will not expose the inherent attributes. You have to explicitly expose them
 with the getAdditionalBeanInfo() method.</p>
@@ -136,24 +134,19 @@ return new BeanInfo[0];            
  will not render it, even if it is set in the source code.  </p>
 </div>
 </div>
-
 <div>
-<blockquote>
-<div class="ulchildlink"><b><a href="../topics/cve_beaninfo_jre.html">BeanInfo classes for JRE classes</a></b><br />
-The Java beans for classes included in the JRE are supplied as part of the visual editor for Java. These define the behavior of classes such as javax.swing.JButton or javax.swing.JFrame inside the workbench.</div>
-<div class="ulchildlink"><b><a href="../topics/cve_beaninfo_ve.html">Tips for writing BeanInfo classes for the visual editor</a></b><br />
-This section describes some rules you can employ if you are writing a BeanInfo class for a Java bean intended for use in the visual editor for Java.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_beaninfo.html">Controlling BeanInfo information for plug-in developers</a></b><br />
-You can exercise control over how the BeanInfo classes are associated with a class path variable by adding an entry in a plug-in manifest file.</div>
-</blockquote>
+<ul class="ullinks">
+<li class="ulchildlink"><strong><a href="../topics/cve_beaninfo_jre.html">BeanInfo classes for JRE classes</a></strong><br />
+The Java beans for classes included in the JRE are supplied as part of the visual editor for Java. These define the behavior of classes such as javax.swing.JButton or javax.swing.JFrame inside the workbench.</li>
+<li class="ulchildlink"><strong><a href="../topics/cve_beaninfo_ve.html">Tips for writing BeanInfo classes for the visual editor</a></strong><br />
+This section describes some rules you can employ if you are writing a BeanInfo class for a Java bean intended for use in the visual editor for Java.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_beaninfo.html">Controlling BeanInfo information for plug-in developers</a></strong><br />
+You can exercise control over how the BeanInfo classes are associated with a class path variable by adding an entry in a plug-in manifest file.</li>
+</ul>
 
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_extending.html" title="Advanced developers might be interested in extending the visual editor to include custom components or Java beans, customizers, or custom property editors.">Extending the visual editor for Java</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_beaninfo.html" title="You can exercise control over how the BeanInfo classes are associated with a class path variable by adding an entry in a plug-in manifest file.">Controlling BeanInfo information for plug-in developers</a><br />
-<a href="../topics/tve_beaninfo_location.html" title="The visual editor requires the BeanInfo classes at design time and run time to determine the behavior of the various components. You can decide where to keep the BeanInfo classes.">Specifying the location of BeanInfo classes</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_extending.html" title="Advanced developers might be interested in extending the visual editor to include custom components or Java beans, customizers, or custom property editors.">Extending the visual editor for Java</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

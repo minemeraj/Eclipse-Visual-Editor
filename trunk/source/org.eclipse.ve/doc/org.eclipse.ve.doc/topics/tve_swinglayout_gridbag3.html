@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
-<meta name="DC.Title" content="Adjusting fill, anchor, and inset constraints in GridBag layout" />
-<meta name="abstract" content="When you use the Swing GridBag layout, the visual editor sets default constraints on components. You can change these constraints using the Properties view or the Customize Layout dialog." />
-<meta name="description" content="When you use the Swing GridBag layout, the visual editor sets default constraints on components. You can change these constraints using the Properties view or the Customize Layout dialog." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag1.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag2.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag4.dita" />
+<meta name="DC.Title" content="Customizing the layout of components in GridBagLayout" />
+<meta name="abstract" content="You can use the Customize Layout window to specify anchor position, insets, fill, span, padding, and weight for components within GridBagLayout." />
+<meta name="description" content="You can use the Customize Layout window to specify anchor position, insets, fill, span, padding, and weight for components within GridBagLayout." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag2.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag4.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag2.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag4.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_swinglayout_gridbag3" />
 <meta name="DC.Language" content="en-us" />
@@ -26,111 +28,117 @@
 <!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
-<title>Adjusting fill, anchor, and inset constraints in GridBag layout</title>
+<title>Customizing the layout of components in GridBagLayout</title>
 </head>
 <body id="tve_swinglayout_gridbag3"><a name="tve_swinglayout_gridbag3"><!-- --></a>
 
-<h1 class="topictitle1">Adjusting fill, anchor, and inset constraints in GridBag layout</h1>
-<div><p>When you use the Swing GridBag layout, the visual editor sets default
-constraints on components. You can change these constraints using the Properties
-view or the Customize Layout dialog.</p>
-<div class="skipspace"><p>Constraints, such as fill, anchor, weight x, and weight y, are
-set based on the component type in order to display the component better on
-a GridBagLayout. For example, when you drop a javax.swing.JTextField, the
-fill is set to HORIZONTAL (default value for JTextField is NONE), and the
-weight x value is set to 1 (default for JTextField value is 0). Otherwise,
-the JTextField is barely visible. </p>
-<p>In the following example, the JScrollBar
-was dropped with a fill value set to VERTICAL and the weight y value set to
-1.</p>
-<p> <img src="../images/GridBagTargetFeedbac.gif" alt="drop cursor with feedback" /> </p>
-<p>The
-generated constraint for a new component instantiates GridBagConstraints using
-its null constructor.</p>
-<p>When switching to a GridBagLayout from another
-layout manager, the visual editor for Java will generate constraints for each
-component based on their existing bounds, and the net effect will be that
-the components do not move their position. Instead of being placed there by
-an absolute rectangle such as a container with a layout set to null, they
-have GridBagConstraints.</p>
-<p>The advantage of using GridBagConstraints instead
-of a null layout is that each component is sized according to its preferred
-size. So, if the size of the parent window changes or if the preferred sizes
-change at run time due to different language strings, the layout manager will
-resize and reposition all of the components and make the best use of the available
-space.</p>
-<p>To specify anchor, fill, and inset constraints for a component
-in GridBag layout:</p>
+<h1 class="topictitle1">Customizing the layout of components in GridBagLayout</h1>
+<div><p>You can use the Customize Layout window to specify anchor position,
+insets, fill, span, padding, and weight for components within GridBagLayout.</p>
+<div class="section"><p>In GridBagLayout, the visual editor uses default values for constraints,
+such as fill, anchor, weight x, and weight y, in order to display the component
+better. For example, when you drop a javax.swing.JTextField, the fill is set
+to HORIZONTAL (default value for JTextField is NONE), and the weight X value
+is set to 1 (default for JTextField value is 0).</p>
+<p>When switching to a
+GridBagLayout from another layout manager, the visual editor for Java generates
+constraints for each component based on their existing bounds. An advantage
+of using GridBagConstraints instead of a null layout is that each component
+is sized according to its preferred size. So, if the size of the parent window
+changes or if the preferred sizes change at run time due to different language
+strings, the layout manager will resize and reposition all of the components
+and make the best use of the available space.</p>
+<p>To customize the layout
+of components within GridBagLayout:</p>
 </div>
-<ol><li class="skipspace"><span>Select the component that is in a GridBag layout that you want
-to adjust.</span> <div class="tip"><span class="tiptitle">Tip: </span>Select multiple components to set identical
-anchor, fill, and inset constraints on multiple components at the same time.</div>
+<ol><li class="stepexpand"><span>Select the component that you want to customize within the GridBagLayout,
+and click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/icons/aligndialog_obj.gif" alt="Customize Layout toolbar button" /></span> toolbar button</span> <div class="tip"><span class="tiptitle">Tip: </span>Select multiple components to set identical anchor,
+fill, and inset constraints on multiple components at the same time.</div>
+ The Customize Layout window shows the anchor position, insets,
+fill, span, padding, and weight values of the selected components on the GridBagLayout.
+If multiple components are selected, the anchor value and fill values only
+show a pressed button if all the components have the same value. The inset
+values shown are those set for the last component selected.<p><img src="../images/CustomizeLayout_GridBag.gif" alt="Customize Layout window" /></p>
 </li>
-<li class="skipspace"><span>Do one of the following to open the Customize Layout window: </span><ul><li>Right-click and select <span class="uicontrol">Customize Layout</span> from
-the pop-up menu.</li>
-<li>Click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/aligndialog_obj.gif" alt="show alignment window icon" /></span> toolbar button.</li>
-</ul>
- The Customize Layout window shows the anchor, fill, and inset
-values of the selected components on the GridBagLayout. If multiple components
-are selected, the anchor value and fill values only show a pressed button
-if all the components have the same value. The inset values shown are those
-set for the last component selected.<br /><img src="../images/CustomizeLayout_GridBag.gif" alt="Customize Layout window" /><br /></li>
-<li class="skipspace"><span>Go to the Component page of the Customize Layout window.</span></li>
-<li class="skipspace"><span>To adjust the anchor position of the component, click one of the
-compass buttons:</span><ul><li><span class="uicontrol">Anchor northwest</span> - positions the component
+<li class="stepexpand"><span>To adjust the anchor position of the component, click one of the
+compass buttons:</span><ul><li><span class="uicontrol">Anchor northwest</span> - Positions the component
 in the upper-left corner of the grid cell.</li>
-<li><span class="uicontrol">Anchor north</span> - positions the component in the
+<li><span class="uicontrol">Anchor north</span> - Positions the component in the
 top center of the grid cell.</li>
-<li><span class="uicontrol">Anchor northeast</span> - positions the component
+<li><span class="uicontrol">Anchor northeast</span> - Positions the component
 in the upper-right corner of the grid cell.</li>
-<li><span class="uicontrol">Anchor west</span> - positions the component in the
+<li><span class="uicontrol">Anchor west</span> - Positions the component in the
 left middle of the grid cell.</li>
-<li><span class="uicontrol">Anchor center</span> - positions the component in
+<li><span class="uicontrol">Anchor center</span> - Positions the component in
 the center of the grid cell.</li>
-<li><span class="uicontrol">Anchor east</span> - positions the component in the
+<li><span class="uicontrol">Anchor east</span> - Positions the component in the
 right middle of the grid cell.</li>
-<li><span class="uicontrol">Anchor southwest</span> - positions the component
+<li><span class="uicontrol">Anchor southwest</span> - Positions the component
 in the lower-left corner of the grid cell.</li>
-<li><span class="uicontrol">Anchor south</span> - positions the component in the
+<li><span class="uicontrol">Anchor south</span> - Positions the component in the
 bottom center of the grid cell.</li>
-<li><span class="uicontrol">Anchor southeast</span> - positions the component
+<li><span class="uicontrol">Anchor southeast</span> - Positions the component
 in the lower-right corner of the grid cell.</li>
 </ul>
 </li>
-<li class="skipspace"><span>To adjust how much the component fills the grid cell, click either
-or both of the fill buttons:</span><ul><li><span class="uicontrol">Fill horizontal</span> - specifies that the component
-should occupy the full width of the grid cell.</li>
-<li><span class="uicontrol">Fill vertical</span> - specifies that the component
-should occupy the full height of the grid cell.</li>
-</ul>
-</li>
-<li class="skipspace"><span>To adjust the padding between the grid cell border and the component,
-set a value (in pixels) for any of the following fields:</span><ul><li><span class="uicontrol">Top</span> - sets the inset, or padding, above the
+<li class="stepexpand"><span>To adjust the padding between the grid cell border and the component,
+enter a value (in pixels) for any of the following fields:</span><ul><li><span class="uicontrol">Top</span> - Sets the inset, or padding, above the
 component.</li>
-<li><span class="uicontrol">Left</span> - sets the inset, or padding, to the left
+<li><span class="uicontrol">Left</span> - Sets the inset, or padding, to the left
 of the component.</li>
-<li><span class="uicontrol">Bottom</span> - sets the inset, or padding, below
+<li><span class="uicontrol">Bottom</span> - Sets the inset, or padding, below
 the component.</li>
-<li><span class="uicontrol">Right</span> - sets the inset, or padding, to the
+<li><span class="uicontrol">Right</span> - Sets the inset, or padding, to the
 right of the component.</li>
 </ul>
 </li>
-<li class="skipspace"><span>To change other properties for a component in a GridBag (for example, <span class="uicontrol">weight
-x</span>, <span class="uicontrol">weight y</span>, <span class="uicontrol">x internal padding</span>,
-and <span class="uicontrol">y internal padding</span>), you can expand the <span class="uicontrol">constraint</span> property
-for the component in the Properties view.</span></li>
+<li class="stepexpand"><span>To adjust how much the component fills the grid cell, click either
+or both of the fill buttons:</span><ul><li><span class="uicontrol">Fill horizontal</span> - Specifies that the component
+should occupy the full width of the grid cell.</li>
+<li><span class="uicontrol">Fill vertical</span> - Specifies that the component
+should occupy the full height of the grid cell.</li>
+</ul>
+</li>
+<li class="stepexpand"><span>To specify how many cells a component should span, enter values
+for <span class="uicontrol">Width</span> and <span class="uicontrol">Height</span>:</span><ul><li><span class="uicontrol">Width</span> - Specifies the number of columns the
+component occupies (the X axis).</li>
+<li><span class="uicontrol">Height</span> - Specifies the number of rows the component
+occupies (the Y axis).</li>
+</ul>
+</li>
+<li class="stepexpand"><span>To specify internal padding for a component, enter values (in pixels)
+for the following fields:</span><ul><li><span class="uicontrol">X</span> - </li>
+<li><span class="uicontrol">Y</span> - </li>
+</ul>
+</li>
+<li class="stepexpand"><span>To specify how to distribute extra space across rows or columns,
+enter values (in relative numerical values, in relation to the weights specified
+for other components) for the <span class="uicontrol">X</span> and <span class="uicontrol">Y</span> fields.</span> <p>The GridBagLayout manager calculates the weight of columns and rows
+to be the maximum weightx and weighty of all the components in a row and column,
+respectively. If the resulting layout is smaller than the area it needs to
+fill, the extra space in the layout will be distributed to the columns and
+rows in proportion to the weights specified. A cell that has a weight of zero
+receives no extra space. </p>
+<p>For example, if a component in column 1, row
+1 has a weight X of 3, and a component in column 2, row 1 has a weight X of
+1, the total of the weight X values in row 1 add up to 4, and column 1 will
+receive 75% of the extra space when space is distributed.</p>
+<ul><li><span class="uicontrol">X</span> - Specifies the weight for distribution of
+extra space between columns.</li>
+<li><span class="uicontrol">Y</span> - Specifies the weight for distribution of
+extra space between rows.</li>
+</ul>
+</li>
 </ol>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_swinglayout_gridbag.html" title="You can use the AWT GridBag layout with Swing and AWT containers to arrange components using a powerful and flexible grid arrangement.">Using GridBag layout</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_swinglayout_gridbag1.html" title="When using the GridBag layout manager, you can show or hide the grid in Design view.">Showing the grid for GridBag layout</a><br />
-<a href="../topics/tve_swinglayout_gridbag2.html" title="When you build your application visually using GridBag layout, the visual grid markers help you to move and drop components in the required position.">Adding or moving components within GridBag layout</a><br />
-<a href="../topics/tve_swinglayout_gridbag4.html" title="You can set a component in a GridBag layout to span multiple columns or rows. You can set this in the property constraints or by visually dragging the component in the Design view.">Spanning components across GridBag rows and columns</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_swinglayout_gridbag.html" title="You can use the AWT GridBagLayout with Swing and AWT containers to arrange components using a powerful and flexible grid arrangement.">Using GridBagLayout (AWT)</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tve_swinglayout_gridbag2.html" title="When you build your application visually using GridBagLayout, the visual grid markers help you to move and drop components in the required position.">Adding or moving components within GridBagLayout</a></div>
+<div><a href="../topics/tve_swinglayout_gridbag4.html" title="You can drag a component in a GridBagLayout to make it span multiple cells. You can also specify the width and height of a component using Properties view or the Customize Layout window.">Spanning components across GridBagLayout cells</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

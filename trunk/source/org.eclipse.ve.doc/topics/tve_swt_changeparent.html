@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Changing the parent of an SWT Shell" />
+<meta name="abstract" content="You can use the visual editor to change the parent of an SWT Shell, to quickly create dialogs and other shells from an SWT application." />
+<meta name="description" content="You can use the visual editor to change the parent of an SWT Shell, to quickly create dialogs and other shells from an SWT application." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtoverview.html" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tve_swt_changeparent" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<title>Changing the parent of an SWT Shell</title>
+</head>
+<body id="tve_swt_changeparent"><a name="tve_swt_changeparent"><!-- --></a>
+
+<h1 class="topictitle1">Changing the parent of an SWT Shell</h1>
+<div><p>You can use the visual editor to change the parent of an SWT Shell,
+to quickly create dialogs and other shells from an SWT application.</p>
+<div class="p">In order to change the parent of an SWT Shell, your visual class must
+include another Shell.</div>
+<div class="section">When you drop a new Shell on an SWT visual class, by default the
+Shell is created without a parent:<pre>sShell1 = new Shell();</pre>
+If
+a Shell specified a parent, it would look like this:<pre>sShell1 = new Shell(sShell);</pre>
+The
+visual editor provides a dialog to help you specify or change the parent of
+an SWT Shell.</div>
+<ol><li class="stepexpand"><span>In the Design view, right-click the Shell whose parent you want
+to change, and select <span class="uicontrol">Change Parent</span>.</span></li>
+<li class="stepexpand"><span>In the Change Parent window, select the parent Shell that you want
+to use.</span> <p><img src="../images/ChangeParentDialog.gif" alt="Change Parent window" /></p>
+</li>
+<li class="stepexpand"><span>Click <span class="uicontrol">OK</span>.</span></li>
+</ol>
+<div class="section">The Java code will be updated to reflect the new parent. The following
+code snippet shows an example:<pre>sShell1 = new Shell(sShell2);</pre>
+</div>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_swtoverview.html" title="The visual editor helps you develop applications using Standard Widgets Toolkit (SWT).">Working with SWT in the visual editor</a></div>
+</div>
+</div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
+<br />
+</div>
+</body>
+</html>

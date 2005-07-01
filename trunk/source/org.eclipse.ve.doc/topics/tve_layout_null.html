@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
 <meta name="DC.Title" content="Using null layout" />
-<meta name="abstract" content="Rather than using a layout manager that controls the size and position of all components in a container, you can set the layout manager to null. Each component then controls its own position and size using its bounds." />
-<meta name="description" content="Rather than using a layout manager that controls the size and position of all components in a container, you can set the layout manager to null. Each component then controls its own position and size using its bounds." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_overview.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.dita" />
+<meta name="abstract" content="Layout managers help control the size and position of all components in a container. In containers using null layout, each component defines its own bounds to determine size and location." />
+<meta name="description" content="Layout managers help control the size and position of all components in a container. In containers using null layout, each component defines its own bounds to determine size and location." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_overview.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_customize.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_align_xy.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_prefsgrid.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_layout_null" />
 <meta name="DC.Language" content="en-us" />
@@ -29,71 +34,67 @@
 <body id="tve_layout_null"><a name="tve_layout_null"><!-- --></a>
 
 <h1 class="topictitle1">Using null layout</h1>
-<div><p>Rather than using a layout manager that controls the size and position
-of all components in a container, you can set the layout manager to null.
-Each component then controls its own position and size using its bounds.</p>
-<div class="skipspace"><p>If you right-click a container and set the <span class="uicontrol">Show Grid</span> option,
-you can drag, drop, and move components to a point on the grid, giving you
-the ability to align components to positions without using the alignment actions:
- <br /><img src="../images/NullShowGrid.gif" alt="Show Grid in null layout" /><br /></p>
-<p>You
-can also start with the layout manager set to null and then change to a layout
-(like the GridBagLayout) to get the constraint setting calculated by the visual
-editor for Java. The advantage of having each component control its size and
-position is that you can specify the x, y, width, and height and be sure that
-these will always be used at run time. The disadvantage of having fixed size
-and height is that they will not resize if the application is resized by the
-user or if the labels on components such as buttons or check boxes change
-size based on the user's font or locale.</p>
-<p>To see this behavior in the
-visual editor for Java you can use the list of values in the Properties
-view for the <span class="uicontrol">layout</span> property and select <span class="uicontrol">null</span>.</p>
-<p>When
-you set the layout manager for an existing container to null, the Design view
-does not change in appearance. The visual editor calculates the current bounds
-of each component and explicitly sets them for you. For example, suppose you
-have a container that uses the FlowLayout layout manager and contains a JLabel
-bean. Before you set layout to null, the code to initialize the JLabel bean
-only has its label property set, as shown here:</p>
-<pre>private javax.swing.JLabel getIvjJLabel(){
-    if(ivjJLabel == null) {
-       ivjJLabel = new javax.swing.JLabel();
-       ivjJLabel.setText("JLabel");
-    }
-    return ivjJLabel;
-}</pre>
-<p>If you then use the Properties view to change the layout manager
-to null, the code looks something like this:</p>
-<pre>private javax.swing.JLabel getIvjJLabel(){
-    if(ivjJLabel == null) {
-       ivjJLabel = new javax.swing.JLabel();
-       ivjJLabel.setBounds(59, 10, 38, 15);
-       ivjJLabel.setText("JLabel");
-    }
-    return ivjJLabel;
-}</pre>
-<p>In the same example, as soon as you set the layout manager
-to null, the Properties view for each component displays values for bounds,
-size, and location. These values do not display when the parent container uses
-any other layout manager, because component properties do not change when
-the layout manager controls positioning and sizing.</p>
-<p>When you set the
-layout for a container to null, the handles for each component in the Design
-view allow resizing. You can also size a bean as you add it from the palette.
-Simply hold down the left mouse button when you drop the bean in the Design
-view, and drag the mouse pointer until the bean is the required size. A target
-feedback rectangle shows you the initial size. In any other layout manager
-you are only allowed to move or add components.</p>
+<div><p>Layout managers help control the size and position of all components
+in a container. In containers using null layout, each component defines its
+own bounds to determine size and location.</p>
+<div class="section"><p>The visual editor provides grid markers that help you visually
+align components, and you can snap components to the grid. When you set to
+null the layout for an existing container that was previously using a layout
+manager, the Design view does not change in appearance. The visual editor
+calculates and sets the bounds for each component using the setBounds() method.</p>
+</div>
+<ul><li class="stepexpand"><span>To specify universal settings for how the null grid markers display,
+see <a href="tve_prefsgrid.html">Specifying grid display preferences for
+containers</a>. To customize the spacing of the grid markers for the selected
+container, open the <span class="uicontrol">Customize Layout</span><img src="../images/icons/aligndialog_obj.gif" alt="Customize Layout toolbar button" /> window and specify the
+width, height, and margin sizes for the grid.</span></li>
+<li class="stepexpand"><span>To force items to snap to the grid markers as you drop them or
+move them on the null layout, right-click the container and select <span class="uicontrol">Snap
+to Grid</span>. With <span class="uicontrol">Snap to Grid</span> selected, you
+can easily align components visually.</span> <p><img src="../images/NullSnapToGrid.gif" alt="Snap to Grid in null layout" /></p>
+<p>To override the snapping
+to grid for a component, hold down the Alt key while you drop or move the
+component. This allows you to place a component between grid markers.</p>
+</li>
+<li class="stepexpand"><span>To resize a component in null layout, click and drag the component's
+handles:</span> <p><img src="../images/NullResize.gif" alt="Re-sizing&#xA;a component in null layout" /></p>
+<p>You can also set the size of
+a component as you add it from the palette. Simply hold down the left mouse
+button when you drop the component in the Design view, and drag the mouse
+pointer. In any other layout manager, you cannot size a component as you add
+it.</p>
+<p><img src="../images/NullDropSize.gif" alt="Dropping and sizing&#xA;a component in null layout" /></p>
+</li>
+</ul>
+<div class="example"><div class="tip"><span class="tiptitle">Tip: </span>You can start with the layout manager set to null
+and then change to a layout (like the GridBagLayout) to get the constraint
+settings calculated by the visual editor for Java. The advantage of having
+each component control its bounds is that you can be sure that a component
+will always be the same size and in the same position at run time. The disadvantage
+of having fixed size and height is that the components will not adjust their
+bounds if the application is re-sized by the user. In addition, labels on
+components such as buttons or check boxes need to change size based on font
+or locale.</div>
 </div>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_layout_overview.html" title="Use the visual editor for Java to visually arrange and lay out visual components in your Java application.">Laying out components using the visual editor</a><br />
-</p>
-<p><b class="relconceptshd">Related concepts</b><br />
-<a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a><br />
-</p>
+<ul class="ullinks">
+<li class="ulchildlink"><strong><a href="../topics/tve_align_xy.html">Aligning components using X/Y alignment</a></strong><br />
+When you set the layout property for a component to null, you can use the Customize Layout window to align components based on their boundaries.</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_layout_overview.html" title="You can use the visual editor for Java to visually arrange and lay out user interface (UI) components in your Java application. The editor supports various SWT and Swing layout managers.">Laying out UI components using the visual editor</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tve_layout_customize.html" title="In the visual editor for Java, you can use the Customize Layout window to modify layout settings for the currently selected container and UI component.">Customizing UI layout in the visual editor</a></div>
+<div><a href="../topics/tve_swtlayout.html" title="You can work with SWT layout managers with the visual editor for Java.">Using SWT layout managers</a></div>
+<div><a href="../topics/tve_swinglayout.html" title="You can work with Swing and AWT layout managers with the visual editor for Java.">Using Swing and AWT layout managers</a></div>
+<div><a href="../topics/tve_prefsgrid.html" title="When working with Swing GridBagLayout, SWT GridLayout, or null layout, you can specify a preference to show or hide the grid feedback in the Design view.">Specifying grid display preferences for containers</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

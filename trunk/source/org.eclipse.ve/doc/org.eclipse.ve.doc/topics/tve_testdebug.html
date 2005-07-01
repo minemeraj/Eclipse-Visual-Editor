@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
 <meta name="DC.Title" content="Testing and debugging in the visual editor" />
-<meta name="abstract" content="After you write a Java class using the visual editor for Java, you can run it to test and debug the run-time behavior." />
-<meta name="description" content="After you write a Java class using the visual editor for Java, you can run it to test and debug the run-time behavior." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_overview.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_run.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_run_config.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_debug.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_debug_advanced.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_test_applets.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_exceptions.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_run.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_run_config.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_test_applets.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_debug.dita" />
+<meta name="abstract" content="After you write a Java class using the visual editor for Java, you can run it to test and debug the runtime behavior." />
+<meta name="description" content="After you write a Java class using the visual editor for Java, you can run it to test and debug the runtime behavior." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_overview.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_run.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_run_config.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_debug.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_test_applets.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_exceptions.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_debug_advanced.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_testdebug" />
 <meta name="DC.Language" content="en-us" />
@@ -39,8 +35,8 @@
 
 <h1 class="topictitle1">Testing and debugging in the visual editor</h1>
 <div><p>After you write a Java class using the visual editor for Java,
-you can run it to test and debug the run-time behavior.</p>
-<div class="skipspace"><p>If the class has a <samp class="codeph">public static void main(String[])</samp> method,
+you can run it to test and debug the runtime behavior.</p>
+<div class="section"><p>If the class has a <samp class="codeph">public static void main(String[])</samp> method,
 you can run or debug it as a Java application. However, when you write a Java
 bean using the visual editor for Java, it will not typically have a main method.
 Rather than adding a main method just to test the class, you can run or debug
@@ -50,36 +46,29 @@ it, you can switch to the Debug perspective, where the Java processes can
 be seen and where you can use breakpoints and step through the code.</p>
 </div>
 </div>
-
 <div>
-<blockquote>
-<div class="ulchildlink"><b><a href="../topics/tve_run.html">Running a Java bean or application</a></b><br />
-While you are developing your visual class, you can run it to see its appearance and behavior.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_run_config.html">Configuring options for running a Java bean or application</a></b><br />
-You can specify different configurations for each Java bean or Java application that you run.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_debug.html">Debugging a visual Java bean or application</a></b><br />
-If you want to see the Java processes and step through the code for your visual class while you are running it, you can choose the debug options.</div>
-<div class="ulchildlink"><b><a href="../topics/cve_debug_advanced.html">Advanced options for debugging Java beans</a></b><br />
+<ul class="ullinks">
+<li class="ulchildlink"><strong><a href="../topics/tve_run.html">Running your visual class as a Java bean or application</a></strong><br />
+While you are developing your visual class, you can run it to test its appearance and behavior.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_run_config.html">Configuring options for running a Java bean or application</a></strong><br />
+You can specify different configurations for each Java bean or Java application that you run.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_debug.html">Debugging a visual Java bean or application</a></strong><br />
+If you want to see the Java processes and step through the code for your Java visual class while you are running it, you can choose the debug options.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_test_applets.html">Testing and deploying applets</a></strong><br />
+You can test an applet using launch configuration options before deploying it to open in a browser.</li>
+<li class="ulchildlink"><strong><a href="../topics/cve_exceptions.html">Java bean exceptions</a></strong><br />
+During normal development, exceptions are sometimes thrown by the Java beans. The visual editor displays icons and visual markers to indicate exceptions.</li>
+<li class="ulchildlink"><strong><a href="../topics/cve_debug_advanced.html">Advanced options for debugging Java beans</a></strong><br />
 During normal development you should not need to be concerned with
 the VM that is used by each visual editor instance. Advanced users, however,
 can configure the workbench so that any messages sent to <tt class="sysout">System.out</tt> or <tt class="sysout">System.err</tt> of
 the VM are written to the <span class="filepath">.log</span> file in the <span class="filepath">.metadata</span> directory
-in your workspace.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_test_applets.html">Testing and deploying applets</a></b><br />
-You can test an applet using launch configuration options before deploying it to open in a browser.</div>
-<div class="ulchildlink"><b><a href="../topics/cve_exceptions.html">Java bean exceptions</a></b><br />
-During normal development, exceptions are sometimes thrown by the Java beans. The visual editor displays icons and visual markers to indicate exceptions.</div>
-</blockquote>
+in your workspace.</li>
+</ul>
 
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_overview.html" title="This information describes how to use the visual editor to develop and test visual Java classes and applications.">Editing Java in the visual editor</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_run.html" title="While you are developing your visual class, you can run it to see its appearance and behavior.">Running a Java bean or application</a><br />
-<a href="../topics/tve_run_config.html" title="You can specify different configurations for each Java bean or Java application that you run.">Configuring options for running a Java bean or application</a><br />
-<a href="../topics/tve_test_applets.html" title="You can test an applet using launch configuration options before deploying it to open in a browser.">Testing and deploying applets</a><br />
-<a href="../topics/tve_debug.html" title="If you want to see the Java processes and step through the code for your visual class while you are running it, you can choose the debug options.">Debugging a visual Java bean or application</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_overview.html" title="This information describes how to use the visual editor for Java to develop and test visual Java classes and applications.">Developing Java in the visual editor</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

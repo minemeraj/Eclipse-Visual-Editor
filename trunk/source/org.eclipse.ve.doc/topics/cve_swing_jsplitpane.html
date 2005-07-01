@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -13,7 +13,7 @@
 <meta name="DC.Title" content="JSplitPane and its components" />
 <meta name="abstract" content="The visual editor has special behavior to make it easy to work with a Swing JSplitPane container." />
 <meta name="description" content="The visual editor has special behavior to make it easy to work with a Swing JSplitPane container." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swingoverview.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swingoverview.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="cve_swing_jsplitpane" />
 <meta name="DC.Language" content="en-us" />
@@ -30,47 +30,35 @@
 <h1 class="topictitle1">JSplitPane and its components</h1>
 <div><p>The visual editor has special behavior to make it easy to work
 with a Swing JSplitPane container.</p>
-<p>You can use the class javax.swing.JSplitPane to create two components with
-a split bar between them. At run time, a user can drag the split bar to adjust
-the space on the screen. </p>
-<p>In the visual editor, the two child components are shown beneath the JSplitPane
-on the Java Beans view. When you drop a new component onto a JSplitPane in
-the Java Beans view or the Design view, the visual editor will try to place
-the component in the left pane if there is no existing child. If there is
-already a component in the left pane, the component that you are dropping
-will be added to the right pane. If both panes in the JSplitPane are already
-occupied, the visual editor will not allow you to drop the component.</p>
-<p>Whether the visual editor for Java shows the left and right component as
-children depends on the value of its orientation property. If this property
-is set to VERTICAL_SPLIT then the bottom and top component are shown instead.</p>
-<p>The method generated for each of the split pane children is to set one
-of its properties using a <samp class="codeph">set</samp> method. For example:</p>
-<pre>ivjJSplitPane.setTopComponent(getIvjJButton());</pre>
-<p>In addition to setting a component using a set method, it can be added
-using a constraint of "top", "bottom" "left" or "right". For example:  </p>
+<p>You can use the JSplitPane container to create two components with a split
+bar between them. When the application is running, a user can drag the split
+bar to adjust the space on the screen.</p>
+<ul><li>When you first drop a JSplitPane container onto your design, the Design
+view shows a representation of two components separated by a split bar. The
+buttons are just visual representations for the two sides, where you can drop
+your own components or containers:<p><img src="../images/JSplitPaneDefault.gif" alt="JSplitPane in the Design view" /></p>
+</li>
+<li>The first component that is dropped onto JSplitPane will occupy the left
+pane. The second component that is dropped will occupy the right pane. If
+both panes in the JSplitPane are already occupied, the visual editor does
+not allow you to drop the component.</li>
+<li>The JSplitPane includes an orientation property. If you set the orientation
+to VERTICAL_SPLIT, the split bar will run horizontally, making top and bottom
+components. The default is HORIZONTAL_SPLIT.</li>
+<li>The visual editor generates code that uses a <samp class="codeph">set</samp> method:<pre>ivjJSplitPane.setTopComponent(getIvjJButton());</pre>
+<p>However, the visual editor will also recognize the following
+code method:  </p>
 <pre>ivjJSplitPane.addComponent(getIvjJButton(),"top");</pre>
-<div class="note"><span class="notetitle">Note: </span>Although the visual editor generates code that uses the <samp class="codeph">set</samp> method,
-the Design view will also recognize the <tt class="sysout">add(Component,Object)</tt> method
-with a valid constraint.</div>
-<p>When you drop components onto a JSplitPane, if the divider location is
-not explicitly set, the divider location will change according to the preferred
-size of the left or top component. Then it will fill the opposite side with
-the remaining component if one is set. For example, if you drop a JPanel into
-a JSplitPane with no components, it will be assigned by default to the left
-side. The divider location will move to the far left in the split pane because
-the preferredSize for a JPanel is very small. If you then drop components
-onto the JPanel, which is using a FlowLayout, the split pane will resize according
-to the preferred size of the JPanel, which has now changed because of the
-preferred sizes of the components that were added to it.</p>
-<p>The visual editor will render JLayeredPane indexes in a single layer. In
-the case of multilayer and indexes, the visual editor may not show the components
-in the correct order.</p>
+</li>
+<li>The visual editor will render JLayeredPane indexes in a single layer.
+In the case of multilayer and indexes, the visual editor may not show the
+components in the correct order.</li>
+</ul>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_swingoverview.html" title="The visual editor for Java gives you visual control in working with Swing components. You can also customize the Swing look and feel.">Working with Swing in the visual editor</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_swingoverview.html" title="The visual editor for Java gives you visual control in working with Swing components. You can also customize the Swing look and feel.">Working with Swing in the visual editor</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

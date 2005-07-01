@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?NLS  TYPE="org.eclipse.help.toc"?>
-<toc label="Extending the Visual Editor for Java" link_to="ve_toc.xml#anchor0240" topic="topics/tve_extending.html">
+<toc label="Extending the Visual Editor for Java" topic="topics/tve_extending.html">
    <anchor id="anchor0205"/>
    <topic label="Extending the visual editor for Java" href="topics/tve_extending.html">
       <anchor id="anchor0210"/>

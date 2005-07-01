@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
 <meta name="DC.Title" content="Adding events to a component" />
-<meta name="abstract" content="You can add an event to a component in the Design view or Java Beans view." />
-<meta name="description" content="You can add an event to a component in the Design view or Java Beans view." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_events.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_events_delete.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_events_view.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_events_viewsource.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_javabeansview.dita" />
+<meta name="abstract" content="You can add an event to a component in the Design view or Java Beans view of the visual editor for Java." />
+<meta name="description" content="You can add an event to a component in the Design view or Java Beans view of the visual editor for Java." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_events.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_events.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_events_view.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_events_delete.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_events_viewsource.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_javabeansview.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_events_add" />
 <meta name="DC.Language" content="en-us" />
@@ -33,29 +34,28 @@
 
 <h1 class="topictitle1">Adding events to a component</h1>
 <div><p>You can add an event to a component in the Design view or Java
-Beans view.</p>
-<div class="skipspace">To add an event to a component:</div>
-<ol><li class="skipspace"><span>Right-click the component in the Java Beans view or the Design
+Beans view of the visual editor for Java.</p>
+<div class="section">To add an event to a component:</div>
+<ol><li class="stepexpand"><span>Right-click the component in the Java Beans view or the Design
 view.</span></li>
-<li class="skipspace"><span>From the pop-up menu, click <span class="uicontrol">Events</span>.</span> The pop-up menu shows the preferred events for the component. Do one
+<li class="stepexpand"><span>From the pop-up menu, click <span class="uicontrol">Events</span>.</span> The pop-up menu shows the preferred events for the component. Do one
 of the following steps:<ul><li>Click one of the preferred events for the component. The event is
 added to the component. For example, for a JFrame the preferred events are
 windowClosed and windowOpened.</li>
 <li>Click <span class="uicontrol">Add Events</span> to open the Add Events window.</li>
 </ul>
 </li>
-<li class="skipspace"><span>If you opened the Add Events window, you are presented with a list
-of categorized events to choose from. Select the event that you want to add
-click <span class="uicontrol">Finish</span>.</span> <ul><li>The Add Event dialog shows all of the available events for the component
+<li class="stepexpand"><span>If you opened the Add Events window, you are presented with a list
+of categorized events to choose from. Select the event that you want to add,
+then click <span class="uicontrol">Finish</span>.</span> <ul><li>The Add Event dialog shows all of the available events for the component
 in a tree. The tree shows the event listeners as the first level of entries,
 and beneath each listener entry are the possible callbacks the event can raise.<br /><img src="../images/AddEventDialog_01.gif" alt="add event dialog" /><br /></li>
 <li>You can use the dialog to specify whether you want to create a new listener
-or use an existing one. When the dialog opens, it analyzes the existing
-listeners, and if it finds one that it believes can be re-used, it marks the
-listener with a different icon: <img src="../images/eventpresent_class_obj.gif" alt="event present class" /> if the existing listener extends an adapter class,
-or <img src="../images/eventpresent_anon_obj.gif" alt="event present" /> otherwise. Within
-the listener itself, existing events are shown with a green arrow <img src="../images/e2mconn_obj.gif" alt="green arrow" />, and available events
-are shown with an incomplete arrow <img src="../images/unevent_obj.gif" alt="unevent" /></li>
+or use an existing one. When the dialog opens, it analyzes the existing listeners,
+and if it finds one that it believes can be re-used, it marks the listener
+with a different icon. For existing listeners that extend an adapter class,
+the <img src="../images/icons/anonclass_obj.gif" alt="event present class" /> icon is used, otherwise, the <img src="../images/icons/genlistener_obj.gif" alt="event present" /> is used. Within the listener itself, existing events are shown with
+a green arrow <img src="../images/icons/e2mconn_obj.gif" alt="green arrow" />, and available events are shown with an incomplete arrow <img src="../images/icons/unevent_obj.gif" alt="unevent" /></li>
 <li>You can specify whether or not you want to use the existing listener or
 create a new one. When a new one is created, you can choose whether you
 want it to extend the adapter class or just implement the listener interface. If
@@ -72,9 +72,9 @@ event)</samp> is used for all property events.  On some JavaBeans (such
 as Swing components) the two argument method <samp class="codeph">addPropertyChange(String
 propertyName, PropertyChangeListener listener)</samp> is available and selected
 by default to use for the new listener.<p><img src="../images/AddEventDialog_02.gif" alt="add event dialog" /> </p>
-<p>A listener that is added using the two argument
-method is specific to a particular property, so it cannot be reused for another
-property. A listener added with a single argument method has an <samp class="codeph">if</samp> statement
+<p>A listener that is added using the two argument method is
+specific to a particular property, so it cannot be reused for another property. A
+listener added with a single argument method has an <samp class="codeph">if</samp> statement
 that checks the name of the property before processing the logic for each
 property callback as shown in the following code:</p>
 <div class="p"><pre>javaBean.addPropertyChangeListener(new java.beans.PropertyChangeListener() { 
@@ -91,9 +91,9 @@ if{} blocks used ). </p>
 </li>
 </ul>
 </li>
-<li class="skipspace"><span></span></li>
+<li class="stepexpand"><span></span></li>
 </ol>
-<div class="skipspace"><p></p>
+<div class="section"><p></p>
 <p>When you add an event, if there is an existing listener
 that can be used, then the callback method is added to it. Otherwise, a new
 listener is created. For an existing listener to be used, it must be
@@ -111,36 +111,37 @@ the event then the listener will extend this. Otherwise, it will implement
 the listener interface.  After the event is added a stub method is created
 with a  //TODO comment.  The stub method is an indicator of the
 source code that will be executed when the event occurs, and you should then
-change this to perform your required behavior. The //TODO comment
-is displayed in the Tasks window, flagging incomplete methods.
-This is so that you can locate them later and remove the //TODO comment once
-the callback logic has been written.</p>
-<p>In the previous example the windowOpened
-method already exists.  If this is a listener that extends the adapter,
-the same listener will be re-used because it does not already have a windowClosed
-method . The method  <samp class="codeph">windowClosed(WindowEvent e)</samp> is added,
-and the method stub and //TODO comment added as shown here:</p>
+change this to perform your required behavior. The //TODO comment is displayed
+in the Tasks window, flagging incomplete methods. This is so that you can
+locate them later and remove the //TODO comment once the callback logic has
+been written.</p>
+<p>In the previous example the windowOpened method already
+exists.  If this is a listener that extends the adapter, the same listener
+will be re-used because it does not already have a windowClosed method . The
+method  <samp class="codeph">windowClosed(WindowEvent e)</samp> is added, and the method
+stub and //TODO comment added as shown here:</p>
 <div class="p"><pre>this.addWindowListener(new java.awt.event.WindowAdapter() {       
-        <b>public void windowClosed(java.awt.event.WindowEvent e) {</b>  
-<b>         System.out.println("windowClosed()"); // TODO Auto-generated stub windowClosed() </b> <b>     
-              } </b>      
+        <strong>public void windowClosed(java.awt.event.WindowEvent e) {</strong>  
+<strong>         System.out.println("windowClosed()"); // TODO Auto-generated stub windowClosed() </strong> <strong>     
+              } </strong>      
         public void windowOpened(java.awt.event.WindowEvent e) {          
              callExistingWindowOpenedLogic();      
             }  
 });</pre>
  </div>
 <p>In expert mode, events can still be added to the JavaBean
-as shown previously, but they can also be added to a listener in the Java Beans
-tree.  The Events menu shows all of the event callback methods on the
-listener, and any that are already used are disabled.</p>
+as shown previously, but they can also be added to a listener in the Java
+Beans tree.  The Events menu shows all of the event callback methods
+on the listener, and any that are already used are disabled.</p>
 <p> <img src="../images/AddWindowClosed_02.gif" alt="add window closed" /> </p>
-<p>For a PropertyChangeListener the pop-up menu
-shows all of the bound properties on the JavaBean.  If any are already
-used by the PropertyChangeListener then they are disabled.</p>
+<p>For
+a PropertyChangeListener the pop-up menu shows all of the bound properties
+on the JavaBean.  If any are already used by the PropertyChangeListener
+then they are disabled.</p>
 <p> <img src="../images/PropertyChangeListener_01.gif" alt="property change listener" /> </p>
-<p>A listener added with
-a single argument method has an if statement that checks the name of the property
-before processing the logic for each property callback as shown in the following code:</p>
+<p>A listener added with a single argument method has an if statement
+that checks the name of the property before processing the logic for each
+property callback as shown in the following code:</p>
 <div class="p"><pre>javaBean.addPropertyChangeListener(new java.beans.PropertyChangeListener() {  
     public void propertyChange(java.beans.PropertyChangeEvent e) {                        
              if ((e.getPropertyName().equals("font"))) {              
@@ -160,19 +161,19 @@ to a particular property so cannot be re-used for another property. In this
 case all of the Events cascade menu children are disabled.</p>
 </div>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_events.html" title="The Java Beans view helps you to work with events for your visual application.">Handling events with the visual editor</a><br />
-</p>
-<p><b class="relconceptshd">Related concepts</b><br />
-<a href="../topics/cve_javabeansview.html" title="The Java Beans view of the visual editor for Java shows a tree view of the components, events, and listeners used by the Java class that you are composing.">The Java Beans view</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_events_delete.html" title="You can use the Java Beans view to delete an event that you added to a component.">Deleting events from a component</a><br />
-<a href="../topics/tve_events_view.html" title="The Java Beans view shows all of the events set on the components in your visual class.">Viewing events for a component</a><br />
-<a href="../topics/tve_events_viewsource.html" title="When you select an event in the Java Beans view, the Source view shows the relevant lines in the Java code.">Viewing the source for an event</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_events.html" title="The Java Beans view of the visual editor for Java helps you work with events for your visual application.">Handling events with the visual editor</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cve_events.html" title="JavaBeans events are signalled when an activity occurs, such as a button being pressed or a window being closed. The visual editor for Java shows events in the Java Beans view, and you can use this view to add and remove events.">Events, listeners, and adapter classes</a></div>
+<div><a href="../topics/cve_javabeansview.html" title="The Java Beans view of the visual editor for Java shows a tree view of the components, events, and listeners used by the Java class that you are composing. You can use this view to work with the components.">The Java Beans view</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tve_events_view.html" title="The Java Beans view shows all of the events set on the components in your visual class.">Viewing events for a component</a></div>
+<div><a href="../topics/tve_events_delete.html" title="You can use the Java Beans view to delete an event that you added to a component in the visual editor for Java.">Deleting events from a component</a></div>
+<div><a href="../topics/tve_events_viewsource.html" title="When you select an event in the Java Beans view, the Source view shows the relevant lines in the Java code.">Viewing the source for an event</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

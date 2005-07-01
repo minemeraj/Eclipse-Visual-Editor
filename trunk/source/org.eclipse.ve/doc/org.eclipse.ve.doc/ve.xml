@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?NLS  TYPE="org.eclipse.help.toc"?>
+<toc label="Visual Editor for Java User Guide">
+   <link toc="ve_toc.xml"/>
+   <link toc="ve_isv_toc.xml"/>
+</toc>

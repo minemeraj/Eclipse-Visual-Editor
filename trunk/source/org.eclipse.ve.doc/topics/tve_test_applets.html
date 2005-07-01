@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -13,11 +13,12 @@
 <meta name="DC.Title" content="Testing and deploying applets" />
 <meta name="abstract" content="You can test an applet using launch configuration options before deploying it to open in a browser." />
 <meta name="description" content="You can test an applet using launch configuration options before deploying it to open in a browser." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_testdebug.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_run.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_run_config.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_testdebug.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_debug.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_testdebug.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_run.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_run_config.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_debug.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_exceptions.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_debug_advanced.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_test_applets" />
 <meta name="DC.Language" content="en-us" />
@@ -34,15 +35,15 @@
 <h1 class="topictitle1">Testing and deploying applets</h1>
 <div><p>You can test an applet using launch configuration options before
 deploying it to open in a browser.</p>
-<div class="skipspace"><p>An applet is a bean that is designed to be run inside a Web browser
-and that inherits from  <samp class="codeph">java.applet.Applet</samp> or <samp class="codeph">javax.swing.JApplet</samp> .</p>
+<div class="section"><p>An applet is a bean that is designed to be run inside a Web browser
+and inherits from <samp class="codeph">java.applet.Applet</samp> or <samp class="codeph">javax.swing.JApplet</samp> .</p>
 <p>The
 Eclipse-based launcher has its own applet stub that is used to run the applet.
 This stub automatically starts the applet after it has been instantiated by
-calling its  <tt class="sysout">start()</tt> method. Unlike the JRE applet
+calling its <tt class="sysout">start()</tt> method. Unlike the JRE applet
 launcher, which the Java bean launcher does not use, the stub does not check
 authority profiles to see whether the applet can perform tasks such as input/output
-or opening sockets. This means you can quickly test your applet's run-time
+or opening sockets. This means you can quickly test your applet's runtime
 appearance and behavior without worrying about security certificates.</p>
 <p>To
 test an applet using the Java bean launcher:</p>
@@ -59,8 +60,8 @@ select the text in the table and type new values.</span></li>
 <li><span>Click <span class="uicontrol">Run</span> to run the applet using the parameters
 that you entered.</span></li>
 </ol>
-<div class="skipspace"><p>When you have finished testing your applet and are ready to deploy
-it in a browser, you can use the simple HTML  <tt class="sysout">&lt;applet&gt;</tt> tag,
+<div class="section"><p>When you have finished testing your applet and are
+ready to deploy it in a browser, you can use the simple HTML <tt class="sysout">&lt;applet&gt;</tt> tag,
 as long as the class does not require any JDK 1.2 or higher features, such
 as any of the Swing classes. If your applet uses any JDK 1.2 or higher features,
 the HTML syntax to embed it into a page is more complex in order to deal with
@@ -69,17 +70,19 @@ Java plug-in. For more information about applets and Java plug-ins, refer
 to <a href="http://www.java.sun.com" target="_blank">java.sun.com</a>.</p>
 </div>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_testdebug.html" title="After you write a Java class using the visual editor for Java, you can run it to test and debug the run-time behavior.">Testing and debugging in the visual editor</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_run.html" title="While you are developing your visual class, you can run it to see its appearance and behavior.">Running a Java bean or application</a><br />
-<a href="../topics/tve_run_config.html" title="You can specify different configurations for each Java bean or Java application that you run.">Configuring options for running a Java bean or application</a><br />
-<a href="../topics/tve_testdebug.html" title="After you write a Java class using the visual editor for Java, you can run it to test and debug the run-time behavior.">Testing and debugging in the visual editor</a><br />
-<a href="../topics/tve_debug.html" title="If you want to see the Java processes and step through the code for your visual class while you are running it, you can choose the debug options.">Debugging a visual Java bean or application</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_testdebug.html" title="After you write a Java class using the visual editor for Java, you can run it to test and debug the runtime behavior.">Testing and debugging in the visual editor</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cve_exceptions.html" title="During normal development, exceptions are sometimes thrown by the Java beans. The visual editor displays icons and visual markers to indicate exceptions.">Java bean exceptions</a></div>
+<div><a href="../topics/cve_debug_advanced.html" title="During normal development you should not need to be concerned with the VM that is used by each visual editor instance. Advanced users, however, can configure the workbench so that any messages sent to System.out or System.err of the VM are written to the .log file in the .metadata directory in your workspace.">Advanced options for debugging Java beans</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tve_run.html" title="While you are developing your visual class, you can run it to test its appearance and behavior.">Running your visual class as a Java bean or application</a></div>
+<div><a href="../topics/tve_run_config.html" title="You can specify different configurations for each Java bean or Java application that you run.">Configuring options for running a Java bean or application</a></div>
+<div><a href="../topics/tve_debug.html" title="If you want to see the Java processes and step through the code for your Java visual class while you are running it, you can choose the debug options.">Debugging a visual Java bean or application</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

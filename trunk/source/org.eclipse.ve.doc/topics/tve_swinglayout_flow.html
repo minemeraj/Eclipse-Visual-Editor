@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -13,13 +13,9 @@
 <meta name="DC.Title" content="Using FlowLayout" />
 <meta name="abstract" content="The FlowLayout layout manager arranges components in a left-to-right flow, with wrapping lines. The advantages of the flow layout manager include its ease of use, and the guarantee that each component can be seen." />
 <meta name="description" content="The FlowLayout layout manager arranges components in a left-to-right flow, with wrapping lines. The advantages of the flow layout manager include its ease of use, and the guarantee that each component can be seen." />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_swinglayout.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_border.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_box.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_card.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_grid.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_swinglayout_flow" />
 <meta name="DC.Language" content="en-us" />
@@ -37,7 +33,7 @@
 <div><p>The FlowLayout layout manager arranges components in a left-to-right
 flow, with wrapping lines. The advantages of the flow layout manager include
 its ease of use, and the guarantee that each component can be seen.</p>
-<div class="skipspace"><p>The FlowLayout layout manager (java.awt.FlowLayout) dynamically
+<div class="section"><p>The FlowLayout layout manager (java.awt.FlowLayout) dynamically
 sizes each component according to its preferred size. It positions components
 so that they are evenly spaced. Flow layouts are typically used to arrange
 buttons in a panel. It will arrange buttons left to right until no more buttons
@@ -46,18 +42,17 @@ set to left or right.</p>
 <p>FlowLayout is the default layout manager for a
 JPanel.</p>
 </div>
-<ul><li class="skipspace"><span>To add a component to a FlowLayout:</span><ol><li class="skipspace"><span>Select a component from the palette.</span></li>
-<li class="skipspace"><span>Drag the cursor over the container using FlowLayout.</span> <ul><li>When you drop this first bean you will see the drop cursor, and a rectangle
-just inside the container's boundaries as you drag the loaded cursor over
-it. This target feedback is drawn even on a populated container.<br /><img src="../images/FlowLayoutDropFirstButtonStart.gif" alt="drop cursor with no feedback" /><br /> </li>
+<ul><li class="stepexpand"><span>To add a component to a FlowLayout:</span><ol><li class="substepexpand"><span>Select a Swing component from the palette.</span></li>
+<li class="substepexpand"><span>Point your cursor over the container that is using FlowLayout.</span> <ul><li>A black rectangle is drawn inside the container's boundaries to provide
+feedback for where you are about to drop the component.</li>
 <li>If the container already includes a component, a black bar gives visual
-feedback when a second component is dropped because it can be dropped with
-a position relative to the existing components.<br /><img src="../images/FlowLayoutDropJLabelStart.gif" alt="drop cursor with placement feedback" /><br /></li>
+feedback to where the component will be dropped relative to the existing components:<p><img src="../images/FlowLayoutFeedback.gif" alt="drop cursor with placement feedback" /></p>
+</li>
 </ul>
 </li>
 </ol>
 </li>
-<li class="skipspace"><span>To reorder components in FlowLayout, do one of the following steps:</span>  <ul><li>In the Design view, click and drag a component to a new position in the
+<li class="stepexpand"><span>To reorder components in FlowLayout, do one of the following steps:</span>  <ul><li>In the Design view, click and drag a component to a new position in the
 FlowLayout. The black bar gives visual feedback about the new position for
 the component.</li>
 <li>In the Java Beans view, click and drag a component and move it above or
@@ -66,14 +61,8 @@ of the <samp class="codeph">add()</samp> methods, the Design view will reflect t
 <li>You can explicitly set the position of a component using an index as an
 argument to the <samp class="codeph">add()</samp> method.</li>
 </ul>
-<div class="p">When you reorder a component, you are actually changing the order
-in which it is added to its parent container. This can be seen by the calls
-to the  <tt class="sysout">add (Component, Object)</tt> method for the
-JPanel class:<pre>this.add(getJLabel(), null);
-this.add(getJButton(), null);</pre>
-</div>
 </li>
-<li class="skipspace"><span>To specify the alignment of the flow layout, set the <span class="uicontrol">alignment</span> property
+<li class="stepexpand"><span>To specify the alignment of the flow layout, set the <span class="uicontrol">alignment</span> property
 for the FlowLayout to one of the following options:</span><ul><li><span class="uicontrol">LEFT</span> - indicates that each row of components
 should be left-justified</li>
 <li><span class="uicontrol">CENTER</span> - indicates that each row of components
@@ -81,9 +70,10 @@ should be centered</li>
 <li><span class="uicontrol">RIGHT</span> - indicates that each row of components
 should be right-justified</li>
 </ul>
- <br /><img src="../images/FlowLayoutNestedProperties.gif" alt="layout properties" /><br /></li>
-<li class="skipspace"><span>To set the spacing between components in the FlowLayout, give values
-for the following FlowLayout properties:</span><ul><li><span class="uicontrol">horizontal gap</span> - specifies the distance in
+ <p><br /><img src="../images/FlowLayoutNestedProperties.gif" alt="layout properties" /><br /></p>
+</li>
+<li class="stepexpand"><span>To set the spacing between components in the FlowLayout, enter
+values for the following FlowLayout properties:</span><ul><li><span class="uicontrol">horizontal gap</span> - specifies the distance in
 pixels between components in the same row</li>
 <li><span class="uicontrol">vertical gap</span> - specifies the distance in pixels
 between rows of components</li>
@@ -91,21 +81,13 @@ between rows of components</li>
 </li>
 </ul>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/cve_swinglayout.html" title="You can work with Swing and AWT layout managers with the visual editor for Java.">Swing and AWT layout managers</a><br />
-</p>
-<p><b class="relconceptshd">Related concepts</b><br />
-<a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_swinglayout_border.html" title="The visual editor provides visual cues for helping you work with the Swing BorderLayout.">Using BorderLayout</a><br />
-<a href="../topics/tve_swinglayout_box.html" title="You can use the visual editor to layout Swing components using BoxLayout on the X or Y axis.">Using BoxLayout</a><br />
-<a href="../topics/tve_swinglayout_card.html" title="The CardLayout layout manager arranges components in a stack, like a stack of cards.">Using CardLayout</a><br />
-<a href="../topics/tve_swinglayout_grid.html" title="You can use the visual editor for Java to layout a class using GridLayout.">Using GridLayout (AWT)</a><br />
-<a href="../topics/tve_swinglayout_gridbag.html" title="You can use the AWT GridBag layout with Swing and AWT containers to arrange components using a powerful and flexible grid arrangement.">Using GridBag layout</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_swinglayout.html" title="You can work with Swing and AWT layout managers with the visual editor for Java.">Using Swing and AWT layout managers</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

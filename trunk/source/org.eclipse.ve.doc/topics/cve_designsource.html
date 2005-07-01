@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="concept" />
 <meta name="DC.Title" content="The visual editor Design and Source views" />
-<meta name="abstract" content="The visual editor for Java editor is divided into two windows: the Design view previews the Java beans in a graphical representation, and the Source view shows the associated Java code." />
-<meta name="description" content="The visual editor for Java editor is divided into two windows: the Design view previews the Java beans in a graphical representation, and the Source view shows the associated Java code." />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_overview.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_propertyeditdesign.dita" />
+<meta name="abstract" content="The visual editor for Java is divided into two main windows: the Design view and the Source view. The Design view previews the Java beans in a graphical representation, while the Source view shows the associated Java code." />
+<meta name="description" content="The visual editor for Java is divided into two main windows: the Design view and the Source view. The Design view previews the Java beans in a graphical representation, while the Source view shows the associated Java code." />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_overview.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="cve_designsource" />
 <meta name="DC.Language" content="en-us" />
@@ -29,23 +28,22 @@
 <body id="cve_designsource"><a name="cve_designsource"><!-- --></a>
 
 <h1 class="topictitle1">The visual editor Design and Source views</h1>
-<div><p>The visual editor for Java editor is divided into two windows:
-the Design view previews the Java beans in a graphical representation, and
-the Source view shows the associated Java code.</p>
-<p>Visual beans that are Swing, SWT, or AWT components, or subclasses of these
+<div><p>The visual editor for Java is divided into two main windows: the
+Design view and the Source view. The Design view previews the Java beans in
+a graphical representation, while the Source view shows the associated Java
+code.</p>
+<p>Visual beans that are SWT, Swing, or AWT components, or subclasses of these
 components, are shown in the Design view with their graphical representation.
 As you modify the Java beans in the Design view, the source is updated. Conversely,
-as you change the source files, the Design view is updated to reflect the
-changes you make. This round tripping of the Design and Source views is designed
-so that the visual editor for Java can be used not only as a tool to generate
-code, but as an editor to show the effect of source code modifications during
-development. After you make changes to your .java file source in another editor,
-your changes will be reflected in the design window of the visual editor.</p>
+as you change the Java source, the Design view updates to reflect the changes
+you make. Also, if you make changes to your .java source file in another editor,
+your changes will be reflected in the Design window of the visual editor.</p>
 <p>The visual editor for Java, by default, shows the Design view above the
 Source view on a split pane. The Design view is a WYSIWYG surface, or canvas,
 where you can compose the GUI that you are building. The Source view shows
-the contents of the Java file. The collapsible palette is on the left, where
-you can select components to add to the design. </p>
+the contents of the Java file. The collapsible palette is on the right side
+of the Design view by default. The palette includes selection tools and components
+that you can add to the design.</p>
 <p><img src="../images/designsourceviews.gif" alt="Design and Source views" /> </p>
 <p>You can change the default so that the Design and Source views are notebook
 tabs, allowing you to click back and forth between them. To change the default,
@@ -54,14 +52,10 @@ Select the <span class="uicontrol">Appearance</span> tab, then click <span class
 Separate notebook tabs</span>. Close the visual editor for Java, then
 open it again to refresh your preference change.</p>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/cve_overview.html" title="The visual editor for Java is a code-centric Java editor that helps you design applications that have a graphical user interface (GUI). The visual editor is based on the JavaBeans component model and supports visual construction using the Standard Widget Toolkit (SWT), the Abstract Window Toolkit (AWT), or Swing.">About the visual editor for Java</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_propertyeditdesign.html" title="Some text properties can be directly edited on the Design view of the visual editor.">Directly editing items in the Design view</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/cve_overview.html" title="The visual editor for Java is a code-centric Java editor that helps you design applications that have a graphical user interface (GUI). The visual editor is based on the JavaBeans component model and supports visual construction using the Standard Widget Toolkit (SWT), the Abstract Window Toolkit (AWT), or Swing.">About the visual editor for Java</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>
