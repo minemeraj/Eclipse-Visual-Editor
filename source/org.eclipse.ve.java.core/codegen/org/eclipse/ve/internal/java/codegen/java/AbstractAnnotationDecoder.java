@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractAnnotationDecoder.java,v $
- *  $Revision: 1.10 $  $Date: 2005-02-25 23:07:18 $ 
+ *  $Revision: 1.11 $  $Date: 2005-07-01 15:20:03 $ 
  */
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EList;
@@ -194,14 +194,16 @@ public abstract class AbstractAnnotationDecoder implements IAnnotationDecoder {
     	Annotation a = CodeGenUtil.getAnnotation(fBeanpart.getEObject()) ;
     	if (a == null) return false;
     	
-    	KeyedBooleanImpl c = (KeyedBooleanImpl) CDMFactory.eINSTANCE.create(CDMPackage.eINSTANCE.getKeyedBoolean());
-    	c.setValue(new Boolean(!keepOnFreeForm)) ; // The model has it reversed
-    	try {
+    	if (keepOnFreeForm) {    	
+      	  KeyedBooleanImpl c = (KeyedBooleanImpl) CDMFactory.eINSTANCE.create(CDMPackage.eINSTANCE.getKeyedBoolean());
+    	  c.setValue(new Boolean(!keepOnFreeForm)) ; // The model has it reversed
+    	  try {
 			setAnnotationValue (c) ;
-		}
-		catch (Exception e) {
+		  }
+		  catch (Exception e) {
 			decoded = false;
-		}
+		  }
+    	}
 		return decoded;
     }
     

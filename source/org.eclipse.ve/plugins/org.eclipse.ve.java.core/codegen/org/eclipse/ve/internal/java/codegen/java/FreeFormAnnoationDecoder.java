@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.23 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.24 $  $Date: 2005-07-01 15:20:03 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -183,8 +183,6 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 				// Brand New Anotation 
 				newSrc = generate(null, null);
 				if (newSrc == null || newSrc.length() == 0) {
-					if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
-						JavaVEPlugin.log(fBeanpart.getUniqueName() + " No FF annotation.", Level.WARNING); //$NON-NLS-1$
 					return;
 				}
 				newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc;
