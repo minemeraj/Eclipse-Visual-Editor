@@ -479,7 +479,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				 }
 			}
 			else
-				JavaVEPlugin.log("SWTContainer: Could not find a plugin for: "+swtLibraries[i].getLegacyID());				 //$NON-NLS-1$
+				JavaVEPlugin.log("SWTContainer: Could not find a plugin for:"+swtLibraries[i].getLegacyID());
 		}
 
 		if (containerType.includeJFace()) {
@@ -532,7 +532,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				 }
 			}
 			else
-				JavaVEPlugin.log(SWTMessages.SWTContainer_54+swtLibraries[i].getLegacyID());	
+				JavaVEPlugin.log("SWTContainer: Could not find a plugin for:"+swtLibraries[i].getLegacyID());	
 		}
 
 		if (containerType.includeJFace()) {
@@ -546,8 +546,10 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 						 addProblem(MessageFormat.format(SWTMessages.SWTContainer_55, new Object[] {jfaceLibraries[i].getLegacyID()})); 
 					 }
 				}
-				else
-					JavaVEPlugin.log("SWTContainer: Could not find a plugin for: "+jfaceLibraries[i].getLegacyID());	 //$NON-NLS-1$
+				else {
+					// In a PDE environment, it may be a valid problem.  e.g., RCP only imaged does not contain jfacetext 
+					JavaVEPlugin.log("SWTContainer: plugin "+jfaceLibraries[i].getLegacyID()+" is not available on the PDE target", Level.FINE);	 //$NON-NLS-1$ $NON-NLS-2$
+				}
 			}
 		}
 		fClasspathEntries = (IClasspathEntry[]) entries.toArray(new IClasspathEntry[entries.size()]);
@@ -769,8 +771,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(project.getElementName());
-		sb.append("\ninitialized=");
-		sb.append(initialized+"\n");
+		sb.append("\ninitialized="); //$NON-NLS-1$
+		sb.append(initialized+"\n"); //$NON-NLS-1$
 		for (int i = 0; i < fClasspathEntries.length; i++) {
 			sb.append(fClasspathEntries[i].getPath().toPortableString());			
 		}

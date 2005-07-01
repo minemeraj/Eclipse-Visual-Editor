@@ -129,7 +129,6 @@ public final class SWTMessages extends NLS {
 	public static String SWTContainer_49;
 	public static String SWTContainer_51;
 	public static String SWTContainer_53;
-	public static String SWTContainer_54;
 	public static String SWTContainer_55;
 	public static String SWTContainer_57;
 	public static String SWTContainer_60;
