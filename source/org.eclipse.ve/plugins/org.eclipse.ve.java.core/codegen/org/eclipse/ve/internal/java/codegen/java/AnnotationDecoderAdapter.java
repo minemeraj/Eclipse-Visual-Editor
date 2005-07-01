@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.25 $  $Date: 2005-06-20 17:33:02 $ 
+ *  $Revision: 1.26 $  $Date: 2005-07-01 20:21:04 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.internal.ui.refactoring.RefactoringSavePreferences;
 import org.eclipse.jdt.internal.ui.text.correction.LinkedNamesAssistProposal;
 import org.eclipse.jdt.ui.refactoring.RenameSupport;
@@ -311,6 +312,7 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 	}
   
   protected IAnnotationDecoder fDecoder=null ;
+  static RenameRequestCollector renameCollector;
 
 public AnnotationDecoderAdapter(IAnnotationDecoder decoder) {
 	super() ;
@@ -419,6 +421,15 @@ protected Object[] getInitMethodNameAndParamNames(ICompilationUnit cu, BeanPart 
 }
 
 protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChangedBP, final String newFieldName, final IMethod bpRetMethod){
+	// Perform all local renames in one step
+	if(renameCollector==null){
+		renameCollector = new RenameRequestCollector(nameChangedBP.getModel());
+		// If a dialog opens, the main shell loses focus and property is re-applied,
+		// hence do this process async()
+		// WARNING - NO BDM members should be in the async, as it will be stale
+		nameChangedBP.getModel().getDomain().getEditorPart().getEditorSite().getShell().getDisplay().asyncExec(renameCollector);
+	}
+
 	final String oldVarName = nameChangedBP.getSimpleName();
 	Object[] ret;
 	if(nameChangedBP.getDecleration().isInstanceVar()){
@@ -428,32 +439,23 @@ protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChange
 	}
 	final String methodName =(String)ret[0];
 	final String[] paramNames = (String[])ret[1];
-	
+	final CompilationUnitEditor cuEditor = (CompilationUnitEditor) nameChangedBP.getModel().getDomain().getEditorPart();
 	final ITextViewer viewer = ((JavaVisualEditorPart)nameChangedBP.getModel().getDomain().getEditorPart()).getViewer();
-	// If a dialog opens, the main shell loses focus and property is re-applied,
-	// hence do this process async()
-	// WARNING - NO BDM members should be in the async, as it will be stale
-	nameChangedBP.getModel().getDomain().getEditorPart().getEditorSite().getShell().getDisplay().asyncExec(
+	renameCollector.addRequest(
 		new Runnable() {
 			public void run() {
 			  try {
-				fDecoder.getBeanModel().suspendSynchronizer();				
 				ASTParser parser = ASTParser.newParser(AST.JLS2);
 				parser.setSource(cu);
 				CompilationUnit cuNode = (CompilationUnit) parser.createAST(null);
 				BPVarFinderVisitor visitor = new BPVarFinderVisitor(oldVarName, methodName, paramNames);
 				cuNode.accept(visitor);
 				if(visitor.getVariableName()!=null){
-					LinkedNamesAssistProposal prop = new LinkedNamesAssistProposal(cu, visitor.getVariableName());
+					LinkedNamesAssistProposal prop = new LinkedNamesAssistProposal("Renaming variable", cu, visitor.getVariableName(), newFieldName);
 					char triggerChar = (newFieldName!=null && newFieldName.length()>0) ? newFieldName.charAt(newFieldName.length()-1) : 0;
 					int triggerPosition = visitor.getVariableName().getStartPosition()+newFieldName.length()-1;
 					prop.apply(viewer, triggerChar, 0, triggerPosition);
-					try {
-						cu.getBuffer().replace(visitor.getVariableName().getStartPosition(), visitor.getVariableName().getLength(), newFieldName.toCharArray());
-					} catch (JavaModelException e) {
-						JavaVEPlugin.log(e);
-					}
-					
+					cuEditor.aboutToBeReconciled();
 					if(bpRetMethod!=null){
 						String methodName = bpRetMethod.getElementName().toLowerCase(Locale.getDefault());
 						String varName = visitor.getVariableName().getIdentifier();
@@ -475,15 +477,11 @@ protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChange
 									MethodNameFinderVisitor mVisitor = new MethodNameFinderVisitor(getterMethodName, getterParamTypes);
 									cuNode.accept(mVisitor);
 									if(mVisitor.getMethodName()!=null){
-										prop = new LinkedNamesAssistProposal(cu, mVisitor.getMethodName());
+										prop = new LinkedNamesAssistProposal("Renaming method", cu, mVisitor.getMethodName(), newMethodName);
 										triggerChar = newMethodName.charAt(newMethodName.length()-1) ;
 										triggerPosition = mVisitor.getMethodName().getStartPosition()+newMethodName.length()-1;
 										prop.apply(viewer, triggerChar, 0, triggerPosition);
-										try {
-											cu.getBuffer().replace(mVisitor.getMethodName().getStartPosition(), mVisitor.getMethodName().getLength(), newMethodName);
-										} catch (JavaModelException e) {
-											JavaVEPlugin.log(e);
-										}
+										cuEditor.aboutToBeReconciled();
 									}
 						}
 					}
@@ -491,10 +489,6 @@ protected void performLocalRename(final ICompilationUnit cu, BeanPart nameChange
 			  } catch (RuntimeException e) {
 					JavaVEPlugin.log(e);
 			  }
-			  finally{
-					fDecoder.getBeanModel().resumeSynchronizer();
-			  }
-					
 			}
 		 }
 		
