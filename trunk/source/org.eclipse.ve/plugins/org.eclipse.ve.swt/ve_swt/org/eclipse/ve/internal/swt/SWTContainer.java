@@ -317,7 +317,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		for (int i = 0; i < deltas.length; i++) {
 			IResourceDelta[] rdeltas = deltas[i].getResourceDeltas();			
 			if (rdeltas!=null && rdeltas.length>0) {
-				for (int j = 0; j < deltas.length; j++) {
+				for (int j = 0; j < rdeltas.length; j++) {
 					if (rdeltas[j].getFullPath().lastSegment().equals(".classpath")) {						 //$NON-NLS-1$
 						return true;
 					}					
