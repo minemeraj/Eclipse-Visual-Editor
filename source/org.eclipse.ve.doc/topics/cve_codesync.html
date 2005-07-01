@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="concept" />
-<meta name="DC.Title" content="How the visual editor synchronizes code" />
-<meta name="abstract" content="As you change the contents of the Java source file with the visual editor open, the visual editor performs incremental analysis of the changes to determine how the change affects the Java beans." />
-<meta name="description" content="As you change the contents of the Java source file with the visual editor open, the visual editor performs incremental analysis of the changes to determine how the change affects the Java beans." />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_codegen.dita" />
+<meta name="DC.Title" content="Java code and visual design synchronization in the visual editor" />
+<meta name="abstract" content="By default, the visual editor for Java continuously synchronizes the source code and the Design view. This synchronization can be paused or reloaded manually at any time, and the delay before synchronization occurs can be set as a preference." />
+<meta name="description" content="By default, the visual editor for Java continuously synchronizes the source code and the Design view. This synchronization can be paused or reloaded manually at any time, and the delay before synchronization occurs can be set as a preference." />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_overview.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="cve_codesync" />
 <meta name="DC.Language" content="en-us" />
@@ -23,59 +23,51 @@
 <!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
-<title>How the visual editor synchronizes code</title>
+<title>Java code and visual design synchronization in the visual
+editor</title>
 </head>
 <body id="cve_codesync"><a name="cve_codesync"><!-- --></a>
 
-<h1 class="topictitle1">How the visual editor synchronizes code</h1>
-<div><p>As you change the contents of the Java source file with the visual editor open, the visual editor performs incremental analysis of the changes to determine
-how the change affects the Java beans.</p>
-<p>Changes to the code can be made in the Source view included with the visual
-editor, or within another editor open on the same file within the workbench.
-When a change occurs in the code, the visual editor synchronizes these changes
-with the model of the Java beans displayed in the Design view, the Java Beans
-view, and the Properties view.</p>
-<p>If a situation occurs where the model of the Java beans is out of step
-with the source code for any reason, you can click the reload <img src="../images/sync_reload.gif" alt="Reload the code synchronization" /> button on the main toolbar.</p>
-<p>As you use the visual editor there are two internal models that are maintained.
-The first model is a representation of the Java beans that is used by the
-Java Beans view, the Properties view, and the Design view. The second model
-is the source that represents the code that, when compiled and executed, will
-re-create the Java beans in a run-time VM. As you make changes to either model,
-the visual editor maintains the other model for you by performing synchronization.
-You can see the status of the synchronization of the two models in the status
-bar <img src="../images/sync_insync.gif" alt="code in sync" /> at
-the bottom of the workbench.</p>
-<p>There is a performance overhead associated with synchronizing the two models,
-so the processes to do this are run in background threads on a delay timer.
-If changes are made to a model, by either manipulating the Java beans in a
-view or by editing the source, the other model needs to be updated or it will
-no longer be synchronized. To show that the models are not synchronized, the
-label changes from <span class="uicontrol">In Sync</span> to <span class="uicontrol">Out of Sync</span>.</p>
-<p>If synchronization takes place too frequently and is degrading performance,
-the time that the synchronizer waits can be altered using on the Code Generation
-page of the visual editor preferences <span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol">Preferences</span> &gt; <span class="uicontrol">Java</span> &gt; <span class="uicontrol">Visual
-Editor</span></span>. You can change the delay time used to make
-updates from the source to the Java beans. The initial value is 1000 milliseconds.
-This is how long the visual editor waits after you have updated the source
-code before updating the graphics in the Design view.</p>
-<p>You can disable the synchronization by pressing the pause <img src="../images/sync_pause.gif" alt="Pause the code synchronization" /> button on the main visual editor toolbar. </p>
-<p>While the synchronizer is paused, you can make changes to the source without
-any overhead of parsing source, but you can no longer make changes to the
-Java beans model. All edits made using the Design view, the Java Beans view,
-or the Properties view will not be applied. When you have finished updating
-the source, you can resume the synchronizer by pressing the reload <img src="../images/sync_reload.gif" alt="Reload the code synchronization" /> button
-on the main toolbar. The reload <img src="../images/sync_reload.gif" alt="Reload the code synchronization" /> button
-displays when synchronization is paused.</p>
-<p>If the visual editor determine that the source contains errors, the toolbar
-button will show the parsing error <img src="../images/sync_error.gif" alt="Code synchronization error" /> button. The visual editor will wait until
-the errors are fixed before trying to synchronize again.</p>
+<h1 class="topictitle1">Java code and visual design synchronization in the visual
+editor</h1>
+<div><p>By default, the visual editor for Java continuously synchronizes
+the source code and the Design view. This synchronization can be paused or
+reloaded manually at any time, and the delay before synchronization occurs
+can be set as a preference.</p>
+<p>The following are key features of the synchronization process and how you
+can adjust it for performance:</p>
+<ul><li><img src="../images/icons/pause.gif" alt="Pause the code synchronization" /> <span class="uicontrol">Pause</span> - Click the pause button on the main
+visual editor toolbar to suspend all synchronization. While synchronization
+is paused, you can only make changes to the source. This removes the overhead
+of parsing source, but you cannot make any changes using the Java beans view,
+Properties view, or Design view while synchronization is paused.</li>
+<li><img src="../images/icons/refresh_obj.gif" alt="Reload the code synchronization" /> <span class="uicontrol">Reload</span> - When synchronization is paused, the
+reload button is displayed in the main toolbar. Click the reload button to
+reparse the code, resynchronize, and revert to the default synchronization
+mode.</li>
+<li><img src="../images/sync_insync.gif" alt="code in sync" /> - The status of the synchronization is displayed at the bottom of
+the workbench. <ul><li>If the source code and the model of the Java beans are synchronized, the
+status displays <strong>In Sync</strong>.</li>
+<li>If the synchronization is paused, the status displays <strong>Sync Paused</strong>.</li>
+<li>If synchronization has not yet taken place for a change, the status displays <strong>Out
+of Sync</strong> until the next synchronization occurs.</li>
+<li>If you do a reload and the visual editor is unable to parse the code,
+the status displays <strong>Parse Error</strong>.</li>
+</ul>
+ </li>
+<li>You can change the delay time before automatic synchronization occurs
+to adjust for performance. By default, synchronization with the Design view
+occurs one second after a source code change is made. You can change the delay
+on the Code Generation tab of the Visual Editor preferences page.<br /><img src="../images/sync_delayprefs.gif" alt="Code synchronization delay preference" /><br /></li>
+<li>If the source code contains syntax errors, the toolbar button shows the
+synchronization error <img src="../images/icons/error_obj.gif" alt="Code synchronization error" /> button. The visual editor will wait until the errors are fixed before
+trying to synchronize again, or you can click the button to attempt a reload.</li>
+</ul>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/cve_codegen.html" title="As you make changes to a visual class in the Design view, the Java source is updated. Likewise, as you edit the Java source, the graphical design view is updated to reflect the code changes.">Source code generation in the visual editor</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/cve_overview.html" title="The visual editor for Java is a code-centric Java editor that helps you design applications that have a graphical user interface (GUI). The visual editor is based on the JavaBeans component model and supports visual construction using the Standard Widget Toolkit (SWT), the Abstract Window Toolkit (AWT), or Swing.">About the visual editor for Java</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -13,12 +13,7 @@
 <meta name="DC.Title" content="Keeping beans and BeanInfo classes in the same package" />
 <meta name="abstract" content="A Java bean and its associated BeanInfo class are in the same package, then the introspector will be able to find the BeanInfo class." />
 <meta name="description" content="A Java bean and its associated BeanInfo class are in the same package, then the introspector will be able to find the BeanInfo class." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo_location.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo_diffpkg.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo_diffproj.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo_jar.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo_locationdefine.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_beaninfo.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_beaninfo_location.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_beaninfo_samepkg" />
 <meta name="DC.Language" content="en-us" />
@@ -36,15 +31,15 @@
 <div><p>A Java bean and its associated BeanInfo class are
 in the same package, then the introspector will be able to find the BeanInfo
 class.</p>
-<div class="skipspace"><p>This is the simplest but also least likely scenario because coupling
+<div class="section"><p>This is the simplest but also least likely scenario because coupling
 the run-time and design time classes in the same package makes for more work
 at deployment time to separate them.</p>
-<p>For example, a project called <b>MyProject</b> contains
-a package called <b>myclasses</b> that contains the classes <b>MyJavaBean</b> and <b>MyJavaBeanBeanInfo</b>.
-Whenever the bean <b>myclasses.MyJavaBean</b> is used, either for development
-of a class within <b>MyProject</b> or for development of a class in another
-project that includes <b>MyProject</b> in its Java build path, the introspector
-will locate its BeanInfo class <b>myclasses.MyJavaBeanBeanInfo</b>.</p>
+<p>For example, a project called <strong>MyProject</strong> contains
+a package called <strong>myclasses</strong> that contains the classes <strong>MyJavaBean</strong> and <strong>MyJavaBeanBeanInfo</strong>.
+Whenever the bean <strong>myclasses.MyJavaBean</strong> is used, either for development
+of a class within <strong>MyProject</strong> or for development of a class in another
+project that includes <strong>MyProject</strong> in its Java build path, the introspector
+will locate its BeanInfo class <strong>myclasses.MyJavaBeanBeanInfo</strong>.</p>
 <p>To
 keep BeanInfo classes in the same package as your visual classes:</p>
 </div>
@@ -52,23 +47,13 @@ keep BeanInfo classes in the same package as your visual classes:</p>
 <li><span>Save the BeanInfo classes in the same project and same package
 as your beans that use the BeanInfo classes.</span></li>
 </ol>
-<div class="skipspace">The visual editor will locate and introspect the BeanInfo classes
+<div class="section">The visual editor will locate and introspect the BeanInfo classes
 during design time to determine the properties of the Java bean.</div>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_beaninfo_location.html" title="The visual editor requires the BeanInfo classes at design time and run time to determine the behavior of the various components. You can decide where to keep the BeanInfo classes.">Specifying the location of BeanInfo classes</a><br />
-</p>
-<p><b class="relconceptshd">Related concepts</b><br />
-<a href="../topics/cve_beaninfo.html" title="If you are creating new components or beans for use within the visual editor (for example, adding components to the palette), you can control their behavior by supplying a BeanInfo class.">BeanInfo classes and introspection</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_beaninfo_diffpkg.html" title="When you develop classes in the visual editor for Java, you have the option to keep your .java files and BeanInfo classes in different packages within the same project.">Keeping beans and BeanInfo classes in different packages in the same project</a><br />
-<a href="../topics/tve_beaninfo_diffproj.html" title="When you develop classes in the visual editor for Java, you have the option to keep your .java files and BeanInfo classes in different projects. This enables you to easily develop and deploy the classes separately.">Keeping beans and BeanInfo classes in different projects</a><br />
-<a href="../topics/tve_beaninfo_jar.html" title="You can keep your BeanInfo classes in a separate JAR file in the same project as the Java beans that they define, in a separate project, or on the file system.">Keeping BeanInfo classes in a JAR file</a><br />
-<a href="../topics/tve_beaninfo_locationdefine.html" title="You can explicitly define the location of BeanInfo classes that are external to the workbench by using a class path variable. The variable can point to either a JAR file or a folder that exists in the file system.">Explicitly defining the location of BeanInfo classes</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_beaninfo_location.html" title="The visual editor requires the BeanInfo classes at design time and run time to determine the behavior of the various components. You can decide where to keep the BeanInfo classes.">Specifying the location of BeanInfo classes</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

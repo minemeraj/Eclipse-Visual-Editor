@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
-<meta name="DC.Title" content="Using RowLayout" />
+<meta name="DC.Title" content="Using RowLayout (SWT)" />
 <meta name="abstract" content="The SWT RowLayout layout manager lays out its components in rows, but is more robust than FillLayout." />
 <meta name="description" content="The SWT RowLayout layout manager lays out its components in rows, but is more robust than FillLayout." />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_swtlayout.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout_fill.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout_form.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout_grid.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_swtlayout_row" />
 <meta name="DC.Language" content="en-us" />
@@ -27,41 +25,38 @@
 <!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
-<title>Using RowLayout</title>
+<title>Using RowLayout (SWT)</title>
 </head>
 <body id="tve_swtlayout_row"><a name="tve_swtlayout_row"><!-- --></a>
 
-<h1 class="topictitle1">Using RowLayout</h1>
+<h1 class="topictitle1">Using RowLayout (SWT)</h1>
 <div><p>The SWT RowLayout layout manager lays out its components in rows,
 but is more robust than FillLayout.</p>
-<div class="skipspace"><p>If you have a composite or other SWT container that is set to
-use Row layout, there are several options you can change to customize the
-layout. You can use the Properties view of the visual editor, or you can open
-the Customize Layout dialog for the composite.</p>
-<p>With RowLayout, you can
-set the rows to be in vertical or horizontal style. For the horizontal style,
-widgets are placed to the left and right of each other. In vertical style,
-widgets are placed above and below each other.</p>
-<p>Dropping or moving widgets
-within a RowLayout works similarly to other layout managers in the visual
-editor. As you move your cursor on the Design view, a black bar indicates
-where the widget will be dropped or moved. If the RowLayout is set to the
-vertical style, a horizontal black bar will be above or below any existing
-widgets. If the RowLayout is set to the horizontal style, a vertical black
-bar will show placement to the left or right of existing widgets.</p>
-<p>To
-set the RowLayout options for a container using RowLayout layout manager:</p>
+<div class="section"><p>With RowLayout, you can set the rows to be in vertical or horizontal
+style. For the horizontal style, widgets are placed to the left and right
+of each other. In vertical style, widgets are placed above and below each
+other.</p>
+<p>Dropping or moving widgets within a RowLayout works similarly
+to other layout managers in the visual editor. As you move your cursor on
+the Design view, a black bar indicates where the widget will be dropped or
+moved. If the RowLayout is set to the vertical style, a horizontal black bar
+will be above or below any existing widgets. If the RowLayout is set to the
+horizontal style, a vertical black bar will show placement to the left or
+right of existing widgets.</p>
+<p>To set the RowLayout options for a container
+using RowLayout layout manager:</p>
 </div>
-<ol><li class="skipspace"><span>In the Design view or Java Beans view, right-click the container
+<ol><li class="stepexpand"><span>In the Design view or Java Beans view, right-click the container
 that is using RowLayout and select <span class="uicontrol">Customize Layout</span> from
-the pop-up menu.</span> The Customize Layout window opens.<br /><img src="../images/CustomizeLayout_Row.gif" alt="Customize Layout window for SWT RowLayout" /><br /></li>
-<li class="skipspace"><span>On the Layout page, specify an orientation for the rows:</span><ul><li><span class="uicontrol">Horizontal</span> - standard row orientation, left
+the pop-up menu.</span> The Customize Layout window opens.<p><img src="../images/CustomizeLayout_Row.gif" alt="Customize Layout window for SWT RowLayout" /></p>
+</li>
+<li class="stepexpand"><span>On the Layout page, specify an orientation for the rows:</span><ul><li><span class="uicontrol">Horizontal</span> - standard row orientation, left
 to right:<span><br /><img src="../images/SWTRow_horizontal.gif" alt="SWT RowLayout in horizontal mode" /><br /></span></li>
 <li><span class="uicontrol">Vertical</span> - a top-to-bottom orientation, or
 column:<span><br /><img src="../images/SWTRow_vertical.gif" alt="SWT RowLayout in vertical mode" /><br /></span></li>
 </ul>
 </li>
-<li class="skipspace"><span>Specify sizes in pixels for the margins and the space between the
+<li class="stepexpand"><span>Specify sizes in pixels for the margins and the space between the
 widgets:</span><ul><li><span class="uicontrol">Spacing</span> - sets the spacing, or padding, between
 widgets</li>
 <li><span class="uicontrol">Margin Height</span> - sets the height in pixels of
@@ -79,7 +74,7 @@ bottom, top, left, or right margins, the values will cumulate. For example,
 if you set a margin height of 5 and a margin top of 5, the margin at the top
 of the row layout will be 10.</div>
 </li>
-<li class="skipspace"><span>Specify other RowLayout options:</span><ul><li><span class="uicontrol">Fill</span> - specifies that the controls in a row
+<li class="stepexpand"><span>Specify other RowLayout options:</span><ul><li><span class="uicontrol">Fill</span> - specifies that the controls in a row
 should be all the same height for horizontal layouts, or the same width for
 vertical layouts</li>
 <li><span class="uicontrol">Justify</span> - specifies that extra space remaining
@@ -93,19 +88,13 @@ or column</li>
 </li>
 </ol>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/cve_swtlayout.html" title="You can work with SWT layout managers with the visual editor for Java.">SWT layout managers</a><br />
-</p>
-<p><b class="relconceptshd">Related concepts</b><br />
-<a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_swtlayout_fill.html" title="The visual editor makes it easy to work with the SWT FillLayout manager.">Using FillLayout</a><br />
-<a href="../topics/tve_swtlayout_form.html" title="You can set a composite to use the SWT FormLayout, but the visual editor does not provide additional visual support.">Using FormLayout</a><br />
-<a href="../topics/tve_swtlayout_grid.html" title="You can use the GridLayout with SWT composites to arrange components using a powerful and flexible grid arrangement.">Using GridLayout (SWT)</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_swtlayout.html" title="You can work with SWT layout managers with the visual editor for Java.">Using SWT layout managers</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

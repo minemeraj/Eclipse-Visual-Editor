@@ -15,9 +15,16 @@
 
 .p {margin-top: 1em}
 
+.tableborder { margin-top: 1em; margin-bottom: 1em }
+.tablenoborder { margin-top: 1em; margin-bottom: 1em }
+caption { text-align: left; font-style: italic }
+.simpletableborder { margin-top: 1em; margin-bottom: 1em }
+.simpletablenoborder { margin-top: 1em; margin-bottom: 1em }
+.choicetableborder { margin-top: 1em; margin-bottom: 1em }
+.choicetablenoborder { margin-top: 1em; margin-bottom: 1em }
+
 .figcap { font-style: italic }
 .figdesc { font-style: normal }
-caption { text-align: left; font-style: italic }
 
 .fignone {margin-top: 1em}
 .figborder { border-style: solid; padding-left : 3px; border-width : 2px; padding-right : 3px; margin-top: 1em; border-color : Silver;}
@@ -35,8 +42,17 @@ caption { text-align: left; font-style: italic }
 
 .skip { margin-top: 1em }
 .skipspace { margin-top: 1em; margin-bottom: 1em }
+.ullinks { list-style-type: none }
 .ulchildlink { margin-top: 1em; margin-bottom: 1em }
 .olchildlink { margin-top: 1em; margin-bottom: 1em }
+.linklist { margin-bottom: 1em }
+.linklistwithchild { margin-left: 1.5em; margin-bottom: 1em  }
+.sublinklist { margin-left: 1.5em; margin-bottom: 1em  }
+.relconcepts { margin-top: 1em; margin-bottom: 1em }
+.reltasks { margin-top: 1em; margin-bottom: 1em }
+.relref { margin-top: 1em; margin-bottom: 1em }
+.relinfo { margin-top: 1em; margin-bottom: 1em }
+div.breadcrumb {margin-bottom: 1em }
 
 .topictitle1 { margin-top: 0pc; margin-bottom: .1em; font-size: 1.34em; }
 .topictitle2 { margin-top: 1pc; margin-bottom: .45em; font-size: 1.17em; }
@@ -45,6 +61,8 @@ caption { text-align: left; font-style: italic }
 .topictitle5 { font-size: 1.17em; font-weight: bold; }
 .topictitle6 { font-size: 1.17em; font-style: italic; }
 .sectiontitle { margin-top: 1em; margin-bottom: 0em; color: black; font-size: 1.17em; font-weight: bold;}
+.section { margin-top: 1em; margin-bottom: 1em }
+.example { margin-top: 1em; margin-bottom: 1em }
 
 .note { margin-top: 1em; margin-bottom : 1em;}
 .notetitle { font-weight: bold }
@@ -88,13 +106,21 @@ ul.simple { list-style-type: none }
 .stitle { font-style: italic; text-decoration: underline; }
 .nte {}
 
+.dlterm { font-weight: bold; }
+.dltermexpand { font-weight: bold; margin-top: 1em; }
 .defListHead { font-weight: bold; text-decoration: underline; }
 .parmListKwd { font-weight: bold; }
 .parmListVar { font-style: italic; }
 .pk { font-weight: bold; text-decoration: underline; }
 
 *[compact="yes"]>li { margin-top: 0em;}
-*[compact="no"]>li { margin-top: .53em;}
+*[compact="no"]>li { margin-top: .53em;}	
+.liexpand { margin-top: 1em; margin-bottom: 1em }
+.sliexpand { margin-top: 1em; margin-bottom: 1em }
+.dlexpand { margin-top: 1em; margin-bottom: 1em }
+.ddexpand { margin-top: 1em; margin-bottom: 1em }
+.stepexpand { margin-top: 1em; margin-bottom: 1em }
+.substepexpand { margin-top: 1em; margin-bottom: 1em }
 
 div.imageleft { text-align: left }
 div.imagecenter { text-align: center }
@@ -190,5 +216,3 @@ div.titlerow h1
 	font-weight: bold;
 	margin-bottom: .2em
 	}
-
-

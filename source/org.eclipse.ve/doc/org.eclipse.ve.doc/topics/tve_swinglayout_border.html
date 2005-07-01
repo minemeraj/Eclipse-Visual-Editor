@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
-<meta name="DC.Title" content="Using BorderLayout" />
+<meta name="DC.Title" content="Using BorderLayout (Swing)" />
 <meta name="abstract" content="The visual editor provides visual cues for helping you work with the Swing BorderLayout." />
 <meta name="description" content="The visual editor provides visual cues for helping you work with the Swing BorderLayout." />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_swinglayout.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_box.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_card.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_flow.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_grid.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_swinglayout_border" />
 <meta name="DC.Language" content="en-us" />
@@ -29,14 +25,14 @@
 <!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
-<title>Using BorderLayout</title>
+<title>Using BorderLayout (Swing)</title>
 </head>
 <body id="tve_swinglayout_border"><a name="tve_swinglayout_border"><!-- --></a>
 
-<h1 class="topictitle1">Using BorderLayout</h1>
+<h1 class="topictitle1">Using BorderLayout (Swing)</h1>
 <div><p>The visual editor provides visual cues for helping you work with
 the Swing BorderLayout.</p>
-<div class="skipspace"><p>The BorderLayout manager lays out components into regions defined
+<div class="section"><p>The BorderLayout manager lays out components into regions defined
 by compass directions. The class java.awt.BorderLayout implements LayoutManager2,
 and its constraint is a string that can be of the value "North", "South",
 "Center", "East", or "West".</p>
@@ -49,30 +45,33 @@ positions each component at one of the compass constraints along the edge
 with its preferred width or height, and the "Center" component occupies all
 of the remaining space.</p>
 </div>
-<ul><li class="skipspace"><span>To add a component on a BorderLayout:</span><ol><li class="skipspace"><span>Select the Swing component from the palette that you want to
+<ul><li class="stepexpand"><span>To add a component on a container that is using BorderLayout:</span><ol><li class="substepexpand"><span>Select the Swing component from the palette that you want to
 add to the BorderLayout.</span></li>
-<li class="skipspace"><span>Move your mouse cursor over the Design view.</span> <ul><li>The BorderLayout will show five rectangular areas representing the five
+<li class="substepexpand"><span>Move your mouse cursor over the Design view.</span> <ul><li>The BorderLayout will show five rectangular areas representing the five
 constraints of "North", "South", "Center", "East", or "West". </li>
+<li>If the region is empty, the region will be highlighted and the cursor
+will show a plus sign, indicating that you can drop the component.<p><img src="../images/BorderLayout_1.gif" alt="Border Layout, dropping in North area" /></p>
+</li>
 <li>If the region is already occupied by a component, the cursor will show
 a circle with a line through it, meaning that you cannot drop the component
-in that region.<br /><img src="../images/BorderLayoutDropJButtonNotCursor.gif" alt="dropping a bean outside of constraint limits" /><br /></li>
-<li>If the region is empty, the region will be highlighted and the cursor
-will show a plus sign, indicating that you can drop the component.<br /><img src="../images/BoederLayoutDropJButtonOnCenter.gif" alt="dropping a bean inside constraint limits" /><br /></li>
+in that region.<p><img src="../images/BorderLayout_2.gif" alt="Border Layout, trying to drop in occupied region" /></p>
+<p><img src="../images/BorderLayout_3.gif" alt="Border Layout, trying to drop in occupied region" /></p>
+</li>
 </ul>
 </li>
-<li class="skipspace"><span>Click the Design view in a valid region to add the component
+<li class="substepexpand"><span>Click the Design view in a valid region to add the component
 to the BorderLayout.</span></li>
 </ol>
 </li>
-<li class="skipspace"><span>To move components within a BorderLayout:</span><ol><li class="skipspace"><span>In the Design view, select the component in the BorderLayout
+<li class="stepexpand"><span>To move components within a BorderLayout:</span><ol><li class="substepexpand"><span>In the Design view, select the component in the BorderLayout
 that you want to move to another region within the BorderLayout.</span></li>
-<li class="skipspace"><span>Drag the component to another region and release your mouse
+<li class="substepexpand"><span>Drag the component to another region and release your mouse
 button.</span> The component will be moved to the new region. If
 the region was already occupied by another component, the components will
 switch places.</li>
 </ol>
 </li>
-<li class="skipspace"><span>To adjust the spacing for components within a BorderLayout, you
+<li class="stepexpand"><span>To adjust the spacing for components within a BorderLayout, you
 can set the following properties on the BorderLayout:</span> <ul><li><span class="uicontrol">Horizontal gap</span> - sets the distance in pixels between
 the center component and the east and west components.</li>
 <li><span class="uicontrol">Vertical gap</span> - sets the distance in pixels between
@@ -80,7 +79,7 @@ the center component and the north and south components.</li>
 </ul>
 </li>
 </ul>
-<div class="skipspace"><p>The constraints value is used as the second argument to the method
+<div class="section"><p>The constraints value is used as the second argument to the method
  <tt class="sysout">add(Component,Object)</tt> that adds the components
 to their parent container. For example, the code to initialize a JPanel might
 look like this:</p>
@@ -97,25 +96,17 @@ based on the container's ComponentOrientation: "before line begins" and "after
 line ends". For example, in a container where ComponenetOrientation is <tt class="sysout">ComponentOrientation.LEFT_TO_RIGHT</tt>,
 "Before line begins" maps to "West", and "After line ends" maps to "East".
 Mixing the two types of constants is not recommended. Unusual results may
-show in the graph viewer and at run time, since the relative constants will take
-precedence.</div>
+show in the graph viewer and at run time, since the relative constants will
+take precedence.</div>
 </div>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/cve_swinglayout.html" title="You can work with Swing and AWT layout managers with the visual editor for Java.">Swing and AWT layout managers</a><br />
-</p>
-<p><b class="relconceptshd">Related concepts</b><br />
-<a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_swinglayout_box.html" title="You can use the visual editor to layout Swing components using BoxLayout on the X or Y axis.">Using BoxLayout</a><br />
-<a href="../topics/tve_swinglayout_card.html" title="The CardLayout layout manager arranges components in a stack, like a stack of cards.">Using CardLayout</a><br />
-<a href="../topics/tve_swinglayout_flow.html" title="The FlowLayout layout manager arranges components in a left-to-right flow, with wrapping lines. The advantages of the flow layout manager include its ease of use, and the guarantee that each component can be seen.">Using FlowLayout</a><br />
-<a href="../topics/tve_swinglayout_grid.html" title="You can use the visual editor for Java to layout a class using GridLayout.">Using GridLayout (AWT)</a><br />
-<a href="../topics/tve_swinglayout_gridbag.html" title="You can use the AWT GridBag layout with Swing and AWT containers to arrange components using a powerful and flexible grid arrangement.">Using GridBag layout</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_swinglayout.html" title="You can work with Swing and AWT layout managers with the visual editor for Java.">Using Swing and AWT layout managers</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

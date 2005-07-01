@@ -1,32 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
-<meta name="DC.Title" content="Developing Java classes with the visual editor" />
+<meta name="DC.Title" content="Designing Java classes with the visual editor" />
 <meta name="abstract" content="You can use the visual editor to visually compose and preview Java classes using Standard Widget Toolkit (SWT), Swing, and AWT components." />
 <meta name="description" content="You can use the visual editor to visually compose and preview Java classes using Standard Widget Toolkit (SWT), Swing, and AWT components." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_overview.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_class_open.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_class_create.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_add.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_reorder.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_delete.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_resize.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_component_properties.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_overview.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swingoverview.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtoverview.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_events.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_external_strings.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_dragdrop.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_overview.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_class_open.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_class_create.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_component.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_overview.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtoverview.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swingoverview.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_events.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_external_strings.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_developing" />
 <meta name="DC.Language" content="en-us" />
@@ -36,63 +31,54 @@
 <!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
-<title>Developing Java classes with the visual editor</title>
+<title>Designing Java classes with the visual editor</title>
 </head>
 <body id="tve_developing"><a name="tve_developing"><!-- --></a>
 
-<h1 class="topictitle1">Developing Java classes with the visual editor</h1>
+<h1 class="topictitle1">Designing Java classes with the visual editor</h1>
 <div><p>You can use the visual editor to visually compose and preview Java
 classes using Standard Widget Toolkit (SWT), Swing, and AWT components.</p>
 <div class="p"></div>
-<div class="skipspace"><p>The following links provide more information about Swing, SWT,
-and the Java platform:</p>
+<div class="section"><p>The following Web sites provide more information about Java, SWT,
+the Eclipse Rich Client Platform, and Swing:</p>
 <ul><li><a href="http://java.sun.com/j2se/1.4.2/docs/api/overview-summary.html" target="_blank">Java 2 Platform, Standard Edition, v 1.4.2 API Specification</a></li>
-<li><a href="http://java.sun.com/j2se/1.4.2/docs/api/javax/swing/package-summary.html" target="_blank">Swing API document (package javax.swing)</a></li>
 <li><a href="http://dev.eclipse.org/viewcvs/index.cgi/~checkout~/platform-swt-home/dev.html" target="_blank">Standard Widget Toolkit (SWT)</a></li>
 <li><a href="http://eclipse-wiki.info/SWT" target="_blank">Eclipse Wiki
 for SWT/JFace</a></li>
+<li><a href="http://eclipse.org/rcp/" target="_blank">Eclipse Rich Client
+Platform</a></li>
+<li><a href="http://java.sun.com/j2se/1.4.2/docs/api/javax/swing/package-summary.html" target="_blank">Swing API document (package javax.swing)</a></li>
 </ul>
-<p>Using the visual editor, you can add Java beans, or components,
-from different palettes, manipulate them in the Design view, and edit the
-properties in the Properties view. The visual editor also includes a Source
-view where you can see and modify the generated Java code. You can make changes
-in either the Source view or in the Design view.</p>
+<p>Using the visual editor, you can add Java beans, or components, from
+different palettes, manipulate them in the Design view and Java Beans view,
+and edit the properties in the Properties view. The visual editor also includes
+a Source view where you can see and modify the generated Java code. You can
+make changes in either the Source view or in the Design view.</p>
 </div>
 </div>
-
 <div>
-<blockquote>
-<div class="ulchildlink"><b><a href="../topics/tve_class_open.html">Opening an existing Java class in the visual editor</a></b><br />
-If the visual editor for Java is not the default editor for .java files, you can still open Java classes in the visual editor.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_class_create.html">Creating a new Java visual class</a></b><br />
-You can use the New Java Visual Class wizard to quickly create a Java visual class for use within the visual editor for Java.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_component_add.html">Adding a component to a class</a></b><br />
-You can use the palette or the choose component dialog to add components to your Java class.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_component_reorder.html">Reordering components in a class</a></b><br />
-The Java Beans view displays components in the order in which they are added to their parent. You can use the Java Beans view to change this order.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_component_delete.html">Deleting components from a class</a></b><br />
-You can use the visual editor to quickly delete a component from a Java class.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_component_resize.html">Resizing visual components</a></b><br />
-In most cases, if a component's container does not control the size of the component, you can use the selection handles to resize visual components, or you can change the size in the Properties view.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_component_properties.html">Changing component properties</a></b><br />
-You can change properties for a component by using the Properties view.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_layout_overview.html">Laying out components using the visual editor</a></b><br />
-Use the visual editor for Java to visually arrange and lay out visual components in your Java application.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_swingoverview.html">Working with Swing in the visual editor</a></b><br />
-The visual editor for Java gives you visual control in working with Swing components. You can also customize the Swing look and feel.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_swtoverview.html">Working with SWT in the visual editor</a></b><br />
-The visual editor helps you develop applications using Standard Widgets Toolkit (SWT).</div>
-<div class="ulchildlink"><b><a href="../topics/tve_events.html">Handling events with the visual editor</a></b><br />
-The Java Beans view helps you to work with events for your visual application.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_external_strings.html">Externalizing text strings with the visual editor</a></b><br />
-If you are writing an application that will be deployed for use in different languages, any text that is visible to the user needs to be translated.</div>
-<div class="ulchildlink"><b><a href="../topics/tve_dragdrop.html">Dragging and dropping with the keyboard in the visual editor</a></b><br />
-You can use the keyboard to drop a component from the palette onto the Design view.</div>
-</blockquote>
+<ul class="ullinks">
+<li class="ulchildlink"><strong><a href="../topics/tve_class_open.html">Opening a Java class in the visual editor</a></strong><br />
+If you have not made the visual editor for Java the default editor for .java files, you can still open Java classes in the visual editor.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_class_create.html">Creating a new Java visual class</a></strong><br />
+You can use the New Java Visual Class wizard to quickly create a visual class that you can then design within the visual editor.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_component.html">Working with Java components visually</a></strong><br />
+With the visual editor for Java, you can add, remove, resize, modify, and change the properties of components, including visual and non-visual elements.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_layout_overview.html">Laying out UI components using the visual editor</a></strong><br />
+You can use the visual editor for Java to visually arrange and lay out user interface (UI) components in your Java application. The editor supports various SWT and Swing layout managers.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_swtoverview.html">Working with SWT in the visual editor</a></strong><br />
+The visual editor helps you develop applications using Standard Widgets Toolkit (SWT).</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_swingoverview.html">Working with Swing in the visual editor</a></strong><br />
+The visual editor for Java gives you visual control in working with Swing components. You can also customize the Swing look and feel.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_events.html">Handling events with the visual editor</a></strong><br />
+The Java Beans view of the visual editor for Java helps you work with events for your visual application.</li>
+<li class="ulchildlink"><strong><a href="../topics/tve_external_strings.html">Externalizing text strings with the visual editor</a></strong><br />
+If you are designing a Java application that will be deployed for use in different locales, any text that is visible to the user needs to be translated.</li>
+</ul>
 
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_overview.html" title="This information describes how to use the visual editor to develop and test visual Java classes and applications.">Editing Java in the visual editor</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_overview.html" title="This information describes how to use the visual editor for Java to develop and test visual Java classes and applications.">Developing Java in the visual editor</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
 <meta name="DC.Title" content="Using GridLayout (AWT)" />
-<meta name="abstract" content="You can use the visual editor for Java to layout a class using GridLayout." />
-<meta name="description" content="You can use the visual editor for Java to layout a class using GridLayout." />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_swinglayout.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_border.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_box.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_card.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_flow.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.dita" />
+<meta name="abstract" content="You can use the visual editor for Java to lay out Swing components using GridLayout." />
+<meta name="description" content="You can use the visual editor for Java to lay out Swing components using GridLayout." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_swinglayout_grid" />
 <meta name="DC.Language" content="en-us" />
@@ -34,64 +30,61 @@
 <body id="tve_swinglayout_grid"><a name="tve_swinglayout_grid"><!-- --></a>
 
 <h1 class="topictitle1">Using GridLayout (AWT)</h1>
-<div><p>You can use the visual editor for Java to layout a class using
-GridLayout.</p>
-<div class="skipspace">The layout manager java.awt.GridLayout lays out components in a grid
+<div><p>You can use the visual editor for Java to lay out Swing components
+using GridLayout.</p>
+<div class="section">The layout manager java.awt.GridLayout lays out components in a grid
 of equal-sized rectangles in rows and columns. You can set the number of rows
-and columns that a GridLayout will contain. As components are added, they
-are added in order based on the componentOrientation: right to left, or left
-to right.</div>
-<ul><li class="skipspace"><span>To set the grid dimensions for a GridLayout:</span><ol><li class="skipspace"><span>In the Design view or Java Beans view, select the component
+or columns that a GridLayout will contain. As you add components, they are
+added in order based on the componentOrientation property of the container
+that is using GridLayout (RIGHT_TO_LEFT or LEFT_TO_RIGHT).<p><img src="../images/SwingGridLayout_1.gif" alt="Buttons in a GridLayout" /></p>
+</div>
+<ul><li><span>To set the grid dimensions for a GridLayout:</span><ol><li class="substepexpand"><span>In the Design view or Java Beans view, select the component
 that is using GridLayout.</span></li>
-<li class="skipspace"><span>Click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/aligndialog_obj.gif" alt="show alignment window icon" /></span> toolbar
-button.</span> The Customize Layout dialog opens.</li>
-<li class="skipspace"><span>On the Layout notebook tab, enter a value for either <span class="uicontrol">Number
-of columns</span> or <span class="uicontrol">Number of rows</span>.</span></li>
-</ol>
- If you set both the number of rows and the number of columns to non-zero
-values, the number of columns specified is ignored. Instead, the number of
-columns is determined from the specified number or rows and the
-total number of components in the layout. So, for example, if you specify
-three rows and two columns, and you add nine components to the layout, they
-will be displayed as three rows of three columns. Specifying the number of
-columns affects the layout only when the number of rows is set to zero.</li>
-<li class="skipspace"><span>To add a component to a GridLayout:</span><ol><li><span>Select a Swing/AWT component on the palette.</span></li>
-<li><span>Move your cursor over the Design view and click on the GridLayout.</span></li>
+<li class="substepexpand"><span>Click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/icons/aligndialog_obj.gif" alt="Customize Layout toolbar button" /></span> toolbar button.</span> The Customize Layout dialog
+opens.<p><img src="../images/CustomizeLayout_GridSwing.gif" alt="Customize&#xA;Layout dialog for GridLayout" /></p>
+</li>
+<li class="substepexpand"><span>On the Layout notebook tab, enter a value for <em>either</em> <span class="uicontrol">Number
+of columns</span> or <span class="uicontrol">Number of rows</span>.</span> <div class="important"><span class="importanttitle">Important: </span>Specifying the number of columns affects the layout only
+when the number of rows is set to zero. If you set both the number of rows
+and the number of columns to non-zero values, the number of columns specified
+is ignored. In this case, the number of columns is determined from the specified
+number of rows and the total number of components in the layout. For example,
+if you specify three rows and two columns, and you add nine components to
+the layout, they will be displayed as three rows of three columns. </div>
+</li>
 </ol>
 </li>
-<li class="skipspace"><span>To move a component within a GridLayout:</span><ol><li class="skipspace"><span>On the Design view, click and drag the component that you are
-moving.</span> As you move your cursor, a black bar will indicate
-the position where the component will be added.</li>
-<li class="skipspace"><span>Release your mouse to move the component.</span></li>
-</ol>
-</li>
-<li class="skipspace"><span>To set spacing for components with a GridLayout:</span><ol><li class="skipspace"><span>In the Design view or Java Beans view, select the component
-that is using GridLayout.</span></li>
-<li class="skipspace"><span>Click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/aligndialog_obj.gif" alt="show alignment window icon" /></span> toolbar
-button.</span> The Customize Layout dialog opens.</li>
-<li class="skipspace"><span>On the Layout notebook tab, enter values for <span class="uicontrol">Horizontal
+<li><span>To set spacing for components with a GridLayout:</span><ol><li><span>Open the Customize Layout dialog for the component that is using
+GridLayout.</span></li>
+<li><span>On the Layout notebook tab, enter values for <span class="uicontrol">Horizontal
 gap</span> and <span class="uicontrol">Vertical gap</span>. Horizontal gap sets
 the distance in pixels between columns, while vertical gap sets the spacing
 between rows.</span></li>
 </ol>
 </li>
+<li><span>To add a component to a GridLayout:</span><ol><li class="substepexpand"><span>Select a Swing component on the palette.</span></li>
+<li class="substepexpand"><span>Move your cursor over the Design view.</span> A black
+bar provides feedback to indicate the position where the component will be
+added.</li>
+<li class="substepexpand"><span>Click the GridLayout container. The component is added to the
+grid of components.</span></li>
+</ol>
+</li>
+<li><span>To move a component within a GridLayout:</span><ol><li class="substepexpand"><span>On the Design view, click and drag the component that you are
+moving.</span> As you move your cursor, a black bar provides feedback
+to indicate the position where the component will be moved.</li>
+<li class="substepexpand"><span>Release your mouse to move the component.</span></li>
+</ol>
+</li>
 </ul>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/cve_swinglayout.html" title="You can work with Swing and AWT layout managers with the visual editor for Java.">Swing and AWT layout managers</a><br />
-</p>
-<p><b class="relconceptshd">Related concepts</b><br />
-<a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_swinglayout_border.html" title="The visual editor provides visual cues for helping you work with the Swing BorderLayout.">Using BorderLayout</a><br />
-<a href="../topics/tve_swinglayout_box.html" title="You can use the visual editor to layout Swing components using BoxLayout on the X or Y axis.">Using BoxLayout</a><br />
-<a href="../topics/tve_swinglayout_card.html" title="The CardLayout layout manager arranges components in a stack, like a stack of cards.">Using CardLayout</a><br />
-<a href="../topics/tve_swinglayout_flow.html" title="The FlowLayout layout manager arranges components in a left-to-right flow, with wrapping lines. The advantages of the flow layout manager include its ease of use, and the guarantee that each component can be seen.">Using FlowLayout</a><br />
-<a href="../topics/tve_swinglayout_gridbag.html" title="You can use the AWT GridBag layout with Swing and AWT containers to arrange components using a powerful and flexible grid arrangement.">Using GridBag layout</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_swinglayout.html" title="You can work with Swing and AWT layout managers with the visual editor for Java.">Using Swing and AWT layout managers</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

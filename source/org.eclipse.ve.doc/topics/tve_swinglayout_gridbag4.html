@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
-<meta name="DC.Title" content="Spanning components across GridBag rows and columns" />
-<meta name="abstract" content="You can set a component in a GridBag layout to span multiple columns or rows. You can set this in the property constraints or by visually dragging the component in the Design view." />
-<meta name="description" content="You can set a component in a GridBag layout to span multiple columns or rows. You can set this in the property constraints or by visually dragging the component in the Design view." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag1.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag2.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag3.dita" />
+<meta name="DC.Title" content="Spanning components across GridBagLayout cells" />
+<meta name="abstract" content="You can drag a component in a GridBagLayout to make it span multiple cells. You can also specify the width and height of a component using Properties view or the Customize Layout window." />
+<meta name="description" content="You can drag a component in a GridBagLayout to make it span multiple cells. You can also specify the width and height of a component using Properties view or the Customize Layout window." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag2.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag3.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag2.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout_gridbag3.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_swinglayout_gridbag4" />
 <meta name="DC.Language" content="en-us" />
@@ -26,15 +28,15 @@
 <!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
-<title>Spanning components across GridBag rows and columns</title>
+<title>Spanning components across GridBagLayout cells</title>
 </head>
 <body id="tve_swinglayout_gridbag4"><a name="tve_swinglayout_gridbag4"><!-- --></a>
 
-<h1 class="topictitle1">Spanning components across GridBag rows and columns</h1>
-<div><p>You can set a component in a GridBag layout to span multiple columns
-or rows. You can set this in the property constraints or by visually dragging
-the component in the Design view.</p>
-<div class="skipspace"><p>By default, when you drop a component into a GridBag layout, the
+<h1 class="topictitle1">Spanning components across GridBagLayout cells</h1>
+<div><p>You can drag a component in a GridBagLayout to make it span multiple
+cells. You can also specify the width and height of a component using Properties
+view or the Customize Layout window.</p>
+<div class="section"><p>By default, when you drop a component into a GridBagLayout, the
 visual editor sets the x and y values to assign it to a cell. However, two
 additional constraints available for a component are gridheight and gridwidth,
 which are properties on the GridBagConstraints object that is instantiated
@@ -44,36 +46,29 @@ that the component should span.</li>
 <li>The gridwidth constraint is an integer that indicates the number of columns
 that the component should span.</li>
 </ul>
-<p>To use the Design view to visually span components across GridBag
-rows and columns:</p>
+<p>To span a component across multiple cells in a GridBagLayout:</p>
 </div>
-<ol><li class="skipspace"><span>Select the component in the GridBag layout that you want to span
-across multiple rows or columns. The component will show a black selection
-border around it with two green boxes, or handles, on the right and bottom.</span></li>
-<li class="skipspace"><span>Click and drag either of the green handles to span the component
-across grid cells. </span> The cursor will show the x,y coordinates
-for the grid cell where you are spanning to. The following image shows a JTable
-that occupies a single cell. Notice the green handle on the right, which can
-be used to span the component across columns:<br /><img src="../images/ColumnSpan.gif" alt=" Span Column" /><br /></li>
-<li class="skipspace"><span>Release the mouse button to complete the span.</span> The
-grid width and grid height constraints will be set accordingly based on the
-number of rows or columns you spanned. The following image shows the same
-JTable after spanning the JTable across three columns. The gridwidth for this
-component is now set to 3:<br /><img src="../images/ColumnSpan2.gif" alt=" Span Column" /><br /></li>
+<ol><li class="stepexpand"><span>Select the component.</span> The component shows a black
+selection border around it with two green boxes, or handles, on the right
+and bottom.<p><img src="../images/GridBag_span_1.gif" alt="GridBagLayout,&#xA;spanning cells" /></p>
+</li>
+<li class="stepexpand"><span>Click and drag a handle to span the component across grid cells.</span> The cursor shows the X/Y coordinates for the grid cell where you
+are spanning to.<p><img src="../images/GridBag_span_2.gif" alt="GridBagLayout,&#xA;spanning cells" /></p>
+</li>
+<li class="stepexpand"><span>Release the mouse button to complete the span.</span> The
+grid width and grid height constraints are set based on the number of rows
+or columns you spanned.<p><img src="../images/GridBag_span_3.gif" alt="GridBagLayout,&#xA;spanning cells" /></p>
+</li>
 </ol>
-<div class="skipspace">You can also use the Properties view to manually set the grid height
-and grid width for a given component in a GridBay layout.</div>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_swinglayout_gridbag.html" title="You can use the AWT GridBag layout with Swing and AWT containers to arrange components using a powerful and flexible grid arrangement.">Using GridBag layout</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_swinglayout_gridbag1.html" title="When using the GridBag layout manager, you can show or hide the grid in Design view.">Showing the grid for GridBag layout</a><br />
-<a href="../topics/tve_swinglayout_gridbag2.html" title="When you build your application visually using GridBag layout, the visual grid markers help you to move and drop components in the required position.">Adding or moving components within GridBag layout</a><br />
-<a href="../topics/tve_swinglayout_gridbag3.html" title="When you use the Swing GridBag layout, the visual editor sets default constraints on components. You can change these constraints using the Properties view or the Customize Layout dialog.">Adjusting fill, anchor, and inset constraints in GridBag layout</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_swinglayout_gridbag.html" title="You can use the AWT GridBagLayout with Swing and AWT containers to arrange components using a powerful and flexible grid arrangement.">Using GridBagLayout (AWT)</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tve_swinglayout_gridbag2.html" title="When you build your application visually using GridBagLayout, the visual grid markers help you to move and drop components in the required position.">Adding or moving components within GridBagLayout</a></div>
+<div><a href="../topics/tve_swinglayout_gridbag3.html" title="You can use the Customize Layout window to specify anchor position, insets, fill, span, padding, and weight for components within GridBagLayout.">Customizing the layout of components in GridBagLayout</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

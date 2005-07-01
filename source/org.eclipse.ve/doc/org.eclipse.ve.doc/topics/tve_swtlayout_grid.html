@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
 <meta name="DC.Title" content="Using GridLayout (SWT)" />
-<meta name="abstract" content="You can use the GridLayout with SWT composites to arrange components using a powerful and flexible grid arrangement." />
-<meta name="description" content="You can use the GridLayout with SWT composites to arrange components using a powerful and flexible grid arrangement." />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_swtlayout.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout_fill.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout_form.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout_row.dita" />
-<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.dita" />
+<meta name="abstract" content="You can use the GridLayout with SWT containers to arrange widgets in a grid arrangement." />
+<meta name="description" content="You can use the GridLayout with SWT containers to arrange widgets in a grid arrangement." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_prefsgrid.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_swtlayout_grid" />
 <meta name="DC.Language" content="en-us" />
@@ -32,32 +31,28 @@
 <body id="tve_swtlayout_grid"><a name="tve_swtlayout_grid"><!-- --></a>
 
 <h1 class="topictitle1">Using GridLayout (SWT)</h1>
-<div><p>You can use the GridLayout with SWT composites to arrange components
-using a powerful and flexible grid arrangement.</p>
-<div class="skipspace"><p>The SWT GridLayout layout manager arranges its components, or
+<div><p>You can use the GridLayout with SWT containers to arrange widgets
+in a grid arrangement.</p>
+<div class="section"><p>The SWT GridLayout layout manager arranges its components, or
 widgets, in rows and columns. As each component is added, a new cell is added
 from left to right to accommodate the new component, and new rows are automatically
 added as necessary. For example, a Grid layout with three columns requires
 two rows to hold four widgets. This can become more complex because each component
 can bet set to span cells vertically and horizontally.</p>
-<p>Because of its
-visual grid and placement indicators, the visual editor makes it easy to determine
-exactly where widgets will be located within the grid and in relation to other
-widgets.</p>
-<p>To work with a SWT composite that is using Grid layout:</p>
+<p>The visual editor
+provides grid markers and placement indicators to make it easy to determine
+where widgets are located within the grid and in relation to other widgets.</p>
+<p>To
+work with an SWT container using Grid layout:</p>
 </div>
-<ul><li><span>To show the grid for Grid layout:</span><ol><li class="skipspace"><span>In the Java Beans view or Design view, select the composite
-that uses Grid layout.</span></li>
-<li class="skipspace"><span>Right-click and select <span class="uicontrol">Show Grid</span>.</span> A grid with red, dotted lines shows the borders of the cells in
-the grid.</li>
-</ol>
-</li>
-<li><span>To change the number of columns in the grid:</span><ol><li class="skipspace"><span>In the Design view, select the composite that uses Fill layout.</span></li>
-<li class="skipspace"><span>Click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/aligndialog_obj.gif" alt="show alignment window icon" /></span> toolbar
-button.</span> The Customize Layout dialog opens.</li>
-<li class="skipspace"><span>On the Layout notebook tab, enter a new value in the <span class="uicontrol">Number
+<ul><li><span>To specify how the grid displays, see <a href="tve_prefsgrid.html">Specifying
+grid display preferences for containers</a>.</span></li>
+<li><span>To change the number of columns in the grid:</span><ol><li class="substepexpand"><span>In the Design view, select the container that uses Fill layout.</span></li>
+<li class="substepexpand"><span>Click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/icons/aligndialog_obj.gif" alt="Customize Layout toolbar button" /></span> toolbar button.</span> The Customize Layout dialog
+opens.</li>
+<li class="substepexpand"><span>On the Layout notebook tab, enter a new value in the <span class="uicontrol">Number
 of columns</span> field.</span></li>
-<li class="skipspace"><strong>Optional: </strong><span>You can force all the Grid columns to
+<li class="substepexpand"><strong>Optional: </strong><span>You can force all the Grid columns to
 be the same width by selecting the <span class="uicontrol">Make columns equal width</span> check
 box.</span></li>
 </ol>
@@ -84,8 +79,8 @@ cell.</span></li>
 <li><strong>Optional: </strong><span>To force the row or column that holds
 the component to grab extra space in the container, click the <span class="uicontrol">Fill
 horizontal</span> or <span class="uicontrol">Fill vertical</span> button. If
-multiple rows or columns are grabbing extra space, they divide
-up the excess space equally.</span></li>
+multiple rows or columns are grabbing extra space, they divide up the excess
+space equally.</span></li>
 </ol>
 </li>
 <li><span>To span a widget, or component, across grid cells, select the component
@@ -101,19 +96,16 @@ cell to the right of its current position.</li>
 </li>
 </ul>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/cve_swtlayout.html" title="You can work with SWT layout managers with the visual editor for Java.">SWT layout managers</a><br />
-</p>
-<p><b class="relconceptshd">Related concepts</b><br />
-<a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a><br />
-</p>
-<p><b class="reltaskshd">Related tasks</b><br />
-<a href="../topics/tve_swtlayout_fill.html" title="The visual editor makes it easy to work with the SWT FillLayout manager.">Using FillLayout</a><br />
-<a href="../topics/tve_swtlayout_form.html" title="You can set a composite to use the SWT FormLayout, but the visual editor does not provide additional visual support.">Using FormLayout</a><br />
-<a href="../topics/tve_swtlayout_row.html" title="The SWT RowLayout layout manager lays out its components in rows, but is more robust than FillLayout.">Using RowLayout</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_swtlayout.html" title="You can work with SWT layout managers with the visual editor for Java.">Using SWT layout managers</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tve_prefsgrid.html" title="When working with Swing GridBagLayout, SWT GridLayout, or null layout, you can specify a preference to show or hide the grid feedback in the Design view.">Specifying grid display preferences for containers</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

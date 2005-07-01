@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Customizing UI layout in the visual editor" />
+<meta name="abstract" content="In the visual editor for Java, you can use the Customize Layout window to modify layout settings for the currently selected container and UI component." />
+<meta name="description" content="In the visual editor for Java, you can use the Customize Layout window to modify layout settings for the currently selected container and UI component." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_overview.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_layoutmanagers.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swtlayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_swinglayout.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_layout_null.html" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tve_layout_customize" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<title>Customizing UI layout in the visual editor</title>
+</head>
+<body id="tve_layout_customize"><a name="tve_layout_customize"><!-- --></a>
+
+<h1 class="topictitle1">Customizing UI layout in the visual editor</h1>
+<div><p>In the visual editor for Java, you can use the Customize Layout
+window to modify layout settings for the currently selected container and
+UI component.</p>
+<div class="p">Your Java class must include a container, such as JFrame, JPanel,
+or Shell, that allows for a layout manager to be set.</div>
+<div class="section">Some layout effects can be achieved by visually dropping, dragging,
+and resizing UI components in the Design view. The visual editor includes
+the Customize Layout window to help you further refine and work with your
+layout settings. <p>The Customize Layout window is a non-modal dialog box
+that you can open and leave open, like a toolbox, while you work in the Design
+view. The Customize Layout window then displays relevant layout properties
+and settings, depending on the layout manager for the selected container or
+the layout manager of the selected component's container.</p>
+<div class="p">The Customize
+Layout window includes two tabbed pages:<ul><li><span class="uicontrol">Layout</span> - The Layout page includes options that
+affect the layout in general. For example, for layouts that use grids, the
+Layout page might have grid spacing and margin settings, or it might allow
+you to specify the number of columns or rows in the grid. Again, these settings
+vary based on the layout manager. Not all layout managers include customizable
+settings on the Layout page.</li>
+<li><span class="uicontrol">Component</span> - The Component page includes layout
+options for the selected component. For example, certain layout managers use
+grids where you can specify the alignment of a component within the grid,
+how many cells a component spans, or whether the component should grab excess
+space within its cell. Not all layout managers include settings on the Component
+page.</li>
+</ul>
+</div>
+To open the Customize Layout window, do <em>one</em> of the following:</div>
+<ul><li><span>Click the Customize Layout <img src="../images/icons/aligndialog_obj.gif" alt="Customize Layout toolbar button" /> toolbar button.</span></li>
+<li><span>In the Design view, right-click a container or component, and select
+Customize Layout from the pop-up menu.</span></li>
+</ul>
+<div class="example"><p>The Customize Layout window includes different options for different
+layout managers. For example, the Customize Layout manager looks like the
+following screen shot for SWT GridLayout:</p>
+<ul><li>SWT GridLayout example:<p><img src="../images/CustomizeLayout_GridSWT.gif" alt="Customize Layout window for SWT GridLayout manager" /></p>
+</li>
+<li>Swing GridBagLayout example:<p><img src="../images/CustomizeLayout_GridBag.gif" alt="Customize Layout window for Swing GridBagLayout manager" /></p>
+</li>
+<li>SWT FillLayout example:<p><img src="../images/CustomizeLayout_Fill.gif" alt="Customize Layout window for SWT FillLayout&#xA;manager" /></p>
+</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_layout_overview.html" title="You can use the visual editor for Java to visually arrange and lay out user interface (UI) components in your Java application. The editor supports various SWT and Swing layout managers.">Laying out UI components using the visual editor</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cve_layoutmanagers.html" title="Layout managers are objects that control the size and position of components within a container.">Layout managers and containers</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tve_swtlayout.html" title="You can work with SWT layout managers with the visual editor for Java.">Using SWT layout managers</a></div>
+<div><a href="../topics/tve_swinglayout.html" title="You can work with Swing and AWT layout managers with the visual editor for Java.">Using Swing and AWT layout managers</a></div>
+<div><a href="../topics/tve_layout_null.html" title="Layout managers help control the size and position of all components in a container. In containers using null layout, each component defines its own bounds to determine size and location.">Using null layout</a></div>
+</div>
+</div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
+<br />
+</div>
+</body>
+</html>

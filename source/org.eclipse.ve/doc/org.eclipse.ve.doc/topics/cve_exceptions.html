@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="copyright" content="(C) Copyright IBM Corporation 2004" />
-<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2004" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2005" />
+<meta name="DC.rights.owner" content="(C) Copyright IBM Corporation 2005" />
 <meta name="security" content="public" />
 <meta name="Robots" content="index,follow" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -13,7 +13,12 @@
 <meta name="DC.Title" content="Java bean exceptions" />
 <meta name="abstract" content="During normal development, exceptions are sometimes thrown by the Java beans. The visual editor displays icons and visual markers to indicate exceptions." />
 <meta name="description" content="During normal development, exceptions are sometimes thrown by the Java beans. The visual editor displays icons and visual markers to indicate exceptions." />
-<meta name="DC.Relation" scheme="URI" content="../topics/tve_testdebug.dita" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_testdebug.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_run.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_run_config.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_debug.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tve_test_applets.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cve_debug_advanced.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="cve_exceptions" />
 <meta name="DC.Language" content="en-us" />
@@ -38,8 +43,8 @@ other valid properties are applied. A warning sign is shown in the Design
 view and the Java beans view to indicate that an exception occurred  <br /><img src="../images/DesignWarningException.gif" alt="exception warning sign" /><br />  <br /><img src="../images/JavaBeansWarningException.gif" alt="exception in Java bean view" /><br /></p>
 <p>When you select a component that has a warning, the status line will show
 you the property that threw the exception as well as the exception message.
-For example, if the button's text property threw a run-time exception, the status
-bar shows the following status:<br /><img src="../images/StatusWarningException.gif" alt="exception in status bar" /><br /></p>
+For example, if the button's text property threw a run-time exception, the
+status bar shows the following status:<br /><img src="../images/StatusWarningException.gif" alt="exception in status bar" /><br /></p>
 <p>When the exception is thrown during the application of a property value,
 the Java bean is recreated and the property ignored. The warning sign indicates
 that the representation of the live Java bean, as shown in the Design view
@@ -57,11 +62,19 @@ the exception message in the status line.</p>
 point, occurs when the initialization string for a property is too complicated
 for the visual editor to understand.</p>
 </div>
-
 <div>
-<p>
-<b class="parentlink">Parent topic:</b> <a href="../topics/tve_testdebug.html" title="After you write a Java class using the visual editor for Java, you can run it to test and debug the run-time behavior.">Testing and debugging in the visual editor</a><br />
-</p>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_testdebug.html" title="After you write a Java class using the visual editor for Java, you can run it to test and debug the runtime behavior.">Testing and debugging in the visual editor</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cve_debug_advanced.html" title="During normal development you should not need to be concerned with the VM that is used by each visual editor instance. Advanced users, however, can configure the workbench so that any messages sent to System.out or System.err of the VM are written to the .log file in the .metadata directory in your workspace.">Advanced options for debugging Java beans</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tve_run.html" title="While you are developing your visual class, you can run it to test its appearance and behavior.">Running your visual class as a Java bean or application</a></div>
+<div><a href="../topics/tve_run_config.html" title="You can specify different configurations for each Java bean or Java application that you run.">Configuring options for running a Java bean or application</a></div>
+<div><a href="../topics/tve_debug.html" title="If you want to see the Java processes and step through the code for your Java visual class while you are running it, you can choose the debug options.">Debugging a visual Java bean or application</a></div>
+<div><a href="../topics/tve_test_applets.html" title="You can test an applet using launch configuration options before deploying it to open in a browser.">Testing and deploying applets</a></div>
+</div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>

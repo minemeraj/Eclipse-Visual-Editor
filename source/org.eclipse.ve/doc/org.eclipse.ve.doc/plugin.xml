@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
 
-    <extension point="org.eclipse.help.toc">
-      <toc file="ve_toc.xml" primary="true" />
+   <extension point="org.eclipse.help.toc">
+      <toc file="ve.xml" primary="true" />
+      <toc file="ve_toc.xml" />
       <toc file="ve_isv_toc.xml" />
    </extension>
 
