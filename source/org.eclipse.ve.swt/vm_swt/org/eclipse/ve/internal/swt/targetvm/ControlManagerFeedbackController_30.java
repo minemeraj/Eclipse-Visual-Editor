@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlManagerFeedbackController_30.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-07-01 14:09:14 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -143,7 +143,7 @@ public class ControlManagerFeedbackController_30 extends ControlManager.ControlM
 
 			try {
 				// Now we layout from the bottom to the top. A depth-first walk.
-				layoutTree((CompositeTree) invalidControls.get(shell));
+				layoutTree((CompositeTree) invalidatedControls.get(shell));
 				if (shell == freeformHost)
 					shell.pack();
 			} catch (RuntimeException e) {
