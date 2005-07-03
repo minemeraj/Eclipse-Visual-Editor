@@ -18,7 +18,8 @@ package org.eclipse.ve.sweet.dataeditors;
  * 
  * Note that not all these methods will be applicable in all cases.  For example,
  * an IObjectEditor implementation may be designed for regular Java objects 
- * that are not themselves persistent.
+ * that are not themselves persistent.  In this case, the IEditedObject may or
+ * may not receive commit, refresh, rollback, etc., events.
  *
  * @author djo
  */
