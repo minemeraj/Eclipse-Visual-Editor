@@ -12,17 +12,29 @@
 package org.eclipse.ve.sweet.metalogger;
 
 /**
- * StdLogger.
+ * StdLogger. A stdout/stderr metalogger implementation.
  *
- * FIXME:  This is a stub because the old code that was referenced
- * was CPL, so I couldn't include it.
- * 
  * @author djo
  */
-public class StdLogger implements ILogger {
+public class StdLogger extends AbstractLogger implements ILogger {
 
     public void message(String message) {
         System.out.println(message);
+    }
+
+    public void error(Throwable t, String message) {
+        System.err.println(message);
+        t.printStackTrace(System.err);
+    }
+
+    public void data(String data) {
+        System.out.print(data);
+    }
+
+    public void debug(Class subject, String message) {
+        if (isDebug(subject)) {
+            System.out.println(message);
+        }
     }
 
 }
