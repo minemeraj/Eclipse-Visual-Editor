@@ -12,17 +12,21 @@
 package org.eclipse.ve.sweet.metalogger;
 
 /**
- * Logger.
- *
- * FIXME:  This is a stub because the old code that was referenced
- * was CPL, so I couldn't include it.
+ * Logger.  Provides access to the current logging singleton.
  * 
  * @author djo
  */
 public class Logger {
+    
+    public static ILogger logger = new StdLogger();
 
+    /**
+     * Return the current ILogger being used by the application.
+     * 
+     * @return The current ILogger
+     */
     public static ILogger log() {
-        return new StdLogger();
+        return logger;
     }
 
 }
