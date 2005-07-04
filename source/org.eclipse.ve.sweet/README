@@ -1,0 +1,47 @@
+                                 Sweet README
+
+What is Sweet?
+
+Sweet is a data binding framework for Swing and SWT front-ends and any data 
+back-end.
+
+
+What is a data binding framework doing in VE?
+
+We believe that this framework belongs in VE because the framework is 
+architected in a way that we can support both Swing and SWT data binding from 
+the same code base, consistent with our charter.  We also can bind controls to 
+any back-end--from plain old Java objects to EJB3 or Db4o (http://www.db4o.com).
+
+
+What is included in the initial implementation?
+
+Currently this framework implements binding between plain old Java objects and 
+an SWT Text control, along with data validation based on regular expressions, 
+Java code, or just the data type of the Java property being edited.  Stubs are 
+in the code showing how it can easily be extended to support editing using any 
+SWT control and any data back-end.
+
+
+Okay, VE is a tooling project, so you're going to provide tool support for
+this in VE?
+
+The VE team currently does not have plans to provide tooling support for this 
+library, but we had it, so we thought we'd release it.  :-)   Since we don't 
+have data binding in any of the VE plan documents yet, please consider this 
+released on an unofficial basis only for now.  Of course, we would love to see 
+what the community could come up in terms of completing it and adding tooling 
+support, and we would support the community in any efforts to do so.
+
+
+How do I get Sweet?
+
+You can check out the new library (called Sweet) from CVS:
+
+Host: dev.eclipse.org
+Repository: /home/tools/
+Package: org.eclipse.ve.sweet
+
+The class org.eclipse.ve.sweet.test.TestSweet is a simple tutorial showing how 
+to use most of the framework's features.
+
