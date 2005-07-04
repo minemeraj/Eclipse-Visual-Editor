@@ -129,6 +129,26 @@ public interface IObjectEditor {
     public void fireObjectListenerEvent();
     
     /**
+     * Method addInputChangeListener.
+     * 
+     * Adds listener to the set of listeners that will be notified when
+     * this object editor's input object changes.
+     * 
+     * @param listener The listener to add.
+     */
+    public void addInputChangeListener(IInputChangeListener listener);
+    
+    /**
+     * Method removeInputChangeListener.
+     * 
+     * Removes listener from the set of listeners that will be notified when
+     * this object editor's input object changes.
+     * 
+     * @param listener The listener to remove.
+     */
+    public void removeInputChangeListener(IInputChangeListener listener);
+    
+    /**
      * Method isDirty.
      * 
      * Returns if any of the objects' fields have been edited (are dirty)

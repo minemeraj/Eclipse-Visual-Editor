@@ -16,6 +16,7 @@ import java.util.LinkedList;
 
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.dataeditors.IEditedObject;
+import org.eclipse.ve.sweet.dataeditors.IInputChangeListener;
 import org.eclipse.ve.sweet.dataeditors.IObjectEditor;
 import org.eclipse.ve.sweet.dataeditors.IObjectListener;
 import org.eclipse.ve.sweet.dataeditors.IPropertyEditor;
@@ -53,9 +54,16 @@ public class JavaObject implements IObjectEditor {
         } catch (CannotSaveException e) {
             throw new RuntimeException("Should be able to save if fields and object verify", e);
         }
+        
+        if (!fireInputChangingEvent(this.input, input)) {
+            return false;
+        }
+        
         this.input = input;
         inputBean = (IEditedObject) RelaxedDuckType.implement(IEditedObject.class, input);
         refreshFieldsFromInput();
+        
+        fireInputChangedEvent(input);
         return true;
     }
 
@@ -313,5 +321,36 @@ public class JavaObject implements IObjectEditor {
         }
         return false;
     }
+    
+    private LinkedList inputChangeListeners = new LinkedList();
 
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#addInputChangeListener(org.eclipse.ve.sweet.dataeditors.IInputChangeListener)
+     */
+    public void addInputChangeListener(IInputChangeListener listener) {
+        inputChangeListeners.add(listener);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#removeInputChangeListener(org.eclipse.ve.sweet.dataeditors.IInputChangeListener)
+     */
+    public void removeInputChangeListener(IInputChangeListener listener) {
+        inputChangeListeners.remove(listener);
+    }
+    
+    private boolean fireInputChangingEvent(Object oldInput, Object newInput) {
+        for (Iterator inputChangeListenersIter = inputChangeListeners.iterator(); inputChangeListenersIter.hasNext();) {
+            IInputChangeListener listener = (IInputChangeListener) inputChangeListenersIter.next();
+            if (!listener.inputChanging(oldInput, newInput))
+                return false;
+        }
+        return true;
+    }
+
+    private void fireInputChangedEvent(Object newInput) {
+        for (Iterator inputChangeListenersIter = inputChangeListeners.iterator(); inputChangeListenersIter.hasNext();) {
+            IInputChangeListener listener = (IInputChangeListener) inputChangeListenersIter.next();
+            listener.inputChanged(newInput);
+        }
+    }
 }
