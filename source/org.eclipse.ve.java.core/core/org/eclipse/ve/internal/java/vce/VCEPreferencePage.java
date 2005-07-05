@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.31 $  $Date: 2005-06-22 15:28:32 $ 
+ *  $Revision: 1.32 $  $Date: 2005-07-05 15:07:32 $ 
  */
 
 import java.net.URL;
@@ -359,7 +359,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		showGridCheckBox = createCheckBox(appearanceComposite, VCEMessages.PreferencePage_ShowGridWhenSelected, 15); 
 
 		// Create controls for setting the XY grid spacing default
-		xyGridSpacingText = createLabelText(appearanceComposite, "X/Y Grid Spacing:", 10, 12);
+		xyGridSpacingText = createLabelText(appearanceComposite, VCEMessages.VCEPreferencePage_XYGridSpacing, 10, 12);
 
 		renameAskCheckbox = createCheckBox(appearanceComposite, VCEMessages.VCEPreferencePage_Checkbox_PromptNameOnCreation_Text, 15); 
 

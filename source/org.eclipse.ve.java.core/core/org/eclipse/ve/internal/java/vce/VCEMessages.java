@@ -58,4 +58,6 @@ public final class VCEMessages extends NLS {
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, VCEMessages.class);
 	}
+
+	public static String VCEPreferencePage_XYGridSpacing;
 }
