@@ -55,7 +55,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	public final static IPath  SWT_CONTAINER_OS = new Path("os").append(Platform.getOS()).append(Platform.getOSArch()); //$NON-NLS-1$
 	public final static String SWT_CONTAINER_OS_PLUGIN_EXT = "."+Platform.getOS()+"."+Platform.getWS()+"."+Platform.getOSArch(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	public final static String SWT_CONTAINER_WS_PLUGIN_EXT = "."+Platform.getWS()+"."+Platform.getOS()+"."+Platform.getOSArch(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	public final static String SWT_CONTAINER_SRC_PLUGIN = "org.eclipse.platform.source";	 //$NON-NLS-1$
+	public final static String SWT_CONTAINER_SRC_PLUGIN = "org.eclipse.rcp.source";	 //$NON-NLS-1$
 	
 	
 	public static class ContainerType {
