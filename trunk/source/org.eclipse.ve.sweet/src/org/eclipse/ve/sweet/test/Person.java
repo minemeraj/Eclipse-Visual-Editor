@@ -11,8 +11,8 @@
  */
 package org.eclipse.ve.sweet.test;
 
-import org.eclipse.ve.sweet.verifier.IVerifier;
-import org.eclipse.ve.sweet.verifiers.reusable.RegularExpressionVerifier;
+import org.eclipse.ve.sweet.validator.IValidator;
+import org.eclipse.ve.sweet.validators.reusable.RegularExpressionValidator;
 
 
 public class Person {
@@ -24,8 +24,8 @@ public class Person {
         this.age = age;
     }
 
-    public IVerifier getAgeVerifier() {
-        return new RegularExpressionVerifier("^[0-9]*$", "^[0-9]{1,3}$", 
+    public IValidator getAgeVerifier() {
+        return new RegularExpressionValidator("^[0-9]*$", "^[0-9]{1,3}$", 
                 "Please enter an age between 0 and 999");
     }
 }
