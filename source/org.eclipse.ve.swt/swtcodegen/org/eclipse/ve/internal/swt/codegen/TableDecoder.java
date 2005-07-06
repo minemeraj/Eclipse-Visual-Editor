@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableDecoder.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.5 $  $Date: 2005-07-06 14:50:57 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -29,17 +29,20 @@ import org.eclipse.ve.internal.swt.SWTConstants;
 public class TableDecoder extends CompositeDecoder {
 	protected final static String ADD_METHOD_PREFIX = "create"; //$NON-NLS-1$
 	protected final static String ADD_METHOD_SF_NAME = URItoFeature(SWTConstants.SF_TABLE_COLUMNS);
+	protected final static String ADD_TABLEITEMS_METHOD_PREFIX = "create"; //$NON-NLS-1$
+	protected final static String ADD_TABLEITEMS_METHOD_SF_NAME = URItoFeature(SWTConstants.SF_TABLE_ITEMS);
 
 	public TableDecoder(){
 		super();
 		addStructuralFeatureAndWriteMethod(ADD_METHOD_SF_NAME, ADD_METHOD_PREFIX);
+		addStructuralFeatureAndWriteMethod(ADD_TABLEITEMS_METHOD_SF_NAME, ADD_TABLEITEMS_METHOD_PREFIX);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.swt.codegen.AbstractCompositeDecoder#getAppropriateFeatureMapper(java.lang.String)
 	 */
 	protected IJavaFeatureMapper getAppropriateFeatureMapper(String structuralFeature) {
-		 if (structuralFeature.equals(ADD_METHOD_SF_NAME))
+		 if (structuralFeature.equals(ADD_METHOD_SF_NAME) || structuralFeature.equals(ADD_TABLEITEMS_METHOD_SF_NAME))
 		    return new CompositeFeatureMapper();
 		return super.getAppropriateFeatureMapper(structuralFeature);
 	}

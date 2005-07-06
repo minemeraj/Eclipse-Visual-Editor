@@ -71,6 +71,7 @@ public class SWTConstants {
 		SF_ROW_LAYOUT_WRAP,
 		
 		SF_TABLE_COLUMNS,
+		SF_TABLE_ITEMS,
 		SF_TABFOLDER_ITEMS,
 		SF_TABITEM_CONTROL,
 		SF_CTABFOLDER_ITEMS,
@@ -148,6 +149,7 @@ public class SWTConstants {
 		SF_ROW_LAYOUT_WRAP = URI.createURI("java:/org.eclipse.swt.layout#RowLayout/wrap");    //$NON-NLS-1$
 		
 		SF_TABLE_COLUMNS = URI.createURI("java:/org.eclipse.swt.widgets#Table/tableColumns");    //$NON-NLS-1$
+		SF_TABLE_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#Table/tableItems");    //$NON-NLS-1$
 		SF_TABFOLDER_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#TabFolder/items");	 //$NON-NLS-1$
 		SF_TABITEM_CONTROL = URI.createURI("java:/org.eclipse.swt.widgets#TabItem/control");	 //$NON-NLS-1$
 		SF_CTABFOLDER_ITEMS = URI.createURI("java:/org.eclipse.swt.custom#CTabFolder/items");	 //$NON-NLS-1$

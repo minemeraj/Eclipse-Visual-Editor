@@ -29,6 +29,11 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
       <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
     </addedEObjects>
+    <addedEObjects xsi:type="ecore:EReference" name="tableItems" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#TableItem"
+        upperBound="-1">
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
+    </addedEObjects>
   </event:AddMany>
 
 </xmi:XMI>
