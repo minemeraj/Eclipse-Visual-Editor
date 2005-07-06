@@ -24,7 +24,7 @@ header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."
               if (($tst == $_POST["Test"]) && ($tester == "None") && ($a!="") && ($b=="")) {
                   $tester = $_POST["Email"];                  
                   // ve-dev@eclipse.org 
-                  mail("sgunturi@us.ibm.com, " . $_POST["Email"], $_POST["Test"] . " assigned to " . $_POST["Email"], "VisualEditor, 1.0.2 TestPass\n\tTestcase " . $_POST["Test"] . " was assigned to ". $_POST["Email"].".", "From: VEproject@{$_SERVER['SERVER_NAME']}");                  
+                  mail("walkerp@us.ibm.com, " . $_POST["Email"], $_POST["Test"] . " assigned to " . $_POST["Email"], "VisualEditor, 1.0.2 TestPass\n\tTestcase " . $_POST["Test"] . " was assigned to ". $_POST["Email"].".", "From: VEproject@{$_SERVER['SERVER_NAME']}");                  
 //                  mail("ve-dev@eclipse.org, " . $_POST["Email"], $_POST["Test"] . " assigned to " . $_POST["Email"], "VisualEditor, M8 TestPass\n\tTestcase " . $_POST["Test"] . " was assigned to ". $_POST["Email"].".", "From: gmendel@us.ibm.com");                  
               }
               $out=sprintf("%s\t%s\t%s\t%s\t%s\n", $tst, $url, $tester, $status, $description);
