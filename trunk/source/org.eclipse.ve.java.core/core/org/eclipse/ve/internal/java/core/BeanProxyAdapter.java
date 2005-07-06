@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.43 $  $Date: 2005-06-24 16:45:13 $ 
+ *  $Revision: 1.44 $  $Date: 2005-07-06 16:28:33 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -369,6 +369,9 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		// 
 		//   try {
 		//     instantiate
+		if (domain.getEditDomain().getEditorPart().getEditorInput()==null)
+			return;
+		
 		expression.createTry();
 		try {
 			beanProxy = primInstantiateBeanProxy(expression);
