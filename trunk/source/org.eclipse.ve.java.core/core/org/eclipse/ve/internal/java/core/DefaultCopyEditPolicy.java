@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.14 $  $Date: 2005-06-08 11:17:17 $ 
+ *  $Revision: 1.15 $  $Date: 2005-07-06 14:52:56 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -46,7 +46,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	protected List objectsToCopy = new ArrayList(20);
 	protected List visitedObjects = new ArrayList(20);
 	protected EcoreUtil.Copier copier;
-	
+		
 	public Command getCommand(Request request) {
 		if(CopyAction.REQ_COPY.equals(request.getType())){
 			return getCopyCommand(request);
@@ -67,7 +67,16 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				Resource newEMFResource = javaBeanToCopy.eResource().getResourceSet().createResource(javaBeanToCopy.eResource().getURI().appendSegment("" + javaBeanToCopy.hashCode()));				 //$NON-NLS-1$
 
 				// Use the ECore.Copier to put everything from the copy set into the resource set
-				copier = new EcoreUtil.Copier();	
+				copier = new EcoreUtil.Copier(){
+					private static final long serialVersionUID = 1L;
+					protected void copyReference(EReference reference,EObject subject,EObject target) {
+						if(reference.getName().equals("events")){
+							// Do not copy events
+						} else {
+							super.copyReference(reference,subject,target);
+						}
+					}
+				};
 				objectsToCopy.clear();
 				visitedObjects.clear();				
 				copyProperty(null, javaBeanToCopy);	
@@ -222,12 +231,9 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	}
 		
 	protected void cleanup(IJavaInstance javaBeanToCopy){
+		
 	}	
-	/**
-	/* This method allows additional work to be done to clean up a particular JavaBean prior to it being analyzed further and expanded
-	 * 
-	 */	 
-	 protected void preExpand(final IJavaInstance javaBean){
+    protected void preExpand(final IJavaInstance javaBean){
 	 }
 
 }
