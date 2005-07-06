@@ -22,7 +22,7 @@ header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."
                   $description=$_POST["Comments"];
                   // ve-dev@eclipse.org 
 //                  mail("ve-dev@eclipse.org, ".$_POST["Email"], $_POST["Test"].": ".$_POST["Result"].".", "VisualEditor, M8 TestPass\n\tTestcase " . $_POST["Test"] . " status=".$_POST["Result"]." by ". $_POST["Email"]."\nComments:\n".$description.".", "From: VEproject@{$_SERVER['SERVER_NAME']}");                  
-                  mail("sgunturi@us.ibm.com, ".$_POST["Email"], $_POST["Test"].": ".$_POST["Result"].".", "VisualEditor, M8 TestPass\n\tTestcase " . $_POST["Test"] . " status=".$_POST["Result"]." by ". $_POST["Email"]."\nComments:\n".$description.".", "From: gmendel@us.ibm.com");                  
+                  mail("walkerp@us.ibm.com, ".$_POST["Email"], $_POST["Test"].": ".$_POST["Result"].".", "VisualEditor, M8 TestPass\n\tTestcase " . $_POST["Test"] . " status=".$_POST["Result"]." by ". $_POST["Email"]."\nComments:\n".$description.".", "From: gmendel@us.ibm.com");                  
               }
               $out=sprintf("%s\t%s\t%s\t%s\t%s\n", $tst, $url, $tester, $status, $description);
               fwrite($f2,$out);
