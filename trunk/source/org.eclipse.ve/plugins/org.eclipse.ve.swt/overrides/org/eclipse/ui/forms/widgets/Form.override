@@ -4,8 +4,10 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
 	    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
+        xmlns:org.eclipse.jem.internal.beaninfo.beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore"
 	    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
 	    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
+		xmlns:org.eclipse.jem.java="java.xmi"	    
 	    xmlns:event="event.xmi">
 	<event:AddMany featureName="eAnnotations">
 	  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
@@ -14,10 +16,10 @@
 	</event:AddMany>
 	
     <event:AddMany  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="body">
+    <addedEObjects xsi:type="ecore:EReference" name="body" unsettable="false">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"
           hidden="true"/>
-      <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" mergeIntrospection="false"/>
+      <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator"/>
     </addedEObjects>
   </event:AddMany>	
 	
