@@ -36,7 +36,7 @@ Editor Project</font></b><br>
 		<li><b><font size="4" color="#0000FF">Test Cases not assigned to anyone yet</font></b><ul>
 		     <?php
               if (!($f=fopen("/home/data/httpd/writable/vep/testruns/110/final/tests-ve1.1.txt","r"))) 
-                  exit("Unable to open file.");
+                  exit("Unable to open file (cases not assigned).");
               while ($testinfo = fscanf ($f, "%s\t%s\t%s\t%s\t%[a-zA-Z0-9,. \\'';;~~!!@@##$$%%&&**(())--==++__]\n")) {
                 list ($tst, $url, $tester, $status, $description) = $testinfo;
                 if ($tester == "None") {
@@ -58,7 +58,7 @@ Editor Project</font></b><br>
 		progress</b></font><ul>
 		<?php
               if (!($f=fopen("/home/data/httpd/writable/vep/testruns/110/final/tests-ve1.1.txt","r"))) 
-                  exit("Unable to open file.");
+                  exit("Unable to open file (cases assigned).");
               while ($testinfo = fscanf ($f, "%s\t%s\t%s\t%s\t%[a-zA-Z0-9,. \\'';;~~!!@@##$$%%&&**(())--==++__]\n")) {
                 list ($tst, $url, $tester, $status, $description) = $testinfo;
                 if (($tester != "None") && ($status=="NoResult")){
@@ -79,7 +79,7 @@ Editor Project</font></b><br>
 		<li><font size="4" color="#0000FF"><b>Test Cases Completed</b></font><br>
 		<?php
               if (!($f=fopen("/home/data/httpd/writable/vep/testruns/110/M1/tests-ve1.1.txt","r"))) 
-                  exit("Unable to open file.");
+                  exit("Unable to open file (cases Completed).");
               echo "<table border=\"0\" width=\"100%\" id=\"t3\">";
               while ($testinfo = fscanf ($f, "%s\t%s\t%s\t%s\t%[a-zA-Z0-9,. \\'';;~~!!@@##$$%%&&**(())--==++__]\n")) {
                 list ($tst, $url, $tester, $status, $description) = $testinfo;
