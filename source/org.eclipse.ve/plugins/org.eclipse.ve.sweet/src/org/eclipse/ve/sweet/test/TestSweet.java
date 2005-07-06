@@ -21,11 +21,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ve.sweet.CannotSaveException;
-import org.eclipse.ve.sweet.dataeditors.IObjectEditor;
-import org.eclipse.ve.sweet.dataeditors.ObjectEditorFactory;
-import org.eclipse.ve.sweet.dataeditors.java.JavaObjectEditorFactory;
 import org.eclipse.ve.sweet.hinthandler.HintHandler;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
+import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
+import org.eclipse.ve.sweet.objectviewer.ObjectViewerFactory;
+import org.eclipse.ve.sweet.objectviewer.pojo.JavaObjectViewerFactory;
 
 public class TestSweet {
 
@@ -54,8 +54,8 @@ public class TestSweet {
         age.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
         
         // Edit our Person object
-        ObjectEditorFactory.factory = new JavaObjectEditorFactory();
-        final IObjectEditor personEditor = ObjectEditorFactory.edit(person);
+        ObjectViewerFactory.factory = new JavaObjectViewerFactory();
+        final IObjectViewer personEditor = ObjectViewerFactory.edit(person);
         personEditor.bind(name, "Name");
         personEditor.bind(age, "Age");
         

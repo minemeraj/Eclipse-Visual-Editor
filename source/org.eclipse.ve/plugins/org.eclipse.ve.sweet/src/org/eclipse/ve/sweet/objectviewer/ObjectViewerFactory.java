@@ -1,0 +1,49 @@
+/*
+ * Copyright (C) 2005 db4objects Inc.  http://www.db4o.com
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     db4objects - Initial API and implementation
+ */
+package org.eclipse.ve.sweet.objectviewer;
+
+
+/**
+ * ObjectEditorFactory.  Constructs ObjectEditors for an application.  Enables
+ * various IObjectEditor implementations to be painlessly swapped in an
+ * application.
+ *
+ * @author djo
+ */
+public class ObjectViewerFactory {
+    /**
+     * The actual IObjectEditorFactory instance that will be used to create
+     * new IObjectEditor objects.  Defaults to the Db4oObjectEditorFactory.
+     */
+    public static IObjectViewerFactory factory = null;
+    
+    /**
+     * Construct a new IObjectEditor and set its initial input object.
+     * 
+     * @param input The initial input object
+     * @return The constructed IObjectEditor
+     */
+    public static IObjectViewer edit(Object input) {
+        IObjectViewer result = construct();
+        result.setInput(input);
+        return result;
+    }
+    
+    /**
+     * Construct a new IObjectEditor object.
+     * 
+     * @return The IObjectEditor that was constructed.
+     */
+    public static IObjectViewer construct() {
+        return factory.construct();
+    }
+}

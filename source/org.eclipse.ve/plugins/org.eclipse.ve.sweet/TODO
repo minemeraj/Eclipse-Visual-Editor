@@ -1,0 +1,4 @@
+Migrate to using JFace interfaces wherever possible.  In particular:
+
+IEditStateListener --> ICellEditorListener
+
