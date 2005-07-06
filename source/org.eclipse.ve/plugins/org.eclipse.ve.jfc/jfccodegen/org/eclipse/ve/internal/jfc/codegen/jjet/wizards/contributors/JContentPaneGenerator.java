@@ -27,9 +27,9 @@ public class JContentPaneGenerator implements org.eclipse.ve.internal.java.codeg
   protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "import javax.swing.JPanel;" + NL + "import java.awt.BorderLayout;" + NL + "" + NL + "public class ";
   protected final String TEXT_2 = " {" + NL + "" + NL + "\tprivate JPanel jContentPane = null;" + NL + "\t" + NL + "\t/**" + NL + "\t * This is the default constructor" + NL + "\t */" + NL + "\tpublic ";
-  protected final String TEXT_3 = "() {" + NL + "\t\tsuper(); ";
-  protected final String TEXT_4 = "initialize();";
-  protected final String TEXT_5 = NL + "\t}" + NL + "\t" + NL + "\t/**" + NL + "\t * This method initializes this" + NL + "\t * " + NL + "\t * @return void" + NL + "\t */" + NL + "\t";
+  protected final String TEXT_3 = "() {" + NL + "\t\tsuper();" + NL + "\t";
+  protected final String TEXT_4 = "\tinitialize();" + NL + "\t";
+  protected final String TEXT_5 = "}" + NL + "\t" + NL + "\t/**" + NL + "\t * This method initializes this" + NL + "\t * " + NL + "\t * @return void" + NL + "\t */" + NL + "\t";
   protected final String TEXT_6 = "public ";
   protected final String TEXT_7 = "private ";
   protected final String TEXT_8 = "void ";
@@ -53,12 +53,11 @@ public String generateSource(String typeName, String superClassName, HashMap arg
     stringBuffer.append(TEXT_2);
     stringBuffer.append(typeName);
     stringBuffer.append(TEXT_3);
-    
-			if(!"javax.swing.JApplet".equals(superClassName)){
-				
+    		if(!"javax.swing.JApplet".equals(superClassName)){
+	
     stringBuffer.append(TEXT_4);
-    
-		}
+    		}
+	
     stringBuffer.append(TEXT_5);
     
 		if("javax.swing.JApplet".equals(superClassName)){
