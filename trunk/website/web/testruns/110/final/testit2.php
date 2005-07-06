@@ -41,7 +41,7 @@ header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."
       		exit("unable to copy");
 //       echo "removing $newdatafile <br>";
        if(!unlink($newdatafile))
-       	exit("unable to delete tests-ve1.1m1.txt.new");
+       	exit("unable to delete tests-ve1.1.txt.new");
 //       echo "$newdatafile exists? " . file_exists($newdatafile) . "<br>";
 //       echo "$datafile exists? " . file_exists($datafile) . ", is readable? " . is_readable($datafile) . ", file size=" . filesize($datafile) . "<br>";
      ?>			

@@ -36,7 +36,7 @@ if(strlen($action)<1){
 </li>
 <?php
 }elseif ($action=="reset"){
-	$sourcefile = "tests-ve1.1m1.txt.backup";
+	$sourcefile = "tests-ve1.1.txt.backup";
 	
 	if(!file_exists($DESTDIR)){
 		mkdir($WRITEDIR . "testruns");
