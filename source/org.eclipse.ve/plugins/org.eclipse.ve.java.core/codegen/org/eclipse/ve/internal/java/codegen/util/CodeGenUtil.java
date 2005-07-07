@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.43 $  $Date: 2005-06-28 22:51:34 $ 
+ *  $Revision: 1.44 $  $Date: 2005-07-07 21:16:00 $ 
  */
 
 
@@ -194,7 +194,10 @@ public static IType getMainType(ICompilationUnit cu) {
 		return null;
 	try {
 		IType[] types = cu.getTypes();
-		return types.length > 0 ? types[0] : null;
+		int index = 0;
+		while (types[index].isAnnotation() && index<types.length)
+			index++;
+		return types.length > index ? types[index] : null;
 	} catch (JavaModelException e) {
 	}
 	
