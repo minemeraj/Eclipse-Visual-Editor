@@ -47,7 +47,7 @@ public class RegularExpressionValidator implements IValidator {
 	}
     
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.binding.verifier.IVerifier#verifyFragment(java.lang.String)
+	 * @see org.eclipse.ve.sweet.validator.IValidator#isValidPartialInput(java.lang.String)
 	 */
 	public String isValidPartialInput(String fragment) {
         Matcher matcher = fragmentRegex.matcher(fragment);
@@ -70,7 +70,7 @@ public class RegularExpressionValidator implements IValidator {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.binding.verifier.IVerifier#getHint()
+	 * @see org.eclipse.ve.sweet.validator.IValidator#getHint()
 	 */
 	public String getHint() {
 		return hint;

@@ -28,5 +28,13 @@ public interface IValidator extends ICellEditorValidator {
      * that the value is valid
      */
     public String isValidPartialInput(String fragment);
+
+    /**
+     * Returns a generic hint string telling the user what type of input
+     * is expected.
+     * 
+     * @return a hint string.
+     */
+    public String getHint();
     
 }

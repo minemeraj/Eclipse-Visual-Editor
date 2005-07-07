@@ -43,7 +43,10 @@ public class FloatValidator implements IValidator {
         }
     }
 
-	private String getHint() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.sweet.validator.IValidator#getHint()
+	 */
+	public String getHint() {
 		return "Please enter a number like 1.234, " + Float.MIN_VALUE + ", or " + Float.MAX_VALUE + ".";
 	}
 

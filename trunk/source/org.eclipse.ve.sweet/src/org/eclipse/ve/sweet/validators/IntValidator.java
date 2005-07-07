@@ -15,14 +15,14 @@ import org.eclipse.ve.sweet.validator.IValidator;
 
 
 /**
- * DoubleVerifier.  Verify data input for Doubles
+ * IntValidator.  Verify data input for int/Integer
  *
  * @author djo
  */
 public class IntValidator implements IValidator {
     
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.binding.verifier.IVerifier#verifyFragment(java.lang.String)
+	 * @see org.eclipse.ve.sweet.validator.IValidator#isValidPartialInput(java.lang.String)
 	 */
 	public String isValidPartialInput(String fragment) {
 		if (fragment.matches("\\-?[0-9]*"))
@@ -31,6 +31,9 @@ public class IntValidator implements IValidator {
             return getHint();
 	}
     
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
+     */
     public String isValid(Object value) {
         try {
             Integer.parseInt((String)value);
@@ -40,7 +43,10 @@ public class IntValidator implements IValidator {
         }
     }
 
-	private String getHint() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.sweet.validator.IValidator#getHint()
+	 */
+	public String getHint() {
 		return "Please enter a number between " + Integer.MIN_VALUE + " and " + Integer.MAX_VALUE + ".";
 	}
 

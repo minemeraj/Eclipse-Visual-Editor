@@ -45,7 +45,7 @@ public class ReadOnlyValidator implements IValidator {
         return null;
     }
 
-	private String getHint() {
+	public String getHint() {
 		return "No changes are allowed in this field";
 	}
 
