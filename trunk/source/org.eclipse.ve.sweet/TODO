@@ -1,4 +1,4 @@
-Migrate to using JFace interfaces wherever possible.  In particular:
 
-IEditStateListener --> ICellEditorListener
+* Finish implementing SWT controls
+* Add virtual Table control
 
