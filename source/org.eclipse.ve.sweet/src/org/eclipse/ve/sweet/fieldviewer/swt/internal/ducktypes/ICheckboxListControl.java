@@ -14,14 +14,25 @@ package org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionListener;
 
+
 /**
- * ICheckboxButtonField. 
+ * ISetSelectorField. A strict duck interface for things like list boxes or
+ * groups of check boxes that allow the user to pick a bunch of choices from
+ * a set of valid values
  *
  * @author djo
  */
-public interface ICheckboxButtonField {
-    void setSelection(boolean value);
-    boolean getSelection();
+public interface ICheckboxListControl {
+    int getSelectionIndex();
+    void setSelection(int index);
+    
+    String [] getSelection();
+    int [] getSelectionIndices();
+    void setSelection(int[] indices);
+    
+    void removeAll();
+    
+    void add(String item);
     
     void addSelectionListener(SelectionListener l);
     void removeSelectionListener(SelectionListener l);

@@ -15,7 +15,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 
-public interface IComboField {
+public interface IComboControl {
     Point getSelection();
     int getSelectionIndex();
     
