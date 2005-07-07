@@ -64,7 +64,7 @@ public class TextFieldViewer implements IFieldViewer {
         }
     }
     
-    private void addListeners() {
+    protected void addListeners() {
         control.addDisposeListener(disposeListener);
         control.addVerifyListener(verifyListener);
         control.addFocusListener(focusListener);
