@@ -15,14 +15,14 @@ import org.eclipse.ve.sweet.validator.IValidator;
 
 
 /**
- * DoubleVerifier.  Verify data input for Doubles
+ * ShortValidator.  Verify data input for Shorts
  *
  * @author djo
  */
 public class ShortValidator implements IValidator {
     
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.binding.verifier.IVerifier#verifyFragment(java.lang.String)
+	 * @see org.eclipse.ve.sweet.validator.IValidator#isValidPartialInput(java.lang.String)
 	 */
 	public String isValidPartialInput(String fragment) {
 		if (fragment.matches("\\-?[0-9]*"))
@@ -44,18 +44,9 @@ public class ShortValidator implements IValidator {
     }
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.binding.verifier.IVerifier#verifyFullValue(java.lang.String)
+	 * @see org.eclipse.ve.sweet.validator.IValidator#getHint()
 	 */
-	public boolean verifyFullValue(String value) {
-        try {
-            Short.parseShort(value);
-            return true;
-        } catch (Throwable t) {
-        	return false;
-        }
-	}
-
-	private String getHint() {
+	public String getHint() {
 		return "Please enter a number between " + Short.MIN_VALUE + " and " + Short.MAX_VALUE + ".";
 	}
 

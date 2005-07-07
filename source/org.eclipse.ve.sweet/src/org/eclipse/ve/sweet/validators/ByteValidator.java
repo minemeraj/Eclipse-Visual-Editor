@@ -15,7 +15,7 @@ import org.eclipse.ve.sweet.validator.IValidator;
 
 
 /**
- * DoubleValidator.  Verify data input for Doubles
+ * ByteValidator.  Verify data input for Bytes
  *
  * @author djo
  */
@@ -43,7 +43,10 @@ public class ByteValidator implements IValidator {
         }
     }
 
-	private String getHint() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.sweet.validator.IValidator#getHint()
+	 */
+	public String getHint() {
 		return "Please enter a number between " + Byte.MIN_VALUE + " and " + Byte.MAX_VALUE + ".";
 	}
 

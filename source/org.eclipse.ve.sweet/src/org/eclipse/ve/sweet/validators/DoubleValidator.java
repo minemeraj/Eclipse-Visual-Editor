@@ -31,6 +31,9 @@ public class DoubleValidator implements IValidator {
             return getHint();
 	}
     
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
+     */
     public String isValid(Object value) {
         try {
             Double.parseDouble((String)value);
@@ -40,7 +43,10 @@ public class DoubleValidator implements IValidator {
         }
     }
 
-	private String getHint() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.sweet.validator.IValidator#getHint()
+	 */
+	public String getHint() {
 		return "Please enter a number like 1.234, " + Double.MIN_VALUE + ", or " + Double.MAX_VALUE + ".";
 	}
 

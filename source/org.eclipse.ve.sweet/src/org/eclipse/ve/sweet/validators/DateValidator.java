@@ -17,6 +17,11 @@ import org.eclipse.ve.sweet.converters.*;
 import org.eclipse.ve.sweet.validator.*;
 
 
+/**
+ * DateValidator.  An IValidator implementation for dates.
+ *
+ * @author djo
+ */
 public class DateValidator extends DateConversionSupport implements IValidator {
 	// TODO: Can we do any sensible (locale-independent) checking here?
 	public String isValidPartialInput(String fragment) {
@@ -27,7 +32,7 @@ public class DateValidator extends DateConversionSupport implements IValidator {
         return parse((String)value)!=null ? null : getHint();
     }
 
-	private String getHint() {
+	public String getHint() {
 		Date sampleDate=new Date();
 		StringBuffer samples=new StringBuffer();
 		for(int formatterIdx=1;formatterIdx<numFormatters()-2;formatterIdx++) {

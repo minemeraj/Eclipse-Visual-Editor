@@ -15,7 +15,7 @@ import org.eclipse.ve.sweet.validator.IValidator;
 
 
 /**
- * DoubleVerifier.  Verify data input for Doubles
+ * LongValidator.  Verify data input for Longs
  *
  * @author djo
  */
@@ -43,7 +43,10 @@ public class LongValidator implements IValidator {
         }
     }    
 
-	private String getHint() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.sweet.validator.IValidator#getHint()
+	 */
+	public String getHint() {
 		return "Please enter a number between " + Long.MIN_VALUE + " and " + Long.MAX_VALUE + ".";
 	}
 
