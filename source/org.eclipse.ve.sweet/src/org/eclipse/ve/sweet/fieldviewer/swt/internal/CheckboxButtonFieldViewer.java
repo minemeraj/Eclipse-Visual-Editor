@@ -48,7 +48,7 @@ public class CheckboxButtonFieldViewer implements IFieldViewer {
 
     }
 
-    public String verify() {
+    public String validate() {
         // TODO Auto-generated method stub
         return null;
     }

@@ -17,10 +17,10 @@ import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 public interface IFieldViewerFactory {
 
     /**
-     * Construct an IFieldViewer for some control, IObjectEditor, and IPropertyEditor
+     * Construct an IFieldViewer for some control, IObjectViewer, and IPropertyEditor
      * 
      * @param control The SWT control
-     * @param objectEditor The IObjectEditor of the object to edit
+     * @param objectEditor The IObjectViewer of the object to edit
      * @param propertyEditor The IPropertyEditor of the property to edit
      * 
      * @return The IFieldViewer that was constructed

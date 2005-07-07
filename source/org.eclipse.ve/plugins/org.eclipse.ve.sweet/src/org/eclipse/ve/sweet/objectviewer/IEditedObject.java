@@ -17,7 +17,7 @@ package org.eclipse.ve.sweet.objectviewer;
  * life cycle if they exist on the object.
  * 
  * Note that not all these methods will be applicable in all cases.  For example,
- * an IObjectEditor implementation may be designed for regular Java objects 
+ * an IObjectViewer implementation may be designed for regular Java objects 
  * that are not themselves persistent.  In this case, the IEditedObject may or
  * may not receive commit, refresh, rollback, etc., events.
  *
@@ -26,7 +26,7 @@ package org.eclipse.ve.sweet.objectviewer;
 public interface IEditedObject {
 
     /**
-     * Method verifyObject.
+     * Method validateObject.
      * 
      * Returns if the underlying object is in a consistent state so that
      * changes can be committed to a persistent store.  This method returns
@@ -37,7 +37,7 @@ public interface IEditedObject {
      * @return boolean true if all fields in the object have legal values
      * and the object itself is consistent.
      */
-    public boolean verifyObject();
+    public boolean validateObject();
     
     /**
      * Method commit.

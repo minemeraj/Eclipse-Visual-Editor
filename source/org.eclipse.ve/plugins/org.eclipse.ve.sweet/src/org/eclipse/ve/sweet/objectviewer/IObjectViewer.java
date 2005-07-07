@@ -74,17 +74,17 @@ public interface IObjectViewer {
     public IFieldViewer bind(Object control, String propertyName);
 
     /**
-     * Method verifyAndSaveEditedFields.
+     * Method validateAndSaveEditedFields.
      * 
      * Make sure that all fields that have been edited can be safely saved
      * and saves them.
      * 
      * @return true if all fields may be safely saved.  false otherwise.
      */
-    public boolean verifyAndSaveEditedFields();
+    public boolean validateAndSaveEditedFields();
     
     /**
-     * Method verifyAndSaveObject.
+     * Method validateAndSaveObject.
      * 
      * Returns if the underlying object is in a consistent state so that
      * changes can be committed to a persistent store.  If the underlying
@@ -96,7 +96,7 @@ public interface IObjectViewer {
      * and the object itself is consistent and the object was successfully
      * saved.
      */
-    public boolean verifyAndSaveObject();
+    public boolean validateAndSaveObject();
     
     /**
      * Method addObjectListener.

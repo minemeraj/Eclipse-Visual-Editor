@@ -37,16 +37,16 @@ public class JavaObjectViewer implements IObjectViewer {
     private IEditedObject inputBean = null;
     private boolean dirty = false;
 
-    // The IFieldEditors that are bound to this object
+    // The IFieldViewers that are bound to this object
     private LinkedList bindings = new LinkedList();
 
     private LinkedList objectListeners = new LinkedList();
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#setInput(java.lang.Object)
+     * @see com.db4o.binding.dataeditors.IObjectViewer#setInput(java.lang.Object)
      */
     public boolean setInput(Object input) {
-        if (this.input != null && (!verifyAndSaveEditedFields() || !verifyAndSaveObject() || input == null)) {
+        if (this.input != null && (!validateAndSaveEditedFields() || !validateAndSaveObject() || input == null)) {
             return false;
         }
         try {
@@ -82,21 +82,21 @@ public class JavaObjectViewer implements IObjectViewer {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#getInput()
+     * @see com.db4o.binding.dataeditors.IObjectViewer#getInput()
      */
     public Object getInput() {
         return input;
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#getProperty(java.lang.String)
+     * @see com.db4o.binding.dataeditors.IObjectViewer#getProperty(java.lang.String)
      */
     public IPropertyEditor getProperty(String name) throws NoSuchMethodException {
         return JavaProperty.construct(getInput(), name);
     }
     
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#getWidgetBinding(org.eclipse.swt.widgets.Control, java.lang.String)
+     * @see com.db4o.binding.dataeditors.IObjectViewer#getWidgetBinding(org.eclipse.swt.widgets.Control, java.lang.String)
      */
     public IFieldViewer bind(Object control, String propertyName) {
         IPropertyEditor propertyEditor;
@@ -112,7 +112,7 @@ public class JavaObjectViewer implements IObjectViewer {
             bindings.addLast(result);
         }
         
-        if (result.verify() != null) {
+        if (result.validate() != null) {
             dirty=true;
         }
         
@@ -120,14 +120,14 @@ public class JavaObjectViewer implements IObjectViewer {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#verifyEditedFields()
+     * @see com.db4o.binding.dataeditors.IObjectViewer#verifyEditedFields()
      */
-    public boolean verifyAndSaveEditedFields() {
+    public boolean validateAndSaveEditedFields() {
         for (Iterator bindingsIter = bindings.iterator(); bindingsIter.hasNext();) {
             IFieldViewer field = (IFieldViewer) bindingsIter.next();
             if (field.isDirty()) {
                 dirty=true;
-                if (field.verify() != null) {
+                if (field.validate() != null) {
                     return false;
                 }
                 try {
@@ -141,17 +141,17 @@ public class JavaObjectViewer implements IObjectViewer {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#verifyObject()
+     * @see com.db4o.binding.dataeditors.IObjectViewer#verifyObject()
      */
-    public boolean verifyAndSaveObject() {
-        if (!verifyAndSaveEditedFields()) {
+    public boolean validateAndSaveObject() {
+        if (!validateAndSaveEditedFields()) {
             return false;
         }
         /*
          * The return type for RelaxedDuckType is false for boolean types if
          * the method does not exist.  So we have to test explicitly here...
          */
-        if (RelaxedDuckType.includes(input, "verifyObject", new Class[] {}) && !inputBean.verifyObject()) {
+        if (RelaxedDuckType.includes(input, "verifyObject", new Class[] {}) && !inputBean.validateObject()) {
             return false;
         }
         
@@ -179,17 +179,17 @@ public class JavaObjectViewer implements IObjectViewer {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#commit()
+     * @see com.db4o.binding.dataeditors.IObjectViewer#commit()
      */
     public void commit() throws CannotSaveException {
         if (input == null) {
             return;
         }
-        if (!verifyAndSaveEditedFields())
+        if (!validateAndSaveEditedFields())
             throw new CannotSaveException("Unable to save edited fields");
         
         // Ask the bean to verify itself for consistency
-        if (!verifyAndSaveObject())
+        if (!validateAndSaveObject())
             throw new CannotSaveException("Unable to save object");
         
         // Let the bean itself know it is about to be saved
@@ -215,7 +215,7 @@ public class JavaObjectViewer implements IObjectViewer {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#refresh()
+     * @see com.db4o.binding.dataeditors.IObjectViewer#refresh()
      */
     public void refresh() {
         // This is where we would normally refresh the object from the
@@ -238,7 +238,7 @@ public class JavaObjectViewer implements IObjectViewer {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#rollback()
+     * @see com.db4o.binding.dataeditors.IObjectViewer#rollback()
      */
     public void rollback() {
         // This is where we would normally rollback the transaction in the
@@ -262,7 +262,7 @@ public class JavaObjectViewer implements IObjectViewer {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#delete()
+     * @see com.db4o.binding.dataeditors.IObjectViewer#delete()
      */
     public void delete() {
         inputBean.delete();
@@ -283,21 +283,21 @@ public class JavaObjectViewer implements IObjectViewer {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#addObjectListener(com.db4o.binding.dataeditors.IObjectListener)
+     * @see com.db4o.binding.dataeditors.IObjectViewer#addObjectListener(com.db4o.binding.dataeditors.IObjectListener)
      */
     public void addObjectListener(IEditStateListener listener) {
         objectListeners.add(listener);
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#removeObjectListener(com.db4o.binding.dataeditors.IObjectListener)
+     * @see com.db4o.binding.dataeditors.IObjectViewer#removeObjectListener(com.db4o.binding.dataeditors.IObjectListener)
      */
     public void removeObjectListener(IEditStateListener listener) {
         objectListeners.remove(listener);
     }
     
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#fireObjectListenerEvent()
+     * @see com.db4o.binding.dataeditors.IObjectViewer#fireObjectListenerEvent()
      */
     public void fireObjectListenerEvent() {
         for (Iterator listeners = objectListeners.iterator(); listeners.hasNext();) {
@@ -307,7 +307,7 @@ public class JavaObjectViewer implements IObjectViewer {
     }
     
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#isDirty()
+     * @see com.db4o.binding.dataeditors.IObjectViewer#isDirty()
      */
     public boolean isDirty() {
         if (dirty)
@@ -325,14 +325,14 @@ public class JavaObjectViewer implements IObjectViewer {
     private LinkedList inputChangeListeners = new LinkedList();
 
     /* (non-Javadoc)
-     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#addInputChangeListener(org.eclipse.ve.sweet.dataeditors.IInputChangeListener)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectViewer#addInputChangeListener(org.eclipse.ve.sweet.dataeditors.IInputChangeListener)
      */
     public void addInputChangeListener(IInputChangeListener listener) {
         inputChangeListeners.add(listener);
     }
 
     /* (non-Javadoc)
-     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#removeInputChangeListener(org.eclipse.ve.sweet.dataeditors.IInputChangeListener)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectViewer#removeInputChangeListener(org.eclipse.ve.sweet.dataeditors.IInputChangeListener)
      */
     public void removeInputChangeListener(IInputChangeListener listener) {
         inputChangeListeners.remove(listener);

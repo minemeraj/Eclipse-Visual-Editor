@@ -93,14 +93,14 @@ public interface IFieldViewer {
     public void save() throws CannotSaveException;
     
     /**
-     * Method verify.
+     * Method validate.
      * 
-     * Verify the current field value to see if it can be safely saved.
+     * Validate the current field value to see if it can be safely saved.
      * 
      * @return null if the current UI field value can be safely saved; returns
      * an error string otherwise.
      */
-    public String verify();
+    public String validate();
 }
 
 

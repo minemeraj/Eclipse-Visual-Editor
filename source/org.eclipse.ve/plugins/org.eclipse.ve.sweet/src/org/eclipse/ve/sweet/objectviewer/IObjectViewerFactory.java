@@ -22,10 +22,10 @@ public interface IObjectViewerFactory {
     /**
      * Method construct.
      * 
-     * Construct and return an IObjectEditor according to the application's
+     * Construct and return an IObjectViewer according to the application's
      * editing policy.
      * 
-     * @return The constructed IObjectEditor.
+     * @return The constructed IObjectViewer.
      */
     IObjectViewer construct();
 
