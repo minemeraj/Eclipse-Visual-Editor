@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEventDecoder.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-11 22:41:31 $ 
+ *  $Revision: 1.14 $  $Date: 2005-07-07 19:30:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -111,7 +111,9 @@ public abstract class AbstractEventDecoder implements IEventDecoder {
 	 * @see org.eclipse.ve.internal.java.codegen.java.IEventDecoder#determinePriority()
 	 */
 	public VEexpressionPriority determinePriority() {
-		return IJavaFeatureMapper.DEFAULTPriority;
+		if(!Initialize(getEventInvocation()))
+			return IJavaFeatureMapper.DEFAULTPriority;
+		return getHelper().getPriorityOfExpression();
 	}
 
 
