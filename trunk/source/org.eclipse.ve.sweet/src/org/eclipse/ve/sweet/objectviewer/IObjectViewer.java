@@ -12,12 +12,11 @@
 package org.eclipse.ve.sweet.objectviewer;
 
 import org.eclipse.ve.sweet.CannotSaveException;
-import org.eclipse.ve.sweet.fieldviewer.IFieldController;
-
+import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 
 
 /**
- * IObjectEditor.  Encapsulates editing operations on an object.
+ * IObjectViewer.  Encapsulates editing operations on an object.
  *
  * @author djo
  */
@@ -59,20 +58,20 @@ public interface IObjectViewer {
      * Method bind.
      * 
      * Analyze the specified control and (object, property) and return an
-     * appropriate IFieldController for editing that (object, property)
+     * appropriate IFieldViewer for editing that (object, property)
      * pair using the specified control.
      * <p>
      * If we eventually implement masked editing, a masked edit implementation
-     * will simply be another IFieldController implementation than the
+     * will simply be another IFieldViewer implementation than the
      * standard IVerifier-based one, and will be automatically selected
      * and returned from this factory based on the presence of a masked-edit
      * based IVerifier on the property.
      * 
      * @param control The control to use as an editor
      * @param propertyName The name of the property to edit
-     * @return An IFieldController configured to edit propertyName on this object
+     * @return An IFieldViewer configured to edit propertyName on this object
      */
-    public IFieldController bind(Object control, String propertyName);
+    public IFieldViewer bind(Object control, String propertyName);
 
     /**
      * Method verifyAndSaveEditedFields.
@@ -124,7 +123,7 @@ public interface IObjectViewer {
      * 
      * Notifies all object listeners that the editing state of this object
      * has changed.  Normally this is called automatically from the 
-     * IFieldController.
+     * IFieldViewer.
      */
     public void fireObjectListenerEvent();
     

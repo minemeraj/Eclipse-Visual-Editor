@@ -12,14 +12,14 @@
 package org.eclipse.ve.sweet.fieldviewer.swt.internal;
 
 import org.eclipse.ve.sweet.CannotSaveException;
-import org.eclipse.ve.sweet.fieldviewer.IFieldController;
+import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 
 
-public class CheckboxButtonFieldController implements IFieldController {
+public class CheckboxListFieldViewer implements IFieldViewer {
 
-    public CheckboxButtonFieldController(Object control, IObjectViewer object, IPropertyEditor property) {
+    public CheckboxListFieldViewer(Object control, IObjectViewer object, IPropertyEditor property) {
         // TODO Auto-generated constructor stub
     }
 

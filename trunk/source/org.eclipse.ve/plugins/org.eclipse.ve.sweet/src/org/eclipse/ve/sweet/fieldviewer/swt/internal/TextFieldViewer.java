@@ -23,8 +23,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.converter.Converter;
 import org.eclipse.ve.sweet.converter.IConverter;
-import org.eclipse.ve.sweet.fieldviewer.IFieldController;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.interfaces.ITextField;
+import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
+import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.ITextField;
 import org.eclipse.ve.sweet.hinthandler.HintHandler;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
@@ -35,12 +35,12 @@ import org.eclipse.ve.sweet.validators.reusable.ReadOnlyValidator;
 
 
 /**
- * TextFieldController. An IFieldController that can bind any object with a
+ * TextFieldViewer. An IFieldViewer that can bind any object with a
  * setText (and optionally a getText) method.
  * 
  * @author djo
  */
-public class TextFieldController implements IFieldController {
+public class TextFieldViewer implements IFieldViewer {
     private ITextField control;
     private IObjectViewer input;
     private IPropertyEditor property;
@@ -53,7 +53,7 @@ public class TextFieldController implements IFieldController {
     
     private Object propertyValue;
     
-    public TextFieldController(Object control, IObjectViewer object, IPropertyEditor property) {
+    public TextFieldViewer(Object control, IObjectViewer object, IPropertyEditor property) {
         this.input = object;
         this.control = (ITextField) RelaxedDuckType.implement(ITextField.class, control);
         addListeners();

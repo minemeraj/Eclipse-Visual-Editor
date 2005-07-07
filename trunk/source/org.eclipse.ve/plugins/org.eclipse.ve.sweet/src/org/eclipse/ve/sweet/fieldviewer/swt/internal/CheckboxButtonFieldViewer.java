@@ -12,14 +12,14 @@
 package org.eclipse.ve.sweet.fieldviewer.swt.internal;
 
 import org.eclipse.ve.sweet.CannotSaveException;
-import org.eclipse.ve.sweet.fieldviewer.IFieldController;
+import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 
 
-public class ComboFieldController implements IFieldController {
+public class CheckboxButtonFieldViewer implements IFieldViewer {
 
-    public ComboFieldController(Object control, IObjectViewer object, IPropertyEditor property) {
+    public CheckboxButtonFieldViewer(Object control, IObjectViewer object, IPropertyEditor property) {
         // TODO Auto-generated constructor stub
     }
 
@@ -58,13 +58,13 @@ public class ComboFieldController implements IFieldController {
         
     }
 
-    public void setInput(IPropertyEditor input) throws CannotSaveException {
-        // TODO Auto-generated method stub
-    }
-
     public IPropertyEditor getInput() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public void setInput(IPropertyEditor input) throws CannotSaveException {
+        // TODO Auto-generated method stub
     }
 
 }

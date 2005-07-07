@@ -12,8 +12,8 @@
 package org.eclipse.ve.sweet.objectviewer;
 
 /**
- * IObjectEditorFactory. An interface for factory objects that can construct
- * IObjectEditor implementations.
+ * IObjectViewerFactory. An interface for factory objects that can construct
+ * IObjectViewer implementations.
  *
  * @author djo
  */

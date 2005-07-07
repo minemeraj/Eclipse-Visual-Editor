@@ -11,21 +11,20 @@
  */
 package org.eclipse.ve.sweet.fieldviewer;
 
+import org.eclipse.ve.sweet.fieldviewer.swt.SWTFieldViewerFactory;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 
-public interface IFieldControllerFactory {
 
-    /**
-     * Construct an IFieldController for some control, IObjectEditor, and IPropertyEditor
-     * 
-     * @param control The SWT control
-     * @param objectEditor The IObjectEditor of the object to edit
-     * @param propertyEditor The IPropertyEditor of the property to edit
-     * 
-     * @return The IFieldController that was constructed
-     */
-    public IFieldController construct(Object control,
-            IObjectViewer objectEditor, IPropertyEditor propertyEditor);
+public class FieldViewerFactory {
+    public static IFieldViewerFactory factory = null;
 
+    public static IFieldViewer construct(Object control,
+            IObjectViewer objectEditor, IPropertyEditor propertyEditor) 
+    {
+        if (factory == null) {
+            factory = new SWTFieldViewerFactory();
+        }
+        return factory.construct(control, objectEditor, propertyEditor);
+    }
 }

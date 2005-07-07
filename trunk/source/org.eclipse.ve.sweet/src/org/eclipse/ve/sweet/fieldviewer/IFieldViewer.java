@@ -16,7 +16,7 @@ import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 
 
 /**
- * Interface IFieldController. An IFieldController object wraps a UI widget and
+ * Interface IFieldViewer. An IFieldViewer object wraps a UI widget and
  * allows the rest of the framework to generically set and get values as
  * objects. The IWidgetBinding implementation worries about converting the
  * object value to a data type that can be displayed or edited by the user
@@ -25,7 +25,7 @@ import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
  * 
  * @author djo
  */
-public interface IFieldController {
+public interface IFieldViewer {
 	/**
      * Method setInput()
      * 

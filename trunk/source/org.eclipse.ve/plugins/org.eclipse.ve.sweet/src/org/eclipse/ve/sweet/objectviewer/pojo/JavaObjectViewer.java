@@ -15,8 +15,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.eclipse.ve.sweet.CannotSaveException;
-import org.eclipse.ve.sweet.fieldviewer.FieldControllerFactory;
-import org.eclipse.ve.sweet.fieldviewer.IFieldController;
+import org.eclipse.ve.sweet.fieldviewer.FieldViewerFactory;
+import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
 import org.eclipse.ve.sweet.objectviewer.IEditedObject;
 import org.eclipse.ve.sweet.objectviewer.IInputChangeListener;
@@ -26,7 +26,7 @@ import org.eclipse.ve.sweet.objectviewer.pojo.internal.JavaProperty;
 import org.eclipse.ve.sweet.reflect.RelaxedDuckType;
 
 /**
- * JavaObject. An implementation of IObjectEditor for a regular Java object.
+ * JavaObjectViewer. An implementation of IObjectViewer for a regular Java object.
  * 
  * Persistence frameworks can be supported by inheriting from this class and
  * overriding the saveObject, commitObject, refreshObject, rollbackObject,
@@ -69,7 +69,7 @@ public class JavaObjectViewer implements IObjectViewer {
 
     private void refreshFieldsFromInput() {
         for (Iterator bindingIter = bindings.iterator(); bindingIter.hasNext();) {
-            IFieldController controller = (IFieldController) bindingIter.next();
+            IFieldViewer controller = (IFieldViewer) bindingIter.next();
             try {
                 controller.setInput(getProperty(controller.getPropertyName()));
             } catch (CannotSaveException e) {
@@ -98,7 +98,7 @@ public class JavaObjectViewer implements IObjectViewer {
     /* (non-Javadoc)
      * @see com.db4o.binding.dataeditors.IObjectEditor#getWidgetBinding(org.eclipse.swt.widgets.Control, java.lang.String)
      */
-    public IFieldController bind(Object control, String propertyName) {
+    public IFieldViewer bind(Object control, String propertyName) {
         IPropertyEditor propertyEditor;
         try {
             propertyEditor = getProperty(propertyName);
@@ -106,7 +106,7 @@ public class JavaObjectViewer implements IObjectViewer {
             return null;
         }
         
-        IFieldController result = FieldControllerFactory.construct(control, this, propertyEditor);
+        IFieldViewer result = FieldViewerFactory.construct(control, this, propertyEditor);
         
         if (result != null) {
             bindings.addLast(result);
@@ -124,7 +124,7 @@ public class JavaObjectViewer implements IObjectViewer {
      */
     public boolean verifyAndSaveEditedFields() {
         for (Iterator bindingsIter = bindings.iterator(); bindingsIter.hasNext();) {
-            IFieldController field = (IFieldController) bindingsIter.next();
+            IFieldViewer field = (IFieldViewer) bindingsIter.next();
             if (field.isDirty()) {
                 dirty=true;
                 if (field.verify() != null) {
@@ -314,7 +314,7 @@ public class JavaObjectViewer implements IObjectViewer {
             return true;
         
         for (Iterator bindingsIter = bindings.iterator(); bindingsIter.hasNext();) {
-            IFieldController fieldController = (IFieldController) bindingsIter.next();
+            IFieldViewer fieldController = (IFieldViewer) bindingsIter.next();
             if (fieldController.isDirty()) {
                 return true;
             }
