@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartRootContainerObjectActionDelegate.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-24 18:57:12 $ 
+ *  $Revision: 1.4 $  $Date: 2005-07-07 21:33:29 $ 
  */
 package org.eclipse.ve.internal.jface.codegen;
 
@@ -189,7 +189,7 @@ public class WorkbenchPartRootContainerObjectActionDelegate extends ActionDelega
 						fModel.getCompilationUnit().getBuffer().replace(offset,0, filler+childName+" = new Composite("+argumentName+", SWT.NONE);"+fModel.getLineSeperator());
 						
 						// Field for the composite
-						fModel.getCompilationUnit().getTypes()[0].createField("private Composite "+childName+" = null;", null, true, null);
+						CodeGenUtil.getMainType(fModel.getCompilationUnit()).createField("private Composite "+childName+" = null;", null, true, null);
 						
 						// Import for the SWT
 						CodeExpressionRef.handleImportStatements(fModel.getCompilationUnit(), fModel, Collections.singletonList("org.eclipse.swt.SWT"));

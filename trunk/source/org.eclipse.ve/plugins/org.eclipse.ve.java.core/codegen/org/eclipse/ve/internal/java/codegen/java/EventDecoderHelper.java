@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2005-07-07 19:30:33 $ 
+ *  $Revision: 1.18 $  $Date: 2005-07-07 21:35:30 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -347,7 +347,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
      */
 	IType getMainType() throws JavaModelException {
 		ICompilationUnit cu = fbeanPart.getModel().getCompilationUnit();
-        return cu.getTypes()[0] ;
+        return CodeGenUtil.getMainType(cu) ;
 	}
 	
     /**
