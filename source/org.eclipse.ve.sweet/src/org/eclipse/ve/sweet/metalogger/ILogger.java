@@ -12,10 +12,9 @@
 package org.eclipse.ve.sweet.metalogger;
 
 /**
- * ILogger.  
- * 
- * FIXME:  This is a stub because the old code that was referenced
- * was CPL, so I couldn't include it.
+ * ILogger.  An abstract logging interface.  Concrete implementations are
+ * expected to be provided to connect the logger to stdout/stderr, a log
+ * file in the file system, Eclipse's logger, log4j, etc.
  *
  * @author djo
  */
