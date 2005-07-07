@@ -12,22 +12,20 @@
 package org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes;
 
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.events.SelectionListener;
 
-public interface ITextField {
-    void setText(String value);
-    String getText();
+/**
+ * ICheckboxButtonControl. 
+ *
+ * @author djo
+ */
+public interface ICheckboxButtonControl {
+    void setSelection(boolean value);
+    boolean getSelection();
     
-    void addVerifyListener(VerifyListener l);
-    void removeVerifyListener(VerifyListener l);
-    
-    void setSelection(int begin, int end);
+    void addSelectionListener(SelectionListener l);
+    void removeSelectionListener(SelectionListener l);
 
     void addDisposeListener(DisposeListener l);
     void removeDisposeListener(DisposeListener l);
-    
-    void addFocusListener(FocusListener l);
-    void removeFocusListener(FocusListener l);
-    void setFocus();
 }

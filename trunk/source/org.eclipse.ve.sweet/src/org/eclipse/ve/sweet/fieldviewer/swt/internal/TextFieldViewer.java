@@ -24,7 +24,7 @@ import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.converter.Converter;
 import org.eclipse.ve.sweet.converter.IConverter;
 import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.ITextField;
+import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.ITextControl;
 import org.eclipse.ve.sweet.hinthandler.HintHandler;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
@@ -41,7 +41,7 @@ import org.eclipse.ve.sweet.validators.reusable.ReadOnlyValidator;
  * @author djo
  */
 public class TextFieldViewer implements IFieldViewer {
-    private ITextField control;
+    private ITextControl control;
     private IObjectViewer input;
     private IPropertyEditor property;
     private boolean readOnly;
@@ -55,7 +55,7 @@ public class TextFieldViewer implements IFieldViewer {
     
     public TextFieldViewer(Object control, IObjectViewer object, IPropertyEditor property) {
         this.input = object;
-        this.control = (ITextField) RelaxedDuckType.implement(ITextField.class, control);
+        this.control = (ITextControl) RelaxedDuckType.implement(ITextControl.class, control);
         addListeners();
         try {
             setInput(property);

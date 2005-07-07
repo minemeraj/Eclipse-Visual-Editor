@@ -17,9 +17,9 @@ import org.eclipse.ve.sweet.fieldviewer.swt.internal.CheckboxButtonFieldViewer;
 import org.eclipse.ve.sweet.fieldviewer.swt.internal.CheckboxListFieldViewer;
 import org.eclipse.ve.sweet.fieldviewer.swt.internal.ComboFieldViewer;
 import org.eclipse.ve.sweet.fieldviewer.swt.internal.TextFieldViewer;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.ICheckboxButtonField;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.ICheckboxListField;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.IComboField;
+import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.ICheckboxButtonControl;
+import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.ICheckboxListControl;
+import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.IComboControl;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 import org.eclipse.ve.sweet.reflect.DuckType;
@@ -36,11 +36,11 @@ public class SWTFieldViewerFactory implements IFieldViewerFactory {
      */
     public IFieldViewer construct(Object control, IObjectViewer objectEditor, IPropertyEditor propertyEditor) {
         IFieldViewer result = null;
-        if (DuckType.instanceOf(ICheckboxButtonField.class, control)) {
+        if (DuckType.instanceOf(ICheckboxButtonControl.class, control)) {
             result = new CheckboxButtonFieldViewer(control, objectEditor, propertyEditor);
-        } else if (DuckType.instanceOf(ICheckboxListField.class, control)) {
+        } else if (DuckType.instanceOf(ICheckboxListControl.class, control)) {
             result = new CheckboxListFieldViewer(control, objectEditor, propertyEditor);
-        } else if (DuckType.instanceOf(IComboField.class, control)) {
+        } else if (DuckType.instanceOf(IComboControl.class, control)) {
             result = new ComboFieldViewer(control, objectEditor, propertyEditor);
         } else {
             result = new TextFieldViewer(control, objectEditor, propertyEditor);
