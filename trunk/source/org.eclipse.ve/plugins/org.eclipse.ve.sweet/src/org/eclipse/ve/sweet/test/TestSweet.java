@@ -75,7 +75,6 @@ public class TestSweet {
         
         // Make sure changes are committed on shell close
         shell.addShellListener(new ShellAdapter() {
-            @Override
             public void shellClosed(ShellEvent e) {
                 try {
                     personEditor.commit();
@@ -88,7 +87,8 @@ public class TestSweet {
         // The usual SWT event loop
         shell.open();
         while (!shell.isDisposed()) {
-            display.readAndDispatch();
+            if (!display.readAndDispatch())
+                display.sleep();
         }
         display.dispose();
         

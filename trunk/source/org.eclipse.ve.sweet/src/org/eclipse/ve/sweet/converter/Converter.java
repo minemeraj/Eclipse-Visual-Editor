@@ -98,6 +98,34 @@ public class Converter {
         return result;
     }
     
+    /**
+     * Returns if there is a converter registered for a specific class2class
+     * conversion.
+     *  
+     * @param sourceClass
+     * @param destClass
+     * @return true if a converter is registered; false otherwise.
+     */
+    public static boolean canConvert(String sourceClass, String destClass) {
+        if (sourceClass.equals(destClass)) {
+            return true;
+        }
+        
+        HashMap sourceClassConverters = (HashMap) converters.get(sourceClass);
+        
+        if (sourceClassConverters == null) {
+            return false;
+        }
+        
+        IConverter result = (IConverter) sourceClassConverters.get(destClass);
+        
+        if (result == null) {
+            return false;
+        }
+        
+        return true;
+    }
+    
     static {
         converters = new HashMap();
         

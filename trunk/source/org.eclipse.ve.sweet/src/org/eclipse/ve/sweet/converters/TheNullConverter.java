@@ -14,7 +14,7 @@ package org.eclipse.ve.sweet.converters;
 import org.eclipse.ve.sweet.converter.IConverter;
 
 /**
- * TheIdentityConverter.  Returns the source value (the identity function).
+ * TheNullConverter.  TheNullObjectPattern for converters.
  *
  * @author djo
  */
