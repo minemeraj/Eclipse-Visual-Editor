@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllocationStyleHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-03-17 23:31:40 $ 
+ *  $Revision: 1.9 $  $Date: 2005-07-07 19:30:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.Statement;
+
 import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.jcm.*;
@@ -96,13 +97,6 @@ public class AllocationStyleHelper extends EventInvocationHelper {
 			}
 		}
 		return false;
-	}
-
-	/**
-	* @see org.eclipse.ve.internal.java.codegen.java.IEventDecoderHelper#getPriorityOfExpression()
-	*/
-	public Object getPriorityOfExpression() {
-		return null;
 	}
 
 	/**

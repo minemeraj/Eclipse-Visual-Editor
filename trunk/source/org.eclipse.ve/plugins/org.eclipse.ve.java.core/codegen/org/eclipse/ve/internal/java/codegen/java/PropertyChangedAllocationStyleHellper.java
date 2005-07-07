@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangedAllocationStyleHellper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-03-17 23:31:40 $ 
+ *  $Revision: 1.11 $  $Date: 2005-07-07 19:30:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -186,13 +186,6 @@ public class PropertyChangedAllocationStyleHellper extends PropertyChangeInvocat
 			}
 		}
 		return false;
-	}
-
-	/**
-	* @see org.eclipse.ve.internal.java.codegen.java.IEventDecoderHelper#getPriorityOfExpression()
-	*/
-	public Object getPriorityOfExpression() {
-		return null;
 	}
 
 	/**

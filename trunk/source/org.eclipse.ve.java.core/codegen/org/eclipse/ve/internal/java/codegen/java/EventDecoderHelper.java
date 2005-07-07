@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.16 $  $Date: 2005-06-15 18:58:22 $ 
+ *  $Revision: 1.17 $  $Date: 2005-07-07 19:30:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -32,6 +32,7 @@ import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.jcm.*;
 
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeEventRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
@@ -827,6 +828,10 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	}
 	protected Expression getExpression() {
 		return getExpression(fExpr);
+	}
+	
+	public VEexpressionPriority getPriorityOfExpression() {
+		return new VEexpressionPriority(IJavaFeatureMapper.PRIORITY_EVENT, new Object[]{new Integer(getInvocationIndex()), getEventInvocation()});
 	}
 
 }

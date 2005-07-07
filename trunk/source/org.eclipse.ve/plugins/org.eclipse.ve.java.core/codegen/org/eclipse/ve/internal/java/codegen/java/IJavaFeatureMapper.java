@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-20 13:25:32 $ 
+ *  $Revision: 1.16 $  $Date: 2005-07-07 19:30:33 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -147,6 +147,8 @@ public int getFeaturePriority(String methodName);
 public static final int PRIORITY_DEFAULT =				10000;
 //Add to a container should be at the end all default expression settings 
 public static final int PRIORITY_ADD = 					PRIORITY_DEFAULT - 5000; 
+//Event expressions in source 
+public static final int PRIORITY_EVENT = 					PRIORITY_DEFAULT - 7000; 
 // Constructor Expression, all at the top
 public static final int PRIORITY_CONSTRUCTOR = 			PRIORITY_DEFAULT;
 

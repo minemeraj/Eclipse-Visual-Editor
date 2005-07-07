@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InnerClassStyleHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-26 21:06:50 $ 
+ *  $Revision: 1.13 $  $Date: 2005-07-07 19:30:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -121,13 +121,6 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 			}
 			return false;
 		}
-
-	/**
-	 * @see org.eclipse.ve.internal.java.codegen.java.IEventDecoderHelper#getPriorityOfExpression()
-	 */
-	public Object getPriorityOfExpression() {
-		return null;
-	}
 
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.IEventDecoderHelper#getCurrentExpression()

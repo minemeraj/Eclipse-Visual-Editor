@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IEventDecoderHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2005-03-17 23:31:40 $ 
+ *  $Revision: 1.8 $  $Date: 2005-07-07 19:30:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,6 +18,8 @@ package org.eclipse.ve.internal.java.codegen.java;
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.jcm.*;
+
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
 /**
@@ -28,7 +30,7 @@ public interface IEventDecoderHelper {
 
 	// Returns the priority of the expression this 
 	// decoder helper is the helper of.
-	public Object getPriorityOfExpression();
+	public VEexpressionPriority getPriorityOfExpression();
 	
    // A decode method will decode specific expressions.
    // If the expression was decoded, a true will be returned.
