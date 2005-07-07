@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.34 $  $Date: 2005-06-21 21:55:01 $ 
+ *  $Revision: 1.35 $  $Date: 2005-07-07 21:35:30 $ 
  */
 
 import java.io.IOException;
@@ -33,6 +33,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.codegen.util.DefaultClassGenerator;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.templates.*;
@@ -239,8 +240,8 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			}
 			
 			// Merge types
-			IType toType = to.getTypes()[0];
-			IType fromType = from.getTypes()[0];
+			IType toType = CodeGenUtil.getMainType(to);
+			IType fromType = CodeGenUtil.getMainType(from);
 			merge(toType, fromType, formatter, monitor);
 		} catch (JavaModelException e) {
 			JavaVEPlugin.log(e, Level.FINE);
@@ -299,7 +300,7 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		try {
 			ICompilationUnit originalCU = type1.getCompilationUnit(); 
 			
-			String src = gen.generateSource(originalCU.getTypes()[0].getElementName(), superClassName, fPage.getArgumentMatrix());
+			String src = gen.generateSource(CodeGenUtil.getMainType(originalCU).getElementName(), superClassName, fPage.getArgumentMatrix());
 			ICompilationUnit workingCopy = originalCU.getWorkingCopy(null) ;
 			workingCopy.getBuffer().setContents(src);
 			workingCopy.reconcile(ICompilationUnit.NO_AST, true, null, new NullProgressMonitor());
