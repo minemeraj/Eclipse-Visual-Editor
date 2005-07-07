@@ -118,7 +118,7 @@ public class TextFieldViewer implements IFieldViewer {
         if (readOnly) {
             return;
         }
-        String error = verify();
+        String error = validate();
         if (error != null) {
             throw new CannotSaveException(error);
         }
@@ -132,7 +132,7 @@ public class TextFieldViewer implements IFieldViewer {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.binding.IWidgetBinding#verify()
 	 */
-	public String verify() {
+	public String validate() {
         String message = verifier.isValid(control.getText());
         if (message == null) {
             HintHandler.getDefault().setMessage("");
@@ -194,7 +194,7 @@ public class TextFieldViewer implements IFieldViewer {
     
     private FocusListener focusListener = new FocusAdapter() {
         public void focusLost(FocusEvent e) {
-            if (verify() != null) {
+            if (validate() != null) {
                 comeBackHerePlease();
             }
         }

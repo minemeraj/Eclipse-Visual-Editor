@@ -32,7 +32,7 @@ import org.eclipse.ve.sweet.reflect.DuckType;
  */
 public class SWTFieldViewerFactory implements IFieldViewerFactory {
     /* (non-Javadoc)
-     * @see com.db4o.binding.field.swt.IFieldControllerFactory#construct(java.lang.Object, com.db4o.binding.dataeditors.IObjectEditor, com.db4o.binding.dataeditors.IPropertyEditor)
+     * @see com.db4o.binding.field.swt.IFieldControllerFactory#construct(java.lang.Object, com.db4o.binding.dataeditors.IObjectViewer, com.db4o.binding.dataeditors.IPropertyEditor)
      */
     public IFieldViewer construct(Object control, IObjectViewer objectEditor, IPropertyEditor propertyEditor) {
         IFieldViewer result = null;

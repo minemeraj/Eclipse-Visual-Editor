@@ -21,16 +21,16 @@ package org.eclipse.ve.sweet.objectviewer;
  */
 public class ObjectViewerFactory {
     /**
-     * The actual IObjectEditorFactory instance that will be used to create
-     * new IObjectEditor objects.  Defaults to the Db4oObjectEditorFactory.
+     * The actual IObjectViewerFactory instance that will be used to create
+     * new IObjectViewer objects.  Defaults to the Db4oObjectEditorFactory.
      */
     public static IObjectViewerFactory factory = null;
     
     /**
-     * Construct a new IObjectEditor and set its initial input object.
+     * Construct a new IObjectViewer and set its initial input object.
      * 
      * @param input The initial input object
-     * @return The constructed IObjectEditor
+     * @return The constructed IObjectViewer
      */
     public static IObjectViewer edit(Object input) {
         IObjectViewer result = construct();
@@ -39,9 +39,9 @@ public class ObjectViewerFactory {
     }
     
     /**
-     * Construct a new IObjectEditor object.
+     * Construct a new IObjectViewer object.
      * 
-     * @return The IObjectEditor that was constructed.
+     * @return The IObjectViewer that was constructed.
      */
     public static IObjectViewer construct() {
         return factory.construct();
