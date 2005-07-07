@@ -9,7 +9,7 @@
  * Contributors:
  *     db4objects - Initial API and implementation
  */
-package org.eclipse.ve.sweet.fieldviewer.swt.internal.interfaces;
+package org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes;
 
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionListener;

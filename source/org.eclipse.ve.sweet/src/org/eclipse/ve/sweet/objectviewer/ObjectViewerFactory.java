@@ -13,8 +13,8 @@ package org.eclipse.ve.sweet.objectviewer;
 
 
 /**
- * ObjectEditorFactory.  Constructs ObjectEditors for an application.  Enables
- * various IObjectEditor implementations to be painlessly swapped in an
+ * ObjectViewerFactory.  Constructs ObjectViewers for an application.  Enables
+ * various IObjectViewer implementations to be painlessly swapped in an
  * application.
  *
  * @author djo
