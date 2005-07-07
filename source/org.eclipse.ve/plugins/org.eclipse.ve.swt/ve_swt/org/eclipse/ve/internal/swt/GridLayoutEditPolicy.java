@@ -11,24 +11,26 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.19 $ $Date: 2005-06-07 14:42:47 $
+ * $Revision: 1.20 $ $Date: 2005-07-07 13:09:01 $
  */
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.*;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
-import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gef.requests.DropRequest;
+import org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy;
+import org.eclipse.gef.requests.*;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.*;
 
@@ -36,23 +38,27 @@ import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 
-public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGridListener, IActionFilter {
+public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements IGridListener, IActionFilter {
 	
 	// unique ID of this layout edit policy
 	public static final String LAYOUT_ID = "org.eclipse.swt.layout.GridLayout"; //$NON-NLS-1$
 	public static final String REQ_GRIDLAYOUT_SPAN = "GridLayout span cells"; //$NON-NLS-1$
 	
-	private final int DEFAULT_EDGE = 5;
-	private final int HEIGHT_PADDING = 4;
+//	private final int DEFAULT_EDGE = 5;
+//	private final int HEIGHT_PADDING = 4;
 
 	boolean fShowGrid = false;
 
 	GridLayoutPolicyHelper helper = new GridLayoutPolicyHelper();
 	int [][] layoutDimensions = null;
 	private GridLayoutGridFigure fGridLayoutGridFigure;
+	private GridLayoutFeedbackFigure fGridLayoutSpanFigure;
 	private GridLayoutFeedbackFigure fGridLayoutCellFigure;
+	private GridLayoutRowFigure fRowFigure = null; 
+	private GridLayoutColumnFigure fColumnFigure = null;
 	private GridController gridController;
 	private GridImageListener fGridImageListener;
+	private org.eclipse.ve.internal.cde.core.ContainerPolicy containerPolicy;
 	
 	protected FigureListener hostFigureListener = new FigureListener() {
 		public void figureMoved(IFigure source) {
@@ -76,11 +82,104 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 		return fGridImageListener;
 	}
 	
+	class GridLayoutCellFigure extends RectangleFigure {
+
+		public GridLayoutCellFigure() {
+			super();
+//			FigureUtilities.makeGhostShape(this);
+//			setLineStyle(Graphics.LINE_DOT);
+//			setForegroundColor(ColorConstants.white);
+			setBackgroundColor(ColorConstants.gray);
+		}
+
+		public void paint(Graphics g) {
+			g.setAlpha(150);
+			super.paint(g);
+		}
+	}
+	class GridLayoutRowFigure extends Figure {
+		Rectangle rowBounds;
+		public GridLayoutRowFigure(Rectangle rowBounds) {
+			super();
+			this.rowBounds = rowBounds;
+			bounds = rowBounds.getCopy();
+			bounds.expand(8, 6);
+		}
+		public void paintFigure(Graphics g) {
+			g.setAlpha(125);
+			int [] polygonPoints = new int [] {
+					bounds.x+1, bounds.y+1, // left upper corner
+					bounds.x+1, bounds.y + bounds.height-1,
+					rowBounds.x, rowBounds.y + rowBounds.height,
+					rowBounds.x + rowBounds.width, rowBounds.y + rowBounds.height,
+					bounds.x + bounds.width-1, bounds.y + bounds.height-1,
+					bounds.x + bounds.width-1, bounds.y + 1,
+					rowBounds.x + rowBounds.width, rowBounds.y,
+					rowBounds.x, rowBounds.y,
+					bounds.x+1, bounds.y+1}; 
+			g.drawPolygon(polygonPoints);
+			g.setBackgroundColor(ColorConstants.yellow);
+			g.fillPolygon(polygonPoints);
+		}
+	}
+	class GridLayoutColumnFigure extends Figure {
+		Rectangle columnBounds;
+		public GridLayoutColumnFigure(Rectangle columnBounds) {
+			super();
+			this.columnBounds = columnBounds;
+			bounds = columnBounds.getCopy();
+			bounds.expand(6, 8);
+		}
+		public void paintFigure(Graphics g) {
+			g.setAlpha(125);
+			int [] polygonPoints = new int [] {
+					bounds.x+1, bounds.y+1, // left upper corner
+					columnBounds.x, columnBounds.y,
+					columnBounds.x, columnBounds.y + columnBounds.height,
+					bounds.x+1, bounds.y + bounds.height-1,
+					bounds.x + bounds.width-1, bounds.y + bounds.height-1,
+					columnBounds.x + columnBounds.width, columnBounds.y + columnBounds.height,
+					columnBounds.x + columnBounds.width, columnBounds.y,
+					bounds.x + bounds.width-1, bounds.y+1,
+					bounds.x+1, bounds.y+1}; 
+			g.drawPolygon(polygonPoints);
+			g.setBackgroundColor(ColorConstants.yellow);
+			g.fillPolygon(polygonPoints);
+		}
+	}
+	class GridLayoutColumnArrowFigure extends Figure {
+		protected void paintFigure(Graphics graphics) {
+			graphics.setLineWidth(2);
+			graphics.setAlpha(100);
+			Point beginLine = new Point(bounds.x, bounds.y + bounds.height/2);
+			Point endLine = new Point(bounds.x + bounds.width, beginLine.y);
+			graphics.drawLine(beginLine, endLine);
+			graphics.drawLine(endLine, new Point(endLine.x - 10, endLine.y - 6));
+			graphics.drawLine(endLine, new Point(endLine.x - 10, endLine.y + 6));
+		}
+		
+	}
+	/*
+	 * Class used to identify the type of request relative to GridLayout.
+	 */
+	static final int INSERT_COLUMN = 0;
+	static final int INSERT_COLUMN_WITHIN_ROW = 1;
+	static final int INSERT_ROW = 2;
+	static final int ADD_COLUMN = 3;
+	static final int ADD_ROW = 4;
+	static final int PUT = 5;
+	static final int ADD = 6;
+	class GridLayoutRequest {
+		int type = ADD;
+		int column = 0;
+		int row = 0;
+	}
+
 	/**
 	 * @param containerPolicy
 	 */
 	public GridLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
-		super(containerPolicy);
+		this.containerPolicy = containerPolicy;
 		helper.setContainerPolicy(containerPolicy);
 	}
 	
@@ -106,6 +205,7 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 			while (iterator.hasNext())
 				((EditPart) iterator.next()).addEditPartListener(editPartListener);
 		}
+		containerPolicy.setContainer(getHost().getModel());
 		super.activate();
 		CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(), GridLayoutLayoutPage.class);
 		CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(), GridLayoutComponentPage.class);
@@ -232,16 +332,28 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 		}
 		fShowGrid = false;		
 	}
-	
+	//private static final Object requestData = new Object();
 	public void eraseTargetFeedback(Request request) {
 		if (!fShowGrid)
 			if (fGridLayoutGridFigure != null && fGridLayoutGridFigure.getParent() != null) {
 				removeFeedback(fGridLayoutGridFigure);
 				fGridLayoutGridFigure = null;
 			}
+		if (fGridLayoutSpanFigure != null) {
+			removeFeedback(fGridLayoutSpanFigure);
+			fGridLayoutSpanFigure = null;
+		}
 		if (fGridLayoutCellFigure != null) {
 			removeFeedback(fGridLayoutCellFigure);
 			fGridLayoutCellFigure = null;
+		}
+		if (fRowFigure != null) {
+			removeFeedback(fRowFigure);
+			fRowFigure = null;
+		}
+		if (fColumnFigure != null) {
+			removeFeedback(fColumnFigure);
+			fColumnFigure = null;
 		}
 		super.eraseTargetFeedback(request);
 	}
@@ -280,11 +392,11 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 									startCellBounds.y, 
 									endCellBounds.x + endCellBounds.width - startCellBounds.x,
 									endCellBounds.y + endCellBounds.height - startCellBounds.y);
-		if (fGridLayoutCellFigure == null) {
-			fGridLayoutCellFigure = new GridLayoutFeedbackFigure();
+		if (fGridLayoutSpanFigure == null) {
+			fGridLayoutSpanFigure = new GridLayoutFeedbackFigure();
 		}
-		fGridLayoutCellFigure.setBounds(spanrect);
-		addFeedback(fGridLayoutCellFigure);
+		fGridLayoutSpanFigure.setBounds(spanrect);
+		addFeedback(fGridLayoutSpanFigure);
 	}
 	
 	/**
@@ -338,127 +450,67 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 	
 	// modifying the feedback behavior from FlowLayoutEditPolicy
 	
-	private Rectangle getAbsoluteBounds(GraphicalEditPart ep) {
-		Rectangle bounds = ep.getContentPane().getBounds().getCopy();
-		ep.getContentPane().translateToAbsolute(bounds);
-		return bounds;
-	}
-	
 	private Point getLocationFromRequest(Request request) {
 		return ((DropRequest)request).getLocation();
 	}
 	
 	/**
-	 * Get the feedback index for the given request.  If there
-	 * are no children, or the cursor is after the last child,
-	 * the index will be -1.
-	 * 
-	 * @param request the Request
-	 * @return the index for the insertion reference
-	 */
-	protected int getFeedbackIndexFor(Request request) {
-		List children = getHost().getChildren();
-		if (children.isEmpty())
-			return -1;
-		
-		Point p = getLocationFromRequest(request);
-		Point cell = getGridLayoutGridFigure().getCellLocation(p);
-		
-		int index =  helper.getChildIndexAtCell(cell);
-		
-		if (index != -1) {
-			// Check to see if the cursor position is more than middle of the given
-			// edit part, so that the insertion will occur after this position, rather
-			// than before.
-			Rectangle r = getAbsoluteBounds((GraphicalEditPart)children.get(index));
-			if (p.x > r.x + (r.width / 2)) {
-				index += 1;
-				if (index >= children.size()) {
-					index = -1;
-				}
-			}
-		}
-		
-		return index;
-	}
-
-	/**
 	 * Shows an insertion line if there is one or more current children.
 	 */	
 	protected void showLayoutTargetFeedback(Request request) {
-		if (getHost().getChildren().size() == 0)
-			return;
 		
 		if (!fShowGrid)
 			addFeedback(getGridLayoutGridFigure());
 		
-		Polyline fb = getLineFeedback();
-		fb.setLineWidth(4);
-		
-		boolean before = true;
-		int epIndex = getFeedbackIndexFor(request);	
-			
-		Rectangle r = null;
-		if (epIndex == -1) {
-			// add to the end of the layout
-			before = false;
-			epIndex = getHost().getChildren().size() - 1;
-			EditPart editPart = (EditPart) getHost().getChildren().get(epIndex);
-			r = getAbsoluteBounds((GraphicalEditPart)editPart);
-		} else {
-			EditPart editPart = (EditPart) getHost().getChildren().get(epIndex);
-			r = getAbsoluteBounds((GraphicalEditPart)editPart);
-			before = true;
+		if (fRowFigure != null) {
+			removeFeedback(fRowFigure);
+			fRowFigure = null;
 		}
-		int x = Integer.MIN_VALUE;
-		Rectangle parentBox = getAbsoluteBounds((GraphicalEditPart)getHost());
-		
-		
-		
-		if (before) {
-			if (epIndex == 0) {
-				// before the first component
-				x = parentBox.x + (r.x - parentBox.x) / 2;
-				if (x < DEFAULT_EDGE) {
-					x = DEFAULT_EDGE;
-				}
-			} else if (helper.isOnSameRow(epIndex - 1, epIndex)) {
-				// between two elements on the same row
-				Rectangle otherFigure = getAbsoluteBounds((GraphicalEditPart)getHost().getChildren().get(epIndex - 1));
-				Rectangle otherGrid = getGridLayoutGridFigure().getGridBroundsForCellBounds(helper.getChildrenDimensions()[epIndex - 1]);
-				x = otherGrid.right() + (r.x - otherGrid.right()) / 2;
-				if (otherFigure.height < r.height) {
-					r = otherFigure;
-				}
-			} else if (helper.isCellEmptyBefore(epIndex)){
-				// There's empty cells on the preceeding row, so put on the right edge of
-				// the previous item
-				r = getAbsoluteBounds((GraphicalEditPart)getHost().getChildren().get(epIndex - 1));
-				x = parentBox.right() - (parentBox.right() - r.right()) / 2;
-				if (x > DEFAULT_EDGE) {
-					x = r.right() + DEFAULT_EDGE;
-				}
-			} else {
-				// not on the same row, so put it between the start and the edge
-				x = parentBox.x + (r.x - parentBox.x) / 2;
-				if (x < DEFAULT_EDGE) {
-					x = r.x - DEFAULT_EDGE;					
-				}
-			}
-		} else {
-			// after the last component
-			x = parentBox.right() - (parentBox.right() - r.right()) / 2;
-			if (x > DEFAULT_EDGE) {
-				x = r.right() + DEFAULT_EDGE;
-			}
+		if (fColumnFigure != null) {
+			removeFeedback(fColumnFigure);
+			fColumnFigure = null;
 		}
-		
-		Point p1 = new Point(x, r.y - HEIGHT_PADDING);
-		fb.translateToRelative(p1);
-		Point p2 = new Point(x, r.y + r.height + HEIGHT_PADDING);
-		fb.translateToRelative(p2);
-		fb.setPoint(p1, 0);
-		fb.setPoint(p2, 1);
+
+		Point position = getLocationFromRequest(request).getCopy();
+		// This point is absolute.  Make it relative to the model
+		getHostFigure().translateToRelative(position);
+
+		GridLayoutRequest gridReq = createGridLayoutRequest(request);
+
+		Rectangle cellBounds = getGridLayoutGridFigure().getCellBounds(position.x, position.y);
+
+		// Calculate the bounds of the target cell figure based on whether a column is added,
+		// row is added, or it's inserted before another control.
+		if (gridReq.type == INSERT_COLUMN){
+			// If a column is added, show the target figure in between the two columns
+			showNewColumnFeedBack(position);
+			Rectangle colFigBounds = fColumnFigure.getBounds().getCopy();
+			cellBounds.width = 40;
+			cellBounds.x = colFigBounds.x + colFigBounds.width/2 - cellBounds.width/2;
+		} else if (gridReq.type == INSERT_ROW) {
+			// If a row is added, show the target figure in between the two rows
+			showNewRowFeedBack(position);
+			Rectangle rowFigBounds = fRowFigure.getBounds().getCopy();
+			cellBounds.height = 35;
+			cellBounds.y = rowFigBounds.y + rowFigBounds.height/2 - cellBounds.height/2;
+		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
+			// just the cell is selected. need to find out if replacing or inserting
+			showColumnFeedBackWithinARow(cellBounds);
+			Rectangle colFigBounds = fColumnFigure.getBounds().getCopy();
+			cellBounds.width = 40;
+			cellBounds.x = colFigBounds.x + colFigBounds.width/2 - cellBounds.width/2;
+		} else if (gridReq.type == ADD || gridReq.type == ADD_COLUMN || gridReq.type == ADD_ROW) {
+			// No cell found, provide a default size and location.
+			cellBounds.setLocation(position.x-6, position.y-6);
+			cellBounds.width = 40;
+			cellBounds.height = 35;
+		}
+
+		if (fGridLayoutCellFigure == null) {
+			fGridLayoutCellFigure = new GridLayoutFeedbackFigure();
+		}
+		fGridLayoutCellFigure.setBounds(cellBounds);
+		addFeedback(fGridLayoutCellFigure);
 	}
 
 	/*
@@ -508,4 +560,175 @@ public class GridLayoutEditPolicy extends DefaultLayoutEditPolicy implements IGr
 		return false;
 	}
 
+	protected Command getDeleteDependantCommand(Request aRequest) {
+		Command cmd = containerPolicy.getCommand(aRequest);
+		// In order to maintain column row positoning for all the other components we
+		// need to replace the deleted control with a filler label.
+		if (cmd != null && aRequest instanceof ForwardedRequest) {
+			EditPart editPart = ((ForwardedRequest)aRequest).getSender();
+			List children = getHost().getChildren();
+			int indexEP = children.indexOf(editPart);
+			if (indexEP != -1 && (indexEP+1 < children.size())) {
+				CommandBuilder cb = new CommandBuilder();
+				cb.append(containerPolicy.getCreateCommand(helper.createFillerLabelObject(), ((EditPart)children.get(indexEP+1)).getModel()));
+				cb.append(cmd);
+				return cb.getCommand();
+			}
+		}
+		return cmd != null ? cmd : UnexecutableCommand.INSTANCE;
+	}
+
+	/**
+	 * Show a new yellow row inserted into the grid near the row closest to position
+	 */
+	protected void showNewRowFeedBack(Point position) {
+		Point rowStart = fGridLayoutGridFigure.getRowStartPosition(position.y);
+		Point rowEnd = fGridLayoutGridFigure.getRowEndPosition(position.y);
+		Rectangle rect = new Rectangle(rowStart.x-2, rowStart.y - 3, rowEnd.x - rowStart.x + 4, 6);
+		fRowFigure = new GridLayoutRowFigure(rect);
+		addFeedback(fRowFigure);
+	}
+	/**
+	 * Show a new yellow column inserted into the grid near the column closest to position
+	 */
+	protected void showNewColumnFeedBack(Point position) {
+		Point colStart = fGridLayoutGridFigure.getColumnStartPosition(position.x);
+		Point colEnd = fGridLayoutGridFigure.getColumnEndPosition(position.x);
+		Rectangle rect = new Rectangle(colStart.x - 3, colStart.y, 6, colEnd.y - colStart.y);
+		fColumnFigure = new GridLayoutColumnFigure(rect);
+		addFeedback(fColumnFigure);
+	}
+	/**
+	 * Show a new yellow column inserted into the grid near the column closest to position 
+	 * and only within that row
+	 */
+	protected void showColumnFeedBackWithinARow(Rectangle cellBounds) {
+		Point colStart = cellBounds.getLocation();
+		Point colEnd = new Point(cellBounds.x, cellBounds.y + cellBounds.height);
+		Rectangle rect = new Rectangle(colStart.x - 3, colStart.y, 6, colEnd.y - colStart.y);
+		fColumnFigure = new GridLayoutColumnFigure(rect);
+		addFeedback(fColumnFigure);
+	}
+	
+	protected Command createAddCommand(EditPart child, Object constraint) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	protected Command createChangeConstraintCommand(EditPart child, Object constraint) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	protected Object getConstraintFor(Point point) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	protected Object getConstraintFor(Rectangle rect) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	protected Command getCreateCommand(CreateRequest request) {
+		if (fGridLayoutGridFigure == null)
+			return UnexecutableCommand.INSTANCE;
+		List children = getHost().getChildren();
+		if (children.isEmpty()) // If no children, just add to the end
+			return containerPolicy.getCreateCommand(request.getNewObject(), null);
+
+		Point position = getLocationFromRequest(request).getCopy();
+		// This point is absolute. Make it relative to the model
+		getHostFigure().translateToRelative(position);
+		GridLayoutRequest gridReq = createGridLayoutRequest(request);
+		GraphicalEditPart editPart = null;
+		Point cell = new Point(gridReq.column, gridReq.row);
+		int epIndex = helper.getChildIndexAtCell(cell);
+		if (epIndex != -1)
+			editPart = (GraphicalEditPart) children.get(epIndex);
+		CommandBuilder cb = new CommandBuilder();
+		if (gridReq.type == PUT) {
+			// Just replace a filler label with the new control
+			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart.getModel()));
+			cb.append(containerPolicy.getDeleteDependentCommand(editPart.getModel()));
+		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
+			cb.append(helper.createNumColumnsCommand(getHost())); // First add another column to the grid
+			cb.append(helper.createFillerLabelCommands(cell.y + 1)); // then add empty labels at the end of each row
+			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart != null ? editPart.getModel() : null));
+		} else if (gridReq.type == INSERT_COLUMN || gridReq.type == ADD_COLUMN) {
+			boolean isLastColumn = false;
+			int column = getGridLayoutGridFigure().getNearestColumn(position.x);
+			// Not the last column
+			if (column != helper.getNumColumns()) {
+				epIndex = helper.getChildIndexAtCell(new Point(column, cell.y));
+				// Not the last control
+				if (epIndex != -1)
+					editPart = (GraphicalEditPart) children.get(epIndex);
+			} else {
+				// Last column... look for the first control on the next row
+				epIndex = helper.getChildIndexAtCell(new Point(0, cell.y + 1));
+				if (epIndex != -1 && epIndex < children.size() - 1)
+					editPart = (GraphicalEditPart) children.get(epIndex);
+				else
+					editPart = null;
+				// Insert before the first column of each row since we actually
+				// adding to the end of each row
+				column = 0;
+				cell.y = cell.y + 1;
+				isLastColumn = true;
+			}
+			cb.append(helper.createNumColumnsCommand(getHost())); // First add another column to the grid
+			cb.append(helper.createFillerLabelCommands(column, cell.y, isLastColumn)); // then add empty labels at this column position
+			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart != null ? editPart.getModel() : null));
+		} else if (gridReq.type == INSERT_ROW || gridReq.type == ADD_ROW) {
+			int row = getGridLayoutGridFigure().getNearestRow(position.y);
+			EObject beforeObject = null;
+			epIndex = helper.getChildIndexAtCell(new Point(0, row));
+			if (epIndex != -1)
+				beforeObject = (EObject) ((EditPart) children.get(epIndex)).getModel();
+			// Insert a row by adding labels and the new object at the appropriate column position
+			cb.append(helper.createFillerLabelsForNewRowCommand(request, beforeObject, cell.x));
+		}
+
+		if (cb.isEmpty())
+			return UnexecutableCommand.INSTANCE;
+		return cb.getCommand();
+	}
+
+	private GridLayoutRequest createGridLayoutRequest(Request request) {
+		Point position = getLocationFromRequest(request).getCopy();
+		// This point is absolute. Make it relative to the model
+		getHostFigure().translateToRelative(position);
+
+		Point cell = getGridLayoutGridFigure().getCellLocation(position);
+		GridLayoutRequest gridReq = new GridLayoutRequest(); // Create request. default is PUT request
+		gridReq.column = cell.x;
+		gridReq.row = cell.y;
+
+		if (cell.x == -1 && cell.y == -1) 
+			gridReq.type = ADD;
+		else if (cell.x == -1)
+			gridReq.type = ADD_COLUMN;
+		else if (cell.y == -1)
+			gridReq.type = ADD_ROW;
+		else if (fGridLayoutGridFigure.isPointerNearAColumn(position.x))
+			gridReq.type = INSERT_COLUMN;
+		else if (fGridLayoutGridFigure.isPointerNearARow(position.y))
+			gridReq.type = INSERT_ROW;
+		else {
+			EditPart editPart = null;
+			int indexBeforeEP = helper.getChildIndexAtCell(new Point(cell.x, cell.y));
+			if (indexBeforeEP != -1) {
+				editPart = (EditPart) getHost().getChildren().get(indexBeforeEP);
+				if (editPart != null) {
+					if (helper.isEmptyLabel(editPart.getModel()))
+						gridReq.type = PUT;
+					else
+						gridReq.type = INSERT_COLUMN_WITHIN_ROW;
+				}
+			} else
+				gridReq.type = ADD;
+		}
+		return gridReq;
+	}
 }
