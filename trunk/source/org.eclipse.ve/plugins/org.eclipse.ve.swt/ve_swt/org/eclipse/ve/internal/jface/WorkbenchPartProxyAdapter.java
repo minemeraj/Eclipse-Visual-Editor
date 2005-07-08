@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-22 21:05:27 $ 
+ *  $Revision: 1.4 $  $Date: 2005-07-08 18:35:35 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -33,7 +33,6 @@ import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.core.*;
 
@@ -102,18 +101,17 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 		JavaClass superclass = thisClass.getSupertype();
 		while (superclass != null && superclass.isAbstract()) {
 			if ("org.eclipse.ui.part.ViewPart".equals(superclass.getQualifiedName())) {
-				superclass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("org.eclipse.ve.internal.jface.targetvm.ConcreteViewPart", getJavaObject());
-				break;
+				return getBeanTypeProxy("org.eclipse.ve.internal.jface.targetvm.ConcreteViewPart", expression);
 			} else if ("org.eclipse.ui.part.EditorPart".equals(superclass.getQualifiedName())) {
-				superclass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("org.eclipse.ve.internal.jface.targetvm.ConcreteEditorPart", getJavaObject());
-				break;				
+				return getBeanTypeProxy("org.eclipse.ve.internal.jface.targetvm.ConcreteEditorPart", expression);
 			}
 			notInstantiatedClasses.add(superclass);
 			superclass = superclass.getSupertype();
 		}
 		if (superclass != null)
 			return getBeanTypeProxy(superclass.getQualifiedNameForReflection(), expression);
-		return super.getValidSuperClass(expression);
+		else
+			return getBeanTypeProxy("java.lang.Object", expression);
 	}
 	
 	protected FreeFormComponentsHost ffHost;
