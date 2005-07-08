@@ -26,9 +26,4 @@
     
   </event:AddMany>
   
-  <event:Add  featureName="eAnnotations">
-  	<addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-        modelled="true"/>
-  </event:Add>
-
 </xmi:XMI>

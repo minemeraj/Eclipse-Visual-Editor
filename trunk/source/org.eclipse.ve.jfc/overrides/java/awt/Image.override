@@ -8,7 +8,5 @@
   <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator" labelProviderClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ImageLabelProvider"
       cellEditorClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ImageCellEditor"
       entryExpandable="false"/>
-  <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-     modelled="true"/>'
   <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ImageProxyAdapter"/>     
 </event:AddMany>

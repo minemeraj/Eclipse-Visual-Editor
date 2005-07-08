@@ -13,6 +13,4 @@
       labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.visual.RectangleJavaClassLabelProvider"
       cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.visual.RectangleJavaClassCellEditor:org.eclipse.swt.graphics.Rectangle">
   </addedEObjects>
-  <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-     modelled="true"/>
 </event:AddMany>

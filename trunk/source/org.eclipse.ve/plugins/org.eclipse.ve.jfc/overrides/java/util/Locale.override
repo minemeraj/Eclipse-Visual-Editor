@@ -6,6 +6,4 @@
     featureName="eAnnotations">
   <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanCellRenderer:org.eclipse.ve.internal.jfc.beaninfo.LocaleEditor"
       cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFeatureEditor:org.eclipse.ve.internal.jfc.beaninfo.LocaleEditor"/>
-  <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-     modelled="true"/>
 </event:AddMany>

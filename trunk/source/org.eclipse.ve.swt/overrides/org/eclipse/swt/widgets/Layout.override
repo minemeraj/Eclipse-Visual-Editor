@@ -30,8 +30,6 @@
 		<details key="org.eclipse.ve.internal.swt.layoutDisplayName"
 			value="RowLayout"/>
 	</addedEObjects>
-	<addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-        modelled="true"/>
   </event:AddMany>
 
 </xmi:XMI>
