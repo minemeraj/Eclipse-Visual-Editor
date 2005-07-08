@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.23 $  $Date: 2005-07-08 16:00:37 $ 
+ *  $Revision: 1.24 $  $Date: 2005-07-08 18:08:56 $ 
  */
 
 import java.util.*;
@@ -726,6 +726,14 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			fAddedPart.addChild(fAddedPart);
 			// TODO fAddedIndex is not processed at this time... need to also check the
 			//      Smart decoding for the fAddedIndex
+			
+			// Update references so that they dont get deactivated at the end
+			List references = fOwner.getExprRef().getReferences();
+			if(fAddedInstance!=null && !references.contains(fAddedInstance))
+				references.add(fAddedInstance);
+			if(fAddedConstraintInstance!=null && !references.contains(fAddedConstraintInstance))
+				references.add(fAddedConstraintInstance);
+			
 			return true;
 		}
 		else
