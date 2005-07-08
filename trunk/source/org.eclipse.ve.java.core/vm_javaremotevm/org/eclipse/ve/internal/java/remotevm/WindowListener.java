@@ -11,20 +11,20 @@ package org.eclipse.ve.internal.java.remotevm;
  *******************************************************************************/
 /*
  *  $RCSfile: WindowListener.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:29:42 $ 
+ *  $Revision: 1.3 $  $Date: 2005-07-08 17:51:44 $ 
  */
 
 import org.eclipse.jem.internal.proxy.common.*;
 
 public class WindowListener implements ICallback {
 	
-	IVMServer fServer;
+	IVMCallbackServer fServer;
 	int fCallbackID;
 	
 /**
  * The listener initialize for callback server.
  */
-public void initializeCallback(IVMServer server, int callbackID){
+public void initializeCallback(IVMCallbackServer server, int callbackID){
 	fServer = server;
 	fCallbackID = callbackID;
 }	

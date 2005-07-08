@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayExec.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:54:57 $ 
+ *  $Revision: 1.3 $  $Date: 2005-07-08 17:51:50 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.proxy.common.*;
 import org.eclipse.jem.internal.proxy.common.ICallback;
-import org.eclipse.jem.internal.proxy.common.IVMServer;
+import org.eclipse.jem.internal.proxy.common.IVMCallbackServer;
  
 /**
  * This is the callback for doing Display.asyncExec or Display.syncExec from the 
@@ -29,7 +29,7 @@ import org.eclipse.jem.internal.proxy.common.IVMServer;
  */
 public class DisplayExec implements ICallback {
 
-	private IVMServer vmServer;
+	private IVMCallbackServer vmServer;
 	private int callbackID;
 	
 	/**
@@ -52,7 +52,7 @@ public class DisplayExec implements ICallback {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.common.ICallback#initializeCallback(org.eclipse.jem.internal.proxy.common.IVMServer, int)
 	 */
-	public void initializeCallback(IVMServer vmServer, int callbackID) {
+	public void initializeCallback(IVMCallbackServer vmServer, int callbackID) {
 		this.vmServer = vmServer;
 		this.callbackID = callbackID;
 	}

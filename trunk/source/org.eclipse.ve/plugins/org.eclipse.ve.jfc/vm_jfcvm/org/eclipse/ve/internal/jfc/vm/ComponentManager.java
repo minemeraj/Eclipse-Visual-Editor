@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.vm;
 
 /*
  *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.9 $  $Date: 2005-07-08 17:51:49 $ 
  */
 
 import java.awt.*;
@@ -184,7 +184,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 	 */
 	public static class ComponentManagerFeedbackController implements ICallback, Runnable {
 
-		protected IVMServer fServer;
+		protected IVMCallbackServer fServer;	// This will be set to null after shutdown called. Access is thru sync(tranactions).
 
 		protected int fCallbackID;
 		
@@ -263,9 +263,21 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		 * 
 		 * @see org.eclipse.jem.internal.proxy.common.ICallback#initializeCallback(org.eclipse.jem.internal.proxy.common.IVMServer, int)
 		 */
-		public void initializeCallback(IVMServer server, int callbackID) {
+		public void initializeCallback(IVMCallbackServer server, int callbackID) {
 			fServer = server;
 			fCallbackID = callbackID;
+			server.getIVMServer().addShutdownListener(new Runnable() {
+			
+				public void run() {
+					synchronized (transactions) {
+						if (fServer != null) {
+							// We're going down and there is no way to tell AWT Event queue to go away. So we just say we are shutting down.
+							fServer = null;
+						}
+					}
+				}
+			
+			});
 		}
 
 		/**
@@ -337,6 +349,8 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 					queuedInvalidWindows.clear();
 					// Now send the component manager invalid images transactions.
 					synchronized (transactions) {
+						if (fServer == null)
+							return;	// We are shut down.
 						for (Iterator itr = queuedInvalidImages.iterator(); itr.hasNext();) {
 							Component component = (Component) itr.next();
 							ComponentManager cmanager = (ComponentManager) componentToComponentManagers.get(component);
@@ -398,6 +412,8 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		 */
 		private void appendTransaction(Object notifier, int callbackID, Object[] parms, boolean unique) {
 			synchronized (transactions) {
+				if (fServer == null)
+					return;	// We are shut down.
 				if (unique) {
 					UniqueEntry newUE = new UniqueEntry(notifier, callbackID);
 					UniqueEntry ue = (UniqueEntry) uniquesMap.get(newUE);
@@ -445,6 +461,8 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 
 					public void run() {
 						synchronized (transactions) {
+							if (fServer == null)
+								return;	// We are shutdown
 							for (int i = 0; i < queued.size(); i++) {
 								ComponentManager manager = (ComponentManager) queued.get(i);
 								if (manager.fComponent != null) {
@@ -495,15 +513,24 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		public void run() {
 			// This should only be called through the event queue. It should not be called directly.
 			final Object[] trans;
+			IVMCallbackServer server;
 			synchronized (transactions) {
+				if (fServer == null)
+					return;	// We are shutdown, don't process.
 				if (transactions.isEmpty())
 					return; // Nothing to do.
+				if (componentToComponentManagers.isEmpty()) {
+					// There is nobody listening, so clear and do nothing.
+					transactions.clear();
+					return;
+				}
 				trans = transactions.toArray();
 				transactions.clear();
 				uniquesMap.clear();
+				server = fServer;
 			}
 			try {
-				fServer.doCallback(new ICallbackRunnable() {
+				server.doCallback(new ICallbackRunnable() {
 
 					public Object run(ICallbackHandler handler) throws CommandException {
 						return handler.callbackWithParms(fCallbackID, Common.CL_TRANSACTIONS, trans);

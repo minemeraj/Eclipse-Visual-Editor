@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.5 $  $Date: 2005-07-08 17:51:49 $ 
  */
 
 import java.awt.*;
@@ -44,7 +44,7 @@ import org.eclipse.jem.internal.proxy.common.*;
  */
 public class ImageDataCollector implements ImageConsumer, ICallback {
 	
-	protected IVMServer fVMServer;
+	protected IVMCallbackServer fVMServer;
 	protected int fCallbackID;
 	protected DataOutputStream fos;
 	protected int fWidth, fHeight;
@@ -64,7 +64,7 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 	public ImageDataCollector() {
 	}
 	
-	public void initializeCallback(IVMServer vmServer, int callbackID) {
+	public void initializeCallback(IVMCallbackServer vmServer, int callbackID) {
 		fVMServer = vmServer;
 		fCallbackID = callbackID;
 	}	
