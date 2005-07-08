@@ -11,12 +11,13 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: OutlineBorder.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-24 19:48:40 $ 
+ *  $Revision: 1.6 $  $Date: 2005-07-08 22:26:20 $ 
  */
 
 import org.eclipse.draw2d.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 /**
@@ -65,7 +66,11 @@ public class OutlineBorder extends AbstractBorder {
 			return;	// Disabled, don't pain.
 		Rectangle r = getPaintRectangle(aFigure, insets);
 		r.resize(-1,-1);	// Make room for the outline.
-		g.setAlpha(getAlpha());
+		try {
+			g.setAlpha(getAlpha());
+		} catch (SWTException e) {
+			// Occurs if alpha's not available. No check on Graphics that tests for this yet.
+		}
 		g.setForegroundColor(foreground);
 		if (lineStyle != SWT.LINE_SOLID) {
 			// Non-solid lines need a background color to be set. If we have one use it, else compute it.
