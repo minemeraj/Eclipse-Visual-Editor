@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-07-07 13:09:01 $
+ *  $Revision: 1.11 $  $Date: 2005-07-08 02:11:53 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -118,7 +118,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	public List getDefaultConstraint(List children) {
 		return Collections.nCopies(children.size(), null);
 	}
-	public static final EObject SPAN = EcoreFactory.eINSTANCE.createEObject();
+	public static final EObject EMPTY = EcoreFactory.eINSTANCE.createEObject();
 	/**
 	 * Get a representation of the grid. The grid is indexed by [column][row]. The value at each position is the child located at that position. Empty
 	 * cells will have null values.
@@ -167,7 +167,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				// if there's not enough columns left for the horizontal span, go to
 				// next row
 				if (col != 0 && (col + horizontalSpan - 1) >= numColumns) {
-					layoutTable[col][row] = SPAN;
+					layoutTable[col][row] = EMPTY;
 					row += 1;
 					col = 0;
 				}
@@ -188,6 +188,14 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 
 				// Add the spanned columns to the column position
 				col += horizontalSpan - 1;
+			}
+			// If the last row isn't full, fill it with EMPTY objects
+			if (layoutTable.length > 0 && layoutTable[0].length > 0) {
+				int lastRow = layoutTable[0].length - 1;
+				for (int i = 0; i < layoutTable.length; i++) {
+					if (layoutTable[i][lastRow] == null)
+						layoutTable[i][lastRow] = EMPTY;
+				}
 			}
 
 		}
@@ -546,19 +554,19 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 
 	public IJavaInstance createFillerLabelObject() {
-		return BeanUtilities.createJavaObject("org.eclipse.swt.widgets.Label",rset,(JavaAllocation)null);
+		return BeanUtilities.createJavaObject("org.eclipse.swt.widgets.Label",rset,(JavaAllocation)null); //$NON-NLS-1$
 	}
 	
-	public Command createNumColumnsCommand (EditPart editpart) {
+	public Command createNumColumnsCommand(int numCols) {
 		CommandBuilder cb = new CommandBuilder();
-		EObject control = (EObject)editpart.getModel();
-		if (control != null) {
-			IJavaInstance gridLayout = (IJavaInstance) control.eGet(sfCompositeLayout);
+		EObject parent = (EObject) policy.getContainer();
+		if (parent != null) {
+			IJavaInstance gridLayout = (IJavaInstance) parent.eGet(sfCompositeLayout);
 			if (gridLayout != null) {
-				RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
-				Object intObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(getNumColumns() + 1)); //$NON-NLS-1$
+				RuledCommandBuilder componentCB = new RuledCommandBuilder(policy.getEditDomain(), null, false);
+				Object intObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(numCols)); //$NON-NLS-1$
 				componentCB.applyAttributeSetting(gridLayout, sfNumColumns, intObject);
-				componentCB.applyAttributeSetting(control, sfCompositeLayout, gridLayout);
+				componentCB.applyAttributeSetting(parent, sfCompositeLayout, gridLayout);
 				cb.append(componentCB.getCommand());
 			} else {
 				// this shouldn't happen
@@ -569,30 +577,6 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			return UnexecutableCommand.INSTANCE;
 		}
 	}
-	/*
-	 * Insert filler labels at the end of each row except the one the control was added to.
-	 */
-	public Command createFillerLabelCommands (int exceptRow) {
-		CommandBuilder cb = new CommandBuilder();
-		EObject[][] table = getLayoutTable();
-		// If there is only one row (or none), no need to add empty labels.
-		if (table[0].length <= 1)
-			return null;
-		// Add a filler label prior to each object that is in the first position of each row. 
-		// This will in effect add a label to end of the previous row.
-		// This must be done for each row except the row where the actual control has been added.
-		for (int i = 1; i < table[0].length; i++) {
-			if (i != exceptRow) {
-				if (table[0][i] != null) {
-					cb.append(policy.getCreateCommand(createFillerLabelObject(), table[0][i]));
-				}
-			}
-		}
-		// Need to add a final label to the end unless the last row was where the actual control was added
-		if (exceptRow != table[0].length)
-			cb.append(policy.getCreateCommand(createFillerLabelObject(), null));
-		return cb.getCommand();
-	}
 	
 	/*
 	 * To add a row, we must add the filler labels and the requested control prior to the control
@@ -601,6 +585,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	 */
 	public Command createFillerLabelsForNewRowCommand (CreateRequest request, EObject beforeObject, int exceptColumn) {
 		CommandBuilder cb = new CommandBuilder();
+		if (exceptColumn == -1)
+			exceptColumn = numColumns - 1;
 		for (int i = 0; i < numColumns; i++) {
 			if (i == exceptColumn)
 				// This is the column where the new control is put
@@ -611,7 +597,78 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return cb.getCommand();
 	}
-	
+
+	/*
+	 * Put a new control into a cell that is EMPTY. 
+	 */
+	public Command createAddToEmptyCellCommand (CreateRequest request, Point cell) {
+		CommandBuilder cb = new CommandBuilder();
+		EObject[][] table = getLayoutTable();
+		// If there is only one row (or none), no need to add empty labels.
+		if (table.length == 0 || table[0].length == 0 || cell.x >= table.length || cell.y >= table[0].length)
+			return null;
+
+		// Find the next occupied cell to be used as the before object. 
+		EObject beforeObject = null;
+		int col = cell.x + 1, row = cell.y;
+		boolean firstpass = true;
+		for (int i = row; i < table[0].length && beforeObject == null; i++) {
+			for (int j = col; j < table.length; j++) {
+				if (table[j][i] != EMPTY) {
+					beforeObject = table[j][i];
+					break;
+				}
+			}
+			if (firstpass)
+				col = 0;
+		}
+		// Now go through the row and replace the empty cell with the new object... also
+		// create filler labels in other empty cells as we go.
+		for (int i = 0; i < table.length; i++) {
+			if (i == cell.x)
+				// This is the column where the new control is put
+				cb.append(policy.getCreateCommand(request.getNewObject(), beforeObject));
+			else if (table[i][cell.y] == EMPTY)
+				// These are the columns where the empty labels are put
+				cb.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+		}
+		return cb.getCommand();
+	}
+
+	/*
+	 * Insert filler labels at the end of each row except the one the control was added to.
+	 */
+	public Command createFillerLabelCommands (int exceptRow) {
+		CommandBuilder cb = new CommandBuilder();
+		EObject[][] table = getLayoutTable();
+		// If there is only one row (or none), no need to add empty labels.
+		if (table[0].length <= 1)
+			return null;
+		List children = (List) getContainer().eGet(sfCompositeControls);
+		if (children.isEmpty())
+			return null;
+		// Add a filler label prior to each object that is in the first position of each row. 
+		// This will in effect add a label to end of the previous row.
+		// This must be done for each row except the row where the actual control has been added.
+		for (int i = 1; i < table[0].length; i++) {
+			if (i != exceptRow) {
+				if (table[0][i] != EMPTY) {
+					int index = children.indexOf(table[0][i]);
+					// If the column is going through a control that is spanning more than one column,
+					// we need to expand it by one instead of adding filler.
+					if (index != -1 && childrenDimensions[index].width > defaultHorizontalSpan)
+						cb.append(createHorizontalSpanCommand(table[0][i], childrenDimensions[index].width + 1));
+					else
+						cb.append(policy.getCreateCommand(createFillerLabelObject(), table[0][i]));
+				}
+			}
+		}
+		// Need to add a final label to the end unless the last row was where the actual control was added
+		if (exceptRow != table[0].length)
+			cb.append(policy.getCreateCommand(createFillerLabelObject(), null));
+		return cb.getCommand();
+	}
+
 	/*
 	 * Insert filler labels in each row at a specific column position in order to move the controls
 	 * over one column yet maintain all other row/column positions before that column.
@@ -623,22 +680,52 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		// If there is only one row (or none), no need to add empty labels.
 		if (table[0].length <= 1)
 			return null;
+		List children = (List) getContainer().eGet(sfCompositeControls);
+		if (children.isEmpty())
+			return null;
 		// Add a filler label prior to each object that is in the atColumn of each row. 
 		// This will in effect add a label to end of the previous row.
 		// This must be done for each row except the row where the actual control has been added.
 		for (int i = 0; i < table[0].length; i++) {
 			if (isLastColumn && i == 0) continue;
 			if (i != exceptRow) {
-				if (table[atColumn][i] != null) {
-					cb.append(policy.getCreateCommand(createFillerLabelObject(), table[atColumn][i]));
+				if (table[atColumn][i] != EMPTY) {
+					int index = children.indexOf(table[atColumn][i]);
+					// If the column is going through a control that is spanning more than one column,
+					// we need to expand it by one instead of adding filler.
+					if (index != -1 && childrenDimensions[index].width > defaultHorizontalSpan)
+						cb.append(createHorizontalSpanCommand(table[atColumn][i], childrenDimensions[index].width + 1));
+					else
+						cb.append(policy.getCreateCommand(createFillerLabelObject(), table[atColumn][i]));
 				}
 			}
 		}
-//		// If this was the last column, need to add a final filler label to the last row (null editpart).
-//		if (isLastColumn)
-//			cb.append(policy.getCreateCommand(createEmptyLabelObject(), null));
 		return cb.getCommand();
 	}
+
+	/*
+	 * Create the command to set the horizontalSpan value of the GridData for a child control.
+	 */
+	private Command createHorizontalSpanCommand(EObject control, int gridWidth) {
+		CommandBuilder cb = new CommandBuilder();
+		if (control != null) {
+			IJavaObjectInstance gridData = (IJavaObjectInstance) control.eGet(sfLayoutData);
+			if (gridData == null) {
+				// Create a new grid data if one doesn't already exist.
+				gridData = (IJavaObjectInstance) BeanUtilities.createJavaObject(
+						"org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			if (gridData != null) {
+				RuledCommandBuilder componentCB = new RuledCommandBuilder(policy.getEditDomain(), null, false);
+				Object widthObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(gridWidth)); //$NON-NLS-1$
+				componentCB.applyAttributeSetting(gridData, sfHorizontalSpan, widthObject);
+				componentCB.applyAttributeSetting(control, sfLayoutData, gridData);
+				cb.append(componentCB.getCommand());
+			}
+		}
+		return cb.getCommand();
+	}
+
 	public void refresh() {
 		layoutTable = null;
 		childrenDimensions = null;
@@ -658,7 +745,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			sfNumColumns = JavaInstantiation.getSFeature(rset, SWTConstants.SF_GRID_LAYOUT_NUM_COLUMNS);
 			sfCompositeLayout = JavaInstantiation.getReference(rset, SWTConstants.SF_COMPOSITE_LAYOUT);
 			classLabel = Utilities.getJavaClass("org.eclipse.swt.widgets.Label", rset); //$NON-NLS-1$
-			sfLabelText = classLabel.getEStructuralFeature("text");
+			sfLabelText = classLabel.getEStructuralFeature("text"); //$NON-NLS-1$
 
 		}
 	}
@@ -680,32 +767,54 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return false;
 	}
-	public boolean isEmptyLabel(Object control) {
+	public boolean isFillerLabel(Object control) {
 		return classLabel.isInstance(control) && !((EObject)control).eIsSet(sfLabelText);
 	}
 	/*
-	 * If the objects in a row are empty 
+	 * If the objects in a row are all filler labels, except the ignoreObject, remove them 
 	 */
-//	public Command removeRowIfEmpty (int atRow, Object ignoreObject) {
-//		CommandBuilder cb = new CommandBuilder();
-//		EObject[][] table = getLayoutTable();
-//		// If there is only one row (or none), no need to add empty labels.
-//		if (table[0].length <= 1)
-//			return null;
-//		// Add an empty label prior to each object that is in the atColumn of each row. 
-//		// This will in effect add a label to end of the previous row.
-//		// This must be done for each row except the row where the actual control has been added.
-//		for (int i = 0; i < table[0].length; i++) {
-//			if (isLastColumn && i == 0) continue;
-//			if (i != exceptRow) {
-//				if (table[atColumn][i] != null) {
-//					cb.append(policy.getCreateCommand(createEmptyLabelObject(), table[atColumn][i]));
-//				}
-//			}
-//		}
-//		// If this was the last column, need to add a final empty label to the last row (null editpart).
-//		if (isLastColumn)
-//			cb.append(policy.getCreateCommand(createEmptyLabelObject(), null));
-//		return cb.getCommand();
-//	}
+	public Command createEmptyRowCommands (int atRow, EObject ignoreObject) {
+		EObject[][] table = getLayoutTable();
+		CommandBuilder cb = new CommandBuilder();
+		boolean empty = true;
+		for (int i = 0; i < table.length; i++) {
+			if (!isFillerLabel(table[i][atRow]) && !(table[i][atRow] == EMPTY) && !(ignoreObject == table[i][atRow])) {
+				empty = false;
+				break;
+			}
+		}
+		if (empty) {
+			for (int i = 0; i < table.length; i++) {
+				if (!(table[i][atRow] == EMPTY) && !(ignoreObject == table[i][atRow]))
+					cb.append(policy.getDeleteDependentCommand(table[i][atRow]));
+			}
+			return cb.getCommand();
+		}
+		return null;
+	}
+	/*
+	 * If the objects in a column are all filler labels, except the ignoreObject, remove them 
+	 */
+	public Command createEmptyColumnCommands (int atColumn, EObject ignoreObject) {
+		EObject[][] table = getLayoutTable();
+		CommandBuilder cb = new CommandBuilder();
+		boolean empty = true;
+		for (int i = 0; i < table[0].length; i++) {
+			if (!isFillerLabel(table[atColumn][i]) && !(table[atColumn][i] == EMPTY) && !(ignoreObject == table[atColumn][i])) {
+				empty = false;
+				break;
+			}
+		}
+		if (empty) {
+			// Remove the columns and reduce the numColumns by 1
+			for (int i = 0; i < table[0].length; i++) {
+				if (!(table[atColumn][i] == EMPTY) && !(ignoreObject == table[atColumn][i]))
+					cb.append(policy.getDeleteDependentCommand(table[atColumn][i]));
+			}
+			if (numColumns != 1)
+				cb.append(createNumColumnsCommand(numColumns - 1));
+			return cb.getCommand();
+		}
+		return null;
+	}
 }

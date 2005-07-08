@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.20 $ $Date: 2005-07-07 13:09:01 $
+ * $Revision: 1.21 $ $Date: 2005-07-08 02:11:53 $
  */
 import java.util.Iterator;
 import java.util.List;
@@ -167,8 +167,9 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	static final int INSERT_ROW = 2;
 	static final int ADD_COLUMN = 3;
 	static final int ADD_ROW = 4;
-	static final int PUT = 5;
+	static final int REPLACE_FILLER = 5;
 	static final int ADD = 6;
+	static final int ADD_TO_EMPTY_CELL = 7;
 	class GridLayoutRequest {
 		int type = ADD;
 		int column = 0;
@@ -562,15 +563,30 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 
 	protected Command getDeleteDependantCommand(Request aRequest) {
 		Command cmd = containerPolicy.getCommand(aRequest);
-		// In order to maintain column row positoning for all the other components we
-		// need to replace the deleted control with a filler label.
 		if (cmd != null && aRequest instanceof ForwardedRequest) {
-			EditPart editPart = ((ForwardedRequest)aRequest).getSender();
+			EditPart editPart = ((ForwardedRequest) aRequest).getSender();
 			List children = getHost().getChildren();
 			int indexEP = children.indexOf(editPart);
-			if (indexEP != -1 && (indexEP+1 < children.size())) {
+			if (indexEP != -1) {
 				CommandBuilder cb = new CommandBuilder();
-				cb.append(containerPolicy.getCreateCommand(helper.createFillerLabelObject(), ((EditPart)children.get(indexEP+1)).getModel()));
+				Rectangle[] rects = helper.getChildrenDimensions();
+				if (indexEP < rects.length) {
+					Rectangle rect = rects[indexEP];
+					// Create the commands to remove the filler labels on this row
+					// if this delete is the last valid control on this row.
+					Command rowCmds = helper.createEmptyRowCommands(rect.y, (EObject) editPart.getModel());
+					Command columnCmds = helper.createEmptyColumnCommands(rect.x, (EObject) editPart.getModel());
+					if (rowCmds != null)
+						cb.append(rowCmds);
+					if (columnCmds != null)
+						cb.append(columnCmds);
+					if (cb.isEmpty() && indexEP + 1 < children.size()) {
+						// In order to maintain column row positoning for all the other components we
+						// need to replace the deleted control with a filler label.
+						cb.append(containerPolicy.getCreateCommand(helper.createFillerLabelObject(), ((EditPart) children.get(indexEP + 1))
+								.getModel()));
+					}
+				}
 				cb.append(cmd);
 				return cb.getCommand();
 			}
@@ -647,14 +663,17 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		if (epIndex != -1)
 			editPart = (GraphicalEditPart) children.get(epIndex);
 		CommandBuilder cb = new CommandBuilder();
-		if (gridReq.type == PUT) {
+
+		if (gridReq.type == REPLACE_FILLER) {
 			// Just replace a filler label with the new control
 			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart.getModel()));
 			cb.append(containerPolicy.getDeleteDependentCommand(editPart.getModel()));
+
 		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
-			cb.append(helper.createNumColumnsCommand(getHost())); // First add another column to the grid
+			cb.append(helper.createNumColumnsCommand(helper.getNumColumns() + 1)); // First add another column to the grid
 			cb.append(helper.createFillerLabelCommands(cell.y + 1)); // then add empty labels at the end of each row
 			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart != null ? editPart.getModel() : null));
+
 		} else if (gridReq.type == INSERT_COLUMN || gridReq.type == ADD_COLUMN) {
 			boolean isLastColumn = false;
 			int column = getGridLayoutGridFigure().getNearestColumn(position.x);
@@ -667,7 +686,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			} else {
 				// Last column... look for the first control on the next row
 				epIndex = helper.getChildIndexAtCell(new Point(0, cell.y + 1));
-				if (epIndex != -1 && epIndex < children.size() - 1)
+				if (epIndex != -1 && epIndex < children.size())
 					editPart = (GraphicalEditPart) children.get(epIndex);
 				else
 					editPart = null;
@@ -677,9 +696,10 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 				cell.y = cell.y + 1;
 				isLastColumn = true;
 			}
-			cb.append(helper.createNumColumnsCommand(getHost())); // First add another column to the grid
+			cb.append(helper.createNumColumnsCommand(helper.getNumColumns() + 1)); // First add another column to the grid
 			cb.append(helper.createFillerLabelCommands(column, cell.y, isLastColumn)); // then add empty labels at this column position
 			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart != null ? editPart.getModel() : null));
+
 		} else if (gridReq.type == INSERT_ROW || gridReq.type == ADD_ROW) {
 			int row = getGridLayoutGridFigure().getNearestRow(position.y);
 			EObject beforeObject = null;
@@ -688,6 +708,9 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 				beforeObject = (EObject) ((EditPart) children.get(epIndex)).getModel();
 			// Insert a row by adding labels and the new object at the appropriate column position
 			cb.append(helper.createFillerLabelsForNewRowCommand(request, beforeObject, cell.x));
+		} else if (gridReq.type == ADD_TO_EMPTY_CELL) {
+			// Add to an empty cell at a column position
+			cb.append(helper.createAddToEmptyCellCommand(request, cell));
 		}
 
 		if (cb.isEmpty())
@@ -721,13 +744,13 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			if (indexBeforeEP != -1) {
 				editPart = (EditPart) getHost().getChildren().get(indexBeforeEP);
 				if (editPart != null) {
-					if (helper.isEmptyLabel(editPart.getModel()))
-						gridReq.type = PUT;
+					if (helper.isFillerLabel(editPart.getModel()))
+						gridReq.type = REPLACE_FILLER;
 					else
 						gridReq.type = INSERT_COLUMN_WITHIN_ROW;
 				}
 			} else
-				gridReq.type = ADD;
+				gridReq.type = ADD_TO_EMPTY_CELL;
 		}
 		return gridReq;
 	}
