@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlManagerFeedbackController_30.java,v $
- *  $Revision: 1.2 $  $Date: 2005-07-01 14:09:14 $ 
+ *  $Revision: 1.3 $  $Date: 2005-07-08 19:14:23 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -36,6 +36,12 @@ public class ControlManagerFeedbackController_30 extends ControlManager.ControlM
 		super(environment);
 	}
 
+	/**
+	 * This is the tree of composites. It doesn't have leaves (Control's) in them. That is because it
+	 * is used to determine which composites need to be layed out. It doesn't need the controls themselves.
+	 * 
+	 * @since 1.1.0
+	 */
 	private static class CompositeTree {
 
 		public final Composite composite;
@@ -137,7 +143,10 @@ public class ControlManagerFeedbackController_30 extends ControlManager.ControlM
 						// Add a child into the list. If already in the list we can stop because the rest of the tree parents have already been added.
 						if (!parentTree.addChild(childCompositeTree))
 							break; // It was already there, so we can stop.
+							
 					}
+					childCompositeTree = parentTree;	// This child tree will now be added to the next parent.
+					parent = parent.getParent();	// Get the next parent.
 				}
 			}
 
