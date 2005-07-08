@@ -11,6 +11,7 @@
 package org.eclipse.ve.internal.swt;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.geometry.*;
@@ -24,8 +25,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
-import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
-import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 
@@ -148,6 +148,39 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		return newbean;
 	}
 	
+	protected IProxyBeanType getValidSuperClass(IExpression expression) {
+		// KLUDGE: Something special for control and "this" part. Since Control is Abstract, someone may of tried create an abstract subclass.
+		// In that case
+		// the bean proxy that comes in would be for Object. So what we will do is since we are not a control, we will change it a Canvas (that
+		// way something will display).
+		// Don't need to worry about any other kind of class because all of the subclasses of Control that we are implementing
+		// are non-abstract.
+		// 
+		// If we find one of the notinstantiated classes is control, then we know we went to far, so we will create it
+		// as gray canvas.
+		// newBean = new java.awt.Canvas();
+		// newBean.setBackground(lightGray);
+		// return newBean;
+
+		notInstantiatedClasses = new ArrayList(2);
+		JavaClass thisClass = (JavaClass) ((IJavaInstance) getTarget()).getJavaType();
+		notInstantiatedClasses.add(thisClass);
+		JavaClass superclass = thisClass.getSupertype();
+		// Actually this should never occur because you can't subclass Control outside of SWT package (it could only happen if
+		// someone tried to extend the swt package because they are many package protected methods that a subclass on Control
+		// would need to call).
+		while (superclass != null && superclass.isAbstract()) {
+			if ("org.eclipse.swt.widgets.Control".equals(superclass.getQualifiedName()))
+				return getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.ConcreteControl", expression);
+			notInstantiatedClasses.add(superclass);
+			superclass = superclass.getSupertype();
+		}
+		if (superclass != null)
+			return getBeanTypeProxy(superclass.getQualifiedNameForReflection(), expression);
+		else
+			return getBeanTypeProxy("java.lang.Object", expression);
+	}
+	
 	protected IProxy primInstantiateThisPart(IProxyBeanType targetClass, IExpression expression) throws AllocationException {
 		if (ffHost != null) {
 			// We are the this part. This means we should be on the freeform. Currently only thispart can be on freeform, so we are putting the
@@ -157,46 +190,20 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 			overrideVisibility(true, expression);
 			overrideLocation(new Point(), expression); // Go to (0,0) because we are in a freeform dialog which will control position.
 
-			boolean changedTarget = false;
-			// KLUDGE: Something special for control and "this" part. Since Control is Abstract, someone may of tried create an abstract subclass.
-			// In that case
-			// the bean proxy that comes in would be for Object. So what we will do is since we are not a control, we will change it a Canvas (that
-			// way something will display).
-			// Don't need to worry about any other kind of class because all of the subclasses of Control that we are implementing
-			// are non-abstract.
-			// 
-			// If we find one of the notinstantiated classes is control, then we know we went to far, so we will create it
-			// as gray canvas.
-			// newBean = new java.awt.Canvas();
-			// newBean.setBackground(lightGray);
-			// return newBean;
-			for (int i = 0; i < notInstantiatedClasses.size(); i++) {
-				if (!changedTarget && ((JavaHelpers) notInstantiatedClasses.get(i)).getQualifiedName().equals("org.eclipse.swt.widgets.Control")) { //$NON-NLS-1$
-					targetClass = getBeanTypeProxy("org.eclipse.swt.widgets.Canvas", expression);
-					changedTarget = true;
-				}
-				if (changedTarget) {
-					notInstantiatedClasses.remove(i--);	// Remove "control" and any above control because we want to be able to apply "control" properties to the live bean.
-				}
-			}
-
 			// Now create using new Control(ffparent, SWT.NONE);
 			IProxy parent = ffHost.add(getEObject().eIsSet(sfControlBounds) || getEObject().eIsSet(sfControlSize), expression);
 
 			// newbean = new targetClass(Composite parent, int SWT.NONE);
-			ExpressionProxy newbean = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
-			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass, 2);
-			expression.createProxyExpression(ForExpression.CLASSINSTANCECREATION_ARGUMENT, parent);
-			expression.createFieldAccess(ForExpression.CLASSINSTANCECREATION_ARGUMENT, getBeanTypeProxy("org.eclipse.swt.SWT", expression)
-					.getFieldProxy(expression, "NONE"), false);
-
-			if (changedTarget) {
-				expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, targetClass.getMethodProxy(expression, "setBackground", //$NON-NLS-1$
-						new String[] { "org.eclipse.swt.graphics.Color"}), true, 1); //$NON-NLS-1$
-				expression.createProxyExpression(ForExpression.METHOD_RECEIVER, newbean);
-				expression.createFieldAccess(ForExpression.METHOD_ARGUMENT, "lightGray", true); //$NON-NLS-1$
-				expression.createProxyExpression(ForExpression.FIELD_RECEIVER, JavaStandardSWTBeanConstants.getConstants(expression.getRegistry()).getEnvironmentProxy());
+			ExpressionProxy newbean = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);;
+			if (!"java.lang.Object".equals(targetClass.getTypeName())) {
+				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass, 2);
+				expression.createProxyExpression(ForExpression.CLASSINSTANCECREATION_ARGUMENT, parent);
+				expression.createFieldAccess(ForExpression.CLASSINSTANCECREATION_ARGUMENT, getBeanTypeProxy("org.eclipse.swt.SWT", expression)
+						.getFieldProxy(expression, "NONE"), false);
+			} else {
+				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass,0);	// It's just java.lang.Object.
 			}
+
 			return newbean;
 		} else
 			return null;	// This shouldn't happen.

@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.26 $  $Date: 2005-06-22 21:05:25 $ 
+ *  $Revision: 1.27 $  $Date: 2005-07-08 18:35:34 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -29,7 +30,7 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
-import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 
@@ -103,11 +104,8 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 			sfComponentSize = JavaInstantiation.getSFeature((IJavaObjectInstance) newTarget, JFCConstants.SF_COMPONENT_SIZE);
 		}
 	}
-
-	protected IProxy primInstantiateThisPart(IProxyBeanType targetClass, IExpression expression) throws AllocationException {
-		preInstantiateStuff(expression);
-		IProxy newbean = super.primInstantiateThisPart(targetClass, expression);
-		
+	
+	protected IProxyBeanType getValidSuperClass(IExpression expression) {
 		// KLUDGE: Something special for component and "this" part. Since Component is Abstract, someone may of tried create an abstract subclass.
 		// In that case
 		// the bean proxy that comes in would be for Object. So what we will do is since we are not a component, we will throw away the
@@ -120,21 +118,26 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 		//   newBean = new java.awt.Canvas();
 		//   newBean.setBackground(lightGray);
 		//   return newBean;
-		for (int i = 0; i < notInstantiatedClasses.size(); i++) {
-			if (((JavaHelpers) notInstantiatedClasses.get(i)).getQualifiedName().equals("java.awt.Component")) { //$NON-NLS-1$
-				expression.createProxyReassignmentExpression(ForExpression.ROOTEXPRESSION, (ExpressionProxy) newbean);
-				IProxyBeanType componentType = getBeanTypeProxy("java.awt.Component", expression); //$NON-NLS-1$
-				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, getBeanTypeProxy("java.awt.Canvas", expression), 0); //$NON-NLS-1$
-				expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, componentType.getMethodProxy(expression, "setBackground", //$NON-NLS-1$
-						new String[] { "java.awt.Color"}), true, 1); //$NON-NLS-1$
-				expression.createProxyExpression(ForExpression.METHOD_RECEIVER, newbean);
-				expression.createFieldAccess(ForExpression.METHOD_ARGUMENT, "lightGray", true); //$NON-NLS-1$
-				expression.createTypeReceiver(getBeanTypeProxy("java.awt.Color", expression)); //$NON-NLS-1$
-				notInstantiatedClasses.remove(notInstantiatedClasses.size() - 1); // The last one WILL be for Component. We want to be able to
-				// apply component settings.
-				break;
-			}
+
+		notInstantiatedClasses = new ArrayList(2);
+		JavaClass thisClass = (JavaClass) ((IJavaInstance) getTarget()).getJavaType();
+		notInstantiatedClasses.add(thisClass);
+		JavaClass superclass = thisClass.getSupertype();
+		while (superclass != null && superclass.isAbstract()) {
+			if ("java.awt.Component".equals(superclass.getQualifiedName()))
+				return getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.ConcreteComponent", expression);
+			notInstantiatedClasses.add(superclass);
+			superclass = superclass.getSupertype();
 		}
+		if (superclass != null)
+			return getBeanTypeProxy(superclass.getQualifiedNameForReflection(), expression);
+		else
+			return getBeanTypeProxy("java.lang.Object", expression);
+	}
+
+	protected IProxy primInstantiateThisPart(IProxyBeanType targetClass, IExpression expression) throws AllocationException {
+		preInstantiateStuff(expression);
+		IProxy newbean = super.primInstantiateThisPart(targetClass, expression);
 		
 		postInstantiateStuff(expression, newbean);
 		return newbean;
@@ -143,9 +146,7 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 	
 	protected IProxy primInstantiateDroppedPart(IExpression expression) throws AllocationException {
 		preInstantiateStuff(expression);
-
 		IProxy newbean = super.primInstantiateDroppedPart(expression);
-
 		postInstantiateStuff(expression, newbean);
 		return newbean;
 	}
