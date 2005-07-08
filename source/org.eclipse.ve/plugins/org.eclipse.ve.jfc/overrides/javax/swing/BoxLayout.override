@@ -8,7 +8,5 @@
       <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey"
           value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.BoxLayoutPolicyFactory"/>
     </addedEObjects>
-    <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-        modelled="true"/>
   </event:AddMany>
 </xmi:XMI>
