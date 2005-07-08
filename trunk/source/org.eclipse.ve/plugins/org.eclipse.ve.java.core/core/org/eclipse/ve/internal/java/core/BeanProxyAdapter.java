@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.45 $  $Date: 2005-07-08 17:51:44 $ 
+ *  $Revision: 1.46 $  $Date: 2005-07-08 18:33:28 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -1263,6 +1263,8 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		IProxyBeanType targetClass = null;
 		if (superclass != null)
 			targetClass = getBeanTypeProxy(superclass.getQualifiedNameForReflection(), expression);
+		else
+			targetClass = getBeanTypeProxy("java.lang.Object", expression);
 		return targetClass;
 	}
 
