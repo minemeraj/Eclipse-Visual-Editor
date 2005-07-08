@@ -11,9 +11,11 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.133 $  $Date: 2005-07-08 17:51:44 $ 
+ *  $Revision: 1.134 $  $Date: 2005-07-08 21:33:59 $ 
  */
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
@@ -334,6 +336,38 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			
 		super.init(site, input);
 	}
+	
+	private Viewport getViewport(IFigure figure) {
+		IFigure f = figure;
+		while (f != null && !(f instanceof Viewport))
+			f = f.getParent();
+		return (Viewport) f;
+	}
+	
+	private IFigure getRootFigure(IFigure target) {
+		IFigure parent = target.getParent();
+		while (parent.getParent() != null)
+			parent = parent.getParent();
+		return parent;
+	}
+	
+	private FigureListener rootFigureListener = new FigureListener() {
+		public void figureMoved(IFigure source) {
+			pauseFigure.revalidate();
+			pauseLabelFigure.revalidate();
+		}
+	};
+
+	private PropertyChangeListener scrolledListener = new PropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent evt) {
+			if (RangeModel.PROPERTY_VALUE.equals(evt.getPropertyName())) {
+				pauseFigure.revalidate();
+				pauseLabelFigure.revalidate();
+			}
+		}
+
+	};
+	
 	private Figure pauseFigure;
 	private Button pauseLabelFigure;
 	private Image reloadImage;
@@ -345,18 +379,26 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// For the free form there is a figure on the feedback layer that washes an alpha black over the GUI
 				if(pauseFigure == null){
 					LayerManager layoutManager = LayerManager.Helper.find(primaryViewer.getRootEditPart());
-					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.FEEDBACK_LAYER);
-					IFigure connectionLayer = layoutManager.getLayer(LayerConstants.CONNECTION_LAYER);					
-					final Rectangle pauseFigureSize = feedbackLayer.getBounds();
+					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.FEEDBACK_LAYER);					
 					pauseFigure = new Figure(){
 						protected void paintFigure(Graphics graphics) {
-							graphics.setAlpha(50);
-							graphics.setBackgroundColor(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
-							graphics.fillRectangle(pauseFigureSize);
-							graphics.setAlpha(100);
+							graphics.setAlpha(125);
+							graphics.setBackgroundColor(Display.getCurrent().getSystemColor(SWT.COLOR_GRAY));
+							graphics.fillRectangle(getClientArea());
 						}
+						Locator locator = new Locator() {
+							public void relocate(IFigure target) {
+								Rectangle b = getRootFigure(target).getClientArea().getCopy();
+								target.translateToRelative(b);
+								target.setBounds(b);
+							}
+						};
+						public void validate() {
+							if (!isValid())
+								locator.relocate(this);
+							super.validate();
+						}						
 					};
-					pauseFigure.setBounds(pauseFigureSize);
 					String buttonLabel = null;
 					// 	Show the user that GUI is paused and can be unpaused by them
 					if(isError){
@@ -371,7 +413,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						Locator locator = new Locator() {
 							public void relocate(IFigure target) {
 								// 	Center the figure in the middle of the canvas
-								Dimension canvasSize = ((GraphicalEditPart)primaryViewer.getRootEditPart()).getFigure().getSize();
+								Dimension canvasSize = getRootFigure(target).getSize();
 								Dimension prefSize = target.getPreferredSize();
 								int newX = (canvasSize.width - prefSize.width) / 2;
 								int newY = (canvasSize.height - prefSize.height) / 2;
@@ -399,8 +441,16 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					
 					pauseFigure.setEnabled(false);
 			
-					connectionLayer.add(pauseFigure); // The figure to wash the GUI with gray should not be selectable so goes in the feedback layee
-					connectionLayer.add(pauseLabelFigure); // The reload button should be selectable so goes into the connection layer
+					feedbackLayer.add(pauseFigure); 
+					feedbackLayer.add(pauseLabelFigure); // The reload button should be selectable so goes into the connection layer
+					Viewport vp = getViewport(feedbackLayer);
+					if (vp != null) {
+						vp.getHorizontalRangeModel().addPropertyChangeListener(scrolledListener);
+						vp.getVerticalRangeModel().addPropertyChangeListener(scrolledListener);
+					}				
+					getRootFigure(feedbackLayer).addFigureListener(rootFigureListener);
+					pauseFigure.revalidate();
+					pauseLabelFigure.revalidate();					
 				}
 			}
 		};
@@ -415,6 +465,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	private void resetPauseFeedback(){
 		if (pauseFigure != null){
+			Viewport vp = getViewport(pauseFigure.getParent());
+			if (vp != null) {
+				vp.getHorizontalRangeModel().removePropertyChangeListener(scrolledListener);
+				vp.getVerticalRangeModel().removePropertyChangeListener(scrolledListener);
+			}
+			getRootFigure(pauseFigure.getParent()).removeFigureListener(rootFigureListener);
+			
 			pauseFigure.getParent().remove(pauseFigure);
 			pauseFigure = null;
 			pauseLabelFigure.getParent().remove(pauseLabelFigure);
