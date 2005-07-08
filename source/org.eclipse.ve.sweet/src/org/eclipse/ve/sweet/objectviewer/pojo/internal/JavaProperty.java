@@ -63,7 +63,7 @@ public class JavaProperty implements InvocationHandler {
             propertyType = getter.getReturnType();
         } catch (NoSuchMethodException e) {
             try {
-                field = receiverClass.getDeclaredField(propertyName);
+                field = getField(receiverClass, propertyName);
             } catch (Exception e2) {
                 /*
                  *  We'll try lower-casing the property name.  This allows someone
@@ -71,7 +71,7 @@ public class JavaProperty implements InvocationHandler {
                  *  and have Sweet pick up the encapsulated method automatically.
                  */
                 try {
-                    field = receiverClass.getDeclaredField(lowerCaseFirstLetter(propertyName));
+                    field = getField(receiverClass, lowerCaseFirstLetter(propertyName));
                 } catch (Exception e1) {
                     throw new NoSuchMethodException("That property does not exist.");
                 }
@@ -84,6 +84,21 @@ public class JavaProperty implements InvocationHandler {
             setter = receiverClass.getMethod(
                     realMethodName("set"), new Class[] {propertyType});
         } catch (NoSuchMethodException e) {}
+    }
+
+    private Field getField(Class clazz, String propertyName) {
+        Field result = null;
+        while (clazz != null) {
+            try {
+                result = clazz.getDeclaredField(propertyName);
+            } catch (SecurityException e) {
+            } catch (NoSuchFieldException e) {
+            }
+            if (result != null)
+                return result;
+            clazz = clazz.getSuperclass();
+        }
+        return null;
     }
 
     private String lowerCaseFirstLetter(String name) {
