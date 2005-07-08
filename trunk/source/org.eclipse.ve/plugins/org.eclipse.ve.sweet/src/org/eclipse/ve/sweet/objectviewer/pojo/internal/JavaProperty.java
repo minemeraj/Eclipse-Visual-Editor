@@ -169,7 +169,7 @@ public class JavaProperty implements InvocationHandler {
         Method realMethod;
         try {
             realMethod = receiverClass.getMethod(
-                    realMethodName(method.getName()), method.getParameterTypes());
+                    realMethodName(method.getName()), (Class[])method.getParameterTypes());
         } catch (Exception e) {
             return null;
         }
