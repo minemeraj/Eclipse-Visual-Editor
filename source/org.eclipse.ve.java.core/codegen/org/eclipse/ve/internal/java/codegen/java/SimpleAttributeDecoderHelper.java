@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.36 $  $Date: 2005-06-15 18:58:22 $ 
+ *  $Revision: 1.37 $  $Date: 2005-07-08 18:08:57 $ 
  */
 
 import java.util.List;
@@ -78,10 +78,26 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
             JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(
             		ConstructorDecoderHelper.getParsedTree(arg,expOfMethod,fOwner.getExprRef().getOffset(),fbeanPart.getModel(), getExpressionReferences()));
             
-            EFactory fact = argType.getEPackage().getEFactoryInstance();
-			IJavaInstance result = (IJavaInstance) fact.create((EClass) argType);
+            IJavaInstance result=null;
             
-            result.setAllocation(alloc);
+            if(alloc instanceof ParseTreeAllocation){
+            	// If the allocation is a parsetree allocation
+            	ParseTreeAllocation ptAlloc = (ParseTreeAllocation) alloc;
+            	if(ptAlloc.getExpression() instanceof PTInstanceReference){
+            		// and if the expression of the PTAlloc is an instance ref, then
+            		// there is already an instance existing in the EMF model - use it
+            		// instead of creating a new one.
+            		PTInstanceReference ptInstanceRef = (PTInstanceReference) ptAlloc.getExpression();
+            		result = ptInstanceRef.getObject();
+            	}
+            }
+            
+            if(result==null){
+	            EFactory fact = argType.getEPackage().getEFactoryInstance();
+				result = (IJavaInstance) fact.create((EClass) argType);
+	            
+	            result.setAllocation(alloc);
+            }
             
             return result;            
     }
@@ -136,6 +152,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	    if (!updateEMFModel) {
 	    	fPropInstance = newPropInstance;
 			fInitString = newInitString;
+
+			updateReference(fPropInstance);
+			
 			return true;
 	    }
 	    
@@ -173,7 +192,9 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		fPropInstance = newPropInstance;
 		fInitString = newInitString;
 
-        EObject oldSetting = (EObject) target.eGet(sf);
+		updateReference(fPropInstance);
+		
+       EObject oldSetting = (EObject) target.eGet(sf);
 		if (fPropInstance == null) {
 			target.eSet(sf,null) ;
 		}
@@ -184,6 +205,14 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		}
 		CodeGenUtil.propertyCleanup(oldSetting);
 		return true;
+	}
+
+	private void updateReference(IJavaInstance referenceInstance) {
+		// Update references
+		List references = fOwner.getExprRef().getReferences();
+		references.clear();
+		if(referenceInstance!=null)
+			references.add(referenceInstance);
 	}
 
 	/**
