@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.22 $  $Date: 2005-05-11 22:41:22 $ 
+ *  $Revision: 1.23 $  $Date: 2005-07-08 16:00:37 $ 
  */
 
 import java.util.*;
@@ -227,6 +227,13 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		if (targetCC != null) {
 			targetCC.eUnset(targetCC.eClass().getEStructuralFeature("component")); //$NON-NLS-1$
 		}
+		
+		List references = fOwner.getExprRef().getReferences();
+		if(references.contains(fAddedInstance))
+			references.remove(fAddedInstance);
+		if(references.contains(fAddedConstraintInstance))
+			references.remove(fAddedConstraintInstance);
+		
 		if (fAddedPart == null)
 			cleanProperty(fAddedInstance);
 		cleanProperty(fAddedConstraintInstance);
@@ -568,7 +575,14 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 					fisAddedConstraintSet = fAddedConstraint != null;
 					tmpConstraintBeanPart.addToJVEModel();
 				}
-				
+
+				List references = fOwner.getExprRef().getReferences();
+				if(fAddedInstance!=null && !references.contains(fAddedInstance))
+					references.add(fAddedInstance);
+				if(fAddedConstraintInstance!=null && !references.contains(fAddedConstraintInstance))
+					references.add(fAddedConstraintInstance);
+
+
 				try {
 					EObject oldConstraint = (EObject) (fCC != null ? fCC.eGet(CodeGenUtil.getConstraintFeature(fCC)) : null);
 	
