@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.134 $  $Date: 2005-07-08 21:33:59 $ 
+ *  $Revision: 1.135 $  $Date: 2005-07-08 22:26:20 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -64,6 +64,7 @@ import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.*;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.dnd.Clipboard;
@@ -382,9 +383,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.FEEDBACK_LAYER);					
 					pauseFigure = new Figure(){
 						protected void paintFigure(Graphics graphics) {
-							graphics.setAlpha(125);
-							graphics.setBackgroundColor(Display.getCurrent().getSystemColor(SWT.COLOR_GRAY));
-							graphics.fillRectangle(getClientArea());
+							try {
+								graphics.setAlpha(125);
+								graphics.setBackgroundColor(Display.getCurrent().getSystemColor(SWT.COLOR_GRAY));
+								graphics.fillRectangle(getClientArea());
+							} catch (SWTException e) {
+								// This occurs because if alpha's not available. No way to check with Graphics ahead of time.
+							}
 						}
 						Locator locator = new Locator() {
 							public void relocate(IFigure target) {
