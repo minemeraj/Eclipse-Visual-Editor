@@ -13,6 +13,7 @@ package org.eclipse.ve.sweet.fieldviewer.swt.internal;
 
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
+import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 
@@ -65,6 +66,11 @@ public class ComboFieldViewer implements IFieldViewer {
     public IPropertyEditor getInput() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public void setHintHandler(IHintHandler hintHandler) {
+        // TODO Auto-generated method stub
+        
     }
 
 }
