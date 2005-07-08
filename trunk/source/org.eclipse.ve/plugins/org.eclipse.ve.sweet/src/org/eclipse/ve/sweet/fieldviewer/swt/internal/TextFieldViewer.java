@@ -25,7 +25,8 @@ import org.eclipse.ve.sweet.converter.Converter;
 import org.eclipse.ve.sweet.converter.IConverter;
 import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.ITextControl;
-import org.eclipse.ve.sweet.hinthandler.HintHandler;
+import org.eclipse.ve.sweet.hinthandler.DelegatingHintHandler;
+import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 import org.eclipse.ve.sweet.reflect.RelaxedDuckType;
@@ -50,6 +51,8 @@ public class TextFieldViewer implements IFieldViewer {
     private IValidator verifier;
     private IConverter object2String;
     private IConverter string2Object;
+    
+    private DelegatingHintHandler hintHandler = new DelegatingHintHandler();
     
     private Object propertyValue;
     
@@ -135,9 +138,9 @@ public class TextFieldViewer implements IFieldViewer {
 	public String validate() {
         String message = verifier.isValid(control.getText());
         if (message == null) {
-            HintHandler.getDefault().setMessage("");
+            hintHandler.clearMessage();
         } else {
-            HintHandler.getDefault().setMessage(message);
+            hintHandler.setMessage(message);
         }
         return message;
 	}
@@ -175,6 +178,13 @@ public class TextFieldViewer implements IFieldViewer {
     public IPropertyEditor getInput() {
         return property;
     }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.fieldviewer.IFieldViewer#setHintHandler(org.eclipse.ve.sweet.hinthandler.IHintHandler)
+     */
+    public void setHintHandler(IHintHandler hintHandler) {
+        this.hintHandler.delegate = hintHandler;
+    }
 
     private VerifyListener verifyListener = new VerifyListener() {
         public void verifyText(VerifyEvent e) {
@@ -183,11 +193,11 @@ public class TextFieldViewer implements IFieldViewer {
             String error = verifier.isValidPartialInput(newValue);
             if (error != null) {
                 e.doit = false;
-                HintHandler.getDefault().setMessage(error);
+                hintHandler.setMessage(error);
             } else {
                 dirty = true;
                 input.fireObjectListenerEvent();
-                HintHandler.getDefault().clearMessage();
+                hintHandler.clearMessage();
             }
         }
     };

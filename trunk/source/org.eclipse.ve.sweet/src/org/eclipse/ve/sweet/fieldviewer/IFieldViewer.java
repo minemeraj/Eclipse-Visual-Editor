@@ -12,6 +12,7 @@
 package org.eclipse.ve.sweet.fieldviewer;
 
 import org.eclipse.ve.sweet.CannotSaveException;
+import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 
 
@@ -54,6 +55,17 @@ public interface IFieldViewer {
      * @return String the name of the property being edited.
      */
     public String getPropertyName();
+    
+    /**
+     * Method setHintHandler.
+     * 
+     * Sets the object that will handle hint message events for this IObjectViewer.
+     * If none is set, the global hint handler that is specified in the
+     * HintHandler singleton will be used by default.
+     * 
+     * @param hintHandler The IHintHandler to set.
+     */
+    public void setHintHandler(IHintHandler hintHandler);
     
     /**
      * Method isDirty.

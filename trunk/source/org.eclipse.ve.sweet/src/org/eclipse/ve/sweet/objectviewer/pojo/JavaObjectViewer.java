@@ -17,6 +17,8 @@ import java.util.LinkedList;
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.fieldviewer.FieldViewerFactory;
 import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
+import org.eclipse.ve.sweet.hinthandler.DelegatingHintHandler;
+import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
 import org.eclipse.ve.sweet.objectviewer.IEditedObject;
 import org.eclipse.ve.sweet.objectviewer.IInputChangeListener;
@@ -41,7 +43,9 @@ public class JavaObjectViewer implements IObjectViewer {
     private LinkedList bindings = new LinkedList();
 
     private LinkedList objectListeners = new LinkedList();
-
+    
+    private DelegatingHintHandler hintHandler = new DelegatingHintHandler();
+    
     /* (non-Javadoc)
      * @see com.db4o.binding.dataeditors.IObjectViewer#setInput(java.lang.Object)
      */
@@ -115,6 +119,9 @@ public class JavaObjectViewer implements IObjectViewer {
         if (result.validate() != null) {
             dirty=true;
         }
+        
+        // Remember to set the new IFieldViewer about any delegated IHintHandler
+        result.setHintHandler(hintHandler.delegate);
         
         return result;
     }
@@ -304,6 +311,13 @@ public class JavaObjectViewer implements IObjectViewer {
             IEditStateListener listener = (IEditStateListener) listeners.next();
             listener.stateChanged(this);
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.objectviewer.IObjectViewer#setHintHandler(org.eclipse.ve.sweet.hinthandler.IHintHandler)
+     */
+    public void setHintHandler(IHintHandler hintHandler) {
+        this.hintHandler.delegate = hintHandler;
     }
     
     /* (non-Javadoc)
