@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.132 $  $Date: 2005-07-06 14:51:20 $ 
+ *  $Revision: 1.133 $  $Date: 2005-07-08 17:51:44 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1963,6 +1963,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					TimerTests.basicTest.startStep("Create Bean Instances on Target VM");					 //$NON-NLS-1$
 					if (doTimerStep)
 						PerformanceMonitorUtil.getMonitor().snapshot(116);
+					if (monitor.isCanceled()) {
+						setLoadIsPending(false);
+						return canceled();
+					}
 					a.initBeanProxy();
 					if (doTimerStep)
 						PerformanceMonitorUtil.getMonitor().snapshot(117);
@@ -2542,11 +2546,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		}
 		return new CustomPalettePage(getPaletteViewerProvider());
 	}
-	private TreeViewer beansListTreeViewer;
 	protected IContentOutlinePage getContentOutlinePage(){
 		if (beansListPage == null)
-			beansListTreeViewer = new TreeViewer();			
-			beansListPage = new JavaVisualEditorOutlinePage(this, beansListTreeViewer);
+			beansListPage = new JavaVisualEditorOutlinePage(this, new TreeViewer());
 		return beansListPage;
 	}
 

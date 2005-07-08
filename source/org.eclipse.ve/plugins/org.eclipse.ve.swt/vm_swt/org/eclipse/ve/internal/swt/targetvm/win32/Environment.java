@@ -10,13 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Environment.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-07-08 17:51:50 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.win32;
 
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.widgets.Shell;
+
+import org.eclipse.jem.internal.proxy.common.IVMServer;
  
 
 /**
@@ -24,6 +25,10 @@ import org.eclipse.swt.widgets.Shell;
  * @since 1.1.0
  */
 public class Environment extends org.eclipse.ve.internal.swt.targetvm.Environment {
+
+	public Environment(IVMServer vmserver) {
+		super(vmserver);
+	}
 
 	private static final ShellListener preventShellCloseListener = new ShellAdapter() {
 		

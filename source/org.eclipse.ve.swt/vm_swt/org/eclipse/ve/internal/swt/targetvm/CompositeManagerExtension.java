@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeManagerExtension.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-24 16:45:11 $ 
+ *  $Revision: 1.3 $  $Date: 2005-07-08 17:51:50 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -41,10 +41,10 @@ public class CompositeManagerExtension extends ControlManagerExtension {
 	 */
 	public static class LayoutDataTypeCallback implements ICallback {
 
-		private IVMServer vmServer;
+		private IVMCallbackServer vmServer;
 		private int callbackID;
 
-		public void initializeCallback(IVMServer vmServer, int callbackID) {
+		public void initializeCallback(IVMCallbackServer vmServer, int callbackID) {
 			this.vmServer = vmServer;
 			this.callbackID = callbackID;
 			layoutDataTypeCallback = this;

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.remotevm;
 /*
  *  $RCSfile: WindowLauncher.java,v $
- *  $Revision: 1.6 $  $Date: 2005-05-21 06:33:30 $ 
+ *  $Revision: 1.7 $  $Date: 2005-07-08 17:51:44 $ 
  */
 
 import java.awt.*;
@@ -30,7 +30,7 @@ import org.eclipse.ve.internal.java.common.Common;
 
 public class WindowLauncher implements ICallback {
 	
-	protected IVMServer fServer;
+	protected IVMCallbackServer fServer;
 	protected int fCallbackID;	
 	Component fComponent;
 	IBeanPropertyEditorDialog fDialog;
@@ -53,7 +53,7 @@ public WindowLauncher(Component aComponent, boolean aBoolean){
 /**
  * The listener initialize for callback server.
  */
-public void initializeCallback(IVMServer server, int callbackID){
+public void initializeCallback(IVMCallbackServer server, int callbackID){
 	fServer = server;
 	fCallbackID = callbackID;
 }

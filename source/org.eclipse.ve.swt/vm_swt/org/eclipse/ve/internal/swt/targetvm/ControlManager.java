@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.19 $ $Date: 2005-06-24 16:45:11 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.20 $ $Date: 2005-07-08 17:51:50 $
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -36,6 +36,10 @@ import org.eclipse.ve.internal.swt.common.Common;
  * It also handles the freeform settings for loc and bounds since those need to be saved and returned as default values when set by freeform override.
  * <p>
  * This is not meant to be subclassed. Users should use ControlManagerExtension for that.
+ * <p>
+ * Unlike jfc ComponentManagerFeedbackController, this feedback controller doesn't need to do anything on shutdown. That is because on shutdown the
+ * display will be shutdown itself, and so it won't be sending anymore transactions.
+ * 
  * @see ControlManager.ControlManagerExtension for extensions.
  * @since 1.1.0
  */
@@ -231,7 +235,7 @@ public class ControlManager {
 			return (ControlManagerFeedbackController) ctor.newInstance(new Object[] {environment});
 		}
 
-		protected IVMServer fServer;
+		protected IVMCallbackServer fServer;
 
 		protected int fCallbackID;
 
@@ -348,9 +352,9 @@ public class ControlManager {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.jem.internal.proxy.common.ICallback#initializeCallback(org.eclipse.jem.internal.proxy.common.IVMServer, int)
+		 * @see org.eclipse.jem.internal.proxy.common.ICallback#initializeCallback(org.eclipse.jem.internal.proxy.common.IVMCallbackServer, int)
 		 */
-		public void initializeCallback(IVMServer server, int callbackID) {
+		public void initializeCallback(IVMCallbackServer server, int callbackID) {
 			fServer = server;
 			fCallbackID = callbackID;
 		}

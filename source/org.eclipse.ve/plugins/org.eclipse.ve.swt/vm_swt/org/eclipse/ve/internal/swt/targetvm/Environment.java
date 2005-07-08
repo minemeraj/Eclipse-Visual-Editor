@@ -12,11 +12,11 @@ package org.eclipse.ve.internal.swt.targetvm;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
+
+import org.eclipse.jem.internal.proxy.common.IVMServer;
 
 /**
  * Environment. There is one per display. Subclasses are used for individual OS's.
@@ -45,10 +45,14 @@ public abstract class Environment {
 		return (Environment) display.getData(ENVIRONMENT_KEY);
 	}
 
-	private void initialize() {
-		if (display != null)
-			return;
-
+	
+	public Environment(IVMServer vmserver) {
+		initialize(vmserver);
+	}
+	
+	private boolean shutdownRequested;
+	
+	private void initialize(IVMServer vmserver) {
 		t = new Thread("SWT UI Thread for VE") { //$NON-NLS-1$
 			public void run() {
 				synchronized (Thread.currentThread()) {
@@ -59,6 +63,8 @@ public abstract class Environment {
 				}
 				while (true) {
 					try {
+						if (shutdownRequested)
+							break;
 						if (!display.readAndDispatch())
 							display.sleep();
 					} catch (RuntimeException e) {
@@ -67,8 +73,22 @@ public abstract class Environment {
 						// running until vm is killed.
 					}
 				}
+				display.dispose();
 			}
 		};
+		
+		vmserver.addShutdownListener(new Runnable() {
+		
+			public void run() {
+				shutdownRequested = true;
+				display.asyncExec(null);	// Wake it up
+				try {
+					t.join(10000);
+				} catch (InterruptedException e) {
+				}
+			}
+		
+		});
 
 		synchronized (t) {
 			t.start();
@@ -85,12 +105,12 @@ public abstract class Environment {
 
 	/**
 	 * Get the display used by this environment.
+	 * @param vmserver The IVMServer for this registry.
 	 * @return
 	 * 
 	 * @since 1.1.0
 	 */
 	public Display getDisplay() {
-		initialize();
 		return display;
 	}
 	

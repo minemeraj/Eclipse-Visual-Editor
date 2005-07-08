@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.5 $  $Date: 2005-07-08 17:51:50 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -34,11 +34,11 @@ import org.eclipse.ve.internal.swt.common.ImageDataConstants;
  */
 public abstract class ImageCapture implements ICallback {
 	
-	protected IVMServer vmServer;
+	protected IVMCallbackServer vmServer;
 	protected int callbackID;
 	protected DataOutputStream os;
 
-	public void initializeCallback(IVMServer vmServer, int callbackID) {
+	public void initializeCallback(IVMCallbackServer vmServer, int callbackID) {
 		this.vmServer = vmServer;
 		this.callbackID = callbackID;
 	}
