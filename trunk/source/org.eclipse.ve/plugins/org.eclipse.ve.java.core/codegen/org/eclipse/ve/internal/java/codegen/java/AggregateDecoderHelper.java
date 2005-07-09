@@ -1,0 +1,122 @@
+/*******************************************************************************
+ * Copyright (c) 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: AggregateDecoderHelper.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-07-09 00:02:23 $ 
+ */
+package org.eclipse.ve.internal.java.codegen.java;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+
+import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jface.util.Assert;
+
+import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+ 
+
+public class AggregateDecoderHelper extends ExpressionDecoderHelper {
+
+	private IExpressionDecoderHelper[] helpers = null;
+	private IExpressionDecoderHelper decodedHelper = null;
+	
+	public AggregateDecoderHelper(BeanPart bean, Statement exp, IJavaFeatureMapper fm, IExpressionDecoder owner, Class[] helperClasses) {
+		super(bean, exp, fm, owner);
+		Assert.isNotNull(helperClasses, "Must have atleast one decoder helper to aggregate");
+		Assert.isTrue(helperClasses.length>0, "Must have atleast one decoder helper to aggregate");
+		this.helpers = new IExpressionDecoderHelper[helperClasses.length];
+		Class paramClasses[] = new Class[4];
+		try {
+			paramClasses[0] = getClass().getClassLoader().loadClass("org.eclipse.ve.internal.java.codegen.model.BeanPart");
+			paramClasses[1] = getClass().getClassLoader().loadClass("org.eclipse.jdt.core.dom.Statement");
+			paramClasses[2] = getClass().getClassLoader().loadClass("org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper");
+			paramClasses[3] = getClass().getClassLoader().loadClass("org.eclipse.ve.internal.java.codegen.java.IExpressionDecoder");
+			for (int helperClassCount = 0; helperClassCount < helperClasses.length; helperClassCount++) {
+				Constructor constructor = helperClasses[helperClassCount].getConstructor(paramClasses);
+				IExpressionDecoderHelper helper = (IExpressionDecoderHelper) constructor.newInstance(new Object[]{bean, exp, fm, owner});
+				helpers[helperClassCount] = helper;
+			}
+		} catch (ClassNotFoundException e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		} catch (SecurityException e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		} catch (NoSuchMethodException e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		} catch (IllegalArgumentException e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		} catch (InstantiationException e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		} catch (IllegalAccessException e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		} catch (InvocationTargetException e) {
+			JavaVEPlugin.log(e, Level.WARNING);
+		}
+	}
+
+	public boolean decode() throws CodeGenException {
+		for (int helperCount = 0; helperCount < helpers.length; helperCount++) {
+			if(helpers[helperCount].decode()){
+				decodedHelper = helpers[helperCount];
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean restore() throws CodeGenException {
+		for (int helperCount = 0; helperCount < helpers.length; helperCount++) {
+			if(helpers[helperCount].restore()){
+				decodedHelper = helpers[helperCount];
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public String generate(Object[] args) throws CodeGenException {
+		if(decodedHelper!=null)
+			return decodedHelper.generate(args);
+		return null;
+	}
+
+	public void removeFromModel() {
+		if(decodedHelper!=null)
+			decodedHelper.removeFromModel();
+	}
+
+	public String primRefreshFromComposition(String expSig) throws CodeGenException {
+		if(decodedHelper!=null)
+			return decodedHelper.primRefreshFromComposition(expSig);
+		return null;
+	}
+
+	public boolean primIsDeleted() {
+		if(decodedHelper!=null)
+			return decodedHelper.primIsDeleted();
+		return false;
+	}
+
+	public Object[] getArgsHandles(Statement expr) {
+		if(decodedHelper!=null)
+			return decodedHelper.getArgsHandles(expr);
+		return null;
+	}
+
+	public boolean isImplicit(Object[] args) {
+		if(decodedHelper!=null)
+			return decodedHelper.isImplicit(args);
+		return false;
+	}
+
+}

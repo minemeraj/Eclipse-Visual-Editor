@@ -11,11 +11,9 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.21 $  $Date: 2005-06-23 19:34:49 $ 
+ *  $Revision: 1.22 $  $Date: 2005-07-09 00:02:23 $ 
  */
 import java.util.*;
-import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.EList;
@@ -198,7 +196,11 @@ protected boolean  addComponent () throws CodeGenException {
 	
 	BeanPart oldAddedPart = fAddedPart ;
   
-    fAddedPart = parseAddedPart((MethodInvocation)getExpression())  ;
+    fAddedPart = null;
+    if(getExpression() instanceof MethodInvocation) 
+    	fAddedPart = parseAddedPart((MethodInvocation)getExpression())  ;
+    else if (getExpression() instanceof Assignment) 
+    	fAddedPart = parseAddedPart((Assignment)getExpression())  ;
     
     if (oldAddedPart != null)
 		// If we are coming from source, the old beanpart might have been disposed - check
@@ -217,6 +219,22 @@ protected boolean  addComponent () throws CodeGenException {
     else
 	  return false;
 }
+
+private BeanPart parseAddedPart(Assignment assignment) {
+	BeanPart added = null;
+    if (assignment.getRightHandSide() instanceof MethodInvocation)  {
+        // Look to see of if this method returns a Bean
+        String selector = ((MethodInvocation)assignment.getRightHandSide()).getName().getIdentifier() ;  
+        added = fOwner.getBeanModel().getBeanReturned(selector) ;           
+   }
+   else if (assignment.getRightHandSide() instanceof SimpleName){
+          // Simple reference to a bean
+          String selector = ((SimpleName)assignment.getRightHandSide()).getIdentifier();
+          added = CodeGenUtil.getBeanPart(fOwner.getBeanModel(), selector, fOwner.getExprRef().getMethod(), fOwner.getExprRef().getOffset());            	
+   }
+	return added;
+}
+
 
 /**
  * Returns the beanpart in the BDM which reflects to
@@ -294,14 +312,17 @@ public boolean primIsDeleted() {
    return result ;
 }
 
-protected boolean isValid() throws CodeGenException {
-	if (fFmapper.getFeature(fExpr) == null ||
-	 	   fExpr == null) throw new CodeGenException ("null Feature:"+fExpr) ; //$NON-NLS-1$
-	
-	 Expression exp = getExpression();
-	 if (!(exp instanceof MethodInvocation)) return false ;
-	 else return true;
-}
+	protected boolean isValid() throws CodeGenException {
+		if (fFmapper.getFeature(fExpr) == null || fExpr == null)
+			throw new CodeGenException("null Feature:" + fExpr); //$NON-NLS-1$
+
+		Expression exp = getExpression();
+		if (exp instanceof MethodInvocation)
+			return true; // can handle method invocations
+		else if (exp instanceof Assignment)
+			return true; // can handle simple assignments
+		return false;
+	}
 
 /**
  *   Go for it
@@ -316,13 +337,19 @@ public boolean decode() throws CodeGenException {
 
 public boolean restore() throws CodeGenException {
 	if (isValid()) {
-		fAddedPart = parseAddedPart((MethodInvocation)getExpression())  ;
+		fAddedPart = null;
+	    if(getExpression() instanceof MethodInvocation) 
+	    	fAddedPart = parseAddedPart((MethodInvocation)getExpression())  ;
+	    else if (getExpression() instanceof Assignment) 
+	    	fAddedPart = parseAddedPart((Assignment)getExpression())  ;
+		
 		if (fAddedPart!=null) {
 		  if (isChildRelationship()) {      
 		    fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
 		    fbeanPart.addChild(fAddedPart) ;
-		    getExpressionReferences().add(fAddedPart.getEObject());
 		  }
+	      if(!getExpressionReferences().contains(fAddedPart.getEObject()))
+	    	  getExpressionReferences().add(fAddedPart.getEObject());
 		  return true;
 		}
 	}		
