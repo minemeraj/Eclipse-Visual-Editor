@@ -35,7 +35,7 @@ public class MethodSortTests extends TestCase {
 	BeanPartDecleration decl2 = new BeanPartDecleration("DummyBean 2","noType");
 	BeanPart bp1 = new BeanPart (decl1);
 	BeanPart bp2 = new BeanPart (decl2);
-	Object   sf = new Object();
+	Object   sf = EcorePackage.eINSTANCE.getEAnnotation_Contents();
 	
 	int REGULAR = 10;
 	int LOW = 5;
@@ -143,7 +143,7 @@ public class MethodSortTests extends TestCase {
 		if (reference) {
 			if (bp.getEObject()==null) {
 				try {
-			       bp1.setEObject(EcorePackage.eINSTANCE.getEJavaObject());
+			       bp.setEObject(EcorePackage.eINSTANCE.getEJavaObject());
 				}
 				catch (Exception e) {};
 				try {
@@ -383,7 +383,17 @@ public class MethodSortTests extends TestCase {
 			e.printStackTrace();
 		}
 	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(9)) ;		
-		}					
+		}				
+	
+	public void test12() {
+		CodeExpressionRef exp = createExpression(new BeanPart(decl1), false, true, true, getPriority(-1,true));
+		try {
+			method.updateExpressionOrder();
+		} catch (CodeGenException e) {
+			e.printStackTrace();
+		}
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(9)) ;		
+		}				
 	
 	/**
 	 * @see TestCase#setUp()

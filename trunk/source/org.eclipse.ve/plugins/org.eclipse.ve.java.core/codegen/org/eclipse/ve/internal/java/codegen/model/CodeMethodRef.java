@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.40 $  $Date: 2005-06-20 17:33:02 $ 
+ *  $Revision: 1.41 $  $Date: 2005-07-09 00:00:10 $ 
  */
 
 import java.util.*;
@@ -19,6 +19,7 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
@@ -34,6 +35,7 @@ import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpression
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
 
 
 public class CodeMethodRef extends AbstractCodeRef {
@@ -410,20 +412,57 @@ protected int getGroupLastIndex(List sortedList, BeanPart bp) {
 	return -1;
 }
 
+
+/**
+ * 
+ * This method will return true, if it is possible that exp, indirectly initializes
+ * an Object that is listed in the references argument.
+ * 
+ * @param exp 
+ * @param references
+ * @return
+ * 
+ * @since 1.1.0
+ */
+ private boolean isRelated(CodeExpressionRef exp, List references) {
+	 
+ 	EReference sf = (EReference)exp.getPriority().getProiorityIndex()[1];
+	if (VCEPostSetCommand.isChildRelationShip(sf)) {
+		// cExp is a parent/child indexed expression
+		// it can be that it is in the form of creatComposite(), in this case
+		// it relates to the INIT expression of its argument
+		// if exp is dependant on this object, we are dependent on cExp
+		Object[] args = exp.getArgs();
+		if (args!=null) {
+			for (int i = 0; i < args.length; i++) {
+				if (references.contains(args[i]))
+					return true;								
+			}
+		}		
+	}
+	return false;
+ }
+
 /**
  * Sorting goes as following:
  * 
- *     Priority is of the form [proirity:(index,feature)]
+ *     Priority is of the form [w:(index,feature)]
  *     
- *     Expressions are grouped by beans, according to their priority. 
- *     Higher piority goes first.
+ *     w is the expression weight (larger w comes first)
+ *     index imply that the expression is bounded by a z order on a particular feature
  *     
- *     New Bean will be created at the top of the method, unless they are dependant
- *     on other beans.  This is a workaround for things like a GridBagConstraint, where 
+ *     Expressions are grouped by beans, according to their weight. 
+ *     Higher w goes first.
+ *     
+ *     New Bean (constructor) expression will be inserted at the top of the method, unless it is dependant
+ *     on another beans.  This is a workaround for things like a GridBagConstraint, where 
  *     expressions are generated before the dependency of the GridBagConstrait is placed,
- *     and the dependency check does not work. 
+ *     and the dependency check does not work. ... additonal expressions on the same bean will be opted
+ *     to be group together around the constructor.
  *     
- *     Proirity's index order will be enforced across bean expression grouping.
+ *     w is used to detemine where to place an expression within a grouping.
+ *     
+ *     if index is defined, order will be enforced across bean expression grouping.
  *     This may force an expression not to be grouped with its bean's expressions.
  *     Index will be enforced for same features only.
  *     
@@ -480,10 +519,17 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		   	 else if (cExp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
 		   	 		compare = -1;  // new expression will come after the init expr
 		   	 else if (cExp.getPriority().isIndexed()) {
-				    if (expPriority.isIndexed()) // drive index ordering in the group
+				    if (expPriority.isIndexed()) {// drive index ordering in the group
 						compare = expPriority.comparePriority(cExp.getPriority());
-				    else
-				        compare = 1;  // cExp may be placed here because of index, not grouping
+						if (compare==0) // no index dependencies
+							if (isRelated(cExp, dependantBeans))
+								compare = -1; // exp may be dependant on cExp
+				    }
+				    else {
+				    	compare = 1;  // cExp is placed here because of index, not grouping
+				    	if (isRelated(cExp, dependantBeans))
+				    		compare = -1;  // exp may be dependant on cExp
+				    }
 		   	      }
 		   	 else {
 		   	 	    // Check priorities within a BeanPart
