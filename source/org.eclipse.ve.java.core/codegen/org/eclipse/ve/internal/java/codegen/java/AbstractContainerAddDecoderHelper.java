@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.18 $  $Date: 2005-06-23 01:48:08 $ 
+ *  $Revision: 1.19 $  $Date: 2005-07-09 00:02:23 $ 
  */
 
 import java.util.*;
@@ -193,6 +193,12 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 			if(targetRoot!=getComponent(targetRoot)) 
 				targetRoot.eUnset(getRootComponentSF());
 		}
+		
+		// Remove reference from list of references of this expression
+		EObject referencedInstance = fAddedPart!=null ? fAddedPart.getEObject() : fAddedInstance;
+		List references = fOwner.getExprRef().getReferences();
+		if(references.contains(referencedInstance))
+			references.remove(referencedInstance);
 
 		if (fAddedPart != null)
 			fAddedPart.removeBackRef(fbeanPart, true);
@@ -266,12 +272,23 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 			if (fAddedPart != oldAddedPart) {
 				oldAddedPart.removeBackRef(fbeanPart, true);
 			}
-
-		if (fAddedPart != null)
-			fAddedPart.addToJVEModel();
-		else
-			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fAddedInstance);
 		
+		EObject referencedInstance = null;
+
+		if (fAddedPart != null){
+			fAddedPart.addToJVEModel();
+			referencedInstance = fAddedPart.getEObject();
+		}else{
+			fbeanPart.getInitMethod().getCompMethod().getProperties().add(fAddedInstance);
+			referencedInstance = fAddedInstance;
+		}
+	
+		// Update list of references for this expression
+		List references = fOwner.getExprRef().getReferences();
+		if(referencedInstance!=null && !references.contains(referencedInstance))
+			references.add(referencedInstance);
+
+
 		return parseAndAddArguments(args);
 		}
 		return true;	
@@ -327,6 +344,12 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 			   getRootObject(false);
 			   fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
 			   fbeanPart.addChild(fAddedPart) ;
+			   
+				// Update list of references for this expression
+				List references = fOwner.getExprRef().getReferences();
+				if(fAddedInstance!=null && !references.contains(fAddedInstance))
+					references.add(fAddedInstance);
+				
 			   return true; 			   
 			}			
 		}		

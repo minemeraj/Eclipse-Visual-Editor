@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ComponentDecoder.java,v $
- *  $Revision: 1.8 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.9 $  $Date: 2005-07-09 00:02:21 $ 
  */
 
 
@@ -23,7 +23,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
-import org.eclipse.ve.internal.java.codegen.java.AbstractFeatureMapper;
+import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
 
 
@@ -135,10 +135,10 @@ protected void initialFeatureMapper(EStructuralFeature sf){
  */
 protected void initialDecoderHelper() {
 
-      if (isConstraint())	
-	   fhelper = new ConstraintDecoderHelper(fbeanPart, fExpr,  fFeatureMapper,this) ;
+      if (isConstraint())
+	   fhelper = new AggregateDecoderHelper(fbeanPart, fExpr,  fFeatureMapper,this, new Class[]{ConstraintDecoderHelper.class, ChildRelationshipDecoderHelper.class}) ;
 	else if (isLocation())
-	   fhelper = new PointDecoderHelper(fbeanPart, fExpr,  fFeatureMapper,this) ;
+	   fhelper = new AggregateDecoderHelper(fbeanPart, fExpr,  fFeatureMapper,this, new Class[]{PointDecoderHelper.class, ChildRelationshipDecoderHelper.class}) ;
 	else
 	   super.initialDecoderHelper() ;
 }
