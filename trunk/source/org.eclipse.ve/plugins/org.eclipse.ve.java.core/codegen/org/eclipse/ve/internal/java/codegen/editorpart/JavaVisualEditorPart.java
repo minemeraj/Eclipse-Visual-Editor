@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.135 $  $Date: 2005-07-08 22:26:20 $ 
+ *  $Revision: 1.136 $  $Date: 2005-07-09 23:21:28 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -380,7 +380,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// For the free form there is a figure on the feedback layer that washes an alpha black over the GUI
 				if(pauseFigure == null){
 					LayerManager layoutManager = LayerManager.Helper.find(primaryViewer.getRootEditPart());
-					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.FEEDBACK_LAYER);					
+					// The reload button should be selectable so must go into the connection layer.  The feedback layer is disabled
+					// so if it goes into it selection is not possible.  If the reload goes into the connection layer
+					// and the pauseFigure into the feedback then the feedback layer goes over the top of the connection layer
+					// and the button is greyed out
+					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.CONNECTION_LAYER);		
+					
 					pauseFigure = new Figure(){
 						protected void paintFigure(Graphics graphics) {
 							try {
@@ -433,7 +438,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							super.validate();
 						}
 					};
-					
+
+					pauseFigure.setEnabled(false);					
 					pauseLabelFigure.setEnabled(true);
 					pauseLabelFigure.setOpaque(true);
 					
@@ -443,11 +449,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							reloadAction.unPause();
 						};
 					});
-					
-					pauseFigure.setEnabled(false);
 			
 					feedbackLayer.add(pauseFigure); 
-					feedbackLayer.add(pauseLabelFigure); // The reload button should be selectable so goes into the connection layer
+					feedbackLayer.add(pauseLabelFigure); 
+					
 					Viewport vp = getViewport(feedbackLayer);
 					if (vp != null) {
 						vp.getHorizontalRangeModel().addPropertyChangeListener(scrolledListener);
@@ -470,18 +475,30 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	private void resetPauseFeedback(){
 		if (pauseFigure != null){
-			Viewport vp = getViewport(pauseFigure.getParent());
-			if (vp != null) {
-				vp.getHorizontalRangeModel().removePropertyChangeListener(scrolledListener);
-				vp.getVerticalRangeModel().removePropertyChangeListener(scrolledListener);
-			}
-			getRootFigure(pauseFigure.getParent()).removeFigureListener(rootFigureListener);
-			
-			pauseFigure.getParent().remove(pauseFigure);
-			pauseFigure = null;
-			pauseLabelFigure.getParent().remove(pauseLabelFigure);
-			pauseLabelFigure = null;
-			reloadImage.dispose();
+			// If this is not done in an async runnable then GEF becomes unresponsive.  This is because
+			// this method is called in the middle of a callback from a GEF Button being pressed and removes
+			// the button from its parent and that messes up GEF's DomainEventDispatcher leaving it thinking
+			// there is still a consumed event pending
+			Runnable runnable = new Runnable(){
+				public void run(){
+					Viewport vp = getViewport(pauseFigure.getParent());
+					if (vp != null) {
+						vp.getHorizontalRangeModel().removePropertyChangeListener(scrolledListener);
+						vp.getVerticalRangeModel().removePropertyChangeListener(scrolledListener);
+					}
+					getRootFigure(pauseFigure.getParent()).removeFigureListener(rootFigureListener);
+					
+					LayerManager layoutManager = LayerManager.Helper.find(primaryViewer.getRootEditPart());
+					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.CONNECTION_LAYER);							
+					
+					feedbackLayer.remove(pauseFigure);
+					pauseFigure = null;
+					feedbackLayer.remove(pauseLabelFigure);
+					pauseLabelFigure = null;
+					reloadImage.dispose();				
+				}
+			};
+			primaryViewer.getControl().getDisplay().asyncExec(runnable);
 		}
 	}
 
