@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.15 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.16 $  $Date: 2005-07-10 23:43:24 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -24,6 +24,10 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.editpolicies.DirectEditPolicy;
+import org.eclipse.gef.requests.DirectEditRequest;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -36,6 +40,8 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+
+import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
 
 /**
  * swt TabFolder graphical edit part.
@@ -58,6 +64,23 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	 */
 	public TabFolderGraphicalEditPart(Object model) {
 		super(model);
+	}
+	
+	protected void addChild(EditPart child, int index) {
+		super.addChild(child, index);
+		// For a tab item the child's direct edit policy must be replaced with a custom one that lets the "tabText"
+		// property be the one that is affected (and not the child's "text" property for example if it is a Button,Label, etc.
+		child.installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE,new DirectEditPolicy(){
+			protected Command getDirectEditCommand(DirectEditRequest request) {
+				Object newValue = request.getCellEditor().getValue();
+				IPropertySource ps = (IPropertySource) getHost().getAdapter(IPropertySource.class);
+				// Find the "text" property that sets the Tab Item's text property
+				IPropertyDescriptor property = ((TabItemPropertySourceAdapter)ps).tabTextPropertyDescriptor;								
+				return ((ICommandPropertyDescriptor) property).setValue(ps, newValue);
+			}
+			protected void showCurrentEditValue(DirectEditRequest request) {
+			}
+		});
 	}
 
 	public void activate() {
