@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.24 $  $Date: 2005-07-01 15:20:03 $ 
+ *  $Revision: 1.25 $  $Date: 2005-07-10 15:00:59 $ 
  */
 import java.awt.Point;
 import java.util.logging.Level;
@@ -26,6 +26,7 @@ import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
 import org.eclipse.ve.internal.cdm.model.Rectangle;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -56,14 +57,20 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
     }
     
     public boolean isVisualOnFreeform(){
-    	IField f = null;
+		String comment = null;
+
+		IField f = CodeGenUtil.getFieldByName(fBeanpart.getSimpleName(), fBeanpart.getModel().getCompilationUnit()) ;
+		if (f != null){
+	        ExpressionParser p = new ExpressionParser(f, fBeanpart.getModel());
+	        comment = p.getComment();
+		}else{
+			// No field, check comment on init expression
+			CodeExpressionRef exp = fBeanpart.getInitExpression();
+			if(exp!=null && !exp.isStateSet(CodeExpressionRef.STATE_NO_SRC)){
+				comment = exp.getCommentsContent();
+			}
+		}
 		
-		f = CodeGenUtil.getFieldByName(fBeanpart.getSimpleName(), fBeanpart.getModel().getCompilationUnit()) ;
-		
-		if (f == null) 
-			return false ;
-        ExpressionParser p = new ExpressionParser(f, fBeanpart.getModel());
-        String comment = p.getComment();
         return AnnotationDecoderAdapter.isBeanVisible(comment);          
     }
     
