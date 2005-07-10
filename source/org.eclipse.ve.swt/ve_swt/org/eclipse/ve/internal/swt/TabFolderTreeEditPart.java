@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderTreeEditPart.java,v $
- *  $Revision: 1.10 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.11 $  $Date: 2005-07-10 23:43:24 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -23,7 +23,9 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.ILabelDecorator;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -33,6 +35,10 @@ import org.eclipse.ve.internal.cde.core.IErrorNotifier;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
+import org.eclipse.ve.internal.java.core.BeanTreeDirectEditManager;
+
+import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
+
 /**
  * swt TabFolder tree edit part.
  * 
@@ -40,6 +46,7 @@ import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
  */
 public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 
+	private static final String TAB_ITEM_DIRECT_EDIT_MANAGER = "TAB_ITEM_DIRECT_EDIT_MANAGER";
 	private EReference sf_items, sf_tabItemControl;
 
 	public TabFolderTreeEditPart(Object model) {
@@ -90,12 +97,43 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 
 		((EObject) getModel()).eAdapters().add(containerAdapter);
 	}
+	
+	
 
 	protected void createEditPolicies() {
 		super.createEditPolicies();
 		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(new TabFolderContainerPolicy(
 				EditDomain.getEditDomain(this))));
 	}
+	
+	protected void addChild(EditPart child, int index) {
+		super.addChild(child, index);
+		// For a tab item the child's direct edit policy must be replaced with a custom one that lets the "tabText"
+		// property be the one that is affected (and not the child's "text" property for example if it is a Button,Label, etc.
+		EditDomain domain = EditDomain.getEditDomain(this);
+		EditPartViewer viewer = getRoot().getViewer();		
+		((ControlTreeEditPart)child).manager = getDirectEditManager(domain,viewer);
+	}
+	
+	public static BeanTreeDirectEditManager getDirectEditManager(EditDomain domain, EditPartViewer viewer) {
+		BeanTreeDirectEditManager manager = (BeanTreeDirectEditManager) domain.getViewerData(viewer, TAB_ITEM_DIRECT_EDIT_MANAGER);
+		if (manager == null) {
+			manager = new TabItemDirectEditManager(viewer);
+			domain.setViewerData(viewer, TAB_ITEM_DIRECT_EDIT_MANAGER, manager);
+		}
+		return manager;
+	}	
+	
+	public static class TabItemDirectEditManager extends BeanTreeDirectEditManager{
+		public TabItemDirectEditManager(EditPartViewer v) {
+			super(v);
+		}
+		protected Command getDirectEditCommand(Object newValue, EditPart ep, IPropertyDescriptor property) {
+			IPropertySource ps = (IPropertySource) ep.getAdapter(IPropertySource.class);
+			IPropertyDescriptor tabTextProperty = ((TabItemPropertySourceAdapter)ps).tabTextPropertyDescriptor;			
+			return ((ICommandPropertyDescriptor) tabTextProperty).setValue(ps, newValue);
+		}		
+	};
 
 	protected void setupControl(ControlTreeEditPart childEP, EObject child) {
 		// Get the TabItem's error notifier for the child (which is a control) and add it in to the control gep. That way TabItem

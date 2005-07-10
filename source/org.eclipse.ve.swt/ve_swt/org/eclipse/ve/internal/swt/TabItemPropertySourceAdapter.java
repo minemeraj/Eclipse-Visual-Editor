@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabItemPropertySourceAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.9 $  $Date: 2005-07-10 23:43:24 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -43,6 +43,7 @@ import org.eclipse.ve.internal.java.rules.RuledWrapperedPropertyDescriptor;
 public class TabItemPropertySourceAdapter extends PropertySourceAdapter {
 
 	protected IPropertySource controlPS;
+	public IPropertyDescriptor tabTextPropertyDescriptor;
 	protected List myDescriptors;
 	private EReference sf_items;
 	/*
@@ -138,6 +139,13 @@ public class TabItemPropertySourceAdapter extends PropertySourceAdapter {
 		myDescriptors = new ArrayList(wi);
 		for (int i = 0; i < wi; i++) {
 			myDescriptors.add(wrappedMine[i].getId());
+			try{
+				if( ((EReference)wrappedMine[i].getId()).getName().equals("text") ){
+					tabTextPropertyDescriptor = wrappedMine[i];
+				}
+			} catch (ClassCastException exc){
+				// Do nothing.  The name in composition property descriptor has a String id so throws a cast
+			}
 		}
 		// Finally build the complete list.
 		IPropertyDescriptor[] finalList = new IPropertyDescriptor[theirs.length + wi];

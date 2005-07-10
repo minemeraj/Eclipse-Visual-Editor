@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlTreeEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.6 $  $Date: 2005-07-10 23:43:24 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -38,7 +38,7 @@ public class ControlTreeEditPart extends JavaBeanTreeEditPart {
 	
 	private IPropertyDescriptor sfDirectEditProperty;
 
-	private BeanTreeDirectEditManager manager;
+	public BeanTreeDirectEditManager manager;
 
 	protected IPropertySource propertySource;
 	
