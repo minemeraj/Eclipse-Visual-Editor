@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.53 $  $Date: 2005-06-21 21:55:01 $ 
+ *  $Revision: 1.54 $  $Date: 2005-07-10 15:01:02 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -1155,6 +1155,7 @@ public class BDMMerger {
 		if(modelBP==null){
 			BeanPartDecleration otherModelBPDecl = otherModelBP.getDecleration();
 			BeanPartDecleration modelBPDecl = model.getModelDecleration(otherModelBPDecl);
+			updateBPDeclAST(otherModelBPDecl, modelBPDecl);
 			BeanPart[] modelBPs = modelBPDecl==null?null:modelBPDecl.getBeanParts();
 			if(modelBPs!=null && modelBPs.length>0){
 				for (int i = 0; i < modelBPs.length; i++) {
@@ -1179,6 +1180,30 @@ public class BDMMerger {
 			}
 		}
 		return modelBP;
+	}
+
+	/**
+	 * Any search for Codegen's annotation - //@jve:decl-index=0:visual-constraint="x,y" -
+	 * happens on the BeanPartDeclaration's AST node for that bean. If this is not updated
+	 * there is a risk that the bean could be deactivated even if it has "decl-index=0" in its
+	 * annotation. Hence this update is necessary.
+	 * 
+	 * @param otherModelBPDecl
+	 * @param modelBPDecl
+	 * 
+	 * @since 1.1
+	 */
+	private void updateBPDeclAST(BeanPartDecleration otherModelBPDecl, BeanPartDecleration mainModelBPDecl) {
+		if(otherModelBPDecl!=null && mainModelBPDecl!=null){
+			if(		otherModelBPDecl.getFieldDeclHandle()!=null && 
+					mainModelBPDecl.getFieldDeclHandle()!=null && 
+					otherModelBPDecl.getFieldDeclHandle().equals(mainModelBPDecl.getFieldDeclHandle()))
+				mainModelBPDecl.setFieldDecl(otherModelBPDecl.getFieldDecl());
+			else if(	otherModelBPDecl.getDeclerationHandle()!=null && 
+						mainModelBPDecl.getDeclerationHandle()!=null && 
+						otherModelBPDecl.getDeclerationHandle().equals(mainModelBPDecl.getDeclerationHandle()))
+				mainModelBPDecl.setFieldDecl(otherModelBPDecl.getFieldDecl());
+		}
 	}
 
 	/**
