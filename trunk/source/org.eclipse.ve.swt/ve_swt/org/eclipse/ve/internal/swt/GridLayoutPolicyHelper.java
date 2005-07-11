@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.13 $  $Date: 2005-07-11 18:51:17 $
+ *  $Revision: 1.14 $  $Date: 2005-07-11 20:34:47 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -157,7 +157,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				Rectangle r = new Rectangle();
 
 				// Find the next un-occupied cell
-				while (layoutTable[col][row] != null) {
+				while (layoutTable[col][row] != null && row < layoutTable[0].length) {
 					col += 1;
 					if (col >= numColumns) {
 						row += 1;
