@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: GridLayoutFeedbackFigure.java,v $
- *  $Revision: 1.4 $  $Date: 2005-07-07 13:09:01 $ 
+ *  $Revision: 1.5 $  $Date: 2005-07-11 20:03:52 $ 
  */
 
 import org.eclipse.swt.SWT;
@@ -28,14 +28,20 @@ public class GridLayoutFeedbackFigure extends RectangleFigure {
 	}
 	public void fillShape(Graphics g) {
 		Rectangle r = getBounds().getCopy();
-		r.expand(-6, -6);
-		g.setBackgroundColor(ColorConstants.darkGray);
-		g.setXORMode(true);
+		r.expand(-4, -4);
+		g.setBackgroundColor(ColorConstants.lightGray);
+		try {
+			g.setAlpha(175);
+		} catch (Exception e) {
+			// For OS platforms that don't support setAlpha
+			g.setXORMode(true);
+			g.setBackgroundColor(ColorConstants.darkGray);
+		}
 		g.fillRectangle(r.x, r.y, r.width, r.height);
 	}
 	public void outlineShape(Graphics g) {
 		Rectangle r = getBounds().getCopy();
-		r.expand(-6, -6);
+		r.expand(-4, -4);
 		g.drawRectangle(r.x, r.y, r.width, r.height);
 	}
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.23 $ $Date: 2005-07-11 18:51:17 $
+ * $Revision: 1.24 $ $Date: 2005-07-11 20:03:52 $
  */
 import java.util.*;
 
@@ -23,6 +23,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy;
 import org.eclipse.gef.requests.*;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
@@ -81,21 +82,6 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		return fGridImageListener;
 	}
 	
-	class GridLayoutCellFigure extends RectangleFigure {
-
-		public GridLayoutCellFigure() {
-			super();
-//			FigureUtilities.makeGhostShape(this);
-//			setLineStyle(Graphics.LINE_DOT);
-//			setForegroundColor(ColorConstants.white);
-			setBackgroundColor(ColorConstants.gray);
-		}
-
-		public void paint(Graphics g) {
-			g.setAlpha(150);
-			super.paint(g);
-		}
-	}
 	class GridLayoutRowFigure extends Figure {
 		Rectangle rowBounds;
 		public GridLayoutRowFigure(Rectangle rowBounds) {
@@ -105,7 +91,11 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			bounds.expand(8, 6);
 		}
 		public void paintFigure(Graphics g) {
-			g.setAlpha(125);
+			try {
+				g.setAlpha(150);
+			} catch (SWTException e) {
+				// For OS platforms that don't support alpha
+			}
 			int [] polygonPoints = new int [] {
 					bounds.x+1, bounds.y+1, // left upper corner
 					bounds.x+1, bounds.y + bounds.height-1,
@@ -116,9 +106,10 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 					rowBounds.x + rowBounds.width, rowBounds.y,
 					rowBounds.x, rowBounds.y,
 					bounds.x+1, bounds.y+1}; 
-			g.drawPolygon(polygonPoints);
 			g.setBackgroundColor(ColorConstants.yellow);
 			g.fillPolygon(polygonPoints);
+			g.setBackgroundColor(ColorConstants.black);
+			g.drawPolygon(polygonPoints);
 		}
 	}
 	class GridLayoutColumnFigure extends Figure {
@@ -130,7 +121,11 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			bounds.expand(6, 8);
 		}
 		public void paintFigure(Graphics g) {
-			g.setAlpha(125);
+			try {
+				g.setAlpha(150);
+			} catch (SWTException e) {
+				// For OS platforms that don't support alpha
+			}
 			int [] polygonPoints = new int [] {
 					bounds.x+1, bounds.y+1, // left upper corner
 					columnBounds.x, columnBounds.y,
@@ -141,23 +136,13 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 					columnBounds.x + columnBounds.width, columnBounds.y,
 					bounds.x + bounds.width-1, bounds.y+1,
 					bounds.x+1, bounds.y+1}; 
-			g.drawPolygon(polygonPoints);
 			g.setBackgroundColor(ColorConstants.yellow);
 			g.fillPolygon(polygonPoints);
+			g.setBackgroundColor(ColorConstants.black);
+			g.drawPolygon(polygonPoints);
 		}
 	}
-	class GridLayoutColumnArrowFigure extends Figure {
-		protected void paintFigure(Graphics graphics) {
-			graphics.setLineWidth(2);
-			graphics.setAlpha(100);
-			Point beginLine = new Point(bounds.x, bounds.y + bounds.height/2);
-			Point endLine = new Point(bounds.x + bounds.width, beginLine.y);
-			graphics.drawLine(beginLine, endLine);
-			graphics.drawLine(endLine, new Point(endLine.x - 10, endLine.y - 6));
-			graphics.drawLine(endLine, new Point(endLine.x - 10, endLine.y + 6));
-		}
-		
-	}
+
 	/*
 	 * Class used to identify the type of request relative to GridLayout.
 	 */

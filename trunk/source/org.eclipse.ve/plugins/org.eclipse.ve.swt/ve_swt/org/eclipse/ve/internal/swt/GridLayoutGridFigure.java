@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: GridLayoutGridFigure.java,v $
- *  $Revision: 1.9 $  $Date: 2005-07-07 13:09:01 $ 
+ *  $Revision: 1.10 $  $Date: 2005-07-11 20:03:52 $ 
  */
 
 import org.eclipse.draw2d.*;
@@ -38,7 +38,6 @@ public class GridLayoutGridFigure extends Figure {
 public GridLayoutGridFigure (Rectangle bounds, int [][] layoutDimensions, Rectangle spacing, Rectangle clientArea) {
 	super();
 	setBounds(bounds);
-	setForegroundColor(ColorConstants.cyan);
 	this.clientArea = clientArea;
 	if (spacing == null) {
 		// Get the default spacings from GridLayout.
@@ -64,7 +63,7 @@ public GridLayoutGridFigure (Rectangle bounds, int [][] layoutDimensions, Rectan
 protected void paintFigure(Graphics g){
 	Color orgColor = g.getForegroundColor();
 	
-	g.setForegroundColor(ColorConstants.red);
+	g.setForegroundColor(ColorConstants.gray);
 	g.setLineStyle(Graphics.LINE_DOT);
 	drawColumnDividers(g);
 	drawRowDividers(g);
