@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-07-11 00:16:50 $
+ *  $Revision: 1.13 $  $Date: 2005-07-11 18:51:17 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -647,7 +647,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	/*
 	 * Put a new control into a cell that is EMPTY. 
 	 */
-	public Command createAddToEmptyCellCommand (CreateRequest request, Point cell) {
+	public Command createAddToEmptyCellCommand (Object addedControl, Point cell, Request request) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject[][] table = getLayoutTable();
 		// If there is only one row (or none), no need to add empty labels.
@@ -662,7 +662,10 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		for (int i = 0; i < table.length; i++) {
 			if (i == cell.x)
 				// This is the column where the new control is put
-				cb.append(policy.getCreateCommand(request.getNewObject(), beforeObject));
+				if (request instanceof CreateRequest)
+					cb.append(policy.getCreateCommand(addedControl, beforeObject));
+				else 
+					cb.append(policy.getMoveChildrenCommand(Collections.singletonList(addedControl), beforeObject));
 			else if (table[i][cell.y] == EMPTY)
 				// These are the columns where the empty labels are put
 				cb.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
