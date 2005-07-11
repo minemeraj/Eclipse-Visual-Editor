@@ -11,7 +11,10 @@
 package org.eclipse.swt.widgets.beaninfo;
 
 
+import java.beans.BeanDescriptor;
 import java.beans.PropertyDescriptor;
+
+import org.eclipse.swt.SWT;
 
 public class ToolBarBeanInfo extends IvjBeanInfo {
 
@@ -24,6 +27,20 @@ public class ToolBarBeanInfo extends IvjBeanInfo {
 	 */
 	public Class getBeanClass() {
 		return org.eclipse.swt.widgets.ToolBar.class;
+	}
+
+	public BeanDescriptor getBeanDescriptor() {
+		BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
+		descriptor.setValue(
+			SweetHelper.STYLE_BITS_ID,
+		    new Object[] [] {
+				{ "flat" , ToolBarMessages.getString("ToolBarBeanInfo.StyleBits.Flat.Name") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+					ToolBarMessages.getString("ToolBarBeanInfo.StyleBits.Flat.Value.Flat") , "org.eclipse.swt.SWT.FLAT" , new Integer(SWT.FLAT) , //$NON-NLS-1$ //$NON-NLS-2$
+				} }
+			}
+		);
+		SweetHelper.mergeSuperclassStyleBits(descriptor);
+		return descriptor;
 	}
 
 	/**

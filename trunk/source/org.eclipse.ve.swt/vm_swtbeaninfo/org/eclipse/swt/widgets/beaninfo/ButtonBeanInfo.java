@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ButtonBeanInfo.java,v $
- *  $Revision: 1.12 $  $Date: 2005-06-24 14:31:25 $ 
+ *  $Revision: 1.13 $  $Date: 2005-07-11 15:40:09 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -47,6 +47,9 @@ public BeanDescriptor getBeanDescriptor() {
 				ButtonMessages.getString("ButtonBeanInfo.StyleBits.TextAlignment.Value.Left") , "org.eclipse.swt.SWT.LEFT" , new Integer(SWT.LEFT) ,					 //$NON-NLS-1$ //$NON-NLS-2$
 				ButtonMessages.getString("ButtonBeanInfo.StyleBits.TextAlignment.Value.Right") , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT) , //$NON-NLS-1$ //$NON-NLS-2$
 				ButtonMessages.getString("ButtonBeanInfo.StyleBits.TextAlignment.Value.Center") , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER)				 //$NON-NLS-1$ //$NON-NLS-2$
+			} },
+			{ "flat" , ButtonMessages.getString("ButtonBeanInfo.StyleBits.Flat.Name") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				ButtonMessages.getString("ButtonBeanInfo.StyleBits.Flat.Value.Flat") , "org.eclipse.swt.SWT.FLAT" , new Integer(SWT.FLAT) , //$NON-NLS-1$ //$NON-NLS-2$
 			} },
 			{ "arrowStyle" , ButtonMessages.getString("ButtonBeanInfo.StyleBits.ArrowStyle.Name"), Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 				ButtonMessages.getString("ButtonBeanInfo.StyleBits.ArrowStyle.Value.Up") , "org.eclipse.swt.SWT.UP" , new Integer(SWT.UP) ,					 //$NON-NLS-1$ //$NON-NLS-2$
