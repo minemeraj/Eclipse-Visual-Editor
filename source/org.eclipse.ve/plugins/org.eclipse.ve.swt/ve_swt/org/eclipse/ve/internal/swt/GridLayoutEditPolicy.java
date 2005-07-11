@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.24 $ $Date: 2005-07-11 20:03:52 $
+ * $Revision: 1.25 $ $Date: 2005-07-11 23:20:55 $
  */
 import java.util.*;
 
@@ -608,24 +608,16 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		fColumnFigure = new GridLayoutColumnFigure(rect);
 		addFeedback(fColumnFigure);
 	}
-	
 	protected Command createAddCommand(EditPart child, Object constraint) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
 	protected Command createChangeConstraintCommand(EditPart child, Object constraint) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
 	protected Object getConstraintFor(Point point) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
 	protected Object getConstraintFor(Rectangle rect) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
