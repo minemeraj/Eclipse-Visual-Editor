@@ -12,7 +12,7 @@
     xmlns:org.eclipse.jem.internal.beaninfo.beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore">
     	
   <event:AddMany xmi:version="2.0" featureName="eAnnotations">
-    <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass" modelled="false"
+    <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
   	    expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.MenuDecoder"/>    	
   </event:AddMany>
 </xmi:XMI>

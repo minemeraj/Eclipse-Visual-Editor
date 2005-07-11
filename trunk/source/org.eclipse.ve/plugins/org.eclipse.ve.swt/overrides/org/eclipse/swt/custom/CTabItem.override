@@ -13,6 +13,6 @@
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
     	beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ItemProxyAdapter:java:/org.eclipse.swt.custom#CTabFolder/items"/>
     <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-    	expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTWidgetChildDecoder" modelled="true"/>    	
+    	expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTWidgetChildDecoder"/>    	
   </event:AddMany>
 </xmi:XMI> 
