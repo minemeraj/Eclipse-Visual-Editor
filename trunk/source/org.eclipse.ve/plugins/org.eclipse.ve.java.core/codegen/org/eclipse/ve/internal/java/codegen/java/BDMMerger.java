@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.54 $  $Date: 2005-07-10 15:01:02 $ 
+ *  $Revision: 1.55 $  $Date: 2005-07-11 16:24:18 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -1262,8 +1262,8 @@ public class BDMMerger {
 			if (!newBP.getSimpleName().equals(BeanPart.THIS_NAME)) {
 				if (!(obj instanceof IJavaObjectInstance)) {
 					obj = null;
-					if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
-						JavaVEPlugin.log("Bad Object: " + newBP.getType() + ": " + newBP.getUniqueName(), Level.WARNING); //$NON-NLS-1$ //$NON-NLS-2$
+					if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+						JavaVEPlugin.log("Bad Object: " + newBP.getType() + ": " + newBP.getUniqueName(), Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else { // a this part
 				if (obj != null) {

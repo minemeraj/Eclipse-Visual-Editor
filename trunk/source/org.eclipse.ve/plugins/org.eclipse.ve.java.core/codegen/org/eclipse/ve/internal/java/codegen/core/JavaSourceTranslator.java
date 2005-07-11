@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.79 $  $Date: 2005-06-21 22:12:53 $ 
+ *  $Revision: 1.80 $  $Date: 2005-07-11 16:24:18 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -619,8 +619,8 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
        if (!bean.getSimpleName().equals(BeanPart.THIS_NAME)) {
     	   if (!(obj instanceof IJavaObjectInstance)) {    	   	  
     	      obj = null ;
-    	      if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
-    	      	JavaVEPlugin.log("Bad Object: "+bean.getType()+": "+bean.getUniqueName(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+    	      if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+    	      	JavaVEPlugin.log("Bad Object: "+bean.getType()+": "+bean.getUniqueName(),Level.FINE) ; //$NON-NLS-1$ //$NON-NLS-2$
     	   }
        }
        else {  // a this part
