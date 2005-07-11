@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.32 $  $Date: 2005-07-08 16:41:25 $ 
+ *  $Revision: 1.33 $  $Date: 2005-07-11 18:14:12 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -109,63 +109,65 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 			}
 		// Create a root path for each version of .dlls
 		IPath root = JavaVEPlugin.VE_GENERATED_LIBRARIES_CACHE.append(Integer.toString(f.getAbsolutePath().hashCode()));
-		File target = root.append(relativePath).toFile();
-		if (target.exists()) {
-			try {
-				return target.toURL();
-			} catch (MalformedURLException e1) {
-				JavaVEPlugin.log(e1);
-				return null;
-			}
-		}
-		target.mkdirs();
-				
-		File src = new File(srcJarFile);
 		URL url = null;  // result
-		if (src.isFile() && src.getName().endsWith(".jar")) { //$NON-NLS-1$			
-			try {
-				ZipFile zip = new ZipFile(src);
-				try {				
-					for (Enumeration entries = zip.entries(); entries.hasMoreElements();) {
-						ZipEntry entry = (ZipEntry) entries.nextElement();
-						if (entry.getName().startsWith(relativePath) &&
-							isInterestingLibFile(entry.getName())) {
-							InputStream in = zip.getInputStream(entry);						
-							try {
-								if (in!=null) {
-									File dest = new File (root.toFile(), entry.getName());
-									AbstractFrameworkAdaptor.readFile(in, dest);
-									if (!Platform.getOS().equals(Constants.OS_WIN32))
-										Runtime.getRuntime().exec(new String[] {"chmod", "755", dest.getAbsolutePath()}).waitFor(); //$NON-NLS-1$ //$NON-NLS-2$
-								}
-							} catch (IOException e) {
-								JavaVEPlugin.log(e);
-							} catch (InterruptedException e) {
-								JavaVEPlugin.log(e);
-							}							
-							finally {
-								try {
-							     in.close();
-								}
-								catch (Exception e) {}
-							}
-						}
-						
-					}
-					url = target.toURL();
-				} catch (IOException e) {				
-					JavaVEPlugin.log(e);
-				} 
-				finally {
-					try {
-						zip.close();
-					} catch (IOException e) {}
+		synchronized (root.toString().intern()) {  // Thread safe
+			File target = root.append(relativePath).toFile();
+			if (target.exists()) {
+				try {
+					return target.toURL();
+				} catch (MalformedURLException e1) {
+					JavaVEPlugin.log(e1);
+					return null;
 				}
-			} catch (ZipException e) {
-				JavaVEPlugin.log(e);
-			} catch (IOException e) {
-				JavaVEPlugin.log(e);
-			}			
+			}
+			target.mkdirs();
+					
+			File src = new File(srcJarFile);			
+			if (src.isFile() && src.getName().endsWith(".jar")) { //$NON-NLS-1$			
+				try {
+					ZipFile zip = new ZipFile(src);
+					try {				
+						for (Enumeration entries = zip.entries(); entries.hasMoreElements();) {
+							ZipEntry entry = (ZipEntry) entries.nextElement();
+							if (entry.getName().startsWith(relativePath) &&
+								isInterestingLibFile(entry.getName())) {
+								InputStream in = zip.getInputStream(entry);						
+								try {
+									if (in!=null) {
+										File dest = new File (root.toFile(), entry.getName());
+										AbstractFrameworkAdaptor.readFile(in, dest);
+										if (!Platform.getOS().equals(Constants.OS_WIN32))
+											Runtime.getRuntime().exec(new String[] {"chmod", "755", dest.getAbsolutePath()}).waitFor(); //$NON-NLS-1$ //$NON-NLS-2$
+									}
+								} catch (IOException e) {
+									JavaVEPlugin.log(e);
+								} catch (InterruptedException e) {
+									JavaVEPlugin.log(e);
+								}							
+								finally {
+									try {
+								     in.close();
+									}
+									catch (Exception e) {}
+								}
+							}
+							
+						}
+						url = target.toURL();
+					} catch (IOException e) {				
+						JavaVEPlugin.log(e);
+					} 
+					finally {
+						try {
+							zip.close();
+						} catch (IOException e) {}
+					}
+				} catch (ZipException e) {
+					JavaVEPlugin.log(e);
+				} catch (IOException e) {
+					JavaVEPlugin.log(e);
+				}			
+			}
 		}
 		return url;		
 }
