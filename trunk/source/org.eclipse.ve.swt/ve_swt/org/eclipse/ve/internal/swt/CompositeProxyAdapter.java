@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.33 $ $Date: 2005-06-22 21:05:27 $
+ * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.34 $ $Date: 2005-07-11 19:40:01 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -224,7 +224,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 	 * @since 1.1.0
 	 */
 	protected void moveComponentToEnd(IProxy controlProxy, IExpression expression) {
-		expression.createSimpleMethodInvoke(moveBelowMethodProxy(expression), controlProxy, null, false);
+		expression.createSimpleMethodInvoke(moveBelowMethodProxy(expression), controlProxy, new IProxy[] {null}, false);
 	}
 
 	/**
