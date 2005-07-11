@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.46 $  $Date: 2005-07-08 18:33:28 $ 
+ *  $Revision: 1.47 $  $Date: 2005-07-11 18:04:40 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -408,6 +408,20 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 			});
 			expression.createThrow();
 			expression.createClassInstanceCreation(ForExpression.THROW_OPERAND, getBeanInstantiationExceptionTypeProxy(expression), 0);
+			//   } catch (LinkageError e) {
+			//     ... send back thru ExpressionProxy to mark an instantiation error ...
+			//     throw new BeanInstantiationError(); ... so that when being applied as a setting it can be seen as not valid, but rest of expression can continue.
+			//   }				
+			ExpressionProxy linkProxy = expression.createTryCatchClause(getBeanTypeProxy("java.lang.LinkageError", expression), true); //$NON-NLS-1$
+			linkProxy.addProxyListener(new ExpressionProxy.ProxyAdapter() {
+
+				public void proxyResolved(ProxyEvent event) {
+					ThrowableProxy throwableProxy = (ThrowableProxy) event.getProxy();
+					processInstantiationError(new BeanExceptionError(throwableProxy, ERROR_SEVERE));
+				}
+			});
+			expression.createThrow();
+			expression.createClassInstanceCreation(ForExpression.THROW_OPERAND, getBeanInstantiationExceptionTypeProxy(expression), 0);			
 		} finally {
 			if (expression.isValid())
 				expression.createTryEnd();
