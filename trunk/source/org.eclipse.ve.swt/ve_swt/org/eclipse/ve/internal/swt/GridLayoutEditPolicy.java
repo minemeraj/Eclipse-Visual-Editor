@@ -11,10 +11,9 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.21 $ $Date: 2005-07-08 02:11:53 $
+ * $Revision: 1.22 $ $Date: 2005-07-11 00:16:49 $
  */
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.*;
@@ -476,7 +475,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		// This point is absolute.  Make it relative to the model
 		getHostFigure().translateToRelative(position);
 
-		GridLayoutRequest gridReq = createGridLayoutRequest(request);
+		GridLayoutRequest gridReq = createGridLayoutRequest(position);
 
 		Rectangle cellBounds = getGridLayoutGridFigure().getCellBounds(position.x, position.y);
 
@@ -572,10 +571,9 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 				Rectangle[] rects = helper.getChildrenDimensions();
 				if (indexEP < rects.length) {
 					Rectangle rect = rects[indexEP];
-					// Create the commands to remove the filler labels on this row
-					// if this delete is the last valid control on this row.
-					Command rowCmds = helper.createEmptyRowCommands(rect.y, (EObject) editPart.getModel());
-					Command columnCmds = helper.createEmptyColumnCommands(rect.x, (EObject) editPart.getModel());
+					// Create the commands to remove the filler labels on this row if this delete is the last valid control on this row.
+					Command rowCmds = helper.createRemoveRowCommand(rect.y, (EObject) editPart.getModel());
+					Command columnCmds = helper.createRemoveColumnCommand(rect.x, (EObject) editPart.getModel(), helper.getNumColumns());
 					if (rowCmds != null)
 						cb.append(rowCmds);
 					if (columnCmds != null)
@@ -656,7 +654,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		Point position = getLocationFromRequest(request).getCopy();
 		// This point is absolute. Make it relative to the model
 		getHostFigure().translateToRelative(position);
-		GridLayoutRequest gridReq = createGridLayoutRequest(request);
+		GridLayoutRequest gridReq = createGridLayoutRequest(position);
 		GraphicalEditPart editPart = null;
 		Point cell = new Point(gridReq.column, gridReq.row);
 		int epIndex = helper.getChildIndexAtCell(cell);
@@ -702,12 +700,8 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 
 		} else if (gridReq.type == INSERT_ROW || gridReq.type == ADD_ROW) {
 			int row = getGridLayoutGridFigure().getNearestRow(position.y);
-			EObject beforeObject = null;
-			epIndex = helper.getChildIndexAtCell(new Point(0, row));
-			if (epIndex != -1)
-				beforeObject = (EObject) ((EditPart) children.get(epIndex)).getModel();
 			// Insert a row by adding labels and the new object at the appropriate column position
-			cb.append(helper.createFillerLabelsForNewRowCommand(request, beforeObject, cell.x));
+			cb.append(helper.createFillerLabelsForNewRowCommand(request.getNewObject(), row, cell.x, request));
 		} else if (gridReq.type == ADD_TO_EMPTY_CELL) {
 			// Add to an empty cell at a column position
 			cb.append(helper.createAddToEmptyCellCommand(request, cell));
@@ -718,11 +712,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		return cb.getCommand();
 	}
 
-	private GridLayoutRequest createGridLayoutRequest(Request request) {
-		Point position = getLocationFromRequest(request).getCopy();
-		// This point is absolute. Make it relative to the model
-		getHostFigure().translateToRelative(position);
-
+	private GridLayoutRequest createGridLayoutRequest(Point position) {
 		Point cell = getGridLayoutGridFigure().getCellLocation(position);
 		GridLayoutRequest gridReq = new GridLayoutRequest(); // Create request. default is PUT request
 		gridReq.column = cell.x;
@@ -753,5 +743,106 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 				gridReq.type = ADD_TO_EMPTY_CELL;
 		}
 		return gridReq;
+	}
+
+	protected Command getMoveChildrenCommand(Request request) {
+		List children = getHost().getChildren();
+		if (fGridLayoutGridFigure == null || !(request instanceof ChangeBoundsRequest) || children.isEmpty())
+			return UnexecutableCommand.INSTANCE;
+		ChangeBoundsRequest req = (ChangeBoundsRequest) request;
+		List editparts = req.getEditParts();
+		// Only allow one object to be moved
+		if (editparts.size() > 1)
+			return null;
+
+		Point position = req.getLocation();
+		// This point is absolute.  Make it relative to the model
+		getHostFigure().translateToRelative(position);
+		GridLayoutRequest gridReq = createGridLayoutRequest(position);
+		Point cell = new Point(gridReq.column, gridReq.row);
+
+		boolean cleanupRowsColums = false;
+		int numColumns = helper.getNumColumns();
+		EditPart childEP = (EditPart) editparts.iterator().next(), nextEP = null, beforeEP = null;
+		int childIndex = children.indexOf(childEP);
+		if (childIndex < children.size() - 1)
+			nextEP = (EditPart) children.get(childIndex + 1);
+		int epIndex = helper.getChildIndexAtCell(cell);
+		if (epIndex != -1)
+			beforeEP = (EditPart) children.get(epIndex);
+		CommandBuilder cb = new CommandBuilder();
+
+		// No change if selected editpart and the target editpart are the same.
+		if (childEP == beforeEP)
+			return UnexecutableCommand.INSTANCE;
+		
+		if (gridReq.type == REPLACE_FILLER) {
+			// Create a filler label to put in original cell and replace a filler label with the moved control
+			cb.append(containerPolicy.getMoveChildrenCommand(Collections.singletonList(childEP.getModel()), beforeEP.getModel()));
+			cb.append(containerPolicy.getDeleteDependentCommand(beforeEP.getModel()));
+			cleanupRowsColums = true;
+		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
+			cb.append(helper.createNumColumnsCommand(++numColumns)); // First add another column to the grid
+			cb.append(helper.createFillerLabelCommands(cell.y + 1)); // then add empty labels at the end of each row
+			cb.append(containerPolicy.getMoveChildrenCommand(Collections.singletonList(childEP.getModel()), beforeEP != null ? beforeEP.getModel() : null));
+			cleanupRowsColums = true;
+		} else if (gridReq.type == INSERT_COLUMN || gridReq.type == ADD_COLUMN) {
+			boolean isLastColumn = false;
+			int column = getGridLayoutGridFigure().getNearestColumn(position.x);
+			// Not the last column
+			if (column != helper.getNumColumns()) {
+				epIndex = helper.getChildIndexAtCell(new Point(column, cell.y));
+				// Not the last control
+				if (epIndex != -1)
+					beforeEP = (GraphicalEditPart) children.get(epIndex);
+			} else {
+				// Last column... look for the first control on the next row
+				epIndex = helper.getChildIndexAtCell(new Point(0, cell.y + 1));
+				if (epIndex != -1 && epIndex < children.size())
+					beforeEP = (GraphicalEditPart) children.get(epIndex);
+				else
+					beforeEP = null;
+				// Insert before the first column of each row since we actually
+				// adding to the end of each row
+				column = 0;
+				cell.y = cell.y + 1;
+				isLastColumn = true;
+			}
+			cb.append(helper.createNumColumnsCommand(++numColumns)); // First add another column to the grid
+			cb.append(helper.createFillerLabelCommands(column, cell.y, isLastColumn)); // then add empty labels at this column position
+			cb.append(containerPolicy.getMoveChildrenCommand(Collections.singletonList(childEP.getModel()), beforeEP != null ? beforeEP.getModel() : null));
+			cleanupRowsColums = true;
+		} else if (gridReq.type == INSERT_ROW || gridReq.type == ADD_ROW) {
+			int row = getGridLayoutGridFigure().getNearestRow(position.y);
+			// Insert a row by adding labels and the new object at the appropriate column position
+			cb.append(helper.createFillerLabelsForNewRowCommand(childEP.getModel(), row, cell.x, request));
+			cleanupRowsColums = true;
+//		} else if (gridReq.type == ADD_TO_EMPTY_CELL) {
+//			// Add to an empty cell at a column position
+//			cb.append(helper.createAddToEmptyCellCommand(request, cell));
+//		}
+		}
+
+
+		if (cleanupRowsColums) {
+			Rectangle rect = helper.getChildrenDimensions()[childIndex];
+			// Create the commands to remove the filler labels on this row if this delete is the last valid control on this row.
+			Command rowCmds = helper.createRemoveRowCommand(rect.y, (EObject) childEP.getModel());
+			Command columnCmds = helper.createRemoveColumnCommand(rect.x, (EObject) childEP.getModel(), helper.getNumColumns());
+			if (rowCmds != null)
+				cb.append(rowCmds);
+			if (columnCmds != null)
+				cb.append(columnCmds);
+			// If no rows or colums to remove, add a filler label to fill the cell of the moved control.
+			if (rowCmds == null && columnCmds == null && nextEP != null) {
+				if (beforeEP == nextEP) // handle case in which the target editpart is the next editpart 
+					nextEP = childEP;
+				cb.append(containerPolicy.getCreateCommand(helper.createFillerLabelObject(), nextEP != null ? nextEP.getModel() : null));
+			}
+		}
+		if (cb.isEmpty())
+			return UnexecutableCommand.INSTANCE;
+		return cb.getCommand();
+//		return containerPolicy.getMoveChildrenCommand(Collections.singletonList(childEP.getModel()), null);
 	}
 }
