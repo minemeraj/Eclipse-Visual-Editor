@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.20 $  $Date: 2005-06-29 20:07:24 $ 
+ *  $Revision: 1.21 $  $Date: 2005-07-11 13:31:44 $ 
  */
 
 import java.util.*;
@@ -26,6 +26,7 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy;
 import org.eclipse.gef.requests.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
@@ -82,7 +83,11 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 	
 	private class AlphaRectangleFigure extends RectangleFigure {
 		protected void fillShape(Graphics graphics) {
-			graphics.setAlpha(150);
+			try{
+				graphics.setAlpha(150);
+			} catch (SWTException e) {
+				// Occurs if alpha's not available. No check on Graphics that tests for this yet.
+			}
 			super.fillShape(graphics);
 		}
 	}
