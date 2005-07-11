@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-07-08 02:11:53 $
+ *  $Revision: 1.12 $  $Date: 2005-07-11 00:16:50 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -534,16 +534,25 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 						"org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (gridData != null) {
+				List children = (List)getContainer().eGet(sfCompositeControls);
+				int index = children.indexOf(control);
+				Rectangle rect = getChildrenDimensions()[index];
 				RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(childEditPart), null, false);
 				if (spanDirection == PositionConstants.EAST) {
 					int gridWidth = endCellLocation.x - childCellLocation.x + 1;
-					Object widthObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(gridWidth)); //$NON-NLS-1$
-					componentCB.applyAttributeSetting(gridData, sfHorizontalSpan, widthObject);
+					if (gridWidth != rect.width){
+						componentCB.append(createNumColumnsCommand(numColumns + gridWidth - rect.width));
+						componentCB.append(createFillerLabelCommands(rect.y + 1));
+						Object widthObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(gridWidth)); //$NON-NLS-1$
+						componentCB.applyAttributeSetting(gridData, sfHorizontalSpan, widthObject);
+					}
 				}
 				if (spanDirection == PositionConstants.SOUTH) {
 					int gridHeight = endCellLocation.y - childCellLocation.y + 1;
-					Object heightObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(gridHeight)); //$NON-NLS-1$
-					componentCB.applyAttributeSetting(gridData, sfVerticalSpan, heightObject);
+					if (gridHeight != rect.height) {
+						Object heightObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(gridHeight)); //$NON-NLS-1$
+						componentCB.applyAttributeSetting(gridData, sfVerticalSpan, heightObject);
+					}
 				}
 				componentCB.applyAttributeSetting(control, sfLayoutData, gridData);
 				cb.append(componentCB.getCommand());
@@ -580,18 +589,55 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	
 	/*
 	 * To add a row, we must add the filler labels and the requested control prior to the control
-	 * in the first column on the row after the insertion point. 
-	 * If the beforeObject is null, this is the end of the grid.
+	 * in the first column on the row after the insertion point. Add filler except at the column position.
 	 */
-	public Command createFillerLabelsForNewRowCommand (CreateRequest request, EObject beforeObject, int exceptColumn) {
+	public Command createFillerLabelsForNewRowCommand (Object addedControl, int atRow, int atColumn, Request request) {
+		EObject[][] table = getLayoutTable();
+		if (table[0].length < 1)
+			return null;
+		List children = (List) getContainer().eGet(sfCompositeControls);
+		if (children.isEmpty())
+			return null;
+
+		if (atColumn == -1)
+			atColumn = numColumns - 1;
+		
+		// Do not allow adding the row if inserting through a control that spans vertically
+		if (atRow < table[0].length) {
+			EObject child = table[atColumn][atRow];
+			if (child != null && !isFillerLabel(child)) {
+				int index = children.indexOf(table[atColumn][atRow]);
+				if (index != -1 && childrenDimensions[index].y != atRow)
+					return UnexecutableCommand.INSTANCE;
+			}
+		}
+		
 		CommandBuilder cb = new CommandBuilder();
-		if (exceptColumn == -1)
-			exceptColumn = numColumns - 1;
+		EObject beforeObject = findNextValidObject(0, atRow);
+		// Add the row by adding filler labels and inserting the control at the specific column position.
+		// If any of the controls spans vertically, don't add filler, just expand it one more row.
 		for (int i = 0; i < numColumns; i++) {
-			if (i == exceptColumn)
+			boolean addFiller = true;
+			if (i == atColumn) {
 				// This is the column where the new control is put
-				cb.append(policy.getCreateCommand(request.getNewObject(), beforeObject));
-			else
+				if (request instanceof CreateRequest)
+					cb.append(policy.getCreateCommand(addedControl, beforeObject));
+				else 
+					cb.append(policy.getMoveChildrenCommand(Collections.singletonList(addedControl), beforeObject));
+				addFiller = false;
+			} else if (atRow < table[0].length) {
+				EObject child = table[i][atRow];
+				if (child != null && !isFillerLabel(child) && child != EMPTY) {
+					int index = children.indexOf(child);
+					// If the row is going through a control that is spanning more than one row,
+					// we need to expand it by one instead of adding filler.
+					if (index != -1 && childrenDimensions[index].y != atRow) {
+						cb.append(createVerticalSpanCommand(child, childrenDimensions[index].height + 1));
+						addFiller = false;
+					}
+				}
+			}
+			if (addFiller)
 				// These are the columns where the empty labels are put
 				cb.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
 		}
@@ -609,19 +655,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			return null;
 
 		// Find the next occupied cell to be used as the before object. 
-		EObject beforeObject = null;
-		int col = cell.x + 1, row = cell.y;
-		boolean firstpass = true;
-		for (int i = row; i < table[0].length && beforeObject == null; i++) {
-			for (int j = col; j < table.length; j++) {
-				if (table[j][i] != EMPTY) {
-					beforeObject = table[j][i];
-					break;
-				}
-			}
-			if (firstpass)
-				col = 0;
-		}
+		EObject beforeObject = findNextValidObject(cell.x, cell.y);
+
 		// Now go through the row and replace the empty cell with the new object... also
 		// create filler labels in other empty cells as we go.
 		for (int i = 0; i < table.length; i++) {
@@ -726,6 +761,29 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		return cb.getCommand();
 	}
 
+	/*
+	 * Create the command to set the horizontalSpan value of the GridData for a child control.
+	 */
+	private Command createVerticalSpanCommand(EObject control, int gridHeight) {
+		CommandBuilder cb = new CommandBuilder();
+		if (control != null) {
+			IJavaObjectInstance gridData = (IJavaObjectInstance) control.eGet(sfLayoutData);
+			if (gridData == null) {
+				// Create a new grid data if one doesn't already exist.
+				gridData = (IJavaObjectInstance) BeanUtilities.createJavaObject(
+						"org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			if (gridData != null) {
+				RuledCommandBuilder componentCB = new RuledCommandBuilder(policy.getEditDomain(), null, false);
+				Object heightObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(gridHeight)); //$NON-NLS-1$
+				componentCB.applyAttributeSetting(gridData, sfVerticalSpan, heightObject);
+				componentCB.applyAttributeSetting(control, sfLayoutData, gridData);
+				cb.append(componentCB.getCommand());
+			}
+		}
+		return cb.getCommand();
+	}
+
 	public void refresh() {
 		layoutTable = null;
 		childrenDimensions = null;
@@ -773,7 +831,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	/*
 	 * If the objects in a row are all filler labels, except the ignoreObject, remove them 
 	 */
-	public Command createEmptyRowCommands (int atRow, EObject ignoreObject) {
+	public Command createRemoveRowCommand (int atRow, EObject ignoreObject) {
 		EObject[][] table = getLayoutTable();
 		CommandBuilder cb = new CommandBuilder();
 		boolean empty = true;
@@ -795,7 +853,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	/*
 	 * If the objects in a column are all filler labels, except the ignoreObject, remove them 
 	 */
-	public Command createEmptyColumnCommands (int atColumn, EObject ignoreObject) {
+	public Command createRemoveColumnCommand (int atColumn, EObject ignoreObject, int projectNumColumns) {
 		EObject[][] table = getLayoutTable();
 		CommandBuilder cb = new CommandBuilder();
 		boolean empty = true;
@@ -811,10 +869,46 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				if (!(table[atColumn][i] == EMPTY) && !(ignoreObject == table[atColumn][i]))
 					cb.append(policy.getDeleteDependentCommand(table[atColumn][i]));
 			}
-			if (numColumns != 1)
-				cb.append(createNumColumnsCommand(numColumns - 1));
+			if (projectNumColumns != 1)
+				cb.append(createNumColumnsCommand(projectNumColumns - 1));
 			return cb.getCommand();
 		}
 		return null;
+	}
+	
+	/*
+	 * Find next object in the table that is not EMPTY and doesn't vertically span more than one row.
+	 * Note: filler labels are valid
+	 */
+	private EObject findNextValidObject (int columnStart, int rowStart) {
+		EObject[][] table = getLayoutTable();
+		// If there is only one row (or none), no need to add empty labels.
+		if (table.length == 0 || table[0].length == 0)
+			return null;
+		List children = (List) getContainer().eGet(sfCompositeControls);
+		if (children.isEmpty())
+			return null;
+
+		// Find the next occupied cell to be used as the before object. 
+		EObject foundObject = null;
+		int col = columnStart, row = rowStart;
+		boolean firstpass = true;
+		for (int i = row; i < table[0].length && foundObject == null; i++) {
+			for (int j = col; j < table.length; j++) {
+				if (table[j][i] != EMPTY) {
+					int index = children.indexOf(table[j][i]);
+					// If the row is going through a control that is spanning vertically more than one
+					// row, skip it. This is checked by comparing this control's starting y (row) value
+					// with where we are in the table lookup
+					if (index != -1 && childrenDimensions[index].y == i) {
+						foundObject = table[j][i];
+						break;
+					}
+				}
+			}
+			if (firstpass)
+				col = 0;
+		}
+		return foundObject;
 	}
 }
