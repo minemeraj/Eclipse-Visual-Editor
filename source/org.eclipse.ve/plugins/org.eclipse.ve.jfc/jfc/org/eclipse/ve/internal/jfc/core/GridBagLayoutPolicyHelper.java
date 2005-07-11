@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-11 22:41:21 $ 
+ *  $Revision: 1.14 $  $Date: 2005-07-11 20:59:42 $ 
  */
 
 import java.util.*;
@@ -482,24 +482,45 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 				IJavaInstance intValue = null;
 				Iterator containerComponents = ((List) getContainer().eGet(sfComponents)).iterator();
 				while (containerComponents.hasNext()) {
+					boolean isDefault = false;
 					EObject gridbagComponent = (EObject) containerComponents.next();
-					// The component has the constraint set onto it. Get the gridx and grid y properties and set
+					// The component has the constraint set onto it. Get the gridx and gridy properties and set
 					// them into the layout table at the appropriate cell location
 					IJavaObjectInstance gridbagconstraint = (IJavaObjectInstance) gridbagComponent.eGet(sfConstraintConstraint);
 					if (gridbagconstraint != null) {
-						intValue = (IJavaInstance) gridbagconstraint.eGet(sfGridX);
-						if (intValue != null) {
-							int x = ((IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(intValue)).intValue();
-							intValue = (IJavaInstance) gridbagconstraint.eGet(sfGridY);
-							if (intValue != null) {
-								int y = ((IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(intValue)).intValue();
-								if (x < layoutTable.length && y < layoutTable[0].length)
-									layoutTable[x][y] = gridbagComponent;
+						if(gridbagconstraint.eIsSet(sfGridX))
+							intValue = (IJavaInstance) gridbagconstraint.eGet(sfGridX);
+						else
+							isDefault = true;
+						if (intValue != null || isDefault) {
+							int x = -1;
+							if(!isDefault && intValue != null)
+								x = ((IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(intValue)).intValue();
+							if(gridbagconstraint.eIsSet(sfGridY)){
+								intValue = (IJavaInstance) gridbagconstraint.eGet(sfGridY);
+								isDefault = false;
+							} else
+								isDefault = true;
+							if (intValue != null || isDefault) {
+								int y = -1;
+								if(!isDefault && intValue != null)
+									y = ((IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(intValue)).intValue();
+								if (x < layoutTable.length && y < layoutTable[0].length){
+									if(x == -1){
+										x = getGridXOfDefaultConstraint(gridbagComponent, dimensions);
+									}
+									if(y == -1){
+										y = getGridYOfDefaultConstraint(gridbagComponent, dimensions);
+									}
+									if(x >= 0 && y >= 0)
+										layoutTable[x][y] = gridbagComponent;
+								}
 								// If the gridWidth and gridHeight values are greater than 1, store this same
 								// component in the table as well so the cell location will indicate it is occupied.
 								intValue = (IJavaInstance) gridbagconstraint.eGet(sfGridWidth);
-								if (intValue != null) {
-									int gridWidth = ((IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(intValue)).intValue();
+								int gridWidth = 1;
+								if (intValue != null && x >= 0 && y >= 0) {
+									gridWidth = ((IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(intValue)).intValue();
 									if (gridWidth > 1) {
 										for (int i = 1; i < gridWidth && (x + i) < layoutTable.length; i++) {
 											layoutTable[x + i][y] = gridbagComponent;
@@ -507,11 +528,20 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 									}
 								}
 								intValue = (IJavaInstance) gridbagconstraint.eGet(sfGridHeight);
-								if (intValue != null) {
+								if (intValue != null && x >= 0 && y >= 0) {
 									int gridHeight = ((IIntegerBeanProxy) BeanProxyUtilities.getBeanProxy(intValue)).intValue();
 									if (gridHeight > 1) {
 										for (int i = 1; i < gridHeight && (y + i) < layoutTable[0].length; i++) {
-											layoutTable[x][y + i] = gridbagComponent;
+											if(gridWidth > 1){
+												for (int j = 0; j < gridWidth 
+													&& (x + j) < layoutTable.length 
+													&& (y + i) < layoutTable[0].length; j++){
+													
+													layoutTable[x+j][y+i] = gridbagComponent;
+												}
+											} else if ((y + i) < layoutTable[0].length){
+												layoutTable[x][y + i] = gridbagComponent;
+											}
 										}
 									}
 								}
@@ -912,4 +942,96 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 		return false;
 	}
 
+	/**
+	 * Helper for the layout table to determine what the GridX is of a component with the 
+	 * default constraint of -1.
+	 * 
+	 * @since 1.1
+	 */
+	private int getGridXOfDefaultConstraint(EObject gridbagComponent, int[][] dimensions) {
+		int x = -1;
+		IJavaObjectInstance component = 
+			(IJavaObjectInstance) gridbagComponent.eGet(sfConstraintComponent);
+		IBeanProxy compProxy = BeanProxyUtilities.getBeanProxy(component);
+		IRectangleBeanProxy rectangleProxy = BeanAwtUtilities.invoke_getBounds(compProxy);
+		int componentX = rectangleProxy.getX();
+		int[] columnPositions = new int[dimensions[0].length + 1];
+		int layoutOriginXMargin = getContainerLayoutOrigin().x;
+		//adjust for left margin
+		columnPositions[0] = layoutOriginXMargin;
+		for(int i = 1; i < columnPositions.length; i++){
+			columnPositions[i] = columnPositions[i - 1] + dimensions[0][i - 1];
+		}
+		int gridx = -1;
+		
+		for (int i = 0; i < columnPositions.length-1; i++) {
+			int xpos = columnPositions[i];
+			if (componentX >= xpos && componentX < columnPositions[i+1]) {
+				gridx = i;
+
+				/*
+				 * Since column positions can be equal if there are columns that don't contain components,
+				 * iterate back throught the columns positions to get the first one with this position.
+				 */
+				int j;
+				for (j = i; j >= 0 && columnPositions[i] == columnPositions[j]; j--){
+					gridx = j;
+				}
+				break;
+			}
+		}
+		if(columnPositions.length == 1)
+			x = 0;
+		else
+			x = gridx;
+		
+		return x;
+	}
+	
+	/**
+	 * Helper for the layout table to determine what the GridY is of a component with the 
+	 * default constraint of -1.
+	 * 
+	 * @since 1.1
+	 */
+	private int getGridYOfDefaultConstraint(EObject gridbagComponent, int[][] dimensions) {
+		int y = -1;
+		
+		IJavaObjectInstance component = 
+			(IJavaObjectInstance) gridbagComponent.eGet(sfConstraintComponent);
+		IBeanProxy compProxy = BeanProxyUtilities.getBeanProxy(component);
+		IRectangleBeanProxy rectangleProxy = BeanAwtUtilities.invoke_getBounds(compProxy);
+		int componentY = rectangleProxy.getY();
+		int[] rowPositions = new int[dimensions[1].length + 1];
+		int layoutOriginYMargin = getContainerLayoutOrigin().y;
+		//adjust for top margin
+		rowPositions[0] = layoutOriginYMargin;
+		for(int i = 1; i < rowPositions.length; i++){
+			rowPositions[i] = rowPositions[i - 1] + dimensions[1][i - 1];
+		}
+		int gridy = -1;
+		
+		for (int i = 0; i < rowPositions.length-1; i++) {
+			int ypos = rowPositions[i];
+			if (componentY >= ypos && componentY < rowPositions[i+1]) {
+				gridy = i;
+
+				/*
+				 * Since row positions can be equal if there are rows that don't contain components,
+				 * iterate back throught the row positions to get the first one with this position.
+				 */
+				int j;
+				for (j = i; j >= 0 && rowPositions[i] == rowPositions[j]; j--){
+					gridy = j;
+				}
+				break;
+			}
+		}
+		if(rowPositions.length == 1)
+			y = 0;
+		else
+			y = gridy;
+		
+		return y;
+	}
 }
