@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.16 $  $Date: 2005-07-11 16:24:18 $ 
+ *  $Revision: 1.17 $  $Date: 2005-07-11 18:14:11 $ 
  */
 
 import java.util.*;
@@ -233,8 +233,9 @@ public void visit()  {
 								 getSourceRange(methods[i].getStartPosition(),methods[i].getStartPosition()+methods[i].getLength()), 
 								 String.copyValueOf(content,methods[i].getStartPosition(),methods[i].getLength()));
 				}
-			}catch(Exception e){
-				JavaVEPlugin.log(e, Level.WARNING) ;
+			}catch(Exception e){				
+				if (e.getCause()!=null)
+				   JavaVEPlugin.log(e.getCause(), Level.WARNING) ;
 			}
 		}
 	}else{
@@ -257,8 +258,12 @@ public void visit()  {
 				}
 			}
 		    catch (Exception e) {
-		    	if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
-		    		JavaVEPlugin.log ("TypeVisitor.visit() could not visit"+String.valueOf(methods[i].getName().getIdentifier())+" : "+e.getMessage(), Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+		    	if (JavaVEPlugin.isLoggingLevel(Level.WARNING)) {
+		    		String msg = e.getMessage();
+		    		if (e.getCause() != null)
+		    			msg = e.getCause().getMessage();
+		    		JavaVEPlugin.log ("TypeVisitor.visit() could not visit "+String.valueOf(methods[i].getName().getIdentifier())+" : "+msg, Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+		    	}
 		    }
 		}		
 	}
