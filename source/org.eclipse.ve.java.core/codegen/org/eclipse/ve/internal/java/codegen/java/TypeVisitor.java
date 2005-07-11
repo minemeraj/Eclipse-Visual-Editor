@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.15 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.16 $  $Date: 2005-07-11 16:24:18 $ 
  */
 
 import java.util.*;
@@ -22,8 +22,6 @@ import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.ve.internal.java.codegen.java.rules.*;
-import org.eclipse.ve.internal.java.codegen.java.rules.IInstanceVariableRule;
-import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
@@ -134,6 +132,8 @@ public void addFieldToMap(BeanPart bp, String method) {
 }
 
 protected void visitAMethod(MethodDeclaration method, IBeanDeclModel model,List reTryList,CodeTypeRef typeRef, String methodHandle, ISourceRange range, String content) {
+	if(skipMethod(method))
+		return;
 	String mName = method.getName().getIdentifier();
 	MethodVisitor v = visitorFactory.getMethodVisitor();
 	v.initialize(method,model,reTryList,typeRef,methodHandle,	range,content, visitorFactory) ;
@@ -145,6 +145,44 @@ protected void visitAMethod(MethodDeclaration method, IBeanDeclModel model,List 
 			v.setInitMethodFor((BeanPart)itr.next()) ;
 	}
 	v.visit() ;
+}
+
+/**
+ * Skip the following methods if:
+ * <li> method == null
+ * <li> is <code>static main(String[])</code>
+ * 
+ * @param method
+ * @return
+ * 
+ * @since 1.1
+ */
+private boolean skipMethod(MethodDeclaration method) {
+	boolean skip = false;
+	if(method==null)
+		skip = true;
+	else{
+		String methodName = method.getName().getIdentifier();
+		if("main".equals(methodName) && Modifier.isStatic(method.getModifiers())){
+			List params = method.parameters();
+			if(params!=null && params.size()==1 && params.get(0) instanceof SingleVariableDeclaration){
+				SingleVariableDeclaration svd = (SingleVariableDeclaration) params.get(0);
+				if(svd.getType() instanceof ArrayType){
+					Type simpleType = ((ArrayType) svd.getType()).getElementType();
+					if(simpleType.isSimpleType()){
+						if(		"java.lang.String".equals(((SimpleType)simpleType).getName().getFullyQualifiedName()) ||
+								"String".equals(((SimpleType)simpleType).getName().getFullyQualifiedName()))
+							skip = true;
+					}else if(simpleType.isQualifiedType()){
+						if(		"java.lang.String".equals(((QualifiedType)simpleType).getName().getFullyQualifiedName()) ||
+								"String".equals(((QualifiedType)simpleType).getName().getFullyQualifiedName()))
+							skip = true;
+					}
+				}
+			}
+		}
+	}
+	return skip;
 }
 
 public void visit()  {
