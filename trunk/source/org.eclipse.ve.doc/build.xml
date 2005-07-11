@@ -42,7 +42,7 @@
 			includes="images/**,topics/**"
 		/>		
 		<copy todir="${destination.temp.folder}/${full.name}">
-			<fileset dir="${basedir}" includes="plugin.xml,plugin.properties,about.html,doc.zip,ve_toc.xml,ve_isv_toc.xml,ibmdita.css,swg_info_common.css,META-INF/"/>
+			<fileset dir="${basedir}" includes="plugin.xml,plugin.properties,about.html,doc.zip,ve.xml,ve_toc.xml,ve_isv_toc.xml,ibmdita.css,swg_info_common.css,META-INF/"/>
 		</copy>
 	</target>
 
