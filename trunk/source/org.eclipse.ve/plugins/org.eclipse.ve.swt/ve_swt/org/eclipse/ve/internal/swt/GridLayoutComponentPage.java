@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.13 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.14 $  $Date: 2005-07-12 19:04:20 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -193,8 +193,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	protected AlignmentAction selectedAlignmentAction;
 	protected boolean fillVertical = false, fillHorizontal = false;
 	
-	protected Spinner horizontalSpanSpinner, verticalSpanSpinner, horizontalIndentSpinner;
-	protected org.eclipse.ve.internal.java.core.Spinner heightHintSpinner, widthHintSpinner;
+	protected Spinner horizontalSpanSpinner, verticalSpanSpinner, horizontalIndentSpinner, heightHintSpinner, widthHintSpinner;
 	protected int horizontalSpanValue = 1, verticalSpanValue = 1, horizontalIndentValue = 0, heightHintValue = -1, widthHintValue = -1;
 
 	private Button restoreAllButton;
@@ -639,7 +638,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		Label horizontalIndentLabel = new Label(alignmentGroup, SWT.NONE);
 		horizontalIndentLabel.setText(SWTMessages.GridLayoutComponentPage_HorizontalIndent); 
 		
-		horizontalIndentSpinner = new Spinner(alignmentGroup, SWT.NONE);
+		horizontalIndentSpinner = new Spinner(alignmentGroup, SWT.BORDER);
 		horizontalIndentSpinner.setSelection(horizontalIndentValue);
 		horizontalIndentSpinner.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -672,12 +671,12 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		Label horizontalHintLabel = new Label(hintsGroup, SWT.NONE);
 		horizontalHintLabel.setText(SWTMessages.GridLayoutComponentPage_HeightHint); 
 		
-		heightHintSpinner = new org.eclipse.ve.internal.java.core.Spinner(hintsGroup, SWT.NONE, -1);
+		heightHintSpinner = new Spinner(hintsGroup, SWT.BORDER);
 		heightHintSpinner.setMinimum(-1);
-		heightHintSpinner.setValue(heightHintValue);
-		heightHintSpinner.addModifyListener(new Listener() {
-			public void handleEvent(Event e) {
-				int value = heightHintSpinner.getValue();
+		heightHintSpinner.setSelection(heightHintValue);
+		heightHintSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int value = heightHintSpinner.getSelection();
 				if (value != heightHintValue) {
 					heightHintValue = value;
 					execute(createSpinnerCommand(getSelectedObjects(), sfHeightHint, heightHintValue));
@@ -688,12 +687,12 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		Label verticalHintLabel = new Label(hintsGroup, SWT.NONE);
 		verticalHintLabel.setText(SWTMessages.GridLayoutComponentPage_WidthHint); 
 		
-		widthHintSpinner = new org.eclipse.ve.internal.java.core.Spinner(hintsGroup, SWT.NONE, -1);
+		widthHintSpinner = new Spinner(hintsGroup, SWT.BORDER);
 		widthHintSpinner.setMinimum(-1);
-		widthHintSpinner.setValue(widthHintValue);
-		widthHintSpinner.addModifyListener(new Listener() {
-			public void handleEvent(Event e) {
-				int value = widthHintSpinner.getValue();
+		widthHintSpinner.setSelection(widthHintValue);
+		widthHintSpinner.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int value = widthHintSpinner.getSelection();
 				if (value != widthHintValue) {
 					widthHintValue = value;
 					execute(createSpinnerCommand(getSelectedObjects(), sfWidthHint, widthHintValue));
@@ -745,14 +744,14 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		Label horizontalLabel = new Label(spanGroup, SWT.NONE);
 		horizontalLabel.setText(SWTMessages.GridLayoutComponentPage_SpanHorizontal); 
 		
-		horizontalSpanSpinner = new Spinner(spanGroup, SWT.NONE);
+		horizontalSpanSpinner = new Spinner(spanGroup, SWT.BORDER);
 		horizontalSpanSpinner.setMinimum(1);
 		horizontalSpanSpinner.setSelection(horizontalSpanValue);
 		
 		Label verticalLabel = new Label(spanGroup, SWT.NONE);
 		verticalLabel.setText(SWTMessages.GridLayoutComponentPage_SpanVertical); 
 		
-		verticalSpanSpinner = new Spinner(spanGroup, SWT.NONE);
+		verticalSpanSpinner = new Spinner(spanGroup, SWT.BORDER);
 		verticalSpanSpinner.setMinimum(1);
 		verticalSpanSpinner.setSelection(verticalSpanValue);
 		
@@ -1012,9 +1011,9 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		if (verticalSpanSpinner != null)
 			verticalSpanSpinner.setSelection(verticalSpanValue);
 		if (heightHintSpinner != null && heightHintValue != 0)
-			heightHintSpinner.setValue(heightHintValue);
+			heightHintSpinner.setSelection(heightHintValue);
 		if (widthHintSpinner != null && widthHintValue != 0)
-			widthHintSpinner.setValue(widthHintValue);
+			widthHintSpinner.setSelection(widthHintValue);
 		if (horizontalIndentSpinner != null)
 			horizontalIndentSpinner.setSelection(horizontalIndentValue);
 	}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutComposite.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.6 $  $Date: 2005-07-12 19:04:20 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -76,7 +76,7 @@ public class GridLayoutLayoutComposite extends Composite {
 
 		Label l2 = new Label(spaceGroup, SWT.NONE);
 		l2.setText(SWTMessages.GridLayoutLayoutPage_horizontalSpacing); 
-		horizontalSpinner = new Spinner(spaceGroup, SWT.NONE);
+		horizontalSpinner = new Spinner(spaceGroup, SWT.BORDER);
 		horizontalSpinner.addModifyListener(spinnerModify);
 		GridData gd3 = new GridData();
 		gd3.grabExcessHorizontalSpace = true;
@@ -84,17 +84,17 @@ public class GridLayoutLayoutComposite extends Composite {
 
 		Label l3 = new Label(spaceGroup, SWT.NONE);
 		l3.setText(SWTMessages.GridLayoutLayoutPage_verticalSpacing); 
-		verticalSpinner = new Spinner(spaceGroup, SWT.NONE);
+		verticalSpinner = new Spinner(spaceGroup, SWT.BORDER);
 		verticalSpinner.addModifyListener(spinnerModify);
 
 		Label l4 = new Label(spaceGroup, SWT.NONE);
 		l4.setText(SWTMessages.GridLayoutLayoutPage_marginWidth); 
-		widthSpinner = new Spinner(spaceGroup, SWT.NONE);
+		widthSpinner = new Spinner(spaceGroup, SWT.BORDER);
 		widthSpinner.addModifyListener(spinnerModify);
 
 		Label l5 = new Label(spaceGroup, SWT.NONE);
 		l5.setText(SWTMessages.GridLayoutLayoutPage_marginHeight); 
-		heightSpinner = new Spinner(spaceGroup, SWT.NONE);
+		heightSpinner = new Spinner(spaceGroup, SWT.BORDER);
 		heightSpinner.addModifyListener(spinnerModify);
 		this.setSize(new org.eclipse.swt.graphics.Point(344,147));
 
@@ -130,7 +130,7 @@ public class GridLayoutLayoutComposite extends Composite {
 		GridData gd4 = new GridData();
 		gd4.grabExcessHorizontalSpace = true;
 		l1.setLayoutData(gd4);
-		numColumnsSpinner = new Spinner(colGroup, SWT.NONE);
+		numColumnsSpinner = new Spinner(colGroup, SWT.BORDER);
 		numColumnsSpinner.setMinimum(1);
 		numColumnsSpinner.addModifyListener(spinnerModify);
 

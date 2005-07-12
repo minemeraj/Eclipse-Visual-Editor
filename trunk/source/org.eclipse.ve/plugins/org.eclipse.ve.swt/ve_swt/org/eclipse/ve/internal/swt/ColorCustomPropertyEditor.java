@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ColorCustomPropertyEditor.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-22 15:34:15 $ 
+ *  $Revision: 1.9 $  $Date: 2005-07-12 19:04:20 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -453,13 +453,13 @@ public class ColorCustomPropertyEditor extends Composite {
 		GD1.verticalAlignment = GridData.CENTER;
 		redL = new Label(rgbPanel, SWT.NONE);		
 		redScale = new Scale(rgbPanel, SWT.NONE);
-		redSpinner = new Spinner(rgbPanel, SWT.NONE);
+		redSpinner = new Spinner(rgbPanel, SWT.BORDER);
 		greenL = new Label(rgbPanel, SWT.NONE);		
 		greenScale = new Scale(rgbPanel, SWT.NONE);
-		greenSpinner = new Spinner(rgbPanel, SWT.NONE);		
+		greenSpinner = new Spinner(rgbPanel, SWT.BORDER);		
 		blueL = new Label(rgbPanel, SWT.NONE);		
 		blueScale = new Scale(rgbPanel, SWT.NONE);		
-		blueSpinner = new Spinner(rgbPanel, SWT.NONE);
+		blueSpinner = new Spinner(rgbPanel, SWT.BORDER);
 		grid2.numColumns = 3;
 		grid2.verticalSpacing = 5;
 		grid2.horizontalSpacing = 10;
