@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.47 $  $Date: 2005-06-24 16:44:28 $ 
+ *  $Revision: 1.48 $  $Date: 2005-07-12 18:41:11 $ 
  */
 
 import java.util.*;
@@ -182,6 +182,8 @@ protected void parseInitExpression (BeanPart b) {
 		CodeExpressionRef exp = f.createFromJVEModel(null);
 		exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
 		exp.insertContentToDocument();
+		if (!exp.getBean().getDecleration().isSingleDecleration())
+			  exp.getBean().getDecleration().refreshDeclerationSource();
 		return exp;
 	}
 
@@ -633,7 +635,9 @@ public void removeBeanPart (BeanPart bean) {
 	boolean jdtChangesMade = false ; 	 // MethodRef offsets not being updated - hence check.
 	BeanPartDecleration needRefresh = null; // Deleting a BeanPart may need refreshing of a reUse instance's init expression 
 	IType tp = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit()) ;
-	if (bean.getDecleration().isInstanceVar()) { 	  
+	
+	if (bean.getDecleration().isInstanceVar() &&
+		bean.getDecleration().isSingleDecleration()) { 	  
 	  IField f = tp.getField(bean.getSimpleName()) ;
 	  if (f != null) {		// delete the field
 		try {
