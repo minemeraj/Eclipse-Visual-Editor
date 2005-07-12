@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.80 $  $Date: 2005-07-11 16:24:18 $ 
+ *  $Revision: 1.81 $  $Date: 2005-07-12 22:52:20 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -107,16 +107,18 @@ IDiagramSourceDecoder fSourceDecoder = null;
   	private  void Reload(Display disp,IProgressMonitor monitor) {
   		monitor.beginTask(CodegenMessages.JavaSourceTranslator_0,2); 
 
-		// We have no idea when the load will be called by the editor.
-		// We need to stop the synch. from driving snippets, as we are going
-		// to load from scratch anyhow
-		fSrcSync.disconnect();
-		monitor.worked(1);
-		try {
-			if (fBeanModel!=null) 
-			 fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN,true);
-		} catch (CodeGenException e) {}
-		fireReloadIsNeeded();
+  		if (fSrcSync!=null) {
+			// We have no idea when the load will be called by the editor.
+			// We need to stop the synch. from driving snippets, as we are going
+			// to load from scratch anyhow
+			fSrcSync.disconnect();
+			monitor.worked(1);
+			try {
+				if (fBeanModel!=null) 
+				 fBeanModel.setState(IBeanDeclModel.BDM_STATE_DOWN,true);
+			} catch (CodeGenException e) {}
+			fireReloadIsNeeded();
+  		}
 		monitor.done();
  	}
   	
