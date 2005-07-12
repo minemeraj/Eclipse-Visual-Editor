@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.43 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.44 $  $Date: 2005-07-12 18:41:11 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -334,9 +334,10 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * @since 1.1.0
 	 */
 	protected boolean isDeclerationNeeded() {
-		boolean result = true;
-		if (!fbeanPart.getDecleration().isInstanceVar()) {
-			// Local Variable
+		boolean result = false;
+		BeanPartDecleration d = fbeanPart.getDecleration();
+		if (!d.isInstanceVar() || !d.isSingleDecleration()) {
+			// Reused Variable
 			result = fbeanPart.getDecleration().getBeanPartIndex(fbeanPart)==0;
 		}				
 		return result;
@@ -348,7 +349,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	public String generate(Object[] args) throws CodeGenException {
 		IJavaObjectInstance obj = (JavaObjectInstance)fbeanPart.getEObject();
 		StringBuffer sb = new StringBuffer();				
-			// ivjFoo = <allocation>;			
+			// ivjFoo = <allocation>;					
 		if (!fbeanPart.getDecleration().isInstanceVar()) {
 			String type = fbeanPart.getType();
 			fOwner.getExprRef().getReqImports().add(type);

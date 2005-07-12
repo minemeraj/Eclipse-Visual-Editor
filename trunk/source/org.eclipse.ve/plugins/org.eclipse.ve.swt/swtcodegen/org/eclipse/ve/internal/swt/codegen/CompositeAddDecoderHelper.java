@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.21 $  $Date: 2005-05-11 22:41:37 $ 
+ *  $Revision: 1.22 $  $Date: 2005-07-12 18:41:14 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -410,6 +410,10 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 			CodeExpressionRef newExpr = eGen.createFromJVEModel(new Object[] { fbeanPart.getEObject() });
 			newExpr.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
 			newExpr.insertContentToDocument();
+			if (newExpr.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+				  if (!newExpr.getBean().getDecleration().isSingleDecleration())
+					  newExpr.getBean().getDecleration().refreshDeclerationSource();
+			}
 			return newExpr;
 
 		} catch (CodeGenException e) {

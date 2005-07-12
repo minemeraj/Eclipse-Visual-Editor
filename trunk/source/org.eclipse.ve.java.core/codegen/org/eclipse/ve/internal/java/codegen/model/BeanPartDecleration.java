@@ -18,7 +18,7 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.7 $  $Date: 2005-07-12 18:41:11 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -139,16 +139,14 @@ public class BeanPartDecleration {
 			beanParts.add(bp);			
 	}
 	
-	public void refreshDeclerationSource() {
-		CodeExpressionRef exp = null;
+	public void refreshDeclerationSource() {		
 		for (int i = 0; i < beanParts.size(); i++) {
 			CodeExpressionRef e = ((BeanPart)beanParts.get(i)).getInitExpression();
-			if ( exp == null ||
-				(e!=null && e.getOffset()<exp.getOffset()))
-				exp = e;			
+			if (e != null) {
+				// May need to add, or remove decleration
+				e.getExpressionDecoder().reflectMOFchange();
+			}
 		}
-		if (exp!=null)
-			exp.getExpressionDecoder().reflectMOFchange();
 	}
 	
 	public void removeBeanPart (BeanPart bp) {		
@@ -339,5 +337,16 @@ public class BeanPartDecleration {
 		bp.addInitMethod(initMethod);
 		model.addBean(bp);
 		return bp;		
+	}
+	
+	/**
+	 * 
+	 * @return true if this decleration is reused by multiple instances
+	 *         false if this instance decleration is not shared
+	 * 
+	 * @since 1.1.0
+	 */
+	public boolean isSingleDecleration() {
+		return beanParts.size()<=1;
 	}
 }

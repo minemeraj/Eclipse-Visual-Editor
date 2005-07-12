@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.17 $$  $$Date: 2005-06-24 18:57:12 $$ 
+ *  $$Revision: 1.18 $$  $$Date: 2005-07-12 18:41:15 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -206,13 +206,13 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 	}
 	
 	protected Command getMoveChildrenCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		// If two or more of the child conntrols being moved share the same instance variable do not allow movement because we
-		// cannot correctly update the code yet so it's safer to disallow for now
-		if(areFieldNamesShared(children,containmentSF)){
-			return UnexecutableCommand.INSTANCE;
-		} else {
+//		// If two or more of the child conntrols being moved share the same instance variable do not allow movement because we
+//		// cannot correctly update the code yet so it's safer to disallow for now
+//		if(areFieldNamesShared(children,containmentSF)){
+//			return UnexecutableCommand.INSTANCE;
+//		} else {
 			return super.getMoveChildrenCommand(children, positionBeforeChild,containmentSF);
-		}
+//		}
 	}	
 	
 
