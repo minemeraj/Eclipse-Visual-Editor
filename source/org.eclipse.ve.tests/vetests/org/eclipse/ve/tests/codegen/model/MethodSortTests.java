@@ -18,6 +18,7 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -94,6 +95,7 @@ public class MethodSortTests extends TestCase {
 			sb.append("offset("+offset+")"+"filler<"+ filler +">");
 			return sb.toString();
 		}
+				
 		
 		/* (non-Javadoc)
 		 * @see org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef#setFillerContent(java.lang.String)
@@ -121,13 +123,19 @@ public class MethodSortTests extends TestCase {
 		}
 	}
 	
+	public class DummyEObject extends EObjectImpl {
+		public DummyEObject() {
+			super();
+		}
+	}
+	
 	int offset;
 	/**
 	 * 
 	 * @param bp  Bean
 	 * @param fixed true if this expression position is fixed
 	 * @param init true if init expression
-	 * @param reference if it reference the other bean (not bp)
+	 * @param reference if it reference the other bean (not bp), or bp1 by default
 	 * @param pri priority structure
 	 * @return
 	 * 
@@ -140,17 +148,13 @@ public class MethodSortTests extends TestCase {
 		exp.setState (CodeExpressionRef.STATE_IN_SYNC,true);
 		offset+=10;
 		exp.setOffset(offset);
-		if (reference) {
-			if (bp.getEObject()==null) {
-				try {
-			       bp.setEObject(EcorePackage.eINSTANCE.getEJavaObject());
-				}
-				catch (Exception e) {};
-				try {
-			       bp2.setEObject(EcorePackage.eINSTANCE.getEJavaObject());
-				}
-				catch (Exception e) {};
+		if (bp.getEObject()==null) {
+			try {
+		       bp.setEObject(new DummyEObject());
 			}
+			catch (Exception e) {};
+		}
+		if (reference) {
 			if (bp==bp1)
 				exp.getReferences().add(bp2.getEObject());
 			else
@@ -357,7 +361,7 @@ public class MethodSortTests extends TestCase {
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(9)) ;
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(7)) ;
 	}
 	/**
      *  Add a brand new bean
@@ -382,17 +386,20 @@ public class MethodSortTests extends TestCase {
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(9)) ;		
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(4)) ;		
 		}				
 	
+	/**
+	 * Add a brand new bean with order priority of 3
+	 */
 	public void test12() {
-		CodeExpressionRef exp = createExpression(new BeanPart(decl1), false, true, true, getPriority(-1,true));
+		CodeExpressionRef exp = createExpression(new BeanPart(decl1), false, true, true, getPriority(3,true));
 		try {
 			method.updateExpressionOrder();
 		} catch (CodeGenException e) {
 			e.printStackTrace();
 		}
-	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(9)) ;		
+	    assertEquals("Failed to add low priority expression to bp1",exp,getExp(8)) ;		
 		}				
 	
 	/**

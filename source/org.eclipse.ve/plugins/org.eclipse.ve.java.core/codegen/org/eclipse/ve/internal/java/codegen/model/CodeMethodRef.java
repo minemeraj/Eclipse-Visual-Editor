@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.41 $  $Date: 2005-07-09 00:00:10 $ 
+ *  $Revision: 1.42 $  $Date: 2005-07-12 22:23:51 $ 
  */
 
 import java.util.*;
@@ -542,8 +542,8 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 			   if ((indexsSet && // Z order comparison is needed					
 				   cExp.getPriority().compareIndex(expPriority)>0) // Z order forces us to come after 
 				   ||  
-				   (dependantBeans.contains(cExp.getBean().getEObject()) //&& // we are dependant
-//				    (isGrouping(cExp.getBean(), sortedList, i)) //||
+				   (dependantBeans.contains(cExp.getBean().getEObject()) && // we are dependant
+				    isGrouping(cExp.getBean(), sortedList, i) //||
 				     //!cExp.getPriority().isIndexed())  // It is part of the bean init or its group of expressions
 				   )) { 
 		   
