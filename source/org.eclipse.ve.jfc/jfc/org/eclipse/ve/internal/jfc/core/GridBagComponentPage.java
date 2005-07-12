@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.12 $  $Date: 2005-06-28 18:11:26 $ 
+ *  $Revision: 1.13 $  $Date: 2005-07-12 19:04:22 $ 
  */
 
 import java.util.Collections;
@@ -684,7 +684,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			bottom = componentInsets.bottom;
 			right = componentInsets.right;
 		}
-		topSpinner = new Spinner(insetsGroup, SWT.NONE);
+		topSpinner = new Spinner(insetsGroup, SWT.BORDER);
 		topSpinner.setMaximum(9999);
 		topSpinner.setEnabled(componentInsets != null ? true : false);
 		topSpinner.setSelection(top);
@@ -703,7 +703,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Left); 
-		leftSpinner = new Spinner(insetsGroup, SWT.NONE);
+		leftSpinner = new Spinner(insetsGroup, SWT.BORDER);
 		leftSpinner.setMaximum(9999);
 		leftSpinner.setEnabled(componentInsets != null ? true : false);
 		leftSpinner.setSelection(left);
@@ -722,7 +722,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Bottom); 
-		bottomSpinner = new Spinner(insetsGroup, SWT.NONE);
+		bottomSpinner = new Spinner(insetsGroup, SWT.BORDER);
 		bottomSpinner.setMaximum(9999);
 		bottomSpinner.setEnabled(componentInsets != null ? true : false);
 		bottomSpinner.setSelection(bottom);
@@ -741,7 +741,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		});
 		lbl = new Label(insetsGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_InsetsGroup_Right); 
-		rightSpinner = new Spinner(insetsGroup, SWT.NONE);
+		rightSpinner = new Spinner(insetsGroup, SWT.BORDER);
 		rightSpinner.setMaximum(9999);
 		rightSpinner.setEnabled(componentInsets != null ? true : false);
 		rightSpinner.setSelection(right);
@@ -789,7 +789,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			x_span = spans[X_POS];
 			y_span = spans[Y_POS];
 		}
-		xSpanSpinner = new Spinner(spanGroup, SWT.NONE);
+		xSpanSpinner = new Spinner(spanGroup, SWT.BORDER);
 		xSpanSpinner.setMaximum(9999);
 		xSpanSpinner.setEnabled(spans != null ? true : false);
 		xSpanSpinner.setSelection(x_span);
@@ -808,7 +808,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		});
 		lbl = new Label(spanGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_SpanLabel_Height); 
-		ySpanSpinner = new Spinner(spanGroup, SWT.NONE);
+		ySpanSpinner = new Spinner(spanGroup, SWT.BORDER);
 		ySpanSpinner.setMaximum(9999);
 		ySpanSpinner.setEnabled(spans != null ? true : false);
 		ySpanSpinner.setSelection(y_span);
@@ -840,7 +840,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			x_pad = paddings[X_POS];
 			y_pad = paddings[Y_POS];
 		}
-		xPaddingSpinner = new Spinner(paddingGroup, SWT.NONE);
+		xPaddingSpinner = new Spinner(paddingGroup, SWT.BORDER);
 		xPaddingSpinner.setMaximum(9999);
 		xPaddingSpinner.setEnabled(spans != null ? true : false);
 		xPaddingSpinner.setSelection(x_pad);
@@ -859,7 +859,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		});
 		lbl = new Label(paddingGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_SpinnerLabel_Y); 
-		yPaddingSpinner = new Spinner(paddingGroup, SWT.NONE);
+		yPaddingSpinner = new Spinner(paddingGroup, SWT.BORDER);
 		yPaddingSpinner.setMaximum(9999);
 		yPaddingSpinner.setEnabled(spans != null ? true : false);
 		yPaddingSpinner.setSelection(y_pad);
@@ -894,7 +894,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.grabExcessHorizontalSpace = true;
 		data.minimumWidth = 40;
-		xWeightText = new Text(weightGroup, SWT.NONE);
+		xWeightText = new Text(weightGroup, SWT.BORDER);
 		xWeightText.setLayoutData(data);
 		xWeightText.setTextLimit(5);
 		xWeightText.setEnabled(spans != null ? true : false);
@@ -919,7 +919,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		});
 		lbl = new Label(weightGroup, SWT.NONE);
 		lbl.setText(JFCMessages.GridBagComponentPage_SpinnerLabel_Y); 
-		yWeightText = new Text(weightGroup, SWT.NONE);
+		yWeightText = new Text(weightGroup, SWT.BORDER);
 		yWeightText.setLayoutData(data);
 		yWeightText.setTextLimit(5);
 		yWeightText.setEnabled(weights != null ? true : false);

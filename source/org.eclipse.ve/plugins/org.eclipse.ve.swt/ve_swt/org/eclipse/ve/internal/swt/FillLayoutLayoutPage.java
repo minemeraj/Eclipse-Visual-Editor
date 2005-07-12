@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FillLayoutLayoutPage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.9 $  $Date: 2005-07-12 19:04:20 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -30,6 +30,7 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -37,7 +38,6 @@ import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.Spinner;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  
@@ -134,8 +134,8 @@ public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		return b;
 	}
 	
-	protected Listener spinnerModify = new Listener() {
-		public void handleEvent(Event event) {
+	protected ModifyListener spinnerModify = new ModifyListener() {
+		public void modifyText(ModifyEvent event) {
 			spinnerModified((Spinner)event.widget);
 		}
 	};
@@ -144,7 +144,8 @@ public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		Label label = new Label(parent, SWT.NONE);
 		label.setText(labelText);
 		
-		Spinner spin = new Spinner(parent, SWT.NONE, 0);
+		Spinner spin = new Spinner(parent, SWT.BORDER);
+		spin.setSelection(0);
 		spin.addModifyListener(spinnerModify);
 		
 		return spin;
@@ -273,11 +274,11 @@ public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 			else if (orientationValue == SWT.VERTICAL)
 				typeVerticalRadio.setSelection(true);
 			
-			spacingSpinner.setValue(getIntValue(fEditPart, sfSpacing));
+			spacingSpinner.setSelection(getIntValue(fEditPart, sfSpacing));
 			spacingSpinner.setEnabled(true);
-			heightSpinner.setValue(getIntValue(fEditPart, sfMarginHeight));
+			heightSpinner.setSelection(getIntValue(fEditPart, sfMarginHeight));
 			heightSpinner.setEnabled(true);
-			widthSpinner.setValue(getIntValue(fEditPart, sfMarginWidth));
+			widthSpinner.setSelection(getIntValue(fEditPart, sfMarginWidth));
 			widthSpinner.setEnabled(true);
 						
 			initialized = true;
@@ -339,7 +340,7 @@ public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 			IJavaInstance layout = (IJavaInstance) control.eGet(sfCompositeLayout);
 			if (layout != null) {
 				RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
-				String init = String.valueOf(spinner.getValue());
+				String init = String.valueOf(spinner.getSelection());
 				Object intObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
 				componentCB.applyAttributeSetting(layout, sf, intObject);
 				componentCB.applyAttributeSetting(control, sfCompositeLayout, layout);

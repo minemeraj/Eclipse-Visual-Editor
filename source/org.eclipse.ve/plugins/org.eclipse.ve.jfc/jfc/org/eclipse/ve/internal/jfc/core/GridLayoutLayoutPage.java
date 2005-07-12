@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-22 14:36:44 $ 
+ *  $Revision: 1.9 $  $Date: 2005-07-12 19:04:22 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -25,9 +25,12 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -35,7 +38,6 @@ import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.core.Spinner;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
  
@@ -76,8 +78,8 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		Composite c = new Composite(parent, SWT.NONE);
 		c.setLayout(new GridLayout());
 		
-		Listener spinnerModify = new Listener() {
-			public void handleEvent(Event event) {
+		ModifyListener spinnerModify = new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
 				spinnerModified((Spinner)event.widget);
 			}
 		};
@@ -95,8 +97,9 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
 		label.setLayoutData(gd);
-		columnsSpinner = new Spinner(dimensionsGroup, SWT.NONE, 0);
+		columnsSpinner = new Spinner(dimensionsGroup, SWT.BORDER);
 		columnsSpinner.setMinimum(0);
+		columnsSpinner.setSelection(0);
 		columnsSpinner.addModifyListener(spinnerModify);
 		
 		label = new Label(dimensionsGroup, SWT.NONE);
@@ -104,8 +107,9 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
 		label.setLayoutData(gd);
-		rowsSpinner = new Spinner(dimensionsGroup, SWT.NONE, 0);
+		rowsSpinner = new Spinner(dimensionsGroup, SWT.BORDER);
 		rowsSpinner.setMinimum(0);
+		rowsSpinner.setSelection(0);
 		rowsSpinner.addModifyListener(spinnerModify);
 		
 		Group spaceGroup = new Group(c, SWT.NONE);
@@ -120,7 +124,8 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		
 		label = new Label(spaceGroup, SWT.NONE);
 		label.setText(JFCMessages.GridLayoutLayoutPage_horizontalGap); 
-		hgapSpinner = new Spinner(spaceGroup, SWT.NONE, 5);
+		hgapSpinner = new Spinner(spaceGroup, SWT.BORDER);
+		hgapSpinner.setSelection(5);
 		hgapSpinner.addModifyListener(spinnerModify);
 		gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
@@ -128,7 +133,8 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		
 		label = new Label(spaceGroup, SWT.NONE);
 		label.setText(JFCMessages.GridLayoutLayoutPage_verticalGap); 
-		vgapSpinner = new Spinner(spaceGroup, SWT.NONE, 5);
+		vgapSpinner = new Spinner(spaceGroup, SWT.BORDER);
+		vgapSpinner.setSelection(5);
 		vgapSpinner.addModifyListener(spinnerModify);
 		gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
@@ -259,13 +265,13 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 			if (columnsSpinner == null) {
 				return;
 			}
-			columnsSpinner.setValue(getIntValue(fEditPart, sfColumns));
+			columnsSpinner.setSelection(getIntValue(fEditPart, sfColumns));
 			columnsSpinner.setEnabled(true);
-			rowsSpinner.setValue(getIntValue(fEditPart, sfRows));
+			rowsSpinner.setSelection(getIntValue(fEditPart, sfRows));
 			rowsSpinner.setEnabled(true);
-			hgapSpinner.setValue(getIntValue(fEditPart, sfHgap));
+			hgapSpinner.setSelection(getIntValue(fEditPart, sfHgap));
 			hgapSpinner.setEnabled(true);
-			vgapSpinner.setValue(getIntValue(fEditPart, sfVgap));
+			vgapSpinner.setSelection(getIntValue(fEditPart, sfVgap));
 			vgapSpinner.setEnabled(true);
 			initialized = true;
 		}
@@ -300,7 +306,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 			IJavaInstance gridLayout = (IJavaInstance) control.eGet(sfCompositeLayout);
 			if (gridLayout != null) {
 				RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
-				String init = String.valueOf(spinner.getValue());
+				String init = String.valueOf(spinner.getSelection());
 				Object intObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
 				componentCB.applyAttributeSetting(gridLayout, sf, intObject);
 				componentCB.applyAttributeSetting(control, sfCompositeLayout, gridLayout);
