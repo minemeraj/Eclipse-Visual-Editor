@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.13 $  $Date: 2005-07-12 19:04:22 $ 
+ *  $Revision: 1.14 $  $Date: 2005-07-12 20:13:36 $ 
  */
 
 import java.util.Collections;
@@ -638,7 +638,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			ac.fill(anchorGroup);
 		}
 		GridData data = (GridData) anchorGroup.getLayoutData();
-		data.heightHint = 93;
+		data.heightHint = 101;
 		anchorGroup.setLayoutData(data);
 		
 		Group insetsGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Insets, 2, 5, 4); 
@@ -649,6 +649,9 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			ActionContributionItem ac = new ActionContributionItem(fillActions[i]);
 			ac.fill(fillGroup);
 		}
+		GridData data2 = (GridData) fillGroup.getLayoutData();
+		data2.heightHint = 101;
+		fillGroup.setLayoutData(data2);
 		
 		Group spanningGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Span, 2, 5, 30); 
 		createSpanControl(spanningGroup);
@@ -656,7 +659,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		Group paddingGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Padding, 2, 5, 30); 
 		createPaddingControl(paddingGroup);
 		
-		Group weightGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Weight, 2, 13, 5); 
+		Group weightGroup = createGroup(mainComposite, JFCMessages.GridBagComponentPage_Weight, 2, 5, 5); 
 		createWeightControl(weightGroup);
 
 		restoreAllButton = new Button(mainComposite, SWT.NONE);
