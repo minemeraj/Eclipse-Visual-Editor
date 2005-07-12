@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.25 $ $Date: 2005-07-11 23:20:55 $
+ * $Revision: 1.26 $ $Date: 2005-07-12 19:06:47 $
  */
 import java.util.*;
 
@@ -62,8 +62,8 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	
 	protected FigureListener hostFigureListener = new FigureListener() {
 		public void figureMoved(IFigure source) {
-				refreshGridFigure();
-				helper.refresh();
+			helper.refresh();
+			refreshGridFigure();
 		}
 	};
 	private EditPartListener editPartListener;
@@ -71,8 +71,8 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	
 	private class GridImageListener implements IImageListener {
 		public void imageChanged(ImageData data) {
-				refreshGridFigure();
-				helper.refresh();
+			helper.refresh();
+			refreshGridFigure();
 		}
 	}
 	
@@ -290,22 +290,19 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		if (fGridLayoutGridFigure == null) {
 			IFigure f = ((GraphicalEditPart) getHost()).getContentPane();
 			int [][] layoutDimensions = null;
+			EObject[][] cellContents = null;
 			Rectangle layoutSpacing = null;
-			Rectangle clientArea = null;
+			Rectangle clientArea = helper.getContainerClientArea();
 			/*
 			 * If the container is empty, we can't depend on the layout dimensions or layout origin
-			 * from the GridLayout, just use the default values.
+			 * from the GridLayout, so we have nothing being drawn.
 			 */
-			if (helper.getContainer() == null || getHost().getChildren().size() == 0) {
-				layoutDimensions = new int [2][0];
-				layoutDimensions[0] = new int[0];
-				layoutDimensions[1] = new int[0];
-			} else {
+			if (helper.getContainer() != null && !getHost().getChildren().isEmpty()) {
 				layoutDimensions = helper.getContainerLayoutDimensions();
 				layoutSpacing = helper.getContainerLayoutSpacing();
+				cellContents = helper.getLayoutTable();
 			}
-			clientArea = helper.getContainerClientArea();
-			fGridLayoutGridFigure = new GridLayoutGridFigure(f.getBounds().getCopy(), layoutDimensions, layoutSpacing, clientArea );
+			fGridLayoutGridFigure = new GridLayoutGridFigure(f.getBounds().getCopy(), layoutDimensions, cellContents, layoutSpacing, clientArea );
 		}
 		return fGridLayoutGridFigure;
 	}
