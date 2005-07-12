@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.136 $  $Date: 2005-07-09 23:21:28 $ 
+ *  $Revision: 1.137 $  $Date: 2005-07-12 23:27:42 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.Button;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
@@ -370,7 +370,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	};
 	
 	private Figure pauseFigure;
-	private Button pauseLabelFigure;
+	private Label pauseLabelFigure;
 	private Image reloadImage;
 	private void showPauseFeedback(final boolean isError){
 		
@@ -384,7 +384,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					// so if it goes into it selection is not possible.  If the reload goes into the connection layer
 					// and the pauseFigure into the feedback then the feedback layer goes over the top of the connection layer
 					// and the button is greyed out
-					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.CONNECTION_LAYER);		
+					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.FEEDBACK_LAYER);		
 					
 					pauseFigure = new Figure(){
 						protected void paintFigure(Graphics graphics) {
@@ -409,17 +409,17 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							super.validate();
 						}						
 					};
-					String buttonLabel = null;
+					String labelText = null;
 					// 	Show the user that GUI is paused and can be unpaused by them
 					if(isError){
 						reloadImage = ReloadAction.ERROR_IMAGE_DESCRIPTOR.createImage();
-						buttonLabel = " Correct source errors and click to restart";				
+						labelText = " Errors in source preventing parsing";				
 					} else {
 						reloadImage = ReloadAction.PLAY_IMAGE_DESCRIPTOR.createImage();
-						buttonLabel = " Visual Editor paused.  Click to restart";				
+						labelText = " Visual Editor paused";				
 					}
 			
-					pauseLabelFigure = new Button(buttonLabel,reloadImage){
+					pauseLabelFigure = new Label(labelText,reloadImage){
 						Locator locator = new Locator() {
 							public void relocate(IFigure target) {
 								// 	Center the figure in the middle of the canvas
@@ -442,13 +442,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					pauseFigure.setEnabled(false);					
 					pauseLabelFigure.setEnabled(true);
 					pauseLabelFigure.setOpaque(true);
-					
-					pauseLabelFigure.addActionListener(new ActionListener(){
-						public void actionPerformed(ActionEvent event) {
-							reloadCallback.reload(true);
-							reloadAction.unPause();
-						};
-					});
 			
 					feedbackLayer.add(pauseFigure); 
 					feedbackLayer.add(pauseLabelFigure); 
@@ -488,12 +481,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					}
 					getRootFigure(pauseFigure.getParent()).removeFigureListener(rootFigureListener);
 					
-					LayerManager layoutManager = LayerManager.Helper.find(primaryViewer.getRootEditPart());
-					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.CONNECTION_LAYER);							
-					
-					feedbackLayer.remove(pauseFigure);
+					pauseFigure.getParent().remove(pauseFigure);
 					pauseFigure = null;
-					feedbackLayer.remove(pauseLabelFigure);
+					pauseLabelFigure.getParent().remove(pauseLabelFigure);
 					pauseLabelFigure = null;
 					reloadImage.dispose();				
 				}
@@ -540,10 +530,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	private void setReloadEnablement(boolean enabled) {
 		ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);
-        if (enabled)
+        if (enabled) {
             rla.unPause();
-        else
+            resetPauseFeedback();
+        } else {
             rla.setEnabled(enabled);
+        }
 		ReloadNowAction rlna = (ReloadNowAction) graphicalActionRegistry.getAction(ReloadNowAction.RELOADNOW_ACTION_ID);
 		rlna.setEnabled(enabled);
 	}
