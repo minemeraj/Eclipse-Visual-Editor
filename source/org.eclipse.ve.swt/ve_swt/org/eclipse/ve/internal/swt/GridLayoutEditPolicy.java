@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.26 $ $Date: 2005-07-12 19:06:47 $
+ * $Revision: 1.27 $ $Date: 2005-07-12 22:42:52 $
  */
 import java.util.*;
 
@@ -24,7 +24,6 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy;
 import org.eclipse.gef.requests.*;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 
@@ -57,29 +56,29 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	private GridLayoutRowFigure fRowFigure = null; 
 	private GridLayoutColumnFigure fColumnFigure = null;
 	private GridController gridController;
-	private GridImageListener fGridImageListener;
+	private IVisualComponentListener fGridComponentListener;
 	private org.eclipse.ve.internal.cde.core.ContainerPolicy containerPolicy;
 	
 	protected FigureListener hostFigureListener = new FigureListener() {
 		public void figureMoved(IFigure source) {
 			helper.refresh();
-			refreshGridFigure();
+				refreshGridFigure();
 		}
 	};
 	private EditPartListener editPartListener;
 
 	
-	private class GridImageListener implements IImageListener {
-		public void imageChanged(ImageData data) {
+	private class GridComponentListener extends VisualComponentAdapter {
+		public void componentValidated() {
 			helper.refresh();
 			refreshGridFigure();
 		}
 	}
 	
-	protected IImageListener getGridImageListener() {
-		if (fGridImageListener == null)
-			fGridImageListener = new GridImageListener();
-		return fGridImageListener;
+	protected IVisualComponentListener getGridComponentListener() {
+		if (fGridComponentListener == null)
+			fGridComponentListener = new GridComponentListener();
+		return fGridComponentListener;
 	}
 	
 	class GridLayoutRowFigure extends Figure {
@@ -175,7 +174,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			GridController.registerEditPart(getHost(), gridController);
 			ControlProxyAdapter beanProxy = (ControlProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance)getHost().getModel());
 			if (beanProxy != null)
-				beanProxy.addImageListener(getGridImageListener());
+				beanProxy.addComponentListener(getGridComponentListener());
 			getHostFigure().addFigureListener(hostFigureListener);	// need to know when the host figure changes so we can refresh the grid
 
 			// show grid if host editpart is selected and prefs is set
@@ -206,7 +205,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		}
 		ControlProxyAdapter beanProxy = (ControlProxyAdapter) BeanProxyUtilities.getBeanProxyHost((IJavaObjectInstance)getHost().getModel());
 		if (beanProxy != null)
-			beanProxy.removeImageListener(getGridImageListener());
+			beanProxy.removeComponentListener(getGridComponentListener());
 		getHostFigure().removeFigureListener(hostFigureListener);
 		if (editPartListener != null) {
 			getHost().removeEditPartListener(editPartListener);
@@ -815,6 +814,16 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		if (cb.isEmpty())
 			return UnexecutableCommand.INSTANCE;
 		return cb.getCommand();
-//		return containerPolicy.getMoveChildrenCommand(Collections.singletonList(childEP.getModel()), null);
+	}
+	public Rectangle getFullCellBounds(EditPart child) {
+		Rectangle bounds = new Rectangle();
+		List children = getHost().getChildren();
+		if (children.isEmpty() || fGridLayoutGridFigure == null)
+			return bounds;
+		int childIndex = children.indexOf(child);
+		if (childIndex != -1) {
+			bounds = getGridLayoutGridFigure().getGridBroundsForCellBounds(helper.getChildrenDimensions()[childIndex]);
+		}
+		return bounds;
 	}
 }

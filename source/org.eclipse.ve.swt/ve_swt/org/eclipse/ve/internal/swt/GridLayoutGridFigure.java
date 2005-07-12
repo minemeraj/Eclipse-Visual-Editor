@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: GridLayoutGridFigure.java,v $
- *  $Revision: 1.11 $  $Date: 2005-07-12 19:06:47 $ 
+ *  $Revision: 1.12 $  $Date: 2005-07-12 22:42:52 $ 
  */
 
 import org.eclipse.draw2d.*;
@@ -149,6 +149,7 @@ protected int[][] calculateColumnDividers(int[] columnWidths, int[] rowHeights, 
 			int lastRow = leftColumn.length-1;
 			int colSegsNdx = 0;	// This will always point to the start index of the next segment.
 			colSegs[colSegsNdx] = yMin;	// Will always start at yMin.
+			boolean prevSpan = true;	// Previous was a span. (We treat first one as previous span so as not to close off an empty segment)
 			// Walk each row, and compare left and right column to see if spanned.
 			for (int j = 0; j < leftColumn.length; j++) {
 				int trueRowHeight = rowHeights[j];
@@ -163,15 +164,17 @@ protected int[][] calculateColumnDividers(int[] columnWidths, int[] rowHeights, 
 				EObject leftObject, rightObject;
 				if ((leftObject = leftColumn[j]) != GridLayoutPolicyHelper.EMPTY && (rightObject = rightColumn[j]) != GridLayoutPolicyHelper.EMPTY && leftObject == rightObject) {
 					// We are spanning, so skip it and move start of segment to next cell.
-					if (colSegsNdx != 0) {
+					if (!prevSpan) {
 						// Need to close off previous one (if not first)
 						colSegs[++colSegsNdx] = yPos;
 						colSegsNdx++;	// Move to start of next.
 					}
 					yPos+=trueRowHeight;
 					colSegs[colSegsNdx] = yPos+1;	// Start of next seg.
+					prevSpan = true;
 				} else {
 					// We are not spanning, continue line through it.
+					prevSpan = false;
 					yPos+=trueRowHeight;
 				}
 			}
@@ -276,6 +279,7 @@ protected int[][] calculateRowDividers(int[] columnWidths, int[] rowHeights, EOb
 			int lastCol = cellContents.length-1;
 			int rowSegsNdx = 0;	// This will always point to the start index of the next segment.
 			rowSegs[rowSegsNdx] = xMin;	// Will always start at xMin.
+			boolean prevSpan = true;	// Previous was a span. (We treat first one as previous span so as not to close off an empty segment)
 			// Walk each column comparing upper row and lower to see if spanned.
 			for (int j = 0; j < cellContents.length; j++) {
 				int trueColWidth = columnWidths[j];
@@ -290,16 +294,18 @@ protected int[][] calculateRowDividers(int[] columnWidths, int[] rowHeights, EOb
 				EObject upperObject, lowerObject;
 				if ((upperObject = cellContents[j][upperRow]) != GridLayoutPolicyHelper.EMPTY && (lowerObject = cellContents[j][lowerRow]) != GridLayoutPolicyHelper.EMPTY && upperObject == lowerObject) {
 					// We are spanning, so skip it and move start of segment to next cell.
-					if (rowSegsNdx != 0) {
+					if (!prevSpan) {
 						// Need to close off previous one (if not first)
 						rowSegs[++rowSegsNdx] = xPos;
 						rowSegsNdx++;	// Move to start of next.
 					}
 					xPos+=trueColWidth;
 					rowSegs[rowSegsNdx] = xPos+1;	// Start of next seg.
+					prevSpan = true;
 				} else {
 					// We are not spanning, continue line through it.
 					xPos+=trueColWidth;
+					prevSpan = false;
 				}
 			}
 			if (rowSegs[rowSegsNdx] < xPos) {

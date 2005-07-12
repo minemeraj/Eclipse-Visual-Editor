@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: NonResizableSpannableEditPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.4 $  $Date: 2005-07-12 22:42:52 $ 
  */
 
 import java.util.List;
@@ -27,6 +27,7 @@ import org.eclipse.gef.tools.ResizeTracker;
 
 public class NonResizableSpannableEditPolicy extends NonResizableEditPolicy {
 	protected GridLayoutEditPolicy layoutEditPolicy;
+	protected GridLayoutPolicyHelper helper;
 	/**
 	 * 
 	 */
@@ -47,7 +48,7 @@ public class NonResizableSpannableEditPolicy extends NonResizableEditPolicy {
 		return nonResizeHandles;
 	}
 	private Handle createHandle(GraphicalEditPart owner, int direction) {
-		GridSpanHandle handle = new GridSpanHandle(owner, direction);
+		GridSpanHandle handle = new GridSpanHandle(owner, direction, layoutEditPolicy);
 		handle.setDragTracker(new ResizeTracker(owner, direction));
 		return handle;
 	}
