@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AggregateDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2005-07-09 00:02:23 $ 
+ *  $Revision: 1.2 $  $Date: 2005-07-12 06:03:11 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,21 +18,22 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jface.util.Assert;
 
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
 
-public class AggregateDecoderHelper extends ExpressionDecoderHelper {
+public class AggregateDecoderHelper implements IExpressionDecoderHelper{
 
 	private IExpressionDecoderHelper[] helpers = null;
 	private IExpressionDecoderHelper decodedHelper = null;
 	
 	public AggregateDecoderHelper(BeanPart bean, Statement exp, IJavaFeatureMapper fm, IExpressionDecoder owner, Class[] helperClasses) {
-		super(bean, exp, fm, owner);
 		Assert.isNotNull(helperClasses, "Must have atleast one decoder helper to aggregate");
 		Assert.isTrue(helperClasses.length>0, "Must have atleast one decoder helper to aggregate");
 		this.helpers = new IExpressionDecoderHelper[helperClasses.length];
@@ -116,6 +117,64 @@ public class AggregateDecoderHelper extends ExpressionDecoderHelper {
 	public boolean isImplicit(Object[] args) {
 		if(decodedHelper!=null)
 			return decodedHelper.isImplicit(args);
+		return false;
+	}
+
+	public void setDecodingContent(Statement exp) {
+		for (int i = 0; i < helpers.length; i++) {
+			helpers[i].setDecodingContent(exp);
+		}
+	}
+
+	public VEexpressionPriority getPriorityOfExpression() {
+		if(decodedHelper!=null)
+			return decodedHelper.getPriorityOfExpression();
+		return null;
+	}
+
+	public boolean canRefreshFromComposition() {
+		if(decodedHelper!=null)
+			return decodedHelper.canRefreshFromComposition();
+		return false;
+	}
+
+	public String getCurrentExpression() {
+		if(decodedHelper!=null)
+			return decodedHelper.getCurrentExpression();
+		return null;
+	}
+
+	public void adaptToCompositionModel(IExpressionDecoder decoder) {
+		if(decodedHelper!=null)
+			decodedHelper.adaptToCompositionModel(decoder);
+	}
+
+	public void unadaptToCompositionModel() {
+		if(decodedHelper!=null)
+			decodedHelper.unadaptToCompositionModel();
+	}
+
+	public boolean isGenerateOnImplicit() {
+		if(decodedHelper!=null)
+			return decodedHelper.isGenerateOnImplicit();
+		return false;
+	}
+
+	public Object[] getAddedInstance() {
+		if(decodedHelper!=null)
+			return decodedHelper.getAddedInstance();
+		return null;
+	}
+
+	public Object[] getReferencedInstances() {
+		if(decodedHelper!=null)
+			return decodedHelper.getReferencedInstances();
+		return null;
+	}
+
+	public boolean isRelevantFeature(EStructuralFeature sf) {
+		if(decodedHelper!=null)
+			return decodedHelper.isRelevantFeature(sf);
 		return false;
 	}
 
