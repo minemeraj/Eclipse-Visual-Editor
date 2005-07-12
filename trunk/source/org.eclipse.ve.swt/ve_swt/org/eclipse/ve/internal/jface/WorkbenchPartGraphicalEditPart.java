@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-24 20:44:24 $ 
+ *  $Revision: 1.3 $  $Date: 2005-07-12 21:08:22 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -174,11 +174,7 @@ public class WorkbenchPartGraphicalEditPart extends AbstractGraphicalEditPart im
 			private ListenerList listeners;
 			private VisualComponentListener vListener;
 
-			private class VisualComponentListener implements IVisualComponentListener {
-				public void componentHidden() {
-				}
-				public void componentMoved(int x, int y) {
-				}
+			private class VisualComponentListener extends VisualComponentAdapter {
 				public void componentRefreshed() {
 					Rectangle bounds = getVisualComponent().getBounds();
 					componentResized(bounds.width,bounds.height);				
@@ -188,8 +184,6 @@ public class WorkbenchPartGraphicalEditPart extends AbstractGraphicalEditPart im
 					for (int i = 0; i < listens.length; i++) {
 						((IConstraintHandlerListener) listens[i]).sizeChanged(width, height);
 					}
-				}
-				public void componentShown() {
 				}
 			}
 			

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentManager.java,v $ $Revision: 1.12 $ $Date: 2005-06-15 20:19:27 $
+ * $RCSfile: ComponentManager.java,v $ $Revision: 1.13 $ $Date: 2005-07-12 21:08:24 $
  */
 
 import java.io.InputStream;
@@ -435,6 +435,7 @@ public class ComponentManager implements ComponentManagerFeedbackControllerNotif
 				fireComponentRefresh();
 				break;
 			case Common.CL_IMAGEINVALID:
+				componentValidated();
 				// The image for this component is invalid. Go do image refresh if we have any listeners.
 				if (imSupport != null && imSupport.hasImageListeners()) {
 					// Now we are finally ready for images, create the image data collector if needed.
@@ -494,7 +495,17 @@ public class ComponentManager implements ComponentManagerFeedbackControllerNotif
 	}
 
 	/**
-	 * Component hidden. Subclasses may override to know when hidden. Should call super.
+	 * Component validated. 
+	 * 
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void componentValidated() {
+		vcSupport.fireComponentValidated();
+	}
+	
+	/**
+	 * Component hidden.
 	 * 
 	 * 
 	 * @since 1.1.0
@@ -504,7 +515,7 @@ public class ComponentManager implements ComponentManagerFeedbackControllerNotif
 	}
 
 	/**
-	 * Component shown. Subclasses may override to know when shown. Should call super.
+	 * Component shown. 
 	 * 
 	 * 
 	 * @since 1.1.0

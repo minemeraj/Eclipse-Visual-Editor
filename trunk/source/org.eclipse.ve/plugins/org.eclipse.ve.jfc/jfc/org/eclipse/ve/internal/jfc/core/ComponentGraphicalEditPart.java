@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.27 $ $Date: 2005-06-24 19:48:41 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.28 $ $Date: 2005-07-12 21:08:24 $
  */
 import java.util.*;
 
@@ -122,23 +122,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 
 		private VisualComponentListener vListener;
 
-		private class VisualComponentListener implements IVisualComponentListener {
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see org.eclipse.ve.internal.cde.core.IVisualComponentListener#componentHidden()
-			 */
-			public void componentHidden() {
-			}
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see org.eclipse.ve.internal.cde.core.IVisualComponentListener#componentMoved(int, int)
-			 */
-			public void componentMoved(int x, int y) {
-			}
+		private class VisualComponentListener extends VisualComponentAdapter {
 
 			/*
 			 * (non-Javadoc)
@@ -164,14 +148,6 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 				for (int i = 0; i < listens.length; i++) {
 					((IConstraintHandlerListener) listens[i]).sizeChanged(width, height);
 				}
-			}
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see org.eclipse.ve.internal.cde.core.IVisualComponentListener#componentShown()
-			 */
-			public void componentShown() {
 			}
 		}
 

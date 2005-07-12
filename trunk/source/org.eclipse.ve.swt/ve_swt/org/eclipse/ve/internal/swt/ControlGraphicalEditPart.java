@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.24 $ $Date: 2005-06-24 19:48:40 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.25 $ $Date: 2005-07-12 21:08:22 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -260,11 +260,7 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		private ListenerList listeners;
 		private VisualComponentListener vListener;
 
-		private class VisualComponentListener implements IVisualComponentListener {
-			public void componentHidden() {
-			}
-			public void componentMoved(int x, int y) {
-			}
+		private class VisualComponentListener extends VisualComponentAdapter  {
 			public void componentRefreshed() {
 				// For the initial resize get the bounds and treat this as a resize
 				// Don't do this with a synchronous call to getVisualComponent.getBounds()
@@ -282,8 +278,6 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 				for (int i = 0; i < listens.length; i++) {
 					((IConstraintHandlerListener) listens[i]).sizeChanged(width, height);
 				}
-			}
-			public void componentShown() {
 			}
 		}
 		public void addConstraintHandlerListener(IConstraintHandlerListener listener) {

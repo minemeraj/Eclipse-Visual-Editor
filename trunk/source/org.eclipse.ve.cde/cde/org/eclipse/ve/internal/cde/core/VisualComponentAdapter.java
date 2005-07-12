@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VisualComponentAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.2 $  $Date: 2005-07-12 21:08:25 $ 
  */
 package org.eclipse.ve.internal.cde.core;
  
@@ -51,6 +51,9 @@ public class VisualComponentAdapter implements IVisualComponentListener {
 	 * @see org.eclipse.ve.internal.cde.core.IVisualComponentListener#componentShown()
 	 */
 	public void componentShown() {
+	}
+
+	public void componentValidated() {
 	}
 
 }

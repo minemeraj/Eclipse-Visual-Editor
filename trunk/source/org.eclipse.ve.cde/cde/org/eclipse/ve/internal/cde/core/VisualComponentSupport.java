@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: VisualComponentSupport.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.4 $  $Date: 2005-07-12 21:08:25 $ 
  */
 
 import org.eclipse.jface.util.ListenerList;
@@ -54,6 +54,22 @@ public class VisualComponentSupport {
 			}
 		}
 	}
+	
+	/**
+	 * Fire component validated notification.
+	 */
+	public void fireComponentValidated() {
+		if (componentListeners != null) {
+			Object[] lists = null;
+			synchronized (this) {
+				lists = componentListeners.getListeners();
+			}
+			for (int i = 0; i < lists.length; i++) {
+				IVisualComponentListener listener = (IVisualComponentListener) lists[i];
+				listener.componentValidated();
+			}
+		}
+	}	
 
 	/**
 	 * Fire component moved notification.

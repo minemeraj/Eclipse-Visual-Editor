@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: CardLayoutEditPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-23 19:29:57 $ 
+ *  $Revision: 1.8 $  $Date: 2005-07-12 21:08:24 $ 
  */
 import java.util.*;
 
@@ -32,8 +32,7 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IMethodProxy;
 
-import org.eclipse.ve.internal.cde.core.IVisualComponent;
-import org.eclipse.ve.internal.cde.core.IVisualComponentListener;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
@@ -200,36 +199,10 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 	 * getAdapter interface from the editpart. Refresh the editpart when the card
 	 * component has been refreshed.
 	 */
-	protected class CardLayoutComponentListener implements IVisualComponentListener {
-		/**
-		 * The listened component was hidden
-		 */
-		public void componentHidden() {
-		};
-		/**
-		 * The listened component moved, the point moved to is passed on.
-		 */
-		public void componentMoved(int x, int y) {
-		};
-		/**
-		 * The listened component has changed in some way,
-		 * but can't give a specific. So refresh.
-		 * (an example is the underlying component
-		 * that the visual component is
-		 * monitoring has been replaced, so refresh the bounds).
-		 */
+	protected class CardLayoutComponentListener extends VisualComponentAdapter {
+		
 		public void componentRefreshed() {
 			selectCard(fSelectedCard);
-		};
-		/**
-		 * The listened component was resized. The new size is passed also.
-		 */
-		public void componentResized(int width, int height) {
-		};
-		/**
-		 * The listened component was shown
-		 */
-		public void componentShown() {
 		};
 	}
 	/*
