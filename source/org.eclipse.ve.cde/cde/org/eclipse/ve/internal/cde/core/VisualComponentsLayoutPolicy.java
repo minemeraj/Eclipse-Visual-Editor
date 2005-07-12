@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualComponentsLayoutPolicy.java,v $
- *  $Revision: 1.11 $  $Date: 2005-06-15 20:19:34 $ 
+ *  $Revision: 1.12 $  $Date: 2005-07-12 21:08:25 $ 
  */
 
 import java.util.Iterator;
@@ -415,6 +415,9 @@ public class VisualComponentsLayoutPolicy extends AbstractEditPolicy {
 		 * @see org.eclipse.ve.internal.cde.core.IVisualComponentListener#componentHidden()
 		 */
 		public void componentHidden() {
+		}
+
+		public void componentValidated() {
 		}
 		
 	}

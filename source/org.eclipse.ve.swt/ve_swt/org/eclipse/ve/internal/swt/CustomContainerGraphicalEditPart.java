@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CustomContainerGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-30 10:05:48 $ 
+ *  $Revision: 1.2 $  $Date: 2005-07-12 21:08:22 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -160,11 +160,7 @@ public abstract class CustomContainerGraphicalEditPart extends AbstractGraphical
 			private ListenerList listeners;
 			private VisualComponentListener vListener;
 
-			private class VisualComponentListener implements IVisualComponentListener {
-				public void componentHidden() {
-				}
-				public void componentMoved(int x, int y) {
-				}
+			private class VisualComponentListener extends VisualComponentAdapter {
 				public void componentRefreshed() {
 					Rectangle bounds = getVisualComponent().getBounds();
 					componentResized(bounds.width,bounds.height);				
@@ -174,8 +170,6 @@ public abstract class CustomContainerGraphicalEditPart extends AbstractGraphical
 					for (int i = 0; i < listens.length; i++) {
 						((IConstraintHandlerListener) listens[i]).sizeChanged(width, height);
 					}
-				}
-				public void componentShown() {
 				}
 			}
 			

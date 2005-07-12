@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.18 $ $Date: 2005-06-15 20:19:21 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.19 $ $Date: 2005-07-12 21:08:22 $
  */
 
 import java.io.InputStream;
@@ -442,6 +442,7 @@ public class ControlManager implements ControlManagerFeedbackControllerNotifier,
 				synchronized (imageAccessorSemaphore) {
 					fImageValid = INVALID;
 				}
+				componentValidated();
 				// The image for this component is invalid. Go do image refresh if we have any listeners.
 				if (imSupport != null && imSupport.hasImageListeners()) {
 					// Now we are finally ready for images, create the image data collector if needed.
@@ -486,7 +487,7 @@ public class ControlManager implements ControlManagerFeedbackControllerNotifier,
 	}
 
 	/**
-	 * Component moved. Subclasses may override to know when move occurred. Should call super.
+	 * Component moved. 
 	 * 
 	 * @param x
 	 * @param y
@@ -507,6 +508,14 @@ public class ControlManager implements ControlManagerFeedbackControllerNotifier,
 		vcSupport.fireComponentRefreshed();
 	}
 
+
+	/**
+	 * fireComponentValidated. Send out a validated notification.
+	 */
+	protected void componentValidated() {
+		vcSupport.fireComponentValidated();
+	}
+	
 	/**
 	 * Dispose the component manager.
 	 * 

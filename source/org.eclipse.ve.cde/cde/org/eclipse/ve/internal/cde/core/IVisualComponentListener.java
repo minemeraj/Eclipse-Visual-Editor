@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IVisualComponentListener.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.4 $  $Date: 2005-07-12 21:08:25 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -69,4 +69,14 @@ public interface IVisualComponentListener extends EventListener {
 	 * @since 1.1.0
 	 */
 	public void componentShown();
+	
+	/**
+	 * This is sent when the component was invalidated and then subsequently validated. It is not required that all visual components
+	 * can send validated notifications. Also when it is sent depends on the visual component itself. Typically it would be when
+	 * a new image would of been required if an images were being listened for.
+	 * 
+	 * 
+	 * @since 1.1.0
+	 */
+	public void componentValidated();
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IImageNotifier.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.4 $  $Date: 2005-07-12 21:10:21 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -23,7 +23,9 @@ package org.eclipse.ve.internal.cde.core;
 public interface IImageNotifier {
 
 	/**
-	 * Add an image listener.
+	 * Add an image listener. Do not add an image listener except if you need the actual image. This is because
+	 * if you are the only listener and you don't need the image it will still cause an image to be captured.
+	 * This is a waste. Use {@link IVisualComponentListener#componentValidated()} instead.
 	 * 
 	 * @param listener
 	 * 
