@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.34 $ $Date: 2005-07-11 19:40:01 $
+ * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.35 $ $Date: 2005-07-13 16:31:22 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -43,7 +43,7 @@ import org.eclipse.ve.internal.java.core.*;
  */
 public class CompositeProxyAdapter extends ControlProxyAdapter {
 
-	protected EReference sfCompositeControls, sfLayout, sfLayoutData;
+	protected EReference sfCompositeControls, sfLayout;
 
 	/**
 	 * Construct
@@ -56,7 +56,6 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
 		sfCompositeControls = JavaInstantiation.getReference(rset, SWTConstants.SF_COMPOSITE_CONTROLS);
 		sfLayout = JavaInstantiation.getReference(rset, SWTConstants.SF_COMPOSITE_LAYOUT);
-		sfLayoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
 	}
 
 	protected void primApplied(EStructuralFeature feature, Object value, int index, boolean isTouch, IExpression expression, boolean testValidity) {
