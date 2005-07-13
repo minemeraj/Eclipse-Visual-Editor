@@ -31,4 +31,5 @@ JVEEVNT02	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/
 JVESYNC01	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/testcases/src-sync/src-sync.htm	None	NoResult	Test source code synchronization
 JVEWRKB01	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/testcases/workbench1/workbench1.htm	None	NoResult	Test Visual Editor interactions with the Eclipse workbench
 JVEWRKB02	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/testcases/interdependency/interdependency.htm	None	NoResult	Projects Interdependency test
+JVECCP01	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/testcases/cut-copy-paste/cut-copy-paste.htm	None	NoResult	Test the Cut, Copy, Paste capabilities
 
