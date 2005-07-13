@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2005-07-11 23:20:55 $
+ *  $Revision: 1.16 $  $Date: 2005-07-13 12:26:46 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -132,6 +132,9 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			int[][] dimensions = getContainerLayoutDimensions();
 			layoutTable = new EObject[dimensions[0].length][dimensions[1].length];
 			numColumns = dimensions[0].length;
+			// If empty container, don't continue.
+			if (layoutTable.length < 1 || layoutTable[0].length < 1)
+				return layoutTable;
 
 			int row = 0;
 			int col = 0;
