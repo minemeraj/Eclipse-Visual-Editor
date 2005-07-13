@@ -16,7 +16,7 @@
        if (!flock($f, LOCK_EX)) 
                   exit ("Site is busy") ;
        if (!($f2=fopen($newdatafile,"w+"))) 
-                  exit("Unable to open temp file.");  
+                  exit("Unable to open temp file. '$php_errormsg'");  
        while ($testinfo = fscanf ($f, "%s\t%s\t%s\t%s\t%[a-zA-Z0-9,. \\'';;~~!!@@##$$%%&&**(())--==++__]\n")) {
               list ($tst, $url, $tester, $status, $description) = $testinfo;
               // No spaces allowed in an Email ID
