@@ -11,12 +11,13 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanActionFilter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.8 $  $Date: 2005-07-13 13:21:04 $ 
  */
-import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.gef.EditPart;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.core.CDEActionFilter;
@@ -78,6 +79,25 @@ public class JavaBeanActionFilter extends CDEActionFilter {
 	protected JavaBeanActionFilter() {
 	}
 
+	public boolean testAttributeForPropertyName(Object target, String value) {
+		// The "text" property can be present because the edit part's parent is a TabFolder
+		// which allows direct edit of the TabItem text
+		if("text".equals(value)){
+			if(isTabFolderParent(target)) return true;
+		}
+		
+		return super.testAttributeForPropertyName(target,value);
+	}
+	
+	public static boolean isTabFolderParent(Object target){
+		Object parentModel = ((EditPart)target).getParent().getModel();
+		if(parentModel instanceof IJavaObjectInstance && 
+		   ((IJavaObjectInstance)parentModel).getJavaType().getQualifiedName().equals("org.eclipse.swt.widgets.TabFolder")){
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * @see org.eclipse.ui.IActionFilter#testAttribute(Object, String, String)
 	 */
