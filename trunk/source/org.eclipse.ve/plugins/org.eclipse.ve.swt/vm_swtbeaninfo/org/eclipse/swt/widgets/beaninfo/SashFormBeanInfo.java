@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SashFormBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2005-07-13 15:56:31 $ 
+ *  $Revision: 1.5 $  $Date: 2005-07-13 16:00:05 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -51,6 +51,7 @@ public class SashFormBeanInfo extends IvjBeanInfo {
 					super.createPropertyDescriptor(getBeanClass(), "weights", new Object[] { //$NON-NLS-1$
 						DISPLAYNAME, SashFormMessages.getString("weightsDN"),  //$NON-NLS-1$
 						SHORTDESCRIPTION, SashFormMessages.getString("weightsSD"),						 //$NON-NLS-1$
+						DESIGNTIMEPROPERTY, Boolean.FALSE,	// Because we don't have a good property editor yet.
 									})};
 			// aDescriptorList[0].setHidden(true);
 			return aDescriptorList;
