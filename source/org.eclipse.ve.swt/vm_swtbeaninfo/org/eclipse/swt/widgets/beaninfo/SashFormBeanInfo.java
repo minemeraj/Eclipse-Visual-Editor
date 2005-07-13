@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SashFormBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2005-04-05 21:40:17 $ 
+ *  $Revision: 1.4 $  $Date: 2005-07-13 15:56:31 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -38,24 +38,21 @@ public class SashFormBeanInfo extends IvjBeanInfo {
 	 */
 	public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		try {
-			PropertyDescriptor aDescriptorList[] = { super
-					.createPropertyDescriptor(
-							getBeanClass(),
-							"orientation", new Object[] { //$NON-NLS-1$
-									DISPLAYNAME,
-									SashFormMessages.getString("orientationDN"), //$NON-NLS-1$
-									SHORTDESCRIPTION,
-									SashFormMessages.getString("orientationSD"), //$NON-NLS-1$
+			PropertyDescriptor aDescriptorList[] = {
+					super.createPropertyDescriptor(getBeanClass(), "orientation", new Object[] { //$NON-NLS-1$
+							DISPLAYNAME, SashFormMessages.getString("orientationDN"), //$NON-NLS-1$
+									SHORTDESCRIPTION, SashFormMessages.getString("orientationSD"), //$NON-NLS-1$
 									ENUMERATIONVALUES,
-									new Object[] {
-											SashFormMessages
-													.getString("orientation.vertical"), new Integer(org.eclipse.swt.SWT.VERTICAL), //$NON-NLS-1$
+									new Object[] { SashFormMessages.getString("orientation.vertical"), new Integer(org.eclipse.swt.SWT.VERTICAL), //$NON-NLS-1$
 											"org.eclipse.swt.SWT.VERTICAL", //$NON-NLS-1$
-											SashFormMessages
-													.getString("orientation.horizontal"), new Integer(org.eclipse.swt.SWT.HORIZONTAL), //$NON-NLS-1$
+											SashFormMessages.getString("orientation.horizontal"), new Integer(org.eclipse.swt.SWT.HORIZONTAL), //$NON-NLS-1$
 											"org.eclipse.swt.SWT.HORIZONTAL", //$NON-NLS-1$
-									}, }), };
-			//aDescriptorList[0].setHidden(true);
+									},}),
+					super.createPropertyDescriptor(getBeanClass(), "weights", new Object[] { //$NON-NLS-1$
+						DISPLAYNAME, SashFormMessages.getString("weightsDN"),  //$NON-NLS-1$
+						SHORTDESCRIPTION, SashFormMessages.getString("weightsSD"),						 //$NON-NLS-1$
+									})};
+			// aDescriptorList[0].setHidden(true);
 			return aDescriptorList;
 		} catch (Throwable exception) {
 			handleException(exception);
