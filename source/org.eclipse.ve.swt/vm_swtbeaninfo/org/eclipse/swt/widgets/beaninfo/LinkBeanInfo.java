@@ -10,11 +10,10 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LinkBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2005-03-23 22:07:20 $ 
+ *  $Revision: 1.2 $  $Date: 2005-07-13 14:27:05 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.BeanDescriptor;
 import java.beans.EventSetDescriptor;
 import java.beans.PropertyDescriptor;
 
@@ -29,11 +28,6 @@ public class LinkBeanInfo extends IvjBeanInfo {
 		return org.eclipse.swt.widgets.Link.class;
 	}
 	
-	public BeanDescriptor getBeanDescriptor() {
-		BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
-		SweetHelper.mergeSuperclassStyleBits(descriptor);
-		return descriptor;
-	}
 	/* (non-Javadoc)
 	 * @see java.beans.BeanInfo#getEventSetDescriptors()
 	 */
