@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.16 $  $Date: 2005-07-13 12:26:46 $
+ *  $Revision: 1.17 $  $Date: 2005-07-13 22:16:44 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -764,13 +764,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		for (int i = 1; i < table[0].length; i++) {
 			if (i != exceptRow) {
 				if (table[0][i] != EMPTY) {
-					int index = children.indexOf(table[0][i]);
-					// If the column is going through a control that is spanning more than one column,
-					// we need to expand it by one instead of adding filler.
-					if (index != -1 && childrenDimensions[index].width > defaultHorizontalSpan)
-						cb.append(createHorizontalSpanCommand(table[0][i], childrenDimensions[index].width + 1));
-					else
-						cb.append(policy.getCreateCommand(createFillerLabelObject(), table[0][i]));
+					cb.append(policy.getCreateCommand(createFillerLabelObject(), table[0][i]));
 				}
 			}
 		}
