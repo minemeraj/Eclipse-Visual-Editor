@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: SetTextPropertyObjectActionDelegate.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.4 $  $Date: 2005-07-13 13:11:38 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -26,6 +26,8 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.java.core.JavaBeanActionFilter;
 
 /**
  * Object action delegate that brings up a dialog to change the 'label' property for
@@ -75,6 +77,12 @@ public class SetTextPropertyObjectActionDelegate implements IObjectActionDelegat
 			sfProperty = modelType.getEStructuralFeature(propertyName); //$NON-NLS-1$
 			if (sfProperty == null) {
 				// no structural feature
+				if("text".equals(propertyName) && JavaBeanActionFilter.isTabFolderParent(fEditPart))   {
+					// Text property is special because it might not be on the control the action is being run on, but instead
+					// on its folder if it is a TabFolder
+					action.setEnabled(true);
+					return;
+				}
 				action.setEnabled(false);
 			}
 		}
