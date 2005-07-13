@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.27 $ $Date: 2005-07-12 22:42:52 $
+ * $Revision: 1.28 $ $Date: 2005-07-13 18:51:43 $
  */
 import java.util.*;
 
@@ -51,7 +51,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	GridLayoutPolicyHelper helper = new GridLayoutPolicyHelper();
 	int [][] layoutDimensions = null;
 	private GridLayoutGridFigure fGridLayoutGridFigure;
-	private GridLayoutFeedbackFigure fGridLayoutSpanFigure;
+	private GridLayoutSpanFeedbackFigure fGridLayoutSpanFigure;
 	private GridLayoutFeedbackFigure fGridLayoutCellFigure;
 	private GridLayoutRowFigure fRowFigure = null; 
 	private GridLayoutColumnFigure fColumnFigure = null;
@@ -368,15 +368,20 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		Point childPosition = ep.getContentPane().getBounds().getLocation();
 		// Get the start and end cell bounds in order to determine the entire bounds of the cell feedback figure.
 		Rectangle startCellBounds = getGridLayoutGridFigure().getCellBounds(childPosition.x, childPosition.y);
+		if (request.getResizeDirection() == PositionConstants.EAST) {
+			spanToPosition.y = childPosition.y;	// This forces us to not span north/south when going east/west.
+		} else {
+			spanToPosition.x = childPosition.x;	// This forces us to not span left/right when going north/south.
+		}
 		Rectangle endCellBounds = getGridLayoutGridFigure().getCellBounds(spanToPosition.x, spanToPosition.y);
 		Rectangle spanrect = new Rectangle(startCellBounds.x, 
 									startCellBounds.y, 
 									endCellBounds.x + endCellBounds.width - startCellBounds.x,
 									endCellBounds.y + endCellBounds.height - startCellBounds.y);
 		if (fGridLayoutSpanFigure == null) {
-			fGridLayoutSpanFigure = new GridLayoutFeedbackFigure();
+			fGridLayoutSpanFigure = new GridLayoutSpanFeedbackFigure(request.getResizeDirection());
 		}
-		fGridLayoutSpanFigure.setBounds(spanrect);
+		fGridLayoutSpanFigure.setLayoutFigureBounds(spanrect);
 		addFeedback(fGridLayoutSpanFigure);
 	}
 	
