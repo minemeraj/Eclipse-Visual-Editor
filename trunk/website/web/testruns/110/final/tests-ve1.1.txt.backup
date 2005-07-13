@@ -24,6 +24,7 @@ JVERCP01	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/W
 JVEBEANS01	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/testcases/beans1/beans1.htm	None	NoResult	Test the ability to manipulate non-visual beans
 JVECDGEN01	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/testcases/codegen-annotations/codegen-annotations.htm	None	NoResult	Test free form Annotations
 JVECDPAR01	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/testcases/codegen-parse/codegen-parse.htm	None	NoResult Test Java Inheritance
+JVECDSNP01	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/testcases/codegen-unreferenced/index.html	None	NoResult Test unreferenced bean removal
 JVEEVNT01	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/testcases/events1/events1.htm	None	NoResult	Basic Events test - Style 3 only
 JVEEVNT02	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/testcases/events2/events2.htm	None	NoResult	Test the parsing and modeling of Style 2 and Style 3 events
 JVESYNC01	http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/testcases/src-sync/src-sync.htm	None	NoResult	Test source code synchronization
