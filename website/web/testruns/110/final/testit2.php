@@ -12,7 +12,7 @@
     	$datafile = "/home/data/httpd/writable/vep/testruns/110/final/tests-ve1.1.txt";
     	$newdatafile = "/home/data/httpd/writable/vep/testruns/110/final/tests-ve1.1.txt.new";
        if (!($f=fopen($datafile,"r"))) 
-                  exit("Unable to open file.");
+                  exit("Unable to open original file.");
        if (!flock($f, LOCK_EX)) 
                   exit ("Site is busy") ;
        if (!($f2=fopen($newdatafile,"w+"))) 
