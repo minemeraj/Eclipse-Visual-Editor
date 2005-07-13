@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.16 $  $Date: 2005-07-10 23:43:24 $ 
+ *  $Revision: 1.17 $  $Date: 2005-07-13 13:11:38 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -66,21 +66,27 @@ public class TabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 		super(model);
 	}
 	
+	public static class TabItemDirectEditPolicy extends DirectEditPolicy{
+		protected Command getDirectEditCommand(DirectEditRequest request) {
+			Object newValue = request.getCellEditor().getValue();
+			IPropertySource ps = (IPropertySource) getHost().getAdapter(IPropertySource.class);
+			// Find the "text" property that sets the Tab Item's text property
+			IPropertyDescriptor property = ((TabItemPropertySourceAdapter)ps).tabTextPropertyDescriptor;								
+			return ((ICommandPropertyDescriptor) property).setValue(ps, newValue);
+		}
+		protected void showCurrentEditValue(DirectEditRequest request) {
+		}
+		public IPropertyDescriptor getTabTextEditProperty(){
+			IPropertySource ps = (IPropertySource) getHost().getAdapter(IPropertySource.class);
+			return ((TabItemPropertySourceAdapter)ps).tabTextPropertyDescriptor;			
+		}
+	}
+	
 	protected void addChild(EditPart child, int index) {
 		super.addChild(child, index);
 		// For a tab item the child's direct edit policy must be replaced with a custom one that lets the "tabText"
 		// property be the one that is affected (and not the child's "text" property for example if it is a Button,Label, etc.
-		child.installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE,new DirectEditPolicy(){
-			protected Command getDirectEditCommand(DirectEditRequest request) {
-				Object newValue = request.getCellEditor().getValue();
-				IPropertySource ps = (IPropertySource) getHost().getAdapter(IPropertySource.class);
-				// Find the "text" property that sets the Tab Item's text property
-				IPropertyDescriptor property = ((TabItemPropertySourceAdapter)ps).tabTextPropertyDescriptor;								
-				return ((ICommandPropertyDescriptor) property).setValue(ps, newValue);
-			}
-			protected void showCurrentEditValue(DirectEditRequest request) {
-			}
-		});
+		child.installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE,new TabItemDirectEditPolicy());
 	}
 
 	public void activate() {

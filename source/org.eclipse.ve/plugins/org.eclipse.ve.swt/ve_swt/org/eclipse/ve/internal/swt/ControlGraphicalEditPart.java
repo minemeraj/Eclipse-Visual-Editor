@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.25 $ $Date: 2005-07-12 21:08:22 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.26 $ $Date: 2005-07-13 13:11:38 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -346,9 +346,16 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 	}
 
 	public void performRequest(Request request){
-		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT && sfDirectEditProperty != null)
+		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT && getEditPolicy(EditPolicy.DIRECT_EDIT_ROLE) != null){
+			if(sfDirectEditProperty == null){
+				Object directEditPolicy = getEditPolicy(EditPolicy.DIRECT_EDIT_ROLE);
+				if(directEditPolicy instanceof TabFolderGraphicalEditPart.TabItemDirectEditPolicy){
+					sfDirectEditProperty = ((TabFolderGraphicalEditPart.TabItemDirectEditPolicy)directEditPolicy).getTabTextEditProperty();
+				}
+			}
 			performDirectEdit();
-		else
+		} else {
 			super.performRequest(request);
+		}
 	}
 }  
