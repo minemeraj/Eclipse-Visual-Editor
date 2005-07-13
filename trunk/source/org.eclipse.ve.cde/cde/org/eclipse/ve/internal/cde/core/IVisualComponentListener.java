@@ -10,14 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IVisualComponentListener.java,v $
- *  $Revision: 1.4 $  $Date: 2005-07-12 21:08:25 $ 
+ *  $Revision: 1.5 $  $Date: 2005-07-13 14:12:06 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import java.util.EventListener;
 
 /**
- * Listener for visual component changes
+ * Listener for visual component changes.
+ * <p>
+ * <b>Note:</b> These notifications will not necessarily be on the UI thread, therefor
+ * do not assume it is on the UI thread.
  * 
  * @since 1.1.0
  */

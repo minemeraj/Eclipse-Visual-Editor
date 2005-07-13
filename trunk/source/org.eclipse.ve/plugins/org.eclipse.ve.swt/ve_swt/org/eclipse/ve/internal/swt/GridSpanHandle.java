@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: GridSpanHandle.java,v $
- *  $Revision: 1.4 $  $Date: 2005-07-12 22:42:52 $ 
+ *  $Revision: 1.5 $  $Date: 2005-07-13 14:12:06 $ 
  */
 
 import org.eclipse.draw2d.ColorConstants;
@@ -32,7 +32,11 @@ public class GridSpanHandle extends ResizeHandle {
 	public static int HANDLE_SIZE = DEFAULT_HANDLE_SIZE;
 	private IVisualComponentListener fGridComponentListener = new VisualComponentAdapter () {
 		public void componentValidated() {
-			revalidate();
+			getOwner().getViewer().getControl().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					revalidate();
+				}
+			});
 		};
 	};
 
