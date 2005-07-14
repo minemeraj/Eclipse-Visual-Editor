@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.17 $  $Date: 2005-07-13 22:16:44 $
+ *  $Revision: 1.18 $  $Date: 2005-07-14 00:05:39 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -537,42 +537,51 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 						"org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (gridData != null) {
-				List children = (List)getContainer().eGet(sfCompositeControls);
+				List children = (List) getContainer().eGet(sfCompositeControls);
 				int index = children.indexOf(control);
 				Rectangle rect = getChildrenDimensions()[index];
 				RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(childEditPart), null, false);
 				if (spanDirection == PositionConstants.EAST) {
-					int gridWidth = endCellLocation.x - childCellLocation.x + 1;
-					if (gridWidth != rect.width) {
-						Object widthObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(gridWidth)); //$NON-NLS-1$
+					int newgridDataWidth = endCellLocation.x - childCellLocation.x + 1;
+					if (newgridDataWidth != rect.width) {
+						Object widthObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(newgridDataWidth)); //$NON-NLS-1$
 						componentCB.applyAttributeSetting(gridData, sfHorizontalSpan, widthObject);
-						if (gridWidth > rect.width) {
+						if (newgridDataWidth > rect.width) {
 							// Increase the horizontalSpan
-							componentCB.append(createNumColumnsCommand(numColumns + gridWidth - rect.width));
-							componentCB.append(createFillerLabelCommands(rect.y + 1));
+							
+							// First see if we can expand into empty cells without increasing the number of columns
+							int numColsIncrement = createHorizontalSpanWithEmptyColumnCommands(componentCB, rect.y, rect.x + rect.width - 1,
+									newgridDataWidth - rect.width);
+							if (numColsIncrement > 0) {
+								// Need to expand the number of columns and add fillers in each row
+								componentCB.append(createNumColumnsCommand(numColumns + numColsIncrement));
+								for (int i = 0; i < numColsIncrement; i++) {
+									componentCB.append(createFillerLabelCommands(rect.y + 1));
+								}
+							}
 						} else {
 							// Decrease the horizontal span and put a filler label in the columns it was decreased by
 							if (index + 1 < children.size())
-								for (int i = 0; i < rect.width - gridWidth; i++)
+								for (int i = 0; i < rect.width - newgridDataWidth; i++)
 									componentCB.append(policy.getCreateCommand(createFillerLabelObject(), children.get(index + 1)));
 						}
 					}
 				}
 				if (spanDirection == PositionConstants.SOUTH) {
-					int gridHeight = endCellLocation.y - childCellLocation.y + 1;
-					if (gridHeight != rect.height) {
-						Object heightObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(gridHeight)); //$NON-NLS-1$
+					int newgridDataHeight = endCellLocation.y - childCellLocation.y + 1;
+					if (newgridDataHeight != rect.height) {
+						Object heightObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(newgridDataHeight)); //$NON-NLS-1$
 						componentCB.applyAttributeSetting(gridData, sfVerticalSpan, heightObject);
-						if (gridHeight > rect.height) {
+						if (newgridDataHeight > rect.height) {
 							// increase the verticalSpan
-							for (int i = 0; i < gridHeight - rect.height; i++) {
+							for (int i = 0; i < newgridDataHeight - rect.height; i++) {
 								componentCB.append(createFillerLabelsForSpannedRowCommand(rect.y + rect.height, endCellLocation.x));
 							}
 						} else {
 							// decrease the verticalSpan
 							CommandBuilder rowcb = new CommandBuilder();
-							for (int i = 0; i < rect.height - gridHeight; i++) {
-								rowcb.append(createRemoveRowCommand(rect.y + rect.height -1 - i, control));
+							for (int i = 0; i < rect.height - newgridDataHeight; i++) {
+								rowcb.append(createRemoveRowCommand(rect.y + rect.height - 1 - i, control));
 							}
 							if (!rowcb.isEmpty())
 								// If all that is left on the row(s) is filler labels, remove them.
@@ -944,6 +953,26 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			return cb.getCommand();
 		}
 		return null;
+	}
+	
+	/*
+	 * For spanning horizontally, walk through the row starting atColumn and delete empty or 
+	 * filler labels so we can expand into the empty columns. If no empty cells, numColIncrement
+	 * is returned so the number of columns can be incremented on the overall grid.
+	 */
+	private int createHorizontalSpanWithEmptyColumnCommands(CommandBuilder cb, int atRow, int atColumn, int numColIncrement) {
+		EObject[][] table = getLayoutTable();
+		if (atColumn < table.length && atRow < table[0].length) {
+			for (int i = atColumn; i < table.length && numColIncrement != 0; i++) {
+				if (table[i][atRow] == EMPTY || isFillerLabel(table[i][atRow])) {
+					if (isFillerLabel(table[i][atRow])) {
+						cb.append(policy.getDeleteDependentCommand(table[i][atRow]));
+					}
+					numColIncrement--;
+				}
+			}
+		}
+		return numColIncrement;
 	}
 	
 	/*
