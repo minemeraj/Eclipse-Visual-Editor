@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.17 $  $Date: 2005-05-31 15:33:51 $ 
+ *  $Revision: 1.18 $  $Date: 2005-07-14 22:37:04 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -93,7 +93,8 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 	 * @see org.eclipse.ve.internal.java.codegen.java.AbstractExpressionDecoder#isPriorityCacheable()
 	 */
 	protected boolean isPriorityCacheable() {
-		if (fhelper instanceof SWTConstructorDecoderHelper)
+		if ((fhelper instanceof ConstructorDecoderHelper) ||
+			 fFeatureMapper.getFeature(null).getName().equals(ADD_METHOD_SF_NAME)) // createFoo()
 			return false ;
 		else
 		    return super.isPriorityCacheable();
