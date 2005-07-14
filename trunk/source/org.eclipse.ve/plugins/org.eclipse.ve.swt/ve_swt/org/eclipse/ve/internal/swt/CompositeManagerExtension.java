@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeManagerExtension.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-07-14 18:06:44 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -19,12 +19,14 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
-import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
@@ -145,10 +147,16 @@ public class CompositeManagerExtension extends ControlManagerExtension implement
 			// It will return the constraint data type or null if not known.
 			
 			ILayoutPolicyFactory layoutPolicyFactory = VisualUtilities.getLayoutPolicyFactory((IBeanTypeProxy) parm, editDomain);
-			JavaClass constraintClass = layoutPolicyFactory == null ?
-				    null :
-			        layoutPolicyFactory.getConstraintClass(EMFEditDomainHelper.getResourceSet(editDomain));
-			return (constraintClass != null) ? parm.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(constraintClass.getQualifiedNameForReflection()) : null;
+			// If no policy factory, then we can't test constraint, if the constraint class is null, then that means no constraint (we send Void.TYPE in that case).
+			JavaHelpers constraintType;
+			if (layoutPolicyFactory != null) {
+			        ResourceSet resourceSet = EMFEditDomainHelper.getResourceSet(editDomain);
+					constraintType = layoutPolicyFactory.getConstraintClass(resourceSet);
+			        if (constraintType == null)
+			        	constraintType = Utilities.getJavaType("void",resourceSet); //$NON-NLS-1$
+			} else
+				return null;
+			return parm.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(constraintType.getQualifiedNameForReflection());
 		}
 
 		public Object calledBack(int msgID, Object[] parms) {
