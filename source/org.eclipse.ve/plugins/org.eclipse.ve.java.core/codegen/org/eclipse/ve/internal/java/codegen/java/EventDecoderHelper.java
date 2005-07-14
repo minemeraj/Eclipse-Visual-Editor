@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.18 $  $Date: 2005-07-07 21:35:30 $ 
+ *  $Revision: 1.19 $  $Date: 2005-07-14 16:02:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -831,7 +831,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	}
 	
 	public VEexpressionPriority getPriorityOfExpression() {
-		return new VEexpressionPriority(IJavaFeatureMapper.PRIORITY_EVENT, new Object[]{new Integer(getInvocationIndex()), getEventInvocation()});
+		return new VEexpressionPriority(IJavaFeatureMapper.PRIORITY_EVENT, new Object[]{new Integer(getInvocationIndex()), getEventSF()});
 	}
 
 }
