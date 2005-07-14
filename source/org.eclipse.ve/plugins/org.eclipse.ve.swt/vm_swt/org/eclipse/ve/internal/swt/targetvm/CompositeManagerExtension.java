@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeManagerExtension.java,v $
- *  $Revision: 1.3 $  $Date: 2005-07-08 17:51:50 $ 
+ *  $Revision: 1.4 $  $Date: 2005-07-14 18:06:44 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -112,30 +112,28 @@ public class CompositeManagerExtension extends ControlManagerExtension {
 			// If layout is null, then no check needs to be made.
 			if (layout != null) {
 				Class layoutDataType = layoutDataTypeCallback.getLayoutDataType(layout.getClass());
-				// If layout data type is null, then we don't know the type. So we leave alone and hope for the best.
-				if (layoutDataType != null) {
-					List invalidChildren = new ArrayList();
-					Control[] children = parent.getChildren();
-					for (int i = 0; i < children.length; i++) {
-						Control child = children[i];
-						// Restore to what it should be, either the explicit setting or the default one at construction.
-						Object data = child.getData(ControlManager.LAYOUT_DATA_KEY);	// Use what it thinks it should be.
-						child.setLayoutData(data);	// Restore it to test it. It may of been changed to a good value from a previous pass through this code, we want to retest to make sure it is still bad.
-						if (data != null) {
-							if (!layoutDataType.isInstance(data)) {
-								// This is invalid.
-								child.setLayoutData(null);		// We set to null. Hoping all layout editors can handle null. They will probably put a default value into the layout data.
-								invalidChildren.add(child);
-								invalidChildren.add(data.getClass().getName());
-							}
+				List invalidChildren = new ArrayList();
+				Control[] children = parent.getChildren();
+				for (int i = 0; i < children.length; i++) {
+					Control child = children[i];
+					// Restore to what it should be, either the explicit setting or the default one at construction.
+					Object data = child.getData(ControlManager.LAYOUT_DATA_KEY);	// Use what it thinks it should be.
+					child.setLayoutData(data);	// Restore it to test it. It may of been changed to a good value from a previous pass through this code, we want to retest to make sure it is still bad.
+					// layoutDataType null means we don't know the type, so no test is done, data == null is considered to be always good. So far that seems to be true.
+					if (layoutDataType != null && data != null) {
+						// It should of been null (Void.TYPE - isInstance is always false against that) or it is not an instance of the type.
+						if (!layoutDataType.isInstance(data)) {
+							// This is invalid.
+							child.setLayoutData(null);		// We set to null. Hoping all layout editors can handle null. They will probably put a default value into the layout data.
+							invalidChildren.add(child);
+							invalidChildren.add(data.getClass().getName());
 						}
 					}
-					// Signal even if all good so that it knows that all is good.
-					if (!invalidChildren.isEmpty()) {
-						invalidChildren.add(0, layoutDataType.getName());	// Want the data type first so we can produce a nice message on the host.
-						getControlManager().getFeedbackController().addTransaction(this, Common.CMPL_INVALID_LAYOUT, invalidChildren.toArray(), false);
-					} else
-						getControlManager().getFeedbackController().addTransaction(this, Common.CMPL_INVALID_LAYOUT, null, false);	// Tell it all are valid.
+				}
+				// Signal even if all good so that it knows that all is good.
+				if (!invalidChildren.isEmpty()) {
+					invalidChildren.add(0, layoutDataType.getName());	// Want the data type first so we can produce a nice message on the host.
+					getControlManager().getFeedbackController().addTransaction(this, Common.CMPL_INVALID_LAYOUT, invalidChildren.toArray(), false);
 				} else
 					getControlManager().getFeedbackController().addTransaction(this, Common.CMPL_INVALID_LAYOUT, null, false);	// Tell it all are valid.
 			}
