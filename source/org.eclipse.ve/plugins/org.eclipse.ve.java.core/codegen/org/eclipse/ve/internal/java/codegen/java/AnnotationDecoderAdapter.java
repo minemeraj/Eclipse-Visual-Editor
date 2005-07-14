@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.27 $  $Date: 2005-07-12 20:55:33 $ 
+ *  $Revision: 1.28 $  $Date: 2005-07-14 15:41:12 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -214,7 +214,9 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 			String astSource = (String) td.getProperty(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY);
 			if(node!=null){
 				CompilationUnit cuNode = (CompilationUnit) node;
-				int fieldLineNumber = cuNode.lineNumber(field.getType().getStartPosition()); // we check for the type's location, cos previous comments effect the field's start position
+				//	we need to look at end of field instead of starting as field could span multiple lines! (99637)
+				int len = field.getLength() - (field.getType().getStartPosition() - field.getStartPosition());
+				int fieldLineNumber = cuNode.lineNumber(field.getType().getStartPosition()+len); // we check for the type's location, cos previous comments effect the field's start position
 				List comments = ((CompilationUnit)node).getCommentList();
 				for (int cc = 0; cc < comments.size(); cc++) {
 					if (comments.get(cc) instanceof LineComment){ 
@@ -266,7 +268,8 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 			String astSource = (String) td.getProperty(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY);
 			if(node!=null){
 				CompilationUnit cuNode = (CompilationUnit) node;
-				int fieldLineNumber = cuNode.lineNumber(varDecl.getStartPosition());
+				// we need to look at end of decl instead of starting as decl could span multiple lines! (99637)
+				int fieldLineNumber = cuNode.lineNumber(varDecl.getStartPosition()+varDecl.getLength());  
 				List comments = ((CompilationUnit)node).getCommentList();
 				for (int cc = 0; cc < comments.size(); cc++) {
 					if (comments.get(cc) instanceof LineComment){ 
