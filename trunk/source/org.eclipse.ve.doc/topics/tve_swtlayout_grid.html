@@ -33,68 +33,31 @@
 <h1 class="topictitle1">Using GridLayout (SWT)</h1>
 <div><p>You can use the GridLayout with SWT containers to arrange widgets
 in a grid arrangement.</p>
-<div class="section"><p>The SWT GridLayout layout manager arranges its components, or
-widgets, in rows and columns. As each component is added, a new cell is added
-from left to right to accommodate the new component, and new rows are automatically
-added as necessary. For example, a Grid layout with three columns requires
-two rows to hold four widgets. This can become more complex because each component
-can bet set to span cells vertically and horizontally.</p>
-<p>The visual editor
-provides grid markers and placement indicators to make it easy to determine
-where widgets are located within the grid and in relation to other widgets.</p>
-<p>To
-work with an SWT container using Grid layout:</p>
+<div class="section"><p>The SWT GridLayout layout manager arranges widgets in rows and
+columns. The visual editor provides feedback as you add widgets to the grid.
+When you add a widget, you can add it to an empty grid cell, or you can force
+the grid to add a new row or column and place the widget in a new cell. When
+you add new rows or columns, "empty" cells are created as needed. Because
+GridLayout requires each cell to contain a widget, a filler label with no
+text is added the empty cells actually include a filler label with no text.</p>
+<p>The
+visual editor displays a grid border and placement indicators to help you
+determine where widgets are located within the grid and where a widget will
+be placed in relation to other widgets. A yellow bar that spans the entire
+width or height of the grid indicates that an entire row or column will be
+added. A yellow bar that spans a single row or column indicates that only
+that row or column will be affected:</p>
+<p><img src="../images/SWTGrid_drop2.gif" alt="SWT GridLayout" /></p>
+<div class="p">For more help, read the following sections
+of this topic:<ul><li><a href="#swtgrid1">Adding or moving components in GridLayout</a></li>
+<li><a href="#swtgrid2">Setting the alignment of a component within its
+cell in the grid</a></li>
+<li><a href="#swtgrid3">Spanning a widget across grid cells</a></li>
+<li><a href="#swtgrid4">Specifying the number of columns and rows in the
+grid</a></li>
+</ul>
 </div>
-<ul><li><span>To specify how the grid displays, see <a href="tve_prefsgrid.html">Specifying
-grid display preferences for containers</a>.</span></li>
-<li><span>To change the number of columns in the grid:</span><ol><li class="substepexpand"><span>In the Design view, select the container that uses Fill layout.</span></li>
-<li class="substepexpand"><span>Click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/icons/aligndialog_obj.gif" alt="Customize Layout toolbar button" /></span> toolbar button.</span> The Customize Layout dialog
-opens.</li>
-<li class="substepexpand"><span>On the Layout notebook tab, enter a new value in the <span class="uicontrol">Number
-of columns</span> field.</span></li>
-<li class="substepexpand"><strong>Optional: </strong><span>You can force all the Grid columns to
-be the same width by selecting the <span class="uicontrol">Make columns equal width</span> check
-box.</span></li>
-</ol>
-</li>
-<li><span>To add or move components in Grid layout:</span><ol><li><span>Select the component from the palette that you want to add to
-your Grid layout, or click and drag the existing component that you want to
-move within your Grid layout.</span></li>
-<li><span>Move your mouse pointer over the position where you want to
-drop or move the component. As you move the cursor, a vertical bar will indicate
-the approximate placement of the widget if you release your mouse button. </span></li>
-<li><span>Click or release your mouse to drop the component in the position
-that you selected. In Grid layout, you can only place an item to the left
-or right of another item. Depending on the number of columns and whether other
-components span columns, the visual editor will move widgets and create rows
-as necessary.</span></li>
-</ol>
-</li>
-<li><span>To set the alignment of a component within its cell in the grid:</span><ol><li><span>Right-click the component and select <span class="uicontrol">Customize Layout</span>.
-The Customize Layout dialog opens:.<span><br /><img src="../images/CustomizeLayout_GridSWT.gif" alt="Customize Layout window for SWT Grid" /><br /></span></span></li>
-<li><span>In the Alignment section of the Component page, select one of
-the compass buttons to align the component. For example, if you click the <span class="uicontrol">NW</span> (North-West)
-button, the component will be aligned in the upper left corner of the grid
-cell.</span></li>
-<li><strong>Optional: </strong><span>To force the row or column that holds
-the component to grab extra space in the container, click the <span class="uicontrol">Fill
-horizontal</span> or <span class="uicontrol">Fill vertical</span> button. If
-multiple rows or columns are grabbing extra space, they divide up the excess
-space equally.</span></li>
-</ol>
-</li>
-<li><span>To span a widget, or component, across grid cells, select the component
-and do one of the following steps:</span><ul><li>Click a resize handle on the component, and drag the component across
-cells until the dark grey box occupies the cells that you want to span, then
-release your mouse button.<span><br /><img src="../images/SWTGrid_span.gif" alt="SWT GridLayout spanning cells" /><br /></span></li>
-<li>On the Customize Layout window, enter the exact number of cells that
-you want the component to span. If you increase the <span class="uicontrol">Vertical</span> span,
-the component will span to the cell below its current position. If you increase
-the <span class="uicontrol">Horizontal</span> span, the component will span to the
-cell to the right of its current position.</li>
-</ul>
-</li>
-</ul>
+</div>
 </div>
 <div>
 <div class="familylinks">
@@ -106,7 +69,90 @@ cell to the right of its current position.</li>
 <div class="reltasks"><strong>Related tasks</strong><br />
 <div><a href="../topics/tve_prefsgrid.html" title="When working with Swing GridBagLayout, SWT GridLayout, or null layout, you can specify a preference to show or hide the grid feedback in the Design view.">Specifying grid display preferences for containers</a></div>
 </div>
-</div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
+</div><div class="nested1" xml:lang="en-us" id="swtgrid1"><a name="swtgrid1"><!-- --></a><h2 class="topictitle2">Adding or moving components in GridLayout</h2>
+<div><ol><li><span>Select the component from the palette that you want to add to your
+Grid layout, or click and drag the existing component that you want to move
+within your Grid layout.</span></li>
+<li><span>Move your mouse pointer over the position where you want to drop
+or move the component. As you move the cursor, visual feedback indicates the
+placement of the widget if you release your mouse button. A yellow bar indicates
+that a new row or column will be created</span></li>
+<li><span>Click or release your mouse to drop the component in the position
+that you selected. Depending on the placement, the visual editor will move
+widgets and create rows or columns as necessary.</span></li>
+</ol>
+<div class="example">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" frame="border" border="1" rules="all"><caption>Table 1. Example drop placements and results</caption><thead align="left"><tr valign="bottom"><th valign="bottom" id="d0e79">Cursor position and feedback</th>
+<th valign="bottom" id="d0e81">Result</th>
+</tr>
+</thead>
+<tbody><tr><td valign="top" headers="d0e79 ">Cursor placed in an empty cell:<br /><img src="../images/SWTGrid_drop1.gif" alt="SWT GridLayout" /><br /></td>
+<td valign="top" headers="d0e81 ">Widget is added to cell:<br /><img src="../images/SWTGrid_drop1b.gif" alt="SWT GridLayout" /><br /></td>
+</tr>
+<tr><td valign="top" headers="d0e79 ">Cursor placed on horizontal grid border:<br /><img src="../images/SWTGrid_drop2.gif" alt="SWT GridLayout" /><br /></td>
+<td valign="top" headers="d0e81 ">Widget is added to cell in new row:<br /><img src="../images/SWTGrid_drop2b.gif" alt="SWT GridLayout" /><br /></td>
+</tr>
+<tr><td valign="top" headers="d0e79 ">Cursor placed on vertical grid border:<br /><img src="../images/SWTGrid_drop3.gif" alt="SWT GridLayout" /><br /></td>
+<td valign="top" headers="d0e81 ">Widget is added to cell in new column:<br /><img src="../images/SWTGrid_drop3b.gif" alt="SWT GridLayout" /><br /></td>
+</tr>
+<tr><td valign="top" headers="d0e79 ">Cursor placed on vertical grid border, on single row:<br /><img src="../images/SWTGrid_drop4.gif" alt="SWT GridLayout" /><br /></td>
+<td valign="top" headers="d0e81 ">Widget (CLabel) is added to cell, other widgets in row
+are moved:<br /><img src="../images/SWTGrid_drop4b.gif" alt="SWT GridLayout" /><br /></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="nested1" xml:lang="en-us" id="swtgrid2"><a name="swtgrid2"><!-- --></a><h2 class="topictitle2">Setting the alignment of a component within its cell in the grid</h2>
+<div><ol><li><span>Right-click the component and select <span class="uicontrol">Customize Layout</span>.
+The Customize Layout dialog opens. <span></span></span></li>
+<li><span>In the Alignment section of the Component page, select one of the
+compass buttons to align the component. For example, if you click the <span class="uicontrol">NW</span> (North-West)
+button, the component will be aligned in the upper left corner of the grid
+cell.</span></li>
+<li><span>Click or release your mouse to drop the component in the position
+that you selected. In Grid layout, you can only place an item to the left
+or right of another item. Depending on the number of columns and whether other
+components span columns, the visual editor will move widgets and create rows
+as necessary.</span></li>
+<li><strong>Optional: </strong><span>To force the row or column that holds the
+component to grab extra space in the container, click the <span class="uicontrol">Fill
+horizontal</span> or <span class="uicontrol">Fill vertical</span> button. If
+multiple rows or columns are grabbing extra space, they divide up the excess
+space equally.</span></li>
+</ol>
+</div>
+</div>
+<div class="nested1" xml:lang="en-us" id="swtgrid3"><a name="swtgrid3"><!-- --></a><h2 class="topictitle2">Spanning a widget across grid cells</h2>
+<div><div class="section">To span a widget across multiple grid cells, do <em>one</em> of the
+following steps:</div>
+<ul><li><span>Click a resize handle on the widget, and drag the component across
+cells until the dark grey box occupies the cells that you want to span, then
+release your mouse button:<span><br /><img src="../images/SWTGrid_span1a.gif" alt="SWT GridLayout spanning cells" /><br /></span><span><br /><img src="../images/SWTGrid_span1b.gif" alt="SWT GridLayout spanning cells" /><br /></span><span><br /><img src="../images/SWTGrid_span1c.gif" alt="SWT GridLayout spanning cells" /><br /></span></span></li>
+<li><span>On the Customize Layout window, enter the exact number of cells
+that you want the widget to span. If you increase the <span class="uicontrol">Vertical</span> span,
+the component will span to the cell below its current position. If you increase
+the <span class="uicontrol">Horizontal</span> span, the component will span to the
+cell to the right of its current position.</span></li>
+</ul>
+</div>
+</div>
+<div class="nested1" xml:lang="en-us" id="swtgrid4"><a name="swtgrid4"><!-- --></a><h2 class="topictitle2">Specifying the number of columns and rows in the grid</h2>
+<div><div class="section">When you add or move widgets, the number of columns and rows can
+change dynamically. You can also manually specify the number of columns:</div>
+<ol><li class="stepexpand"><span>In the Design view, select the container that uses Fill layout.</span></li>
+<li class="stepexpand"><span>Click the <span class="uicontrol">Customize Layout</span> <span><img src="../images/icons/aligndialog_obj.gif" alt="Customize Layout toolbar button" /></span> toolbar button.</span> The Customize Layout dialog opens.</li>
+<li class="stepexpand"><span>On the Layout notebook tab, enter a new value in the <span class="uicontrol">Number
+of columns</span> field.</span></li>
+<li class="stepexpand"><strong>Optional: </strong><span>You can force all the Grid columns to be
+the same width by selecting the <span class="uicontrol">Make columns equal width</span> check
+box.</span></li>
+</ol>
+</div>
+</div>
+<div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
 </div>
 </body>
