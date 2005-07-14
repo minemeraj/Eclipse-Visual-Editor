@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: NonResizableSpannableEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-07-12 22:42:52 $ 
+ *  $Revision: 1.5 $  $Date: 2005-07-14 00:04:52 $ 
  */
 
 import java.util.List;
@@ -83,7 +83,6 @@ public class NonResizableSpannableEditPolicy extends NonResizableEditPolicy {
 	public void eraseSourceFeedback(Request request) {
 		if (REQ_RESIZE.equals(request.getType())) {
 			layoutEditPolicy.eraseTargetFeedback(request);
-			eraseChangeBoundsFeedback((ChangeBoundsRequest) request);
 		} else
 			super.eraseSourceFeedback(request);
 	}
@@ -91,7 +90,6 @@ public class NonResizableSpannableEditPolicy extends NonResizableEditPolicy {
 		if (REQ_RESIZE.equals(request.getType())) {
 			if (request instanceof ChangeBoundsRequest && ((ChangeBoundsRequest)request).getEditParts().size() == 1) {
 				layoutEditPolicy.showSpanTargetFeedback(createSpanRequest((ChangeBoundsRequest)request));
-				showChangeBoundsFeedback((ChangeBoundsRequest) request);
 			}
 		} else
 			super.showSourceFeedback(request);
