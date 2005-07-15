@@ -27,7 +27,9 @@ public class RCPEditorSourceGenerator implements org.eclipse.ve.internal.java.co
   protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "import org.eclipse.ui.part.EditorPart;" + NL + "import org.eclipse.swt.widgets.Composite;" + NL + "import org.eclipse.swt.SWT;" + NL + "" + NL + "public class ";
   protected final String TEXT_2 = " extends EditorPart{" + NL + "" + NL + "\tpublic static final String ID = \"";
-  protected final String TEXT_3 = "\"; // TODO Needs to be whatever is mentioned in plugin.xml" + NL + "\t" + NL + "\tprivate Composite top = null;" + NL + "\t" + NL + "\tpublic void createPartControl(Composite parent) {" + NL + "\t\ttop = new Composite(parent, SWT.NONE);\t\t   " + NL + "\t}" + NL + "}";
+  protected final String TEXT_3 = "\"; // TODO Needs to be whatever is mentioned in plugin.xml" + NL + "\t" + NL + "\tprivate Composite top = null;" + NL + "\t" + NL + "\tpublic void createPartControl(Composite ";
+  protected final String TEXT_4 = ") {" + NL + "\t\ttop = new Composite(";
+  protected final String TEXT_5 = ", SWT.NONE);\t\t   " + NL + "\t}" + NL + "}";
 
 public String generateSource(String typeName, String superClassName, HashMap argumentMatrix)
   {
@@ -42,12 +44,36 @@ public String generateSource(String typeName, String superClassName, HashMap arg
 			packageName += ".";
 	}
 	
+	String compositeArgumentName = "parent";
+	if(argumentMatrix!=null && argumentMatrix.get(TARGET_TYPE)!=null){
+		org.eclipse.jdt.core.IType targetType = (org.eclipse.jdt.core.IType) argumentMatrix.get(TARGET_TYPE);
+		String paramSignature = org.eclipse.jdt.core.Signature.createTypeSignature("Composite", false);
+		org.eclipse.jdt.core.IMethod method = targetType.getMethod("createPartControl", new String[]{paramSignature});
+		if(method==null){
+			paramSignature = org.eclipse.jdt.core.Signature.createTypeSignature("org.eclipse.swt.widgets.Composite", true);
+			method = targetType.getMethod("createPartControl", new String[]{paramSignature});
+		}
+		if(method!=null){
+			try{
+				String[] paramNames = method.getParameterNames();
+				if(paramNames!=null && paramNames.length>0 && paramNames[0]!=null){
+					compositeArgumentName = paramNames[0];
+				}
+			}catch(org.eclipse.jdt.core.JavaModelException e){
+			}
+		}
+	}
+	
     stringBuffer.append(TEXT_1);
     stringBuffer.append(typeName);
     stringBuffer.append(TEXT_2);
     stringBuffer.append(packageName);
     stringBuffer.append(typeName);
     stringBuffer.append(TEXT_3);
+    stringBuffer.append(compositeArgumentName);
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append(compositeArgumentName);
+    stringBuffer.append(TEXT_5);
     return stringBuffer.toString();
   }
 }

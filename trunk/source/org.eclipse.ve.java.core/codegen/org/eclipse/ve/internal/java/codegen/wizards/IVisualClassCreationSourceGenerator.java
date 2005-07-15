@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 /*
  *  $RCSfile: IVisualClassCreationSourceGenerator.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-02 18:58:41 $ 
+ *  $Revision: 1.7 $  $Date: 2005-07-15 23:47:32 $ 
  */
 
 /**
@@ -44,6 +44,7 @@ public interface IVisualClassCreationSourceGenerator {
     public static final String CREATE_SUPER_CONSTRUCTORS = "createSuperConstructors"; //$NON-NLS-1$
     public static final String CREATE_INHERITED_ABSTRACT = "createInheritedAbstract"; //$NON-NLS-1$
     public static final String TARGET_PACKAGE_NAME = "targetPackageName"; //$NON-NLS-1$
+    public static final String TARGET_TYPE = "targetType"; //$NON-NLS-1$
     
     public String generateSource(String typeName, String superClassName,
             HashMap argumentMatrix);
