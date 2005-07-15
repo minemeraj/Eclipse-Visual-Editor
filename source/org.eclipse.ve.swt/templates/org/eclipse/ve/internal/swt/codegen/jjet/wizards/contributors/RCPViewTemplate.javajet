@@ -10,6 +10,26 @@
 		if(packageName.length()>0)
 			packageName += ".";
 	}
+	
+	String compositeArgumentName = "parent";
+	if(argumentMatrix!=null && argumentMatrix.get(TARGET_TYPE)!=null){
+		org.eclipse.jdt.core.IType targetType = (org.eclipse.jdt.core.IType) argumentMatrix.get(TARGET_TYPE);
+		String paramSignature = org.eclipse.jdt.core.Signature.createTypeSignature("Composite", false);
+		org.eclipse.jdt.core.IMethod method = targetType.getMethod("createPartControl", new String[]{paramSignature});
+		if(method==null){
+			paramSignature = org.eclipse.jdt.core.Signature.createTypeSignature("org.eclipse.swt.widgets.Composite", true);
+			method = targetType.getMethod("createPartControl", new String[]{paramSignature});
+		}
+		if(method!=null){
+			try{
+				String[] paramNames = method.getParameterNames();
+				if(paramNames!=null && paramNames.length>0 && paramNames[0]!=null){
+					compositeArgumentName = paramNames[0];
+				}
+			}catch(org.eclipse.jdt.core.JavaModelException e){
+			}
+		}
+	}
 	%>
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.widgets.Composite;
@@ -21,7 +41,7 @@ public class <%=typeName%> extends ViewPart {
 	
 	private Composite top = null;
 	
-	public void createPartControl(Composite parent) {
-		top = new Composite(parent, SWT.NONE);		   
+	public void createPartControl(Composite <%=compositeArgumentName%>) {
+		top = new Composite(<%=compositeArgumentName%>, SWT.NONE);		   
 	}
 }
