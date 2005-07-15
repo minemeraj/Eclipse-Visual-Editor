@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.29 $  $Date: 2005-06-23 16:08:44 $ 
+ *  $Revision: 1.30 $  $Date: 2005-07-15 22:36:54 $ 
  */
 
 import java.util.regex.Pattern;
@@ -38,7 +38,10 @@ import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
+
+import org.eclipse.ve.internal.jcm.*;
 
 public class BeanUtilities {
 	
@@ -463,5 +466,28 @@ public class BeanUtilities {
 			// If no label provider exists use the toString of the target VM JavaBean itself
 			return BeanProxyUtilities.getBeanProxy(component).toBeanString(); 
 		}
+	}
+
+	/*
+	 * Check to ensure the childComponent we are adding is a Global/Global which means: - it has a global variable (i.e. is a member) - has it's own
+	 * initialization method (i.e. getJButton() for a jButton variable)
+	 */
+	public static boolean isValidBeanLocation(EditDomain domain, EObject childComponent) {
+		Object bcm = domain.getDiagramData();
+		if (bcm instanceof BeanSubclassComposition) {
+			BeanSubclassComposition beanComposition = (BeanSubclassComposition) bcm;
+			// Check that it's a global variable
+			if (beanComposition.getMembers().indexOf(childComponent) != -1) {
+				// Check for Global/Global by ensuring the return from the initialize method is the same
+				// as the child component.
+				EObject cRef = InverseMaintenanceAdapter.getFirstReferencedBy(childComponent, JCMPackage.eINSTANCE
+						.getJCMMethod_Initializes());
+				if (cRef != null && cRef instanceof JCMMethod) {
+					if (((JCMMethod) cRef).getReturn() == childComponent)
+						return true;
+				}
+			}
+		}
+		return false;
 	}	
 }

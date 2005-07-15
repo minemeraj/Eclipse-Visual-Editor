@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JTabbedPaneContainerPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-24 18:57:15 $ 
+ *  $Revision: 1.7 $  $Date: 2005-07-15 22:36:56 $ 
  */
 
 import java.util.*;
@@ -24,8 +24,8 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
-import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
+
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 
 /**
@@ -37,7 +37,7 @@ public class JTabbedPaneContainerPolicy extends JavaContainerPolicy {
 	 * @see org.eclipse.ve.internal.java.core.JavaContainerPolicy#isValidBeanLocation(java.lang.Object)
 	 */
 	protected boolean isValidBeanLocation(Object child) {
-		return child instanceof EObject && BeanAwtUtilities.isValidBeanLocation(domain, (EObject)child);
+		return child instanceof EObject && BeanUtilities.isValidBeanLocation(domain, (EObject)child);
 	}
 	protected EClass classJComponent;
 	protected EClass classJTabComponent;

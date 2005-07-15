@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ContainerPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-24 18:57:15 $ 
+ *  $Revision: 1.8 $  $Date: 2005-07-15 22:36:56 $ 
  */
 
 import java.util.*;
@@ -29,6 +29,7 @@ import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
+import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -116,7 +117,7 @@ public class ContainerPolicy extends VisualContainerPolicy {
 			Object childConstraintComponent = cons.next();
 			Object childComponent = chlds.next();
 			if (!isValidChild(childConstraintComponent, containmentSF) || !isValidComponent(childComponent) || !isParentAcceptable(childComponent)
-					|| !(BeanAwtUtilities.isValidBeanLocation(domain, (EObject) childComponent)))
+					|| !(BeanUtilities.isValidBeanLocation(domain, (EObject) childComponent)))
 				return UnexecutableCommand.INSTANCE;
 			cb.applyAttributeSetting((EObject) childConstraintComponent, sfConstraintComponent, childComponent);
 		}

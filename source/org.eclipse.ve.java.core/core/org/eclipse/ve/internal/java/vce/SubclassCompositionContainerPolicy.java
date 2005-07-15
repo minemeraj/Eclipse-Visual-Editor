@@ -11,10 +11,11 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: SubclassCompositionContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-24 18:57:14 $ 
+ *  $Revision: 1.6 $  $Date: 2005-07-15 22:36:54 $ 
  */
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -24,6 +25,7 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 
+import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.CompositionContainerPolicy;
 /**
  * Container Policy for Bean Subclass Compositions.
@@ -61,5 +63,9 @@ public class SubclassCompositionContainerPolicy extends CompositionContainerPoli
 				return UnexecutableCommand.INSTANCE;	// Can't orphan the this part.
 		}
 		return super.getOrphanTheChildrenCommand(children);
+	}
+	
+	protected boolean isValidBeanLocation(Object child) {
+		return child instanceof EObject && BeanUtilities.isValidBeanLocation(domain, (EObject)child);
 	}
 }
