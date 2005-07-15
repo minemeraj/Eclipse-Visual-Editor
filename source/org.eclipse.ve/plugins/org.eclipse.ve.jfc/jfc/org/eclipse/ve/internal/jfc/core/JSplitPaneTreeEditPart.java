@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JSplitPaneTreeEditPart.java,v $ $Revision: 1.7 $ $Date: 2005-06-02 22:32:28 $
+ * $RCSfile: JSplitPaneTreeEditPart.java,v $ $Revision: 1.8 $ $Date: 2005-07-15 18:17:59 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -129,10 +129,24 @@ public class JSplitPaneTreeEditPart extends ComponentTreeEditPart {
 			IJavaInstance component = (IJavaInstance) con.eGet(sf_constraintComponent);
 			// See whether the component is in severe error. If so then exlude if from the list of children
 			if (BeanProxyUtilities.getBeanProxyHost(component).isBeanProxyInstantiated()) {
-				children.add(con.eGet(sf_constraintComponent)); // Get the component out of the constrain
+				children.add(con.eGet(sf_constraintComponent)); // Get the component out of the constraint
 			}
 		}
 		return children;
+	}
+
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.gef.editparts.AbstractEditPart#reorderChild(org.eclipse.gef.EditPart, int)
+	 */
+	protected void reorderChild(EditPart editpart, int index) {
+		super.reorderChild(editpart, index);
+		Iterator itr = children.iterator();
+		while (itr.hasNext()){
+			Object child = itr.next();
+			if(child instanceof ComponentTreeEditPart)
+				((ComponentTreeEditPart)child).refresh();
+		}
 	}
 
 	/*
