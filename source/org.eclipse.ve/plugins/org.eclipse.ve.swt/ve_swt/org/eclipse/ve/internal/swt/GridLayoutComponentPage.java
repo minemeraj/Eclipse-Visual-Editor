@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.15 $  $Date: 2005-07-12 19:59:30 $ 
+ *  $Revision: 1.16 $  $Date: 2005-07-15 20:34:39 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -641,6 +641,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		
 		horizontalIndentSpinner = new Spinner(alignmentGroup, SWT.BORDER);
 		horizontalIndentSpinner.setSelection(horizontalIndentValue);
+		horizontalIndentSpinner.setMaximum(9999);
 		horizontalIndentSpinner.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				int value = horizontalIndentSpinner.getSelection();
@@ -749,6 +750,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		
 		horizontalSpanSpinner = new Spinner(spanGroup, SWT.BORDER);
 		horizontalSpanSpinner.setMinimum(1);
+		horizontalSpanSpinner.setMaximum(9999);
 		horizontalSpanSpinner.setSelection(horizontalSpanValue);
 		
 		Label verticalLabel = new Label(spanGroup, SWT.NONE);
@@ -756,6 +758,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		
 		verticalSpanSpinner = new Spinner(spanGroup, SWT.BORDER);
 		verticalSpanSpinner.setMinimum(1);
+		verticalSpanSpinner.setMaximum(9999);
 		verticalSpanSpinner.setSelection(verticalSpanValue);
 		
 		horizontalSpanSpinner.addModifyListener(new ModifyListener() {

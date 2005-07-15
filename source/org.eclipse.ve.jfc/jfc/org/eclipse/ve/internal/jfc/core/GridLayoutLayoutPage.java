@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.9 $  $Date: 2005-07-12 19:04:22 $ 
+ *  $Revision: 1.10 $  $Date: 2005-07-15 20:34:40 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -126,6 +126,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		label.setText(JFCMessages.GridLayoutLayoutPage_horizontalGap); 
 		hgapSpinner = new Spinner(spaceGroup, SWT.BORDER);
 		hgapSpinner.setSelection(5);
+		hgapSpinner.setMaximum(9999);
 		hgapSpinner.addModifyListener(spinnerModify);
 		gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
@@ -135,6 +136,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		label.setText(JFCMessages.GridLayoutLayoutPage_verticalGap); 
 		vgapSpinner = new Spinner(spaceGroup, SWT.BORDER);
 		vgapSpinner.setSelection(5);
+		vgapSpinner.setMaximum(9999);
 		vgapSpinner.addModifyListener(spinnerModify);
 		gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;

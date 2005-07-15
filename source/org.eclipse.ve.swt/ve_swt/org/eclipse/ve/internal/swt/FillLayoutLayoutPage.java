@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FillLayoutLayoutPage.java,v $
- *  $Revision: 1.9 $  $Date: 2005-07-12 19:04:20 $ 
+ *  $Revision: 1.10 $  $Date: 2005-07-15 20:34:39 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -146,6 +146,7 @@ public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		
 		Spinner spin = new Spinner(parent, SWT.BORDER);
 		spin.setSelection(0);
+		spin.setMaximum(9999);
 		spin.addModifyListener(spinnerModify);
 		
 		return spin;
