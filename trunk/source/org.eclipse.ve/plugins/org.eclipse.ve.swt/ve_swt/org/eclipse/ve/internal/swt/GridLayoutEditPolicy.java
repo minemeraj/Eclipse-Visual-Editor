@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.28 $ $Date: 2005-07-13 18:51:43 $
+ * $Revision: 1.29 $ $Date: 2005-07-15 13:25:40 $
  */
 import java.util.*;
 
@@ -555,7 +555,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			if (indexEP != -1) {
 				CommandBuilder cb = new CommandBuilder();
 				Rectangle[] rects = helper.getChildrenDimensions();
-				if (indexEP < rects.length) {
+				if (rects != null && indexEP < rects.length) {
 					Rectangle rect = rects[indexEP];
 					// Create the commands to remove the filler labels on this row if this delete is the last valid control on this row.
 					Command rowCmds = helper.createRemoveRowCommand(rect.y, (EObject) editPart.getModel());
