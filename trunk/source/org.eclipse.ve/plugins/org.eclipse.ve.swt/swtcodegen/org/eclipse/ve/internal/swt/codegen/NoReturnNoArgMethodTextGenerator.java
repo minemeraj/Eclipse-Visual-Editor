@@ -10,21 +10,21 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoReturnNoArgMethodTextGenerator.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-15 18:58:20 $ 
+ *  $Revision: 1.7 $  $Date: 2005-07-15 23:58:55 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.codegen.util.*;
-import org.eclipse.ve.internal.java.codegen.util.AbstractMethodTextGenerator;
-import org.eclipse.ve.internal.java.codegen.util.IMethodTemplate;
  
 /**
  * This method generator is a generic method generator for a method with no arguments, 
@@ -91,6 +91,19 @@ public class NoReturnNoArgMethodTextGenerator extends AbstractMethodTextGenerato
 	public String getMethodPrefix() {
 		return METHOD_PREFIX;
 	}
+	
+	
+
+	private boolean isExistNullConstructorMethod() {
+		IType t = CodeGenUtil.getMainType(fModel.getCompilationUnit());		
+		IMethod nullConstructor  = t.getMethod(t.getElementName(), new String[]{});
+		if (nullConstructor!=null && !nullConstructor.exists())
+			nullConstructor=null;
+		if (nullConstructor!=null)
+			return true;
+		else
+			return false;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.util.IMethodTextGenerator#generateMain()
@@ -98,8 +111,10 @@ public class NoReturnNoArgMethodTextGenerator extends AbstractMethodTextGenerato
 	public String generateMain(String className) {
 		if (fMethodTemplate==null) 
 			return null ;  // regular method was not generated yet.
-		if (!getInfo().finitBeanType.equals("org.eclipse.swt.widgets.Shell") && //$NON-NLS-1$
-			!getInfo().finitBeanType.equals("Shell")) //$NON-NLS-1$
+	
+		if ((!getInfo().finitBeanType.equals("org.eclipse.swt.widgets.Shell") && //$NON-NLS-1$
+			 !getInfo().finitBeanType.equals("Shell")) || //$NON-NLS-1$
+			!isExistNullConstructorMethod()) // The template assume a null constructor
 			return null ;
 		
 		fMethodTemplate=null;
