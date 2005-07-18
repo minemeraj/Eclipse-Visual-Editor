@@ -634,7 +634,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				if (!jarPath.toFile().exists())
 					addProblem(MessageFormat.format(SWTMessages.SWTContainer_61, new Object[] {jarPath.toPortableString()})); 
 				IClasspathEntry entry = JavaCore.newLibraryEntry(resolvedPath.append(jarName), resolvedPath.append(jarSrc), null, new IAccessRule [0], attr, false);
-				entries.add(entry);
+				if (entry!=null)
+				    entries.add(entry);
 			}
 			else {
 				JavaVEPlugin.log("Could not location class path for: "+swtLibraries[i].getPluginID()); //$NON-NLS-1$
