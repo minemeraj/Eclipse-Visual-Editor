@@ -31,7 +31,6 @@ public final class CodegenEditorPartMessages extends NLS {
 	public static String JavaVisualEditorVMController_InactiveVMCheckJob_Text;
 	public static String JavaVisualEditorPart_InitializingModel;
 	public static String JavaVisualEditorPart_ReleasingModel;
-	public static String JVEActionContributor_Status_Creating_label_;
 	public static String JVE_STATUS_MSG_INSYNC;
 	public static String JVE_STATUS_MSG_NOT_IN_SYNC;
 	public static String JVE_STATUS_MSG_SYNCHRONIZING;

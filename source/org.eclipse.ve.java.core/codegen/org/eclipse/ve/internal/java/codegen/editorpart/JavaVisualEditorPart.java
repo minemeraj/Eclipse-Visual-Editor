@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.137 $  $Date: 2005-07-12 23:27:42 $ 
+ *  $Revision: 1.138 $  $Date: 2005-07-18 22:53:24 $ 
  */
 
 import java.beans.PropertyChangeEvent;
@@ -44,7 +44,6 @@ import org.eclipse.gef.commands.CommandStackListener;
 import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.*;
-import org.eclipse.gef.palette.CreationToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.ui.actions.*;
 import org.eclipse.gef.ui.palette.*;
@@ -264,7 +263,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 		// Do any initializations that are needed for both the viewers and the codegen parser when they are created.
 		// Need to be done here because there would be race condition between the two threads otherwise.
-		editDomain = new EditDomain(this);
+		editDomain = new EditDomain(this);		
+		
 		ClassDescriptorDecoratorPolicy policy = new ClassDescriptorDecoratorPolicy();
 		// Get the default decorator and put a JavaBean label provider onto it
 		ClassDescriptorDecorator defaultClassDescriptorDecorator = (ClassDescriptorDecorator) policy.getDefaultDecorator(ClassDescriptorDecorator.class);
@@ -334,6 +334,18 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		graphicalActionRegistry.registerAction(new ReloadNowAction(reloadCallback));
 		
 		setRootInProgressLock = Platform.getJobManager().newLock();
+		
+		// Listen to when the tool on the edit domain changes so we can update the status line
+		
+		editDomain.addToolChangedListener(new EditDomain.ToolChangedListener(){
+			public void toolChanged() {
+				if(editDomain.toolInfo == null){
+					setStatusMsg(getEditorSite().getActionBars(),null,null);
+				} else {
+					setStatusMsg(getEditorSite().getActionBars(),editDomain.toolInfo.msg,editDomain.toolInfo.image);
+ 				}						
+			}			
+		});
 			
 		super.init(site, input);
 	}
@@ -908,20 +920,15 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						ptDropDown.setPaletteRoot(paletteRoot);
 						ptDropDown.setId(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID);	// Because setToolEntry resets it						
 						
-						// Add palette viewer listener so that we can set the correct selection state and msg.
+						// Add palette viewer listener so that we can set the correct selection state
 						final PaletteRoot froot = paletteRoot; 
 						editDomain.getPaletteViewer().addPaletteListener(new PaletteListener() {
 							public void activeToolChanged(PaletteViewer palette, ToolEntry tool) {
 								ptSel.setChecked(tool == froot.getChildren().get(0));
-								ptMarq.setChecked(tool == froot.getChildren().get(1));
-							
-								String msg = ""; //$NON-NLS-1$
-								if (tool instanceof CreationToolEntry ){
-									msg = MessageFormat.format(CodegenEditorPartMessages.JVEActionContributor_Status_Creating_label_, new Object[]{tool.getLabel()}); 
-								}
-								setStatusMsg(getEditorSite().getActionBars(),msg,null);																
+								ptMarq.setChecked(tool == froot.getChildren().get(1));														
 							}
-						});
+						});						
+						
 					}				
 				}
 			} catch (RuntimeException e) {
@@ -2660,7 +2667,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			else if (part instanceof IViewPart)
 				actionBars = ((IViewPart) part).getViewSite().getActionBars();
 				
-			setStatusMsg(actionBars,null,null); // Clear the status bar as we try and show any errors for the selected JavaBean
+			setStatusMsg(actionBars,null,(Image)null); // Clear the status bar as we try and show any errors for the selected JavaBean
 			// Only try and drive the source editor selection if one edit part is selected
 			// If more than one is selected then don't bother 
 			if (selection.size() == 1 && selection.getFirstElement() instanceof EditPart) {
@@ -2796,10 +2803,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected void setStatusMsg (IActionBars bars, String msg, Image icon) {
 		if (msg==null || bars==null) {
 			statusMsgSet=false;			
+		} else {
+			statusMsgSet=true;
 		}
-		else
-			statusMsgSet=true;		
-		
 		bars.getStatusLineManager().setMessage(icon, msg);		
 	}
 	
@@ -2810,8 +2816,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 *  The JavaEditor will erase our error msg on a post selection
 	 */
 	protected void setStatusLineMessage(String msg) {
-		if (msg != null || !statusMsgSet)
-		   super.setStatusLineMessage(msg);
+		if (msg != null || !statusMsgSet){		
+			super.setStatusLineMessage(msg);
+		}
 	}
 	protected void setLoadIsPending(boolean flag) {
 		synchronized (loadCompleteSync) {

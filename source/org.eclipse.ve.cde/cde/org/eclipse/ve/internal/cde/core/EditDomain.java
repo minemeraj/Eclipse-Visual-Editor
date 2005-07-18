@@ -11,13 +11,17 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: EditDomain.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-21 14:41:07 $ 
+ *  $Revision: 1.8 $  $Date: 2005-07-18 22:53:07 $ 
  */
 
+import java.text.MessageFormat;
 import java.util.*;
 
 import org.eclipse.gef.*;
-import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.gef.palette.*;
+import org.eclipse.gef.ui.palette.PaletteViewer;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -37,12 +41,76 @@ public class EditDomain extends DefaultEditDomain {
 	
 	public static final String DIAGRAM_KEY = "org.eclipse.ve.internal.cde.core.diagramkey";	// The key to use in getViewerData to return the Diagram object for that viewer. //$NON-NLS-1$
 	protected List viewers = new ArrayList(2);
-
+	protected List toolListeners;
+	public ToolInfo toolInfo;
+	
+	public static interface ToolChangedListener{
+		public void toolChanged();
+	}
+	public static class ToolInfo{
+		public ToolInfo(String aMsg, Image anImage) {
+			msg = aMsg;
+			image = anImage;
+		}
+		public Image image;
+		public String msg;
+	}
+	
 	/**
 	 * A utility method to get the edit domain from an EditPart.
 	 */
 	public static EditDomain getEditDomain(EditPart ep) {
 		return (EditDomain) ep.getRoot().getViewer().getEditDomain();
+	}
+	
+	private Map imageCache;	// Cache of ImageDescriptor to Image;
+	private Image getImage(ImageDescriptor imageDescriptor){
+		if (imageCache == null) imageCache = new HashMap(20);
+		Image existingImage = (Image)imageCache.get(imageDescriptor);
+		if(existingImage == null) {
+			existingImage = imageDescriptor.createImage();
+			imageCache.put(imageDescriptor,existingImage);
+		}
+		return existingImage;
+	}
+	
+	public void setPaletteViewer(PaletteViewer palette) {
+		super.setPaletteViewer(palette);
+		palette.addPaletteListener(new PaletteListener(){
+			public void activeToolChanged(PaletteViewer palette, ToolEntry tool) {
+				if (tool instanceof CreationToolEntry){
+					CreationToolEntry creationTool = (CreationToolEntry)tool;
+					toolInfo = new ToolInfo(
+							MessageFormat.format(CDEMessages.ActionContributor_Status_Creating_label_, new Object[]{creationTool.getLabel()}),
+							getImage(creationTool.getSmallIcon()));
+				} else {
+					toolInfo = null;
+				}
+				if(toolListeners != null){
+					Iterator iter = toolListeners.iterator();
+					while(iter.hasNext()){
+						((ToolChangedListener)iter.next()).toolChanged();
+					}
+				}				
+			}			
+		});
+	}
+	
+	public void setActiveTool(Tool tool) {
+		super.setActiveTool(tool);	
+	}	
+	
+	public void addToolChangedListener(ToolChangedListener aToolChangedListener){
+		if(toolListeners == null){
+			toolListeners = new ArrayList(2);
+		}
+		toolListeners.add(aToolChangedListener);
+	}
+	
+	public void removeToolChangedListener(ToolChangedListener aToolChangedListener){
+		if(toolListeners != null){
+			toolListeners.remove(aToolChangedListener);			
+		}
 	}
 	
 	/**
@@ -81,6 +149,10 @@ public class EditDomain extends DefaultEditDomain {
 			while (itr.hasNext()) {
 				disposeCollection(((HashMap) itr.next()).values());
 			}
+		}
+		Iterator images = imageCache.values().iterator();
+		while(images.hasNext()){
+			((Image)images.next()).dispose();
 		}
 	}
 
