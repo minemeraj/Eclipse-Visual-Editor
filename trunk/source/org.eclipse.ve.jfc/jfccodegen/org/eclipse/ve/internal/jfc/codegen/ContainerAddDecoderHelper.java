@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.24 $  $Date: 2005-07-08 18:08:56 $ 
+ *  $Revision: 1.25 $  $Date: 2005-07-18 20:25:41 $ 
  */
 
 import java.util.*;
@@ -978,6 +978,9 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			
 		result.addAll (CodeGenUtil.getReferences(fAddedConstraintInstance,true));
 		return result.toArray();
+	}
+	protected EObject getIndexParent() {
+		return fbeanPart.getEObject();
 	}
 	
 }

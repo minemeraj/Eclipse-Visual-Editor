@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionDecoderHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-14 23:39:52 $ 
+ *  $Revision: 1.12 $  $Date: 2005-07-18 20:25:43 $ 
  */
 import java.util.Collection;
 import java.util.List;
@@ -136,7 +136,7 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 		return IJavaFeatureMapper.PRIORITY_DEFAULT;
 	}
 
-	protected Object[] getIndexPriority() {
+	protected IJavaFeatureMapper.VEexpressionPriority.VEpriorityIndex getIndexPriority() {
 		return null;
 	}
 

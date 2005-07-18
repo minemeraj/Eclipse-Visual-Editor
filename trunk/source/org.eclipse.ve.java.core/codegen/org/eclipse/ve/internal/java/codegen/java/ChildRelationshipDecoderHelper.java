@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.22 $  $Date: 2005-07-09 00:02:23 $ 
+ *  $Revision: 1.23 $  $Date: 2005-07-18 20:25:43 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -577,5 +577,10 @@ public Object[] getArgsHandles(Statement expr) {
 		if (fAddedPart!=null)
 			result.addAll(CodeGenUtil.getReferences(fAddedPart.getEObject(),true));
 		return result.toArray();
+	}
+
+
+	protected EObject getIndexParent() {
+		return fbeanPart.getEObject();
 	}
 }

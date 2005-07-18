@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.21 $  $Date: 2005-06-28 22:51:35 $ 
+ *  $Revision: 1.22 $  $Date: 2005-07-18 20:25:44 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -241,18 +241,17 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
 	 */
-	protected Object[] getIndexPriority() {
-		Object[] result = new Object[2];
-		result[1] = getIndexSF();
-		if (result[1]==null) {
+	protected IJavaFeatureMapper.VEexpressionPriority.VEpriorityIndex getIndexPriority() {		
+		EStructuralFeature sf = getIndexSF();
+		if (sf==null) {
 			return null; // no index priority
 		}
 		List controls = Collections.EMPTY_LIST;
 		if (getParent()!=null)
 			controls = (List)getParent().getEObject().eGet(getIndexSF());
 		// use a common method
-		result[0] = new Integer(getIndexPriority(fbeanPart, controls)) ;
-		return result;
+		int index = getIndexPriority(fbeanPart, controls) ;
+		return new IJavaFeatureMapper.VEexpressionPriority.VEpriorityIndex(sf, index, getParent().getEObject());
 	}
 	
 	/** (non-Javadoc)
