@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.19 $  $Date: 2005-07-09 00:02:23 $ 
+ *  $Revision: 1.20 $  $Date: 2005-07-18 20:25:43 $ 
  */
 
 import java.util.*;
@@ -538,6 +538,10 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		for (int i = 0; i < added.length; i++) 
 			result.addAll(CodeGenUtil.getReferences(added[i],true));			
 		return result.toArray();
+	}
+
+	protected EObject getIndexParent() {		
+		return getRootObject(false);
 	}
 	
 

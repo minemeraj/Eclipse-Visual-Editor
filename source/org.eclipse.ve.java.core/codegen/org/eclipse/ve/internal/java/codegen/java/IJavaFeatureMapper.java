@@ -11,14 +11,16 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.16 $  $Date: 2005-07-07 19:30:33 $ 
+ *  $Revision: 1.17 $  $Date: 2005-07-18 20:25:43 $ 
  */
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 /**
  *  An IFeatureMapper is a IExpressionDecoder helper which comes
@@ -45,15 +47,55 @@ public boolean isFieldFeature() ;
 // Expresson priority will determine where new expressions will 
 // be inserted in the code
 
-public class VEexpressionPriority {	
-    int priority;  // Expression "feature" level priority ordering withing a bean
-	Object[] index;  // First element is an Integer for index value, second is the SF to index on
-	                 // This will determine Z ordering priority between beans
-	                 // lower index comes first.
+public static class VEexpressionPriority {	
+    int 			priority;  // Expression "feature" level priority ordering withing a bean
+    VEpriorityIndex index;
+
+	public static class VEpriorityIndex {
+		EStructuralFeature  sf;
+		Integer			    index;
+		EObject 			parent;
+		
+		public VEpriorityIndex (EStructuralFeature sf, int idx, EObject parent) {
+			this.sf = sf;
+			this.index = new Integer(idx);
+			this.parent = parent;
+		}
+		
+		public Integer getIndex() {
+			return index;
+		}		
+		public EObject getParent() {
+			return parent;
+		}		
+		public EStructuralFeature getSf() {
+			return sf;
+		}
+		public String toString() {
+			StringBuffer st = new StringBuffer();
+			st.append("("); //$NON-NLS-1$
+			st.append(index);
+			st.append(","); //$NON-NLS-1$			
+			st.append(sf.getName());
+			if (parent instanceof IJavaObjectInstance)
+			     st.append(((IJavaObjectInstance)parent).getAllocation().toString());
+			else
+				st.append(parent.toString());
+			st.append(")"); //$NON-NLS-1$
+			return st.toString();
+		}
+	}
     
-    public VEexpressionPriority (int p, Object [] i) {
+    public VEexpressionPriority (int p, EStructuralFeature sf, int idx, EObject parent) {
     	priority = p;
-    	index=i;    	
+    	if (sf != null && parent!= null)
+    	   index = new VEpriorityIndex(sf, idx, parent);
+    	else
+    	   index = null;
+    }
+    public VEexpressionPriority (int p, VEpriorityIndex  pIndex) {
+    	priority = p;
+    	index=pIndex;    	
     }
 	public int getProiority() {  		
 		return priority;
@@ -61,7 +103,7 @@ public class VEexpressionPriority {
 	public boolean isIndexed() {
 		return index!=null;
 	}
-	public Object[] getProiorityIndex() {  	
+	public VEpriorityIndex getProiorityIndex() {  	
 		return index;
 	}
 	public String toString() {
@@ -73,14 +115,8 @@ public class VEexpressionPriority {
 			st.append(priority);
 			st.append(":"); //$NON-NLS-1$
 			if (index!=null) {
-				st.append("("); //$NON-NLS-1$
-				st.append(index[0]);
-				st.append(","); //$NON-NLS-1$
-				if (index[1] instanceof EStructuralFeature)
-				    st.append(((EStructuralFeature)index[1]).getName());
-				else
-					st.append("???"); //$NON-NLS-1$
-				st.append(")]"); //$NON-NLS-1$
+				st.append(index.toString()); //$NON-NLS-1$
+				st.append("]"); //$NON-NLS-1$
 			}
 			else {
 				st.append("NoIndex]"); //$NON-NLS-1$
@@ -115,16 +151,25 @@ public class VEexpressionPriority {
 	 * @since 1.1.0
 	 */
 	public int compareIndex(VEexpressionPriority p) {
-		if (getProiorityIndex()[1]==p.getProiorityIndex()[1]) { // same SF
-			  if (((Integer)(getProiorityIndex()[0])).intValue()>((Integer)(p.getProiorityIndex()[0])).intValue())
+		if (sameIndexFeature(p)) { // same SF
+			  if (getProiorityIndex().getIndex().intValue()>p.getProiorityIndex().getIndex().intValue())
 				  return -1;
-			  else if (((Integer)(getProiorityIndex()[0])).intValue()<((Integer)(p.getProiorityIndex()[0])).intValue())
+			  else if (getProiorityIndex().getIndex().intValue()<p.getProiorityIndex().getIndex().intValue())
 				       return 1;
 			       else
 				       return 0;
 	      }
 	      else
 			  return 0;  // index is not on the same SF
+	}
+	
+	public boolean sameIndexFeature(VEexpressionPriority p) {
+		boolean result = false;
+		if (getProiorityIndex()!=null && p.getProiorityIndex()!=null) {
+			result = (getProiorityIndex().getSf()==p.getProiorityIndex().getSf()) &&
+			         (getProiorityIndex().getParent() == p.getProiorityIndex().getParent());
+		}
+		return result;
 	}
 	
 }

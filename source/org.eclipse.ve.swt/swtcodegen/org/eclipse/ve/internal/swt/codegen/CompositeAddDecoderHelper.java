@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.22 $  $Date: 2005-07-12 18:41:14 $ 
+ *  $Revision: 1.23 $  $Date: 2005-07-18 20:25:44 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -492,11 +492,12 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
 	 */
-	protected Object[] getIndexPriority() {
-		Object[] result = new Object[2];
-		result[1]=fFmapper.getFeature(null);
-		result[0]= new Integer(SWTConstructorDecoderHelper.getIndexPriority(fAddedPart,getIndexedEntries()));
-		return result;
+	protected IJavaFeatureMapper.VEexpressionPriority.VEpriorityIndex getIndexPriority() {
+		
+		EStructuralFeature sf =fFmapper.getFeature(null);
+		int index = SWTConstructorDecoderHelper.getIndexPriority(fAddedPart,getIndexedEntries());
+		EObject parent = getRootObject(false);
+		return new IJavaFeatureMapper.VEexpressionPriority.VEpriorityIndex(sf, index, parent);
 	}
 	protected int getAddedPartArgIndex(int argsSize) {		
 		return 0;

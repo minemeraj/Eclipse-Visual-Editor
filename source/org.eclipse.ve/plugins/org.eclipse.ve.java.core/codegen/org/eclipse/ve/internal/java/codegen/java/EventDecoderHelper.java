@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.19 $  $Date: 2005-07-14 16:02:32 $ 
+ *  $Revision: 1.20 $  $Date: 2005-07-18 20:25:43 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
@@ -831,7 +832,10 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	}
 	
 	public VEexpressionPriority getPriorityOfExpression() {
-		return new VEexpressionPriority(IJavaFeatureMapper.PRIORITY_EVENT, new Object[]{new Integer(getInvocationIndex()), getEventSF()});
+		EStructuralFeature sf = getEventSF();
+		EObject parent = fbeanPart.getEObject();
+		int index = getInvocationIndex(); 
+		return new VEexpressionPriority(IJavaFeatureMapper.PRIORITY_EVENT, sf, index, parent) ; 				
 	}
 
 }

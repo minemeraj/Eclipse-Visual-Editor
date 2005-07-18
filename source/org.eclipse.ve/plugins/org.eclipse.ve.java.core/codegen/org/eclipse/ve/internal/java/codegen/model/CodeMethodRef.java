@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.42 $  $Date: 2005-07-12 22:23:51 $ 
+ *  $Revision: 1.43 $  $Date: 2005-07-18 20:25:43 $ 
  */
 
 import java.util.*;
@@ -426,7 +426,7 @@ protected int getGroupLastIndex(List sortedList, BeanPart bp) {
  */
  private boolean isRelated(CodeExpressionRef exp, List references) {
 	 
- 	EReference sf = (EReference)exp.getPriority().getProiorityIndex()[1];
+ 	EReference sf = (EReference)exp.getPriority().getProiorityIndex().getSf();
 	if (VCEPostSetCommand.isChildRelationShip(sf)) {
 		// cExp is a parent/child indexed expression
 		// it can be that it is in the form of creatComposite(), in this case
@@ -484,16 +484,16 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 	VEexpressionPriority expPriority = exp.getPriority();
 	List dependantBeans = exp.getReferences();
 	
+	// find a target insersion window (first/last)
+	// Start from the end, as expression may not be sorted
+	// according to the priorities and dependencies.
+	int first = -1, last = -1 ;
+	
 	if (expPriority.equals(IJavaFeatureMapper.NOPriority)) {
 		// add to the end of the list
 		index=sortedList.size();
 	}
 	else {
-		
-		// find a target insersion window (first/last)
-		// Start from the end, as expression may not be sorted
-		// according to the priorities and dependencies.
-		int first = -1, last = -1 ;
 		boolean firstBean = true;  // should we insert this exp. at index 0		
 				
 		for (int i = sortedList.size()-1; i>=0 && first<0 ; i--) {
@@ -525,10 +525,16 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 							if (isRelated(cExp, dependantBeans))
 								compare = -1; // exp may be dependant on cExp
 				    }
-				    else {
-				    	compare = 1;  // cExp is placed here because of index, not grouping
-				    	if (isRelated(cExp, dependantBeans))
-				    		compare = -1;  // exp may be dependant on cExp
+				    else {				    	
+				        boolean grouping = isGrouping(exp.getBean(),sortedList, i);
+				        boolean related = isRelated(cExp, dependantBeans);
+				    	if (grouping || related) {
+				    	  compare = 1;  //exp comes before this one
+				    	  if (related)
+				    		compare = -1;  // exp may be dependant on cExp, come after
+				    	}
+				    	else
+				    		continue; // cExp is placed here because of index/dependency, not grouping
 				    }
 		   	      }
 		   	 else {
@@ -538,7 +544,10 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 		   }
 		   // Not the same bean
 		   else {
-			   boolean indexsSet = cExp.getPriority().isIndexed() && expPriority.isIndexed();
+			   boolean indexsSet = cExp.getPriority().isIndexed() && 
+			   					   expPriority.isIndexed() &&
+			   					   expPriority.sameIndexFeature(cExp.getPriority());
+			   						
 			   if ((indexsSet && // Z order comparison is needed					
 				   cExp.getPriority().compareIndex(expPriority)>0) // Z order forces us to come after 
 				   ||  

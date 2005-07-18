@@ -17,9 +17,11 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -35,8 +37,9 @@ public class MethodSortTests extends TestCase {
 	BeanPartDecleration decl1 = new BeanPartDecleration("DummyBean 1","noType");
 	BeanPartDecleration decl2 = new BeanPartDecleration("DummyBean 2","noType");
 	BeanPart bp1 = new BeanPart (decl1);
-	BeanPart bp2 = new BeanPart (decl2);
-	Object   sf = EcorePackage.eINSTANCE.getEAnnotation_Contents();
+	BeanPart bp2 = new BeanPart (decl2);	
+	DummyEObject parent = new DummyEObject();
+	EReference   sf = EcorePackage.eINSTANCE.getEAnnotation_Contents();
 	
 	int REGULAR = 10;
 	int LOW = 5;
@@ -173,9 +176,9 @@ public class MethodSortTests extends TestCase {
 	 * @since 1.1.0
 	 */
 	VEexpressionPriority getPriority(int zOrder, boolean regular) {
-		Object[] z ;
+		VEexpressionPriority.VEpriorityIndex z ;
 		if (zOrder>=0) 
-			z = new Object[] { new Integer(zOrder), sf };
+			z = new IJavaFeatureMapper.VEexpressionPriority.VEpriorityIndex(sf, zOrder, parent);				
 		else
 			z = null;
 		

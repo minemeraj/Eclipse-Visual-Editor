@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractIndexedChildrenDecoderHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-16 22:12:50 $ 
+ *  $Revision: 1.9 $  $Date: 2005-07-18 20:25:43 $ 
  */
 
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.dom.Statement;
 
@@ -35,8 +36,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public abstract class AbstractIndexedChildrenDecoderHelper
-	extends ExpressionDecoderHelper {
+public abstract class AbstractIndexedChildrenDecoderHelper extends ExpressionDecoderHelper {
 
 	protected static List getComponentsFromConstraintComponents(List ccs){
 		if(ccs==null)
@@ -67,19 +67,21 @@ public abstract class AbstractIndexedChildrenDecoderHelper
 		super(bean, exp, fm, owner);
 	}
 	
-	protected abstract List getIndexedEntries();
-	protected abstract Object getIndexedEntry();
+	protected abstract List getIndexedEntries(); // get all the index entries
+	protected abstract Object getIndexedEntry(); // get the added object
+	protected abstract EObject getIndexParent(); // The parent where the index applies
 
 	/**
 	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
 	 */
-	protected Object[] getIndexPriority() {
-		Object[] result = new Object[2];
-		result[1] = fFmapper.getFeature(null);
+	protected IJavaFeatureMapper.VEexpressionPriority.VEpriorityIndex getIndexPriority() {		
+		EStructuralFeature sf = fFmapper.getFeature(null);
+		EObject parent = getIndexParent();
+		int index  ;
 		List indexedEntries = getIndexedEntries();
 		Object entry = getIndexedEntry();
 		if(indexedEntries!=null && entry!=null){
-			int index = -1;
+			index = -1;
 			for(int i=0;i<indexedEntries.size();i++){
 				Object component = indexedEntries.get(i);
 				if(component.equals(entry)){
@@ -88,11 +90,9 @@ public abstract class AbstractIndexedChildrenDecoderHelper
 				}	
 			}
 			index++;
-			result[0]= new Integer(index);
-			return result;
+			return new IJavaFeatureMapper.VEexpressionPriority.VEpriorityIndex(sf, index, parent);
 		}
-		result[0]= new Integer(0);
-		return result;
+		return new IJavaFeatureMapper.VEexpressionPriority.VEpriorityIndex(sf, 0, parent);
 	}
 
 	/**

@@ -10,11 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.44 $  $Date: 2005-07-12 18:41:11 $ 
+ *  $Revision: 1.45 $  $Date: 2005-07-18 20:25:43 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
-import java.util.*;
+import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.*;
@@ -457,7 +457,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * 
 	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
 	 */
-	protected Object[] getIndexPriority() {
+	protected IJavaFeatureMapper.VEexpressionPriority.VEpriorityIndex getIndexPriority() {
 //		if(fbeanPart!=null){
 //			return getDefaultBeanPriority(fbeanPart);
 //		}
