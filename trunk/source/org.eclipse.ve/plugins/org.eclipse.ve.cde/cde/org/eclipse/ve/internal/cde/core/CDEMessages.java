@@ -108,6 +108,7 @@ public final class CDEMessages extends NLS {
 	public static String XYLayoutEditPolicy_CursorFeedback_X_Y;
 	public static String CustomSashForm_Restore;
 	public static String CustomSashForm_Maximize;
+	public static String ActionContributor_Status_Creating_label_;	
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, CDEMessages.class);
