@@ -24,7 +24,7 @@ import java.util.*;
  */
 public abstract class DateConversionSupport {
 	public final static int DATE_FORMAT=DateFormat.SHORT;
-	public final static int DEFAULT_FORMATTER_INDEX=1;
+	public final static int DEFAULT_FORMATTER_INDEX=0;
 
 	private final static int NUM_VIRTUAL_FORMATTERS=1;
 	
@@ -62,7 +62,7 @@ public abstract class DateConversionSupport {
 	}
 
 	protected Date parse(String str,int formatterIdx) {
-		if(formatterIdx>0) {
+		if(formatterIdx>=0) {
 				ParsePosition pos=new ParsePosition(0);
 				Date date=formatters[formatterIdx].parse(str,pos);
 				if(pos.getErrorIndex()!=-1||pos.getIndex()!=str.length()) {
@@ -89,7 +89,7 @@ public abstract class DateConversionSupport {
 	}
 
 	protected String format(Date date,int formatterIdx) {
-		if(formatterIdx>0) {
+		if(formatterIdx>=0) {
 			return formatters[formatterIdx].format(date);
 		}
 		return String.valueOf(date.getTime());

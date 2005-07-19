@@ -21,7 +21,7 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ve.sweet.CannotSaveException;
-import org.eclipse.ve.sweet.converter.Converter;
+import org.eclipse.ve.sweet.converter.ConverterRegistry;
 import org.eclipse.ve.sweet.converter.IConverter;
 import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.ITextControl;
@@ -155,8 +155,8 @@ public class TextFieldViewer implements IFieldViewer {
         
         this.property = input;
         
-        object2String = Converter.get(property.getType(), String.class.getName());
-        string2Object = Converter.get(String.class.getName(), property.getType());
+        object2String = ConverterRegistry.get(property.getType(), String.class.getName());
+        string2Object = ConverterRegistry.get(String.class.getName(), property.getType());
         
         readOnly = property.isReadOnly();
         if (readOnly) {

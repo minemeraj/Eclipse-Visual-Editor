@@ -11,11 +11,13 @@
  */
 package org.eclipse.ve.sweet.converter;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import org.eclipse.ve.sweet.converters.ConvertBoolean2String;
 import org.eclipse.ve.sweet.converters.ConvertByte2String;
 import org.eclipse.ve.sweet.converters.ConvertCharacter2String;
+import org.eclipse.ve.sweet.converters.ConvertDate2String;
 import org.eclipse.ve.sweet.converters.ConvertDouble2String;
 import org.eclipse.ve.sweet.converters.ConvertFloat2String;
 import org.eclipse.ve.sweet.converters.ConvertInteger2String;
@@ -25,6 +27,7 @@ import org.eclipse.ve.sweet.converters.ConvertShort2String;
 import org.eclipse.ve.sweet.converters.ConvertString2Boolean;
 import org.eclipse.ve.sweet.converters.ConvertString2Byte;
 import org.eclipse.ve.sweet.converters.ConvertString2Character;
+import org.eclipse.ve.sweet.converters.ConvertString2Date;
 import org.eclipse.ve.sweet.converters.ConvertString2Double;
 import org.eclipse.ve.sweet.converters.ConvertString2Float;
 import org.eclipse.ve.sweet.converters.ConvertString2Integer;
@@ -37,11 +40,11 @@ import org.eclipse.ve.sweet.metalogger.Logger;
 
 
 /**
- * Converter.  The base converter from which all converters can be found.
+ * ConverterRegistry.  The place where all converters can be found.
  *
  * @author djo
  */
-public class Converter {
+public class ConverterRegistry {
 	private static HashMap converters;
     
     /*
@@ -126,6 +129,9 @@ public class Converter {
         return true;
     }
     
+    /*
+     * Register converters for built-in Java types
+     */
     static {
         converters = new HashMap();
         
@@ -176,6 +182,9 @@ public class Converter {
         
         associate(Double.class.getName(), String.class.getName(), new ConvertDouble2String());
         associate(String.class.getName(), Double.class.getName(), new ConvertString2Double());
+        
+        associate(Date.class.getName(), String.class.getName(), new ConvertDate2String());
+        associate(String.class.getName(), Date.class.getName(), new ConvertString2Date());
     }
 }
 
