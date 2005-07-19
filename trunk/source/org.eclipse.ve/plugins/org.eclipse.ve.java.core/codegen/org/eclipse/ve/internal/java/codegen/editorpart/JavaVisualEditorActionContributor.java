@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.11 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.12 $  $Date: 2005-07-19 22:58:38 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
@@ -93,9 +93,9 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		palDropdownAction.setEnabled(false);
 		markAsPartListener(palDropdownAction);
 		
-		reloadAction = new LabelRetargetAction(ReloadAction.RELOAD_ACTION_ID, "", Action.AS_CHECK_BOX); //$NON-NLS-1$
+		reloadAction = new LabelRetargetAction(JavaVisualEditorReloadActionController.RELOAD_ACTION_ID, "", Action.AS_CHECK_BOX); //$NON-NLS-1$
 		// dbk use ReloadAction.PAUSE_IMAGE_DESCRIPTOR		
-		reloadAction.setHoverImageDescriptor(ReloadAction.PAUSE_IMAGE_DESCRIPTOR);
+		reloadAction.setHoverImageDescriptor(JavaVisualEditorReloadActionController.PAUSE_IMAGE_DESCRIPTOR);
 		reloadAction.setEnabled(false);
 		markAsPartListener(reloadAction);
 		
@@ -169,7 +169,7 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		bars.setGlobalActionHandler(PALETTE_SELECTION_ACTION_ID, getAction(textEditor, PALETTE_SELECTION_ACTION_ID));
 		bars.setGlobalActionHandler(PALETTE_MARQUEE_SELECTION_ACTION_ID, getAction(textEditor, PALETTE_MARQUEE_SELECTION_ACTION_ID));
 		bars.setGlobalActionHandler(PALETTE_DROPDOWN_ACTION_ID, getAction(textEditor, PALETTE_DROPDOWN_ACTION_ID));
-		bars.setGlobalActionHandler(ReloadAction.RELOAD_ACTION_ID, getAction(textEditor, ReloadAction.RELOAD_ACTION_ID));
+		bars.setGlobalActionHandler(JavaVisualEditorReloadActionController.RELOAD_ACTION_ID, getAction(textEditor, JavaVisualEditorReloadActionController.RELOAD_ACTION_ID));
 		bars.setGlobalActionHandler(CustomizeJavaBeanAction.ACTION_ID, getAction(textEditor, CustomizeJavaBeanAction.ACTION_ID));		
 	}
 	/* (non-Javadoc)
