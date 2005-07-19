@@ -89,7 +89,7 @@ class JavaVisualEditorReloadActionController {
 	private Label pauseLabelFigure;
 	private IReloadCallback reloadCallback;
 	
-	private Action reloadAction = new Action("", Action.AS_CHECK_BOX) {
+	private Action reloadAction = new Action("", Action.AS_CHECK_BOX) { //$NON-NLS-1$
 		public void run() {
 			// We'll never be switching to parse error on an action ran (user clicked button). That is controlled by editor part.
 			if (isChecked()) {
@@ -283,10 +283,10 @@ class JavaVisualEditorReloadActionController {
 			}
 			if (pauseType.booleanValue()) {
 				image = ERROR_IMAGE_DESCRIPTOR.createImage();
-				label = " Errors in source preventing parsing";				
+				label = CodegenEditorPartMessages.JavaVisualEditorReloadActionController_PARSE_ERROR;				
 			} else {
 				image = PLAY_IMAGE_DESCRIPTOR.createImage();
-				label = " Visual Editor paused";								
+				label = CodegenEditorPartMessages.JavaVisualEditorReloadActionController_PAUSED;								
 			}
 			pauseLabelFigure.setText(label);
 			pauseLabelFigure.setIcon(image);
