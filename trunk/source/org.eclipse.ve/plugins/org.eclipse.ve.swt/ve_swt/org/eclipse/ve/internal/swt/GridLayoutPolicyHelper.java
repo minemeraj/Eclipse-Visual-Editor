@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.19 $  $Date: 2005-07-19 13:17:26 $
+ *  $Revision: 1.20 $  $Date: 2005-07-19 20:38:53 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -550,7 +550,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 							// Increase the horizontalSpan
 							// but first see if we can expand into empty cells without increasing the number of columns
 							int numColsIncrement = createHorizontalSpanWithEmptyColumnCommands(componentCB, rect.y, rect.x + rect.width - 1,
-									newgridDataWidth - rect.width);
+									rect.height, newgridDataWidth - rect.width);
 							if (numColsIncrement > 0) {
 								// Need to expand the number of columns and add fillers in each row
 								componentCB.append(createNumColumnsCommand(numColumns + numColsIncrement));
@@ -574,10 +574,17 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 						if (newgridDataHeight > rect.height) {
 							// Increase the verticalSpan
 							// but first see if we can expand into empty cells without increasing the number of columns
-							int numRowsIncrement = createVerticalSpanWithEmptyRowCommands(componentCB, rect.y + rect.height -1, rect.x,
+							int numRowsIncrement = createVerticalSpanWithEmptyRowCommands(componentCB, rect.y + rect.height - 1, rect.x, rect.width,
 									newgridDataHeight - rect.height);
-							for (int i = 0; i < numRowsIncrement; i++) {
-								componentCB.append(createFillerLabelsForSpannedRowCommand(rect.y + rect.height, endCellLocation.x));
+							if (numRowsIncrement > 0) {
+								List childCols = new ArrayList(rect.width);
+								for (int i = 0; i < rect.width; i++) {
+									childCols.add(new Integer(rect.x + i));
+								}
+								// For adding a row, add filler labels in cells where the child is not occupied 
+								for (int i = 0; i < numRowsIncrement; i++) {
+									componentCB.append(createFillerLabelsForSpannedRowCommand(rect.y + rect.height, childCols));
+								}
 							}
 						} else {
 							// decrease the verticalSpan
@@ -592,7 +599,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 								Rectangle childRect = rect.getCopy();
 								for (int i = 0; i < rect.height - newgridDataHeight; i++) {
 									// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
-									EObject beforeObject = findNextValidObject(childRect.x+1, childRect.y + childRect.height - 1);
+									EObject beforeObject = findNextValidObject(childRect.x + 1, childRect.y + childRect.height - 1);
 									componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
 									childRect.y--;
 								}
@@ -694,7 +701,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	 * To add a row, we must add the filler labels before the first object on the next row
 	 * except for the column the spanned control is spanning into.
 	 */
-	private Command createFillerLabelsForSpannedRowCommand (int atRow, int atColumn) {
+	private Command createFillerLabelsForSpannedRowCommand (int atRow, List atColumns) {
 		EObject[][] table = getLayoutTable();
 		if (table[0].length < 1)
 			return null;
@@ -702,16 +709,13 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		if (children.isEmpty())
 			return null;
 
-		if (atColumn == -1)
-			atColumn = numColumns - 1;
-		
 		CommandBuilder cb = new CommandBuilder();
 		EObject beforeObject = findNextValidObject(0, atRow);
-		// Add the row by adding filler labels in all columns except the column the control is spanning into.
+		// Add the row by adding filler labels in all columns except the columns the control is spanning into.
 		// If any of the controls spans vertically, don't add filler, just expand it one more row.
 		for (int i = 0; i < numColumns; i++) {
 			boolean addFiller = true;
-			if (!(i == atColumn)) {
+			if (!(atColumns.contains(new Integer(i)))) {
 				if (atRow < table[0].length) {
 					EObject child = table[i][atRow];
 					if (child != null && !isFillerLabel(child) && child != EMPTY) {
@@ -966,39 +970,41 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	 * filler labels so we can expand into the empty columns. If no empty cells, numColIncrement
 	 * is returned so the number of columns can be incremented on the overall grid.
 	 */
-	private int createHorizontalSpanWithEmptyColumnCommands(CommandBuilder cb, int atRow, int atColumn, int numColIncrement) {
+	private int createHorizontalSpanWithEmptyColumnCommands(CommandBuilder cb, int atRow, int atColumn, int childHeight, int numColsIncrement) {
 		EObject[][] table = getLayoutTable();
 		if (atColumn < table.length && atRow < table[0].length) {
-			for (int i = atColumn; i < table.length && numColIncrement != 0; i++) {
-				if (table[i][atRow] == EMPTY || isFillerLabel(table[i][atRow])) {
-					if (isFillerLabel(table[i][atRow])) {
-						cb.append(policy.getDeleteDependentCommand(table[i][atRow]));
+			for (int i = atColumn; i < table.length && numColsIncrement != 0; i++) {
+				if (isHorizontalSpaceAvailable(i, atRow, atRow + childHeight - 1)) {
+					for (int j = atRow; j < atRow + childHeight; j++) {
+						if (isFillerLabel(table[i][j]))
+							cb.append(policy.getDeleteDependentCommand(table[i][j]));
 					}
-					numColIncrement--;
+					numColsIncrement--;
 				}
 			}
 		}
-		return numColIncrement;
+		return numColsIncrement;
 	}
 	/*
 	 * For spanning vertically, walk through the rows starting atRow and atColumn and delete empty or 
 	 * filler labels so we can expand into the empty rows. If no empty cells, numRowIncrement
 	 * is returned so the number of rows can be incremented on the overall grid by creating additional
-	 * filler labels for the addditional rows.
+	 * filler labels for the additional rows.
 	 */
-	private int createVerticalSpanWithEmptyRowCommands(CommandBuilder cb, int atRow, int atColumn, int numRowIncrement) {
+	private int createVerticalSpanWithEmptyRowCommands(CommandBuilder cb, int atRow, int atColumn, int childWidth, int numRowsIncrement) {
 		EObject[][] table = getLayoutTable();
-		if (atColumn < table.length && atRow < table[0].length && (atRow + numRowIncrement) < table[0].length) {
-			for (int i = atRow; i < table[0].length && numRowIncrement != 0; i++) {
-				if (table[atColumn][i] == EMPTY || isFillerLabel(table[atColumn][i])) {
-					if (isFillerLabel(table[atColumn][i])) {
-						cb.append(policy.getDeleteDependentCommand(table[atColumn][i]));
+		if (atColumn < table.length && atRow < table[0].length && (atRow + numRowsIncrement) < table[0].length) {
+			for (int i = atRow; i < table[0].length && numRowsIncrement != 0; i++) {
+				if (isVerticalSpaceAvailable(i, atColumn, atColumn + childWidth - 1)) {
+					for (int j = atColumn; j < atColumn + childWidth; j++) {
+						if (isFillerLabel(table[j][i]))
+							cb.append(policy.getDeleteDependentCommand(table[j][i]));
 					}
-					numRowIncrement--;
+					numRowsIncrement--;
 				}
 			}
 		}
-		return numRowIncrement;
+		return numRowsIncrement;
 	}
 
 	/*
@@ -1035,5 +1041,37 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				col = 0;
 		}
 		return foundObject;
+	}
+	/*
+	 * Return true if the cells atRow from columnStart to columnEnd have either an EMPTY object or is a filler label.
+	 */
+	private boolean isVerticalSpaceAvailable(int atRow, int columnStart, int columnEnd) {
+		boolean result = true;
+		EObject[][] table = getLayoutTable();
+		if (table.length == 0 || table[0].length == 0 || columnStart >= table.length || columnEnd >= table.length || atRow >= table[0].length)
+			return false;
+		for (int i = columnStart; i <= columnEnd; i++) {
+			if (table[i][atRow] != EMPTY && !isFillerLabel(table[i][atRow])) {
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
+	/*
+	 * Return true if the cells atCol from rowStart to rowEnd have either an EMPTY object or is a filler label.
+	 */
+	private boolean isHorizontalSpaceAvailable(int atCol, int rowStart, int rowEnd) {
+		boolean result = true;
+		EObject[][] table = getLayoutTable();
+		if (table.length == 0 || table[0].length == 0 || rowStart >= table[0].length || rowEnd >= table[0].length || atCol >= table.length)
+			return false;
+		for (int i = rowStart; i <= rowEnd; i++) {
+			if (table[atCol][i] != EMPTY && !isFillerLabel(table[atCol][i])) {
+				result = false;
+				break;
+			}
+		}
+		return result;
 	}
 }
