@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: JavaSourceSynchronizer.java,v $
- *  $Revision: 1.18 $  $Date: 2005-03-17 20:35:53 $ 
+ *  $Revision: 1.19 $  $Date: 2005-07-19 22:32:34 $ 
  */
 
 import java.util.ArrayList;
@@ -295,7 +295,8 @@ public Object getLockObject() {
 }
 
 public String toString() {
-	return "Stalled="+stalled+", updateStatus="+updateStatus+", delay="+getDelay(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	String listener = docListener==null?"null":"listening"; //$NON-NLS-1$ //$NON-NLS-2$
+	return "Stalled="+stalled+", updateStatus="+updateStatus+", delay="+getDelay()+", docListener="+listener; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 }
 
 }
