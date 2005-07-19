@@ -38,9 +38,11 @@ of components within a container.</p>
 class java.awt.Container allows instances of java.awt.Component to be added
 to it as part of its components relationship. An example of java.awt.Container
 is a panel or a frame. An example of java.awt.Component is a button or a text
-box. In the visual editor for Java, containment relationships are shown in
-the Java Beans view and in the Design view. In other words, containers can
-contain components or other containers.</p>
+box. The SWT class org.eclipse.swt.widgets.Composite allows instances of org.eclipse.swt.widgets.Control
+to be added as part of its controls relationship. In the visual
+editor for Java, containment relationships are shown in the Java Beans view
+and in the Design view. In other words, containers can contain components
+or other containers.</p>
 <p>A layout manager is an object that controls the size and position of components
 within a container. You can set the layout manager on a container to null
 and allow each component to size and position itself. However, in a null layout
@@ -61,7 +63,7 @@ will be deployed in an environment where label strings, fonts, or window size
 may vary (due to localization, for example).</p>
 <p>Swing and Abstract Windows Toolkit (AWT) containers use the same set of
 layout managers, which are mostly AWT objects. Standard Widget Toolkit (SWT)
-containers use their own SWT layout managers.</p>
+composites use their own SWT layout managers.</p>
 <div class="note"><span class="notetitle">Note: </span>If you use a layout manager not supplied in the visual editor, the Design
 view will still construct the container correctly and render the components.
 However, you will not be able to update constraints using the Properties view
