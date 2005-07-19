@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NameInMemberPropertyDescriptor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-21 22:53:48 $ 
+ *  $Revision: 1.8 $  $Date: 2005-07-19 22:33:59 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -246,7 +246,7 @@ public class NameInMemberPropertyDescriptor extends NameInCompositionPropertyDes
 	 */
 	public String[] getUniqueNamesInComposition(EditDomain domain, String[] names, Annotation[] annotations) {
 		String[] uniques = super.getUniqueNamesInComposition(domain, names, annotations);
-		if(JavaVEPlugin.getPlugin().getPluginPreferences().getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY)){
+		if(VCEPreferences.askForRename()){
 			EObject[] annotates = new EObject[annotations.length];
 			for (int i = 0; i < annotations.length; i++) {
 				if (annotations[i] instanceof AnnotationEMF) {

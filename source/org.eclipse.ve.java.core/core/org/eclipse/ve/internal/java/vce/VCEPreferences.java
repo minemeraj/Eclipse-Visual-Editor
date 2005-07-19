@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.16 $  $Date: 2005-05-17 23:39:48 $ 
+ *  $Revision: 1.17 $  $Date: 2005-07-19 22:33:59 $ 
  */
 
 
@@ -52,7 +52,10 @@ public class VCEPreferences {
     
 	// Rename instance preferences
 	public static final String RENAME_INSTANCE_ASK_KEY ="RENAME_INSTANCE_ASK_KEY"; //$NON-NLS-1$
-	public static final boolean RENAME_INSTANCE_ASK_DEFAULT = true;
+	public static final boolean RENAME_INSTANCE_ASK_DEFAULT;
+	static{
+		RENAME_INSTANCE_ASK_DEFAULT = !isLinux(); //Do not allow rename prompt if on Linux cause it crashes - bugzilla 103738
+	}
     
     // The following are run time options
     public static final String DEBUG_CONSOLE_ECHO   = "/debug/logtrace" ; // Dump all logs to console //$NON-NLS-1$
@@ -62,6 +65,9 @@ public class VCEPreferences {
     
 	public static final String JVE_PATTERN_STYLE_ID = "JVA_PATTERN_STYLE_ID" ; // The current Style (pattern) style ID //$NON-NLS-1$
 
+public static boolean isLinux(){
+	return Platform.getOS().equals(Platform.OS_LINUX);
+}
 /*
  *  This is a read from the plugin extension point <com.ibm.etools.visualeditor.lookandfeel>
  */
@@ -86,6 +92,13 @@ public static String[][] getPluginLookAndFeelClasses(){
 
 	return result;
 	
+}
+public static boolean askForRename(){
+	if(isLinux()){
+		return false;
+	} else {
+		return JavaVEPlugin.getPlugin().getPluginPreferences().getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY);
+	}
 }
 
 /** 

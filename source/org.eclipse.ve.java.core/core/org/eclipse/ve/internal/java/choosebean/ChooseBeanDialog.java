@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.34 $  $Date: 2005-06-21 22:32:23 $ 
+ *  $Revision: 1.35 $  $Date: 2005-07-19 22:33:59 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -284,7 +284,7 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 		
 		
 		// Variable name section
-		if(!JavaVEPlugin.getPlugin().getPreferenceStore().getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY)){
+		if(!VCEPreferences.askForRename()){
 			// Bean name dialog will not be used - rename here
 			
 			Composite beanNameComposite = new Composite(area, SWT.NONE);
