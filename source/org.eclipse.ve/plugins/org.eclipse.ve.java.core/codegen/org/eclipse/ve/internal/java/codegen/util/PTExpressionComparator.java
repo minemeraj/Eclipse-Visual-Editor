@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PTExpressionComparator.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-03 22:28:16 $ 
+ *  $Revision: 1.2 $  $Date: 2005-07-19 15:15:25 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -59,9 +59,15 @@ public class PTExpressionComparator extends ParseVisitor {
 		Object ast = pop();
 		if(ast instanceof PTArrayAccess){
 			PTArrayAccess otherArrayAccess = (PTArrayAccess) ast;
-			pushInReverse(otherArrayAccess.getIndexes());
-			push(otherArrayAccess.getArray());
-			return super.visit(node);
+			List otherIndexes = otherArrayAccess.getIndexes();
+			List nodeIndexes = node.getIndexes();
+			if(otherIndexes==null && nodeIndexes==null)
+				return super.visit(node);
+			else if(otherIndexes!=null && nodeIndexes!=null && otherIndexes.size()==nodeIndexes.size()) {
+				pushInReverse(otherIndexes);
+				push(otherArrayAccess.getArray());
+				return super.visit(node);
+			}
 		}
 		equal = false;
 		return false;
@@ -73,8 +79,14 @@ public class PTExpressionComparator extends ParseVisitor {
 			PTArrayCreation otherArrayCreation = (PTArrayCreation) ast;
 			if(node.getType().equals(otherArrayCreation.getType())){
 				push(otherArrayCreation.getInitializer());
-				pushInReverse(otherArrayCreation.getDimensions());
-				return super.visit(node);
+				List otherArrayDimentions = otherArrayCreation.getDimensions();
+				List nodeDimensions = node.getDimensions();
+				if(otherArrayDimentions==null && nodeDimensions==null)
+					return super.visit(node);
+				else if(otherArrayDimentions!=null && nodeDimensions!=null && otherArrayDimentions.size()==nodeDimensions.size()){
+					pushInReverse(otherArrayDimentions);
+					return super.visit(node);
+				}
 			}
 		}
 		equal = false;
@@ -85,8 +97,14 @@ public class PTExpressionComparator extends ParseVisitor {
 		Object ast = pop();
 		if(ast instanceof PTArrayInitializer){
 			PTArrayInitializer otherArrayInitializer = (PTArrayInitializer) ast;
-			pushInReverse(otherArrayInitializer.getExpressions());
-			return super.visit(node);
+			List otherExpressions = otherArrayInitializer.getExpressions();
+			List nodeExpressions = node.getExpressions();
+			if(otherExpressions==null && nodeExpressions==null)
+				return super.visit(node);
+			else if(otherExpressions!=null && nodeExpressions!=null && otherExpressions.size()==nodeExpressions.size()){
+				pushInReverse(otherExpressions);
+				return super.visit(node);
+			}
 		}
 		equal = false;
 		return false;
@@ -133,8 +151,13 @@ public class PTExpressionComparator extends ParseVisitor {
 			PTClassInstanceCreation otherClassInstanceCreation = (PTClassInstanceCreation) otherAST;
 			if(node.getType().equals(otherClassInstanceCreation.getType())){
 				List otherArguments = otherClassInstanceCreation.getArguments();
-				pushInReverse(otherArguments);
-				return super.visit(node);
+				List nodeArguments = node.getArguments();
+				if(nodeArguments==null && otherArguments==null) {
+					return super.visit(node);
+				}else if(nodeArguments!=null && otherArguments!=null && nodeArguments.size()==otherArguments.size()){
+					pushInReverse(otherArguments);
+					return super.visit(node);
+				}
 			}
 		}
 		equal = false;
@@ -204,7 +227,7 @@ public class PTExpressionComparator extends ParseVisitor {
 		Object otherAST = pop();
 		if (otherAST instanceof PTInstanceReference) {
 			PTInstanceReference otherInstanceReference = (PTInstanceReference) otherAST;
-			if(node.getObject().equals(otherInstanceReference.getObject()))
+			if(node.getObject()!=null && otherInstanceReference.getObject()!=null && node.getObject().equals(otherInstanceReference.getObject()))
 				return super.visit(node);
 		}
 		equal = false;
@@ -227,9 +250,15 @@ public class PTExpressionComparator extends ParseVisitor {
 		if (otherAST instanceof PTMethodInvocation) {
 			PTMethodInvocation otherMethodInvocation = (PTMethodInvocation) otherAST;
 			if(node.getName().equals(otherMethodInvocation.getName())){
-				pushInReverse(otherMethodInvocation.getArguments());
-				push(otherMethodInvocation.getReceiver());
-				return super.visit(node);
+				List otherArguments = otherMethodInvocation.getArguments();
+				List nodeArguments = node.getArguments();
+				if(nodeArguments==null && otherArguments==null)
+					return super.visit(node);
+				else if(nodeArguments!=null && otherArguments!=null && otherArguments.size()==nodeArguments.size()){
+					pushInReverse(otherArguments);
+					push(otherMethodInvocation.getReceiver());
+					return super.visit(node);
+				}
 			}
 		}
 		equal = false;
