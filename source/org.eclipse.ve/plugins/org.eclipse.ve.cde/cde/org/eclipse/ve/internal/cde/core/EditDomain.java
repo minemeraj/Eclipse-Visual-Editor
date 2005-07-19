@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: EditDomain.java,v $
- *  $Revision: 1.8 $  $Date: 2005-07-18 22:53:07 $ 
+ *  $Revision: 1.9 $  $Date: 2005-07-19 14:06:03 $ 
  */
 
 import java.text.MessageFormat;
@@ -150,9 +150,11 @@ public class EditDomain extends DefaultEditDomain {
 				disposeCollection(((HashMap) itr.next()).values());
 			}
 		}
-		Iterator images = imageCache.values().iterator();
-		while(images.hasNext()){
-			((Image)images.next()).dispose();
+		if(imageCache != null){
+			Iterator images = imageCache.values().iterator();
+			while(images.hasNext()){
+				((Image)images.next()).dispose();
+			}
 		}
 	}
 
