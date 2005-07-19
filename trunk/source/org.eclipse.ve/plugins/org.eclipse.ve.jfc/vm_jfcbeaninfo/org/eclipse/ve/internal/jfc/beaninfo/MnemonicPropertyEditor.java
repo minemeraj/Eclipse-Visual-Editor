@@ -18,7 +18,7 @@ import java.util.*;
  *******************************************************************************/
 /*
  *  $RCSfile: MnemonicPropertyEditor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-16 17:46:03 $ 
+ *  $Revision: 1.4 $  $Date: 2005-07-19 14:06:04 $ 
  */
 public class MnemonicPropertyEditor extends JPanel {
 	
@@ -307,6 +307,8 @@ public class MnemonicPropertyEditor extends JPanel {
 	public void setValue( Object o ) {
 		if ( o instanceof Integer ) {
 			value = (Integer)o;
+		} else if (o instanceof Character){
+			value = new Integer(((Character)o).charValue());
 		}
 	}
 
