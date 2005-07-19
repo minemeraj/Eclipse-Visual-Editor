@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.10 $  $Date: 2005-07-15 20:34:40 $ 
+ *  $Revision: 1.11 $  $Date: 2005-07-19 22:49:41 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -108,7 +108,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		gd.grabExcessHorizontalSpace = true;
 		label.setLayoutData(gd);
 		rowsSpinner = new Spinner(dimensionsGroup, SWT.BORDER);
-		rowsSpinner.setMinimum(0);
+		rowsSpinner.setMinimum(1);
 		rowsSpinner.setSelection(0);
 		rowsSpinner.addModifyListener(spinnerModify);
 		
