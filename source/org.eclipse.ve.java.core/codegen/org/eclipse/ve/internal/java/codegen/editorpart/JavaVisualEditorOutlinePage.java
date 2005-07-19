@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.20 $  $Date: 2005-06-22 14:36:02 $ 
+ *  $Revision: 1.21 $  $Date: 2005-07-19 22:58:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -234,7 +234,7 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID, jve.getAction(JavaVisualEditorActionContributor.PALETTE_MARQUEE_SELECTION_ACTION_ID));
 		actionBars.setGlobalActionHandler(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID, jve.getAction(JavaVisualEditorActionContributor.PALETTE_DROPDOWN_ACTION_ID));
 		actionBars.setGlobalActionHandler(CustomizeJavaBeanAction.ACTION_ID, jve.getAction(CustomizeJavaBeanAction.ACTION_ID));
-		actionBars.setGlobalActionHandler(ReloadAction.RELOAD_ACTION_ID, jve.getAction(ReloadAction.RELOAD_ACTION_ID));
+		actionBars.setGlobalActionHandler(JavaVisualEditorReloadActionController.RELOAD_ACTION_ID, jve.getAction(JavaVisualEditorReloadActionController.RELOAD_ACTION_ID));
 		actionBars.setGlobalActionHandler(CustomizeLayoutWindowAction.ACTION_ID, jve.getEditorSite().getActionBars().getGlobalActionHandler(CustomizeLayoutWindowAction.ACTION_ID));
 
 		IToolBarManager tbm = actionBars.getToolBarManager();

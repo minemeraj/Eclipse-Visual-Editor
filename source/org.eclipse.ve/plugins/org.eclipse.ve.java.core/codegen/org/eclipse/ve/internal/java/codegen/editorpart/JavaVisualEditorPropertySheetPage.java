@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorPropertySheetPage.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:28:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-07-19 22:58:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -48,6 +48,6 @@ public class JavaVisualEditorPropertySheetPage extends EToolsPropertySheetPage {
 		// Set an action handler to redirect these to the action registry's actions so they work when the property sheet is enabled
 		actionBars.setGlobalActionHandler(ActionFactory.UNDO.getId(), jve.getAction(ActionFactory.UNDO.getId()));
 		actionBars.setGlobalActionHandler(ActionFactory.REDO.getId(), jve.getAction(ActionFactory.REDO.getId()));
-		actionBars.setGlobalActionHandler(ReloadAction.RELOAD_ACTION_ID, jve.getAction(ReloadAction.RELOAD_ACTION_ID));
+		actionBars.setGlobalActionHandler(JavaVisualEditorReloadActionController.RELOAD_ACTION_ID, jve.getAction(JavaVisualEditorReloadActionController.RELOAD_ACTION_ID));
 	}
 }

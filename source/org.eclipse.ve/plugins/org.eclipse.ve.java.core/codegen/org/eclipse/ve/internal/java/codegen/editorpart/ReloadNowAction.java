@@ -10,12 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ReloadNowAction.java,v $
- *  $Revision: 1.4 $  $Date: 2005-05-24 19:36:30 $ 
+ *  $Revision: 1.5 $  $Date: 2005-07-19 22:58:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
 import org.eclipse.jface.action.Action;
- 
+import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorReloadActionController.IReloadCallback; 
 
 /**
  * Do a reload when run action. This will not cycle through pause/reload, it will just reload when run.
@@ -31,14 +31,14 @@ public class ReloadNowAction extends Action {
 	 */
 	public static final String RELOADNOW_ACTION_ID = "org.eclipse.ve.java.core.ReloadNow"; //$NON-NLS-1$
 
-	protected ReloadAction.IReloadCallback reloadCallback;
+	protected IReloadCallback reloadCallback;
 	
 	/**
 	 * 
 	 * 
 	 * @since 1.0.0
 	 */
-	public ReloadNowAction(ReloadAction.IReloadCallback reloadCallback) {
+	public ReloadNowAction(IReloadCallback reloadCallback) {
 		super();
 		setId(RELOADNOW_ACTION_ID);
 		this.reloadCallback = reloadCallback;

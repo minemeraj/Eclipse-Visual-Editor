@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JaveVisualEditorLoadingFigureController.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-24 19:58:18 $ 
+ *  $Revision: 1.5 $  $Date: 2005-07-19 22:58:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -94,7 +94,7 @@ class JaveVisualEditorLoadingFigureController {
 	}
 
 	protected Layer getLoadingLayer() {
-		return (Layer) ((LayerManager) viewer.getEditPartRegistry().get(LayerManager.ID)).getLayer(LayerConstants.HANDLE_LAYER);
+		return (Layer) LayerManager.Helper.find(viewer.getRootEditPart()).getLayer(LayerConstants.HANDLE_LAYER);
 	}
 
 	private FigureListener rootFigureListener = new FigureListener() {

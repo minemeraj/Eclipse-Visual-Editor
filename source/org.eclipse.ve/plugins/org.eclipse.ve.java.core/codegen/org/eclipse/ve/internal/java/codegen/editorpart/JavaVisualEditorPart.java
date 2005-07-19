@@ -11,11 +11,9 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.138 $  $Date: 2005-07-18 22:53:24 $ 
+ *  $Revision: 1.139 $  $Date: 2005-07-19 22:58:38 $ 
  */
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
@@ -28,9 +26,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.geometry.*;
+import org.eclipse.draw2d.ConnectionLayer;
+import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
@@ -41,7 +38,6 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackListener;
-import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.*;
 import org.eclipse.gef.palette.ToolEntry;
@@ -63,13 +59,10 @@ import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.*;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.*;
@@ -116,7 +109,7 @@ import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
 
-
+import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorReloadActionController.IReloadCallback;
 
 /**
  * @author richkulp
@@ -152,6 +145,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	private CustomPalettePage palettePage;	// Palette page for the palette viewer	
 
 	protected JaveVisualEditorLoadingFigureController loadingFigureController;
+	protected JavaVisualEditorReloadActionController reloadActionController;
 
 	protected IDiagramModelBuilder modelBuilder;
 	
@@ -214,7 +208,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	private RetargetTextEditorAction cutAction;	
 	private RetargetTextEditorAction copyAction;
 	private RetargetTextEditorAction pasteAction;
-	private ReloadAction reloadAction;
 	private void bumpUIPriority(boolean up, Thread ui) {
 		// First time around this method must be called from the ui thread		
 		if (uiThread==null) {
@@ -260,6 +253,17 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		// Actually the createPartControl will probably occur before the thread runs to do the rest of
 		// the initialization.	
 		loadingFigureController = new JaveVisualEditorLoadingFigureController();
+		
+		reloadCallback = new JavaVisualEditorReloadActionController.IReloadCallback() {
+			public void pause() {
+				modelChangeController.setHoldState(ModelChangeController.NO_UPDATE_STATE, null);	// So no updates while paused.
+				modelBuilder.pause();
+			}
+			public void reload(boolean removeVECache) {
+				loadModel(true, false, true, removeVECache);
+			}
+		};
+		reloadActionController = new JavaVisualEditorReloadActionController(reloadCallback);
 
 		// Do any initializations that are needed for both the viewers and the codegen parser when they are created.
 		// Need to be done here because there would be race condition between the two threads otherwise.
@@ -319,17 +323,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 		// Create the pause/reload action.
 		
-		reloadCallback = new ReloadAction.IReloadCallback() {
-			public void pause() {
-				modelChangeController.setHoldState(ModelChangeController.NO_UPDATE_STATE, null);	// So no updates while paused.
-				modelBuilder.pause();
-				showPauseFeedback(false);
-			}
-			public void reload(boolean removeVECache) {
-				loadModel(true, false, true, removeVECache);
-			}
-		};
-		reloadAction = new ReloadAction(reloadCallback);
+
+		Action reloadAction = reloadActionController.getReloadAction();
 		graphicalActionRegistry.registerAction(reloadAction);
 		graphicalActionRegistry.registerAction(new ReloadNowAction(reloadCallback));
 		
@@ -350,157 +345,38 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		super.init(site, input);
 	}
 	
-	private Viewport getViewport(IFigure figure) {
-		IFigure f = figure;
-		while (f != null && !(f instanceof Viewport))
-			f = f.getParent();
-		return (Viewport) f;
-	}
-	
-	private IFigure getRootFigure(IFigure target) {
-		IFigure parent = target.getParent();
-		while (parent.getParent() != null)
-			parent = parent.getParent();
-		return parent;
-	}
-	
-	private FigureListener rootFigureListener = new FigureListener() {
-		public void figureMoved(IFigure source) {
-			pauseFigure.revalidate();
-			pauseLabelFigure.revalidate();
-		}
-	};
-
-	private PropertyChangeListener scrolledListener = new PropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent evt) {
-			if (RangeModel.PROPERTY_VALUE.equals(evt.getPropertyName())) {
-				pauseFigure.revalidate();
-				pauseLabelFigure.revalidate();
+	private void doPauseFeedback(final boolean isError) {
+		if (!isDisposed() && getSite().getShell() != null) {
+			if (Display.getCurrent() != null) {
+				if (isError)
+					reloadActionController.showParseError();
+				else
+					reloadActionController.runPause();
+			} else {
+				getSite().getPage().getWorkbenchWindow().getShell().getDisplay().asyncExec(new Runnable() {
+				
+					public void run() {
+						doPauseFeedback(isError);
+					}
+				
+				});
 			}
 		}
-
-	};
+	}
 	
-	private Figure pauseFigure;
-	private Label pauseLabelFigure;
-	private Image reloadImage;
-	private void showPauseFeedback(final boolean isError){
-		
-		Runnable runnable = new Runnable(){
-			public void run(){
-		
-				// For the free form there is a figure on the feedback layer that washes an alpha black over the GUI
-				if(pauseFigure == null){
-					LayerManager layoutManager = LayerManager.Helper.find(primaryViewer.getRootEditPart());
-					// The reload button should be selectable so must go into the connection layer.  The feedback layer is disabled
-					// so if it goes into it selection is not possible.  If the reload goes into the connection layer
-					// and the pauseFigure into the feedback then the feedback layer goes over the top of the connection layer
-					// and the button is greyed out
-					IFigure feedbackLayer = layoutManager.getLayer(LayerConstants.FEEDBACK_LAYER);		
-					
-					pauseFigure = new Figure(){
-						protected void paintFigure(Graphics graphics) {
-							try {
-								graphics.setAlpha(125);
-								graphics.setBackgroundColor(Display.getCurrent().getSystemColor(SWT.COLOR_GRAY));
-								graphics.fillRectangle(getClientArea());
-							} catch (SWTException e) {
-								// This occurs because if alpha's not available. No way to check with Graphics ahead of time.
-							}
-						}
-						Locator locator = new Locator() {
-							public void relocate(IFigure target) {
-								Rectangle b = getRootFigure(target).getClientArea().getCopy();
-								target.translateToRelative(b);
-								target.setBounds(b);
-							}
-						};
-						public void validate() {
-							if (!isValid())
-								locator.relocate(this);
-							super.validate();
-						}						
-					};
-					String labelText = null;
-					// 	Show the user that GUI is paused and can be unpaused by them
-					if(isError){
-						reloadImage = ReloadAction.ERROR_IMAGE_DESCRIPTOR.createImage();
-						labelText = " Errors in source preventing parsing";				
-					} else {
-						reloadImage = ReloadAction.PLAY_IMAGE_DESCRIPTOR.createImage();
-						labelText = " Visual Editor paused";				
+	private void resetPauseFeedback() {
+		if (!isDisposed() && getSite().getShell() != null) {
+			if (Display.getCurrent() != null) {
+				reloadActionController.removeParseFigure();
+			} else {
+				getSite().getPage().getWorkbenchWindow().getShell().getDisplay().asyncExec(new Runnable() {
+				
+					public void run() {
+						resetPauseFeedback();
 					}
-			
-					pauseLabelFigure = new Label(labelText,reloadImage){
-						Locator locator = new Locator() {
-							public void relocate(IFigure target) {
-								// 	Center the figure in the middle of the canvas
-								Dimension canvasSize = getRootFigure(target).getSize();
-								Dimension prefSize = target.getPreferredSize();
-								int newX = (canvasSize.width - prefSize.width) / 2;
-								int newY = (canvasSize.height - prefSize.height) / 2;
-								Rectangle b = new Rectangle(newX, newY, prefSize.width, prefSize.height).expand(new Insets(10, 25, 10, 25));
-								target.translateToRelative(b);
-								target.setBounds(b);
-							}
-						};
-						public void validate() {
-							if (!isValid())
-								locator.relocate(this);
-							super.validate();
-						}
-					};
-
-					pauseFigure.setEnabled(false);					
-					pauseLabelFigure.setEnabled(true);
-					pauseLabelFigure.setOpaque(true);
-			
-					feedbackLayer.add(pauseFigure); 
-					feedbackLayer.add(pauseLabelFigure); 
-					
-					Viewport vp = getViewport(feedbackLayer);
-					if (vp != null) {
-						vp.getHorizontalRangeModel().addPropertyChangeListener(scrolledListener);
-						vp.getVerticalRangeModel().addPropertyChangeListener(scrolledListener);
-					}				
-					getRootFigure(feedbackLayer).addFigureListener(rootFigureListener);
-					pauseFigure.revalidate();
-					pauseLabelFigure.revalidate();					
-				}
+				
+				});
 			}
-		};
-		
-		if(Display.getCurrent() == null){
-			primaryViewer.getControl().getDisplay().syncExec(runnable);
-		} else {
-			runnable.run();
-		}
-		
-	}	
-	
-	private void resetPauseFeedback(){
-		if (pauseFigure != null){
-			// If this is not done in an async runnable then GEF becomes unresponsive.  This is because
-			// this method is called in the middle of a callback from a GEF Button being pressed and removes
-			// the button from its parent and that messes up GEF's DomainEventDispatcher leaving it thinking
-			// there is still a consumed event pending
-			Runnable runnable = new Runnable(){
-				public void run(){
-					Viewport vp = getViewport(pauseFigure.getParent());
-					if (vp != null) {
-						vp.getHorizontalRangeModel().removePropertyChangeListener(scrolledListener);
-						vp.getVerticalRangeModel().removePropertyChangeListener(scrolledListener);
-					}
-					getRootFigure(pauseFigure.getParent()).removeFigureListener(rootFigureListener);
-					
-					pauseFigure.getParent().remove(pauseFigure);
-					pauseFigure = null;
-					pauseLabelFigure.getParent().remove(pauseLabelFigure);
-					pauseLabelFigure = null;
-					reloadImage.dispose();				
-				}
-			};
-			primaryViewer.getControl().getDisplay().asyncExec(runnable);
 		}
 	}
 
@@ -541,14 +417,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	}
 
 	private void setReloadEnablement(boolean enabled) {
-		ReloadAction rla = (ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID);
-        if (enabled) {
-            rla.unPause();
-            resetPauseFeedback();
-        } else {
-            rla.setEnabled(enabled);
-        }
-		ReloadNowAction rlna = (ReloadNowAction) graphicalActionRegistry.getAction(ReloadNowAction.RELOADNOW_ACTION_ID);
+		IAction rla = graphicalActionRegistry.getAction(JavaVisualEditorReloadActionController.RELOAD_ACTION_ID);
+		rla.setEnabled(enabled);
+		IAction rlna = graphicalActionRegistry.getAction(ReloadNowAction.RELOADNOW_ACTION_ID);
 		rlna.setEnabled(enabled);
 	}
 
@@ -869,7 +740,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	public CutJavaBeanAction cutBeanAction;	
 	public CopyJavaBeanAction copyBeanAction;
 	public PasteJavaBeanAction pasteBeanAction;
-	private ReloadAction.IReloadCallback reloadCallback; 	
+	private IReloadCallback reloadCallback; 	
 	/*
 	 * Rebuild the palette.
 	 * NOTE: This must be run in the display thread.
@@ -1030,6 +901,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		getSite().registerContextMenu("JavaVisualEditor.contextMenu", menuMgr, primaryViewer); //$NON-NLS-1$
 
 		loadingFigureController.startListener(primaryViewer);
+		reloadActionController.startListening(primaryViewer);
 
 		if (setupJob != null && setupJob.getState() == Job.NONE)
 			initializeViewers();
@@ -1164,7 +1036,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					modelBuilder.dispose();
 					loadingFigureController.showLoadingFigure(false);	// Bring down only the loading figure.
 					processParseError(true);	// Treat it as a parse error, the model parser couldn't even get far enough to signal parse error.
-					setReloadEnablement(true);	// Because it was disabled.							
 					
 					String title = CodegenEditorPartMessages.JavaVisualEditor_ErrorTitle; 
 					String msg = CodegenEditorPartMessages.JavaVisualEditor_ErrorDesc; 
@@ -1365,6 +1236,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		try {
 			TimerTests.basicTest.startStep("Dispose"); //$NON-NLS-1$
 			JavaVisualEditorVMController.disposeEditor(((IFileEditorInput) getEditorInput()).getFile());
+			reloadActionController.dispose();
 			
 			if (proxyFactoryRegistry != null) {
 				// Remove the proxy registry first so that we aren't trying to listen to any changes and sending them through since it isn't necessary.
@@ -2272,7 +2144,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				public void parsingPaused(boolean paused) {
 					if (paused) {
 						// If a snippet job is canceled, we will move into the paused state
-						((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).setPause();
+						doPauseFeedback(false);
 					}
 				}
 			});
@@ -2565,13 +2437,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	private void processParseError(boolean parseError) {
 		modelChangeController.setHoldState(parseError ? PARSE_ERROR_STATE : ModelChangeController.READY_STATE, null);
-		((ReloadAction) graphicalActionRegistry.getAction(ReloadAction.RELOAD_ACTION_ID)).parseError(parseError);
 		// force the removal of the cache... may be an overkill, but
 		// better no cache than stale cache.  It is possible that reverse parse
 		// built a bad model, and generated a cache
 		if (parseError) {// on error, a save will clear the cache			
-		   modelBuilder.doSave(null);
-		   showPauseFeedback(true);
+			modelBuilder.doSave(null);
+			doPauseFeedback(true);
 		} else {
 			resetPauseFeedback();
 		}
