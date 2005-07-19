@@ -84,11 +84,10 @@
                   <topic label="Custom widgets" href="../org.eclipse.platform.doc.isv/guide/swt_widgets_custom.htm"/>
                </topic>
                <topic label="Layouts" href="../org.eclipse.platform.doc.isv/guide/swt_layouts.htm">
-                  <topic label="FillLayout" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_fill.htm"/>
-                  <topic label="RowLayout" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_row.htm"/>
-                  <topic label="FormLayout" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_form.htm"/>
-                  <topic label="GridLayout" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_grid.htm"/>
-                  <topic label="StackLayout" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_stack.htm"/>
+                  <topic label="FillLayout" href="../org.eclipse.platform.doc.isv/reference/api/org/eclipse/swt/layout/FillLayout.html"/>
+                  <topic label="FormLayout" href="../org.eclipse.platform.doc.isv/reference/api/org/eclipse/swt/layout/FormLayout.html"/>
+                  <topic label="GridLayout" href="../org.eclipse.platform.doc.isv/reference/api/org/eclipse/swt/layout/GridLayout.html"/>
+                  <topic label="RowLayout" href="../org.eclipse.platform.doc.isv/reference/api/org/eclipse/swt/layout/RowLayout.html"/>
                   <topic label="Custom Layouts" href="../org.eclipse.platform.doc.isv/guide/swt_layouts_custom.htm"/>
                </topic>
                <topic label="Threading issues" href="../org.eclipse.platform.doc.isv/guide/swt_threading.htm"/>

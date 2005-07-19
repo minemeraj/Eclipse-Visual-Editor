@@ -23,13 +23,11 @@
 <!-- GSA ADP Schedule Contract with IBM Corp. -->
 <link rel="stylesheet" type="text/css" href="../ibmdita.css" />
 <link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
-<title>Java code and visual design synchronization in the visual
-editor</title>
+<title>Java code and visual design synchronization in the visual editor</title>
 </head>
 <body id="cve_codesync"><a name="cve_codesync"><!-- --></a>
 
-<h1 class="topictitle1">Java code and visual design synchronization in the visual
-editor</h1>
+<h1 class="topictitle1">Java code and visual design synchronization in the visual editor</h1>
 <div><p>By default, the visual editor for Java continuously synchronizes
 the source code and the Design view. This synchronization can be paused or
 reloaded manually at any time, and the delay before synchronization occurs
@@ -40,7 +38,9 @@ can adjust it for performance:</p>
 visual editor toolbar to suspend all synchronization. While synchronization
 is paused, you can only make changes to the source. This removes the overhead
 of parsing source, but you cannot make any changes using the Java beans view,
-Properties view, or Design view while synchronization is paused.</li>
+Properties view, or Design view while synchronization is paused. When synchronization
+is paused, the Design view is greyed out to indicate the paused
+state:<br /><img src="../images/sync_paused.gif" alt="code in sync" /><br /></li>
 <li><img src="../images/icons/refresh_obj.gif" alt="Reload the code synchronization" /> <span class="uicontrol">Reload</span> - When synchronization is paused, the
 reload button is displayed in the main toolbar. Click the reload button to
 reparse the code, resynchronize, and revert to the default synchronization

@@ -11,8 +11,8 @@
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="task" />
 <meta name="DC.Title" content="Cutting, copying, and pasting in the visual editor for Java" />
-<meta name="abstract" content="The visual editor supports cutting, copying, and pasting in the Design view and Java beans view." />
-<meta name="description" content="The visual editor supports cutting, copying, and pasting in the Design view and Java beans view." />
+<meta name="abstract" content="The visual editor supports cutting, copying, and pasting in the Design view and Java beans view. You can copy single widgets or containers with their children." />
+<meta name="description" content="The visual editor supports cutting, copying, and pasting in the Design view and Java beans view. You can copy single widgets or containers with their children." />
 <meta name="DC.Relation" scheme="URI" content="../topics/tve_component_add.html" />
 <meta name="DC.Format" content="XHTML" />
 <meta name="DC.Identifier" content="tve_copypaste" />
@@ -29,19 +29,21 @@
 
 <h1 class="topictitle1">Cutting, copying, and pasting in the visual editor for Java</h1>
 <div><p>The visual editor supports cutting, copying, and pasting in the
-Design view and Java beans view.</p>
+Design view and Java beans view. You can copy single widgets or containers
+with their children.</p>
 <div class="section">When you are designing a visual class, you will often want to quickly
 cut or copy an element then paste several instances of the same element in
 another spot in your application. When an item is copied, not all of the item's
 properties are included, but typically the key visual properties are included
 in the paste. For example, when you copy and paste a button, the text for
-the button is included.<div class="p">The standard keyboard shortcuts are supported:<ul><li>Ctrl+X (cut)</li>
+the button is included. When you cut or copy a Swing container or SWT composite,
+the child controls are copied too.<div class="p">The standard keyboard shortcuts are supported:<ul><li>Ctrl+X (cut)</li>
 <li>Ctrl+C (copy)</li>
 <li>Ctrl+V (paste)</li>
 </ul>
 </div>
-<p>To cut, copy, and paste components using the visual
-editor for Java:</p>
+<p>To cut, copy, and paste components using the visual editor for
+Java:</p>
 </div>
 <ol><li><span>In the Design View or Java Beans view, right-click the element
 that you want to cut or copy, and select <span class="uicontrol">Cut</span> or <span class="uicontrol">Copy</span>.</span></li>

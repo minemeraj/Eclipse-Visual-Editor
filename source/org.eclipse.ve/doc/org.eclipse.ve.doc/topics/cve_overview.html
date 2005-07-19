@@ -54,11 +54,13 @@ class. To be used as a Java bean by the visual editor for Java there is no
 interface that must be implemented and the only requirement is that the editor
 knows how to instantiate the class. For most purposes this means that the
 class should be public and have a public null constructor. The null constructor
-can be explicit or implicit, although there are a few exceptions that the
-visual editor for Java recognizes, such as java.awt.Dialog subclasses. They
-are instantiated using the constructor that takes an argument of java.awt.Frame.
-The visual editor adds an explicit constructor that calls the initialize method,
-which is used to set up the initial state of the Java bean.</p>
+cannot be abstract, and it can be explicit or implicit, although there are
+a few exceptions that the visual editor for Java recognizes, for example java.awt.Dialog
+subclasses (which are instantiated using the java.awt.Frame argument constructor)
+or SWT controls. Certain other classes are recognized and can be dropped or
+sub-classed, such as Eclipse RCP views or editors. The visual editor adds
+an explicit constructor that calls the initialize method, which is used to
+set up the initial state of the Java bean.</p>
 </div>
 <div>
 <ul class="ullinks">
