@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.81 $  $Date: 2005-07-12 22:52:20 $ 
+ *  $Revision: 1.82 $  $Date: 2005-07-19 22:32:34 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -112,6 +112,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
 			// We need to stop the synch. from driving snippets, as we are going
 			// to load from scratch anyhow
 			fSrcSync.disconnect();
+			fdisconnected=true;
 			monitor.worked(1);
 			try {
 				if (fBeanModel!=null) 
