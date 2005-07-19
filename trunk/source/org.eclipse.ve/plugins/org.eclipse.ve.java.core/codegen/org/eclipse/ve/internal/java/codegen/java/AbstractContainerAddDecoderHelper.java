@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.20 $  $Date: 2005-07-18 20:25:43 $ 
+ *  $Revision: 1.21 $  $Date: 2005-07-19 14:54:57 $ 
  */
 
 import java.util.*;
@@ -339,18 +339,22 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		}
 		if (isMySigniture()) {			
 			fAddedPart = parseAddedPart((MethodInvocation) getExpression(fExpr));
-			if (fAddedPart!=null) {
-			   fAddedInstance = (IJavaObjectInstance)fAddedPart.getEObject();
-			   getRootObject(false);
-			   fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
-			   fbeanPart.addChild(fAddedPart) ;
+			if (fAddedPart!=null || fAddedInstance != null) {
+			  if (fAddedPart!=null) {
+					fAddedInstance = (IJavaObjectInstance)fAddedPart.getEObject();					
+			  }			  
+			  getRootObject(false);			  
+			  if (fAddedPart!=null) {			  
+				  fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
+				  fbeanPart.addChild(fAddedPart) ;
+			  }
 			   
-				// Update list of references for this expression
-				List references = fOwner.getExprRef().getReferences();
-				if(fAddedInstance!=null && !references.contains(fAddedInstance))
-					references.add(fAddedInstance);
+			  // Update list of references for this expression
+			  List references = fOwner.getExprRef().getReferences();
+			    if(fAddedInstance!=null && !references.contains(fAddedInstance))
+				  references.add(fAddedInstance);
 				
-			   return true; 			   
+		      return true; 			   
 			}			
 		}		
 		return false;
