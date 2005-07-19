@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.32 $  $Date: 2005-07-05 15:07:32 $ 
+ *  $Revision: 1.33 $  $Date: 2005-07-19 22:33:59 $ 
  */
 
 import java.net.URL;
@@ -725,7 +725,12 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		openJavaBeansViewIfRequired.setSelection(fStore.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW));
 		showGridCheckBox.setSelection(cdeStore.getBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED));
 		xyGridSpacingText.setText(String.valueOf(cdeStore.getInt(CDEPlugin.XY_GRID_SPACING)));
-		renameAskCheckbox.setSelection(fStore.getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
+		if(VCEPreferences.isLinux()){
+			renameAskCheckbox.setSelection(false);
+			renameAskCheckbox.setEnabled(false);
+		} else {
+			renameAskCheckbox.setSelection(fStore.getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));			
+		}
 		showWindowCheckBox.setSelection(fStore.getBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showXMLTextCheckBox.setSelection(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_XML));
 		showClipboardCheckBox.setSelection(fStore.getBoolean(VCEPreferences.USE_TEXT_FOR_CLIPBOARD));		
@@ -877,7 +882,11 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		showClipboardCheckBox.setSelection(store.getDefaultBoolean(VCEPreferences.USE_TEXT_FOR_CLIPBOARD));		
 		showGridCheckBox.setSelection(cdeStore.getDefaultBoolean(CDEPlugin.SHOW_GRID_WHEN_SELECTED));
 		xyGridSpacingText.setText(String.valueOf(cdeStore.getDefaultInt(CDEPlugin.XY_GRID_SPACING)));
-		renameAskCheckbox.setSelection(fStore.getDefaultBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
+		if(VCEPreferences.isLinux()){
+			renameAskCheckbox.setSelection(false);
+		} else {
+			renameAskCheckbox.setSelection(fStore.getDefaultBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
+		}
 		// Initialize the tree to just show the DEFAULT and the plugin defined look and feel classes
 		TableItem[] items = lookAndFeelTable.getItems();
 		for (int i = 0; i < items.length; i++) {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractRenameInstanceDialog.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-21 22:53:48 $ 
+ *  $Revision: 1.5 $  $Date: 2005-07-19 22:33:59 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -156,7 +156,7 @@ public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
 			Button checkbox = new Button(mainContainer, SWT.CHECK);
 			checkbox.setText(JavaMessages.AbstractRenameInstanceDialog_Checkbox_DontAsk); 
 			checkbox.setLayoutData(new GridData());
-			checkbox.setSelection(!JavaVEPlugin.getPlugin().getPluginPreferences().getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
+			checkbox.setSelection(!VCEPreferences.askForRename());
 			checkbox.addSelectionListener(new SelectionAdapter(){
 				public void widgetSelected(SelectionEvent e) {
 					Button cb = (Button) e.getSource();
