@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.18 $  $Date: 2005-07-14 00:05:39 $
+ *  $Revision: 1.19 $  $Date: 2005-07-19 13:17:26 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -548,8 +548,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 						componentCB.applyAttributeSetting(gridData, sfHorizontalSpan, widthObject);
 						if (newgridDataWidth > rect.width) {
 							// Increase the horizontalSpan
-							
-							// First see if we can expand into empty cells without increasing the number of columns
+							// but first see if we can expand into empty cells without increasing the number of columns
 							int numColsIncrement = createHorizontalSpanWithEmptyColumnCommands(componentCB, rect.y, rect.x + rect.width - 1,
 									newgridDataWidth - rect.width);
 							if (numColsIncrement > 0) {
@@ -573,8 +572,11 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 						Object heightObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(newgridDataHeight)); //$NON-NLS-1$
 						componentCB.applyAttributeSetting(gridData, sfVerticalSpan, heightObject);
 						if (newgridDataHeight > rect.height) {
-							// increase the verticalSpan
-							for (int i = 0; i < newgridDataHeight - rect.height; i++) {
+							// Increase the verticalSpan
+							// but first see if we can expand into empty cells without increasing the number of columns
+							int numRowsIncrement = createVerticalSpanWithEmptyRowCommands(componentCB, rect.y + rect.height -1, rect.x,
+									newgridDataHeight - rect.height);
+							for (int i = 0; i < numRowsIncrement; i++) {
 								componentCB.append(createFillerLabelsForSpannedRowCommand(rect.y + rect.height, endCellLocation.x));
 							}
 						} else {
@@ -586,10 +588,14 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 							if (!rowcb.isEmpty())
 								// If all that is left on the row(s) is filler labels, remove them.
 								componentCB.append(rowcb.getCommand());
-							else if (index + 1 < children.size()) {
-								// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
-								EObject beforeObject = findNextValidObject(rect.x, rect.y + rect.height - 1);
-								componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+							else {
+								Rectangle childRect = rect.getCopy();
+								for (int i = 0; i < rect.height - newgridDataHeight; i++) {
+									// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
+									EObject beforeObject = findNextValidObject(childRect.x+1, childRect.y + childRect.height - 1);
+									componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+									childRect.y--;
+								}
 							}
 						}
 					}
@@ -974,7 +980,27 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return numColIncrement;
 	}
-	
+	/*
+	 * For spanning vertically, walk through the rows starting atRow and atColumn and delete empty or 
+	 * filler labels so we can expand into the empty rows. If no empty cells, numRowIncrement
+	 * is returned so the number of rows can be incremented on the overall grid by creating additional
+	 * filler labels for the addditional rows.
+	 */
+	private int createVerticalSpanWithEmptyRowCommands(CommandBuilder cb, int atRow, int atColumn, int numRowIncrement) {
+		EObject[][] table = getLayoutTable();
+		if (atColumn < table.length && atRow < table[0].length && (atRow + numRowIncrement) < table[0].length) {
+			for (int i = atRow; i < table[0].length && numRowIncrement != 0; i++) {
+				if (table[atColumn][i] == EMPTY || isFillerLabel(table[atColumn][i])) {
+					if (isFillerLabel(table[atColumn][i])) {
+						cb.append(policy.getDeleteDependentCommand(table[atColumn][i]));
+					}
+					numRowIncrement--;
+				}
+			}
+		}
+		return numRowIncrement;
+	}
+
 	/*
 	 * Find next object in the table that is not EMPTY and doesn't vertically span more than one row.
 	 * Note: filler labels are valid
