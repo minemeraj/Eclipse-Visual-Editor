@@ -68,4 +68,7 @@ public final class CodegenEditorPartMessages extends NLS {
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, CodegenEditorPartMessages.class);
 	}
+
+	public static String JavaVisualEditorReloadActionController_PARSE_ERROR;
+	public static String JavaVisualEditorReloadActionController_PAUSED;
 }
