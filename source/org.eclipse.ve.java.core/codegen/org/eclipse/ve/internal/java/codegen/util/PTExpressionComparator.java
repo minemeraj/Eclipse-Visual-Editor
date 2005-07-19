@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PTExpressionComparator.java,v $
- *  $Revision: 1.3 $  $Date: 2005-07-19 15:22:35 $ 
+ *  $Revision: 1.4 $  $Date: 2005-07-19 15:35:27 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -199,10 +199,18 @@ public class PTExpressionComparator extends ParseVisitor {
 			String otherOperatorString = otherOperator==null?null:otherOperator.getOperator();
 			if(	nodeOperatorString!=null && otherOperatorString!=null && 
 				nodeOperatorString.equals(otherOperatorString)){
-				pushInReverse(otherInfixExpression.getExtendedOperands());
-				push(otherInfixExpression.getLeftOperand());
-				push(otherInfixExpression.getRightOperand());
-				return super.visit(node);
+				List otherExtendedOperands =otherInfixExpression.getExtendedOperands();
+				List nodeExtendedOperands = node.getExtendedOperands();
+				if(otherExtendedOperands==null && nodeExtendedOperands==null){
+					push(otherInfixExpression.getLeftOperand());
+					push(otherInfixExpression.getRightOperand());
+					return super.visit(node);
+				}else if(otherExtendedOperands!=null && nodeExtendedOperands!=null && otherExtendedOperands.size()==nodeExtendedOperands.size()){
+					pushInReverse(otherExtendedOperands);
+					push(otherInfixExpression.getLeftOperand());
+					push(otherInfixExpression.getRightOperand());
+					return super.visit(node);
+				}
 			}
 		}
 		equal = false;
