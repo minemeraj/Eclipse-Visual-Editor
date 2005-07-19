@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.30 $ $Date: 2005-07-19 13:17:26 $
+ * $Revision: 1.31 $ $Date: 2005-07-19 13:52:07 $
  */
 import java.util.*;
 
@@ -251,11 +251,13 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		// Get the cell location of the child component
 		GraphicalEditPart ep = (GraphicalEditPart)editParts.get(0);
 		Point childPosition;
+		Point childCellLocation;
 		if (helper.getChildrenDimensions() != null)
-			childPosition = helper.getChildrenDimensions()[getHost().getChildren().indexOf(ep)].getLocation();
-		else
+			childCellLocation = helper.getChildrenDimensions()[getHost().getChildren().indexOf(ep)].getLocation();
+		else {
 			childPosition = ep.getContentPane().getBounds().getLocation();
-		Point childCellLocation = getGridLayoutGridFigure().getCellLocation(childPosition.x, childPosition.y);
+			childCellLocation = getGridLayoutGridFigure().getCellLocation(childPosition.x, childPosition.y);
+		}
 		Point startCellLocation = getGridLayoutGridFigure().getCellLocation(startPosition.x, startPosition.y);
 		// If the cell location where the pointer is located is different from the original cell location where we started,
 		// create the commands to change the gridwidth or gridheight
