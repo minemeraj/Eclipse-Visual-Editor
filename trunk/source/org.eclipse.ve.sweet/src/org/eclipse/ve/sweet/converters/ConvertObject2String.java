@@ -11,7 +11,7 @@
  */
 package org.eclipse.ve.sweet.converters;
 
-import org.eclipse.ve.sweet.converter.Converter;
+import org.eclipse.ve.sweet.converter.ConverterRegistry;
 import org.eclipse.ve.sweet.converter.IConverter;
 
 /**
@@ -34,7 +34,7 @@ public class ConvertObject2String implements IConverter {
         if (source == null) 
             return "";
         
-        IConverter converter = Converter.get(source.getClass().getName(), String.class.getName());
+        IConverter converter = ConverterRegistry.get(source.getClass().getName(), String.class.getName());
         if (converter != null) {
             return converter.convert(source);
         }

@@ -11,9 +11,11 @@
  */
 package org.eclipse.ve.sweet.validator;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import org.eclipse.ve.sweet.validators.ByteValidator;
+import org.eclipse.ve.sweet.validators.DateValidator;
 import org.eclipse.ve.sweet.validators.DoubleValidator;
 import org.eclipse.ve.sweet.validators.FloatValidator;
 import org.eclipse.ve.sweet.validators.IntValidator;
@@ -29,7 +31,7 @@ import org.eclipse.ve.sweet.validators.reusable.RegularExpressionValidator;
  * @author djo
  */
 public class ValidatorRegistry {
-	private static HashMap verifiers;
+	private static HashMap validators;
     
     /**
      * Associate a particular verifier with a particular Java class.
@@ -38,7 +40,7 @@ public class ValidatorRegistry {
      * @param verifier
      */
     public static void associate(String klass, IValidator verifier) {
-        verifiers.put(klass, verifier);
+        validators.put(klass, verifier);
     }
     
     /**
@@ -48,7 +50,7 @@ public class ValidatorRegistry {
      * @return An appropriate IVerifier
      */
     public static IValidator get(String klass) {
-        IValidator result = (IValidator) verifiers.get(klass);
+        IValidator result = (IValidator) validators.get(klass);
         if (result == null) {
             return ReadOnlyValidator.getDefault();
         }
@@ -56,9 +58,9 @@ public class ValidatorRegistry {
     }
     
     static {
-        verifiers = new HashMap();
+        validators = new HashMap();
         
-        // Standalone verifiers here...
+        // Standalone validators here...
         associate(Integer.TYPE.getName(), new IntValidator());
         associate(Byte.TYPE.getName(), new ByteValidator());
         associate(Short.TYPE.getName(), new ShortValidator());
@@ -72,8 +74,9 @@ public class ValidatorRegistry {
         associate(Long.class.getName(), new LongValidator());
         associate(Float.class.getName(), new FloatValidator());
         associate(Double.class.getName(), new DoubleValidator());
+        associate(Date.class.getName(), new DateValidator());
         
-        // Regex-implemented verifiers here...
+        // Regex-implemented validators here...
         associate(Character.TYPE.getName(), new RegularExpressionValidator(
                 "^.$|^$", ".", "Please type a character"));
         associate(Character.class.getName(), new RegularExpressionValidator(
