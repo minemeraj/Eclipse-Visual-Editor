@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PTExpressionComparator.java,v $
- *  $Revision: 1.2 $  $Date: 2005-07-19 15:15:25 $ 
+ *  $Revision: 1.3 $  $Date: 2005-07-19 15:22:35 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Stack;
 
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.PTExpression;
-import org.eclipse.jem.internal.instantiation.ParseVisitor;
  
 
 /**
@@ -61,9 +59,10 @@ public class PTExpressionComparator extends ParseVisitor {
 			PTArrayAccess otherArrayAccess = (PTArrayAccess) ast;
 			List otherIndexes = otherArrayAccess.getIndexes();
 			List nodeIndexes = node.getIndexes();
-			if(otherIndexes==null && nodeIndexes==null)
+			if(otherIndexes==null && nodeIndexes==null){
+				push(otherArrayAccess.getArray());
 				return super.visit(node);
-			else if(otherIndexes!=null && nodeIndexes!=null && otherIndexes.size()==nodeIndexes.size()) {
+			}else if(otherIndexes!=null && nodeIndexes!=null && otherIndexes.size()==nodeIndexes.size()) {
 				pushInReverse(otherIndexes);
 				push(otherArrayAccess.getArray());
 				return super.visit(node);
@@ -252,9 +251,10 @@ public class PTExpressionComparator extends ParseVisitor {
 			if(node.getName().equals(otherMethodInvocation.getName())){
 				List otherArguments = otherMethodInvocation.getArguments();
 				List nodeArguments = node.getArguments();
-				if(nodeArguments==null && otherArguments==null)
+				if(nodeArguments==null && otherArguments==null){
+					push(otherMethodInvocation.getReceiver());
 					return super.visit(node);
-				else if(nodeArguments!=null && otherArguments!=null && otherArguments.size()==nodeArguments.size()){
+				}else if(nodeArguments!=null && otherArguments!=null && otherArguments.size()==nodeArguments.size()){
 					pushInReverse(otherArguments);
 					push(otherMethodInvocation.getReceiver());
 					return super.visit(node);
