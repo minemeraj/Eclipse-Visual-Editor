@@ -10,11 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.45 $  $Date: 2005-07-18 20:25:43 $ 
+ *  $Revision: 1.46 $  $Date: 2005-07-19 20:09:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.*;
@@ -178,6 +178,8 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				Resolved r = bdm.getResolver().resolveType(name);
 				if (r != null)
 					return InstantiationFactory.eINSTANCE.createPTName(r.getName());
+				else
+					return createImmutablePTExpression((SimpleName)name); // simple name not a bean - might be a primitive variable
 			}
 			return null;
 		}
@@ -257,6 +259,136 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			else
 				return null;
 		}
+		
+		/**
+		 * @param name
+		 * @return
+		 * 
+		 * @since 1.0.2
+		 */
+		private PTExpression createImmutablePTExpression(final SimpleName name) {
+			PTExpression ptExpression = null;
+			ASTNode parent = name.getParent();
+			
+			final List values = new ArrayList();
+			Expression value = null;
+			
+			final List declaration = new ArrayList();
+			Type type = null;
+			
+			final List parents = new ArrayList();
+			final Collection visitedMap = new ArrayList();
+			while(parent!=null){
+				parents.add(parent);
+				parent.accept(new ASTVisitor(){
+					public boolean visit(Assignment node) {
+						if(!visitedMap.contains(node) && !parents.contains(node)){
+							visitedMap.add(node);
+							if(node.getLeftHandSide() instanceof SimpleName){
+								SimpleName lhs = (SimpleName) node.getLeftHandSide();
+								if(name.getIdentifier().equals(lhs.getIdentifier())){
+									values.add(node.getRightHandSide());
+									return false;
+								}
+							}
+						}
+						return super.visit(node);
+					}
+					public boolean visit(VariableDeclarationFragment node) {
+						if(!visitedMap.contains(node) && !parents.contains(node)){
+							visitedMap.add(node);
+							if(name.getIdentifier().equals(node.getName().getIdentifier())){
+									values.add(node.getInitializer());
+									return false;
+							}
+						}
+						return super.visit(node);
+					}
+					public boolean visit(VariableDeclarationExpression node) {
+						List fragments = node.fragments();
+						for(int i=0;i<fragments.size();i++){
+							VariableDeclarationFragment frag = (VariableDeclarationFragment) fragments.get(i);
+							handleVariableDeclaration(node.getType(), frag.getName(), node);
+							if(name.getIdentifier().equals(frag.getName().getIdentifier())){
+								values.add(frag.getInitializer());
+								return false;
+							}
+						}
+						return super.visit(node);
+					}
+					public boolean visit(VariableDeclarationStatement node) {
+						List fragments = node.fragments();
+						for(int i=0;i<fragments.size();i++){
+							VariableDeclarationFragment frag = (VariableDeclarationFragment) fragments.get(i);
+							handleVariableDeclaration(node.getType(), frag.getName(), node);
+						}
+						return super.visit(node);
+					}
+					public boolean visit(SingleVariableDeclaration node) {
+						handleVariableDeclaration(node.getType(), node.getName(), node);
+						if(name.getIdentifier().equals(node.getName().getIdentifier())){
+							values.add(node.getInitializer());
+							return false;
+						}
+						return super.visit(node);
+					}
+					public boolean visit(FieldDeclaration node) {
+						List fragments = node.fragments();
+						for(int i=0;i<fragments.size();i++){
+							VariableDeclarationFragment frag = (VariableDeclarationFragment) fragments.get(i);
+							handleVariableDeclaration(node.getType(), frag.getName(), node);
+						}
+						return super.visit(node);
+					}
+					protected void handleVariableDeclaration(Type type, SimpleName varName, ASTNode node){
+						if(name.getIdentifier().equals(varName.getIdentifier())){
+							declaration.add(type);
+						}
+					}
+				});
+				if(value==null && values.size()>0)
+					value = (Expression) values.get(values.size()-1);
+				if(type==null && declaration.size()>0)
+					type = (Type) declaration.get(declaration.size()-1);
+				if(type!=null && value!=null)
+					break; // A variable declaration has been reached - no need to keep visiting parents
+				else
+					parent = parent.getParent();
+			}
+			if(type!=null && value!=null){
+				// We have a type - check to see its an immutable
+				if(isTypeImmutable(type)) {
+					// Immutable - try to get its value
+					// The immutable could have other immutables in it - so call this resolver on that again
+					ptExpression = getParsedTree(value, expMethodRef, offset, bdm, ref);
+				}
+			}
+			return ptExpression;
+		}
+
+		/**
+		 * @param type
+		 * @return true if Immutable
+		 * 
+		 * @since 1.0.2
+		 */
+		private boolean isTypeImmutable(Type type) {
+			if(type.isPrimitiveType())
+				return true;
+			String typeName = resolveType(type);
+			if(		"java.lang.String".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Character".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Byte".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Short".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Integer".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Long".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Boolean".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Float".equals(typeName) || //$NON-NLS-1$
+					"java.lang.Double".equals(typeName)) //$NON-NLS-1$
+				return true;
+			return false;
+		}
+
 	}		
 
 	
