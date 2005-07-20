@@ -13,6 +13,7 @@ package org.eclipse.ve.sweet.controllers.swt;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.eclipse.ve.sweet.controllers.IEditStateController;
 import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
@@ -34,18 +35,27 @@ public class SWTEditStateController implements IEditStateController {
 	public boolean isDirty() {
 		return dirty;
 	}
+	
+	private static class ControlInfo {
+		public final IEnableableDuck control;
+		public final boolean enableOnDirty;
+		public ControlInfo(IEnableableDuck control, boolean dirty) {
+			this.control = control;
+			enableOnDirty = dirty;
+		}
+	}
 
 	private HashMap controls = new HashMap();
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.sweet.controllers.IEditStateController#addControl(java.lang.Object)
 	 */
-	public void addControl(Object control) {
+	public void addControl(Object control, boolean enableOnDirty) {
 		if (!DuckType.instanceOf(IEnableableDuck.class, control)) {
 			throw new ClassCastException(control.getClass().getName() + " does not implement setEnabled/isEnabled");
 		}
 		IEnableableDuck enableableControl = (IEnableableDuck)DuckType.implement(IEnableableDuck.class, control);
-		controls.put(control, enableableControl);
+		controls.put(control, new ControlInfo(enableableControl, enableOnDirty));
 	}
 	
 	/* (non-Javadoc)
@@ -55,18 +65,18 @@ public class SWTEditStateController implements IEditStateController {
 		controls.remove(control);
 	}
 	
-	private HashMap objectViewers = new HashMap();
+	private LinkedList objectViewers = new LinkedList();
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.sweet.controllers.IEditStateController#addObjectViewer(org.eclipse.ve.sweet.objectviewer.IObjectViewer)
 	 */
 	public void addObjectViewer(IObjectViewer objectViewer) {
+		objectViewers.add(objectViewer);
 		boolean isDirty = objectViewer.isDirty();
-		objectViewers.put(objectViewer, new Boolean(isDirty));
 		
 		if (isDirty && !isDirty()) {
 			this.dirty = true;
-			disableControls();
+			updateControlEnablement();
 		}
 		
 		objectViewer.addObjectListener(editStateListener);
@@ -89,8 +99,8 @@ public class SWTEditStateController implements IEditStateController {
 
 	private void refreshDirtyState() {
 		boolean nowIsDirty = false;
-		for (Iterator objectViewersIter = objectViewers.keySet().iterator(); objectViewersIter.hasNext();) {
-			IObjectViewer objectViewer = (IObjectViewer) objectViewers.get(objectViewersIter.next());
+		for (Iterator objectViewersIter = objectViewers.iterator(); objectViewersIter.hasNext();) {
+			IObjectViewer objectViewer = (IObjectViewer) objectViewersIter.next();
 			if (objectViewer.isDirty()) {
 				nowIsDirty = true;
 				break;
@@ -100,27 +110,24 @@ public class SWTEditStateController implements IEditStateController {
 		if (isDirty()) {
 			if (!nowIsDirty) {
 				dirty = nowIsDirty;
-				enableControls();
+				updateControlEnablement();
 			}
 		} else {
 			if (nowIsDirty) {
 				dirty = nowIsDirty;
-				disableControls();
+				updateControlEnablement();
 			}
 		}
 	}
 
-	private void disableControls() {
+	private void updateControlEnablement() {
 		for (Iterator controlsIter = controls.keySet().iterator(); controlsIter.hasNext();) {
-			IEnableableDuck control = (IEnableableDuck) controls.get(controlsIter.next());
-			control.setEnabled(false);
-		}
-	}
-
-	private void enableControls() {
-		for (Iterator controlsIter = controls.keySet().iterator(); controlsIter.hasNext();) {
-			IEnableableDuck control = (IEnableableDuck) controls.get(controlsIter.next());
-			control.setEnabled(true);
+			ControlInfo controlInfo = (ControlInfo) controls.get(controlsIter.next());
+			boolean enable = dirty;
+			if (!controlInfo.enableOnDirty) {
+				enable = !enable;
+			}
+			controlInfo.control.setEnabled(enable);
 		}
 	}
 
