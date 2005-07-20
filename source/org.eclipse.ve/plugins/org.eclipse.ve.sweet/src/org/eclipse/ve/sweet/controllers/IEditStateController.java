@@ -24,11 +24,13 @@ public interface IEditStateController {
 	/**
 	 * Method addControl.  Add a control to be managed by this IEditStateController.  When
 	 * any IObjectViewer managed by this IEditStateController becomes dirty, all managed
-	 * controls will be disabled in the user interface.
+	 * controls will be enabled/disabled in the user interface as specified by their
+	 * enableOnDirty flag.
 	 * 
 	 * @param control The control to manager.
+	 * @param enableOnDirty If the control should be enabled when editors are dirty.
 	 */
-	void addControl(Object control);
+	void addControl(Object control, boolean enableOnDirty);
 
 	/**
 	 * Method removeControl.  Removes a control from being managed by this IEditStateController.
