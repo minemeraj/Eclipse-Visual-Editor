@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-06-15 20:19:38 $
+ * $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-07-20 09:05:47 $
  */
 
 package org.eclipse.ve.internal.java.core;
@@ -206,7 +206,9 @@ public class EventInvocationAndListenerTreeEditPart extends AbstractTreeEditPart
 
 		if (type == ANON_INTERFACE) {
 			Listener listener = eventInvocationAndListener.getListener();
-			buffer.append(((JavaClass) listener.getListenerType().getImplements().get(0)).getName());
+			if(listener.getListenerType() != null){
+				buffer.append(((JavaClass) listener.getListenerType().getImplements().get(0)).getName());
+			}
 		} else if (type == ANON_CLASS) {
 			Listener listener = eventInvocationAndListener.getListener();
 			// Anonymous inner classes can only extend one superclass
