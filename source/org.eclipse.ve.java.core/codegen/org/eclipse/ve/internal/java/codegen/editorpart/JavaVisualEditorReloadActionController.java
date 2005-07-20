@@ -272,6 +272,7 @@ class JavaVisualEditorReloadActionController {
 	
 	private void showPauseFigure(Boolean pauseType) {
 		this.pauseType = pauseType;
+		if(pauseType.booleanValue()) return; // The error pause occurs too often which we will fix post 1.2, but in the meantime don't show an error figure to stop flicker
 		// If no viewer, then we have nothing to show yet.
 		if (viewer != null) {
 			String label;
@@ -317,7 +318,7 @@ class JavaVisualEditorReloadActionController {
 		if (pauseType == null)
 			return;	// All ready down.
 		pauseType = null;
-		if (viewer != null) {
+		if (viewer != null && pauseFigure.getParent() != null) {
 			Layer layer = getLoadingLayer();
 			layer.remove(pauseFigure);
 			layer.remove(pauseLabelFigure);
