@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.36 $  $Date: 2005-07-15 23:47:32 $ 
+ *  $Revision: 1.37 $  $Date: 2005-07-20 23:12:19 $ 
  */
 
 import java.io.IOException;
@@ -335,12 +335,14 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 			JavaVEPlugin.getPlugin().getPluginPreferences().setValue(VISUAL_CLASS_WIZARD_SELECTED_ELEMENT_KEY, "");			 //$NON-NLS-1$
 		}
 		monitor.beginTask("",300); //$NON-NLS-1$
-		fPage.createType(new SubProgressMonitor(monitor, 100)); // use the full progress monitor
 		// Check for a class path container or plugin id this extension needs in this source folder
 		if (fPage.getSelectedElement() != null && (fPage.getSelectedElement().getContainer() != null || fPage.getSelectedElement().getPluginId() != null)) {
 			verifyProjectClassPath(fPage.getSelectedElement(), new SubProgressMonitor(monitor, 100));
 		} else 
 			monitor.worked(100);
+
+		fPage.createType(new SubProgressMonitor(monitor, 100)); // use the full progress monitor
+		
 		updateContributor(fPage.getSelectedElement());
 		if(contributor!=null){
 			applyContributor(fPage.getCreatedType(), fPage.getSuperClass(), new SubProgressMonitor(monitor, 100));
