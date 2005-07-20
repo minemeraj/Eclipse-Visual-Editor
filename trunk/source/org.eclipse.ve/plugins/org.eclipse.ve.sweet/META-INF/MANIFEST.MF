@@ -7,6 +7,8 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui
 Export-Package: org.eclipse.ve.sweet,
+ org.eclipse.ve.sweet.controllers,
+ org.eclipse.ve.sweet.controllers.swt,
  org.eclipse.ve.sweet.converter,
  org.eclipse.ve.sweet.converters,
  org.eclipse.ve.sweet.fieldviewer,
