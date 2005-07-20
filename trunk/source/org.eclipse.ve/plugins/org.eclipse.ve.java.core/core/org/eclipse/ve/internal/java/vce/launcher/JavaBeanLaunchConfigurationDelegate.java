@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.19 $  $Date: 2005-06-22 13:00:22 $ 
+ *  $Revision: 1.20 $  $Date: 2005-07-20 20:20:15 $ 
  */
 
 
@@ -274,8 +274,10 @@ protected void setupClasspath(ILaunchConfiguration configuration, StringBuffer a
 		StringBuffer javaPath = new StringBuffer("");
 		while(libPaths.hasNext()){
 			String curLib = ((URL)libPaths.next()).getPath();
-			if(curLib.startsWith("/"))
+			if(curLib.startsWith("/") && Platform.getOS().equals(Platform.OS_WIN32))
 				curLib = curLib.substring(1);
+			if (javaPath.length()>0)
+				javaPath.append(File.pathSeparatorChar);
 			javaPath.append(curLib);
 		}
 		if (!args.toString().matches(".*java.library.path=")) //$NON-NLS-1$
