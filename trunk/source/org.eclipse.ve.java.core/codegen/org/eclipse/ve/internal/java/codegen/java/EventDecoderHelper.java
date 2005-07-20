@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.20 $  $Date: 2005-07-18 20:25:43 $ 
+ *  $Revision: 1.21 $  $Date: 2005-07-20 17:30:08 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -294,7 +294,36 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
     protected void restoreInvocationFromModel (int index) {
    	 EStructuralFeature sf = getEventSF();
    	 AbstractEventInvocation aee = (AbstractEventInvocation)((List)fbeanPart.getEObject().eGet(sf)).get(index);
-   	 ((CodeEventRef)fOwner.getExprRef()).setEventInvocation(aee);    	
+   	 ((CodeEventRef)fOwner.getExprRef()).setEventInvocation(aee);   
+   	 String cName = aee.getListener().getListenerType().getName();
+   	 if (cName !=null) {
+		 try {			 			
+			 List callbacks = new ArrayList();
+		   	 callbacks.addAll(aee.getCallbacks());
+		   	 if (callbacks.size()>0) {
+		   		 // Callbacks are supported only for inner classes
+				 String pkg = fbeanPart.getModel().getCompilationUnit().getPackageDeclarations()[0].getElementName();
+				 cName = pkg + '.' + cName.replace('.','$');
+			   	 JavaClass clazz = (JavaClass) JavaRefFactory.eINSTANCE.reflectType(cName, fbeanPart.getModel().getCompositionModel().getModelResourceSet());	   	 
+			   	 List impl = getExplicitTypeEventMethods(clazz);
+			   	 
+				 for (Iterator itr = impl.iterator(); itr.hasNext();) {
+					 Method m = (Method) itr.next();
+					 ICallbackDecoder d = (ICallbackDecoder) itr.next() ;			 
+					 for (int i = 0; i < callbacks.size(); i++) {
+						Callback cb = (Callback) callbacks.get(i);
+						if (cb.getMethod()==m) {
+							d.setCallBack(cb);					
+							callbacks.remove(cb);
+							break;
+						}				
+					}			 
+				 }		 
+		   	 }
+		 } catch (Exception e) {
+				JavaVEPlugin.log("could not restore event properley: "+cName, Level.WARNING); //$NON-NLS-1$
+		 }
+	 }   	 
     }
 	/**
 	 * 
