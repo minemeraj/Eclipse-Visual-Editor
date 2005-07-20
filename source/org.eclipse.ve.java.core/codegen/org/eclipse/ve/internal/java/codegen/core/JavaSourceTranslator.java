@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.82 $  $Date: 2005-07-19 22:32:34 $ 
+ *  $Revision: 1.83 $  $Date: 2005-07-20 23:14:28 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -629,7 +629,7 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
        else {  // a this part
           if (obj != null) {
           	if (cache==null)
-                ((XMIResource)comp.eResource()).setID(obj,MessageFormat.format(BeanPart.THIS_NAME+"", new Object[] {fVEModel.getFile().getName()})) ; //$NON-NLS-1$
+                ((XMIResource)comp.eResource()).setID(obj,BeanPart.THIS_NAME);
              // If no annotation, the PS will not allow you to edit the name in composition
             annotatedName = null ;
           }
@@ -1132,8 +1132,11 @@ public synchronized void disconnect(boolean clearVCEModel) {
      fSrcSync = null;
 	}
 	finally {
-		fdisconnected=true ;	
-		fireProcessingPause(fdisconnected);
+		fdisconnected=true ;
+//      This will cause a loop, where a disconnect is called before a loadModel,
+//      The editor sometime on an async. will come back, and deCapitate the model
+//      potentially after the model is reLoaded		
+//		fireProcessingPause(fdisconnected);
 	}
     fireStatusChanged(fPauseSig);
     if (fFile!=null)

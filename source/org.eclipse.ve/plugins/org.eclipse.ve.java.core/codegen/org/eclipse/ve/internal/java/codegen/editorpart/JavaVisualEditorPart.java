@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.139 $  $Date: 2005-07-19 22:58:38 $ 
+ *  $Revision: 1.140 $  $Date: 2005-07-20 23:14:28 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1509,14 +1509,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				return registry;
 			}
 			
-			protected IStatus run(IProgressMonitor monitor) {
-
-				if (proxyFactoryRegistry != null && proxyFactoryRegistry.isValid()) {
-					// Since we need to create a new one, we need to get rid of the old one.
-					proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
-					proxyFactoryRegistry.terminateRegistry();			
-				}
-				
+			protected IStatus run(IProgressMonitor monitor) {				
 				try {
 					JavaVisualEditorVMController.RegistryResult regResult = JavaVisualEditorVMController.getRegistry(file);
 					
@@ -1767,6 +1760,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		 * Start the create registry job.
 		 */
 		private void startCreateProxyFactoryRegistry(IFile file) {
+			if (proxyFactoryRegistry != null)
+				proxyFactoryRegistry.removeRegistryListener(registryListener); // We're going away, don't let the listener come into play.
 			registryCreateJob = new CreateRegistry(CodegenEditorPartMessages.JavaVisualEditorPart_CreateRemoteVMForJVE, file); 
 			registryCreateJob.schedule();
 		}
@@ -1899,8 +1894,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						a.releaseBeanProxy(true);
 					}
 					
-                    if (lRestartVM)
+                    if (lRestartVM) {
+        				if (proxyFactoryRegistry != null && proxyFactoryRegistry.isValid()) {
+        					// Since we need to create a new one, we need to get rid of the old one.
+        					proxyFactoryRegistry.terminateRegistry();			
+        				}
+
                         joinCreateRegistry();	// At this point in time we need to have the registry available so that we can initialize all of the proxies.
+                    }
 					
 					beanProxyAdapterFactory.setThisTypeName(modelBuilder.getThisTypeName());	// Now that we've joined and have a registry, we can set the this type name into the proxy domain.
 					modelSynchronizer.setIgnoreTypeName(modelBuilder.getThisTypeName());
@@ -2000,6 +2001,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				} else {
 					synchronized (JavaVisualEditorPart.this) {
 						proxyFactoryRegistry = registryCreateJob.getRegistry();
+						proxyFactoryRegistry.addRegistryListener(registryListener);
 						beanProxyAdapterFactory.setProxyFactoryRegistry(proxyFactoryRegistry);
 					}
 				}
