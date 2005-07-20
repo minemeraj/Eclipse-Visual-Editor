@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.22 $  $Date: 2005-06-23 20:29:16 $ 
+ *  $Revision: 1.23 $  $Date: 2005-07-20 18:49:04 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -577,16 +577,21 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 		if (ccAdapter != null)
 			clearError(sfContainerComponents); 
 		IJavaInstance component = (IJavaInstance) aConstraintComponent.eGet(sfConstraintComponent);
-		ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) EcoreUtil.getExistingAdapter(component,IBeanProxyHost.BEAN_PROXY_TYPE);
-		// Note: We shouldn't be called during an instantiation of any kind, so we should have a straight instantiated bean.
-		if (componentProxyHost != null && componentProxyHost.isBeanProxyInstantiated()) {
-			if (!layoutChangePending) {
-				BeanAwtUtilities.invoke_removeComponent(getProxy(), componentProxyHost.getBeanProxy(), expression);
+		try {
+			ComponentProxyAdapter componentProxyHost = (ComponentProxyAdapter) EcoreUtil
+					.getExistingAdapter(component, IBeanProxyHost.BEAN_PROXY_TYPE);
+			// Note: We shouldn't be called during an instantiation of any kind, so we should have a straight instantiated bean.
+			if (componentProxyHost != null && componentProxyHost.isBeanProxyInstantiated()) {
+				if (!layoutChangePending) {
+					BeanAwtUtilities.invoke_removeComponent(getProxy(), componentProxyHost.getBeanProxy(), expression);
+				}
+				// Always want to restore, even when in layout change pending. Except if about to release then we don't need to because it will reinstantiate if needed.
+				if (!aboutToRelease)
+					componentProxyHost.restoreVisibility(expression); // Always want to restore, even when in layout change pending.
+				componentRemoved(aConstraintComponent, expression, aboutToRelease);
 			}
-			// Always want to restore, even when in layout change pending. Except if about to release then we don't need to because it will reinstantiate if needed.
-			if (!aboutToRelease)
-				componentProxyHost.restoreVisibility(expression);	// Always want to restore, even when in layout change pending.
-			componentRemoved(aConstraintComponent, expression, aboutToRelease);
+		} catch (ClassCastException e) {
+			// Ok, possible that component wasn't a valid child.
 		}
 	}
 	
