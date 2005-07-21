@@ -154,6 +154,11 @@ public class TextFieldViewer implements IFieldViewer {
      * @see com.db4o.binding.field.internal.IFieldController#setInput(com.db4o.binding.dataeditors.IPropertyEditor)
      */
     public void setInput(IPropertyEditor input) throws CannotSaveException {
+    	// If we're resetting the dirty flag, make sure everyone knows about it now...
+    	if (isDirty()) {
+    		setDirty(false);
+    	}
+    	
         this.property = input;
         
         object2String = ConverterRegistry.get(property.getType(), String.class.getName());

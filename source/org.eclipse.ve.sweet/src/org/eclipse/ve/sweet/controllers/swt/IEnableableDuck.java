@@ -18,4 +18,6 @@ public interface IEnableableDuck {
 	boolean isEnabled();
 	
 	void setEnabled(boolean value);
+
+	boolean isDisposed();
 }

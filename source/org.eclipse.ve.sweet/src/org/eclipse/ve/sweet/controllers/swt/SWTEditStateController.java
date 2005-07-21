@@ -124,6 +124,11 @@ public class SWTEditStateController implements IEditStateController {
 	private void updateControlEnablement() {
 		for (Iterator controlsIter = controls.keySet().iterator(); controlsIter.hasNext();) {
 			ControlInfo controlInfo = (ControlInfo) controls.get(controlsIter.next());
+			
+			if (controlInfo.control.isDisposed()) {
+				continue;
+			}
+			
 			if (controlInfo.enableOnDirty) {
 				controlInfo.control.setEnabled(dirty);
 			} else {
