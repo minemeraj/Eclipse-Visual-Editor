@@ -1,6 +1,7 @@
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
+import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 
@@ -60,141 +61,92 @@ public class CTabFolderBeanInfo extends IvjBeanInfo {
 	 */
 	public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		try {
+			ArrayList descriptorList = new ArrayList();
+			
 			if(SWT.getVersion() >= 3100){
-				PropertyDescriptor aDescriptorList[] = {
-					// maximized
-					super.createPropertyDescriptor(getBeanClass(),"maximized", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, CTabFolderMessages.getString("maximizedDN"), //$NON-NLS-1$
-						SHORTDESCRIPTION, CTabFolderMessages.getString("maximizedSD"), //$NON-NLS-1$
-					}
-					),
-					// maximizeVisible
-					super.createPropertyDescriptor(getBeanClass(),"maximizeVisible", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, CTabFolderMessages.getString("maximizeVisibleDN"), //$NON-NLS-1$
-						SHORTDESCRIPTION, CTabFolderMessages.getString("maximizeVisibleSD"), //$NON-NLS-1$
-					}
-					),
-					// minimized
-					super.createPropertyDescriptor(getBeanClass(),"minimized", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, CTabFolderMessages.getString("minimizedDN"), //$NON-NLS-1$
-						SHORTDESCRIPTION, CTabFolderMessages.getString("minimizedSD"), //$NON-NLS-1$
-					}
-					),
-					// minimizeVisible
-					super.createPropertyDescriptor(getBeanClass(),"minimizeVisible", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, CTabFolderMessages.getString("minimizeVisibleDN"), //$NON-NLS-1$
-						SHORTDESCRIPTION, CTabFolderMessages.getString("minimizeVisibleSD"), //$NON-NLS-1$
-					}
-					),
+				descriptorList.add(
 					// MRUVisible
 					super.createPropertyDescriptor(getBeanClass(),"MRUVisible", new Object[] { //$NON-NLS-1$
 						DISPLAYNAME, CTabFolderMessages.getString("MRUVisibleDN"), //$NON-NLS-1$
 						SHORTDESCRIPTION, CTabFolderMessages.getString("MRUVisibleSD"), //$NON-NLS-1$
-					}
-					),
-					// selectionBackground
-					super.createPropertyDescriptor(getBeanClass(),"selectionBackground", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, CTabFolderMessages.getString("selectionBackgroundDN"), //$NON-NLS-1$
-						SHORTDESCRIPTION, CTabFolderMessages.getString("selectionBackgroundSD"), //$NON-NLS-1$
-					}
-					),
-					// selectionForeground
-					super.createPropertyDescriptor(getBeanClass(),"selectionForeground", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, CTabFolderMessages.getString("selectionForegroundDN"), //$NON-NLS-1$
-						SHORTDESCRIPTION, CTabFolderMessages.getString("selectionForegroundSD"), //$NON-NLS-1$
-					}
-					),
-					// simple
-					super.createPropertyDescriptor(getBeanClass(),"simple", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, CTabFolderMessages.getString("simpleDN"), //$NON-NLS-1$
-						SHORTDESCRIPTION, CTabFolderMessages.getString("simpleSD"), //$NON-NLS-1$
-					}
-					),
-					// tabHeight
-					super.createPropertyDescriptor(getBeanClass(),"tabHeight", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, CTabFolderMessages.getString("tabHeightDN"), //$NON-NLS-1$
-						SHORTDESCRIPTION, CTabFolderMessages.getString("tabHeightSD"), //$NON-NLS-1$
-					}
-					),
-					// unselectedCloseVisible
-					super.createPropertyDescriptor(getBeanClass(),"unselectedCloseVisible", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, CTabFolderMessages.getString("unselectedCloseVisibleDN"), //$NON-NLS-1$
-						SHORTDESCRIPTION, CTabFolderMessages.getString("unselectedCloseVisibleSD"), //$NON-NLS-1$
-					}
-					),
-					// unselectedImageVisible
-					super.createPropertyDescriptor(getBeanClass(),"unselectedImageVisible", new Object[] { //$NON-NLS-1$
-						DISPLAYNAME, CTabFolderMessages.getString("unselectedImageVisibleDN"), //$NON-NLS-1$
-						SHORTDESCRIPTION, CTabFolderMessages.getString("unselectedImageVisibleSD"), //$NON-NLS-1$
-					}
-					),
-				};
-				return aDescriptorList;
-			} else {
-				PropertyDescriptor aDescriptorList[] = {
-						// maximized
-						super.createPropertyDescriptor(getBeanClass(),"maximized", new Object[] { //$NON-NLS-1$
-							DISPLAYNAME, CTabFolderMessages.getString("maximizedDN"), //$NON-NLS-1$
-							SHORTDESCRIPTION, CTabFolderMessages.getString("maximizedSD"), //$NON-NLS-1$
-						}
-						),
-						// maximizeVisible
-						super.createPropertyDescriptor(getBeanClass(),"maximizeVisible", new Object[] { //$NON-NLS-1$
-							DISPLAYNAME, CTabFolderMessages.getString("maximizeVisibleDN"), //$NON-NLS-1$
-							SHORTDESCRIPTION, CTabFolderMessages.getString("maximizeVisibleSD"), //$NON-NLS-1$
-						}
-						),
-						// minimized
-						super.createPropertyDescriptor(getBeanClass(),"minimized", new Object[] { //$NON-NLS-1$
-							DISPLAYNAME, CTabFolderMessages.getString("minimizedDN"), //$NON-NLS-1$
-							SHORTDESCRIPTION, CTabFolderMessages.getString("minimizedSD"), //$NON-NLS-1$
-						}
-						),
-						// minimizeVisible
-						super.createPropertyDescriptor(getBeanClass(),"minimizeVisible", new Object[] { //$NON-NLS-1$
-							DISPLAYNAME, CTabFolderMessages.getString("minimizeVisibleDN"), //$NON-NLS-1$
-							SHORTDESCRIPTION, CTabFolderMessages.getString("minimizeVisibleSD"), //$NON-NLS-1$
-						}
-						),
-						// selectionBackground
-						super.createPropertyDescriptor(getBeanClass(),"selectionBackground", new Object[] { //$NON-NLS-1$
-							DISPLAYNAME, CTabFolderMessages.getString("selectionBackgroundDN"), //$NON-NLS-1$
-							SHORTDESCRIPTION, CTabFolderMessages.getString("selectionBackgroundSD"), //$NON-NLS-1$
-						}
-						),
-						// selectionForeground
-						super.createPropertyDescriptor(getBeanClass(),"selectionForeground", new Object[] { //$NON-NLS-1$
-							DISPLAYNAME, CTabFolderMessages.getString("selectionForegroundDN"), //$NON-NLS-1$
-							SHORTDESCRIPTION, CTabFolderMessages.getString("selectionForegroundSD"), //$NON-NLS-1$
-						}
-						),
-						// simple
-						super.createPropertyDescriptor(getBeanClass(),"simple", new Object[] { //$NON-NLS-1$
-							DISPLAYNAME, CTabFolderMessages.getString("simpleDN"), //$NON-NLS-1$
-							SHORTDESCRIPTION, CTabFolderMessages.getString("simpleSD"), //$NON-NLS-1$
-						}
-						),
-						// tabHeight
-						super.createPropertyDescriptor(getBeanClass(),"tabHeight", new Object[] { //$NON-NLS-1$
-							DISPLAYNAME, CTabFolderMessages.getString("tabHeightDN"), //$NON-NLS-1$
-							SHORTDESCRIPTION, CTabFolderMessages.getString("tabHeightSD"), //$NON-NLS-1$
-						}
-						),
-						// unselectedCloseVisible
-						super.createPropertyDescriptor(getBeanClass(),"unselectedCloseVisible", new Object[] { //$NON-NLS-1$
-							DISPLAYNAME, CTabFolderMessages.getString("unselectedCloseVisibleDN"), //$NON-NLS-1$
-							SHORTDESCRIPTION, CTabFolderMessages.getString("unselectedCloseVisibleSD"), //$NON-NLS-1$
-						}
-						),
-						// unselectedImageVisible
-						super.createPropertyDescriptor(getBeanClass(),"unselectedImageVisible", new Object[] { //$NON-NLS-1$
-							DISPLAYNAME, CTabFolderMessages.getString("unselectedImageVisibleDN"), //$NON-NLS-1$
-							SHORTDESCRIPTION, CTabFolderMessages.getString("unselectedImageVisibleSD"), //$NON-NLS-1$
-						}
-						),
-					};
-					return aDescriptorList;
+					})	
+				);
 			}
+			descriptorList.add(		
+				// maximized
+				super.createPropertyDescriptor(getBeanClass(),"maximized", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CTabFolderMessages.getString("maximizedDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CTabFolderMessages.getString("maximizedSD"), //$NON-NLS-1$
+				})
+			);
+			descriptorList.add(
+				// maximizeVisible
+				super.createPropertyDescriptor(getBeanClass(),"maximizeVisible", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CTabFolderMessages.getString("maximizeVisibleDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CTabFolderMessages.getString("maximizeVisibleSD"), //$NON-NLS-1$
+				})
+			);
+			descriptorList.add(
+				// minimized
+				super.createPropertyDescriptor(getBeanClass(),"minimized", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CTabFolderMessages.getString("minimizedDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CTabFolderMessages.getString("minimizedSD"), //$NON-NLS-1$
+				})
+			);		
+			descriptorList.add(
+				// minimizeVisible
+				super.createPropertyDescriptor(getBeanClass(),"minimizeVisible", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CTabFolderMessages.getString("minimizeVisibleDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CTabFolderMessages.getString("minimizeVisibleSD"), //$NON-NLS-1$
+				})
+			);
+			descriptorList.add(
+				// selectionBackground
+				super.createPropertyDescriptor(getBeanClass(),"selectionBackground", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CTabFolderMessages.getString("selectionBackgroundDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CTabFolderMessages.getString("selectionBackgroundSD"), //$NON-NLS-1$
+				})
+			);
+			descriptorList.add(
+				// selectionForeground
+				super.createPropertyDescriptor(getBeanClass(),"selectionForeground", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CTabFolderMessages.getString("selectionForegroundDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CTabFolderMessages.getString("selectionForegroundSD"), //$NON-NLS-1$
+				})
+			);
+			descriptorList.add(
+				// simple
+				super.createPropertyDescriptor(getBeanClass(),"simple", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CTabFolderMessages.getString("simpleDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CTabFolderMessages.getString("simpleSD"), //$NON-NLS-1$
+				})
+			);
+			descriptorList.add(
+				// tabHeight
+				super.createPropertyDescriptor(getBeanClass(),"tabHeight", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CTabFolderMessages.getString("tabHeightDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CTabFolderMessages.getString("tabHeightSD"), //$NON-NLS-1$
+				})
+			);
+			descriptorList.add(
+				// unselectedCloseVisible
+				super.createPropertyDescriptor(getBeanClass(),"unselectedCloseVisible", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CTabFolderMessages.getString("unselectedCloseVisibleDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CTabFolderMessages.getString("unselectedCloseVisibleSD"), //$NON-NLS-1$
+				})
+			);
+			descriptorList.add(
+				// unselectedImageVisible
+				super.createPropertyDescriptor(getBeanClass(),"unselectedImageVisible", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, CTabFolderMessages.getString("unselectedImageVisibleDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, CTabFolderMessages.getString("unselectedImageVisibleSD"), //$NON-NLS-1$
+				})
+			);
+				
+			PropertyDescriptor aDescriptorList[] = new PropertyDescriptor[descriptorList.size()];
+			descriptorList.toArray(aDescriptorList);
+			return aDescriptorList;
+			
 		} catch (Throwable exception) {
 			handleException(exception);
 		};
