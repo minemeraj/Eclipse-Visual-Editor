@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeManagerExtension.java,v $
- *  $Revision: 1.2 $  $Date: 2005-07-14 18:06:44 $ 
+ *  $Revision: 1.3 $  $Date: 2005-07-21 19:54:35 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -70,7 +70,7 @@ public class CompositeManagerExtension extends ControlManagerExtension implement
 	}
 	
 	protected void primSetExtensionProxy(IProxy proxy) {
-		if (compositeManagerProxy != null && compositeManagerProxy.isBeanProxy())
+		if (compositeManagerProxy != null && compositeManagerProxy.isBeanProxy() && ((IBeanProxy) compositeManagerProxy).isValid())
 			composite.getControlManager().getFeedbackController().deregisterFeedbackNotifier((IBeanProxy) compositeManagerProxy);	// Remove the old.
 		compositeManagerProxy = proxy;
 		// See if it has been registered yet or not. If proxy is null, then we are either invalid or disposed. In either case we don't care
