@@ -1,0 +1,450 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Language" content="en-us">
+  <meta http-equiv="Content-Type" content="text/html">
+  <link rel="stylesheet" href="default_style.css">
+  <title>Eclipse Visual Editor Project 1.0 - New and Noteworthy</title>
+</head>
+<body>
+<h1>Eclipse Visual Editor Project 1.0- New and Noteworthy</h1>
+<table border="0" cellpadding="10" cellspacing="0" width="80%">
+  <tbody>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>Support
+for Eclipse 3.0<br>
+      </b></td>
+      <td style="vertical-align: top;">The Visual Editor is now
+compatible with <a href="http://www.eclipse.org/eclipse/index.html">Eclipse
+3.0.1</a> Final, <a href="http://www.eclipse.org/gef/">GEF 3.0.1</a> and <a
+ href="http://www.eclipse.org/emf/">EMF 2.0.1</a>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" width="30%">
+      <p align="right"><b>Mature SWT Support<br>
+      </b></p>
+      </td>
+      <td valign="top" width="70%">SWT support in the VE is now mature on Windows 
+		and Linux/GTK.  The SWT editor now fully supports editing an 
+		arbitrary Composite rather than requiring everything to be inside a
+		Shell.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>SWT Support on Linux/GTK<br>
+      </b></td>
+      <td style="vertical-align: top;">The Visual Editor supports
+SWT development under Linux/GTK.<br>
+      <br>
+      <img alt="SWT Application under Linux/GTK" src="SWT-Linux-GTK.jpg"
+ style="width: 495px; height: 302px;"><br>
+      <br>
+      <br>
+Note: A Shell's trim (title bar and border) does not reflect the native
+window manager on Linux/GTK.&nbsp; A simple trim is mocked-up around
+the Shell instead.&nbsp; <br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>New Visual
+Class Wizard<br>
+      </b></td>
+      <td style="vertical-align: top;">The New Visual Class Wizard has
+been updated to include additional code styles and parent components.<br>
+      <img alt="New Visual Class Wizard" src="newVisualClass.jpg"
+ style="width: 416px; height: 469px;"><br>
+      <br>
+Selecting the option to generate the main method stub when using the
+SWT Application style will generate the event loop code necessary to
+run an SWT application.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><span
+ style="font-weight: bold;">Layout Customization Window</span><br>
+      </td>
+      <td style="vertical-align: top;">The alignment window has been
+redesigned to provide more flexibility in layout customization.<br>
+      <img style="width: 338px; height: 105px;"
+ alt="Show Customize Layout Window" src="openCustomizeLayout.jpg"><br>
+      <br>
+Layout customization is now split onto two pages that change
+dynamically based on the selected components in the VE.&nbsp; The
+layout page customizes the layout of the selected container or the
+selected control's parent container.<br>
+      <br>
+      <img style="width: 452px; height: 196px;"
+ alt="Customize row layout" src="customizeRowLayout.jpg"><br>
+      <br>
+The component page customizes layout options for the selected
+component(s), based on their parent container's layout.<br>
+      <br>
+      <img style="width: 304px; height: 193px;"
+ alt="Customize grid component" src="customizeGridComponent.jpg"><br>
+      <br>
+There currently are layout customization pages implemented for null,
+GridBag, Grid (AWT/Swing), Grid (SWT), Fill, and Row layouts.&nbsp; The
+customize layout window can be opened by pressing its button on the
+Eclipse toolbar, or by selecting Customize Layout... from the context
+menu for a graphical component.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="text-align: right;" valign="top" width="30%"><b>Removed
+Fully-Qualified Types<br>
+      </b></td>
+      <td valign="top" width="70%">The Visual Editor's reliance on
+fully qualified type names has been reduced significantly.&nbsp; Now
+when you drop and manipulate components the code generated is no
+longer filled with <span style="font-family: monospace;">javax.swing.*</span>
+and <span style="font-family: monospace;">org.eclipse.swt.widget.*</span>,
+etc.&nbsp; Import statements are added as needed as new types are
+referenced.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td align="right" valign="top" width="30%"><span
+ style="font-weight: bold;"><b>Removed Field Prefixes</b></span> </td>
+      <td valign="top" width="70%">The fields for non-visual components
+no longer must be prefixed with <span style="font-family: monospace;">ivj</span>.&nbsp;
+For non-visuals to show up on the free form, the <span
+ style="color: rgb(63, 127, 95); font-family: monospace;">visual-constraint</span>
+tag must be included in the <span
+ style="font-family: monospace; color: rgb(63, 127, 95);">//&nbsp; @jve:</span>
+comment on the field declaration.&nbsp; For a non-visual to be modeled
+by the Visual Editor, but not shown on the free form, only the <span
+ style="color: rgb(63, 127, 95); font-family: monospace;">decl-index</span>
+tag needs to be present.<br>
+      <br>
+      <span style="font-weight: bold;">Examples:<br>
+      <br>
+      </span> This will be both modeled and show up on the free form:<br>
+      <span style="font-family: monospace;"><span
+ style="font-weight: bold; color: rgb(127, 0, 85);">private</span>
+CheckboxGroup myGroup = <span
+ style="font-weight: bold; color: rgb(127, 0, 85);">null</span>;&nbsp; <span
+ style="color: rgb(63, 127, 95);">//
+@jve:decl-index=0:visual-constraint=""<br>
+      </span></span><br>
+This will be modeled but not show up on the free form:<br>
+      <span style="font-family: monospace;"><span
+ style="font-weight: bold; color: rgb(127, 0, 85);">private</span>
+CheckboxGroup myGroup = <span
+ style="font-weight: bold; color: rgb(127, 0, 85);">null</span>;&nbsp; <span
+ style="color: rgb(63, 127, 95);">// @jve:decl-index=0<br>
+      </span></span><br>
+These will be neither modeled nor show up in the Visual Editor:<br>
+      <span style="font-family: monospace;"><span
+ style="font-weight: bold; color: rgb(127, 0, 85);">private</span>
+CheckboxGroup myGroup = <span
+ style="font-weight: bold; color: rgb(127, 0, 85);">null</span>;&nbsp; <span
+ style="color: rgb(63, 127, 95);">// @jve:</span></span><br>
+      <span style="font-family: monospace;"><span
+ style="font-weight: bold; color: rgb(127, 0, 85);">private</span>
+CheckboxGroup myGroup = <span
+ style="font-weight: bold; color: rgb(127, 0, 85);">null</span>;</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>GridLayout
+(SWT)
+Editor</b></td>
+      <td style="vertical-align: top;">The VE now includes an advanced
+editor for SWT's GridLayout.&nbsp; The editor features:<br>
+      <ul>
+        <li>Visualization of the grid through borders and row/column
+indicators.&nbsp; The grid is shown when dropping a new component,
+moving an existing component, or by enabling the grid display from the
+container's context menu.</li>
+        <li>Drop position when adding/moving components on the
+GridLayout indicated by vertical position bar<br>
+        </li>
+        <li>Horizontal/vertical spanning done graphically by dragging
+the green
+handles on a selected component<br>
+        </li>
+      </ul>
+      <p><img alt="Dropping a component on grid layout"
+ src="droppingOnGridLayout.jpg" style="width: 374px; height: 256px;"><br>
+      </p>
+      <ul>
+        <li>GridData constraints modifiable through the Grid pages on
+the Layout Customization window. (accessible from the Eclipse tool bar)</li>
+        <ul>
+          <li>Change alignment, fill, grab and span values</li>
+          <li>Change the constraints of multiple selected components at
+once</li>
+        </ul>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>Component
+Error Messages in Tool Tips<br>
+      </b></td>
+      <td style="vertical-align: top;">Error messages for a visual
+component are now displayed in the component's tool tip on the
+graphical surface.&nbsp; Previously the only way to see these messages
+were to select the component then read the Eclipse status line
+text.&nbsp; The tool tip will also show multiple errors, where as the
+status line only shows a single message.<br>
+      <img alt="Multi-line tool tip error" src="vmError.jpg"
+ style="width: 549px; height: 111px;"><br>
+      <br>
+      <img alt="Too complicated message" src="vmError2.jpg"
+ style="width: 492px; height: 94px;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>Palette
+Improvements<br>
+      </b></td>
+      <td style="vertical-align: top;">The Visual Editor's palette can
+now be hosted in the Palette view.&nbsp; This allows for the palette to
+be placed anywhere in the perspective, as a fly out, or as a tear off
+view.&nbsp; If the Palette view is open in the current perspective, the
+Visual Editor's palette will be populated in the view.&nbsp; Otherwise
+the palette will be embedded in the editor window as before.<br>
+      <br>
+      <img alt="Palette as a tear off view" src="paletteView.jpg"
+ style="width: 545px; height: 471px;"><br>
+      <br>
+To show the Palette view, go to <span style="font-weight: bold;">Window-&gt;Show
+View-&gt;Other...</span>, expand the <span style="font-weight: bold;">Basic</span>
+group, select <span style="font-weight: bold;">Palette</span> and
+press OK.<br>
+      <br>
+      <br>
+      <img alt="New palette layout options" src="paletteLayout.jpg"
+ style="width: 234px; height: 354px;" align="left">The embedded palette
+has been improved as well.&nbsp; It can be docked
+to the left or right side of the editor, will automatically fly out
+when the cursor hovers over the collapsed view, and will maintain size
+preferences.<br>
+      <br>
+The palette also now supports several different layout options,
+including columns and icons only.&nbsp; Some additional configuration
+options are available by selecting the <span style="font-weight: bold;">Settings...</span>
+option from the context menu on the palette.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>Graphical
+Manipulation of Table Columns<br>
+      </b></td>
+      <td style="vertical-align: top;">You can now add, move, delete,
+and direct edit TableColumns on JTables graphically (the
+autoCreateColumnsFromModel property on the JTable must be set to false
+to drop TableColumns).&nbsp; To select a column, click in the content
+area on the table (not the column header).&nbsp; Performing direct edit
+on a Table Column modifies the headerValue property.<br>
+      <br>
+      <img alt="Moving a table column" src="columnMove.jpg"
+ style="width: 438px; height: 160px;">&nbsp; <img
+ alt="Direct editing the header value" src="columnEdit.jpg"
+ style="width: 155px; height: 117px;" align="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="text-align: right;" width="30%" valign="top"><b>GridBagLayout
+Editor<br>
+      </b></td>
+      <td width="70%" valign="top">The VE now includes an advanced
+editor for Swing/AWT's GridbagLayout.&nbsp; The editor features:<br>
+      <ul>
+        <li>Visualization of the grid through borders and row/column
+indicators.&nbsp; The grid is shown when dropping a new component,
+moving an existing component, or by enabling the grid display from the
+container's context menu.</li>
+        <li>Cell shading and row/column position indications on the
+cursor indicating drop locations of added/moved components.</li>
+        <li>Dropping to new rows/columns indicated by yellow bars on
+the grid lines.&nbsp; The row and column headers will change to yellow
+to indicate the numbers will be incremented.</li>
+        <li>Row/column spanning done graphically by dragging the green
+handles on a selected component<br>
+        </li>
+      </ul>
+      <p><img alt="Inserting into a new row" src="GridBag1.jpg"
+ style="width: 469px; height: 340px;"><br>
+      </p>
+      <ul>
+        <li>Gridbag constraints modifiable through the Gridbag
+alignment window. (accessible from the Eclipse toolbar)</li>
+        <ul>
+          <li>Change anchor, fill and insets constraints</li>
+          <li>Change the constraints of multiple selected components at
+once<br>
+          </li>
+        </ul>
+      </ul>
+      <p> <img style="width: 567px; height: 390px;"
+ alt="Gridbag alignment help" src="GridBag2.jpg"><br>
+      </p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td style="text-align: right;" width="30%" valign="top"><b>Object
+Reference Editor<br>
+      </b></td>
+      <td width="70%" valign="top">The property sheet now has a default
+property editor for object types without a predefined editor.&nbsp;
+This generic editor will allow you to choose to drop a new instance of
+the required type, or to reference beans that have previously been
+dropped.<br>
+      <br>
+      <p><img style="width: 333px; height: 647px;" alt="Choose object"
+ src="defaultObjectChooser1.jpg"><img align="top"
+ style="width: 247px; height: 98px;" alt="Object property sheet"
+ src="defaultObjectChooser2.jpg"><br>
+      </p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td align="right" valign="top" width="30%"><span
+ style="font-weight: bold;">Field Rename</span><br>
+      </td>
+      <td width="70%" valign="top">You can now rename dropped beans
+from the property sheet, without using the refactoring system.&nbsp; By
+changing the field name property on the property sheet, the bean's
+field and its get method will be renamed, and any references to the
+bean will be updated.&nbsp; This is done without the time-consuming
+reload process that was necessary in previous versions of the VE.<br>
+      <p><img src="fieldRename.jpg"
+ alt="Field rename from the property sheet"
+ style="height: 77px; width: 237px;"><br>
+      </p>
+      <p>A full-scale refactoring is still required if the field or get
+method are not declared as <span
+ style="font-family: monospace; font-weight: bold; color: rgb(127, 0, 85);">private</span>.<br>
+      </p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td width="30%" valign="top" align="left">
+      <p align="right"><b>Editor Progress Information<br>
+      </b></p>
+      </td>
+      <td width="70%" valign="top">Status information is displayed on
+the status bar and on the Progress view while the Visual Editor is
+busy.&nbsp; Currently this is mostly displayed as the editor is being
+launched, but more information messages will be added in later
+milestones.<br>
+      <br>
+To launch the Progress View, double-click on the status line text in
+the bottom right of the Eclipse window.<br>
+      <br>
+      <img style="width: 577px; height: 164px;"
+ alt="Status information in the Progress view" src="progress.jpg"><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>Reload
+From Scratch Changes<br>
+      </b></td>
+      <td style="vertical-align: top;">The types of operations which
+automatically invoke a reload from scratch have been reduced
+drastically.&nbsp; When a reload does occur, the selection of
+components are now maintained when the reload completes.<br>
+      <br>
+You can now manually invoke a reload from scrach operation by
+double-clicking in the code synchronization status field on the Eclipse
+status bar.<br>
+      <img style="width: 343px; height: 32px;"
+ alt="Reload from code synchronization status" src="statusReload.jpg"><br>
+Previously it was necessary to pause and resume the code
+synchronization in order to manually cause a reload from scratch.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>Code
+Synchronization Status<br>
+      </b></td>
+      <td style="vertical-align: top;">The code synchronization control
+has been moved from the status bar to the Eclipse
+toolbar.&nbsp; Use the button to pause the code synchronization when
+performing major changes to the source code.&nbsp; The button's icon
+will update to indicate when there is a parse error in the source.<br>
+      <br>
+      <img style="width: 303px; height: 107px;"
+ alt="Code synchronization pause button" src="pauseButton.jpg"><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+  </tbody>
+</table>
+<b></b>
+</body>
+</html>

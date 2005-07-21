@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Language" content="en-us">
+  <meta http-equiv="Content-Type" content="text/html">
+  <link rel="stylesheet" href="default_style.css">
+  <title>Previewing SWT</title>
+</head>
+<body>
+<h1>Previewing SWT Support in the Visual Editor 1.0 M2</h1>
+<br>
+This document will help you get setup to preview the VE's SWT
+support.&nbsp; The SWT functionality is still under heavy development
+but it is worth
+previewing for those interested in a glimpse of what is to come.<br>
+<br>
+<h3 style="color: rgb(255, 0, 0);"><span style="font-weight: bold;">Requirements:</span></h3>
+<ul>
+  <li>Eclipse 3.0<br>
+  </li>
+  <li>Visual Editor 1.0 M2</li>
+  <li>JRE 1.4.2</li>
+  <li>Win32 or Linux/GTK (support for other platforms to come, see bug <a
+ href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=58022">58022</a>)<br>
+  </li>
+</ul>
+<h3><span style="font-weight: bold;">1.&nbsp; Creating a new Java
+Project</span></h3>
+<br>
+Launch the wizard to create a new Java Project in your workspace.&nbsp;
+Give the project a name and hit <span style="font-weight: bold;">Next
+&gt;</span>
+(not finish).<br>
+<img alt="New Java Project" src="newProject1.jpg"><br>
+<br>
+On the following page, select the <span style="font-weight: bold;">Libraries</span>
+tab and press the <span style="font-weight: bold;">Add Library...</span>
+button.<br>
+<br>
+<img alt="Add Library" src="newProject2.jpg"><br>
+<br>
+Select the <span style="font-weight: bold;">Standard Widget Toolkit
+(SWT)</span> library.&nbsp; Hit <span style="font-weight: bold;">Next</span>,
+then <span style="font-weight: bold;">Finish</span>, then <span
+ style="font-weight: bold;">Finish</span> on the New Java Project
+wizard.<br>
+<br>
+Note: You can add the SWT library to an existing Java project by
+opening the project's <span style="font-weight: bold;">Properties</span>
+(from the context menu), selecting <span style="font-weight: bold;">Java
+Build Path</span>, then the <span style="font-weight: bold;">Libraries</span>
+tab, then <span style="font-weight: bold;">Add Library...</span> as
+shown above.<br>
+<br>
+<br>
+<img alt="Select SWT Library" src="newProject3.jpg"><br>
+<br>
+<br>
+<h3><span style="font-weight: bold;">2.&nbsp; Creating an SWT Visual
+Class</span></h3>
+Select the newly created project, and create a new Visual Class in it
+(select the project, bring up the context menu, go to <span
+ style="font-weight: bold;">New</span>-&gt;<span
+ style="font-weight: bold;">Visual
+Class</span>)<br>
+<br>
+Name the class, expand the <span style="font-weight: bold;">SWT</span>
+Style and select <span style="font-weight: bold;">Application</span>.&nbsp;
+Check the create main stub option to generate the SWT event loop.
+Hit <span style="font-weight: bold;">Finish</span>.<br>
+<br>
+<img alt="New visual class" src="newVisualClass-SWT.jpg"><br>
+<br>
+When the Visual Editor loads, you will see a canvas with a shell
+dropped on it,
+and the SWT group on the Java Beans palette.<br>
+<br>
+<img src="SWTPalette.jpg" alt="SWT Palette"><br>
+<br>
+The default layout of SWT composites is the null layout, so switch the
+Shell's layout to RowLayout from the property sheet.<br>
+Try out the SWT support by adding more components to the shell,
+modifying properties, changing layouts, adding events, etc.&nbsp;
+Currently controls other than Shell must be dropped on a composite to
+be shown visually (so you can not drop to the free form).&nbsp; The
+code pattern generated will most likely be changed in future milestones.<br>
+<br>
+Hopefully this will give you a sense of what is to come from the Visual
+Editor's support for SWT in version 1.0.&nbsp; Please leave feedback on
+the eclipse.tools.ve newsgroup, and post bug reports in <a
+ href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=VE">bugzilla</a>
+(and <a
+ href="https://bugs.eclipse.org/bugs/buglist.cgi?short_desc_type=allwordssubstr&amp;short_desc=&amp;product=VE&amp;component=SWT&amp;long_desc_type=allwordssubstr&amp;long_desc=&amp;bug_file_loc_type=allwordssubstr&amp;bug_file_loc=&amp;keywords_type=anywords&amp;keywords=&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;emailassigned_to1=1&amp;emailtype1=substring&amp;email1=&amp;emailreporter2=1&amp;emailtype2=substring&amp;email2=&amp;bugidtype=include&amp;bug_id=&amp;votes=&amp;changedin=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;cmdtype=doit&amp;newqueryname=&amp;order=Reuse+same+sort+as+last+time&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=">check</a>
+for duplicates first)
+</body>
+</html>
