@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.20 $  $Date: 2005-07-19 20:38:53 $
+ *  $Revision: 1.21 $  $Date: 2005-07-21 17:59:14 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -559,10 +559,17 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 								}
 							}
 						} else {
-							// Decrease the horizontal span and put a filler label in the columns it was decreased by
-							if (index + 1 < children.size())
-								for (int i = 0; i < rect.width - newgridDataWidth; i++)
-									componentCB.append(policy.getCreateCommand(createFillerLabelObject(), children.get(index + 1)));
+							// Decrease the horizontal span and put filler labels in the columns it was decreased by
+							Rectangle childRect = rect.getCopy();
+							// Need to put filler labels in the more than one row if the child spans vertically.
+							for (int i = 0; i < rect.height; i++) {
+								// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
+								EObject beforeObject = findNextValidObject(childRect.x + childRect.width, childRect.y + childRect.height - 1);
+								for (int j = 0; j < rect.width - newgridDataWidth; j++) {
+									componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+								}
+								childRect.y--;
+							}
 						}
 					}
 				}
@@ -600,7 +607,9 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 								for (int i = 0; i < rect.height - newgridDataHeight; i++) {
 									// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
 									EObject beforeObject = findNextValidObject(childRect.x + 1, childRect.y + childRect.height - 1);
-									componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+									for (int j = 0; j < rect.width; j++) {
+										componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+									}
 									childRect.y--;
 								}
 							}
@@ -1013,7 +1022,6 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	 */
 	private EObject findNextValidObject (int columnStart, int rowStart) {
 		EObject[][] table = getLayoutTable();
-		// If there is only one row (or none), no need to add empty labels.
 		if (table.length == 0 || table[0].length == 0)
 			return null;
 		List children = (List) getContainer().eGet(sfCompositeControls);
