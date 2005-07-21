@@ -82,6 +82,7 @@ public class TextFieldViewer implements IFieldViewer {
     private void loadEditControl() {
         String valueToEdit = (String) object2String.convert(propertyValue);
         control.setText(valueToEdit);
+        setDirty(false);
     }
 
     /* (non-Javadoc)
@@ -103,6 +104,7 @@ public class TextFieldViewer implements IFieldViewer {
 	 */
 	public void setDirty(boolean dirty) {
         this.dirty = dirty;
+        input.fireObjectListenerEvent();
 	}
     
     /* (non-Javadoc)
@@ -110,8 +112,7 @@ public class TextFieldViewer implements IFieldViewer {
      */
     public void undo() {
         loadEditControl();
-        dirty = false;
-        input.fireObjectListenerEvent();
+        setDirty(false);
     }
     
     /* (non-Javadoc)
@@ -128,8 +129,7 @@ public class TextFieldViewer implements IFieldViewer {
         String textValue = control.getText();
         propertyValue = string2Object.convert(textValue);
         property.set(propertyValue);
-        dirty = false;
-        input.fireObjectListenerEvent();
+        setDirty(false);
 	}
     
 	/* (non-Javadoc)
@@ -195,8 +195,7 @@ public class TextFieldViewer implements IFieldViewer {
                 e.doit = false;
                 hintHandler.setMessage(error);
             } else {
-                dirty = true;
-                input.fireObjectListenerEvent();
+            	setDirty(true);
                 hintHandler.clearMessage();
             }
         }

@@ -22,7 +22,8 @@ import org.eclipse.ve.sweet.reflect.DuckType;
 
 /**
  * An object that tracks the dirty/committed state of specified IObjectViewers and 
- * enables/disables SWT controls when the edit state changes.
+ * enables/disables SWT controls when the edit state changes.  This implementation uses
+ * duck typing so that it works with any SWT control that has setEnabled/isEnabled methods.
  * 
  * @author djo
  */
@@ -123,11 +124,11 @@ public class SWTEditStateController implements IEditStateController {
 	private void updateControlEnablement() {
 		for (Iterator controlsIter = controls.keySet().iterator(); controlsIter.hasNext();) {
 			ControlInfo controlInfo = (ControlInfo) controls.get(controlsIter.next());
-			boolean enable = dirty;
-			if (!controlInfo.enableOnDirty) {
-				enable = !enable;
+			if (controlInfo.enableOnDirty) {
+				controlInfo.control.setEnabled(dirty);
+			} else {
+				controlInfo.control.setEnabled(!dirty);
 			}
-			controlInfo.control.setEnabled(enable);
 		}
 	}
 
