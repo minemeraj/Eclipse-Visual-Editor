@@ -1,0 +1,393 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Language" content="en-us">
+  <meta http-equiv="Content-Type" content="text/html">
+  <link rel="stylesheet" type="text/css" href="newnoteworthy.css">
+  <title>Eclipse Visual Editor Project 1.0 - New and Noteworthy</title>
+</head>
+<body style="">
+<h1>Eclipse Visual Editor Project 1.1 M1 - New and Noteworthy</h1>
+<table style="width: 80%;" border="0" cellpadding="10" cellspacing="0">
+  <tbody>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: left;"><b><a
+ name="Support_for_Eclipse_3.1_M6"></a>Support
+for Eclipse 3.1 M6<br>
+      </b></td>
+      <td style="vertical-align: top;" align="left">The Visual Editor
+is now
+compatible with <a
+ href="http://download.eclipse.org/downloads/drops/S-3.1M6-200504011645/index.php">Eclipse
+3.1 M6</a>, <a href="http://www.eclipse.org/gef/">GEF 3.1</a> and <a
+ href="http://www.eclipse.org/emf/">EMF 2.1</a>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" width="30%">
+      <p><b><a name="Ability_to_create_and_edit_RCP_Views"></a>Ability
+to create and edit <a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/platform-ui-home/rcp/index.html">RCP</a>
+Views<br>
+      </b></p>
+      </td>
+      <td valign="top" width="70%"><span style="font-weight: bold;"></span>The
+Visual Editor can now be used to create an RCP View in a RCP enabled
+plugin project<br>
+      <br>
+      <img alt="" src="newvisualclass-rcp.jpg"><br>
+      <br>
+      <br>
+The template created has a default Composite that can be used as the
+ViewPart's client area<br>
+      <table style="text-align: left;" border="0" cellpadding="2"
+ cellspacing="10">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;"><img alt=""
+ src="rcp-testview.jpg"></td>
+            <td style="vertical-align: top;"><img src="javabeans.gif"
+ border="0"></td>
+          </tr>
+        </tbody>
+      </table>
+      <img src="snippet.gif" border="0"><br>
+To compose the ViewPart select SWT controls from the palette as
+described in <span style="font-weight: bold;">Help &gt; Contents </span>and
+      <span style="font-weight: bold;">Using the visual editor for Java</span><br>
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="text-align: right; vertical-align: top;">
+      <p style="text-align: left;"><b><a name="Performance:_Phase-I"></a>Performance:
+Phase-I<br>
+      </b></p>
+      </td>
+      <td style="vertical-align: top;">The Visual Editor now uses
+caches which (once created) reduces loading time by 30% on an average.
+The cached model
+can be cleared by performing a <span style="font-style: italic;">clean</span>
+operation on the project concerned (Project &gt; Clean...). Details of
+the performance improvement effort can be
+found <a
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/vep-home/WebContent/docs/performance/index.html?rev=HEAD&amp;content-type=text/html">here</a>.
+(<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=61944">61944</a>)<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="text-align: right; vertical-align: top;">
+      <p style="text-align: left;"><span style="font-weight: bold;"><a
+ name="Improved_Font_and_Color_property_editors"></a>Improved
+Font and Color property editors</span><br>
+      </p>
+      </td>
+      <td style="vertical-align: top;">The SWT font and color property
+editors have improved JFace support built into them. JFace resources do
+not require one to explicitly dispose them. <br>
+      <br>
+Color property editor :<br>
+      <img alt="" src="color-property-editor.jpg"><br>
+      <br>
+Font property editor:<br>
+      <img alt="" src="font-property-editor.jpg"><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;">
+      <p style="text-align: left;"><span style="font-weight: bold;"><b><a
+ name="Improved_Tablecolumn_support"></a>Improved
+Tablecolumn
+support</b></span></p>
+      </td>
+      <td style="vertical-align: top;">The Visual Editor is now capable
+of better editing TableColumns in both SWT and Swing. <br>
+      <br>
+It is possible to add table columns directly to the table instead of
+only to the Java Beans view. Table columns can also be reordered
+directly in graphical editor. <br>
+      <img alt="" src="tablecolumn-drop.jpg"><br>
+      <br>
+Also it is possible to set column header text directly from the
+graphical editor<br>
+      <img alt="" src="tablecolumn-title.jpg"><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;">
+      <p style="text-align: left;"><b><a
+ name="Better_PDE_development_support"></a>Better PDE development
+support<br>
+      </b></p>
+      </td>
+      <td style="vertical-align: top;">The Visual Editor is now capable
+of working in a plugin based environment where necessary resources are
+obtained from a (potentially different) target platform. This allows
+for one to use the
+Visual Editor in the development of <a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/platform-ui-home/rcp/index.html">RCP</a>
+applications which use the
+plugin based environment.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align: right; vertical-align: top;">
+      <p style="text-align: left;"><span style="font-weight: bold;"><a
+ name="Ability_to_launch_RCP_Views"></a>Ability
+to launch RCP Views</span><br>
+      </p>
+      </td>
+      <td style="vertical-align: top;">The Visual Editor's <span
+ style="font-style: italic;">Java Bean</span> launcher is now capable
+of launching and showing the contents of RCP Views, with out the need
+to run a full RCP application.<br>
+      <br>
+      <img alt="" src="RCPView-launch.jpg"><br>
+      <br>
+The RCP View once launched:<br>
+      <img alt="" src="RCPView-launched.jpg"
+ style="width: 503px; height: 235px;"><br>
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="text-align: right; vertical-align: top;">
+      <p style="text-align: left;"><span style="font-weight: bold;"><a
+ name="Preferences_aware_RCP_View_tabs"></a>Preferences
+aware RCP View tabs</span><br>
+      </p>
+      </td>
+      <td style="vertical-align: top;">The Visual Editor edits and
+launches RCP Views based on the current platform's preferences for a
+View's tabs. <br>
+      <br>
+If a user prefers tabs at the bottom and not be traditional style as
+indicated below:<br>
+      <br>
+      <img alt="" src="Tab-preferences.jpg"
+ style="width: 572px; height: 524px;"><br>
+      <br>
+Then Visual Editor edits based on the preferences:<br>
+      <img alt="" src="Tab-edit.jpg"><br>
+      <br>
+Also it launches the file being edited based on the preferences:<br>
+      <img alt="" src="Tab-run.jpg" style="width: 501px; height: 234px;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;">
+      <p style="text-align: left;"><span style="font-weight: bold;"><a
+ name="Improved_support_for_complex_arguments"></a>Improved
+support for complex arguments<br>
+      </span></p>
+      </td>
+      <td style="vertical-align: top;">The Visual Editor now
+understands complex source patterns for an argument to a method. It can
+understand most combinations of source as long as the entities making
+up the argument are modeled. <br>
+      <span style="font-weight: bold;"><br>
+      </span><span style="text-decoration: underline;"><span
+ style="font-weight: bold;">Example:</span></span><span
+ style="font-weight: bold;"><br>
+      <span style="font-weight: bold;"><br>
+      <span style="font-weight: bold;"></span></span></span>The complex
+argument statement <br>
+      <img src="simpleapplication-expression.jpg" alt=""><br>
+      <br>
+creates the below simple application containing a JButton.<br>
+      <img alt="" src="simpleapplication.jpg"><br>
+      <br>
+Earlier versions of the Visual Editor were incapable of handling such
+an expression and would result in<br>
+      <img alt="" src="simpleapplication-fail.jpg"><br>
+      <br>
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;"><br>
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="text-align: right;" valign="top" width="30%">
+      <p style="text-align: left;"><span style="font-weight: bold;"><b><a
+ name="Support_for_new_SWT_controls"></a>Support
+for new SWT controls<br>
+      </b></span></p>
+      </td>
+      <td valign="top" width="70%"><span style="font-family: monospace;">The
+Visual Editor now supports the new SWT controls in 3.1<br>
+      </span>
+      <table style="text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+        <tbody>
+          <tr>
+            <td><span style="font-weight: bold;">org.eclipse.swt.widgets.Spinner&nbsp;</span>
+            </td>
+            <td><img alt="" src="spinner.jpg"></td>
+          </tr>
+          <tr>
+            <td><span style="font-weight: bold;">org.eclipse.swt.widgets.Link&nbsp;</span></td>
+            <td><span style="text-align: center;"><img alt=""
+ src="link.jpg"></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <span style="font-family: monospace;"> </span></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td align="right" valign="top" width="30%">
+      <p align="left"><b><a name="Enhanced_New_Java_Visual_Class_wizard"></a>Enhanced
+      <span style="font-style: italic;">New
+Java Visual Class</span> wizard<br>
+      </b></p>
+      </td>
+      <td valign="top" width="70%"><span style="font-family: monospace;"></span>The
+      <span style="font-style: italic;">New Java Visual Class</span>
+wizard added an <i>Application</i> style to help users develop more
+powerful applications. <br>
+      <br>
+      <img alt="" src="newvisualclass.jpg"><br>
+      <br>
+which generates an application containing commonly used menus and event
+handlers already built into it<br>
+      <img alt="" src="newvisualclass-myapp.jpg"><br>
+      <br>
+Similarly the <span style="font-style: italic;">Shell</span> style in
+the <span style="font-style: italic;">SWT </span>category has also
+been updated.<br>
+      <br>
+The <span style="font-style: italic;">New Java Visual Class</span>
+wizard also has improved error checking built into it<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;">
+      <p style="text-align: left;"><b><a
+ name="SWT_Shell_re-parenting_support"></a>SWT Shell
+re-parenting support<br>
+      </b></p>
+      </td>
+      <td style="vertical-align: top;">The Visual Editor now allows a
+user to re-parent an SWT Shell. This is helpful for users wanting to
+create dialogs and other shells from an SWT application. <br>
+      <br>
+      <br>
+      <table style="width: 100%; text-align: left;" border="0"
+ cellpadding="2" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="text-align: center; vertical-align: top;"><img
+ alt="" src="reparent-menu.jpg"></td>
+            <td style="text-align: center; vertical-align: top;"><img
+ alt="" src="reparent-dialog.jpg"></td>
+          </tr>
+        </tbody>
+      </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;"><br>
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;">
+      <p style="text-align: left;"><span style="font-weight: bold;"><a
+ name="Grouping_of_generated_expressions"></a>Grouping
+of generated expressions</span><br>
+      </p>
+      </td>
+      <td style="vertical-align: top;">The Visual Editor has an
+improved code generation pattern which puts new expressions in the
+source in a more understandable manner. It groups together expressions
+of a bean based on priority and dependency checks. (<a
+ href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=91731">91731</a>)<br>
+      <br>
+      <table style="width: 100%; text-align: left;" border="0"
+ cellpadding="2" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="text-align: center; vertical-align: middle;">Before<br>
+            </td>
+            <td style="text-align: center; vertical-align: middle;">After<br>
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: center; vertical-align: middle;"><img
+ alt="" src="ordering-old.jpg"><br>
+            </td>
+            <td style="text-align: center; vertical-align: middle;"><img
+ alt="" src="ordering-new.jpg"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td style="text-align: right; vertical-align: top;">
+      <p style="text-align: left;"><span style="font-weight: bold;"><a
+ name="New_detailed_VE_extension_tutorial"></a>New
+detailed VE extension tutorial</span></p>
+      </td>
+      <td style="vertical-align: top;">The Visual Editor now has a
+tutorial which details the various means by which it can be extended.
+The tutorial can be found <a
+ href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/WebContent/index.html">here</a>.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+&nbsp;
+</body>
+</html>
