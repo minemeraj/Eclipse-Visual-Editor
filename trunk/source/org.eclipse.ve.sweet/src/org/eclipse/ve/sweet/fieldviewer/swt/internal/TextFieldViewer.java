@@ -55,6 +55,7 @@ public class TextFieldViewer implements IFieldViewer {
     private DelegatingHintHandler hintHandler = new DelegatingHintHandler();
     
     private Object propertyValue;
+	private int loadingControl=0;
     
     public TextFieldViewer(Object control, IObjectViewer object, IPropertyEditor property) {
         this.input = object;
@@ -81,8 +82,10 @@ public class TextFieldViewer implements IFieldViewer {
 
     private void loadEditControl() {
         String valueToEdit = (String) object2String.convert(propertyValue);
+        ++loadingControl;
         control.setText(valueToEdit);
         setDirty(false);
+        --loadingControl;
     }
 
     /* (non-Javadoc)
@@ -104,7 +107,9 @@ public class TextFieldViewer implements IFieldViewer {
 	 */
 	public void setDirty(boolean dirty) {
         this.dirty = dirty;
-        input.fireObjectListenerEvent();
+        if (loadingControl < 1) {
+        	input.fireObjectListenerEvent();
+        }
 	}
     
     /* (non-Javadoc)
