@@ -1,0 +1,482 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html><head>
+  
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+
+  
+  <meta name="Author" content="Eclipse {{top-level project name}} PMC">
+  <title>Eclipse {{TEMPLATE}} - DRAFT {{VERSION}} Plan</title>
+
+  
+
+
+
+  
+  <link rel="stylesheet" href="default_style.css" type="text/css">
+</head>
+<body>
+
+<p>[<b>Eclipse project plan template 1.0 - last revised Sept. 30, 2004</b></p>
+
+
+
+<p><b>This is the plan template for Eclipse projects. It's basic format follows
+that of the ones for the Eclipse Platform top-level project.
+Fill-ins are enclosed in double braces, which has the advantage for being easy
+to spot in both raw and rendered HTML. Comments, like this one, are in bold and
+enclosed in square brackets (obviously they'll all need to be deleted). The aim
+is to have all Eclipse plans be "mostly" uniform, but provide freedom
+to deviate where it makes sense. The key characteristic is that the plans
+"feel" the same; the details may vary. The plan template can be
+expected to evolve over time based on feedback from the various projects.)</b></p>
+
+
+
+<p><b>Eclipse
+projects are somewhat hierarchical: (1) top-level projects, (2)
+projects within a top-level project, and (3) subsystems within a level
+2
+project. Plans are likely to be somewhat hierarchical as well. For
+simplicity,
+this template is written in the form of a plan for a top-level
+project with
+multiple projects within it. Subsystems are not explicitly mentioned.
+However,
+most projects under the umbrella Eclipse Tools top-level project will
+provide
+their own independent plans. To this end, this template uses the
+fill-in
+{{primary project name}}, which can be substituted with either the name
+of&nbsp;
+top-level project or the name of a project depending on the
+circumstance.</b></p>
+
+
+<p><b>Note: Plans are nominally authored by the top-level project's PMC. "We..." means
+"We, the top-level project's PMC, ..."</b></p>
+
+
+<p><b>Project names should be capitalized (e.g., "Web Tools Platform"); use all-caps
+for acronyms (e.g., "GEF").</b></p>
+
+
+<p><b>Reminder: Edit the page author &lt;meta name="Author"
+content="Eclipse {{top-level project name}} PMC"&gt;</b></p>
+
+
+<p><b>Reminder:
+Edit the&nbsp;page title &lt;title&gt;Eclipse {{primary
+project name}} - DRAFT {{version}} Plan&lt;/title&gt;<br>
+</b>]</p>
+
+
+<h1>Eclipse {{primary project name}}<br>
+ DRAFT {{version}} Plan</h1>
+
+
+<p>Last revised {{date}} (<img src="new.gif" border="0" height="12" width="12"> 
+  marks interesting changes over the {{link to previous plan revision}})</p>
+
+
+<p>[<b>Each time a new revision of a project plan is posted, tell the entire
+community by sending a notice to <a href="mailto:eclipse-dev@eclipse.org">eclipse-dev@eclipse.org</a>.
+Save
+old versions of the plans as {{plan file name}}_{{yyyymmdd}} so there is a
+permanent public record of how the project plan evolved. Use the green box </b><img src="new.gif" border="0" height="12" width="12"> 
+<b>image
+to draw the reader's attention to all interesting changes since the previous
+plan revision (like change bars in
+the margin). </b>]<br>
+<br>
+<i>&nbsp;&nbsp;&nbsp; Please send comments about this draft plan to the </i>{{link
+xxx@eclipse.org}} <i>developer mailing list.</i></p>
+
+
+<p>This document lays out the feature and API set for the next feature release
+of the Eclipse {{primary project name}} project after {{previous version}}, designated release
+{{version}}.
+</p>
+
+<ul>
+
+
+  <li><a href="#Deliverables">Release deliverables</a></li>
+  <li><a href="#Milestones">Release milestones</a></li>
+  <li><a href="#TargetOperatingEnvironments">Target operating environments</a></li>
+  <li><a href="#Compatibility">Compatibility with previous releases</a></li>
+</ul>
+
+
+<p>Plans do not materialize out of nowhere, nor are they entirely static. To
+ensure the planning process is transparent and open to the entire Eclipse
+community, plans are posted in an embryonic form and then revised from time to
+time throughout the release cycle.
+</p>
+
+<p>The first part of the plan deals with the important matters of release
+deliverables, release milestones, target operating environments, and
+release-to-release compatibility. These are all things that need to be clear for
+any release, even if no features were to change.&nbsp;
+</p>
+
+<p>The
+remainder of the plan consists of plan items for the projects under
+the Eclipse {{primary project name}} project. Each plan item covers a
+feature or API that is to be added, or some aspect that is to be
+improved. Each plan item has
+its own entry in the Eclipse bugzilla database, with a title and a
+concise
+summary (usually a single paragraph) that explains the work item at a
+suitably
+high enough level so that everyone can readily understand what the work
+item is
+without having to understand the nitty-gritty detail.
+</p>
+
+<p>[<b>Creating a special bugzilla
+report for each plan item allows any member of the Eclipse community to register
+their interest in, and comment on, individual plan items. Recommended format for
+plan item bug reports:<br>
+Summary: [Plan Item] {{Item title}}<br>
+Description: {{Item description}}<br>
+Keyword: plan<br>
+Version: {{previous version}}<br>
+Target Milestone: {{version}}<br>
+Priority: P4<br>
+Severity: enhancement</b>]
+</p>
+
+<p>Not
+all plan items represent the same amount of work; some may be quite
+large, others, quite small. Some plan items may involve work that is
+localized
+to a single subsystem; others may involve coordinated changes across
+several
+projects within the same top-level project; and others may involve
+coordination with other top-level projects. Although some plan
+items are for work that is more pressing that others, the plan items
+appear in
+no particular order.
+</p>
+
+<p>With the previous release as the starting point, this is the plan for how we
+will enhance and improve it. Fixing bugs, improving test coverage,
+documentation, examples, performance tuning, usability, etc. are considered routine
+ongoing maintenance activities and are not included in this plan unless they
+would also involve a significant change to the API or feature set, or involve a
+significant amount of work. The intent of the plan is to account for all interesting feature work.
+</p>
+
+<h2><a name="Deliverables"></a>Release deliverables</h2>
+
+
+<p>The release deliverables are:
+</p>
+
+<ul>
+
+
+  <li>Source code release for Eclipse {{primary project name}}, available as versions tagged
+    "{{release version tag - e.g., R1_1}}" in the eclipse.org <a href="http://dev.eclipse.org/viewcvs/">CVS
+    repository</a>.</li>
+  <li>{{primary project}} runtime binary and SDK distributions (downloadable).</li>
+  <li>{{primary project}} runtime binary and SDK features on eclipse.org update site
+    (install via Eclipse update manager).</li>
+</ul>
+
+
+<h2><a name="Milestones"></a>Release milestones</h2>
+
+
+<p>[<b>A regular schedule of release milestone throughout the release
+cycle helps keep things on track and gives the community a very visible metric
+of progress. The Eclipse Platform top-level project finds that a release cycle
+of about a year with milestones every 6 weeks is working fairly well for their
+teams. Your mileage may vary.</b>]</p>
+
+
+<p>Release milestone occurring at roughly {{N}} week intervals exist to facilitate
+coarse-grained planning and staging. The milestones are:</p>
+
+
+<ul>
+
+
+  <li>{{milestone date}} - Milestone 1 ({{version}} M1) - {{characteristics}}</li>
+  <li>{{milestone date}} - Milestone 2 ({{version}} M2) - {{characteristics}}</li>
+  <li>{{...}}</li>
+</ul>
+
+
+<p>The {{version}} release is targeted for {{anticipated release date - usually
+just the quarter until late in project)}}. All release deliverables will be
+available for download as soon as the release has been tested and validated in
+the target operating configurations listed below.</p>
+
+
+<h2><a name="TargetOperatingEnvironments"></a>Target Operating Environments</h2>
+
+
+<p>In order to remain current, each release of an Eclipse project targets reasonably current
+versions of underlying operating environments and other Eclipse projects on
+which it depends.&nbsp;</p>
+
+
+<p>Most of Eclipse is "pure" Java™ code and has no direct
+dependence on the underlying operating system. The chief dependence is on the
+Eclipse Platform, and on the Java 2 Platform that runs it.</p>
+
+
+<p>The {{primary project name}} {{version} release depends on the following:</p>
+
+
+<ul>
+
+
+  <li>Java 2 Platform {{JDK version; e.g., 1.4}}</li>
+  <li>Eclipse Platform {{platform version; e.g., 3.0}}</li>
+  <li>{{versions of other Eclipse projects; e.g., EMF 2.0}}</li>
+</ul>
+
+
+<p> The {{version}} release of {{primary project name}} is designed to run on any configuration supporting the above components.</p>
+
+
+<p>The Eclipse Platform runs in a variety of operating environments. Testing is
+focused on a handful of popular
+<span class="header">combinations of operating system and Java 2 Platform; these
+are our <em>reference platforms</em>. Eclipse undoubtedly runs fine in many
+operating environments beyond the reference platforms we test. However, since we
+do not systematically test them we cannot vouch for them. Problems encountered
+when running Eclipse on non-reference platform that cannot be recreated on any
+reference platform will be given lower priority than problems with running
+Eclipse on a reference platform.</span></p>
+
+
+<p> {{primary project name}} {{version}} is tested and validated on the following reference platforms:</p>
+
+
+<table border="1">
+
+
+  <tbody><tr bgcolor="#cccccc">
+    <th colspan="4">
+      <div align="center">
+        <b><font size="+1">Eclipse Reference Platforms</font></b>
+      </div>
+    </th>
+  </tr>
+  <tr>
+    <td width="205"><b>Operating system</b></td>
+    <td width="76"><b>Processor architecture</b></td>
+    <td width="59"><b>Window system</b></td>
+    <td width="453"><b>Java 2 Platform</b></td>
+  </tr>
+  <tr>
+    <td width="205">{{os and version}}</td>
+    <td width="76">{{arch}}</td>
+    <td width="59">{{ws}}</td>
+    <td width="453">{{JRE vendor and version}}</td>
+  </tr>
+</tbody>
+</table>
+
+
+<p>[<b>See the <a href="http://www.eclipse.org/eclipse/development/eclipse_project_plan_3_1.html">Eclipse
+Project 3.1 plan</a> for a list of reference platforms.</b>]</p>
+
+
+<h4>Internationalization</h4>
+
+
+<p> Eclipse is designed as the basis for internationalized products.
+The user interface elements provided by the various Eclipse projects, including
+dialogs and error messages, are externalized. The English strings for {{primary project name}}
+are provided
+as the default resource bundles. Translations are not provided with this
+release. However, the plug-in fragment mechanism provides the means by which translations into any number of
+other languages can be incorporated.</p>
+
+
+<h2><a name="Compatibility"></a>Compatibility with Previous Releases</h2>
+
+
+<p>[<b>Compatible evolution is the basis for long-lived software, and the norm
+for all Eclipse projects. The following boilerplate spells this out. In
+exception circumstances, a project may need to deviate from the norm. If that is
+the case, it is critical that this section explains how and why this project
+differs from the norm of compatibility.</b>]</p>
+
+
+<h3>Compatibility of Release {{version}} with {{previous version}}</h3>
+
+
+<p>Eclipse {{primary project name}} {{version}} will be compatible with {{primary project name}}
+{{previous version}}.</p>
+
+
+<p><b>API Contract Compatibility:</b> {{primary project name}} {{version}} will be upwards
+contract-compatible with {{primary project name}} {{previous version}} except in those areas noted
+in the <i>{{primary project name}}</i><i> {{version}} Migration</i><em> Guide</em>. Programs that use affected APIs and extension points
+will need to be ported to {{primary project name}} {{version}} APIs. Downward contract compatibility
+is not supported. There is no guarantee that compliance with {{primary project name}}
+{{version}} APIs would ensure compliance with {{primary project name}} {{previous version}} APIs. Refer to <i><a href="http://eclipse.org/eclipse/development/java-api-evolution.html">Evolving
+Java-based APIs</a></i> for a discussion of the kinds of API changes that
+maintain contract compatibility.</p>
+
+
+<p><b>Binary (plug-in) Compatibility:</b> {{primary project name}} {{version}} will be upwards
+binary-compatible with {{primary project name}} {{previous version}} except in those areas noted in the
+<i>{{primary project name}}</i><i> {{version}} Migration</i><em> Guide</em>. Downward plug-in compatibility is not
+supported: plug-ins compiled against {{primary project name}} {{version}} will
+likely be unusable with {{primary project name}} {{previous version}}. Refer to <i><a href="http://eclipse.org/eclipse/development/java-api-evolution.html">Evolving
+Java-based APIs</a></i> for a discussion of the kinds of API changes that
+maintain binary compatibility.
+</p>
+
+<p><b>Source Compatibility:</b>   Source files written to use {{primary project name}}
+{{previous version}} APIs will usually compile and
+run successfully against {{primary project name}} {{version}} APIs,
+although this cannot be guaranteed. In some cases, it may be necessary to make
+minor changes to the source code to disambiguate things like imports or
+overloaded method invocations. Downward source compatibility is not supported.
+If source files use new APIs, they will not be usable with earlier versions.
+</p>
+
+<p><b>Workspace Compatibility:</b>
+Eclipse {{primary project name}} {{version}} will be upwards
+workspace-compatible with {{primary project name}} {{previous version}}
+unless noted. This means that
+workspaces and projects created by an Eclipse with {{primary project
+name}} {{previous
+version}} installed can be successfully opened
+by an Eclipse with {{primary project name}} {{version}} installed. This
+includes both hidden
+metadata, which is localized to a particular workspace, as well as
+metadata
+files found within a workspace project, which may
+propagate between workspaces via file copying or team repositories.
+User interface session state may be discarded when a workspace is
+upgraded.
+Downward workspace compatibility is not supported. Metadata files
+created (or overwritten)
+by the newer version will generally be unusable with older versions.
+</p>
+
+<p><b>Non-compliant usage of API's</b>: All non-API methods and classes, and
+certainly everything in a package with "internal" in its name, are
+considered implementation details which may vary between operating environment
+and are subject to change without notice. Client plug-ins that directly depend
+on anything other than what is specified in the API are inherently
+unsupportable and receive no guarantees about compatibility within a single
+release much less with an earlier releases. Refer to <i><a href="http://www.eclipse.org/articles/Article-API%20use/eclipse-api-usage-rules.html">How
+to Use the Eclipse API</a></i> for information about how to write compliant
+plug-ins.
+</p>
+
+<h2>Themes</h2>
+
+
+<p>[<b>Themes are used to draw attention to the main thrusts of the release, and
+help to in organizing the plan items. See the <a href="http://www.eclipse.org/eclipse/development/eclipse_project_plan_3_1.html">Eclipse
+Project 3.1 plan</a> for examples of theme and plan item write-ups.</b>]</p>
+
+
+<p> The changes under consideration for the next release of Eclipse {{primary project name}}
+address a few major themes:</p>
+
+
+<ul>
+
+
+  <li><b>{{Theme1 title} </b>- {{Theme1 description}}</li>
+  <li><b>{{Theme2 title} </b>- {{Theme2 description}}</li>
+</ul>
+
+
+<p>Each theme has a number of items; the relevant theme is identified for each committed, proposed, and deferred
+plan items.</p>
+
+
+[<b>For top-level projects with only a single project, or where the plan is for
+a primary project that is not a top-level project, delete the next paragraph and
+the corresponding section heads, and just substitute the primary project name
+for {{project1 name}}.</b>]
+<p>
+Each of the projects under the Eclipse {{primary project name}} project is covered in its
+own section:</p>
+
+
+<ul>
+
+
+  <li><a href="#project1">{{project1 name}}</a><a href="#project1"> project</a></li>
+  <li>{{others}}</li>
+</ul>
+
+
+<p>For each project, the items listed reflect new features or
+areas where existing features will be significantly reworked. Numbers in parentheses link to
+bugzilla problem reports for that plan item.
+</p>
+
+<p>The current status of each plan item is noted:
+</p>
+
+<ul>
+
+
+  <li><b>Committed</b> plan item - A committed plan item is one that we have
+    decided to address for the release.</li>
+  <li><b>Proposed</b> plan item - A proposed plan item is one that we are
+    considering addressing for the release. Although we are actively
+    investigating it, we are not yet in a position to commit to it, or to say
+    that we won't be able to address it. After due consideration, a proposal
+    will either be committed or deferred.</li>
+  <li><b>Deferred</b> plan item - A reasonable proposal that will not make it in
+    to this release for some reason is marked as deferred with a brief note as
+    to why it was deferred. Deferred plan items may resurface as committed plan
+    items at a later point.</li>
+</ul>
+
+
+<h2><a name="project1">{{project1 name} project</a></h2>
+
+
+<p>{{A sentence that locates project1 in the grand scheme
+of things.}} Plan
+items reflect new features of the {{project1 name}} project, or areas where existing
+features will be significantly reworked.</p>
+
+
+<h4>Committed Items ({{project1 name}} project)</h4>
+
+
+<blockquote>
+  <p><b>{{Item1 title}}.</b> {{Item1 description}} ({{link to plan item1 bugzilla
+  report}}) [Theme: {{theme title}}]</p>
+  <p><b>{{Item2 title}}.</b> {{Item1 description}} ({{link to plan item2 bugzilla
+  report}}) [Theme: {{theme title}}] {{<em><img src="ok.gif" border="0" height="12" width="12">
+  Work completed}}</em></p>
+</blockquote>
+
+
+<h4>Proposed Items ({{project1 name}} project)</h4>
+
+
+<blockquote>
+  <p><i>None at this time.</i></p>
+</blockquote>
+
+
+<h4>Deferred Items ({{project1 name}} project)</h4>
+
+
+<blockquote>
+  <p><i>None at this time.</i></p>
+</blockquote>
+
+
+
+</body></html>
