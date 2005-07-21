@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.21 $  $Date: 2005-07-21 17:59:14 $
+ *  $Revision: 1.22 $  $Date: 2005-07-21 21:56:47 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -20,6 +20,7 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
@@ -29,8 +30,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider.FeatureValueProviderHelper;
+import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider.Visitor;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.swt.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
@@ -59,6 +62,20 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	private IBeanProxy fContainerBeanProxy = null;
 	private IBeanProxy fLayoutManagerBeanProxy = null;
 	protected JavaClass classLabel = null;
+	
+	/*
+	 * Wrapper class for the filler label.
+	 * This is put in the layoutTable at the specific cell location and created when the layoutTable
+	 * is first created. That way we only have to go throught the elaborate checks up front and not
+	 * every time we want to check if it's a filler label.
+	 */
+	static class FillerLabel extends EObjectImpl {
+		EObject realObject;
+
+		public FillerLabel(EObject realObject) {
+			this.realObject = realObject;
+		}
+	}
 
 	protected IBeanProxy getContainerBeanProxy() {
 		if (fContainerBeanProxy == null) {
@@ -119,6 +136,18 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		return Collections.nCopies(children.size(), null);
 	}
 	public static final EObject EMPTY = EcoreFactory.eINSTANCE.createEObject();
+
+	private static class AnyFeatureSetVisitor implements Visitor {
+
+		public Object isSet(EStructuralFeature feature, Object value) {
+			if (feature.getName().equals(JavaInstantiation.ALLOCATION))
+				return null;
+			else if (feature.isMany() && ((List)value).isEmpty())
+				return null;
+			return Boolean.TRUE;
+		}
+	}
+	private static final AnyFeatureSetVisitor anyFeatureSetVisitor = new AnyFeatureSetVisitor();
 	/**
 	 * Get a representation of the grid. The grid is indexed by [column][row]. The value at each position is the child located at that position. Empty
 	 * cells will have null values.
@@ -178,7 +207,10 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				// Add the child to the table in all spanned cells
 				for (int i = 0; i < horizontalSpan; i++) {
 					for (int j = 0; j < verticalSpan; j++) {
-						layoutTable[col + i][row + j] = child;
+						if (classLabel.isInstance(child) && (FeatureValueProviderHelper.visitSetFeatures(child, anyFeatureSetVisitor) == null) && isNoStyleSet(child))
+							layoutTable[col + i][row + j] = new FillerLabel(child);
+						else
+							layoutTable[col + i][row + j] = child;
 					}
 				}
 
@@ -252,6 +284,16 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		return numColumns;
 	}
 
+	/*
+	 * Return true if a filler label occupies this cell location
+	 */
+	public boolean isFillerLabelAtCell(Point cell) {
+		EObject[][] table = getLayoutTable();
+		// Check to make sure the cell position is within the grid
+		if (cell.x >= 0 && cell.x < table.length && cell.y >= 0 && cell.y < table[0].length)
+			return table[cell.x][cell.y] instanceof FillerLabel;
+		return false;
+	}
 	/**
 	 * Get the index of the child occupying the given cell.
 	 * @param cell Cell location to check
@@ -283,6 +325,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			}
 		}
 
+		if (isFillerLabel(childAtCell))
+			childAtCell = ((FillerLabel)childAtCell).realObject;
 		List children = (List) getContainer().eGet(sfCompositeControls);
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i).equals(childAtCell)) {
@@ -923,8 +967,13 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return false;
 	}
-	public boolean isFillerLabel(Object control) {
-		return classLabel.isInstance(control) && !((EObject)control).eIsSet(sfLabelText);
+	/*
+	 * Return true if the object is a filler label.
+	 * This helper class should only be used when the object passed in (i.e. control) is an object of 
+	 * the internal layoutTable. 
+	 */
+	private boolean isFillerLabel(Object control) {
+		return control instanceof FillerLabel;
 	}
 	/*
 	 * If the objects in a row are all filler labels, except the ignoreObject, remove them 
@@ -941,8 +990,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		if (empty) {
 			for (int i = 0; i < table.length; i++) {
-				if (!(table[i][atRow] == EMPTY) && !(ignoreObject == table[i][atRow]))
-					cb.append(policy.getDeleteDependentCommand(table[i][atRow]));
+				if (isFillerLabel(table[i][atRow]))
+					cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[i][atRow]).realObject));
 			}
 			return cb.getCommand();
 		}
@@ -964,8 +1013,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		if (empty) {
 			// Remove the columns and reduce the numColumns by 1
 			for (int i = 0; i < table[0].length; i++) {
-				if (!(table[atColumn][i] == EMPTY) && !(ignoreObject == table[atColumn][i]))
-					cb.append(policy.getDeleteDependentCommand(table[atColumn][i]));
+				if (isFillerLabel(table[atColumn][i]))
+					cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[atColumn][i]).realObject));
 			}
 			if (projectNumColumns != 1)
 				cb.append(createNumColumnsCommand(projectNumColumns - 1));
@@ -986,7 +1035,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				if (isHorizontalSpaceAvailable(i, atRow, atRow + childHeight - 1)) {
 					for (int j = atRow; j < atRow + childHeight; j++) {
 						if (isFillerLabel(table[i][j]))
-							cb.append(policy.getDeleteDependentCommand(table[i][j]));
+							cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[i][j]).realObject));
 					}
 					numColsIncrement--;
 				}
@@ -1007,7 +1056,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				if (isVerticalSpaceAvailable(i, atColumn, atColumn + childWidth - 1)) {
 					for (int j = atColumn; j < atColumn + childWidth; j++) {
 						if (isFillerLabel(table[j][i]))
-							cb.append(policy.getDeleteDependentCommand(table[j][i]));
+							cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[j][i]).realObject));
 					}
 					numRowsIncrement--;
 				}
@@ -1048,6 +1097,9 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			if (firstpass)
 				col = 0;
 		}
+		// return the real filler label instance that is modelled instead of the wrapper object
+		if (foundObject != null && foundObject instanceof FillerLabel)
+			foundObject = ((FillerLabel)foundObject).realObject;
 		return foundObject;
 	}
 	/*
@@ -1081,5 +1133,24 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			}
 		}
 		return result;
+	}
+	/*
+	 * Helper method to determine if there are any styles set for this label.
+	 * Look for SWT.NONE as the second argument.
+	 */
+	private boolean isNoStyleSet(IJavaObjectInstance child) {
+		if (child != null && child.getAllocation() instanceof ParseTreeAllocation) {
+			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) child.getAllocation();
+			PTExpression allocationExpression = ptAlloc.getExpression();
+			if (allocationExpression instanceof PTClassInstanceCreation) {
+				PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) allocationExpression;
+				if (classInstanceCreation.getArguments().size() == 2) {
+					PTExpression secondArg = (PTExpression) classInstanceCreation.getArguments().get(1);
+					if (secondArg instanceof PTFieldAccess && ((PTFieldAccess) secondArg).getField().equals("NONE"))
+						return true;
+				}
+			}
+		}
+		return false;
 	}
 }
