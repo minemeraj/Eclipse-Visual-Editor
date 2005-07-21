@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Language" content="en-us">
+  <meta http-equiv="Content-Type" content="text/html">
+  <link rel="stylesheet" href="default_style.css">
+  <title>Eclipse Visual Editor Project 1.0 M1 - New and Noteworthy</title>
+</head>
+<body>
+<h1>Eclipse Visual Editor Project 1.0 M1 - New and Noteworthy</h1>
+<table border="0" cellpadding="10" cellspacing="0" width="80%">
+  <tbody>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td width="30%" valign="top" align="left">
+      <p align="right"><b>Initial SWT Support<br>
+      </b></p>
+      </td>
+      <td width="70%" valign="top">The VE now has initial support for
+designing with SWT controls is in place.&nbsp; This includes:<br>
+      <ul>
+        <li>Palette support for SWT controls</li>
+        <li>Visuals support from remote VM (Currently only on Windows)</li>
+        <li>Introspection (<a href="http://sweet-swt.sourceforge.net/">Sweet</a>)
+and Beaninfo for SWT controls</li>
+        <li>Parsing and generating initial SWT code pattern (will be
+changed in the future)</li>
+        <li>Initial support for SWT layouts: null, FillLayout,
+FormLayout, GridLayout, RowLayout</li>
+        <li>Property editors for Color, Font, and Cursor<br>
+        </li>
+      </ul>
+      <p>&nbsp;<img alt="SWT palatte and canvas" src="SWT.jpg"
+ style="width: 504px; height: 350px;"><br>
+      </p>
+      <p>Those interested in previewing the SWT support should see the
+instructions <a href="previewingSWT.html">here</a>.<br>
+      </p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td style="text-align: right;" width="30%" valign="top"><b>GridBagLayout
+Editor<br>
+      </b></td>
+      <td width="70%" valign="top">The VE now includes an advanced
+editor for Swing/AWT's GridbagLayout.&nbsp; The editor features:<br>
+      <ul>
+        <li>Visualization of the grid through borders and row/column
+indicators.&nbsp; The grid is shown when dropping a new component,
+moving an existing component, or by enabling the grid display from the
+container's context menu.</li>
+        <li>Cell shading and row/column position indications on the
+cursor indicating drop locations of added/moved components.</li>
+        <li>Dropping to new rows/columns indicated by yellow bars on
+the grid lines.&nbsp; The row and column headers will change to yellow
+to indicate the numbers will be incremented.</li>
+        <li>Row/column spanning done graphically by dragging the green
+handles on a selected component<br>
+        </li>
+      </ul>
+      <p><img alt="Inserting into a new row" src="GridBag1.jpg"
+ style="width: 469px; height: 340px;"><br>
+      </p>
+      <ul>
+        <li>Gridbag constraints modifiable through the Gridbag
+alignment window. (accessible from the Eclipse toolbar)</li>
+        <ul>
+          <li>Change anchor, fill and insets constraints</li>
+          <li>Change the constraints of multiple selected components at
+once<br>
+          </li>
+        </ul>
+      </ul>
+      <p> <img style="width: 567px; height: 390px;"
+ alt="Gridbag alignment help" src="GridBag2.jpg"><br>
+      </p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td style="text-align: right;" width="30%" valign="top"><b>Object
+Reference Editor<br>
+      </b></td>
+      <td width="70%" valign="top">The property sheet now has a default
+property editor for object types without a predefined editor.&nbsp;
+This generic editor will allow you to choose to drop a new instance of
+the required type, or to reference beans that have previously been
+dropped.<br>
+      <br>
+      <p><img style="width: 333px; height: 647px;" alt="Choose object"
+ src="defaultObjectChooser1.jpg"><img align="top"
+ style="width: 247px; height: 98px;" alt="Object property sheet"
+ src="defaultObjectChooser2.jpg"><br>
+      </p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td align="right" valign="top" width="30%"><span
+ style="font-weight: bold;">Field Rename</span><br>
+      </td>
+      <td width="70%" valign="top">You can now rename dropped beans
+from the property sheet, without using the refactoring system.&nbsp; By
+changing the field name property on the property sheet, the bean's
+field and its get method will be renamed, and any references to the
+bean will be updated.&nbsp; This is done without the time-consuming
+reload process that was necessary in previous versions of the VE.<br>
+      <p><img src="fieldRename.jpg"
+ alt="Field rename from the property sheet"
+ style="height: 77px; width: 237px;"><br>
+      </p>
+      <p>A full-scale refactoring is still required if the field or get
+method are not declared as <span
+ style="font-family: monospace; font-weight: bold; color: rgb(127, 0, 85);">private</span>.<br>
+      </p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td width="30%" valign="top" align="left">
+      <p align="right"><b>Editor Progress Information<br>
+      </b></p>
+      </td>
+      <td width="70%" valign="top">Status information is displayed on
+the status bar and on the Progress view while the Visual Editor is
+busy.&nbsp; Currently this is mostly displayed as the editor is being
+launched, but more information messages will be added in later
+milestones.<br>
+      <br>
+To launch the Progress View, double-click on the status line text in
+the bottom right of the Eclipse window.<br>
+      <br>
+      <img style="width: 577px; height: 164px;"
+ alt="Status information in the Progress view" src="progress.jpg"><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>Reload
+From Scratch Changes<br>
+      </b></td>
+      <td style="vertical-align: top;">The types of operations which
+automatically invoke a reload from scratch have been reduced
+drastically.&nbsp; When a reload does occur, the selection of
+components are now maintained when the reload completes.<br>
+      <br>
+You can now manually invoke a reload from scrach operation by
+double-clicking in the code synchronization status field on the Eclipse
+status bar.<br>
+      <img style="width: 343px; height: 32px;"
+ alt="Reload from code synchronization status" src="statusReload.jpg"><br>
+Previously it was necessary to pause and resume the code
+synchronization in order to manually cause a reload from scratch.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; text-align: right;"><b>Code
+Synchronization Status<br>
+      </b></td>
+      <td style="vertical-align: top;">The code synchronization control
+has been moved from the status bar to the Eclipse
+toolbar.&nbsp; Use the button to pause the code synchronization when
+performing major changes to the source code.&nbsp; The button's icon
+will update to indicate when there is a parse error in the source.<br>
+      <br>
+      <img style="width: 303px; height: 107px;"
+ alt="Code synchronization pause button" src="pauseButton.jpg"><br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+    <tr>
+      <td width="30%" valign="top" align="left">
+      <p align="right"><b>Move to Eclipse 3.0</b></p>
+      </td>
+      <td width="70%" valign="top">The Visual Editor now runs on <a
+ href="http://fullmoon.raleigh.ibm.com/downloads/drops/S-3.0M8-200403261517/index.php">Eclipse
+3.0 M8</a>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <hr> </td>
+    </tr>
+  </tbody>
+</table>
+<b></b>
+</body>
+</html>
