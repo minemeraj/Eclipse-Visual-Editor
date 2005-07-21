@@ -1,0 +1,276 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Visual Editor FAQ</title>
+  <link rel="stylesheet" href="http://dev.eclipse.org/default_style.css" type="text/css">
+</head>
+
+<body>
+
+<!-- Title -->
+<table border="0" cellspacing="0" cellpadding="3" width="100%" 
+style="border-collapse: collapse" bordercolor="#111111">
+	<tr>
+		<td align="Left" width="54%">
+		<p><font class="indextop">VE Developer FAQ</font><br>
+		<font class="indexsub">frequently asked question and answers</font></p>
+		</td>
+		<td width="46%"><img src="http://dev.eclipse.org/images/howto_banner.jpg" 
+  height="111" width="272" align="right"></td>
+	</tr>
+</table>
+<!-- Introduction -->
+<table border="0" cellspacing="0" cellpadding="2" width="100%" 
+style="border-collapse: collapse" bordercolor="#111111">
+	<tr>
+		<td align="Left" valign="Top" colspan="2" bgcolor="#0070A0"><b>
+		<font face="Arial,Helvetica" color="#FFFFFF">VE Developer FAQ</font></b></td>
+	</tr>
+	<tr>
+		<td><font size="-1" face="arial,helvetica,geneva">Last Modified: Sept. 20</font><sup><font 
+  size="-2" face="Arial">th</font></sup><font size="-1" face="arial,helvetica,geneva">, 2004</font></td>
+	</tr>
+</table>
+<br>
+<!-- Table of contents header -->
+<table border="0" cellspacing="0" cellpadding="2" width="100%" bgcolor="#cccccc">
+	<tr>
+		<td bgcolor="#777777"><font color="#FFFFFF"><b><a name="toc">Table of contents:</a></b></font></td>
+	</tr>
+</table>
+<ul>
+	<!-- General subheader -->
+	<li><b><a href="#general">General:</a></b>
+	<ol>
+		<li><a href="#general_about">What is VE?</a></li>
+		<li><a href="#general_suggest">How do I make a suggestion for this FAQ?</a></li>
+		<li><a href="#general_os">Which operating systems does VE support?</a></li>
+		<li><a href="#general_license">How is VE licensed?</a></li>
+	</ol>
+	<br>
+	</li>
+	<li><b><a href="#install">Download &amp; Installation:</a></b>
+	<ol>
+		<li><a href="#install_howto">How do I Install VE?</a></li>
+		<li><a href="#install_doc">Where do I find the documentation?</a></li>
+		<li><a href="#install_cvs">How do I checkout VE via CVS?</a></li>
+	</ol>
+	<br>
+	</li>
+	<li><b><a href="#developer">Developer:</a></b>
+	<ol>
+		<li><a href="#dev_questions">How do I ask questions?</a></li>
+		<li><a href="#dev_bugs">How do I report a bug or request a feature?</a></li>
+		<LI><A href="#dev_ontop">How do I develop on top of VE (i.e. extend
+		the VE)?</A></LI>
+		<LI><A href="#dev_vmserver">Why do I get main class not found when
+		starting a VE editor?</A></LI>
+	</ol>
+	</li>
+</ul>
+<div align="center">
+<table border="0" cellpadding="3" cellspacing="0" style="border-collapse: collapse" 
+bordercolor="#111111" width="100%">
+	<tr>
+		<td bgcolor="#777777"><font color="#FFFFFF"><b><a name="general">General</a></b></font></td>
+		<td bgcolor="#777777"><a href="#toc"><font color="#FFFFFF">
+		<img src="http://www.eclipse.org/eclipse/faq/up_nav.gif" width="16" height="16" 
+  alt="Goto Top" border="0" align="middle">top</font></a></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<ol>
+			<li><b><a name="general_about">What is VE</a></b>
+			<p>The <a target="_top" href="http://www.eclipse.org/vep">Visual Editor</a> is 
+			an open source editor. The provided components allow for visually editing java classes, in particular visual classes. The java component is integrated with the Eclipse java editor so that changes in either are reflected between them immediately.<br>
+			<br>
+			</p>
+			<hr></li>
+			<li><b><a name="general_suggest">How do I make a suggestion for this FAQ?</a></b>
+			<p>The best way to contribute to this FAQ is to post your suggestion to the
+			<a href="news://news.eclipse.org/eclipse.tools.ve">VE newsgroup</a> with the 
+			subject prefixed by &quot;[FAQ]&quot;. You may post just a question or both a question and 
+			answer.<br>
+			<br>
+			</p>
+			<hr></li>
+			<li><b><a name="general_os">Which operating systems does VE support?</a></b>
+			<p>VE is written in pure Java and should run on all operating systems officially 
+			supported by the Eclipse platform. It's been tested on Windows and Linux (GTK and 
+			Motif).<BR>
+			<B><BR>
+			Note:</B> At this time MAC OSX is not supported.<br>
+			</p>
+
+			<hr></li>
+			<li><b><a name="general_license">How is VE licensed?</a></b>
+			<p>VE is licensed in accordance with the
+			<a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>. 
+			Third party components built using VE are made available under their own licenses.
+			<br>
+			<br>
+			</p>
+			</li>
+		</ol>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#777777"><b><font color="#FFFFFF"><a name="install">Download and Install</a></font></b></td>
+		<td bgcolor="#777777"><a href="#toc"><font color="#FFFFFF">
+		<img src="http://www.eclipse.org/eclipse/faq/up_nav.gif" width="16" height="16" 
+  alt="Goto Top" border="0" align="absmiddle">top</font></a></td>
+	</tr>
+	<tr>
+		<td colspan="2" valign="middle">
+		<ol>
+			<li><b><a name="install_howto">How do I Install VE?</a></b>
+			<P>VE can now be downloaded through Update Manager. Select
+			&quot;Find and Install...&quot; then select &quot;Search for new
+			features to install...&quot; From there expand Eclipse.org update
+			site, and select EMF, GEF, and Visual Editor updates categories. Then
+			select the Visual Editor (or Visual Editor SDK if you want to do
+			development for the Visual Editor, or see its source). It will tell
+			then tell you what compatible levels of EMF and GEF are required.
+			Select those too, and then finish the install.
+			<P>Or you can 
+			<A target="_self"
+				href="http://download.eclipse.org/tools/ve/downloads/">download</A>
+			the version of VE that <B>matches</B> your installation of Eclipse.
+			(The SDK download contains documentation and source, while the
+			runtime download does not.) You will also need to download the
+			matching version of GEF and EMF. The download page will give this
+			information for you. Exit Eclipse and unzip into the directory that eclipse
+			is installed into. For example, if you have installed into "<code>D:\XYZ\eclipse</code>", 
+			you would unzip into "<code>D:\XYZ</code>". Restart Eclipse using the <B>-clean</B> option (only do
+			this once) to clear the cache and verify that everything is
+			installed. To do so, go to Help-&gt;About Eclipse
+			Platform-&gt;Feature Details. Check the following entries:</P>
+			<table border="1" align="center" cellpadding="5">
+				<tr>
+					<td align="center"><b><center>Provider</center></b></td>
+					<td align="center"><b><center>Feature id</center></b>
+					</td>
+				</tr>
+				<tr>
+					<td align="center">Eclipse.org</td>
+					<td align="center">org.eclipse.jem</td>
+				</tr>
+				<tr>
+					<td align="center">Eclipse.org</td>
+					<td align="center">org.eclipse.jem.source <font color="#FF0000">(SDK only)</font></td>
+				</tr>
+				<tr>
+					<td align="center">Eclipse.org</td>
+					<td align="center">org.eclipse.ve</td>
+				</tr>
+				<tr>
+					<td align="center">Eclipse.org</td>
+					<td align="center">org.eclipse.ve.source 
+					<font color="#FF0000">(SDK only)</font></td>
+				</tr>
+				<tr>
+					<td align="center">Eclipse.org</td>
+					<td align="center">org.eclipse.ve.sdk <font color="#FF0000">(SDK only)</font></td>
+				</tr>
+			</table>
+			<p></p><hr>
+			<HR>
+			</li>
+			<li><a name="install_doc"><b>Where do I find the documentation?</b></a>
+			<table border="0" cellpadding="2" style="border-collapse: collapse" bordercolor="#111111" id="AutoNumber1" cellspacing="0">
+              <tr>
+                <td>The documentation is available in the SDK download. After unzipping this build into your 
+			Eclipse installation directory, start Eclipse (and possibly restart after updating 
+			via the update manager), click on the Help menu and then Help Contents.<br>
+&nbsp;</td>
+                <td><img border="0" src="images/help_menu.png?cvsroot=Tools_Project" width="164" 
+   height="128"></td>
+              </tr>
+            </table>
+			<hr>
+			</li>
+		    <li><b><a name="install_cvs">How do I checkout VE via CVS?</a></b><table border="0" cellpadding="2" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" id="AutoNumber2">
+              <tr>
+                <td>Open the <b>CVS Repositories</b> View using the Window menu.&nbsp; 
+                Right-click on the view and select &quot;New&quot; --&gt; &quot;Repository 
+                Location...&quot;<p>Enter the data shown here.</td>
+                <td>
+                <img border="0" src="images/FAQ_CVS.gif?cvsroot=Tools_Project"></td>
+              </tr>
+              <tr>
+                <td width="50%">Expand the HEAD node and select the desired module.<B><BR>
+					ve-dev-base</B>: This is just the base projects. You would use this for developing VE code, or developing against VE code. Most developers would use this.<B><BR>
+					ve-dev-others</B>: This brings in the examples and junit tests projects. You would need to check out ve-dev-base first.<B><BR>
+					ve-all</B>: This is everything. You would check this out if you need everything, this would be for doing builds and such. It includes the features and build projects. Most people won't need this.<BR>
+					<BR>
+					Then use the context menu and select &quot;Checkout Module&quot;</td>
+                <td width="50%">&nbsp;<IMG border="0"
+						src="images/faq_cvs_head.gif"></td>
+              </tr>
+            </table>
+            </li>
+		</ol>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#777777"><font color="#FFFFFF"><b><a name="developer">Developer</a></b></font></td>
+		<td bgcolor="#777777"><a href="#toc"><font color="#FFFFFF">
+		<img src="http://www.eclipse.org/eclipse/faq/up_nav.gif" width="16" height="16" 
+  alt="Goto Top" border="0" align="absmiddle">top</font></a></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<ol>
+			<li><b><a name="dev_questions">How do I ask questions?</a> </b>
+			<p>Questions about the use of  VE in user projects that are not addressed in this 
+			FAQ should be posted to the
+			<a href="news://news.eclipse.org/eclipse.tools.ve">VE newsgroup</a>. Questions 
+            and comments 
+			regarding the <em>implementation</em><i> </i>of  VE itself<i> </i>should be posted 
+			to the <a href="https://dev.eclipse.org/mailman/listinfo/ve-dev">VE mailing 
+			list</a>.<br></p><hr></li>
+			<li><b><a name="dev_bugs">How do I report a bug or request a feature?</a></b>
+			<p>VE, like the Eclipse project, uses
+			<a target="_top" href="http://www.bugzilla.org/">Bugzilla</a> as its bug and feature tracking 
+			system. Entering a bug\feature report is as simple as filling in a web form on 
+			the <a href="http://dev.eclipse.org/bugs/">eclipse bugzilla page</a>. The first 
+			time you enter a bug you will need to
+			<a href="http://dev.eclipse.org/bugs/createaccount.cgi">create a new bugzilla 
+			account</a> for yourself by providing an email address and choosing a password. 
+			Before submitting a bug, please be sure to check the list of
+			<a href="https://bugs.eclipse.org/bugs/buglist.cgi?bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&email1=&emailtype1=substring&emailassigned_to1=1&email2=&emailtype2=substring&emailreporter2=1&bugidtype=include&bug_id=&changedin=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&product=VE&short_desc=&short_desc_type=allwordssubstr&long_desc=&long_desc_type=allwordssubstr&keywords=&keywords_type=anywords&field0-0-0=noop&type0-0-0=noop&value0-0-0=&cmdtype=doit&order=Reuse+same+sort+as+last+time">open VE bugs</a> and
+			<a href="https://bugs.eclipse.org/bugs/buglist.cgi?short_desc_type=allwordssubstr&short_desc=&product=VE&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&keywords_type=allwords&keywords=&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&changedin=7&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=">recentely closed VE bugs</a>.<br>
+			</p><hr></li>
+			<li><b><a name="dev_ontop">How do I develop on top of VE (i.e. extend the VE)?</a> </b>
+			<P>Install the SDK download into your target Eclipse. Now do the following from your development workspace (for Eclipse 2.1.2):</P>
+			<OL>
+				<LI>Do Window-&gt;Preferences-&gt;Plugin Development-&gt;Target Platform</LI>
+				<LI>Select the radio button for &quot;another compatible application ...&quot; and browse and select the eclipse directory of your target Eclipse.</LI>
+				<LI>Hit the &quot;Reload&quot; button, and then &quot;OK&quot;.</LI>
+				<LI>Now go to File-&gt;Import...-&gt;External Plugins and Fragments</LI>
+				<LI>Make sure that &quot;Copy plugin contents...&quot; is not checked. Then hit Next.</LI>
+				<LI>From here select all of the org.eclipse.jem.* and org.eclipse.ve.* plugins.</LI>
+				<LI>Hit the &quot;Add required plugins&quot; button too.</LI>
+				<LI>Hit &quot;Finish.&quot; This will proceed to load all of the binary plugins into your workspace.</LI>
+				<LI>Then go back to Window-&gt;Preferences-&gt;Plugin Development-&gt;Target Platform and hit &quot;Deselect all&quot; and then hit &quot;Not in workspace&quot;, then hit &quot;OK.&quot; This will fix it up so that no duplicate plugin warnings happen on execution.</LI>
+			</OL>
+			</p><hr>
+			<li><b><a name="dev_vmserver">Why do I get main class not found when starting a VE editor?</a> </b>
+			<P>If you get this message, look in the .log file. If you see a message that says NoClassDefFoundError for IVMServer, then you tried to use the source from the SDK and loaded it into your development workspace instead of the binaries. You cannot use the &quot;Extract source archives...&quot; checkbox on the import external plugins and fragments wizard. This is because the source is to be used for developers extending the VE, not developing the VE itself. There are jars that are created for the remote vm, and they aren't created when you use the source from the SDK</P>
+			<P>If you want to extend the VE, then see the <B><A href="#dev_ontop">How
+			do I develop on top of VE (i.e. extend the VE)?</A> </B></P>
+			<P>If you want to develop the VE itself, you will need to load the projects from CVS. See <B><A href="#install_cvs">How do I checkout VE via CVS?</A></B></P>
+			<P>.</P>
+			</li>			
+		</ol>
+		</td>
+	</tr>
+</table>
+
+</div>
+
+</body>
+
+</html>
