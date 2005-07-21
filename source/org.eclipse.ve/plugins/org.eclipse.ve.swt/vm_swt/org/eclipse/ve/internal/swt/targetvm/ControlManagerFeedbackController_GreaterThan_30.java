@@ -10,15 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlManagerFeedbackController_GreaterThan_30.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-07-21 19:37:57 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
 
 import org.eclipse.ve.internal.swt.targetvm.ControlManager.ControlManagerFeedbackController;
  
@@ -71,10 +71,18 @@ public class ControlManagerFeedbackController_GreaterThan_30 extends ControlMana
 				// Note: If it is the shell itself that is invalid (such as change of layout), the
 				// list of invalids for shell will be empty and it won't do anything. Need to check
 				// for this and when just shell is invalid, then do a layout on shell directly.
-				if (!invalidsForShell.isEmpty())
+				if (!invalidsForShell.isEmpty()) {
+					Iterator controls = invalidsForShell.iterator();
+					while(controls.hasNext()){
+						try{
+							((Composite)controls.next()).layout(true,true);
+						} catch (ClassCastException exc){
+						}
+					}
 					shell.layout((Control[]) invalidsForShell.toArray(new Control[invalidsForShell.size()]));
-				else
+				}else {
 					shell.layout(true, false);
+				}
 				if (shell == freeformShell)
 					shell.pack(); // Also need to pack it for the freeform host.
 			} catch (RuntimeException e) {
