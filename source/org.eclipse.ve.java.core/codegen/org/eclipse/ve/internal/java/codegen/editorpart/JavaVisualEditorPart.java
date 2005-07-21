@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.140 $  $Date: 2005-07-20 23:14:28 $ 
+ *  $Revision: 1.141 $  $Date: 2005-07-21 18:47:48 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -33,6 +33,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gef.*;
@@ -423,12 +424,22 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		rlna.setEnabled(enabled);
 	}
 
-	private BeanSubclassComposition currentSetRoot;
 	private static final Object SELECTED_EDITPARTS_KEY = new Object();
 	// A lock to indicate a set non-null root is in progress. This is necessary because if a set root is in progress
 	// we shouldn't try to load a new model while an old model is still loading. It doesn't like being ripped out from
 	// underneath itself.
 	private ILock setRootInProgressLock = null;	
+	
+	// This uri is used for a resource that is deleted but not yet removed from the resource set.
+	// This can occur because setRootModel is called via async and it may be processing models which
+	// are already out of date because of several quick reloads in succession. So when Setup is 
+	// about to get rid of the old model it will first change its uri to deleted, then it will
+	// release the model, then finally it will remove the resource itself from the resource set.
+	// The change of the uri and the removal of the resource from the resource set will be
+	// done under the setRootInProgressLock so that setRootModel will not progress during
+	// these two steps.
+	private static final URI DELETED_URI = URI.createURI("deleted:org.eclipse.ve.deleted");
+	
 	/*
 	 * Set a new model into the root editparts. This can happen because the setup and the initial creation
 	 * of the viewers can be in a race condition with each other.
@@ -479,7 +490,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			} else {
 				setRootInProgressLock.acquire();	// Get access to prevent a load while we are doing this.
 				acquiredLock = true;
-				if (root.eResource() == null || root.eResource().getResourceSet() == null) 
+				if (root.eResource() == null || DELETED_URI.equals(root.eResource().getURI()) || root.eResource().getResourceSet() == null) 
 					return; // This root has already been released. Means probably another reload in progress.
 				modelReady = true;
 			}
@@ -512,23 +523,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				}
 			}
 
-			try {
-				if (currentSetRoot != root && currentSetRoot != null) {
-					// Move the release off into a job, no need to tie up ui with it. It is already unused by anyone else.
-					final BeanSubclassComposition releaseRoot = currentSetRoot; 
-					Job releaseJob = new Job(CodegenEditorPartMessages.JavaVisualEditorPart_ReleasingModel) {	
-						protected IStatus run(IProgressMonitor monitor) {
-							((CompositionProxyAdapter) EcoreUtil.getExistingAdapter(releaseRoot, CompositionProxyAdapter.BEAN_COMPOSITION_PROXY)).releaseBeanProxy(false);							
-							return Status.OK_STATUS;
-						};
-					};
-					releaseJob.setPriority(Job.SHORT);
-					releaseJob.setSystem(true);	// Don't want to bother having it normally show up.
-					releaseJob.schedule();
-				}
-			} finally {
-				currentSetRoot = root;
-			}
 			if (propertySheetPage != null) {
 				// At this point in time the property sheet may be in focus, so it is not listening to selection changes
 				// from us. Because of this it may have an active entries which are now pointing to the obsolete
@@ -1825,31 +1819,41 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					return canceled();
 				}
 				
-				if (lLoadModel) {
-                    DiagramData dd = modelBuilder.getModelRoot();
-                    if (dd != null) {
-                        // See if we have an old model, and if we do, get the root in progress lock and then clear
-                        // the model. This will stop the set root from working on an old root by mistake.
-                        // We don't want to hold up ui, so we will just hold it long enough to release old model.
-                        setRootInProgressLock.acquire();
-                        try {
-                            Resource res = dd.eResource();
-                            if (res != null) {
-                                ResourceSet rset = res.getResourceSet();
-                                if (rset != null)
-                                    rset.getResources().remove(res);
+				// First we will mark the resource as "deleted" so that any pending setRootModel will ignore it.
+				// If we are loading a new model, we will throw it away after we release the model.
+				// If we are not reloading (which means we are doing a restart vm instead), we will
+				// restore from the "deleted" state after we release them model
+				DiagramData oldDD = modelBuilder.getModelRoot();
+				URI oldURI = null;
+				if (oldDD != null) {
+                    // This will stop the set root from working on an old root by mistake.
+                    // We don't want to hold up ui, so we will just hold it long enough to mark it deleted.
+                    setRootInProgressLock.acquire();
+                    try {
+                        Resource res = oldDD.eResource();
+                        if (res != null) {
+                            ResourceSet rset = res.getResourceSet();
+                            if (rset != null) {
+                            	oldURI = res.getURI();
+                            	res.setURI(DELETED_URI);
+                                Map map = ((ResourceSetImpl) rset).getURIResourceMap();
+                                if (map != null)
+                                	map.clear();	// Slight performance hit, it will simply recalculate the cache as needed again.
                             }
-                        } finally {
-                            setRootInProgressLock.release();
                         }
-                    }
-
-                    TimerTests.basicTest.startStep("Load Model"); //$NON-NLS-1$
+                    } finally {
+                        setRootInProgressLock.release();
+                    }					
+				}
+				if (lLoadModel) {
+                     TimerTests.basicTest.startStep("Load Model"); //$NON-NLS-1$
                     if (doTimerStep)
                         PerformanceMonitorUtil.getMonitor().snapshot(114); // Starting codegen loading for the first time
 
+                    //******************************* LOAD THE MODEL **********************************************************************
                     modelBuilder.loadModel((IFileEditorInput) getEditorInput(), removeVECache,
                             new SubProgressMonitor(monitor, 100));
+                    //*********************************************************************************************************************
 
                     if (doTimerStep)
                         PerformanceMonitorUtil.getMonitor().snapshot(115); // Ending codegen loading for the first time
@@ -1865,6 +1869,52 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					setLoadIsPending(false);
 					return canceled();
 				}
+				
+				
+                if (oldDD != null) {
+    				CompositionProxyAdapter a = (CompositionProxyAdapter) EcoreUtil.getExistingAdapter(oldDD,
+    						CompositionProxyAdapter.BEAN_COMPOSITION_PROXY);
+    				if (a != null) {
+    					// Release the old model proxies.
+    					// If we loading a new model, then we don't need to remove all of the proxy adapters because
+    					// the old model will be thrown away.
+    					// If we are not loading a model and restarting VM, then we need to release all of the beans
+    					// before we go on, we will also remove the adapters so that they will get new ones. This
+    					// is necessary because sometimes the reload will result in a different adapter type.
+    					a.releaseBeanProxy(!lLoadModel && lRestartVM);
+    				}
+
+                	// Lock out the set root model while we make this change.
+					setRootInProgressLock.acquire();
+					try {
+						if (lLoadModel) {
+							// Need to completely remove the old resource from resource set because it is dead.
+							Resource res = oldDD.eResource();
+							if (res != null) {
+								ResourceSet rset = res.getResourceSet();
+								if (rset != null) {
+									rset.getResources().remove(res);
+								}
+							}
+						} else if (oldURI != null) {
+							// We are going to reuse this model, so change the URI back.
+							Resource res = oldDD.eResource();
+							if (res != null) {
+								ResourceSet rset = res.getResourceSet();
+								if (rset != null) {
+									res.setURI(oldURI);
+									Map map = ((ResourceSetImpl) rset).getURIResourceMap();
+									if (map != null)
+										map.clear(); // Slight performance hit, it will simply recalculate the cache as needed again.
+								}
+							}							
+						}
+					} finally {
+						setRootInProgressLock.release();
+					} 
+				}					
+
+				
 				DiagramData dd = modelBuilder.getModelRoot();
 				if (dd != null) {
 					editDomain.setDiagramData(dd);
@@ -1884,15 +1934,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
     					dd.eAdapters().add(ia);
     					ia.propagate();
                     }
-
-					CompositionProxyAdapter a = (CompositionProxyAdapter) EcoreUtil.getExistingAdapter(dd,
-							CompositionProxyAdapter.BEAN_COMPOSITION_PROXY);
-					if (!loadModel && lRestartVM && a != null) {
-						// We have a new vm but same model, and an adapter, so we need to release all of the beans
-						// before we go on, we will also remove the adapters so that they will get new ones. This
-						// is necessary because sometimes the reload will result in a different adapter type.
-						a.releaseBeanProxy(true);
-					}
 					
                     if (lRestartVM) {
         				if (proxyFactoryRegistry != null && proxyFactoryRegistry.isValid()) {
@@ -1906,6 +1947,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					beanProxyAdapterFactory.setThisTypeName(modelBuilder.getThisTypeName());	// Now that we've joined and have a registry, we can set the this type name into the proxy domain.
 					modelSynchronizer.setIgnoreTypeName(modelBuilder.getThisTypeName());
 					
+    				CompositionProxyAdapter a = (CompositionProxyAdapter) EcoreUtil.getExistingAdapter(dd,
+    						CompositionProxyAdapter.BEAN_COMPOSITION_PROXY);
                     if (a == null) {
 						a =	new CompositionProxyAdapter(beanProxyAdapterFactory, modelChangeController);
                         dd.eAdapters().add(a);
