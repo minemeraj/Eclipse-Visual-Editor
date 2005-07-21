@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.31 $ $Date: 2005-07-19 13:52:07 $
+ * $Revision: 1.32 $ $Date: 2005-07-21 21:56:47 $
  */
 import java.util.*;
 
@@ -714,11 +714,12 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			gridReq.type = INSERT_ROW;
 		else {
 			EditPart editPart = null;
-			int indexBeforeEP = helper.getChildIndexAtCell(new Point(cell.x, cell.y));
+			Point cellLocation = new Point(cell.x, cell.y);
+			int indexBeforeEP = helper.getChildIndexAtCell(cellLocation);
 			if (indexBeforeEP != -1) {
 				editPart = (EditPart) getHost().getChildren().get(indexBeforeEP);
 				if (editPart != null) {
-					if (helper.isFillerLabel(editPart.getModel()))
+					if (helper.isFillerLabelAtCell(cellLocation))
 						gridReq.type = REPLACE_FILLER;
 					else
 						gridReq.type = INSERT_COLUMN_WITHIN_ROW;
