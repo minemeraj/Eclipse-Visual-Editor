@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.141 $  $Date: 2005-07-21 18:47:48 $ 
+ *  $Revision: 1.142 $  $Date: 2005-07-21 23:42:03 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -394,6 +394,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		loadModel(true, true, true, false);		
 	}
 	
+	// The last set model. This is managed by Setup job. No one else should access it.
+	private DiagramData lastModel;
 	protected Setup setupJob = null; 
 	protected void loadModel(boolean resetVMRecycleCounter, boolean restartVM, boolean loadModel, boolean removeVECache) {
 		if(!((IFileEditorInput) getEditorInput()).getFile().isAccessible())
@@ -959,6 +961,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		return gviewer;
 	}
 
+
+	
 	/*
 	 * Bit of a KLDUGE but during setup we may not have primary viewer yet, and during primary viewer creation
 	 * we may not yet have Setup completed. So we need a common synchronized method that will set the diagram data
@@ -1823,14 +1827,13 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// If we are loading a new model, we will throw it away after we release the model.
 				// If we are not reloading (which means we are doing a restart vm instead), we will
 				// restore from the "deleted" state after we release them model
-				DiagramData oldDD = modelBuilder.getModelRoot();
 				URI oldURI = null;
-				if (oldDD != null) {
+				if (lastModel != null) {
                     // This will stop the set root from working on an old root by mistake.
                     // We don't want to hold up ui, so we will just hold it long enough to mark it deleted.
                     setRootInProgressLock.acquire();
                     try {
-                        Resource res = oldDD.eResource();
+                        Resource res = lastModel.eResource();
                         if (res != null) {
                             ResourceSet rset = res.getResourceSet();
                             if (rset != null) {
@@ -1871,8 +1874,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				}
 				
 				
-                if (oldDD != null) {
-    				CompositionProxyAdapter a = (CompositionProxyAdapter) EcoreUtil.getExistingAdapter(oldDD,
+                if (lastModel != null) {
+    				CompositionProxyAdapter a = (CompositionProxyAdapter) EcoreUtil.getExistingAdapter(lastModel,
     						CompositionProxyAdapter.BEAN_COMPOSITION_PROXY);
     				if (a != null) {
     					// Release the old model proxies.
@@ -1889,7 +1892,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					try {
 						if (lLoadModel) {
 							// Need to completely remove the old resource from resource set because it is dead.
-							Resource res = oldDD.eResource();
+							Resource res = lastModel.eResource();
 							if (res != null) {
 								ResourceSet rset = res.getResourceSet();
 								if (rset != null) {
@@ -1898,7 +1901,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 							}
 						} else if (oldURI != null) {
 							// We are going to reuse this model, so change the URI back.
-							Resource res = oldDD.eResource();
+							Resource res = lastModel.eResource();
 							if (res != null) {
 								ResourceSet rset = res.getResourceSet();
 								if (rset != null) {
@@ -1911,11 +1914,12 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 						}
 					} finally {
 						setRootInProgressLock.release();
+						lastModel = null;
 					} 
 				}					
 
 				
-				DiagramData dd = modelBuilder.getModelRoot();
+				DiagramData dd = lastModel = modelBuilder.getModelRoot();
 				if (dd != null) {
 					editDomain.setDiagramData(dd);
 					InverseMaintenanceAdapter ia = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(dd, InverseMaintenanceAdapter.ADAPTER_KEY);
