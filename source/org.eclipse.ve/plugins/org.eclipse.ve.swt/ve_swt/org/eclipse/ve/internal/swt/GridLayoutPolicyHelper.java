@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.25 $  $Date: 2005-07-22 14:03:16 $
+ *  $Revision: 1.26 $  $Date: 2005-07-22 20:20:21 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -614,16 +614,31 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 								}
 							}
 						} else {
-							// Decrease the horizontal span and put filler labels in the columns it was decreased by
-							Rectangle childRect = rect.getCopy();
-							// Need to put filler labels in the more than one row if the child spans vertically.
-							for (int i = 0; i < rect.height; i++) {
-								// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
-								EObject beforeObject = findNextValidObject(childRect.x + childRect.width, childRect.y + childRect.height - 1);
-								for (int j = 0; j < rect.width - newgridDataWidth; j++) {
-									componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+							CommandBuilder columncb = new CommandBuilder();
+							// First look through the columns were spanning out of and see if there empty columns
+							int projectedNumCols = numColumns;
+							for (int i = 0; i < rect.width - newgridDataWidth; i++) {
+								Command cmd = createRemoveColumnCommand(rect.x + rect.width - 1 - i, control, projectedNumCols);
+								if (cmd != null) {
+									columncb.append(cmd);
+									projectedNumCols--;
 								}
-								childRect.y--;
+							}
+							if (!columncb.isEmpty())
+								// If all that is left in the column(s) is filler labels, remove them.
+								componentCB.append(columncb.getCommand());
+							else {
+								// Decrease the horizontal span and put filler labels in the columns it was decreased by
+								Rectangle childRect = rect.getCopy();
+								// Need to put filler labels in the more than one row if the child spans vertically.
+								for (int i = 0; i < rect.height; i++) {
+									// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
+									EObject beforeObject = findNextValidObject(childRect.x + childRect.width, childRect.y + childRect.height - 1);
+									for (int j = 0; j < rect.width - newgridDataWidth; j++) {
+										componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+									}
+									childRect.y--;
+								}
 							}
 						}
 					}
@@ -720,7 +735,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			atColumn = numColumns - 1;
 		
 		// Do not allow adding the row if inserting through a control that spans vertically
-		if (atRow < table[0].length) {
+		if (atRow < table[0].length - 1) {
 			EObject child = table[atColumn][atRow];
 			if (child != null && !isFillerLabel(child)) {
 				int index = children.indexOf(table[atColumn][atRow]);
@@ -730,6 +745,15 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		
 		CommandBuilder cb = new CommandBuilder();
+		// if this the last row, we must check to see if any cells are empty and replace them
+		// with filler labels so the new object falls into the correct cell location in the new row.
+		if (atRow >= table[0].length) {
+			for (int i = 0; i < table.length; i++) {
+				if (table[i][table[0].length-1] == EMPTY)
+					cb.append(policy.getCreateCommand(createFillerLabelObject(), null));
+			}
+		}
+		
 		EObject beforeObject = findNextValidObject(0, atRow);
 		// Add the row by adding filler labels and inserting the control at the specific column position.
 		// If any of the controls spans vertically, don't add filler, just expand it one more row.
@@ -847,7 +871,10 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		for (int i = 1; i < table[0].length; i++) {
 			if (i != exceptRow) {
 				if (table[0][i] != EMPTY) {
-					cb.append(policy.getCreateCommand(createFillerLabelObject(), table[0][i]));
+					EObject child = table[0][i];
+					if (isFillerLabel(child))
+						child = ((FillerLabel)child).realObject;
+					cb.append(policy.getCreateCommand(createFillerLabelObject(), child));
 				}
 			}
 		}
@@ -872,19 +899,30 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		if (children.isEmpty())
 			return null;
 		// Add a filler label prior to each object that is in the atColumn of each row. 
-		// This will in effect add a label to end of the previous row.
 		// This must be done for each row except the row where the actual control has been added.
 		for (int i = 0; i < table[0].length; i++) {
-			if (isLastColumn && i == 0) continue;
+			if (isLastColumn && i == 0)
+				continue;
+			// If this the last row, we must check to see if any cells are empty and replace them
+			// with filler labels so the new object falls into the correct cell location.
+			if (i == table[0].length - 1) {
+				for (int j = 0; j < table.length; j++) {
+					if (table[j][i] == EMPTY)
+						cb.append(policy.getCreateCommand(createFillerLabelObject(), null));
+				}
+			}
 			if (i != exceptRow) {
 				if (table[atColumn][i] != EMPTY) {
-					int index = children.indexOf(table[atColumn][i]);
+					EObject child = table[atColumn][i];
+					if (isFillerLabel(child))
+						child = ((FillerLabel) child).realObject;
+					int index = children.indexOf(child);
 					// If the column is going through a control that is spanning more than one column,
 					// we need to expand it by one instead of adding filler.
 					if (index != -1 && childrenDimensions[index].width > defaultHorizontalSpan)
-						cb.append(createHorizontalSpanCommand(table[atColumn][i], childrenDimensions[index].width + 1));
+						cb.append(createHorizontalSpanCommand(child, childrenDimensions[index].width + 1));
 					else
-						cb.append(policy.getCreateCommand(createFillerLabelObject(), table[atColumn][i]));
+						cb.append(policy.getCreateCommand(createFillerLabelObject(), child));
 				}
 			}
 		}
