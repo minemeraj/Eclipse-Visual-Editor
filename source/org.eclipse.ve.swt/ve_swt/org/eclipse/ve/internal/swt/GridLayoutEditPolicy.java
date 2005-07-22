@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.32 $ $Date: 2005-07-21 21:56:47 $
+ * $Revision: 1.33 $ $Date: 2005-07-22 00:28:43 $
  */
 import java.util.*;
 
@@ -32,6 +32,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -165,6 +166,10 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	public GridLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		this.containerPolicy = containerPolicy;
 		helper.setContainerPolicy(containerPolicy);
+	}
+	public void setHost(EditPart host) {
+		super.setHost(host);
+		helper.setEditDomain(EditDomain.getEditDomain(this.getHost()));		
 	}
 	
 	public void activate(){
