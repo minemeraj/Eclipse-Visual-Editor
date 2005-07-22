@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.33 $ $Date: 2005-07-22 00:28:43 $
+ * $Revision: 1.34 $ $Date: 2005-07-22 00:38:59 $
  */
 import java.util.*;
 
@@ -169,7 +169,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	}
 	public void setHost(EditPart host) {
 		super.setHost(host);
-		helper.setEditDomain(EditDomain.getEditDomain(this.getHost()));		
+		helper.setEditDomain(EditDomain.getEditDomain(this.getHost()));
 	}
 	
 	public void activate(){

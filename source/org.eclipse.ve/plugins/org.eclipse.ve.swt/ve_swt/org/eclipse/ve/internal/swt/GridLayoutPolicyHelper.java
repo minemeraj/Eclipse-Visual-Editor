@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.23 $  $Date: 2005-07-22 00:27:41 $
+ *  $Revision: 1.24 $  $Date: 2005-07-22 00:40:19 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -1164,7 +1164,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return false;
 	}
-private int getTargetVMSWTVersion(){
+	private int getTargetVMSWTVersion(){
 		
 		if(targetVMVersion != -1) return targetVMVersion;
 		// This is cache'd on the edit domain for performance
@@ -1201,6 +1201,10 @@ private int getTargetVMSWTVersion(){
 			targetVMVersion = 3100;			
 		}
 		return targetVMVersion;
+	}
+
+	public void setEditDomain(EditDomain editDomain) {
+		fEditDomain = editDomain;
 	}
 	
 }
