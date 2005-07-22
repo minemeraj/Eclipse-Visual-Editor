@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.83 $  $Date: 2005-07-20 23:14:28 $ 
+ *  $Revision: 1.84 $  $Date: 2005-07-22 15:18:41 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1354,7 +1354,10 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 			!fparseError && !fdisconnected) {
 		  VEModelCacheUtility.doSaveCache(fBeanModel, monitor);
 		  // We may have stopped processing bottom up so that the model will not change.
-		  fSrcSync.resumeProcessing();
+		  if (fSrcSync!=null)
+		     fSrcSync.resumeProcessing();
+		  else  // Editor closed during the save.
+			 VEModelCacheUtility.removeCache(fFile);
 		}
 		else {
 			// File is being saved, but our model is not in sync... remove the old cache
