@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.17 $  $Date: 2005-06-22 21:05:23 $ 
+ *  $Revision: 1.18 $  $Date: 2005-07-22 16:54:29 $ 
  */
 package org.eclipse.ve.internal.java.core;
  
@@ -80,6 +80,10 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 					if (exp.isValid())
 						exp.createSubexpressionEnd();
 				}
+			} else if (proxyHost.inInstantiation() && proxyHost.getProxy() == null) {
+				// This is a recurrsion requesting the same object while it is being instanatiated and before we got far enough to get an
+				// expression proxy for it.
+				throw new ProcessingException(new IllegalStateException(JavaMessages.BasicAllocationProcesser_BeanRecurrsionError));
 			}
 			exp.createProxyExpression(getNextExpression(), proxyHost.getProxy());
 			return false;

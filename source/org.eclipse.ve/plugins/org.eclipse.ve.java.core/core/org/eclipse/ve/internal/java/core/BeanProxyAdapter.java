@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.47 $  $Date: 2005-07-11 18:04:40 $ 
+ *  $Revision: 1.48 $  $Date: 2005-07-22 16:54:29 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -54,7 +54,8 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 										IErrorHolder.ERROR_INFO);	
 	// The beanproxy being wrappered. It should be accessed only through accessors, even subclasses. During
 	// instantiation it will be a ExpressionProxy.
-	private IProxy beanProxy;	
+	private IProxy beanProxy;
+	private boolean inInstantiation;	// Used while in instantiation.
 	
 	// Does this adapter own the proxy? If it owns it, then it will release it. If it doesn't own it
 	// then someone else does, and they will take care of it.
@@ -274,7 +275,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	 * @see org.eclipse.ve.internal.java.core.IInternalBeanProxyHost2#inInstantiation()
 	 */
 	public final boolean inInstantiation() {
-		return beanProxy != null && beanProxy.isExpressionProxy();
+		return inInstantiation || (beanProxy != null && beanProxy.isExpressionProxy());
 	}
 	
 	/**
@@ -313,6 +314,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 			isThis = null;
 			isThisPart();	// Reset it.
 			clearError(INSTANTIATION_ERROR_KEY);	// Make sure there are no instantiation errors.
+			inInstantiation = true;
 			int mark = expression.mark();
 			try {
 				instantiateAndInitialize(expression);
@@ -330,18 +332,19 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 				// Log this as the instantiate error, but we make it just an info, allocation exceptions
 				// are usually due to errors other than actually trying to instantiate it, such as too complicated.
 				processInstantiationError(new ExceptionError(e.getCause(), ERROR_INFO));
-				return null;
+				beanProxy = null;
 			} catch (IllegalStateException e) {
 				// This means there was a expression creation error occured in instantiation and so is not recoverable.
 				// Log this as the instantiate error.
 				processInstantiationError(new ExceptionError(e, ERROR_SEVERE));
-				return null;				
+				beanProxy = null;				
 			} catch (RuntimeException e) {
 				// This means there was a some other kind of error occured in instantiation and so is not recoverable.
 				// Log this as the instantiate error.
 				processInstantiationError(new ExceptionError(e, ERROR_SEVERE));
-				return null;								
+				beanProxy = null;							
 			} finally {
+				inInstantiation = false;				
 				expression.endMark(mark);
 			}
 		}
