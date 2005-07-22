@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.22 $  $Date: 2005-07-21 21:56:47 $
+ *  $Revision: 1.23 $  $Date: 2005-07-22 00:27:41 $
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
@@ -35,6 +36,8 @@ import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider.FeatureValueProviderHelper;
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider.Visitor;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
+import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyListener;
 import org.eclipse.jem.internal.proxy.swt.*;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
 import org.eclipse.jem.java.JavaClass;
@@ -339,6 +342,9 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 
 	int[] expandableColumns, expandableRows;
+	private static final String TARGET_VM_VERSION_KEY = "TARGET_VM_VERSION";
+	private int targetVMVersion = -1;
+	private EditDomain fEditDomain;
 	/**
 	 * Return the GridLayout dimensions which is 2 dimensional array that contains 2 arrays:
 	 *  1. an int array of all the column widths
@@ -354,8 +360,13 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		// The helper class org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper is used to calculate the column widths and row heights
 		// Prior to 3.1 these were in package protected fields on GridLayout but these are no longer available so the helper class
 		// computes the values
-		IBeanTypeProxy gridLayoutHelperType = getLayoutManagerBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
-				"org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper"); //$NON-NLS-1$
+		String targetVMHelperTypeName = null;
+		if(getTargetVMSWTVersion() >= 3100){
+			targetVMHelperTypeName = "org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper";
+		} else {
+			targetVMHelperTypeName = "org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper_30";		
+		}		
+		IBeanTypeProxy gridLayoutHelperType = getLayoutManagerBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(targetVMHelperTypeName); //$NON-NLS-1$
 		IBeanProxy gridLayoutHelperProxy = null;
 		try {
 			gridLayoutHelperProxy = gridLayoutHelperType.newInstance();
@@ -1153,4 +1164,43 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return false;
 	}
+private int getTargetVMSWTVersion(){
+		
+		if(targetVMVersion != -1) return targetVMVersion;
+		// This is cache'd on the edit domain for performance
+		Integer editDomainTargetVMVersion = (Integer) fEditDomain.getData(TARGET_VM_VERSION_KEY);
+		if(editDomainTargetVMVersion != null){
+			targetVMVersion = editDomainTargetVMVersion.intValue();
+			return targetVMVersion;
+		}
+		// Get the target VM version for the first time for the edit domain from the target VM itself 
+		ProxyFactoryRegistry proxyFactoryRegistry = getLayoutManagerBeanProxy().getProxyFactoryRegistry();		
+		IExpression expression = proxyFactoryRegistry.getBeanProxyFactory().createExpression();		
+		// Evaluate the expression "org.eclipse.swt.SWT.getVersion()";
+		IProxyBeanType swtBeanTypeProxy = proxyFactoryRegistry.getBeanTypeProxyFactory().getBeanTypeProxy(expression,"org.eclipse.swt.SWT");
+		IProxyMethod getVersionMethodProxy = swtBeanTypeProxy.getMethodProxy(expression,"getVersion");
+		ExpressionProxy proxy = expression.createSimpleMethodInvoke(getVersionMethodProxy,swtBeanTypeProxy,null,true);
+		proxy.addProxyListener(new ProxyListener(){
+			public void proxyResolved(ProxyEvent event) {	
+				targetVMVersion = ((IIntegerBeanProxy)event.getProxy()).intValue();
+				fEditDomain.setData(TARGET_VM_VERSION_KEY,new Integer(targetVMVersion));
+			}
+			public void proxyNotResolved(ProxyEvent event) {				
+			}
+			public void proxyVoid(ProxyEvent event) {				
+			}
+		});	
+		try {
+			expression.invokeExpression();
+		} catch (Exception e) {
+			JavaVEPlugin.log("Unable to work out target SWT version for GridLayoutHelper", Level.WARNING);	
+			targetVMVersion = 3100;
+		}
+		if(targetVMVersion == -1){
+			JavaVEPlugin.log("Unable to work out target SWT version for GridLayoutHelper", Level.WARNING);
+			targetVMVersion = 3100;			
+		}
+		return targetVMVersion;
+	}
+	
 }
