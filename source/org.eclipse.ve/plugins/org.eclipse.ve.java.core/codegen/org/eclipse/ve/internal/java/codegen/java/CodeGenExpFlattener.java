@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenExpFlattener.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-23 19:46:25 $ 
+ *  $Revision: 1.8 $  $Date: 2005-07-22 14:34:50 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jem.internal.instantiation.*;
@@ -40,6 +41,8 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 		IBeanDeclModel fmodel ;
 		List 		   fimportList;
 		List		   frefList; 
+		
+		List		   visitedList = new ArrayList();
 		
 		
 		public CodeGenExpFlattener (IBeanDeclModel model) {
@@ -76,15 +79,17 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 		    	  }
 		    }
 		    else {
-		    	if (obj.isSetAllocation()) {
+		    	if (obj.isSetAllocation() && !visitedList.contains(obj)) {
 		    		JavaAllocation alloc = obj.getAllocation();
 		    		if (alloc instanceof InitStringAllocation)
 		    			getStringBuffer().append(((InitStringAllocation) alloc).getInitString());
-		    		else if (alloc instanceof ParseTreeAllocation)
+		    		else if ((alloc instanceof ParseTreeAllocation)) {
+		    			visitedList.add(obj);
 		    			((ParseTreeAllocation) alloc).getExpression().accept(this);
+		    		}
 		    	} else {
 		    		getStringBuffer().append("new "); //$NON-NLS-1$
-		    		getStringBuffer().append(handleQualifiedName(((JavaHelpers)obj).getJavaName())); 
+		    		getStringBuffer().append(handleQualifiedName((obj.getJavaType()).getJavaName())); 
 		    		getStringBuffer().append("()"); //$NON-NLS-1$
 		    	}
 		    }

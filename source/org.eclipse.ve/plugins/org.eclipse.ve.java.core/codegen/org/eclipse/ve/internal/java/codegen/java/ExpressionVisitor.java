@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.27 $  $Date: 2005-06-21 22:15:43 $ 
+ *  $Revision: 1.28 $  $Date: 2005-07-22 14:34:50 $ 
  */
 
 import java.text.MessageFormat;
@@ -279,33 +279,6 @@ protected boolean isStaticCall (String resolvedReciever, String selector, int ar
 			if (bean != null) {
 				fExpression.setBean(bean);
 				boolean initExpr = true;
-//				if (stmt.getRightHandSide() instanceof ClassInstanceCreation
-//						|| (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression) stmt.getRightHandSide()).getExpression() instanceof ClassInstanceCreation)) {
-//					// e.g. ivjTitledBorder = new Border()
-//					// e.g. ivjTitledBorder = (TitledBorder) new Border()
-//					initExpr = true;
-//				} else if (stmt.getRightHandSide() instanceof MethodInvocation
-//						|| (stmt.getRightHandSide() instanceof CastExpression && ((CastExpression) stmt.getRightHandSide()).getExpression() instanceof MethodInvocation)) {
-//					// e.g., ivjTitledBorder = javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
-//					// e.g., ivjTitledBorder = (TitledBorder) javax.swing.BorderFactory.createTitledBorder(null , "Dog" , 0 , 0)
-//					// Assume the MessageSend is a static that can be resolved by the target VM...
-//					// need more work here.
-//					// At this point, make sure this is a static method.
-//					MethodInvocation m = (MethodInvocation) (stmt.getRightHandSide() instanceof MethodInvocation ? stmt.getRightHandSide()
-//							: ((CastExpression) stmt.getRightHandSide()).getExpression());
-//					while (m.getExpression() instanceof MethodInvocation)
-//						m = (MethodInvocation)m.getExpression();
-//					if (m.getExpression() instanceof Name) {
-//						TypeResolver.Resolved resolvedReceiver = fModel.getResolver().resolveType((Name) m.getExpression());
-//						String resolvedReceiverName = resolvedReceiver != null ? resolvedReceiver.getName() : null;
-//						// TODO This should be in a rule: parse methodInvocation Initialization
-//						if (isStaticCall(resolvedReceiverName, m.getName().getIdentifier(), (m.arguments() == null ? 0 : m.arguments().size()))) {
-//							initExpr = true;
-//						}
-//					}					
-//				}else if (stmt.getRightHandSide() instanceof StringLiteral){
-//					initExpr = true;
-//				}
 				if (initExpr) {
 					bean.addInitMethod(fMethod);
 					fExpression.setState(CodeExpressionRef.STATE_IN_SYNC, true);

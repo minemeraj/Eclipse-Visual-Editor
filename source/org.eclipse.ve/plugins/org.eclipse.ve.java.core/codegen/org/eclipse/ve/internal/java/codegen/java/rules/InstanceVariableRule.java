@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.18 $  $Date: 2005-06-20 13:43:47 $ 
+ *  $Revision: 1.19 $  $Date: 2005-07-22 14:34:50 $ 
  */
 
 import org.eclipse.jdt.core.dom.*;
@@ -28,7 +28,9 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	boolean fInitMethodSet = false;
 
 	public boolean ignoreVariable(FieldDeclaration field, TypeResolver resolver, IVEModelInstance di) {
-		if(field.getType() instanceof ArrayType)
+		if(field.getType().isArrayType())
+			return true;
+		if (field.getType().isPrimitiveType())
 			return true;
 		if (resolveType(field.getType(), resolver) == null)
 			return true;	// If not resolved, ignore it.
@@ -37,10 +39,13 @@ public class InstanceVariableRule implements IInstanceVariableRule, IMethodVaria
 	}
 	
 	public boolean ignoreVariable(VariableDeclarationStatement stmt, TypeResolver resolver, IVEModelInstance di) {
-		if(stmt.getType() instanceof ArrayType)
+		if(stmt.getType().isArrayType())
+			return true;
+		if (stmt.getType().isPrimitiveType())
 			return true;
 		if (resolveType(stmt.getType(), resolver) == null)
 			return true;	// If not resolved, ignore it.
+		
 		//TODO: support multi declerations
 		return ignoreVariable((VariableDeclaration)stmt.fragments().get(0), stmt.getType(), resolver, di);
 	}
