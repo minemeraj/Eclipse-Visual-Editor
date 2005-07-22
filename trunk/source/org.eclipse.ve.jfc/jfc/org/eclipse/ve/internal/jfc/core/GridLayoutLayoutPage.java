@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.11 $  $Date: 2005-07-19 22:49:41 $ 
+ *  $Revision: 1.12 $  $Date: 2005-07-22 17:13:19 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -49,6 +49,9 @@ import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
 public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	
 	EditPart fEditPart = null;
+	
+	int currentRowValue = 1;
+	int currentColsValue = 1;
 	
 	Spinner columnsSpinner;
 	Spinner rowsSpinner;
@@ -108,7 +111,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		gd.grabExcessHorizontalSpace = true;
 		label.setLayoutData(gd);
 		rowsSpinner = new Spinner(dimensionsGroup, SWT.BORDER);
-		rowsSpinner.setMinimum(1);
+		rowsSpinner.setMinimum(0);
 		rowsSpinner.setSelection(0);
 		rowsSpinner.addModifyListener(spinnerModify);
 		
@@ -268,8 +271,10 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				return;
 			}
 			columnsSpinner.setSelection(getIntValue(fEditPart, sfColumns));
+			currentColsValue = columnsSpinner.getSelection();
 			columnsSpinner.setEnabled(true);
 			rowsSpinner.setSelection(getIntValue(fEditPart, sfRows));
+			currentRowValue = rowsSpinner.getSelection();
 			rowsSpinner.setEnabled(true);
 			hgapSpinner.setSelection(getIntValue(fEditPart, sfHgap));
 			hgapSpinner.setEnabled(true);
@@ -293,8 +298,27 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	private void spinnerModified(Spinner s) {
-		if (initialized)
-			execute(createSpinnerCommand(fEditPart, getSFForSpinner(s), s));				
+		if (initialized){
+			if(s == rowsSpinner && columnsSpinner.getSelection() == 0){
+				if(rowsSpinner.getSelection() == 0){
+					if(currentRowValue == 0)
+						rowsSpinner.setSelection(1);
+					else
+						rowsSpinner.setSelection(currentRowValue);
+				}
+				currentRowValue = rowsSpinner.getSelection();
+			} else if(s == columnsSpinner && rowsSpinner.getSelection() == 0){
+				if(columnsSpinner.getSelection() == 0){
+					if(currentColsValue == 0)
+						columnsSpinner.setSelection(1);		
+					else
+						columnsSpinner.setSelection(currentColsValue);
+				}
+				currentColsValue = columnsSpinner.getSelection();
+			}
+
+			execute(createSpinnerCommand(fEditPart, getSFForSpinner(s), s));
+		}
 	}
 	
 	/*
@@ -311,6 +335,8 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				String init = String.valueOf(spinner.getSelection());
 				Object intObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
 				componentCB.applyAttributeSetting(gridLayout, sf, intObject);
+				if(columnsSpinner.getSelection() == 0)
+					componentCB.cancelAttributeSetting(gridLayout, sfColumns);
 				componentCB.applyAttributeSetting(control, sfCompositeLayout, gridLayout);
 				cb.append(componentCB.getCommand());
 			} else {
