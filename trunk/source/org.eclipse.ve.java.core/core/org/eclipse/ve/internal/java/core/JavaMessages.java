@@ -97,4 +97,6 @@ public final class JavaMessages extends NLS {
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, JavaMessages.class);
 	}
+
+	public static String BasicAllocationProcesser_BeanRecurrsionError;
 }
