@@ -11,9 +11,8 @@
 package org.eclipse.ve.internal.swt.targetvm;
 import java.lang.reflect.Field;
 
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * Get the widths and heights of the columns and rows so that the IDE can show these in its GEF feedback
@@ -33,14 +32,17 @@ public class GridLayoutHelper_30 {
 	private Field pixelRowHeightsFieldProxy;
 	private Field expandableColumnsFieldProxy;
 	private Field expandableRowsFieldProxy;
+	private GridLayout gridLayout;
 
 	public void setComposite(Composite aComposite) {
 		fComposite = aComposite;
+		aComposite.layout();
 		computeValues();
 	}
 
 	private void computeValues() {
-		GridLayout gridLayout = (GridLayout) fComposite.getLayout();
+		gridLayout = (GridLayout) fComposite.getLayout();
+		fComposite.layout();
 		try {
 			if(pixelColumnWidthsFieldProxy == null){
 				pixelColumnWidthsFieldProxy = gridLayout.getClass().getDeclaredField("pixelColumnWidths");
@@ -73,53 +75,56 @@ public class GridLayoutHelper_30 {
 	}
 
 	private void adjustGridDimensions(GridLayout gridLayout) {
-		int[] columnWidths;
-		int[] rowHeights;
-		int compositeWidth, compositeHeight;
-		int excessHorizontal, excessVertical;
-//		Point extent = computeSize(fComposite, SWT.DEFAULT, SWT.DEFAULT, flushCache);
-		Point extent = new Point(0,0);
-		columnWidths = new int[gridLayout.numColumns];
-		for (int i = 0; i < widths.length; i++) {
-			columnWidths[i] = widths[i];
-		}
-		rowHeights = new int[heights.length];
-		for (int i = 0; i < heights.length; i++) {
-			rowHeights[i] = heights[i];
-		}
-		compositeWidth = extent.x;
-		compositeHeight = extent.y;
-
-		// Calculate whether or not there is any extra space or not enough space due to a resize 
-		// operation.  Then allocate/deallocate the space to columns and rows that are expandable.  
-		// If a control grabs excess space, its last column or row will be expandable.
-		excessHorizontal = fComposite.getClientArea().width - compositeWidth;
-		excessVertical = fComposite.getClientArea().height - compositeHeight;
-		if (excessVertical == 0) {};
-
-		// Allocate/deallocate horizontal space.
-		if (expandableColumns.length != 0) {
-			int excess, remainder, last;
-			int colWidth;
-			excess = excessHorizontal / expandableColumns.length;
-			remainder = excessHorizontal % expandableColumns.length;
-			last = 0;
-			for (int i = 0; i < expandableColumns.length; i++) {
-				int expandableCol = expandableColumns[i];
-				colWidth = columnWidths[expandableCol];
-				colWidth = colWidth + excess;
-				columnWidths[expandableCol] = colWidth;
-				last = Math.max(last, expandableCol);
-			}
-			colWidth = columnWidths[last];
-			colWidth = colWidth + remainder;
-			columnWidths[last] = colWidth;
-		}
-		for (int i = 0; i < widths.length; i++) {
-			widths[i] = columnWidths[i];
-		}
-		// ---> NEED MORE calculations here from the 3.0 GridLayout.layout method <---
 		
-	}
+		// The expandableColumns holds an array of which controls want to grab excess width
+		// The expandableRows holds an array of which controls want to grab excess height
+		// We need to adjust the widths and heights arrays for this
+		// 1 - Get the available space that the controls who want to grow into available space can occupy
+		// 2 - Divide this space among the controls that want it
+		// 3 - adjust the widths and heights array
 
+		// 1) Work out the available total width and height
+		int availableHorizontal = fComposite.getClientArea().width;
+		int availableVerical = fComposite.getClientArea().height;
+				
+		// 2) Divide the height and width by the columns that want it
+		// 3) increment each control that is expandable		
+		if(expandableColumns.length > 0){
+			// Reduce the width by the margins
+			availableHorizontal = availableHorizontal - (gridLayout.marginWidth * 2);
+			// Reduce the width by the spacing
+			if(widths.length >= 2){
+				availableHorizontal = availableHorizontal - (widths.length - 1) * gridLayout.horizontalSpacing;
+			}
+			// Subtract the currently used space
+			widths: for (int i = 0; i < widths.length; i++) {
+				availableHorizontal = availableHorizontal - widths[i];					
+			}			
+			// We have the remaining space to use.  Divide by the number of columns that want to be expanded
+			int widthAdjustment = availableHorizontal / expandableColumns.length;
+			// Now add this to each column that wants to be expanded
+			for (int i = 0; i < expandableColumns.length; i++) {
+				widths[expandableColumns[i]] = widthAdjustment + widths[expandableColumns[i]];
+			}			
+		}
+		
+		if(expandableRows.length > 0){
+			// Reduce the width by the margins
+			availableVerical = availableVerical - (gridLayout.marginHeight * 2);
+			// Reduce the height by the spacing
+			if(heights.length >= 2){
+				availableVerical = availableVerical - (heights.length - 1) * gridLayout.verticalSpacing;
+			}
+			// Subtract the currently used space
+			heights: for (int i = 0; i < heights.length; i++) {
+				availableVerical = availableVerical - heights[i];					
+			}			
+			// We have the remaining space to use.  Divide by the number of rows that want to be expanded
+			int heightAdjustment = availableVerical / expandableRows.length;
+			// Now add this to each row that wants to be expanded
+			for (int i = 0; i < expandableRows.length; i++) {
+				heights[expandableRows[i]] = heightAdjustment + heights[expandableRows[i]];
+			}			
+		} 
+	}
 }
