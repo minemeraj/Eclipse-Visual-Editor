@@ -160,6 +160,33 @@ public class GridLayoutHelper {
 			}
 		}
 
+		for (int i=0; i<count; i++) {
+			Control child = children [i];
+			GridData data = (GridData) child.getLayoutData ();
+			if (data == null) child.setLayoutData (data = new GridData ());
+			runComputeSize(data, new Object[] {child, new Integer(data.widthHint),
+					new Integer(data.heightHint), new Boolean(false)});
+			if (data.grabExcessHorizontalSpace && data.minimumWidth > 0) {
+				if (getCacheWidth(data) < data.minimumWidth) {
+					int trim = 0;
+					//TEMPORARY CODE
+					if (child instanceof Scrollable) {
+						Rectangle rect = ((Scrollable) child).computeTrim (0, 0, 0, 0);
+						trim = rect.width;
+					} else {
+						trim = child.getBorderWidth () * 2;
+					}
+					putCacheWidth(data, SWT.DEFAULT);
+					putCacheHeight(data, SWT.DEFAULT);
+					runComputeSize(data, new Object[] {child, new Integer(Math.max(0, data.minimumWidth - trim)),
+							new Integer(data.heightHint), new Boolean(false)});
+				}
+			}
+			if (data.grabExcessVerticalSpace && data.minimumHeight > 0) {
+				putCacheHeight(data, Math.max (getCacheHeight(data), data.minimumHeight));
+			}
+		}
+
 		/* Build the grid */
 		int row = 0, column = 0, rowCount = 0, columnCount = fGridLayout.numColumns;
 		Control[][] grid = new Control[4][columnCount];
