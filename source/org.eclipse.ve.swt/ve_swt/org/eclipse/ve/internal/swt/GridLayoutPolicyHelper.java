@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.24 $  $Date: 2005-07-22 00:40:19 $
+ *  $Revision: 1.25 $  $Date: 2005-07-22 14:03:16 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -81,7 +81,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 
 	protected IBeanProxy getContainerBeanProxy() {
-		if (fContainerBeanProxy == null) {
+		if (fContainerBeanProxy == null || !fContainerBeanProxy.isValid()) {
 			fContainerBeanProxy = BeanProxyUtilities.getBeanProxy(getContainer());
 		}
 		return fContainerBeanProxy;
