@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.30 $  $Date: 2005-07-15 22:36:54 $ 
+ *  $Revision: 1.31 $  $Date: 2005-07-22 14:05:46 $ 
  */
 
 import java.util.regex.Pattern;
@@ -184,10 +184,14 @@ public class BeanUtilities {
 				case '"':
 					if (isString)
 						sb.append("\\\"");	// Put out an escaped quote. But only for string. Not needed for char.
+					else
+						sb.append('"');
 					break;
 				case '\'':
 					if (!isString)
 						sb.append("\\\'");	// Put out escaped quote. But we only do this on chars. Strings can handle it unquoted.
+					else
+						sb.append('\'');
 					break;
 				default:	
 					if (c == '\\') {
