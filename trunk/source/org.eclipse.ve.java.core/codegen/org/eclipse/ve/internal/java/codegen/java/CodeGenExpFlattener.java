@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenExpFlattener.java,v $
- *  $Revision: 1.8 $  $Date: 2005-07-22 14:34:50 $ 
+ *  $Revision: 1.9 $  $Date: 2005-07-22 21:17:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -79,7 +79,11 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 		    	  }
 		    }
 		    else {
-		    	if (obj.isSetAllocation() && !visitedList.contains(obj)) {
+		    	if (obj == null || obj.eContainer()==null) {
+		    		// do nothing here ... bad object to begin with
+		    	}
+		    	else
+		    	  if (obj.isSetAllocation() && !visitedList.contains(obj)) {
 		    		JavaAllocation alloc = obj.getAllocation();
 		    		if (alloc instanceof InitStringAllocation)
 		    			getStringBuffer().append(((InitStringAllocation) alloc).getInitString());
@@ -87,11 +91,11 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 		    			visitedList.add(obj);
 		    			((ParseTreeAllocation) alloc).getExpression().accept(this);
 		    		}
-		    	} else {
+		    	  } else {
 		    		getStringBuffer().append("new "); //$NON-NLS-1$
 		    		getStringBuffer().append(handleQualifiedName((obj.getJavaType()).getJavaName())); 
 		    		getStringBuffer().append("()"); //$NON-NLS-1$
-		    	}
+		    	  }
 		    }
 			return false;
 		}
