@@ -24,7 +24,7 @@ public class ConvertByte2String implements IConverter {
 	 * @see org.eclipse.jface.binding.converter.IConverter#convert(java.lang.Object)
 	 */
 	public Object convert(Object source) {
-        Integer i = (Integer) source;
+        Byte i = (Byte) source;
 		return i.toString();
 	}
 

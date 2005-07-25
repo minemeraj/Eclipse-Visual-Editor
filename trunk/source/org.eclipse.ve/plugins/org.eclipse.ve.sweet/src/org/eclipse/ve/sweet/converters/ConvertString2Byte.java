@@ -25,9 +25,9 @@ public class ConvertString2Byte implements IConverter {
 	 */
 	public Object convert(Object source) {
         try {
-            return new Integer(Integer.parseInt((String) source));
+            return new Byte(Byte.parseByte((String) source));
         } catch (Exception e) {
-            throw new IllegalArgumentException("String2Integer: " + e.getMessage() + ": " + source);
+            throw new IllegalArgumentException("String2Byte: " + e.getMessage() + ": " + source);
         }
 	}
 
