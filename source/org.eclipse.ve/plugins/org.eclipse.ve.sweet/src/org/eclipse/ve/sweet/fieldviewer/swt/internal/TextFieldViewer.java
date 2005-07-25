@@ -60,12 +60,12 @@ public class TextFieldViewer implements IFieldViewer {
     public TextFieldViewer(Object control, IObjectViewer object, IPropertyEditor property) {
         this.input = object;
         this.control = (ITextControl) RelaxedDuckType.implement(ITextControl.class, control);
-        addListeners();
         try {
             setInput(property);
         } catch (CannotSaveException e) {
             throw new RuntimeException("Object just created: should not need to save", e);
         }
+        addListeners();
     }
     
     protected void addListeners() {
