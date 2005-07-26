@@ -262,11 +262,11 @@
 		
 		<!-- Now build the update program. -->
 	    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-		<property name="eclipse.version" value="3.0.0"/>
-		<available file="${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}" property="versionFound"/>
+		<property name="eclipse.version" value="3.1.0"/>
+		<available file="${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}.jar" property="versionFound"/>
 		<fail unless="versionFound" message="Failed due to ${eclipse.version} Eclipse not being used. If upgraded, need to upgrade this buildAll.xml too."/>
 		<mkdir dir="${updateLocalDirectory}/bin"/>
-	    <javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpath="${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/core.jar"/>
+	    <javac verbose="true" failonerror="true" srcdir="${updateLocalDirectory}" destdir="${updateLocalDirectory}/bin" classpath="${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}.jar"/>
 
 		<!-- Now get the latest build SDK and unzip into the local directory for processing. -->
 		<exec dir="${updateLocalDirectory}" executable="unzip">
@@ -283,7 +283,7 @@
 	    <java classname="org.eclipse.releng.generators.UpdateBuilder" failonerror="true">
 	         <arg line="-root ${updateLocalDirectory}/eclipse -site ${updateLocalDirectory}/site -sitexml ${updateLocalDirectory}/site.xml -build ${buildId} -size ${devtype}" /> 
 	         <classpath>
-	            	<pathelement path="${updateLocalDirectory}/bin:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/osgi.jar:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}/core.jar" />
+	            	<pathelement path="${updateLocalDirectory}/bin:${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}.jar" />
 	         </classpath>
 	    </java>
 
