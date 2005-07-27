@@ -61,23 +61,20 @@ public class JavaProperty implements InvocationHandler {
         try {
             getter = receiverClass.getMethod(realMethodName("get"), noParams);
             propertyType = getter.getReturnType();
-        } catch (NoSuchMethodException e) {
-            try {
+        } catch (NoSuchMethodException e) {            
                 field = getField(receiverClass, propertyName);
-            } catch (Exception e2) {
-                /*
-                 *  We'll try lower-casing the property name.  This allows someone
-                 *  to encapsulate a normal lower-cased field with getFieldName()
-                 *  and have Sweet pick up the encapsulated method automatically.
-                 */
-                try {
-                    field = getField(receiverClass, lowerCaseFirstLetter(propertyName));
-                } catch (Exception e1) {
+                if (field == null) {
+                 /*
+                  *  We'll try lower-casing the property name.  This allows someone
+                  *  to encapsulate a normal lower-cased field with getFieldName()
+                  *  and have Sweet pick up the encapsulated method automatically.
+                  */                
+                   field = getField(receiverClass, lowerCaseFirstLetter(propertyName));
+                   if (field == null)                
                     throw new NoSuchMethodException("That property does not exist.");
-                }
-            }
-            propertyType = field.getType();
-            field.setAccessible(true);
+                }            
+                propertyType = field.getType();
+                field.setAccessible(true);
         }
         
         try {
