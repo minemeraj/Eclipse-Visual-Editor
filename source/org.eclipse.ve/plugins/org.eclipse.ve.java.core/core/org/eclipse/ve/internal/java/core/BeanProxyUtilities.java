@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.18 $  $Date: 2005-06-23 21:08:30 $ 
+ *  $Revision: 1.19 $  $Date: 2005-07-28 22:23:16 $ 
  */
 
 import java.util.List;
@@ -444,8 +444,7 @@ public class BeanProxyUtilities {
 		if (aBean == null)
 			return null;
 		IInternalBeanProxyHost aBeanProxyHost = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(aBean);
-		// TODO Change to use hasInstantiationError when proxy host stuff collapsed back.
-		if (!aBeanProxyHost.getInstantiationError().isEmpty() && !noInstantiateOnError)
+		if (aBeanProxyHost.hasInstantiationErrors() && !noInstantiateOnError)
 			return null;
 		aBeanProxyHost.instantiateBeanProxy();
 		return aBeanProxyHost.getBeanProxy();
@@ -462,7 +461,7 @@ public class BeanProxyUtilities {
 		if (aBean == null)
 			return null;
 		IInternalBeanProxyHost aBeanProxyHost = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(aBean, aResourceSet);
-		if (aBeanProxyHost.hasInstantiationErrors())
+		if (!aBeanProxyHost.hasInstantiationErrors())
 			aBeanProxyHost.instantiateBeanProxy();
 		return aBeanProxyHost.getBeanProxy();
 	}
