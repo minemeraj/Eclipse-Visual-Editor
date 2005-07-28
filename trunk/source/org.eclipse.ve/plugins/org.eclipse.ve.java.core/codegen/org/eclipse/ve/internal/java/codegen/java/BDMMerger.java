@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.56 $  $Date: 2005-07-20 23:14:31 $ 
+ *  $Revision: 1.57 $  $Date: 2005-07-28 22:25:46 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -35,6 +35,7 @@ import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver.ResolvedType;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
 /**
@@ -1555,15 +1556,23 @@ public class BDMMerger {
 		Name mainBeanExtendsName = (isMainBeanThisPart && mainBean.getModel().getTypeDecleration()!=null) ? mainBean.getModel().getTypeDecleration().getSuperclass() : null;
 		Name newBeanExtendsName = (isNewBeanThisPart && newBean.getModel().getTypeDecleration()!=null) ? newBean.getModel().getTypeDecleration().getSuperclass() : null;
 		TypeResolver resolver = mainBean.getModel().getResolver();
-		if(isMainBeanThisPart && mainBeanExtendsName!=null)
-			mainType = resolver.resolveType(mainBeanExtendsName).getName();
-		else
+		if(isMainBeanThisPart && mainBeanExtendsName!=null) {
+			ResolvedType resolveType = resolver.resolveType(mainBeanExtendsName);
+			if (resolveType != null)
+				mainType = resolveType.getName();
+			else
+				mainType = null;
+		} else
 			mainType = mainBean.getType();
-		if(isNewBeanThisPart && newBeanExtendsName!=null)
-			newType = resolver.resolveType(newBeanExtendsName).getName() ;
-		else
+		if(isNewBeanThisPart && newBeanExtendsName!=null) {
+			ResolvedType resolveType = resolver.resolveType(newBeanExtendsName);
+			if (resolveType != null)
+				newType = resolveType.getName() ;
+			else
+				newType = null;
+		} else
 			newType = newBean.getType();
-		boolean typeChanged = !mainType.equals(newType) ;
+		boolean typeChanged = mainType == null || newType == null || !mainType.equals(newType) ;
 		if(typeChanged){
 			monitor.subTask(mainBean.getSimpleName());
 			// Type has changed 
