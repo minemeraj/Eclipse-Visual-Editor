@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: StringJavaClassCellEditor.java,v $ $Revision: 1.8 $ $Date: 2005-06-23 01:48:08 $
+ * $RCSfile: StringJavaClassCellEditor.java,v $ $Revision: 1.9 $ $Date: 2005-07-28 22:26:36 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -17,6 +17,7 @@ package org.eclipse.ve.internal.java.core;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IStringBeanProxy;
 import org.eclipse.jem.java.JavaRefFactory;
 
@@ -42,13 +43,17 @@ public class StringJavaClassCellEditor extends DefaultJavaClassCellEditor {
 	 * Returns the string for the value.
 	 */
 	protected String doGetString(Object value) {
-		if (isInstance(value)) {
-			return BeanUtilities.getEscapedString(((IStringBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) value, JavaEditDomainHelper.getResourceSet(fEditDomain)))
-					.stringValue());
-		} else if (value != null) {
-			// Since this is not a string value, the text widget is disabled,
-			// just return the toString of this object.
-			return BeanProxyUtilities.getBeanProxy((IJavaInstance) value, JavaEditDomainHelper.getResourceSet(fEditDomain)).toBeanString();
+		IBeanProxy beanProxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) value, JavaEditDomainHelper.getResourceSet(fEditDomain));
+		if (beanProxy != null) {
+			if (isInstance(value)) {
+				return BeanUtilities.getEscapedString(((IStringBeanProxy) beanProxy)
+						.stringValue());
+			} else if (value != null) {
+				// Since this is not a string value, the text widget is disabled,
+				// just return the toString of this object.
+				return beanProxy.toBeanString();
+			} else
+				return null;
 		} else
 			return null;
 	}
