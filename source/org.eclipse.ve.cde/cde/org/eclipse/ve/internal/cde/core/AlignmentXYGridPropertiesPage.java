@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYGridPropertiesPage.java,v $
- *  $Revision: 1.9 $  $Date: 2005-06-21 21:43:42 $ 
+ *  $Revision: 1.10 $  $Date: 2005-08-01 17:09:37 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -167,6 +167,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 
 		data = new GridData();
 		data.widthHint = 40;
+		data.grabExcessHorizontalSpace = true;
 		widthLabel.setLayoutData(data);
 		// Grid width scale
 		fGridWidthScale = new Scale(fieldsGroup, SWT.HORIZONTAL);
@@ -202,6 +203,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		data = new GridData();
 		data.grabExcessHorizontalSpace = true;
 		data.widthHint = 40;
+		data.horizontalAlignment = GridData.END;
 		fGridWidthText.setLayoutData(data);
 
 		// Grid height label
@@ -209,6 +211,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		heightLabel.setText(CDEMessages.AlignmentXYGridPropertiesPage_height); 
 		data = new GridData();
 		data.widthHint = 40;
+		data.grabExcessHorizontalSpace = true;
 		heightLabel.setLayoutData(data);
 		// Grid height scale
 		fGridHeightScale = new Scale(fieldsGroup, SWT.HORIZONTAL);
@@ -243,6 +246,8 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		});
 		data = new GridData();
 		data.widthHint = 40;
+		data.grabExcessHorizontalSpace = true;
+		data.horizontalAlignment = GridData.END;
 		fGridHeightText.setLayoutData(data);
 
 		// Grid margin label
@@ -250,6 +255,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		marginLabel.setText(CDEMessages.AlignmentXYGridPropertiesPage_margin); 
 		data = new GridData();
 		data.widthHint = 40;
+		data.grabExcessHorizontalSpace = true;
 		marginLabel.setLayoutData(data);
 		// Grid margin scale
 		fGridMarginScale = new Scale(fieldsGroup, SWT.HORIZONTAL);
@@ -278,6 +284,8 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		});
 		data = new GridData();
 		data.widthHint = 40;
+		data.grabExcessHorizontalSpace = true;
+		data.horizontalAlignment = GridData.END;
 		fGridMarginText.setLayoutData(data);
 
 		// Create the message line
