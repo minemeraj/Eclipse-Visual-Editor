@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.21 $  $Date: 2005-07-19 22:58:38 $ 
+ *  $Revision: 1.22 $  $Date: 2005-08-01 16:02:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -44,7 +44,6 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.texteditor.ResourceAction;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
-import org.eclipse.ui.views.navigator.ResourceNavigatorMessages;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
@@ -65,8 +64,8 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	// dbk cache IMG_COLLAPSE_ALL / IMG_COLLAPSE_ALL_DISABLED
 	private static final ImageDescriptor IMG_COLLAPSE_ALL = getUIImageDescriptor("elcl16/collapseall.gif"); //$NON-NLS-1$
 	private static final ImageDescriptor IMG_COLLAPSE_ALL_DISABLED = getUIImageDescriptor("dlcl16/collapseall.gif"); //$NON-NLS-1$
-	private static final String TITLE = ResourceNavigatorMessages.getString("CollapseAllAction.title"); //$NON-NLS-1$
-	private static final String TOOL_TIP = ResourceNavigatorMessages.getString("CollapseAllAction.toolTip"); //$NON-NLS-1$
+	private static final String TITLE = CodegenEditorPartMessages.CollapseAllAction_label;
+	private static final String TOOL_TIP = CodegenEditorPartMessages.CollapseAllAction_toolTip;
 	
 	private class ShowOverviewAction extends ResourceAction {
 		private static final String RESOURCE_PREFIX = "ShowOverviewAction_"; //$NON-NLS-1$
