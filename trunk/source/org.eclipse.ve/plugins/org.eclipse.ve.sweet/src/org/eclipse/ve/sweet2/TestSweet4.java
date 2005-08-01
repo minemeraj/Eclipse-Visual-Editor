@@ -47,6 +47,11 @@ public class TestSweet4 {
 		separator.setLayoutData(data);
 		
 		// Have a copy of the name field to show that notification works between the two
+		Label nameLabel_2 = new Label(shell,SWT.NONE);
+		nameLabel_2.setText("Name: ");		
+		TextViewer nameTextViewer_2 = new TextViewer(shell,SWT.BORDER);
+		nameTextViewer_2.setContentProvider(personBinder.getPropertyProvider("name"));
+		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		shell.open();
 		
