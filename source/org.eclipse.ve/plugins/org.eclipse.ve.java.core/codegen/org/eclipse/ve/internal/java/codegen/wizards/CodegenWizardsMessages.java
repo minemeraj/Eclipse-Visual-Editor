@@ -25,6 +25,7 @@ public final class CodegenWizardsMessages extends NLS {
 	public static String SourceFolder_RCP_ERROR;
 	public static String SourceFolder_NON_UI_ERROR;
 	public static String NewVisualClassWizardPage_EnclosedType_ERROR_;
+	public static String NewVisualClassWizardPage_Style_Label;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, CodegenWizardsMessages.class);
