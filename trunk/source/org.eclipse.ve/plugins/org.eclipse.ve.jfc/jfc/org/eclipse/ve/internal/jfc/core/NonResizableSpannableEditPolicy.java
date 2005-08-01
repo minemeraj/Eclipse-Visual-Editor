@@ -11,9 +11,10 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NonResizableSpannableEditPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.4 $  $Date: 2005-08-01 20:08:41 $ 
  */
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.draw2d.PositionConstants;
@@ -39,8 +40,17 @@ public class NonResizableSpannableEditPolicy extends NonResizableEditPolicy {
 	 * @see org.eclipse.gef.editpolicies.SelectionHandlesEditPolicy#createSelectionHandles()
 	 */
 	protected List createSelectionHandles() {
+		int numChildrenSelected = 0;
+		
+		Iterator children = getHost().getParent().getChildren().iterator();
+		while(children.hasNext()){
+			EditPart child = (EditPart) children.next();
+			if(child.getSelected() == EditPart.SELECTED_PRIMARY || child.getSelected() == EditPart.SELECTED)
+				numChildrenSelected++;
+		}
+		
 		List nonResizeHandles = super.createSelectionHandles();
-		if (getHost().getSelected() == EditPart.SELECTED_PRIMARY) {
+		if (getHost().getSelected() == EditPart.SELECTED_PRIMARY && numChildrenSelected == 1) {
 			nonResizeHandles.add(createHandle((GraphicalEditPart) getHost(), PositionConstants.EAST));
 			nonResizeHandles.add(createHandle((GraphicalEditPart) getHost(), PositionConstants.SOUTH));
 		}
