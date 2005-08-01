@@ -14,7 +14,7 @@ package org.eclipse.ve.sweet.objectviewer;
 /**
  * IEditedObject. A relaxed duck interface for Java objects that are being edited.
  * These methods will be called at the appropriate times in the object's 
- * life cycle if they exist on the object.
+ * life cycle if they exist on the object.<p>
  * 
  * Note that not all these methods will be applicable in all cases.  For example,
  * an IObjectViewer implementation may be designed for regular Java objects 
