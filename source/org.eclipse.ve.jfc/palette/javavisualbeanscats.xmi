@@ -98,7 +98,7 @@
         creationClassURI="java:/javax.swing.table#TableColumn">
       <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="TableColumn"/>
       <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
-          value="ivjTableColumn"/>
+          value="tableColumn"/>
     </children>
     <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/progressbar_obj.gif"
         creationClassURI="java:/javax.swing#JProgressBar">
