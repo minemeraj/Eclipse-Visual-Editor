@@ -13,7 +13,7 @@ import org.eclipse.jface.viewers.IContentProvider;
  *******************************************************************************/
 /*
  *  $RCSfile: IPropertyProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-01 14:38:32 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-01 15:06:14 $ 
  */
 
 /**
@@ -24,5 +24,6 @@ public interface IPropertyProvider extends IContentProvider {
 
 	public Object getValue();
 	public void setValue(Object value);
+	public Object getSource();
 
 }

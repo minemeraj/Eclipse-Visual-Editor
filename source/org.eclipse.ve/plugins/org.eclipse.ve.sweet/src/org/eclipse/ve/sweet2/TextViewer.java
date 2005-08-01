@@ -1,7 +1,10 @@
 package org.eclipse.ve.sweet2;
 
 import org.eclipse.jface.viewers.ContentViewer;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
@@ -9,10 +12,15 @@ import org.eclipse.swt.widgets.Text;
 public class TextViewer extends ContentViewer {
 	
 	private Text text;
+	private IPropertyProvider propertyProvider;
 	
 	public TextViewer(Composite parent, int styles){
 		text = new Text(parent,styles);
-		
+		text.addModifyListener(new ModifyListener(){
+			public void modifyText(ModifyEvent e) {
+				((IPropertyProvider)getContentProvider()).setValue(text.getText());
+			}			
+		});
 	}
 	
 	public Text getText(){
@@ -32,6 +40,13 @@ public class TextViewer extends ContentViewer {
 	}
 
 	public void setSelection(ISelection selection, boolean reveal) {
+
+	}
+	
+	public void setContentProvider(IContentProvider contentProvider) {
+		super.setContentProvider(contentProvider);
+		propertyProvider = (IPropertyProvider)contentProvider;
+		setInput(propertyProvider.getSource());
 
 	}
 
