@@ -28,5 +28,19 @@ public class Person {
         return new RegularExpressionValidator("^[0-9]*$", "^[0-9]{1,3}$", 
                 "Please enter an age between 0 and 999");
     }
+    
+    public String getName(){
+    	return name;
+    }
+    public void setName(String aName){
+    	name = aName;
+    }
+    public int getAge(){
+    	return age;
+    }
+    public void setAge(int anAge){
+    	age = anAge;
+    }
+    
 }
 

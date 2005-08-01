@@ -1,5 +1,5 @@
-
 package org.eclipse.ve.sweet2;
+
 import org.eclipse.jface.viewers.IContentProvider;
 /*******************************************************************************
  * Copyright (c) 2004 IBM Corporation and others.
@@ -13,7 +13,7 @@ import org.eclipse.jface.viewers.IContentProvider;
  *******************************************************************************/
 /*
  *  $RCSfile: IPropertyProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2005-07-29 20:47:30 $ 
+ *  $Revision: 1.2 $  $Date: 2005-08-01 14:38:32 $ 
  */
 
 /**
@@ -24,4 +24,5 @@ public interface IPropertyProvider extends IContentProvider {
 
 	public Object getValue();
 	public void setValue(Object value);
+
 }
