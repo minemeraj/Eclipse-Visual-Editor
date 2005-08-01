@@ -33,18 +33,19 @@ public class PropertyProvider implements InvocationHandler {
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     	
-    	if(method.getName().equals("inputChanged") & args.length == 3){
-    		inputChanged((Viewer)args[0],args[1],args[2]);
-    		return null;
+    	try{ 
+    		Method myMethod = this.getClass().getMethod(method.getName(),method.getParameterTypes());
+    		return myMethod.invoke(this,args);
+    	} catch (NoSuchMethodException exc){
+        	Method realMethod;
+    	    try {
+    	    	realMethod = receiverClass.getMethod(method.getName(), method.getParameterTypes() );
+    	    } catch (Exception e) {
+    	    	return null;
+    	    }
+    	    return realMethod.invoke(source, args);				 
     	}
-		
-    	Method realMethod;
-	    try {
-	    	realMethod = receiverClass.getMethod(method.getName(), method.getParameterTypes() );
-	    } catch (Exception e) {
-	    	return null;
-	    }
-	    return realMethod.invoke(source, args);				
+    	
 	}
 
 	public Object getValue() {
@@ -73,6 +74,10 @@ public class PropertyProvider implements InvocationHandler {
 
 	private String getStringValue() {
 		return getValue().toString();
+	}
+	
+	public Object getSource(){
+		return source;
 	}
 
 }

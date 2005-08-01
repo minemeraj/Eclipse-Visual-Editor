@@ -8,6 +8,10 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.*;
 import org.eclipse.ve.sweet.test.Person;
 
+/**
+ * This example demonstrates a simple TextViewer with a custom content provider for age and name
+ */
+
 public class TestSweet2 {
 	
 	public static void main(String[] args) {

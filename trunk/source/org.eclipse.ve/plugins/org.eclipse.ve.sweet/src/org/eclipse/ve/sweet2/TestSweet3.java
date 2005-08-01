@@ -8,6 +8,10 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.*;
 import org.eclipse.ve.sweet.test.Person;
 
+/**
+ * This example builds on TestSweet2 but uses a generic PropertyProvider instead of a customer IContentProvider for the viewer
+ */
+
 public class TestSweet3 {
 	
 	public static void main(String[] args) {
@@ -30,9 +34,11 @@ public class TestSweet3 {
 		TextViewer ageTextViewer = new TextViewer(shell,SWT.BORDER);
 		ageTextViewer.setContentProvider(PropertyProvider.getPropertyProvider(p,"age"));
 		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		nameTextViewer.setInput(p);
-		ageTextViewer.setInput(p);		
+		
+		Label separator = new Label(shell,SWT.SEPARATOR | SWT.HORIZONTAL);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalSpan = 2;
+		separator.setLayoutData(data);
 		
 		shell.open();
 		
