@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutLayoutPage.java,v $
- *  $Revision: 1.11 $  $Date: 2005-07-15 20:34:39 $ 
+ *  $Revision: 1.12 $  $Date: 2005-08-02 17:40:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -337,10 +337,14 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 			}
 			
 			int orientationValue = getIntValue(fEditPart, sfType);
-			if (orientationValue == SWT.HORIZONTAL)
+			if (orientationValue == SWT.HORIZONTAL){
 				typeHorizontalRadio.setSelection(true);
-			else if (orientationValue == SWT.VERTICAL)
+				typeVerticalRadio.setSelection(false);
+			}
+			else if (orientationValue == SWT.VERTICAL){
 				typeVerticalRadio.setSelection(true);
+				typeHorizontalRadio.setSelection(false);
+			}
 			
 			spacingSpinner.setSelection(getIntValue(fEditPart, sfSpacing));
 			spacingSpinner.setEnabled(true);
