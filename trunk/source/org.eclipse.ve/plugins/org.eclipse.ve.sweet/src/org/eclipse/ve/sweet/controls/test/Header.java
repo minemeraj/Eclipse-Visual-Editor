@@ -14,6 +14,7 @@ package org.eclipse.ve.sweet.controls.test;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Button;
 
 public class Header extends Composite {
 
@@ -27,19 +28,25 @@ public class Header extends Composite {
 		initialize();
 	}
 
+	/**
+	 * This method initializes this
+	 * 
+	 */
 	private void initialize() {
-		label = new Label(this, SWT.NONE);
-		label.setBounds(new org.eclipse.swt.graphics.Rectangle(13,20,31,17));
-		label.setText("Name");
-		label1 = new Label(this, SWT.NONE);
-		label1.setBounds(new org.eclipse.swt.graphics.Rectangle(73,19,31,17));
-		label1.setText("Address");
-		label2 = new Label(this, SWT.NONE);
-		label2.setBounds(new org.eclipse.swt.graphics.Rectangle(117,19,31,17));
-		label2.setText("City");
-		label3 = new Label(this, SWT.NONE);
-		label3.setBounds(new org.eclipse.swt.graphics.Rectangle(170,22,31,17));
-		label3.setText("State");
+        this.setSize(new org.eclipse.swt.graphics.Point(313,54));
+        label = new Label(this, SWT.NONE);
+        label.setBounds(new org.eclipse.swt.graphics.Rectangle(23,18,53,18));
+        label.setText("Name");
+        label1 = new Label(this, SWT.NONE);
+        label1.setBounds(new org.eclipse.swt.graphics.Rectangle(98,18,79,17));
+        label1.setText("Address");
+        label2 = new Label(this, SWT.NONE);
+        label2.setBounds(new org.eclipse.swt.graphics.Rectangle(199,18,35,17));
+        label2.setText("City");
+        label3 = new Label(this, SWT.NONE);
+        label3.setBounds(new org.eclipse.swt.graphics.Rectangle(256,17,35,17));
+        label3.setText("State");
+			
 	}
 
-}
+}  //  @jve:decl-index=0:visual-constraint="11,16"
