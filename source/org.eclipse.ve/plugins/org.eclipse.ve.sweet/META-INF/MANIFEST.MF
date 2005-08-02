@@ -20,4 +20,6 @@ Export-Package: org.eclipse.ve.sweet,
  org.eclipse.ve.sweet.validator,
  org.eclipse.ve.sweet.validators,
  org.eclipse.ve.sweet.objectviewer,
- org.eclipse.ve.sweet.objectviewer.pojo
+ org.eclipse.ve.sweet.objectviewer.pojo,
+ org.eclipse.ve.sweet.controls
+ 
