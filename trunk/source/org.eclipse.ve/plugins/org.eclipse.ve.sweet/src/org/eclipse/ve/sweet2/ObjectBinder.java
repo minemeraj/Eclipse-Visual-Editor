@@ -3,11 +3,15 @@ package org.eclipse.ve.sweet2;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.*;
 
 public class ObjectBinder implements IObjectBinder , InvocationHandler {
 
 	private Object source;
 	private Class receiverClass;
+	private List binders = new ArrayList();
+	private int commitPolicy;
+	private boolean isSignallingChange;
 
 	public static IObjectBinder createObjectBinder(Object source) {
 		try{
@@ -43,8 +47,35 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 	}
 
 	public IPropertyProvider getPropertyProvider(String string) {
-		return new SimplePropertyProvider(source,string);
+		SimplePropertyProvider result = new SimplePropertyProvider(source,string);
+		result.setObjectBinder(this);
+		binders.add(result);
+		return result;
 	}
-	
 
+	public void propertyChanged(String propertyName, Object value) {
+		// Refresh all binders
+		if(isSignallingChange) return;
+		isSignallingChange = true;
+		Iterator iter = binders.iterator();
+		while(iter.hasNext()){
+			((IPropertyProvider)iter.next()).refreshUI();
+		}
+		isSignallingChange = false;
+	}
+
+	public void setCommitPolicy(int aCommitPolicy) {
+		commitPolicy = aCommitPolicy;
+	}
+
+	public int getCommitPolicy() {
+		return commitPolicy;
+	}
+
+	public void commit() {
+		Iterator iter = binders.iterator();
+		while(iter.hasNext()){
+			((IPropertyProvider)iter.next()).refreshDomain();
+		}
+	}
 }

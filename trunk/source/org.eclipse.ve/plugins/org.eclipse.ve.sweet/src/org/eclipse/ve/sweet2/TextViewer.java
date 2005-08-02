@@ -16,11 +16,6 @@ public class TextViewer extends ContentViewer {
 	
 	public TextViewer(Composite parent, int styles){
 		text = new Text(parent,styles);
-		text.addModifyListener(new ModifyListener(){
-			public void modifyText(ModifyEvent e) {
-				((IPropertyProvider)getContentProvider()).setValue(text.getText());
-			}			
-		});
 	}
 	
 	public Text getText(){
