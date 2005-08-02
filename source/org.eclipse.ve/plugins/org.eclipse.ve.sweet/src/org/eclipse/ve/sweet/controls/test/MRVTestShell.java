@@ -87,7 +87,7 @@ public class MRVTestShell {
 		sShell.setText("Shell");
 		sShell.setLayout(new FillLayout());
 		createMultiRowViewer();
-		sShell.setSize(new org.eclipse.swt.graphics.Point(445,242));
+		sShell.setSize(new org.eclipse.swt.graphics.Point(445,243));
 	}
 
 }
