@@ -24,10 +24,26 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 			return null;
 		}
 	}
+
+	public static IObjectBinder createObjectBinder(Class sourceClass) {
+		try{
+			Object result = Proxy.newProxyInstance(ObjectBinder.class.getClassLoader(),
+					new Class[] { IObjectBinder.class }, 
+					new ObjectBinder((Class)sourceClass));
+          return (IObjectBinder) result;
+		} catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}	
 	
 	private ObjectBinder(Object aSource){
 		source = aSource;
 		receiverClass = aSource.getClass();
+	}
+	
+	private ObjectBinder(Class aSourceClass){
+		receiverClass = aSourceClass;
 	}
 
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -47,7 +63,12 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 	}
 
 	public IPropertyProvider getPropertyProvider(String string) {
-		SimplePropertyProvider result = new SimplePropertyProvider(source,string);
+		SimplePropertyProvider result = null;
+		if(source != null){
+			 result = new SimplePropertyProvider(source,string);
+		} else {
+			result = new SimplePropertyProvider((Class)receiverClass,string);
+		}
 		result.setObjectBinder(this);
 		binders.add(result);
 		return result;
@@ -77,5 +98,14 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		while(iter.hasNext()){
 			((IPropertyProvider)iter.next()).refreshDomain();
 		}
+	}
+
+	public void setSource(Object aSource) {
+		source = aSource;
+		Iterator iter = binders.iterator();		
+		while(iter.hasNext()){
+			IPropertyProvider provider = (IPropertyProvider)iter.next();
+			provider.setSource(aSource);
+		}		
 	}
 }

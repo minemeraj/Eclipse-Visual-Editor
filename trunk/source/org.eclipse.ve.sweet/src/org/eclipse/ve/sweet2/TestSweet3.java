@@ -40,6 +40,7 @@ public class TestSweet3 {
 		data.horizontalSpan = 2;
 		separator.setLayoutData(data);
 		
+		shell.setSize(300,200);
 		shell.open();
 		
 		while(!shell.isDisposed()){

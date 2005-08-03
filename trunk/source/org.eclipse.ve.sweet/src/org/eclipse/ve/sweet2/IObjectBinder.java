@@ -11,5 +11,6 @@ public interface IObjectBinder {
 	void setCommitPolicy(int commitPolicy);
 	int getCommitPolicy();
 	void commit();
+	void setSource(Object aSource);
 
 }
