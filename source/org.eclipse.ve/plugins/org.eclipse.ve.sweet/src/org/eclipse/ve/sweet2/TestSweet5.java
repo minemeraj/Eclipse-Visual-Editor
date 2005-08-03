@@ -1,7 +1,17 @@
 package org.eclipse.ve.sweet2;
 
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -9,10 +19,7 @@ import org.eclipse.swt.*;
 import org.eclipse.ve.sweet.test.Person;
 
 /**
- * This example builds on TestSweet3 but instead of each contentProvider listening to a specific Person
- * this is a proxy object that allows the person to be changed and also notifies updates
- * The example shows the person being changed by duplicating the GUI text entry
- * The example TestSweet5 illustrates this using a list of people
+ * This example shows a list of people and when one is selected it is editable within text fields showing the selected person
  */
 
 public class TestSweet5 {
@@ -21,14 +28,56 @@ public class TestSweet5 {
 		
 		Display display = new Display();
 		Shell shell = new Shell(display);
-		
-		final Person p = new Person("John Doe",35);
-		IObjectBinder personBinder = ObjectBinder.createObjectBinder(p);
-		
+				
 		shell.setLayout(new GridLayout(2,false));
+		
+		ListViewer listViewer = new ListViewer(shell,SWT.BORDER);
+		GridData table_data = new GridData(GridData.FILL_HORIZONTAL);
+		table_data.horizontalSpan = 2;
+		table_data.heightHint = 100;
+		listViewer.getControl().setLayoutData(table_data);
+		listViewer.setContentProvider(new IStructuredContentProvider(){
+			public Object[] getElements(Object inputElement) {
+				return new Person[]{
+					new Person("John Doe",35),
+					new Person("Jill Smith",25),
+					new Person("Chris Cringle",75)
+				};
+			}
+			public void dispose() {				
+			}
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			}
+		});
+		listViewer.setLabelProvider(new ILabelProvider(){
+			public Image getImage(Object element) {
+				return null;
+			}
+			public String getText(Object element) {
+				Person p = (Person)element;
+				return p.getName() + "  -  " + p.getAge();
+			}
+			public void addListener(ILabelProviderListener listener) {				
+			}
+			public void dispose() {				
+			}
+			public boolean isLabelProperty(Object element, String property) {
+				return false;
+			}
+			public void removeListener(ILabelProviderListener listener) {				
+			}
+		});
+		listViewer.setInput("Dummy");
+
+		Label separator = new Label(shell,SWT.SEPARATOR | SWT.HORIZONTAL);
+		GridData sep_data = new GridData(GridData.FILL_HORIZONTAL);
+		sep_data.horizontalSpan = 2;
+		separator.setLayoutData(sep_data);		
 		
 		Label nameLabel = new Label(shell,SWT.NONE);
 		nameLabel.setText("Name: ");
+		
+		final IObjectBinder personBinder = ObjectBinder.createObjectBinder(Person.class);
 		
 		TextViewer nameTextViewer = new TextViewer(shell,SWT.BORDER);
 		nameTextViewer.setContentProvider(personBinder.getPropertyProvider("name"));
@@ -40,18 +89,13 @@ public class TestSweet5 {
 		ageTextViewer.setContentProvider(personBinder.getPropertyProvider("age"));
 		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		Label separator = new Label(shell,SWT.SEPARATOR | SWT.HORIZONTAL);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 2;
-		separator.setLayoutData(data);
-		
-		// Have a copy of the name field to show that notification works between the two
-		Label nameLabel_2 = new Label(shell,SWT.NONE);
-		nameLabel_2.setText("Name: ");		
-		TextViewer nameTextViewer_2 = new TextViewer(shell,SWT.BORDER);
-		nameTextViewer_2.setContentProvider(personBinder.getPropertyProvider("name"));
-		nameTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
+		listViewer.addSelectionChangedListener(new ISelectionChangedListener(){
+			public void selectionChanged(SelectionChangedEvent event) {
+				personBinder.setSource(((IStructuredSelection)event.getSelection()).getFirstElement());
+			}
+		});
+				
+		shell.setSize(300,300);
 		shell.open();
 		
 		while(!shell.isDisposed()){
@@ -60,4 +104,4 @@ public class TestSweet5 {
 		
 	}
 
-}
+} 

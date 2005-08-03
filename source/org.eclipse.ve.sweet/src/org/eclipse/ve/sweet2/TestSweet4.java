@@ -78,6 +78,7 @@ public class TestSweet4 {
 		ageTextViewer_2.setContentProvider(personBinder.getPropertyProvider("age"));
 		ageTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
+		shell.setSize(300,300);
 		shell.open();
 		
 		while(!shell.isDisposed()){

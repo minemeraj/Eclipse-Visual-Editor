@@ -26,6 +26,11 @@ public class SimplePropertyProvider implements IPropertyProvider {
 		fPropertyName = propertyName;
 		fReceiverClass = source.getClass();
 	}
+	
+	public SimplePropertyProvider(Class aReceiverClass, String propertyName){
+		fReceiverClass = aReceiverClass;
+		fPropertyName = propertyName;
+	}
 
 	public Object getValue() {
 		if(fGetMethod == null){
@@ -69,9 +74,11 @@ public class SimplePropertyProvider implements IPropertyProvider {
 		}
 		try {
 			isSettingValue = true;
-			fSetMethod.invoke(fSource,new Object[] {getModelValue((String)value)});
-			// Refresh binders so they can update the new value
-			objectBinder.propertyChanged(fPropertyName,value);
+			if(fSource != null){
+				fSetMethod.invoke(fSource,new Object[] {getModelValue((String)value)});
+				// Refresh binders so they can update the new value
+				objectBinder.propertyChanged(fPropertyName,value);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -84,7 +91,11 @@ public class SimplePropertyProvider implements IPropertyProvider {
 		if(fPropertyType.isInstance(value)){
 			return value;
 		} else if(fPropertyType == Integer.class || fPropertyType == Integer.TYPE){
-			return new Integer(value);
+			if(value == null || value.length() == 0){
+				return new Integer(0);
+			} else {
+				return new Integer(value);
+			}
 		} else {
 			return value;
 		}
@@ -135,7 +146,11 @@ public class SimplePropertyProvider implements IPropertyProvider {
 	}
 	private String getStringValue() {
 		// Do conversion from the domain value to a string
-		return getValue().toString();
+		if(fSource != null){
+			return getValue().toString();
+		} else {
+			return "";
+		}
 	}
 
 	public void refreshUI() {
@@ -150,5 +165,10 @@ public class SimplePropertyProvider implements IPropertyProvider {
 
 	public void refreshDomain() {
 		setValue(fTextControl.getText());
+	}
+
+	public void setSource(Object aSource) {
+		fSource = aSource;
+		refreshUI();
 	}	
 }
