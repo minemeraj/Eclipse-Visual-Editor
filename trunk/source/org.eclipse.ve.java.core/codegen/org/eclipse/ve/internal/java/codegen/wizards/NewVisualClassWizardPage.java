@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.22 $  $Date: 2005-08-01 15:26:57 $ 
+ *  $Revision: 1.23 $  $Date: 2005-08-05 19:47:09 $ 
  */
 
 import java.util.HashMap;
@@ -91,7 +91,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		GridData treeGridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
 		treeGridData.verticalSpan = 4;
 		treeGridData.widthHint = convertWidthInCharsToPixels(23);
-		treeGridData.heightHint = convertHeightInCharsToPixels(16);
+		treeGridData.heightHint = convertHeightInCharsToPixels(12);
 		styleTreeViewer.getTree().setLayoutData(treeGridData);
 
 		styleTreeViewer.setContentProvider(new StyleTreeContentProvider());
