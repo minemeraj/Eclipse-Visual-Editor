@@ -11,12 +11,13 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.7 $  $Date: 2005-03-30 17:34:23 $ 
+ *  $Revision: 1.8 $  $Date: 2005-08-05 16:08:07 $ 
  */
 
 import java.util.logging.Level;
 
-import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.compiler.*;
 
 import org.eclipse.ve.internal.java.codegen.model.IScannerFactory;
@@ -99,7 +100,12 @@ public void replaceCode(String code) {
 
 public void replaceComments(String comment) {
 	StringBuffer st = new StringBuffer (fSource) ;
-	st.replace(getCommentOff(),getCommentOff()+getCommentLen(),comment) ;
+	if(getCommentOff()<0){
+		// no comment - insert one
+		int atIndex = getCodeOff()+getCodeLen()+1;
+		st.insert(atIndex, comment);
+	}else
+		st.replace(getCommentOff(),getCommentOff()+getCommentLen(),comment) ;
 	fSource=st.toString() ;
 	clear() ;
 }
@@ -353,8 +359,10 @@ protected void primParseExpression() {
 	 	// We have more than one expression on a given line, keep the white space
 	 	if (overide > 0)
 	 	   right = overide ;
+	 	else if(prevToken==-1)
+	 		right += scanner.getCurrentTokenStartPosition() ; // No previous token - next line immediately followed
 	 	else
-	 	   right += scanner.getCurrentTokenStartPosition()-1 ;
+	 		right += scanner.getCurrentTokenStartPosition()-1 ;
 	 }
 	 
 	 
