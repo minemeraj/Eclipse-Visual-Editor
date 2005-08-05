@@ -53,7 +53,7 @@ public class InternalMRViewer extends Composite {
 			composite.getChildren()[0].setSize(size);
 		}
 	}
-
+	
 	private Composite sliderHolder = null;
 	private Composite controlHolder = null;
 	private Slider slider = null;
@@ -192,8 +192,8 @@ public class InternalMRViewer extends Composite {
 		if (myHeader != null)
 			layoutChild(myHeader);
 		for (Iterator rowsIter = rows.iterator(); rowsIter.hasNext();) {
-			Control row = (Control) rowsIter.next();
-			layoutChild(row);
+			InternalMRVRow row = (InternalMRVRow) rowsIter.next();
+			layoutChild(row.getRowControl());
 		}
 		updateVisibleRows();
 	}
@@ -294,9 +294,10 @@ public class InternalMRViewer extends Composite {
 		rowHeight = rowControl.getSize().y;
 		
 		for (Iterator rowsIter = rows.iterator(); rowsIter.hasNext();) {
-			Control row = (Control) rowsIter.next();
-			row.setBounds(0, topPosition, width, rowHeight);
-			layoutChild(row);
+			InternalMRVRow row = (InternalMRVRow) rowsIter.next();
+			Control rowControl = row.getRowControl();
+			rowControl.setBounds(0, topPosition, width, rowHeight);
+			layoutChild(rowControl);
 			topPosition += rowHeight;
 		}
 	}
@@ -327,34 +328,34 @@ public class InternalMRViewer extends Composite {
 	private void refreshAllRows() {
 		int row=0;
 		for (Iterator rowsIter = rows.iterator(); rowsIter.hasNext();) {
-			Control control = (Control) rowsIter.next();
-			fireRefreshEvent(row, control);
+			InternalMRVRow rowControl = (InternalMRVRow) rowsIter.next();
+			fireRefreshEvent(row, rowControl.getRowControl());
 			++row;
 		}
 	}
 
 	private void insertRowAt(int position) {
-		Control newControl = getNewControl();
+		InternalMRVRow newRow = new InternalMRVRow(getNewControl());
 		if (position > rows.size()) {
 			position = rows.size();
 		}
-		rows.add(position, newControl);
-		fireRefreshEvent(position, newControl);
+		rows.add(position, newRow);
+		fireRefreshEvent(position, newRow.getRowControl());
 	}
 	
 	private Control getNewControl() {
 		if (spareRows.size() > 0) {
-			Control recycledControl = (Control) spareRows.removeFirst();
+			InternalMRVRow recycledControl = (InternalMRVRow) spareRows.removeFirst();
 			recycledControl.setVisible(true);
-			return recycledControl;
+			return recycledControl.getRowControl();
 		}
 		return createInternalControl(controlHolder, rowConstructor);
 	}
 
 	private void deleteRowAt(int position) {
-		Control control = (Control) rows.remove(position);
-		control.setVisible(false);
-		spareRows.addLast(control);
+		InternalMRVRow row = (InternalMRVRow) rows.remove(position);
+		row.setVisible(false);
+		spareRows.addLast(row);
 	}
 	
 	// Property getters/setters --------------------------------------------------------------
@@ -385,7 +386,12 @@ public class InternalMRViewer extends Composite {
 	}
 
 	public Control[] getVisibleChildRows() {
-		return (Control[]) rows.toArray(new Control[rows.size()]);
+		InternalMRVRow[] rowArray = (InternalMRVRow[]) rows.toArray(new InternalMRVRow[rows.size()]);
+		Control[] result = new Control[rowArray.length];
+		for (int i = 0; i < rowArray.length; i++) {
+			result[i] = rowArray[i].getRowControl();
+		}
+		return result;
 	}
 
 	public int getNumRowsVisible() {
