@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.25 $  $Date: 2005-07-18 20:25:41 $ 
+ *  $Revision: 1.26 $  $Date: 2005-08-05 16:07:05 $ 
  */
 
 import java.util.*;
@@ -648,7 +648,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 		if (constraintAdapter == null) {
 			ExpressionDecoderAdapter a =
 				(ExpressionDecoderAdapter) EcoreUtil.getExistingAdapter(CC, ICodeGenAdapter.JVE_CODEGEN_EXPRESSION_ADAPTER);
-			constraintAdapter = a.getShadowSourceRangeAdapter();
+			constraintAdapter = a!=null ? a.getShadowSourceRangeAdapter() : null;
 		}
 		if (CC != null) {
 			EStructuralFeature sf = CC.eClass().getEStructuralFeature("constraint"); //$NON-NLS-1$
