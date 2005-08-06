@@ -57,7 +57,7 @@ public class CompositeTableTest {
 	}
 	
 	private IRowContentProvider rowContentProvider = new IRowContentProvider() {
-		public void refresh(CompositeTable mrc, int currentObjectOffset, Control row) {
+		public void refresh(CompositeTable table, int currentObjectOffset, Control row) {
 			Row rowObj = (Row) row;
 			Person person = (Person)toEdit.get(currentObjectOffset);
 			rowObj.name.setText(person.name);
