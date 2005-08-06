@@ -9,7 +9,7 @@
  * Contributors:
  *     David Orme     - Initial API and implementation
  */
-package org.eclipse.ve.sweet.controls;
+package org.eclipse.ve.sweet.controls.internal;
 
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -21,13 +21,14 @@ import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ve.sweet.controls.InternalCompositeTable;
 
-class InternalRow {
+public class TableRow {
 	private Control row;
 	private Control[] columns;
 	protected InternalCompositeTable parent;
 	
-	public InternalRow(InternalCompositeTable parent, Control row) {
+	public TableRow(InternalCompositeTable parent, Control row) {
 		this.parent = parent;
 		this.row = row;
 		if (row instanceof Composite) {
@@ -62,22 +63,22 @@ class InternalRow {
 	
 	private KeyListener keyListener = new KeyAdapter() {
 		public void keyPressed(KeyEvent e) {
-			parent.keyPressed(InternalRow.this, e);
+			parent.keyPressed(TableRow.this, e);
 		}
 	};
 	
 	private FocusListener focusListener = new FocusAdapter() {
 		public void focusLost(FocusEvent e) {
-			parent.focusLost(InternalRow.this, e);
+			parent.focusLost(TableRow.this, e);
 		}
 		public void focusGained(FocusEvent e) {
-			parent.focusGained(InternalRow.this, e);
+			parent.focusGained(TableRow.this, e);
 		}
 	};
 	
 	private TraverseListener traverseListener = new TraverseListener() {
 		public void keyTraversed(TraverseEvent e) {
-			parent.keyTraversed(InternalRow.this, e);
+			parent.keyTraversed(TableRow.this, e);
 		}
 	};
 
