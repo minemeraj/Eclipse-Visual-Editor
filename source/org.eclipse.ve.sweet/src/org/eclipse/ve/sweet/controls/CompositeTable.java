@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -464,6 +461,16 @@ public class CompositeTable extends Canvas {
 		}
 	}
 
+	/**
+	 * Method refreshAllRows.  Refresh all visible rows in the CompositeTable from the
+	 * original data.
+	 */
+	public void refreshAllRows() {
+		if (contentPane != null) {
+			contentPane.refreshAllRows();
+		}
+	}
+	
 	/**
 	 * Method getCurrentColumn.  Returns the column number of the currently-focused column 
 	 * (0-based).
