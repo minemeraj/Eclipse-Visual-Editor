@@ -92,7 +92,6 @@ public class CompositeTable extends Canvas {
 	// Property fields here
 	private boolean runTime = false;
 	
-	private boolean drawingLines = false;
 	private int[] weights = new int[0];
 	
 	private int topRow = 0;
@@ -309,17 +308,6 @@ public class CompositeTable extends Canvas {
 		return result;
 	}
 
-	private ControlListener childResizeListener = new ControlAdapter() {
-		public void controlResized(ControlEvent e) {
-			if (e.widget instanceof Composite) {
-				Composite item = (Composite) e.widget;
-				if (item.getLayout() == null) {
-					layoutHeaderOrRow(item);
-				}
-			}
-		}
-	};
-	
 	/**
 	 * Method isRunTime.  Returns if the CompositeTable is in run time mode as opposed
 	 * to design time mode.  In design time mode, the only permitted operations are to
@@ -650,4 +638,76 @@ public class CompositeTable extends Canvas {
 		rowListeners.remove(listener);
 	}
 	
+	LinkedList insertHandlers = new LinkedList();
+	
+	/**
+	 * Method addInsertHandler.  Adds the specified insertHandler to the set of objects that
+	 * will be used to handle insert requests.
+	 * 
+	 * @param insertHandler the insertHandler to add.
+	 */
+	public void addInsertHandler(IInsertHandler insertHandler) {
+		insertHandlers.add(insertHandler);
+	}
+	
+	/**
+	 * Method removeInsertHandler.  Removes the specified insertHandler from the set of objects that
+	 * will be used to handle insert requests.
+	 * 
+	 * @param insertHandler the insertHandler to remove.
+	 */
+	public void removeInsertHandler(IInsertHandler insertHandler) {
+		insertHandlers.remove(insertHandler);
+	}
+	
+	LinkedList deleteHandlers = new LinkedList();
+	
+	/**
+	 * Method addDeleteHandler.  Adds the specified deleteHandler to the set of objects that
+	 * will be used to handle delete requests.
+	 * 
+	 * @param deleteHandler the deleteHandler to add.
+	 */
+	public void addDeleteHandler(IDeleteHandler deleteHandler) {
+		deleteHandlers.add(deleteHandler);
+	}
+	
+	/**
+	 * Method removeDeleteHandler.  Removes the specified deleteHandler from the set of objects that
+	 * will be used to handle delete requests.
+	 * 
+	 * @param deleteHandler the deleteHandler to remove.
+	 */
+	public void removeDeleteHandler(IDeleteHandler deleteHandler) {
+		deleteHandlers.remove(deleteHandler);
+	}
+	
+	boolean deleteEnabled = true;
+
+	/**
+	 * Method isDeleteEnabled.  Returns if delete is enabled.  Deletions are only processed if
+	 * the DeleteEnabled property is true and at least one delete handler has been registered.<p>
+	 * 
+	 * The default value is true.
+	 * 
+	 * @return true if delete is enabled.  false otherwise.
+	 */
+	public boolean isDeleteEnabled() {
+		return deleteEnabled;
+	}
+
+	/**
+	 * Method setDeleteEnabled.  Sets if delete is enabled.  Deletions are only processed if
+	 * the DeleteEnabled property is true and at least one delete handler has been registered.<p>
+	 * 
+	 * The default value is true.
+	 * 
+	 * @param deleteEnabled true if delete should be enabled.  false otherwise.
+	 */
+	public void setDeleteEnabled(boolean deleteEnabled) {
+		this.deleteEnabled = deleteEnabled;
+	}
+	
 }  //  @jve:decl-index=0:visual-constraint="10,10"
+
+
