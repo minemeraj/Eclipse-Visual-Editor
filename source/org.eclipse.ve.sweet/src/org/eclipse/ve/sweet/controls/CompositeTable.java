@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.Layout;
  * 
  * @author djo
  * @since 3.1
- * TODO: implement scroll wheel events on 3.1; eliminate flicker when scrolling backwards
+ * TODO: eliminate flicker when scrolling backwards
  */
 public class CompositeTable extends Canvas {
 	
