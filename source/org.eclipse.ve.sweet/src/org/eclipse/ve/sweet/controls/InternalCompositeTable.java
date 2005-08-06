@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Slider;
+import org.eclipse.ve.sweet.controls.internal.EmptyTablePlaceholder;
 import org.eclipse.ve.sweet.controls.internal.TableRow;
 import org.eclipse.ve.sweet.metalogger.Logger;
 
@@ -40,6 +41,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 	private Composite sliderHolder = null;
 	private Composite controlHolder = null;
 	private Slider slider = null;
+	private EmptyTablePlaceholder emptyTablePlaceholder = null;
 	
 	private CompositeTable parent;
 	
@@ -263,42 +265,45 @@ public class InternalCompositeTable extends Composite implements Listener {
 			topPosition += headerHeight;
 		}
 		
-		numRowsInDisplay = clientAreaHeight / rowControl.getSize().y;
-		numRowsVisible = numRowsInDisplay;
-		
-		int displayableRows = numRowsInCollection - topRow;
-		if (numRowsVisible > displayableRows) {
-			numRowsVisible = displayableRows;
-		}
-		if (numRowsVisible > maxRowsVisible) {
-			numRowsVisible = maxRowsVisible;
-		}
-		if (numRowsVisible < 1) {
-			numRowsVisible = 1;
-		}
-
-		// Scroll the view so that the right number of row
-		// objects are showing and they have the right data
-		if (rows.size() - Math.abs(currentVisibleTopRow - topRow) > 0) {
-			if (currentRow >= numRowsVisible) {
-				deleteRowAt(0);
-				++currentVisibleTopRow;
-				++topRow;
-				--currentRow;
-			}
-			scrollTop();
-			fixNumberOfRows();
-		} else {
-			currentVisibleTopRow = topRow;
+		// Make sure we have something to lay out to begin with
+		if (numRowsInCollection > 0) {
+			numRowsInDisplay = clientAreaHeight / rowControl.getSize().y;
+			numRowsVisible = numRowsInDisplay;
 			
-			// The order of number fixing/refresh is important in order to
-			// minimize the number of screen redraw operations
-			if (rows.size() > numRowsVisible) {
+			int displayableRows = numRowsInCollection - topRow;
+			if (numRowsVisible > displayableRows) {
+				numRowsVisible = displayableRows;
+			}
+			if (numRowsVisible > maxRowsVisible) {
+				numRowsVisible = maxRowsVisible;
+			}
+			if (numRowsVisible < 1) {
+				numRowsVisible = 1;
+			}
+	
+			// Scroll the view so that the right number of row
+			// objects are showing and they have the right data
+			if (rows.size() - Math.abs(currentVisibleTopRow - topRow) > 0) {
+				if (currentRow >= numRowsVisible) {
+					deleteRowAt(0);
+					++currentVisibleTopRow;
+					++topRow;
+					--currentRow;
+				}
+				scrollTop();
 				fixNumberOfRows();
-				refreshAllRows();
 			} else {
-				refreshAllRows();
-				fixNumberOfRows();
+				currentVisibleTopRow = topRow;
+				
+				// The order of number fixing/refresh is important in order to
+				// minimize the number of screen redraw operations
+				if (rows.size() > numRowsVisible) {
+					fixNumberOfRows();
+					refreshAllRows();
+				} else {
+					refreshAllRows();
+					fixNumberOfRows();
+				}
 			}
 		}
 		
@@ -308,6 +313,11 @@ public class InternalCompositeTable extends Composite implements Listener {
 		// First, the header...
 		if (myHeader != null) {
 			myHeader.setBounds(0, 0, width, headerHeight);
+		}
+		
+		// Make sure we have rows to lay out...
+		if (numRowsInCollection < 1) {
+			return;
 		}
 		
 		// Now the rows.
@@ -402,6 +412,10 @@ public class InternalCompositeTable extends Composite implements Listener {
 	}
 
 	// Property getters/setters --------------------------------------------------------------
+
+	public Control getHeaderControl() {
+		return headerControl;
+	}
 
 	public void setMaxRowsVisible(int maxRowsVisible) {
 		this.maxRowsVisible = maxRowsVisible;
@@ -508,7 +522,8 @@ public class InternalCompositeTable extends Composite implements Listener {
 						} else {
 							// Otherwise, show the placeholder object and give it focus
 							deleteRowAt(currentRow);
-							// FIXME: show the placeholder object here
+							emptyTablePlaceholder = new EmptyTablePlaceholder(controlHolder, SWT.NULL);
+							emptyTablePlaceholder.setFocus();
 						}
 					} else {
 						// else, keep the focus where it was
