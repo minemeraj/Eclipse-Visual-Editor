@@ -378,7 +378,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 
-	private void refreshAllRows() {
+	public void refreshAllRows() {
 		int row=0;
 		for (Iterator rowsIter = rows.iterator(); rowsIter.hasNext();) {
 			TableRow rowControl = (TableRow) rowsIter.next();
