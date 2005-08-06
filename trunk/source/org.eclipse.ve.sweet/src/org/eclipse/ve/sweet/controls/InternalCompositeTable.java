@@ -452,7 +452,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 	private void fireRefreshEvent(int offsetFromTopRow, Control rowControl) {
 		for (Iterator refreshListenersIter = parent.contentProviders.iterator(); refreshListenersIter.hasNext();) {
 			IRowContentProvider listener = (IRowContentProvider) refreshListenersIter.next();
-			listener.refresh(parent, offsetFromTopRow, rowControl);
+			listener.refresh(parent, topRow, offsetFromTopRow, rowControl);
 		}
 	}
 	
