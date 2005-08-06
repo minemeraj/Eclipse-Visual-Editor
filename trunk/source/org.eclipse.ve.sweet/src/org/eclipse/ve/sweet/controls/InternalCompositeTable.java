@@ -483,28 +483,34 @@ public class InternalCompositeTable extends Composite implements Listener {
 			case SWT.DEL:
 				if (fireDeleteEvent()) {
 					// We know the object is gone if we made it here, so now refresh the display...
+					--numRowsInCollection;
 					
 					// If we deleted the last row in the list
 					if (currentRow >= numRowsVisible-1) {
 						// If that wasn't the last row in the collection, move the focus
-						if (numRowsInCollection > 1) {
-							internalSetSelection(currentColumn, currentRow-1, false);
-							Display.getCurrent().asyncExec(new Runnable() {
-								public void run() {
-									--numRowsInCollection;
-									deleteRowAt(currentRow+1);
-									updateVisibleRows();
-								}
-							});
+						if (numRowsInCollection > 0) {
+
+							// If we're only displaying one row, scroll first
+							if (currentRow < 1) {
+								deleteRowAt(currentRow);
+								setTopRow(topRow-1);
+								internalSetSelection(currentColumn, currentRow, false);
+							} else {
+								internalSetSelection(currentColumn, currentRow-1, false);
+								Display.getCurrent().asyncExec(new Runnable() {
+									public void run() {
+										deleteRowAt(currentRow+1);
+										updateVisibleRows();
+									}
+								});
+							}
 						} else {
 							// Otherwise, show the placeholder object and give it focus
-							--numRowsInCollection;
 							deleteRowAt(currentRow);
 							// FIXME: show the placeholder object here
 						}
 					} else {
 						// else, keep the focus where it was
-						--numRowsInCollection;
 						deleteRowAt(currentRow);
 						updateVisibleRows();
 						setSelection(currentColumn, currentRow);
