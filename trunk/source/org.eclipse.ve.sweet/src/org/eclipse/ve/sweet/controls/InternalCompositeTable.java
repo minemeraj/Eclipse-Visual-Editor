@@ -42,7 +42,6 @@ public class InternalCompositeTable extends Composite implements Listener {
 	
 	private CompositeTable parent;
 	
-	private boolean drawingLines;		// TODO: Not implemented yet
 	private int[] weights;
 	private int maxRowsVisible;
 	private int numRowsInDisplay;
@@ -69,7 +68,6 @@ public class InternalCompositeTable extends Composite implements Listener {
 		this.parent = (CompositeTable) parentControl;
 		controlHolder.addListener(SWT.MouseWheel, this);
 
-		drawingLines = parent.isDrawingLines();
 		weights = parent.getWeights();
 		maxRowsVisible = parent.getMaxRowsVisible();
 		numRowsInCollection = parent.getNumRowsInCollection();
@@ -404,11 +402,6 @@ public class InternalCompositeTable extends Composite implements Listener {
 
 	// Property getters/setters --------------------------------------------------------------
 
-	public void setDrawingLines(boolean drawingLines) {
-		this.drawingLines = drawingLines;
-		controlHolder.redraw();
-	}
-
 	public void setMaxRowsVisible(int maxRowsVisible) {
 		this.maxRowsVisible = maxRowsVisible;
 		updateVisibleRows();
@@ -442,15 +435,6 @@ public class InternalCompositeTable extends Composite implements Listener {
 		layoutControlHolder();
 	}
 
-	public Control[] getRowControls() {
-		InternalRow[] rowArray = (InternalRow[]) rows.toArray(new InternalRow[rows.size()]);
-		Control[] result = new Control[rowArray.length];
-		for (int i = 0; i < rowArray.length; i++) {
-			result[i] = rowArray[i].getRowControl();
-		}
-		return result;
-	}
-
 	public int getNumRowsVisible() {
 		return numRowsVisible;
 	}
@@ -458,15 +442,15 @@ public class InternalCompositeTable extends Composite implements Listener {
 	// Refresh Event API --------------------------------------------------------------------------
 
 	public void addRefreshContentProvider(IRowContentProvider listener) {
-		parent.refreshListeners.add(listener);
+		parent.contentProviders.add(listener);
 	}
 
 	public void removeRefreshContentProvider(IRowContentProvider listener) {
-		parent.refreshListeners.remove(listener);
+		parent.contentProviders.remove(listener);
 	}
 
 	private void fireRefreshEvent(int offsetFromTopRow, Control rowControl) {
-		for (Iterator refreshListenersIter = parent.refreshListeners.iterator(); refreshListenersIter.hasNext();) {
+		for (Iterator refreshListenersIter = parent.contentProviders.iterator(); refreshListenersIter.hasNext();) {
 			IRowContentProvider listener = (IRowContentProvider) refreshListenersIter.next();
 			listener.refresh(parent, offsetFromTopRow, rowControl);
 		}
