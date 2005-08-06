@@ -13,8 +13,24 @@ package org.eclipse.ve.sweet.controls;
 
 import org.eclipse.swt.widgets.Control;
 
+/**
+ * Interface IRowContentProvider.  An interface for objects that are able to initialize an
+ * arbitrary row control with values on demand.
+ * @author djo
+ */
 public interface IRowContentProvider {
 
-	void refresh(CompositeTable sender, int offsetFromTopRow, Control row);
+	/**
+	 * Method refresh.  Requests receiver to refresh the currentRowInTable with data
+	 * to edit.
+	 * 
+	 * @param sender The CompositeTable sending the message.
+	 * @param firstVisibleRow The 0-based row number that is offset in the data structure of 
+	 * the table's top row.
+	 * @param currentRowInTable The current row in the table.
+	 * @param row The row control to fill with data.  This will be a copy of your prototype 
+	 * row object.
+	 */
+	void refresh(CompositeTable sender, int firstVisibleRow, int currentRowInTable, Control row);
 
 }

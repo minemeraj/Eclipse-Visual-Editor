@@ -41,9 +41,9 @@ public class CompositeTableTest {
 	}
 	
 	private IRowContentProvider refreshContentProvider = new IRowContentProvider() {
-		public void refresh(CompositeTable mrc, int offsetFromTopRow, Control row) {
+		public void refresh(CompositeTable mrc, int firstVisibleRow, int currentRowInTable, Control row) {
 			Row rowObj = (Row) row;
-			rowObj.name.setText(Integer.toString(mrc.getTopRow() + offsetFromTopRow));
+			rowObj.name.setText(Integer.toString(firstVisibleRow + currentRowInTable));
 		}
 	};
 
