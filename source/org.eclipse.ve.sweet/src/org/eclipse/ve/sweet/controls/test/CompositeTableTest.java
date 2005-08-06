@@ -35,7 +35,7 @@ public class CompositeTableTest {
 		multiRowViewer.setNumRowsInCollection(15);
 		multiRowViewer.setRunTime(true);
 		multiRowViewer.setWeights(new int[] {35, 35, 20, 10});
-		multiRowViewer.addRefreshContentProvider(refreshContentProvider);
+		multiRowViewer.addRowContentProvider(refreshContentProvider);
 		createHeader();
 		createRow();
 	}
