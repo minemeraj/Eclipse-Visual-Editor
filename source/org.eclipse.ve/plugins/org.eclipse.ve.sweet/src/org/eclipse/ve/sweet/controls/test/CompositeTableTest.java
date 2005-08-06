@@ -16,13 +16,13 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ve.sweet.controls.IRefreshContentProvider;
-import org.eclipse.ve.sweet.controls.MultiRowViewer;
+import org.eclipse.ve.sweet.controls.IRowContentProvider;
+import org.eclipse.ve.sweet.controls.CompositeTable;
 
-public class MRVTestShell {
+public class CompositeTableTest {
 
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
-	private MultiRowViewer multiRowViewer = null;
+	private CompositeTable multiRowViewer = null;
 	private Header header = null;
 	private Row row = null;
 
@@ -31,7 +31,7 @@ public class MRVTestShell {
 	 *
 	 */
 	private void createMultiRowViewer() {
-		multiRowViewer = new MultiRowViewer(sShell, SWT.NONE);
+		multiRowViewer = new CompositeTable(sShell, SWT.NONE);
 		multiRowViewer.setNumRowsInCollection(15);
 		multiRowViewer.setRunTime(true);
 		multiRowViewer.setWeights(new int[] {35, 35, 20, 10});
@@ -40,8 +40,8 @@ public class MRVTestShell {
 		createRow();
 	}
 	
-	private IRefreshContentProvider refreshContentProvider = new IRefreshContentProvider() {
-		public void refresh(MultiRowViewer mrc, int offsetFromTopRow, Control row) {
+	private IRowContentProvider refreshContentProvider = new IRowContentProvider() {
+		public void refresh(CompositeTable mrc, int offsetFromTopRow, Control row) {
 			Row rowObj = (Row) row;
 			rowObj.name.setText(Integer.toString(mrc.getTopRow() + offsetFromTopRow));
 		}
@@ -68,7 +68,7 @@ public class MRVTestShell {
 	 */
 	public static void main(String[] args) {
 		Display display = Display.getDefault();
-		MRVTestShell thisClass = new MRVTestShell();
+		CompositeTableTest thisClass = new CompositeTableTest();
 		thisClass.createSShell();
 		thisClass.sShell.open();
 

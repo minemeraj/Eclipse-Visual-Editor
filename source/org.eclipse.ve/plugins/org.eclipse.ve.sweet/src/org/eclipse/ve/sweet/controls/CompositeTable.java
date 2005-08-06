@@ -26,7 +26,52 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 
 
-public class MultiRowViewer extends Canvas {
+/**
+ * Class CompositeTable.  A virtual table control that works by stacking copies of a
+ * programmer-supplied Composite below each other.<p>
+ * 
+ * This control is designed to work inside of the Eclipse Visual Editor.  To use it,
+ * drop one on the design surface.  (Even though it extends Canvas, it does not make
+ * sense to put a layout manager on it.)<p>
+ * 
+ * Next create one or two new custom controls by using the Visual Editor to extend
+ * Composite.  If you create one custom control, it will be used as the prototype
+ * for all rows that will be displayed in the table.  If you create two, the first
+ * one will be used as a prototype for the header and the second one will be used 
+ * as a prototype for the rows.<p>
+ * 
+ * If these custom controls are not given layout managers (null layout), then 
+ * CompositeTable will automatically detect this situation and will supply its own
+ * layout manager that will automatically lay out the children of these controls in 
+ * columns to form a table.  However, if you supply layout managers for your header 
+ * prototype and row prototype objects, CompositeTable will respect your choice.
+ * If you use CompositeTable's built-in layout manager, then the weights property
+ * will be used to determine what percentage of the total width will be allocated
+ * to each column.  If this property is not set or if the sum of their elements
+ * does not equal 100, the columns are created as equal sizes.<p>
+ * 
+ * Once you have created your (optional) Header and Row custom controls, simply drop
+ * them onto your CompositeTable control in VE.  The first of these two custom
+ * controls to be instantiated in your code will be interpreted by the CompositeTable
+ * as the header control and the second will be interpreted as the row control.<p>
+ * 
+ * Now that you have defined the (optional) header and row, you can switch your 
+ * CompositeTable into run mode and use it.  This is done by switching the RunTime 
+ * property to true.<p>
+ * 
+ * Once in run mode, all of the CompositeTable's properties will be active.  In order
+ * to use it, set the NumRowsInCollection property to the number of rows in the 
+ * collection you want to display.  And add a RefreshContentProvider, which will
+ * be called whenever CompositeTable needs to refresh a particular row.<p>
+ * 
+ * Please refer to the remainder of the JavaDoc for information on the remaining
+ * properties and events.
+ * 
+ * @author djo
+ * @since 3.1
+ * TODO: implement scroll wheel events on 3.1; eliminate flicker when scrolling backwards
+ */
+public class CompositeTable extends Canvas {
 	
 	// Property fields here
 	private boolean runTime = false;
@@ -44,9 +89,16 @@ public class MultiRowViewer extends Canvas {
 	private Constructor rowConstructor = null;
 	private Control rowControl = null;
 	
-	private InternalMRViewer contentPane = null;
+	private InternalCompositeTable contentPane = null;
 	
-	public MultiRowViewer(Composite parent, int style) {
+	/**
+	 * Constructor CompositeTable.  Construct a CompositeTable control.  CompositeTable
+	 * accepts the same style bits as the SWT Canvas.
+	 * 
+	 * @param parent The SWT parent control.
+	 * @param style Style bits.  These are the same as Canvas
+	 */
+	public CompositeTable(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new Layout() {
 			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
@@ -71,9 +123,9 @@ public class MultiRowViewer extends Canvas {
 				resizeAndRecordPrototypeRows();
 				showPrototypes(false);
 				numChildrenLastTime = childrenLength;
-				contentPane.removeHandlers();
 				contentPane.dispose();
-				contentPane = new InternalMRViewer(this, SWT.NULL);
+				contentPane.dispose();
+				contentPane = new InternalCompositeTable(this, SWT.NULL);
 			}
 			updateVisibleRows();
 		} else {
@@ -91,11 +143,11 @@ public class MultiRowViewer extends Canvas {
 
 	private void switchToRunMode() {
 		showPrototypes(false);
-		contentPane = new InternalMRViewer(this, SWT.NULL);
+		contentPane = new InternalCompositeTable(this, SWT.NULL);
 	}
 	
 	private void switchToDesignMode(){
-		contentPane.removeHandlers();
+		contentPane.dispose();
 		contentPane.dispose();
 		contentPane = null;
 		showPrototypes(true);
@@ -118,7 +170,7 @@ public class MultiRowViewer extends Canvas {
 		
 		// Find first two prototypes
 		for (int i = 0; i < children.length; i++) {
-			if (children[i] instanceof InternalMRViewer) {
+			if (children[i] instanceof InternalCompositeTable) {
 				continue;
 			}
 			if (realChildren.size() < 2) {
@@ -252,10 +304,25 @@ public class MultiRowViewer extends Canvas {
 		}
 	};
 	
+	/**
+	 * Method isRunTime.  Returns if the CompositeTable is in run time mode as opposed
+	 * to design time mode.  In design time mode, the only permitted operations are to
+	 * add or remove child Composites to be used as the header and/or row prototype objects.
+	 * 
+	 * @return true if this CompositeTable is in run mode.  false otherwise.
+	 */
 	public boolean isRunTime() {
 		return runTime;
 	}
 
+	/**
+	 * Method setRunTime.  Turns run-time mode on or off.  When run-time mode is off, 
+	 * CompositeTable ignores most property operations and will accept prototype child
+	 * controls to be added.  When run-time mode is on, the prototype controls are 
+	 * interpreted and all properties become active.
+	 * 
+	 * @param runTime true if run-time mode should be enabled; false otherwise.
+	 */
 	public void setRunTime(boolean runTime) {
 		if (this.runTime != runTime) {
 			this.runTime = runTime;
@@ -331,13 +398,52 @@ public class MultiRowViewer extends Canvas {
 			contentPane.setTopRow(topRow);
 		}
 	}
-	
-	public Control getHeaderRow() {
-		return headerControl;
+
+	public int getCurrentColumn() {
+		if (contentPane == null) {
+			return -1;
+		}
+		return getSelection().x;
 	}
 
-	public Control[] getVisibleChildRows() {
-		return contentPane.getVisibleChildRows();
+	public void setCurrentColumn(int column) {
+		setSelection(column, getCurrentRow());
+	}
+
+	public int getCurrentRow() {
+		if (contentPane == null) {
+			return -1;
+		}
+		return getSelection().y;
+	}
+
+	public void setCurrentRow(int row) {
+		setSelection(getCurrentColumn(), row);
+	}
+	
+	public Point getSelection() {
+		if (contentPane == null) {
+			return null;
+		}
+		return contentPane.getSelection();
+	}
+	
+	public void setSelection(Point selection) {
+		setSelection(selection.x, selection.y);
+	}
+
+	public void setSelection(int column, int row) {
+		if (contentPane == null) {
+			return;
+		}
+		contentPane.setSelection(column, row);
+	}
+	
+	public Control[] getRowControls() {
+		if (contentPane == null) {
+			return null;
+		}
+		return contentPane.getRowControls();
 	}
 
 	public Constructor getHeaderConstructor() {
@@ -358,12 +464,22 @@ public class MultiRowViewer extends Canvas {
 
 	LinkedList refreshListeners = new LinkedList();
 	
-	public void addRefreshContentProvider(IRefreshContentProvider listener) {
+	public void addRefreshContentProvider(IRowContentProvider listener) {
 		refreshListeners.add(listener);
 	}
 
-	public void removeRefreshContentProvider(IRefreshContentProvider listener) {
+	public void removeRefreshContentProvider(IRowContentProvider listener) {
 		refreshListeners.remove(listener);
+	}
+	
+	LinkedList rowListeners = new LinkedList();
+	
+	public void addRowListener(IRowListener listener) {
+		rowListeners.add(listener);
+	}
+	
+	public void removeRowListener(IRowListener listener) {
+		rowListeners.remove(listener);
 	}
 	
 }  //  @jve:decl-index=0:visual-constraint="10,10"

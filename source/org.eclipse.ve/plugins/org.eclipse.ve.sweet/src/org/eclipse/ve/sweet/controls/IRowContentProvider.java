@@ -13,8 +13,8 @@ package org.eclipse.ve.sweet.controls;
 
 import org.eclipse.swt.widgets.Control;
 
-public interface IRefreshContentProvider {
+public interface IRowContentProvider {
 
-	void refresh(MultiRowViewer mrc, int offsetFromTopRow, Control row);
+	void refresh(CompositeTable sender, int offsetFromTopRow, Control row);
 
 }
