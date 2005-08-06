@@ -25,12 +25,11 @@ public interface IRowContentProvider {
 	 * to edit.
 	 * 
 	 * @param sender The CompositeTable sending the message.
-	 * @param firstVisibleRow The 0-based row number that is offset in the data structure of 
+	 * @param currentObjectOffset The 0-based row number that is offset in the data structure of 
 	 * the table's top row.
-	 * @param currentRowInTable The current row in the table.
 	 * @param row The row control to fill with data.  This will be a copy of your prototype 
 	 * row object.
 	 */
-	void refresh(CompositeTable sender, int firstVisibleRow, int currentRowInTable, Control row);
+	void refresh(CompositeTable sender, int currentObjectOffset, Control row);
 
 }

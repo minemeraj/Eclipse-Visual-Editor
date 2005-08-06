@@ -450,9 +450,12 @@ public class InternalCompositeTable extends Composite implements Listener {
 	}
 
 	private void fireRefreshEvent(int offsetFromTopRow, Control rowControl) {
+		if (numRowsInCollection < 1) {
+			return;
+		}
 		for (Iterator refreshListenersIter = parent.contentProviders.iterator(); refreshListenersIter.hasNext();) {
 			IRowContentProvider listener = (IRowContentProvider) refreshListenersIter.next();
-			listener.refresh(parent, topRow, offsetFromTopRow, rowControl);
+			listener.refresh(parent, parent.getTopRow() + offsetFromTopRow, rowControl);
 		}
 	}
 	
@@ -475,6 +478,37 @@ public class InternalCompositeTable extends Composite implements Listener {
 					}
 					setTopRow(numRowsInCollection - numRowsVisible);
 					internalSetSelection(currentColumn, numRowsVisible, true);
+				}
+				return;
+			case SWT.DEL:
+				if (fireDeleteEvent()) {
+					// We know the object is gone if we made it here, so now refresh the display...
+					
+					// If we deleted the last row in the list
+					if (currentRow >= numRowsVisible-1) {
+						// If that wasn't the last row in the collection, move the focus
+						if (numRowsInCollection > 1) {
+							internalSetSelection(currentColumn, currentRow-1, false);
+							Display.getCurrent().asyncExec(new Runnable() {
+								public void run() {
+									--numRowsInCollection;
+									deleteRowAt(currentRow+1);
+									updateVisibleRows();
+								}
+							});
+						} else {
+							// Otherwise, show the placeholder object and give it focus
+							--numRowsInCollection;
+							deleteRowAt(currentRow);
+							// FIXME: show the placeholder object here
+						}
+					} else {
+						// else, keep the focus where it was
+						--numRowsInCollection;
+						deleteRowAt(currentRow);
+						updateVisibleRows();
+						setSelection(currentColumn, currentRow);
+					}
 				}
 				return;
 			default:
@@ -627,6 +661,25 @@ public class InternalCompositeTable extends Composite implements Listener {
 			if (!listener.requestRowChange(parent)) {
 				return false;
 			}
+		}
+		return true;
+	}
+
+	private boolean fireDeleteEvent() {
+		if (parent.deleteHandlers.size() < 1) {
+			return false;
+		}
+		
+		int absoluteRow = topRow + currentRow;
+		for (Iterator deleteHandlersIter = parent.deleteHandlers.iterator(); deleteHandlersIter.hasNext();) {
+			IDeleteHandler handler = (IDeleteHandler) deleteHandlersIter.next();
+			if (!handler.canDelete(absoluteRow)) {
+				return false;
+			}
+		}
+		for (Iterator deleteHandlersIter = parent.deleteHandlers.iterator(); deleteHandlersIter.hasNext();) {
+			IDeleteHandler handler = (IDeleteHandler) deleteHandlersIter.next();
+			handler.deleteRow(absoluteRow);
 		}
 		return true;
 	}
