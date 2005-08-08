@@ -90,12 +90,15 @@ public class CompositeTableTest {
 	
 	private IRowListener rowListener = new IRowListener() {
 		public boolean requestRowChange(CompositeTable sender, int currentObjectOffset, Control row) {
+			System.out.println("requestRC");
 			return true;
 		}
 		public void depart(CompositeTable sender, int currentObjectOffset, Control row) {
-			
+			System.out.println("depart");
 		}
 		public void arrive(CompositeTable sender, int currentObjectOffset, Control row) {
+			System.out.println("arrive");
+			
 			Person person = (Person)personList.get(currentObjectOffset);
 			Row rowObj = (Row) row;
 			person.name = rowObj.name.getText();
