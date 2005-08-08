@@ -91,7 +91,6 @@ public class CompositeTable extends Canvas {
 	
 	private int[] weights = new int[0];
 	
-	private int topRow = 0;
 	private int numRowsInCollection = 0;
 	private int maxRowsVisible = Integer.MAX_VALUE;
 	
@@ -435,6 +434,8 @@ public class CompositeTable extends Canvas {
 			contentPane.setNumRowsInCollection(numRowsInCollection);
 		}
 	}
+	
+	private int topRow=0;
 
 	/**
 	 * Method getTopRow.  Return the number of the line that is being displayed in the top row
@@ -443,6 +444,9 @@ public class CompositeTable extends Canvas {
 	 * @return the number of the top line.
 	 */
 	public int getTopRow() {
+		if (contentPane != null) {
+			return contentPane.getTopRow();
+		}
 		return topRow;
 	}
 

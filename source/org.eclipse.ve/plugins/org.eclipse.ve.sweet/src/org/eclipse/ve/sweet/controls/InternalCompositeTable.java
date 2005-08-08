@@ -446,6 +446,10 @@ public class InternalCompositeTable extends Composite implements Listener {
 		this.topRow = topRow;
 		updateVisibleRows();
 	}
+	
+	public int getTopRow() {
+		return topRow;
+	}
 
 	public Point getSelection() {
 		return new Point(currentColumn, currentRow);
@@ -478,13 +482,13 @@ public class InternalCompositeTable extends Composite implements Listener {
 		parent.contentProviders.remove(listener);
 	}
 
-	private void fireRefreshEvent(int offsetFromTopRow, Control rowControl) {
+	private void fireRefreshEvent(int positionInCollection, Control rowControl) {
 		if (numRowsInCollection < 1) {
 			return;
 		}
 		for (Iterator refreshListenersIter = parent.contentProviders.iterator(); refreshListenersIter.hasNext();) {
 			IRowContentProvider listener = (IRowContentProvider) refreshListenersIter.next();
-			listener.refresh(parent, parent.getTopRow() + offsetFromTopRow, rowControl);
+			listener.refresh(parent, positionInCollection, rowControl);
 		}
 	}
 	
@@ -593,9 +597,8 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 		switch (e.keyCode) {
 		case SWT.INSERT:
-			// Try to insert the new object
-			int newRowPosition = fireInsertEvent();
-			if (newRowPosition < 0) {
+			// If no insertHandler has been registered, bail out 
+			if (parent.insertHandlers.size() < 1) {
 				return;
 			}
 			
@@ -605,18 +608,25 @@ public class InternalCompositeTable extends Composite implements Listener {
 			}
 			needToRequestRC = false;
 			
+			// Insert the new object
+			int newRowPosition = fireInsertEvent();
+			if (newRowPosition < 0) {
+				// This should never happen, but...
+				return;
+			}
+			
 			// If the placeholder is currently visible, remove it.
 			if (emptyTablePlaceholder != null) {
 				emptyTablePlaceholder.dispose();
 				emptyTablePlaceholder = null;
 			}
 			
-			// If the current widget is selected, deselect it
+			// If the current widget has a selection, deselect it
 			deselect(e.widget);
 			
 			// If the new row is in the visible space, refresh it
-			if (parent.getTopRow() < newRowPosition && 
-					parent.getTopRow() + parent.getNumRowsVisible() > newRowPosition) {
+			if (topRow <= newRowPosition && 
+					numRowsVisible > newRowPosition - topRow) {
 				insertRowAt(newRowPosition - topRow);
 				++numRowsInCollection;
 				updateVisibleRows();

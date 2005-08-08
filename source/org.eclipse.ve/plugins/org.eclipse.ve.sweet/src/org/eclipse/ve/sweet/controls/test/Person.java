@@ -4,8 +4,8 @@ public class Person {
 	
 	public String name = "";
 	public String address = "";
-	public String city = "";
-	public String state = "";
+	public String city = "Wheaton";
+	public String state = "IL";
 	
 	public Person(String name, String address, String city, String state) {
 		this.address = address;
