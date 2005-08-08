@@ -471,6 +471,7 @@ public class CompositeTable extends Canvas {
 	 */
 	public void refreshAllRows() {
 		if (contentPane != null) {
+			contentPane.updateVisibleRows();
 			contentPane.refreshAllRows();
 		}
 	}
