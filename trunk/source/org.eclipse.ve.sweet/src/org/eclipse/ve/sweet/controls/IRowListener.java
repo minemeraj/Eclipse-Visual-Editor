@@ -25,7 +25,7 @@ public interface IRowListener {
 	 * Method requestRowChange.  Requests permission to change rows.  This method is
 	 * called immediately before a row change occurs.  Listeners must return true to
 	 * grant permission for the row change to occur or return false to veto it.  If
-	 * any listener returns false, the entire row change operation is aborted.
+	 * any listener returns false, the entire row change operation is aborted.<p>
 	 *  
 	 * @param sender The CompositeTable sending the event.
 	 * @param currentObjectOffset The offset of the current object in the data structure.

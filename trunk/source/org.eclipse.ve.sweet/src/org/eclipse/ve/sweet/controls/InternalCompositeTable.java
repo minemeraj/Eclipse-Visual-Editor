@@ -47,6 +47,13 @@ import org.eclipse.ve.sweet.metalogger.Logger;
 import org.eclipse.ve.sweet.reflect.DuckType;
 
 
+/** (non-API)
+ * Class InternalCompositeTable.  This is the run-time CompositeTableControl.  It gets its prototype
+ * row and (optional) header objects from its SWT parent, then uses them to implement an SWT table
+ * control.
+ * 
+ * @author djo
+ */
 public class InternalCompositeTable extends Composite implements Listener {
 	private Composite sliderHolder = null;
 	private Composite controlHolder = null;
@@ -483,27 +490,61 @@ public class InternalCompositeTable extends Composite implements Listener {
 	
 	// Event Handling, navigation -----------------------------------------------------------------
 
+	private boolean needToRequestRC=true;
+	
 	public void keyPressed(TableRow sender, KeyEvent e) {
 		if ((e.stateMask & SWT.CONTROL) != 0) {
 			switch (e.keyCode) {
 			case SWT.HOME:
+				if (topRow <= 0) {
+					return;
+				}
+				
 				if (!fireRequestRowChangeEvent()) {
 					return;
 				}
+				needToRequestRC = false;
+				
 				deselect(e.widget);
 				
+				// If the focus is already in the top visible row, we will need to explicitly 
+				// fire an arrive event.
+				boolean needToArrive = true;
+				if (currentRow > 0) {
+					needToArrive = false;
+				}
+				
 				setTopRow(0);
-				internalSetSelection(currentColumn, 0, true);
+				
+				if (needToArrive) {
+					internalSetSelection(currentColumn, 0, true);
+				} else {
+					internalSetSelection(currentColumn, 0, false);
+				}
 				return;
 			case SWT.END:
 				if (topRow + numRowsVisible < numRowsInCollection) {
 					if (!fireRequestRowChangeEvent()) {
 						return;
 					}
+					needToRequestRC = false;
+					
 					deselect(e.widget);
 					
+					// If the focus is already in the last visible row, we will need to explicitly 
+					// fire an arrive event.
+					needToArrive = true;
+					if (currentRow < numRowsVisible-1) {
+						needToArrive = false;
+					}
+					
 					setTopRow(numRowsInCollection - numRowsVisible);
-					internalSetSelection(currentColumn, numRowsVisible-1, true);
+					
+					if (needToArrive) {
+						internalSetSelection(currentColumn, numRowsVisible-1, true);
+					} else {
+						internalSetSelection(currentColumn, numRowsVisible-1, false);
+					}
 				}
 				return;
 			case SWT.DEL:
@@ -520,9 +561,9 @@ public class InternalCompositeTable extends Composite implements Listener {
 							if (currentRow < 1) {
 								deleteRowAt(currentRow);
 								setTopRow(topRow-1);
-								internalSetSelection(currentColumn, currentRow, false);
+								internalSetSelection(currentColumn, currentRow, true);
 							} else {
-								internalSetSelection(currentColumn, currentRow-1, false);
+								internalSetSelection(currentColumn, currentRow-1, true);
 								Display.getCurrent().asyncExec(new Runnable() {
 									public void run() {
 										deleteRowAt(currentRow+1);
@@ -554,7 +595,8 @@ public class InternalCompositeTable extends Composite implements Listener {
 			if (!fireRequestRowChangeEvent()) {
 				return;
 			}
-
+			needToRequestRC = false;
+			
 			// Try to insert the new object
 			int newRowPosition = fireInsertEvent();
 			if (newRowPosition < 0) {
@@ -590,10 +632,12 @@ public class InternalCompositeTable extends Composite implements Listener {
 			if (!fireRequestRowChangeEvent()) {
 				return;
 			}
+			needToRequestRC = false;
+			
 			if (currentRow > 0) {
 				deselect(e.widget);
 				
-				internalSetSelection(currentColumn, currentRow-1, true);
+				internalSetSelection(currentColumn, currentRow-1, false);
 				return;
 			}
 			if (topRow > 0) {
@@ -608,10 +652,12 @@ public class InternalCompositeTable extends Composite implements Listener {
 			if (!fireRequestRowChangeEvent()) {
 				return;
 			}
+			needToRequestRC = false;
+			
 			if (currentRow < numRowsVisible-1) {
 				deselect(e.widget);
 				
-				internalSetSelection(currentColumn, currentRow+1, true);
+				internalSetSelection(currentColumn, currentRow+1, false);
 				return;
 			}
 			if (topRow + numRowsVisible < numRowsInCollection) {
@@ -626,6 +672,8 @@ public class InternalCompositeTable extends Composite implements Listener {
 			if (!fireRequestRowChangeEvent()) {
 				return;
 			}
+			needToRequestRC = false;
+			
 			if (topRow > 0) {
 				int newTopRow = topRow - numRowsInDisplay;
 				if (newTopRow < 0) {
@@ -639,6 +687,8 @@ public class InternalCompositeTable extends Composite implements Listener {
 			if (!fireRequestRowChangeEvent()) {
 				return;
 			}
+			needToRequestRC = false;
+			
 			if (topRow + numRowsVisible < numRowsInCollection) {
 				int newTopRow = topRow + numRowsVisible;
 				if (newTopRow >= numRowsInCollection - 1) {
@@ -716,15 +766,24 @@ public class InternalCompositeTable extends Composite implements Listener {
 	}
 	
 	public void focusGained(TableRow sender, FocusEvent e) {
+		boolean rowChanged = false;
 		if (getRowNumber(sender) != currentRow) {
-			if (!fireRequestRowChangeEvent()) {
-				// Go back if we're not allowed to be here
-				deferredSetFocus(getControl(currentColumn, currentRow), false);
+			if (needToRequestRC) {
+				if (!fireRequestRowChangeEvent()) {
+					// Go back if we're not allowed to be here
+					deferredSetFocus(getControl(currentColumn, currentRow), false);
+				}
+			} else {
+				needToRequestRC = true;
 			}
+			rowChanged = true;
 		}
+
 		currentRow = getRowNumber(sender);
 		currentColumn = sender.getColumnNumber((Control)e.widget);
-		fireRowArriveEvent();
+		
+		if (rowChanged)
+			fireRowArriveEvent();
 	}
 	
 	// Event Firing -------------------------------------------------------------------------------
@@ -812,14 +871,14 @@ public class InternalCompositeTable extends Composite implements Listener {
 	
 	private void handleNextRowNavigation(TableRow row) {
 		if (!fireRequestRowChangeEvent()) {
-			deferredSetFocus(getControl(currentRow, currentColumn), false);
 			return;
 		}
-
+		needToRequestRC = false;
+		
 		deselect(getControl(currentColumn, currentRow));
 		
 		if (currentRow < numRowsVisible-1) {
-			deferredSetFocus(getControl(0, currentRow+1), true);
+			deferredSetFocus(getControl(0, currentRow+1), false);
 		} else {
 			if (topRow + numRowsVisible >= numRowsInCollection) {
 				// We're at the end; don't go anywhere
@@ -833,9 +892,9 @@ public class InternalCompositeTable extends Composite implements Listener {
 
 	private void handlePreviousRowNavigation(TableRow row) {
 		if (!fireRequestRowChangeEvent()) {
-			deferredSetFocus(getControl(currentRow, currentColumn), false);
 			return;
 		}
+		needToRequestRC = false;
 		
 		deselect(getControl(currentColumn, currentRow));
 		
@@ -848,7 +907,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 			setTopRow(topRow-1);
 			deferredSetFocus(getControl(row.getNumColumns()-1, 0), true);
 		} else {
-			deferredSetFocus(getControl(row.getNumColumns()-1, currentRow-1), true);
+			deferredSetFocus(getControl(row.getNumColumns()-1, currentRow-1), false);
 		}
 	}
 
