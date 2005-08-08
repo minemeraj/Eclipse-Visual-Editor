@@ -11,16 +11,17 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-05 16:08:07 $ 
+ *  $Revision: 1.9 $  $Date: 2005-08-08 20:40:06 $ 
  */
 
+import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.compiler.*;
 
-import org.eclipse.ve.internal.java.codegen.model.IScannerFactory;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -565,7 +566,83 @@ public String toString() {
 }
 
 
-	
+/**
+ * Returns a list of expressions in the passed in method (including the passed in expRef), which are
+ * in the same line as the passed in expRef. If the offset of expRef is not set or there are no other 
+ * expressions in the method, a list containing just expRef is returned. <code>null</code> is never
+ * returned, atleast a list with passed in expRef is returned. The method should have the correct 
+ * content set on it, as it is used to dertermine the presence of newlines - without this the returned
+ * list is not accurate.
+ * 
+ * @param expRef
+ * @param method
+ * @return
+ * 
+ * @since 1.1.0.1
+ */
+public static List getExpressionsOnSameLine(CodeExpressionRef expRef, CodeMethodRef method){
+	List onSameLine = new ArrayList();
+	onSameLine.add(expRef);
+	if(expRef.getOffset()>-1){
+		Iterator expItr = method.getAllExpressions();
+		CodeExpressionRef fromExp, toExp;
+		while (expItr.hasNext()) {
+			CodeExpressionRef methodExp = (CodeExpressionRef) expItr.next();
+			fromExp = expRef;
+			toExp = methodExp;
+			
+			if(fromExp==toExp || methodExp.getOffset()<0)
+				continue; //
+			
+			if(fromExp.getOffset() > toExp.getOffset()){
+				CodeExpressionRef tmpExp = fromExp;
+				fromExp = toExp;
+				toExp = tmpExp;
+			}
+			
+			// Check if the trailing comment area has newlines
+			int contentLength = 	(fromExp.getFillerContent()==null?0:fromExp.getFillerContent().length()) +
+											(fromExp.getCodeContent()==null?0:fromExp.getCodeContent().length()) +
+											(fromExp.getCommentsContent()==null?0:fromExp.getCommentsContent().length());
+			String postCommentContent = fromExp.getContent().substring(contentLength);
+			if(postCommentContent!=null && (postCommentContent.indexOf('\r')>-1 || postCommentContent.indexOf('\n')>-1))
+				continue; // if comment has newline, then the expression is not on the same line
+			
+			String methodContent = method.getContent();
+			// Check from end of fromExp to beginning of toExp if there are any newlines
+			boolean nlFound = false;
+			for(int index=(fromExp.getOffset()+fromExp.getLen()); index < toExp.getOffset(); index++){
+				if(index<methodContent.length()){
+					char c = methodContent.charAt(index);
+					if(c=='\r' || c=='\n'){
+						nlFound=true;
+						break;
+					}
+				}
+			}
+			if(nlFound)
+				continue;
+			
+			// No newlines from fromExp's end to toExp's start - add it at the correct index in the list
+			int correctIndex = -1;
+			int methodExpOffset = methodExp.getOffset();
+			for (int idx = 0; idx < onSameLine.size(); idx++) {
+				int arrayOffset = ((CodeExpressionRef)onSameLine.get(idx)).getOffset();
+				if(arrayOffset>methodExpOffset){
+					correctIndex = idx;
+					break;
+				}
+			}
+			
+			if(correctIndex==-1)
+				onSameLine.add(methodExp);
+			else
+				onSameLine.add(correctIndex, methodExp);
+		}
+	}
+	return onSameLine;
+}
+
 }
 
 

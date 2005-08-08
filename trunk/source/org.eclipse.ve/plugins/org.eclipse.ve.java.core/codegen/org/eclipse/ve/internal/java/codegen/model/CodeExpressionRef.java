@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.53 $  $Date: 2005-06-24 18:56:15 $ 
+ *  $Revision: 1.54 $  $Date: 2005-08-08 20:40:06 $ 
  */
 
 
@@ -47,6 +47,7 @@ protected 	VEexpressionPriority	fPriority		= null;
 protected   CodeExpressionRef		fMasteredExpression = null;  // STATE_NO_SRC expressions may have a master expression
 protected   List					freqImports = new ArrayList();  // Imports required
 protected 	List fReferences = new ArrayList() ; // References to other BeanBarts
+protected List fSameLineExpressions = new ArrayList(); // List of expressions in the same line - STATE_SHARED_LINE
 
 
 /*********
@@ -78,8 +79,10 @@ public final static int                STATE_EXP_NOT_PERSISTED 	= 0x0200 ;
 public final static int                STATE_MASTER            	= 0x0400 ;
 // A Master expression, drives the existance of another expression. 
 public final static int                STATE_MASTER_DELETED     = 0x0800 ;
-  // Typically set for an allocation statement that initialize the expression.
+// Typically set for an allocation statement that initialize the expression.
 public final static int                STATE_INIT_EXPR         	= 0x1000 ;  
+// Typically set when an expression is sharing the same line with other expressions
+public final static int                STATE_SHARED_LINE         	= 0x2000 ;  
 
 /*******/
 	
@@ -536,11 +539,21 @@ public  void updateDocument(ExpressionParser newParser) {
 	setState(STATE_EXP_NOT_PERSISTED,false);	
 }
 
-public  void updateDocument(boolean updateSharedDoc) {
+/**
+ * Updates the document with the latest content from refreshComposition().
+ * Optionally set a new filler and comment for the expression. Only non-null
+ * filler and comments are set. Pass in null to filler and comment to use the default.
+ * 
+ * @param updateSharedDoc
+ * @param newFiller
+ * @param newComment
+ * 
+ * @since 1.1
+ */
+protected  void updateDocument(boolean updateSharedDoc, String newFiller, String newComment) {
 	if(isStateSet(STATE_IN_SYNC))  
 		return ;
      
-          
 	StringBuffer trace = new StringBuffer() ;
 	trace.append("CodeExpressionRef.updateDocument():\n") ; //$NON-NLS-1$	
 	setState(STATE_UPDATING_SOURCE, true); //fState |= STATE_UPDATING_SOURCE ;
@@ -548,6 +561,21 @@ public  void updateDocument(boolean updateSharedDoc) {
 	int len = getLen() ;
 	String prevContent = getContent()==null ? "" : getContent() ;	  	   //$NON-NLS-1$
 	trace.append(prevContent) ;	  
+          
+	if(newFiller!=null)
+		try {
+			setFillerContent(newFiller);
+		} catch (CodeGenException e1) {
+			JavaVEPlugin.log(e1, Level.WARNING);
+		}
+	if(newComment!=null)
+		try {
+			setCommentContent(newComment);
+		} catch (CodeGenException e1) {
+			JavaVEPlugin.log(e1, Level.WARNING);
+		}
+	
+
 	try {	  
 		refreshFromComposition() ;
 	}catch (CodeGenException e) {
@@ -599,7 +627,7 @@ public  void updateDocument(boolean updateSharedDoc) {
 			CodeExpressionRef master = getMasteredExpression();
 			master.setState(STATE_MASTER_DELETED,isStateSet(STATE_DELETE));
 			master.setState(STATE_IN_SYNC,false);
-			master.updateDocument(true);
+			master.updateDocument(true, null, null);
 		}
 		dispose() ;
 	}	
@@ -926,6 +954,17 @@ public void dispose() {
 	   fBean.removeNoSrcExpresion(this);
 	}
 	fBean = null ;	
+
+	// Remove this expression from the same line expressions of others
+	if(fSameLineExpressions.size()>1){
+		for (Iterator expItr = fSameLineExpressions.iterator(); expItr.hasNext();) {
+			CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+			List list = exp.getSameLineExpressions();
+			if(list!=null && list.contains(this))
+				list.remove(this);
+		}
+	}
+	setSameLineExpressions(null);
 }
 
 /**
@@ -982,6 +1021,8 @@ public String toString(){
    	    states = states.concat("STATE_NO_SRC#"); //$NON-NLS-1$
    	if (isStateSet(STATE_NO_MODEL))
    		states = states.concat("STATE_NO_MODEL#"); //$NON-NLS-1$    
+   	if (isStateSet(STATE_SHARED_LINE))
+   		states = states.concat("STATE_SHARED_LINE#"); //$NON-NLS-1$    
 	states = states.concat("}"+" Offset: "+getOffset()+" upTo:"+(getOffset()+getLen())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	if (isStateSet(STATE_NO_SRC) && fMasteredExpression != null)
 		return fMasteredExpression.getContent() + states;
@@ -1128,5 +1169,88 @@ public static void resetExpressionStates(CodeExpressionRef exp, int states) {
 	exp.setState(STATE_MASTER_DELETED, (states & STATE_MASTER_DELETED) > 0);
 	exp.setState(STATE_INIT_EXPR, (states & STATE_INIT_EXPR) > 0);
 }
+
+/**
+ * Sets the list of expressions in the same line as this.
+ * The passed in list generally includes this expression also 
+ * as returned by ExpressionParser.getExpressionsOnSameLine().
+ * This information should be used in conjunction with STATE_SHARED_LINE.
+ * The contents of the passed in list are copied to an internal list.
+ * 
+ * @param sameLineExpressions
+ * @see ExpressionParser#getExpressionsOnSameLine(CodeExpressionRef, CodeMethodRef)
+ * 
+ * @since 1.1
+ */
+public void setSameLineExpressions(List sameLineExpressions){
+	fSameLineExpressions.clear();
+	if(sameLineExpressions!=null)
+		fSameLineExpressions.addAll(sameLineExpressions);
+}
+
+public List getSameLineExpressions(){
+	return fSameLineExpressions;
+}
+
+/**
+ * This API has been created specifically for breaking up expressions in 
+ * the same line into multiple expressions. At the same time all the contents
+ * of the expressions will be refreshed from emf model. This will only happen
+ * when this expression has the STATE_SHARED_LINE state set.
+ * 
+ * @param updateSharedDoc
+ * 
+ * @since 1.1
+ */
+public void updateSharedLineExpressions(boolean updateSharedDoc){
+	if(isStateSet(STATE_SHARED_LINE)){
+		boolean clearThisSameLineExpressions = false;
+		// we are about to update a shared line - regenerate all of them with the correct fillers and comments
+		List sameLineExpressions = new ArrayList(fSameLineExpressions);
+		String defaultFiller = ((CodeExpressionRef)sameLineExpressions.get(0)).getFillerContent();
+		String NL = fBean.getModel().getLineSeperator();
+		Iterator expItr = sameLineExpressions.iterator();
+		while (expItr.hasNext()) {
+			String correctFiller = defaultFiller;
+			String correctEnd = NL;
+			CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+			if(sameLineExpressions.indexOf(exp)==0) // first expression
+				correctFiller = null; // first expression's filler doesnt change
+			else
+				correctFiller = NL + correctFiller; // the way expressionparser works to find start is by NLs
+			
+			if(sameLineExpressions.indexOf(exp)!=sameLineExpressions.size()-1) // update newlines for all non-last expressions
+				correctEnd = exp.getCommentsContent()==null ? correctEnd : exp.getCommentsContent()+correctEnd;
+			else
+				correctEnd = null; // last expression's comment doesnt change
+			exp.setState(CodeExpressionRef.STATE_SHARED_LINE, false);
+			if(exp!=this){
+				exp.setSameLineExpressions(null);
+				exp.setState(CodeExpressionRef.STATE_IN_SYNC, false);
+				exp.updateDocument(updateSharedDoc, correctFiller, correctEnd);
+				exp.setState(CodeExpressionRef.STATE_IN_SYNC, true);
+			}else{
+				boolean isInSync = isStateSet(STATE_IN_SYNC);
+				if(isInSync)
+					setState(STATE_IN_SYNC, false);
+				updateDocument(updateSharedDoc, correctFiller, correctEnd);
+				if(isInSync)
+					setState(STATE_IN_SYNC, true);
+				clearThisSameLineExpressions = true;
+			}
+		}
+		if(clearThisSameLineExpressions)
+			setSameLineExpressions(null);
+	}
+}
+
+public void updateDocument(boolean updateSharedDoc) {
+	if(isStateSet(STATE_SHARED_LINE)){
+		updateSharedLineExpressions(updateSharedDoc);
+	}else{
+		updateDocument(updateSharedDoc, null, null); // the regular path
+	}
+}
+
 }
 

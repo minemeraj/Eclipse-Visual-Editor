@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.57 $  $Date: 2005-07-28 22:25:46 $ 
+ *  $Revision: 1.58 $  $Date: 2005-08-08 20:40:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -106,6 +106,8 @@ public class BDMMerger {
 			merged = merged && deactivateUnreferencedBeans() ;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			merged = merged && updateFreeForm() ;
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
+			CodeGenUtil.markSameLineExpressions(mainModel);
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			merged = merged && clean() ;
 		}

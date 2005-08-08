@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.43 $  $Date: 2005-07-18 20:25:43 $ 
+ *  $Revision: 1.44 $  $Date: 2005-08-08 20:40:06 $ 
  */
 
 import java.util.*;
@@ -360,8 +360,21 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
 			cExp = (CodeExpressionRef) l.get(index);
 			offset = cExp.getOffset();
 		}
-		filler=cExp.getFillerContent();
-	}		
+		if(cExp.isStateSet(CodeExpressionRef.STATE_SHARED_LINE)){
+			filler = ((CodeExpressionRef) cExp.getSameLineExpressions().get(0)).getFillerContent();
+			cExp.updateSharedLineExpressions(true);
+			// offsets are update - refresh the offsets again
+			if (prevIndex>=0) {
+				// use the previou's filler.. we come right after
+				offset = cExp.getOffset()+cExp.getLen();
+			}
+			else {
+				// use the one we come in front off
+				offset = cExp.getOffset();
+			}
+		}else
+			filler=cExp.getFillerContent();
+	}
 	exp.setFillerContent(filler);
 	exp.setOffset(offset);
 	exp.setState(CodeExpressionRef.STATE_SRC_LOC_FIXED, true);
