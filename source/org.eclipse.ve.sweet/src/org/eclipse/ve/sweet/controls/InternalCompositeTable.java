@@ -630,13 +630,51 @@ public class InternalCompositeTable extends Composite implements Listener {
 				insertRowAt(newRowPosition - topRow);
 				++numRowsInCollection;
 				updateVisibleRows();
-				internalSetSelection(currentColumn, currentRow, false);
+				int newRowNumber = newRowPosition - topRow;
+				if (newRowNumber != currentRow) {
+					internalSetSelection(currentColumn, newRowNumber, false);
+				} else {
+					internalSetSelection(currentColumn, newRowNumber, true);
+				}
 				return;
 			} else {
 				++numRowsInCollection;
-				setTopRow(newRowPosition);
-				updateVisibleRows();
-				internalSetSelection(0,0, false);
+
+				// If the new row is above us, scroll up to it
+				if (newRowPosition < topRow + currentRow) {
+					setTopRow(newRowPosition);
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							updateVisibleRows();
+							if (currentRow != 0) {
+								internalSetSelection(currentColumn, 0, false);
+							} else {
+								internalSetSelection(currentColumn, 0, true);
+							}
+						}
+					});
+				} else {
+					// If we're appending
+					if (numRowsInDisplay > numRowsVisible) {
+						updateVisibleRows();
+						int newRowNumber = newRowPosition - topRow;
+						if (newRowNumber != currentRow) {
+							internalSetSelection(currentColumn, newRowNumber, false);
+						} else {
+							internalSetSelection(currentColumn, newRowNumber, true);
+						}
+					} else {
+						// It's somewhere in the middle below us; scroll down to it
+						setTopRow(newRowPosition-numRowsVisible+1);
+						int newRowNumber = numRowsVisible-1;
+						if (newRowNumber != currentRow) {
+							internalSetSelection(currentColumn, newRowNumber, false);
+						} else {
+							internalSetSelection(currentColumn, newRowNumber, true);
+						}
+					}
+				}
+				
 			}
 			
 			return;
