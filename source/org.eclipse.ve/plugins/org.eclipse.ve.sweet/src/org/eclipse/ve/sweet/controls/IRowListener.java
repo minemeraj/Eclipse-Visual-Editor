@@ -11,6 +11,8 @@
  */
 package org.eclipse.ve.sweet.controls;
 
+import org.eclipse.swt.widgets.Control;
+
 /**
  * Interface IRowListener.  An interface for objects that want to listen to and have the
  * possibility of vetoing row change events on a CompositeTable.
@@ -26,15 +28,27 @@ public interface IRowListener {
 	 * any listener returns false, the entire row change operation is aborted.
 	 *  
 	 * @param sender The CompositeTable sending the event.
+	 * @param currentObjectOffset The offset of the current object in the data structure.
+	 * @param row The row control that is losing focus.
 	 * @return true to permit the row change to occur; false otherwise.
 	 */
-	boolean requestRowChange(CompositeTable sender);
+	boolean requestRowChange(CompositeTable sender, int currentObjectOffset, Control row);
+	
+	/**
+	 * Method depart.  Called after requstRowChange has been called to indicate that
+	 * the focus is departing the specified row.
+	 * 
+	 * @param sender
+	 * @param currentObjectOffset
+	 * @param row
+	 */
+	void depart(CompositeTable sender, int currentObjectOffset, Control row);
 
 	/**
-	 * Method rowChanged.  Notifies receiver that the current row has just been changed.
+	 * Method arrive.  Notifies receiver that the current row has just been changed.
 	 * 
 	 * @param sender The CompositeTable sending the event.
 	 */
-	void rowChanged(CompositeTable sender);
+	void arrive(CompositeTable sender, int currentObjectOffset, Control row);
 
 }
