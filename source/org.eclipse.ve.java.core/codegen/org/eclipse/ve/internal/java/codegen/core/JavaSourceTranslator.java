@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.84 $  $Date: 2005-07-22 15:18:41 $ 
+ *  $Revision: 1.85 $  $Date: 2005-08-08 20:40:06 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -829,6 +829,8 @@ protected boolean reverseParse (IProgressMonitor pm) throws CodeGenException {
 		    
 			builder.setDiagram(fVEModel) ;
 			fBeanModel = builder.build() ;
+			CodeGenUtil.markSameLineExpressions(fBeanModel);
+			
 			errors = builder.isErrors();
 			if (fBeanModel!=null)
 			   fBeanModel.setSourceSynchronizer(fSrcSync) ;	

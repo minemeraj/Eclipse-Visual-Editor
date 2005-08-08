@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.44 $  $Date: 2005-07-07 21:16:00 $ 
+ *  $Revision: 1.45 $  $Date: 2005-08-08 20:40:06 $ 
  */
 
 
@@ -1085,6 +1085,43 @@ public static Collection getReferences(Object o, boolean includeO) {
 		return bps;
 	}
 
+	/**
+	 * Marks relevent expressions in the passed BDM if they are on the same line
+	 * with the CodeExpressionRef.STATE_SHARED_LINE. This method should 
+	 * typically be called immediately after the BDM is built so that all the method
+	 * contents are accurate, as required by ExpressionParser.getExpressionsOnSameLine()
+	 * 
+	 * @param bdm
+	 * 
+	 * @since 1.1.0.1
+	 */
+	public static void markSameLineExpressions(IBeanDeclModel bdm){
+		Iterator methodItr = bdm.getAllMethods();
+		while (methodItr.hasNext()) {
+			CodeMethodRef method = (CodeMethodRef) methodItr.next();
+			List sameLineExpressions = new ArrayList();
+			Iterator expItr = method.getAllExpressions();
+			while (expItr.hasNext()) {
+				CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+				if(exp.isStateSet(CodeExpressionRef.STATE_NO_SRC))
+					continue; // no source - no need to check for same line
+				if(sameLineExpressions.contains(exp))
+					continue; // exp is already on the same line as someone else
+				List expsOnSameLine = ExpressionParser.getExpressionsOnSameLine(exp, method);
+				if(expsOnSameLine.size()>1){
+					for (int expCount = 0; expCount < expsOnSameLine.size(); expCount++) {
+						CodeExpressionRef sameLineExp = (CodeExpressionRef) expsOnSameLine.get(expCount);
+						sameLineExp.setState(CodeExpressionRef.STATE_SHARED_LINE, true);
+						sameLineExp.setSameLineExpressions(expsOnSameLine);
+						sameLineExpressions.add(sameLineExp); // no need to visit other same line expressions again
+					}
+				}else{
+					exp.setState(CodeExpressionRef.STATE_SHARED_LINE, false);
+					exp.setSameLineExpressions(null);
+				}
+			}
+		}
+	}
 }
 
 
