@@ -41,7 +41,9 @@ click <a href="directory.txt">here</a>.<br>
 </table>
 <p>These are the prerequisites to install the Visual Editor. They must
 be downloaded and installed before the Visual Editor can be installed.
-Since these are now releases, compatible updates in the future may be downloaded.
+At this point in time since these are all drivers that are in
+development and are not release drivers, they cannot be mixed and
+matched. For VE to work they must match.
 </p>
 <p><span style="color: blue;"><b><u>Note:</u>
 <ul>
