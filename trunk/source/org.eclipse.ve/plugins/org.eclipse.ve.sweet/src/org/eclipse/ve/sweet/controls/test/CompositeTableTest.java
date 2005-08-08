@@ -85,6 +85,9 @@ public class CompositeTableTest {
 			Person newPerson = new Person();
 			personList.add(positionHint, newPerson);
 			return positionHint;
+//			int newPosition = (int)(Math.random() * (personList.size()+1));
+//			personList.add(newPosition, newPerson);
+//			return newPosition;
 		}
 	};
 	
