@@ -11,6 +11,13 @@
  */
 package org.eclipse.ve.sweet.controls;
 
+/*
+ * TODO:
+ * - PgUp/PgDn don't save edited changes
+ * - Insert into zeroth visible row always fails
+ * - invisible inserts wind up creating "unbound" fields
+ */
+
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -45,7 +52,6 @@ public class InternalCompositeTable extends Composite implements Listener {
 	
 	private CompositeTable parent;
 	
-	private int[] weights;
 	private int maxRowsVisible;
 	private int numRowsInDisplay;
 	private int numRowsInCollection;
@@ -71,7 +77,6 @@ public class InternalCompositeTable extends Composite implements Listener {
 		this.parent = (CompositeTable) parentControl;
 		controlHolder.addListener(SWT.MouseWheel, this);
 
-		weights = parent.getWeights();
 		maxRowsVisible = parent.getMaxRowsVisible();
 		numRowsInCollection = parent.getNumRowsInCollection();
 		topRow = parent.getTopRow();
@@ -446,7 +451,6 @@ public class InternalCompositeTable extends Composite implements Listener {
 	}
 
 	public void setWeights(int[] weights) {
-		this.weights = weights;
 		layoutControlHolder();
 	}
 
@@ -538,6 +542,34 @@ public class InternalCompositeTable extends Composite implements Listener {
 			}
 		}
 		switch (e.keyCode) {
+		case SWT.INSERT:
+			// Make sure we can leave the current row
+			if (!fireRequestRowChangeEvent()) {
+				return;
+			}
+
+			// Try to insert the new object
+			int newRowPosition = fireInsertEvent();
+			if (newRowPosition < 0) {
+				return;
+			}
+			
+			// If the new row is in the visible space, refresh it
+			if (parent.getTopRow() < newRowPosition && 
+					parent.getTopRow() + parent.getNumRowsVisible() > newRowPosition) {
+				insertRowAt(newRowPosition - topRow);
+				++numRowsInCollection;
+				updateVisibleRows();
+				internalSetSelection(currentColumn, currentRow, false);
+				return;
+			} else {
+				++numRowsInCollection;
+				setTopRow(newRowPosition);
+				updateVisibleRows();
+				internalSetSelection(0,0, false);
+			}
+			
+			return;
 		case SWT.ARROW_UP:
 			if (!fireRequestRowChangeEvent()) {
 				return;
@@ -624,7 +656,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	public void focusGained(TableRow sender, FocusEvent e) {
 		if (getRowNumber(sender) != currentRow) {
 			if (!fireRequestRowChangeEvent()) {
@@ -671,16 +703,26 @@ public class InternalCompositeTable extends Composite implements Listener {
 	// Event Firing -------------------------------------------------------------------------------
 
 	private void fireRowChangedEvent() {
+		if (rows.size() < 1) {
+			return;
+		}
 		for (Iterator rowChangeListenersIter = parent.rowListeners.iterator(); rowChangeListenersIter.hasNext();) {
 			IRowListener listener = (IRowListener) rowChangeListenersIter.next();
-			listener.rowChanged(parent);
+			listener.arrive(parent, topRow+currentRow, currentRow().getRowControl());
 		}
 	}
 
 	private boolean fireRequestRowChangeEvent() {
+		if (rows.size() < 1) {
+			return true;
+		}
+		if (currentRow > rows.size()-1) {
+			// (if the other row is already gone)
+			return true;
+		}
 		for (Iterator rowChangeListenersIter = parent.rowListeners.iterator(); rowChangeListenersIter.hasNext();) {
 			IRowListener listener = (IRowListener) rowChangeListenersIter.next();
-			if (!listener.requestRowChange(parent)) {
+			if (!listener.requestRowChange(parent, topRow+currentRow, currentRow().getRowControl())) {
 				return false;
 			}
 		}
@@ -704,6 +746,22 @@ public class InternalCompositeTable extends Composite implements Listener {
 			handler.deleteRow(absoluteRow);
 		}
 		return true;
+	}
+	
+	private int fireInsertEvent() {
+		if (parent.insertHandlers.size() < 1) {
+			return -1;
+		}
+		
+		for (Iterator insertHandlersIter = parent.insertHandlers.iterator(); insertHandlersIter.hasNext();) {
+			IInsertHandler handler = (IInsertHandler) insertHandlersIter.next();
+			int resultRow = handler.insert(topRow+currentRow);
+			if (resultRow >= 0) {
+				return resultRow;
+			}
+		}
+		
+		return -1;
 	}
 
 	// Event Handling, utility methods ------------------------------------------------------------
@@ -747,21 +805,17 @@ public class InternalCompositeTable extends Composite implements Listener {
 	}
 
 	private TableRow currentRow() {
-		TableRow result = null;;
-		Iterator rowsIter = rows.iterator();
-		for (int i=0; i < currentRow && rowsIter.hasNext(); ++i) {
-			result = (TableRow) rowsIter.next();
+		if (currentRow > rows.size()-1) {
+			return null;
 		}
-		return result;
+		return (TableRow) rows.get(currentRow);
 	}
 
 	private TableRow getRowByNumber(int rowNumber) {
-		TableRow result = null;;
-		Iterator rowsIter = rows.iterator();
-		for (int i=0; i <= rowNumber && rowsIter.hasNext(); ++i) {
-			result = (TableRow) rowsIter.next();
+		if (rowNumber > rows.size()-1) {
+			return null;
 		}
-		return result;
+		return (TableRow) rows.get(rowNumber);
 	}
 	
 	private Control getControl(int column, int row) {
