@@ -259,7 +259,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 	
 	// Table control layout -- main refresh algorithm ---------------------------------------------
 
-	private void updateVisibleRows() {
+	void updateVisibleRows() {
 		// If we don't have our prototype row object yet, bail out
 		if (rowControl == null) {
 			return;
@@ -393,7 +393,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 
-	public void refreshAllRows() {
+	void refreshAllRows() {
 		int row=0;
 		for (Iterator rowsIter = rows.iterator(); rowsIter.hasNext();) {
 			TableRow rowControl = (TableRow) rowsIter.next();
