@@ -95,16 +95,15 @@ public class CompositeTableTest {
 		}
 		public void depart(CompositeTable sender, int currentObjectOffset, Control row) {
 			System.out.println("depart");
-		}
-		public void arrive(CompositeTable sender, int currentObjectOffset, Control row) {
-			System.out.println("arrive");
-			
 			Person person = (Person)personList.get(currentObjectOffset);
 			Row rowObj = (Row) row;
 			person.name = rowObj.name.getText();
 			person.address = rowObj.address.getText();
 			person.city = rowObj.city.getText();
 			person.state = rowObj.state.getText();
+		}
+		public void arrive(CompositeTable sender, int currentObjectOffset, Control row) {
+			System.out.println("arrive");
 		}
 	};
 	
