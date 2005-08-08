@@ -630,8 +630,8 @@ public class CompositeTable extends Canvas {
 	 * 
 	 * @param listener The listener to add.
 	 */
-	public void addRowListener(IRowListener listener) {
-		rowListeners.add(listener);
+	public void addRowListener(IRowListener rowListener) {
+		rowListeners.add(rowListener);
 	}
 	
 	/**
