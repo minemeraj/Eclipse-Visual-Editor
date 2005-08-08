@@ -21,13 +21,12 @@ public interface IInsertHandler {
 	/**
 	 * Method insert.  Requests that the receiver insert object(s) making up a new row at 
 	 * the specified position.  The receiver returns the actual position where the insert
-	 * occured (that doesn't have to be the same as the requested position) or -1 if the
-	 * insert could not be performed.
+	 * occured (that doesn't have to be the same as the requested position).
 	 * 
 	 * @param positionHint The user's current position in the user interface relative to the 
 	 * beginning of the collection (0-based).
 	 * 
-	 * @return the actual position of the new object or -1 if the insert could not be performed.
+	 * @return the actual position of the new object.
 	 */
 	public int insert(int positionHint);
 }
