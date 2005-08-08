@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ve.sweet.controls.internal.EmptyTablePlaceholder;
+import org.eclipse.ve.sweet.controls.internal.ISelectableRegionControl;
 import org.eclipse.ve.sweet.controls.internal.TableRow;
 import org.eclipse.ve.sweet.metalogger.Logger;
 import org.eclipse.ve.sweet.reflect.DuckType;

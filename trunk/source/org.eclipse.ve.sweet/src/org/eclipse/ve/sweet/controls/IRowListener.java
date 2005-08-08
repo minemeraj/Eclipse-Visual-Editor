@@ -49,6 +49,6 @@ public interface IRowListener {
 	 * 
 	 * @param sender The CompositeTable sending the event.
 	 */
-	void arrive(CompositeTable sender, int currentObjectOffset, Control row);
+	void arrive(CompositeTable sender, int currentObjectOffset, Control newRow);
 
 }
