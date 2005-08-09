@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy, see www.w3.org">
+  <title>Visual Editor Tutorial</title>
+  <link rel="stylesheet" type="text/css"
+ href="main_data/default_style.css">
+  <style type="text/css">
+  .PictureParagraph { margin-left: 10% }
+  .PictureStyle { border-style: ridge; border-width: 1px; padding: 1px }
+  
+  </style>
+</head>
+<body>
+<div align="right"> &nbsp;
+<table border="0" cellpadding="2" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td colspan="2" align="left" bgcolor="#0080c0" valign="top"> <b>
+		<font face="Arial,Helvetica" color="#FFFFFF">Hibernate/Database 
+		Configuration</font></b></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div align="left">
+<p title="RCP">&nbsp;</div>
+<div align="left">
+<p title="RCP">This <a href="Test.java">example</a> uses&nbsp; <a href="http://www.hibernate.org/">
+Hibernate</a>, and&nbsp; <a href="http://db.apache.org/derby/">Derby</a> to provide support for a simple, 
+end to end persistence example.&nbsp; From a user point of view there is a 
+single <a href="Person.java">Person</a> class, with a First/Last <i>name</i> 
+properties, a one-to-many <i>manager</i> relationship, a one-to-one <i>spouse</i> 
+relationship, and a many-to-many <i>backup</i> relationship.&nbsp; The validate, 
+onXXX methods, are Hibernate's version of a life cycle implementation.</div>
+<div align="left">
+<p title="RCP"><img border="0" src="README7.jpg"></div>
+<div align="left">
+<p title="RCP">&nbsp;</div>
+<hr width="100%">
+<h2>Configuring the Hibernate User Library</h2>
+<p>This project is configured with the following entry in its <b>.classpath</b>
+<i>&lt;classpathentry kind=&quot;con&quot; path=&quot;org.eclipse.jdt.USER_LIBRARY/Hibernate&quot;/&gt;</i>.&nbsp; 
+This means that it will be looking to a User Library definition named <i>
+Hibernate.&nbsp; </i>Follow these instruction to create the Hibernate library 
+configuration.</p>
+<p>First you need to download the
+<a href="http://sourceforge.net/project/showfiles.php?group_id=40712&package_id=127784">
+Hibernate 3.0.5 jars</a> and extract them to some <i>directory</i>.
+<img border="0" src="README1.gif"></p>
+<p>Then, create a new Eclipse User Library configuration named <i>Hibernate</i> 
+that will point to the needed jars:<img border="0" src="README2.jpg"></p>
+<p>Click on the New User Library, name it Hibernate, and add the hibernate3 jar, 
+as well as all the .jars in the lib directory under the hibernate directory you 
+extracted the hibernate archive.</p>
+<p><img border="0" src="README3.jpg"></p>
+<p>You should have 36 jars, under the Hibernate class path entry.</p>
+<p>&nbsp;</p>
+<h2>Configuring a Database</h2>
+<p>We have used for this example the
+<a href="http://db.apache.org/derby/releases/release-10.1.1.0.html">Apache Derby 
+10.1.10</a> database (you may use a different database if you wish).&nbsp; You 
+will have to have a DB instance installed/running locally or remotely.&nbsp; An 
+instance of a Derby instance is running on <i>jvelinux.raleigh.ibm.com</i>.&nbsp; 
+If you are going to use this instance, you only need to have download Derby's 
+database's libraries, and can skip the DB schema configuration.&nbsp; Note: <i>
+jvelinux.raleigh.ibm.com</i> is inside the IBM firewall, and must be accessed 
+through a browser (for authentication) before it can be accessed by a DB client.&nbsp; 
+Point your browser to <a href="http://jvelinux.raleigh.ibm.com/JVELINUX/">
+http://jvelinux.raleigh.ibm.com/JVELINUX/</a>, and authenticate. <br>
+<img border="0" src="README4.gif"></p>
+<h4>Creating the TEST schema on the DB instance</h4>
+<p>Once you have a DB installed, you can create the following DB schema by 
+running this <a href="TEST.sql">DDL script</a>.&nbsp; The data base has a PERSON 
+table, with a one-to-one, optional and unique relationship to another Person 
+using the SPOUSE table.&nbsp; A many-to-one manager relationship, and a 
+many-to-many backup relationship with other Persons.</p>
+<p><img border="0" src="README5.gif"></p>
+<p>&nbsp;</p>
+<h4>Configuration the Database Jars User Library</h4>
+<p>Similarly to the Hibernate User Library, this project will require you to 
+define a <i>DBclient</i> user library for that will point to the client jars 
+that will be needed to access the database. If you intend to use the Derby 
+database, use the following two .jars from the <b>lib</b> directory that was 
+created by the derby archive: <i>derbyclient.jar</i>, and <i>derbytools.jar</i>.</p>
+<p><img border="0" src="README6.jpg"></p>
+<p>&nbsp;</p>
+<h4>Configuring Hibernate to use a specific database</h4>
+<p>Now that your project contain all the Hibernate and database-client jars, you 
+will have to tell Hibernate what type database you are using, and where is it 
+(the URL).&nbsp; Hibernate's configuration file <a href="hibernate.cfg.xml">
+hibernate.cfg.xml</a> is where this information is entered.&nbsp; The CVS 
+version of this file is set to work with the jvelinux.raleigh.ibm.com database 
+instance.&nbsp; You can change this by updating the <i>hibernate.connection.url
+</i>property<i>.</i>&nbsp; If you are not using the Derby DataBase, you will 
+need to also change the client driver (<i>hibernate.connection.driver_class</i>), 
+and the database <i>dialect</i> property. </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

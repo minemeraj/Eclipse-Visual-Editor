@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping 
+  schema="TEST"  
+  package="org.eclipse.ve.sweet2.hibernate">
+  
+  <class name="Person" table="PERSON">
+  
+    <id name="id" type="long" column="ID" >
+     <generator class="increment"/>
+    </id>
+
+    <property name="firstName">
+       <column name="FIRST_NAME" />
+    </property>
+    <property name="lastName">
+      <column name="LAST_NAME"/>
+    </property>
+    
+    <!-- manager is a many-to-one relationship -->
+    <many-to-one name="manager" column="MANAGER" cascade="none"/>
+  
+    <!--  Spouse is a one-to-one relationship using the samp PK for Person/Spouse --> 
+    <one-to-one name="db_spouse" class="Person$Spouse" cascade="none"/> 
+    
+    <!-- backups are a many-to-many relationship using an intermediate table -->
+    <set name="backups" table="PERSON_BACKUP" cascade="none">
+           <key column="PERSON_ID"/>
+           <many-to-many column="BACKUP_ID" class="Person"/>
+     </set>
+    
+    
+  </class>
+  
+  <class name="Person$Spouse" table="SPOUSE">
+    <id name="id" column="PERSON_ID" >
+       <!-- Spouse primary key should be the same of that of its person -->
+       <generator class="foreign">
+            <param name="property">person</param>
+       </generator>
+    </id>
+    
+    <!-- Bi direction for the one-to-one with Person  -->
+    <one-to-one name="person" class="Person" constrained="true" cascade="none"/>
+    
+    <!-- spouse in the SPOUSE table links a person to its SPOUSE 
+         This allows the Spouse record to be unique, and the 
+         SPOUSE column in Person to be optionally null at the same time -->
+    <many-to-one name="spouse" column="SPOUSE_ID" unique="true" cascade="none"/> 
+  
+  </class>
+</hibernate-mapping>
