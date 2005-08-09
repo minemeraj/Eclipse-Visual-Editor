@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.5 $  $Date: 2005-07-08 17:51:49 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-09 22:25:09 $ 
  */
 
 import java.awt.*;
@@ -22,6 +22,8 @@ import java.util.Hashtable;
 
 import org.eclipse.ve.internal.jfc.common.ImageDataConstants;
 import org.eclipse.jem.internal.proxy.common.*;
+import org.eclipse.jem.internal.proxy.common.remote.CommandErrorException;
+import org.eclipse.jem.internal.proxy.common.remote.Commands;
 
 /**
  * An AWT Image Consumer which will consume an AWT image
@@ -183,13 +185,21 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 						}								
 					}
 				} catch(final Throwable e) {
-					e.printStackTrace();
+					// If this is a callback not registered, don't bother with printing anything. This just means this request came
+					// in after a close of the component was started. So we don't care.
+					if (!(e instanceof CommandErrorException) || ((CommandErrorException) e).getErrorCode() != Commands.CALLBACK_NOT_REGISTERED)
+						e.printStackTrace();
 					try {
 						fVMServer.doCallback(new ICallbackRunnable() {
 							public Object run(ICallbackHandler handler) throws CommandException {
 								return handler.callbackWithParms(fCallbackID, ImageDataConstants.IMAGE_HAS_EXCEPTION, new Object[] {e});
 							}
 						});
+					} catch (CommandErrorException e1) {
+						// If this is a callback not registered, don't bother with printing anything. This just means this request came
+						// in after a close of the component was started. So we don't care.						
+						if (e1.getErrorCode() != Commands.CALLBACK_NOT_REGISTERED)
+							e.printStackTrace();
 					} catch (CommandException e1) {
 						e1.printStackTrace();
 					}						

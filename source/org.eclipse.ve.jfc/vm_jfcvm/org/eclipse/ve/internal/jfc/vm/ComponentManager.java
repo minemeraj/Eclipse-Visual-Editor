@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.vm;
 
 /*
  *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.9 $  $Date: 2005-07-08 17:51:49 $ 
+ *  $Revision: 1.10 $  $Date: 2005-08-09 22:25:09 $ 
  */
 
 import java.awt.*;
@@ -190,6 +190,11 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		
 		private boolean changesHeld;	// Changes are being queued.
 
+		// The event queue here is used solely to have the callbacks to the client run only on non-AWT event queue. All
+		// of the other queuing is done on the AWT event queue so that they are ordered correctly relative to the event queue.
+		// That is because all of the other queuing is AWT relative.
+		private GenericEventQueue callbackEventQueue = new GenericEventQueue("ComponentManager Feedback Controller callback event queue");
+		
 		private List transactions = new ArrayList(); // List of transactions to send.
 		private Map uniquesMap = new HashMap();	// Map of unique transactions (ComponentManager,ID, index in transactions array). (key and value the same object). Used to keep only the last unique one in list.
 		/*
@@ -273,6 +278,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 						if (fServer != null) {
 							// We're going down and there is no way to tell AWT Event queue to go away. So we just say we are shutting down.
 							fServer = null;
+							callbackEventQueue.close();
 						}
 					}
 				}
@@ -301,6 +307,13 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		 */
 		public void deregisterComponentManager(Component component) {
 			componentToComponentManagers.remove(component);
+		}
+		
+		/**
+		 * Post the callback.
+		 */
+		private void postCallback() {
+			callbackEventQueue.postEvent(this);
 		}
 
 		/**
@@ -360,7 +373,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 						}
 					}
 					queuedInvalidImages.clear();
-					ComponentManagerFeedbackController.this.run();
+					postCallback();
 				}
 			}
 		};
@@ -374,7 +387,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		public void postInvalidImages() {
 			if (queuedInvalidImages != null && !queuedInvalidImages.isEmpty()) {
 				// We have something to do, but queue it off to the AWT UI thread so that the validates are done on the UI thread.
-				// This will make sure most (but unforunately not all) size/location changes are grouped together and batched rather
+				// This will make sure most (but unfortunately not all) size/location changes are grouped together and batched rather
 				// than happening sporadically.
 				EventQueue.invokeLater(validateImages);
 			}
@@ -402,9 +415,9 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 				queueNow = !changesHeld;
 			}
 			if (queueNow)
-				EventQueue.invokeLater(this); // Queue up for later execution.
+				postCallback();
 		}
-
+		
 		/*
 		 * Append the transaction to the transaction list.
 		 * 
@@ -472,7 +485,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 							} 
 						}
 
-						ComponentManagerFeedbackController.this.run(); // Now send all of these back at one time.
+						postCallback(); // Now send all of these back at one time.
 					}
 				});
 			}
@@ -502,7 +515,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 			synchronized (this) {
 				changesHeld = false;
 			}
-			EventQueue.invokeLater(this);
+			postCallback();
 		}
 
 		/*
