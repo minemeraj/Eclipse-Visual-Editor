@@ -22,18 +22,17 @@ import org.eclipse.ve.sweet.test.Person;
  * This example shows a list of people and when one is selected it is editable within text fields showing the selected person
  */
 
-public class TestSweet5 {
+public class TestSweet_ListToTextEdit {
 	
 	public static void main(String[] args) {
 		
 		Display display = new Display();
 		Shell shell = new Shell(display);
 				
-		shell.setLayout(new GridLayout(2,false));
+		shell.setLayout(new GridLayout(2,true));
 		
 		ListViewer listViewer = new ListViewer(shell,SWT.BORDER);
 		GridData table_data = new GridData(GridData.FILL_HORIZONTAL);
-		table_data.horizontalSpan = 2;
 		table_data.heightHint = 100;
 		listViewer.getControl().setLayoutData(table_data);
 		listViewer.setContentProvider(new IStructuredContentProvider(){
@@ -69,23 +68,22 @@ public class TestSweet5 {
 		});
 		listViewer.setInput("Dummy");
 
-		Label separator = new Label(shell,SWT.SEPARATOR | SWT.HORIZONTAL);
-		GridData sep_data = new GridData(GridData.FILL_HORIZONTAL);
-		sep_data.horizontalSpan = 2;
-		separator.setLayoutData(sep_data);		
+		Composite c = new Composite(shell,SWT.NONE);
+		c.setLayout(new GridLayout(2,false));
+		c.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		Label nameLabel = new Label(shell,SWT.NONE);
+		Label nameLabel = new Label(c,SWT.NONE);
 		nameLabel.setText("Name: ");
 		
 		final IObjectBinder personBinder = ObjectBinder.createObjectBinder(Person.class);
 		
-		TextViewer nameTextViewer = new TextViewer(shell,SWT.BORDER);
+		TextViewer nameTextViewer = new TextViewer(c,SWT.BORDER);
 		nameTextViewer.setContentProvider(personBinder.getPropertyProvider("name"));
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		Label ageLabel = new Label(shell,SWT.NONE);
+		Label ageLabel = new Label(c,SWT.NONE);
 		ageLabel.setText("Age: ");
-		TextViewer ageTextViewer = new TextViewer(shell,SWT.BORDER);
+		TextViewer ageTextViewer = new TextViewer(c,SWT.BORDER);
 		ageTextViewer.setContentProvider(personBinder.getPropertyProvider("age"));
 		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
@@ -95,7 +93,7 @@ public class TestSweet5 {
 			}
 		});
 				
-		shell.setSize(300,300);
+		shell.setSize(500,200);
 		shell.open();
 		
 		while(!shell.isDisposed()){
