@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.54 $  $Date: 2005-08-08 20:40:06 $ 
+ *  $Revision: 1.55 $  $Date: 2005-08-09 17:22:44 $ 
  */
 
 
@@ -959,6 +959,8 @@ public void dispose() {
 	if(fSameLineExpressions.size()>1){
 		for (Iterator expItr = fSameLineExpressions.iterator(); expItr.hasNext();) {
 			CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+			if(exp==this)
+				continue;
 			List list = exp.getSameLineExpressions();
 			if(list!=null && list.contains(this))
 				list.remove(this);
