@@ -60,41 +60,48 @@ extracted the hibernate archive.</p>
 <p>We have used for this example the
 <a href="http://db.apache.org/derby/releases/release-10.1.1.0.html">Apache Derby 
 10.1.10</a> database (you may use a different database if you wish).&nbsp; You 
-will have to have a DB instance installed/running locally or remotely.&nbsp; An 
-instance of a Derby instance is running on <i>jvelinux.raleigh.ibm.com</i>.&nbsp; 
-If you are going to use this instance, you only need to have download Derby's 
-database's libraries, and can skip the DB schema configuration.&nbsp; Note: <i>
-jvelinux.raleigh.ibm.com</i> is inside the IBM firewall, and must be accessed 
-through a browser (for authentication) before it can be accessed by a DB client.&nbsp; 
-Point your browser to <a href="http://jvelinux.raleigh.ibm.com/JVELINUX/">
-http://jvelinux.raleigh.ibm.com/JVELINUX/</a>, and authenticate. <br>
+will have to have a database instance installed/running locally or remotely.&nbsp; 
+A Derby database instance is running on <i>jvelinux.raleigh.ibm.com</i>.&nbsp; 
+If you are going to use this instance, you only need to download Derby's 
+client libraries, and can skip the database schema configuration.&nbsp; <br>
 <img border="0" src="README4.gif"></p>
-<h4>Creating the TEST schema on the DB instance</h4>
-<p>Once you have a DB installed, you can create the following DB schema by 
+<p>Note: <i>
+jvelinux.raleigh.ibm.com</i> is inside the IBM firewall, and must be accessed 
+through a browser (for authentication) before it can be accessed by a database client.&nbsp; 
+Point your browser to <a href="http://jvelinux.raleigh.ibm.com/JVELINUX/">
+http://jvelinux.raleigh.ibm.com/JVELINUX/</a>, and authenticate.&nbsp; This 
+authentication is transient. </p>
+<h4>Creating the TEST schema on the database instance</h4>
+<p>Once you have a database installed, you need to create the following database schema by 
 running this <a href="TEST.sql">DDL script</a>.&nbsp; The data base has a PERSON 
-table, with a one-to-one, optional and unique relationship to another Person 
-using the SPOUSE table.&nbsp; A many-to-one manager relationship, and a 
-many-to-many backup relationship with other Persons.</p>
+table, with a one-to-one, optional and unique <i>spouse</i> relationship to another Person 
+using the SPOUSE table.&nbsp; A many-to-one <i>manager</i> relationship, and a 
+many-to-many <i>backup</i> relationship with other Persons.</p>
 <p><img border="0" src="README5.gif"></p>
 <p>&nbsp;</p>
 <h4>Configuration the Database Jars User Library</h4>
-<p>Similarly to the Hibernate User Library, this project will require you to 
-define a <i>DBclient</i> user library for that will point to the client jars 
-that will be needed to access the database. If you intend to use the Derby 
+<p>Similar to the Hibernate User Library configuration, this project will require you to 
+define a <i>DBclient</i> user library that points to a set of client jars 
+needed to access the database. If you intend to use the Derby 
 database, use the following two .jars from the <b>lib</b> directory that was 
-created by the derby archive: <i>derbyclient.jar</i>, and <i>derbytools.jar</i>.</p>
+created from the derby archive: <i>derbyclient.jar</i>, and <i>derbytools.jar</i>.</p>
 <p><img border="0" src="README6.jpg"></p>
 <p>&nbsp;</p>
 <h4>Configuring Hibernate to use a specific database</h4>
-<p>Now that your project contain all the Hibernate and database-client jars, you 
+<p>Now that your project contains all the Hibernate and database-client jars, you 
 will have to tell Hibernate what type database you are using, and where is it 
-(the URL).&nbsp; Hibernate's configuration file <a href="hibernate.cfg.xml">
+located at (the URL).&nbsp; Hibernate's configuration file <a href="hibernate.cfg.xml">
 hibernate.cfg.xml</a> is where this information is entered.&nbsp; The CVS 
-version of this file is set to work with the jvelinux.raleigh.ibm.com database 
-instance.&nbsp; You can change this by updating the <i>hibernate.connection.url
-</i>property<i>.</i>&nbsp; If you are not using the Derby DataBase, you will 
+version of this file is set to work with the jvelinux.raleigh.ibm.com Derby 
+database instance.&nbsp; You can modify it by updating the <i>hibernate.connection.url
+</i>property<i>.</i>&nbsp; If you are not using a Derby DataBase, you will 
 need to also change the client driver (<i>hibernate.connection.driver_class</i>), 
 and the database <i>dialect</i> property. </p>
+<p>&nbsp;</p>
+<h2>Running the Test Example</h2>
+<p>Run the <a href="Test.java">Test</a> class as a Java Application.&nbsp; This 
+example will delete existing Person instances (if there), re/create a set of 
+Person instances, read the database, and print out its content.</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 </body>
