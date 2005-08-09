@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYGridPropertiesPage.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-01 17:09:37 $ 
+ *  $Revision: 1.11 $  $Date: 2005-08-09 18:32:33 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -165,10 +165,6 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		Label widthLabel = new Label(fieldsGroup, SWT.NONE);
 		widthLabel.setText(CDEMessages.AlignmentXYGridPropertiesPage_width); 
 
-		data = new GridData();
-		data.widthHint = 40;
-		data.grabExcessHorizontalSpace = true;
-		widthLabel.setLayoutData(data);
 		// Grid width scale
 		fGridWidthScale = new Scale(fieldsGroup, SWT.HORIZONTAL);
 		fGridWidthScale.setMaximum(60);
@@ -176,7 +172,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		fGridWidthScale.setIncrement(1);
 		fGridWidthScale.setPageIncrement(10);
 		data = new GridData();
-		data.widthHint = 100;
+		data.widthHint = 120;
 		fGridWidthScale.setLayoutData(data);
 		fGridWidthScale.setSelection(gridController.getGridWidth());
 		fGridWidthScale.addSelectionListener(new SelectionAdapter() {
@@ -201,7 +197,6 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 			}
 		});
 		data = new GridData();
-		data.grabExcessHorizontalSpace = true;
 		data.widthHint = 40;
 		data.horizontalAlignment = GridData.END;
 		fGridWidthText.setLayoutData(data);
@@ -209,10 +204,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		// Grid height label
 		Label heightLabel = new Label(fieldsGroup, SWT.NONE);
 		heightLabel.setText(CDEMessages.AlignmentXYGridPropertiesPage_height); 
-		data = new GridData();
-		data.widthHint = 40;
-		data.grabExcessHorizontalSpace = true;
-		heightLabel.setLayoutData(data);
+
 		// Grid height scale
 		fGridHeightScale = new Scale(fieldsGroup, SWT.HORIZONTAL);
 		fGridHeightScale.setMaximum(60);
@@ -220,7 +212,7 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		fGridHeightScale.setIncrement(1);
 		fGridHeightScale.setPageIncrement(10);
 		data = new GridData();
-		data.widthHint = 100;
+		data.widthHint = 120;
 		fGridHeightScale.setLayoutData(data);
 		fGridHeightScale.setSelection(gridController.getGridHeight());
 		fGridHeightScale.addSelectionListener(new SelectionAdapter() {
@@ -246,24 +238,20 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		});
 		data = new GridData();
 		data.widthHint = 40;
-		data.grabExcessHorizontalSpace = true;
 		data.horizontalAlignment = GridData.END;
 		fGridHeightText.setLayoutData(data);
 
 		// Grid margin label
 		Label marginLabel = new Label(fieldsGroup, SWT.NONE);
 		marginLabel.setText(CDEMessages.AlignmentXYGridPropertiesPage_margin); 
-		data = new GridData();
-		data.widthHint = 40;
-		data.grabExcessHorizontalSpace = true;
-		marginLabel.setLayoutData(data);
+
 		// Grid margin scale
 		fGridMarginScale = new Scale(fieldsGroup, SWT.HORIZONTAL);
 		fGridMarginScale.setMaximum(30);
 		fGridMarginScale.setIncrement(1);
 		fGridMarginScale.setPageIncrement(5);
 		data = new GridData();
-		data.widthHint = 100;
+		data.widthHint = 120;
 		fGridMarginScale.setLayoutData(data);
 		fGridMarginScale.setSelection(gridController.getGridMargin());
 		fGridMarginScale.addSelectionListener(new SelectionAdapter() {
@@ -284,7 +272,6 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		});
 		data = new GridData();
 		data.widthHint = 40;
-		data.grabExcessHorizontalSpace = true;
 		data.horizontalAlignment = GridData.END;
 		fGridMarginText.setLayoutData(data);
 
@@ -293,7 +280,6 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 //		fMessageLine.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
 		data = new GridData();
 		data.horizontalAlignment = GridData.FILL;
-		data.grabExcessHorizontalSpace = true;
 		fMessageLine.setLayoutData(data);
 		fMessageLine.setText(""); //$NON-NLS-1$
 
