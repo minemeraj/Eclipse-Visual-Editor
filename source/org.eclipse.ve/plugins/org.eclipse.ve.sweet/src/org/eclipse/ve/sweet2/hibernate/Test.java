@@ -20,7 +20,7 @@ import org.hibernate.cfg.Configuration;
  *  Created Aug 2, 2005 by Gili Mendel
  * 
  *  $RCSfile: Test.java,v $
- *  $Revision: 1.1 $  $Date: 2005-08-09 20:23:23 $ 
+ *  $Revision: 1.2 $  $Date: 2005-08-09 20:58:44 $ 
  */
 /**
  * This class is a test that will delete all entries from the DataBase, Re-Create the
@@ -50,7 +50,7 @@ public class Test {
 	  */
 	 protected void beginTransaction(String msg) {
 		 _transactionMsg = msg;
-		 System.out.println("Starting Transaction: "+msg);
+		 System.out.println("\nStarting Transaction: "+msg);
 		 if (transaction!=null)
 			 throw new IllegalStateException();
 		 transaction = getSession().beginTransaction();
@@ -188,20 +188,21 @@ public class Test {
 
 	 public static void main(String[] args) {
 		    
-		    System.setProperty("commons-loggin.properties","/org/eclipse/ve/sweet2/hibernate/log4j.properties");
+		    // Hibernate utilizes log4j which requires a configuration file.
+		    System.setProperty("log4j.configuration","org/eclipse/ve/sweet2/hibernate/log4j.properties");
 		    Test t = new Test();
 		    try{
 		    	// This will delete/reCreate the person entries in the DB
 		    	// comment this line if you do not want to reCreate.
 		    	t.createDBEntries();
-		    	
+		    	System.out.println("\nRead all DataBase Entries:");
 		    	List pl = t.primGetPersonList();
 		    	for (Iterator iter = pl.iterator(); iter.hasNext();) {
 					Person p = (Person) iter.next();
 					System.out.println("\t"+p);
 					System.out.println("\t\tManager: "+p.getManager());
 					Person s = p.getSpouse();
-					System.out.println("\t\tSpouse:" + s);
+					System.out.println("\t\tSpouse: " + s);
 					System.out.println("\t\tBackups:");
 					if (p.getBackups()!=null)
 					   for (Iterator i = p.getBackups().iterator(); i.hasNext();) {
