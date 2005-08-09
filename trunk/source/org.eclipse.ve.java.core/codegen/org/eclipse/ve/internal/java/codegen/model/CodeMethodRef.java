@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.44 $  $Date: 2005-08-08 20:40:06 $ 
+ *  $Revision: 1.45 $  $Date: 2005-08-09 22:55:24 $ 
  */
 
 import java.util.*;
@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
@@ -52,7 +53,7 @@ protected   IBeanDeclModel			fModel = null ;
 protected   JCMMethod				fcompMethod = null ;
 protected	boolean					fgenerationRequired = false ;
 protected	boolean					fStaleOffset = false ;
-	
+private String[] 						fArgumentNames = null;
 
 
     public CodeMethodRef (MethodDeclaration method,CodeTypeRef tRef, String methodHandle,ISourceRange range, String content) {
@@ -82,6 +83,15 @@ protected void setDeclMethod(MethodDeclaration method){
 	fdeclMethod = method ;
 	if(fdeclMethod!=null){// && fMethod==null){
 		fMethodName = method.getName().getIdentifier();
+		List parameters = method.parameters();
+		fArgumentNames = null;
+		if(parameters!=null){
+			fArgumentNames = new String[parameters.size()];
+			for (int argCount = 0; argCount < parameters.size(); argCount++) {
+				SingleVariableDeclaration svd = (SingleVariableDeclaration) parameters.get(argCount);
+				fArgumentNames[argCount] = svd.getName().getFullyQualifiedName();
+			}
+		}
 	}
 }
 
@@ -1075,5 +1085,9 @@ public boolean refresh(CodeMethodRef cmr) {
 	if(cmr.getDeclMethod()!=null)
 		setDeclMethod(cmr.getDeclMethod());
 	return true;
+}
+
+public String[] getArgumentNames(){
+	return fArgumentNames;
 }
 }

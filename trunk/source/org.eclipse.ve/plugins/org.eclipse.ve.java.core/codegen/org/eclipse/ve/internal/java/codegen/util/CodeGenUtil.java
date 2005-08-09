@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.45 $  $Date: 2005-08-08 20:40:06 $ 
+ *  $Revision: 1.46 $  $Date: 2005-08-09 22:55:24 $ 
  */
 
 
@@ -935,13 +935,27 @@ public static BeanPart getBeanPart (IBeanDeclModel model, String name, CodeMetho
 	if (d!=null) {
 		// instance variable decleration
 	  	b = d.getBeanPart(m,expOffset);
-		// It is possible that the instance is declared in a different method.
 		if (b==null) {
-   		  BeanPart[] beans = d.getBeanParts();
-		  //TODO: we need to actually find the bean with an init method
-		  //      that calls this method
-		  if (beans.length>0)
-			  b = beans[0];
+			// No bean found in the method with the given name from the offset specified
+			// Currently we dont model arguments - check to see if it is a argument -
+			boolean isArgument = false;
+			String[] argNames = m.getArgumentNames();
+			if(argNames!=null){
+				for (int argCount = 0; argCount < argNames.length; argCount++) {
+					if(name.equals(argNames[argCount])){
+						isArgument = true;
+						break;
+					}
+				}
+			}
+			if (!isArgument) {
+					// It is possible that the instance is declared in a different method - like createComposite()
+					BeanPart[] beans = d.getBeanParts();
+					// TODO: we need to actually find the bean with an init method
+					// that calls this method
+					if (beans.length > 0)
+						b = beans[0];
+				}
 		}
 	}
 	if(b!=null && !b.isActive())
