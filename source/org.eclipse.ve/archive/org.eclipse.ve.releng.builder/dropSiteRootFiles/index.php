@@ -43,6 +43,10 @@
         All downloads are provided under the terms and conditions of the <a href="http://www.eclipse.org/legal/epl/notice.html">Eclipse Foundation Software User Agreement</a> unless otherwise specified. </p>
       <p> 
         For information about different kinds of builds look <a href="build_types.html">here</a>.</p>
+      <p>
+		<A href="http://archive.eclipse.org/tools/ve/downloads/">Archived
+		(older) builds can be found here.</A>
+      </p>
       </td>
   </tr>
   </table>
