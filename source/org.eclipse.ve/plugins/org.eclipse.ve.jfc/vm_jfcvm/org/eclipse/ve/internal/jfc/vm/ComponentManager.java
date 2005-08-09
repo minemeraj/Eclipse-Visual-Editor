@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.vm;
 
 /*
  *  $RCSfile: ComponentManager.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-09 22:25:09 $ 
+ *  $Revision: 1.11 $  $Date: 2005-08-09 22:51:06 $ 
  */
 
 import java.awt.*;
@@ -193,7 +193,7 @@ public class ComponentManager implements ComponentListener, HierarchyBoundsListe
 		// The event queue here is used solely to have the callbacks to the client run only on non-AWT event queue. All
 		// of the other queuing is done on the AWT event queue so that they are ordered correctly relative to the event queue.
 		// That is because all of the other queuing is AWT relative.
-		private GenericEventQueue callbackEventQueue = new GenericEventQueue("ComponentManager Feedback Controller callback event queue");
+		private GenericEventQueue callbackEventQueue = new GenericEventQueue(VisualVMMessages.getString("ComponentManager.CallbackQueueThreadTitle")); //$NON-NLS-1$
 		
 		private List transactions = new ArrayList(); // List of transactions to send.
 		private Map uniquesMap = new HashMap();	// Map of unique transactions (ComponentManager,ID, index in transactions array). (key and value the same object). Used to keep only the last unique one in list.

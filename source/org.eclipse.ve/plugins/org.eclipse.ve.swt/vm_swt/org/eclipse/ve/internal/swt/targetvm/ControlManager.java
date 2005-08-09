@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.20 $ $Date: 2005-07-08 17:51:50 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.21 $ $Date: 2005-08-09 22:51:05 $
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -225,10 +225,10 @@ public class ControlManager {
 			Class feedbackControllerClass;
 			if (SWT.getVersion() >= 3100) {
 				// It is 3.1 or greater. We can use the new one.
-				feedbackControllerClass = Class.forName("org.eclipse.ve.internal.swt.targetvm.ControlManagerFeedbackController_GreaterThan_30");
+				feedbackControllerClass = Class.forName("org.eclipse.ve.internal.swt.targetvm.ControlManagerFeedbackController_GreaterThan_30"); //$NON-NLS-1$
 			} else {
 				// It is 3.0.x. Need to use the old one.
-				feedbackControllerClass = Class.forName("org.eclipse.ve.internal.swt.targetvm.ControlManagerFeedbackController_30");
+				feedbackControllerClass = Class.forName("org.eclipse.ve.internal.swt.targetvm.ControlManagerFeedbackController_30"); //$NON-NLS-1$
 			}
 			Environment environment = Environment.getEnvironment(display);
 			Constructor ctor = feedbackControllerClass.getConstructor(new Class[] { Environment.class});
@@ -242,6 +242,12 @@ public class ControlManager {
 		protected Environment environment; 
 
 		private boolean changesHeld; // Changes are being queued.
+		
+		// The event queue here is used solely to have the callbacks to the client run only on non-Display event queue. All
+		// of the other queuing is done on the Display event queue so that they are ordered correctly relative to the event queue.
+		// That is because all of the other queuing is Display relative.
+		private GenericEventQueue callbackEventQueue = new GenericEventQueue(TargetVMMessages.getString("ControlManager.CallbackQueueThreadTitle")); //$NON-NLS-1$
+
 
 		private List transactions = new ArrayList(); // List of transactions to send.
 
@@ -357,6 +363,19 @@ public class ControlManager {
 		public void initializeCallback(IVMCallbackServer server, int callbackID) {
 			fServer = server;
 			fCallbackID = callbackID;
+			server.getIVMServer().addShutdownListener(new Runnable() {
+				
+				public void run() {
+					synchronized (transactions) {
+						if (fServer != null) {
+							// We're going down and there is no way to tell AWT Event queue to go away. So we just say we are shutting down.
+							fServer = null;
+							callbackEventQueue.close();
+						}
+					}
+				}
+			
+			});
 		}
 
 		/**
@@ -380,6 +399,13 @@ public class ControlManager {
 		 */
 		public void deregisterComponentManager(Control component) {
 			controlToControlManagers.remove(component);
+		}
+		
+		/**
+		 * Post the callback.
+		 */
+		private void postCallback() {
+			callbackEventQueue.postEvent(this);
 		}
 
 		/**
@@ -477,7 +503,7 @@ public class ControlManager {
 						}
 					}
 					queuedInvalidControls.clear();
-					ControlManagerFeedbackController.this.run();
+					postCallback();
 				}
 
 			}
@@ -518,7 +544,7 @@ public class ControlManager {
 				queueNow = !changesHeld;
 			}
 			if (queueNow)
-				getDisplay().asyncExec(this); // Queue up for later execution.
+				postCallback(); // Queue up for later execution.
 		}
 
 		/*
@@ -584,7 +610,7 @@ public class ControlManager {
 							}
 						}
 
-						ControlManagerFeedbackController.this.run(); // Now send all of these back at one time.
+						postCallback(); // Now send all of these back at one time.
 					}
 				});
 			}
@@ -612,7 +638,7 @@ public class ControlManager {
 			synchronized (this) {
 				changesHeld = false;
 			}
-			getDisplay().asyncExec(this);
+			postCallback();
 		}
 
 		/*
@@ -623,15 +649,19 @@ public class ControlManager {
 		public void run() {
 			// This should only be called through the event queue. It should not be called directly.
 			final Object[] trans;
+			IVMCallbackServer server = null;
 			synchronized (transactions) {
+				if (fServer == null)
+					return;	// We are shutdown.
 				if (transactions.isEmpty())
 					return; // Nothing to do.
 				trans = transactions.toArray();
 				transactions.clear();
 				uniquesMap.clear();
+				server = fServer;
 			}
 			try {
-				fServer.doCallback(new ICallbackRunnable() {
+				server.doCallback(new ICallbackRunnable() {
 
 					public Object run(ICallbackHandler handler) throws CommandException {
 						return handler.callbackWithParms(fCallbackID, Common.CL_TRANSACTIONS, trans);
