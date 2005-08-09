@@ -75,9 +75,10 @@ public class SimplePropertyProvider implements IPropertyProvider {
 		try {
 			isSettingValue = true;
 			if(fSource != null){
-				fSetMethod.invoke(fSource,new Object[] {getModelValue((String)value)});
+				Object modelValue = getModelValue((String)value);
+				fSetMethod.invoke(fSource,new Object[] {modelValue});
 				// Refresh binders so they can update the new value
-				objectBinder.propertyChanged(fPropertyName,value);
+				objectBinder.propertyChanged(fPropertyName,modelValue);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -169,6 +170,13 @@ public class SimplePropertyProvider implements IPropertyProvider {
 
 	public void setSource(Object aSource) {
 		fSource = aSource;
+		if(fTextControl != null){
+			fTextControl.setEnabled(aSource != null);
+		}
 		refreshUI();
+	}
+
+	public boolean isForProperty(String propertyName) {
+		return propertyName.equals(fPropertyName);
 	}	
 }

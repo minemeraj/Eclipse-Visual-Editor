@@ -16,6 +16,7 @@ public class TextViewer extends ContentViewer {
 	
 	public TextViewer(Composite parent, int styles){
 		text = new Text(parent,styles);
+		text.setEnabled(false);
 	}
 	
 	public Text getText(){
@@ -41,8 +42,9 @@ public class TextViewer extends ContentViewer {
 	public void setContentProvider(IContentProvider contentProvider) {
 		super.setContentProvider(contentProvider);
 		propertyProvider = (IPropertyProvider)contentProvider;
-		setInput(propertyProvider.getSource());
-
+		Object newSource = propertyProvider.getSource();
+		getText().setEnabled(newSource != null);
+		setInput(newSource);
 	}
 
 }

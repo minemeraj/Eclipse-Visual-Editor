@@ -26,8 +26,7 @@ public class TestSweet2 {
 		Label nameLabel = new Label(shell,SWT.NONE);
 		nameLabel.setText("Name: ");
 		final TextViewer nameTextViewer = new TextViewer(shell,SWT.BORDER);
-		nameTextViewer.setContentProvider(new IPropertyProvider(){
-			public void dispose() { }
+		nameTextViewer.setContentProvider(new AbstractPropertyProvider(){
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) { 
 				((TextViewer)viewer).getText().setText(((Person)newInput).getName());
 			}
@@ -36,16 +35,14 @@ public class TestSweet2 {
 			public void setValue(Object value) {
 				p.setName((String) value);
 			}
-			public Object getSource() {
-				return p;
-			}
 			public void refreshUI() {
 				nameTextViewer.getText().setText(p.getName());
 			}
 			public void refreshDomain() {
 				p.setName(nameTextViewer.getText().getText());
 			}
-			public void setSource(Object aSource) {				
+			public boolean isForProperty(String propertyName) {
+				return "name".equals(propertyName);
 			}
 		});
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -53,7 +50,7 @@ public class TestSweet2 {
 		Label ageLabel = new Label(shell,SWT.NONE);
 		ageLabel.setText("Age: ");
 		final TextViewer ageTextViewer = new TextViewer(shell,SWT.BORDER);
-		ageTextViewer.setContentProvider(new IPropertyProvider(){
+		ageTextViewer.setContentProvider(new AbstractPropertyProvider(){
 			public void dispose() { }
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) { 
 				((TextViewer)viewer).getText().setText(String.valueOf(((Person)newInput).getAge()));
@@ -64,16 +61,14 @@ public class TestSweet2 {
 			public void setValue(Object value) {
 				p.setAge( ((Integer)value).intValue());
 			}
-			public Object getSource() {
-				return p;
-			}
 			public void refreshUI() {
 				ageTextViewer.getText().setText(String.valueOf(p.getAge()));
 			}
 			public void refreshDomain() {
 				p.setAge(new Integer(ageTextViewer.getText().getText()).intValue());
 			}
-			public void setSource(Object aSource) {				
+			public boolean isForProperty(String propertyName) {
+				return "age".equals("propertyName");
 			}
 		});
 		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

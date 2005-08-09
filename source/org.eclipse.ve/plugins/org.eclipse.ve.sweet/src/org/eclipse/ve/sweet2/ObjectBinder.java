@@ -80,7 +80,10 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		isSignallingChange = true;
 		Iterator iter = binders.iterator();
 		while(iter.hasNext()){
-			((IPropertyProvider)iter.next()).refreshUI();
+			IPropertyProvider propertyProvider = (IPropertyProvider)iter.next(); 
+			if(propertyProvider.isForProperty(propertyName)){
+				propertyProvider.refreshUI();
+			}
 		}
 		isSignallingChange = false;
 	}
