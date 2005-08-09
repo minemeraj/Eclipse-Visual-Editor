@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceMethodVisitor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-05-31 15:33:51 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-09 22:53:08 $ 
  */
 package org.eclipse.ve.internal.jface.codegen;
 
@@ -49,11 +49,8 @@ public class JFaceMethodVisitor extends MethodVisitor {
 
 	protected void createParamBeanPart(SingleVariableDeclaration svd, IBeanDeclModel model, MethodDeclaration method) {
 		// If bean has been created by earlier visits to the source - ignore further creation
-		if(model.getABean(svd.getName().getFullyQualifiedName())!=null)
-			return;
-		
-		// Determine init method
-		CodeMethodRef initMethod = fMethod;
+		String beanHandle = BeanPartDecleration.createDeclerationHandle(fMethod, svd.getName().getFullyQualifiedName());
+		BeanPartDecleration bpDecl = model.getModelDecleration(beanHandle);
 		
 		// Create the 'Statement' AST node as we cannot handle non-statement expressions
 		AST ast = svd.getAST();
@@ -65,15 +62,20 @@ public class JFaceMethodVisitor extends MethodVisitor {
 		varDeclFragment.setName((SimpleName) ASTNode.copySubtree(ast, svd.getName()));
 		VariableDeclarationStatement varDeclStatement = ast.newVariableDeclarationStatement(varDeclFragment);
 		varDeclStatement.setType((Type) ASTNode.copySubtree(ast, svd.getType()));
-		WorkbenchPartArgumentCodegenHelper helper = new WorkbenchPartArgumentCodegenHelper("delegate_control", svd);
-		varDeclStatement.setProperty(IMethodArgumentCodegenHelper.KEY_METHODARGUMENT_CODEGENHELPER, helper);
 		varDeclStatement.setSourceRange(svd.getStartPosition(), svd.getLength());
 		
+		WorkbenchPartArgumentCodegenHelper helper = new WorkbenchPartArgumentCodegenHelper("delegate_control", svd);
+		varDeclStatement.setProperty(IMethodArgumentCodegenHelper.KEY_METHODARGUMENT_CODEGENHELPER, helper);
+		
+		
+		// Determine init method
+		CodeMethodRef initMethod = fMethod;
 		
 		// Create the bean part
-		BeanPartDecleration decl = new BeanPartDecleration(varDeclStatement) ; //$NON-NLS-1$
-		decl.setDeclaringMethod(initMethod);
-		BeanPart bp = new BeanPart(decl);			
+		if(bpDecl==null)
+			bpDecl = new BeanPartDecleration(varDeclStatement) ; //$NON-NLS-1$
+		bpDecl.setDeclaringMethod(initMethod);
+		BeanPart bp = new BeanPart(bpDecl);			
 		model.addBean(bp) ;
 
 		bp.addInitMethod(initMethod);
