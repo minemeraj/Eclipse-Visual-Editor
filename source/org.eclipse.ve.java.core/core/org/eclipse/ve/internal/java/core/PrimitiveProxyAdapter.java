@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: PrimitiveProxyAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-06-22 21:05:23 $ 
+ *  $Revision: 1.12 $  $Date: 2005-08-10 15:47:15 $ 
  */
 
 import java.util.*;
@@ -322,10 +322,19 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IInternalBeanP
 			}
 		}
 		if (beanProxy.isExpressionProxy()) {
-			((ExpressionProxy) beanProxy).addProxyListener(new ExpressionProxy.ProxyAdapter() {
+			((ExpressionProxy) beanProxy).addProxyListener(new ExpressionProxy.ProxyListener() {
 				public void proxyResolved(ProxyEvent event) {
 					beanProxy = event.getProxy();	// We have it! So save it.
 				}
+
+				public void proxyNotResolved(ProxyEvent event) {
+					beanProxy = null;
+				}
+
+				public void proxyVoid(ProxyEvent event) {
+					beanProxy = null;
+				}
+				
 			});
 		}
 
