@@ -25,10 +25,10 @@ public class TestSweet2 {
 		
 		Label nameLabel = new Label(shell,SWT.NONE);
 		nameLabel.setText("Name: ");
-		final TextViewer nameTextViewer = new TextViewer(shell,SWT.BORDER);
+		final TextEditor nameTextViewer = new TextEditor(shell,SWT.BORDER);
 		nameTextViewer.setContentProvider(new AbstractPropertyProvider(){
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) { 
-				((TextViewer)viewer).getText().setText(((Person)newInput).getName());
+				((TextEditor)viewer).getText().setText(((Person)newInput).getName());
 			}
 			public Object getValue() {
 				return p.getName();			}
@@ -49,11 +49,11 @@ public class TestSweet2 {
 		
 		Label ageLabel = new Label(shell,SWT.NONE);
 		ageLabel.setText("Age: ");
-		final TextViewer ageTextViewer = new TextViewer(shell,SWT.BORDER);
+		final TextEditor ageTextViewer = new TextEditor(shell,SWT.BORDER);
 		ageTextViewer.setContentProvider(new AbstractPropertyProvider(){
 			public void dispose() { }
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) { 
-				((TextViewer)viewer).getText().setText(String.valueOf(((Person)newInput).getAge()));
+				((TextEditor)viewer).getText().setText(String.valueOf(((Person)newInput).getAge()));
 			}
 			public Object getValue() {
 				return new Integer(p.getAge());

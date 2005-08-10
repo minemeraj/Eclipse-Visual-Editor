@@ -10,7 +10,6 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 	private Object source;
 	private Class receiverClass;
 	private List binders = new ArrayList();
-	private int commitPolicy;
 	private boolean isSignallingChange;
 
 	public static IObjectBinder createObjectBinder(Object source) {
@@ -86,14 +85,6 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 			}
 		}
 		isSignallingChange = false;
-	}
-
-	public void setCommitPolicy(int aCommitPolicy) {
-		commitPolicy = aCommitPolicy;
-	}
-
-	public int getCommitPolicy() {
-		return commitPolicy;
 	}
 
 	public void commit() {
