@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentManager.java,v $ $Revision: 1.13 $ $Date: 2005-07-12 21:08:24 $
+ * $RCSfile: ComponentManager.java,v $ $Revision: 1.14 $ $Date: 2005-08-10 15:47:16 $
  */
 
 import java.io.InputStream;
@@ -778,7 +778,8 @@ public class ComponentManager implements ComponentManagerFeedbackControllerNotif
 	 * @since 1.1.0
 	 */
 	public void invalidate(ModelChangeController controller) {
-		getFeedbackController().queueInvalidate(this, controller);
+		if (!isDisposed())
+			getFeedbackController().queueInvalidate(this, controller);
 	}
 
 	/**
@@ -909,7 +910,7 @@ public class ComponentManager implements ComponentManagerFeedbackControllerNotif
 	public void refreshImage() {
 		// Don't do refresh if we have image support or listeners yet. Waste of time in that case.
 		// Don't do refresh if we don't have a valid component to get an image of.
-		if (imSupport != null && imSupport.hasImageListeners() && fComponentBeanProxy.isBeanProxy() && ((IBeanProxy) fComponentBeanProxy).isValid()) {
+		if (imSupport != null && imSupport.hasImageListeners() && fComponentBeanProxy != null && fComponentBeanProxy.isBeanProxy() && ((IBeanProxy) fComponentBeanProxy).isValid()) {
 			// Need to capture validity before going in and start because there would be a deadlock while
 			// waiting for completion because it would tie up "this" while DataCollectedRunnable would also
 			// try to synchronize on "this" and it couldn't because we had and are waiting in waitForCompletion.

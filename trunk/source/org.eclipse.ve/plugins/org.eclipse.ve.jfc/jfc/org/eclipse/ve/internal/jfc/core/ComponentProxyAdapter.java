@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.27 $  $Date: 2005-07-08 18:35:34 $ 
+ *  $Revision: 1.28 $  $Date: 2005-08-10 15:47:16 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -124,31 +124,55 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 		notInstantiatedClasses.add(thisClass);
 		JavaClass superclass = thisClass.getSupertype();
 		while (superclass != null && superclass.isAbstract()) {
-			if ("java.awt.Component".equals(superclass.getQualifiedName()))
-				return getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.ConcreteComponent", expression);
+			if ("java.awt.Component".equals(superclass.getQualifiedName())) //$NON-NLS-1$
+				return getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.ConcreteComponent", expression); //$NON-NLS-1$
 			notInstantiatedClasses.add(superclass);
 			superclass = superclass.getSupertype();
 		}
 		if (superclass != null)
 			return getBeanTypeProxy(superclass.getQualifiedNameForReflection(), expression);
 		else
-			return getBeanTypeProxy("java.lang.Object", expression);
+			return getBeanTypeProxy("java.lang.Object", expression); //$NON-NLS-1$
 	}
 
-	protected IProxy primInstantiateThisPart(IProxyBeanType targetClass, IExpression expression) throws AllocationException {
+	protected final IProxy primInstantiateThisPart(IProxyBeanType targetClass, IExpression expression) throws AllocationException {
 		preInstantiateStuff(expression);
-		IProxy newbean = super.primInstantiateThisPart(targetClass, expression);
+		IProxy newbean = primPrimInstantiatedThisPart(targetClass, expression);
 		
 		postInstantiateStuff(expression, newbean);
 		return newbean;
-
 	}
 	
-	protected IProxy primInstantiateDroppedPart(IExpression expression) throws AllocationException {
+	/**
+	 * Override this to do non-standard prim instantiate this part.
+	 * @param targetClass
+	 * @param expression
+	 * @return
+	 * @throws AllocationException
+	 * 
+	 * @since 1.1.0.1
+	 */
+	protected IProxy primPrimInstantiatedThisPart(IProxyBeanType targetClass, IExpression expression) throws AllocationException {
+		return super.primInstantiateThisPart(targetClass, expression);
+	}
+	
+	protected final IProxy primInstantiateDroppedPart(IExpression expression) throws AllocationException {
 		preInstantiateStuff(expression);
-		IProxy newbean = super.primInstantiateDroppedPart(expression);
+		IProxy newbean = primPrimInstantiateDroppedPart(expression);
 		postInstantiateStuff(expression, newbean);
 		return newbean;
+	}
+	
+	/**
+	 * Override this to do non-standard prim instantiate dropped part.
+	 * @param expression
+	 * @return
+	 * @throws AllocationException
+	 * 
+	 * @since 1.1.0.1
+	 */
+	protected IProxy primPrimInstantiateDroppedPart(IExpression expression) throws AllocationException {
+		return super.primInstantiateDroppedPart(expression);
 	}
 
 	/**

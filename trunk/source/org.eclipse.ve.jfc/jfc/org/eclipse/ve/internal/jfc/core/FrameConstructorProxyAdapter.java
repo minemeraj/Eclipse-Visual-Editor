@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2005-06-22 21:05:25 $ 
+ *  $Revision: 1.14 $  $Date: 2005-08-10 15:47:16 $ 
  */
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 		super(domain);
 	}
 
-	protected IProxy primInstantiateDroppedPart(IExpression expression) throws AllocationException {
+	protected IProxy primPrimInstantiateDroppedPart(IExpression expression) throws AllocationException {
 		// Override to see if the allocation has a "new java.awt.Frame" in it. If it does, we need to
 		// grab that frame so that we can dispose it later.
 		// TODO This is really a bad way to do this. We should never have a temporary like this.
@@ -69,7 +69,7 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 			}
 		}
 
-		return super.primInstantiateDroppedPart(expression);
+		return super.primPrimInstantiateDroppedPart(expression);
 	}
 
 	/*
@@ -77,10 +77,9 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 	 * 
 	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#primInstantiateThisPart(org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
-	protected IProxy primInstantiateThisPart(IExpression expression) {
+	protected IProxy primPrimInstantiatedThisPart(IProxyBeanType targetClass, IExpression expression) {
 		// We need to override so that we can generate the fake Frame that is required for Dialogs.
 		// We are assuming that we find a class that has a constructor with only Frame for a parent.
-		IProxyBeanType targetClass = getValidSuperClass(expression);
 
 		disposeParentOnRelease = true;
 		IProxy result = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
