@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.48 $  $Date: 2005-07-22 16:54:29 $ 
+ *  $Revision: 1.49 $  $Date: 2005-08-10 19:42:32 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -1989,8 +1989,8 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 			if (overrideSettings == null || !overrideSettings.containsKey(aBeanPropertyFeature)) {
 				return primGetBeanProperyProxyValue(getProxy(), Utilities.getPropertyDecorator(aBeanPropertyFeature), expression, forExpression);
 			} else {
-				// We have an existing override.
-				return (IProxy) overrideSettings.get(aBeanPropertyFeature);
+				// We have an existing override. Get the original setting. Don't want to see the override.
+				return isSettingInOriginalSettingsTable(aBeanPropertyFeature) ? (IProxy) getOriginalSettingsTable().get(aBeanPropertyFeature) : null;
 			}
 		}
 		return null;
