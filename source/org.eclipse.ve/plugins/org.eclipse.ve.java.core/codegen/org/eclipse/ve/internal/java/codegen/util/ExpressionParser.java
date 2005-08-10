@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-08 20:40:06 $ 
+ *  $Revision: 1.10 $  $Date: 2005-08-10 17:08:34 $ 
  */
 
 import java.util.*;
@@ -593,6 +593,14 @@ public static List getExpressionsOnSameLine(CodeExpressionRef expRef, CodeMethod
 			
 			if(fromExp==toExp || methodExp.getOffset()<0)
 				continue; //
+			
+			if((methodExp.getOffset() == fromExp.getOffset()) &&
+				(fromExp.getCodeContent()!=null && fromExp.getCodeContent().equals(methodExp.getCodeContent()))){
+				boolean isFromExpEvent = fromExp instanceof CodeEventRef;
+				boolean isMethodExpEvent = methodExp instanceof CodeEventRef;
+				if(isFromExpEvent!=isMethodExpEvent) // if contents/offsets are same and only type of exp is different (event/nonevent) - ignore
+					continue;
+			}
 			
 			if(fromExp.getOffset() > toExp.getOffset()){
 				CodeExpressionRef tmpExp = fromExp;
