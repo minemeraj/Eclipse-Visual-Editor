@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.55 $  $Date: 2005-08-09 17:22:44 $ 
+ *  $Revision: 1.56 $  $Date: 2005-08-10 19:43:06 $ 
  */
 
 
@@ -140,7 +140,7 @@ public CodeMethodRef getMethod()  {
 
 
 public VEexpressionPriority getPriority(){
-	if (isStateSet(STATE_DELETE|STATE_NO_MODEL))
+	if (isStateSet(STATE_DELETE) || isStateSet(STATE_NO_MODEL))
 		return IJavaFeatureMapper.NOPriority;
 	
 	return primGetDecoder().determinePriority();
