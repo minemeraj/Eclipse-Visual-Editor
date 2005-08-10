@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.142 $  $Date: 2005-07-21 23:42:03 $ 
+ *  $Revision: 1.143 $  $Date: 2005-08-10 18:40:25 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -21,8 +21,7 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
@@ -343,6 +342,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}			
 		});
 			
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceListener, IResourceChangeEvent.PRE_DELETE);
 		super.init(site, input);
 	}
 	
@@ -1208,6 +1208,24 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			}
 		}
 	};
+	
+	/*
+	 * Need to listen for pre_delete because they could occur BEFORE we are
+	 * told to close or change to new input (for a rename of project, which is a delete old/open new).
+	 * We would keep the registry open which would lock the delete from occurring.
+	 */
+	private IResourceChangeListener resourceListener = new IResourceChangeListener(){
+	
+		public void resourceChanged(IResourceChangeEvent event) {
+			if (proxyFactoryRegistry != null && event.getType() == IResourceChangeEvent.PRE_DELETE && event.getResource().equals(((IFileEditorInput)getEditorInput()).getFile().getProject())) {
+				// We are about to be deleted. Close the registry so that we don't hold onto it. But remove listener first so no
+				// notification to us occurs (we don't want to restart it, that will happen when the new file input is sent in later).
+				proxyFactoryRegistry.removeRegistryListener(registryListener);
+				proxyFactoryRegistry.terminateRegistry(true);	// We need to wait so that we are sure it is gone before we let the delete occur.
+			}
+		}
+	
+	};
 
 	private int recycleCntr = 0; // A counter to handle pre-mature terminations. We don't want to keep recycling if it keeps going down.
 	private boolean restartVMNeeded = false;
@@ -1233,6 +1251,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		TimerTests.basicTest.clearTests();	// Clear any outstanding because we want to test only dispose time.
 		try {
 			TimerTests.basicTest.startStep("Dispose"); //$NON-NLS-1$
+			ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceListener, IResourceChangeEvent.PRE_DELETE);
 			JavaVisualEditorVMController.disposeEditor(((IFileEditorInput) getEditorInput()).getFile());
 			reloadActionController.dispose();
 			
