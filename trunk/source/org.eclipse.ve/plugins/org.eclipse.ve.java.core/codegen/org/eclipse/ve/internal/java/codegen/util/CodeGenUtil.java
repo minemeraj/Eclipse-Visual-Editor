@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.46 $  $Date: 2005-08-09 22:55:24 $ 
+ *  $Revision: 1.47 $  $Date: 2005-08-10 17:09:18 $ 
  */
 
 
@@ -1084,7 +1084,7 @@ public static Collection getReferences(Object o, boolean includeO) {
 					    if (bp!=null)
 					    	  bps.add(bp);
 					    else {
-					    	if (obj.isSetAllocation()) {
+					    	if (obj!=null && obj.isSetAllocation()) {
 					    		JavaAllocation alloc = obj.getAllocation();
 					    		if (alloc instanceof ParseTreeAllocation)
 					    			((ParseTreeAllocation) alloc).getExpression().accept(this);
