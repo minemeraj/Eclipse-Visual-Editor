@@ -112,30 +112,10 @@ public class SimplePropertyProvider implements IPropertyProvider {
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if(isSettingValue) return;
 		isSettingValue = true;		
-		TextViewer textViewer = (TextViewer)viewer;
+		TextEditor textViewer = (TextEditor)viewer;
+		fTextControl = textViewer.getText();	//TODO - Deal with view changing
 		textViewer.getText().setText(getStringValue());	
-		if(fTextControl != textViewer.getText()){
-			fTextControl = textViewer.getText();			
-			switch (objectBinder.getCommitPolicy()) {
-			case IObjectBinder.COMMIT_MODIFY:
-				fTextControl.addModifyListener(new ModifyListener(){
-					public void modifyText(ModifyEvent e) {
-						refreshDomain();
-					}
-				});
-				break;
-			case IObjectBinder.COMMIT_FOCUS:
-				fTextControl.addFocusListener(new FocusAdapter(){
-					public void focusLost(FocusEvent e) {
-						refreshDomain();						
-					};
-				});
-			    break;
-			default:
-				break;
-			}
-			isSettingValue = false;			
-		}
+		isSettingValue = false;			
 	}
 	
 	private Object fromStringValue(String string) {
@@ -165,7 +145,9 @@ public class SimplePropertyProvider implements IPropertyProvider {
 	}
 
 	public void refreshDomain() {
-		setValue(fTextControl.getText());
+		if(fTextControl != null){
+			setValue(fTextControl.getText());
+		}
 	}
 
 	public void setSource(Object aSource) {

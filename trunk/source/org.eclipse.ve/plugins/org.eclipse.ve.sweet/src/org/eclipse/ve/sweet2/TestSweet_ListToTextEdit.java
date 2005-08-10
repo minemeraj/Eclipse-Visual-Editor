@@ -1,5 +1,7 @@
 package org.eclipse.ve.sweet2;
 
+import java.util.EventObject;
+
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -7,6 +9,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
@@ -48,22 +51,10 @@ public class TestSweet_ListToTextEdit {
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		});
-		listViewer.setLabelProvider(new ILabelProvider(){
-			public Image getImage(Object element) {
-				return null;
-			}
+		listViewer.setLabelProvider(new LabelProvider(){
 			public String getText(Object element) {
 				Person p = (Person)element;
 				return p.getName() + "  -  " + p.getAge();
-			}
-			public void addListener(ILabelProviderListener listener) {				
-			}
-			public void dispose() {				
-			}
-			public boolean isLabelProperty(Object element, String property) {
-				return false;
-			}
-			public void removeListener(ILabelProviderListener listener) {				
 			}
 		});
 		listViewer.setInput("Dummy");
@@ -77,13 +68,13 @@ public class TestSweet_ListToTextEdit {
 		
 		final IObjectBinder personBinder = ObjectBinder.createObjectBinder(Person.class);
 		
-		TextViewer nameTextViewer = new TextViewer(c,SWT.BORDER);
+		TextEditor nameTextViewer = new TextEditor(c,SWT.BORDER);
 		nameTextViewer.setContentProvider(personBinder.getPropertyProvider("name"));
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Label ageLabel = new Label(c,SWT.NONE);
 		ageLabel.setText("Age: ");
-		TextViewer ageTextViewer = new TextViewer(c,SWT.BORDER);
+		TextEditor ageTextViewer = new TextEditor(c,SWT.BORDER);
 		ageTextViewer.setContentProvider(personBinder.getPropertyProvider("age"));
 		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		

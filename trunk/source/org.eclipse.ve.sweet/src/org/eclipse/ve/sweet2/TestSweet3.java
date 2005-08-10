@@ -25,13 +25,13 @@ public class TestSweet3 {
 		
 		Label nameLabel = new Label(shell,SWT.NONE);
 		nameLabel.setText("Name: ");
-		TextViewer nameTextViewer = new TextViewer(shell,SWT.BORDER);
+		TextEditor nameTextViewer = new TextEditor(shell,SWT.BORDER);
 		nameTextViewer.setContentProvider(PropertyProvider.getPropertyProvider(p,"name"));
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Label ageLabel = new Label(shell,SWT.NONE);
 		ageLabel.setText("Age: ");
-		TextViewer ageTextViewer = new TextViewer(shell,SWT.BORDER);
+		TextEditor ageTextViewer = new TextEditor(shell,SWT.BORDER);
 		ageTextViewer.setContentProvider(PropertyProvider.getPropertyProvider(p,"age"));
 		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		

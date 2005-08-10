@@ -68,7 +68,7 @@ public class PropertyProvider implements InvocationHandler {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		TextViewer textViewer = (TextViewer)viewer;
+		TextEditor textViewer = (TextEditor)viewer;
 		textViewer.getText().setText(getStringValue());
 	}
 

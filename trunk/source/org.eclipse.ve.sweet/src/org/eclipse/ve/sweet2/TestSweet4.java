@@ -27,37 +27,36 @@ public class TestSweet4 {
 		
 		final Person p = new Person("John Doe",35);
 		final IObjectBinder personBinder = ObjectBinder.createObjectBinder(p);
-//		personBinder.setCommitPolicy(IObjectBinder.COMMIT_MODIFY);		
-//		personBinder.setCommitPolicy(IObjectBinder.COMMIT_FOCUS);
-		personBinder.setCommitPolicy(IObjectBinder.COMMIT_EXPLICIT);
 		
 		shell.setLayout(new GridLayout(2,false));
 		
 		Label nameLabel = new Label(shell,SWT.NONE);
 		nameLabel.setText("Name: ");
 		
-		final TextViewer nameTextViewer = new TextViewer(shell,SWT.BORDER);
+		final TextEditor nameTextViewer = new TextEditor(shell,SWT.BORDER);
+		nameTextViewer.setUpdatePolicy(Editor.COMMIT_MODIFY);
 		nameTextViewer.setContentProvider(personBinder.getPropertyProvider("name"));
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Label ageLabel = new Label(shell,SWT.NONE);
 		ageLabel.setText("Age: ");
-		final TextViewer ageTextViewer = new TextViewer(shell,SWT.BORDER);
+		final TextEditor ageTextViewer = new TextEditor(shell,SWT.BORDER);
+		ageTextViewer.setUpdatePolicy(Editor.COMMIT_MODIFY);
 		ageTextViewer.setContentProvider(personBinder.getPropertyProvider("age"));
 		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		// If using explicit commit then create a button for this
-		if(personBinder.getCommitPolicy() == IObjectBinder.COMMIT_EXPLICIT){
-			Button commitButton = new Button(shell,SWT.PUSH);
-			commitButton.setText("Commit");
-			Label separator = new Label(shell,SWT.NONE);
-			commitButton.addSelectionListener(new SelectionAdapter(){
-				public void widgetSelected(SelectionEvent e) {
-					((IPropertyProvider)nameTextViewer.getContentProvider()).refreshDomain();
-					((IPropertyProvider)ageTextViewer.getContentProvider()).refreshDomain();					
-				}				
-			});
-		}
+//		if(personBinder.getRefreshPolicy() == IObjectBinder.COMMIT_EXPLICIT){
+//			Button commitButton = new Button(shell,SWT.PUSH);
+//			commitButton.setText("Commit");
+//			Label separator = new Label(shell,SWT.NONE);
+//			commitButton.addSelectionListener(new SelectionAdapter(){
+//				public void widgetSelected(SelectionEvent e) {
+//					((IPropertyProvider)nameTextViewer.getContentProvider()).refreshDomain();
+//					((IPropertyProvider)ageTextViewer.getContentProvider()).refreshDomain();					
+//				}				
+//			});
+//		}
 		
 		Label separator = new Label(shell,SWT.SEPARATOR | SWT.HORIZONTAL);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -67,14 +66,14 @@ public class TestSweet4 {
 		// Have a copy of the name field to show that notification works between the two
 		Label nameLabel_2 = new Label(shell,SWT.NONE);
 		nameLabel_2.setText("Name: ");		
-		TextViewer nameTextViewer_2 = new TextViewer(shell,SWT.BORDER);
+		TextEditor nameTextViewer_2 = new TextEditor(shell,SWT.BORDER);
 		nameTextViewer_2.setContentProvider(personBinder.getPropertyProvider("name"));
 		nameTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		// Have a copy of the age field to show that notification works between the two
 		Label ageLabel_2 = new Label(shell,SWT.NONE);
 		ageLabel_2.setText("Age: ");
-		TextViewer ageTextViewer_2 = new TextViewer(shell,SWT.BORDER);
+		TextEditor ageTextViewer_2 = new TextEditor(shell,SWT.BORDER);
 		ageTextViewer_2.setContentProvider(personBinder.getPropertyProvider("age"));
 		ageTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
