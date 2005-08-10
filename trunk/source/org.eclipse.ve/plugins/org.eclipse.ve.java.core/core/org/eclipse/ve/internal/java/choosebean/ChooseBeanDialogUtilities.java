@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialogUtilities.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-21 22:32:23 $ 
+ *  $Revision: 1.4 $  $Date: 2005-08-10 23:12:42 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -18,8 +18,8 @@ import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
@@ -27,16 +27,18 @@ import org.eclipse.jdt.internal.corext.util.TypeInfo;
 import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cdm.Annotation;
+
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
+import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
-import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.PrototypeFactory;
 import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
-import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
  
 /**
  * 
@@ -241,9 +243,17 @@ public class ChooseBeanDialogUtilities {
 
 	public static void setBeanName(EObject obj, String name, EditDomain ed){
 		if(obj!=null) {
-			RuledCommandBuilder commandBuilder = new RuledCommandBuilder(ed);
-			commandBuilder.append(BeanUtilities.getSetBeanNameCommand((IJavaInstance)obj,name, ed));
-			commandBuilder.getCommand().execute();
+			AnnotationLinkagePolicy policy = ed.getAnnotationLinkagePolicy();
+			Annotation annotation = policy.getAnnotation(obj);
+			if(annotation==null)
+				annotation = AnnotationPolicy.createAnnotation(obj);
+			
+			EStringToStringMapEntryImpl sentry = (EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
+			sentry.setKey(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+			sentry.setValue(name);
+			annotation.getKeyedValues().add(sentry);
+			
+			policy.setModelOnAnnotation(obj, annotation);
 		}
 	}
 	
