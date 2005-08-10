@@ -1,4 +1,10 @@
                                  Sweet README
+                                 
+In order to remove the compile error from the hibernate based
+examples, you will need to create two User 
+Libraries in your Eclipse preference configuration: Hibernate, DBclient
+see src\org\eclipse\ve\sweet2\hibernate\README.html for more information.
+
 
 What is Sweet?
 
