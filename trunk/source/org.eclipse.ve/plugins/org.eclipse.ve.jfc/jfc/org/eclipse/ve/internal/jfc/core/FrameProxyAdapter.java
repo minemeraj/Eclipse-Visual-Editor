@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FrameProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-24 16:45:10 $ 
+ *  $Revision: 1.7 $  $Date: 2005-08-10 19:42:33 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -86,7 +86,7 @@ public class FrameProxyAdapter extends WindowProxyAdapter {
 	public IProxy getBeanPropertyProxyValue(EStructuralFeature aBeanPropertyAttribute, IExpression exp, ForExpression forExpression) {
 		if (aBeanPropertyAttribute == sfTitle && isSettingInOriginalSettingsTable(aBeanPropertyAttribute)) {
 			// This is title, it was not explicitly set, and we have an original settings, so return that instead of
-			// default string we use as a title.
+			// default string we use as a title. (Note: we would not be here if explicitly set).
 			return (IProxy) getOriginalSettingsTable().get(aBeanPropertyAttribute);
 		}
 		return super.getBeanPropertyProxyValue(aBeanPropertyAttribute, exp, forExpression);
