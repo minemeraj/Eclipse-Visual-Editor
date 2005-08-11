@@ -11,8 +11,18 @@
     xmlns:org.eclipse.jem.java="java.xmi"
     xmlns:org.eclipse.jem.internal.beaninfo.beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore">
     	
-  <event:AddMany xmi:version="2.0" featureName="eAnnotations">
+  <event:Add featureName="eAnnotations">
     <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
   	    expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.MenuDecoder"/>    	
-  </event:AddMany>
+  </event:Add>
+  
+  <event:Add featureName="eStructuralFeatures">
+    <addedEObjects xsi:type="ecore:EReference" name="items" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#MenuItem"
+        upperBound="-1">
+      <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" mergeIntrospection="false"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
+    </addedEObjects>
+  </event:Add>
+  
 </xmi:XMI>
