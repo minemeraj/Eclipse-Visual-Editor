@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEActionFilter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-07 23:13:12 $ 
+ *  $Revision: 1.7 $  $Date: 2005-08-11 19:07:07 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -34,6 +34,7 @@ import org.eclipse.ui.IActionFilter;
  *
  * The valid tests are: 
  *   (name)        - (value)
+ *   CHANGABLE     - "true" if the model can be changed (is ready), "false" if it is not ready (busy, read-only, paused, etc.).
  *   PROPERTY      - "nameOfFeature" tests if the given feature is an available property of the model of the editpart. (Model needs to be EMF, does not need to be JavaModel).
  *   EDITPOLICY#   - This means redirect the request to the Editpolicies. The portion of "name" after the "#" becomes that "name" and
  *                   value is left as is, and then request to filter is sent to each of the edit policies that can handle IActionFilter or adapt to it.
@@ -47,6 +48,7 @@ public class CDEActionFilter implements IActionFilter {
 	public static final CDEActionFilter INSTANCE = new CDEActionFilter();	// Only one is needed. All the info it needs comes from the input.
 	
 	public final static String
+		CHANGEABLE_STRING = "CHANGEABLE", //$NON-NLS-1$
 		EDITPOLICY_STRING = "EDITPOLICY#", //$NON-NLS-1$
 		PARENT_STRING = "PARENT#", //$NON-NLS-1$
 		ANCESTOR_STRING = "ANCESTOR#", //$NON-NLS-1$
@@ -65,7 +67,10 @@ public class CDEActionFilter implements IActionFilter {
 		if (!(target instanceof EditPart))	//Can only handle edit parts
 			return false;
 		
-		if (name.equals(PROPERTY_STRING)) {
+		if (name.equals(CHANGEABLE_STRING)) {
+			// This tests the model to see if it is changable.
+			return Boolean.valueOf(value).booleanValue() == (CDEUtilities.getHoldState(EditDomain.getEditDomain((EditPart) target)) == ModelChangeController.READY_STATE);
+		} else if (name.equals(PROPERTY_STRING)) {
 			// This allows an extension so that a popup action could be provided if a component
 			// had a specific property with its name equal to 'value'.			
 			return testAttributeForPropertyName(target, value);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: EventInvocationAndListenerEventsObjectActionDelegate.java,v $
- *  $Revision: 1.7 $  $Date: 2005-02-23 23:19:39 $ 
+ *  $Revision: 1.8 $  $Date: 2005-08-11 19:07:07 $ 
  */
 
 import java.util.Iterator;
@@ -216,6 +216,9 @@ public class EventInvocationAndListenerEventsObjectActionDelegate implements IOb
 	
 	private Action delegateAction;	// This is the delegate action that is wrappering this one.	
     public void selectionChanged(IAction action, ISelection selection) {
+    	// Test to see if action is enabled, if it is, that means we've already passed the enablesFor test.
+			if (!action.isEnabled())
+				return;
 			if ( selection == null || 
 					!(selection instanceof IStructuredSelection) || 
 					selection.isEmpty() || 

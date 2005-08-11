@@ -81,6 +81,11 @@
                menubarPath="group.add"
                enablesFor="1"
                id="org.eclipse.ve.java.visual.events">
+           <enablement>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+           </enablement>               
          </action>
       </objectContribution>
 <!--
@@ -97,6 +102,11 @@
                menubarPath="group.add"
                enablesFor="1"
                id="org.eclipse.ve.java.visual.listener.events">
+           <enablement>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+           </enablement>                              
          </action>
       </objectContribution>
 <!-- ======================================================================== -->
@@ -112,6 +122,11 @@
                menubarPath="org.eclipse.gef.group.edit"
                enablesFor="+"
                id="org.eclipse.ve.internal.java.codegen.editorpart.renameaction">
+           <enablement>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+           </enablement>               
          </action>
       </objectContribution>    
 <!-- ==================================================== -->                  

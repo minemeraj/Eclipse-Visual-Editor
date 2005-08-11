@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanEventsObjectActionDelegate.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-21 22:53:48 $ 
+ *  $Revision: 1.9 $  $Date: 2005-08-11 19:07:07 $ 
  */
 
 import java.text.Collator;
@@ -77,6 +77,10 @@ public class JavaBeanEventsObjectActionDelegate implements IObjectActionDelegate
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
+		// Test to see if action is enabled, if it is, that means we've already passed the enablesFor test.
+		if (!action.isEnabled())
+			return;
+
 		if ( selection == null || 
 				!(selection instanceof IStructuredSelection) || 
 				selection.isEmpty() || 

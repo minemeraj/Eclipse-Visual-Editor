@@ -17,7 +17,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: CreateContentPaneObjectActionDelegate.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-11 19:07:06 $ 
  */
 
 import java.util.Iterator;
@@ -57,6 +57,10 @@ public class CreateContentPaneObjectActionDelegate
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
+		// Test to see if action is enabled, if it is, that means we've already passed the enablesFor test.
+		if (!action.isEnabled())
+			return;
+
 		if (!(selection instanceof IStructuredSelection))
 			action.setEnabled(false);
 		else {
