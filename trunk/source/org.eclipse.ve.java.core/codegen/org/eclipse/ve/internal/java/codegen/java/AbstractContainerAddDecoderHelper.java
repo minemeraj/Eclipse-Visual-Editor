@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.21 $  $Date: 2005-07-19 14:54:57 $ 
+ *  $Revision: 1.22 $  $Date: 2005-08-11 16:27:29 $ 
  */
 
 import java.util.*;
@@ -544,8 +544,12 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 		return result.toArray();
 	}
 
+	/**
+	 * The one which holds the children is this expressions beanpart, instead
+	 * of the intermetidate object.
+	 */
 	protected EObject getIndexParent() {		
-		return getRootObject(false);
+		return fbeanPart.getEObject();
 	}
 	
 
