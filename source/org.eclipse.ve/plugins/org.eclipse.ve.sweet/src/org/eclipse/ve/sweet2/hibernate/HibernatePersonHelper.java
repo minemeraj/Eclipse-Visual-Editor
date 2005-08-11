@@ -11,8 +11,8 @@
 /*
  *  Created Aug 10, 2005 by Gili Mendel
  * 
- *  $RCSfile: HibernateHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2005-08-10 18:39:22 $ 
+ *  $RCSfile: HibernatePersonHelper.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-08-11 22:03:11 $ 
  */
 package org.eclipse.ve.sweet2.hibernate;
 
@@ -26,26 +26,26 @@ import org.hibernate.cfg.Configuration;
 /**
  * This is a hibernate helper to the Person Database
  */
-public class HibernateHelper {
+public class HibernatePersonHelper {
 
 	 private Session session = null;
 	 private Transaction transaction = null;
 	 private static String HIBERNATE_CFG = "/org/eclipse/ve/sweet2/hibernate/hibernate.cfg.xml";
 	 private static String LOG4J_CFG = "org/eclipse/ve/sweet2/hibernate/log4j.properties";
 	 
-	 private static HibernateHelper helper = null;
+	 private static HibernatePersonHelper helper = null;
 	 
 	 
 	
-	public HibernateHelper() {
+	public HibernatePersonHelper() {
 		super();
 		// Hibernate uses log4j that needs a configuration file
 		System.setProperty("log4j.configuration",LOG4J_CFG);
 	}
 	
-	public static HibernateHelper getHelper() {
+	public static HibernatePersonHelper getHelper() {
 		if (helper==null)
-			helper = new HibernateHelper();
+			helper = new HibernatePersonHelper();
 		return helper;
 	}
 	
@@ -63,6 +63,7 @@ public class HibernateHelper {
 	 
 	 public void endSession() {
 		 if (session!=null) {
+			 endTransaction();
 			 session.flush();
 		     session.close();
 		     session = null;
@@ -83,10 +84,12 @@ public class HibernateHelper {
 	 }
 	 
 	 public void endTransaction() {
-		 System.out.println("Transaction Ended: "+_transactionMsg);
-		 transaction.commit();
-		 transaction=null;
-		 _transactionMsg=null;
+		 if (transaction!=null) {
+			 System.out.println("Transaction Ended: "+_transactionMsg);
+			 transaction.commit();
+			 transaction=null;
+			 _transactionMsg=null;
+		 }
 	 }
 	 
 	 protected void rollBackTransaction() {
@@ -154,6 +157,7 @@ public class HibernateHelper {
 			 Person beth = new Person ("Beth","Walker");
 			 Person rich = new Person("Rich","Kulp");
 			 Person jon = new Person ("Jon","Stinton");
+			 Person dave = new Person("Dave","Orme");
 			 			 
 			 getSession().save(gili);
 			 getSession().save(michelle);
@@ -164,6 +168,7 @@ public class HibernateHelper {
 			 getSession().save(beth);
 			 getSession().save(rich);
 			 getSession().save(jon);
+			 getSession().save(dave);
 			 
 			 // many-to-one relationship
 			 joe.setManager(gili);
@@ -193,6 +198,8 @@ public class HibernateHelper {
 			 joe.addBackup(peter);
 			 
 			 jon.addBackup(peter);
+			 
+			 dave.addBackup(gili);
 								 
 			 // one-to-one relationship	- bi-direction is enforced by the APIs	 
 			 gili.setSpouse(michelle);

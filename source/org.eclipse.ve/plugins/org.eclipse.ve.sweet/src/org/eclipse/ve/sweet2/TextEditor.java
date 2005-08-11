@@ -1,16 +1,8 @@
 package org.eclipse.ve.sweet2;
 
-import org.eclipse.jface.viewers.ContentViewer;
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 
 public class TextEditor extends ContentViewer implements Editor {
 	
@@ -23,8 +15,18 @@ public class TextEditor extends ContentViewer implements Editor {
 	
 	public TextEditor(Composite parent, int styles){
 		text = new Text(parent,styles);
+		setDefaults();
+	}
+	
+	protected void setDefaults() {		
 		text.setEnabled(false);
-		setUpdatePolicy(DEFAULT_COMMIT_POLICY);
+		setUpdatePolicy(DEFAULT_COMMIT_POLICY);		
+	}
+	
+	public TextEditor(Text text){
+		this.text = text;
+		hookControl(text);
+		setDefaults();
 	}
 	
 	public Text getText(){
