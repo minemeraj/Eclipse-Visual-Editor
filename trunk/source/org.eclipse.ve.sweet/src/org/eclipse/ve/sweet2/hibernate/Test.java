@@ -17,7 +17,7 @@ import java.util.List;
  *  Created Aug 2, 2005 by Gili Mendel
  * 
  *  $RCSfile: Test.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-10 18:39:22 $ 
+ *  $Revision: 1.4 $  $Date: 2005-08-11 22:03:10 $ 
  */
 /**
  * This class is a test that will delete all entries from the DataBase, Re-Create the
@@ -29,7 +29,7 @@ public class Test {
 
 	 public static void main(String[] args) {
 		    
-		   HibernateHelper helper = HibernateHelper.getHelper();
+		   HibernatePersonHelper helper = HibernatePersonHelper.getHelper();
 		    try{
 		    	// This will delete/reCreate the person entries in the DB
 		    	// comment this line if you do not want to reCreate.
