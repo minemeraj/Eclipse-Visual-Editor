@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.49 $  $Date: 2005-08-10 19:42:32 $ 
+ *  $Revision: 1.50 $  $Date: 2005-08-11 21:00:28 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -417,6 +417,20 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 			//   }				
 			ExpressionProxy linkProxy = expression.createTryCatchClause(getBeanTypeProxy("java.lang.LinkageError", expression), true); //$NON-NLS-1$
 			linkProxy.addProxyListener(new ExpressionProxy.ProxyAdapter() {
+
+				public void proxyResolved(ProxyEvent event) {
+					ThrowableProxy throwableProxy = (ThrowableProxy) event.getProxy();
+					processInstantiationError(new BeanExceptionError(throwableProxy, ERROR_SEVERE));
+				}
+			});
+			expression.createThrow();
+			expression.createClassInstanceCreation(ForExpression.THROW_OPERAND, getBeanInstantiationExceptionTypeProxy(expression), 0);	
+			//   } catch (UnresolvedCompilationError e) {
+			//     ... send back thru ExpressionProxy to mark an instantiation error ...
+			//     throw new BeanInstantiationError(); ... so that when being applied as a setting it can be seen as not valid, but rest of expression can continue.
+			//   }				
+			ExpressionProxy compErrorProxy = expression.createTryCatchClause(getBeanTypeProxy("org.eclipse.jem.internal.proxy.common.UnresolvedCompilationError", expression), true); //$NON-NLS-1$
+			compErrorProxy.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
 				public void proxyResolved(ProxyEvent event) {
 					ThrowableProxy throwableProxy = (ThrowableProxy) event.getProxy();
