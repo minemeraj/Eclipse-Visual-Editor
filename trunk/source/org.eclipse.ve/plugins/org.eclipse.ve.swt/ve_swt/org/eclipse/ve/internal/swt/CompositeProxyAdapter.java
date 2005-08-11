@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.35 $ $Date: 2005-07-13 16:31:22 $
+ * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.36 $ $Date: 2005-08-11 19:28:01 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -96,6 +96,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 				moveComponentBefore(controlProxyHost.getBeanProxy(), above, expression);
 			else
 				moveComponentToEnd(controlProxyHost.getBeanProxy(), expression);
+			revalidateBeanProxy();
 		} else
 			super.primMoved(feature, value, oldPosition, newPosition, expression);
 	}
