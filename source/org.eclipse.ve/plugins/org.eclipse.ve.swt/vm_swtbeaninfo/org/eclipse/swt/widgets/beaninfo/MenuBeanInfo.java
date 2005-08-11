@@ -52,12 +52,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				SHORTDESCRIPTION, MenuMessages.getString("itemCountSD"), //$NON-NLS-1$
 			}
 			),
-			// items
-			super.createPropertyDescriptor(getBeanClass(),"items", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, MenuMessages.getString("itemsDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, MenuMessages.getString("itemsSD"), //$NON-NLS-1$
-			}
-			),
 			// visible
 			super.createPropertyDescriptor(getBeanClass(),"visible", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, MenuMessages.getString("visibleDN"), //$NON-NLS-1$
