@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.12 $  $Date: 2005-06-15 20:19:34 $ 
+ *  $Revision: 1.13 $  $Date: 2005-08-11 21:00:29 $ 
  */
 
 
@@ -430,5 +430,51 @@ nextName:
 				return (EAnnotation) next;
 		}
 		return null;
+	}
+	
+	/**
+	 * Strip newlines/tabs (either Win or Unix format) from the string, replacing with the given character.
+	 * @param in
+	 * @param replaceNewline char to replace new lines with. If <code>0x00</code>, then don't replace newlines.
+	 * @param replaceTab char to replace tabs with. If <code>0x00</code>, then don't replace tabs.
+	 * @return
+	 * 
+	 * @since 1.1.0.1
+	 */
+	public static String stripNewLineTabs(String in, char replaceNewline, char replaceTab) {
+		boolean doNL = replaceNewline != 0x00;
+		boolean doTab = replaceTab != 0x00;
+		int nl = doNL ? in.indexOf('\n') : -1;
+		int tab = doTab ? in.indexOf('\t') : -1;
+		if (nl != -1 || tab != -1) {
+			char[] inchar = in.toCharArray();
+			int length = inchar.length;
+			int ndx;
+			if (nl != -1)
+				if (tab != -1)
+					ndx = Math.min(nl, tab);
+				else
+					ndx = nl;
+			else
+				ndx = tab;
+			for (; ndx < inchar.length; ndx++) {
+				if (doNL && inchar[ndx] == '\n') {
+					if (ndx > 0 && inchar[ndx-1] == '\r') {
+						// Got \r\n type newline.
+						inchar[ndx-1] = replaceNewline;
+						System.arraycopy(inchar, ndx+1, inchar, ndx, inchar.length-ndx-1);	// Move rest after the \n back over \n
+						length--;	// Reduce final length by one.
+					} else {
+						// Got \n type newline
+						inchar[ndx] = replaceNewline;
+					}
+				} if (doTab && inchar[ndx] == '\t') {
+					// Got \t.
+					inchar[ndx] = replaceTab;
+				}
+			}
+			return new String(inchar, 0, length);
+		} else
+			return in;
 	}
 }

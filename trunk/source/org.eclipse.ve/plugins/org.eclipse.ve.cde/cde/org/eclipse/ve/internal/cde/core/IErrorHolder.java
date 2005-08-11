@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.cde.core;
 
 /*
  *  $RCSfile: IErrorHolder.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-21 21:43:42 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-11 21:00:29 $ 
  */
  
 import java.text.MessageFormat;
@@ -306,7 +306,7 @@ public interface IErrorHolder {
 		
 
 		public String getMessage() {
-			return MessageFormat.format(CDEMessages.Exception_msg, new Object[] { getExceptionClassname(), getExceptionMessage()}); 
+			return CDEUtilities.stripNewLineTabs(MessageFormat.format(CDEMessages.Exception_msg, new Object[] { getExceptionClassname(), getExceptionMessage()}), ' ', '-'); 
 		}
 		
 		/**
