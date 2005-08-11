@@ -169,6 +169,11 @@
                label="%PopupMenus.SetTextAction.Label  Set Text"
                class="org.eclipse.ve.internal.swt.SetTextObjectActionDelegate"
                id="org.eclipse.ve.internal.swt.settextaction">
+           <enablement>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+           </enablement>                              
          </action>
       </objectContribution>
    <!-- 
@@ -247,6 +252,11 @@
                label="%PopupMenus.ChangeParentAction.Label  Change Parent..."
                class="org.eclipse.ve.internal.swt.ChangeParentShellObjectActionDelegate"
                id="org.eclipse.ve.internal.swt.changeparentaction">
+           <enablement>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+           </enablement>                              
          </action>
       </objectContribution>
       <objectContribution
@@ -274,6 +284,11 @@
                label="%PopupMenus.RootContainer.Label &amp;Create container"
                class="org.eclipse.ve.internal.jface.codegen.WorkbenchPartRootContainerObjectActionDelegate"
                id="org.eclipse.ve.internal.jface.codegen.rootcontainer.action">
+           <enablement>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+           </enablement>                              
          </action>
       </objectContribution>
    </extension> 

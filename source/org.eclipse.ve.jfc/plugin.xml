@@ -60,6 +60,11 @@
                label="%PopupMenus.SetTextAction.Label  Set Text"
                class="org.eclipse.ve.internal.jfc.core.SetTextObjectActionDelegate"
                id="org.eclipse.ve.internal.jfc.core.settextaction">
+           <enablement>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+           </enablement>               
          </action>
       </objectContribution>
 <!-- Add a popup to edit the label property -->
@@ -78,6 +83,11 @@
                label="%PopupMenus.SetLabelAction.Label  Set Label"
                class="org.eclipse.ve.internal.jfc.core.SetLabelObjectActionDelegate"
                id="org.eclipse.ve.internal.jfc.core.setlabelaction">
+           <enablement>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+           </enablement>                              
          </action>
       </objectContribution>
 <!-- Add a popup to edit the title property -->
@@ -96,6 +106,11 @@
                label="%PopupMenus.SetTitleAction.Label  Set Title"
                class="org.eclipse.ve.internal.jfc.core.SetTitleObjectActionDelegate"
                id="org.eclipse.ve.internal.jfc.core.settitleaction">
+           <enablement>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+           </enablement>                              
          </action>
       </objectContribution>
 <!-- 
@@ -173,6 +188,11 @@
                label="%PopupMenus.ContentPane.Label &amp;Create Content Pane"
                class="org.eclipse.ve.internal.jfc.core.CreateContentPaneObjectActionDelegate"
                id="org.eclipse.ve.internal.jfc.core.content.pane">
+           <enablement>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+           </enablement>                              
          </action>
       </objectContribution>
    </extension>

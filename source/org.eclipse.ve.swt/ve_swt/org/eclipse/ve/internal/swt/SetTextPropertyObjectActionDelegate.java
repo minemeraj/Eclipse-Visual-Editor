@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: SetTextPropertyObjectActionDelegate.java,v $
- *  $Revision: 1.4 $  $Date: 2005-07-13 13:11:38 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-11 19:07:08 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -59,6 +59,10 @@ public class SetTextPropertyObjectActionDelegate implements IObjectActionDelegat
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
+		// Test to see if action is enabled, if it is, that means we've already passed the enablesFor test.
+		if (!action.isEnabled())
+			return;
+
         // return if the target property is not set properly
 		if (propertyName == null || propertyName.length() <= 0 ) {
 			action.setEnabled(false);
