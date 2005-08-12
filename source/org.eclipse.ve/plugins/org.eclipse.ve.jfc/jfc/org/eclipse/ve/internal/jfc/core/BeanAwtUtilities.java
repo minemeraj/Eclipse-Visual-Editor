@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.34 $  $Date: 2005-08-12 17:43:04 $ 
+ *  $Revision: 1.35 $  $Date: 2005-08-12 21:36:29 $ 
  */
 
 import java.util.List;
@@ -50,7 +50,7 @@ public class BeanAwtUtilities {
 	public static final String COMPONENTMANAGEREXTENSION_CLASSNAME = COMPONENTMANAGER_CLASSNAME+"$ComponentManagerExtension";	//$NON-NLS-1$
 
 	private Point offscreenLocation;
-	
+
 	/**
 	 * Get the offscreen location for windows.
 	 * @param registry
@@ -70,9 +70,9 @@ public class BeanAwtUtilities {
 					constants.offscreenLocation = new Point(pb.getX(), pb.getY());
 				} else
 					constants.offscreenLocation = new Point(10000, 10000);
-			}
-			return constants.offscreenLocation;
 		}
+			return constants.offscreenLocation;
+	}
 	}
 
 	// JCMMethod proxies are cached in a registry constants.
@@ -119,7 +119,8 @@ public class BeanAwtUtilities {
 			MANAGER_JTABBEDPANE_INSERTTAB_DEFAULT = MANAGER_JTABBEDPANE_INSERTTAB + 1,
 			MANAGER_JSPLITPANE_SETDIVIDERLOCATION = MANAGER_JTABBEDPANE_INSERTTAB_DEFAULT + 1,
 			WINDOW_APPLYTITLE = MANAGER_JSPLITPANE_SETDIVIDERLOCATION + 1,
-			MAX_METHODS = WINDOW_APPLYTITLE + 1;
+			SCROLLPANE_MAKE_IT_RIGHT = WINDOW_APPLYTITLE + 1,
+			MAX_METHODS = SCROLLPANE_MAKE_IT_RIGHT + 1;
 
 	private IProxyMethod[] methods = new IProxyMethod[MAX_METHODS];
 
@@ -1391,6 +1392,29 @@ public class BeanAwtUtilities {
 		}
 	}
 
+	/**
+	 * See bug 69514 - Dropping AWT ScrollPane fails on Linux 
+	 * Exceptions are thrown because the scroll pane doesn't have children. 
+	 * To prevent this, we'll add a temporary child (a special Panel) when there isn't one.
+	 * 
+	 * @param scrollPane    ScrollPane to be processed
+	 * 
+	 * @since 1.1.0.1
+	 */
+	public static IProxyMethod getScrollPaneMakeItRight(IExpression expression) {
+		BeanAwtUtilities constants = getConstants(expression.getRegistry());
+
+		IProxyMethod method = constants.methods[SCROLLPANE_MAKE_IT_RIGHT];
+		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression,
+					"org.eclipse.ve.internal.jfc.vm.ScrollPaneManager").getMethodProxy( //$NON-NLS-1$
+					expression, "makeItRight", //$NON-NLS-1$
+					new String[] { "java.awt.ScrollPane"}); //$NON-NLS-1$
+			processExpressionProxy(method, constants.methods, SCROLLPANE_MAKE_IT_RIGHT);
+		}
+		return method;
+	}
+	
 	protected BeanAwtUtilities() {
 	}
 
