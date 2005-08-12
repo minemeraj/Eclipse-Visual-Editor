@@ -24,19 +24,34 @@ import org.eclipse.swt.widgets.Layout;
 
 
 /**
- * Class CompositeTable.  n.  (1) A virtual table control that extends Composite.  (2) A virtual 
- * table control that is composed of many Composites, each representing a header or a row,
- * one below the other.<p>
+ * Class CompositeTable.  n.  (1) An SWT virtual table control that extends Composite.  
+ * (2) An SWT virtual table control that is composed of many Composites, each representing 
+ * a header or a row, one below the other.<p>
  * 
- * Synopsis:<p>
+ * CompositeTable is designed specifically to work nicely in the Eclipse Visual Editor,
+ * but it is equally easy to use in hand-coded layouts.<p>
+ * 
+ * <b>Synopsis:</b><p>
  * 
  * In order to edit anything, one must:<p>
  * 
  * <ul>
- * <li>Set up a prototype row (and optionally header) object as specified in the CompositeTable
- * class documentation.
- * <li>Set the RunTime property to "true".
- * <li>Add a RowContentProvider that knows how to put data into a row's controls.
+ * <li>Extend Composite or Canvas and create an object that can be duplicated to 
+ * represent the rows in your table.
+ * <li>Optionally, extend Composite or Canvas and create a header object in the
+ * same way.
+ * <li>If the canvas and row objects do not have a layout manager, the CompositeTable 
+ * will automatically supply one that lays out child controls in a visual table.  If
+ * they have a layout manager, CompositeTable will let them use that.
+ * <li>Create a CompositeTable object, either using VE or using hand-coded SWT.
+ * <li>Drop the header (if applicable), then the row object on the CompositeTable or
+ * simply write code that creates instances of these objects in that order as child
+ * controls of your CompositeTable.
+ * <li>Set the RunTime property to "true".  Your control is now "live."
+ * <li>Add a RowConstructionListener if you need to add event handlers to individual row 
+ * controls when a row is created.
+ * <li>Add a RowContentProvider that knows how to put data into your row object's 
+ * controls on demand.
  * <li>Add a RowListener to validate and save changed data.
  * <li>Set the NumRowsInCollection property to the number of rows in the underlying data
  * structure.
@@ -666,7 +681,7 @@ public class CompositeTable extends Canvas {
 		contentProviders.remove(contentProvider);
 	}
 	
-	LinkedList rowListeners = new LinkedList();
+	LinkedList rowFocusListeners = new LinkedList();
 	
 	/**
 	 * Method addRowListener.  Adds the specified listener to the set of listeners that 
@@ -675,8 +690,8 @@ public class CompositeTable extends Canvas {
 	 * 
 	 * @param listener The listener to add.
 	 */
-	public void addRowListener(IRowListener rowListener) {
-		rowListeners.add(rowListener);
+	public void addRowFocusListener(IRowFocusListener rowListener) {
+		rowFocusListeners.add(rowListener);
 	}
 	
 	/**
@@ -686,8 +701,8 @@ public class CompositeTable extends Canvas {
 	 * 
 	 * @param listener The listener to remove.
 	 */
-	public void removeRowListener(IRowListener listener) {
-		rowListeners.remove(listener);
+	public void removeRowFocusListener(IRowFocusListener listener) {
+		rowFocusListeners.remove(listener);
 	}
 	
 	LinkedList insertHandlers = new LinkedList();
@@ -732,6 +747,28 @@ public class CompositeTable extends Canvas {
 	 */
 	public void removeDeleteHandler(IDeleteHandler deleteHandler) {
 		deleteHandlers.remove(deleteHandler);
+	}
+	
+	LinkedList rowConstructionListeners = new LinkedList();
+	
+	/**
+	 * Method addrowConstructionListener.  Adds the specified rowConstructionListener to the set of objects that
+	 * will be used to listen to row construction events.
+	 * 
+	 * @param rowConstructionListener the rowConstructionListener to add.
+	 */
+	public void addrowConstructionListener(IRowConstructionListener rowConstructionListener) {
+		rowConstructionListeners.add(rowConstructionListener);
+	}
+	
+	/**
+	 * Method removerowConstructionListener.  Removes the specified rowConstructionListener from the set of objects that
+	 * will be used to listen to row construction events.
+	 * 
+	 * @param rowConstructionListener the rowConstructionListener to remove.
+	 */
+	public void removerowConstructionListener(IRowConstructionListener rowConstructionListener) {
+		rowConstructionListeners.remove(rowConstructionListener);
 	}
 	
 	boolean deleteEnabled = true;

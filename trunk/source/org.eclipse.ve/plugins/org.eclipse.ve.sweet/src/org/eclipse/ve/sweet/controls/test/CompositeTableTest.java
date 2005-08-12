@@ -22,7 +22,7 @@ import org.eclipse.ve.sweet.controls.CompositeTable;
 import org.eclipse.ve.sweet.controls.IDeleteHandler;
 import org.eclipse.ve.sweet.controls.IInsertHandler;
 import org.eclipse.ve.sweet.controls.IRowContentProvider;
-import org.eclipse.ve.sweet.controls.IRowListener;
+import org.eclipse.ve.sweet.controls.IRowFocusListener;
 
 public class CompositeTableTest {
 
@@ -54,7 +54,7 @@ public class CompositeTableTest {
 		table.addRowContentProvider(rowContentProvider);
 		table.addDeleteHandler(deleteHandler);
 		table.addInsertHandler(insertHandler);
-		table.addRowListener(rowListener);
+		table.addRowFocusListener(rowListener);
 		table.setNumRowsInCollection(personList.size());
 		createHeader();
 		createRow();
@@ -91,7 +91,7 @@ public class CompositeTableTest {
 		}
 	};
 	
-	private IRowListener rowListener = new IRowListener() {
+	private IRowFocusListener rowListener = new IRowFocusListener() {
 		public boolean requestRowChange(CompositeTable sender, int currentObjectOffset, Control row) {
 			System.out.println("requestRC");
 			return true;

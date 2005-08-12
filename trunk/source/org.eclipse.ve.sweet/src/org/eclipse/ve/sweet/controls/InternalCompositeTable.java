@@ -11,13 +11,6 @@
  */
 package org.eclipse.ve.sweet.controls;
 
-/*
- * TODO:
- * - PgUp/PgDn don't save edited changes
- * - Insert into zeroth visible row always fails
- * - invisible inserts wind up creating "unbound" fields
- */
-
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -49,19 +42,22 @@ import org.eclipse.ve.sweet.reflect.DuckType;
 
 /** (non-API)
  * Class InternalCompositeTable.  This is the run-time CompositeTableControl.  It gets its prototype
- * row and (optional) header objects from its SWT parent, then uses them to implement an SWT table
- * control.
+ * row and (optional) header objects from its SWT parent, then uses them to implement an SWT 
+ * virtual table control.
  * 
  * @author djo
  */
 public class InternalCompositeTable extends Composite implements Listener {
+	// The internal UI controls that make up this control.
 	private Composite sliderHolder = null;
 	private Composite controlHolder = null;
 	private Slider slider = null;
 	private EmptyTablePlaceholder emptyTablePlaceholder = null;
-	
+
+	// My parent CompositeTable
 	private CompositeTable parent;
 	
+	// Property fields
 	private int maxRowsVisible;
 	private int numRowsInDisplay;
 	private int numRowsInCollection;
@@ -70,17 +66,26 @@ public class InternalCompositeTable extends Composite implements Listener {
 	private int currentRow;
 	private int currentColumn;
 
+	// The visible/invisible row objects and bookeeping info about them
 	private int currentVisibleTopRow = 0;
 	private int numRowsVisible = 0;
 	private LinkedList rows = new LinkedList();
 	private LinkedList spareRows = new LinkedList();
-	
+
+	// The prototype header/row objects and Constructors so we can duplicate them
 	private Constructor headerConstructor;
 	private Constructor rowConstructor;
 	private Control headerControl;
 	private Control myHeader = null;
 	private Control rowControl;
 	
+	/**
+	 * Constructor InternalCompositeTable.  The usual SWT constructor.  The same style bits are
+	 * allowed here as are allowed on Composite.
+	 * 
+	 * @param parentControl The SWT parent.
+	 * @param style Style bits.
+	 */
 	public InternalCompositeTable(Composite parentControl, int style) {
 		super(parentControl, style);
 		initialize();
@@ -101,6 +106,9 @@ public class InternalCompositeTable extends Composite implements Listener {
 		updateVisibleRows();
 	}
 
+	/**
+	 * Initialize the overall table UI.
+	 */
 	private void initialize() {
 		GridLayout gl = new GridLayout();
 		gl.numColumns = 2;
@@ -114,8 +122,8 @@ public class InternalCompositeTable extends Composite implements Listener {
 	}
 
 	/**
-	 * This method initializes controlHolder	
-	 *
+	 * Initialize the controlHolder, which is the holder Composite for the header object (if
+	 * applicable) and the row objects.
 	 */
 	private void createControlHolder() {
 		GridData gridData = new org.eclipse.swt.layout.GridData();
@@ -151,8 +159,8 @@ public class InternalCompositeTable extends Composite implements Listener {
 	}
 
 	/**
-	 * This method initializes sliderHolder	
-	 *
+	 * Initialize the sliderHolder and slider.  The SliderHolder is a Composite that is 
+	 * responsible for showing and hiding the vertical slider upon request.
 	 */
 	private void createSliderHolder() {
 		GridData gd = getSliderGridData();
@@ -166,6 +174,12 @@ public class InternalCompositeTable extends Composite implements Listener {
 
 	// Slider utility methods ---------------------------------------------------------------------
 
+	/**
+	 * Returns a GridData for the SliderHolder appropriate for if the slider is visible or not.
+	 * 
+	 * @return A GridData with a widthHint of 0 if the slider is not visible or with a widthHint
+	 * of SWT.DEFAULT otherwise.
+	 */
 	private GridData getSliderGridData() {
 		GridData gd = new org.eclipse.swt.layout.GridData();
 		gd.grabExcessVerticalSpace = true;
@@ -180,6 +194,11 @@ public class InternalCompositeTable extends Composite implements Listener {
 	
 	private boolean sliderVisible = false;
 	
+	/**
+	 * Sets if the slider is visible or not.
+	 * 
+	 * @param visible true if the slider should be visible; false otherwise.
+	 */
 	public void setSliderVisible(boolean visible) {
 		this.sliderVisible = visible;
 		sliderHolder.setLayoutData(getSliderGridData());
@@ -193,16 +212,29 @@ public class InternalCompositeTable extends Composite implements Listener {
 		});
 	}
 	
+	/**
+	 * Returns if the slider is visible.
+	 * 
+	 * @return true if the slider is visible; false otherwise.
+	 */
 	public boolean isSliderVisible() {
 		return sliderVisible;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.Widget#dispose()
+	 */
 	public void dispose() {
 		disposeRows(rows);
 		disposeRows(spareRows);
 		super.dispose();
 	}
 
+	/**
+	 * Disposes all the row objects in the specified LinkedList.
+	 * 
+	 * @param rowsCollection The collection containing TableRow objects to dispose.
+	 */
 	private void disposeRows(LinkedList rowsCollection) {
 		for (Iterator rowsIter = rowsCollection.iterator(); rowsIter.hasNext();) {
 			TableRow row = (TableRow) rowsIter.next();
@@ -212,6 +244,9 @@ public class InternalCompositeTable extends Composite implements Listener {
 
 	// Row object layout --------------------------------------------------------------------------
 	
+	/**
+	 * Layout the child controls within the controlHolder Composite.
+	 */
 	protected void layoutControlHolder() {
 		if (myHeader != null)
 			layoutChild(myHeader);
@@ -223,7 +258,11 @@ public class InternalCompositeTable extends Composite implements Listener {
 	}
 
 	/**
-	 * @param child
+	 * Layout a particular row or header control (child control of the controlHolder).
+	 * If the child control has a layout manager, we delegate to that layout manager.
+	 * Otherwise, we use the built in table layout manager.
+	 * 
+	 * @param child The row or header control to layout.
 	 * @return height of child
 	 */
 	private int layoutChild(Control child) {
@@ -240,6 +279,13 @@ public class InternalCompositeTable extends Composite implements Listener {
 
 	// Table control layout -- utility methods ----------------------------------------------------
 
+	/**
+	 * Construct a header or row object on demand.  Logs an error and returns null on failure.
+	 * 
+	 * @param parent The SWT parent.
+	 * @param constructor The header or row object's constructor.
+	 * @return The constructed control or null if none could be constructed.
+	 */
 	private Control createInternalControl(Composite parent, Constructor constructor) {
 		Control result = null;
 		try {
@@ -250,6 +296,9 @@ public class InternalCompositeTable extends Composite implements Listener {
 		return result;
 	}
 	
+	/**
+	 * If the header control hasn't been created yet, create and show it.
+	 */
 	private void showHeader() {
 		if (myHeader == null && headerConstructor != null) {
 			myHeader = createInternalControl(controlHolder, headerConstructor);
@@ -259,6 +308,14 @@ public class InternalCompositeTable extends Composite implements Listener {
 	
 	// Table control layout -- main refresh algorithm ---------------------------------------------
 
+	/**
+	 * Main refresh algorithm entry point.  This method refreshes everything in the table:
+	 * 
+	 * <ul>
+	 * <li>Makes sure the correct number of rows are visible
+	 * <li>Makes sure each row has been refreshed with data from the underlying model
+	 * </ul>
+	 */
 	void updateVisibleRows() {
 		// If we don't have our prototype row object yet, bail out
 		if (rowControl == null) {
@@ -370,6 +427,10 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 
+	/**
+	 * Utility method: Makes sure that the currently visible top row is the same as the top row
+	 * specified in the TopRow property.
+	 */
 	private void scrollTop() {
 		while (currentVisibleTopRow < topRow) {
 			deleteRowAt(0);
@@ -381,6 +442,11 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 
+	/**
+	 * Utility method: Makes sure that the number of rows that are visible correspond with
+	 * what should be visible given the table control's size, where it is scrolled, and
+	 * the number of rows in the underlying collection.
+	 */
 	private void fixNumberOfRows() {
 		int numRows = rows.size();
 		while (numRows > numRowsVisible) {
@@ -393,6 +459,9 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 
+	/**
+	 * Fire the refresh event on all visible rows.
+	 */
 	void refreshAllRows() {
 		int row=0;
 		for (Iterator rowsIter = rows.iterator(); rowsIter.hasNext();) {
@@ -402,6 +471,11 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 
+	/**
+	 * Insert a new row object at the specified 0-based position relatve to the topmost row.
+	 * 
+	 * @param position The 0-based position relative to the topmost row.
+	 */
 	private void insertRowAt(int position) {
 		TableRow newRow = getNewRow();
 		if (position > rows.size()) {
@@ -411,23 +485,41 @@ public class InternalCompositeTable extends Composite implements Listener {
 		fireRefreshEvent(currentVisibleTopRow + position, newRow.getRowControl());
 	}
 	
+	/**
+	 * Delete the row at the specified 0-based position relative to the topmost row.
+	 * 
+	 * @param position The 0-based position relative to the topmost row.
+	 */
 	private void deleteRowAt(int position) {
 		TableRow row = (TableRow) rows.remove(position);
 		row.setVisible(false);
 		spareRows.addLast(row);
 	}
 	
+	/**
+	 * Utility method: Creates a new row object or recycles one that had been previously 
+	 * created but was no longer needed.
+	 * 
+	 * @return The new row object.
+	 */
 	private TableRow getNewRow() {
 		if (spareRows.size() > 0) {
 			TableRow recycledRow = (TableRow) spareRows.removeFirst();
 			recycledRow.setVisible(true);
 			return recycledRow;
 		}
-		return new TableRow(this, createInternalControl(controlHolder, rowConstructor));
+		TableRow newRow = new TableRow(this, createInternalControl(controlHolder, rowConstructor));
+		fireRowConstructionEvent(newRow.getRowControl());
+		return newRow;
 	}
 
 	// Property getters/setters --------------------------------------------------------------
 
+
+	/*
+	 * Plese refer to the JavaDoc on CompositeTable for detailed description of these property methods.
+	 */
+	
 	public Control getHeaderControl() {
 		return headerControl;
 	}
@@ -496,6 +588,12 @@ public class InternalCompositeTable extends Composite implements Listener {
 
 	private boolean needToRequestRC=true;
 	
+	/**
+	 * Handle a keyPressed event on any row control.
+	 * 
+	 * @param sender The row that is sending the event
+	 * @param e the actual KeyEvent
+	 */
 	public void keyPressed(TableRow sender, KeyEvent e) {
 		if ((e.stateMask & SWT.CONTROL) != 0) {
 			switch (e.keyCode) {
@@ -765,6 +863,12 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 
+	/**
+	 * Handle the keyTraversed event on any child control in the table.
+	 * 
+	 * @param sender The row sending the event.
+	 * @param e The SWT TraverseEvent
+	 */
 	public void keyTraversed(TableRow sender, TraverseEvent e) {
 		if (e.detail == SWT.TRAVERSE_TAB_NEXT) {
 			if (currentColumn >= sender.getNumColumns() - 1) {
@@ -786,6 +890,9 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 
+	/**
+	 * The SelectionListener for the table's slider control.
+	 */
 	private SelectionListener sliderSelectionListener = new SelectionListener() {
 		public void widgetSelected(SelectionEvent e) {
 			if (slider.getSelection() == topRow) {
@@ -808,7 +915,9 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	};
 	
-	// Scroll wheel handling...
+	/**
+	 * Scroll wheel event handling.
+	 */
 	public void handleEvent(Event event) {
 		
 		if (event.count > 0) {
@@ -832,9 +941,21 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 	
+	/**
+	 * Handle focusLost events on any child control.  This is not currently used.
+	 * 
+	 * @param sender The row containing the sending control.
+	 * @param e The SWT FocusEvent.
+	 */
 	public void focusLost(TableRow sender, FocusEvent e) {
 	}
 	
+	/**
+	 * Handle focusGained events on any child control.
+	 * 
+	 * @param sender The row containing the sending control.
+	 * @param e The SWT FocusEvent.
+	 */
 	public void focusGained(TableRow sender, FocusEvent e) {
 		boolean rowChanged = false;
 		if (getRowNumber(sender) != currentRow) {
@@ -858,16 +979,39 @@ public class InternalCompositeTable extends Composite implements Listener {
 	
 	// Event Firing -------------------------------------------------------------------------------
 
+	/**
+	 * Fire the row construction event
+	 * 
+	 * @param newControl The new row's SWT control
+	 */
+	private void fireRowConstructionEvent(Control newControl) {
+		if (rows.size() < 1) {
+			return;
+		}
+		for (Iterator rowConstructionListenersIter = parent.rowConstructionListeners.iterator(); rowConstructionListenersIter.hasNext();) {
+			IRowConstructionListener listener = (IRowConstructionListener) rowConstructionListenersIter.next();
+			listener.rowConstructed(newControl);
+		}
+	}
+
+	/**
+	 * Indicate to listeners that the focus is arriving on the specified row
+	 */
 	private void fireRowArriveEvent() {
 		if (rows.size() < 1) {
 			return;
 		}
-		for (Iterator rowChangeListenersIter = parent.rowListeners.iterator(); rowChangeListenersIter.hasNext();) {
-			IRowListener listener = (IRowListener) rowChangeListenersIter.next();
+		for (Iterator rowChangeListenersIter = parent.rowFocusListeners.iterator(); rowChangeListenersIter.hasNext();) {
+			IRowFocusListener listener = (IRowFocusListener) rowChangeListenersIter.next();
 			listener.arrive(parent, topRow+currentRow, currentRow().getRowControl());
 		}
 	}
 
+	/**
+	 * Request permission from all listeners to leave the current row.
+	 * 
+	 * @return true if all listeners permit the row change; false otherwise.
+	 */
 	private boolean fireRequestRowChangeEvent() {
 		if (rows.size() < 1) {
 			return true;
@@ -876,8 +1020,8 @@ public class InternalCompositeTable extends Composite implements Listener {
 			// (if the other row is already gone)
 			return true;
 		}
-		for (Iterator rowChangeListenersIter = parent.rowListeners.iterator(); rowChangeListenersIter.hasNext();) {
-			IRowListener listener = (IRowListener) rowChangeListenersIter.next();
+		for (Iterator rowChangeListenersIter = parent.rowFocusListeners.iterator(); rowChangeListenersIter.hasNext();) {
+			IRowFocusListener listener = (IRowFocusListener) rowChangeListenersIter.next();
 			if (!listener.requestRowChange(parent, topRow+currentRow, currentRow().getRowControl())) {
 				return false;
 			}
@@ -886,16 +1030,24 @@ public class InternalCompositeTable extends Composite implements Listener {
 		return true;
 	}
 
+	/**
+	 * Indicate to listeners that the focus is about to leave the current row.
+	 */
 	private void fireRowDepartEvent() {
 		if (rows.size() < 1) {
 			return;
 		}
-		for (Iterator rowChangeListenersIter = parent.rowListeners.iterator(); rowChangeListenersIter.hasNext();) {
-			IRowListener listener = (IRowListener) rowChangeListenersIter.next();
+		for (Iterator rowChangeListenersIter = parent.rowFocusListeners.iterator(); rowChangeListenersIter.hasNext();) {
+			IRowFocusListener listener = (IRowFocusListener) rowChangeListenersIter.next();
 			listener.depart(parent, topRow+currentRow, currentRow().getRowControl());
 		}
 	}
 
+	/**
+	 * Request deletion of the current row from the underlying data structure.
+	 * 
+	 * @return true if the deletion was successful; false otherwise.
+	 */
 	private boolean fireDeleteEvent() {
 		if (parent.deleteHandlers.size() < 1) {
 			return false;
@@ -915,6 +1067,12 @@ public class InternalCompositeTable extends Composite implements Listener {
 		return true;
 	}
 	
+	/**
+	 * Request that the model insert a new row into itself.
+	 * 
+	 * @return The 0-based offset of the new row from the start of the collection or -1 if a 
+	 * new row could not be inserted.
+	 */
 	private int fireInsertEvent() {
 		if (parent.insertHandlers.size() < 1) {
 			return -1;
@@ -933,6 +1091,11 @@ public class InternalCompositeTable extends Composite implements Listener {
 
 	// Event Handling, utility methods ------------------------------------------------------------
 	
+	/**
+	 * Set the widget's selection to an empty selection.
+	 * 
+	 * @param widget The widget to deselect
+	 */
 	private void deselect(Widget widget) {
 		if (DuckType.instanceOf(ISelectableRegionControl.class, widget)) {
 			ISelectableRegionControl control = (ISelectableRegionControl) DuckType.implement(ISelectableRegionControl.class, widget);
@@ -940,6 +1103,11 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 	
+	/**
+	 * Try to go to the next row in the collection.
+	 * 
+	 * @param row The current table row.
+	 */
 	private void handleNextRowNavigation(TableRow row) {
 		if (currentRow < numRowsVisible-1) {
 			if (!fireRequestRowChangeEvent()) {
@@ -968,6 +1136,11 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 
+	/**
+	 * Try to go to the previous row in the collection.
+	 * 
+	 * @param row The current table row.
+	 */
 	private void handlePreviousRowNavigation(TableRow row) {
 		if (currentRow == 0) {
 			if (topRow == 0) {
@@ -996,6 +1169,11 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 
+	/**
+	 * Gets the current TableRow.
+	 * 
+	 * @return the current TableRow
+	 */
 	private TableRow currentRow() {
 		if (currentRow > rows.size()-1) {
 			return null;
@@ -1003,6 +1181,12 @@ public class InternalCompositeTable extends Composite implements Listener {
 		return (TableRow) rows.get(currentRow);
 	}
 
+	/**
+	 * Returns the TableRow by the specified 0-based offset from the top visible row.
+	 * 
+	 * @param rowNumber 0-based offset of the requested fow starting from the top visible row.
+	 * @return The corresponding TableRow or null if there is none.
+	 */
 	private TableRow getRowByNumber(int rowNumber) {
 		if (rowNumber > rows.size()-1) {
 			return null;
@@ -1010,6 +1194,14 @@ public class InternalCompositeTable extends Composite implements Listener {
 		return (TableRow) rows.get(rowNumber);
 	}
 	
+	/**
+	 * Return the SWT control at (column, row), where row is a 0-based number starting
+	 * from the top visible row.
+	 * 
+	 * @param column the 0-based column.
+	 * @param row the 0-based row starting from the top visible row.
+	 * @return
+	 */
 	private Control getControl(int column, int row) {
 		TableRow rowObject = getRowByNumber(row);
 		if (rowObject == null) {
@@ -1019,6 +1211,12 @@ public class InternalCompositeTable extends Composite implements Listener {
 		return result;
 	}
 
+	/**
+	 * Return the 0-based row number corresponding to a particular TableRow object.
+	 * 
+	 * @param row The TableRow to translate to row coordinates.
+	 * @return the 0-based row number or -1 if the specified TableRow is not visible.
+	 */
 	private int getRowNumber(TableRow row) {
 		int rowNumber = 0;
 		for (Iterator rowIter = rows.iterator(); rowIter.hasNext();) {
@@ -1031,11 +1229,27 @@ public class InternalCompositeTable extends Composite implements Listener {
 		return -1;
 	}
 
+	/**
+	 * Set the focus to the specified (column, row).  If rowChange is true, fire a
+	 * row change event, otherwise be silent.
+	 * 
+	 * @param column The 0-based column to focus
+	 * @param row The 0-based row to focus
+	 * @param rowChange true if a row change event should be fired; false otherwise.
+	 */
 	private void internalSetSelection(int column, int row, boolean rowChange) {
 		Control toFocus = getControl(column, row);
 		deferredSetFocus(toFocus, rowChange);
 	}
 
+	/**
+	 * Set the top row to the specified 0-based offset within the collectiobn, but
+	 * perform the operation in an asyncExec'd Runnable in order to allow any pending
+	 * events to finish first.
+	 * 
+	 * @param newTopRow The 0-based new top row relative to the start of the underlying
+	 * collection.
+	 */
 	private void deferredSetTopRow(final int newTopRow) {
 		Display.getCurrent().asyncExec(new Runnable() {
 			public void run() {
@@ -1044,6 +1258,13 @@ public class InternalCompositeTable extends Composite implements Listener {
 		});
 	}
 	
+	/**
+	 * Set the focus to the specified control after allowing all pending events to complete
+	 * first.  If rowChange is true, fire a row arrive event after the focus has been set.
+	 * 
+	 * @param toFocus The SWT Control to focus
+	 * @param rowChange true if the rowArrive event should be fired; false otherwise.
+	 */
 	private void deferredSetFocus(final Control toFocus, final boolean rowChange) {
 		Display.getCurrent().asyncExec(new Runnable() {
 			public void run() {

@@ -1,7 +1,24 @@
+/*
+ * Copyright (C) 2005 David Orme <djo@coconut-palm-software.com>
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Orme     - Initial API and implementation
+ */
 package org.eclipse.ve.sweet.controls.internal;
 
 import org.eclipse.swt.SWTException;
 
+/**
+ * A duck interface for controls that can select a specific range according to SWT 
+ * range selection semantics.
+ * 
+ * @author djo
+ */
 public interface ISelectableRegionControl {
 	/**
 	 * Sets the selection to the range specified

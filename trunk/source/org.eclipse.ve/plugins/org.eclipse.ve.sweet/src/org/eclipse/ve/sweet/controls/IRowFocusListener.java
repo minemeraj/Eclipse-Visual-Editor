@@ -14,12 +14,12 @@ package org.eclipse.ve.sweet.controls;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * Interface IRowListener.  An interface for objects that want to listen to and have the
+ * Interface IRowFocusListener.  An interface for objects that want to listen to and have the
  * possibility of vetoing row change events on a CompositeTable.
  * 
  * @author djo
  */
-public interface IRowListener {
+public interface IRowFocusListener {
 
 	/**
 	 * Method requestRowChange.  Requests permission to change rows.  This method is

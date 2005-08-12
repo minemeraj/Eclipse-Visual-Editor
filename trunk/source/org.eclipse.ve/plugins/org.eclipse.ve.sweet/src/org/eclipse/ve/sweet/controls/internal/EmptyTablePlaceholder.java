@@ -1,3 +1,14 @@
+/*
+ * Copyright (C) 2005 David Orme <djo@coconut-palm-software.com>
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Orme     - Initial API and implementation
+ */
 package org.eclipse.ve.sweet.controls.internal;
 
 import org.eclipse.swt.SWT;
@@ -22,6 +33,19 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ve.sweet.controls.InternalCompositeTable;
 
+/**
+ * Class EmptyTablePlaceholder.  An SWT control that is displayed in the table when
+ * there are no rows to display.  It has four purposes:
+ * 
+ * <ul>
+ * <li>Prompt the user to hit <INS> to insert a new (first) row.
+ * <li>Indicate if the table has focus using a dashed line around the outside.
+ * <li>Actually accept focus for the table when there are no other controls to do so.
+ * <li>Forward the insert key event back to the table when the user needs to insert a row.
+ * </ul>
+ * 
+ * @author djo
+ */
 public class EmptyTablePlaceholder extends Canvas {
 
 	private boolean focusControl = false;
@@ -30,6 +54,12 @@ public class EmptyTablePlaceholder extends Canvas {
 	private final Color RED;
 	private final Color BLUE;
 	
+	/**
+	 * Constructor EmptyTablePlaceholder.  Construct an EmptyTablePlaceholder control.
+	 * 
+	 * @param parent The parent control
+	 * @param style Style bits.  These are the same as what Canvas accepts.
+	 */
 	public EmptyTablePlaceholder(Composite parent, int style) {
 		super(parent, style);
 		parentTable = (InternalCompositeTable) parent.getParent();
@@ -48,6 +78,9 @@ public class EmptyTablePlaceholder extends Canvas {
 		resize();
 	}
 
+	/**
+	 * Make sure we remove our listeners...
+	 */
 	private DisposeListener disposeListener = new DisposeListener() {
 		public void widgetDisposed(DisposeEvent e) {
 			removeTraverseListener(traverseListener);
@@ -60,12 +93,18 @@ public class EmptyTablePlaceholder extends Canvas {
 		}
 	};
 	
+	/**
+	 * Handle resize events so we can redraw ourselves correctly.
+	 */
 	private ControlListener controlListener = new ControlAdapter() {
 		public void controlResized(ControlEvent e) {
 			resize();
 		}
 	};
 	
+	/**
+	 * Actually resize ourself.
+	 */
 	private void resize() {
 		Point headerSize = new Point(0, 0);
 		Control header = parentTable.getHeaderControl();
@@ -78,16 +117,31 @@ public class EmptyTablePlaceholder extends Canvas {
 	}
 
 	
+	// The message property
 	private String message = "Press [INS] to create a new row.";
 	
+	/**
+	 * Return the prompt message that will be displayed to the user inside this control.
+	 * 
+	 * @return The message string.
+	 */
 	public String getMessage() {
 		return message;
 	}
+	
+	/**
+	 * Set the prompt message that will be displayed to the user inside this control.
+	 * 
+	 * @param message The message to display.
+	 */
 	public void setMessage(String message) {
 		this.message = message;
 		redraw();
 	}
 
+	/**
+	 * Paint the control.
+	 */
 	private PaintListener paintListener = new PaintListener() {
 		public void paintControl(PaintEvent e) {
 			Color oldColor = e.gc.getForeground();
@@ -111,6 +165,9 @@ public class EmptyTablePlaceholder extends Canvas {
 		}
 	};
 	
+	/**
+	 * When we gain/lose focus, redraw ourselves appropriately
+	 */
 	private FocusListener focusListener = new FocusListener() {
 		public void focusGained(FocusEvent e) {
 			focusControl = true;
@@ -122,11 +179,17 @@ public class EmptyTablePlaceholder extends Canvas {
 		}
 	};
 	
+	/**
+	 * Permit focus events via keyboard.
+	 */
 	private TraverseListener traverseListener = new TraverseListener() {
 		 public void keyTraversed(TraverseEvent e) {
 		}
 	};
 	
+	/**
+	 * Forward the insert key back to our parent for handling.
+	 */
 	private KeyListener keyListener = new KeyListener() {
 		public void keyPressed(KeyEvent e) {
 			if (e.keyCode == SWT.INSERT)
