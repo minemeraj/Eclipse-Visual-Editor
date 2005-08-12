@@ -306,30 +306,42 @@
             /> 
       </editor>
    </extension>
-<!-- =============================================================================== -->
-<!-- Add the Refactor and Navigate action sets to the menu when the editor is active -->
-<!-- =============================================================================== -->
+<!-- ========================================================================================================= -->
+<!-- Add the action sets that normally come with compilation unit editor to the menu when the editor is active -->
+<!-- ========================================================================================================= -->
    <extension
          point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
+         <part
+               id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
+         </part>
+      </actionSetPartAssociation>
+      <actionSetPartAssociation
+            targetID="org.eclipse.ui.edit.text.actionSet.presentation">
+         <part
+               id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
+         </part>
+      </actionSetPartAssociation>
+      <actionSetPartAssociation
+            targetID="org.eclipse.jdt.ui.text.java.actionSet.presentation">
+         <part
+               id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
+         </part>
+      </actionSetPartAssociation>
+         
       <actionSetPartAssociation
             targetID="org.eclipse.jdt.ui.CodingActionSet">
          <part
                id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
          </part>
       </actionSetPartAssociation>
-<!-- ============================================================= -->
-<!-- Extend the Search menu with the action set for the JavaEditor -->
-<!-- ============================================================= -->
       <actionSetPartAssociation
             targetID="org.eclipse.jdt.ui.SearchActionSet">
          <part
                id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor">
          </part>
       </actionSetPartAssociation>
-<!-- ================================================================================= -->
-<!-- The Open Type Hierarchy and Open Type are defined in their own action set         -->
-<!-- that we must associate with the JavaVisualEditor to get them on the navigate menu -->
-<!-- ================================================================================= -->
       <actionSetPartAssociation
             targetID="org.eclipse.jdt.ui.A_OpenActionSet">
          <part
@@ -337,6 +349,7 @@
          </part>
       </actionSetPartAssociation>
    </extension>
+   
 <!-- ============================================================================================================== -->
 <!-- Editor actions are editor specific, so we need to duplicate them here.                                         -->
 <!-- ============================================================================================================== -->

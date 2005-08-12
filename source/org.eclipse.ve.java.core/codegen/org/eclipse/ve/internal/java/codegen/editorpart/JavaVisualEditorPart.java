@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.143 $  $Date: 2005-08-10 18:40:25 $ 
+ *  $Revision: 1.144 $  $Date: 2005-08-12 21:55:39 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -1418,7 +1418,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				public void errorMessageChanged(IPropertySheetEntry entry){
 				}
 				public void valueChanged(IPropertySheetEntry entry){
-					resetHighlightRange();					
 					Object source = ((JavaCommandStackPropertySheetEntry)entry).getEditValue();
 					Object id = ((JavaCommandStackPropertySheetEntry)entry).getId() ;
 					if ((source instanceof IJavaInstance) && id instanceof EStructuralFeature && (getSite().getPage().getActivePart() instanceof PropertySheet)) {
@@ -1485,7 +1484,14 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				// may be typing in it and if we drive the cursor away from them they won't like it
 				if (!textEditorFocus && sourceRange != null) {
 					try {
-						setHighlightRange(sourceRange.getOffset(), sourceRange.getLength(), true);
+						// Using select length of 0 so that nothing is actually selected, but
+						// we are driven to the line where source range is at. If we gave selection
+						// then some text would be selected, and this might accidentally cause a 
+						// change of text if that wasn't noticed. (Though the regular java editor
+						// does do selection of the method name/fieldname if select through outline,
+						// maybe we should too. Though the source range currently returned is the entire
+						// line and not just the expression interest).
+						selectAndReveal(sourceRange.getOffset(), 0);
 					} catch (Exception exc) {
 						exc.printStackTrace();
 						// Do nothing - We get assertion failures that I don't fully understand, especially when
@@ -2727,8 +2733,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			firstSelection = false ;
 			return ;
 		}
-		// If a cursor has moved, we want to drive back - reset the HighlightRange()
-		resetHighlightRange() ;
 		if (model instanceof IJavaInstance)
 			select(SELECT_JVE, (IJavaInstance) model, null);
 		else if (model instanceof EventInvocationAndListener) {
