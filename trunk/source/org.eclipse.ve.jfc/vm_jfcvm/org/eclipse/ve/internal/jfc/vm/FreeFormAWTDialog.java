@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormAWTDialog.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-16 17:46:03 $ 
+ *  $Revision: 1.7 $  $Date: 2005-08-12 17:43:04 $ 
  */
 
 import java.awt.*;
@@ -35,6 +35,26 @@ public class FreeFormAWTDialog extends Dialog {
 	protected boolean isDisposing = false;
 	
 	protected static FreeFormAWTDialog AWT_DIALOG;
+	
+	/**
+	 * Get the off-screen location. It will get the screen size and go 1000 more
+	 * off of the lower-right corner.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0.1
+	 */
+	public static Point getOffScreenLocation() {
+		Rectangle virtualBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+//		The following should be the true way, but getConfigurations() is very very slow (it is about a second elapsed time).
+//		So we're relying on getMaxBounds to work with multi-screen virtual device. 
+//		GraphicsConfiguration[] configurations = screenDevice.getConfigurations();
+//		Rectangle virtualBounds = configurations[0].getBounds();
+//		for (int i = 1; i < configurations.length; i++) {
+//			virtualBounds = virtualBounds.union(configurations[i].getBounds());
+//		}
+		return new Point(virtualBounds.width+1000, virtualBounds.height+1000);
+	}
 	
 	/**
 	 * Get the one awt dialog in the jvm.

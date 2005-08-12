@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.19 $ $Date: 2005-06-24 16:45:11 $
+ * $RCSfile: ShellProxyAdapter.java,v $ $Revision: 1.20 $ $Date: 2005-08-12 17:43:05 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -66,7 +66,7 @@ public class ShellProxyAdapter extends CompositeProxyAdapter {
 		if (onFreeForm) {
 			// On freeform we want at offscreen and we want to be visible. Apply these BEFORE instantiation.
 			// Actually we will always be on freeform.
-			overrideLocation(BeanSWTUtilities.getOffScreenLocation(), expression);
+			overrideLocation(BeanSWTUtilities.getOffScreenLocation(expression.getRegistry()), expression);
 			overrideVisibility(true, expression);
 		}
 		

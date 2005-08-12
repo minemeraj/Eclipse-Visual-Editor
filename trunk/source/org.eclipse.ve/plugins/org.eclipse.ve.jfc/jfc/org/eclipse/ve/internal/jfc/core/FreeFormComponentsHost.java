@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FreeFormComponentsHost.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-03 19:18:41 $ 
+ *  $Revision: 1.7 $  $Date: 2005-08-12 17:43:04 $ 
  */
 
 import org.eclipse.draw2d.geometry.Point;
@@ -51,7 +51,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 		}
 		
 		private void create(IExpression expression) {
-			Point loc = BeanAwtUtilities.getOffScreenLocation();
+			Point loc = BeanAwtUtilities.getOffScreenLocation(expression.getRegistry());
 			dialogTypeProxy = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, dialogTypeName);
 			dialogProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 			expression.createMethodInvocation(ForExpression.ASSIGNMENT_RIGHT, dialogTypeProxy.getMethodProxy(expression, "getFreeFormDialog", new String[] {"int" , "int"}), false, 2);	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

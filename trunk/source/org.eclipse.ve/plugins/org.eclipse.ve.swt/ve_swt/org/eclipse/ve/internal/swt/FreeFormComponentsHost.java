@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormComponentsHost.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-08-12 17:43:05 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -45,7 +45,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 		}
 		
 		private void create(IExpression expression) {
-			Point loc = BeanSWTUtilities.getOffScreenLocation();
+			Point loc = BeanSWTUtilities.getOffScreenLocation(expression.getRegistry());
 			ProxyFactoryRegistry registry = expression.getRegistry();
 			IBeanProxy environment = JavaStandardSWTBeanConstants.getConstants(registry).getEnvironmentProxy();
 			IStandardBeanProxyFactory proxyFactory = registry.getBeanProxyFactory();

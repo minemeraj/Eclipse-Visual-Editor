@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: WindowProxyAdapter.java,v $
- *  $Revision: 1.19 $  $Date: 2005-06-15 20:19:27 $ 
+ *  $Revision: 1.20 $  $Date: 2005-08-12 17:43:04 $ 
  */
 
 import java.util.logging.Level;
@@ -88,7 +88,7 @@ public class WindowProxyAdapter extends ContainerProxyAdapter {
 		if (onFreeForm) {
 			// On freeform we want at offscreen and we want to be visible. Apply these BEFORE instantiation.
 			// Actually we will always be on freeform.
-			overrideLocation(BeanAwtUtilities.getOffScreenLocation(), expression);
+			overrideLocation(BeanAwtUtilities.getOffScreenLocation(expression.getRegistry()), expression);
 			overrideVisibility(true, expression);
 		}
 		IProxy result = super.primInstantiateBeanProxy(expression);

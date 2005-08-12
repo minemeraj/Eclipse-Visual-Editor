@@ -728,15 +728,33 @@ public class BeanSWTUtilities {
     	return null;
     }
 	
-    public static Point getOffScreenLocation(){
-    	
-    	boolean showWindow = VCEPreferences.isLiveWindowOn();
-    	if (showWindow)
-    		return new Point(0,0);
-    	else {
-    		return new Point(10000, 10000);
-    	}
-    }
+    private Point offscreenLocation;
+    
+	/**
+	 * Get the offscreen location for windows.
+	 * @param registry TODO
+	 * @param registry
+	 * @return
+	 * 
+	 * @since 1.1.0.1
+	 */
+	public static Point getOffScreenLocation(ProxyFactoryRegistry registry) {
+		if (VCEPreferences.isLiveWindowOn())
+			return new Point(0, 0);
+		else {
+			BeanSWTUtilities constants = getConstants(registry);
+			if (constants.offscreenLocation == null) {
+				IBeanProxy env = JavaStandardSWTBeanConstants.getConstants(registry).getEnvironmentProxy();
+				IBeanProxy p = env.getTypeProxy().getMethodProxy("getOffScreenLocation", (String[]) null).invokeCatchThrowableExceptions(env);
+				if (p instanceof IPointBeanProxy) {
+					IPointBeanProxy pb = (IPointBeanProxy) p;
+					constants.offscreenLocation = new Point(pb.getX(), pb.getY());
+				} else
+					constants.offscreenLocation = new Point(10000, 10000);
+			}
+			return constants.offscreenLocation;
+		}
+	}
     /**
      * Set the selection on the TabFolder which brings the respective tab to the front.
      */
