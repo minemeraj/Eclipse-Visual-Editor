@@ -24,8 +24,9 @@ import org.eclipse.swt.widgets.Layout;
 
 
 /**
- * Class CompositeTable.  A virtual table control that works by laying out multiple
- * copies of a programmer-supplied Composite below each other.<p>
+ * Class CompositeTable.  n.  (1) A virtual table control that extends Composite.  (2) A virtual 
+ * table control that is composed of many Composites, each representing a header or a row,
+ * one below the other.<p>
  * 
  * Synopsis:<p>
  * 
@@ -78,7 +79,10 @@ import org.eclipse.swt.widgets.Layout;
  * be called whenever CompositeTable needs to refresh a particular row.<p>
  * 
  * Please refer to the remainder of the JavaDoc for information on the remaining
- * properties and events.
+ * properties and events.<p>
+ * 
+ * Although this control extends Composite, it is not intended to be subclassed
+ * except within its own implementation.
  * 
  * @author djo
  * @since 3.1
@@ -113,20 +117,20 @@ public class CompositeTable extends Canvas {
 		super(parent, style);
 		setLayout(new Layout() {
 			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
-				return computeTheSize(wHint, hHint, flushCache);
+				return CompositeTable.this.computeSize(wHint, hHint, flushCache);
 			}
 			protected void layout(Composite composite, boolean flushCache) {
 				resize();
 			}
 		});
 	}
-	
-	protected final Point computeTheSize(int wHint, int hHint, boolean changed) {
-		return super.computeSize(wHint, hHint, changed);
-	}
-	
+		
 	private int numChildrenLastTime = 0;
 	
+	/** (non-API)
+	 * Method resize.  Resize this table's contents.  Called from within the custom 
+	 * layout manager.
+	 */
 	protected final void resize() {
 		if (isRunTime()) {
 			int childrenLength = getChildren().length;
@@ -144,6 +148,10 @@ public class CompositeTable extends Canvas {
 		}
 	}
 
+	/** (non-API)
+	 * Method updateVisibleRows.  Makes sure that the content pane is displaying the correct
+	 * number of visible rows given the control's size.  Called from within #resize.
+	 */
 	protected void updateVisibleRows() {
 		if (contentPane == null) {
 			switchToRunMode();
@@ -152,19 +160,31 @@ public class CompositeTable extends Canvas {
 		contentPane.setBounds(0, 0, size.x, size.y);
 	}
 
+	/**
+	 * Switch from design mode where prototype header/row objects can be dropped on the 
+	 * control into run mode where all of the properties do what you would expect.
+	 */
 	private void switchToRunMode() {
 		showPrototypes(false);
 		contentPane = new InternalCompositeTable(this, SWT.NULL);
 	}
 	
+	/**
+	 * Switch back to design mode so that the prototype header/row objects may be manipulated
+	 * directly in a GUI design tool.
+	 */
 	private void switchToDesignMode(){
-		contentPane.dispose();
 		contentPane.dispose();
 		contentPane = null;
 		showPrototypes(true);
 		resizeAndRecordPrototypeRows();
 	}
 
+	/**
+	 * Turns display of the prototype objects on or off.
+	 * 
+	 * @param newValue true of the prototype objects should be displayed; false otherwise.
+	 */
 	private void showPrototypes(boolean newValue) {
 		if (headerControl != null) {
 			headerControl.setVisible(newValue);
@@ -174,6 +194,11 @@ public class CompositeTable extends Canvas {
 		}
 	}
 
+	/**
+	 * (non-API) Method resizeAndRecordPrototypeRows. Figure out what child
+	 * controls are the header and row prototype rows respectively and resize
+	 * them so they occupy the entire width and their preferred height.
+	 */
 	protected void resizeAndRecordPrototypeRows() {
 		Control[] children = getChildren();
 		ArrayList realChildren = new ArrayList();
@@ -241,8 +266,12 @@ public class CompositeTable extends Canvas {
 		}
 	}
 	
-	/**
-	 * @param child
+	/**(non-API)
+	 * Method layoutHeaderOrRow.  If a header or row object does not have a layout manager, this
+	 * method will automatically be called to layout the child controls of that header or row
+	 * object.
+	 * 
+	 * @param child The child object to layout.
 	 * @return the height of the header or row
 	 */
 	int layoutHeaderOrRow(Composite child) {
@@ -281,6 +310,17 @@ public class CompositeTable extends Canvas {
 		return maxHeight;
 	}
 
+	/**
+	 * Compute and return a weights array where each weight is the percentage the corresponding
+	 * column should occupy of the entire control width.  If the elements in the supplied weights 
+	 * array add up to 100 and the length of the array is the same as the number of columns, the
+	 * supplied weights array is used.  Otherwise, this method computes and returns a weights 
+	 * array that makes each column an equal size. 
+	 * 
+	 * @param weights The default or user-supplied weights array.
+	 * @param numChildren The number of child controls.
+	 * @return The weights array that will be used by the layout manager.
+	 */
 	private int[] checkWeights(int[] weights, int numChildren) {
 		if (weights.length == numChildren) {
 			int sum = 0;
