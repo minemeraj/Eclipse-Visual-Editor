@@ -1,32 +1,43 @@
 package org.eclipse.ve.sweet2;
 
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.ContentViewer;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 
 public class TextEditor extends ContentViewer implements Editor {
 	
 	private Text text;
-	private IPropertyProvider propertyProvider;
+	private IValueProvider valueProvider;
 	public static int DEFAULT_COMMIT_POLICY = COMMIT_FOCUS;
 	private Listener updateListener;
 	private int updateListenerType;
 	private int commitPolicy = DEFAULT_COMMIT_POLICY;
+	private IDomainProvider domainProvider;
+	
+	public TextEditor(Text aText){
+		text = aText;
+		setDefaults();
+		hookControl(aText);
+	}
 	
 	public TextEditor(Composite parent, int styles){
 		text = new Text(parent,styles);
-		setDefaults();
-	}
-	
-	protected void setDefaults() {		
-		text.setEnabled(false);
-		setUpdatePolicy(DEFAULT_COMMIT_POLICY);		
-	}
-	
-	public TextEditor(Text text){
-		this.text = text;
 		hookControl(text);
 		setDefaults();
+	}
+	
+	private void setDefaults(){
+		text.setEnabled(false);
+		setUpdatePolicy(DEFAULT_COMMIT_POLICY);		
 	}
 	
 	public Text getText(){
@@ -42,7 +53,8 @@ public class TextEditor extends ContentViewer implements Editor {
 	}
 
 	public void refresh() {
-		
+		String displayValue = ((LabelProvider)getLabelProvider()).getText(valueProvider.getValue());
+		text.setText(displayValue);
 	}
 
 	public void setSelection(ISelection selection, boolean reveal) {
@@ -51,10 +63,9 @@ public class TextEditor extends ContentViewer implements Editor {
 	
 	public void setContentProvider(IContentProvider contentProvider) {
 		super.setContentProvider(contentProvider);
-		propertyProvider = (IPropertyProvider)contentProvider;
-		Object newSource = propertyProvider.getSource();
-		getText().setEnabled(newSource != null);
-		setInput(newSource);
+		valueProvider = (IValueProvider)contentProvider;
+		getText().setEnabled(valueProvider.canSetValue());
+		setInput(valueProvider.getValue());
 	}
 	
 	public void setUpdatePolicy(int aCommitPolicy){
@@ -64,7 +75,11 @@ public class TextEditor extends ContentViewer implements Editor {
 		} else {
 			updateListener = new Listener(){
 				public void handleEvent(Event event) {
-					propertyProvider.refreshDomain();
+					// Push the changes down to the model domain
+					Object modelValue = getDomainProvider() == null ? 
+							text.getText() : 
+							getDomainProvider().getValue(text.getText());
+					valueProvider.setValue(modelValue);
 				}				
 			};
 		}
@@ -84,5 +99,17 @@ public class TextEditor extends ContentViewer implements Editor {
 		default:
 			return DEFAULT_COMMIT_POLICY;
 		}		
+	}
+
+	public void setDomainProvider(IDomainProvider aDomainProvider) {	
+		domainProvider = aDomainProvider;
+	}
+
+	public IDomainProvider getDomainProvider() {
+		if(domainProvider == null && valueProvider.getValue() != null){
+			// To to use a default domain provider based on the object type
+			domainProvider = DomainProviderFactory.getDefaultDomainProvider(valueProvider.getValue().getClass());
+		}
+		return domainProvider;
 	}
 }
