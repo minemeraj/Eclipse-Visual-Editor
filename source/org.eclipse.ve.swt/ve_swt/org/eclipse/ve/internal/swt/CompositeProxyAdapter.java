@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.36 $ $Date: 2005-08-11 19:28:01 $
+ * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.37 $ $Date: 2005-08-12 18:29:07 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -102,11 +102,11 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 	}
 
 	private IProxyMethod moveAboveMethodProxy(IExpression expression) {
-		return getBeanProxy().getTypeProxy().getMethodProxy(expression, "moveAbove", new String[] { "org.eclipse.swt.widgets.Control"}); //$NON-NLS-1$ //$NON-NLS-2$
+		return getBeanTypeProxy("org.eclipse.swt.widgets.Composite", expression).getMethodProxy(expression, "moveAbove", new String[] { "org.eclipse.swt.widgets.Control"}); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private IProxyMethod moveBelowMethodProxy(IExpression expression) {
-		return getBeanProxy().getTypeProxy().getMethodProxy(expression, "moveBelow", new String[] { "org.eclipse.swt.widgets.Control"}); //$NON-NLS-1$ //$NON-NLS-2$
+		return getBeanTypeProxy("org.eclipse.swt.widgets.Composite", expression).getMethodProxy(expression, "moveBelow", new String[] { "org.eclipse.swt.widgets.Control"}); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
