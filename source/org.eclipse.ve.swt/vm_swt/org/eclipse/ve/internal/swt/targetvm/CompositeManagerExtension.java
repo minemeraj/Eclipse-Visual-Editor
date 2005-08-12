@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeManagerExtension.java,v $
- *  $Revision: 1.4 $  $Date: 2005-07-14 18:06:44 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-12 15:59:40 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -117,8 +117,16 @@ public class CompositeManagerExtension extends ControlManagerExtension {
 				for (int i = 0; i < children.length; i++) {
 					Control child = children[i];
 					// Restore to what it should be, either the explicit setting or the default one at construction.
-					Object data = child.getData(ControlManager.LAYOUT_DATA_KEY);	// Use what it thinks it should be.
-					child.setLayoutData(data);	// Restore it to test it. It may of been changed to a good value from a previous pass through this code, we want to retest to make sure it is still bad.
+					Object data = ControlManager.getStoredLayoutData(child);	// Use what it thinks it should be.
+					if (data != ControlManager.LAYOUT_DATA_NOTSTORED) {
+						// We have tested once the data, so we will restore it.
+						// Restore it to test it. It may of been changed to a good value from a previous pass through this code, we want to retest to make sure it is still bad.
+						child.setLayoutData(data);
+					} else {
+						// We have never queried this value. Probably came from a subclass of Composite that had some already defined.
+						// So grab the current value and use it as the initial data like we had done.
+						ControlManager.storeLayoutData(child, data = child.getLayoutData());
+					}
 					// layoutDataType null means we don't know the type, so no test is done, data == null is considered to be always good. So far that seems to be true.
 					if (layoutDataType != null && data != null) {
 						// It should of been null (Void.TYPE - isInstance is always false against that) or it is not an instance of the type.
