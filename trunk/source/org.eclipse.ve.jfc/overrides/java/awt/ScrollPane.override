@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<event:Add xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<event:AddMany xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
+    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" 
     xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:event="event.xmi" 
     featureName="eAnnotations">
   <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
@@ -8,4 +9,6 @@
       graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ScrollPaneGraphicalEditPart">
     <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/scrollpane_obj.gif"/>
   </addedEObjects>
-</event:Add>
+  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ScrollPaneProxyAdapter">
+  </addedEObjects>
+</event:AddMany>
