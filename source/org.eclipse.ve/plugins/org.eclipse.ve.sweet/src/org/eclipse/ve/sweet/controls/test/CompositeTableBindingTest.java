@@ -24,7 +24,7 @@ import org.eclipse.ve.sweet.controls.IInsertHandler;
 import org.eclipse.ve.sweet.controls.IRowContentProvider;
 import org.eclipse.ve.sweet.controls.IRowFocusListener;
 
-public class CompositeTableTest {
+public class CompositeTableBindingTest {
 
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
 	private CompositeTable table = null;
@@ -33,7 +33,7 @@ public class CompositeTableTest {
 	
 	private LinkedList personList = new LinkedList();
 	
-	public CompositeTableTest() {
+	public CompositeTableBindingTest() {
 		personList.add(new Person("John", "1234", "Wheaton", "IL"));
 		personList.add(new Person("Jane", "1234", "Wheaton", "IL"));
 		personList.add(new Person("Frank", "1234", "Wheaton", "IL"));
@@ -131,7 +131,7 @@ public class CompositeTableTest {
 	 */
 	public static void main(String[] args) {
 		Display display = Display.getDefault();
-		CompositeTableTest thisClass = new CompositeTableTest();
+		CompositeTableBindingTest thisClass = new CompositeTableBindingTest();
 		thisClass.createSShell();
 		thisClass.sShell.open();
 
