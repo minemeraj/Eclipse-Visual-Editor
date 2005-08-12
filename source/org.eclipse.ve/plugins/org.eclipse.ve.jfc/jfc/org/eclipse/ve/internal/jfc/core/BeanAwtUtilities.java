@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.33 $  $Date: 2005-07-15 22:36:56 $ 
+ *  $Revision: 1.34 $  $Date: 2005-08-12 17:43:04 $ 
  */
 
 import java.util.List;
@@ -49,29 +49,29 @@ public class BeanAwtUtilities {
 	public static final String FEEDBACKCONTROLLER_CLASSNAME = COMPONENTMANAGER_CLASSNAME+"$ComponentManagerFeedbackController";	//$NON-NLS-1$
 	public static final String COMPONENTMANAGEREXTENSION_CLASSNAME = COMPONENTMANAGER_CLASSNAME+"$ComponentManagerExtension";	//$NON-NLS-1$
 
-	public static Point getOffScreenLocation() {
-
-		boolean showWindow = VCEPreferences.isLiveWindowOn();
-		if (showWindow)
+	private Point offscreenLocation;
+	
+	/**
+	 * Get the offscreen location for windows.
+	 * @param registry
+	 * @return
+	 * 
+	 * @since 1.1.0.1
+	 */
+	public static Point getOffScreenLocation(ProxyFactoryRegistry registry) {
+		if (VCEPreferences.isLiveWindowOn())
 			return new Point(0, 0);
 		else {
-			// Get how big the display is and put it out beyond that.
-			//		Display disp = Display.getCurrent();
-			//		if (disp == null)
-			//			disp = Display.getDefault();
-			//		final Rectangle[] b = new Rectangle[1];
-			//		final Display dsp = disp;
-			//		disp.syncExec(new Runnable() {
-			//			/**
-			//			 * @see java.lang.Runnable#run()
-			//			 */
-			//			public void run() {
-			//				b[0] = dsp.getBounds();
-			//			}
-			//		});
-			//		return new Point(Math.max(10000, b[0].width*2), Math.max(10000, b[0].height*2));
-			// TODO 57295 : Need to determine this dynamically - maybe using java.awt.Toolkit.getScreenSize() and cant do a syncExec()
-			return new Point(10000, 10000);
+			BeanAwtUtilities constants = getConstants(registry);
+			if (constants.offscreenLocation == null) {
+				IBeanProxy p = registry.getMethodProxyFactory().getMethodProxy("org.eclipse.ve.internal.jfc.vm.FreeFormAWTDialog", "getOffScreenLocation", null).invokeCatchThrowableExceptions(null);
+				if (p instanceof IPointBeanProxy) {
+					IPointBeanProxy pb = (IPointBeanProxy) p;
+					constants.offscreenLocation = new Point(pb.getX(), pb.getY());
+				} else
+					constants.offscreenLocation = new Point(10000, 10000);
+			}
+			return constants.offscreenLocation;
 		}
 	}
 
