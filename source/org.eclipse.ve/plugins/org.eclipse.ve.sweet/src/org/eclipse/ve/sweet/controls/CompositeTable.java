@@ -752,22 +752,22 @@ public class CompositeTable extends Canvas {
 	LinkedList rowConstructionListeners = new LinkedList();
 	
 	/**
-	 * Method addrowConstructionListener.  Adds the specified rowConstructionListener to the set of objects that
+	 * Method addRowConstructionListener.  Adds the specified rowConstructionListener to the set of objects that
 	 * will be used to listen to row construction events.
 	 * 
 	 * @param rowConstructionListener the rowConstructionListener to add.
 	 */
-	public void addrowConstructionListener(IRowConstructionListener rowConstructionListener) {
+	public void addRowConstructionListener(IRowConstructionListener rowConstructionListener) {
 		rowConstructionListeners.add(rowConstructionListener);
 	}
 	
 	/**
-	 * Method removerowConstructionListener.  Removes the specified rowConstructionListener from the set of objects that
+	 * Method removeRowConstructionListener.  Removes the specified rowConstructionListener from the set of objects that
 	 * will be used to listen to row construction events.
 	 * 
 	 * @param rowConstructionListener the rowConstructionListener to remove.
 	 */
-	public void removerowConstructionListener(IRowConstructionListener rowConstructionListener) {
+	public void removeRowConstructionListener(IRowConstructionListener rowConstructionListener) {
 		rowConstructionListeners.remove(rowConstructionListener);
 	}
 	
