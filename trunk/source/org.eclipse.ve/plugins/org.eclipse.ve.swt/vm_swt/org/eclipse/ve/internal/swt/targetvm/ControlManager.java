@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.21 $ $Date: 2005-08-09 22:51:05 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.22 $ $Date: 2005-08-12 15:59:40 $
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -45,7 +45,7 @@ import org.eclipse.ve.internal.swt.common.Common;
  */
 public class ControlManager {
 
-	/**
+	/*
 	 * The purpose of this key is a little complicated. It is possible that the component has an invalid layout data for the current 
 	 * layout manager. This key is used to store with the component the original layout data by default when created, or the
 	 * one that was explicitly set. Then whenever the layout or some layout data is changed then {@link CompositeManagerExtension#aboutToValidate()}
@@ -53,7 +53,21 @@ public class ControlManager {
 	 * a message will be sent back to the host to know that it is invalid for that layout, and then it will set the layout data to null.
 	 * This will allow the layout to at least attempt a layout.
 	 */
-	protected static final String LAYOUT_DATA_KEY = "org.swt.layoutdata";	//$NON-NLS-1$
+	private static final String LAYOUT_DATA_KEY = "org.swt.layoutdata";	//$NON-NLS-1$
+	
+	/*
+	 * This valud is used when the layout data is explicitly null. This is so that
+	 * we can tell the difference between the data not yet set and set to null. 
+	 */
+	private static final Object LAYOUT_DATA_NULL = new Object();
+	
+	/**
+	 * This value is returned from {@link #getStoredLayoutData(Control)} to indicate
+	 * that there was no data stored for the control.
+	 * 
+	 * @since 1.1.0.1
+	 */
+	protected static final Object LAYOUT_DATA_NOTSTORED = new Object();
 	
 	protected Control fControl;
 
@@ -799,14 +813,15 @@ public class ControlManager {
 		if (fControl != null) {
 			feedbackController.deregisterComponentManager(fControl);
 			locOverridden = false; // Since changing controls we should reset to not overridden.
-			fControl.setData(LAYOUT_DATA_KEY, null);
+			fControl.setData(LAYOUT_DATA_KEY, null);	// remove it
 		}
 		Control oldControl = fControl;
 		fControl = aControl;
 		if (isValidControl(fControl)) {
 			feedbackController.registerComponentManager(fControl, this);
-			feedbackController.queueInitialRefresh(this); // Queue up the initial refresh request.			
-			fControl.setData(LAYOUT_DATA_KEY, fControl.getLayoutData());	// Save original value.
+			feedbackController.queueInitialRefresh(this); // Queue up the initial refresh request.	
+			Object layoutData = fControl.getLayoutData();
+			storeLayoutData(fControl, layoutData);
 		}
 
 		if (extensions != null) {
@@ -815,6 +830,34 @@ public class ControlManager {
 				lcl[i].controlSet(oldControl, fControl);
 			}
 		}
+	}
+
+	/**
+	 * Store the layout data into the "data" field of the control.
+	 * @param control
+	 * @param layoutData
+	 * 
+	 * @since 1.1.0.1
+	 */
+	protected static void storeLayoutData(Control control, Object layoutData) {
+		control.setData(LAYOUT_DATA_KEY, layoutData != null ? layoutData : LAYOUT_DATA_NULL);	// Save original value.
+	}
+	
+	/**
+	 * Return the stored data.
+	 * @param control
+	 * @return the stored data for layout data or {@link #LAYOUT_DATA_NOTSTORED} if it was not stored.
+	 * 
+	 * @since 1.1.0.1
+	 */
+	protected static Object getStoredLayoutData(Control control) {
+		Object data = control.getData(LAYOUT_DATA_KEY);
+		if (data == null)
+			return LAYOUT_DATA_NOTSTORED;
+		else if (data != LAYOUT_DATA_NULL)
+			return data;
+		else
+			return null;
 	}
 
 	/**
@@ -1065,7 +1108,7 @@ public class ControlManager {
 	 */
 	public Object applyLayoutData(Object newData) {
 		Control control = getControl();
-		control.setData(LAYOUT_DATA_KEY, newData);
+		control.setData(LAYOUT_DATA_KEY, newData != null ? newData : LAYOUT_DATA_NULL);
 		Object old = control.getLayoutData();
 		control.setLayoutData(newData);
 		return old;
