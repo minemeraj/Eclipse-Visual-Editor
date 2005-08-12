@@ -13,12 +13,12 @@ public class PropertyProvider implements InvocationHandler {
 	private String propertyName;
 	private Class receiverClass;
 
-	public static IPropertyProvider getPropertyProvider(Object source, String propertyName){
+	public static IValueProvider getPropertyProvider(Object source, String propertyName){
 		 try {
 	            Object result = Proxy.newProxyInstance(PropertyProvider.class.getClassLoader(),
-	                    new Class[] { IPropertyProvider.class }, new PropertyProvider(
+	                    new Class[] { IValueProvider.class }, new PropertyProvider(
 	                            source, propertyName));
-	            return (IPropertyProvider) result;
+	            return (IValueProvider) result;
 	        } catch (Exception e) {
 	        	e.printStackTrace();
 	        }		

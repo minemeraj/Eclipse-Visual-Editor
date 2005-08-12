@@ -7,5 +7,7 @@ public interface Editor {
 	public final int COMMIT_EXPLICIT = 2;	
 	
 	void setUpdatePolicy(int updatePolicy);
+	void setDomainProvider(IDomainProvider domainProvider);
+	IDomainProvider getDomainProvider();	
 
 }

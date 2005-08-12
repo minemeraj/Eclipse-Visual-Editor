@@ -61,7 +61,7 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		}
 	}
 
-	public IPropertyProvider getPropertyProvider(String string) {
+	public IValueProvider getPropertyProvider(String string) {
 		SimplePropertyProvider result = null;
 		if(source != null){
 			 result = new SimplePropertyProvider(source,string);
@@ -72,34 +72,27 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		binders.add(result);
 		return result;
 	}
-
+	
 	public void propertyChanged(String propertyName, Object value) {
 		// Refresh all binders
 		if(isSignallingChange) return;
 		isSignallingChange = true;
 		Iterator iter = binders.iterator();
 		while(iter.hasNext()){
-			IPropertyProvider propertyProvider = (IPropertyProvider)iter.next(); 
-			if(propertyProvider.isForProperty(propertyName)){
-				propertyProvider.refreshUI();
+			IValueProvider propertyProvider = (IValueProvider)iter.next(); 
+			if(propertyProvider instanceof SimplePropertyProvider){
+				SimplePropertyProvider provider = (SimplePropertyProvider) propertyProvider;
+				provider.firePropertyChanged();
 			}
 		}
 		isSignallingChange = false;
-	}
-
-	public void commit() {
-		Iterator iter = binders.iterator();
-		while(iter.hasNext()){
-			((IPropertyProvider)iter.next()).refreshDomain();
-		}
 	}
 
 	public void setSource(Object aSource) {
 		source = aSource;
 		Iterator iter = binders.iterator();		
 		while(iter.hasNext()){
-			IPropertyProvider provider = (IPropertyProvider)iter.next();
-			provider.setSource(aSource);
+			IValueProvider provider = (IValueProvider)iter.next();
 		}		
 	}
 }

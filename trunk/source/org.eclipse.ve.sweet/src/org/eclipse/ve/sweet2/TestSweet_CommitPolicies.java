@@ -63,7 +63,8 @@ public class TestSweet_CommitPolicies {
 		
 		final TextEditor nameTextViewer = new TextEditor(parent,SWT.BORDER);
 		nameTextViewer.setUpdatePolicy(updatePolicy);
-		nameTextViewer.setContentProvider(personBinder.getPropertyProvider("name"));
+		final IValueProvider nameBinder = personBinder.getPropertyProvider("name");		
+		nameTextViewer.setContentProvider(nameBinder);
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		final TextEditor nameTextViewer_2 = new TextEditor(parent,SWT.READ_ONLY);		
@@ -72,16 +73,24 @@ public class TestSweet_CommitPolicies {
 		
 		// AGE
 		Label ageLabel = new Label(parent,SWT.NONE);
-		ageLabel.setText("age: ");
+		ageLabel.setText("age: ");	
 		
+		final SpinnerEditor ageSpinnerViewer = new SpinnerEditor(parent,SWT.BORDER);
+		final IValueProvider ageBinder = personBinder.getPropertyProvider("age");
+		ageSpinnerViewer.setContentProvider(ageBinder);
+		ageSpinnerViewer.setUpdatePolicy(updatePolicy);		
+		
+		final TextEditor ageTextViewer_2 = new TextEditor(parent,SWT.READ_ONLY);
+		ageTextViewer_2.setContentProvider(personBinder.getPropertyProvider("age"));
+		ageTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		// Place another age viewer that is a text viewer to show it works with ints
+		Label spacer = new Label(parent,SWT.NONE);
 		final TextEditor ageTextViewer = new TextEditor(parent,SWT.BORDER);
 		ageTextViewer.setContentProvider(personBinder.getPropertyProvider("age"));
 		ageTextViewer.setUpdatePolicy(updatePolicy);		
 		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		final TextEditor ageTextViewer_2 = new TextEditor(parent,SWT.READ_ONLY);
-		ageTextViewer_2.setContentProvider(personBinder.getPropertyProvider("age"));
-		ageTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 				
 		// If using explicit commit then create a button for this
 		if(updatePolicy == Editor.COMMIT_EXPLICIT){
@@ -93,8 +102,12 @@ public class TestSweet_CommitPolicies {
 			Label separator = new Label(parent,SWT.NONE);
 			commitButton.addSelectionListener(new SelectionAdapter(){
 				public void widgetSelected(SelectionEvent e) {
-					((IPropertyProvider)nameTextViewer.getContentProvider()).refreshDomain();
-					((IPropertyProvider)ageTextViewer.getContentProvider()).refreshDomain();					
+					// Update the name
+					Object newName = nameTextViewer.getText().getText();
+					nameBinder.setValue(newName);
+					// Update the age
+					Object newAge = new Integer(ageSpinnerViewer.getSpinner().getSelection());
+					ageBinder.setValue(newAge);					
 				}				
 			});
 		}						
