@@ -80,7 +80,7 @@ public class TestSweet_ListToTextEdit {
 		
 		listViewer.addSelectionChangedListener(new ISelectionChangedListener(){
 			public void selectionChanged(SelectionChangedEvent event) {
-				personBinder.setSource(((IStructuredSelection)event.getSelection()).getFirstElement());
+				personBinder.setValue(((IStructuredSelection)event.getSelection()).getFirstElement());
 			}
 		});
 				

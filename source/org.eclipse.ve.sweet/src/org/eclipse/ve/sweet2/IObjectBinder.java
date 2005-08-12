@@ -1,9 +1,12 @@
 package org.eclipse.ve.sweet2;
 
+import java.beans.PropertyChangeListener;
 
-public interface IObjectBinder {
+
+public interface IObjectBinder extends IValue {
 
 	IValueProvider getPropertyProvider(String propertyName);
-	void setSource(Object aSource);
+	void addPropertyChangeListener(PropertyChangeListener l);
+	void refresh(String propertyName);
 
 }

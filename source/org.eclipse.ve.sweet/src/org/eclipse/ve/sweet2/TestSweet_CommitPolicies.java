@@ -9,7 +9,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.*;
-import org.eclipse.ve.sweet.test.Person;
+import org.eclipse.ve.sweet.testcase.Person;
 
 /**
  * This example builds on TestSweet3 but instead of each contentProvider listening to a specific Person
@@ -54,7 +54,7 @@ public class TestSweet_CommitPolicies {
 	
 	public static void createPersonFields(int updatePolicy, Composite parent){
 		
-		final Person p = new Person("John Doe",35);
+		final Person p = new Person("John","Doe",35);
 		final IObjectBinder personBinder = ObjectBinder.createObjectBinder(p);
 		
 		// NAME
@@ -63,12 +63,12 @@ public class TestSweet_CommitPolicies {
 		
 		final TextEditor nameTextViewer = new TextEditor(parent,SWT.BORDER);
 		nameTextViewer.setUpdatePolicy(updatePolicy);
-		final IValueProvider nameBinder = personBinder.getPropertyProvider("name");		
+		final IValueProvider nameBinder = personBinder.getPropertyProvider("firstName");		
 		nameTextViewer.setContentProvider(nameBinder);
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		final TextEditor nameTextViewer_2 = new TextEditor(parent,SWT.READ_ONLY);		
-		nameTextViewer_2.setContentProvider(personBinder.getPropertyProvider("name"));
+		nameTextViewer_2.setContentProvider(personBinder.getPropertyProvider("firstName"));
 		nameTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		// AGE

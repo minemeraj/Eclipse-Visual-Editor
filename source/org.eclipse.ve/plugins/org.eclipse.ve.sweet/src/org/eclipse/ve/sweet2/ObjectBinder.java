@@ -1,5 +1,7 @@
 package org.eclipse.ve.sweet2;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -10,6 +12,7 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 	private Object source;
 	private Class receiverClass;
 	private List binders = new ArrayList();
+	private List listeners = new ArrayList();
 	private boolean isSignallingChange;
 
 	public static IObjectBinder createObjectBinder(Object source) {
@@ -62,37 +65,51 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 	}
 
 	public IValueProvider getPropertyProvider(String string) {
-		SimplePropertyProvider result = null;
-		if(source != null){
-			 result = new SimplePropertyProvider(source,string);
-		} else {
-			result = new SimplePropertyProvider((Class)receiverClass,string);
-		}
+		SimplePropertyProvider result = new SimplePropertyProvider(this,string);
 		result.setObjectBinder(this);
 		binders.add(result);
 		return result;
 	}
 	
-	public void propertyChanged(String propertyName, Object value) {
+	public void setValue(Object aSource) {
+		Object oldSource = source;
+		source = aSource;
+		if(isSignallingChange) return;		
+		isSignallingChange = true;		
+		Iterator iter = listeners.iterator();		
+		while(iter.hasNext()){
+			PropertyChangeListener listener = (PropertyChangeListener)iter.next();
+			listener.propertyChange(new PropertyChangeEvent(this,null,oldSource,aSource));
+		}		
+		isSignallingChange = false;		
+	}
+
+	public Object getValue() {
+		return source;
+	}
+
+	public Class getType() {
+		return receiverClass == null ? source.getClass() : receiverClass;
+	}
+
+	public void addPropetyChangeListener(PropertyChangeListener listener) {
+		listeners.add(listener);
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener l) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void refresh(String propertyName) {
 		// Refresh all binders
 		if(isSignallingChange) return;
 		isSignallingChange = true;
-		Iterator iter = binders.iterator();
+		Iterator iter = listeners.iterator();		
 		while(iter.hasNext()){
-			IValueProvider propertyProvider = (IValueProvider)iter.next(); 
-			if(propertyProvider instanceof SimplePropertyProvider){
-				SimplePropertyProvider provider = (SimplePropertyProvider) propertyProvider;
-				provider.firePropertyChanged();
-			}
-		}
-		isSignallingChange = false;
-	}
-
-	public void setSource(Object aSource) {
-		source = aSource;
-		Iterator iter = binders.iterator();		
-		while(iter.hasNext()){
-			IValueProvider provider = (IValueProvider)iter.next();
-		}		
+			PropertyChangeListener listener = (PropertyChangeListener)iter.next();
+			listener.propertyChange(new PropertyChangeEvent(this,propertyName,null,null));
+		}			
+		isSignallingChange = false;		
 	}
 }
