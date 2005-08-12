@@ -53,8 +53,10 @@ public class TextEditor extends ContentViewer implements Editor {
 	}
 
 	public void refresh() {
-		String displayValue = ((LabelProvider)getLabelProvider()).getText(valueProvider.getValue());
-		text.setText(displayValue);
+		if(!text.isDisposed()){
+			String displayValue = ((LabelProvider)getLabelProvider()).getText(valueProvider.getValue());
+			text.setText(displayValue);
+		}
 	}
 
 	public void setSelection(ISelection selection, boolean reveal) {

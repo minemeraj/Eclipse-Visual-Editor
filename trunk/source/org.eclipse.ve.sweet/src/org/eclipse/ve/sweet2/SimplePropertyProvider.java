@@ -1,5 +1,7 @@
 package org.eclipse.ve.sweet2;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,7 @@ import org.eclipse.swt.widgets.Control;
 
 public class SimplePropertyProvider implements IValueProvider {
 	
-	private Object fSource;
+	private IValue fSource;
 	private String fPropertyName;
 	private Class fReceiverClass;
 	private Method fGetMethod;
@@ -20,10 +22,10 @@ public class SimplePropertyProvider implements IValueProvider {
 	private Editor editor;
 	private Control control;
 	
-	public SimplePropertyProvider(Object source, String propertyName){
-		fSource = source;
+	public SimplePropertyProvider(IValue source, String propertyName){
 		fPropertyName = propertyName;
-		fReceiverClass = source.getClass();
+		fSource = source;		
+		fReceiverClass = source.getType();
 	}
 	
 	public SimplePropertyProvider(Class aReceiverClass, String propertyName){
@@ -36,11 +38,13 @@ public class SimplePropertyProvider implements IValueProvider {
 			initializeGetMethod();
 		}
 		try {
-			return fGetMethod.invoke(fSource,null);
+			if(fSource.getValue() != null){
+				return fGetMethod.invoke(fSource.getValue(),null);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
 		}
+		return null;		
 	}
 	
 	private void initializeGetMethod(){
@@ -54,6 +58,7 @@ public class SimplePropertyProvider implements IValueProvider {
 				fPropertyType = fGetMethod.getReturnType();
 			}
 		} catch (NoSuchMethodException exc){
+			exc.toString();
 		}		
 	}
 
@@ -74,9 +79,9 @@ public class SimplePropertyProvider implements IValueProvider {
 		try {
 			isSettingValue = true;
 			if(fSource != null){
-				fSetMethod.invoke(fSource,new Object[] {value});
+				fSetMethod.invoke(fSource.getValue(),new Object[] {value});
 				// Refresh binders so they can update the new value
-				objectBinder.propertyChanged(fPropertyName,value);
+				objectBinder.refresh(fPropertyName);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,19 +108,24 @@ public class SimplePropertyProvider implements IValueProvider {
 	
 	public void setObjectBinder(ObjectBinder binder) {
 		objectBinder = binder;
+		objectBinder.addPropetyChangeListener(new PropertyChangeListener(){
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(!isSettingValue){
+					((Viewer)editor).refresh();
+				}
+			}			
+		});
 	}
 
 	public boolean canSetValue() {
-		return fSource != null;
+		return fSource.getValue() != null;
 	}
 
-	public void firePropertyChanged() {
-		if(!isSettingValue){
-			((Viewer)editor).refresh();
+	public Class getType() {
+		if(fGetMethod == null){
+			initializeGetMethod();
 		}
+		return fGetMethod.getReturnType();
 	}
 
-	public void setSource(Object aSource) {
-		fSource = aSource;
-	}
 }
