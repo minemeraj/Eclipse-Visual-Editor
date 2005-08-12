@@ -679,6 +679,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 							// Otherwise, show the placeholder object and give it focus
 							deleteRowAt(currentRow);
 							emptyTablePlaceholder = new EmptyTablePlaceholder(controlHolder, SWT.NULL);
+							emptyTablePlaceholder.setMessage(parent.getInsertHint());
 							emptyTablePlaceholder.setFocus();
 						}
 					} else {

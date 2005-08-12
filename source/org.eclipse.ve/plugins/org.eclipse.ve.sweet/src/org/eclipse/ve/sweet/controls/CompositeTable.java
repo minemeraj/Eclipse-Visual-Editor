@@ -421,6 +421,27 @@ public class CompositeTable extends Canvas {
 			contentPane.setWeights(weights);
 		}
 	}
+	
+	String insertHint = "Press <INS> to insert a new row.";
+	
+	/**
+	 * Returns the hint string that will be displayed when there are no rows in the table.
+	 * 
+	 * @return The hint string that will be displayed when there are no rows in the table.
+	 */
+	public String getInsertHint() {
+		return insertHint;
+	}
+	
+	/**
+	 * Sets the hint string that will be displayed when there are no rows in the table.  The
+	 * default value is "Press &lt;INS> to insert a new row."
+	 * 
+	 * @param newHint
+	 */
+	public void setInsertHint(String newHint) {
+		this.insertHint = newHint;
+	}
 
 	/**
 	 * Method getMaxRowsVisible.  Returns the maximum number of rows that will be permitted 
