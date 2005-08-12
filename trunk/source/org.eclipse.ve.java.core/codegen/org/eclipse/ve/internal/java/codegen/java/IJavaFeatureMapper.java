@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IJavaFeatureMapper.java,v $
- *  $Revision: 1.17 $  $Date: 2005-07-18 20:25:43 $ 
+ *  $Revision: 1.18 $  $Date: 2005-08-12 12:54:02 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -75,8 +75,9 @@ public static class VEexpressionPriority {
 			StringBuffer st = new StringBuffer();
 			st.append("("); //$NON-NLS-1$
 			st.append(index);
-			st.append(","); //$NON-NLS-1$			
+			st.append(", "); //$NON-NLS-1$			
 			st.append(sf.getName());
+			st.append(" feature on parent: ");
 			if (parent instanceof IJavaObjectInstance)
 			     st.append(((IJavaObjectInstance)parent).getAllocation().toString());
 			else

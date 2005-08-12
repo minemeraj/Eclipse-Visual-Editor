@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.45 $  $Date: 2005-08-09 22:55:24 $ 
+ *  $Revision: 1.46 $  $Date: 2005-08-12 12:54:02 $ 
  */
 
 import java.util.*;
@@ -417,6 +417,32 @@ protected  boolean isGrouping (BeanPart bp, List expressions, int index) {
 	return result;
 }
 
+/**
+ * 
+ * @return true, if there exist and expression with a lower Z order priority in the group.
+ * 
+ * @since 1.1.0.1
+ */
+protected boolean isLowZOrderInGroup(BeanPart bp, List expressions, int index, VEexpressionPriority pri) {
+	boolean result = false;
+	if (pri.isIndexed()) {
+		for (int i=index; i>=0; i--) {	
+		    CodeExpressionRef exp = (CodeExpressionRef) expressions.get(i);
+		    VEexpressionPriority cp = exp.getPriority();
+		    if (cp.isIndexed()&&pri.comparePriority(cp)>0) { // pri comes before cp
+		    	result = true;
+		    	break;
+		    }
+			if (exp.getBean()!=bp)
+				break; // Not in the grouping anymore
+			if (exp.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {				
+				break;
+			}
+		}		
+	}
+    return result;
+}
+
 protected int getGroupLastIndex(List sortedList, BeanPart bp) {
 	int idx=0;
 	while (idx<sortedList.size()) {
@@ -575,8 +601,8 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 				   cExp.getPriority().compareIndex(expPriority)>0) // Z order forces us to come after 
 				   ||  
 				   (dependantBeans.contains(cExp.getBean().getEObject()) && // we are dependant
-				    isGrouping(cExp.getBean(), sortedList, i) //||
-				     //!cExp.getPriority().isIndexed())  // It is part of the bean init or its group of expressions
+				    isGrouping(cExp.getBean(), sortedList, i) &&
+				    !isLowZOrderInGroup(cExp.getBean(), sortedList, i, expPriority)
 				   )) { 
 		   
 			       // exp comes after cExp
