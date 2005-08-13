@@ -67,7 +67,7 @@ public class JavaProperty implements InvocationHandler {
                  /*
                   *  We'll try lower-casing the property name.  This allows someone
                   *  to encapsulate a normal lower-cased field with getFieldName()
-                  *  and have Sweet pick up the encapsulated method automatically.
+                  *  and have Sweet pick up the encapsulating method automatically.
                   */                
                    field = getField(receiverClass, lowerCaseFirstLetter(propertyName));
                    if (field == null)                
