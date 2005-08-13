@@ -24,6 +24,7 @@ import org.eclipse.ve.sweet.objectviewer.IEditedObject;
 import org.eclipse.ve.sweet.objectviewer.IInputChangeListener;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
+import org.eclipse.ve.sweet.objectviewer.NullProperty;
 import org.eclipse.ve.sweet.objectviewer.pojo.internal.JavaProperty;
 import org.eclipse.ve.sweet.reflect.RelaxedDuckType;
 
@@ -50,7 +51,7 @@ public class JavaObjectViewer implements IObjectViewer {
      * @see com.db4o.binding.dataeditors.IObjectViewer#setInput(java.lang.Object)
      */
     public boolean setInput(Object input) {
-        if (this.input != null && (!validateAndSaveEditedFields() || !validateAndSaveObject() || input == null)) {
+        if (this.input != null && (validateAndSaveEditedFields() != null || validateAndSaveObject() != null || input == null)) {
             return false;
         }
         try {
@@ -96,11 +97,14 @@ public class JavaObjectViewer implements IObjectViewer {
      * @see com.db4o.binding.dataeditors.IObjectViewer#getProperty(java.lang.String)
      */
     public IPropertyEditor getProperty(String name) throws NoSuchMethodException {
-        return JavaProperty.construct(getInput(), name);
+    	if (input != null)
+    		return JavaProperty.construct(getInput(), name);
+    	else
+    		return new NullProperty(name);
     }
     
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectViewer#getWidgetBinding(org.eclipse.swt.widgets.Control, java.lang.String)
+     * @see com.db4o.binding.dataeditors.IObjectViewer#bind(Object, java.lang.String)
      */
     public IFieldViewer bind(Object control, String propertyName) {
         IPropertyEditor propertyEditor;
@@ -129,38 +133,41 @@ public class JavaObjectViewer implements IObjectViewer {
     /* (non-Javadoc)
      * @see com.db4o.binding.dataeditors.IObjectViewer#verifyEditedFields()
      */
-    public boolean validateAndSaveEditedFields() {
+    public String validateAndSaveEditedFields() {
         for (Iterator bindingsIter = bindings.iterator(); bindingsIter.hasNext();) {
             IFieldViewer field = (IFieldViewer) bindingsIter.next();
             if (field.isDirty()) {
                 dirty=true;
-                if (field.validate() != null) {
-                    return false;
+                String error = field.validate();
+                if (error != null) {
+                    return error;
                 }
                 try {
                     field.save();
                 } catch (CannotSaveException e) {
-                    return false;
+                    return "Unknown error: field validated but it could not save.";
                 }
             }
         }
-        return true;
+        return null;
     }
 
     /* (non-Javadoc)
      * @see com.db4o.binding.dataeditors.IObjectViewer#verifyObject()
      */
-    public boolean validateAndSaveObject() {
-        if (!validateAndSaveEditedFields()) {
-            return false;
-        }
+    public String validateAndSaveObject() {
+    	String error = validateAndSaveEditedFields();
+    	if (error != null) {
+    		return error;
+    	}
         /*
          * The return type for RelaxedDuckType is false for boolean types if
          * the method does not exist.  So we have to test explicitly here...
          */
-        if (RelaxedDuckType.includes(input, "verifyObject", new Class[] {}) && !inputBean.validateObject()) {
-            return false;
-        }
+    	error = inputBean.validateObject();
+    	if (error != null) {
+    		return error;
+    	}
         
         // If the underlying persistent store supports transactions, this is
         // where the object should be saved back to the persistent store,
@@ -168,7 +175,7 @@ public class JavaObjectViewer implements IObjectViewer {
         // dirty until the transaction is committed.
         saveObject(input);
         
-        return true;
+        return null;
     }
 
     /**
@@ -192,12 +199,14 @@ public class JavaObjectViewer implements IObjectViewer {
         if (input == null) {
             return;
         }
-        if (!validateAndSaveEditedFields())
-            throw new CannotSaveException("Unable to save edited fields");
+        String error = validateAndSaveEditedFields();
+        if (error != null)
+            throw new CannotSaveException(error);
         
         // Ask the bean to verify itself for consistency
-        if (!validateAndSaveObject())
-            throw new CannotSaveException("Unable to save object");
+        error = validateAndSaveObject();
+        if (error != null)
+            throw new CannotSaveException(error);
         
         // Let the bean itself know it is about to be saved
         inputBean.commit();

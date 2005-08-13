@@ -20,12 +20,12 @@ public interface IFieldViewerFactory {
      * Construct an IFieldViewer for some control, IObjectViewer, and IPropertyEditor
      * 
      * @param control The SWT control
-     * @param objectEditor The IObjectViewer of the object to edit
+     * @param objectViewer The IObjectViewer of the object to edit
      * @param propertyEditor The IPropertyEditor of the property to edit
      * 
      * @return The IFieldViewer that was constructed
      */
     public IFieldViewer construct(Object control,
-            IObjectViewer objectEditor, IPropertyEditor propertyEditor);
+            IObjectViewer objectViewer, IPropertyEditor propertyEditor);
 
 }

@@ -14,4 +14,11 @@ public interface IListIterable {
 	 * @return a ListIterator to iterate over the collection's contents.
 	 */
 	ListIterator listIterator();
+	
+	/**
+	 * Returns the number of elements in the collection.
+	 * 
+	 * @return the number of elements in the collection.
+	 */
+	int size();
 }

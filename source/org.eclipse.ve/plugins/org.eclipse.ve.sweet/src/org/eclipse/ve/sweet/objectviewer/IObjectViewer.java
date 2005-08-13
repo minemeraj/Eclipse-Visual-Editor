@@ -80,9 +80,9 @@ public interface IObjectViewer {
      * Make sure that all fields that have been edited can be safely saved
      * and saves them.
      * 
-     * @return true if all fields may be safely saved.  false otherwise.
+     * @return null if all fields may be safely saved.  Returns an error message otherwise.
      */
-    public boolean validateAndSaveEditedFields();
+    public String validateAndSaveEditedFields();
     
     /**
      * Method validateAndSaveObject.
@@ -93,11 +93,11 @@ public interface IObjectViewer {
      * save operation will be performed here.  Otherwise, it will be performed
      * in the commit() method.
      * 
-     * @return boolean true if all fields in the object have legal values
+     * @return boolean null if all fields in the object have legal values
      * and the object itself is consistent and the object was successfully
-     * saved.
+     * saved.  Returns an error message otherwise.
      */
-    public boolean validateAndSaveObject();
+    public String validateAndSaveObject();
     
     /**
      * Method addObjectListener.

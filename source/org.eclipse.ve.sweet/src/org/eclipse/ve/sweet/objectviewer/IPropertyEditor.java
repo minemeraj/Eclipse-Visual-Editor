@@ -17,6 +17,8 @@ import org.eclipse.ve.sweet.validator.IValidator;
  * IPropertyEditor.  An abstraction for a property.  Implementations may follow
  * JavaBeans naming specifications, may simply treat POJO fields as properties,
  * may represent a property of a remote object, etc...
+ * 
+ * TODO: Add property change listener support to this interface and to the implementation
  *
  * @author djo
  */
@@ -89,5 +91,27 @@ public interface IPropertyEditor {
      * method or null otherwise.
      */
     public Object[] getLegalValues();
+    
+    // Optional methods for handling collection properties ------------------------
+    
+    /**
+     * Method getInsertHandler.  Returns an IInsertHandler allowing Sweet to
+     * add objects to a collection on demand.  Note that this method only
+     * makes sense to define if the underlying property type is a collection
+     * type.
+     * 
+     * @return The defined IInsertHandler or null if none is defined.
+     */
+    public IInsertHandler getInsertHandler();
+    
+    /**
+     * Method getDeleteHandler.  Returns an IDeleteHandler allowing sweet to
+     * ask a collection property to delete objects from itself.  Note that
+     * this method only makes sense to define if the underlying property 
+     * is a collection type.
+     * 
+     * @return The defined IDeleteHandler or null if none is defined.
+     */
+    public IDeleteHandler getDeleteHandler();
 }
 
