@@ -22,7 +22,7 @@ package org.eclipse.ve.sweet.objectviewer;
 public class ObjectViewerFactory {
     /**
      * The actual IObjectViewerFactory instance that will be used to create
-     * new IObjectViewer objects.  Defaults to the Db4oObjectEditorFactory.
+     * new IObjectViewer objects.
      */
     public static IObjectViewerFactory factory = null;
     

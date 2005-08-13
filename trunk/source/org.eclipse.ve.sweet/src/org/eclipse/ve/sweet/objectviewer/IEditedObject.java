@@ -34,10 +34,10 @@ public interface IEditedObject {
      * exists on the underlying object, and returns true if the method does
      * not exist.
      * 
-     * @return boolean true if all fields in the object have legal values
-     * and the object itself is consistent.
+     * @return String null if all fields in the object have legal values
+     * and the object itself is consistent.  Returns an error message otherwise.
      */
-    public boolean validateObject();
+    public String validateObject();
     
     /**
      * Method commit.

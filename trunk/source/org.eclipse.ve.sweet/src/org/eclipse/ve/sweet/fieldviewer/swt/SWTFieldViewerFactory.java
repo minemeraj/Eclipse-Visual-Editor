@@ -11,40 +11,77 @@
  */
 package org.eclipse.ve.sweet.fieldviewer.swt;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
 import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 import org.eclipse.ve.sweet.fieldviewer.IFieldViewerFactory;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.CheckboxButtonFieldViewer;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.CheckboxListFieldViewer;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.ComboFieldViewer;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.TextFieldViewer;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.ICheckboxButtonControl;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.ICheckboxListControl;
-import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.IComboControl;
+import org.eclipse.ve.sweet.fieldviewer.swt.internal.factories.CheckboxButtonFieldViewerFactory;
+import org.eclipse.ve.sweet.fieldviewer.swt.internal.factories.CheckboxListFieldViewerFactory;
+import org.eclipse.ve.sweet.fieldviewer.swt.internal.factories.ComboFieldViewerFactory;
+import org.eclipse.ve.sweet.fieldviewer.swt.internal.factories.CompositeTableViewerFactory;
+import org.eclipse.ve.sweet.fieldviewer.swt.internal.factories.TextFieldViewerFactory;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
-import org.eclipse.ve.sweet.reflect.DuckType;
 
 
 /**
- * SWTFieldViewerFactory.  SWT constructor factory for IFieldViewer objects. 
- *
+ * SWTFieldViewerFactory.  SWT constructor factory for IFieldViewer objects.  New factories
+ * must be registered ahead of (overriding) the built-in factory objects.
+ * 
  * @author djo
  */
 public class SWTFieldViewerFactory implements IFieldViewerFactory {
-    /* (non-Javadoc)
+	
+	/**
+	 * Construct SWTFieldViewerFactory.  Default constructor.
+	 */
+	public SWTFieldViewerFactory() {
+		// Register the built-in factories
+		register(new CompositeTableViewerFactory());
+		register(new CheckboxButtonFieldViewerFactory());
+		register(new CheckboxListFieldViewerFactory());
+		register(new ComboFieldViewerFactory());
+		register(new TextFieldViewerFactory());		// The default (unconditional) factory rule
+	}
+	
+	private LinkedList viewerFactories = new LinkedList();
+	
+	/**
+	 * Register an IFieldViewerFactory object for a particular kind of IFieldViewer
+	 * ahead of all the other current IFieldViewerFactory objects.
+	 * 
+	 * @param factoryRule The rule object to register.
+	 */
+	public void registerFirst(IFieldViewerFactory factoryRule) {
+		viewerFactories.addFirst(factoryRule);
+	}
+	
+	/**(non-API)
+	 * Register an IFieldViewerFactory object for a particular kind of IFieldViewer
+	 * behind all the other current IFieldViewerFactory objects.
+	 * 
+	 * @param factoryRule The rule object to register.
+	 */
+	protected void register(IFieldViewerFactory factoryRule) {
+		viewerFactories.addLast(factoryRule);
+	}
+	
+	/* (non-Javadoc)
      * @see com.db4o.binding.field.swt.IFieldControllerFactory#construct(java.lang.Object, com.db4o.binding.dataeditors.IObjectViewer, com.db4o.binding.dataeditors.IPropertyEditor)
      */
-    public IFieldViewer construct(Object control, IObjectViewer objectEditor, IPropertyEditor propertyEditor) {
+    public IFieldViewer construct(Object control, IObjectViewer objectViewer, IPropertyEditor propertyEditor) {
         IFieldViewer result = null;
-        if (DuckType.instanceOf(ICheckboxButtonControl.class, control)) {
-            result = new CheckboxButtonFieldViewer(control, objectEditor, propertyEditor);
-        } else if (DuckType.instanceOf(ICheckboxListControl.class, control)) {
-            result = new CheckboxListFieldViewer(control, objectEditor, propertyEditor);
-        } else if (DuckType.instanceOf(IComboControl.class, control)) {
-            result = new ComboFieldViewer(control, objectEditor, propertyEditor);
-        } else {
-            result = new TextFieldViewer(control, objectEditor, propertyEditor);
-        }
-        return result;
-    } 
+        
+        for (Iterator factoryIter = viewerFactories.iterator(); factoryIter.hasNext();) {
+			IFieldViewerFactory factory = (IFieldViewerFactory) factoryIter.next();
+			result = factory.construct(control, objectViewer, propertyEditor);
+			if (result != null) {
+				return result;
+			}
+		}
+        
+        // If a default factory rule was registered, this should never happen
+        return null;
+    }
 }
