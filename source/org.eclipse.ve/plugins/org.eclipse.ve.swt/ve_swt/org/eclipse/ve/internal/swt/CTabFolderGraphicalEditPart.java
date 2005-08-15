@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-15 13:33:00 $ 
+ *  $Revision: 1.7 $  $Date: 2005-08-15 21:05:07 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -370,8 +370,11 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	   DragTracker tracker = new org.eclipse.gef.tools.DragEditPartsTracker(this) {
 		   protected boolean handleButtonUp(int button) {
 			   if (getState() == AbstractTool.STATE_DRAG && !(getState() == AbstractTool.STATE_DRAG_IN_PROGRESS)) {
-				   Rectangle r = CTabFolderGraphicalEditPart.this.getFigure().getBounds();
-				   Point mouseLocation = getLocation().getTranslated(0 - r.x, 0 - r.y);
+				   Rectangle bounds = CTabFolderGraphicalEditPart.this.getFigure().getBounds();
+				   Point mouseLocation = getLocation().getCopy();
+				   CTabFolderGraphicalEditPart.this.getFigure().translateToRelative(mouseLocation);
+				   mouseLocation.translate(0 - bounds.x, 0 - bounds.y);
+				   
 				   // call method to select tab at mouseLocation
 				   switchToTab(mouseLocation);
 				   return true;
