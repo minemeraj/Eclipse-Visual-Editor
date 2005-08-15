@@ -40,7 +40,7 @@ public class CompositeTableBindingTest {
 	 * This method initializes the table
 	 */
 	private void createTable() {
-		table = new CompositeTable(sShell, SWT.NONE);
+		table = new CompositeTable(sShell, SWT.BORDER);
 		table.setRunTime(true);
 		table.setWeights(new int[] {35, 35, 20, 10});
 		createHeader();

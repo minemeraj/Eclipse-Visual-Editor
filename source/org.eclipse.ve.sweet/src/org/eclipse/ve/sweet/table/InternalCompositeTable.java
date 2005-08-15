@@ -18,10 +18,14 @@ import java.util.LinkedList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -91,7 +95,10 @@ public class InternalCompositeTable extends Composite implements Listener {
 	public InternalCompositeTable(Composite parentControl, int style) {
 		super(parentControl, style);
 		initialize();
+		
 		this.parent = (CompositeTable) parentControl;
+		
+		setBackground(parentControl.getBackground());
 		controlHolder.addListener(SWT.MouseWheel, this);
 
 		maxRowsVisible = parent.getMaxRowsVisible();
@@ -106,6 +113,17 @@ public class InternalCompositeTable extends Composite implements Listener {
 		currentVisibleTopRow = topRow;
 		showHeader();
 		updateVisibleRows();
+		
+		if (numRowsVisible < 1) {
+			emptyTablePlaceholder = new EmptyTablePlaceholder(controlHolder, SWT.NULL);
+			emptyTablePlaceholder.setMessage(parent.getInsertHint());
+			emptyTablePlaceholder.setFocus();
+		}
+	}
+	
+	public void setBackground(Color color) {
+		super.setBackground(color);
+		controlHolder.setBackground(color);
 	}
 
 	/**
@@ -304,6 +322,12 @@ public class InternalCompositeTable extends Composite implements Listener {
 	private void showHeader() {
 		if (myHeader == null && headerConstructor != null) {
 			myHeader = createInternalControl(controlHolder, headerConstructor);
+			if (myHeader instanceof Composite) {
+				Composite headerComp = (Composite) myHeader;
+				if (headerComp.getLayout() == null) {
+					headerComp.addPaintListener(headerPaintListener);
+				}
+			}
 			layoutChild(myHeader);
 		}
 	}
@@ -334,14 +358,14 @@ public class InternalCompositeTable extends Composite implements Listener {
 		
 		int headerHeight = 0;
 		if (myHeader != null) {
-			headerHeight = headerControl.getSize().y + 1;
+			headerHeight = headerControl.getSize().y + 3;
 			clientAreaHeight -= headerHeight;
 			topPosition += headerHeight;
 		}
+		numRowsInDisplay = clientAreaHeight / rowControl.getSize().y;
 		
 		// Make sure we have something to lay out to begin with
 		if (numRowsInCollection > 0) {
-			numRowsInDisplay = clientAreaHeight / rowControl.getSize().y;
 			numRowsVisible = numRowsInDisplay;
 			
 			int displayableRows = numRowsInCollection - topRow;
@@ -512,6 +536,13 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 		TableRow newRow = new TableRow(this, createInternalControl(controlHolder, rowConstructor));
 		fireRowConstructionEvent(newRow.getRowControl());
+		if (newRow.getRowControl() instanceof Composite) {
+			Composite rowComp = (Composite) newRow.getRowControl();
+			if (rowComp.getLayout() == null) {
+				rowComp.setBackground(getBackground());
+				rowComp.addPaintListener(rowPaintListener);
+			}
+		}
 		return newRow;
 	}
 
@@ -680,6 +711,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 						} else {
 							// Otherwise, show the placeholder object and give it focus
 							deleteRowAt(currentRow);
+							--numRowsVisible;
 							emptyTablePlaceholder = new EmptyTablePlaceholder(controlHolder, SWT.NULL);
 							emptyTablePlaceholder.setMessage(parent.getInsertHint());
 							emptyTablePlaceholder.setFocus();
@@ -699,7 +731,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 		switch (e.keyCode) {
 		case SWT.INSERT:
 			// If no insertHandler has been registered, bail out 
-			if (parent.insertHandlers.size() < 1) {
+		 	if (parent.insertHandlers.size() < 1) {
 				return;
 			}
 			
@@ -984,6 +1016,76 @@ public class InternalCompositeTable extends Composite implements Listener {
 		
 		if (rowChanged)
 			fireRowArriveEvent();
+	}
+	
+	private PaintListener headerPaintListener = new PaintListener() {
+		public void paintControl(PaintEvent e) {
+			if (parent.gridLinesOn) {
+				drawGridLines(e, true);
+			}
+		}
+	};
+	
+	private PaintListener rowPaintListener = new PaintListener() {
+		public void paintControl(PaintEvent e) {
+			if (parent.gridLinesOn) {
+				drawGridLines(e, false);
+			}
+		}
+	};
+	
+	private void drawGridLines(PaintEvent e, boolean isHeader) {
+		Color oldColor = e.gc.getForeground();
+		try {
+			// Get the colors we need
+			Display display = Display.getCurrent();
+			Color lineColor = display.getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW);
+			Color secondaryColor = display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
+			Color hilightColor = display.getSystemColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
+			if (!isHeader) {
+				lineColor = display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
+			}
+			
+			// Get the control
+			Control toPaint = (Control) e.widget;
+			Point controlSize = toPaint.getSize();
+			
+			// Draw the bottom line(s)
+			e.gc.setForeground(lineColor);
+			e.gc.drawLine(0, controlSize.y-1, controlSize.x, controlSize.y-1);
+			if (isHeader) {
+				e.gc.setForeground(secondaryColor);
+				e.gc.drawLine(0, controlSize.y-2, controlSize.x, controlSize.y-2);
+				e.gc.setForeground(hilightColor);
+				e.gc.drawLine(0, 0, controlSize.x, 0);
+			}
+			
+			// Now draw lines around the child controls, if there are any
+			if (toPaint instanceof Composite) {
+				Composite row = (Composite) toPaint;
+				Control[] children = row.getChildren();
+				for (int i = 0; i < children.length; i++) {
+					Rectangle childBounds = children[i].getBounds();
+					
+					// Paint the beginning lines
+					if (isHeader) {
+						e.gc.setForeground(hilightColor);
+						e.gc.drawLine(childBounds.x-2, 1, childBounds.x-2, controlSize.y-2);
+					}
+					
+					// Paint the ending lines
+					e.gc.setForeground(lineColor);
+					int lineLeft = childBounds.x + childBounds.width+1;
+					e.gc.drawLine(lineLeft, 0, lineLeft, controlSize.y);
+					if (isHeader) {
+						e.gc.setForeground(secondaryColor);
+						e.gc.drawLine(lineLeft-1, 0, lineLeft-1, controlSize.y-1);
+					}
+				}
+			}
+		} finally {
+			e.gc.setForeground(oldColor);
+		}
 	}
 	
 	// Event Firing -------------------------------------------------------------------------------

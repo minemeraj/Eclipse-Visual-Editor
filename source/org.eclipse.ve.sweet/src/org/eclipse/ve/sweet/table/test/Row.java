@@ -29,13 +29,13 @@ public class Row extends Composite {
 
 	private void initialize() {
 		this.setSize(new org.eclipse.swt.graphics.Point(131,52));
-		name = new Text(this, SWT.BORDER);
+		name = new Text(this, SWT.NONE);
 		name.setBounds(new org.eclipse.swt.graphics.Rectangle(12,12,10,25));
-		address = new Text(this, SWT.BORDER);
+		address = new Text(this, SWT.NONE);
 		address.setBounds(new org.eclipse.swt.graphics.Rectangle(43,12,10,25));
-		city = new Text(this, SWT.BORDER);
+		city = new Text(this, SWT.NONE);
 		city.setBounds(new org.eclipse.swt.graphics.Rectangle(75,14,10,25));
-		state = new Text(this, SWT.BORDER);
+		state = new Text(this, SWT.NONE);
 		state.setBounds(new org.eclipse.swt.graphics.Rectangle(109,16,10,25));
 	}
 

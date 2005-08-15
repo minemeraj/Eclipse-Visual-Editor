@@ -74,6 +74,7 @@ public class EmptyTablePlaceholder extends Canvas {
 		
 		RED = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 		BLUE = Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
+		setBackground(getParent().getBackground());
 		
 		resize();
 	}
@@ -113,7 +114,7 @@ public class EmptyTablePlaceholder extends Canvas {
 		}
 		Point parentSize = getParent().getSize();
 		
-		setBounds(0, headerSize.y, parentSize.x, parentSize.y - headerSize.y);
+		setBounds(0, headerSize.y+2, parentSize.x-4, parentSize.y - headerSize.y-6);
 	}
 
 	
