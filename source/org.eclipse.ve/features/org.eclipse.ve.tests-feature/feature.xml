@@ -21,7 +21,7 @@
          name="%featureName"/>
 
    <requires>
-      <import feature="org.eclipse.ve" version="1.0.0"/>
+      <import feature="org.eclipse.ve" version="1.1.0"/>
    </requires>
 
    <plugin
