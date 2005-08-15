@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-15 19:06:19 $ 
+ *  $Revision: 1.9 $  $Date: 2005-08-15 20:27:02 $ 
  */
 
 import java.awt.*;
@@ -82,7 +82,6 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 		return start(image.getSource(), startStatus);
 	}
 	
-long startImage;	
 	/**
 	 * Start collecting the image of a component.
 	 * Return whether collection has started or not.
@@ -109,8 +108,7 @@ long startImage;
 				// go higher than a Window. A Window can have a parent, but that is another
 				// window, and validating that window will not validate child windows (this
 				// relationship downward is ownership and not child containment).
-				Container parent = component.getParent();
-startImage = System.currentTimeMillis();				
+				Container parent = component.getParent();			
 				while (parent != null && !(parent instanceof Window) && parent.getParent() != null)
 					parent = parent.getParent();
 				if (parent == null)
@@ -165,8 +163,6 @@ startImage = System.currentTimeMillis();
 						graphics = componentImage.getGraphics();
 						graphics.setClip(0, 0, iWidth, iHeight);
 						component.printAll(graphics);
-long printAll = System.currentTimeMillis();
-System.err.println("-- PrintAll time="+(printAll-startImage));						
 					} finally {
 						if (graphics != null)
 							graphics.dispose(); // Clear out the resources.
@@ -272,11 +268,7 @@ System.err.println("-- PrintAll time="+(printAll-startImage));
 					} catch (CommandException e) {
 						e.printStackTrace();
 					}
-long startProduction = System.currentTimeMillis(); 					
 					producer.startProduction(ImageDataCollector.this);
-long stop = System.currentTimeMillis();					
-System.err.println("-- Production time="+(stop-startProduction));
-System.err.println("   Total time="+(stop-startImage));
 				} catch (final Exception e) {
 					e.printStackTrace();
 					try {
