@@ -9,13 +9,15 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JTabbedPaneGraphicalEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-06-02 22:32:28 $
+ * $RCSfile: JTabbedPaneGraphicalEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-08-15 17:59:49 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
 import java.util.*;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -23,22 +25,20 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
+import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.views.properties.IPropertySource;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+import org.eclipse.ve.internal.cde.emf.*;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+import org.eclipse.ve.internal.java.core.*;
 
 /**
  * Graphical edit part for handling JTabbedPane in the Graph viewer
@@ -295,6 +295,38 @@ public class JTabbedPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 		getJTabbedPaneProxyAdapter().setSelectedComponent((IJavaObjectInstance) page.getModel());
 		fSelectingPage = false;
 	}
+	
+	/*
+	 * The JTabbedPane has been selected.  If a tab has been clicked on switch to that tab.
+	 */
+	protected void switchToTab(Point p){
+		if (p != null) {
+			ResourceSet rset = EMFEditDomainHelper.getResourceSet(EditDomain.getEditDomain(this));
+			IJavaDataTypeInstance xpos = 
+				(IJavaDataTypeInstance)BeanUtilities.createJavaObject("int", rset,  //$NON-NLS-1$
+						String.valueOf(p.x));
+			IJavaDataTypeInstance ypos = 
+				(IJavaDataTypeInstance)BeanUtilities.createJavaObject("int", rset,  //$NON-NLS-1$
+						String.valueOf(p.y));
+			
+			int newTab = getJTabbedPaneProxyAdapter().getTabItemFromLocation(xpos, ypos);
+			
+			if(newTab == -1)
+				return;
+			
+			List children = getChildren();
+            if(children != null){
+            	if(newTab < children.size()){
+            		EditPart oldPage = getEditPartFromModel(fSelectedPage);
+            		EditPart newPage = (EditPart) children.get(newTab); 
+            		
+            		setPageVisible(oldPage, false);
+            		pageSelected(newPage);
+            		setPageVisible(newPage, true);
+            	}
+            }
+		}
+	}
 
 	/**
 	 * Get current page index.
@@ -420,4 +452,26 @@ public class JTabbedPaneGraphicalEditPart extends ContainerGraphicalEditPart {
 		}
 		return null;
 	}
+	
+	/**
+	 * Use the drag tracker to determine when a mouse down is pressed, but the tool is not dragging.
+	 * 
+	 * 
+	 * @since 1.1.0.1
+	 */
+   public DragTracker getDragTracker(Request request) {
+	   DragTracker tracker = new org.eclipse.gef.tools.DragEditPartsTracker(this) {
+		   protected boolean handleButtonUp(int button) {
+			   if (getState() == AbstractTool.STATE_DRAG && !(getState() == AbstractTool.STATE_DRAG_IN_PROGRESS)) {
+				   Rectangle r = JTabbedPaneGraphicalEditPart.this.getFigure().getBounds();
+				   Point mouseLocation = getLocation().getTranslated(0 - r.x, 0 - r.y);
+				   // call method to select tab at mouseLocation
+				   switchToTab(mouseLocation);
+				   return true;
+			   }
+			   return super.handleButtonUp(button);
+		   }
+	   };
+	   return tracker;
+   }
 }

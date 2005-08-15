@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: JTabbedPaneProxyAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-06-22 21:05:25 $ 
+ *  $Revision: 1.11 $  $Date: 2005-08-15 17:59:49 $ 
  */
 
 import java.util.Iterator;
@@ -323,6 +323,27 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 			BeanAwtUtilities.invoke_tab_setSelectedComponent(getBeanProxy(), a.getComponentProxy());
 			revalidateBeanProxy();
 		}
+	}
+	
+	/**
+	 * Gets the TabItem at the given location for this JTabbedFolder.
+	 * @param location
+	 * 
+	 * @since 1.1.0.1
+	 */
+	public int getTabItemFromLocation(IJavaDataTypeInstance xLocation, IJavaDataTypeInstance yLocation) {
+		int retVal = -1;
+		if (!isBeanProxyInstantiated())
+			return retVal;
+		IBeanProxyHost proxyhostx = getSettingBeanProxyHost(xLocation);
+		IBeanProxyHost proxyhosty = getSettingBeanProxyHost(yLocation);
+		proxyhostx.instantiateBeanProxy();
+		proxyhosty.instantiateBeanProxy();
+		if (proxyhostx.isBeanProxyInstantiated() && proxyhosty.isBeanProxyInstantiated())
+			retVal = BeanAwtUtilities.invoke_JTabbedPane_getItemFromLocation(getBeanProxy(), 
+					proxyhostx.getBeanProxy(), proxyhosty.getBeanProxy());
+		revalidateBeanProxy();
+		return retVal;
 	}
 
 	/**

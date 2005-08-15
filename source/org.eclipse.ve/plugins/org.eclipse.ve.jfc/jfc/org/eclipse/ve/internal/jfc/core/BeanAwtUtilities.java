@@ -12,11 +12,15 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.35 $  $Date: 2005-08-12 21:36:29 $ 
+ *  $Revision: 1.36 $  $Date: 2005-08-15 17:59:49 $ 
  */
 
+import java.awt.*;
 import java.util.List;
 import java.util.logging.Level;
+
+import javax.swing.*;
+import javax.swing.table.TableColumn;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClassifier;
@@ -79,7 +83,7 @@ public class BeanAwtUtilities {
 	private IMethodProxy getLayoutMethodProxy, getBoundsMethodProxy,
 			getLocationMethodProxy, getSizeMethodProxy, getPreferredSizeMethodProxy, getParentMethodProxy, getComponentsMethodProxy,
 			getManagerDefaultLocationMethodProxy, getManagerDefaultBoundsMethodProxy, 
-			getTabSelectedComponentMethodProxy, setTabSelectedComponentMethodProxy,
+			getTabSelectedComponentMethodProxy, setTabSelectedComponentMethodProxy, indexOfTabAtLocationMethodProxy,
 			managerJTableGetAllColumnRects;
 
 	private IBeanProxy jFrameDefaultOnClose_DoNothingProxy;
@@ -1211,6 +1215,29 @@ public class BeanAwtUtilities {
 							"setSelectedComponent", "java.awt.Component"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		constants.setTabSelectedComponentMethodProxy.invokeCatchThrowableExceptions(aJTabbedPaneBeanProxy, componentBeanProxy);
+	}
+	
+	/**
+	 * get the index of the tab at the given location
+	 */
+	public static int invoke_JTabbedPane_getItemFromLocation(IBeanProxy aJTabbedPaneBeanProxy, IBeanProxy xPointBeanProxy, IBeanProxy yPointBeanProxy) {
+		BeanAwtUtilities constants = getConstants(aJTabbedPaneBeanProxy);
+    	int retVal = -1;
+    	
+    	if (constants.indexOfTabAtLocationMethodProxy == null) {
+    		constants.indexOfTabAtLocationMethodProxy = aJTabbedPaneBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory()
+			.getBeanTypeProxy("javax.swing.JTabbedPane").getMethodProxy( //$NON-NLS-1$
+					"indexAtLocation", new String[]{"int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$
+    	} 
+        if (constants.indexOfTabAtLocationMethodProxy != null) {
+           	IBeanProxy pageNum = 
+           		constants.indexOfTabAtLocationMethodProxy.invokeCatchThrowableExceptions(aJTabbedPaneBeanProxy, 
+           				new IBeanProxy[]{xPointBeanProxy, yPointBeanProxy});
+           	
+           	if(pageNum != null && pageNum instanceof INumberBeanProxy)
+            	retVal = ((INumberBeanProxy) pageNum).intValue();
+        }
+        return retVal;
 	}
 
 	/**
