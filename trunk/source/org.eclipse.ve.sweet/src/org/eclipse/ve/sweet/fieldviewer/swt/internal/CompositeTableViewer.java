@@ -202,6 +202,10 @@ public class CompositeTableViewer implements IFieldViewer {
 	 * @see org.eclipse.ve.sweet.fieldviewer.IFieldViewer#validate()
 	 */
 	public String validate() {
+		if (table.getNumRowsInCollection() < 1) {
+			return null;
+		}
+		
 		IObjectViewer currentRowObjectViewer = getCurrentRowObjectViewer();
 		String error = currentRowObjectViewer.validateAndSaveEditedFields();
 		if (error != null) {

@@ -16,10 +16,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ve.sweet.objectviewer.IDeleteHandler;
 import org.eclipse.ve.sweet.objectviewer.IInsertHandler;
@@ -132,6 +134,7 @@ public class CompositeTable extends Canvas {
 	 */
 	public CompositeTable(Composite parent, int style) {
 		super(parent, style);
+		setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		setLayout(new Layout() {
 			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
 				return CompositeTable.this.computeSize(wHint, hHint, flushCache);
@@ -140,6 +143,16 @@ public class CompositeTable extends Canvas {
 				resize();
 			}
 		});
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.Control#setBackground(org.eclipse.swt.graphics.Color)
+	 */
+	public void setBackground(Color color) {
+		super.setBackground(color);
+		if (contentPane != null) {
+			contentPane.setBackground(color);
+		}
 	}
 		
 	private int numChildrenLastTime = 0;
@@ -313,16 +326,16 @@ public class CompositeTable extends Canvas {
 		for (int i = 0; i < children.length-1; i++) {
 			int left = totalSize - widthRemaining;
 			int desiredHeight = children[i].computeSize(SWT.DEFAULT, SWT.DEFAULT, false).y;
-			int top = maxHeight - desiredHeight;
+			int top = maxHeight - desiredHeight-1;
 			int width = (int)(((float)weights[i])/100 * totalSize);
-			children[i].setBounds(left, top, width-2, desiredHeight);
+			children[i].setBounds(left+2, top, width-4, desiredHeight);
 			widthRemaining -= width;
 		}
 		
 		int left = totalSize - widthRemaining;
 		int desiredHeight = children[children.length-1].computeSize(SWT.DEFAULT, SWT.DEFAULT, false).y;
-		int top = maxHeight - desiredHeight;
-		children[children.length-1].setBounds(left, top, widthRemaining, desiredHeight);
+		int top = maxHeight - desiredHeight-1;
+		children[children.length-1].setBounds(left+2, top, widthRemaining-4, desiredHeight);
 		
 		return maxHeight;
 	}
@@ -424,7 +437,31 @@ public class CompositeTable extends Canvas {
 		}
 	}
 	
-	String insertHint = "Press <INS> to insert a new row.";
+	boolean gridLinesOn = true;
+	
+	/**
+	 * Method isGridLinesOn.  Returns if the CompositeTable will draw grid lines on the header
+	 * and row Composite objects.  This property is ignored if the programmer has set a layout
+	 * manager on the header and/or the row prototype objects.
+	 * 
+	 * @return true if the CompositeTable will draw grid lines; false otherwise.
+	 */
+	public boolean isGridLinesOn() {
+		return gridLinesOn;
+	}
+
+	/**
+	 * Method setGridLinesOn.  Sets if the CompositeTable will draw grid lines on the header and
+	 * row Composite objects.  This property is ignored if the programmer has set a layout 
+	 * manager on the header and/or the row prototype objects.
+	 * 
+	 * @param gridLinesOn true if the CompositeTable will draw grid lines; false otherwise.
+	 */
+	public void setGridLinesOn(boolean gridLinesOn) {
+		this.gridLinesOn = gridLinesOn;
+	}
+	
+	String insertHint = "Press <INS> to insert new data.";
 	
 	/**
 	 * Returns the hint string that will be displayed when there are no rows in the table.
