@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-09 22:25:09 $ 
+ *  $Revision: 1.7 $  $Date: 2005-08-15 18:50:57 $ 
  */
 
 import java.awt.*;
@@ -82,6 +82,7 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 		return start(image.getSource(), startStatus);
 	}
 	
+long startImage;	
 	/**
 	 * Start collecting the image of a component.
 	 * Return whether collection has started or not.
@@ -109,6 +110,7 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 				// window, and validating that window will not validate child windows (this
 				// relationship downward is ownership and not child containment).
 				Container parent = component.getParent();
+startImage = System.currentTimeMillis();				
 				while (parent != null && !(parent instanceof Window) && parent.getParent() != null)
 					parent = parent.getParent();
 				if (parent == null)
@@ -162,6 +164,8 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 						graphics = componentImage.getGraphics();
 						graphics.setClip(0, 0, iWidth, iHeight);
 						component.printAll(graphics);
+long printAll = System.currentTimeMillis();
+System.err.println("-- PrintAll time="+(printAll-startImage));						
 					} finally {
 						if (graphics != null)
 							graphics.dispose(); // Clear out the resources.
@@ -267,7 +271,11 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 					} catch (CommandException e) {
 						e.printStackTrace();
 					}
+long startProduction = System.currentTimeMillis(); 					
 					producer.startProduction(ImageDataCollector.this);
+long stop = System.currentTimeMillis();					
+System.err.println("-- Production time="+(stop-startProduction));
+System.err.println("   Total time="+(stop-startImage));
 				} catch (final Exception e) {
 					e.printStackTrace();
 					try {
