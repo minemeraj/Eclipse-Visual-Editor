@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.jfc.vm;
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-15 18:50:57 $ 
+ *  $Revision: 1.8 $  $Date: 2005-08-15 19:06:19 $ 
  */
 
 import java.awt.*;
@@ -142,8 +142,9 @@ startImage = System.currentTimeMillis();
 					clipped = true;
 				}		
 				final int iWidth = w;
-				final int iHeight = h;			
-				final Image componentImage = component.createImage(iWidth, iHeight);
+				final int iHeight = h;	
+				ColorModel cm = component.getColorModel();
+				final Image componentImage = new BufferedImage(cm, cm.createCompatibleWritableRaster(iWidth, iHeight), cm.isAlphaPremultiplied(), null);
 				if (componentImage == null) {
 					// This could happen if we asked for an image of component not attached to a window, it was
 					// attached to a window when requested but it was detached by the time the event queue got to process this request.
