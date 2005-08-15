@@ -368,6 +368,11 @@ public class InternalCompositeTable extends Composite implements Listener {
 		if (numRowsInCollection > 0) {
 			numRowsVisible = numRowsInDisplay;
 			
+			if (emptyTablePlaceholder != null) {
+				emptyTablePlaceholder.dispose();
+				emptyTablePlaceholder = null;
+			}
+			
 			int displayableRows = numRowsInCollection - topRow;
 			if (numRowsVisible > displayableRows) {
 				numRowsVisible = displayableRows;
