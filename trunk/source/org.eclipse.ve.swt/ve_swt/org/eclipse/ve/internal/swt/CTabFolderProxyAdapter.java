@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabFolderProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-15 13:33:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -34,18 +34,36 @@ public class CTabFolderProxyAdapter extends ItemParentProxyAdapter {
 	}
 
 	/**
-	 * Sets the selected TabItem corresponding to the TabItem for this TabFolder. This is public and is used by 
+	 * Sets the selected CTabItem corresponding to the CTabItem for this CTabFolder. This is public and is used by 
 	 * the edit parts to bring a selected tab to the front so it can be viewed and edited.
-	 * @param tabItem
+	 * @param cTabItem
 	 * 
 	 * @since 1.1.0
 	 */
-	public void setSelection(IJavaObjectInstance tabItem) {
+	public void setSelection(IJavaObjectInstance cTabItem) {
 		if (!isBeanProxyInstantiated())
 			return;
-		IBeanProxyHost proxyhost = getSettingBeanProxyHost(tabItem);
+		IBeanProxyHost proxyhost = getSettingBeanProxyHost(cTabItem);
 		if (proxyhost.isBeanProxyInstantiated())
 			BeanSWTUtilities.invoke_ctabfolder_setSelection(getBeanProxy(), proxyhost.getBeanProxy());
 		revalidateBeanProxy();
-	}	
+	}
+	
+	/**
+	 * Gets the CTabItem at the given location for this CTabFolder.
+	 * @param location
+	 * 
+	 * @since 1.1.0.1
+	 */
+	public int getCTabItemFromLocation(IJavaObjectInstance location) {
+		int retVal = -1;
+		if (!isBeanProxyInstantiated())
+			return retVal;
+		IBeanProxyHost proxyhost = getSettingBeanProxyHost(location);
+		proxyhost.instantiateBeanProxy();
+		if (proxyhost.isBeanProxyInstantiated())
+			retVal = BeanSWTUtilities.invoke_ctabfolder_getItemFromLocation(getBeanProxy(), proxyhost.getBeanProxy());
+		revalidateBeanProxy();
+		return retVal;
+	}
 }

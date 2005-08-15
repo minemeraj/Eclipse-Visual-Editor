@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.swt.widgets.*;
 
 import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -55,7 +56,9 @@ public class BeanSWTUtilities {
 		computeSizeMethodProxy,
 		setTabfolderSelectionMethodProxy,
 		indexOfTabITemMethodProxy,
+		indexOfCTabItemMethodProxy,
 		setCTabfolderSelectionMethodProxy,
+		setCTabFolderSelectionAtLocationMethodProxy,
 		imageCaptureAbortMethodProxy,
 		imageCaptureStartCaptureMethodProxy,
 		managerTableGetAllColumnRects;
@@ -801,6 +804,46 @@ public class BeanSWTUtilities {
                         }
                     });
         }
+    }
+    
+    /**
+     * Get the index of the CTabItem from the CTabFolder at the given location.
+     * 
+     * @since 1.1.0.1
+     */
+    public static int invoke_ctabfolder_getItemFromLocation(final IBeanProxy aCTabFolderBeanProxy, final IBeanProxy pointBeanProxy) {
+    	BeanSWTUtilities constants = getConstants(aCTabFolderBeanProxy);
+    	int retVal = -1;
+    	
+    	if (constants.setCTabFolderSelectionAtLocationMethodProxy == null) {
+    		constants.setCTabFolderSelectionAtLocationMethodProxy = aCTabFolderBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.custom.CTabFolder").getMethodProxy( //$NON-NLS-1$
+    			"getItem", "org.eclipse.swt.graphics.Point"); //$NON-NLS-1$ //$NON-NLS-2$
+    	}
+    	if (constants.indexOfCTabItemMethodProxy == null) {
+    		constants.indexOfCTabItemMethodProxy = aCTabFolderBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.custom.CTabFolder").getMethodProxy( //$NON-NLS-1$
+    			"indexOf", "org.eclipse.swt.custom.CTabItem"); //$NON-NLS-1$ //$NON-NLS-2$
+    	} 
+
+        if (constants.setCTabFolderSelectionAtLocationMethodProxy != null && constants.indexOfCTabItemMethodProxy != null) {
+        	final IMethodProxy getItemAtLocationMethodProxy = constants.setCTabFolderSelectionAtLocationMethodProxy;
+        	final IMethodProxy indexOfCTabItemMethodProxy = constants.indexOfCTabItemMethodProxy;
+        	
+            IBeanProxy pageNum = (IBeanProxy) JavaStandardSWTBeanConstants.invokeSyncExecCatchThrowableExceptions(aCTabFolderBeanProxy.getProxyFactoryRegistry(),
+                    new DisplayManager.DisplayRunnable() {
+
+                        public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
+                            IBeanProxy cTabItemBeanProxy = getItemAtLocationMethodProxy.invoke(aCTabFolderBeanProxy, pointBeanProxy);
+                            
+                            if(cTabItemBeanProxy == null)
+                            	return cTabItemBeanProxy;
+
+                            return indexOfCTabItemMethodProxy.invoke(aCTabFolderBeanProxy,cTabItemBeanProxy);
+                        }
+                    });
+            if(pageNum != null && pageNum instanceof INumberBeanProxy)
+            	retVal = ((INumberBeanProxy) pageNum).intValue();
+        }
+        return retVal;
     }
 
 	public static boolean isValidBeanLocation(EditDomain domain, EObject childComponent, EObject targetContainer) {

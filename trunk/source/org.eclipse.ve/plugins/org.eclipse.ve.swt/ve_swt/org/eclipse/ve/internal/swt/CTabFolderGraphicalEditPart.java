@@ -10,13 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabFolderGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-15 13:33:00 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.*;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -24,6 +26,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
+import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -31,11 +34,9 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.IErrorNotifier;
-import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+import org.eclipse.ve.internal.cde.emf.*;
 
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
-import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+import org.eclipse.ve.internal.java.core.*;
 
 /**
  * 
@@ -54,7 +55,7 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	/**
 	 * @param model
 	 * 
-	 * @since 1.0.0
+	 * @since 1.1
 	 */
 	public CTabFolderGraphicalEditPart(Object model) {
 		super(model);
@@ -181,7 +182,7 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 
 	/*
-	 * The selected page of the JTabbedPane has changed. Bring this page to the front.
+	 * The selected page of the CTabFolder has changed. Bring this page to the front.
 	 */
 	protected void pageSelected(EditPart page) {
 		if (page != null) {
@@ -192,6 +193,28 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 			setPageVisible(page, true);
 			fSelectedItem = (IJavaObjectInstance) page.getModel(); // save for later checks... see createPageListener()
 			getCTabFolderProxyAdapter().setSelection(getTabForChild(fSelectedItem));
+		}
+	}
+	
+	/*
+	 * The CTabFolder has been selected.  If a CTabItem has been clicked on switch to that tab.
+	 */
+	protected void switchToTab(Point p){
+		if (p != null) {
+			ResourceSet rset = EMFEditDomainHelper.getResourceSet(EditDomain.getEditDomain(this));
+			IJavaObjectInstance point = 
+				(IJavaObjectInstance)BeanUtilities.createJavaObject("org.eclipse.swt.graphics.Point", rset,  //$NON-NLS-1$
+						"new org.eclipse.swt.graphics.Point(" + p.x + "," + p.y + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			int newTab = getCTabFolderProxyAdapter().getCTabItemFromLocation(point);
+			
+			if(newTab == -1)
+				return;
+			
+			List children = getChildren();
+            if(children != null){
+            	if(newTab < children.size())
+            		pageSelected((EditPart) children.get(newTab));
+            }
 		}
 	}
 
@@ -336,4 +359,27 @@ public class CTabFolderGraphicalEditPart extends CompositeGraphicalEditPart {
 		}
 	}
 
+	/**
+	 * Use the drag tracker to determine when a mouse down is pressed, but the tool is not dragging.
+	 * This means that the CTabFolder has been selected and we need to check if a tab was clicked on, and
+	 * if so, change to the tab.
+	 * 
+	 * @since 1.1.0.1
+	 */
+   public DragTracker getDragTracker(Request request) {
+	   DragTracker tracker = new org.eclipse.gef.tools.DragEditPartsTracker(this) {
+		   protected boolean handleButtonUp(int button) {
+			   if (getState() == AbstractTool.STATE_DRAG && !(getState() == AbstractTool.STATE_DRAG_IN_PROGRESS)) {
+				   Rectangle r = CTabFolderGraphicalEditPart.this.getFigure().getBounds();
+				   Point mouseLocation = getLocation().getTranslated(0 - r.x, 0 - r.y);
+				   // call method to select tab at mouseLocation
+				   switchToTab(mouseLocation);
+				   return true;
+			   }
+			   return super.handleButtonUp(button);
+		   }
+	   };
+	   return tracker;
+   }
+   
 }
