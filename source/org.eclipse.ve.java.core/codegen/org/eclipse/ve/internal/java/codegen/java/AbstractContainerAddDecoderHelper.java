@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.22 $  $Date: 2005-08-11 16:27:29 $ 
+ *  $Revision: 1.23 $  $Date: 2005-08-17 18:38:21 $ 
  */
 
 import java.util.*;
@@ -220,10 +220,8 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 			return cur==null;		
 		if (cur==null)
 			return false;		
-	  String curStr = ConstructorDecoderHelper.convertToString(cur.getAllocation());
 	  JavaAllocation pAlloc = getAllocation(proposed);
-	  String proposedStr = ConstructorDecoderHelper.convertToString(pAlloc);
-	  return (curStr.equals(proposedStr));
+	  return (CodeGenUtil.areAllocationsEqual(cur.getAllocation(), pAlloc));
 	}
 	
 	protected boolean shouldCommit(BeanPart oldAddedPart, BeanPart newAddedPart, EObject newAddedInstance, List args){
@@ -232,10 +230,8 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 			// We may be added a property (e.g., add(new Foo(), x, y z)		
 			if (fRootObj!=null) {
 				if (args.size()>0 && args.get(getAddedPartArgIndex(args.size())) instanceof ClassInstanceCreation) {
-				   String curAllocation = ConstructorDecoderHelper.convertToString(fAddedInstance.getAllocation());
 				   JavaAllocation astAlloc = getAllocation((Expression)args.get(getAddedPartArgIndex(args.size())));
-				   String astAllocation = ConstructorDecoderHelper.convertToString(astAlloc);
-				   if (!curAllocation.equals(astAllocation)) {
+				   if (!CodeGenUtil.areAllocationsEqual(fAddedInstance.getAllocation(), astAlloc)) {
 				   	fAddedInstance.setAllocation(astAlloc);
 				   	addedInstanceChanged = true;
 				   }
