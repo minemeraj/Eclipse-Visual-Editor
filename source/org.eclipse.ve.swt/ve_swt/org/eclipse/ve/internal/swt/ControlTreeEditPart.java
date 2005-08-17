@@ -10,23 +10,28 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlTreeEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-07-10 23:43:24 $ 
+ *  $Revision: 1.7 $  $Date: 2005-08-17 18:39:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.IErrorNotifier;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 import org.eclipse.ve.internal.java.core.*;
@@ -44,10 +49,19 @@ public class ControlTreeEditPart extends JavaBeanTreeEditPart {
 	
 	private IErrorNotifier otherNotifier;
 	
+	protected EReference sf_menu;
+	
 	protected IErrorNotifier.CompoundErrorNotifier errorNotifier = new IErrorNotifier.CompoundErrorNotifier();	
 
 	public ControlTreeEditPart(Object model) {
 		super(model);
+	}
+	
+	public void setModel(Object model) {
+		super.setModel(model);
+
+		ResourceSet rset = ((IJavaObjectInstance) model).eResource().getResourceSet();
+		sf_menu = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_MENU);
 	}
 	
 	protected IErrorNotifier getErrorNotifier() {
@@ -58,13 +72,35 @@ public class ControlTreeEditPart extends JavaBeanTreeEditPart {
 		super.activate();
 		errorNotifier.addErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE));	// This will signal initial severity if not none.
 		errorNotifier.addErrorNotifier(otherNotifier);
+		((EObject) getModel()).eAdapters().add(menuAdapter);
 
 	}
 	
 	public void deactivate() {
 		errorNotifier.dispose();
+		((EObject) getModel()).eAdapters().remove(menuAdapter);
 		super.deactivate();
 	}
+	
+	protected Adapter menuAdapter = new EditPartAdapterRunnable(this) {
+		protected void doRun() {
+			refreshChildren();
+		}
+
+		public void notifyChanged(Notification notification) {
+			if (notification.getFeature() == sf_menu)
+				queueExec(ControlTreeEditPart.this, "MENU"); //$NON-NLS-1$
+		}
+	};
+	
+	
+	protected List getChildJavaBeans() {
+		if (((EObject) getModel()).eIsSet(sf_menu)) {
+			return (List)((EObject) getModel()).eGet(sf_menu);
+		} else 	
+			return Collections.EMPTY_LIST;
+	}
+	
 
 	public Object getAdapter(Class type) {
 		if (type == IPropertySource.class)

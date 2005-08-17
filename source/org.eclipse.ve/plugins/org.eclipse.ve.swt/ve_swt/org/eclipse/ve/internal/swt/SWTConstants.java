@@ -19,8 +19,10 @@ public class SWTConstants {
 		SF_CONTROL_LOCATION,
 		SF_CONTROL_SIZE,
 		SF_CONTROL_VISIBLE,
-		SF_CONTROL_LAYOUTDATA,		
+		SF_CONTROL_LAYOUTDATA,	
+		SF_CONTROL_MENU,
 		SF_DECORATIONS_TEXT,		
+		SF_DECORATIONS_MENU_BAR,
 		SF_COMPOSITE_LAYOUT,
 		SF_COMPOSITE_CONTROLS,
 		SF_SCROLLEDCOMPOSITE_CONTENT,
@@ -79,7 +81,6 @@ public class SWTConstants {
 		SF_COOLBAR_ITEMS,
 		SF_COOLITEM_CONTROL,
 		SF_TOOLBAR_ITEMS,
-		SF_MENU_BAR,
 		SF_MENU_ITEMS,
 		SF_MENUITEM_MENU,
 		SF_ITEM_TEXT;
@@ -98,7 +99,8 @@ public class SWTConstants {
 		SF_CONTROL_LOCATION = URI.createURI("java:/org.eclipse.swt.widgets#Control/location");		 //$NON-NLS-1$
 		SF_CONTROL_SIZE = URI.createURI("java:/org.eclipse.swt.widgets#Control/size");		 //$NON-NLS-1$
 		SF_CONTROL_VISIBLE = URI.createURI("java:/org.eclipse.swt.widgets#Control/visible");		 //$NON-NLS-1$		
-		SF_CONTROL_LAYOUTDATA = URI.createURI("java:/org.eclipse.swt.widgets#Control/layoutData");		 //$NON-NLS-1$		
+		SF_CONTROL_LAYOUTDATA = URI.createURI("java:/org.eclipse.swt.widgets#Control/layoutData");		 //$NON-NLS-1$
+		SF_CONTROL_MENU = URI.createURI("java:/org.eclipse.swt.widgets#Control/menu");	 //$NON-NLS-1$
 		SF_COMPOSITE_LAYOUT = URI.createURI("java:/org.eclipse.swt.widgets#Composite/layout");		 //$NON-NLS-1$
 		SF_COMPOSITE_CONTROLS = URI.createURI("java:/org.eclipse.swt.widgets#Composite/controls");		 //$NON-NLS-1$
 		SF_SCROLLEDCOMPOSITE_CONTENT = URI.createURI("java:/org.eclipse.swt.custom#ScrolledComposite/content"); //$NON-NLS-1$
@@ -159,7 +161,7 @@ public class SWTConstants {
 		SF_COOLBAR_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#CoolBar/items");	 //$NON-NLS-1$
 		SF_COOLITEM_CONTROL = URI.createURI("java:/org.eclipse.swt.widgets#CoolItem/control");	 //$NON-NLS-1$
 		SF_TOOLBAR_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#ToolBar/items");	 //$NON-NLS-1$
-		SF_MENU_BAR = URI.createURI("java:/org.eclipse.swt.widgets#Decorations/menuBar");	 //$NON-NLS-1$
+		SF_DECORATIONS_MENU_BAR = URI.createURI("java:/org.eclipse.swt.widgets#Decorations/menuBar");	 //$NON-NLS-1$
 		SF_MENU_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#Menu/items");	 //$NON-NLS-1$
 		SF_MENUITEM_MENU = URI.createURI("java:/org.eclipse.swt.widgets#MenuItem/menu");	 //$NON-NLS-1$
 		

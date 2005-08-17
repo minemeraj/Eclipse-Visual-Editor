@@ -12,12 +12,15 @@
  *  Created Aug 15, 2005 by Gili Mendel
  * 
  *  $RCSfile: MenuTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-08-17 12:30:36 $ 
+ *  $Revision: 1.2 $  $Date: 2005-08-17 18:39:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -25,9 +28,15 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
+
 import org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart;
 
-
+/**
+ * Menu Tree Edit part.
+ * 
+ * @since 1.1.0.1
+ */
 public class MenuTreeEditPart extends JavaBeanTreeEditPart {
 
 	protected EReference sf_items;
@@ -41,7 +50,29 @@ public class MenuTreeEditPart extends JavaBeanTreeEditPart {
 
 		ResourceSet rset = ((IJavaObjectInstance) model).eResource().getResourceSet();
 		sf_items = JavaInstantiation.getReference(rset, SWTConstants.SF_MENU_ITEMS);
-	}	
+	}
+	
+	protected Adapter menuAdapter = new EditPartAdapterRunnable(this) {
+		protected void doRun() {
+			refreshChildren();
+		}
+
+		public void notifyChanged(Notification notification) {
+			if (notification.getFeature() == sf_items)
+				queueExec(MenuTreeEditPart.this, "ITEMS"); //$NON-NLS-1$
+		}
+	};
+
+	public void activate() {
+		super.activate();
+		((EObject) getModel()).eAdapters().add(menuAdapter);
+	}
+
+	public void deactivate() {
+		super.deactivate();
+		((EObject) getModel()).eAdapters().remove(menuAdapter);
+	}
+	
 	
 	protected List getChildJavaBeans() {
 		if (((EObject) getModel()).eIsSet(sf_items)) {

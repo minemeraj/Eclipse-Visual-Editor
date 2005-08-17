@@ -12,12 +12,14 @@
  *  Created Aug 15, 2005 by Gili Mendel
  * 
  *  $RCSfile: DecorationsTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-08-17 12:30:36 $ 
+ *  $Revision: 1.2 $  $Date: 2005-08-17 18:39:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.*;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -25,7 +27,13 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
+/**
+ * Decorations Tree Editpart
+ * 
+ * @since 1.1.0.1
+ */
 public class DecorationsTreeEditPart extends CompositeTreeEditPart {
 
 	protected EReference sf_menuBar;
@@ -38,7 +46,28 @@ public class DecorationsTreeEditPart extends CompositeTreeEditPart {
 		super.setModel(model);
 
 		ResourceSet rset = ((IJavaObjectInstance) model).eResource().getResourceSet();
-		sf_menuBar = JavaInstantiation.getReference(rset, SWTConstants.SF_MENU_BAR);
+		sf_menuBar = JavaInstantiation.getReference(rset, SWTConstants.SF_DECORATIONS_MENU_BAR);
+	}
+	
+	protected Adapter decorationsAdapter = new EditPartAdapterRunnable(this) {
+		protected void doRun() {
+			refreshChildren();
+		}
+
+		public void notifyChanged(Notification notification) {
+			if (notification.getFeature() == sf_menuBar)
+				queueExec(DecorationsTreeEditPart.this, "MENUBAR"); //$NON-NLS-1$
+		}
+	};
+
+	public void activate() {
+		super.activate();
+		((EObject) getModel()).eAdapters().add(decorationsAdapter);
+	}
+
+	public void deactivate() {
+		super.deactivate();
+		((EObject) getModel()).eAdapters().remove(decorationsAdapter);
 	}	
 	
 	protected List getChildJavaBeans() {
