@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: TreeContainerEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-17 18:36:50 $ 
  */
 
 import java.util.*;
@@ -27,6 +27,11 @@ import org.eclipse.gef.requests.CreateRequest;
  * by taking in the requests, determining the positions (which become 
  * indexes) and forwards them over to the ContainerEditPolicy passed in
  * to perform the actions.
+ * <p>
+ * What it makes different from GEF's {@link org.eclipse.gef.editpolicies.TreeContainerEditPolicy} is
+ * that the actual function is shipped over to a {@link org.eclipse.ve.internal.cde.core.ContainerPolicy}, 
+ * which handles that actual commands. This is because the commands are common between the GraphicalViewer
+ * and the TreeViewer, so why duplicate them in the two edit policies, so use the common class instead.
  */
 public class TreeContainerEditPolicy extends org.eclipse.gef.editpolicies.TreeContainerEditPolicy {
 	protected ContainerPolicy containerPolicy;

@@ -11,17 +11,17 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: ILayoutPolicyHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.4 $  $Date: 2005-08-17 18:38:31 $ 
  */
 
 import java.util.List;
 import org.eclipse.gef.commands.Command;
 
 /**
- * This is for awt Container layouts. It supplies the
+ * This is for Visual Containers with layouts. It supplies the
  * common functions for layout constraint management.
- *
- * Note: The constraints are often an IDE format of the constraint
+ * <p>
+ * <b>Note:</b> The constraints are often an IDE format of the constraint
  * instead of a true java object instance. However, this is up to
  * each layout manager helper to determine if it wants to have the
  * constraints be an IDE format or a java object instance.

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: VisualContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-17 18:38:30 $ 
  */
 import java.util.List;
 
@@ -20,14 +20,46 @@ import org.eclipse.gef.commands.Command;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
- 
+
+/**
+ * A Java container policy for handling visuals with constraints.
+ * <p>
+ * It is abstract.
+ * @since 1.1.0
+ */
 public abstract class VisualContainerPolicy extends JavaContainerPolicy {
 
+	/**
+	 * Construct the policy.
+	 * @param feature
+	 * @param domain
+	 * 
+	 * @since 1.1.0.1
+	 */
 	public VisualContainerPolicy(EStructuralFeature feature, EditDomain domain) {
 		super(feature,domain);
 	}
+	
+	/**
+	 * Called to do a create with a given constraint.
+	 * @param constraintComponent
+	 * @param childComponent
+	 * @param position
+	 * @return
+	 * 
+	 * @since 1.1.0.1
+	 */
 	public abstract Command getCreateCommand(Object constraintComponent, Object childComponent, Object position);
 
+	/**
+	 * Called to do an add with a given constraint.
+	 * @param componentConstraints
+	 * @param childrenComponents
+	 * @param position
+	 * @return
+	 * 
+	 * @since 1.1.0.1
+	 */
 	public abstract Command getAddCommand(List componentConstraints, List childrenComponents, Object position);
 	
 }

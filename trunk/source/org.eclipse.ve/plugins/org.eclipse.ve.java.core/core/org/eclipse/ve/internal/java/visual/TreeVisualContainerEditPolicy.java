@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: TreeVisualContainerEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-17 18:38:31 $ 
  */
 
 import java.util.*;
@@ -22,12 +22,19 @@ import org.eclipse.gef.requests.*;
 import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.ve.internal.cde.core.ContainerPolicy;
+import org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy;
 /**
- * Tree ContainerEditPolicy for SWT Composites
+ * Tree ContainerEditPolicy for Visual containers with layout policy helpers on the Tree (Java Beans Viewer).
+ * <p>
+ * If there is a layout policy helper, then certain commands are forwarded over to
+ * the layout policy helper to do processing for the command.
+ * <p>
+ * If the layout policy helper is also an IActionFilter, then testAttribute requests
+ * are forwarded over to it too.
  */
-public class TreeVisualContainerEditPolicy extends org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy implements IActionFilter {
+public class TreeVisualContainerEditPolicy extends TreeContainerEditPolicy implements IActionFilter {
 	
-	ILayoutPolicyHelper helper;
+	protected ILayoutPolicyHelper helper;
 	
 	public TreeVisualContainerEditPolicy(VisualContainerPolicy policy) {
 		super(policy);
@@ -66,7 +73,7 @@ public class TreeVisualContainerEditPolicy extends org.eclipse.ve.internal.cde.c
 	}
 		
 	public boolean testAttribute(Object target, String name, String value) {
-		if (helper != null && helper instanceof IActionFilter) {
+		if (helper instanceof IActionFilter) {
 			return ((IActionFilter)helper).testAttribute(target, name, value);
 		}
 		return false;
