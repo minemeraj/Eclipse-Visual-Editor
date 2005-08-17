@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-08-17 18:50:45 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -74,8 +74,12 @@ public class ImageDataCollector implements ICallback {
 			IBeanTypeProxy dataCollectorType = null;
 			if (Platform.OS_WIN32.equals(Platform.getOS()))
 				dataCollectorType = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.win32.ImageCapture"); //$NON-NLS-1$
-			else if (Platform.WS_GTK.equals(Platform.getWS()))
-				dataCollectorType = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.unix.ImageCapture"); //$NON-NLS-1$
+			else if (Platform.WS_GTK.equals(Platform.getWS())){
+				if(Platform.ARCH_IA64.equals(Platform.getOSArch()) || Platform.ARCH_X86_64.equals(Platform.getOSArch()))
+					dataCollectorType = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.unix.bits64.ImageCapture"); //$NON-NLS-1$
+				else
+					dataCollectorType = registry.getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.unix.ImageCapture"); //$NON-NLS-1$
+			}
 			if (dataCollectorType != null) {
 				fDataCollectorProxy = dataCollectorType.newInstance(); //$NON-NLS-1$
 				registry.getCallbackRegistry().registerCallback(fDataCollectorProxy, this);
