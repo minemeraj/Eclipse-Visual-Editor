@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.47 $  $Date: 2005-08-10 17:09:18 $ 
+ *  $Revision: 1.48 $  $Date: 2005-08-17 18:38:21 $ 
  */
 
 
@@ -535,6 +535,15 @@ public static int getExactJavaIndex(String searchIn, String seachFor){
 			return index;
 	}
 	return -1;
+}
+
+public static boolean areAllocationsEqual(JavaAllocation exp1, JavaAllocation exp2) {
+	if (exp1 instanceof ParseTreeAllocation && exp2 instanceof ParseTreeAllocation)
+		return areParseTreesEqual(((ParseTreeAllocation) exp1).getExpression(), ((ParseTreeAllocation) exp2).getExpression());
+	else if (exp1 instanceof InitStringAllocation && exp2 instanceof InitStringAllocation) {
+		return ((InitStringAllocation) exp1).getInitString().equals(((InitStringAllocation) exp2).getInitString());
+	} else
+		return exp1 == exp2;	// This handles both being null.
 }
 
 public static boolean areParseTreesEqual(PTExpression exp1, PTExpression exp2){

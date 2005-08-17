@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.47 $  $Date: 2005-08-17 12:30:38 $ 
+ *  $Revision: 1.48 $  $Date: 2005-08-17 18:38:21 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -22,7 +22,6 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
 import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -412,21 +411,6 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		return parser.createExpression(ast);
 	}
 	
-	public static String convertToString(JavaAllocation alloc){
-		if (alloc instanceof InitStringAllocation) {
-			InitStringAllocation isAlloc = (InitStringAllocation) alloc;
-			return isAlloc.getInitString();
-		}else if (alloc instanceof ParseTreeAllocation) {
-			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) alloc;
-			NaiveExpressionFlattener flattener = new NaiveExpressionFlattener();
-			if (ptAlloc.getExpression()!=null) {
-			  ptAlloc.getExpression().accept(flattener);
-			  return flattener.getResult();
-			}
-		}// Ignoring ImplicitAlloction for now
-		return null;
-	}
-	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#decode()
 	 */
@@ -437,16 +421,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		IJavaObjectInstance obj = (IJavaObjectInstance)fbeanPart.getEObject();
 		
 		// SMART UPDATE
-		boolean allocationChanged = true;
-		JavaAllocation currentAllocation = obj.getAllocation();
-		if(currentAllocation!=null && alloc!=null){
-			String currentAllocationString = convertToString(currentAllocation);
-			String newAllocationString = convertToString(alloc);
-			if(currentAllocationString!=null)
-				allocationChanged = !currentAllocationString.equals(newAllocationString);
-		}else if(currentAllocation==null && alloc==null)
-			allocationChanged = false;
-		if(allocationChanged)
+		if(!CodeGenUtil.areAllocationsEqual(obj.getAllocation(), alloc))
 			obj.setAllocation(alloc) ;
 		
 		return true;

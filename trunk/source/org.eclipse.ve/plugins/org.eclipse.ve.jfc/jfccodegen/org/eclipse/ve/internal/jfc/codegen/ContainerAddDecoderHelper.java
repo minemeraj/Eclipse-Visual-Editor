@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.26 $  $Date: 2005-08-05 16:07:05 $ 
+ *  $Revision: 1.27 $  $Date: 2005-08-17 18:38:45 $ 
  */
 
 import java.util.*;
@@ -372,10 +372,8 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			// added part may be a property e.g., add (new JPanel()) .. no BeanParts
 			if (fCC!=null) {
 				if (args.get(0) instanceof ClassInstanceCreation) {
-				   String curAllocation = ConstructorDecoderHelper.convertToString(fAddedInstance.getAllocation());
 				   JavaAllocation astAlloc = getAllocation((Expression)args.get(0));
-				   String astAllocation = ConstructorDecoderHelper.convertToString(astAlloc);
-				   if (!curAllocation.equals(astAllocation)) {
+				   if (!CodeGenUtil.areAllocationsEqual(fAddedInstance.getAllocation(), astAlloc)) {
 				   	fAddedInstance.setAllocation(astAlloc);
 				   	addedPartChanged = true;
 				   }

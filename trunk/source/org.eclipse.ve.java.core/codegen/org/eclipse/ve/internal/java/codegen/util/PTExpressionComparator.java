@@ -10,47 +10,88 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PTExpressionComparator.java,v $
- *  $Revision: 1.4 $  $Date: 2005-07-19 15:35:27 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-17 18:38:21 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 import org.eclipse.jem.internal.instantiation.*;
  
 
 /**
+ * Visitor to compare two {@link org.eclipse.jem.internal.instantiation.PTExpression}.
  * 
  * @since 1.1
  */
 public class PTExpressionComparator extends ParseVisitor {
 
-	protected boolean equal = true;
-	protected Stack otherASTStack = new Stack();
+	private boolean equal = true;
 	
-	public PTExpressionComparator(PTExpression otherExpression){
-		otherASTStack.push(otherExpression);
+	/*
+	 * Private non-synchronized version of a Stack. The java Stack is synchronized, and
+	 * we don't need the overhead of that here.
+	 */
+	private static class Stack {
+		private List list = new ArrayList();
+		
+		public void push(Object o) {
+			list.add(o);
+		}
+		
+		public Object pop() {
+			return list.remove(list.size()-1);
+		}
 	}
 	
+	protected Stack otherPTExpressionStack = new Stack();
+	
+	/**
+	 * Construct the comparator.
+	 * @param otherExpression
+	 * 
+	 * @since 1.1.0.1
+	 */
+	public PTExpressionComparator(PTExpression otherExpression){
+		otherPTExpressionStack.push(otherExpression);
+	}
+	
+	/**
+	 * Is the expression equal? Call this after running visitor ({@link PTExpression#accept(ParseVisitor)}.
+	 * @return
+	 * 
+	 * @since 1.1.0.1
+	 */
 	public boolean isEqual(){
 		return equal;
 	}
 
+	/**
+	 * Call in this visitor to indicate the expression is not equal and stop all visiting.
+	 * 
+	 * @throws StopVisiting
+	 * 
+	 * @since 1.1.0.1
+	 */
+	protected void notEqual() throws StopVisiting {
+		equal = false;
+		throw new StopVisiting();
+	}
+	
 	protected void pushInReverse(List list){
 		if(list!=null){
 			for(int i=list.size()-1;i>=0;i--){
-				otherASTStack.push(list.get(i));
+				otherPTExpressionStack.push(list.get(i));
 			}
 		}
 	}
 	
 	protected void push(Object object){
-		otherASTStack.push(object);
+		otherPTExpressionStack.push(object);
 	}
 	
 	protected Object pop(){
-		return otherASTStack.pop();
+		return otherPTExpressionStack.pop();
 	}
 	
 	public boolean visit(PTArrayAccess node) {
@@ -68,7 +109,7 @@ public class PTExpressionComparator extends ParseVisitor {
 				return super.visit(node);
 			}
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -88,7 +129,7 @@ public class PTExpressionComparator extends ParseVisitor {
 				}
 			}
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -105,7 +146,7 @@ public class PTExpressionComparator extends ParseVisitor {
 				return super.visit(node);
 			}
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -116,7 +157,7 @@ public class PTExpressionComparator extends ParseVisitor {
 			if(node.isBooleanValue()==otherBooleanLiteral.isBooleanValue())
 				return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -129,7 +170,7 @@ public class PTExpressionComparator extends ParseVisitor {
 				return super.visit(node);
 			}
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -140,7 +181,7 @@ public class PTExpressionComparator extends ParseVisitor {
 			if(node.getEscapedValue().equals(otherCharacterLiteral.getEscapedValue()))
 				return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -159,7 +200,7 @@ public class PTExpressionComparator extends ParseVisitor {
 				}
 			}
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -172,7 +213,7 @@ public class PTExpressionComparator extends ParseVisitor {
 			push(otherConditionalExpression.getCondition());
 			return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -185,7 +226,7 @@ public class PTExpressionComparator extends ParseVisitor {
 				return super.visit(node);
 			}
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -213,7 +254,7 @@ public class PTExpressionComparator extends ParseVisitor {
 				}
 			}
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -226,7 +267,7 @@ public class PTExpressionComparator extends ParseVisitor {
 				return super.visit(node);
 			}
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -237,7 +278,7 @@ public class PTExpressionComparator extends ParseVisitor {
 			if(node.getObject()!=null && otherInstanceReference.getObject()!=null && node.getObject().equals(otherInstanceReference.getObject()))
 				return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -248,7 +289,7 @@ public class PTExpressionComparator extends ParseVisitor {
 			if(node.getMessage().equals(otherInvalidExpression.getMessage()))
 				return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -269,7 +310,7 @@ public class PTExpressionComparator extends ParseVisitor {
 				}
 			}
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -280,7 +321,7 @@ public class PTExpressionComparator extends ParseVisitor {
 			if(node.getName().equals(otherName.getName()))
 				return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -289,7 +330,7 @@ public class PTExpressionComparator extends ParseVisitor {
 		if (otherAST instanceof PTNullLiteral) {
 			return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -300,7 +341,7 @@ public class PTExpressionComparator extends ParseVisitor {
 			if(node.getToken().equals(otherNumLiteral.getToken()))
 				return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -311,7 +352,7 @@ public class PTExpressionComparator extends ParseVisitor {
 			push(otherParenthesizedExpression.getExpression());
 			return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -329,7 +370,7 @@ public class PTExpressionComparator extends ParseVisitor {
 				return super.visit(node);
 			}
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -340,7 +381,7 @@ public class PTExpressionComparator extends ParseVisitor {
 			if(node.getEscapedValue().equals(otherStringLiteral.getEscapedValue()))
 				return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -349,7 +390,7 @@ public class PTExpressionComparator extends ParseVisitor {
 		if (otherAST instanceof PTThisLiteral) {
 			return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 
@@ -360,7 +401,7 @@ public class PTExpressionComparator extends ParseVisitor {
 			if(node.getType().equals(otherTypeLiteral.getType()))
 				return super.visit(node);
 		}
-		equal = false;
+		notEqual();
 		return false;
 	}
 }
