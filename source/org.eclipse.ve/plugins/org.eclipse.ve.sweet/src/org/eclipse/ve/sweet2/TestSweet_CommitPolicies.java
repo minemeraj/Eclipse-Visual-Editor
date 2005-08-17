@@ -12,10 +12,9 @@ import org.eclipse.swt.*;
 import org.eclipse.ve.sweet.testcase.Person;
 
 /**
- * This example builds on TestSweet3 but instead of each contentProvider listening to a specific Person
- * this is a proxy object that allows the person to be changed and also notifies updates
- * The example shows the person being changed by duplicating the GUI text entry
- * The example shows the three different commit values that are possible
+ * This example has three person objects each with a single binder
+ * Each binder is used to create a set of editors - one input capable and one read only
+ * the refreshPolicy is set differently on each set of editors to show that the commit policy works OK 
  */
 
 public class TestSweet_CommitPolicies {
@@ -26,6 +25,10 @@ public class TestSweet_CommitPolicies {
 		Shell shell = new Shell(display);
 		shell.setLayout(new GridLayout(1,false));
 		
+		Text t = new Text(shell,SWT.READ_ONLY | SWT.WRAP);
+		t.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL));
+		t.setText("This example uses different people objects and shows the update policy working for different states and editor types");
+				
 		Group modifyGroup = new Group(shell,SWT.NONE);
 		modifyGroup.setLayout(new GridLayout(3,false));
 		modifyGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -55,7 +58,8 @@ public class TestSweet_CommitPolicies {
 	public static void createPersonFields(int updatePolicy, Composite parent){
 		
 		final Person p = new Person("John","Doe",35);
-		final IObjectBinder personBinder = ObjectBinder.createObjectBinder(p);
+		final IObjectBinder personBinder = ObjectBinder.createObjectBinder(Person.class);
+		personBinder.setValue(p);
 		
 		// NAME
 		Label nameLabel = new Label(parent,SWT.NONE);
@@ -93,6 +97,7 @@ public class TestSweet_CommitPolicies {
 		
 				
 		// If using explicit commit then create a button for this
+		
 		if(updatePolicy == Editor.COMMIT_EXPLICIT){
 			Button commitButton = new Button(parent,SWT.PUSH);
 			GridData data = new GridData();
@@ -110,6 +115,6 @@ public class TestSweet_CommitPolicies {
 					ageBinder.setValue(newAge);					
 				}				
 			});
-		}						
+		}								
 	}
 }

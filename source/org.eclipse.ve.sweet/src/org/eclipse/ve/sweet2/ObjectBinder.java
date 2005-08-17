@@ -13,18 +13,11 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 	private Class receiverClass;
 	private List binders = new ArrayList();
 	private List listeners = new ArrayList();
+	private static Map typeListeners;
 	private boolean isSignallingChange;
-
-	public static IObjectBinder createObjectBinder(Object source) {
-		try{
-			Object result = Proxy.newProxyInstance(ObjectBinder.class.getClassLoader(),
-					new Class[] { IObjectBinder.class }, 
-					new ObjectBinder(source));
-          return (IObjectBinder) result;
-		} catch (Exception e){
-			e.printStackTrace();
-			return null;
-		}
+	
+	void setSource(Object aSource){
+		source = aSource;
 	}
 
 	public static IObjectBinder createObjectBinder(Class sourceClass) {
@@ -39,13 +32,44 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		}
 	}	
 	
-	private ObjectBinder(Object aSource){
-		source = aSource;
-		receiverClass = aSource.getClass();
+	
+	public interface ChangeListener{
+		void objectAdded(Object newObject);
+		void objectRemove(Object oldObject);
+		void objectChanged(Object object, String propertyName);
+	}
+	
+	public static void addListener(Class aType, ChangeListener aListener){
+		if(typeListeners == null){
+			typeListeners = new WeakHashMap();
+		}
+		List listeners = (List)typeListeners.get(aType);
+		if(listeners == null){
+			listeners = new ArrayList();
+			typeListeners.put(aType,listeners);			
+		}
+		listeners.add(aListener);
 	}
 	
 	private ObjectBinder(Class aSourceClass){
 		receiverClass = aSourceClass;
+		ObjectBinder.addListener(receiverClass,new ChangeListener(){
+			public void objectAdded(Object newObject) {
+				
+			}
+			public void objectRemove(Object oldObject) {
+				
+			}
+			public void objectChanged(Object object, String propertyName) {
+				if(object == source && !isSignallingChange){
+					Iterator iter = listeners.iterator();		
+					while(iter.hasNext()){
+						PropertyChangeListener listener = (PropertyChangeListener)iter.next();
+						listener.propertyChange(new PropertyChangeEvent(this,null,null,source));
+					}		
+				}
+			}
+		});		
 	}
 
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -65,10 +89,21 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 	}
 
 	public IValueProvider getPropertyProvider(String string) {
-		SimplePropertyProvider result = new SimplePropertyProvider(this,string);
-		result.setObjectBinder(this);
-		binders.add(result);
-		return result;
+		// See whether the property is nested or not
+		int indexOfLastPeriod = string.lastIndexOf('.');
+		String immediatePropertyName = null;
+		if(indexOfLastPeriod != -1){
+			// If the property is nested we bind to a property provider that can give this to us
+			immediatePropertyName = string.substring(indexOfLastPeriod+1);
+			String nestedPropertyName = string.substring(0,indexOfLastPeriod);
+			String[] properties = new String[]{nestedPropertyName,immediatePropertyName};
+			NestedPropertyProvider result = new NestedPropertyProvider(this,properties);
+			return result;
+		} else {
+			SimplePropertyProvider result = new SimplePropertyProvider(this,string);
+			binders.add(result);
+			return result;
+		}
 	}
 	
 	public void setValue(Object aSource) {
@@ -92,24 +127,29 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		return receiverClass == null ? source.getClass() : receiverClass;
 	}
 
-	public void addPropetyChangeListener(PropertyChangeListener listener) {
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		listeners.add(listener);
-	}
-
-	public void addPropertyChangeListener(PropertyChangeListener l) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void refresh(String propertyName) {
 		// Refresh all binders
-		if(isSignallingChange) return;
-		isSignallingChange = true;
-		Iterator iter = listeners.iterator();		
+		if(isSignallingChange) return;		
+		// Signal change
+		if(typeListeners == null) return;		
+		List listeners = (List)typeListeners.get(getType());
+		Iterator iter = listeners.iterator();
 		while(iter.hasNext()){
-			PropertyChangeListener listener = (PropertyChangeListener)iter.next();
-			listener.propertyChange(new PropertyChangeEvent(this,propertyName,null,null));
-		}			
+			((ChangeListener)iter.next()).objectChanged(source,propertyName);
+		}
 		isSignallingChange = false;		
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void refresh() {
+		refresh(null);
 	}
 }
