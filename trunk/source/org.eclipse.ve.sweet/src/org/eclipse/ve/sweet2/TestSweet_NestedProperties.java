@@ -12,10 +12,7 @@ import org.eclipse.swt.*;
 import org.eclipse.ve.sweet.testcase.Person;
 
 /**
- * This example builds on TestSweet3 but instead of each contentProvider listening to a specific Person
- * this is a proxy object that allows the person to be changed and also notifies updates
- * The example shows the person being changed by duplicating the GUI text entry
- * The example shows the three different commit values that are possible
+ * 
  */
 
 public class TestSweet_NestedProperties {
@@ -29,7 +26,7 @@ public class TestSweet_NestedProperties {
 		
 		Display display = new Display();
 		Shell shell = new Shell(display);
-		shell.setLayout(new GridLayout(1,false));
+		shell.setLayout(new GridLayout(2,true));
 		
 		p = new Person("John","Doe",35);
 		personBinder = ObjectBinder.createObjectBinder(Person.class);
@@ -43,25 +40,45 @@ public class TestSweet_NestedProperties {
 		Group personGroup = new Group(shell,SWT.NONE);
 		personGroup.setText("Person");
 		personGroup.setLayout(new GridLayout(2,false));
-		personGroup.setLayoutData(new GridData(GridData.FILL_BOTH));		
+		personGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));	
 		
-		addPersonDetailsTo(personGroup,personBinder);
+		addPersonDetailsTo(personGroup,personBinder,SWT.BORDER);
+		
+		Group personReadOnlyGroup = new Group(shell,SWT.NONE);
+		personReadOnlyGroup.setText("Person");
+		personReadOnlyGroup.setLayout(new GridLayout(2,false));
+		personReadOnlyGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		addPersonDetailsTo(personReadOnlyGroup,personBinder,SWT.READ_ONLY);		
 		
 		// Manager's first name
 		Label nameLabel = new Label(personGroup,SWT.NONE);
 		nameLabel.setText("Manager's First Name: ");		
 		TextEditor firstNameTextViewer = new TextEditor(personGroup,SWT.BORDER); 
+		firstNameTextViewer.setUpdatePolicy(Editor.COMMIT_MODIFY);
 		firstNameTextViewer.setContentProvider(personBinder.getPropertyProvider("manager.firstName"));
 		firstNameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
+
+		Label nameLabel_2 = new Label(personReadOnlyGroup,SWT.NONE);
+		nameLabel_2.setText("Manager's First Name: ");		
+		TextEditor firstNameTextViewer_2 = new TextEditor(personReadOnlyGroup,SWT.READ_ONLY); 
+		firstNameTextViewer_2.setContentProvider(personBinder.getPropertyProvider("manager.firstName"));
+		firstNameTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));				
 		
 		Group managerGroup = new Group(shell,SWT.NONE);
 		managerGroup.setText("Manager");		
 		managerGroup.setLayout(new GridLayout(2,false));
-		managerGroup.setLayoutData(new GridData(GridData.FILL_BOTH));				
+		managerGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
+		addPersonDetailsTo(managerGroup,managerBinder,SWT.BORDER);	
 		
-		addPersonDetailsTo(managerGroup,managerBinder);		
+		Group managerReadOnlyGroup = new Group(shell,SWT.NONE);
+		managerReadOnlyGroup.setText("Manager");
+		managerReadOnlyGroup.setLayout(new GridLayout(2,false));
+		managerReadOnlyGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
-		shell.setSize(400,300);
+		addPersonDetailsTo(managerReadOnlyGroup,managerBinder,SWT.READ_ONLY);		
+		
+		shell.setSize(600,300);
 		shell.open();
 		
 		while(!shell.isDisposed()){
@@ -69,26 +86,26 @@ public class TestSweet_NestedProperties {
 		}
 	}
 	
-	public static void addPersonDetailsTo(Composite parent, IObjectBinder aPersonBinder){
+	public static void addPersonDetailsTo(Composite parent, IObjectBinder aPersonBinder, int styleBits){
 		
 		// First name
 		Label nameLabel = new Label(parent,SWT.NONE);
 		nameLabel.setText("First Name: ");		
-		TextEditor firstNameTextViewer = new TextEditor(parent,SWT.BORDER); 
+		TextEditor firstNameTextViewer = new TextEditor(parent,styleBits); 
 		firstNameTextViewer.setContentProvider(aPersonBinder.getPropertyProvider("firstName"));
 		firstNameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		// Last name		
 		Label lastNameLabel = new Label(parent,SWT.NONE);
 		lastNameLabel.setText("Last Name: ");		
-		TextEditor lastNameTextViewer = new TextEditor(parent,SWT.BORDER);
+		TextEditor lastNameTextViewer = new TextEditor(parent,styleBits);
 		lastNameTextViewer.setContentProvider(aPersonBinder.getPropertyProvider("lastName"));
 		lastNameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
 		// age
 		Label ageLabel = new Label(parent,SWT.NONE);
 		ageLabel.setText("age: ");	
-		SpinnerEditor ageSpinnerViewer = new SpinnerEditor(parent,SWT.BORDER); 
+		SpinnerEditor ageSpinnerViewer = new SpinnerEditor(parent,styleBits); 
 		ageSpinnerViewer.setContentProvider(aPersonBinder.getPropertyProvider("age"));
 		
 	}

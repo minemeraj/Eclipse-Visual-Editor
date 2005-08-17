@@ -1,5 +1,8 @@
 package org.eclipse.ve.sweet2;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -58,6 +61,11 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 		super.setContentProvider(contentProvider);
 		valueProvider = (IValueProvider)contentProvider;
 		fSpinner.setEnabled(valueProvider.canSetValue());
+		valueProvider.addPropertyChangeListener(new PropertyChangeListener(){
+			public void propertyChange(PropertyChangeEvent evt) {
+				refresh();
+			}
+		});		
 		setInput(valueProvider.getValue());
 	}	
 

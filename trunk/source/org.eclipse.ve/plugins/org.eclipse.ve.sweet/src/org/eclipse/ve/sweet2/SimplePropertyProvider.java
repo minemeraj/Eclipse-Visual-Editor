@@ -1,36 +1,18 @@
 package org.eclipse.ve.sweet2;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.widgets.Control;
 
-public class SimplePropertyProvider implements IValueProvider {
+public class SimplePropertyProvider extends AbstractPropertyProvider {
 	
-	private IValue fSource;
-	private String fPropertyName;
+	String fPropertyName;
 	private Class fReceiverClass;
 	private Method fGetMethod;
 	private Method fSetMethod;
-	protected Class fPropertyType;
-	private ObjectBinder objectBinder;
-	private boolean isSettingValue;
-	private Editor editor;
-	private Control control;
-	
-	public SimplePropertyProvider(IValue source, String propertyName){
-		fPropertyName = propertyName;
-		fSource = source;		
+	public SimplePropertyProvider(IObjectBinder source, String propertyName){
+		fPropertyName = propertyName;		
 		fReceiverClass = source.getType();
-	}
-	
-	public SimplePropertyProvider(Class aReceiverClass, String propertyName){
-		fReceiverClass = aReceiverClass;
-		fPropertyName = propertyName;
+		setSourceBinder((ObjectBinder) source);
 	}
 
 	public Object getValue() {
@@ -38,8 +20,8 @@ public class SimplePropertyProvider implements IValueProvider {
 			initializeGetMethod();
 		}
 		try {
-			if(fSource.getValue() != null){
-				return fGetMethod.invoke(fSource.getValue(),null);
+			if(objectBinder.getValue() != null){
+				return fGetMethod.invoke(objectBinder.getValue(),null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -49,11 +31,8 @@ public class SimplePropertyProvider implements IValueProvider {
 	
 	private void initializeGetMethod(){
 		try{
-			StringBuffer getMethodName = new StringBuffer();
-			getMethodName.append("get");
-			getMethodName.append(fPropertyName.substring(0,1).toUpperCase());
-			getMethodName.append(fPropertyName.substring(1));
-			fGetMethod = fReceiverClass.getMethod(getMethodName.toString(),null);
+			String getMethodName = getMethodName(fPropertyName); 
+			fGetMethod = fReceiverClass.getMethod(getMethodName,null);
 			if(fPropertyType == null){
 				fPropertyType = fGetMethod.getReturnType();
 			}
@@ -68,18 +47,15 @@ public class SimplePropertyProvider implements IValueProvider {
 		}
 		if(fSetMethod == null){
 			try{
-				StringBuffer setMethodName = new StringBuffer();
-				setMethodName.append("set");
-				setMethodName.append(fPropertyName.substring(0,1).toUpperCase());
-				setMethodName.append(fPropertyName.substring(1));
-				fSetMethod = fReceiverClass.getMethod(setMethodName.toString(),new Class[] {fPropertyType}); 
+				String setMethodName = setMethodName(fPropertyName); 
+				fSetMethod = fReceiverClass.getMethod(setMethodName,new Class[] {fPropertyType}); 
 			} catch (NoSuchMethodException exc){
 			}
 		}
 		try {
 			isSettingValue = true;
-			if(fSource != null){
-				fSetMethod.invoke(fSource.getValue(),new Object[] {value});
+			if(objectBinder != null){
+				fSetMethod.invoke(objectBinder.getValue(),new Object[] {value});
 				// Refresh binders so they can update the new value
 				objectBinder.refresh(fPropertyName);
 			}
@@ -90,35 +66,8 @@ public class SimplePropertyProvider implements IValueProvider {
 		}
 	}
 
-	public Object getSource() {
-		return fSource;
-	}
-
-	public void dispose() {		
-	}
-
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		if(isSettingValue) return;
-		isSettingValue = true;		
-		editor = (Editor)viewer;
-		control = viewer.getControl();	//TODO - Deal with view changing
-		viewer.refresh();
-		isSettingValue = false;			
-	}
-	
-	public void setObjectBinder(ObjectBinder binder) {
-		objectBinder = binder;
-		objectBinder.addPropetyChangeListener(new PropertyChangeListener(){
-			public void propertyChange(PropertyChangeEvent evt) {
-				if(!isSettingValue){
-					((Viewer)editor).refresh();
-				}
-			}			
-		});
-	}
-
 	public boolean canSetValue() {
-		return fSource.getValue() != null;
+		return objectBinder.getValue() != null;
 	}
 
 	public Class getType() {
@@ -126,6 +75,24 @@ public class SimplePropertyProvider implements IValueProvider {
 			initializeGetMethod();
 		}
 		return fGetMethod.getReturnType();
+	}
+
+	public String toString() {
+		StringBuffer buffer = new StringBuffer(super.toString());
+		buffer.append('(');
+		buffer.append(fPropertyName);
+		buffer.append('-');
+		buffer.append(objectBinder);
+		buffer.append(')');		
+		return buffer.toString();
+	}
+
+	public void refresh(){
+		signalListeners();
+	}
+
+	protected String getPropertyName() {
+		return fPropertyName;
 	}
 
 }
