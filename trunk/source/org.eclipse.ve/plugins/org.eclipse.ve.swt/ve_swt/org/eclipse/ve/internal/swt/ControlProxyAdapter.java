@@ -12,7 +12,6 @@ package org.eclipse.ve.internal.swt;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -488,34 +487,6 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	public void revalidateBeanProxy() {
 		if (isBeanProxyInstantiated())
 			getControlManager().invalidate(getModelChangeController());
-	}
-
-	/**
-	 * Return the first instantiated (or in instantiation) proxy at or after the given index.
-	 * Return null if no setting after the given position are instantiated or are in instantiation.
-	 * <p>
-	 * This is a useful method for working with isMany features for doing the add() on the
-	 * target vm. It is usually used so that we put it in the right place (since the index
-	 * may not actually coorespond to the correct index on the target vm due to superclasses
-	 * may of added their own settings that we don't see).
-	 * 
-	 * @param position position to start looking at
-	 * @param feature feature to look into (must be an isMany() feature).
-	 * 
-	 * @return
-	 * 
-	 * @since 1.1.0
-	 */
-	protected IProxy getProxyAt(int position, EStructuralFeature feature) {
-		List settings = (List) getEObject().eGet(feature);
-		for (int i=position; i<settings.size(); i++) {
-			IJavaInstance setting = (IJavaInstance) settings.get(i);
-			IInternalBeanProxyHost settingProxyHost = getSettingBeanProxyHost(setting);
-			if (settingProxyHost.isBeanProxyInstantiated() || settingProxyHost.inInstantiation())
-				return settingProxyHost.getProxy();
-		}
-		
-		return null;
 	}
 
 }

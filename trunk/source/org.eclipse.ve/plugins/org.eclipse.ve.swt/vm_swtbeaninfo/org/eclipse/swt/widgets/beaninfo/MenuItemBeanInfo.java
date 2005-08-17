@@ -52,6 +52,13 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				SHORTDESCRIPTION, MenuItemMessages.getString("selectionSD"), //$NON-NLS-1$
 			}
 			),
+			// menu
+			super.createPropertyDescriptor(getBeanClass(),"menu", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, MenuItemMessages.getString("menuDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, MenuItemMessages.getString("menuSD"), //$NON-NLS-1$
+			}
+			),
+
 		};
 		return aDescriptorList;
 	} catch (Throwable exception) {

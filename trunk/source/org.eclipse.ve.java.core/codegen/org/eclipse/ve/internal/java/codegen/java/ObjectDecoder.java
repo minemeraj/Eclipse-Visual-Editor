@@ -11,13 +11,14 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ObjectDecoder.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-31 15:33:48 $ 
+ *  $Revision: 1.15 $  $Date: 2005-08-17 12:30:38 $ 
  */
 
 
 import java.util.*;
 import java.util.logging.Level;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
@@ -209,6 +210,10 @@ public ICodeGenAdapter createCodeGenInstanceAdapter(BeanPart bp) {
 public ICodeGenAdapter createThisCodeGenInstanceAdapter(BeanPart bp) {
 	EObject bean = bp.getEObject();
 	return new ThisBeanDecoderAdapter(bean, bp);
+}
+
+public static String URItoFeature (URI uri) {
+	return uri.fragment().substring(uri.fragment().lastIndexOf('/')+1);
 }
 
 }

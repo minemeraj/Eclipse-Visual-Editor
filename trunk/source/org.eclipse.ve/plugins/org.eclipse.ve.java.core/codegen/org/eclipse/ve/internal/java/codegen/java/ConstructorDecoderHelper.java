@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.46 $  $Date: 2005-07-19 20:09:33 $ 
+ *  $Revision: 1.47 $  $Date: 2005-08-17 12:30:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -557,18 +557,6 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 */
 	public static int getDefaultBeanPriority(BeanPart b) {
 		return 0;
-//		int p = 10000000;
-//		if (b.getDecleration().isInstanceVar()) {
-//			if (b.getReturnedMethod() != null)
-//				p+= 3;
-//			else
-//				p+= 2;			
-//		}
-//		else
-//			p+= 1;
-//		// Parent should come before its child.
-//		//TODO: we actyally need to get the parent priority here
-//		return p-100*getParentCount(b);
 	}
 	
 	protected static int getParentCount (BeanPart b) {
@@ -580,21 +568,6 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		return count;
 	}
 	
-	/* 
-	 * Determines the index priority for the constructor expressions.
-	 * NOTE: Since the hierarchy of the beans should be known for the 
-	 * index values to turn out correctly, it is assumed that the decoding
-	 * process has been completed when this code gets called.
-	 * 
-	 * 
-	 * @see org.eclipse.ve.internal.java.codegen.java.ExpressionDecoderHelper#getIndexPriority()
-	 */
-	protected IJavaFeatureMapper.VEexpressionPriority.VEpriorityIndex getIndexPriority() {
-//		if(fbeanPart!=null){
-//			return getDefaultBeanPriority(fbeanPart);
-//		}
-		return super.getIndexPriority();
-	}
 	public Object[] getReferencedInstances() {		
 		return CodeGenUtil.getReferences(fbeanPart.getEObject(),false).toArray();
 	}
