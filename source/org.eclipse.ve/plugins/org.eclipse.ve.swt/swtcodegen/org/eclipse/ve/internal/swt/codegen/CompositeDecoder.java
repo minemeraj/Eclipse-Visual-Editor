@@ -10,11 +10,10 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.18 $  $Date: 2005-07-14 22:37:04 $ 
+ *  $Revision: 1.19 $  $Date: 2005-08-17 12:30:36 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -131,9 +130,5 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 			fFeatureMapper.setFeature(sf);
 		}else
 			super.initialFeatureMapper(sf);
-	}
-	
-	public static String URItoFeature (URI uri) {
-		return uri.fragment().substring(uri.fragment().lastIndexOf('/')+1);
 	}
 }

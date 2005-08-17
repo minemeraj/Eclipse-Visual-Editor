@@ -11,10 +11,19 @@
     xmlns:org.eclipse.jem.java="java.xmi"
     xmlns:org.eclipse.jem.internal.beaninfo.beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore">
     	
-  <event:Add featureName="eAnnotations">
+  <event:AddMany featureName="eAnnotations">
     <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-  	    expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.MenuDecoder"/>    	
-  </event:Add>
+  	    expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTWidgetDecoder"/>    	
+    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+                   treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.MenuTreeEditPart">
+        <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/menu_obj.gif"/>
+    </addedEObjects>  
+	<addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
+	    beanLocation="GLOBAL_LOCAL"
+	    beanReturn="false"
+	    beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.MenuProxyAdapter"/>         
+  </event:AddMany>
+  
   
   <event:Add featureName="eStructuralFeatures">
     <addedEObjects xsi:type="ecore:EReference" name="items" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#MenuItem"

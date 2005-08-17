@@ -79,7 +79,9 @@ public class SWTConstants {
 		SF_COOLBAR_ITEMS,
 		SF_COOLITEM_CONTROL,
 		SF_TOOLBAR_ITEMS,
+		SF_MENU_BAR,
 		SF_MENU_ITEMS,
+		SF_MENUITEM_MENU,
 		SF_ITEM_TEXT;
 		
 	public static final String
@@ -157,7 +159,9 @@ public class SWTConstants {
 		SF_COOLBAR_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#CoolBar/items");	 //$NON-NLS-1$
 		SF_COOLITEM_CONTROL = URI.createURI("java:/org.eclipse.swt.widgets#CoolItem/control");	 //$NON-NLS-1$
 		SF_TOOLBAR_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#ToolBar/items");	 //$NON-NLS-1$
+		SF_MENU_BAR = URI.createURI("java:/org.eclipse.swt.widgets#Decorations/menuBar");	 //$NON-NLS-1$
 		SF_MENU_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#Menu/items");	 //$NON-NLS-1$
+		SF_MENUITEM_MENU = URI.createURI("java:/org.eclipse.swt.widgets#MenuItem/menu");	 //$NON-NLS-1$
 		
 		SF_ITEM_TEXT = URI.createURI("java:/org.eclipse.swt.widgets#Item/text");	 //$NON-NLS-1$
 	}

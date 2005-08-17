@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTWidgetChildDecoder.java,v $
- *  $Revision: 1.5 $  $Date: 2005-07-06 14:50:57 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-17 12:30:36 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -22,10 +22,11 @@ import org.eclipse.ve.internal.java.codegen.java.AllocationFeatureMapper;
  
 
 /**
- * @author sri
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * This decoder will deal with a SWT parent/child relationships represented by a constructor but
+ * using a feature the is different from the default (Composite's) 'control'.
+ * e.g., a TabbedFolder will have an 'item' as a child.
+ * 
+ * This is a typical case in a TabItem, TableColumn type of widgets
  */
 public class SWTWidgetChildDecoder extends SWTControlDecoder {
 	
@@ -38,7 +39,7 @@ public class SWTWidgetChildDecoder extends SWTControlDecoder {
 		allocationFeatures.put("org.eclipse.swt.widgets.TabItem",TabFolderDecoder.ADD_METHOD_SF_NAME); //$NON-NLS-1$
 		allocationFeatures.put("org.eclipse.swt.custom.CTabItem",CTabFolderDecoder.ADD_METHOD_SF_NAME); //$NON-NLS-1$
 		allocationFeatures.put("org.eclipse.swt.widgets.CoolItem",CoolBarDecoder.ADD_METHOD_SF_NAME); //$NON-NLS-1$
-		allocationFeatures.put("org.eclipse.swt.widgets.MenuItem",MenuDecoder.ADD_METHOD_SF_NAME); //$NON-NLS-1$
+		allocationFeatures.put("org.eclipse.swt.widgets.MenuItem",SWTWidgetDecoder.ADD_MENU_ITEMS_METHOD_SF_NAME); //$NON-NLS-1$
 		allocationFeatures.put("org.eclipse.swt.widgets.ToolItem",ToolBarDecoder.ADD_METHOD_SF_NAME); //$NON-NLS-1$
 	}
 
