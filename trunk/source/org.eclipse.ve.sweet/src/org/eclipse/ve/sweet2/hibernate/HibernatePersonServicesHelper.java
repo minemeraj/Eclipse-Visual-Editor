@@ -11,8 +11,8 @@
 /*
  *  Created Aug 10, 2005 by Gili Mendel
  * 
- *  $RCSfile: HibernatePersonHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2005-08-11 22:03:11 $ 
+ *  $RCSfile: HibernatePersonServicesHelper.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-08-17 18:41:35 $ 
  */
 package org.eclipse.ve.sweet2.hibernate;
 
@@ -26,26 +26,26 @@ import org.hibernate.cfg.Configuration;
 /**
  * This is a hibernate helper to the Person Database
  */
-public class HibernatePersonHelper {
+public class HibernatePersonServicesHelper {
 
 	 private Session session = null;
 	 private Transaction transaction = null;
 	 private static String HIBERNATE_CFG = "/org/eclipse/ve/sweet2/hibernate/hibernate.cfg.xml";
 	 private static String LOG4J_CFG = "org/eclipse/ve/sweet2/hibernate/log4j.properties";
 	 
-	 private static HibernatePersonHelper helper = null;
+	 private static HibernatePersonServicesHelper helper = null;
 	 
 	 
 	
-	public HibernatePersonHelper() {
+	public HibernatePersonServicesHelper() {
 		super();
 		// Hibernate uses log4j that needs a configuration file
 		System.setProperty("log4j.configuration",LOG4J_CFG);
 	}
 	
-	public static HibernatePersonHelper getHelper() {
+	public static HibernatePersonServicesHelper getHelper() {
 		if (helper==null)
-			helper = new HibernatePersonHelper();
+			helper = new HibernatePersonServicesHelper();
 		return helper;
 	}
 	
@@ -111,9 +111,9 @@ public class HibernatePersonHelper {
 	 /**
 	  * A call to this method will delete all users/relationships from the Data base.
 	  */
-	 public void deleteCurrentEntries() {
+	 public void deleteAllPersonEntries() {
 		 try {
-			 beginTransaction("Delete old Entries");
+			 beginTransaction("Delete all Entries");
 			 Session sess = getSession();			 
 			 List list = sess.createQuery("from Person").list();
 			 // Need first to remove the one-to-one relasionship, as it is cyclic
@@ -121,7 +121,7 @@ public class HibernatePersonHelper {
 				Person p = (Person)list.get(i);
 				p.setSpouse(null);
 			 }
-			 session.flush();
+			 sess.flush();
 			 for (int i = 0; i < list.size(); i++) {
 				Person p = (Person)list.get(i);
 			    sess.delete(p);
@@ -138,13 +138,65 @@ public class HibernatePersonHelper {
 		 }
 	 }
 	 
+	 public void deleteAPerson(Person p) {
+		 try {
+			 beginTransaction("Delete "+p);
+			 p.setSpouse(null);			 
+			 getSession().flush();
+			 getSession().delete(p);
+			 System.out.println("\tDeleting: "+p);
+		 }
+		 catch (RuntimeException e) {
+			 rollBackTransaction();	
+			 System.err.println("Failed deleting "+p);
+			 throw (e);
+		 }
+		 finally {		 
+		   endTransaction();
+		 }		 
+	 }
+	 
+	 public void flushAPerson(Person p) {
+		 try {
+			 beginTransaction("Flush "+p);
+			 getSession().save(p);
+			 getSession().flush();
+			 System.out.println("\tSaving: "+p);
+		 }
+		 catch (RuntimeException e) {
+			 rollBackTransaction();	
+			 System.err.println("Failed saving "+p);
+			 throw (e);
+		 }
+		 finally {		 
+		   endTransaction();
+		 }		 
+	 }
+	 
+	 public void addAPerson (Person p) {
+		 try {
+			 beginTransaction("Add "+p);
+			 getSession().save(p);
+			 System.out.println("\tAdding: "+p);
+		 }
+		 catch (RuntimeException e) {
+			 rollBackTransaction();	
+			 System.err.println("Failed adding "+p);
+			 throw (e);
+		 }
+		 finally {		 
+		   endTransaction();
+		 }		 
+		 getSession().save(p);
+	 }
+	 
 	 /**
 	  * Create sample set of persons/relationships in the DB
 	  */
 	 public void createSampleEntries() {
 		 
 		 // Delete old entries, if there
-		 deleteCurrentEntries();
+		 deleteAllPersonEntries();
 		 
 		 beginTransaction("Create New Entries:");		 
 		 try {
