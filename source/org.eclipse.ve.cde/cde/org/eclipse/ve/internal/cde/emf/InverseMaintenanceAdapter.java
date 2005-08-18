@@ -11,11 +11,12 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2005-05-12 22:17:02 $ 
+ *  $Revision: 1.14 $  $Date: 2005-08-18 21:53:05 $ 
  */
 
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -28,6 +29,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 
 import org.eclipse.ve.internal.cdm.AnnotationEMF;
+
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
 /**
  * This is used to maintain anonymous shared inverse relationships. For instance,
@@ -298,9 +301,14 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 				Object ref = entry.getValue();
 				if (ref instanceof WeakReference) {
 					EObject eobject = (EObject) ((WeakReference) entry.getValue()).get();
-					if (eobject != null)
-						result = visitor.visit((EStructuralFeature) entry.getKey(), eobject);
-					else
+					if (eobject != null) {
+						try {
+							result = visitor.visit((EStructuralFeature) entry.getKey(), eobject);
+						} catch (RuntimeException e) {
+							// Make it safe.
+							CDEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
+						}
+					} else
 						refsItr.remove();	// The ref. has been GC'd. Get rid of it.
 				} else {
 					List refs = (List) ref;
@@ -311,9 +319,14 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 						Iterator refItr = refs.iterator();
 						while (result == null && refItr.hasNext()) {
 							EObject eobject = (EObject) ((WeakReference) refItr.next()).get();
-							if (eobject != null)
-								result = visitor.visit(sf, eobject);
-							else
+							if (eobject != null) {
+								try {
+									result = visitor.visit(sf, eobject);
+								} catch (RuntimeException e) {
+									// Make it safe.
+									CDEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
+								}									
+							} else
 								refItr.remove();	// The ref. has been GC'd. Get rid of it.
 						}
 						if (refs.isEmpty())
