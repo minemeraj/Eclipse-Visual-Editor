@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: FormToolkitEditPolicy.java,v $$
- *  $$Revision: 1.4 $$  $$Date: 2005-06-30 10:05:48 $$ 
+ *  $$Revision: 1.5 $$  $$Date: 2005-08-18 21:55:55 $$ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -120,11 +120,15 @@ public class FormToolkitEditPolicy extends ContainerEditPolicy {
 	
 protected Command getCreateCommand(CreateRequest request) {
 
-	final IJavaObjectInstance javaChild = (IJavaObjectInstance)request.getNewObject();	
-	if(javaChild.getAllocation() != null){
-		return new EnsureFormToolkitExistsCommand(javaChild);
-	} else {
-		return null;
+	try {
+		final IJavaObjectInstance javaChild = (IJavaObjectInstance) request.getNewObject();
+		if (javaChild != null && javaChild.getAllocation() != null) {
+			return new EnsureFormToolkitExistsCommand(javaChild);
+		} else {
+			return null;
+		}
+	} catch (ClassCastException e) {
+		return null;	// OK, not a java object, so we don't do anything.
 	}
 
 }

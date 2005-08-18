@@ -11,22 +11,22 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: TableContainerPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.4 $  $Date: 2005-08-18 21:55:55 $ 
  */
 
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 /**
  * Container Edit Policy for Tables/Columns.
  */
-public class TableContainerPolicy extends CompositeContainerPolicy {
+public class TableContainerPolicy extends SWTWidgetContainerPolicy {
 	
 	public TableContainerPolicy(EditDomain domain) {
-		super(domain);
-		// Override the containment feature from CompositeContainer
-		containmentSF = JavaInstantiation.getSFeature(JavaEditDomainHelper.getResourceSet(domain), SWTConstants.SF_TABLE_COLUMNS);
+		super(JavaInstantiation.getSFeature(JavaEditDomainHelper.getResourceSet(domain), SWTConstants.SF_TABLE_COLUMNS), domain);
 	}
 
 }

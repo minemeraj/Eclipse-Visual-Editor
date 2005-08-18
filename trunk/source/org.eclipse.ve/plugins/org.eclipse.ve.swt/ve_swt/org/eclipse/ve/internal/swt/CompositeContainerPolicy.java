@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.18 $$  $$Date: 2005-07-12 18:41:15 $$ 
+ *  $$Revision: 1.19 $$  $$Date: 2005-08-18 21:55:55 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -19,17 +19,17 @@ import java.util.*;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-import org.eclipse.ve.internal.propertysheet.common.commands.AbstractCommand;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 public class CompositeContainerPolicy extends VisualContainerPolicy {
@@ -45,85 +45,20 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
 		sfLayoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
 	}
-	/**
-	 * Ensure that the child argument belongs to the correct parent for its ParseTreeAllocation
-	 * There are two situations where this is required
-	 * 1	-	Dropping from the palette for prototype instances such as CheckBox.xmi with {parentComposite} as a PTName to be replaced
-	 * 2	-	Moving between parents using GEF such as dragging in the tree or viewer	
-	 * 
-	 * @since 1.0.0
-	 */
-	public class EnsureCorrectParentCommand extends AbstractCommand{
-		private IJavaObjectInstance javaChild;
-		private boolean changedAllocation = false;
-		IJavaObjectInstance correctParent;
-		public EnsureCorrectParentCommand(IJavaObjectInstance aChild){
-			javaChild = aChild;
-		}
-		public void execute() {
-			if(javaChild.getAllocation() != null){
-				correctParent = (IJavaObjectInstance)getContainer(); 
-				if(javaChild.getAllocation() instanceof ParseTreeAllocation){
-					PTExpression expression = ((ParseTreeAllocation)javaChild.getAllocation()).getExpression();					
-					if(expression instanceof PTClassInstanceCreation){
-						visitClassInstanceCreation((PTClassInstanceCreation)expression);
-					} else if (expression instanceof PTMethodInvocation){
-						visitMethodInvocation((PTMethodInvocation)expression);
-					}
-					if(changedAllocation){
-						// ReCreate the allocation feature so that CodeGen will reGenerate the constructor
-						ParseTreeAllocation newAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-						newAlloc.setExpression(expression);								
-						javaChild.setAllocation(newAlloc);					
-					}					
-				}
-			}
-		}
-		private void visitClassInstanceCreation(PTClassInstanceCreation expression){
-			visitArguments(expression.getArguments());
-		}
-		private void visitMethodInvocation(PTMethodInvocation expression){
-			visitArguments(expression.getArguments());
-		}		
-		
-		private void visitArguments(List arguments){
-			// Find all references to {parentComposite} and swop them with a pointer to the real composite parent
-			ArrayList argsCopy = new ArrayList(arguments.size());
-			argsCopy.addAll(arguments);	// Use a copy so we don't access and change the same collection in the loop
-			for (int i = 0; i < argsCopy.size(); i++) {
-				Object argument = argsCopy.get(i);
-				if(argument instanceof PTName && SwtPlugin.PARENT_COMPOSITE_TOKEN.equals(((PTName)argument).getName())){ //$NON-NLS-1$
-					PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-					parentRef.setObject(correctParent);
-					arguments.remove(i);
-					arguments.add(i,parentRef);
-					changedAllocation = true;
-				} else if (argument instanceof PTInstanceReference){
-					PTInstanceReference instanceReference = (PTInstanceReference)argument;
-					if(instanceReference.getObject() != correctParent){
-						instanceReference.setObject(correctParent);
-						changedAllocation = true;
-					}
-				}				
-			}
-		}
-		
-		protected boolean prepare() {
-			return true;
-		}
-	}	
 	
 	public Command getCreateCommand(Object child, Object positionBeforeChild) {
 		Command result = super.getCreateCommand(child, positionBeforeChild);
-		final IJavaObjectInstance javaChild = (IJavaObjectInstance)child;
-		// If we already have a java allocation then check to see whether it is a prototype instance with a 
-		// {parentComposite} that needs substituting with the real parent
-		if(javaChild.getAllocation() != null){
-			Command insertCorrectParentCommand = new EnsureCorrectParentCommand(javaChild);
-			return insertCorrectParentCommand.chain(result);
-		} else {
-			return createInitStringCommand((IJavaObjectInstance)child).chain(result);
-		}
+		if (result.canExecute()) {
+			// If we already have a java allocation then check to see whether it is a prototype instance with a 
+			// {parentComposite} that needs substituting with the real parent
+			if (child instanceof IJavaObjectInstance && ((IJavaObjectInstance) child).getAllocation() != null) {
+				Command insertCorrectParentCommand = new EnsureCorrectParentCommand((IJavaObjectInstance) child, (IJavaObjectInstance) getContainer());
+				return insertCorrectParentCommand.chain(result);
+			} else {
+				return createInitStringCommand((IJavaObjectInstance) child).chain(result);
+			}
+		} else
+			return result;
 	}
 		
 	/**
@@ -166,55 +101,29 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		
 	}
 	
-	protected Command getOrphanTheChildrenCommand(List children) {
-
-		CompoundCommand cmd = new CompoundCommand();
-		Iterator iter = children.iterator();
-		while(iter.hasNext()){
-			IJavaObjectInstance child = (IJavaObjectInstance)iter.next();
-			cmd.append(new EnsureCorrectParentCommand(child));
-		}
-		cmd.append(super.getOrphanTheChildrenCommand(children));
-		return cmd;
-	}
 	
 	protected Command primAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		CompoundCommand cmd = new CompoundCommand();
-		Iterator iter = children.iterator();
-		while(iter.hasNext()){
-			IJavaObjectInstance child = (IJavaObjectInstance)iter.next();
-			if (!(BeanSWTUtilities.isValidBeanLocation(domain, child, (EObject)container)))
-				return UnexecutableCommand.INSTANCE;
-			cmd.append(new EnsureCorrectParentCommand(child));
-		}
-		cmd.append(super.primAddCommand(children, positionBeforeChild, containmentSF));
-		return cmd;
-	}
-	
-	protected Command getDeleteDependentCommand(Object child, EStructuralFeature containmentSF) {
-		// If two or more of the child conntrols being deleted share the same instance variable do not allow deletion because we
-		// cannot correctly update the code yet so it's safer to disallow for now
-		List children;
-		if(child instanceof List){
-			children = (List)child;
-		} else {
-			children = new ArrayList(1);
-			children.add(child);			
-		}
+		Command command = super.primAddCommand(children, positionBeforeChild, containmentSF);
+		if (command.canExecute()) {
+			CompoundCommand cmd = new CompoundCommand();
+			Iterator iter = children.iterator();
+			while (iter.hasNext()) {
+				try {
+					cmd.append(new EnsureCorrectParentCommand((IJavaObjectInstance) iter.next(), (IJavaObjectInstance) getContainer()));
+				} catch (ClassCastException e) {
+					// OK, just in case not a java object. It should be.
+				}
+			}
 
-		return super.getDeleteDependentCommand(child, containmentSF);
+			cmd.append(command);
+			return cmd;
+		} else
+			return command;
 	}
 	
-	protected Command getMoveChildrenCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
-//		// If two or more of the child conntrols being moved share the same instance variable do not allow movement because we
-//		// cannot correctly update the code yet so it's safer to disallow for now
-//		if(areFieldNamesShared(children,containmentSF)){
-//			return UnexecutableCommand.INSTANCE;
-//		} else {
-			return super.getMoveChildrenCommand(children, positionBeforeChild,containmentSF);
-//		}
-	}	
-	
+	protected boolean isValidBeanLocation(Object child) {
+		return BeanSWTUtilities.isValidBeanLocation(getEditDomain(), (IJavaObjectInstance)child, (EObject) getContainer());
+	}
 
 	protected boolean areFieldNamesShared(List children, EStructuralFeature containmentSF){
 	
@@ -245,7 +154,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 			}
 		}
 		return false;
-	}		
+	}
 
 	public Command getCreateCommand(Object constraintComponent, Object childComponent, Object position) {
 		return null;
@@ -253,6 +162,6 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 
 	public Command getAddCommand(List componentConstraints, List childrenComponents, Object position) {
 		return null;
-	}
+	}		
 
 }

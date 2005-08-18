@@ -12,7 +12,7 @@
  *  Created Aug 15, 2005 by Gili Mendel
  * 
  *  $RCSfile: DecorationsTreeEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-17 18:39:48 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-18 21:55:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -27,7 +27,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
+
+import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /**
  * Decorations Tree Editpart
@@ -59,6 +62,10 @@ public class DecorationsTreeEditPart extends CompositeTreeEditPart {
 				queueExec(DecorationsTreeEditPart.this, "MENUBAR"); //$NON-NLS-1$
 		}
 	};
+	
+	protected VisualContainerPolicy getContainerPolicy() {
+		return new DecorationsContainerPolicy(EditDomain.getEditDomain(this));
+	}
 
 	public void activate() {
 		super.activate();

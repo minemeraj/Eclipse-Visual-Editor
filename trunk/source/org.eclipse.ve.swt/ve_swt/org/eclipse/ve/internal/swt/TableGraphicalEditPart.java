@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableGraphicalEditPart.java,v $
- *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.10 $  $Date: 2005-08-18 21:55:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -34,14 +34,13 @@ import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /**
  * swt Table Graphical Edit part.
  * 
  * @since 1.0.0
  */
-public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
+public class TableGraphicalEditPart extends ControlGraphicalEditPart {
 
 	private IBeanProxyHost beanProxyProxyAdapter;
 
@@ -50,10 +49,6 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 
 	private EStructuralFeature sfColumns;
-
-	protected VisualContainerPolicy getContainerPolicy() {
-		return new TableContainerPolicy(EditDomain.getEditDomain(this)); // SWT standard Composite/Container Edit Policy
-	}
 
 	private TableImageListener fImageListener;
 
@@ -129,12 +124,8 @@ public class TableGraphicalEditPart extends CompositeGraphicalEditPart {
 	}
 
 	protected void createEditPolicies() {
-		super.createEditPolicies();
-	}
-
-	protected void createLayoutEditPolicy() {
 		EditDomain domain = EditDomain.getEditDomain(this);
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DefaultLayoutEditPolicy(new TableContainerPolicy(domain)));
+		installEditPolicy(EditPolicy.CONTAINER_ROLE, new FlowLayoutEditPolicy(new TableContainerPolicy(domain), Boolean.TRUE));
 	}
 
 	protected List getModelChildren() {

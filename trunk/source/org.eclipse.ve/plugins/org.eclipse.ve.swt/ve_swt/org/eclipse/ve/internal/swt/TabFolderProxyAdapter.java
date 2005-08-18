@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderProxyAdapter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.10 $  $Date: 2005-08-18 21:55:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -23,7 +23,7 @@ import org.eclipse.ve.internal.java.core.IBeanProxyHost;
  * swt TabFolder proxy adapter.
  * @since 1.0.0
  */
-public class TabFolderProxyAdapter extends ItemParentProxyAdapter {
+public class TabFolderProxyAdapter extends CompositeProxyAdapter {
 	/**
 	 * @param domain
 	 * 
@@ -31,6 +31,7 @@ public class TabFolderProxyAdapter extends ItemParentProxyAdapter {
 	 */
 	public TabFolderProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
+		setSingleItemsFeatureName(DEFAULT_ITEMS_NAME);
 	}
 	
 	/**

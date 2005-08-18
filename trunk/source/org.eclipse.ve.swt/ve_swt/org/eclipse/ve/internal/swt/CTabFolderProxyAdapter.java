@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabFolderProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-15 13:33:00 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-18 21:55:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -23,7 +23,7 @@ import org.eclipse.ve.internal.java.core.IBeanProxyHost;
  * swt CTabFolder proxy adapter.
  * @since 1.0.0
  */
-public class CTabFolderProxyAdapter extends ItemParentProxyAdapter {
+public class CTabFolderProxyAdapter extends CompositeProxyAdapter {
 	/**
 	 * @param domain
 	 * 
@@ -31,6 +31,7 @@ public class CTabFolderProxyAdapter extends ItemParentProxyAdapter {
 	 */
 	public CTabFolderProxyAdapter(IBeanProxyDomain domain) {
 		super(domain);
+		setSingleItemsFeatureName(DEFAULT_ITEMS_NAME);
 	}
 
 	/**

@@ -63,33 +63,36 @@ public Command getCreateChildCommand(Object childComponent, Object constraint, O
 /**
  * Return a command to create the child with the constraints set correctly
  */
-public Command getCreateChildCommand(Object childComponent, Object parent, Object constraint, Object position) {
-	Command createContributionCmd = policy.getCreateCommand(childComponent, position);
-	if (createContributionCmd == null || !createContributionCmd.canExecute())
-		return UnexecutableCommand.INSTANCE;	// It can't be created
+	public Command getCreateChildCommand(Object childComponent, Object parent, Object constraint, Object position) {
+		Command createContributionCmd = policy.getCreateCommand(childComponent, position);
+		if (createContributionCmd == null || !createContributionCmd.canExecute())
+			return UnexecutableCommand.INSTANCE; // It can't be created
 
-	CompoundCommand command = new CompoundCommand("");		 //$NON-NLS-1$
-	NullConstraint new_constraint = (NullConstraint) constraint;
-	//check if this child has the contsraint already set
-		Rectangle bounds = new Rectangle();
+		// check if this child has the constraint already set, or even has such constraint to set (it may not have a bounds feature).
 		IJavaObjectInstance child = (IJavaObjectInstance) childComponent;
 		EStructuralFeature boundsSF = JavaInstantiation.getSFeature(child, SWTConstants.SF_CONTROL_BOUNDS);
-		if(child.eClass().getEStructuralFeature(boundsSF.getName())!=null){
-	   	  IJavaObjectInstance existing_constraint = (IJavaObjectInstance) child.eGet(JavaInstantiation.getSFeature(child, SWTConstants.SF_CONTROL_BOUNDS));
-		  // During a copy the constraint might be set before the child is in a state ready to be instantiated
-		  // if it was copied with a constraint so we must check the eContainer() before doing target VM work
-		  if (existing_constraint != null && child.eContainer() != null) {
-			 IBeanProxy rect = BeanProxyUtilities.getBeanProxy(child);
-			 IRectangleBeanProxy preferredSize = BeanSWTUtilities.invoke_getBounds(rect);
-			 bounds =  new Rectangle(preferredSize.getX(), preferredSize.getY(), preferredSize.getWidth(), preferredSize.getHeight());
-			 new_constraint = new NullConstraint(bounds,true,false);
-		  }
+		if (child.eClass().getEStructuralFeature(boundsSF.getName()) != null) {
+			CompoundCommand command = new CompoundCommand(""); //$NON-NLS-1$
+			NullConstraint new_constraint = (NullConstraint) constraint;
+			Rectangle bounds = new Rectangle();
+
+			IJavaObjectInstance existing_constraint = (IJavaObjectInstance) child.eGet(boundsSF);
+			// During a copy the constraint might be set before the child is in a state ready to be instantiated
+			// if it was copied with a constraint so we must check the eContainer() before doing target VM work
+			if (existing_constraint != null && child.eContainer() != null) {
+				IBeanProxy rect = BeanProxyUtilities.getBeanProxy(child);
+				IRectangleBeanProxy preferredSize = BeanSWTUtilities.invoke_getBounds(rect);
+				bounds = new Rectangle(preferredSize.getX(), preferredSize.getY(), preferredSize.getWidth(), preferredSize.getHeight());
+				new_constraint = new NullConstraint(bounds, true, false);
+			}
+			command.append(createChangeConstraintCommand((IJavaObjectInstance) childComponent, new_constraint));
+			// command.append(createChangeConstraintCommand((IJavaObjectInstance) childComponent, (NullConstraint)constraint));
+			command.append(createContributionCmd);
+			return command.unwrap();
+
 		}
-	command.append(createChangeConstraintCommand((IJavaObjectInstance) childComponent, new_constraint));
-	//command.append(createChangeConstraintCommand((IJavaObjectInstance) childComponent, (NullConstraint)constraint));
-	command.append(createContributionCmd);
-	return command.unwrap();
-}
+		return createContributionCmd;
+	}
 
 protected void cancelConstraints(CommandBuilder cb, List children) {
 	IJavaObjectInstance parent = (IJavaObjectInstance) policy.getContainer();

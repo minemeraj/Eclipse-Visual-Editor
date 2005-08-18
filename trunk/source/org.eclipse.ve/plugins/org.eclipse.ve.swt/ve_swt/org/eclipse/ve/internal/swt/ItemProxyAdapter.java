@@ -10,13 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ItemProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:20 $ 
+ *  $Revision: 1.2 $  $Date: 2005-08-18 21:55:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import java.util.logging.Level;
 
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EReference;
 
@@ -24,32 +25,38 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.IExpression;
 
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.core.*;
  
 /**
- * Item proxy adapter base.
+ * Item proxy adapter base. The override file <b>MUST</b> supply a parentItem feature or this
+ * proxy adapter will not work correctly. Or the subclass must provide it through the super constructor call.
  * 
  * @since 1.1.0
  */
-public class ItemProxyAdapter extends WidgetProxyAdapter implements IExecutableExtension {
+public class ItemProxyAdapter extends WidgetProxyAdapter {
 
 	private EReference sf_items;
 	
 	private String itemsName;
 	
+	/**
+	 * Key for parent "items" feature name for this item in parent. In other words,
+	 * for this item, what is the "items" feature URL that it is stored under in its parent.
+	 * For example: 
+	 * <pre>
+	 * 
+	 * <code>parentItems='java:/org.eclipse.swt.custom#CTabFolder/items'</code>
+	 * </pre>
+	 * @since 1.1.0.1
+	 */
+	public static final String PARENT_ITEM_NAME_KEY = "parentItems";	//$NON-NLS-1$
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
-		// If data is a string, then it will be the items feature. It needs to be fully-qualified as URL because 
-		// won't know class of parent to get the feature from.
-		if (data != null) {
-			try {
-				itemsName = (String) data;
-			} catch (ClassCastException e) {
-				// don't care if not a string.
-			}
-		}
+		itemsName = CDEPlugin.parseInitializationData(data, PARENT_ITEM_NAME_KEY);
+		super.setInitializationData(config, propertyName, data);
 	}
 	
 	/**
@@ -125,7 +132,7 @@ public class ItemProxyAdapter extends WidgetProxyAdapter implements IExecutableE
 		// If we are on the freeform then container will not be an instance of table
 		if (parentProxy != null) {
 			try {
-				((ItemParentProxyAdapter) parentProxy).reinstantiateItem(getItemsFeature(), getJavaObject(), this, expression);
+				((WidgetProxyAdapter) parentProxy).reinstantiateItem(getItemsFeature(), getJavaObject(), this, expression);
 			} catch (ClassCastException e) {
 				// Means not a valid parent.
 			}

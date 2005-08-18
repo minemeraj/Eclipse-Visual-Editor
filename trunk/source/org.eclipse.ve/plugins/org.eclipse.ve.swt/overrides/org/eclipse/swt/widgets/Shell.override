@@ -11,7 +11,7 @@
     featureName="eAnnotations">
   <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
       modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.FFOnlyModelAdapter"
-      graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeGraphicalEditPart:false"
+      graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.DecorationsGraphicalEditPart:false"
       labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text">  
     <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/shell_obj.gif"/>
     <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.prototypefactory"
