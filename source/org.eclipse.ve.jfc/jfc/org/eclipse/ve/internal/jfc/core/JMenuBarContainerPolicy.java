@@ -11,12 +11,14 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JMenuBarContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-18 21:54:37 $ 
  */
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.java.core.BaseJavaContainerPolicy;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 
 /**
@@ -25,7 +27,7 @@ import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
  * Container policy for JMenuBar. 
  * Allow only JMenu's to be dropped.
  */
-public class JMenuBarContainerPolicy extends JavaContainerPolicy {
+public class JMenuBarContainerPolicy extends BaseJavaContainerPolicy {
 
 	/**
 	 * Constructor for JMenuBarContainerPolicy.

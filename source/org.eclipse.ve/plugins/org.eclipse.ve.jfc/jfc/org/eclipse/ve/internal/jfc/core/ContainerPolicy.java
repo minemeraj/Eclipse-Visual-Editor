@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ContainerPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-07-15 22:36:56 $ 
+ *  $Revision: 1.9 $  $Date: 2005-08-18 21:54:37 $ 
  */
 
 import java.util.*;
@@ -20,8 +20,6 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
-import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.gef.requests.GroupRequest;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
@@ -71,11 +69,7 @@ public class ContainerPolicy extends VisualContainerPolicy {
 		// Also need to verify that the component is a valid component
 		return classComponent.isInstance(component);
 	}
-	
-	public Command getCreateCommand(CreateRequest request, Object positionBeforeChild) {	
-		return UnexecutableCommand.INSTANCE;	// This should never be called. It should go through the getCreateCommand(constraint, component, position);
-	}
-	
+		
 	/**
 	 * Get the create command for the child constraint listed here at the position.
 	 */
@@ -91,11 +85,6 @@ public class ContainerPolicy extends VisualContainerPolicy {
 		return cb.getCommand();
 	}
 	
-	
-	public Command getAddCommand(GroupRequest request, Object position) {
-		return UnexecutableCommand.INSTANCE;	// This should never be called. It should go through the getAddCommand(constraints, components, position);
-	}
-
 	/**
 	 * Get the add constraints and components command for the list and position.
 	 */

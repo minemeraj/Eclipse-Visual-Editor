@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneContainerPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-06-24 18:57:15 $ 
+ *  $Revision: 1.10 $  $Date: 2005-08-18 21:54:37 $ 
  */
 
 import java.util.*;
@@ -43,7 +43,7 @@ import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
  * the components regardless of what the orientation is set to. In other words, you can set the left
  * and right components even though the orientation is vertical... and the opposite is true as well. 
  */
-public class JSplitPaneContainerPolicy extends AbstractJavaContainerPolicy {
+public class JSplitPaneContainerPolicy extends BaseJavaContainerPolicy {
 	public static final int VERTICAL_SPLIT = 0;
 	public static final int HORIZONTAL_SPLIT = 1;
 

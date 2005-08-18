@@ -11,19 +11,21 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: RootPaneContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-18 21:54:37 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.java.core.BaseJavaContainerPolicy;
 
 /**
  * Container policy for rootpanes whose only child is a contentpane...
  */
-public class RootPaneContainerPolicy extends JavaContainerPolicy {
+public class RootPaneContainerPolicy extends BaseJavaContainerPolicy {
 
 	/**
 	 * Constructor for RootPaneContainerPolicy.
@@ -40,7 +42,7 @@ public class RootPaneContainerPolicy extends JavaContainerPolicy {
 		super.setContainer(container);
 		if (container != null) {
 			JavaClass modelType = (JavaClass) ((EObject) container).eClass();
-			containmentSF = modelType.getEStructuralFeature("contentPane"); //$NON-NLS-1$
+			setContainerFeature(modelType.getEStructuralFeature("contentPane")); //$NON-NLS-1$
 		}
 	}
 

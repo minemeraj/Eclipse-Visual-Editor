@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CompositionContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-18 21:54:34 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -21,7 +21,7 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
 /**
  * Container Edit Policy for Bean Compositions.
  */
-public class CompositionContainerPolicy extends JavaContainerPolicy {
+public class CompositionContainerPolicy extends BaseJavaContainerPolicy {
 	
 	public CompositionContainerPolicy(EditDomain domain) {
 		super(JCMPackage.eINSTANCE.getBeanComposition_Components(), domain);

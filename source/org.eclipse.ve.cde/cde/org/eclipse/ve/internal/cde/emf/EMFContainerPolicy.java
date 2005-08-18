@@ -11,47 +11,23 @@ package org.eclipse.ve.internal.cde.emf;
  *******************************************************************************/
 /*
  *  $RCSfile: EMFContainerPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-24 18:57:15 $ 
+ *  $Revision: 1.4 $  $Date: 2005-08-18 21:54:35 $ 
  */
-
-import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.gef.commands.Command;
 
 /**
  * This is an implementation of EMF containment that is for a single
  * structural feature. This will be the case the majority of the time.
+ * @deprecated Just use AbstractEMFContainerPolicy directly as the supertype.
  */
 public abstract class EMFContainerPolicy extends AbstractEMFContainerPolicy {
 	
-	protected EStructuralFeature containmentSF;
 	
 	public EMFContainerPolicy(EStructuralFeature containmentSF, EditDomain domain) {
-		super(domain);
-		this.containmentSF = containmentSF;
+		super(containmentSF, domain);
 	}
 	
-	public Command getCreateCommand(Object child, Object positionBeforeChild) {
-		return getCreateCommand(child, positionBeforeChild, containmentSF);
-	}
-	
-	
-	public Command getAddCommand(List children, Object positionBeforeChild) {
-		return getAddCommand(children, positionBeforeChild, containmentSF);
-	}
-	
-	public Command getDeleteDependentCommand(Object child) {
-		return getDeleteDependentCommand(child, containmentSF);
-	}
-	
-	public Command getMoveChildrenCommand(List children, Object positionBeforeChild) {
-		return getMoveChildrenCommand(children, positionBeforeChild, containmentSF);
-	}
-	
-	protected Command getOrphanTheChildrenCommand(List children) {
-		return getOrphanChildrenCommand(children, containmentSF);
-	}
 }

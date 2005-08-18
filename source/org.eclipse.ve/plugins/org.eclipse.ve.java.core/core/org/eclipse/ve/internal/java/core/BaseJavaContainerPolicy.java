@@ -10,9 +10,12 @@ package org.eclipse.ve.internal.java.core;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: AbstractJavaContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $RCSfile$
+ *  $Revision$  $Date$ 
  */
+
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -26,19 +29,56 @@ import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 /**
  * @author richkulp
  *
- * This is an abstract class for container policies within Java VE. What it does special is
+ * This is an base class for container policies within Java VE. What it does special is
  * to handle using the appropriate rules for creating/deleting children.
  */
-public abstract class AbstractJavaContainerPolicy extends AbstractEMFContainerPolicy {
+public class BaseJavaContainerPolicy extends AbstractEMFContainerPolicy {
 
 	/**
-	 * Constructor for AbstractJavaContainerPolicy.
+	 * Construct with feature and domain. Used when this should be a single feature container.
+	 * @param feature
+	 * @param domain
+	 * 
+	 * @since 1.1.0.1
+	 */
+	public BaseJavaContainerPolicy(EStructuralFeature feature, EditDomain domain) {
+		super(feature, domain);
+	}
+
+	/**
+	 * Constructor for BaseJavaContainerPolicy.
 	 * @param domain
 	 */
-	public AbstractJavaContainerPolicy(EditDomain domain) {
+	public BaseJavaContainerPolicy(EditDomain domain) {
 		super(domain);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy#getAddCommand(java.util.List, java.lang.Object, org.eclipse.emf.ecore.EStructuralFeature)
+	 */
+	protected Command getAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		Iterator itr = children.iterator();
+		while (itr.hasNext()) {
+			Object child = itr.next();
+			if (!isValidBeanLocation(child))
+				return UnexecutableCommand.INSTANCE;
+		}
+		return super.getAddCommand(children, positionBeforeChild, containmentSF);
+	}
+	
+	/**
+	 * Is the child in valid bean location for the add. For example, if the child is located at LOCAL, can the
+	 * child be validly added to this container. The default is true, but subclasses can override to provide
+	 * their own tests.
+	 * @param child
+	 * @return
+	 * 
+	 * @since 1.1.0.1
+	 */
+	protected boolean isValidBeanLocation (Object child) {
+		return true;
+	}
+	
 	/**
 	 * @see org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy#getDeleteDependentCommand(Object, EStructuralFeature)
 	 */

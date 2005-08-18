@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: RootPaneJMenuBarContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-18 21:54:37 $ 
  */
 
 import java.util.List;
@@ -19,9 +19,11 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.ve.internal.java.core.JavaMultiFeatureContainerPolicy;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.ve.internal.java.core.BaseJavaContainerPolicy;
 
 /**
  * @author pwalker
@@ -29,7 +31,7 @@ import org.eclipse.ve.internal.java.core.JavaMultiFeatureContainerPolicy;
  * Container policy for Swing containers that can have both a rootpane and JMenuBar
  * such as JFrame, JDialog, JApplet, and JInternalFrame.
  */
-public class RootPaneJMenuBarContainerPolicy extends JavaMultiFeatureContainerPolicy {
+public class RootPaneJMenuBarContainerPolicy extends BaseJavaContainerPolicy {
 
 	private EStructuralFeature sfJMenuBar, sfContentPane;
 	
@@ -55,22 +57,16 @@ public class RootPaneJMenuBarContainerPolicy extends JavaMultiFeatureContainerPo
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.JavaMultiFeatureContainerPolicy#getContainmentSF(java.util.List, int)
-	 */
-	protected EStructuralFeature getContainmentSF(List children, int requestType) {
+	protected EStructuralFeature getContainmentSF(List children, Object positionBeforeChild, int requestType) {
 		// For RootPaneJMenuBar, we can't add/orphan/move if more than one child is selected because
-		// that would involve more than one feature.
+		// that could involve more than one feature.
 		if (children.isEmpty() || children.size() > 1)
 			return null;
 			
 		return sfJMenuBar.getEType().isInstance(children.get(0)) ? sfJMenuBar : sfContentPane;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.JavaMultiFeatureContainerPolicy#getContainmentSF(java.lang.Object, int)
-	 */
-	protected EStructuralFeature getContainmentSF(Object child, int requestType) {
+	protected EStructuralFeature getContainmentSF(Object child, Object positionBeforeChild, int requestType) {
 		return sfJMenuBar.getEType().isInstance(child) ? sfJMenuBar : sfContentPane;
 	}
 

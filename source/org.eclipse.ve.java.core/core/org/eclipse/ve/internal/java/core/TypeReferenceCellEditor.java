@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.14 $  $Date: 2005-05-17 15:43:19 $ 
+ *  $Revision: 1.15 $  $Date: 2005-08-18 21:54:34 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -85,7 +85,7 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 			Object[] results = chooseBean.getResult();
 			IJavaObjectInstance newJavaInstance = (IJavaObjectInstance)results[0];
 			// Use the JavaContainer policy to get all the right command generated
-			JavaContainerPolicy editPolicy = new JavaContainerPolicy(
+			BaseJavaContainerPolicy editPolicy = new BaseJavaContainerPolicy(
 					JCMFactory.eINSTANCE.getJCMPackage().getBeanComposition_Components(),
 					editDomain);
 			editPolicy.setContainer(beanComposition);

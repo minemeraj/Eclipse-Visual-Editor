@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JToolBarContainerPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-02-15 23:42:04 $ 
+ *  $Revision: 1.7 $  $Date: 2005-08-18 21:54:37 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -21,15 +21,15 @@ import org.eclipse.jem.internal.beaninfo.core.Utilities;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
-import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
+
+import org.eclipse.ve.internal.java.core.*;
 
 /**
  * @author pwalker
  *
  * Container policy for JToolBar. Children can be components or Actions.
  */
-public class JToolBarContainerPolicy extends JavaContainerPolicy {
+public class JToolBarContainerPolicy extends BaseJavaContainerPolicy {
 	protected JavaClass classComponent, classAction;
 
 	/**
@@ -55,7 +55,7 @@ public class JToolBarContainerPolicy extends JavaContainerPolicy {
 		super.setContainer(container);
 		if (container != null) {
 			JavaClass modelType = (JavaClass) ((EObject) container).eClass();
-			containmentSF = modelType.getEStructuralFeature("items"); //$NON-NLS-1$
+			setContainerFeature(modelType.getEStructuralFeature("items")); //$NON-NLS-1$
 		}
 	}
 
