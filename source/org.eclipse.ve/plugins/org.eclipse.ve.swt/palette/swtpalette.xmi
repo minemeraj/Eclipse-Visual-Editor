@@ -214,6 +214,46 @@
           value="scrolledComposite"/>
     </children>
   </org.eclipse.ve.internal.cde.palette:Drawer>
+  <org.eclipse.ve.internal.cde.palette:Drawer>
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.SWTMenus"
+        bundle="#bundle"/>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/menubar_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/MenuBar.xmi#MenuBar_1">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="MenuBar"/>
+    </children>        
+<!-- Reactivate this when we can drop Menu's on Controls (for Popup menu), and can drop/move Menu's to other menus and implicitly create an intermediate MenuItem
+    Note: At that time we will need a new icon to distinquish MenuCascade from just Menu.
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/menu_obj.gif"
+        creationClassURI="java:/org.eclipse.swt.widgets#Menu">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Menu"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="menu"/>
+    </children>    
+-->
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:Stack">
+        <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/menuitem_obj.gif"
+           prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/MenuItem-Push.xmi#MenuItem_1">
+          <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="MenuItem.Push"/>
+        </children>                        
+        <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/menu_obj.gif"
+           prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/MenuItem-Submenu.xmi#MenuItem_1">
+          <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="MenuItem.SubMenu"/>
+        </children>     
+        <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/menuseparator_obj.gif"
+           prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/MenuItem-Separator.xmi#MenuItem_1">
+          <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="MenuItem.Separator"/>
+        </children>                    
+        <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/menuitem_obj.gif"
+           prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/MenuItem-Check.xmi#MenuItem_1">
+          <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="MenuItem.Check"/>
+        </children>                    
+        <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/menuitem_obj.gif"
+           prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/MenuItem-Radio.xmi#MenuItem_1">
+          <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="MenuItem.Radio"/>
+        </children>                            
+    </children>    
+  </org.eclipse.ve.internal.cde.palette:Drawer>
+  
   <org.eclipse.ve.internal.cde.utility:URLResourceBundle xmi:id="bundle" bundleName="palette">
     <bundleURLs>platform:/plugin/org.eclipse.ve.swt/palette/</bundleURLs>
   </org.eclipse.ve.internal.cde.utility:URLResourceBundle>

@@ -18,7 +18,7 @@
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/table_obj.gif"/>
     </addedEObjects>
     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
-    	beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ItemParentProxyAdapter:tableColumns"/>
+    	beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter:items='tableColumns'"/>
     <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
         expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.TableDecoder"/>    
   </event:AddMany>

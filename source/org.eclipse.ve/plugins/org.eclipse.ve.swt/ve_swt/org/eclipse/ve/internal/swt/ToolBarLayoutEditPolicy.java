@@ -10,13 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolBarLayoutEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:51:47 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-18 21:55:55 $ 
  */
 package org.eclipse.ve.internal.swt;
-
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy;
@@ -28,20 +24,7 @@ import org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy;
 public class ToolBarLayoutEditPolicy extends FlowLayoutEditPolicy {
 
 	public ToolBarLayoutEditPolicy(ToolBarGraphicalEditPart editpart) {
-		super(new ToolBarContainerPolicy(EditDomain.getEditDomain(editpart)));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.editpolicies.FlowLayoutEditPolicy#isHorizontal()
-	 */
-	protected boolean isHorizontal() {
-		return true;
-	}
-
-	public EditPolicy createChildEditPolicy(EditPart aChild) {
-		return new NonResizableEditPolicy();
+		super(new ToolBarContainerPolicy(EditDomain.getEditDomain(editpart)), Boolean.TRUE);
 	}
 
 }

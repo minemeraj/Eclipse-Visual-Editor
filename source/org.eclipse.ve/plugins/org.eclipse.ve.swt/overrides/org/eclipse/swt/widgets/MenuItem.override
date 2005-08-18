@@ -12,9 +12,12 @@
     	expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTWidgetChildDecoder"/>    
     		
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+                   labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.MenuItemLabelProvider:text"
                    treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.MenuItemTreeEditPart">
         <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/menuitem_obj.gif"/>
     </addedEObjects>  
+    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
+      beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.MenuItemProxyAdapter"/>   
   </event:AddMany>
   
   <event:Add

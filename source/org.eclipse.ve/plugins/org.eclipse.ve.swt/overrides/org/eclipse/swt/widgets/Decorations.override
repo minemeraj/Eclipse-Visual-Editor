@@ -10,6 +10,7 @@
     xmlns:event="event.xmi">
   <event:Add  featureName="eAnnotations">
     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+        graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.DecorationsGraphicalEditPart:true"
         treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.DecorationsTreeEditPart">
     </addedEObjects>
   </event:Add>

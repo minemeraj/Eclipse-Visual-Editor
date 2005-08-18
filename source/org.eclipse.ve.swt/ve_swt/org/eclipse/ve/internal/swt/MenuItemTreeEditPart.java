@@ -12,11 +12,12 @@
  *  Created Aug 15, 2005 by Gili Mendel
  * 
  *  $RCSfile: MenuItemTreeEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-17 18:39:48 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-18 21:55:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -29,14 +30,12 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
-import org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart;
-
 /**
  * MenuItem Tree Editpart.
  * 
  * @since 1.1.0.1
  */
-public class MenuItemTreeEditPart extends JavaBeanTreeEditPart {
+public class MenuItemTreeEditPart extends ItemTreeEditPart {
 
 	protected EReference sf_menu;
 	
