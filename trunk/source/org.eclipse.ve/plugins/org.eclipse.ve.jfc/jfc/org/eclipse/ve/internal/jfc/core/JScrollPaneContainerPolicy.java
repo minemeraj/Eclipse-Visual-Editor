@@ -11,19 +11,20 @@ package org.eclipse.ve.internal.jfc.core;
  *******************************************************************************/
 /*
  *  $RCSfile: JScrollPaneContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-07-15 22:36:56 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-18 21:54:37 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
+import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.*;
 /**
  * Container Edit Policy for Bean Compositions.
  */
-public class JScrollPaneContainerPolicy extends JavaContainerPolicy {
+public class JScrollPaneContainerPolicy extends BaseJavaContainerPolicy {
 	
 	public JScrollPaneContainerPolicy(EditDomain domain) {
 		super(JavaInstantiation.getSFeature(JavaEditDomainHelper.getResourceSet(domain), JFCConstants.SF_JSCROLLPANE_VIEWPORTVIEW ), domain);

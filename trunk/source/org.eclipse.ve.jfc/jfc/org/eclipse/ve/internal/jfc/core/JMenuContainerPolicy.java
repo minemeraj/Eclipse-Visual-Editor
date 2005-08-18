@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JMenuContainerPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-05-11 19:01:38 $ 
+ *  $Revision: 1.9 $  $Date: 2005-08-18 21:54:37 $ 
  */
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -21,8 +21,8 @@ import org.eclipse.jem.internal.beaninfo.core.Utilities;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
-import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
+
+import org.eclipse.ve.internal.java.core.*;
 
 /**
  * @author pwalker
@@ -30,7 +30,7 @@ import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
  * Container policy for JMenu. 
  * Allow subclasses of Component, and Action, or a String to be dropped.
  */
-public class JMenuContainerPolicy extends JavaContainerPolicy {
+public class JMenuContainerPolicy extends BaseJavaContainerPolicy {
 	protected JavaClass classComponent,
 							classAction,
 							classString;
@@ -68,7 +68,7 @@ public class JMenuContainerPolicy extends JavaContainerPolicy {
 		super.setContainer(container);
 		if (container != null) {
 			JavaClass modelType = (JavaClass) ((EObject) container).eClass();
-			containmentSF = modelType.getEStructuralFeature("items"); //$NON-NLS-1$
+			setContainerFeature(modelType.getEStructuralFeature("items")); //$NON-NLS-1$
 		}
 	}
 }

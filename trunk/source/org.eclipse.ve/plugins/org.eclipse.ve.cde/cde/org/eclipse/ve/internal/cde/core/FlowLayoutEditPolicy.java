@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.core;
  *******************************************************************************/
 /*
  *  $RCSfile: FlowLayoutEditPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:59 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-18 21:54:35 $ 
  */
 
 import java.util.Collections;
@@ -34,16 +34,41 @@ public class FlowLayoutEditPolicy extends org.eclipse.gef.editpolicies.FlowLayou
 		
 	protected ContainerPolicy containerPolicy;		// Handles the containment functions
 	private IFigure targetFeedback;
+	private Boolean horizontal;
 	
 protected EditPolicy createChildEditPolicy(EditPart child) {
 	return new NonResizableEditPolicy();
 }
 	
 /**
+ * Set this flag to indicate this is horizontal(true)/vertical(false). If it is <code>null</code>
+ * it will do the default, which is to query the layout from the Figure. In that
+ * case the layout <b>MUST</b> be a {@link org.eclipse.draw2d.FlowLayout} else
+ * there will be a class cast exception. By default this value is <code>null</code>
+ * @param horizontal <code>Boolean.TRUE</code> for horizontal, <code>Boolean.FALSE</code> for
+ * vertical, <code>null</code> for do default of query the figure's layout (in which
+ * case the layout MUST be a {@link org.eclipse.draw2d.FlowLayout}.
+ * 
+ * @since 1.1.0.1
+ */
+protected void setHorizontal(Boolean horizontal) {
+	this.horizontal = horizontal;
+}
+
+protected boolean isHorizontal() {
+	return horizontal != null ? horizontal.booleanValue() : super.isHorizontal();
+}
+
+/**
  * Create with the container policy for handling children.
  */
 public FlowLayoutEditPolicy(ContainerPolicy containerPolicy) {
 	this.containerPolicy = containerPolicy;
+}
+
+public FlowLayoutEditPolicy(ContainerPolicy containerPolicy, Boolean horizontal) {
+	this(containerPolicy);
+	setHorizontal(horizontal);
 }
 
 public void activate() {

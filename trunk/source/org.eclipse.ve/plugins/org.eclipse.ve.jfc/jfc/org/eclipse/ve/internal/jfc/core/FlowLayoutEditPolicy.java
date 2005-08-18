@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FlowLayoutEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:42:05 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-18 21:54:36 $ 
  */
 
 import java.util.Collections;
@@ -32,6 +32,7 @@ public class FlowLayoutEditPolicy extends org.eclipse.ve.internal.cde.core.FlowL
 	 */
 	public FlowLayoutEditPolicy(VisualContainerPolicy containerPolicy) {
 		super(containerPolicy);
+		setHorizontal(Boolean.TRUE);
 		helper.setContainerPolicy(containerPolicy);
 	}
 	/**
@@ -47,13 +48,5 @@ public class FlowLayoutEditPolicy extends org.eclipse.ve.internal.cde.core.FlowL
 		Object child = aRequest.getNewObject();
 		EditPart before = getInsertionReference(aRequest);
 		return helper.getCreateChildCommand(child, null, before != null ? before.getModel() : null);
-	}
-	/**
-	 * @see org.eclipse.gef.editpolicies.FlowLayoutEditPolicy#isHorizontal()
-	 * Override because the super (GEF) looks to the host figure's layout manager which is an XYLayout usually
-	 * which throws a ClassCastException
-	 */
-	protected boolean isHorizontal() {
-		return true;
 	}
 }

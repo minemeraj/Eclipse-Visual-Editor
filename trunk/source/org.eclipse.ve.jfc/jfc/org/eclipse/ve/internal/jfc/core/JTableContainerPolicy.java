@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTableContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-05-11 19:01:39 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-18 21:54:37 $ 
  */
 
 
@@ -28,11 +28,10 @@ import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.*;
-import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 /**
  * Container Edit Policy for Bean Compositions.
  */
-public class JTableContainerPolicy extends VisualContainerPolicy {
+public class JTableContainerPolicy extends BaseJavaContainerPolicy {
 	
 	EStructuralFeature sfAutoCreateColumns;
 	
@@ -57,14 +56,6 @@ public class JTableContainerPolicy extends VisualContainerPolicy {
 		return false;
 	}
 	
-	public Command getAddCommand(List children, Object positionBeforeChild) {
-		return super.getAddCommand(children, positionBeforeChild);
-	}
-	
-	public Command getCreateCommand(Object child, Object positionBeforeChild) {
-		return getCreateCommand(child, positionBeforeChild, containmentSF);
-	}
-
 	public Command getCreateCommand(Object constraintComponent, Object childComponent, Object position) {
 		return getCreateCommand(childComponent, position);
 	}

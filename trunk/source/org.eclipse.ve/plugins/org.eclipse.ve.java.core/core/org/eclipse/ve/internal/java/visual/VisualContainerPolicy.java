@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: VisualContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-17 18:38:30 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-18 21:54:34 $ 
  */
 import java.util.List;
 
@@ -19,7 +19,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
+
+import org.eclipse.ve.internal.java.core.BaseJavaContainerPolicy;
 
 /**
  * A Java container policy for handling visuals with constraints.
@@ -27,7 +28,7 @@ import org.eclipse.ve.internal.java.core.JavaContainerPolicy;
  * It is abstract.
  * @since 1.1.0
  */
-public abstract class VisualContainerPolicy extends JavaContainerPolicy {
+public abstract class VisualContainerPolicy extends BaseJavaContainerPolicy {
 
 	/**
 	 * Construct the policy.

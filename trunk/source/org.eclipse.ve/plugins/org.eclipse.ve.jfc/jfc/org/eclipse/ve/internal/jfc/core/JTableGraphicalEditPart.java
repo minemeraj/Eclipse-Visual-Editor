@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: JTableGraphicalEditPart.java,v $ $Revision: 1.17 $ $Date: 2005-06-15 20:19:27 $
+ * $RCSfile: JTableGraphicalEditPart.java,v $ $Revision: 1.18 $ $Date: 2005-08-18 21:54:37 $
  */
 
 import java.util.Collections;
@@ -133,7 +133,7 @@ public class JTableGraphicalEditPart extends ComponentGraphicalEditPart {
 
 	protected void createEditPolicies() {
 		EditDomain domain = EditDomain.getEditDomain(this);
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new FlowLayoutEditPolicy(new JTableContainerPolicy(domain)));
+		installEditPolicy(EditPolicy.CONTAINER_ROLE, new org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy(new JTableContainerPolicy(domain), Boolean.TRUE));
 		super.createEditPolicies();
 	}
 

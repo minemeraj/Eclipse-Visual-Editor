@@ -11,11 +11,13 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.13 $  $Date: 2005-06-15 20:19:34 $ 
+ *  $Revision: 1.14 $  $Date: 2005-08-18 21:54:35 $ 
  */
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -182,6 +184,36 @@ public final class CDEPlugin extends AbstractUIPlugin {
 				initData == null ? (colonNdx == -1 ? null : className.substring(colonNdx + 1)) : initData);
 		}
 		return o;
+	}
+	
+	/**
+	 * This is used to parse the init data for the key. This is because we don't have the capablity
+	 * of creating Maps for the initdata since it comes from just a string, so instead we have the
+	 * initdata capable of being like a map. It will be a series of key/value pairs. In the form
+	 * <code>key="value";key='value'</code>. The "key" cannot contain a ';' or '='. The value
+	 * cannot contain a "'". We will not be doing a fancy parse that allows escaped single-quotes.
+	 * This is used for parameterization data, which doesn't usually require single-quotes.
+	 * <p>
+	 * Though to allow us to work with a map too, if the initData is a Map, then it will look in the map instead.
+	 *  
+	 * @param initData data or <code>null</code> if no data. If must be either a Map or a String or <code>null</code>.
+	 * @param key
+	 * @return value or <code>null</code> if the key is not in the data, or the data is <code>null</code>, or the data is not valid. 
+	 * 
+	 * @since 1.1.0.1
+	 */
+	public static String parseInitializationData(Object initData, String key) {
+		if (initData instanceof CharSequence) {
+			Pattern p = Pattern.compile("\\s*"+key+"='(.*)';*");
+			java.util.regex.Matcher m = p.matcher((CharSequence) initData);
+			if (m.find()) {
+				return m.group(1);
+			} else
+				return null;
+		} else if (initData instanceof Map) {
+			return (String) ((Map) initData).get(key);
+		} else
+			return null;
 	}
 
 	/**
