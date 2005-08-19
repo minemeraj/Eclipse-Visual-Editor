@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.46 $  $Date: 2005-08-12 12:54:02 $ 
+ *  $Revision: 1.47 $  $Date: 2005-08-19 15:38:12 $ 
  */
 
 import java.util.*;
@@ -673,9 +673,10 @@ protected ArrayList sortExpressions(List list) throws CodeGenException {
 			//  be sorted yet.
 			notReadyForSorting.add(exp);
 		}
-		else if (!exp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED))
-			needSorting.add(exp);
-		else {
+		else if (!exp.isStateSet(CodeExpressionRef.STATE_SRC_LOC_FIXED)){
+			if(!exp.isStateSet(CodeExpressionRef.STATE_FIELD_EXP)) // no need to sort with non-method exp's
+				needSorting.add(exp);
+		} else {
 			// Those that are already set in code, will not change
 			sortedList.add(exp);
 			// sanity check

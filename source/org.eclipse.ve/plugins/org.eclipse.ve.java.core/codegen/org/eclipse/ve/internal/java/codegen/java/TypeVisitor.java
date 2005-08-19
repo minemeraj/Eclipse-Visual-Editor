@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.17 $  $Date: 2005-07-11 18:14:11 $ 
+ *  $Revision: 1.18 $  $Date: 2005-08-19 15:38:12 $ 
  */
 
 import java.util.*;
@@ -145,6 +145,34 @@ protected void visitAMethod(MethodDeclaration method, IBeanDeclModel model,List 
 			v.setInitMethodFor((BeanPart)itr.next()) ;
 	}
 	v.visit() ;
+	
+	if (fInstanceDeclaredBeans.get(mName) != null) {
+		Iterator itr = ((List)fInstanceDeclaredBeans.get(mName)).iterator() ;
+		while (itr.hasNext()){
+			BeanPart bp = (BeanPart)itr.next();
+			if(bp.getInitExpression()==null && bp.isInstanceInstantiation()){
+				// no init expression and is in the field map
+				BeanPartDecleration bpDecl = bp.getDecleration();
+				if (bpDecl.getFieldDecl() instanceof FieldDeclaration) {
+					FieldDeclaration fd = (FieldDeclaration) bpDecl.getFieldDecl();
+					if(fd.fragments()!=null && fd.fragments().size()>0){
+						VariableDeclarationFragment f = (VariableDeclarationFragment) fd.fragments().get(0);
+						if(f!=null && f.getInitializer()!=null && !(f.getInitializer() instanceof NullLiteral)){
+							String typeSource = (String) typeRef.getTypeDecl().getProperty(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY);
+							AST ast = fd.getAST();
+							VariableDeclarationStatement vds = ast.newVariableDeclarationStatement((VariableDeclarationFragment) ASTNode.copySubtree(ast, f));
+							vds.setType((Type) ASTNode.copySubtree(ast, fd.getType()));
+							vds.setModifiers(fd.getModifiers());
+							vds.setSourceRange(fd.getStartPosition(), fd.getLength());
+							CodeExpressionRef exp = new CodeExpressionRef(vds, typeSource, bp);
+							exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
+							exp.setState(CodeExpressionRef.STATE_FIELD_EXP, true);
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 /**

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.43 $  $Date: 2005-06-23 19:34:49 $ 
+ *  $Revision: 1.44 $  $Date: 2005-08-19 15:38:12 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -299,7 +299,7 @@ public Collection getRefExpressions () {
 		CodeMethodRef mr = getInitMethod() ;
 		for (int I=fBeanRefExpressions.size()-1; I>=0; I--) {
 			CodeExpressionRef exp = (CodeExpressionRef) fBeanRefExpressions.get(I) ;
-			if (exp.getMethod() != mr) {
+			if ((!exp.isStateSet(CodeExpressionRef.STATE_FIELD_EXP)) && exp.getMethod() != mr) {
 				exp.getMethod().removeExpressionRef(exp) ;
 				fBeanRefExpressions.remove(I);
 			}

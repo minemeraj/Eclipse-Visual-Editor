@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.20 $  $Date: 2005-05-31 15:33:48 $ 
+ *  $Revision: 1.21 $  $Date: 2005-08-19 15:38:12 $ 
  */
 import java.util.logging.Level;
 
@@ -144,7 +144,10 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		boolean fromCache = fbeanPart.getModel().getCompositionModel().isFromCache();
 		try {
 			if (fromCache) {
-				getExprRef().getMethod().restore(); // Make sure our method is adapted
+				if(getExprRef().isStateSet(CodeExpressionRef.STATE_FIELD_EXP))
+					getExprRef().getBean().getInitMethod().restore();
+				else
+					getExprRef().getMethod().restore(); // Make sure our method is adapted
 				result = fhelper.restore();
 			}
 			else
