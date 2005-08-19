@@ -12,29 +12,27 @@
  *  Created Aug 17, 2005 by Gili Mendel
  * 
  *  $RCSfile: BindingsTest.java,v $
- *  $Revision: 1.1 $  $Date: 2005-08-17 18:41:35 $ 
+ *  $Revision: 1.2 $  $Date: 2005-08-19 22:24:15 $ 
  */
 package org.eclipse.ve.sweet2;
 
-import java.util.ArrayList;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
 
-import net.sf.cglib.transform.impl.AddStaticInitTransformer;
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.List;
 
 import org.eclipse.ve.sweet2.hibernate.HibernatePersonServicesHelper;
 import org.eclipse.ve.sweet2.hibernate.Person;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Label;
 
 public class BindingsTest {
 
@@ -79,6 +77,7 @@ public class BindingsTest {
 	private Label label13 = null;
 	private Label label14 = null;
 	private Menu menuBar = null;
+	private Button dbDumpButton = null;
 	
 	private Shell addPersonShell = null;  //  @jve:decl-index=0:visual-constraint="37,367"
 	private Label label = null;
@@ -89,11 +88,17 @@ public class BindingsTest {
 	private Button addOKButton = null;
 	private Label label17 = null;
 	private Button addCancelButton = null;
+	private Button domainDumpButton = null;
 	
 	
 	private HibernatePersonServicesHelper dbHelper = HibernatePersonServicesHelper.getHelper();
 	private Person selectedPerson = null;
 	final IObjectBinder selectedPersonBinder = ObjectBinder.createObjectBinder(Person.class);
+	final IObjectBinder managerPersonBinder = ObjectBinder.createObjectBinder(Person.class);
+	final IObjectBinder spousePersonBinder = ObjectBinder.createObjectBinder(Person.class);
+	private Label label18 = null;
+	
+	
 
 	
 	
@@ -141,7 +146,7 @@ public class BindingsTest {
         
         MenuItem helpMenuItem = new MenuItem (menuBar, SWT.CASCADE);
         helpMenuItem.setText ("Help");
-        Menu helpSubMenu = new Menu (sShell, SWT.PUSH);
+    
         	
 	}
 
@@ -171,7 +176,7 @@ public class BindingsTest {
 		gridData5.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData5.horizontalSpan = 2;
 		
-		domainList = new List(demainGroup, SWT.NONE);
+		domainList = new List(demainGroup, SWT.V_SCROLL);
 		domainList.setLayoutData(gridData5);
 		
 		domainListViewer = new ListViewer(domainList);		
@@ -182,6 +187,7 @@ public class BindingsTest {
 				    input=(java.util.List)newInput; 
 				else
 					input=null;
+				selectedPersonBinder.setValue(null);
 			}		
 			public void dispose() {}		
 			public Object[] getElements(Object inputElement) {
@@ -194,7 +200,12 @@ public class BindingsTest {
 		domainListViewer.setLabelProvider(new LabelProvider());
 		domainListViewer.addSelectionChangedListener(new ISelectionChangedListener() {		
 			public void selectionChanged(SelectionChangedEvent event) {
-//				personBinder.setValue(((IStructuredSelection)event.getSelection()).getFirstElement());		
+				selectedPerson = (Person) ((IStructuredSelection)event.getSelection()).getFirstElement();
+				selectedPersonBinder.setValue(selectedPerson);
+				if (selectedPerson!=null) {
+				  managerPersonBinder.setValue(selectedPerson.getManager());
+				  spousePersonBinder.setValue(selectedPerson.getSpouse());
+				}
 			}
 		});
 		
@@ -227,6 +238,14 @@ public class BindingsTest {
 		demainGroup.setText("Domain Model");
 		demainGroup.setLayout(gridLayout4);
 		demainGroup.setLayoutData(gridData9);
+		label18 = new Label(demainGroup, SWT.NONE);
+		domainDumpButton = new Button(demainGroup, SWT.NONE);
+		domainDumpButton.setText("Dump Content");
+		domainDumpButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				dumpPersonList((java.util.List)domainListViewer.getInput());
+			}
+		});
 		
 		createDomainList();
 
@@ -248,6 +267,27 @@ public class BindingsTest {
 		radioButton2.setText("Spouse");
 		radioButton2.setLayoutData(gridData8);
 	}
+	
+	private void dumpPersonList(java.util.List persons) {
+		if (persons!=null  && persons.size()>0) {
+    	 for (Iterator iter = persons.iterator(); iter.hasNext();) {
+			Person p = (Person) iter.next();
+			System.out.println("\t"+p);
+			System.out.println("\t\tManager: "+p.getManager());
+			Person s = p.getSpouse();
+			System.out.println("\t\tSpouse: " + s);
+			System.out.println("\t\tBackups:");
+			if (p.getBackups()!=null)
+			   for (Iterator i = p.getBackups().iterator(); i.hasNext();) {
+				  System.out.println("\t\t\t"+i.next());
+			   }
+			else
+				System.out.println("\t\t\tNone");
+		 }
+		}
+		else
+			System.out.println("No Person records");
+	}
 
 	/**
 	 * This method initializes group2	
@@ -262,24 +302,54 @@ public class BindingsTest {
 		databaseGroup.setLayoutData(gridData11);
 		databaseGroup.setLayout(new GridLayout());
 		readDBButton = new Button(databaseGroup, SWT.NONE);
-		readDBButton.setText("Read  Persons List");
+		readDBButton.setText("Read Domain Model");
 		readDBButton.setToolTipText("Reads domain model from DB");
 		readDBButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				domainListViewer.setInput(dbHelper.primGetPersonList());				
+				runDBService(new Runnable() {				
+					public void run() {
+						domainListViewer.setInput(dbHelper.getAllPersons());				
+					}				
+				});								
 			}
 		});
 		writeDBButton = new Button(databaseGroup, SWT.NONE);
-		writeDBButton.setText("Write selected Person");
+		writeDBButton.setText("Save Domain Model");
 		writeDBButton.setToolTipText("Writes domain model to DB");
 		writeDBButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				dbHelper.flushAPerson(selectedPerson);
+				runDBService(new Runnable() {				
+					public void run() {
+						dbHelper.savePersonList((java.util.List)domainListViewer.getInput());				
+					}				
+				});										
 			}
 		});
 		ResetButton = new Button(databaseGroup, SWT.NONE);
-		ResetButton.setText("Reset  Person's List");
+		ResetButton.setText("Reset  DB Records");
 		ResetButton.setToolTipText("Create sample DB and read it");
+		ResetButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				runDBService(new Runnable() {				
+					public void run() {
+						dbHelper.createSampleEntries();
+						domainListViewer.setInput(dbHelper.getAllPersons());							
+					}				
+				});
+			}
+		});
+		dbDumpButton = new Button(databaseGroup, SWT.NONE);
+		dbDumpButton.setText("Dump DB Records");
+		dbDumpButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				runDBService(new Runnable() {				
+					public void run() {
+						dumpPersonList(dbHelper.getAllPersons());
+					}				
+				});
+		    	
+			}
+		});
 	}
 
 	/**
@@ -429,6 +499,12 @@ public class BindingsTest {
 		createViewersGroup();
 		createDomainGroup();
 		createDBGroup();
+		sShell.addShellListener(new org.eclipse.swt.events.ShellAdapter() {
+			public void shellClosed(org.eclipse.swt.events.ShellEvent e) {
+				dbHelper.endSession();
+				System.exit(0);
+			}
+		});
 		
 		bind();
 	}
@@ -483,10 +559,57 @@ public class BindingsTest {
 		});
 	}
 	
-	private void bind() {
+	private void bind() {	
+		selectedPersonBinder.addPropertyChangeListener(new PropertyChangeListener() {		
+			public void propertyChange(PropertyChangeEvent evt) {
+				domainListViewer.refresh();		
+			}		
+		});
+		managerPersonBinder.addPropertyChangeListener(new PropertyChangeListener() {		
+			public void propertyChange(PropertyChangeEvent evt) {
+				domainListViewer.refresh();		
+			}		
+		});
+		spousePersonBinder.addPropertyChangeListener(new PropertyChangeListener() {		
+			public void propertyChange(PropertyChangeEvent evt) {
+				domainListViewer.refresh();		
+			}		
+		});
+
+		// Person
 		TextEditor personFN = new TextEditor(personFNText);
-		personFN.setUpdatePolicy(Editor.COMMIT_MODIFY);
-		personFN.setContentProvider(selectedPersonBinder.getPropertyProvider("name"));
+		personFN.setUpdatePolicy(Editor.COMMIT_MODIFY);		
+		personFN.setContentProvider(selectedPersonBinder.getPropertyProvider("firstName"));
+		
+		TextEditor personLN = new TextEditor(personLNText);
+		personLN.setUpdatePolicy(Editor.COMMIT_MODIFY);
+		personLN.setContentProvider(selectedPersonBinder.getPropertyProvider("lastName"));
+		
+		
+		// Manager
+	
+		TextEditor managerFN = new TextEditor(managerFNText);
+		managerFN.setUpdatePolicy(Editor.COMMIT_FOCUS);
+		managerFN.setContentProvider(selectedPersonBinder.getPropertyProvider("manager.firstName"));
+				
+		TextEditor managerLN = new TextEditor(managerLNText);
+		managerLN.setUpdatePolicy(Editor.COMMIT_FOCUS);
+		managerLN.setContentProvider(selectedPersonBinder.getPropertyProvider("manager.lastName"));
+
+		
+		// Spouse
+		TextEditor spouseFN = new TextEditor(spouseFNText);
+		spouseFN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
+		spouseFN.setContentProvider(selectedPersonBinder.getPropertyProvider("spouse.firstName"));		
+		
+		TextEditor spouseLN = new TextEditor(spouseLNText);
+		spouseLN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
+		spouseLN.setContentProvider(selectedPersonBinder.getPropertyProvider("spouse.lastName"));
+		
+	}
+	
+	protected void runDBService (Runnable runnable) {
+		BusyIndicator.showWhile(Display.getDefault(), runnable);		
 	}
 
 	/**

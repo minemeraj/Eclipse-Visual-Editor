@@ -17,7 +17,7 @@ import java.util.List;
  *  Created Aug 2, 2005 by Gili Mendel
  * 
  *  $RCSfile: Test.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-17 18:41:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-19 22:24:15 $ 
  */
 /**
  * This class is a test that will delete all entries from the DataBase, Re-Create the
@@ -35,7 +35,7 @@ public class Test {
 		    	// comment this line if you do not want to reCreate.
 		    	helper.createSampleEntries();
 		    	System.out.println("\nRead all DataBase Entries:");
-		    	List pl = helper.primGetPersonList();
+		    	List pl = helper.getAllPersons();
 		    	for (Iterator iter = pl.iterator(); iter.hasNext();) {
 					Person p = (Person) iter.next();
 					System.out.println("\t"+p);

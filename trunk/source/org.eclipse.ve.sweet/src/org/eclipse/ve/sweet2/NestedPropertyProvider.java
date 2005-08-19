@@ -15,6 +15,8 @@ public class NestedPropertyProvider extends AbstractPropertyProvider {
 	private Method fSetMethod;
 
 	public NestedPropertyProvider(IObjectBinder aSourceBinder, String[] nestedProperties){
+		//TODO: <gm> need to support subscripts ...e.g. manager.backup[2].firstName</gm>
+		
 		// aType is the type of object that is our source, e.g. Person
 		// The nested properties are the properties we should get from it, e.g. manager.firstName
 		fNestedProperties = nestedProperties;
@@ -25,26 +27,30 @@ public class NestedPropertyProvider extends AbstractPropertyProvider {
 	}
 		
 	public boolean canSetValue(){
-		return true;
+		IObjectBinder valBinder = fBinders[fNestedProperties.length-1];
+		return valBinder!=null && 
+		       valBinder.getValue()!=null && 
+		       getSetMethod()!=null; 	       
 	}
 
 	public Object getValue() {
 		try{
+			boolean deadEnd=false;
 			for (int i = 0; i < fGetMethods.length; i++) {
-				Method getMethod = fGetMethods[i];
-				IObjectBinder binder = fBinders[i];
-				Object binderValue = binder.getValue();
-				if(binderValue != null){
-					Object binderResult = getMethod.invoke(binderValue,null);
-					// If we are the last person in the array we return the result
-					if(i == fGetMethods.length -1){
-						return binderResult;
-					} else {
-						// Otherwise set the value into the next binder so the get methods can become chained
-						fBinders[i+1].setValue(binderResult);
-						// Listen to the binder so that when its value changes we can update ourself
-					}
+				Object binderValue = null;
+				if (!deadEnd) {				  				  
+				  binderValue = fBinders[i].getValue();
+				  deadEnd = binderValue == null;
 				}
+				Object binderResult  = deadEnd ? null : fGetMethods[i].invoke(binderValue,null);				
+				// If we are the last person in the array we return the result
+				if(i == fGetMethods.length -1){
+					return binderResult;
+				} else {
+					// Otherwise set the value into the next binder so the get methods can become chained
+					fBinders[i+1].setValue(binderResult);
+					// Listen to the binder so that when its value changes we can update ourself					
+				}				
 			}
 		} catch (Exception exc){
 			exc.printStackTrace();
@@ -52,23 +58,40 @@ public class NestedPropertyProvider extends AbstractPropertyProvider {
 		return null;
 	}
 	
+	private Method getSetMethod() {
+		if (fSetMethod!=null) return fSetMethod;
+		try {
+			
+			int index = fNestedProperties.length-1;
+			String setMethodName = setMethodName(fNestedProperties[index]);	 
+			fSetMethod = fBinders[index].getType().getMethod(
+				setMethodName,
+				new Class[] {fGetMethods[index].getReturnType()});			
+		} 		
+		catch (NoSuchMethodException e) {			
+			// A read only property will not have a set value
+		}
+		return fSetMethod;
+	}
+	
 
 	public void setValue(Object aValue) {
+		int index = fNestedProperties.length-1;
+		Object target = fBinders[index].getValue();
+		if (target==null)  
+			return; // No value to set
+		
 		try{
-			isSettingValue = true;			
-			if(fSetMethod == null){
-				// 	There is one set method that is fired on the immediate binder
-				int binderNumbers = fNestedProperties.length;
-				String setMethodName = setMethodName(fNestedProperties[binderNumbers-1]);	 
-				fSetMethod = fBinders[binderNumbers-1].getType().getMethod(
-					setMethodName,
-					new Class[] {fGetMethods[binderNumbers-1].getReturnType()});
-			}
-			fSetMethod.invoke(fBinders[fBinders.length-1].getValue(),new Object[] {aValue});
+			isSettingValue = true;
+			Method setMethod = getSetMethod(); 			
+			if(setMethod == null){
+				throw new Error ("Invalid Set Method:"+fBinders[0].getType().getName()+", property:"+getProperty());
+			}			
+			setMethod.invoke(target,new Object[] {aValue});
 			// Refresh binders so they can update the new value
-			fBinders[fBinders.length-1].refresh(fNestedProperties[fNestedProperties.length-1]);			
+			fBinders[index].refresh(fNestedProperties[index]);			
 		} catch (Exception exc){
-			exc.printStackTrace();
+			throw new Error (exc);
 		} finally {
 			isSettingValue = false;			
 		}
@@ -94,7 +117,7 @@ public class NestedPropertyProvider extends AbstractPropertyProvider {
 				}
 			}
 		} catch (Exception exc){
-			exc.toString();
+			throw new Error("Class:"+fBinders[0].getType().getName()+", property:"+getProperty(),exc);
 		}	
 		// Listen to the source binder so when its value changes we can notify listeners
 		fBinders[0].addPropertyChangeListener(new PropertyChangeListener(){
@@ -109,6 +132,19 @@ public class NestedPropertyProvider extends AbstractPropertyProvider {
 
 	protected String getPropertyName() {
 		return fNestedProperties[fNestedProperties.length-1]; 
+	}
+	
+	private String getProperty() {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < fNestedProperties.length; i++) {
+			if (i>0)
+				sb.append('.');
+			sb.append(fNestedProperties[i]);			
+		}
+		return sb.toString();
+	}
+	public String toString() {		
+		return fBinders[0].getType().getName()+"\n"+getProperty();
 	}
 
 }

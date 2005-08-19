@@ -24,7 +24,7 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		try{
 			Object result = Proxy.newProxyInstance(ObjectBinder.class.getClassLoader(),
 					new Class[] { IObjectBinder.class }, 
-					new ObjectBinder((Class)sourceClass));
+					new ObjectBinder(sourceClass));
           return (IObjectBinder) result;
 		} catch (Exception e){
 			e.printStackTrace();
@@ -41,6 +41,12 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 	
 	public static void addListener(Class aType, ChangeListener aListener){
 		if(typeListeners == null){
+			// TODO: <gm> I expect that this does not do what you intended to do,
+			//            a weak link is on the key, so only when aType is disposed 
+			//            will the array be removed from the list.
+			//            We need a WeakList like so that when the listener is not
+			//            there anymore, we can remove it from the list.
+			//       </gm>
 			typeListeners = new WeakHashMap();
 		}
 		List listeners = (List)typeListeners.get(aType);
@@ -90,13 +96,13 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 
 	public IValueProvider getPropertyProvider(String string) {
 		// See whether the property is nested or not
-		int indexOfLastPeriod = string.lastIndexOf('.');
-		String immediatePropertyName = null;
-		if(indexOfLastPeriod != -1){
+		if(string.indexOf('.') >=0){
+			StringTokenizer tk = new StringTokenizer(string,".");
 			// If the property is nested we bind to a property provider that can give this to us
-			immediatePropertyName = string.substring(indexOfLastPeriod+1);
-			String nestedPropertyName = string.substring(0,indexOfLastPeriod);
-			String[] properties = new String[]{nestedPropertyName,immediatePropertyName};
+			String[] properties = new String[tk.countTokens()];
+			for (int i = 0; tk.hasMoreTokens(); i++) {
+				properties[i] = tk.nextToken();				
+			}
 			NestedPropertyProvider result = new NestedPropertyProvider(this,properties);
 			return result;
 		} else {
@@ -106,17 +112,25 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		}
 	}
 	
+	private void fireValueChanged (Object oldVal, Object newVal) {
+		if (!isSignallingChange && listeners.size()>0) {
+			isSignallingChange = true;		
+			try {
+				PropertyChangeEvent event = new PropertyChangeEvent(this, null, oldVal, newVal);
+				for (Iterator iter = listeners.iterator(); iter.hasNext();)
+					((PropertyChangeListener) iter.next()).propertyChange(event);
+			} finally {
+				isSignallingChange = false;
+			}
+		}			
+	}
+	
 	public void setValue(Object aSource) {
+		if (aSource!=null && aSource.getClass()!=receiverClass)
+			throw new Error("Invalide value:"+aSource);
 		Object oldSource = source;
 		source = aSource;
-		if(isSignallingChange) return;		
-		isSignallingChange = true;		
-		Iterator iter = listeners.iterator();		
-		while(iter.hasNext()){
-			PropertyChangeListener listener = (PropertyChangeListener)iter.next();
-			listener.propertyChange(new PropertyChangeEvent(this,null,oldSource,aSource));
-		}		
-		isSignallingChange = false;		
+		fireValueChanged(oldSource, aSource);
 	}
 
 	public Object getValue() {
@@ -151,5 +165,9 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 
 	public void refresh() {
 		refresh(null);
+	}
+	
+	public String toString() {
+		return "Class:"+receiverClass.getName()+"\n"+source.toString();
 	}
 }
