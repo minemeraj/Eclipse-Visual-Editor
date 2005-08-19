@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.48 $  $Date: 2005-07-12 18:41:11 $ 
+ *  $Revision: 1.49 $  $Date: 2005-08-19 15:38:12 $ 
  */
 
 import java.util.*;
@@ -733,7 +733,9 @@ public void removeBeanPart (BeanPart bean) {
 	  	// updating of subsequent expression offsets is not performed
 	  	// if they are marked as deleted - something which will cause
 	  	// the removal of incorrect code causing broken code. (60079)
-	  	((CodeExpressionRef) deleteList.get(i)).clearState();
+		  boolean isFieldExp = ((CodeExpressionRef) deleteList.get(i)).isStateSet(CodeExpressionRef.STATE_FIELD_EXP);
+		((CodeExpressionRef) deleteList.get(i)).clearState(); 
+	  	((CodeExpressionRef) deleteList.get(i)).setState(CodeExpressionRef.STATE_FIELD_EXP, isFieldExp);
 	  	((CodeExpressionRef) deleteList.get(i)).setState(CodeExpressionRef.STATE_DELETE, true);
 		((CodeExpressionRef) deleteList.get(i)).updateDocument(i == 0); // Update the source code once
 	  }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.56 $  $Date: 2005-08-10 19:43:06 $ 
+ *  $Revision: 1.57 $  $Date: 2005-08-19 15:38:12 $ 
  */
 
 
@@ -83,9 +83,43 @@ public final static int                STATE_MASTER_DELETED     = 0x0800 ;
 public final static int                STATE_INIT_EXPR         	= 0x1000 ;  
 // Typically set when an expression is sharing the same line with other expressions
 public final static int                STATE_SHARED_LINE         	= 0x2000 ;  
+// Typically set when an expression is not inside a method, but needs to be an expression
+public final static int                STATE_FIELD_EXP         	= 0x4000 ;
 
 /*******/
 	
+
+/*******/
+	
+
+/**
+ * Sometimes an expression might not belong to a method at all - like field decalrations.
+ * 
+ * @param exp	Field declaration wrapped inside a Statement
+ * @param source	Source in which exp resides
+ * @param bp  BeanPart to which this expression belongs
+ * 
+ * @since 1.1.0.1
+ */
+	public CodeExpressionRef(Statement exp, String source, BeanPart bp) {
+		super(-1, -1, null);
+
+		int start, end;
+		start = exp.getStartPosition() ;
+		end = exp.getStartPosition() + exp.getLength();
+		String fromSource = source.substring(start, end);
+		end = ExpressionParser.indexOfLastSemiColon(fromSource, bp.getModel()) - 1 + start;
+
+		ExpressionParser fCP = createExpressionParser(source, start , end - start + 1, bp.getModel());
+
+		fMethod = null;
+		fexpStmt = exp;
+		fBean = bp;
+		fBean.addRefExpression(this);
+		setState(STATE_SRC_LOC_FIXED, true);
+		setContent(fCP);
+		setOffset(getContentParser().getFillerOff());
+	}
 
 /**
  * exp/method may not have been generated from the same source
@@ -276,7 +310,8 @@ public  boolean  decodeExpression() throws CodeGenException {
       	return true;
       
       // Do not decode
-      if (fBean.getInitMethod() == null || !fBean.getInitMethod().equals(fMethod)) {
+      if ( (!isStateSet(CodeExpressionRef.STATE_FIELD_EXP)) &&
+    		(fBean.getInitMethod() == null || !fBean.getInitMethod().equals(fMethod))) {
       	if (JavaVEPlugin.isLoggingLevel(Level.FINE))
       		JavaVEPlugin.log("CodeExpressionRef.decodeExpression(): Invalid init JCMMethod for"+fBean,Level.FINE) ; //$NON-NLS-1$      	
       	return false ;
@@ -553,7 +588,9 @@ public  void updateDocument(ExpressionParser newParser) {
 protected  void updateDocument(boolean updateSharedDoc, String newFiller, String newComment) {
 	if(isStateSet(STATE_IN_SYNC))  
 		return ;
-     
+	
+    boolean isFieldExp = isStateSet(STATE_FIELD_EXP);
+    
 	StringBuffer trace = new StringBuffer() ;
 	trace.append("CodeExpressionRef.updateDocument():\n") ; //$NON-NLS-1$	
 	setState(STATE_UPDATING_SOURCE, true); //fState |= STATE_UPDATING_SOURCE ;
@@ -608,12 +645,16 @@ protected  void updateDocument(boolean updateSharedDoc, String newFiller, String
 			setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;		
 			return ;
 		}
-
-		int docOff = off+getMethod().getOffset() ;
-		String newContent = ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) ? "" : getContent(); //(fState&~STATE_UPDATING_SOURCE) == STATE_NOT_EXISTANT ? "" : getContent()  //$NON-NLS-1$
-		trace.append("\t changed to: \n") ; //$NON-NLS-1$
-		trace.append(newContent+"\n") ;	       //$NON-NLS-1$
-		updateDocument(docOff,len,newContent) ;
+		
+		// Field expressions are deleted by BPFactory overall - no need to change document as it is already removed
+		boolean isFieldExpDeletion = isFieldExp && isStateSet(STATE_DELETE);
+		if(!isFieldExpDeletion){
+			int docOff = isFieldExp ? off : off+getMethod().getOffset() ;
+			String newContent = ((!isAnyStateSet()) || isStateSet(STATE_DELETE)) ? "" : getContent(); //(fState&~STATE_UPDATING_SOURCE) == STATE_NOT_EXISTANT ? "" : getContent()  //$NON-NLS-1$
+			trace.append("\t changed to: \n") ; //$NON-NLS-1$
+			trace.append(newContent+"\n") ;	       //$NON-NLS-1$
+			updateDocument(docOff,len,newContent) ;
+		}
     }
 	setOffset(off) ;
 	setState(STATE_UPDATING_SOURCE, false); //fState &= ~STATE_UPDATING_SOURCE ;
@@ -1049,10 +1090,16 @@ public ExpressionParser getContentParser() {
 
 public ICodeGenSourceRange getTargetSourceRange() {
     if (fBean == null || fBean.getModel() == null || fBean.getModel().isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return null ;
-    ISourceRange mSR = fBean.getModel().getWorkingCopyProvider().getSourceRange(fMethod.getMethodHandle()) ;   
-    if (mSR == null) return null ;
-    CodeGenSourceRange result = new CodeGenSourceRange (mSR.getOffset()+getOffset(),getLen()) ;
-    result.setLineOffset(fBean.getModel().getWorkingCopyProvider().getLineNo(result.getOffset())) ;
+    CodeGenSourceRange result = null;
+    if(isStateSet(CodeExpressionRef.STATE_FIELD_EXP)){
+	    result = new CodeGenSourceRange (getOffset(),getLen()) ;
+	    result.setLineOffset(fBean.getModel().getWorkingCopyProvider().getLineNo(result.getOffset())) ;
+    }else{
+	    ISourceRange mSR = fBean.getModel().getWorkingCopyProvider().getSourceRange(fMethod.getMethodHandle()) ;   
+	    if (mSR == null) return null ;
+	    result = new CodeGenSourceRange (mSR.getOffset()+getOffset(),getLen()) ;
+	    result.setLineOffset(fBean.getModel().getWorkingCopyProvider().getLineNo(result.getOffset())) ;
+    }
     return result ;
 }
 

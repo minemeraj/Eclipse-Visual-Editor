@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.48 $  $Date: 2005-08-17 18:38:21 $ 
+ *  $Revision: 1.49 $  $Date: 2005-08-19 15:38:12 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -446,7 +446,9 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		if (!d.isInstanceVar() || !d.isSingleDecleration()) {
 			// Reused Variable
 			result = fbeanPart.getDecleration().getBeanPartIndex(fbeanPart)==0;
-		}				
+		}else if(fOwner.getExprRef().isStateSet(CodeExpressionRef.STATE_FIELD_EXP)){
+			result = true;
+		}
 		return result;
 	}
 
@@ -457,16 +459,10 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		IJavaObjectInstance obj = (JavaObjectInstance)fbeanPart.getEObject();
 		StringBuffer sb = new StringBuffer();				
 			// ivjFoo = <allocation>;					
-		if (!fbeanPart.getDecleration().isInstanceVar()) {
-			String type = fbeanPart.getType();
-			fOwner.getExprRef().getReqImports().add(type);
-			if (isDeclerationNeeded()) {
-			   int idx = type.lastIndexOf('.');
-			   if (idx>=0)
-				  type = type.substring(idx+1);
-			      type = type.replace('$','.');	// Change for qualified for reflection to formal qualified form.
-			      sb.append(type+" "); //$NON-NLS-1$
-			}
+		if (!fbeanPart.getDecleration().isInstanceVar() || fOwner.getExprRef().isStateSet(CodeExpressionRef.STATE_FIELD_EXP)) {
+			if(fOwner.getExprRef().isStateSet(CodeExpressionRef.STATE_FIELD_EXP))
+				contributeModifiers(sb);
+			contributeType(sb);
 		}
 		sb.append(fbeanPart.getSimpleName());
 		sb.append(" = "); //$NON-NLS-1$
@@ -476,6 +472,61 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		fOwner.getExprRef().setState(CodeExpressionRef.STATE_INIT_EXPR,true);
 		return sb.toString();
 		
+	}
+
+	/**
+	 * Contributes Modifiers to the generated string
+	 * 
+	 * @param sb
+	 * 
+	 * @since 1.1
+	 */
+	private void contributeModifiers(StringBuffer sb) {
+		if(isDeclerationNeeded()){
+			if (fExpr instanceof VariableDeclarationStatement) {
+				VariableDeclarationStatement vds = (VariableDeclarationStatement) fExpr;
+				int modifiers = vds.getModifiers();
+				if(Modifier.isFinal(modifiers))
+					sb.append("final ");
+				if(Modifier.isPrivate(modifiers))
+					sb.append("private ");
+				if(Modifier.isProtected(modifiers))
+					sb.append("protected ");
+				if(Modifier.isPublic(modifiers))
+					sb.append("public ");
+				if(Modifier.isStatic(modifiers))
+					sb.append("static ");
+				if(Modifier.isStrictfp(modifiers))
+					sb.append("strictfp ");
+				if(Modifier.isSynchronized(modifiers))
+					sb.append("synchronized ");
+				if(Modifier.isTransient(modifiers))
+					sb.append("transient ");
+				if(Modifier.isVolatile(modifiers))
+					sb.append("volatile ");
+				if(Modifier.isNative(modifiers))
+					sb.append("native ");
+				if(Modifier.isAbstract(modifiers))
+					sb.append("abstract ");
+			}
+		}
+	}
+
+	/**
+	 * @param sb
+	 * 
+	 * @since 1.1.0.1
+	 */
+	private void contributeType(StringBuffer sb) {
+		String type = fbeanPart.getType();
+		fOwner.getExprRef().getReqImports().add(type);
+		if (isDeclerationNeeded()) {
+		   int idx = type.lastIndexOf('.');
+		   if (idx>=0)
+			  type = type.substring(idx+1);
+		      type = type.replace('$','.');	// Change for qualified for reflection to formal qualified form.
+		      sb.append(type+" "); //$NON-NLS-1$
+		}
 	}
 
 	/* (non-Javadoc)

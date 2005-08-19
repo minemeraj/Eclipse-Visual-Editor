@@ -18,7 +18,7 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-09 22:55:24 $ 
+ *  $Revision: 1.9 $  $Date: 2005-08-19 15:38:12 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -299,12 +299,16 @@ public class BeanPartDecleration {
 			BeanPart b = (BeanPart) beanParts.get(i);
 			CodeExpressionRef e = b.getInitExpression();
 			// Shaddow BDM will have a different CodeMethodRef
-			if (e!=null && e.getMethod().getMethodName().equals(m.getMethodName())) {
-				if (e.getOffset()<off) {
-					if (exp==null)
-						exp = e;
-					else if (e.getOffset()>exp.getOffset())
-						    exp = e;
+			if (e!=null ){
+				if(e.isStateSet(CodeExpressionRef.STATE_FIELD_EXP))
+					exp = e;
+				else if(e.getMethod().getMethodName().equals(m.getMethodName())){ 
+					if (e.getOffset()<off) {
+						if (exp==null)
+							exp = e;
+						else if (e.getOffset()>exp.getOffset())
+							    exp = e;
+					}
 				}
 			}
 		}
