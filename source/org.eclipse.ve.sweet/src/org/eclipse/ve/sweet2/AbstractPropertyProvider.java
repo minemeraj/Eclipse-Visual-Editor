@@ -31,9 +31,10 @@ public abstract class AbstractPropertyProvider implements IValueProvider {
 
 	protected void signalListeners() {
 		if(listeners != null){
+			PropertyChangeEvent event = new PropertyChangeEvent(this,getPropertyName(),null,null);
 			Iterator iter = listeners.iterator();
 			while(iter.hasNext()){
-				((PropertyChangeListener)iter.next()).propertyChange(new PropertyChangeEvent(this,getPropertyName(),null,null));
+				((PropertyChangeListener)iter.next()).propertyChange(event);
 			}
 		}
 	}
@@ -41,6 +42,7 @@ public abstract class AbstractPropertyProvider implements IValueProvider {
 	protected abstract String getPropertyName();
 	
 	protected String getMethodName(String propertyName){
+		//TODO: <gm> need to deal with BeanInfo overrides </gm>
 		StringBuffer getMethodName = new StringBuffer();
 		getMethodName.append("get");
 		getMethodName.append(propertyName.substring(0,1).toUpperCase());
@@ -49,6 +51,7 @@ public abstract class AbstractPropertyProvider implements IValueProvider {
 	}
 	
 	protected String setMethodName(String propertyName){
+		//TODO: <gm> need to deal with BeanInfo overrides </gm>
 		StringBuffer getMethodName = new StringBuffer();
 		getMethodName.append("set");
 		getMethodName.append(propertyName.substring(0,1).toUpperCase());

@@ -12,16 +12,16 @@
  *  Created Aug 10, 2005 by Gili Mendel
  * 
  *  $RCSfile: HibernatePersonServicesHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2005-08-17 18:41:35 $ 
+ *  $Revision: 1.2 $  $Date: 2005-08-19 22:24:15 $ 
  */
 package org.eclipse.ve.sweet2.hibernate;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.*;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+
  
 /**
  * This is a hibernate helper to the Person Database
@@ -104,7 +104,7 @@ public class HibernatePersonServicesHelper {
 	  * the Db.
 	  * @return Person Set read from the DB
 	  */
-	 public List primGetPersonList() {
+	 public List getAllPersons() {
 		 return getSession().createQuery("from Person").list();
 	 }
 	 
@@ -156,9 +156,9 @@ public class HibernatePersonServicesHelper {
 		 }		 
 	 }
 	 
-	 public void flushAPerson(Person p) {
+	 public void saveAPerson(Person p) {
 		 try {
-			 beginTransaction("Flush "+p);
+			 beginTransaction("Save "+p);
 			 getSession().save(p);
 			 getSession().flush();
 			 System.out.println("\tSaving: "+p);
@@ -166,6 +166,26 @@ public class HibernatePersonServicesHelper {
 		 catch (RuntimeException e) {
 			 rollBackTransaction();	
 			 System.err.println("Failed saving "+p);
+			 throw (e);
+		 }
+		 finally {		 
+		   endTransaction();
+		 }		 
+	 }
+	 
+	 public void savePersonList(List persons) {
+		 try {
+			 beginTransaction("Save List ");
+			 for (Iterator itr=persons.iterator(); itr.hasNext();) {				 				 
+				 Person p = (Person)itr.next();
+				 getSession().save(p);
+				 System.out.println("\tSaving: "+p);
+			 }
+			 getSession().flush();
+		 }
+		 catch (RuntimeException e) {
+			 rollBackTransaction();	
+			 System.err.println("Failed List Save");
 			 throw (e);
 		 }
 		 finally {		 
@@ -210,7 +230,15 @@ public class HibernatePersonServicesHelper {
 			 Person rich = new Person("Rich","Kulp");
 			 Person jon = new Person ("Jon","Stinton");
 			 Person dave = new Person("Dave","Orme");
-			 			 
+			 Person john = new Person("John","Doe");
+			 Person jill = new Person ("Jill", "Smith");
+			 Person tooth = new Person ("Tooth", "Fairy");
+			 Person chris = new Person ("Chris","Cringle");
+
+
+			 getSession().save(chris);			
+			 getSession().save(tooth);
+			 getSession().save(dave);
 			 getSession().save(gili);
 			 getSession().save(michelle);
 			 getSession().save(joe);
@@ -220,7 +248,9 @@ public class HibernatePersonServicesHelper {
 			 getSession().save(beth);
 			 getSession().save(rich);
 			 getSession().save(jon);
-			 getSession().save(dave);
+			 getSession().save(john);
+			 getSession().save(jill);
+			 
 			 
 			 // many-to-one relationship
 			 joe.setManager(gili);
@@ -229,11 +259,16 @@ public class HibernatePersonServicesHelper {
 			 rich.setManager(gili);
 			 peter.setManager(gili);
 			 gili.setManager(michelle);
+			 dave.setManager(john);
+			 tooth.setManager(chris);
 			 			 
 			 // many-to-many relathionship
 			 gili.addBackup(peter);
 			 gili.addBackup(sri);
 			 gili.addBackup(rich);
+			 
+			 tooth.addBackup(chris);
+			 tooth.addBackup(jill);
 			 			 
 			 rich.addBackup(joe);
 			 rich.addBackup(peter);
@@ -252,6 +287,8 @@ public class HibernatePersonServicesHelper {
 			 jon.addBackup(peter);
 			 
 			 dave.addBackup(gili);
+			 
+			 john.setSpouse(jill);
 								 
 			 // one-to-one relationship	- bi-direction is enforced by the APIs	 
 			 gili.setSpouse(michelle);
