@@ -56,7 +56,7 @@ import org.eclipse.ve.sweet.objectviewer.IInsertHandler;
  * controls when a row is created.
  * <li>Add a RowContentProvider that knows how to put data into your row object's 
  * controls on demand.
- * <li>Add a RowListener to validate and save changed data.
+ * <li>Add a RowFocusListener to validate and save changed data.
  * <li>Set the NumRowsInCollection property to the number of rows in the underlying data
  * structure.
  * </ul>
@@ -101,7 +101,9 @@ import org.eclipse.ve.sweet.objectviewer.IInsertHandler;
  * properties and events.<p>
  * 
  * Although this control extends Composite, it is not intended to be subclassed
- * except within its own implementation.
+ * except within its own implementation and it makes no sense to set a layout 
+ * manager on it (although as discussed above, the child controls may have layout
+ * managers).
  * 
  * @author djo
  * @since 3.1
