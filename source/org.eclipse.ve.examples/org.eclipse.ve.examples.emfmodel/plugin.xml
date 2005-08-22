@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+  
+     <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.java.refactor.popup.object">
+         <filter
+               name="BEANTYPE"
+               value="java.awt.Component">
+         </filter>            
+         <action
+               label="Set background..."
+               style="pulldown"
+               class="org.eclipse.ve.examples.emfmodel.SetBackgroundJavaBeanObjectActionDelegate"
+               enablesFor="+"               
+               menubarPath="org.eclipse.ve.internal.refactor/refactorGroup"
+               id="org.eclipse.ve.java.visual.setbackground">
+         </action>
+
+      </objectContribution>
+    </extension>
+     
+      
+</plugin>

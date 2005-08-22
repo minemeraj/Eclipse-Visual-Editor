@@ -4,7 +4,7 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
 	    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
-        xmlns:org.eclipse.jem.internal.beaninfo.beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore"
+        xmlns:beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore"
 	    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
 	    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
 		xmlns:org.eclipse.jem.java="java.xmi"	    
@@ -16,11 +16,14 @@
 	</event:AddMany>
 	
     <event:AddMany  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="body" unsettable="false">
+    <addedEObjects xsi:type="ecore:EReference" name="body" 
+     eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#Composite" unsettable="false">
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"
           hidden="true"/>
-      <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator"/>
+      <eAnnotations xsi:type="beaninfo:PropertyDecorator" mergeIntrospection="false">
+        <readMethod xsi:type="org.eclipse.jem.java.JavaMethod" 
+      </eAnnotations>
     </addedEObjects>
-  </event:AddMany>	
+  </event:AddMany>
 	
 </xmi:XMI>
