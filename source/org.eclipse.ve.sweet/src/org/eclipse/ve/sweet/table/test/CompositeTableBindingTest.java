@@ -75,12 +75,10 @@ public class CompositeTableBindingTest {
 		sShell.setSize(new org.eclipse.swt.graphics.Point(445,243));
 		
 		// Now bind the table to the PersonList property of the model
-		table.setData("ColumnBindings", new String[] {
-			"Name",
-			"Address",
-			"City",
-			"State"
-		});
+		row.name.setData("ColumnBinding", "Name");
+		row.address.setData("ColumnBinding", "Address");
+		row.city.setData("ColumnBinding", "City");
+		row.state.setData("ColumnBinding", "State");
         ObjectViewerFactory.factory = new JavaObjectViewerFactory();
         final IObjectViewer personEditor = ObjectViewerFactory.edit(model);
         personEditor.bind(table, "PersonList");
