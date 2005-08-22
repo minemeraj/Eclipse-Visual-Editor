@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.swt;
 
 /*
  *  $RCSfile: CoolBarContainerPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-06-24 18:57:12 $ 
+ *  $Revision: 1.10 $  $Date: 2005-08-22 20:09:16 $ 
  */
 
 import java.util.*;
@@ -217,7 +217,6 @@ public class CoolBarContainerPolicy extends CompositeContainerPolicy {
 				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
 				cb.cancelAttributeSettings((EObject) getContainer(), sf_coolbarItems, items); // Delete the TabItems under rule control so that they
 																							  // will go away.
-				cb.setApplyRules(false);
 				command = cb.getCommand();
 				command.execute();
 			}

@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-24 18:57:12 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-22 20:09:16 $ 
  */
 package org.eclipse.ve.internal.swt;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.*;
@@ -97,32 +98,32 @@ public class ViewFormContainerPolicy extends CompositeContainerPolicy {
 		if (orphanCmd == null || !orphanCmd.canExecute())
 			return UnexecutableCommand.INSTANCE;
 		
-		Object child = children.get(0);
-		
 		IJavaObjectInstance viewFormBean = (IJavaObjectInstance) getContainer();
 		IJavaInstance left = (IJavaInstance) viewFormBean.eGet(sfLeftControl);
 		IJavaInstance right = (IJavaInstance) viewFormBean.eGet(sfRightControl);
 		IJavaInstance center = (IJavaInstance) viewFormBean.eGet(sfCenterControl);
 		IJavaInstance content = (IJavaInstance) viewFormBean.eGet(sfContentControl);
 		
-		Command orphanControl;
 		EObject parent = (EObject)getContainer();
 		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
+
+		for (Iterator itr = children.iterator(); itr.hasNext();) {
+			Object child = itr.next();
+			if(left != null && left.equals(child))
+				cBld.cancelAttributeSetting(parent,sfLeftControl);
+			else if(center != null && center.equals(child))
+				cBld.cancelAttributeSetting(parent,sfCenterControl);
+			else if(right != null && right.equals(child))
+				cBld.cancelAttributeSetting(parent,sfRightControl);
+			else if(content != null && content.equals(child))
+				cBld.cancelAttributeSetting(parent,sfContentControl);
+		}
 		
-		if(left != null && left.equals(child))
-			cBld.cancelAttributeSetting(parent,sfLeftControl);
-		else if(center != null && center.equals(child))
-			cBld.cancelAttributeSetting(parent,sfCenterControl);
-		else if(right != null && right.equals(child))
-			cBld.cancelAttributeSetting(parent,sfRightControl);
-		else if(content != null && content.equals(child))
-			cBld.cancelAttributeSetting(parent,sfContentControl);
 		
-		orphanControl = cBld.getCommand();
-		
-		if(orphanControl != null)
-			return orphanControl.chain(orphanCmd);
-		
-		return orphanCmd;
+		if(!cBld.isEmpty()) {
+			cBld.append(orphanCmd);
+			return cBld.getCommand();
+		} else
+			return orphanCmd;
 	}
 }

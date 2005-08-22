@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.19 $$  $$Date: 2005-08-18 21:55:55 $$ 
+ *  $$Revision: 1.20 $$  $$Date: 2005-08-22 20:09:16 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -28,6 +28,7 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
+import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
@@ -119,6 +120,15 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 			return cmd;
 		} else
 			return command;
+	}
+	
+	protected Command getOrphanTheChildrenCommand(List children) {
+		Command orphanChildrenCommand = super.getOrphanTheChildrenCommand(children);
+		// Need to cancel the childrens' layout data because we don't what it will be where we are going.
+		RuledCommandBuilder cbld = new RuledCommandBuilder(getEditDomain());
+		cbld.cancelGroupAttributeSetting(children, sfLayoutData);
+		cbld.append(orphanChildrenCommand);
+		return cbld.getCommand();
 	}
 	
 	protected boolean isValidBeanLocation(Object child) {
