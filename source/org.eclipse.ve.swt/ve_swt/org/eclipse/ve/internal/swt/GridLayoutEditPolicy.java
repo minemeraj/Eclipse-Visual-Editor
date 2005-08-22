@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.35 $ $Date: 2005-08-22 16:49:50 $
+ * $Revision: 1.36 $ $Date: 2005-08-22 20:29:55 $
  */
 import java.util.*;
 
@@ -734,6 +734,13 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		return gridReq;
 	}
 
+	protected Command getOrphanChildrenCommand(Request request) {
+		Command orphanContributionCmd = containerPolicy.getCommand(request);
+		if (orphanContributionCmd == null)
+			return UnexecutableCommand.INSTANCE; // It can't be created.
+		return orphanContributionCmd;
+	}
+	
 	protected Command getMoveChildrenCommand(Request request) {
 		List children = getHost().getChildren();
 		if (fGridLayoutGridFigure == null || !(request instanceof ChangeBoundsRequest) || children.isEmpty())
