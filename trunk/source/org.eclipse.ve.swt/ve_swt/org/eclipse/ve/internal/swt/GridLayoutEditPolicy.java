@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.34 $ $Date: 2005-07-22 00:38:59 $
+ * $Revision: 1.35 $ $Date: 2005-08-22 16:49:50 $
  */
 import java.util.*;
 
@@ -658,8 +658,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 
 		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
 			cb.append(helper.createNumColumnsCommand(helper.getNumColumns() + 1)); // First add another column to the grid
-			cb.append(helper.createFillerLabelCommands(cell.y + 1)); // then add empty labels at the end of each row
-			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart != null ? editPart.getModel() : null));
+			cb.append(helper.createInsertColumnWithinRowCommands(cell.x, cell.y, request.getNewObject(), request)); // then add empty labels at the end of each row
 
 		} else if (gridReq.type == INSERT_COLUMN || gridReq.type == ADD_COLUMN) {
 			boolean isLastColumn = false;
@@ -684,13 +683,13 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 				isLastColumn = true;
 			}
 			cb.append(helper.createNumColumnsCommand(helper.getNumColumns() + 1)); // First add another column to the grid
-			cb.append(helper.createFillerLabelCommands(column, cell.y, isLastColumn)); // then add empty labels at this column position
-			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart != null ? editPart.getModel() : null));
+			cb.append(helper.createInsertColumnCommands(request.getNewObject(), request, column, cell.y, isLastColumn)); // then add empty labels at this column position
 
 		} else if (gridReq.type == INSERT_ROW || gridReq.type == ADD_ROW) {
 			int row = getGridLayoutGridFigure().getNearestRow(position.y);
 			// Insert a row by adding labels and the new object at the appropriate column position
 			cb.append(helper.createFillerLabelsForNewRowCommand(request.getNewObject(), row, cell.x, request));
+
 		} else if (gridReq.type == ADD_TO_EMPTY_CELL) {
 			// Add to an empty cell at a column position
 			cb.append(helper.createAddToEmptyCellCommand(request.getNewObject(), cell, request));
@@ -769,10 +768,11 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			// Create a filler label to put in original cell and replace a filler label with the moved control
 			cb.append(containerPolicy.getMoveChildrenCommand(Collections.singletonList(childEP.getModel()), beforeEP.getModel()));
 			cb.append(containerPolicy.getDeleteDependentCommand(beforeEP.getModel()));
+
 		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
 			cb.append(helper.createNumColumnsCommand(++numColumns)); // First add another column to the grid
-			cb.append(helper.createFillerLabelCommands(cell.y + 1)); // then add empty labels at the end of each row
-			cb.append(containerPolicy.getMoveChildrenCommand(Collections.singletonList(childEP.getModel()), beforeEP != null ? beforeEP.getModel() : null));
+			cb.append(helper.createInsertColumnWithinRowCommands(cell.x, cell.y, childEP.getModel(), request)); // then add empty labels at the end of each row
+			
 		} else if (gridReq.type == INSERT_COLUMN || gridReq.type == ADD_COLUMN) {
 			boolean isLastColumn = false;
 			int column = getGridLayoutGridFigure().getNearestColumn(position.x);
@@ -796,12 +796,13 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 				isLastColumn = true;
 			}
 			cb.append(helper.createNumColumnsCommand(++numColumns)); // First add another column to the grid
-			cb.append(helper.createFillerLabelCommands(column, cell.y, isLastColumn)); // then add empty labels at this column position
-			cb.append(containerPolicy.getMoveChildrenCommand(Collections.singletonList(childEP.getModel()), beforeEP != null ? beforeEP.getModel() : null));
+			cb.append(helper.createInsertColumnCommands(childEP.getModel(), request, column, cell.y, isLastColumn)); // then add empty labels at this column position
+
 		} else if (gridReq.type == INSERT_ROW || gridReq.type == ADD_ROW) {
 			int row = getGridLayoutGridFigure().getNearestRow(position.y);
 			// Insert a row by adding labels and the new object at the appropriate column position
 			cb.append(helper.createFillerLabelsForNewRowCommand(childEP.getModel(), row, cell.x, request));
+
 		} else if (gridReq.type == ADD_TO_EMPTY_CELL) {
 			// Add to an empty cell at a column position
 			cb.append(helper.createAddToEmptyCellCommand(childEP.getModel(), cell, request));

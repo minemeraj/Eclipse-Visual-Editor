@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.26 $  $Date: 2005-07-22 20:20:21 $
+ *  $Revision: 1.27 $  $Date: 2005-08-22 16:49:50 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -610,7 +610,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 								// Need to expand the number of columns and add fillers in each row
 								componentCB.append(createNumColumnsCommand(numColumns + numColsIncrement));
 								for (int i = 0; i < numColsIncrement; i++) {
-									componentCB.append(createFillerLabelCommands(rect.y + 1));
+									componentCB.append(createInsertColumnWithinRowCommands(endCellLocation.x, rect.y, null, null));
 								}
 							}
 						} else {
@@ -856,7 +856,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	/*
 	 * Insert filler labels at the end of each row except the one the control was added to.
 	 */
-	public Command createFillerLabelCommands (int exceptRow) {
+	public Command createInsertColumnWithinRowCommands (int atColumn, int atRow, Object addedControl, Request request) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject[][] table = getLayoutTable();
 		// If there is only one row (or none), no need to add empty labels.
@@ -868,28 +868,65 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		// Add a filler label prior to each object that is in the first position of each row. 
 		// This will in effect add a label to end of the previous row.
 		// This must be done for each row except the row where the actual control has been added.
-		for (int i = 1; i < table[0].length; i++) {
-			if (i != exceptRow) {
-				if (table[0][i] != EMPTY) {
-					EObject child = table[0][i];
+		// Also have to handle the case in which the before control spans vertically.
+		EObject beforeObject = table[atColumn][atRow];
+		if (isFillerLabel(beforeObject))
+			beforeObject = ((FillerLabel)beforeObject).realObject;
+		for (int i = 0; i < table[0].length; i++) {
+			EObject child = table[atColumn][i];
+			if (isFillerLabel(child))
+				child = ((FillerLabel)child).realObject;
+			int index = children.indexOf(child);
+
+			// This is the row where the new control is put
+			if (i == atRow && addedControl != null && index != -1) {
+				Rectangle rect = childrenDimensions[index];
+				if (rect.height != defaultVerticalSpan && rect.y != i) {
+					if (atColumn + 1 < numColumns)
+						child = findNextValidObject(atColumn + 1, i);
+					else if (i + 1 < table[0].length)
+						child = findNextValidObject(0, i + 1);
+					else
+						child = null;
+				}
+				if (request instanceof CreateRequest)
+					cb.append(policy.getCreateCommand(addedControl, child));
+				else
+					cb.append(policy.getMoveChildrenCommand(Collections.singletonList(addedControl), child));
+					
+			}
+
+			// This is other rows that need have a filler label added to the end
+			if (i != atRow && index != -1) {
+				Rectangle rect = childrenDimensions[index];
+				// If the before object spans vertically, find the next valid object to insert filler
+				if (rect.height != defaultVerticalSpan && child == beforeObject) {
+					// if the spanned control doesn't start in this row, find next valid object to insert filler
+					if (rect.y != i) {
+						if (atColumn + 1 < numColumns)
+							child = findNextValidObject(atColumn + 1, i);
+						else if (i + 1 < table[0].length)
+							child = findNextValidObject(0, i + 1);
+						else
+							child = null;
+					}
+				} else if (i + 1 < table[0].length && table[0][i+1] != EMPTY) {
+					child = table[0][i+1];
 					if (isFillerLabel(child))
 						child = ((FillerLabel)child).realObject;
-					cb.append(policy.getCreateCommand(createFillerLabelObject(), child));
-				}
+				} else 
+					child = null;
+				cb.append(policy.getCreateCommand(createFillerLabelObject(), child));
 			}
 		}
-		// Need to add a final label to the end unless the last row was where the actual control was added
-		if (exceptRow != table[0].length)
-			cb.append(policy.getCreateCommand(createFillerLabelObject(), null));
 		return cb.getCommand();
 	}
 
 	/*
 	 * Insert filler labels in each row at a specific column position in order to move the controls
 	 * over one column yet maintain all other row/column positions before that column.
-	 * The row the control was added is not processed.
 	 */
-	public Command createFillerLabelCommands (int atColumn, int exceptRow, boolean isLastColumn) {
+	public Command createInsertColumnCommands (Object addedControl, Request request, int atColumn, int atRow, boolean isLastColumn) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject[][] table = getLayoutTable();
 		// If there is only one row (or none), no need to add empty labels.
@@ -911,17 +948,62 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 						cb.append(policy.getCreateCommand(createFillerLabelObject(), null));
 				}
 			}
-			if (i != exceptRow) {
-				if (table[atColumn][i] != EMPTY) {
-					EObject child = table[atColumn][i];
+			if (table[atColumn][i] != EMPTY) {
+				EObject child = table[atColumn][i];
+				if (i == atRow) {
+					// This is the row where the new control is put
+					int index = children.indexOf(child);
+					if (index != -1) {
+						Rectangle rect = childrenDimensions[index];
+						//Handle case where the before child is spanned vertically and the starting
+						// row is not this row. Need to get the next valid child.
+						if (rect.height != defaultVerticalSpan && rect.y != i){
+							if (atColumn + 1 < numColumns)
+								child = findNextValidObject(atColumn + 1, i);
+							else if (i + 1 < table[0].length)
+								child = findNextValidObject(0, i + 1);
+							else
+								child = null;
+						}
+						if (request instanceof CreateRequest)
+							cb.append(policy.getCreateCommand(addedControl, child));
+						else
+							cb.append(policy.getMoveChildrenCommand(Collections.singletonList(addedControl), child));
+					}
+				} else {
 					if (isFillerLabel(child))
 						child = ((FillerLabel) child).realObject;
 					int index = children.indexOf(child);
-					// If the column is going through a control that is spanning more than one column,
-					// we need to expand it by one instead of adding filler.
-					if (index != -1 && childrenDimensions[index].width > defaultHorizontalSpan)
-						cb.append(createHorizontalSpanCommand(child, childrenDimensions[index].width + 1));
-					else
+					if (index != -1) {
+						Rectangle rect = childrenDimensions[index];
+						// Just a control that doesn't span either way or
+						// a control that spans horizontal, not vertically, and starts atColumn.
+						if ((rect.width == defaultHorizontalSpan && rect.height == defaultVerticalSpan)
+								|| (rect.width > defaultHorizontalSpan && rect.height == defaultVerticalSpan && rect.x == atColumn))
+							cb.append(policy.getCreateCommand(createFillerLabelObject(), child));
+
+						// If the column is going through a control that is spanning more than one column,
+						// we need to expand it by one instead of adding filler. Only do this if
+						// this control starts in the row in case it spans vertically too.
+						else if (rect.width > defaultHorizontalSpan && rect.x != atColumn && rect.y == i)
+							cb.append(createHorizontalSpanCommand(child, rect.width + 1));
+
+						// If the control spans vertically, add a filler before this if it's the row it
+						// starts in otherwise we need to add a filler before the
+						// the control after this one... or at the end (nextChild=null)
+						else if (rect.height > defaultVerticalSpan) {
+							if (rect.y == i)
+								cb.append(policy.getCreateCommand(createFillerLabelObject(), child));
+							else {
+								EObject nextChild = null;
+								if (atColumn + 1 < numColumns)
+									nextChild = findNextValidObject(atColumn + 1, i);
+								else if (i + 1 < table[0].length)
+									nextChild = findNextValidObject(0, i + 1);
+								cb.append(policy.getCreateCommand(createFillerLabelObject(), nextChild));
+							}
+						}
+					} else
 						cb.append(policy.getCreateCommand(createFillerLabelObject(), child));
 				}
 			}
