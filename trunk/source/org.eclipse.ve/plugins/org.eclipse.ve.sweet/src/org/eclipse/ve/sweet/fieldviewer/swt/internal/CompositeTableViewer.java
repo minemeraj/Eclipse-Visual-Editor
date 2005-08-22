@@ -43,6 +43,8 @@ import org.eclipse.ve.sweet.table.IRowFocusListener;
  * @author djo
  */
 public class CompositeTableViewer implements IFieldViewer {
+	private static final String COLUMN_BINDING = "ColumnBinding";
+
 	private CompositeTable table = null;
 
     private IObjectViewer objectViewer;
@@ -227,20 +229,18 @@ public class CompositeTableViewer implements IFieldViewer {
 		Control[] columns;
 		if (rowControl instanceof Composite) {
 			Composite rowComposite = (Composite) rowControl;
-			columns = rowComposite.getTabList();
+			columns = rowComposite.getChildren();
 		} else {
 			columns = new Control[] {rowControl};
 		}
 		
-		String[] columnBindings = (String[]) table.getData("ColumnBindings");
-		
 		int numColumns = columns.length;
-		if (numColumns > columnBindings.length) {
-			numColumns = columnBindings.length;
-		}
-		
+
 		for (int i=0; i < numColumns; ++i) {
-			objectViewer.bind(columns[i], columnBindings[i]);
+			String binding = (String) columns[i].getData(COLUMN_BINDING);
+			if (binding != null) {
+				objectViewer.bind(columns[i], binding);
+			}
 		}
 	}
 
