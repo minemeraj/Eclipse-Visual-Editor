@@ -13,7 +13,7 @@
 	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="createHyperlink">
 		<receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{formToolkit}"/>
         <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
-        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTNullLiteral"/>        
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTStringLiteral" literalValue="Hyperlink"/>
         <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="NONE">
           <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
         </arguments>        
