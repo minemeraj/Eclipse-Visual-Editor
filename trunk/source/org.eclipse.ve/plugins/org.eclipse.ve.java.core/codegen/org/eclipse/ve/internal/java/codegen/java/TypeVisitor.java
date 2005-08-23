@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.18 $  $Date: 2005-08-19 15:38:12 $ 
+ *  $Revision: 1.19 $  $Date: 2005-08-23 20:09:31 $ 
  */
 
 import java.util.*;
@@ -150,7 +150,7 @@ protected void visitAMethod(MethodDeclaration method, IBeanDeclModel model,List 
 		Iterator itr = ((List)fInstanceDeclaredBeans.get(mName)).iterator() ;
 		while (itr.hasNext()){
 			BeanPart bp = (BeanPart)itr.next();
-			if(bp.getInitExpression()==null && bp.isInstanceInstantiation()){
+			if(bp.getInitExpression()==null && bp.isInstanceInstantiation() && bp.getInitMethod()!=null){
 				// no init expression and is in the field map
 				BeanPartDecleration bpDecl = bp.getDecleration();
 				if (bpDecl.getFieldDecl() instanceof FieldDeclaration) {
