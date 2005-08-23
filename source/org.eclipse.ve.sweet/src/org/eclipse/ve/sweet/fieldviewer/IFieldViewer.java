@@ -13,6 +13,7 @@ package org.eclipse.ve.sweet.fieldviewer;
 
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
+import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 
 
@@ -113,6 +114,7 @@ public interface IFieldViewer {
      * an error string otherwise.
      */
     public String validate();
+    
 }
 
 

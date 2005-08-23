@@ -11,20 +11,24 @@
  */
 package org.eclipse.ve.sweet.objectviewer.pojo;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.fieldviewer.FieldViewerFactory;
 import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
+import org.eclipse.ve.sweet.fieldviewer.SubObject;
 import org.eclipse.ve.sweet.hinthandler.DelegatingHintHandler;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
 import org.eclipse.ve.sweet.objectviewer.IEditedObject;
 import org.eclipse.ve.sweet.objectviewer.IInputChangeListener;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
+import org.eclipse.ve.sweet.objectviewer.IObjectViewerFactory;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 import org.eclipse.ve.sweet.objectviewer.NullProperty;
+import org.eclipse.ve.sweet.objectviewer.ObjectViewerFactory;
 import org.eclipse.ve.sweet.objectviewer.pojo.internal.JavaProperty;
 import org.eclipse.ve.sweet.reflect.RelaxedDuckType;
 
@@ -124,8 +128,52 @@ public class JavaObjectViewer implements IObjectViewer {
             dirty=true;
         }
         
-        // Remember to set the new IFieldViewer about any delegated IHintHandler
+        // Remember to tell the new IFieldViewer about any delegated IHintHandler
         result.setHintHandler(hintHandler.delegate);
+        
+        return result;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.objectviewer.IObjectViewer#bind(java.lang.String)
+     */
+    public IObjectViewer bind(String propertyName) {
+    	return bind(propertyName, ObjectViewerFactory.factory);
+    }
+    
+    private HashMap subObjects = new HashMap();
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.objectviewer.IObjectViewer#bind(java.lang.String, org.eclipse.ve.sweet.objectviewer.IObjectViewerFactory)
+     */
+    public IObjectViewer bind(String propertyName, IObjectViewerFactory factory) {
+    	IObjectViewer result = (IObjectViewer) subObjects.get(propertyName);
+    	if (result != null) {
+            if (result.validateAndSaveEditedFields() != null) {
+                dirty=true;
+            }
+    		return result;
+    	}
+    	
+    	IPropertyEditor propertyEditor;
+        try {
+            propertyEditor = getProperty(propertyName);
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
+        
+    	result = factory.construct();
+        subObjects.put(propertyName, result);
+        
+        IFieldViewer wrapper = new SubObject(result, propertyEditor);
+        bindings.addLast(wrapper);
+        
+        if (wrapper.validate() != null) {
+            dirty=true;
+        }
+        
+        // Remember to tell the new IFieldViewer about any delegated IHintHandler
+        wrapper.setHintHandler(hintHandler.delegate);
         
         return result;
     }

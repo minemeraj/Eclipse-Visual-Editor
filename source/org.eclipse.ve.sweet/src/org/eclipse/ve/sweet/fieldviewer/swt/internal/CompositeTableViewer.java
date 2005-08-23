@@ -11,6 +11,8 @@
  */
 package org.eclipse.ve.sweet.fieldviewer.swt.internal;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.ListIterator;
 
 import org.eclipse.swt.widgets.Composite;
@@ -216,6 +218,49 @@ public class CompositeTableViewer implements IFieldViewer {
 		error = currentRowObjectViewer.validateAndSaveObject();
 		return error;
 	}
+	
+	// Master/detail utility methods -----------------------------------------------------------
+
+    private LinkedList detailObjects = new LinkedList();
+    
+    /*
+     * Tries to save all detail objects.  Returns null if they could all be saved; an error message if any
+     * could not be saved.
+     */
+    private String canChangeDetailObjects() {
+    	for (Iterator detailObjectsIter = detailObjects.iterator(); detailObjectsIter.hasNext();) {
+			IObjectViewer objectViewer = (IObjectViewer) detailObjectsIter.next();
+			String error = objectViewer.validateAndSaveObject();
+			if (error != null) {
+				return error;
+			}
+		}
+    	return null;
+    }
+    
+    /*
+     * Call setInput() on all detail objects, passing the current input object.
+     */
+    private void changeDetailObjects(Object detailObject) {
+    	for (Iterator detailObjectsIter = detailObjects.iterator(); detailObjectsIter.hasNext();) {
+			IObjectViewer objectViewer = (IObjectViewer) detailObjectsIter.next();
+			objectViewer.setInput(detailObject);
+		}
+    }
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.sweet.fieldviewer.IFieldViewer#addDetailViewer(org.eclipse.ve.sweet.objectviewer.IObjectViewer)
+	 */
+	public void addDetailViewer(IObjectViewer detailViewer) {
+		detailObjects.add(detailViewer);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.sweet.fieldviewer.IFieldViewer#removeDetailViewer(org.eclipse.ve.sweet.objectviewer.IObjectViewer)
+	 */
+	public void removeDetailViewer(IObjectViewer detailViewer) {
+		detailObjects.remove(detailViewer);
+	}
 
 	// Event handler utility methods -----------------------------------------------------------
 
@@ -265,6 +310,11 @@ public class CompositeTableViewer implements IFieldViewer {
 	
 	private IRowFocusListener rowFocusListener = new IRowFocusListener() {
 		public boolean requestRowChange(CompositeTable sender, int currentObjectOffset, Control row) {
+			String error = canChangeDetailObjects();
+			if (error != null) {
+				hintHandler.setMessage(error);
+				return false;
+			}
 			IObjectViewer objectViewer = (IObjectViewer) row.getData(DATA_KEY);
 			if (objectViewer.validateAndSaveObject() == null)
 				return true;
@@ -280,6 +330,7 @@ public class CompositeTableViewer implements IFieldViewer {
 			}
 		}
 		public void arrive(CompositeTable sender, int currentObjectOffset, Control row) {
+			changeDetailObjects(objectAt(currentObjectOffset));
 		}
 	};
 
