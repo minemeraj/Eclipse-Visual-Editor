@@ -21,11 +21,15 @@ public class SubObject implements IFieldViewer {
     private DelegatingHintHandler hintHandler = new DelegatingHintHandler();
     
 	/**
-	 * @param object
-	 * @param propertyEditor
+	 * Constructor SubObject.  Construct a SubObject for the specified IObjectViewer, using
+	 * the specified IPropertyEditor to get the initial input.
+	 * 
+	 * @param object The child object delegate
+	 * @param propertyEditor The property from which to get the input
 	 */
 	public SubObject(IObjectViewer object, IPropertyEditor propertyEditor) {
 		this.childObjectEditor = object;
+		childObjectEditor.setInput(propertyEditor.get());
 		this.propertyEditor = propertyEditor;
 	}
 
