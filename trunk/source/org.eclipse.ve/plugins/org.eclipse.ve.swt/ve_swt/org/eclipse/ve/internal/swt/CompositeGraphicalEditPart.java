@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.26 $ $Date: 2005-06-22 14:10:26 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.27 $ $Date: 2005-08-23 21:18:39 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -93,7 +93,9 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 	}
 	
 	protected void setupControl(ControlGraphicalEditPart childEP, EObject child) {
-		childEP.setErrorNotifier(getCompositeProxyAdapter().getControlLayoutDataAdapter(child).getErrorNotifier());
+		CompositeProxyAdapter compositeProxyAdapter = getCompositeProxyAdapter();
+		if (compositeProxyAdapter.isBeanProxyInstantiated())
+			childEP.setErrorNotifier(compositeProxyAdapter.getControlLayoutDataAdapter(child).getErrorNotifier());
 	}
 
 	/**

@@ -11,12 +11,12 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.15 $  $Date: 2005-06-30 18:45:54 $ 
+ *  $Revision: 1.16 $  $Date: 2005-08-23 21:18:39 $ 
  */
 import java.util.*;
 
 import org.eclipse.emf.common.util.EMap;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
@@ -301,14 +301,22 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 		
 		boolean explicitUserSizing = false;
 		// Top level things like Shells don't have a parent
+		EReference sfLayout = null; 
 		if (compositeJavaObjectInstance == null) {
 			explicitUserSizing = true;
 		} else {
-			CompositeProxyAdapter compositeProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost(compositeJavaObjectInstance);
-			IBeanProxy layoutBeanProxy = BeanSWTUtilities.invoke_getLayout(compositeProxyAdapter.getBeanProxy());
-			// null layout and FillLayout don't have layout data
-			if (layoutBeanProxy == null) 
-				explicitUserSizing = true;
+			sfLayout = JavaInstantiation.getReference(compositeJavaObjectInstance, SWTConstants.SF_COMPOSITE_LAYOUT);
+			if (!compositeJavaObjectInstance.eIsSet(sfLayout)) {
+				CompositeProxyAdapter compositeProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities
+						.getBeanProxyHost(compositeJavaObjectInstance);
+				if (compositeProxyAdapter.isBeanProxyInstantiated()) {
+					IBeanProxy layoutBeanProxy = BeanSWTUtilities.invoke_getLayout(compositeProxyAdapter.getBeanProxy());
+					// null layout will require explicit sizing.
+					if (layoutBeanProxy == null)
+						explicitUserSizing = true;
+				}
+			} else if (compositeJavaObjectInstance.eGet(sfLayout) == null)
+				explicitUserSizing = true;	// Explicitly set, and set to null.
 		}
 		
 		List descriptorList = new ArrayList(descriptors.length);			
@@ -331,13 +339,21 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				if("layoutData".equals(fn)){ //$NON-NLS-1$
 					// We need the class of the layoutData to set.  This comes from looking at the policyFactory
 					// for our container's layoutManager
-					CompositeProxyAdapter compositeProxyAdapter = (CompositeProxyAdapter)BeanProxyUtilities.getBeanProxyHost(compositeJavaObjectInstance);					
+					CompositeProxyAdapter compositeProxyAdapter = (CompositeProxyAdapter)BeanProxyUtilities.getBeanProxyHost(compositeJavaObjectInstance);
 					EditDomain domain = compositeProxyAdapter.getBeanProxyDomain().getEditDomain();
-					ILayoutPolicyFactory factory = BeanSWTUtilities.getLayoutPolicyFactory(compositeProxyAdapter.getBeanProxy(), domain);
-					IPropertyDescriptor layoutPD = factory.getConstraintPropertyDescriptor(sf);
+					// If instantiated we can get the true layout, else we have to guess by using local setting.
+					IPropertyDescriptor layoutPD = null;
+					if (compositeProxyAdapter.isBeanProxyInstantiated()) {
+						ILayoutPolicyFactory factory = BeanSWTUtilities.getLayoutPolicyFactory(compositeProxyAdapter.getBeanProxy(), domain);
+						layoutPD = factory.getConstraintPropertyDescriptor(sf);
+					} else {
+						EObject layoutSetting = (EObject) compositeJavaObjectInstance.eGet(sfLayout);
+						ILayoutPolicyFactory factory = BeanSWTUtilities.getLayoutPolicyFactoryFromLayout(layoutSetting != null ? layoutSetting.eClass() : null, domain);
+						layoutPD = factory.getConstraintPropertyDescriptor(sf);
+					}
 					if (layoutPD != null) {
-					    if (layoutPD instanceof INeedData) 
-					        ((INeedData)layoutPD).setData(domain);
+						if (layoutPD instanceof INeedData) 
+							((INeedData)layoutPD).setData(domain);
 						descriptorList.add(layoutPD);
 					}
 				} else {
