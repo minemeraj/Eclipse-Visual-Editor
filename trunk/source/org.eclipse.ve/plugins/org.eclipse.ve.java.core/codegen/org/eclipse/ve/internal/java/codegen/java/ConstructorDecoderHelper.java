@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.50 $  $Date: 2005-08-23 20:52:46 $ 
+ *  $Revision: 1.51 $  $Date: 2005-08-23 21:14:16 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -21,7 +21,6 @@ import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaObjectInstance;
 import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -457,7 +456,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#generate(java.lang.Object[])
 	 */
 	public String generate(Object[] args) throws CodeGenException {
-		IJavaObjectInstance obj = (JavaObjectInstance)fbeanPart.getEObject();
+		IJavaObjectInstance obj = (IJavaObjectInstance)fbeanPart.getEObject();
 		StringBuffer sb = new StringBuffer();				
 			// ivjFoo = <allocation>;					
 		if (!fbeanPart.getDecleration().isInstanceVar() || fOwner.getExprRef().isStateSet(CodeExpressionRef.STATE_FIELD_EXP)) {

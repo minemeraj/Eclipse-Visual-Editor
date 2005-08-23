@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.21 $  $Date: 2005-07-11 13:31:44 $ 
+ *  $Revision: 1.22 $  $Date: 2005-08-23 21:13:04 $ 
  */
 
 import java.util.*;
@@ -266,7 +266,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		
 		CommandBuilder cb = new CommandBuilder();
 		if (constraintComponent != null) {
-			JavaObjectInstance constraintObject = (JavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
+			IJavaObjectInstance constraintObject = (IJavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
 			if (constraintObject != null && constraintObject.getJavaType().getJavaName().equals("java.awt.GridBagConstraints")) { //$NON-NLS-1$
 				// This is a GridBagConstraints object. Just change the gridx and gridy, then re-apply the constraint to the ConstraintComponent
 				RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(ep), null, false);

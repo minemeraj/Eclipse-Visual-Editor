@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: PropertyEventTreeEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-23 21:14:16 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -19,15 +19,16 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
-import org.eclipse.gef.requests.*;
+import org.eclipse.gef.requests.ForwardedRequest;
+import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-
-import org.eclipse.ve.internal.jcm.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.internal.instantiation.base.JavaObjectInstance;
+
+import org.eclipse.ve.internal.jcm.PropertyEvent;
 
 /**
  */
@@ -55,7 +56,7 @@ public class PropertyEventTreeEditPart extends AbstractTreeEditPart implements P
 		// The eventInvocation is either from an EventSetDescripriptor, e.g. Button>actionPerformed
 		// For NLS we must find the actual property itself, however this would involve iterating over every property to find the one that matches
 		// so we'll just use the name for now
-		JavaObjectInstance javaBean = (JavaObjectInstance) propertyChange.eContainer().eContainer();
+		IJavaObjectInstance javaBean = (IJavaObjectInstance) propertyChange.eContainer().eContainer();
 		
 		EStructuralFeature eStructuralFeature = ((JavaClass)javaBean.getJavaType()).getEStructuralFeature(propertyChange.getPropertyName());
 		if (eStructuralFeature == null) {

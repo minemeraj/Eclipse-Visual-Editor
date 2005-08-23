@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.48 $  $Date: 2005-08-17 18:38:21 $ 
+ *  $Revision: 1.49 $  $Date: 2005-08-23 21:14:16 $ 
  */
 
 
@@ -982,10 +982,10 @@ public static BeanPart getBeanPart (IBeanDeclModel model, String name, CodeMetho
  */
 public static Collection getReferences(Object o, boolean includeO) {
 	final Collection refs = new ArrayList();
-	if (o!=null && o instanceof JavaObjectInstance) {
+	if (o!=null && o instanceof IJavaObjectInstance) {
 		if (includeO)
 			refs.add(o);
-	  JavaAllocation alloc = ((JavaObjectInstance)o).getAllocation();
+	  JavaAllocation alloc = ((IJavaObjectInstance)o).getAllocation();
 	  if (alloc instanceof ParseTreeAllocation) {
 		ParseTreeAllocation ptAlloc = (ParseTreeAllocation) alloc;
 		ParseVisitor visitor = new ParseVisitor() {
