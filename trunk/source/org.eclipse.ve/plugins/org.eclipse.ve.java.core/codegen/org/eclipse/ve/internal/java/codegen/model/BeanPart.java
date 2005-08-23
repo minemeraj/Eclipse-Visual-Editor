@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.44 $  $Date: 2005-08-19 15:38:12 $ 
+ *  $Revision: 1.45 $  $Date: 2005-08-23 17:16:21 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -578,7 +578,13 @@ public  void dispose() {
 			Object[] added = exp.getAddedInstances();
 			if (added!=null)
 				for (int j = 0; j < added.length; j++) {
-					if (added[j]!=null && added[j].equals(getEObject())) {
+					if (added[j]!=null && added[j].equals(getEObject())) {	
+						if (exp.isStateSet(CodeExpressionRef.STATE_EXIST) &&
+							!exp.isStateSet(CodeExpressionRef.STATE_DELETE)&&
+							!exp.isStateSet(CodeExpressionRef.STATE_NO_SRC) &&
+							!exp.isStateSet(CodeExpressionRef.STATE_FIELD_EXP)) {							
+							exp.getExpDecoder().deleteFromSrc();
+						}
 						exp.dispose();
 						break;
 					}

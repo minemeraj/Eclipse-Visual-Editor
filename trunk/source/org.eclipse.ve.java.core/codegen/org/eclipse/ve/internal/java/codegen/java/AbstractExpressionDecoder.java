@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.21 $  $Date: 2005-08-19 15:38:12 $ 
+ *  $Revision: 1.22 $  $Date: 2005-08-23 17:16:21 $ 
  */
 import java.util.logging.Level;
 
@@ -250,8 +250,10 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	
 	
 	protected void markExprAsDeleted() {
+		boolean field = fExprRef.isStateSet(CodeExpressionRef.STATE_FIELD_EXP);
 		fExprRef.clearState();
 		fExprRef.setState(CodeExpressionRef.STATE_DELETE, true); 
+		fExprRef.setState(CodeExpressionRef.STATE_FIELD_EXP, field);
 	}
 	
 	/**
