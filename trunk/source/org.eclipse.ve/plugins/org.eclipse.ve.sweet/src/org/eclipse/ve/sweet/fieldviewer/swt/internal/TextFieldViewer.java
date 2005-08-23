@@ -12,6 +12,9 @@
 package org.eclipse.ve.sweet.fieldviewer.swt.internal;
 
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
@@ -191,8 +194,10 @@ public class TextFieldViewer implements IFieldViewer {
     public void setHintHandler(IHintHandler hintHandler) {
         this.hintHandler.delegate = hintHandler;
     }
-
-    private VerifyListener verifyListener = new VerifyListener() {
+    
+	// Listeners here -------------------------------------------------------------------------------
+	
+	private VerifyListener verifyListener = new VerifyListener() {
         public void verifyText(VerifyEvent e) {
             String currentText = control.getText();
             String newValue = currentText.substring(0, e.start) + e.text + currentText.substring(e.end);
@@ -228,4 +233,5 @@ public class TextFieldViewer implements IFieldViewer {
             }
         });
     }
+
 }

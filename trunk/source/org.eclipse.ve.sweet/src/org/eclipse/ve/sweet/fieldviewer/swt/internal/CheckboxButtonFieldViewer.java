@@ -72,5 +72,5 @@ public class CheckboxButtonFieldViewer implements IFieldViewer {
         // TODO Auto-generated method stub
         
     }
-
+    
 }

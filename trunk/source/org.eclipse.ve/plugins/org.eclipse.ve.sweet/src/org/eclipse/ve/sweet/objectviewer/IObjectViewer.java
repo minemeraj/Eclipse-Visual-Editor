@@ -73,6 +73,40 @@ public interface IObjectViewer {
      * @return An IFieldViewer configured to edit propertyName on this object
      */
     public IFieldViewer bind(Object control, String propertyName);
+    
+    /**
+     * Method bind.
+     * 
+     * Bind a property to a child IObjectViewer in a 1:1 master-detail relationship.
+     * The resulting IObjectViewer may then be used to bind multiple properties
+     * of the child object to multiple user interface fields.<p>
+     * 
+     * Calling #bind multiple times on the same property name will return the same
+     * IObjectViewer.<p>
+     * 
+     * This version uses the default IObjectViewerFactory to create the child
+     * IObjectViewer.
+     *
+     * @param propertyName The name of the property to bind.
+     * @return The bound IObjectViewer.
+     */
+    public IObjectViewer bind(String propertyName);
+    
+    /**
+     * Method bind.
+     * 
+     * Bind a property to a child IObjectViewer in a 1:1 master-detail relationship.
+     * The resulting IObjectViewer may then be used to bind multiple properties
+     * of the child object to multiple user interface fields.<p>
+     * 
+     * Calling #bind multiple times on the same property name will return the same
+     * IObjectViewer.<p>
+     * 
+     * @param propertyName The name of the property to bind.
+     * @param factory The IObjectViewerFactory to use for creating the bound IObjectViewer.
+     * @return The bound IObjectViewer.
+     */
+    public IObjectViewer bind(String propertyName, IObjectViewerFactory factory);
 
     /**
      * Method validateAndSaveEditedFields.
@@ -204,5 +238,6 @@ public interface IObjectViewer {
      * Remove this object from the persistent store (if possible/applicable)
      */
     public void delete();
+
 }
 

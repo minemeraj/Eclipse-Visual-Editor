@@ -72,5 +72,4 @@ public class CheckboxListFieldViewer implements IFieldViewer {
         // TODO Auto-generated method stub
         
     }
-
 }
