@@ -1,11 +1,18 @@
-package org.eclipse.ve.sweet.fieldviewer;
+package org.eclipse.ve.sweet.fieldviewer.internal;
 
 import org.eclipse.ve.sweet.CannotSaveException;
+import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 import org.eclipse.ve.sweet.hinthandler.DelegatingHintHandler;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 
+/**
+ * Class SubObject.  An IFieldViewer that wraps and encapsulates an IObjectViewer.  This
+ * class is used internally to IObjectViewer when creating 1:1 master-detail relationships.
+ * 
+ * @author djo
+ */
 public class SubObject implements IFieldViewer {
 
 	private IObjectViewer childObjectEditor;
