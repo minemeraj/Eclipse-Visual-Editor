@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.fieldviewer.FieldViewerFactory;
 import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
-import org.eclipse.ve.sweet.fieldviewer.SubObject;
+import org.eclipse.ve.sweet.fieldviewer.internal.SubObject;
 import org.eclipse.ve.sweet.hinthandler.DelegatingHintHandler;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
