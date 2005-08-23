@@ -12,12 +12,11 @@
  *  Created Aug 10, 2005 by Gili Mendel
  * 
  *  $RCSfile: HibernatePersonServicesHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-19 22:24:15 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-23 15:59:01 $ 
  */
 package org.eclipse.ve.sweet2.hibernate;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
@@ -34,6 +33,8 @@ public class HibernatePersonServicesHelper {
 	 private static String LOG4J_CFG = "org/eclipse/ve/sweet2/hibernate/log4j.properties";
 	 
 	 private static HibernatePersonServicesHelper helper = null;
+	 
+	 private boolean fakeData = System.getProperty("fake") != null;
 	 
 	 
 	
@@ -53,7 +54,7 @@ public class HibernatePersonServicesHelper {
 	 /**
 	  * @return Hibernate Session using the default configuration file hibernate.cfg.xml
 	  */
-	 public Session getSession() {
+	 public Session getSession() {		 
 		 if (session==null) {
 		        SessionFactory sessionFactory = new Configuration().configure(HIBERNATE_CFG).buildSessionFactory();
 		        session =sessionFactory.openSession();
@@ -76,6 +77,8 @@ public class HibernatePersonServicesHelper {
 	  * @param msg debug message to be use in begin/end/rollback calls
 	  */
 	 public void beginTransaction(String msg) {
+		 if (fakeData) return;
+		 
 		 _transactionMsg = msg;
 		 System.out.println("\nStarting Transaction: "+msg);
 		 if (transaction!=null)
@@ -84,6 +87,8 @@ public class HibernatePersonServicesHelper {
 	 }
 	 
 	 public void endTransaction() {
+		 if (fakeData) return;
+		 
 		 if (transaction!=null) {
 			 System.out.println("Transaction Ended: "+_transactionMsg);
 			 transaction.commit();
@@ -93,6 +98,8 @@ public class HibernatePersonServicesHelper {
 	 }
 	 
 	 protected void rollBackTransaction() {
+		 if (fakeData) return;
+		 
 		 System.out.println("Rolling Back: "+_transactionMsg);
 		 if (transaction!=null) 
 			 transaction.rollback();
@@ -105,7 +112,10 @@ public class HibernatePersonServicesHelper {
 	  * @return Person Set read from the DB
 	  */
 	 public List getAllPersons() {
-		 return getSession().createQuery("from Person").list();
+		 if (fakeData) 
+			 return createSampleEntries();
+		 else 
+			 return getSession().createQuery("from Person").list();
 	 }
 	 
 	 /**
@@ -139,6 +149,7 @@ public class HibernatePersonServicesHelper {
 	 }
 	 
 	 public void deleteAPerson(Person p) {
+		 if (fakeData) return;
 		 try {
 			 beginTransaction("Delete "+p);
 			 p.setSpouse(null);			 
@@ -157,6 +168,8 @@ public class HibernatePersonServicesHelper {
 	 }
 	 
 	 public void saveAPerson(Person p) {
+		 if (fakeData) return;
+		 
 		 try {
 			 beginTransaction("Save "+p);
 			 getSession().save(p);
@@ -174,6 +187,8 @@ public class HibernatePersonServicesHelper {
 	 }
 	 
 	 public void savePersonList(List persons) {
+		 if (fakeData) return;
+		 
 		 try {
 			 beginTransaction("Save List ");
 			 for (Iterator itr=persons.iterator(); itr.hasNext();) {				 				 
@@ -194,6 +209,7 @@ public class HibernatePersonServicesHelper {
 	 }
 	 
 	 public void addAPerson (Person p) {
+		 if (fakeData) return;
 		 try {
 			 beginTransaction("Add "+p);
 			 getSession().save(p);
@@ -213,11 +229,13 @@ public class HibernatePersonServicesHelper {
 	 /**
 	  * Create sample set of persons/relationships in the DB
 	  */
-	 public void createSampleEntries() {
+	 public List createSampleEntries() {
 		 
 		 // Delete old entries, if there
-		 deleteAllPersonEntries();
+		 if (!fakeData) 
+		     deleteAllPersonEntries();
 		 
+		 Person[] persons = new Person[0];
 		 beginTransaction("Create New Entries:");		 
 		 try {
 			 Person gili = new Person("Gili", "Mendel");
@@ -234,22 +252,26 @@ public class HibernatePersonServicesHelper {
 			 Person jill = new Person ("Jill", "Smith");
 			 Person tooth = new Person ("Tooth", "Fairy");
 			 Person chris = new Person ("Chris","Cringle");
+			 
+			 persons = new Person[] { gili, michelle, joe, sri, anu, peter, beth, rich, jon, dave, john, jill, tooth, chris }; 
 
 
-			 getSession().save(chris);			
-			 getSession().save(tooth);
-			 getSession().save(dave);
-			 getSession().save(gili);
-			 getSession().save(michelle);
-			 getSession().save(joe);
-			 getSession().save(sri);
-			 getSession().save(anu);
-			 getSession().save(peter);
-			 getSession().save(beth);
-			 getSession().save(rich);
-			 getSession().save(jon);
-			 getSession().save(john);
-			 getSession().save(jill);
+			 if (!fakeData) {
+				getSession().save(chris);
+				getSession().save(tooth);
+				getSession().save(dave);
+				getSession().save(gili);
+				getSession().save(michelle);
+				getSession().save(joe);
+				getSession().save(sri);
+				getSession().save(anu);
+				getSession().save(peter);
+				getSession().save(beth);
+				getSession().save(rich);
+				getSession().save(jon);
+				getSession().save(john);
+				getSession().save(jill);
+			}
 			 
 			 
 			 // many-to-one relationship
@@ -295,8 +317,10 @@ public class HibernatePersonServicesHelper {
 			 sri.setSpouse(anu);
 			 peter.setSpouse(beth);
 		
-			 // Save changes to DB
-			 getSession().flush();
+			 if (!fakeData) {
+				 // Save changes to DB
+				 getSession().flush();
+			 }
 		 }
 		 catch (Exception e) {
 			 rollBackTransaction();			 
@@ -304,6 +328,8 @@ public class HibernatePersonServicesHelper {
 		 finally {
 			 endTransaction();			 
 		 }
+		 
+		 return Arrays.asList(persons);
 		 
 		 
 	 }
