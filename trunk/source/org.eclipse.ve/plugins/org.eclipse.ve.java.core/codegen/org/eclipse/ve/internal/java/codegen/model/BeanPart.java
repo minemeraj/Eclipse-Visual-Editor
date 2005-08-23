@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.45 $  $Date: 2005-08-23 17:16:21 $ 
+ *  $Revision: 1.46 $  $Date: 2005-08-23 20:47:18 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -1089,10 +1089,12 @@ public   void removeFromJVEModel()  {
 		expItr = getRefExpressions().iterator();
 		while (expItr.hasNext()) {
 			CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+			boolean isFieldExp = exp.isStateSet(CodeExpressionRef.STATE_FIELD_EXP);
 			int currentState = exp.primGetState();
 			exp.getExpDecoder().dispose();
 			CodeExpressionRef.resetExpressionStates(exp, currentState);
 			exp.setState(CodeExpressionRef.STATE_NO_MODEL, true);
+			exp.setState(CodeExpressionRef.STATE_FIELD_EXP, isFieldExp);
 		}
 		if(isInJVEModel())
 			removeFromJVEModel();
