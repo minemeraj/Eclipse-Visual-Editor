@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.144 $  $Date: 2005-08-12 21:55:39 $ 
+ *  $Revision: 1.145 $  $Date: 2005-08-23 21:14:16 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -100,6 +100,7 @@ import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder;
 import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
+import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorReloadActionController.IReloadCallback;
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.core.*;
@@ -108,8 +109,6 @@ import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
 
 import org.eclipse.ve.internal.propertysheet.EToolsPropertySheetPage;
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
-
-import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorReloadActionController.IReloadCallback;
 
 /**
  * @author richkulp
@@ -1251,7 +1250,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		TimerTests.basicTest.clearTests();	// Clear any outstanding because we want to test only dispose time.
 		try {
 			TimerTests.basicTest.startStep("Dispose"); //$NON-NLS-1$
-			ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceListener, IResourceChangeEvent.PRE_DELETE);
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceListener);
 			JavaVisualEditorVMController.disposeEditor(((IFileEditorInput) getEditorInput()).getFile());
 			reloadActionController.dispose();
 			

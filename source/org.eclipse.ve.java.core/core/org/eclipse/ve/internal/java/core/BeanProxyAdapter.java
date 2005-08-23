@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.50 $  $Date: 2005-08-11 21:00:28 $ 
+ *  $Revision: 1.51 $  $Date: 2005-08-23 21:14:16 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -465,7 +465,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		}
 		
 		// Now apply all of the feature settings.
-		JavaObjectInstance eTarget = (JavaObjectInstance) getTarget();
+		IJavaObjectInstance eTarget = (IJavaObjectInstance) getTarget();
 
 		eTarget.visitSetFeatures(new FeatureValueProvider.Visitor() {
 
