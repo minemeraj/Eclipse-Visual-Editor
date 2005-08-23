@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.22 $  $Date: 2005-07-18 20:25:44 $ 
+ *  $Revision: 1.23 $  $Date: 2005-08-23 20:52:45 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -185,6 +185,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	public boolean decode() throws CodeGenException {		
 		boolean result = super.decode();
 		if (result) {
+			fParent = null;
 			if (isControlFeatureNeeded()) {
 				createControlFeature(true);								
 			}

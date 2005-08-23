@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.49 $  $Date: 2005-08-19 15:38:12 $ 
+ *  $Revision: 1.50 $  $Date: 2005-08-23 20:52:46 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -417,6 +417,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	public boolean decode() throws CodeGenException {
 		// Set the EMF object with a proper PT allocation
 		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+		getExpressionReferences().clear();
 		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),expOfMethod,fOwner.getExprRef().getOffset(), fbeanPart.getModel(), getExpressionReferences()));
 		IJavaObjectInstance obj = (IJavaObjectInstance)fbeanPart.getEObject();
 		

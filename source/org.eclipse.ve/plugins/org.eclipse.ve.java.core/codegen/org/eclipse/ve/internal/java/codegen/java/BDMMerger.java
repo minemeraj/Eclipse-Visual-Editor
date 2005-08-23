@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.58 $  $Date: 2005-08-08 20:40:06 $ 
+ *  $Revision: 1.59 $  $Date: 2005-08-23 20:52:46 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -571,6 +571,7 @@ public class BDMMerger {
 						// content - hence create a new parent expression
 						CodeExpressionRef newExp = new CodeExpressionRef(updateParentExpression.getExprStmt(), newExpMethod);
 						mainBeanPart.addParentExpression(newExp);
+						needToRedecodeExpressions.add(mainBeanPart.getInitExpression());
 					}else{
 						// main BDM expression was found with the same content
 						// hence just update the offsets
