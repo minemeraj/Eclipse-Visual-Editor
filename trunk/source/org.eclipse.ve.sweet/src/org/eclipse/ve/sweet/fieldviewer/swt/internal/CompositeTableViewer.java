@@ -18,8 +18,8 @@ import java.util.ListIterator;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ve.sweet.CannotSaveException;
+import org.eclipse.ve.sweet.controllers.IMaster;
 import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
-import org.eclipse.ve.sweet.fieldviewer.IMaster;
 import org.eclipse.ve.sweet.fieldviewer.swt.internal.ducktypes.IListIterable;
 import org.eclipse.ve.sweet.hinthandler.DelegatingHintHandler;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
@@ -250,20 +250,14 @@ public class CompositeTableViewer implements IFieldViewer, IMaster {
     }
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.sweet.fieldviewer.IFieldViewer#addDetailViewer(org.eclipse.ve.sweet.objectviewer.IObjectViewer)
-	 */
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.sweet.fieldviewer.swt.internal.IMaster#addDetailViewer(org.eclipse.ve.sweet.objectviewer.IObjectViewer)
+	 * @see org.eclipse.ve.sweet.controllers.IMaster#addDetailViewer(org.eclipse.ve.sweet.objectviewer.IObjectViewer)
 	 */
 	public void addDetailViewer(IObjectViewer detailViewer) {
 		detailObjects.add(detailViewer);
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ve.sweet.fieldviewer.IFieldViewer#removeDetailViewer(org.eclipse.ve.sweet.objectviewer.IObjectViewer)
-	 */
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.sweet.fieldviewer.swt.internal.IMaster#removeDetailViewer(org.eclipse.ve.sweet.objectviewer.IObjectViewer)
+	 * @see org.eclipse.ve.sweet.controllers.IMaster#removeDetailViewer(org.eclipse.ve.sweet.objectviewer.IObjectViewer)
 	 */
 	public void removeDetailViewer(IObjectViewer detailViewer) {
 		detailObjects.remove(detailViewer);

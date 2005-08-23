@@ -1,4 +1,4 @@
-package org.eclipse.ve.sweet.fieldviewer;
+package org.eclipse.ve.sweet.controllers;
 
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 
