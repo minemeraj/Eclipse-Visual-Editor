@@ -3,7 +3,7 @@ package org.eclipse.ve.sweet.fieldviewer;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 
 /**
- * Interface IMaster.  An interface for IFieldViewers that can also behave as master objects
+ * Interface IMaster.  An interface for objects that can behave as master objects
  * in a master-detail relationship.
  *  
  * @author djo
