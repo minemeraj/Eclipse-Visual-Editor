@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.57 $  $Date: 2005-08-19 15:38:12 $ 
+ *  $Revision: 1.58 $  $Date: 2005-08-23 17:16:21 $ 
  */
 
 
@@ -434,9 +434,11 @@ public  void refreshFromComposition() throws CodeGenException {
 	    (isStateSet(STATE_DELETE))){
 		   // Clear the expression's content
 		   boolean isSrc = isStateSet(STATE_NO_SRC);
+		   boolean isField = isStateSet(STATE_FIELD_EXP);
 		   clearState();
 		   setState(STATE_DELETE, true) ;
 		   setState(STATE_NO_SRC,isSrc);
+		   setState(STATE_FIELD_EXP,isField);
 		   setContent((ExpressionParser) null) ;
 		   return ;
 	    }
@@ -1065,7 +1067,9 @@ public String toString(){
    	if (isStateSet(STATE_NO_MODEL))
    		states = states.concat("STATE_NO_MODEL#"); //$NON-NLS-1$    
    	if (isStateSet(STATE_SHARED_LINE))
-   		states = states.concat("STATE_SHARED_LINE#"); //$NON-NLS-1$    
+   		states = states.concat("STATE_SHARED_LINE#"); //$NON-NLS-1$
+   	if (isStateSet(STATE_FIELD_EXP))
+   		states = states.concat("STATE_FIELD_EXP#"); //$NON-NLS-1$  
 	states = states.concat("}"+" Offset: "+getOffset()+" upTo:"+(getOffset()+getLen())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	if (isStateSet(STATE_NO_SRC) && fMasteredExpression != null)
 		return fMasteredExpression.getContent() + states;
