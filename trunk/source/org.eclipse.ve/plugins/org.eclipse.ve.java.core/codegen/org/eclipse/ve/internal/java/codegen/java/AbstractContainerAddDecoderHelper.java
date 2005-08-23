@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractContainerAddDecoderHelper.java,v $
- *  $Revision: 1.23 $  $Date: 2005-08-17 18:38:21 $ 
+ *  $Revision: 1.24 $  $Date: 2005-08-23 20:52:46 $ 
  */
 
 import java.util.*;
@@ -212,6 +212,31 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 
 	}
 
+		/* It is possible that this control is changing parent.
+		 * we need to find an old parent, and hijack his child.
+		 */
+		protected void clearOtherReferencesIfNeeded() {
+			EStructuralFeature sf = fFmapper.getFeature(null);
+			EObject added=null;
+			if (fAddedInstance!=null)
+				added=fAddedInstance;
+			else if (fAddedPart!=null)
+				      added = fAddedPart.getEObject();
+			else
+				return;
+			
+			EObject refs[] = InverseMaintenanceAdapter.getReferencedBy(added,(EReference)sf);
+			for (int i = 0; i < refs.length; i++) {
+				List l = (List)refs[i].eGet(sf);
+				l.remove(added);
+				if (fAddedPart!=null) {
+				 BeanPart bp = fbeanPart.getModel().getABean(refs[i]);
+				 if (bp!=null)
+					 fAddedPart.removeBackRef(bp, false);
+				}
+			}			
+	}
+
 	protected abstract BeanPart parseAddedPart(MethodInvocation exp) throws CodeGenException;
 	protected abstract int		getAddedPartArgIndex(int totalArgs);
 	
@@ -270,6 +295,8 @@ public abstract class AbstractContainerAddDecoderHelper extends AbstractIndexedC
 			}
 		
 		EObject referencedInstance = null;
+		
+		clearOtherReferencesIfNeeded();
 
 		if (fAddedPart != null){
 			fAddedPart.addToJVEModel();

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.24 $  $Date: 2005-07-18 22:11:26 $ 
+ *  $Revision: 1.25 $  $Date: 2005-08-23 20:52:45 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -371,8 +371,11 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 	 * @since 1.0.0
 	 */
 	public void removeChildFromModel() {
-		if (fAddedPart != null)
-			 fAddedPart.dispose();	 
+		if (fAddedPart != null) {
+			List ctrls = getRootComponentList();
+			if (ctrls!=null && ctrls.contains(fAddedPart.getEObject())) // It is possible that the child was hijacked by another parent by the time we get here.			
+			    fAddedPart.dispose();
+		}
 		else if (fAddedInstance != null) {
 			if (fAddedInstance.eContainer() != null) {
 				if (fAddedInstance.eContainingFeature().isMany())
@@ -502,4 +505,15 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 	protected int getAddedPartArgIndex(int argsSize) {		
 		return 0;
 	}
+
+	public boolean primIsDeleted() {
+		EObject rootObj = getRootObject(false);
+		if (rootObj == null) {
+			if (fAddedPart != null && fbeanPart!=null){
+				fbeanPart.removeChild(fAddedPart);
+			}
+		}
+		return super.primIsDeleted();
+	}
+
 }
