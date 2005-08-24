@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: EventInvocationAndListenerEventsObjectActionDelegate.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-11 19:07:07 $ 
+ *  $Revision: 1.9 $  $Date: 2005-08-24 23:30:45 $ 
  */
 
 import java.util.Iterator;

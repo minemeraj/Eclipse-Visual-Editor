@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2005 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Common Public License v1.0
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
@@ -12,7 +12,7 @@
  *  Created May 27, 2005 by Gili Mendel
  * 
  *  $RCSfile: EditorSettings.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-27 21:58:27 $ 
+ *  $Revision: 1.2 $  $Date: 2005-08-24 23:30:47 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 

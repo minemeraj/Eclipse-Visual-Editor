@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultVisitorFactoryRule.java,v $
- *  $Revision: 1.2 $  $Date: 2005-04-05 22:48:23 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-24 23:30:48 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 

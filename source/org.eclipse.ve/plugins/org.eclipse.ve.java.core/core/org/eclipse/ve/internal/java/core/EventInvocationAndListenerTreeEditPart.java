@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-07-20 20:51:26 $
+ * $RCSfile: EventInvocationAndListenerTreeEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-08-24 23:30:46 $
  */
 
 package org.eclipse.ve.internal.java.core;

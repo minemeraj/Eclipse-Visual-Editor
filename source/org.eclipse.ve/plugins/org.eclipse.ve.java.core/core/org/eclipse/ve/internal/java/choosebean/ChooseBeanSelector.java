@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.choosebean;
 
 /*
- * $RCSfile: ChooseBeanSelector.java,v $ $Revision: 1.11 $ $Date: 2005-06-21 22:32:23 $
+ * $RCSfile: ChooseBeanSelector.java,v $ $Revision: 1.12 $ $Date: 2005-08-24 23:30:47 $
  */
 
 import java.util.logging.Level;

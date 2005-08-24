@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: InstanceVariableRule.java,v $
- *  $Revision: 1.19 $  $Date: 2005-07-22 14:34:50 $ 
+ *  $Revision: 1.20 $  $Date: 2005-08-24 23:30:48 $ 
  */
 
 import org.eclipse.jdt.core.dom.*;
