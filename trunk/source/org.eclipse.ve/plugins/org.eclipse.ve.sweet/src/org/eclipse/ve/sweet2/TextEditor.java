@@ -63,7 +63,7 @@ public class TextEditor extends ContentViewer implements Editor {
 
 	public void refresh() {
 		if(valueProvider == null) return;
-		if(!text.isDisposed()){
+		if(!text.isDisposed() && !isSettingValue){
 			isSettingValue = true;
 			String newValue = "";
 			if(getLabelProvider() != null){
@@ -99,10 +99,12 @@ public class TextEditor extends ContentViewer implements Editor {
 			updateListener = new Listener(){
 				public void handleEvent(Event event) {
 					if(!isSettingValue){
+						isSettingValue = true;
 						// Push the changes down to the model domain
 						if (fContentConsumer != null){
 							fContentConsumer.setValue(text.getText());
 						}
+						isSettingValue = false;						
 					}
 				}				
 			};
