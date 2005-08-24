@@ -25,6 +25,7 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 	private Listener updateListener;
 	private int updateListenerType;
 	private int commitPolicy;	
+	private boolean isSettingValue;
 	
 	public SpinnerEditor(Spinner aSpinner){
 		fSpinner = aSpinner;
@@ -49,7 +50,9 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 
 	public void refresh() {
 		if(!fSpinner.isDisposed()){
+			isSettingValue = true;
 			fSpinner.setSelection(((Integer)valueProvider.getValue()).intValue());
+			isSettingValue = false;			
 		}
 	}
 
@@ -75,9 +78,11 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 		} else {
 			updateListener = new Listener(){
 				public void handleEvent(Event event) {
-					// Push the changes down to the model domain
-					Object modelValue = new Integer(fSpinner.getSelection()); 
-					valueProvider.setValue(modelValue);
+					if(!isSettingValue){
+						// Push the changes down to the model domain
+						Object modelValue = new Integer(fSpinner.getSelection()); 
+						valueProvider.setValue(modelValue);
+					}
 				}				
 			};
 		}

@@ -22,6 +22,8 @@ public class TestSweet_NestedProperties {
 
 	public static void main(String[] args) {
 		
+		TextEditor.DEFAULT_COMMIT_POLICY = Editor.COMMIT_FOCUS;
+		
 		Display display = new Display();
 		Shell shell = new Shell(display);
 		shell.setLayout(new GridLayout(2,true));
@@ -53,7 +55,6 @@ public class TestSweet_NestedProperties {
 		Label nameLabel = new Label(personGroup,SWT.NONE);
 		nameLabel.setText("Manager's First Name: ");		
 		TextEditor firstNameTextViewer = new TextEditor(personGroup,SWT.BORDER); 
-		firstNameTextViewer.setUpdatePolicy(Editor.COMMIT_MODIFY);
 		firstNameTextViewer.setContentProvider(personBinder.getPropertyProvider("manager.firstName"));
 		firstNameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 
