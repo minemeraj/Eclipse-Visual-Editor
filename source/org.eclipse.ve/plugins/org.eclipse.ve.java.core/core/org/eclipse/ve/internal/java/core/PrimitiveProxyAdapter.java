@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: PrimitiveProxyAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-10 15:47:15 $ 
+ *  $Revision: 1.13 $  $Date: 2005-08-24 20:29:12 $ 
  */
 
 import java.util.*;
@@ -73,8 +73,7 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IInternalBeanP
 		releaseBeanProxy();	// Being in an expression is not of much use to primitives for releasing.
 	}
 
-	public void reinstantiateChild(IBeanProxyHost aChildHost) {
-	}
+
 	/*
 	 * @see IBeanProxyHost#getBeanPropertyValue(EStructuralFeature)
 	 */

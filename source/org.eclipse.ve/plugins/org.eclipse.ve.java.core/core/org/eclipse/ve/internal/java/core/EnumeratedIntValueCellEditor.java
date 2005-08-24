@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EnumeratedIntValueCellEditor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-23 23:19:39 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-24 20:29:12 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -79,7 +79,7 @@ protected int doGetIndex(Object anObject){
 		// The proxy is an int.  which represents one of the values.
 		// Loop the array of fill values and return the index for the one found.
 		fillValue = fillValueProxy.intValue();
-	} else {
+	} else if (anObject instanceof Number ){
 		fillValue = ((Number)anObject).intValue();
 	}
 	for (int i = 0; i < fill_values.length; i++) {
