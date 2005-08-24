@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.cde.commands;
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractAttributeCommand.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:17:58 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-24 20:28:29 $ 
  */
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ abstract public class AbstractAttributeCommand extends AbstractCommand {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return super.toString() + (feature != null ? ':' + feature.getName() : "") + ':' + target; //$NON-NLS-1$
+		return getClass().getName()+ " (" + (feature != null ? feature.getName() : "?") + ") : " + target + (getLabel() != null ? " - " + getLabel() : ""); //$NON-NLS-1$
 	}
 
 }
