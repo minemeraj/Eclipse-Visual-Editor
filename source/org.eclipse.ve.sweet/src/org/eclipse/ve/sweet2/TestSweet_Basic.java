@@ -29,6 +29,8 @@ public class TestSweet_Basic {
 		Shell shell = new Shell(display);
 		shell.setLayout(new GridLayout(2,false));
 		
+		TextEditor.DEFAULT_COMMIT_POLICY = Editor.COMMIT_MODIFY;
+		
 		Text t = new Text(shell,SWT.READ_ONLY | SWT.WRAP);
 		GridData data = new GridData(GridData.GRAB_HORIZONTAL);
 		data.horizontalSpan = 2;
@@ -43,22 +45,22 @@ public class TestSweet_Basic {
 		Label nameLabel = new Label(shell,SWT.NONE);
 		nameLabel.setText("Name: ");
 		
-		final TextEditor nameTextViewer = new TextEditor(shell,SWT.BORDER);
-		nameTextViewer.setContentProvider(new PropertyContentProvider("firstName"));
-		nameTextViewer.setContentConsumer(personBinder.getContentConsumer("firstName"));
-		nameTextViewer.setInput(personBinder);
-		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
+		final TextEditor nameTextEditor = new TextEditor(shell,SWT.BORDER);
+		nameTextEditor.setContentProvider(new PropertyContentProvider("firstName"));
+		nameTextEditor.setContentConsumer(personBinder.getContentConsumer("firstName"));
+		nameTextEditor.setInput(personBinder);
+		nameTextEditor.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
 		// NAME
 		Label nameLabel_2 = new Label(shell,SWT.NONE);
 		nameLabel_2.setText("Name: ");		
 		
-		final TextEditor nameTextViewer_2 = new TextEditor(shell,SWT.BORDER);
-		nameTextViewer_2.setContentProvider(new PropertyContentProvider("firstName"));
-		nameTextViewer.setContentConsumer(personBinder.getContentConsumer("firstName"));
-		nameTextViewer_2.setInput(personBinder);		
+		final TextEditor nameTextEditor_2 = new TextEditor(shell,SWT.BORDER);
+		nameTextEditor_2.setContentProvider(new PropertyContentProvider("firstName"));
+		nameTextEditor_2.setContentConsumer(personBinder.getContentConsumer("firstName"));
+		nameTextEditor_2.setInput(personBinder);		
 		
-		nameTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
+		nameTextEditor_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
 		shell.setSize(500,400);
 		shell.open();
