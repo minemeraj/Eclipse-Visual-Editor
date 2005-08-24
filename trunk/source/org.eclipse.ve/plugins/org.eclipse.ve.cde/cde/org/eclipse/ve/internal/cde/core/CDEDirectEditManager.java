@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEDirectEditManager.java,v $
- *  $Revision: 1.5 $  $Date: 2005-06-23 18:36:04 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:49 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
