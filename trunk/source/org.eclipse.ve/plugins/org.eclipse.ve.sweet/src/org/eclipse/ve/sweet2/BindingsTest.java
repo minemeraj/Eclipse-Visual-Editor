@@ -12,7 +12,7 @@
  *  Created Aug 17, 2005 by Gili Mendel
  * 
  *  $RCSfile: BindingsTest.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-19 22:24:15 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-24 17:32:12 $ 
  */
 package org.eclipse.ve.sweet2;
 
@@ -579,32 +579,42 @@ public class BindingsTest {
 		// Person
 		TextEditor personFN = new TextEditor(personFNText);
 		personFN.setUpdatePolicy(Editor.COMMIT_MODIFY);		
-		personFN.setContentProvider(selectedPersonBinder.getPropertyProvider("firstName"));
+		personFN.setContentProvider(new PropertyContentProvider("firstName"));
+		personFN.setContentConsumer(selectedPersonBinder.getContentConsumer("firstName"));
+		personFN.setInput(selectedPersonBinder);
 		
 		TextEditor personLN = new TextEditor(personLNText);
 		personLN.setUpdatePolicy(Editor.COMMIT_MODIFY);
-		personLN.setContentProvider(selectedPersonBinder.getPropertyProvider("lastName"));
-		
+		personLN.setContentProvider(new PropertyContentProvider("lastName"));
+		personLN.setContentConsumer(selectedPersonBinder.getContentConsumer("lastName"));
+		personLN.setInput(selectedPersonBinder);
 		
 		// Manager
 	
 		TextEditor managerFN = new TextEditor(managerFNText);
 		managerFN.setUpdatePolicy(Editor.COMMIT_FOCUS);
-		managerFN.setContentProvider(selectedPersonBinder.getPropertyProvider("manager.firstName"));
+		managerFN.setContentProvider(new PropertyContentProvider("manager.firstName"));
+		managerFN.setContentConsumer(selectedPersonBinder.getContentConsumer("manager.firstName"));
+		managerFN.setInput(selectedPersonBinder);
 				
 		TextEditor managerLN = new TextEditor(managerLNText);
 		managerLN.setUpdatePolicy(Editor.COMMIT_FOCUS);
-		managerLN.setContentProvider(selectedPersonBinder.getPropertyProvider("manager.lastName"));
-
+		managerLN.setContentProvider(new PropertyContentProvider("manager.lastName"));
+		managerLN.setContentConsumer(selectedPersonBinder.getContentConsumer("manager.lastName"));
+		managerLN.setInput(selectedPersonBinder);
 		
 		// Spouse
 		TextEditor spouseFN = new TextEditor(spouseFNText);
 		spouseFN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
-		spouseFN.setContentProvider(selectedPersonBinder.getPropertyProvider("spouse.firstName"));		
+		spouseFN.setContentProvider(new PropertyContentProvider("spouse.firstName"));
+		spouseFN.setContentConsumer(selectedPersonBinder.getContentConsumer("spouse.firstName"));
+		spouseFN.setInput(selectedPersonBinder);
 		
 		TextEditor spouseLN = new TextEditor(spouseLNText);
 		spouseLN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
-		spouseLN.setContentProvider(selectedPersonBinder.getPropertyProvider("spouse.lastName"));
+		spouseLN.setContentProvider(new PropertyContentProvider("spouse.lastName"));
+		spouseLN.setContentConsumer(selectedPersonBinder.getContentConsumer("spouse.lastName"));
+		spouseLN.setInput(selectedPersonBinder);
 		
 	}
 	

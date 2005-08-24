@@ -8,6 +8,7 @@ public interface IContentConsumer {
 	public void setValue(Object aValue);
 	public void addPropertyChangeListener(PropertyChangeListener listener);
 	public void removePropertyChangeListener(PropertyChangeListener listener);	
+	public void setObjectBinder(IObjectBinder anObjectBinder);
 	public Class getType();
 
 }

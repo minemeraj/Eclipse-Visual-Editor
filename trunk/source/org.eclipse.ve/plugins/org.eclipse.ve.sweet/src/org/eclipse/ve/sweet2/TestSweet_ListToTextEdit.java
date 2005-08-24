@@ -54,7 +54,7 @@ public class TestSweet_ListToTextEdit {
 		
 		TextEditor nameTextViewer = new TextEditor(c,SWT.BORDER);
 		nameTextViewer.setContentProvider(new PropertyContentProvider("firstName"));
-		nameTextViewer.setContentConsumer(personBinder.getContentConsumer("firstName"));
+		nameTextViewer.setContentConsumer(new PropertyContentConsumer("firstName"));
 		nameTextViewer.setInput(personBinder);
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
@@ -63,7 +63,7 @@ public class TestSweet_ListToTextEdit {
 		
 		TextEditor ageTextViewer = new TextEditor(c,SWT.BORDER);
 		ageTextViewer.setContentProvider(new PropertyContentProvider("age"));
-		ageTextViewer.setContentConsumer(personBinder.getContentConsumer("age"));
+		ageTextViewer.setContentConsumer(new PropertyContentConsumer("age"));
 		ageTextViewer.setInput(personBinder);
 		
 		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

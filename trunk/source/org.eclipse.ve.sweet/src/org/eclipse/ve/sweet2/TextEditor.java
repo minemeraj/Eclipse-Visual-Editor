@@ -88,6 +88,9 @@ public class TextEditor extends ContentViewer implements Editor {
 					text.setEnabled(binder.getValue() != null);
 				}
 			});
+			if(fContentConsumer != null){
+				fContentConsumer.setObjectBinder(binder);
+			}
 		} else {
 			text.setEnabled(true);
 		}

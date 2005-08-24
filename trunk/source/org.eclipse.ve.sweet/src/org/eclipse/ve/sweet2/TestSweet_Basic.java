@@ -50,7 +50,7 @@ public class TestSweet_Basic {
 		
 		TextEditor nameTextEditor = new TextEditor(shell,SWT.BORDER);
 		nameTextEditor.setContentProvider(new PropertyContentProvider("firstName"));
-		nameTextEditor.setContentConsumer(personBinder.getContentConsumer("firstName"));
+		nameTextEditor.setContentConsumer(new PropertyContentConsumer("firstName"));
 		nameTextEditor.setInput(personBinder);
 		nameTextEditor.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
@@ -60,7 +60,7 @@ public class TestSweet_Basic {
 		
 		SpinnerEditor ageSpinnerEditor = new SpinnerEditor(shell,SWT.BORDER);
 		ageSpinnerEditor.setContentProvider(new PropertyContentProvider("age"));
-		ageSpinnerEditor.setContentConsumer(personBinder.getContentConsumer("age"));
+		ageSpinnerEditor.setContentConsumer(new PropertyContentConsumer("age"));
 		ageSpinnerEditor.setInput(personBinder);
 				
 		
@@ -70,7 +70,7 @@ public class TestSweet_Basic {
 		
 		final TextEditor nameTextEditor_2 = new TextEditor(shell,SWT.BORDER);
 		nameTextEditor_2.setContentProvider(new PropertyContentProvider("firstName"));
-		nameTextEditor_2.setContentConsumer(personBinder.getContentConsumer("firstName"));
+		nameTextEditor_2.setContentConsumer(new PropertyContentConsumer("firstName"));
 		nameTextEditor_2.setInput(personBinder);		
 		
 		nameTextEditor_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
