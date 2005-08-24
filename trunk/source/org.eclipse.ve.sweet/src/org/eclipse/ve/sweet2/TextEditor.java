@@ -100,6 +100,9 @@ public class TextEditor extends ContentViewer implements Editor {
 				public void handleEvent(Event event) {
 					if(!isSettingValue){
 						// Push the changes down to the model domain
+						if (fContentConsumer != null){
+							fContentConsumer.setValue(text.getText());
+						}
 					}
 				}				
 			};

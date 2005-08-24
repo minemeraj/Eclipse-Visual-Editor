@@ -67,11 +67,11 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 				
 			}
 			public void objectChanged(Object object, String propertyName) {
-				if(object == source && !isSignallingChange){
+				if(object == source){
 					Iterator iter = listeners.iterator();		
 					while(iter.hasNext()){
 						PropertyChangeListener listener = (PropertyChangeListener)iter.next();
-						listener.propertyChange(new PropertyChangeEvent(this,null,null,source));
+						listener.propertyChange(new PropertyChangeEvent(this,propertyName,null,source));
 					}		
 				}
 			}
@@ -94,7 +94,11 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		}
 	}
 
-	public IValueProvider getPropertyProvider(String string) {
+	public IContentConsumer getContentConsumer(String string) {
+		
+		PropertyContentConsumer result = new PropertyContentConsumer(this,string);
+		return result;
+/**		
 		// See whether the property is nested or not
 		if(string.indexOf('.') >=0){
 			StringTokenizer tk = new StringTokenizer(string,".");
@@ -103,13 +107,14 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 			for (int i = 0; tk.hasMoreTokens(); i++) {
 				properties[i] = tk.nextToken();				
 			}
-			NestedPropertyProvider result = new NestedPropertyProvider(this,properties);
+//			NestedPropertyProvider result = new NestedPropertyProvider(this,properties);
 			return result;
 		} else {
-			SimplePropertyProvider result = new SimplePropertyProvider(this,string);
+//			SimplePropertyProvider result = new SimplePropertyProvider(this,string);
 			binders.add(result);
 			return result;
 		}
+**/		
 	}
 	
 	private void fireValueChanged (Object oldVal, Object newVal) {

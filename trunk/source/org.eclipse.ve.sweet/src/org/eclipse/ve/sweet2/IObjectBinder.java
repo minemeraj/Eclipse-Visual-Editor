@@ -5,6 +5,6 @@ import java.beans.PropertyChangeListener;
 public interface IObjectBinder extends IContentConsumer {
 
 	void refresh(String propertyName);
-//	IValueProvider getPropertyProvider(String string);
+	IContentConsumer getContentConsumer(String string);
 
 }

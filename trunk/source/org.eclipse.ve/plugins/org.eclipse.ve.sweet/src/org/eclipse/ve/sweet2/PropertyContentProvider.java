@@ -1,5 +1,7 @@
 package org.eclipse.ve.sweet2;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 
 import org.eclipse.jface.viewers.IContentProvider;
@@ -25,8 +27,16 @@ public class PropertyContentProvider implements IElementContentProvider {
 		// Listen to the input and refresh the viewer whenever the registered property changes
 		if(newInput == null) return;
 		if(newInput instanceof IObjectBinder){
+			IObjectBinder binder = (IObjectBinder)newInput;
 			viewerInput = ((IObjectBinder)newInput).getValue();
-			viewer.refresh();
+			// If the object changes we must refresh the viewer
+			binder.addPropertyChangeListener(new PropertyChangeListener(){
+				public void propertyChange(PropertyChangeEvent event) {
+					if(fPropertyName.equals(event.getPropertyName())){
+						viewer.refresh();
+					}
+				}
+			});
 		}
 		if(changeListener != null && oldInput != null){
 			ObjectBinder.removeListener(oldInput.getClass(),changeListener);
