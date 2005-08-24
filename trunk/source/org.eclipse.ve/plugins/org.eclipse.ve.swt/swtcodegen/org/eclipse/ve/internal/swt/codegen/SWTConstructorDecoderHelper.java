@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.23 $  $Date: 2005-08-23 20:52:45 $ 
+ *  $Revision: 1.24 $  $Date: 2005-08-24 22:42:26 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -118,6 +118,10 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		EStructuralFeature sf = getIndexSF();
 		CodeExpressionRef exp = fOwner.getExprRef();
 		
+		// The master expression sits on the parent and can get disposed if 
+		// the parent is disposed. Check to see if it is disposed and dont use if it is.
+		if(masterExpression!=null && masterExpression.isStateSet(CodeExpressionRef.STATE_DELETE))
+			masterExpression = null;
 		
 		if (updateEMFModel) {
 			EObject parent = getParent().getEObject();
@@ -313,8 +317,10 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		return masterExpression;
 	}
 	public void removeFromModel() {
-		if (getMasterExpression()!=null)
+		if (getMasterExpression()!=null) {			
 			masterExpression.dispose();
+			masterExpression=null;
+		}
 		super.removeFromModel();		
 	}
 }
