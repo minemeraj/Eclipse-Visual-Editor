@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.ve.internal.swt;
 import java.util.Collections;
 import org.eclipse.gef.EditPart;
@@ -5,16 +15,8 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-/***************************************************************************************************
- * Copyright (c) 2004 IBM Corporation and others. All rights reserved. This program and the
- * accompanying materials are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: IBM Corporation - initial API and implementation
- **************************************************************************************************/
 /*
- * $RCSfile: DefaultLayoutEditPolicy.java,v $ $Revision: 1.2 $ $Date: 2005-02-15 23:51:47 $
+ * $RCSfile: DefaultLayoutEditPolicy.java,v $ $Revision: 1.3 $ $Date: 2005-08-24 23:52:55 $
  */
 /**
  * Default layout edit policy for SWT layouts. Allows insertion between components and standard
