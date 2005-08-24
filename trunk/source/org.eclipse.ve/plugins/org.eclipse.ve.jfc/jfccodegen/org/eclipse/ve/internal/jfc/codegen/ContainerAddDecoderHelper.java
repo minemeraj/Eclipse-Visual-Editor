@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.27 $  $Date: 2005-08-17 18:38:45 $ 
+ *  $Revision: 1.28 $  $Date: 2005-08-24 16:28:30 $ 
  */
 
 import java.util.*;
@@ -200,14 +200,11 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 			// can add them as we generate the current method
 			Iterator itr = compList.iterator();
 			while (itr.hasNext()) {
-				try {
-					EObject CC = (EObject) itr.next();
-					IJavaObjectInstance child = CodeGenUtil.getCCcomponent(CC);
-					if (child.equals(fAddedInstance)) {
-						targetCC = CC;
-						break;
-					}
-				} catch (Exception e) {
+				EObject CC = (EObject) itr.next();
+				IJavaObjectInstance child = CodeGenUtil.getCCcomponent(CC);
+				if (child != null && child.equals(fAddedInstance)) {
+					targetCC = CC;
+					break;
 				}
 			}
 		}
