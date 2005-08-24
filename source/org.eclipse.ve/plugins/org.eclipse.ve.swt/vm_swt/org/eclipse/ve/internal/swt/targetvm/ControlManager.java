@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.22 $ $Date: 2005-08-12 15:59:40 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.23 $ $Date: 2005-08-24 22:19:39 $
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -813,7 +813,8 @@ public class ControlManager {
 		if (fControl != null) {
 			feedbackController.deregisterComponentManager(fControl);
 			locOverridden = false; // Since changing controls we should reset to not overridden.
-			fControl.setData(LAYOUT_DATA_KEY, null);	// remove it
+			if (!fControl.isDisposed())
+				fControl.setData(LAYOUT_DATA_KEY, null);	// remove it
 		}
 		Control oldControl = fControl;
 		fControl = aControl;
