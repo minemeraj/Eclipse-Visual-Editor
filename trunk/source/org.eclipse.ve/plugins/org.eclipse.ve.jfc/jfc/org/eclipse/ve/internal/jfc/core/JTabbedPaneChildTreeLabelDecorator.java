@@ -1,8 +1,6 @@
-package org.eclipse.ve.internal.jfc.core;
-
 /*******************************************************************************
- * Copyright (c) 2001, 2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -10,9 +8,11 @@ package org.eclipse.ve.internal.jfc.core;
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+package org.eclipse.ve.internal.jfc.core;
+
 /*
  *  $RCSfile: JTabbedPaneChildTreeLabelDecorator.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-22 14:53:04 $ 
+ *  $Revision: 1.8 $  $Date: 2005-08-24 23:38:10 $ 
  */
 
 import java.text.MessageFormat;
