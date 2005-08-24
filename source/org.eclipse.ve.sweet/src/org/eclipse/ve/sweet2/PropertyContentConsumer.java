@@ -20,7 +20,7 @@ public class PropertyContentConsumer implements IContentConsumer {
 		fPropertyName = propertyName;		
 		fBinder.addPropertyChangeListener(new PropertyChangeListener(){
 			public void propertyChange(PropertyChangeEvent event) {
-				if(fPropertyName.equals(event.getPropertyName())){
+				if(fPropertyName.equals(event.getPropertyName()) || event.getPropertyName() == null){
 					propertyChangeSupport.firePropertyChange(event);
 				}
 			}

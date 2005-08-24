@@ -5,9 +5,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-
-import org.eclipse.ve.sweet.test.Person;
-
 /**
  * This example shows a list of people and when one is selected it is editable within text fields showing the selected person
  */
@@ -28,9 +25,9 @@ public class TestSweet_ListToTextEdit {
 		listViewer.setContentProvider(new IStructuredContentProvider(){
 			public Object[] getElements(Object inputElement) {
 				return new Person[]{
-					new Person("John Doe",35),
-					new Person("Jill Smith",25),
-					new Person("Chris Cringle",75)
+					new Person("Doe","John",37),
+					new Person("Smoth","Jill",25),
+					new Person("Cringle","Chris",75)
 				};
 			}
 			public void dispose() {				
@@ -41,7 +38,7 @@ public class TestSweet_ListToTextEdit {
 		listViewer.setLabelProvider(new LabelProvider(){
 			public String getText(Object element) {
 				Person p = (Person)element;
-				return p.getName() + "  -  " + p.getAge();
+				return p.getFirstName() + " " + p.getLastName() + " -  " + p.getAge();
 			}
 		});
 		listViewer.setInput("Dummy");
@@ -56,13 +53,19 @@ public class TestSweet_ListToTextEdit {
 		final IObjectBinder personBinder = ObjectBinder.createObjectBinder(Person.class);
 		
 		TextEditor nameTextViewer = new TextEditor(c,SWT.BORDER);
-		nameTextViewer.setContentProvider(personBinder.getPropertyProvider("name"));
+		nameTextViewer.setContentProvider(new PropertyContentProvider("firstName"));
+		nameTextViewer.setContentConsumer(personBinder.getContentConsumer("firstName"));
+		nameTextViewer.setInput(personBinder);
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Label ageLabel = new Label(c,SWT.NONE);
 		ageLabel.setText("Age: ");
+		
 		TextEditor ageTextViewer = new TextEditor(c,SWT.BORDER);
-		ageTextViewer.setContentProvider(personBinder.getPropertyProvider("age"));
+		ageTextViewer.setContentProvider(new PropertyContentProvider("age"));
+		ageTextViewer.setContentConsumer(personBinder.getContentConsumer("age"));
+		ageTextViewer.setInput(personBinder);
+		
 		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		listViewer.addSelectionChangedListener(new ISelectionChangedListener(){
