@@ -89,7 +89,23 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 	}
 	
 	protected void inputChanged(Object input, Object oldInput) {
-		fSpinner.setEnabled(input != null);		
+		if(input == null){
+			fSpinner.setEnabled(false);
+		} else if (input instanceof IObjectBinder){
+			final IObjectBinder binder = (IObjectBinder) input;
+			fSpinner.setEnabled(binder.getValue() != null);
+			// Listen for when the value in the binder changes
+			binder.addPropertyChangeListener(new PropertyChangeListener(){
+				public void propertyChange(PropertyChangeEvent event) {
+					fSpinner.setEnabled(binder.getValue() != null);
+				}
+			});
+			if(fContentConsumer != null){
+				fContentConsumer.setObjectBinder(binder);
+			}
+		} else {
+			fSpinner.setEnabled(true);
+		}		
 		refresh();
 	}
 	

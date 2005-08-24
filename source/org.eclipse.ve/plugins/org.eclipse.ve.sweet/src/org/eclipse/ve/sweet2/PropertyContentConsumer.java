@@ -7,24 +7,22 @@ import java.lang.reflect.Method;
 
 public class PropertyContentConsumer implements IContentConsumer {
 
-	private ObjectBinder fBinder;
+	private IObjectBinder fBinder;
 	private String fPropertyName;
 	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	private Method fGetMethod;
 	private Method fSetMethod;
 	private Class fPropertyType;
 	private boolean isSettingValue;
+	private PropertyChangeListener propertyChangeListener;
+	
+	public PropertyContentConsumer(String propertyName){
+		fPropertyName = propertyName;
+	}
 
 	public PropertyContentConsumer(ObjectBinder binder, String propertyName) {
-		fBinder = binder;
-		fPropertyName = propertyName;		
-		fBinder.addPropertyChangeListener(new PropertyChangeListener(){
-			public void propertyChange(PropertyChangeEvent event) {
-				if(fPropertyName.equals(event.getPropertyName()) || event.getPropertyName() == null){
-					propertyChangeSupport.firePropertyChange(event);
-				}
-			}
-		});
+		fPropertyName = propertyName;
+		setObjectBinder(binder);
 	}
 
 	public Object getValue() {
@@ -92,7 +90,22 @@ public class PropertyContentConsumer implements IContentConsumer {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
 
+	public void setObjectBinder(IObjectBinder anObjectBinder) {
+		if(fBinder != null){
+			fBinder.removePropertyChangeListener(propertyChangeListener);
+		}
+		if(propertyChangeListener == null){
+			propertyChangeListener = new PropertyChangeListener(){
+				public void propertyChange(PropertyChangeEvent event) {
+					if(fPropertyName.equals(event.getPropertyName()) || event.getPropertyName() == null){
+						propertyChangeSupport.firePropertyChange(event);
+					}
+				}
+			};		
+		};
+		
+		fBinder = anObjectBinder;		
+		fBinder.addPropertyChangeListener(propertyChangeListener);		
+	}
 }
