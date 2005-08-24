@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@
 
 /*
 *  $RCSfile: AbstractClassGenerator.java,v $
-*  $Revision: 1.7 $
+*  $Revision: 1.8 $
 */
 
 package org.eclipse.ve.internal.java.codegen.util;
