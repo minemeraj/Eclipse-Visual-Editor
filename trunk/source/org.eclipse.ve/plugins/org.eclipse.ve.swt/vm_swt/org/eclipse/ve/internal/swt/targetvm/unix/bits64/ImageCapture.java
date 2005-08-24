@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.1 $  $Date: 2005-08-17 18:50:45 $ 
+ *  $Revision: 1.2 $  $Date: 2005-08-24 03:34:57 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix.bits64;
 
@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
  
@@ -360,7 +361,15 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 				writeIntFieldValue(Widget.class, control, FIELD_STATE_NAME, stateValue);
 			}
 		}
-		if (control instanceof Composite) {
+		if (control instanceof CCombo) {
+			// CCombo has a text field whose OBSCURED field needs to be changed
+			CCombo ccombo = (CCombo) control;
+			Object val = readObjectFieldValue(CCombo.class, ccombo, "text");
+			if (val instanceof Text) {
+				Text text = (Text) val;
+				changeObscured(text, map, on);
+			}
+		} else if (control instanceof Composite) {
 			Composite composite = (Composite) control;
 			Control[] children = composite.getChildren();
 			for (int cc = 0; children!=null && cc < children.length; cc++) {
@@ -368,5 +377,26 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 			}
 		}
 	}
+	
+	/**
+	 * @param object
+	 * @param fieldName
+	 * @return
+	 * 
+	 * @since 1.1.0.1
+	 */
+	private Object readObjectFieldValue(Class klass, Object object, String fieldName) {
+		try {
+			Field field = klass.getDeclaredField(fieldName);
+			field.setAccessible(true);
+			return field.get(object);
+		} catch (SecurityException e) {
+		} catch (NoSuchFieldException e) {
+		} catch (IllegalArgumentException e) {
+		} catch (IllegalAccessException e) {
+		}
+		return null;
+	}
+
 
 }
