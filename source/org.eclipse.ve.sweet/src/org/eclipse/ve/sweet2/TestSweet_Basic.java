@@ -45,7 +45,7 @@ public class TestSweet_Basic {
 		
 		final TextEditor nameTextViewer = new TextEditor(shell,SWT.BORDER);
 		nameTextViewer.setContentProvider(new PropertyContentProvider("firstName"));
-//		nameTextViewer.setContentConsumer(personBinder.getContentConsumer("firstName"));
+		nameTextViewer.setContentConsumer(personBinder.getContentConsumer("firstName"));
 		nameTextViewer.setInput(personBinder);
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
@@ -55,7 +55,7 @@ public class TestSweet_Basic {
 		
 		final TextEditor nameTextViewer_2 = new TextEditor(shell,SWT.BORDER);
 		nameTextViewer_2.setContentProvider(new PropertyContentProvider("firstName"));
-//		nameTextViewer.setContentConsumer(personBinder.getContentConsumer("firstName"));
+		nameTextViewer.setContentConsumer(personBinder.getContentConsumer("firstName"));
 		nameTextViewer_2.setInput(personBinder);		
 		
 		nameTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		

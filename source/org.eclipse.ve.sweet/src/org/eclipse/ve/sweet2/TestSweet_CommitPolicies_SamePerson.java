@@ -72,33 +72,38 @@ public class TestSweet_CommitPolicies_SamePerson {
 		
 		final TextEditor nameTextViewer = new TextEditor(parent,SWT.BORDER);
 		nameTextViewer.setUpdatePolicy(updatePolicy);
-		final IValueProvider nameBinder = personBinder.getPropertyProvider("firstName");		
-		nameTextViewer.setContentProvider(nameBinder);
+		
+		nameTextViewer.setContentProvider(new PropertyContentProvider("firstName"));
+		nameTextViewer.setInput(personBinder);
+		final IContentConsumer nameConsumer = personBinder.getContentConsumer("firstName");	
+		nameTextViewer.setContentConsumer(nameConsumer);
+		
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		final TextEditor nameTextViewer_2 = new TextEditor(parent,SWT.READ_ONLY);		
-		nameTextViewer_2.setContentProvider(personBinder.getPropertyProvider("firstName"));
+		nameTextViewer_2.setContentProvider(new PropertyContentProvider("firstName"));
+		nameTextViewer_2.setInput(personBinder);
+		
 		nameTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		// AGE
-		Label ageLabel = new Label(parent,SWT.NONE);
-		ageLabel.setText("age: ");	
+//		Label ageLabel = new Label(parent,SWT.NONE);
+//		ageLabel.setText("age: ");	
 		
-		final SpinnerEditor ageSpinnerViewer = new SpinnerEditor(parent,SWT.BORDER);
-		final IValueProvider ageBinder = personBinder.getPropertyProvider("age");
-		ageSpinnerViewer.setContentProvider(ageBinder);
-		ageSpinnerViewer.setUpdatePolicy(updatePolicy);		
+//		final SpinnerEditor ageSpinnerViewer = new SpinnerEditor(parent,SWT.BORDER);
+//		ageSpinnerViewer.setContentProvider(ageBinder);
+//		ageSpinnerViewer.setUpdatePolicy(updatePolicy);		
 		
-		final TextEditor ageTextViewer_2 = new TextEditor(parent,SWT.READ_ONLY);
-		ageTextViewer_2.setContentProvider(personBinder.getPropertyProvider("age"));
-		ageTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//		final TextEditor ageTextViewer_2 = new TextEditor(parent,SWT.READ_ONLY);
+//		ageTextViewer_2.setContentProvider(personBinder.getPropertyProvider("age"));
+//		ageTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		// Place another age viewer that is a text viewer to show it works with ints
-		Label spacer = new Label(parent,SWT.NONE);
-		final TextEditor ageTextViewer = new TextEditor(parent,SWT.BORDER);
-		ageTextViewer.setContentProvider(personBinder.getPropertyProvider("age"));
-		ageTextViewer.setUpdatePolicy(updatePolicy);		
-		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//		Label spacer = new Label(parent,SWT.NONE);
+//		final TextEditor ageTextViewer = new TextEditor(parent,SWT.BORDER);
+//		ageTextViewer.setContentProvider(personBinder.getPropertyProvider("age"));
+//		ageTextViewer.setUpdatePolicy(updatePolicy);		
+//		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 				
 		// If using explicit commit then create a button for this
@@ -114,10 +119,10 @@ public class TestSweet_CommitPolicies_SamePerson {
 				public void widgetSelected(SelectionEvent e) {
 					// Update the name
 					Object newName = nameTextViewer.getText().getText();
-					nameBinder.setValue(newName);
+					nameConsumer.setValue(newName);
 					// Update the age
-					Object newAge = new Integer(ageSpinnerViewer.getSpinner().getSelection());
-					ageBinder.setValue(newAge);					
+//					Object newAge = new Integer(ageSpinnerViewer.getSpinner().getSelection());
+//					ageBinder.setValue(newAge);					
 				}				
 			});
 		}								
