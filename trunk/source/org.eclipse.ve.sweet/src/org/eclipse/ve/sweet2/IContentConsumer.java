@@ -2,7 +2,7 @@ package org.eclipse.ve.sweet2;
 
 import java.beans.PropertyChangeListener;
 
-public interface IValue {
+public interface IContentConsumer {
 	
 	public Object getValue();
 	public void setValue(Object aValue);

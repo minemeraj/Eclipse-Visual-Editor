@@ -3,6 +3,7 @@ package org.eclipse.ve.sweet2;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -10,6 +11,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -19,12 +21,16 @@ import org.eclipse.swt.widgets.Text;
 public class TextEditor extends ContentViewer implements Editor {
 	
 	private Text text;
-	private IValueProvider valueProvider;
+	private IElementContentProvider valueProvider;
+	private IContentConsumer fContentConsumer;
 	public static int DEFAULT_COMMIT_POLICY = COMMIT_FOCUS;
 	private Listener updateListener;
 	private int updateListenerType;
 	private int commitPolicy = DEFAULT_COMMIT_POLICY;
 	private IDomainProvider domainProvider;
+	private boolean isSettingValue = false;
+	private String lastSetValue;
+	private IObjectBinder fBinder;
 	
 	public TextEditor(Text aText){
 		text = aText;
@@ -56,26 +62,33 @@ public class TextEditor extends ContentViewer implements Editor {
 	}
 
 	public void refresh() {
+		if(valueProvider == null) return;
 		if(!text.isDisposed()){
-			text.setText(((LabelProvider)getLabelProvider()).getText(valueProvider.getValue()));			    
-			text.setEnabled(valueProvider.canSetValue());
+			isSettingValue = true;
+			String newValue = "";
+			if(getLabelProvider() != null){
+				newValue = ((LabelProvider)getLabelProvider()).getText(valueProvider.getElement(getInput()));
+			} else {
+				newValue = (String) valueProvider.getElement(getInput());
+			}
+			text.setText(newValue);	
+			isSettingValue = false;			
 		}
 	}
 
+	protected void inputChanged(Object input, Object oldInput) {
+		text.setEnabled(input != null);
+		refresh();
+	}
+	
 	public void setSelection(ISelection selection, boolean reveal) {
 
 	}
 	
 	public void setContentProvider(IContentProvider contentProvider) {
+		Assert.isTrue(contentProvider instanceof IElementContentProvider);
+		valueProvider = (IElementContentProvider) contentProvider;
 		super.setContentProvider(contentProvider);
-		valueProvider = (IValueProvider)contentProvider;
-		getText().setEnabled(valueProvider.canSetValue());
-		valueProvider.addPropertyChangeListener(new PropertyChangeListener(){
-			public void propertyChange(PropertyChangeEvent evt) {
-				refresh();
-			}
-		});
-		setInput(valueProvider.getValue());
 	}
 	
 	public void setUpdatePolicy(int aCommitPolicy){
@@ -85,11 +98,9 @@ public class TextEditor extends ContentViewer implements Editor {
 		} else {
 			updateListener = new Listener(){
 				public void handleEvent(Event event) {
-					// Push the changes down to the model domain
-					Object modelValue = getDomainProvider() == null ? 
-							text.getText() : 
-							getDomainProvider().getValue(text.getText());
-					valueProvider.setValue(modelValue);
+					if(!isSettingValue){
+						// Push the changes down to the model domain
+					}
 				}				
 			};
 		}
@@ -115,11 +126,11 @@ public class TextEditor extends ContentViewer implements Editor {
 		domainProvider = aDomainProvider;
 	}
 
-	public IDomainProvider getDomainProvider() {
-		if(domainProvider == null && valueProvider.getValue() != null){
-			// To to use a default domain provider based on the object type
-			domainProvider = DomainProviderFactory.getDefaultDomainProvider(valueProvider.getValue().getClass());
-		}
-		return domainProvider;
+	public void setContentConsumer(IContentConsumer contentConsumer) {
+		fContentConsumer = contentConsumer;
+	}
+
+	public IContentConsumer getContentConsumer() {
+		return fContentConsumer;
 	}
 }

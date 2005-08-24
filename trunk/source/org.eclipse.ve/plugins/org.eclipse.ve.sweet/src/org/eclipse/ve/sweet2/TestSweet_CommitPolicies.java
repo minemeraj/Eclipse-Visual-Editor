@@ -69,8 +69,9 @@ public class TestSweet_CommitPolicies {
 		
 		final TextEditor nameTextViewer = new TextEditor(parent,SWT.BORDER);
 		nameTextViewer.setUpdatePolicy(updatePolicy);
-		final IValueProvider nameBinder = personBinder.getPropertyProvider("firstName");		
-		nameTextViewer.setContentProvider(nameBinder);
+		nameTextViewer.setInput(personBinder);
+		nameTextViewer.setContentProvider(personBinder.getContentProvider("firstName"));
+		nameTextViewer.setContentConsumer(personBinder.getContentConsumer("firstName"));
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		final TextEditor nameTextViewer_2 = new TextEditor(parent,SWT.READ_ONLY);		

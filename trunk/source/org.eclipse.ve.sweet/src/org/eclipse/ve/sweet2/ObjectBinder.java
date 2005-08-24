@@ -170,4 +170,11 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 	public String toString() {
 		return "Class:"+receiverClass.getName()+"\n"+source.toString();
 	}
+
+	public static void removeListener(Class aType, ChangeListener changeListener) {
+		List listeners = (List)typeListeners.get(aType);
+		if(listeners instanceof List){
+			((List)listeners).remove(changeListener);			
+		}		
+	}
 }
