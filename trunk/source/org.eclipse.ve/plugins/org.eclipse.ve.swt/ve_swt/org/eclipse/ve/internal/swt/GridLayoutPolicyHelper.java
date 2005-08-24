@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.27 $  $Date: 2005-08-22 16:49:50 $
+ *  $Revision: 1.28 $  $Date: 2005-08-24 13:24:31 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -930,8 +930,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		CommandBuilder cb = new CommandBuilder();
 		EObject[][] table = getLayoutTable();
 		// If there is only one row (or none), no need to add empty labels.
-		if (table[0].length <= 1)
-			return null;
+//		if (table[0].length <= 1)
+//			return null;
 		List children = (List) getContainer().eGet(sfCompositeControls);
 		if (children.isEmpty())
 			return null;
@@ -950,6 +950,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			}
 			if (table[atColumn][i] != EMPTY) {
 				EObject child = table[atColumn][i];
+				if (isFillerLabel(child))
+					child = ((FillerLabel)child).realObject;
 				if (i == atRow) {
 					// This is the row where the new control is put
 					int index = children.indexOf(child);
@@ -1008,6 +1010,77 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				}
 			}
 		}
+		// Handle when adding control to the last column on the last row which is basically
+		// adding to the end of the container
+		if (isLastColumn && atRow >= table[0].length) {
+			if (request instanceof CreateRequest)
+				cb.append(policy.getCreateCommand(addedControl, null));
+			else
+				cb.append(policy.getMoveChildrenCommand(Collections.singletonList(addedControl), null));
+		}
+		return cb.getCommand();
+	}
+	public Command createFillerLabelsForDeletedControlCommands (EObject deletedChild) {
+		CommandBuilder cb = new CommandBuilder();
+		EObject[][] table = getLayoutTable();
+		// If there is only one row (or none), no need to add empty labels.
+		if (table[0].length <= 1)
+			return null;
+		List children = (List) getContainer().eGet(sfCompositeControls);
+		if (children.isEmpty())
+			return null;
+		int index = children.indexOf(deletedChild);
+		if (index != -1) {
+			Rectangle rect = childrenDimensions[index];
+			EObject nextChild = null;
+			// Iterate through the rows and columns where the child resides and replace with
+			// filler labels where it spans horizontally and vertically.
+			for (int i = rect.y; i < rect.y + rect.height && i < table[0].length; i++) {
+				if (rect.x + 1 < numColumns)
+					nextChild = findNextValidObject(rect.x + 1, i);
+				else if (i + 1 < table[0].length)
+					nextChild = findNextValidObject(0, i + 1);
+				// If the deleted child spans horizontally, loop through and create appropriate
+				// number of filler labels.
+				for (int j = 0; j < rect.width; j++) {
+					cb.append(policy.getCreateCommand(createFillerLabelObject(), nextChild));
+				}
+			}
+		}
+
+		return cb.getCommand();
+	}
+
+	public Command createFillerLabelsForMovedControlCommands (EObject movedChild, EObject beforeChild) {
+		CommandBuilder cb = new CommandBuilder();
+		EObject[][] table = getLayoutTable();
+		// If there is only one row (or none), no need to add empty labels.
+		if (table[0].length <= 1)
+			return null;
+		List children = (List) getContainer().eGet(sfCompositeControls);
+		if (children.isEmpty())
+			return null;
+		int index = children.indexOf(movedChild);
+		if (index != -1) {
+			Rectangle rect = childrenDimensions[index];
+			EObject nextChild = null;
+			// Iterate through the rows and columns where the child resides and replace with
+			// filler labels where it spans horizontally and vertically.
+			for (int i = rect.y; i < rect.y + rect.height && i < table[0].length; i++) {
+				if (rect.x + 1 < numColumns)
+					nextChild = findNextValidObject(rect.x + 1, i);
+				else if (i + 1 < table[0].length)
+					nextChild = findNextValidObject(0, i + 1);
+				// If the deleted child spans horizontally, loop through and create appropriate
+				// number of filler labels.
+				if (nextChild == beforeChild)
+					nextChild = movedChild;
+				for (int j = 0; j < rect.width; j++) {
+					cb.append(policy.getCreateCommand(createFillerLabelObject(), nextChild));
+				}
+			}
+		}
+
 		return cb.getCommand();
 	}
 
@@ -1033,9 +1106,16 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return cb.getCommand();
 	}
+	/*
+	 * Create the command to set the horizontalSpan value to the default value.
+	 */
+	public Command createHorizontalSpanDefaultCommand(EObject control) {
+		return createHorizontalSpanCommand(control, defaultHorizontalSpan);
+	}
+
 
 	/*
-	 * Create the command to set the horizontalSpan value of the GridData for a child control.
+	 * Create the command to set the verticalSpan value of the GridData for a child control.
 	 */
 	private Command createVerticalSpanCommand(EObject control, int gridHeight) {
 		CommandBuilder cb = new CommandBuilder();
@@ -1055,6 +1135,13 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			}
 		}
 		return cb.getCommand();
+	}
+
+	/*
+	 * Create the command to set the verticalSpan value to the default value.
+	 */
+	public Command createVerticalSpanDefaultCommand(EObject control) {
+		return createVerticalSpanCommand(control, defaultVerticalSpan);
 	}
 
 	public void refresh() {
@@ -1215,12 +1302,15 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		for (int i = row; i < table[0].length && foundObject == null; i++) {
 			for (int j = col; j < table.length; j++) {
 				if (table[j][i] != EMPTY) {
-					int index = children.indexOf(table[j][i]);
+					EObject child = table[j][i];
+					if (isFillerLabel(child))
+						child = ((FillerLabel)child).realObject;
+					int index = children.indexOf(child);
 					// If the row is going through a control that is spanning vertically more than one
 					// row, skip it. This is checked by comparing this control's starting y (row) value
 					// with where we are in the table lookup
 					if (index != -1 && childrenDimensions[index].y == i) {
-						foundObject = table[j][i];
+						foundObject = child;
 						break;
 					}
 				}
@@ -1228,9 +1318,6 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			if (firstpass)
 				col = 0;
 		}
-		// return the real filler label instance that is modelled instead of the wrapper object
-		if (foundObject != null && foundObject instanceof FillerLabel)
-			foundObject = ((FillerLabel)foundObject).realObject;
 		return foundObject;
 	}
 	/*
@@ -1325,6 +1412,16 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 
 	public void setEditDomain(EditDomain editDomain) {
 		fEditDomain = editDomain;
+	}
+
+	
+	public int getDefaultHorizontalSpan() {
+		return defaultHorizontalSpan;
+	}
+
+	
+	public int getDefaultVerticalSpan() {
+		return defaultVerticalSpan;
 	}
 	
 }
