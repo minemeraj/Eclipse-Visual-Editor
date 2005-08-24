@@ -11,13 +11,15 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.12 $  $Date: 2005-05-12 22:17:02 $ 
+ *  $Revision: 1.13 $  $Date: 2005-08-24 20:29:12 $ 
  */
 
 import java.util.*;
 
 import org.eclipse.emf.ecore.*;
 
+import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cdm.Annotation;
@@ -184,12 +186,27 @@ public class VCEPreSetCommand extends CommandWrapper {
 		return initMethod;
 	}
 
+	/*
+	 * Handle seeing if this is an implicit. If it is then on promotion
+	 * we need to remove the allocation because it will now be the default allocation.
+	 * TODO This will change when we trully handle implicits. Right now on promotion it is no longer implicit. It is a new guy.
+	 */
+	private void handlePromoteImplicit(CommandBuilder cbld, EObject member) {
+		if (member instanceof IJavaInstance) {
+			IJavaInstance javaInstance = (IJavaInstance) member;
+			JavaAllocation alloc = javaInstance.getAllocation();
+			if (alloc != null && alloc instanceof ImplicitAllocation) {
+				cbld.cancelAttributeSetting(javaInstance, JavaInstantiation.getAllocationFeature(javaInstance));
+			}
+		}
+	}
 	
 	/*
 	 * Promote to global, assumption is that not already contained by a non-<properties> relationship AND not already
 	 * have initializes and return set for it.
 	 */
 	protected JCMMethod promoteGlobal(CommandBuilder cbld, CommandBuilder memberBldr, EObject member) {
+		handlePromoteImplicit(cbld, member);
 		JCMMethod m = createInitMethod(cbld, member);
 		memberBldr.applyAttributeSetting(getComposition(), JCMPackage.eINSTANCE.getMemberContainer_Members(), member);		
 		return m;
@@ -200,6 +217,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 	 * have initializes and return set for it.
 	 */	
 	protected JCMMethod promoteLocal(CommandBuilder cbld, CommandBuilder memberBldr, EObject member, JCMMethod method) {
+		handlePromoteImplicit(cbld, member);
 		cbld.applyAttributeSetting(method, JCMPackage.eINSTANCE.getJCMMethod_Initializes(), member);
 		memberBldr.applyAttributeSetting(method, JCMPackage.eINSTANCE.getMemberContainer_Members(), member);
 		return method;
@@ -210,6 +228,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 	 * have initializes and return set for it.
 	 */	
 	protected JCMMethod promoteGlobalLocal(CommandBuilder cbld, CommandBuilder memberBldr, EObject member, JCMMethod method) {
+		handlePromoteImplicit(cbld, member);
 		// The initializes method is from the argument
 		cbld.applyAttributeSetting(method, JCMPackage.eINSTANCE.getJCMMethod_Initializes(), member);
 		// The member is added to the composition

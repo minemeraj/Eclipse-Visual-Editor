@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.51 $  $Date: 2005-08-23 21:14:16 $ 
+ *  $Revision: 1.52 $  $Date: 2005-08-24 20:29:12 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -325,7 +325,8 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 					// Now walk through all references and tell of instantiation.
 					InverseMaintenanceAdapter ai = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(getTarget(),
 							InverseMaintenanceAdapter.ADAPTER_KEY);
-					fireReinstantiateNotice(notification, ai);
+					if (ai != null)
+						fireReinstantiateNotice(notification, ai);
 				}
 			} catch (AllocationException e) {
 				// This means there was a bad error occured in instantiation and is not recoverable.
@@ -1339,7 +1340,8 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 				// Now walk through all references and tell of pre-release.
 				InverseMaintenanceAdapter ai = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(getTarget(),
 						InverseMaintenanceAdapter.ADAPTER_KEY);
-				fireReinstantiateNotice(notification, ai);
+				if (ai != null)
+					fireReinstantiateNotice(notification, ai);
 			}
 
 			primReleaseBeanProxy(expression);
@@ -1679,14 +1681,6 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	 */
 	public final IBeanProxyDomain getBeanProxyDomain() {
 		return domain;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.java.core.IBeanProxyHost#reinstantiateChild(org.eclipse.ve.internal.java.core.IBeanProxyHost)
-	 */
-	public void reinstantiateChild(IBeanProxyHost aChildProxyHost) {
-		// TODO Get rid of once we've merged back to IBeanProxyHost
-		throw new IllegalStateException(JavaMessages.BeanProxyAdapter2_ShouldNotBeCalled_EXC_); 
 	}
 
 	/**
