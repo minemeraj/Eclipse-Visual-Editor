@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.46 $  $Date: 2005-08-23 20:47:18 $ 
+ *  $Revision: 1.47 $  $Date: 2005-08-24 18:54:20 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -582,8 +582,9 @@ public  void dispose() {
 						if (exp.isStateSet(CodeExpressionRef.STATE_EXIST) &&
 							!exp.isStateSet(CodeExpressionRef.STATE_DELETE)&&
 							!exp.isStateSet(CodeExpressionRef.STATE_NO_SRC) &&
-							!exp.isStateSet(CodeExpressionRef.STATE_FIELD_EXP)) {							
-							exp.getExpDecoder().deleteFromSrc();
+							!exp.isStateSet(CodeExpressionRef.STATE_FIELD_EXP)) {
+							if(!exp.getBean().getModel().isStateSet(BeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL))
+								exp.getExpDecoder().deleteFromSrc();
 						}
 						exp.dispose();
 						break;
