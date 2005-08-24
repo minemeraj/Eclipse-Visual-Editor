@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeFeatureMapper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-04-05 21:40:17 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:56 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 

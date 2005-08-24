@@ -1,9 +1,9 @@
 /*******************************************************************************
  * Copyright (c) 2005 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Common Public License v1.0
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
@@ -12,7 +12,7 @@
  *  Created May 3, 2005 by Gili Mendel
  * 
  *  $RCSfile: SWTContainerWizardContent.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.7 $  $Date: 2005-08-24 23:52:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 

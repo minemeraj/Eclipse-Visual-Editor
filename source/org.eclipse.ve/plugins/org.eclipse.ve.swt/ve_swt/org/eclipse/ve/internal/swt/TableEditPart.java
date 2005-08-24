@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: TableEditPart.java,v $ $Revision: 1.1 $ $Date: 2005-06-15 20:19:21 $
+ * $RCSfile: TableEditPart.java,v $ $Revision: 1.2 $ $Date: 2005-08-24 23:52:55 $
  */
 package org.eclipse.ve.internal.swt;
 

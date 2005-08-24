@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: GridLayoutFeedbackFigure.java,v $
- *  $Revision: 1.5 $  $Date: 2005-07-11 20:03:52 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:55 $ 
  */
 
 import org.eclipse.swt.SWT;
