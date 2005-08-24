@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.ve.internal.cdm.model;
 
 import org.eclipse.emf.common.util.BasicEMap;
@@ -10,19 +20,9 @@ import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 
-/*******************************************************************************
- * Copyright (c)  2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials 
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
 /*
  *  $RCSfile: KeyedValueHolderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:16:26 $ 
+ *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:50 $ 
  */
  
 /**

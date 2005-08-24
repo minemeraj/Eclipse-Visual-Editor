@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,7 @@ package org.eclipse.ve.examples.java;
 
 /*
  *  $RCSfile: BasicTypesBeanProxyAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-06-22 21:05:19 $ 
+ *  $Revision: 1.9 $  $Date: 2005-08-24 23:16:43 $ 
  */
 
 import org.eclipse.jem.internal.proxy.core.*;
