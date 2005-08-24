@@ -182,4 +182,8 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 			((List)listeners).remove(changeListener);			
 		}		
 	}
+
+	public void setObjectBinder(IObjectBinder anObjectBinder) {
+		
+	}
 }

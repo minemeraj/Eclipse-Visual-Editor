@@ -54,14 +54,21 @@ public class TestSweet_NestedProperties {
 		// Manager's first name
 		Label nameLabel = new Label(personGroup,SWT.NONE);
 		nameLabel.setText("Manager's First Name: ");		
-		TextEditor firstNameTextViewer = new TextEditor(personGroup,SWT.BORDER); 
-		firstNameTextViewer.setContentProvider(personBinder.getPropertyProvider("manager.firstName"));
+
+		TextEditor firstNameTextViewer = new TextEditor(personGroup,SWT.BORDER); 		
+		firstNameTextViewer.setContentProvider(new PropertyContentProvider("manager.firstName"));
+		firstNameTextViewer.setContentConsumer(new PropertyContentConsumer("manager.firstName"));
+		firstNameTextViewer.setInput(personBinder);
+
 		firstNameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 
 		Label nameLabel_2 = new Label(personReadOnlyGroup,SWT.NONE);
 		nameLabel_2.setText("Manager's First Name: ");		
 		TextEditor firstNameTextViewer_2 = new TextEditor(personReadOnlyGroup,SWT.READ_ONLY); 
-		firstNameTextViewer_2.setContentProvider(personBinder.getPropertyProvider("manager.firstName"));
+		firstNameTextViewer_2.setContentProvider(new PropertyContentProvider("manager.firstName"));
+		firstNameTextViewer_2.setContentConsumer(new PropertyContentConsumer("manager.firstName"));
+		firstNameTextViewer_2.setInput(personBinder);
+		
 		firstNameTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));				
 		
 		Group managerGroup = new Group(shell,SWT.NONE);
@@ -91,21 +98,27 @@ public class TestSweet_NestedProperties {
 		Label nameLabel = new Label(parent,SWT.NONE);
 		nameLabel.setText("First Name: ");		
 		TextEditor firstNameTextViewer = new TextEditor(parent,styleBits); 
-		firstNameTextViewer.setContentProvider(aPersonBinder.getPropertyProvider("firstName"));
+		firstNameTextViewer.setContentProvider(new PropertyContentProvider("firstName"));
+		firstNameTextViewer.setContentConsumer(new PropertyContentConsumer("firstName"));
+		firstNameTextViewer.setInput(aPersonBinder);
 		firstNameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		// Last name		
 		Label lastNameLabel = new Label(parent,SWT.NONE);
 		lastNameLabel.setText("Last Name: ");		
 		TextEditor lastNameTextViewer = new TextEditor(parent,styleBits);
-		lastNameTextViewer.setContentProvider(aPersonBinder.getPropertyProvider("lastName"));
+		lastNameTextViewer.setContentProvider(new PropertyContentProvider("lastName"));
+		lastNameTextViewer.setContentConsumer(new PropertyContentConsumer("lastName"));
+		lastNameTextViewer.setInput(aPersonBinder);
 		lastNameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
 		// age
 		Label ageLabel = new Label(parent,SWT.NONE);
 		ageLabel.setText("age: ");	
 		SpinnerEditor ageSpinnerViewer = new SpinnerEditor(parent,styleBits); 
-		ageSpinnerViewer.setContentProvider(aPersonBinder.getPropertyProvider("age"));
+		ageSpinnerViewer.setContentProvider(new PropertyContentProvider("age"));
+		ageSpinnerViewer.setContentConsumer(new PropertyContentConsumer("age"));		
+		ageSpinnerViewer.setInput(aPersonBinder);
 		
 	}
 }
