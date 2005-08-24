@@ -3,6 +3,7 @@ package org.eclipse.ve.sweet2;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -35,7 +36,9 @@ public class TestSweet_Basic {
 		GridData data = new GridData(GridData.GRAB_HORIZONTAL);
 		data.horizontalSpan = 2;
 		t.setLayoutData(data);
-		t.setText("This example uses the same person object for each group of update policies with three separate object binders");
+		t.setText("This example shows two TextEditors and SpinnerEditors, each bound to the firstName and age property of the same Person");
+		Font font = new Font(display,"Helvetica",10,SWT.NONE);
+		t.setFont(font);
 		
 		p = new Person("John","Doe",35);		
 		final IObjectBinder personBinder = ObjectBinder.createObjectBinder(Person.class);
@@ -45,11 +48,21 @@ public class TestSweet_Basic {
 		Label nameLabel = new Label(shell,SWT.NONE);
 		nameLabel.setText("Name: ");
 		
-		final TextEditor nameTextEditor = new TextEditor(shell,SWT.BORDER);
+		TextEditor nameTextEditor = new TextEditor(shell,SWT.BORDER);
 		nameTextEditor.setContentProvider(new PropertyContentProvider("firstName"));
 		nameTextEditor.setContentConsumer(personBinder.getContentConsumer("firstName"));
 		nameTextEditor.setInput(personBinder);
 		nameTextEditor.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
+		
+		// AGE
+		Label ageLabel = new Label(shell,SWT.NONE);
+		ageLabel.setText("Age: ");
+		
+		SpinnerEditor ageSpinnerEditor = new SpinnerEditor(shell,SWT.BORDER);
+		ageSpinnerEditor.setContentProvider(new PropertyContentProvider("age"));
+		ageSpinnerEditor.setContentConsumer(personBinder.getContentConsumer("age"));
+		ageSpinnerEditor.setInput(personBinder);
+				
 		
 		// NAME
 		Label nameLabel_2 = new Label(shell,SWT.NONE);
@@ -60,7 +73,16 @@ public class TestSweet_Basic {
 		nameTextEditor_2.setContentConsumer(personBinder.getContentConsumer("firstName"));
 		nameTextEditor_2.setInput(personBinder);		
 		
-		nameTextEditor_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
+		nameTextEditor_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+//		 AGE
+		Label ageLabel_2 = new Label(shell,SWT.NONE);
+		ageLabel_2.setText("Age: ");
+		
+		SpinnerEditor ageSpinnerEditor_2 = new SpinnerEditor(shell,SWT.BORDER);
+		ageSpinnerEditor_2.setContentProvider(new PropertyContentProvider("age"));
+		ageSpinnerEditor_2.setContentConsumer(personBinder.getContentConsumer("age"));
+		ageSpinnerEditor_2.setInput(personBinder);				
 		
 		shell.setSize(500,400);
 		shell.open();

@@ -3,6 +3,7 @@ package org.eclipse.ve.sweet2;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -20,12 +21,13 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 
 	Spinner fSpinner;
 	private IDomainProvider domainProvider;
-	public static int DEFAULT_COMMIT_POLICY = COMMIT_MODIFY;	
-	private IValueProvider valueProvider;	
+	public static int DEFAULT_COMMIT_POLICY = COMMIT_MODIFY;		
 	private Listener updateListener;
 	private int updateListenerType;
 	private int commitPolicy;	
 	private boolean isSettingValue;
+	private IContentConsumer fContentConsumer;
+	private IElementContentProvider fElementProvider;
 	
 	public SpinnerEditor(Spinner aSpinner){
 		fSpinner = aSpinner;
@@ -44,14 +46,13 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 	}
 
 	public ISelection getSelection() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void refresh() {
-		if(!fSpinner.isDisposed()){
+		if(!fSpinner.isDisposed() && !isSettingValue){
 			isSettingValue = true;
-			fSpinner.setSelection(((Integer)valueProvider.getValue()).intValue());
+			fSpinner.setSelection(((Integer)fElementProvider.getElement(getInput())).intValue());
 			isSettingValue = false;			
 		}
 	}
@@ -61,15 +62,9 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 	}
 	
 	public void setContentProvider(IContentProvider contentProvider) {
+		Assert.isTrue(contentProvider instanceof IElementContentProvider);
 		super.setContentProvider(contentProvider);
-		valueProvider = (IValueProvider)contentProvider;
-		fSpinner.setEnabled(valueProvider.canSetValue());
-		valueProvider.addPropertyChangeListener(new PropertyChangeListener(){
-			public void propertyChange(PropertyChangeEvent evt) {
-				refresh();
-			}
-		});		
-		setInput(valueProvider.getValue());
+		fElementProvider = (IElementContentProvider)contentProvider;
 	}	
 
 	public void setUpdatePolicy(int updatePolicy) {
@@ -79,9 +74,11 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 			updateListener = new Listener(){
 				public void handleEvent(Event event) {
 					if(!isSettingValue){
+						isSettingValue = true;
 						// Push the changes down to the model domain
 						Object modelValue = new Integer(fSpinner.getSelection()); 
-						valueProvider.setValue(modelValue);
+						fContentConsumer.setValue(modelValue);
+						isSettingValue = false;						
 					}
 				}				
 			};
@@ -89,6 +86,11 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 		
 		commitPolicy = updatePolicy;
 		fSpinner.addListener(getListenerType(commitPolicy),updateListener);
+	}
+	
+	protected void inputChanged(Object input, Object oldInput) {
+		fSpinner.setEnabled(input != null);		
+		refresh();
 	}
 	
 	private int getListenerType(int aCommitPolicy){
@@ -114,6 +116,14 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 
 	public Spinner getSpinner() {
 		return fSpinner;
+	}
+
+	public void setContentConsumer(IContentConsumer contentConsumer) {
+		fContentConsumer = contentConsumer;
+	}
+
+	public IContentConsumer getContentConsumer() {
+		return fContentConsumer;
 	}
 
 }

@@ -77,7 +77,20 @@ public class TextEditor extends ContentViewer implements Editor {
 	}
 
 	protected void inputChanged(Object input, Object oldInput) {
-		text.setEnabled(input != null);
+		if(input == null){
+			text.setEnabled(false);
+		} else if (input instanceof IObjectBinder){
+			final IObjectBinder binder = (IObjectBinder) input;
+			text.setEnabled(binder.getValue() != null);
+			// Listen for when the value in the binder changes
+			binder.addPropertyChangeListener(new PropertyChangeListener(){
+				public void propertyChange(PropertyChangeEvent event) {
+					text.setEnabled(binder.getValue() != null);
+				}
+			});
+		} else {
+			text.setEnabled(true);
+		}
 		refresh();
 	}
 	

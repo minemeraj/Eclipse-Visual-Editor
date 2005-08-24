@@ -32,7 +32,7 @@ public class PropertyContentProvider implements IElementContentProvider {
 			// If the object changes we must refresh the viewer
 			binder.addPropertyChangeListener(new PropertyChangeListener(){
 				public void propertyChange(PropertyChangeEvent event) {
-					if(fPropertyName.equals(event.getPropertyName())){
+					if(fPropertyName.equals(event.getPropertyName()) || event.getPropertyName() == null){
 						viewer.refresh();
 					}
 				}
