@@ -139,7 +139,19 @@ public class CompositeTable extends Canvas {
 		setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		setLayout(new Layout() {
 			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
-				return CompositeTable.this.computeSize(wHint, hHint, flushCache);
+				if (headerControl == null && rowControl == null) {
+					return new Point(2, 20);
+				}
+				Point headerSize = new Point(0, 0);
+				if (headerControl != null) {
+					headerSize = headerControl.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+				}
+				Point rowSize = new Point(0, 0);
+				if (rowControl != null) {
+					rowSize = rowControl.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+				}
+				Point result = new Point(Math.max(headerSize.x, rowSize.x), headerSize.y + rowSize.y);
+				return result;
 			}
 			protected void layout(Composite composite, boolean flushCache) {
 				resize();
@@ -169,8 +181,6 @@ public class CompositeTable extends Canvas {
 			if (numChildrenLastTime != childrenLength) {
 				resizeAndRecordPrototypeRows();
 				showPrototypes(false);
-				numChildrenLastTime = childrenLength;
-				contentPane.dispose();
 				contentPane.dispose();
 				contentPane = new InternalCompositeTable(this, SWT.NULL);
 			}
@@ -296,6 +306,9 @@ public class CompositeTable extends Canvas {
 			finalChildren[i].setBounds(0, top, width, height);
 			top += height;
 		}
+		
+		numChildrenLastTime = children.length;
+		getParent().layout(true);
 	}
 	
 	/**(non-API)
