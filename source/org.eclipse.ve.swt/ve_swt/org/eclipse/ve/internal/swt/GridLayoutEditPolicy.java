@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.36 $ $Date: 2005-08-22 20:29:55 $
+ * $Revision: 1.37 $ $Date: 2005-08-24 13:24:31 $
  */
 import java.util.*;
 
@@ -577,9 +577,8 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 						cb.append(columnCmds);
 					if (cb.isEmpty() && indexEP + 1 < children.size()) {
 						// In order to maintain column row positoning for all the other components we
-						// need to replace the deleted control with a filler label.
-						cb.append(containerPolicy.getCreateCommand(helper.createFillerLabelObject(), ((EditPart) children.get(indexEP + 1))
-								.getModel()));
+						// need to replace the deleted control with a filler label(s).
+						cb.append(helper.createFillerLabelsForDeletedControlCommands((EObject) editPart.getModel()));
 					}
 				}
 				cb.append(cmd);
@@ -740,10 +739,23 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			return UnexecutableCommand.INSTANCE; // It can't be created.
 		return orphanContributionCmd;
 	}
-	
+
+	protected Command getAddCommand(Request request) {
+		return getMoveChildrenCommand(request);
+	}	
+
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getMoveChildrenCommand(org.eclipse.gef.Request)
+	 * 
+	 * This method will handle both moving a child within the same container and adding a child
+	 * from another container. The only difference is that for the move, there is extra processing
+	 * to remove empty rows or columns and filler labels have to inserted into the cells where the child
+	 * moved from. 
+	 */
 	protected Command getMoveChildrenCommand(Request request) {
 		List children = getHost().getChildren();
-		if (fGridLayoutGridFigure == null || !(request instanceof ChangeBoundsRequest) || children.isEmpty())
+		if (fGridLayoutGridFigure == null || !(request instanceof ChangeBoundsRequest))
 			return UnexecutableCommand.INSTANCE;
 		ChangeBoundsRequest req = (ChangeBoundsRequest) request;
 		List editparts = req.getEditParts();
@@ -756,30 +768,39 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		getHostFigure().translateToRelative(position);
 		GridLayoutRequest gridReq = createGridLayoutRequest(position);
 		Point cell = new Point(gridReq.column, gridReq.row);
-
+	
 		int numColumns = helper.getNumColumns();
-		EditPart childEP = (EditPart) editparts.iterator().next(), nextEP = null, beforeEP = null;
+		EditPart childEP = (EditPart) editparts.iterator().next(), beforeEP = null;
 		int childIndex = children.indexOf(childEP);
-		if (childIndex < children.size() - 1)
-			nextEP = (EditPart) children.get(childIndex + 1);
 		int epIndex = helper.getChildIndexAtCell(cell);
 		if (epIndex != -1)
 			beforeEP = (EditPart) children.get(epIndex);
 		CommandBuilder cb = new CommandBuilder();
-
+	
 		// No change if selected editpart and the target editpart are the same.
 		if (childEP == beforeEP)
 			return UnexecutableCommand.INSTANCE;
+		EObject child = (EObject) childEP.getModel();
 		
-		if (gridReq.type == REPLACE_FILLER) {
-			// Create a filler label to put in original cell and replace a filler label with the moved control
-			cb.append(containerPolicy.getMoveChildrenCommand(Collections.singletonList(childEP.getModel()), beforeEP.getModel()));
-			cb.append(containerPolicy.getDeleteDependentCommand(beforeEP.getModel()));
+		// If child is not one of the children this is an add request (i.e. orphaned from one container and added to this container).
+		if (childIndex == -1 && children.isEmpty())
+			return containerPolicy.getAddCommand(Collections.singletonList(child), null);
 
+		// If it's an add child request, see if it's a valid add (can only add composites, not controls).
+		if (childIndex == -1 && !(BeanSWTUtilities.isValidBeanLocation(containerPolicy.getEditDomain(), (IJavaObjectInstance)child, (EObject) containerPolicy.getContainer())))
+			return UnexecutableCommand.INSTANCE;
+		
+		// Replace a filler label with the moved control
+		if (gridReq.type == REPLACE_FILLER) {
+			cb.append(containerPolicy.getMoveChildrenCommand(Collections.singletonList(child), beforeEP.getModel()));
+			cb.append(containerPolicy.getDeleteDependentCommand(beforeEP.getModel()));
+	
+		// Insert the child within the row, adding one column
 		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
 			cb.append(helper.createNumColumnsCommand(++numColumns)); // First add another column to the grid
-			cb.append(helper.createInsertColumnWithinRowCommands(cell.x, cell.y, childEP.getModel(), request)); // then add empty labels at the end of each row
+			cb.append(helper.createInsertColumnWithinRowCommands(cell.x, cell.y, child, request)); // then add empty labels at the end of each row
 			
+		// Insert the child within the row, adding a full column at the mouse position
 		} else if (gridReq.type == INSERT_COLUMN || gridReq.type == ADD_COLUMN) {
 			boolean isLastColumn = false;
 			int column = getGridLayoutGridFigure().getNearestColumn(position.x);
@@ -803,38 +824,48 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 				isLastColumn = true;
 			}
 			cb.append(helper.createNumColumnsCommand(++numColumns)); // First add another column to the grid
-			cb.append(helper.createInsertColumnCommands(childEP.getModel(), request, column, cell.y, isLastColumn)); // then add empty labels at this column position
-
+			cb.append(helper.createInsertColumnCommands(child, request, column, cell.y, isLastColumn)); // then add empty labels at this column position
+	
 		} else if (gridReq.type == INSERT_ROW || gridReq.type == ADD_ROW) {
 			int row = getGridLayoutGridFigure().getNearestRow(position.y);
 			// Insert a row by adding labels and the new object at the appropriate column position
-			cb.append(helper.createFillerLabelsForNewRowCommand(childEP.getModel(), row, cell.x, request));
-
+			cb.append(helper.createFillerLabelsForNewRowCommand(child, row, cell.x, request));
+	
 		} else if (gridReq.type == ADD_TO_EMPTY_CELL) {
 			// Add to an empty cell at a column position
-			cb.append(helper.createAddToEmptyCellCommand(childEP.getModel(), cell, request));
+			cb.append(helper.createAddToEmptyCellCommand(child, cell, request));
 		}
+	
+		// This next block of code is to handle moving a child only an assumes the child exists in this container.
+		if (childIndex != -1) {
+			// Remove columns and/or rows that are empty or contain all filler labels after the move
+			Rectangle rect = helper.getChildrenDimensions()[childIndex];
+			// If this control spans horizontally and/or vertically, reset to default values
+			if (rect.width != helper.getDefaultHorizontalSpan())
+				cb.append(helper.createHorizontalSpanDefaultCommand(child));
+			if (rect.height != helper.getDefaultVerticalSpan())
+				cb.append(helper.createVerticalSpanDefaultCommand(child));
 
-		// Remove columns and/or rows that are empty or contain all filler labels after the move
-		Rectangle rect = helper.getChildrenDimensions()[childIndex];
-		// Only interested in removing the row if the moved control cell and target cell is not the same row.
-		Command rowCmds = null, columnCmds = null;
-		if (rect.y != cell.y) {
-			rowCmds = helper.createRemoveRowCommand(rect.y, (EObject) childEP.getModel());
-			if (rowCmds != null)
-				cb.append(rowCmds);
-		}
-		// Only interested in removing the column if the moved control cell and target cell is not the same column.
-		if (rect.x != cell.x) {
-			columnCmds = helper.createRemoveColumnCommand(rect.x, (EObject) childEP.getModel(), helper.getNumColumns());
-			if (columnCmds != null)
-				cb.append(columnCmds);
-		}
-		// If no rows or colums to remove, add a filler label to fill the cell of the moved control.
-		if (rowCmds == null && columnCmds == null) {
-			if (beforeEP == nextEP) // handle case in which the target editpart is the next editpart 
-				nextEP = childEP;
-			cb.append(containerPolicy.getCreateCommand(helper.createFillerLabelObject(), nextEP != null ? nextEP.getModel() : null));
+			// Only interested in removing the row if the moved control cell and target cell is not the same row.
+			Command rowCmds = null, columnCmds = null;
+			if (rect.y != cell.y) {
+				rowCmds = helper.createRemoveRowCommand(rect.y, child);
+				if (rowCmds != null)
+					cb.append(rowCmds);
+			}
+			// Only interested in removing the column if the moved control cell and target cell is not the same column.
+			if (rect.x != cell.x) {
+				columnCmds = helper.createRemoveColumnCommand(rect.x, child, helper.getNumColumns());
+				if (columnCmds != null)
+					cb.append(columnCmds);
+			}
+			// If no rows or colums to remove, add a filler label to fill the cell of the moved control.
+			if (rowCmds == null && columnCmds == null) {
+				if (beforeEP != null)
+					cb.append(helper.createFillerLabelsForMovedControlCommands(child, (EObject) beforeEP.getModel()));
+				else
+					cb.append(containerPolicy.getCreateCommand(helper.createFillerLabelObject(), null));
+			}
 		}
 		if (cb.isEmpty())
 			return UnexecutableCommand.INSTANCE;
