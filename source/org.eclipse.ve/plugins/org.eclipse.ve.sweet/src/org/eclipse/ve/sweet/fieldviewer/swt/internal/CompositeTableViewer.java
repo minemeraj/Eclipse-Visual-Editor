@@ -266,7 +266,8 @@ public class CompositeTableViewer implements IFieldViewer, IMaster {
 	 */
 	public void addDetailViewer(IObjectViewer detailViewer) {
 		detailObjects.add(detailViewer);
-		refreshDetailObjects(objectAt(table.getTopRow() + table.getCurrentRow()));
+		if (collection.size() > 0)
+			refreshDetailObjects(objectAt(table.getTopRow() + table.getCurrentRow()));
 	}
 
 	/* (non-Javadoc)
