@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.17 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.18 $  $Date: 2005-08-25 20:36:05 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -567,12 +567,16 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 						gridData = BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					if (gridData != null) {
-						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
-						String init = String.valueOf(spinnerValue);
-						Object intObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
-						componentCB.applyAttributeSetting(gridData, sf, intObject);
-						componentCB.applyAttributeSetting(control, sfControlLayoutData, gridData);
-						cb.append(componentCB.getCommand());
+						try {
+							RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
+							String init = String.valueOf(spinnerValue);
+							Object intObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
+							componentCB.applyAttributeSetting(gridData, sf, intObject);
+							componentCB.applyAttributeSetting(control, sfControlLayoutData, gridData);
+							cb.append(componentCB.getCommand());
+						} catch (IllegalArgumentException e) {
+							return UnexecutableCommand.INSTANCE;	// Feature not a valid feature for the griddata. (Griddata not really a griddata).
+						}
 					}
 				}
 			}

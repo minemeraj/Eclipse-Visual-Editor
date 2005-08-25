@@ -11,14 +11,12 @@
 package org.eclipse.ve.internal.cde.properties;
 /*
  *  $RCSfile: PropertySourceAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.11 $  $Date: 2005-08-25 20:36:04 $ 
  */
 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -265,6 +263,8 @@ public class PropertySourceAdapter extends AdapterImpl implements IPropertySourc
 				return result != null ? result : value; // If no adapter could be found, use the value.
 			}
 			return value;
+		} catch (IllegalArgumentException e) {
+			return null; 			// Feature not a feature of this property source, by IPropertySource definition this should return null.
 		} catch (Exception exc) {
 			CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, "", exc)); //$NON-NLS-1$
 			return null;
@@ -276,15 +276,27 @@ public class PropertySourceAdapter extends AdapterImpl implements IPropertySourc
 	}
 
 	public boolean isPropertySet(Object feature) {
-		return ((EObject) target).eIsSet((EStructuralFeature) feature);
+		try {
+			return ((EObject) target).eIsSet((EStructuralFeature) feature);
+		} catch (IllegalArgumentException e) {
+			return false;	// Feature not a feature of this property source, by IPropertySource definition this should return false.
+		}
 	}
 
 	public void resetPropertyValue(Object feature) {
-		((EObject) target).eUnset((EStructuralFeature) feature);
+		try {
+			((EObject) target).eUnset((EStructuralFeature) feature);
+		} catch (IllegalArgumentException e) {
+			// Feature not a feature of this property source, by IPropertySource definition this should do nothing.
+		}
 	}
 
 	public void setPropertyValue(Object feature, Object val) {
-		((EObject) target).eSet((EStructuralFeature) feature, val);
+		try {
+			((EObject) target).eSet((EStructuralFeature) feature, val);
+		} catch (IllegalArgumentException e) {
+			// Feature not a feature of this property source, by IPropertySource definition this should do nothing.
+		}
 	}
 	/**
 	 * @see java.lang.Object#toString()

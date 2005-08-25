@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.31 $  $Date: 2005-08-25 15:23:07 $
+ *  $Revision: 1.32 $  $Date: 2005-08-25 20:36:05 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -183,8 +183,14 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				IJavaObjectInstance child = (IJavaObjectInstance) itr.next();
 				IJavaObjectInstance childData = (IJavaObjectInstance) child.eGet(sfLayoutData);
 				if (childData != null) {
-					horizontalSpan = getIntValue(sfHorizontalSpan, childData);
-					verticalSpan = getIntValue(sfVerticalSpan, childData);
+					try {
+						horizontalSpan = getIntValue(sfHorizontalSpan, childData);
+						verticalSpan = getIntValue(sfVerticalSpan, childData);
+					} catch (IllegalArgumentException e) {
+						// Not a grid data.
+						horizontalSpan = defaultHorizontalSpan;
+						verticalSpan = defaultVerticalSpan;
+					}
 				} else {
 					horizontalSpan = defaultHorizontalSpan;
 					verticalSpan = defaultVerticalSpan;
@@ -592,103 +598,107 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				gridData = (IJavaObjectInstance) BeanUtilities.createJavaObject(
 						"org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			if (gridData != null) {
-				List children = (List) getContainer().eGet(sfCompositeControls);
-				int index = children.indexOf(control);
-				Rectangle rect = getChildrenDimensions()[index];
-				RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(childEditPart), null, false);
-				if (spanDirection == PositionConstants.EAST) {
-					int newgridDataWidth = endCellLocation.x - childCellLocation.x + 1;
-					if (newgridDataWidth != rect.width) {
-						Object widthObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(newgridDataWidth)); //$NON-NLS-1$
-						componentCB.applyAttributeSetting(gridData, sfHorizontalSpan, widthObject);
-						if (newgridDataWidth > rect.width) {
-							// Increase the horizontalSpan
-							// but first see if we can expand into empty cells without increasing the number of columns
-							int numColsIncrement = createHorizontalSpanWithEmptyColumnCommands(componentCB, rect.y, rect.x + rect.width - 1,
-									rect.height, newgridDataWidth - rect.width);
-							if (numColsIncrement > 0) {
-								// Need to expand the number of columns and add fillers in each row
-								componentCB.append(createNumColumnsCommand(numColumns + numColsIncrement));
-								for (int i = 0; i < numColsIncrement; i++) {
-									componentCB.append(createInsertColumnWithinRowCommands(endCellLocation.x, rect.y, null, null));
-								}
-							}
-						} else {
-							CommandBuilder columncb = new CommandBuilder();
-							// First look through the columns were spanning out of and see if there empty columns
-							int projectedNumCols = numColumns;
-							for (int i = 0; i < rect.width - newgridDataWidth; i++) {
-								Command cmd = createRemoveColumnCommand(rect.x + rect.width - 1 - i, control, projectedNumCols);
-								if (cmd != null) {
-									columncb.append(cmd);
-									projectedNumCols--;
-								}
-							}
-							if (!columncb.isEmpty())
-								// If all that is left in the column(s) is filler labels, remove them.
-								componentCB.append(columncb.getCommand());
-							else {
-								// Decrease the horizontal span and put filler labels in the columns it was decreased by
-								Rectangle childRect = rect.getCopy();
-								// Need to put filler labels in the more than one row if the child spans vertically.
-								for (int i = 0; i < rect.height; i++) {
-									// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
-									EObject beforeObject = findNextValidObject(childRect.x + childRect.width, childRect.y + childRect.height - 1);
-									for (int j = 0; j < rect.width - newgridDataWidth; j++) {
-										componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+			try {
+				if (gridData != null) {
+					List children = (List) getContainer().eGet(sfCompositeControls);
+					int index = children.indexOf(control);
+					Rectangle rect = getChildrenDimensions()[index];
+					RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(childEditPart), null, false);
+					if (spanDirection == PositionConstants.EAST) {
+						int newgridDataWidth = endCellLocation.x - childCellLocation.x + 1;
+						if (newgridDataWidth != rect.width) {
+							Object widthObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(newgridDataWidth)); //$NON-NLS-1$
+							componentCB.applyAttributeSetting(gridData, sfHorizontalSpan, widthObject);
+							if (newgridDataWidth > rect.width) {
+								// Increase the horizontalSpan
+								// but first see if we can expand into empty cells without increasing the number of columns
+								int numColsIncrement = createHorizontalSpanWithEmptyColumnCommands(componentCB, rect.y, rect.x + rect.width - 1,
+										rect.height, newgridDataWidth - rect.width);
+								if (numColsIncrement > 0) {
+									// Need to expand the number of columns and add fillers in each row
+									componentCB.append(createNumColumnsCommand(numColumns + numColsIncrement));
+									for (int i = 0; i < numColsIncrement; i++) {
+										componentCB.append(createInsertColumnWithinRowCommands(endCellLocation.x, rect.y, null, null));
 									}
-									childRect.y--;
+								}
+							} else {
+								CommandBuilder columncb = new CommandBuilder();
+								// First look through the columns were spanning out of and see if there empty columns
+								int projectedNumCols = numColumns;
+								for (int i = 0; i < rect.width - newgridDataWidth; i++) {
+									Command cmd = createRemoveColumnCommand(rect.x + rect.width - 1 - i, control, projectedNumCols);
+									if (cmd != null) {
+										columncb.append(cmd);
+										projectedNumCols--;
+									}
+								}
+								if (!columncb.isEmpty())
+									// If all that is left in the column(s) is filler labels, remove them.
+									componentCB.append(columncb.getCommand());
+								else {
+									// Decrease the horizontal span and put filler labels in the columns it was decreased by
+									Rectangle childRect = rect.getCopy();
+									// Need to put filler labels in the more than one row if the child spans vertically.
+									for (int i = 0; i < rect.height; i++) {
+										// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
+										EObject beforeObject = findNextValidObject(childRect.x + childRect.width, childRect.y + childRect.height - 1);
+										for (int j = 0; j < rect.width - newgridDataWidth; j++) {
+											componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+										}
+										childRect.y--;
+									}
 								}
 							}
 						}
 					}
-				}
-				if (spanDirection == PositionConstants.SOUTH) {
-					int newgridDataHeight = endCellLocation.y - childCellLocation.y + 1;
-					if (newgridDataHeight != rect.height) {
-						Object heightObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(newgridDataHeight)); //$NON-NLS-1$
-						componentCB.applyAttributeSetting(gridData, sfVerticalSpan, heightObject);
-						if (newgridDataHeight > rect.height) {
-							// Increase the verticalSpan
-							// but first see if we can expand into empty cells without increasing the number of columns
-							int numRowsIncrement = createVerticalSpanWithEmptyRowCommands(componentCB, rect.y + rect.height - 1, rect.x, rect.width,
-									newgridDataHeight - rect.height);
-							if (numRowsIncrement > 0) {
-								List childCols = new ArrayList(rect.width);
-								for (int i = 0; i < rect.width; i++) {
-									childCols.add(new Integer(rect.x + i));
+					if (spanDirection == PositionConstants.SOUTH) {
+						int newgridDataHeight = endCellLocation.y - childCellLocation.y + 1;
+						if (newgridDataHeight != rect.height) {
+							Object heightObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(newgridDataHeight)); //$NON-NLS-1$
+							componentCB.applyAttributeSetting(gridData, sfVerticalSpan, heightObject);
+							if (newgridDataHeight > rect.height) {
+								// Increase the verticalSpan
+								// but first see if we can expand into empty cells without increasing the number of columns
+								int numRowsIncrement = createVerticalSpanWithEmptyRowCommands(componentCB, rect.y + rect.height - 1, rect.x,
+										rect.width, newgridDataHeight - rect.height);
+								if (numRowsIncrement > 0) {
+									List childCols = new ArrayList(rect.width);
+									for (int i = 0; i < rect.width; i++) {
+										childCols.add(new Integer(rect.x + i));
+									}
+									// For adding a row, add filler labels in cells where the child is not occupied 
+									for (int i = 0; i < numRowsIncrement; i++) {
+										componentCB.append(createFillerLabelsForSpannedRowCommand(rect.y + rect.height, childCols));
+									}
 								}
-								// For adding a row, add filler labels in cells where the child is not occupied 
-								for (int i = 0; i < numRowsIncrement; i++) {
-									componentCB.append(createFillerLabelsForSpannedRowCommand(rect.y + rect.height, childCols));
-								}
-							}
-						} else {
-							// decrease the verticalSpan
-							CommandBuilder rowcb = new CommandBuilder();
-							for (int i = 0; i < rect.height - newgridDataHeight; i++) {
-								rowcb.append(createRemoveRowCommand(rect.y + rect.height - 1 - i, control));
-							}
-							if (!rowcb.isEmpty())
-								// If all that is left on the row(s) is filler labels, remove them.
-								componentCB.append(rowcb.getCommand());
-							else {
-								Rectangle childRect = rect.getCopy();
+							} else {
+								// decrease the verticalSpan
+								CommandBuilder rowcb = new CommandBuilder();
 								for (int i = 0; i < rect.height - newgridDataHeight; i++) {
-									// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
-									EObject beforeObject = findNextValidObject(childRect.x + 1, childRect.y + childRect.height - 1);
-									for (int j = 0; j < rect.width; j++) {
-										componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+									rowcb.append(createRemoveRowCommand(rect.y + rect.height - 1 - i, control));
+								}
+								if (!rowcb.isEmpty())
+									// If all that is left on the row(s) is filler labels, remove them.
+									componentCB.append(rowcb.getCommand());
+								else {
+									Rectangle childRect = rect.getCopy();
+									for (int i = 0; i < rect.height - newgridDataHeight; i++) {
+										// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
+										EObject beforeObject = findNextValidObject(childRect.x + 1, childRect.y + childRect.height - 1);
+										for (int j = 0; j < rect.width; j++) {
+											componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+										}
+										childRect.y--;
 									}
-									childRect.y--;
 								}
 							}
 						}
 					}
+					componentCB.applyAttributeSetting(control, sfLayoutData, gridData);
+					cb.append(componentCB.getCommand());
 				}
-				componentCB.applyAttributeSetting(control, sfLayoutData, gridData);
-				cb.append(componentCB.getCommand());
+			} catch (Exception e) {
+				return UnexecutableCommand.INSTANCE;	// A feature was not valid for the given data. Usually due to child data not being a Griddata.
 			}
 		}
 		if (cb.isEmpty()) { return UnexecutableCommand.INSTANCE; }
