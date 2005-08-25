@@ -11,16 +11,11 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- *  $RCSfile: BeanAwtUtilities.java,v $
- *  $Revision: 1.37 $  $Date: 2005-08-24 23:38:09 $ 
+ * $RCSfile: BeanAwtUtilities.java,v $ $Revision: 1.38 $ $Date: 2005-08-25 16:50:28 $
  */
 
-import java.awt.*;
 import java.util.List;
 import java.util.logging.Level;
-
-import javax.swing.*;
-import javax.swing.table.TableColumn;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClassifier;
@@ -48,15 +43,19 @@ import org.eclipse.ve.internal.java.visual.VisualUtilities;
  */
 public class BeanAwtUtilities {
 
-	public static final String WINDOWMANAGEREXTENSION_CLASSNAME = "org.eclipse.ve.internal.jfc.vm.WindowManagerExtension";	//$NON-NLS-1$
-	public static final String COMPONENTMANAGER_CLASSNAME = "org.eclipse.ve.internal.jfc.vm.ComponentManager";	//$NON-NLS-1$
-	public static final String FEEDBACKCONTROLLER_CLASSNAME = COMPONENTMANAGER_CLASSNAME+"$ComponentManagerFeedbackController";	//$NON-NLS-1$
-	public static final String COMPONENTMANAGEREXTENSION_CLASSNAME = COMPONENTMANAGER_CLASSNAME+"$ComponentManagerExtension";	//$NON-NLS-1$
+	public static final String WINDOWMANAGEREXTENSION_CLASSNAME = "org.eclipse.ve.internal.jfc.vm.WindowManagerExtension"; //$NON-NLS-1$
+
+	public static final String COMPONENTMANAGER_CLASSNAME = "org.eclipse.ve.internal.jfc.vm.ComponentManager"; //$NON-NLS-1$
+
+	public static final String FEEDBACKCONTROLLER_CLASSNAME = COMPONENTMANAGER_CLASSNAME + "$ComponentManagerFeedbackController"; //$NON-NLS-1$
+
+	public static final String COMPONENTMANAGEREXTENSION_CLASSNAME = COMPONENTMANAGER_CLASSNAME + "$ComponentManagerExtension"; //$NON-NLS-1$
 
 	private Point offscreenLocation;
 
 	/**
 	 * Get the offscreen location for windows.
+	 * 
 	 * @param registry
 	 * @return
 	 * 
@@ -68,23 +67,22 @@ public class BeanAwtUtilities {
 		else {
 			BeanAwtUtilities constants = getConstants(registry);
 			if (constants.offscreenLocation == null) {
-				IBeanProxy p = registry.getMethodProxyFactory().getMethodProxy("org.eclipse.ve.internal.jfc.vm.FreeFormAWTDialog", "getOffScreenLocation", null).invokeCatchThrowableExceptions(null);
+				IBeanProxy p = registry.getMethodProxyFactory().getMethodProxy("org.eclipse.ve.internal.jfc.vm.FreeFormAWTDialog",
+						"getOffScreenLocation", null).invokeCatchThrowableExceptions(null);
 				if (p instanceof IPointBeanProxy) {
 					IPointBeanProxy pb = (IPointBeanProxy) p;
 					constants.offscreenLocation = new Point(pb.getX(), pb.getY());
 				} else
 					constants.offscreenLocation = new Point(10000, 10000);
-		}
+			}
 			return constants.offscreenLocation;
-	}
+		}
 	}
 
 	// JCMMethod proxies are cached in a registry constants.
-	private IMethodProxy getLayoutMethodProxy, getBoundsMethodProxy,
-			getLocationMethodProxy, getSizeMethodProxy, getPreferredSizeMethodProxy, getParentMethodProxy, getComponentsMethodProxy,
-			getManagerDefaultLocationMethodProxy, getManagerDefaultBoundsMethodProxy, 
-			getTabSelectedComponentMethodProxy, setTabSelectedComponentMethodProxy, indexOfTabAtLocationMethodProxy,
-			managerJTableGetAllColumnRects;
+	private IMethodProxy getLayoutMethodProxy, getBoundsMethodProxy, getLocationMethodProxy, getSizeMethodProxy, getPreferredSizeMethodProxy,
+			getParentMethodProxy, getComponentsMethodProxy, getManagerDefaultLocationMethodProxy, getManagerDefaultBoundsMethodProxy,
+			getTabSelectedComponentMethodProxy, setTabSelectedComponentMethodProxy, indexOfTabAtLocationMethodProxy, managerJTableGetAllColumnRects;
 
 	private IBeanProxy jFrameDefaultOnClose_DoNothingProxy;
 
@@ -104,17 +102,15 @@ public class BeanAwtUtilities {
 	private static final int MANAGER_INVALIDATE_COMPONENT = 0, MANAGER_ADD_COMPONENT_BEFORE_WITH_CONSTRAINT = MANAGER_INVALIDATE_COMPONENT + 1,
 			MANAGER_ADD_COMPONENT_BEFORE_WITH_NO_CONSTRAINT = MANAGER_ADD_COMPONENT_BEFORE_WITH_CONSTRAINT + 1,
 			MANAGER_CHANGE_CONSTRAINT = MANAGER_ADD_COMPONENT_BEFORE_WITH_NO_CONSTRAINT + 1,
-			MANAGER_REMOVE_COMPONENT = MANAGER_CHANGE_CONSTRAINT + 1, 
-			MANAGER_SET_COMPONENT = MANAGER_REMOVE_COMPONENT + 1, MANAGER_APPLY_BOUNDS = MANAGER_SET_COMPONENT + 1,
-			MANAGER_APPLY_LOCATION = MANAGER_APPLY_BOUNDS + 1, MANAGER_OVERRIDE_LOCATION = MANAGER_APPLY_LOCATION + 1,
-			WINDOW_DISPOSE = MANAGER_OVERRIDE_LOCATION + 1, COMPONENT_GET_PARENT = WINDOW_DISPOSE + 1,
-			MANAGER_JMENU_REMOVE_COMPONENT = COMPONENT_GET_PARENT + 1, MANAGER_JMENU_ADD_COMPONENT = MANAGER_JMENU_REMOVE_COMPONENT + 1,
-			MANAGER_WINDOW_PACK_ON_CHANGE = MANAGER_JMENU_ADD_COMPONENT + 1,
+			MANAGER_REMOVE_COMPONENT = MANAGER_CHANGE_CONSTRAINT + 1, MANAGER_SET_COMPONENT = MANAGER_REMOVE_COMPONENT + 1,
+			MANAGER_APPLY_BOUNDS = MANAGER_SET_COMPONENT + 1, MANAGER_APPLY_LOCATION = MANAGER_APPLY_BOUNDS + 1,
+			MANAGER_OVERRIDE_LOCATION = MANAGER_APPLY_LOCATION + 1, WINDOW_DISPOSE = MANAGER_OVERRIDE_LOCATION + 1,
+			COMPONENT_GET_PARENT = WINDOW_DISPOSE + 1, MANAGER_JMENU_REMOVE_COMPONENT = COMPONENT_GET_PARENT + 1,
+			MANAGER_JMENU_ADD_COMPONENT = MANAGER_JMENU_REMOVE_COMPONENT + 1, MANAGER_WINDOW_PACK_ON_CHANGE = MANAGER_JMENU_ADD_COMPONENT + 1,
 			MANAGER_JTABLE_ADD_COLUMN_BEFORE = MANAGER_WINDOW_PACK_ON_CHANGE + 1,
 			MANAGER_JTABLE_INITIALIZE_TABLE_MODEL = MANAGER_JTABLE_ADD_COLUMN_BEFORE + 1,
 			MANAGER_JTABLE_REMOVE_ALL_COLUMNS = MANAGER_JTABLE_INITIALIZE_TABLE_MODEL + 1,
-			JTABLE_REMOVE_COLUMN = MANAGER_JTABLE_REMOVE_ALL_COLUMNS + 1,
-			MANAGER_JTOOLBAR_ADD_COMPONENT = JTABLE_REMOVE_COLUMN + 1,
+			JTABLE_REMOVE_COLUMN = MANAGER_JTABLE_REMOVE_ALL_COLUMNS + 1, MANAGER_JTOOLBAR_ADD_COMPONENT = JTABLE_REMOVE_COLUMN + 1,
 			MANAGER_JTOOLBAR_REMOVE_COMPONENT = MANAGER_JTOOLBAR_ADD_COMPONENT + 1,
 			MANAGER_JTABBEDPANE_SETDEFAULTTITLE = MANAGER_JTOOLBAR_REMOVE_COMPONENT + 1,
 			MANAGER_JTABBEDPANE_SETTABICON = MANAGER_JTABBEDPANE_SETDEFAULTTITLE + 1,
@@ -122,8 +118,7 @@ public class BeanAwtUtilities {
 			MANAGER_JTABBEDPANE_INSERTTAB = MANAGER_JTABBEDPANE_SETTABTITLE + 1,
 			MANAGER_JTABBEDPANE_INSERTTAB_DEFAULT = MANAGER_JTABBEDPANE_INSERTTAB + 1,
 			MANAGER_JSPLITPANE_SETDIVIDERLOCATION = MANAGER_JTABBEDPANE_INSERTTAB_DEFAULT + 1,
-			WINDOW_APPLYTITLE = MANAGER_JSPLITPANE_SETDIVIDERLOCATION + 1,
-			SCROLLPANE_MAKE_IT_RIGHT = WINDOW_APPLYTITLE + 1,
+			WINDOW_APPLYTITLE = MANAGER_JSPLITPANE_SETDIVIDERLOCATION + 1, SCROLLPANE_MAKE_IT_RIGHT = WINDOW_APPLYTITLE + 1,
 			MAX_METHODS = SCROLLPANE_MAKE_IT_RIGHT + 1;
 
 	private IProxyMethod[] methods = new IProxyMethod[MAX_METHODS];
@@ -173,6 +168,7 @@ public class BeanAwtUtilities {
 
 	/**
 	 * Get the constants given a registry.
+	 * 
 	 * @param registry
 	 * @return
 	 * 
@@ -187,6 +183,7 @@ public class BeanAwtUtilities {
 
 	/**
 	 * Get the constants given a bean proxy.
+	 * 
 	 * @param proxy
 	 * @return
 	 * 
@@ -208,8 +205,7 @@ public class BeanAwtUtilities {
 		final BeanAwtUtilities constants = getConstants(expression.getRegistry());
 		if (constants.componentManagerFeedbackController == null) {
 			ExpressionProxy feedbackProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
-			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT,
-					FEEDBACKCONTROLLER_CLASSNAME, 0); //$NON-NLS-1$
+			expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, FEEDBACKCONTROLLER_CLASSNAME, 0); //$NON-NLS-1$
 			constants.componentManagerFeedbackController = new ComponentManager.FeedbackController(feedbackProxy);
 			expression.getRegistry().getCallbackRegistry().registerCallback(feedbackProxy, constants.componentManagerFeedbackController, expression);
 			feedbackProxy.addProxyListener(new ExpressionProxy.ProxyListener() {
@@ -286,6 +282,7 @@ public class BeanAwtUtilities {
 
 	/**
 	 * Get the JSplitPane horizontal orientation bean proxy.
+	 * 
 	 * @param registry
 	 * @return
 	 * 
@@ -307,8 +304,8 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.ComponentManager#invalidate() invalidate}proxy method.
-	 * <package-protected> because only ComponentManager should access it.
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.ComponentManager#invalidate() invalidate}proxy method. <package-protected> because only
+	 * ComponentManager should access it.
 	 * 
 	 * @param expression
 	 * @return
@@ -320,9 +317,8 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_INVALIDATE_COMPONENT];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
-							expression, "invalidate"); //$NON-NLS-1$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
+					expression, "invalidate"); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_INVALIDATE_COMPONENT);
 		}
 		return method;
@@ -342,34 +338,35 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_ADD_COMPONENT_BEFORE_WITH_CONSTRAINT];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
-							expression, "addComponentBefore", //$NON-NLS-1$
-							new String[] {"java.awt.Container", "java.awt.Component", "java.lang.Object", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression,
+					"org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
+					expression, "addComponentBefore", //$NON-NLS-1$
+					new String[] { "java.awt.Container", "java.awt.Component", "java.lang.Object", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			processExpressionProxy(method, constants.methods, MANAGER_ADD_COMPONENT_BEFORE_WITH_CONSTRAINT);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Invoke ContainerManager.addComponent with constraint command.
+	 * 
 	 * @param container
 	 * @param component
 	 * @param beforeComponent
 	 * @param constraint
 	 * @param expression
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.ContainerManager#addComponentBefore(Container, Component, Object, Component)
+	 * @see org.eclipse.ve.internal.jfc.vm.ContainerManager#addComponentBefore(java.awt.Container, java.awt.Component, Object, java.awt.Component)
 	 * @since 1.1.0
 	 */
 	public static void invoke_addComponent(IProxy container, IProxy component, IProxy beforeComponent, IProxy constraint, IExpression expression) {
-		expression.createSimpleMethodInvoke(getAddComponentWithConstraint(expression), null, new IProxy[] {container, component, constraint, beforeComponent}, false);
+		expression.createSimpleMethodInvoke(getAddComponentWithConstraint(expression), null, new IProxy[] { container, component, constraint,
+				beforeComponent}, false);
 	}
-
 
 	/**
 	 * Get the
-	 * {@link org.eclipse.ve.internal.jfc.vm.ContainerManager#addComponentBefore(Component, Component, boolean) addComponentBeforeNoExplicitConstraint}
+	 * {@link org.eclipse.ve.internal.jfc.vm.ContainerManager#addComponentBefore(java.awt.Component, java.awt.Component, boolean) addComponentBeforeNoExplicitConstraint}
 	 * proxy method.
 	 * 
 	 * @param expression
@@ -382,34 +379,39 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_ADD_COMPONENT_BEFORE_WITH_NO_CONSTRAINT];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
-							expression, "addComponentBefore", //$NON-NLS-1$
-							new String[] {"java.awt.Container", "java.awt.Component", "java.awt.Component", "boolean"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression,
+					"org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
+					expression, "addComponentBefore", //$NON-NLS-1$
+					new String[] { "java.awt.Container", "java.awt.Component", "java.awt.Component", "boolean"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			processExpressionProxy(method, constants.methods, MANAGER_ADD_COMPONENT_BEFORE_WITH_NO_CONSTRAINT);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Invoke the add the component before the given component, using no constraint or the default constraint (component.getName()).
+	 * 
 	 * @param container
 	 * @param component
-	 * @param beforeComponent beforeComponent, if <code>null</code> it will add to the end.
-	 * @param useDefaultConstraint <code>true</code> means use <code>component.getName()</code> for the constraint, or <code>false</code> means no constraint at all.
+	 * @param beforeComponent
+	 *            beforeComponent, if <code>null</code> it will add to the end.
+	 * @param useDefaultConstraint
+	 *            <code>true</code> means use <code>component.getName()</code> for the constraint, or <code>false</code> means no constraint at
+	 *            all.
 	 * @param expression
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.ContainerManager#addComponentBefore(Container, Component, Component, boolean)
+	 * @see org.eclipse.ve.internal.jfc.vm.ContainerManager#addComponentBefore(java.awt.Container, java.awt.Component, java.awt.Component, boolean)
 	 * @since 1.1.0
 	 */
-	public static void invoke_addComponent(IProxy container, IProxy component, IProxy beforeComponent, boolean useDefaultConstraint, IExpression expression) {
-		expression.createSimpleMethodInvoke(getAddComponentBefore(expression), null, new IProxy[] {container, component, beforeComponent, expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(useDefaultConstraint)}, false);
+	public static void invoke_addComponent(IProxy container, IProxy component, IProxy beforeComponent, boolean useDefaultConstraint,
+			IExpression expression) {
+		expression.createSimpleMethodInvoke(getAddComponentBefore(expression), null, new IProxy[] { container, component, beforeComponent,
+				expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(useDefaultConstraint)}, false);
 	}
-
 
 	/**
 	 * Get the
-	 * {@link org.eclipse.ve.internal.jfc.vm.ContainerManager#addComponentBefore(Component, Component, boolean) addComponentBeforeNoExplicitConstraint}
+	 * {@link org.eclipse.ve.internal.jfc.vm.ContainerManager#addComponentBefore(java.awt.Component, java.awt.Component, boolean) addComponentBeforeNoExplicitConstraint}
 	 * proxy method.
 	 * 
 	 * @param expression
@@ -422,33 +424,35 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_CHANGE_CONSTRAINT];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
-							expression, "changeConstraint", //$NON-NLS-1$
-							new String[] { "java.awt.Container", "java.awt.Component", "java.lang.Object", "boolean"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression,
+					"org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
+					expression, "changeConstraint", //$NON-NLS-1$
+					new String[] { "java.awt.Container", "java.awt.Component", "java.lang.Object", "boolean"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			processExpressionProxy(method, constants.methods, MANAGER_CHANGE_CONSTRAINT);
 		}
 		return method;
 	}
-	
+
 	/**
-	 * Invoke the ContainerManager.changeConstraint
-	 * command.
+	 * Invoke the ContainerManager.changeConstraint command.
+	 * 
 	 * @param container
 	 * @param component
 	 * @param constraint
 	 * @param useDefaultConstraint
 	 * @param expression
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.ContainerManager#changeConstraint(Container, Component, Object, boolean)
+	 * @see org.eclipse.ve.internal.jfc.vm.ContainerManager#changeConstraint(java.awt.Container, java.awt.Component, Object, boolean)
 	 * @since 1.1.0
 	 */
-	public static void invoke_changeConstraint(IProxy container, IProxy component, IProxy constraint, boolean useDefaultConstraint, IExpression expression) {
-		expression.createSimpleMethodInvoke(getChangeConstraint(expression), null, new IProxy[] {container, component, constraint, expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(useDefaultConstraint)}, false);
+	public static void invoke_changeConstraint(IProxy container, IProxy component, IProxy constraint, boolean useDefaultConstraint,
+			IExpression expression) {
+		expression.createSimpleMethodInvoke(getChangeConstraint(expression), null, new IProxy[] { container, component, constraint,
+				expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(useDefaultConstraint)}, false);
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.ContainerManager#removeComponent(Component) removeComponent}proxy method.
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.ContainerManager#removeComponent(java.awt.Component) removeComponent}proxy method.
 	 * 
 	 * @param expression
 	 * @return
@@ -460,30 +464,30 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_REMOVE_COMPONENT];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
-							expression, "removeComponent", //$NON-NLS-1$
-							new String[] {"java.awt.Container", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression,
+					"org.eclipse.ve.internal.jfc.vm.ContainerManager").getMethodProxy( //$NON-NLS-1$
+					expression, "removeComponent", //$NON-NLS-1$
+					new String[] { "java.awt.Container", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_REMOVE_COMPONENT);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Remove the component from the container.
+	 * 
 	 * @param component
 	 * @param expression
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.ContainerManager#removeComponent(Container, Component)
+	 * @see org.eclipse.ve.internal.jfc.vm.ContainerManager#removeComponent(java.awt.Container, java.awt.Component)
 	 * @since 1.1.0
 	 */
 	public static void invoke_removeComponent(IProxy container, IProxy component, IExpression expression) {
-		expression.createSimpleMethodInvoke(getRemoveComponent(expression), null, new IProxy[] {container, component}, false);
+		expression.createSimpleMethodInvoke(getRemoveComponent(expression), null, new IProxy[] { container, component}, false);
 	}
 
-
 	/**
-	 * Get the window dispose method proxy. It is {@link org.eclipse.ve.internal.jfc.vm.WindowManager#disposeWindow(Window)}.
+	 * Get the window dispose method proxy. It is {@link org.eclipse.ve.internal.jfc.vm.WindowManager#disposeWindow(java.awt.Window)}.
 	 * 
 	 * @param expression
 	 * @return
@@ -498,16 +502,18 @@ public class BeanAwtUtilities {
 			IStandardBeanTypeProxyFactory beanTypeProxyFactory = expression.getRegistry().getBeanTypeProxyFactory();
 			method = beanTypeProxyFactory.getBeanTypeProxy(expression, WINDOWMANAGEREXTENSION_CLASSNAME).getMethodProxy( //$NON-NLS-1$
 					expression, "disposeWindow", //$NON-NLS-1$
-					new IProxyBeanType[] {beanTypeProxyFactory.getBeanTypeProxy(expression, "java.awt.Window")}); //$NON-NLS-1$
+					new IProxyBeanType[] { beanTypeProxyFactory.getBeanTypeProxy(expression, "java.awt.Window")}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, WINDOW_DISPOSE);
 		}
 		return method;
 	}
-	
+
 	/**
-	 * Get the window manager apply frame title proxy. It is {@link org.eclipse.ve.internal.jfc.vm.WindowManagerExtension#applyFrameTitle(Frame, String, boolean)}.
+	 * Get the window manager apply frame title proxy. It is
+	 * {@link org.eclipse.ve.internal.jfc.vm.WindowManagerExtension#applyFrameTitle(java.awt.Frame, String, boolean)}.
 	 * <p>
 	 * <package-protected> because only FrameProxyAdapter should access it.
+	 * 
 	 * @param expression
 	 * @return
 	 * 
@@ -519,9 +525,14 @@ public class BeanAwtUtilities {
 		IProxyMethod method = constants.methods[WINDOW_APPLYTITLE];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			IStandardBeanTypeProxyFactory beanTypeProxyFactory = expression.getRegistry().getBeanTypeProxyFactory();
-			method = beanTypeProxyFactory.getBeanTypeProxy(expression, WINDOWMANAGEREXTENSION_CLASSNAME).getMethodProxy( //$NON-NLS-1$
-					expression, "applyFrameTitle", //$NON-NLS-1$
-					new IProxyBeanType[] {beanTypeProxyFactory.getBeanTypeProxy(expression, "java.awt.Frame"), beanTypeProxyFactory.getBeanTypeProxy(expression, "java.lang.String"), beanTypeProxyFactory.getBeanTypeProxy(expression, "boolean")}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			method = beanTypeProxyFactory
+					.getBeanTypeProxy(expression, WINDOWMANAGEREXTENSION_CLASSNAME)
+					.getMethodProxy(
+							//$NON-NLS-1$
+							expression,
+							"applyFrameTitle", //$NON-NLS-1$
+							new IProxyBeanType[] {
+									beanTypeProxyFactory.getBeanTypeProxy(expression, "java.awt.Frame"), beanTypeProxyFactory.getBeanTypeProxy(expression, "java.lang.String"), beanTypeProxyFactory.getBeanTypeProxy(expression, "boolean")}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, WINDOW_APPLYTITLE);
 		}
 		return method;
@@ -547,8 +558,9 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.WindowManager#setPackOnChange(boolean) packOnChange}proxy method.
-	 * <package-protected> because only WindowManager should access it.
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.WindowManager#setPackOnChange(boolean) packOnChange}proxy method. <package-protected> because
+	 * only WindowManager should access it.
+	 * 
 	 * @param expression
 	 * @return
 	 * 
@@ -559,8 +571,8 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_WINDOW_PACK_ON_CHANGE];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, WINDOWMANAGEREXTENSION_CLASSNAME).getMethodProxy( //$NON-NLS-1$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, WINDOWMANAGEREXTENSION_CLASSNAME)
+					.getMethodProxy( //$NON-NLS-1$
 							expression, "setPackOnChange", //$NON-NLS-1$
 							new String[] { "boolean"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_WINDOW_PACK_ON_CHANGE);
@@ -569,7 +581,9 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTableManager#addColumnBefore(JTable, TableColumn, TableColumn) addComponentBefore}proxy method.
+	 * Get the
+	 * {@link org.eclipse.ve.internal.jfc.vm.JTableManager#addColumnBefore(JTable, javax.swing.table.TableColumn, javax.swing.table.TableColumn) addComponentBefore}proxy
+	 * method.
 	 * 
 	 * @param expression
 	 * @return
@@ -584,12 +598,12 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTableManager").getMethodProxy( //$NON-NLS-1$
 							expression, "addColumnBefore", //$NON-NLS-1$
-							new String[] {"javax.swing.JTable", "javax.swing.table.TableColumn", "javax.swing.table.TableColumn"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							new String[] { "javax.swing.JTable", "javax.swing.table.TableColumn", "javax.swing.table.TableColumn"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABLE_ADD_COLUMN_BEFORE);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTableManager#initializeTableModel(JTable) initializeTableModel}proxy method.
 	 * 
@@ -606,13 +620,12 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTableManager").getMethodProxy( //$NON-NLS-1$
 							expression, "initializeTableModel", //$NON-NLS-1$
-							new String[] {"javax.swing.JTable"}); //$NON-NLS-1$
+							new String[] { "javax.swing.JTable"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABLE_INITIALIZE_TABLE_MODEL);
 		}
 		return method;
 	}
-	
-	
+
 	/**
 	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTableManager#removeAllColumns(JTable) removeAllColumns}proxy method.
 	 * 
@@ -629,12 +642,12 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTableManager").getMethodProxy( //$NON-NLS-1$
 							expression, "removeAllColumns", //$NON-NLS-1$
-							new String[] {"javax.swing.JTable"}); //$NON-NLS-1$
+							new String[] { "javax.swing.JTable"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABLE_REMOVE_ALL_COLUMNS);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Get the {@link javax.swing.JTable#removeColumn(javax.swing.table.TableColumn) removeColumn}proxy method.
 	 * 
@@ -648,20 +661,20 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[JTABLE_REMOVE_COLUMN];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "javax.swing.JTable").getMethodProxy( //$NON-NLS-1$
-							expression, "removeColumn", //$NON-NLS-1$
-							new String[] {"javax.swing.table.TableColumn"}); //$NON-NLS-1$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "javax.swing.JTable").getMethodProxy( //$NON-NLS-1$
+					expression, "removeColumn", //$NON-NLS-1$
+					new String[] { "javax.swing.table.TableColumn"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, JTABLE_REMOVE_COLUMN);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Invoke get all column rectangles for a table.
+	 * 
 	 * @param jtable
-	 * @return 5-tuple array (TableColumnProxy, xIntegerProxy, yIntegerProxy, widthIntegerProxy, heightIntegerProxy, ....)
-	 * or <code>null</code> if no columns.
+	 * @return 5-tuple array (TableColumnProxy, xIntegerProxy, yIntegerProxy, widthIntegerProxy, heightIntegerProxy, ....) or <code>null</code> if
+	 *         no columns.
 	 * 
 	 * @see org.eclipse.ve.internal.jfc.vm.JTableManager#getColumnRects(JTable)
 	 * @since 1.1.0
@@ -670,12 +683,12 @@ public class BeanAwtUtilities {
 		BeanAwtUtilities constants = getConstants(jtable);
 
 		if (constants.managerJTableGetAllColumnRects == null) {
-			constants.managerJTableGetAllColumnRects = jtable.getProxyFactoryRegistry().getBeanTypeProxyFactory()
-			.getBeanTypeProxy("org.eclipse.ve.internal.jfc.vm.JTableManager").getMethodProxy( //$NON-NLS-1$
+			constants.managerJTableGetAllColumnRects = jtable.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
+					"org.eclipse.ve.internal.jfc.vm.JTableManager").getMethodProxy( //$NON-NLS-1$
 					"getColumnRects", //$NON-NLS-1$
-					new String[] {"javax.swing.JTable"}); //$NON-NLS-1$
+					new String[] { "javax.swing.JTable"}); //$NON-NLS-1$
 		}
-		return (IArrayBeanProxy) constants.managerJTableGetAllColumnRects.invokeCatchThrowableExceptions(null, new IBeanProxy[] {jtable});
+		return (IArrayBeanProxy) constants.managerJTableGetAllColumnRects.invokeCatchThrowableExceptions(null, new IBeanProxy[] { jtable});
 	}
 
 	/**
@@ -699,19 +712,20 @@ public class BeanAwtUtilities {
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Invoke jmenu remove component (either JMenu or JPopupMenu)
-	 * @param container JMenu or JPopupMenu to remove component from.
+	 * 
+	 * @param container
+	 *            JMenu or JPopupMenu to remove component from.
 	 * @param component
 	 * @param expression
 	 * 
 	 * @since 1.1.0
 	 */
 	public static void invoke_JMenu_removeComponent(IProxy container, IProxy component, IExpression expression) {
-		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJMenuRemoveComponent(expression), null, new IProxy[] {container, component}, false);		
-	}	
-
+		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJMenuRemoveComponent(expression), null, new IProxy[] { container, component}, false);
+	}
 
 	/**
 	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JMenuManager#addComponent(Object, Object) addComponent}proxy method.
@@ -729,27 +743,31 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JMenuManager").getMethodProxy( //$NON-NLS-1$
 							expression, "addComponent", //$NON-NLS-1$
-							new String[] {"java.awt.Container", "java.lang.Object", "java.lang.Object"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							new String[] { "java.awt.Container", "java.lang.Object", "java.lang.Object"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JMENU_ADD_COMPONENT);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Add component to JMenu/JPopupMenu
-	 * @param container container to add to. Must be either a JMenu or a JPopupMenu.
-	 * @param component component to add, may be a Component, String, or Action
-	 * @param beforeComponent before component, may be a Component, String, or Action, or <code>null</code> for at end
+	 * 
+	 * @param container
+	 *            container to add to. Must be either a JMenu or a JPopupMenu.
+	 * @param component
+	 *            component to add, may be a Component, String, or Action
+	 * @param beforeComponent
+	 *            before component, may be a Component, String, or Action, or <code>null</code> for at end
 	 * @param expression
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.JMenuManager#addComponent(Container, Object, Object)
+	 * @see org.eclipse.ve.internal.jfc.vm.JMenuManager#addComponent(java.awt.Container, Object, Object)
 	 * @since 1.1.0
 	 */
 	public static void invoke_JMenu_addComponent(IProxy container, IProxy component, IProxy beforeComponent, IExpression expression) {
-		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJMenuAddComponent(expression), null, new IProxy[] {container, component, beforeComponent}, false);		
+		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJMenuAddComponent(expression), null, new IProxy[] { container, component,
+				beforeComponent}, false);
 	}
 
-	
 	/**
 	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JToolBarManager#addComponent(Object, Object) addComponent}proxy method.
 	 * 
@@ -766,27 +784,30 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JToolBarManager").getMethodProxy( //$NON-NLS-1$
 							expression, "addComponent", //$NON-NLS-1$
-							new String[] {"javax.swing.JToolBar", "java.lang.Object", "java.lang.Object"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							new String[] { "javax.swing.JToolBar", "java.lang.Object", "java.lang.Object"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JTOOLBAR_ADD_COMPONENT);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Add component to JToolBar
+	 * 
 	 * @param jtoolbar
-	 * @param component component to add, may be a Component or Action
-	 * @param beforeComponent before component, may be a Component or Action, or <code>null</code> for at end
+	 * @param component
+	 *            component to add, may be a Component or Action
+	 * @param beforeComponent
+	 *            before component, may be a Component or Action, or <code>null</code> for at end
 	 * @param expression
 	 * 
 	 * @see org.eclipse.ve.internal.jfc.vm.JToolBarManager#addComponent(JToolBar, Object, Object)
 	 * @since 1.1.0
 	 */
 	public static void invoke_JToolBar_addComponent(IProxy jtoolbar, IProxy component, IProxy beforeComponent, IExpression expression) {
-		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJToolBarAddComponent(expression), null, new IProxy[] {jtoolbar, component, beforeComponent}, false);		
+		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJToolBarAddComponent(expression), null, new IProxy[] { jtoolbar, component,
+				beforeComponent}, false);
 	}
 
-	
 	/**
 	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JToolBarManager#removeComponent(Object) removeComponent}proxy method.
 	 * 
@@ -803,14 +824,15 @@ public class BeanAwtUtilities {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
 					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JToolBarManager").getMethodProxy( //$NON-NLS-1$
 							expression, "removeComponent", //$NON-NLS-1$
-							new String[] {"javax.swing.JToolBar", "java.lang.Object"}); //$NON-NLS-1$ //$NON-NLS-2$
+							new String[] { "javax.swing.JToolBar", "java.lang.Object"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_JTOOLBAR_REMOVE_COMPONENT);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Invoke JToolBar remove component.
+	 * 
 	 * @param jtoolbar
 	 * @param component
 	 * @param expression
@@ -819,8 +841,9 @@ public class BeanAwtUtilities {
 	 * @since 1.1.0
 	 */
 	public static void invoke_JToolBar_removeComponent(IProxy jtoolbar, IProxy component, IExpression expression) {
-		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJToolBarRemoveComponent(expression), null, new IProxy[] {jtoolbar, component}, false);		
-	}	
+		expression
+				.createSimpleMethodInvoke(BeanAwtUtilities.getJToolBarRemoveComponent(expression), null, new IProxy[] { jtoolbar, component}, false);
+	}
 
 	public static IBeanProxy invoke_getLayout(IBeanProxy aContainerBeanProxy) {
 		BeanAwtUtilities constants = getConstants(aContainerBeanProxy);
@@ -894,6 +917,7 @@ public class BeanAwtUtilities {
 
 	/**
 	 * Get set component method proxy. <package-protected> because only ComponentManager should access it.
+	 * 
 	 * @param expression
 	 * @return
 	 * 
@@ -904,13 +928,9 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_SET_COMPONENT];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression
-					.getRegistry()
-					.getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
-							expression,
-							"setComponent", //$NON-NLS-1$
-							new String[] { "java.awt.Component", FEEDBACKCONTROLLER_CLASSNAME} //$NON-NLS-1$ //$NON-NLS-2$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
+					expression, "setComponent", //$NON-NLS-1$
+					new String[] { "java.awt.Component", FEEDBACKCONTROLLER_CLASSNAME} //$NON-NLS-1$ //$NON-NLS-2$
 					);
 			processExpressionProxy(method, constants.methods, MANAGER_SET_COMPONENT);
 		}
@@ -930,10 +950,9 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_APPLY_BOUNDS];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
-							expression, "applyBounds", //$NON-NLS-1$
-							new String[] { "java.awt.Rectangle", "java.awt.Rectangle"}); //$NON-NLS-1$ //$NON-NLS-2$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
+					expression, "applyBounds", //$NON-NLS-1$
+					new String[] { "java.awt.Rectangle", "java.awt.Rectangle"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_APPLY_BOUNDS);
 		}
 		return method;
@@ -941,6 +960,7 @@ public class BeanAwtUtilities {
 
 	/**
 	 * Get apply location method proxy. <package-protected> because only ComponentManager should access this.
+	 * 
 	 * @param expression
 	 * @return
 	 * 
@@ -951,18 +971,16 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_APPLY_LOCATION];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
-							expression, "applyLocation", //$NON-NLS-1$
-							new String[] { "java.awt.Point", "java.awt.Point"}); //$NON-NLS-1$ //$NON-NLS-2$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
+					expression, "applyLocation", //$NON-NLS-1$
+					new String[] { "java.awt.Point", "java.awt.Point"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_APPLY_LOCATION);
 		}
 		return method;
 	}
 
 	/**
-	 * Get the ComponentManager.overrideLocation method using the expression.
-	 * <package-protected> because only ComponentManager should access it.
+	 * Get the ComponentManager.overrideLocation method using the expression. <package-protected> because only ComponentManager should access it.
 	 * 
 	 * @param expression
 	 * @return
@@ -974,10 +992,9 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_OVERRIDE_LOCATION];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
-							expression, "overrideLoc", //$NON-NLS-1$
-							new String[] { "int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
+					expression, "overrideLoc", //$NON-NLS-1$
+					new String[] { "int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_OVERRIDE_LOCATION);
 		}
 		return method;
@@ -995,10 +1012,10 @@ public class BeanAwtUtilities {
 		BeanAwtUtilities constants = getConstants(registry);
 
 		if (constants.getManagerDefaultBoundsMethodProxy == null) {
-			constants.getManagerDefaultBoundsMethodProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy(
-					COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
-					"getDefaultBounds" //$NON-NLS-1$
-			);
+			constants.getManagerDefaultBoundsMethodProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy(COMPONENTMANAGER_CLASSNAME)
+					.getMethodProxy( //$NON-NLS-1$
+							"getDefaultBounds" //$NON-NLS-1$
+					);
 		}
 		return constants.getManagerDefaultBoundsMethodProxy;
 	}
@@ -1015,10 +1032,10 @@ public class BeanAwtUtilities {
 		BeanAwtUtilities constants = getConstants(registry);
 
 		if (constants.getManagerDefaultLocationMethodProxy == null) {
-			constants.getManagerDefaultLocationMethodProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy(
-					COMPONENTMANAGER_CLASSNAME).getMethodProxy( //$NON-NLS-1$
-					"getDefaultLocation" //$NON-NLS-1$
-			);
+			constants.getManagerDefaultLocationMethodProxy = registry.getBeanTypeProxyFactory().getBeanTypeProxy(COMPONENTMANAGER_CLASSNAME)
+					.getMethodProxy( //$NON-NLS-1$
+							"getDefaultLocation" //$NON-NLS-1$
+					);
 		}
 		return constants.getManagerDefaultLocationMethodProxy;
 	}
@@ -1112,10 +1129,9 @@ public class BeanAwtUtilities {
 		}
 	}
 
-	
-	
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#insertTabBefore(JTabbedPane, String, Icon, Component, Component) insertTab} proxy method.
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#insertTabBefore(JTabbedPane, String, Icon, Component, Component) insertTab}
+	 * proxy method.
 	 * 
 	 * @param expression
 	 * @return
@@ -1127,17 +1143,18 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_JTABBEDPANE_INSERTTAB];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
-							expression, "insertTabBefore", //$NON-NLS-1$
-							new String[] {"javax.swing.JTabbedPane", "java.lang.String", "javax.swing.Icon", "java.awt.Component", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression,
+					"org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
+					expression, "insertTabBefore", //$NON-NLS-1$
+					new String[] { "javax.swing.JTabbedPane", "java.lang.String", "javax.swing.Icon", "java.awt.Component", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABBEDPANE_INSERTTAB);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Invoke the insert tab, non default.
+	 * 
 	 * @param jtabbedpane
 	 * @param title
 	 * @param icon
@@ -1148,14 +1165,15 @@ public class BeanAwtUtilities {
 	 * 
 	 * @since 1.1.0
 	 */
-	public static IProxy invoke_JTabbedPane_insertTab(IProxy jtabbedpane, IProxy title, IProxy icon,
-			IProxy component, IProxy beforeComponent, IExpression expression) {
-		return expression.createSimpleMethodInvoke(getJTabbedPaneInsertTab(expression), null, new IProxy[] {jtabbedpane, title, icon, component, beforeComponent}, true);
+	public static IProxy invoke_JTabbedPane_insertTab(IProxy jtabbedpane, IProxy title, IProxy icon, IProxy component, IProxy beforeComponent,
+			IExpression expression) {
+		return expression.createSimpleMethodInvoke(getJTabbedPaneInsertTab(expression), null, new IProxy[] { jtabbedpane, title, icon, component,
+				beforeComponent}, true);
 	}
 
-
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#insertTabBefore(JTabbedPane, Component, Component) insertTabDefault} proxy method.
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#insertTabBefore(JTabbedPane, Component, Component) insertTabDefault} proxy
+	 * method.
 	 * 
 	 * @param expression
 	 * @return
@@ -1167,17 +1185,18 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_JTABBEDPANE_INSERTTAB_DEFAULT];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
-							expression, "insertTabBefore", //$NON-NLS-1$
-							new String[] {"javax.swing.JTabbedPane", "java.awt.Component", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression,
+					"org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
+					expression, "insertTabBefore", //$NON-NLS-1$
+					new String[] { "javax.swing.JTabbedPane", "java.awt.Component", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABBEDPANE_INSERTTAB_DEFAULT);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Invoke the insert tab, default.
+	 * 
 	 * @param jtabbedpane
 	 * @param component
 	 * @param beforeComponent
@@ -1186,7 +1205,8 @@ public class BeanAwtUtilities {
 	 * @since 1.1.0
 	 */
 	public static void invoke_JTabbedPane_insertTab_Default(IProxy jtabbedpane, IProxy component, IProxy beforeComponent, IExpression expression) {
-		expression.createSimpleMethodInvoke(getJTabbedPaneInsertTabDefault(expression), null, new IProxy[] {jtabbedpane, component, beforeComponent}, false);
+		expression.createSimpleMethodInvoke(getJTabbedPaneInsertTabDefault(expression), null,
+				new IProxy[] { jtabbedpane, component, beforeComponent}, false);
 	}
 
 	/**
@@ -1216,28 +1236,27 @@ public class BeanAwtUtilities {
 		}
 		constants.setTabSelectedComponentMethodProxy.invokeCatchThrowableExceptions(aJTabbedPaneBeanProxy, componentBeanProxy);
 	}
-	
+
 	/**
 	 * get the index of the tab at the given location
 	 */
 	public static int invoke_JTabbedPane_getItemFromLocation(IBeanProxy aJTabbedPaneBeanProxy, IBeanProxy xPointBeanProxy, IBeanProxy yPointBeanProxy) {
 		BeanAwtUtilities constants = getConstants(aJTabbedPaneBeanProxy);
-    	int retVal = -1;
-    	
-    	if (constants.indexOfTabAtLocationMethodProxy == null) {
-    		constants.indexOfTabAtLocationMethodProxy = aJTabbedPaneBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory()
-			.getBeanTypeProxy("javax.swing.JTabbedPane").getMethodProxy( //$NON-NLS-1$
-					"indexAtLocation", new String[]{"int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$
-    	} 
-        if (constants.indexOfTabAtLocationMethodProxy != null) {
-           	IBeanProxy pageNum = 
-           		constants.indexOfTabAtLocationMethodProxy.invokeCatchThrowableExceptions(aJTabbedPaneBeanProxy, 
-           				new IBeanProxy[]{xPointBeanProxy, yPointBeanProxy});
-           	
-           	if(pageNum != null && pageNum instanceof INumberBeanProxy)
-            	retVal = ((INumberBeanProxy) pageNum).intValue();
-        }
-        return retVal;
+		int retVal = -1;
+
+		if (constants.indexOfTabAtLocationMethodProxy == null) {
+			constants.indexOfTabAtLocationMethodProxy = aJTabbedPaneBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
+					"javax.swing.JTabbedPane").getMethodProxy( //$NON-NLS-1$
+					"indexAtLocation", new String[] { "int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		if (constants.indexOfTabAtLocationMethodProxy != null) {
+			IBeanProxy pageNum = constants.indexOfTabAtLocationMethodProxy.invokeCatchThrowableExceptions(aJTabbedPaneBeanProxy, new IBeanProxy[] {
+					xPointBeanProxy, yPointBeanProxy});
+
+			if (pageNum != null && pageNum instanceof INumberBeanProxy)
+				retVal = ((INumberBeanProxy) pageNum).intValue();
+		}
+		return retVal;
 	}
 
 	/**
@@ -1253,10 +1272,10 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_JTABBEDPANE_SETTABICON];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
-							expression, "setIconAt", //$NON-NLS-1$
-							new String[] {"javax.swing.JTabbedPane", "java.awt.Component", "javax.swing.Icon"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression,
+					"org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
+					expression, "setIconAt", //$NON-NLS-1$
+					new String[] { "javax.swing.JTabbedPane", "java.awt.Component", "javax.swing.Icon"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABBEDPANE_SETTABICON);
 		}
 		return method;
@@ -1264,6 +1283,7 @@ public class BeanAwtUtilities {
 
 	/**
 	 * Set the tab Icon for the tab for the given component.
+	 * 
 	 * @param jtabbedpane
 	 * @param component
 	 * @param icon
@@ -1273,7 +1293,8 @@ public class BeanAwtUtilities {
 	 * @since 1.1.0
 	 */
 	public static void invoke_JTabbedPane_setIconAt(IProxy jtabbedpane, IProxy component, IProxy icon, IExpression expression) {
-		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJTabbedPaneSetTabIcon(expression), null, new IProxy[] {jtabbedpane, component, icon}, false);
+		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJTabbedPaneSetTabIcon(expression), null,
+				new IProxy[] { jtabbedpane, component, icon}, false);
 	}
 
 	/**
@@ -1289,10 +1310,10 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_JTABBEDPANE_SETTABTITLE];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
-							expression, "setTitleAt", //$NON-NLS-1$
-							new String[] {"javax.swing.JTabbedPane", "java.awt.Component", "java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression,
+					"org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
+					expression, "setTitleAt", //$NON-NLS-1$
+					new String[] { "javax.swing.JTabbedPane", "java.awt.Component", "java.lang.String"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABBEDPANE_SETTABTITLE);
 		}
 		return method;
@@ -1300,6 +1321,7 @@ public class BeanAwtUtilities {
 
 	/**
 	 * Set the title on the tab component.
+	 * 
 	 * @param jtabbedPane
 	 * @param component
 	 * @param title
@@ -1309,9 +1331,10 @@ public class BeanAwtUtilities {
 	 * @since 1.1.0
 	 */
 	public static void invoke_JTabbedPane_setTitle(IProxy jtabbedPane, IProxy component, IProxy title, IExpression expression) {
-		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJTabbedPaneSetTitle(expression), null, new IProxy[] {jtabbedPane, component, title}, false);
+		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJTabbedPaneSetTitle(expression), null, new IProxy[] { jtabbedPane, component, title},
+				false);
 	}
-	
+
 	/**
 	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setDefaultTitle(JTabbedPane, Component) setDefaultTitle}proxy method.
 	 * 
@@ -1325,17 +1348,18 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_JTABBEDPANE_SETDEFAULTTITLE];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
-							expression, "setDefaultTitle", //$NON-NLS-1$
-							new String[] {"javax.swing.JTabbedPane", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression,
+					"org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager").getMethodProxy( //$NON-NLS-1$
+					expression, "setDefaultTitle", //$NON-NLS-1$
+					new String[] { "javax.swing.JTabbedPane", "java.awt.Component"}); //$NON-NLS-1$ //$NON-NLS-2$
 			processExpressionProxy(method, constants.methods, MANAGER_JTABBEDPANE_SETDEFAULTTITLE);
 		}
 		return method;
 	}
-	
+
 	/**
 	 * Invoke the JTabbedPane manager set default title.
+	 * 
 	 * @param jtabbedPane
 	 * @param component
 	 * @param expression
@@ -1344,7 +1368,8 @@ public class BeanAwtUtilities {
 	 * @since 1.1.0
 	 */
 	public static void invoke_JTabbedPane_setDefaultTitle(IProxy jtabbedPane, IProxy component, IExpression expression) {
-		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJTabbedPaneSetDefaultTitle(expression), null, new IProxy[] {jtabbedPane, component}, false);
+		expression.createSimpleMethodInvoke(BeanAwtUtilities.getJTabbedPaneSetDefaultTitle(expression), null, new IProxy[] { jtabbedPane, component},
+				false);
 	}
 
 	/**
@@ -1360,20 +1385,20 @@ public class BeanAwtUtilities {
 
 		IProxyMethod method = constants.methods[MANAGER_JSPLITPANE_SETDIVIDERLOCATION];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
-			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.ve.internal.jfc.vm.JSplitPaneManagerExtension").getMethodProxy( //$NON-NLS-1$
-							expression, "setDividerLocation", //$NON-NLS-1$
-							new String[] {"int"}); //$NON-NLS-1$
+			method = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression,
+					"org.eclipse.ve.internal.jfc.vm.JSplitPaneManagerExtension").getMethodProxy( //$NON-NLS-1$
+					expression, "setDividerLocation", //$NON-NLS-1$
+					new String[] { "int"}); //$NON-NLS-1$
 			processExpressionProxy(method, constants.methods, MANAGER_JSPLITPANE_SETDIVIDERLOCATION);
 		}
 		return method;
 	}
 
-
 	/**
 	 * Invoke set splitpane divider location on split pane manager.
 	 * <p>
 	 * <package-protected> because only JSplitPaneManager should access it.
+	 * 
 	 * @param splitPaneManager
 	 * @param dividerLocation
 	 * @param expression
@@ -1382,10 +1407,9 @@ public class BeanAwtUtilities {
 	 * @since 1.1.0
 	 */
 	static IProxy invoke_JSplitPane_setDividerLocation(IProxy splitPaneManager, IProxy dividerLocation, boolean getOldLocation, IExpression expression) {
-		return expression.createSimpleMethodInvoke(getJSplitPaneSetDividerLocation(expression), splitPaneManager, new IProxy[] {dividerLocation}, getOldLocation);
+		return expression.createSimpleMethodInvoke(getJSplitPaneSetDividerLocation(expression), splitPaneManager, new IProxy[] { dividerLocation},
+				getOldLocation);
 	}
-
-	
 
 	/**
 	 * Get the component orientation and invoke the isLeftToRight() method. Return an IBooleanBeanProxy.
@@ -1420,11 +1444,11 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * See bug 69514 - Dropping AWT ScrollPane fails on Linux 
-	 * Exceptions are thrown because the scroll pane doesn't have children. 
-	 * To prevent this, we'll add a temporary child (a special Panel) when there isn't one.
+	 * See bug 69514 - Dropping AWT ScrollPane fails on Linux Exceptions are thrown because the scroll pane doesn't have children. To prevent this,
+	 * we'll add a temporary child (a special Panel) when there isn't one.
 	 * 
-	 * @param scrollPane    ScrollPane to be processed
+	 * @param scrollPane
+	 *            ScrollPane to be processed
 	 * 
 	 * @since 1.1.0.1
 	 */
@@ -1441,7 +1465,7 @@ public class BeanAwtUtilities {
 		}
 		return method;
 	}
-	
+
 	protected BeanAwtUtilities() {
 	}
 
