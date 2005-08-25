@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlTreeEditPart.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-17 18:39:48 $ 
+ *  $Revision: 1.8 $  $Date: 2005-08-25 20:58:10 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -95,9 +95,10 @@ public class ControlTreeEditPart extends JavaBeanTreeEditPart {
 	
 	
 	protected List getChildJavaBeans() {
-		if (((EObject) getModel()).eIsSet(sf_menu)) {
-			return (List)((EObject) getModel()).eGet(sf_menu);
-		} else 	
+// TODO this can be reactivated when we support menu (popup) on a control.		
+//		if (((EObject) getModel()).eIsSet(sf_menu)) {
+//			return Collections.singletonList(((EObject) getModel()).eGet(sf_menu));
+//		} else 	
 			return Collections.EMPTY_LIST;
 	}
 	
