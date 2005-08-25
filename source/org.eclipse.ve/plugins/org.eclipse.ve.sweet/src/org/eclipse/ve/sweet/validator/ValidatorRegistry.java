@@ -34,13 +34,13 @@ public class ValidatorRegistry {
 	private static HashMap validators;
     
     /**
-     * Associate a particular verifier with a particular Java class.
+     * Associate a particular validator with a particular Java class.
      * 
      * @param klass
-     * @param verifier
+     * @param validator
      */
-    public static void associate(String klass, IValidator verifier) {
-        validators.put(klass, verifier);
+    public static void associate(String klass, IValidator validator) {
+        validators.put(klass, validator);
     }
     
     /**
