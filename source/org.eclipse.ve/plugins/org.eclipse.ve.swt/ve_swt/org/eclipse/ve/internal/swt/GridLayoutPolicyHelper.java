@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.30 $  $Date: 2005-08-25 14:09:47 $
+ *  $Revision: 1.31 $  $Date: 2005-08-25 15:23:07 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.ui.IActionFilter;
@@ -761,10 +762,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			boolean addFiller = true;
 			if (i == atColumn) {
 				// This is the column where the new control is put
-				if (request instanceof CreateRequest)
-					cb.append(policy.getCreateCommand(addedControl, beforeObject));
-				else 
-					cb.append(policy.getMoveChildrenCommand(Collections.singletonList(addedControl), beforeObject));
+				cb.append(getCommandForAddCreateMoveChild(request, addedControl, beforeObject));
 				addFiller = false;
 			} else if (atRow < table[0].length) {
 				EObject child = table[i][atRow];
@@ -842,10 +840,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		for (int i = 0; i < table.length; i++) {
 			if (i == cell.x)
 				// This is the column where the new control is put
-				if (request instanceof CreateRequest)
-					cb.append(policy.getCreateCommand(addedControl, beforeObject));
-				else 
-					cb.append(policy.getMoveChildrenCommand(Collections.singletonList(addedControl), beforeObject));
+				cb.append(getCommandForAddCreateMoveChild(request, addedControl, beforeObject));
 			else if (table[i][cell.y] == EMPTY)
 				// These are the columns where the empty labels are put
 				cb.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
@@ -889,11 +884,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 					else
 						child = null;
 				}
-				if (request instanceof CreateRequest)
-					cb.append(policy.getCreateCommand(addedControl, child));
-				else
-					cb.append(policy.getMoveChildrenCommand(Collections.singletonList(addedControl), child));
-					
+				cb.append(getCommandForAddCreateMoveChild(request, addedControl, child));
 			}
 
 			// This is other rows that need have a filler label added to the end
@@ -929,9 +920,6 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	public Command createInsertColumnCommands (Object addedControl, Request request, int atColumn, int atRow, boolean isLastColumn) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject[][] table = getLayoutTable();
-		// If there is only one row (or none), no need to add empty labels.
-//		if (table[0].length <= 1)
-//			return null;
 		List children = (List) getContainer().eGet(sfCompositeControls);
 		if (children.isEmpty())
 			return null;
@@ -967,10 +955,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 							else
 								child = null;
 						}
-						if (request instanceof CreateRequest)
-							cb.append(policy.getCreateCommand(addedControl, child));
-						else
-							cb.append(policy.getMoveChildrenCommand(Collections.singletonList(addedControl), child));
+						cb.append(getCommandForAddCreateMoveChild(request, addedControl, child));
 					}
 				} else {
 					if (isFillerLabel(child))
@@ -1012,12 +997,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		// Handle when adding control to the last column on the last row which is basically
 		// adding to the end of the container
-		if (isLastColumn && atRow >= table[0].length) {
-			if (request instanceof CreateRequest)
-				cb.append(policy.getCreateCommand(addedControl, null));
-			else
-				cb.append(policy.getMoveChildrenCommand(Collections.singletonList(addedControl), null));
-		}
+		if (isLastColumn && atRow >= table[0].length)
+			cb.append(getCommandForAddCreateMoveChild(request, addedControl, null));
 		return cb.getCommand();
 	}
 	public Command getFillerLabelsForDeletedControlCommands(EObject deletedChild) {
@@ -1452,5 +1433,22 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	public int getDefaultVerticalSpan() {
 		return defaultVerticalSpan;
 	}
-	
+
+	/*
+	 * Create the command using the container policy to either add, create, or move the child
+	 */
+	private Command getCommandForAddCreateMoveChild(Request request, Object child, Object beforeObject) {
+		CommandBuilder cb = new CommandBuilder();
+		if (request instanceof CreateRequest)
+			cb.append(policy.getCreateCommand(child, beforeObject));
+		else if (request instanceof ChangeBoundsRequest) {
+			if (RequestConstants.REQ_ADD.equals(request.getType()))
+				cb.append(policy.getAddCommand(Collections.singletonList(child), beforeObject));
+			else
+				cb.append(policy.getMoveChildrenCommand(Collections.singletonList(child), beforeObject));
+			
+		}
+		return cb.getCommand();
+	}
+
 }
