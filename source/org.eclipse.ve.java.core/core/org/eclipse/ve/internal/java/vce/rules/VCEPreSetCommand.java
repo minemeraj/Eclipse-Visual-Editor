@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.15 $  $Date: 2005-08-25 16:07:00 $ 
  */
 
 import java.util.*;
@@ -194,9 +194,11 @@ public class VCEPreSetCommand extends CommandWrapper {
 	private void handlePromoteImplicit(CommandBuilder cbld, EObject member) {
 		if (member instanceof IJavaInstance) {
 			IJavaInstance javaInstance = (IJavaInstance) member;
-			JavaAllocation alloc = javaInstance.getAllocation();
-			if (alloc != null && alloc instanceof ImplicitAllocation) {
-				cbld.cancelAttributeSetting(javaInstance, JavaInstantiation.getAllocationFeature(javaInstance));
+			if (javaInstance.isSetAllocation()) {
+				JavaAllocation alloc = javaInstance.getAllocation();
+				if (alloc != null && alloc instanceof ImplicitAllocation) {
+					cbld.cancelAttributeSetting(javaInstance, JavaInstantiation.getAllocationFeature(javaInstance));
+				}
 			}
 		}
 	}
