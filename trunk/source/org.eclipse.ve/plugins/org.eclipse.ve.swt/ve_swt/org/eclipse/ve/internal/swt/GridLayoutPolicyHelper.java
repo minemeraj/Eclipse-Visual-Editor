@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.29 $  $Date: 2005-08-24 23:52:55 $
+ *  $Revision: 1.30 $  $Date: 2005-08-25 14:09:47 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -1020,7 +1020,36 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return cb.getCommand();
 	}
-	public Command createFillerLabelsForDeletedControlCommands (EObject deletedChild) {
+	public Command getFillerLabelsForDeletedControlCommands(EObject deletedChild) {
+		List children = (List) getContainer().eGet(sfCompositeControls);
+		if (children.isEmpty())
+			return null;
+		CommandBuilder cb = new CommandBuilder();
+		int index = children.indexOf(deletedChild);
+		if (index != -1) {
+			Rectangle[] rects = getChildrenDimensions();
+			if (rects != null && index < rects.length) {
+				Rectangle rect = rects[index];
+				// Create the commands to remove the filler labels on this row if this delete is the last valid control on this row.
+				Command rowCmds = createRemoveRowCommand(rect.y, deletedChild);
+				Command columnCmds = createRemoveColumnCommand(rect.x, deletedChild, numColumns);
+				if (rowCmds != null)
+					cb.append(rowCmds);
+				if (columnCmds != null)
+					cb.append(columnCmds);
+				if (cb.isEmpty() && index + 1 < children.size()) {
+					// In order to maintain column row positoning for all the other components we
+					// need to replace the deleted control with a filler label(s).
+					cb.append(createFillerLabelsForDeletedControlCommands(deletedChild));
+				}
+			}
+		}
+		if (cb.isEmpty())
+			return null;
+		return cb.getCommand();
+
+	}
+	private Command createFillerLabelsForDeletedControlCommands (EObject deletedChild) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject[][] table = getLayoutTable();
 		// If there is only one row (or none), no need to add empty labels.

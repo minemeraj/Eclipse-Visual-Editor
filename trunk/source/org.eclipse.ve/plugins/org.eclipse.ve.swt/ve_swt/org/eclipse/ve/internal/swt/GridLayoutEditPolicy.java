@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.38 $ $Date: 2005-08-24 23:52:55 $
+ * $Revision: 1.39 $ $Date: 2005-08-25 14:09:47 $
  */
 import java.util.*;
 
@@ -558,32 +558,16 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	}
 
 	protected Command getDeleteDependantCommand(Request aRequest) {
+		// Get the commands for doing the delete
 		Command cmd = containerPolicy.getCommand(aRequest);
+		
+		// Get the commands to insert filler labels into the cells where the control used to be 
 		if (cmd != null && aRequest instanceof ForwardedRequest) {
 			EditPart editPart = ((ForwardedRequest) aRequest).getSender();
-			List children = getHost().getChildren();
-			int indexEP = children.indexOf(editPart);
-			if (indexEP != -1) {
-				CommandBuilder cb = new CommandBuilder();
-				Rectangle[] rects = helper.getChildrenDimensions();
-				if (rects != null && indexEP < rects.length) {
-					Rectangle rect = rects[indexEP];
-					// Create the commands to remove the filler labels on this row if this delete is the last valid control on this row.
-					Command rowCmds = helper.createRemoveRowCommand(rect.y, (EObject) editPart.getModel());
-					Command columnCmds = helper.createRemoveColumnCommand(rect.x, (EObject) editPart.getModel(), helper.getNumColumns());
-					if (rowCmds != null)
-						cb.append(rowCmds);
-					if (columnCmds != null)
-						cb.append(columnCmds);
-					if (cb.isEmpty() && indexEP + 1 < children.size()) {
-						// In order to maintain column row positoning for all the other components we
-						// need to replace the deleted control with a filler label(s).
-						cb.append(helper.createFillerLabelsForDeletedControlCommands((EObject) editPart.getModel()));
-					}
-				}
-				cb.append(cmd);
-				return cb.getCommand();
-			}
+			CommandBuilder cb = new CommandBuilder();
+			cb.append(helper.getFillerLabelsForDeletedControlCommands((EObject) editPart.getModel()));
+			cb.append(cmd);
+			return cb.getCommand();
 		}
 		return cmd != null ? cmd : UnexecutableCommand.INSTANCE;
 	}
@@ -734,10 +718,22 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	}
 
 	protected Command getOrphanChildrenCommand(Request request) {
-		Command orphanContributionCmd = containerPolicy.getCommand(request);
-		if (orphanContributionCmd == null)
-			return UnexecutableCommand.INSTANCE; // It can't be created.
-		return orphanContributionCmd;
+		// Get the commands to do the orphaning
+		Command cmd = containerPolicy.getCommand(request);
+		
+		// Get the commands to insert filler labels into the cells where the control used to be 
+		if (cmd != null && request instanceof GroupRequest) {
+			List editparts = ((GroupRequest)request).getEditParts();
+			// Only allow one object to be orphaned
+			if (editparts.size() > 1)
+				return UnexecutableCommand.INSTANCE;
+			EditPart editPart = (EditPart) editparts.iterator().next();
+			CommandBuilder cb = new CommandBuilder();
+			cb.append(helper.getFillerLabelsForDeletedControlCommands((EObject) editPart.getModel()));
+			cb.append(cmd);
+			return cb.getCommand();
+		}
+		return cmd != null ? cmd : UnexecutableCommand.INSTANCE;
 	}
 
 	protected Command getAddCommand(Request request) {
