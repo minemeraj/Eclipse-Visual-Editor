@@ -115,11 +115,10 @@ public class InternalCompositeTable extends Composite implements Listener {
 		updateVisibleRows();
 		
 		if (numRowsVisible < 1) {
-			emptyTablePlaceholder = new EmptyTablePlaceholder(controlHolder, SWT.NULL);
-			emptyTablePlaceholder.setMessage(parent.getInsertHint());
+			createEmptyTablePlaceholer();
 		}
 	}
-	
+
 	public void setBackground(Color color) {
 		super.setBackground(color);
 		controlHolder.setBackground(color);
@@ -367,10 +366,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 		if (numRowsInCollection > 0) {
 			numRowsVisible = numRowsInDisplay;
 			
-			if (emptyTablePlaceholder != null) {
-				emptyTablePlaceholder.dispose();
-				emptyTablePlaceholder = null;
-			}
+			disposeEmptyTablePlaceholder();
 			
 			int displayableRows = numRowsInCollection - topRow;
 			if (numRowsVisible > displayableRows) {
@@ -417,8 +413,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 			
 			if (emptyTablePlaceholder == null) {
 				fixNumberOfRows();
-				emptyTablePlaceholder = new EmptyTablePlaceholder(controlHolder, SWT.NULL);
-				emptyTablePlaceholder.setMessage(parent.getInsertHint());
+				createEmptyTablePlaceholer();
 			}
 		}
 		
@@ -635,6 +630,23 @@ public class InternalCompositeTable extends Composite implements Listener {
 		}
 	}
 	
+	
+	// Empty table placeholder --------------------------------------------------------------------
+
+	private void createEmptyTablePlaceholer() {
+		emptyTablePlaceholder = new EmptyTablePlaceholder(controlHolder, SWT.NULL);
+		if (rowControl != null)
+			emptyTablePlaceholder.setBackground(rowControl.getBackground());
+		emptyTablePlaceholder.setMessage(parent.getInsertHint());
+	}
+	
+	private void disposeEmptyTablePlaceholder() {
+		if (emptyTablePlaceholder != null) {
+			emptyTablePlaceholder.dispose();
+			emptyTablePlaceholder = null;
+		}
+	}
+
 	// Event Handling -----------------------------------------------------------------------------
 
 	private boolean needToRequestRC=true;
@@ -730,8 +742,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 							// Otherwise, show the placeholder object and give it focus
 							deleteRowAt(currentRow);
 							--numRowsVisible;
-							emptyTablePlaceholder = new EmptyTablePlaceholder(controlHolder, SWT.NULL);
-							emptyTablePlaceholder.setMessage(parent.getInsertHint());
+							createEmptyTablePlaceholer();
 							emptyTablePlaceholder.setFocus();
 						}
 					} else {
@@ -766,11 +777,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 				return;
 			}
 			
-			// If the placeholder is currently visible, remove it.
-			if (emptyTablePlaceholder != null) {
-				emptyTablePlaceholder.dispose();
-				emptyTablePlaceholder = null;
-			}
+			disposeEmptyTablePlaceholder();
 			
 			// If the current widget has a selection, deselect it
 			deselect(e.widget);

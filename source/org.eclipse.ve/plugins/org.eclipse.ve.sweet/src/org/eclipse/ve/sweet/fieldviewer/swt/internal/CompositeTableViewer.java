@@ -254,7 +254,7 @@ public class CompositeTableViewer implements IFieldViewer, IMaster {
     /*
      * Call setInput() on all detail objects, passing the current input object.
      */
-    private void changeDetailObjects(Object detailObject) {
+    private void refreshDetailObjects(Object detailObject) {
     	for (Iterator detailObjectsIter = detailObjects.iterator(); detailObjectsIter.hasNext();) {
 			IObjectViewer objectViewer = (IObjectViewer) detailObjectsIter.next();
 			objectViewer.setInput(detailObject);
@@ -266,6 +266,7 @@ public class CompositeTableViewer implements IFieldViewer, IMaster {
 	 */
 	public void addDetailViewer(IObjectViewer detailViewer) {
 		detailObjects.add(detailViewer);
+		refreshDetailObjects(objectAt(table.getTopRow() + table.getCurrentRow()));
 	}
 
 	/* (non-Javadoc)
@@ -421,7 +422,7 @@ public class CompositeTableViewer implements IFieldViewer, IMaster {
 			}
 		}
 		public void arrive(CompositeTable sender, int currentObjectOffset, Control row) {
-			changeDetailObjects(objectAt(currentObjectOffset));
+			refreshDetailObjects(objectAt(currentObjectOffset));
 		}
 	};
 
