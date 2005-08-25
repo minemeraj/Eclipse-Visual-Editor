@@ -208,10 +208,9 @@ public class JavaObjectViewer implements IObjectViewer {
     	if (error != null) {
     		return error;
     	}
-        /*
-         * The return type for RelaxedDuckType is false for boolean types if
-         * the method does not exist.  So we have to test explicitly here...
-         */
+    	if (inputBean == null) {
+    		return null;
+    	}
     	error = inputBean.validateObject();
     	if (error != null) {
     		return error;
