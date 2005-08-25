@@ -66,6 +66,7 @@ public class PropertyContentConsumer implements IContentConsumer {
 	}
 
 	public void setValue(Object aValue) {
+		getValue(); // TODO - Need better way to ensure that the binder's contents are initialized
 		// Invoke the set method on the binder's value
 		if(isSettingValue) return;
 		try{
