@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.swt.widgets.*;
 
 import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -462,7 +461,7 @@ public class BeanSWTUtilities {
 	}
 	
 	/**
-	 * Return the {@link org.eclipse.ve.internal.swt.targetvm.ShellManagerExtension#applyShellTitle(Shell, String, boolean)} method proxy.
+	 * Return the {@link org.eclipse.ve.internal.swt.targetvm.ShellManagerExtension#applyShellTitle(org.eclipse.swt.widgets.Shell, String, boolean)} method proxy.
 	 * @param expression
 	 * @return
 	 * 
@@ -505,7 +504,7 @@ public class BeanSWTUtilities {
 	}
 	
 	/**
-	 * Get the {@link org.eclipse.ve.internal.swt.targetvm.ControlManager#disposeWidget(Widget)}proxy method.
+	 * Get the {@link org.eclipse.ve.internal.swt.targetvm.ControlManager#disposeWidget(org.eclipse.swt.widgets.Widget)}proxy method.
 	 * @param expression
 	 * @return
 	 * 
@@ -543,7 +542,7 @@ public class BeanSWTUtilities {
 	 * @return 5-tuple array (TableColumnProxy, xIntegerProxy, yIntegerProxy, widthIntegerProxy, heightIntegerProxy, ....)
 	 * or <code>null</code> if no columns or not visible
 	 * 
-	 * @see org.eclipse.ve.internal.swt.targetvm.TableManager#getColumnRects(Table)
+	 * @see org.eclipse.ve.internal.swt.targetvm.TableManager#getColumnRects(org.eclipse.swt.widgets.Table)
 	 * @since 1.1.0
 	 */
 	public static IArrayBeanProxy invoke_Table_getAllColumnRects(IBeanProxy table) {
