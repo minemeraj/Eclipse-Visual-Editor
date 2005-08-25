@@ -273,17 +273,20 @@ public class CompositeTableViewer implements IFieldViewer, IMaster {
 	
 	protected void bindFields(Control rowControl, IObjectViewer objectViewer) {
 		Control[] columns;
+		Control[] prototypeCols;
 		if (rowControl instanceof Composite) {
 			Composite rowComposite = (Composite) rowControl;
 			columns = rowComposite.getChildren();
+			prototypeCols = ((Composite)table.getRowControl()).getChildren();
 		} else {
 			columns = new Control[] {rowControl};
+			prototypeCols = new Control[] {table.getRowControl()};
 		}
 		
 		int numColumns = columns.length;
 
 		for (int i=0; i < numColumns; ++i) {
-			String binding = (String) columns[i].getData(COLUMN_BINDING);
+			String binding = (String) prototypeCols[i].getData(COLUMN_BINDING);
 			if (binding != null) {
 				objectViewer.bind(columns[i], binding);
 			}
