@@ -1,5 +1,7 @@
 package org.eclipse.ve.sweet2;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -19,33 +21,33 @@ public class TestSweet_ListToTextEdit {
 		shell.setLayout(new GridLayout(2,true));
 		
 		ListViewer listViewer = new ListViewer(shell,SWT.BORDER);
-		GridData table_data = new GridData(GridData.FILL_HORIZONTAL);
-		table_data.heightHint = 100;
+		GridData table_data = new GridData(GridData.FILL_BOTH);
+		table_data.heightHint = 150;
 		listViewer.getControl().setLayoutData(table_data);
-		listViewer.setContentProvider(new IStructuredContentProvider(){
+		
+		IStructuredContentProvider listContentProvider = new IStructuredContentProvider(){
 			public Object[] getElements(Object inputElement) {
-				return new Person[]{
-					new Person("Doe","John",37),
-					new Person("Smoth","Jill",25),
-					new Person("Cringle","Chris",75)
-				};
+				return ((List)inputElement).toArray();
 			}
 			public void dispose() {				
 			}
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
-		});
-		listViewer.setLabelProvider(new LabelProvider(){
+		};		
+		ILabelProvider personLabelProvider = new LabelProvider(){
 			public String getText(Object element) {
 				Person p = (Person)element;
 				return p.getFirstName() + " " + p.getLastName() + " -  " + p.getAge();
 			}
-		});
-		listViewer.setInput("Dummy");
+		};
+		
+		listViewer.setContentProvider(listContentProvider);
+		listViewer.setLabelProvider(personLabelProvider);
+		listViewer.setInput(Person.getSampleData());
 
 		Composite c = new Composite(shell,SWT.NONE);
 		c.setLayout(new GridLayout(2,false));
-		c.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		c.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		Label nameLabel = new Label(c,SWT.NONE);
 		nameLabel.setText("Name: ");
@@ -67,6 +69,17 @@ public class TestSweet_ListToTextEdit {
 		ageTextViewer.setInput(personBinder);
 		
 		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Label managerLabel = new Label(c,SWT.NONE);
+		managerLabel.setText("Manager: ");		
+		
+		ListEditor managerListEditor = new ListEditor(c,SWT.BORDER);
+		managerListEditor.setContentProvider(listContentProvider);
+		managerListEditor.setLabelProvider(personLabelProvider);
+		managerListEditor.setContentConsumer(personBinder.getContentConsumer("manager"));
+		managerListEditor.setInput(Person.getSampleData());
+		
+		managerListEditor.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		listViewer.addSelectionChangedListener(new ISelectionChangedListener(){
 			public void selectionChanged(SelectionChangedEvent event) {
