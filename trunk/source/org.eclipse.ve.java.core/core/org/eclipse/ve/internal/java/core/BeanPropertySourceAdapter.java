@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.10 $ $Date: 2005-08-24 23:30:45 $
+ * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.11 $ $Date: 2005-08-25 20:36:05 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -84,32 +84,36 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter {
 	 */
 	public Object getPropertyValue(Object structuralFeature) {
 
-		Object value = null;
 		EStructuralFeature sf = (EStructuralFeature) structuralFeature;
-		if (!getEObject().eIsSet(sf)) {
-			// The value was not explicitly set in the EMF Object, so we will get the Bean Proxy Adaptor
-			// and ask it for the live value from the real java bean over in the VM.
-			IBeanProxyHost sourceHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getTarget());
-			value = sourceHost.getBeanPropertyValue(sf);
-			if (value != null) {
-				// Put a propertySource adapter onto it because one will be needed but this guy isn't in a resource set to get it.
-				// Set it an IPropertySource so that we don't look it up again below.
-				Resource res = getEObject().eResource();
-				ResourceSet rset = res != null ? res.getResourceSet() : EMFEditDomainHelper.getResourceSet(sourceHost.getBeanProxyDomain()
-						.getEditDomain()); // If the EObject is not yet contained, use the resource set from the proxy host.
-				IPropertySource ps = (IPropertySource) EcoreUtil.getAdapterFactory(rset.getAdapterFactories(), IPropertySource.class).adapt(
-						(Notifier) value, IPropertySource.class);
-				if (ps != null)
-					value = ps; // It has a property source adapter.
-			}
-		} else
-			value = getEObject().eGet(sf);
-
+		Object value = null;
+		try {
+			if (!getEObject().eIsSet(sf)) {
+				// The value was not explicitly set in the EMF Object, so we will get the Bean Proxy Adaptor
+				// and ask it for the live value from the real java bean over in the VM.
+				IBeanProxyHost sourceHost = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) getTarget());
+				value = sourceHost.getBeanPropertyValue(sf);
+				if (value != null) {
+					// Put a propertySource adapter onto it because one will be needed but this guy isn't in a resource set to get it.
+					// Set it an IPropertySource so that we don't look it up again below.
+					Resource res = getEObject().eResource();
+					ResourceSet rset = res != null ? res.getResourceSet() : EMFEditDomainHelper.getResourceSet(sourceHost.getBeanProxyDomain()
+							.getEditDomain()); // If the EObject is not yet contained, use the resource set from the proxy host.
+					IPropertySource ps = (IPropertySource) EcoreUtil.getAdapterFactory(rset.getAdapterFactories(), IPropertySource.class).adapt(
+							(Notifier) value, IPropertySource.class);
+					if (ps != null)
+						value = ps; // It has a property source adapter.
+				}
+			} else
+				value = getEObject().eGet(sf);
+		} catch (IllegalArgumentException e) {
+			return null; 			// Feature not a feature of this property source, by IPropertySource definition this should return null.
+		}
+		
 		if (!(value instanceof IPropertySource) && value instanceof EObject) {
 			IPropertySource ps = (IPropertySource) EcoreUtil.getRegisteredAdapter((EObject) value, IPropertySource.class);
 			return ps != null ? ps : value;
 		} else
-			return value;
+			return value; 
 	}
 
 	/*
