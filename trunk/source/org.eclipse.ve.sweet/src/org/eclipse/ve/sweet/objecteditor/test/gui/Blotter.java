@@ -1,4 +1,4 @@
-package org.eclipse.ve.sweet.objecteditor.test;
+package org.eclipse.ve.sweet.objecteditor.test.gui;
 
 /*
  * Copyright (c) 2003 Advanced Systems Concepts, Inc.  All rights reserved.

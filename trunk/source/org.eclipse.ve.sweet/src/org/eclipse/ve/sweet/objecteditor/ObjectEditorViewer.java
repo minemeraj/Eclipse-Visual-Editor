@@ -17,7 +17,6 @@ import org.eclipse.ve.sweet.hinthandler.DelegatingHintHandler;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
-import org.eclipse.ve.sweet.table.CompositeTable;
 
 /**
  * Class ObjectEditorViewer. An IFieldViewer implementation for the ObjectEditor SWT control

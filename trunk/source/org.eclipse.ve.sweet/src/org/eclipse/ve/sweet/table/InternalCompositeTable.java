@@ -117,7 +117,6 @@ public class InternalCompositeTable extends Composite implements Listener {
 		if (numRowsVisible < 1) {
 			emptyTablePlaceholder = new EmptyTablePlaceholder(controlHolder, SWT.NULL);
 			emptyTablePlaceholder.setMessage(parent.getInsertHint());
-			emptyTablePlaceholder.setFocus();
 		}
 	}
 	
@@ -408,8 +407,43 @@ public class InternalCompositeTable extends Composite implements Listener {
 					fixNumberOfRows();
 				}
 			}
+		} else {
+			numRowsVisible = 0;
+			topRow=0;
+			currentRow=0;
+			currentColumn=0;
+			currentVisibleTopRow = 0;
+			numRowsVisible = 0;
+			
+			if (emptyTablePlaceholder == null) {
+				fixNumberOfRows();
+				emptyTablePlaceholder = new EmptyTablePlaceholder(controlHolder, SWT.NULL);
+				emptyTablePlaceholder.setMessage(parent.getInsertHint());
+			}
 		}
 		
+		// Show, hide, reset the scroll bar
+		if (numRowsVisible < numRowsInCollection) {
+			int extra = numRowsInCollection - numRowsVisible;
+			int pageIncrement = numRowsVisible;
+			if (pageIncrement > extra)
+				pageIncrement = extra;
+			
+			slider.setMaximum(numRowsInCollection);
+			slider.setMinimum(0);
+			slider.setIncrement(1);
+			slider.setPageIncrement(pageIncrement);
+			slider.setThumb(numRowsInCollection - (numRowsInCollection - numRowsVisible));
+			
+			slider.setSelection(topRow);
+			
+			if (!isSliderVisible()) {
+				setSliderVisible(true);
+			}
+		} else {
+			setSliderVisible(false);
+		}
+
 		// Lay out the header and rows correctly in the display
 		int width = controlHolder.getSize().x;
 		
@@ -433,28 +467,6 @@ public class InternalCompositeTable extends Composite implements Listener {
 			rowControl.setBounds(0, topPosition, width, rowHeight);
 			layoutChild(rowControl);
 			topPosition += rowHeight;
-		}
-		
-		// Show, hide, reset the scroll bar
-		if (numRowsVisible < numRowsInCollection) {
-			int extra = numRowsInCollection - numRowsVisible;
-			int pageIncrement = numRowsVisible;
-			if (pageIncrement > extra)
-				pageIncrement = extra;
-			
-			slider.setMaximum(numRowsInCollection);
-			slider.setMinimum(0);
-			slider.setIncrement(1);
-			slider.setPageIncrement(pageIncrement);
-			slider.setThumb(numRowsInCollection - (numRowsInCollection - numRowsVisible));
-			
-			slider.setSelection(topRow);
-			
-			if (!isSliderVisible()) {
-				setSliderVisible(true);
-			}
-		} else {
-			setSliderVisible(false);
 		}
 	}
 
@@ -570,6 +582,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 	public void setNumRowsInCollection(int numRowsInCollection) {
 		this.numRowsInCollection = numRowsInCollection;
 		updateVisibleRows();
+		refreshAllRows();
 	}
 
 	public void setTopRow(int topRow) {
@@ -1304,6 +1317,10 @@ public class InternalCompositeTable extends Composite implements Listener {
 	 * @return the current row control.
 	 */
 	public Control getCurrentRowControl() {
+		TableRow currentRow = currentRow();
+		if (currentRow == null) {
+			return null;
+		}
 		return currentRow().getRowControl();
 	}
 
