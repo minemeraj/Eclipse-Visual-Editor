@@ -308,7 +308,11 @@ public class CompositeTable extends Canvas {
 		}
 		
 		numChildrenLastTime = children.length;
-		getParent().layout(true);
+		Display.getCurrent().asyncExec(new Runnable() {
+			public void run() {
+				getParent().layout(true);
+			}
+		});
 	}
 	
 	/**(non-API)

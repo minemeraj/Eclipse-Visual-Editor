@@ -41,8 +41,8 @@ public class CompositeTableBindingTest {
 	 */
 	private void createTable() {
 		table = new CompositeTable(sShell, SWT.BORDER);
-		table.setRunTime(true);
 		table.setWeights(new int[] {35, 35, 20, 10});
+		table.setRunTime(true);
 		createHeader();
 		createRow();
 	}

@@ -25,9 +25,13 @@ import org.eclipse.ve.sweet.hinthandler.DelegatingHintHandler;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import org.eclipse.ve.sweet.metalogger.Logger;
 import org.eclipse.ve.sweet.objectviewer.IDeleteHandler;
+import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
+import org.eclipse.ve.sweet.objectviewer.IInputChangeListener;
 import org.eclipse.ve.sweet.objectviewer.IInsertHandler;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
+import org.eclipse.ve.sweet.objectviewer.IObjectViewerFactory;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
+import org.eclipse.ve.sweet.objectviewer.NullProperty;
 import org.eclipse.ve.sweet.objectviewer.ObjectViewerFactory;
 import org.eclipse.ve.sweet.reflect.DuckType;
 import org.eclipse.ve.sweet.table.CompositeTable;
@@ -90,6 +94,11 @@ public class CompositeTableViewer implements IFieldViewer, IMaster {
 	 */
 	public void setInput(IPropertyEditor input) throws CannotSaveException {
 		property = input;
+		
+		if (input instanceof NullProperty) {
+			return;
+		}
+
 		collectionInsertHandler = property.getInsertHandler();
 		collectionDeleteHandler = property.getDeleteHandler();
 		
@@ -212,6 +221,9 @@ public class CompositeTableViewer implements IFieldViewer, IMaster {
 		}
 		
 		IObjectViewer currentRowObjectViewer = getCurrentRowObjectViewer();
+		if (currentRowObjectViewer == null) {
+			return null;
+		}
 		String error = currentRowObjectViewer.validateAndSaveEditedFields();
 		if (error != null) {
 			return error;
@@ -223,7 +235,7 @@ public class CompositeTableViewer implements IFieldViewer, IMaster {
 	// Master/detail utility methods -----------------------------------------------------------
 
     private LinkedList detailObjects = new LinkedList();
-    
+
     /*
      * Tries to save all detail objects.  Returns null if they could all be saved; an error message if any
      * could not be saved.
@@ -267,8 +279,83 @@ public class CompositeTableViewer implements IFieldViewer, IMaster {
 
 	private static final String DATA_KEY = "IObjectViewer";
 
+	private IObjectViewer theNullObjectViewer = new IObjectViewer() {
+
+		public boolean setInput(Object input) {
+			return false;
+		}
+
+		public Object getInput() {
+			return "";
+		}
+
+		public IPropertyEditor getProperty(String name) throws NoSuchMethodException {
+			return new NullProperty(name);
+		}
+
+		public IFieldViewer bind(Object control, String propertyName) {
+			return null;
+		}
+
+		public IObjectViewer bind(String propertyName) {
+			return this;
+		}
+
+		public IObjectViewer bind(String propertyName, IObjectViewerFactory factory) {
+			return this;
+		}
+
+		public String validateAndSaveEditedFields() {
+			return null;
+		}
+
+		public String validateAndSaveObject() {
+			return null;
+		}
+
+		public void addObjectListener(IEditStateListener listener) {
+		}
+
+		public void removeObjectListener(IEditStateListener listener) {
+		}
+
+		public void fireObjectListenerEvent() {
+		}
+
+		public void addInputChangeListener(IInputChangeListener listener) {
+		}
+
+		public void removeInputChangeListener(IInputChangeListener listener) {
+		}
+
+		public void setHintHandler(IHintHandler hintHandler) {
+		}
+
+		public boolean isDirty() {
+			return false;
+		}
+
+		public void commit() throws CannotSaveException {
+		}
+
+		public void refresh() {
+		}
+
+		public void rollback() {
+		}
+
+		public void delete() {
+		}
+		
+	};
+    
+
 	private IObjectViewer getCurrentRowObjectViewer() {
-		return (IObjectViewer) table.getCurrentRowControl().getData(DATA_KEY);
+		Control rowControl = table.getCurrentRowControl();
+		if (rowControl == null) {
+			return theNullObjectViewer;
+		}
+		return (IObjectViewer) rowControl.getData(DATA_KEY);
 	}
 	
 	protected void bindFields(Control rowControl, IObjectViewer objectViewer) {

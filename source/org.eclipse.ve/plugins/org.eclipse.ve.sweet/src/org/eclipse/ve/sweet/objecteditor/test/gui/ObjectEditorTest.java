@@ -9,7 +9,7 @@
  * Contributors:
  *     David Orme - Initial API and implementation
  */
-package org.eclipse.ve.sweet.objecteditor.test;
+package org.eclipse.ve.sweet.objecteditor.test.gui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -25,40 +25,66 @@ import org.eclipse.ve.sweet.objecteditor.ObjectEditor;
 public class ObjectEditorTest {
 
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
-	private Composite composite = null;
-	private Button button = null;
-	private Button button1 = null;
-	private Button button2 = null;
+	private Composite toolBar = null;
+	private Button clients = null;
+	private Button work = null;
+	private Button billing = null;
 	private Blotter blotter = null;
 	private ObjectEditor objectEditor = null;
-	private Button button3 = null;
-	private Button button4 = null;
+	private Button back = null;
+	private Button forward = null;
 	private Label label = null;
+	
 	/**
-	 * This method initializes composite	
+	 * This method initializes the tool bar	
 	 *
 	 */
-	private void createComposite() {
+	private void createToolBar() {
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 6;
 		GridData gridData = new org.eclipse.swt.layout.GridData();
 		gridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		composite = new Composite(sShell, SWT.NONE);
-		composite.setLayoutData(gridData);
-		composite.setLayout(gridLayout);
-		composite.setTabList(new Control[] {});
-		button3 = new Button(composite, SWT.LEFT | SWT.ARROW);
-		button4 = new Button(composite, SWT.ARROW | SWT.RIGHT);
-		label = new Label(composite, SWT.NONE);
+		toolBar = new Composite(sShell, SWT.NONE);
+		toolBar.setLayoutData(gridData);
+		toolBar.setLayout(gridLayout);
+		toolBar.setTabList(new Control[] {});
+		back = new Button(toolBar, SWT.LEFT | SWT.ARROW);
+		back.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				back();
+			}
+		});
+		forward = new Button(toolBar, SWT.ARROW | SWT.RIGHT);
+		forward.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				forward();
+			}
+		});
+		label = new Label(toolBar, SWT.NONE);
 		label.setText("|");
-		button = new Button(composite, SWT.NONE);
-		button.setText("Clients");
-		button1 = new Button(composite, SWT.NONE);
-		button1.setText("Work");
-		button2 = new Button(composite, SWT.NONE);
-		button2.setText("Billing");
+		clients = new Button(toolBar, SWT.NONE);
+		clients.setText("Clients");
+		clients.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				showClients();
+			}
+		});
+		work = new Button(toolBar, SWT.NONE);
+		work.setText("Work");
+		work.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				showWork();
+			}
+		});
+		billing = new Button(toolBar, SWT.NONE);
+		billing.setText("Billing");
+		billing.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				showBilling();
+			}
+		});
 	}
 
 	/**
@@ -95,24 +121,6 @@ public class ObjectEditorTest {
 	}
 
 	/**
-	 * Method main.
-	 *
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		Display display = Display.getDefault();
-		ObjectEditorTest thisClass = new ObjectEditorTest();
-		thisClass.createSShell();
-		thisClass.sShell.open();
-
-		while (!thisClass.sShell.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-		display.dispose();
-	}
-
-	/**
 	 * This method initializes sShell
 	 */
 	private void createSShell() {
@@ -123,9 +131,56 @@ public class ObjectEditorTest {
 		gridLayout1.marginWidth = 0;
 		sShell = new Shell();
 		sShell.setText("Object Browser");
-		createComposite();
+		createToolBar();
 		createBlotter();
 		sShell.setLayout(gridLayout1);
+	}
+	
+	// Event handlers -----------------------------------------------------------------------------
+
+	protected void back() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	protected void forward() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	protected void showClients() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	protected void showWork() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	protected void showBilling() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	// Method Main... -----------------------------------------------------------------------------
+	
+	/**
+	 * Method main.
+	 *
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Display display = Display.getDefault();
+		ObjectEditorTest oet = new ObjectEditorTest();
+		oet.createSShell();
+		oet.sShell.open();
+
+		while (!oet.sShell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		display.dispose();
 	}
 
 }
