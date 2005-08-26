@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.53 $  $Date: 2005-08-24 22:19:39 $ 
+ *  $Revision: 1.54 $  $Date: 2005-08-26 17:37:30 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -51,7 +51,10 @@ import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationExceptio
 public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter implements IInternalBeanProxyHost {
 
 	private static final MessageError NO_BEAN_DUE_TO_PREVIOUS_ERROR = new IErrorHolder.MessageError(JavaMessages.BeanProxyAdapter2_NO_BEAN_DUE_TO_PREVIOUS_ERROR_, 
-										IErrorHolder.ERROR_INFO);	
+										IErrorHolder.ERROR_INFO);
+	
+	static boolean LOG_NOTIFICATIONS;
+	
 	// The beanproxy being wrappered. It should be accessed only through accessors, even subclasses. During
 	// instantiation it will be a ExpressionProxy.
 	private IProxy beanProxy;
@@ -309,6 +312,12 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	public final IProxy instantiateBeanProxy(IExpression expression) {
 
 		if (!inInstantiation() && !isBeanProxyInstantiated() && expression.isValid()){
+			if (LOG_NOTIFICATIONS) {
+				StringBuffer r = new StringBuffer();
+				r.append("Instantiation request: ");
+				printObject(getJavaObject(), r);
+				JavaVEPlugin.log(r.toString(), Level.WARNING);
+			}			
 			// First create the bean
 			boolean reinstantiate = isThis != null;	// If we had a isThis setting then this is not the first instantiation. We will notify in that case.
 			isThis = null;
@@ -1335,6 +1344,12 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		int mark = expression != null ? expression.mark() : -1;
 		try {
 			if (isBeanProxyInstantiated()) {
+				if (LOG_NOTIFICATIONS) {
+					StringBuffer r = new StringBuffer();
+					r.append("Release request: ");
+					printObject(getJavaObject(), r);
+					JavaVEPlugin.log(r.toString(), Level.WARNING);
+				}				
 				ReinstantiateBeanProxyNotification notification = new ReinstantiateBeanProxyNotification(expression);
 				notification.setPrerelease(true);
 				// Now walk through all references and tell of pre-release.
@@ -1735,6 +1750,12 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	 * @since 1.1.0
 	 */
 	protected void primReinstantiate(IExpression expression) {
+		if (LOG_NOTIFICATIONS) {
+			StringBuffer r = new StringBuffer();
+			r.append("Reinstantiation request: ");
+			printObject(getJavaObject(), r);
+			JavaVEPlugin.log(r.toString(), Level.WARNING);
+		}
 		releaseBeanProxy(expression);
 		instantiateBeanProxy(expression);
 	}
@@ -1759,11 +1780,141 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		return (IJavaObjectInstance) getTarget();
 	}
 
-	/* (non-Javadoc)
+	static void logNotification(Notification n) {
+		StringBuffer result = new StringBuffer();
+		switch (n.getEventType()) {
+			case Notification.SET: {
+				result.append("SET");
+				break;
+			}
+			case Notification.UNSET: {
+				result.append("UNSET");
+				break;
+			}
+			case Notification.ADD: {
+				result.append("ADD");
+				break;
+			}
+			case Notification.ADD_MANY: {
+				result.append("ADD_MANY");
+				break;
+			}
+			case Notification.REMOVE: {
+				result.append("REMOVE");
+				break;
+			}
+			case Notification.REMOVE_MANY: {
+				result.append("REMOVE_MANY");
+				break;
+			}
+			case Notification.MOVE: {
+				result.append("MOVE");
+				break;
+			}
+			case Notification.REMOVING_ADAPTER: {
+				result.append("REMOVING_ADPATER");
+				break;
+			}
+			case Notification.RESOLVE: {
+				result.append("RESOLVE");
+				break;
+			}
+			case IInternalBeanProxyHost.NOTIFICATION_LIFECYCLE: {
+				if (((ReinstantiateBeanProxyNotification) n).isPrerelease())
+					result.append("PRERELEASE");
+				else
+					result.append("POSTREINSTANTIATION");
+				break;
+			}
+			default: {
+				result.append(n.getEventType());
+				break;
+			}
+		}
+	    if (n.isTouch())
+	    {
+	      result.append(", touch");
+	    }
+	    if (n.getPosition() != -1) {
+	    	result.append(", pos: ");
+	    	result.append(n.getPosition());
+	    }
+	    result.append(", notifier: ");
+	    printObject(n.getNotifier(), result);
+	    Object feature = n.getFeature();
+	    if (feature instanceof EStructuralFeature) {
+	    	result.append(", feature: ");
+	    	result.append(((EStructuralFeature) feature).getName());
+	    }
+	    Object old = n.getOldValue();
+	    if (old != null) {
+	    	result.append(", oldValue: ");
+	    	if (n.getEventType() == Notification.REMOVE_MANY) {
+	    		result.append('{');
+	    		List ol = (List) old;
+	    		boolean first = true;
+	    		for (Iterator iter = ol.iterator(); iter.hasNext();) {
+	    			if (first) 
+	    				first = false;
+	    			else
+	    				result.append(", ");
+					Object element = iter.next();
+					printObject(element, result);
+				}
+	    		result.append('}');
+	    	} else {
+	    		printObject(old, result);
+	    	}
+	    }
+	    Object newv = n.getNewValue();
+	    if (newv != null) {
+	    	result.append(", newValue: ");
+	    	if (n.getEventType() == Notification.ADD_MANY) {
+	    		result.append('{');
+	    		List nl = (List) newv;
+	    		boolean first = true;
+	    		for (Iterator iter = nl.iterator(); iter.hasNext();) {
+	    			if (first) 
+	    				first = false;
+	    			else
+	    				result.append(", ");
+					Object element = iter.next();
+					printObject(element, result);
+				}
+	    		result.append('}');
+	    	} else {
+	    		printObject(newv, result);	    		
+	    	}
+	    }
+
+	    if (n.wasSet())
+	    	result.append(", wasSet");
+	    
+	    JavaVEPlugin.log(result.toString(), Level.WARNING);
+	}
+	
+	private static void printObject(Object o, StringBuffer b) {
+		if (o instanceof IJavaInstance) {
+			IJavaInstance j = (IJavaInstance) o;
+			b.append('@');
+			b.append(j.hashCode());
+			b.append('(');
+			b.append(j.getAllocation());
+			b.append(')');
+		} else
+			b.append(o);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.emf.common.notify.Adapter#notifyChanged(org.eclipse.emf.common.notify.Notification)
 	 */
 	public void notifyChanged(Notification notification) {
 
+		if (LOG_NOTIFICATIONS) {
+			logNotification(notification);
+		}
 		switch ( notification.getEventType()) {
 			case Notification.SET:
 				clearError((EStructuralFeature) notification.getFeature(), notification.getOldValue());
@@ -2094,5 +2245,9 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	 */
 	public void removeFromFreeForm() {
 		// For a standard bean proxy, it means nothing. Subclasses should override to do what they need to do.
+	}
+	
+	public String toString() {
+		return super.toString() + '(' + getTarget() +')';
 	}
 }
