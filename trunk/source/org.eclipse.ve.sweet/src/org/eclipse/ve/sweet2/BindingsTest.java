@@ -12,27 +12,27 @@
  *  Created Aug 17, 2005 by Gili Mendel
  * 
  *  $RCSfile: BindingsTest.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 17:32:12 $ 
+ *  $Revision: 1.4 $  $Date: 2005-08-26 21:45:47 $ 
  */
 package org.eclipse.ve.sweet2;
 
+import java.awt.peer.ListPeer;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.List;
 
 import org.eclipse.ve.sweet2.hibernate.HibernatePersonServicesHelper;
 import org.eclipse.ve.sweet2.hibernate.Person;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Label;
 
 public class BindingsTest {
 
@@ -47,39 +47,16 @@ public class BindingsTest {
 	private Label label2 = null;
 	private Text personLNText = null;
 	private Group managerGroup = null;
-	private Label label3 = null;
-	private Text managerFNText = null;
-	private Label label4 = null;
-	private Text managerLNText = null;
 	private Group spouseGroup = null;
-	private Label label5 = null;
-	private Text spouseFNText = null;
-	private Label label6 = null;
-	private Text spouseLNText = null;
-	private Button updateDomainButton = null;
 	private List domainList = null;
 	private ListViewer domainListViewer = null;
-	private Button radioButton = null;
-	private Button radioButton1 = null;
-	private Button radioButton2 = null;
-	private Label label7 = null;
 	private Button readDBButton = null;
 	private Button writeDBButton = null;
 	private Button ResetButton = null;
-	private Label label10 = null;
-	private Button deleteSelectedButton = null;
-	private Label label8 = null;
-	private Button noManagerButton = null;
-	private Label label9 = null;
-	private Label label11 = null;
-	private Label label12 = null;
-	private Button noSpouseButton = null;
-	private Label label13 = null;
-	private Label label14 = null;
 	private Menu menuBar = null;
 	private Button dbDumpButton = null;
 	
-	private Shell addPersonShell = null;  //  @jve:decl-index=0:visual-constraint="37,367"
+	private Shell addPersonShell = null;  //  @jve:decl-index=0:visual-constraint="45,581"
 	private Label label = null;
 	private Text addFNText = null;
 	private Label label15 = null;
@@ -89,20 +66,52 @@ public class BindingsTest {
 	private Label label17 = null;
 	private Button addCancelButton = null;
 	private Button domainDumpButton = null;
+	private Label label18 = null;
+	private Label label10 = null;
+	private Table backupTable = null;
+	private CCombo managerCombo = null;
+	private Text managerFNText = null;
+	private Text managerLNText = null;
+	private Button button = null;
+	private Label label3 = null;
+	private List spouseList = null;
+	private Label label5 = null;
+	private Button button1 = null;
+	private Label label8 = null;
+	private Group group = null;
+	private Label label9 = null;
+	private Label label11 = null;
+	private Label label12 = null;
+	private Text spouseFNText = null;
+	private Label label7 = null;
+	private Label label13 = null;
+	private Label label14 = null;
+	private Text spouseLNText = null;
+	private Label label19 = null;
+	private Button button2 = null;
 	
 	
 	private HibernatePersonServicesHelper dbHelper = HibernatePersonServicesHelper.getHelper();
 	private Person selectedPerson = null;
 	final IObjectBinder selectedPersonBinder = ObjectBinder.createObjectBinder(Person.class);
+	private java.util.List personList = null;
+	
 	final IObjectBinder managerPersonBinder = ObjectBinder.createObjectBinder(Person.class);
 	final IObjectBinder spousePersonBinder = ObjectBinder.createObjectBinder(Person.class);
-	private Label label18 = null;
 	
-	
+	public class ListContentProvider implements IStructuredContentProvider {
+		public Object[] getElements(Object inputElement) {
+			if (inputElement instanceof java.util.List)
+			    return ((java.util.List)inputElement).toArray();
+			else 
+				return new Object[0];			
+		}
+		public void dispose() {}
 
-	
-	
-	
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+		
+	}
+
 	private void createMenu() {
 		
 	
@@ -157,7 +166,7 @@ public class BindingsTest {
 	private void createViewersGroup() {
 		GridData gridData13 = new org.eclipse.swt.layout.GridData();
 		gridData13.grabExcessHorizontalSpace = true;
-		gridData13.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		gridData13.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData13.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		viewersGroup = new Group(sShell, SWT.NONE);
 		viewersGroup.setText("Viewers model");
@@ -166,6 +175,7 @@ public class BindingsTest {
 		createManagerGroup();
 		viewersGroup.setLayoutData(gridData13);
 		createSpouseGroup();
+		createBackupsGroup();
 	}
 	
 	private void createDomainList() {
@@ -218,8 +228,6 @@ public class BindingsTest {
 	 *
 	 */
 	private void createDomainGroup() {
-		GridData gridData10 = new org.eclipse.swt.layout.GridData();
-		gridData10.horizontalSpan = 2;
 		GridLayout gridLayout4 = new GridLayout();
 		gridLayout4.numColumns = 2;
 		GridData gridData9 = new org.eclipse.swt.layout.GridData();
@@ -227,12 +235,6 @@ public class BindingsTest {
 		gridData9.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData9.grabExcessHorizontalSpace = true;
 		gridData9.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		GridData gridData8 = new org.eclipse.swt.layout.GridData();
-		gridData8.horizontalIndent = 10;
-		GridData gridData7 = new org.eclipse.swt.layout.GridData();
-		gridData7.horizontalIndent = 10;
-		GridData gridData6 = new org.eclipse.swt.layout.GridData();
-		gridData6.horizontalIndent = 10;
 		
 		demainGroup = new Group(sShell, SWT.NONE);
 		demainGroup.setText("Domain Model");
@@ -240,7 +242,7 @@ public class BindingsTest {
 		demainGroup.setLayoutData(gridData9);
 		label18 = new Label(demainGroup, SWT.NONE);
 		domainDumpButton = new Button(demainGroup, SWT.NONE);
-		domainDumpButton.setText("Dump Content");
+		domainDumpButton.setText("Dump Domain Content");
 		domainDumpButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				dumpPersonList((java.util.List)domainListViewer.getInput());
@@ -249,23 +251,11 @@ public class BindingsTest {
 		
 		createDomainList();
 
-		label7 = new Label(demainGroup, SWT.NONE);
-		label7.setText("Selected will set:");
-		label7.setLayoutData(gridData10);
-		radioButton = new Button(demainGroup, SWT.RADIO);
-		radioButton.setText("Person");
-		radioButton.setSelection(true);
-		radioButton.setLayoutData(gridData6);
-		label10 = new Label(demainGroup, SWT.NONE);
-		radioButton1 = new Button(demainGroup, SWT.RADIO);
-		radioButton1.setText("Manager");
-		radioButton1.setLayoutData(gridData7);
-		deleteSelectedButton = new Button(demainGroup, SWT.NONE);
-		deleteSelectedButton.setText("Delete Selected");
-		deleteSelectedButton.setToolTipText("Delete the selected person from the domain model");
-		radioButton2 = new Button(demainGroup, SWT.RADIO);
-		radioButton2.setText("Spouse");
-		radioButton2.setLayoutData(gridData8);
+		label11 = new Label(demainGroup, SWT.NONE);
+		label12 = new Label(demainGroup, SWT.NONE);
+		label9 = new Label(demainGroup, SWT.NONE);
+		createDBGroup();
+		label10 = new Label(demainGroup, SWT.NONE);		
 	}
 	
 	private void dumpPersonList(java.util.List persons) {
@@ -294,27 +284,46 @@ public class BindingsTest {
 	 *
 	 */
 	private void createDBGroup() {
+		GridData gridData20 = new org.eclipse.swt.layout.GridData();
+		gridData20.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData20.grabExcessHorizontalSpace = false;
+		gridData20.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		GridData gridData19 = new org.eclipse.swt.layout.GridData();
+		gridData19.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData19.grabExcessHorizontalSpace = false;
+		gridData19.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		GridData gridData18 = new org.eclipse.swt.layout.GridData();
+		gridData18.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData18.grabExcessHorizontalSpace = false;
+		gridData18.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		GridData gridData11 = new org.eclipse.swt.layout.GridData();
-		gridData11.horizontalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		gridData11.verticalAlignment = org.eclipse.swt.layout.GridData.BEGINNING;
-		databaseGroup = new Group(sShell, SWT.NONE);
+		gridData11.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData11.grabExcessHorizontalSpace = false;
+		gridData11.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		GridData gridData10 = new org.eclipse.swt.layout.GridData();
+		gridData10.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData10.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		databaseGroup = new Group(demainGroup, SWT.NONE);
 		databaseGroup.setText("Database Conrols");
-		databaseGroup.setLayoutData(gridData11);
+		databaseGroup.setLayoutData(gridData10);
 		databaseGroup.setLayout(new GridLayout());
 		readDBButton = new Button(databaseGroup, SWT.NONE);
-		readDBButton.setText("Read Domain Model");
+		readDBButton.setText("Get Domain Model");
+		readDBButton.setLayoutData(gridData11);
 		readDBButton.setToolTipText("Reads domain model from DB");
 		readDBButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				runDBService(new Runnable() {				
 					public void run() {
-						domainListViewer.setInput(dbHelper.getAllPersons());				
+						personList = dbHelper.getAllPersons();
+						domainListViewer.setInput(personList);				
 					}				
 				});								
 			}
 		});
 		writeDBButton = new Button(databaseGroup, SWT.NONE);
 		writeDBButton.setText("Save Domain Model");
+		writeDBButton.setLayoutData(gridData18);
 		writeDBButton.setToolTipText("Writes domain model to DB");
 		writeDBButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -326,7 +335,8 @@ public class BindingsTest {
 			}
 		});
 		ResetButton = new Button(databaseGroup, SWT.NONE);
-		ResetButton.setText("Reset  DB Records");
+		ResetButton.setText("ReCreate Database Content");
+		ResetButton.setLayoutData(gridData19);
 		ResetButton.setToolTipText("Create sample DB and read it");
 		ResetButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -339,7 +349,8 @@ public class BindingsTest {
 			}
 		});
 		dbDumpButton = new Button(databaseGroup, SWT.NONE);
-		dbDumpButton.setText("Dump DB Records");
+		dbDumpButton.setText("Dump DB Content");
+		dbDumpButton.setLayoutData(gridData20);
 		dbDumpButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				runDBService(new Runnable() {				
@@ -373,7 +384,8 @@ public class BindingsTest {
 		GridLayout gridLayout1 = new GridLayout();
 		gridLayout1.numColumns = 4;
 		personGroup = new Group(viewersGroup, SWT.NONE);
-		personGroup.setText("Person - Update on Modify");
+		personGroup.setText("Selected Person");
+		personGroup.setToolTipText("Immediate Policy");
 		personGroup.setLayoutData(gridData14);
 		personGroup.setLayout(gridLayout1);
 		label1 = new Label(personGroup, SWT.NONE);
@@ -391,39 +403,39 @@ public class BindingsTest {
 	 *
 	 */
 	private void createManagerGroup() {
-		GridData gridData18 = new org.eclipse.swt.layout.GridData();
-		gridData18.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		gridData18.grabExcessHorizontalSpace = true;
-		gridData18.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		GridData gridData8 = new org.eclipse.swt.layout.GridData();
+		gridData8.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData8.grabExcessHorizontalSpace = true;
+		gridData8.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		GridData gridData7 = new org.eclipse.swt.layout.GridData();
+		gridData7.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData7.grabExcessHorizontalSpace = true;
+		gridData7.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		GridData gridData2 = new org.eclipse.swt.layout.GridData();
+		gridData2.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData2.grabExcessHorizontalSpace = true;
+		gridData2.horizontalSpan = 2;
+		gridData2.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		GridData gridData15 = new org.eclipse.swt.layout.GridData();
 		gridData15.grabExcessHorizontalSpace = true;
 		gridData15.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		gridData15.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		GridData gridData2 = new GridData();
-		gridData2.widthHint = 100;
-		gridData2.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		gridData2.grabExcessHorizontalSpace = true;
-		gridData2.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		GridLayout gridLayout2 = new GridLayout();
-		gridLayout2.numColumns = 4;
+		gridLayout2.numColumns = 2;
 		managerGroup = new Group(viewersGroup, SWT.NONE);
-		managerGroup.setText("Manager - Update on Focus lost");
+		managerGroup.setText("Manager");
+		managerGroup.setToolTipText("Focus Lost Policy");
 		managerGroup.setLayoutData(gridData15);
 		managerGroup.setLayout(gridLayout2);
-		label3 = new Label(managerGroup, SWT.NONE);
-		label3.setText("First");
-		managerFNText = new Text(managerGroup, SWT.BORDER);
-		managerFNText.setLayoutData(gridData18);
-		label4 = new Label(managerGroup, SWT.NONE);
-		label4.setText("Last");
+		managerCombo = new CCombo(managerGroup, SWT.NONE);
+		managerCombo.setLayoutData(gridData2);
 		managerLNText = new Text(managerGroup, SWT.BORDER);
-		managerLNText.setLayoutData(gridData2);
-		label8 = new Label(managerGroup, SWT.NONE);
-		noManagerButton = new Button(managerGroup, SWT.NONE);
-		noManagerButton.setText("No Manager");
-		noManagerButton.setToolTipText("Clear the Manager for this person");
-		label9 = new Label(managerGroup, SWT.NONE);
-		label11 = new Label(managerGroup, SWT.NONE);
+		managerLNText.setLayoutData(gridData7);
+		managerFNText = new Text(managerGroup, SWT.BORDER);
+		button = new Button(managerGroup, SWT.NONE);
+		button.setText("No Manager");
+		label3 = new Label(managerGroup, SWT.NONE);
+		managerFNText.setLayoutData(gridData8);
 	}
 
 	/**
@@ -431,46 +443,50 @@ public class BindingsTest {
 	 *
 	 */
 	private void createSpouseGroup() {
-		GridData gridData19 = new org.eclipse.swt.layout.GridData();
-		gridData19.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		gridData19.grabExcessHorizontalSpace = true;
-		gridData19.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		GridData gridData23 = new org.eclipse.swt.layout.GridData();
+		gridData23.horizontalAlignment = org.eclipse.swt.layout.GridData.END;
+		gridData23.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		GridData gridData22 = new org.eclipse.swt.layout.GridData();
+		gridData22.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData22.grabExcessHorizontalSpace = true;
+		gridData22.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		GridData gridData21 = new org.eclipse.swt.layout.GridData();
+		gridData21.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData21.grabExcessHorizontalSpace = true;
+		gridData21.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		GridData gridData3 = new org.eclipse.swt.layout.GridData();
+		gridData3.grabExcessHorizontalSpace = true;
+		gridData3.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData3.horizontalSpan = 2;
+		gridData3.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		GridData gridData16 = new org.eclipse.swt.layout.GridData();
 		gridData16.grabExcessHorizontalSpace = true;
 		gridData16.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		gridData16.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		GridData gridData4 = new org.eclipse.swt.layout.GridData();
-		gridData4.horizontalSpan = 4;
-		gridData4.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		gridData4.horizontalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		GridData gridData3 = new GridData();
-		gridData3.widthHint = 100;
-		gridData3.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
-		gridData3.grabExcessHorizontalSpace = true;
-		gridData3.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		GridLayout gridLayout3 = new GridLayout();
 		gridLayout3.numColumns = 4;
 		spouseGroup = new Group(viewersGroup, SWT.NONE);
-		spouseGroup.setText("Spouse - Explicit Update");
+		spouseGroup.setText("Spouse");
+		spouseGroup.setToolTipText("Explicity Commit Policy");
 		spouseGroup.setLayoutData(gridData16);
 		spouseGroup.setLayout(gridLayout3);
+		spouseList = new List(spouseGroup, SWT.NONE);
+		spouseList.setLayoutData(gridData3);
 		label5 = new Label(spouseGroup, SWT.NONE);
-		label5.setText("First");
-		spouseFNText = new Text(spouseGroup, SWT.BORDER);
-		spouseFNText.setLayoutData(gridData19);
-		label6 = new Label(spouseGroup, SWT.NONE);
-		label6.setText("Last");
-		spouseLNText = new Text(spouseGroup, SWT.BORDER);
-		spouseLNText.setLayoutData(gridData3);
-		label12 = new Label(spouseGroup, SWT.NONE);
-		noSpouseButton = new Button(spouseGroup, SWT.NONE);
-		noSpouseButton.setText("No Spouse");
-		noSpouseButton.setToolTipText("Clears the spouse for this person");
-		label13 = new Label(spouseGroup, SWT.NONE);
 		label14 = new Label(spouseGroup, SWT.NONE);
-		updateDomainButton = new Button(spouseGroup, SWT.NONE);
-		updateDomainButton.setText("Update Domain Model");
-		updateDomainButton.setLayoutData(gridData4);
+		spouseLNText = new Text(spouseGroup, SWT.BORDER);
+		spouseLNText.setLayoutData(gridData22);
+		spouseFNText = new Text(spouseGroup, SWT.BORDER);
+		spouseFNText.setLayoutData(gridData21);
+		label7 = new Label(spouseGroup, SWT.NONE);
+		label13 = new Label(spouseGroup, SWT.NONE);
+		button1 = new Button(spouseGroup, SWT.NONE);
+		button1.setText("No Spouse");
+		button2 = new Button(spouseGroup, SWT.NONE);
+		button2.setText("Commit View");
+		button2.setLayoutData(gridData23);
+		label8 = new Label(spouseGroup, SWT.NONE);
+		label19 = new Label(spouseGroup, SWT.NONE);
 	}
 
 
@@ -488,7 +504,7 @@ public class BindingsTest {
 		sShell = new Shell();
 		sShell.setText("Bindings  Proof of Concept");
 		sShell.setLayout(gridLayout);
-		sShell.setSize(new org.eclipse.swt.graphics.Point(609,333));
+		sShell.setSize(new org.eclipse.swt.graphics.Point(668,530));
 		
 		createMenu();
 		sShell.setMenuBar(menuBar);
@@ -498,7 +514,6 @@ public class BindingsTest {
 		validationMsgLabel.setLayoutData(gridData);
 		createViewersGroup();
 		createDomainGroup();
-		createDBGroup();
 		sShell.addShellListener(new org.eclipse.swt.events.ShellAdapter() {
 			public void shellClosed(org.eclipse.swt.events.ShellEvent e) {
 				dbHelper.endSession();
@@ -562,7 +577,7 @@ public class BindingsTest {
 	private void bind() {	
 		selectedPersonBinder.addPropertyChangeListener(new PropertyChangeListener() {		
 			public void propertyChange(PropertyChangeEvent evt) {
-				domainListViewer.refresh();		
+				domainListViewer.refresh();					
 			}		
 		});
 		managerPersonBinder.addPropertyChangeListener(new PropertyChangeListener() {		
@@ -610,6 +625,13 @@ public class BindingsTest {
 		spouseFN.setContentConsumer(selectedPersonBinder.getContentConsumer("spouse.firstName"));
 		spouseFN.setInput(selectedPersonBinder);
 		
+		ListEditor spouseListEditor = new ListEditor(spouseList);
+		spouseListEditor.setContentProvider(new ListContentProvider());
+		spouseListEditor.setInput(personList);
+		spouseListEditor.setContentConsumer(selectedPersonBinder.getContentConsumer("spouse"));
+		spouseListEditor.setOutput(selectedPersonBinder);
+		
+		
 		TextEditor spouseLN = new TextEditor(spouseLNText);
 		spouseLN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
 		spouseLN.setContentProvider(new PropertyContentProvider("spouse.lastName"));
@@ -620,6 +642,99 @@ public class BindingsTest {
 	
 	protected void runDBService (Runnable runnable) {
 		BusyIndicator.showWhile(Display.getDefault(), runnable);		
+	}
+
+	/**
+	 * This method initializes table	
+	 *
+	 */
+	private void createBackupsTable() {
+		GridData gridData6 = new org.eclipse.swt.layout.GridData();
+		gridData6.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData6.grabExcessHorizontalSpace = true;
+		gridData6.grabExcessVerticalSpace = true;
+		gridData6.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		backupTable = new Table(group, SWT.NONE);
+		backupTable.setHeaderVisible(true);
+		backupTable.setLayoutData(gridData6);
+		backupTable.setLinesVisible(true);
+		TableColumn backupFNCol = new TableColumn(backupTable, SWT.NONE);
+		backupFNCol.setWidth(100);
+		backupFNCol.setText("First Name");
+		TableColumn backupLNCol = new TableColumn(backupTable, SWT.NONE);
+		backupLNCol.setWidth(140);
+		backupLNCol.setText("Last Name");
+		
+		TableViewer backupTableViewer = new TableViewer(backupTable);
+		backupTableViewer.setContentProvider(new IStructuredContentProvider() {
+			Object[] rows = new Object[0];
+			IObjectBinder binder = null;
+			Viewer v = null;
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+				binder = (IObjectBinder) newInput;
+				v = viewer;
+				Person p = (Person)binder.getValue();
+				if (p!=null) {
+					rows = p.getBackups().toArray();
+				}
+				binder.addPropertyChangeListener(new PropertyChangeListener(){				
+					public void propertyChange(PropertyChangeEvent evt) {
+						Person p = (Person)binder.getValue();
+						rows = new Object[0];
+						if (p!=null) {
+							if (p.getBackups()!=null)
+							   rows = p.getBackups().toArray();														   
+						}
+						
+						if (v!=null)
+							v.refresh();						
+					}				
+				});
+			}		
+			public void dispose() {}		
+			public Object[] getElements(Object inputElement) {
+				return rows;
+			}
+		});
+		backupTableViewer.setLabelProvider(new ITableLabelProvider() {		
+			public void removeListener(ILabelProviderListener listener) {}		
+			public boolean isLabelProperty(Object element, String property) {				
+				return true;
+			}
+			public void dispose() {}		
+			public void addListener(ILabelProviderListener listener) {}		
+			public String getColumnText(Object element, int columnIndex) {
+				if (element instanceof Person) {
+					Person p = (Person)element;
+					if (columnIndex==0)
+						return p.getFirstName();
+					else
+						return p.getLastName();
+				}
+				return "???";
+			}		
+			public Image getColumnImage(Object element, int columnIndex) {
+				return null;
+			}		
+		});
+		backupTableViewer.setInput(selectedPersonBinder);
+	}
+
+	/**
+	 * This method initializes group	
+	 *
+	 */
+	private void createBackupsGroup() {
+		GridData gridData4 = new org.eclipse.swt.layout.GridData();
+		gridData4.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData4.grabExcessHorizontalSpace = true;
+		gridData4.grabExcessVerticalSpace = true;
+		gridData4.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		group = new Group(viewersGroup, SWT.NONE);
+		group.setText("Backups");
+		group.setLayout(new GridLayout());
+		createBackupsTable();
+		group.setLayoutData(gridData4);
 	}
 
 	/**

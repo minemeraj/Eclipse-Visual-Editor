@@ -53,7 +53,9 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 	public void refresh() {
 		if(!fSpinner.isDisposed() && !isSettingValue && getInput() != null){
 			isSettingValue = true;
-			fSpinner.setSelection(((Integer)fElementProvider.getElement(getInput())).intValue());
+			Object val = fElementProvider.getElement(getInput());
+			if (val!=null)
+			    fSpinner.setSelection(((Integer)val).intValue());
 			isSettingValue = false;			
 		}
 	}
