@@ -1082,7 +1082,7 @@ public class InternalCompositeTable extends Composite implements Listener {
 				e.gc.setForeground(secondaryColor);
 				e.gc.drawLine(0, controlSize.y-2, controlSize.x, controlSize.y-2);
 				e.gc.setForeground(hilightColor);
-				e.gc.drawLine(0, 0, controlSize.x, 0);
+				e.gc.drawLine(0, 1, controlSize.x, 1);
 			}
 			
 			// Now draw lines around the child controls, if there are any
