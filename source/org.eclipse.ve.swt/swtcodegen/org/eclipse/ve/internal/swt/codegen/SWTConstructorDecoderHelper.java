@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.25 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.26 $  $Date: 2005-08-26 17:34:10 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -155,9 +155,17 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 					index=i+1;
 				}			
 			}
-			if (curIndex<0)
-				controlList.add(index, fbeanPart.getEObject());
-			else 
+
+			if (curIndex<0){
+				EObject toAddEObject = fbeanPart.getEObject();
+				if(toAddEObject!=null && toAddEObject.eContainer()!=null){
+					// remove it from the previous container as it is being reparented
+					List compList = fbeanPart.getModel().getCompositionModel().getModelRoot().getComponents();
+					if(compList!=null)
+						compList.remove(toAddEObject);
+				}
+				controlList.add(index, toAddEObject);
+			} else 
 			  if (curIndex!=index) {
 				if (curIndex<index) // our move will shift all to the left
 					controlList.move(index-1, fbeanPart.getEObject());
