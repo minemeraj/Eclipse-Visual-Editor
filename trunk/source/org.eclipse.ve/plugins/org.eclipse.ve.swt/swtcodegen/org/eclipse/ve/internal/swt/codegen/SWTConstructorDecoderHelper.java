@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.26 $  $Date: 2005-08-26 17:34:10 $ 
+ *  $Revision: 1.27 $  $Date: 2005-08-26 18:52:41 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -159,7 +159,8 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 			if (curIndex<0){
 				EObject toAddEObject = fbeanPart.getEObject();
 				if(toAddEObject!=null && toAddEObject.eContainer()!=null){
-					// remove it from the previous container as it is being reparented
+					// remove it from the the freeform components (if it happens to be there) as it is being reparented. This is
+					// so that it is removed from the freeform before it is added to the new parent.
 					List compList = fbeanPart.getModel().getCompositionModel().getModelRoot().getComponents();
 					if(compList!=null)
 						compList.remove(toAddEObject);
