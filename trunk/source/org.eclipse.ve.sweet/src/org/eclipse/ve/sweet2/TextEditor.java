@@ -31,6 +31,7 @@ public class TextEditor extends ContentViewer implements Editor {
 	private boolean isSettingValue = false;
 	private String lastSetValue;
 	private IObjectBinder fBinder;
+	private Object fOutput;
 	
 	public TextEditor(Text aText){
 		text = aText;
@@ -153,5 +154,13 @@ public class TextEditor extends ContentViewer implements Editor {
 
 	public IContentConsumer getContentConsumer() {
 		return fContentConsumer;
+	}
+
+	public void setOutput(Object anOutput) {
+		fOutput = anOutput;
+	}
+
+	public Object getOutput() {
+		return fOutput;
 	}
 }
