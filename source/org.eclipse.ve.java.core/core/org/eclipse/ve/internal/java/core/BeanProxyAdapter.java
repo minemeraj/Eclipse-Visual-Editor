@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.55 $  $Date: 2005-08-26 18:52:19 $ 
+ *  $Revision: 1.56 $  $Date: 2005-08-26 20:03:18 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -1796,6 +1796,12 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 
 	static void logNotification(Notification n) {
 		StringBuffer result = new StringBuffer();
+		logNotification(n, result);
+	    JavaVEPlugin.log(result.toString(), Level.WARNING);
+	}
+
+
+	private static void logNotification(Notification n, StringBuffer result) {
 		switch (n.getEventType()) {
 			case Notification.SET: {
 				result.append("SET");
@@ -1903,8 +1909,6 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 
 	    if (n.wasSet())
 	    	result.append(", wasSet");
-	    
-	    JavaVEPlugin.log(result.toString(), Level.WARNING);
 	}
 	
 	private static void printObject(Object o, StringBuffer b) {
@@ -1927,7 +1931,12 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	public void notifyChanged(Notification notification) {
 
 		if (LOG_NOTIFICATIONS) {
-			logNotification(notification);
+			StringBuffer result = new StringBuffer();
+			if (isBeanProxyInstantiated())
+				result.append("BPA active: ");
+			logNotification(notification, result);
+		    JavaVEPlugin.log(result.toString(), Level.WARNING);
+
 		}
 		switch ( notification.getEventType()) {
 			case Notification.SET:
