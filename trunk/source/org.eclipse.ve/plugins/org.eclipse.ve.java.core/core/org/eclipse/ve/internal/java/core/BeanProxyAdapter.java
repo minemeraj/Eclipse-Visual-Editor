@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.54 $  $Date: 2005-08-26 17:37:30 $ 
+ *  $Revision: 1.55 $  $Date: 2005-08-26 18:52:19 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -1757,7 +1757,21 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 			JavaVEPlugin.log(r.toString(), Level.WARNING);
 		}
 		releaseBeanProxy(expression);
-		instantiateBeanProxy(expression);
+		// try {
+		//   ... instantiate ...
+		// } catch (BeanInstantiationException e) {
+		//   ... do nothing ... we already handled that there was an error.
+		// }
+		expression.createTry();
+		try {
+			instantiateBeanProxy(expression);
+		} finally {
+			if (expression.isValid()) {
+				expression.createTryCatchClause(getBeanInstantiationExceptionTypeProxy(expression), false);
+				expression.createTryEnd();
+			}
+		}
+		
 	}
 
 	/**
