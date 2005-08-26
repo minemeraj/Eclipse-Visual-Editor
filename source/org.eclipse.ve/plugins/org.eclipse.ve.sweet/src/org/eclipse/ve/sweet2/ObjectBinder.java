@@ -82,6 +82,11 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 	
 		// Invoke the method on the object we are proxying
 		try{
+			if (method.getName().equals("equals") && args.length==1)
+				if (args[0]==proxy)
+					return Boolean.TRUE;
+				else
+					return Boolean.FALSE;
 			Method sourceMethod = receiverClass.getMethod(method.getName(),method.getParameterTypes());
 			return sourceMethod.invoke(source,args);
 		} catch (Exception exc){
