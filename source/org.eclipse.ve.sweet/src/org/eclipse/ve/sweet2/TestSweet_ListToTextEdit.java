@@ -63,12 +63,10 @@ public class TestSweet_ListToTextEdit {
 		Label ageLabel = new Label(c,SWT.NONE);
 		ageLabel.setText("Age: ");
 		
-		TextEditor ageTextViewer = new TextEditor(c,SWT.BORDER);
-		ageTextViewer.setContentProvider(new PropertyContentProvider("age"));
-		ageTextViewer.setContentConsumer(new PropertyContentConsumer("age"));
-		ageTextViewer.setInput(personBinder);
-		
-		ageTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		SpinnerEditor ageSpinnerEditor = new SpinnerEditor(c,SWT.BORDER);
+		ageSpinnerEditor.setContentProvider(new PropertyContentProvider("age"));
+		ageSpinnerEditor.setContentConsumer(new PropertyContentConsumer("age"));
+		ageSpinnerEditor.setInput(personBinder);
 		
 		Label managerLabel = new Label(c,SWT.NONE);
 		managerLabel.setText("Manager: ");		

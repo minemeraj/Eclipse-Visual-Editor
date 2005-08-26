@@ -28,6 +28,7 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 	private boolean isSettingValue;
 	private IContentConsumer fContentConsumer;
 	private IElementContentProvider fElementProvider;
+	private Object fOutput;
 	
 	public SpinnerEditor(Spinner aSpinner){
 		fSpinner = aSpinner;
@@ -50,7 +51,7 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 	}
 
 	public void refresh() {
-		if(!fSpinner.isDisposed() && !isSettingValue){
+		if(!fSpinner.isDisposed() && !isSettingValue && getInput() != null){
 			isSettingValue = true;
 			fSpinner.setSelection(((Integer)fElementProvider.getElement(getInput())).intValue());
 			isSettingValue = false;			
@@ -140,6 +141,14 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 
 	public IContentConsumer getContentConsumer() {
 		return fContentConsumer;
+	}
+
+	public void setOutput(Object anOutput) {
+		fOutput = anOutput;
+	}
+
+	public Object getOutput() {
+		return fOutput;
 	}
 
 }
