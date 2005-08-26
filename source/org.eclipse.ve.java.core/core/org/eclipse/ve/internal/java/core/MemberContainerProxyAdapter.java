@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainerProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-06-22 21:05:23 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-26 17:37:30 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -141,6 +141,9 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#notifyChanged(org.eclipse.emf.common.notify.Notification)
 	 */
 	public void notifyChanged(Notification msg) {
+		if (BeanProxyAdapter.LOG_NOTIFICATIONS) {
+			BeanProxyAdapter.logNotification(msg);
+		}
 		switch (msg.getEventType()) {
 			case Notification.REMOVING_ADAPTER:
 				releaseBeanProxy(true);
