@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.32 $  $Date: 2005-08-25 20:36:05 $
+ *  $Revision: 1.33 $  $Date: 2005-08-26 14:29:05 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -166,17 +166,19 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			layoutTable = new EObject[dimensions[0].length][dimensions[1].length];
 			numColumns = dimensions[0].length;
 			// If empty container, don't continue.
-			if (layoutTable.length < 1 || layoutTable[0].length < 1)
+			if (layoutTable.length < 1 || layoutTable[0].length < 1) {
+				childrenDimensions = new Rectangle[0];
 				return layoutTable;
+			}
 
 			int row = 0;
 			int col = 0;
 			int horizontalSpan;
 			int verticalSpan;
 
-			List children = (List) getContainer().eGet(sfCompositeControls);
-			childrenDimensions = new Rectangle[children.size()];
 			int childNum = 0;
+			List children = (List) getContainer().eGet(sfCompositeControls);
+			childrenDimensions = new Rectangle[children.size()];						
 			Iterator itr = children.iterator();
 
 			while (itr.hasNext()) {

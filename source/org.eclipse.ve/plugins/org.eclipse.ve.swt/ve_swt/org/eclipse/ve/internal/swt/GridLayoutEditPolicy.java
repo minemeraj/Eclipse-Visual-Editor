@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.39 $ $Date: 2005-08-25 14:09:47 $
+ * $Revision: 1.40 $ $Date: 2005-08-26 14:29:05 $
  */
 import java.util.*;
 
@@ -874,7 +874,11 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			return bounds;
 		int childIndex = children.indexOf(child);
 		if (childIndex != -1) {
-			bounds = getGridLayoutGridFigure().getGridBroundsForCellBounds(helper.getChildrenDimensions()[childIndex]);
+			Rectangle[] dims = helper.getChildrenDimensions();
+			if (childIndex < dims.length)
+				bounds = getGridLayoutGridFigure().getGridBroundsForCellBounds(dims[childIndex]);
+			else
+				bounds = new Rectangle();
 		}
 		return bounds;
 	}
