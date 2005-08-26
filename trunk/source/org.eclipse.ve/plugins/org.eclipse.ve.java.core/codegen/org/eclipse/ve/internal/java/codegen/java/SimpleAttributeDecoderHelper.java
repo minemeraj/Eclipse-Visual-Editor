@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.39 $  $Date: 2005-08-24 23:30:44 $ 
+ *  $Revision: 1.40 $  $Date: 2005-08-26 19:22:19 $ 
  */
 
 import java.util.List;
@@ -216,7 +216,14 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 	 *   Check to see if this attribute is still in the composition model
 	 */
 	public boolean primIsDeleted() {
-		return primGetInitString() == null;
+		boolean result =  primGetInitString() == null ;
+		if (result) {
+			if (fPropInstance!=null) {
+				CodeGenUtil.propertyCleanup(fPropInstance);
+				fPropInstance=null;
+			}
+		}
+		return result;
 	}
 
 	/**

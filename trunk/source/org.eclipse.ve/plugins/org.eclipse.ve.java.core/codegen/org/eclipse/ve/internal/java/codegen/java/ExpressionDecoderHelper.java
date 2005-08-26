@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionDecoderHelper.java,v $
- *  $Revision: 1.13 $  $Date: 2005-08-24 23:30:44 $ 
+ *  $Revision: 1.14 $  $Date: 2005-08-26 19:22:18 $ 
  */
 import java.util.Collection;
 import java.util.List;
@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.dom.*;
 
+import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.ve.internal.jcm.MemberContainer;
 
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
@@ -195,7 +196,7 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 		if (obj == null)
 			return;
 
-		if (obj.eContainer() != null && obj.eContainer() instanceof MemberContainer) {
+		if (obj.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties()) {
 			((MemberContainer) obj.eContainer()).getProperties().remove(obj);
 		}
 	}
