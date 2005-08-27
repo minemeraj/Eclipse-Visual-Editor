@@ -575,6 +575,10 @@ public class InternalCompositeTable extends Composite implements Listener {
 	}
 
 	public void setNumRowsInCollection(int numRowsInCollection) {
+		this.topRow = 0;
+		if (currentRow > 0) {
+			currentRow = 0;
+		}
 		this.numRowsInCollection = numRowsInCollection;
 		updateVisibleRows();
 		refreshAllRows();
