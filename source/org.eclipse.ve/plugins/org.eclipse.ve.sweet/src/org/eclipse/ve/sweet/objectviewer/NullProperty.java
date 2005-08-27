@@ -1,5 +1,7 @@
 package org.eclipse.ve.sweet.objectviewer;
 
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.ve.sweet.validator.IValidator;
 import org.eclipse.ve.sweet.validators.reusable.ReadOnlyValidator;
 
@@ -85,6 +87,18 @@ public class NullProperty implements IPropertyEditor {
 	 */
 	public IDeleteHandler getDeleteHandler() {
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.sweet.objectviewer.IPropertyEditor#addChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void addChangeListener(PropertyChangeListener l) {
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.sweet.objectviewer.IPropertyEditor#removeChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void removeChangeListener(PropertyChangeListener l) {
 	}
 
 }
