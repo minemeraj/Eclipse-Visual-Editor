@@ -11,6 +11,8 @@
  */
 package org.eclipse.ve.sweet.objectviewer;
 
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.ve.sweet.validator.IValidator;
 
 /**
@@ -32,18 +34,36 @@ public interface IPropertyEditor {
     public String getName();
     
 	/**
-     * Method get().  Return the value of the property.
+     * Method get.  Return the value of the property.
      * 
 	 * @return the value of the property as an Object
 	 */
 	public Object get();
     
     /**
-     * Method set().  Set the value of the property.
+     * Method set.  Set the value of the property.
      * 
      * @param newValue The new value to set.
      */
     public void set(Object newValue);
+    
+    /**
+     * Method addChangeListener.  Add a property change listener to the underlying property, if
+     * the property has an addPropertyNameChangeListener() method.  If the property does not
+     * define a addPropertyNameChangeListener method, this method does nothing.
+     *
+     * @param l The PropertyChangeListener to add.
+     */
+    public void addChangeListener(PropertyChangeListener l);
+    
+    /**
+     * Method removeChangeListener.  Removes a property change listener to the underlying property, if
+     * the property has a removePropertyNameChangeListener() method.  If the property does not
+     * define a removePropertyNameChangeListener method, this method does nothing.
+     *
+     * @param l The PropertyChangeListener to remove.
+     */
+    public void removeChangeListener(PropertyChangeListener l);
     
     /**
      * Method isReadOnly().  Returns if the property is read-only.
@@ -60,7 +80,7 @@ public interface IPropertyEditor {
     public String getType();
     
     /**
-     * Method getVerifier().  Returns the property's verifier null if the 
+     * Method getVerifier().  Returns the property's verifier or null if the 
      * property has no explicitly-defined verifier.
      * 
      * @return IVerifier The property's verifier.
