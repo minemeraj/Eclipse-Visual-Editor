@@ -1,14 +1,25 @@
 package org.eclipse.ve.sweet2;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.jface.viewers.AbstractListViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.List;
 
-public final class ComboEditor extends AbstractListViewer {
+public final class ComboEditor extends AbstractListViewer implements Editor {
 
-    private Combo combo;
+    private Combo fCombo;
+	private IContentConsumer fContentConsumer;
+	private Object fOutput;
+    
+    
     public ComboEditor(Composite parent) {
         this(parent, SWT.READ_ONLY | SWT.BORDER);
     }
@@ -16,7 +27,7 @@ public final class ComboEditor extends AbstractListViewer {
         this(new Combo(parent, style));
     }
     public ComboEditor(Combo list) {
-        this.combo = list;
+        fCombo = list;
         hookControl(list);
     }
     protected void hookControl(Control control) {
@@ -24,44 +35,90 @@ public final class ComboEditor extends AbstractListViewer {
     	control.setEnabled(false);
     }
     protected void listAdd(String string, int index) {
-        combo.add(string, index);
+        fCombo.add(string, index);
     }
     protected void listSetItem(int index, String string) {
-        combo.setItem(index, string);
+        fCombo.setItem(index, string);
     }
     protected int[] listGetSelectionIndices() {
-        return new int[] { combo.getSelectionIndex() };
+        return new int[] { fCombo.getSelectionIndex() };
     }
     protected int listGetItemCount() {
-        return combo.getItemCount();
+        return fCombo.getItemCount();
     }
     protected void listSetItems(String[] labels) {
-        combo.setItems(labels);
+        fCombo.setItems(labels);
     }
     protected void listRemoveAll() {
-        combo.removeAll();
+        fCombo.removeAll();
     }
     protected void listRemove(int index) {
-        combo.remove(index);
+        fCombo.remove(index);
     }
     public Control getControl() {
-        return combo;
+        return fCombo;
     }
     public Combo getCombo() {
-        return combo;
+        return fCombo;
     }
     public void reveal(Object element) {
         return;
     }
     protected void listSetSelection(int[] ixs) {
         for (int idx = 0; idx < ixs.length; idx++) {
-            combo.select(ixs[idx]);
+            fCombo.select(ixs[idx]);
         }
     }
     protected void listDeselectAll() {
-        combo.deselectAll();
-        combo.clearSelection();
+        fCombo.deselectAll();
+        fCombo.clearSelection();
     }
     protected void listShowSelection() {
     }
+	public void setUpdatePolicy(int updatePolicy) {
+	}
+	protected void handleSelect(SelectionEvent event) {
+		super.handleSelect(event);
+		// Change the value in the consumer to be the newly selected value
+		super.handleSelect(event);
+		Object selectedObject = ((IStructuredSelection)getSelection()).getFirstElement();
+		if(fContentConsumer != null){
+			fContentConsumer.setValue(selectedObject);
+		}		
+	}
+	public void refresh() {
+		// Get the value from the content consumer's binder and select the appropiate item in the list
+		if(fContentConsumer != null){			
+			Object objectValue = fContentConsumer.getValue();
+			if(objectValue == null){
+				setSelection(null);				
+			} else {
+				fCombo.setEnabled(true);				
+				setSelection(new StructuredSelection(objectValue),true);
+			}
+		} else {
+			fCombo.setEnabled(false);			
+		}		
+	}
+	public void setContentConsumer(IContentConsumer contentConsumer) {
+		fContentConsumer = contentConsumer;
+		fContentConsumer.addPropertyChangeListener(new PropertyChangeListener(){
+			public void propertyChange(PropertyChangeEvent event) {
+				if(event.getPropertyName() == null){
+					refresh();
+				}
+			}	
+		});
+		refresh();		
+	}
+	public IContentConsumer getContentConsumer() {
+		return fContentConsumer;
+	}
+	public void setOutput(Object anOutput) {
+		fOutput = anOutput;
+		fContentConsumer.setObjectBinder((IObjectDelegate)anOutput);		
+	}
+	public Object getOutput() {
+		return fOutput;
+	}
 }
