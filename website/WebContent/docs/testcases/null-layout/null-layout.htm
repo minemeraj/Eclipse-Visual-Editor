@@ -1,0 +1,343 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html">
+  <title>Test the behaviour of a layout set to null</title>
+  <style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+ li.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+  </style><!--[if !mso]-->
+  <style>
+.shape       { behavior: url(#default#VML) }
+  </style>
+</head>
+<body>
+<p class="MsoNormal">
+<b><u><span style="font-family: sans-serif;"><font size="3">Procedure</font></span></u></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">This scenario
+will test out the features and behavior of the null layout manager.</span>
+<br>
+<br>
+<span style="font-family: sans-serif; text-decoration: underline;"><b>
+<font size="3">Setup</font></b></span></p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;">
+Create a new Visual Class extending JPanel and resize it to take up
+3/4ths of the Canvas. &nbsp;Set the layout of the JPanel to null.</span>
+<br>
+<br>
+&nbsp;</p>
+<p class="MsoNormal"><b><span style="font-family: sans-serif;">Basic
+Canvas Manipulation</span></b> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Choose a
+JButton from the palette and drop it (without sizing) onto the JPanel.</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the JButton is its
+default size, and that the setBounds call was added to the JButton
+initialization.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Set the text of
+the JButton to "A Button" from the Property Sheet (PS).</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the size of
+the JButton does not change.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Drag and drop
+the JButton to the free form.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Drag and drop
+the JButton back to the JPanel</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the size of
+the JButton has changed to comfortably display the text.</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the JButton is
+able to be moved graphically to any position on the JPanel (including
+off the edges)</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the JButton
+can be resized by dragging the dots along the border (including off the
+edges of the JPanel)</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Choose a
+JTextField from the palette and while the cursor is loaded with the
+Bean, click and drag on the JPanel to size the bean.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> &nbsp;that the
+dropped bean matches the size outlined when dropping.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Move the
+JTextField so that it overlaps the JButton.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> &nbsp;that the
+component added first is on top (the JButton)</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Drop a few more
+different Swing components on the JPanel.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> &nbsp;each is sized
+to its proper default.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Use the Marquee
+tool to select a region which covers several beans.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Move the
+selected group graphically.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> &nbsp;each member
+of the selected group is moved properly and in sync with the other
+members.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Resize the
+selected group graphically.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the preview while
+dragging reflects the final result.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> each member of the
+group is resized properly and the same amount as the other members.</span>
+<br>
+<br>
+<b><span style="font-family: sans-serif;">Alignment Manipulation</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Click the
+Alignment button on the toolbar.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the Alignment
+dialog is shown.</span> <br>
+<img border="0" width="106" height="115" src="image001.jpg"
+ v:shapes="_x0000_s1025"><br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select a Bean
+on the JPanel, then hold down Ctrl and select several more.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Try each of the
+alignment buttons (may have to undo previous changes to see new effects)</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the selected
+components are moved and/or sized to match the last selected component
+in the group.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Try the
+distribute buttons (may have to undo previous changes to see new
+effects).</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the selected
+components are distributed within the parent. The order of distribution
+is not last one selected. It is in original x or y order of the top
+left corners of the selected components. </span><br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the Show
+Distribute Box remains enabled when more than one item is selected,
+even when the Alignment dialog is closed.</span> <br>
+<img border="0" width="400" height="164" src="image002.jpg"
+ v:shapes="_x0000_s1026"><br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Use the Choose
+Bean dialog to drop three String objects on the canvas.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Use the Marquee
+selection tool to select the non-visual beans by drawing a box around
+all three strings.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Use the
+Alignment dialog buttons to arrange the non-visuals.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span><span
+ style="font-size: 10pt; font-family: sans-serif;">
+</span></b><span style="font-size: 10pt; font-family: sans-serif;">the
+alignment tools work for non-visual beans on the canvas.</span> <br>
+<br>
+<br>
+<b><span style="font-family: sans-serif;">Alignment with a Dotted Grid</span></b><br>
+<font size="-1"><span style="font-family: helvetica,arial,sans-serif;">Delete
+all the components from the JPanel and from the canvas that were
+used from previous tests.</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+<span style="font-family: helvetica,arial,sans-serif;">MB2 over the
+JPanel to display the popup menu.</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+</font><font size="-1" style="font-family: helvetica,arial,sans-serif;"
+ color="#0000ff"><b>Verify</b></font><font size="-1"><span
+ style="font-family: helvetica,arial,sans-serif;"> the popup menu has a
+</span><b style="font-family: helvetica,arial,sans-serif;">Show
+Grid</b><span style="font-family: helvetica,arial,sans-serif;"> menu
+item.</span><br style="font-family: helvetica,arial,sans-serif;">
+<img style="font-family: helvetica,arial,sans-serif;" border="0"
+ src="image003.jpg" width="332" height="284"><br
+ style="font-family: helvetica,arial,sans-serif;">
+<span style="font-family: helvetica,arial,sans-serif;">Select </span><b
+ style="font-family: helvetica,arial,sans-serif;">Show Grid</b><span
+ style="font-family: helvetica,arial,sans-serif;"> and </span></font>
+<font size="-1" style="font-family: helvetica,arial,sans-serif;"
+ color="#0000ff"><b>Verify</b></font><font size="-1"><span
+ style="font-family: helvetica,arial,sans-serif;">
+the dotted grid is displayed across the JPanel.</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+<span style="font-family: helvetica,arial,sans-serif;">Select a JButton
+from the palette and resize it as you drop it onto the
+JPanel.</span><br style="font-family: helvetica,arial,sans-serif;">
+<span style="font-family: helvetica,arial,sans-serif;">Set the text of
+the JButton to something (e.g. "Okay").</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+<b style="font-family: helvetica,arial,sans-serif;"><font
+ color="#0000ff">Verify</font></b><span
+ style="font-family: helvetica,arial,sans-serif;"> the upper left side
+of the
+JButton is located on one of the dots close to where you dropped it.</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+<span style="font-family: helvetica,arial,sans-serif;">For example:</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+<img style="font-family: helvetica,arial,sans-serif;" border="0"
+ src="image004.jpg" width="312" height="208"><span
+ style="font-family: helvetica,arial,sans-serif;"></span><br
+ style="font-family: helvetica,arial,sans-serif;">
+<span style="font-family: helvetica,arial,sans-serif;">Select and drag
+the JButton around on the JPanel.</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+<b style="font-family: helvetica,arial,sans-serif;"><font
+ color="#0000ff"><img border="0" src="image005.jpg" width="306"
+ height="208"><br>
+Verify</font></b><span style="font-family: helvetica,arial,sans-serif;">
+the target feedback of the rectangle "snaps" to the
+nearest upper left dot of the grid.</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+<span style="font-family: helvetica,arial,sans-serif;">Release the
+mouse and </span><b style="font-family: helvetica,arial,sans-serif;"><font
+ color="#0000ff">verify</font></b><span
+ style="font-family: helvetica,arial,sans-serif;"> the
+JButton does indeed move to the position on the grid where the target
+feedback was shown.</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+<span style="font-family: helvetica,arial,sans-serif;">Drop a few more
+components (e.g. JSlider, JRadioButton, JLabel) onto
+the grid... some just dropping them and resizing as you drop them. Then
+move and resize them.</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+<b style="font-family: helvetica,arial,sans-serif;"><font
+ color="#0000ff">Verify</font></b><span
+ style="font-family: helvetica,arial,sans-serif;"> the components drop,
+move,
+and resize to the nearest dot locations on the grid (i.e. the position
+is always relative to the upper left position of the component).</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+<span style="font-family: helvetica,arial,sans-serif;">MB2 over the
+JPanel to display the popup menu again.</span><br
+ style="font-family: helvetica,arial,sans-serif;">
+</font>
+<font size="-1" style="font-family: helvetica,arial,sans-serif;"
+ color="#0000ff"><b>Verify</b></font><font size="-1"><span
+ style="font-family: helvetica,arial,sans-serif;"> the popup menu now
+has a </span><b style="font-family: helvetica,arial,sans-serif;">Hide
+Grid</b><span style="font-family: helvetica,arial,sans-serif;"> menu
+item.</span><br style="font-family: helvetica,arial,sans-serif;">
+<span style="font-family: helvetica,arial,sans-serif;">Select </span><b
+ style="font-family: helvetica,arial,sans-serif;">Hide Grid</b><span
+ style="font-family: helvetica,arial,sans-serif;"> and </span></font><font
+ size="-1" style="font-family: helvetica,arial,sans-serif;"
+ color="#0000ff"><b>Verify</b></font><font size="-1"><span
+ style="font-family: helvetica,arial,sans-serif;">
+the dotted grid is </span><u
+ style="font-family: helvetica,arial,sans-serif;">not</u><span
+ style="font-family: helvetica,arial,sans-serif;"> displayed across the
+JPanel. </span></font><br>
+<b><span style="font-family: sans-serif;"><br>
+<br>
+Property Sheet</span></b> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the
+JPanel</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the Layout
+property on the PS gives a value representing the null layout</span>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select a
+component on the JPanel</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that changes to the
+component's bounds, location and size properties reflect in changes to
+the size/location on the canvas.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that changing the
+size property on the PS will remove the bounds setting in the source
+and generate a location setting.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that changing the
+bounds property on the PS will remove the size and location setting.</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that changing the
+location property on the PS will remove the bounds setting in the
+source and generate a size setting.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that setting the
+bounds in the source with a java.awt.Rectangle parameter reflects
+properly on the PS and on the canvas. [ jButton.setBounds( new
+java.awt.Rectangle( 20, 20, 100, 50 ) ) ]</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that setting the
+location in the source with a java.awt.Point parameter reflects
+properly on the PS and on the canvas. &nbsp;[jButton.setLocation( new
+java.awt.Point( 50, 50 ) ) ]</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> that setting the
+size in the source with a java.awt.Dimension parameter reflects
+properly on the PS and on the canvas. [ jButton.setSize( new
+java.awt.Dimension( 100, 50 ) ) ]</span> <br>
+<br>
+<b><span style="font-family: sans-serif;">Conversions to null layout</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">For each layout
+other than null</span> </p>
+<ul type="disc" style="margin-bottom: 0in;">
+  <li class="MsoNormal"> <span
+ style="font-size: 10pt; font-family: sans-serif;">Change the layout of
+the JPanel to the testing layout</span> </li>
+  <li class="MsoNormal"> <span
+ style="font-size: 10pt; font-family: sans-serif;">Change the layout of
+the JPanel back to null</span> </li>
+  <li class="MsoNormal"><b> <span
+ style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that each component
+remains the same size/location</span></li>
+</ul>
+<p class="MsoNormal"><br>
+<span style="font-size: 10pt; font-family: sans-serif;">Note: changing
+from CardLayout will have each component still taking up the entire
+space of the JPanel. &nbsp;This is correct behavior.<br>
+</span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"><br>
+</span><span style="font-size: 10pt; font-family: sans-serif;"><font
+ size="+1"><b><span style="font-family: sans-serif;">SWT Null Layout<br>
+<span style="font-weight: bold;"></span></span></b></font></span><span
+ style="font-size: 10pt; font-family: sans-serif;"><span
+ style="font-family: sans-serif;"><span
+ style="font-size: 10pt; font-family: sans-serif;"><br>
+Repeat all of the above tests using SWT's null layout.&nbsp; (For help
+adding support for SWT to your project, see <a href="../setupSWT.html">here</a>)&nbsp;
+Use the
+SWT equivalents for all the Swing/AWT classes referenced above.<br>
+Use&nbsp; org.eclipse.swt.graphics.Rectangle as the parameter for
+setBounds, and use org.eclipse.swt.graphics.Point as the parameter for
+setLocation and setSize.<br>
+<br>
+</span></span></span> </p>
+</body>
+</html>

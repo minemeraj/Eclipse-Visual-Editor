@@ -1,0 +1,438 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>Basic build and functionality test</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>JStinton</o:Author>
+  <o:Template>Normal</o:Template>
+  <o:LastAuthor>JStinton</o:LastAuthor>
+  <o:Revision>34</o:Revision>
+  <o:TotalTime>143</o:TotalTime>
+  <o:Created>2005-04-19T19:21:00Z</o:Created>
+  <o:LastSaved>2005-04-26T16:18:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>389</o:Words>
+  <o:Characters>2221</o:Characters>
+  <o:Company>IBM</o:Company>
+  <o:Lines>18</o:Lines>
+  <o:Paragraphs>5</o:Paragraphs>
+  <o:CharactersWithSpaces>2605</o:CharactersWithSpaces>
+  <o:Version>10.6735</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:437914756;
+	mso-list-template-ids:1888766584;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Wingdings;}
+@list l0:level2
+	{mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level3
+	{mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level5
+	{mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level6
+	{mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level8
+	{mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level9
+	{mso-level-tab-stop:4.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1
+	{mso-list-id:970286472;
+	mso-list-template-ids:-1042274030;}
+@list l1:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l1:level2
+	{mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level3
+	{mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level5
+	{mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level6
+	{mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level8
+	{mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level9
+	{mso-level-tab-stop:4.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2
+	{mso-list-id:995184956;
+	mso-list-template-ids:-1724348110;}
+@list l2:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Wingdings;}
+@list l3
+	{mso-list-id:1300303722;
+	mso-list-template-ids:798116800;}
+@list l3:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="8194"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=EN-US link=blue vlink=blue style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<p class=MsoNormal><b><u><span style='font-family:Arial'>Procedure</span></u></b>
+<br>
+<br>
+<b><span style='font-family:Arial'>Basic Beans Visualization, Parse, and Launch</span></b><br
+style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></p>
+
+<p class=MsoNormal>Create a new Eclipse Java Project. <span style='background:
+yellow;mso-highlight:yellow'><o:p></o:p></span></p>
+
+<p class=MsoNormal>Add the SWT library to the project (MB2 -&gt; Properties
+-&gt; Java Build Path -&gt; Libraries).</p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'>Import <a
+href="../test-zips/swt_smoke_test_source.zip">swt_smoke_test_source.zip&nbsp;</a>into the
+project.</span><span style='background:yellow;mso-highlight:yellow'><br>
+</span><span style='font-size:10.0pt;font-family:Arial'>Open each class in the
+Visual Editor</span>.<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> that the contents are displayed
+properly (correct representation of each component and layout). </span><br>
+<span style='font-size:10.0pt;font-family:Arial'>Launch each class using the
+Java Bean Launcher and </span><br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> that the running program matches
+what is displayed on the canvas.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span
+style='font-size:10.0pt;font-family:Arial'>FillLayoutShell.java<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'><!--[if gte vml 1]><v:shapetype
+ id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"
+ path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:293.25pt;
+ height:199.5pt'>
+ <v:imagedata src="./image001.jpg" o:title="fill_layout_shell"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=391 height=266
+src="./image001.jpg" v:shapes="_x0000_i1025"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span
+style='font-size:10.0pt;font-family:Arial'>GridLayoutShell.java<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1026" type="#_x0000_t75" style='width:273.75pt;height:3in'>
+ <v:imagedata src="./image002.jpg" o:title="grid_layout_shell"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=365 height=288
+src="./image002.jpg" v:shapes="_x0000_i1026"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span
+style='font-size:10.0pt;font-family:Arial'>NullLayoutShell.java<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1027" type="#_x0000_t75" style='width:312.75pt;height:211.5pt'>
+ <v:imagedata src="./image003.jpg" o:title="null_layout_shell"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=417 height=282
+src="./image003.jpg" v:shapes="_x0000_i1027"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span
+style='font-size:10.0pt;font-family:Arial'>RowLayoutShell.java<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><v:shape id="_x0000_i1028" type="#_x0000_t75"
+ style='width:151.5pt;height:165pt'>
+ <v:imagedata src="./image004.jpg" o:title="row_layout_shell"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=202 height=220
+src="./image004.jpg" v:shapes="_x0000_i1028"><![endif]></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal><br>
+<b><span style='font-family:Arial'>Basic Functionality Verification</span></b> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Note: <b><span
+style='color:blue'>Verify</span></b> generated source after each step to make
+sure it is valid.</span> </p>
+
+<ul style='margin-top:0in' type=square>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo3;tab-stops:list .5in'><b><span
+     style='font-size:10.0pt;font-family:Arial'>Container, Layout and Properties
+     Tests</span></b></li>
+</ul>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'>Perform the
+following tests on Shell and Composite.</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Create a new empty Visual
+Class and/or extend the container</span>.<br>
+<span style='font-size:10.0pt;font-family:Arial'>Change the container's layout
+to Row.</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Place 5 or more controls onto
+the container. </span></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo6;tab-stops:list .5in'><span
+     style='font-size:10.0pt;font-family:Arial'>Mix different controls (Button,
+     Label, RadioButton, Link, Table, etc). &nbsp;</span> </li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo6;tab-stops:list .5in'><span
+     style='font-size:10.0pt;font-family:Arial'>Drop the controls using the
+     palette and choose bean dialog</span>.</li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo6;tab-stops:list .5in'><b><span
+     style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+     style='font-size:10.0pt;font-family:Arial'> only Shell can
+     be dropped on the Free Form.</span></li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo6;tab-stops:list .5in'><b><span
+     style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+     style='font-size:10.0pt;font-family:Arial'> each control is drawn and
+     sized correctly, and shows up on the Beans View.</span></li>
+</ul>
+
+<p class=MsoNormal><br>
+<span style='font-size:10.0pt;font-family:Arial'>Change some of the visual
+properties, such as color, font, border, text, etc. on various controls from
+the property sheet and source</span>.<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> the property editors work properly</span>.<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> the property changes are reflected
+on all views</span>.<br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select the container and look
+at the layout property.</span><br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> that properties with sub properties
+have a + to expand sub properties</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> that sub properties are displayed
+correctly.</span><span style='mso-spacerun:yes'>  </span><br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Reorder the controls visually
+and from the source</span>.<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> the controls are reordered properly
+on the canvas, beans view and source.</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Change the container's layout
+to every layout option (null, fill, form, grid, row) randomly from both the PS
+and the source.<o:p></o:p></span></p>
+
+<p class=MsoNormal><b><span style='font-size:10.0pt;font-family:Arial;
+color:blue'>Verify</span></b><span style='font-size:10.0pt;font-family:Arial'>
+that each operation can be undone properly.</span><br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> that each conversion happens properly.</span>
+<br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select a control on the canvas
+and MB2-&gt;Rename Field. &nbsp;Change the name of the control.</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> the source changes properly, the
+canvas remains unchanged, and the new title is reflected in the beans view.</span>
+<br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Save, close and reopen class.</span>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> class is loaded and displayed
+properly.</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Make sure you save the
+Composite for the next step.</span> </p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p><b><span style='font-family:Arial'>Dropping other Visual Beans and
+Preferences</span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'>Create a
+new Visual Class extending Shell.</span> <span style='font-size:10.0pt;
+font-family:Arial'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'><br>
+Use the Choose Bean dialog to drop the Composite created in the previous example.<br>
+<b><span style='color:blue'>Verify</span></b> that the dropped bean appears
+correctly.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'><span
+style='mso-spacerun:yes'> </span><o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>

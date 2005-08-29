@@ -1,0 +1,663 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<link rel=File-List href="SWTImageCellEditorTestCase_files/filelist.xml">
+<!--  <link rel=Edit-Time-Data href="SWTImageCellEditorTestCase_files/editdata.mso"> -->
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>SWT Image Property Editor Test Scenario - ImageCellEditor</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>IBM_User</o:Author>
+  <o:Template>Normal</o:Template>
+  <o:LastAuthor> </o:LastAuthor>
+  <o:Revision>12</o:Revision>
+  <o:TotalTime>382</o:TotalTime>
+  <o:Created>2004-05-24T16:36:00Z</o:Created>
+  <o:LastSaved>2004-05-24T17:57:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>425</o:Words>
+  <o:Characters>2423</o:Characters>
+  <o:Company>IBM</o:Company>
+  <o:Lines>20</o:Lines>
+  <o:Paragraphs>5</o:Paragraphs>
+  <o:CharactersWithSpaces>2843</o:CharactersWithSpaces>
+  <o:Version>10.4219</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:ActiveWritingStyle Lang="EN-IE" VendorID="64" DLLVersion="131077"
+   NLCheck="1">1</w:ActiveWritingStyle>
+  <w:ActiveWritingStyle Lang="EN-GB" VendorID="64" DLLVersion="131077"
+   NLCheck="1">1</w:ActiveWritingStyle>
+  <w:ActiveWritingStyle Lang="EN-IE" VendorID="64" DLLVersion="131078"
+   NLCheck="1">1</w:ActiveWritingStyle>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:1627421319 -2147483648 8 0 66047 0;}
+@font-face
+	{font-family:"Trebuchet MS";
+	panose-1:2 11 6 3 2 2 2 2 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:647 0 0 0 159 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:Tahoma;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Arial;}
+h1
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	font-size:16.0pt;
+	font-family:Arial;
+	mso-font-kerning:16.0pt;}
+h2
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:2;
+	font-size:14.0pt;
+	font-family:Arial;
+	font-style:italic;}
+h3
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:3;
+	font-size:13.0pt;
+	font-family:Arial;}
+p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:Tahoma;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Arial;}
+p.MsoBodyTextIndent, li.MsoBodyTextIndent, div.MsoBodyTextIndent
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:12.0pt;
+	margin-left:30.0pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Trebuchet MS";
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Arial;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:156651613;
+	mso-list-template-ids:-1602328042;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l0:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l1
+	{mso-list-id:405493486;
+	mso-list-type:hybrid;
+	mso-list-template-ids:286167930 67698689 67698691 67698689 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l1:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l1:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l1:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l1:level4
+	{mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level5
+	{mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level6
+	{mso-level-tab-stop:216.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level7
+	{mso-level-tab-stop:252.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level8
+	{mso-level-tab-stop:288.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level9
+	{mso-level-tab-stop:324.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l2
+	{mso-list-id:704326254;
+	mso-list-template-ids:-77588334;}
+@list l2:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l2:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l3
+	{mso-list-id:1035235834;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1398885748 67698689 67698691 67698689 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l3:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:54.0pt;
+	mso-level-number-position:left;
+	margin-left:54.0pt;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l3:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:90.0pt;
+	mso-level-number-position:left;
+	margin-left:90.0pt;
+	text-indent:-18.0pt;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l3:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:126.0pt;
+	mso-level-number-position:left;
+	margin-left:126.0pt;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l3:level4
+	{mso-level-tab-stop:162.0pt;
+	mso-level-number-position:left;
+	margin-left:162.0pt;
+	text-indent:-18.0pt;}
+@list l3:level5
+	{mso-level-tab-stop:198.0pt;
+	mso-level-number-position:left;
+	margin-left:198.0pt;
+	text-indent:-18.0pt;}
+@list l3:level6
+	{mso-level-tab-stop:234.0pt;
+	mso-level-number-position:left;
+	margin-left:234.0pt;
+	text-indent:-18.0pt;}
+@list l3:level7
+	{mso-level-tab-stop:270.0pt;
+	mso-level-number-position:left;
+	margin-left:270.0pt;
+	text-indent:-18.0pt;}
+@list l3:level8
+	{mso-level-tab-stop:306.0pt;
+	mso-level-number-position:left;
+	margin-left:306.0pt;
+	text-indent:-18.0pt;}
+@list l3:level9
+	{mso-level-tab-stop:342.0pt;
+	mso-level-number-position:left;
+	margin-left:342.0pt;
+	text-indent:-18.0pt;}
+@list l4
+	{mso-list-id:1065253710;
+	mso-list-template-ids:1822852442;}
+@list l4:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l4:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:10.0pt;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l5
+	{mso-list-id:1461877564;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1768582454 403243009 403243011 403243013 403243009 403243011 403243013 403243009 403243011 403243013;}
+@list l5:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:18.0pt;
+	mso-level-number-position:left;
+	margin-left:18.0pt;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+@list l5:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:54.0pt;
+	mso-level-number-position:left;
+	margin-left:54.0pt;
+	text-indent:-18.0pt;
+	font-family:"Courier New";}
+@list l5:level3
+	{mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l5:level4
+	{mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l5:level5
+	{mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l5:level6
+	{mso-level-tab-stop:216.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l5:level7
+	{mso-level-tab-stop:252.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l5:level8
+	{mso-level-tab-stop:288.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l5:level9
+	{mso-level-tab-stop:324.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="2050"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=EN-IE style='tab-interval:36.0pt'>
+
+<div class=Section1>
+
+<h3 style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l1 level1 lfo2;
+tab-stops:list 36.0pt'><![if !supportLists]><span style='font-family:Symbol;
+mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;font-weight:normal;
+mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-family:"Trebuchet MS"'>Procedure:<o:p></o:p></span></h3>
+
+<p class=MsoNormal style='margin-left:30.0pt'><span style='font-family:"Trebuchet MS"'>This
+scenario will test the ability of the Visual Editor to function with icons (</span><span
+class=SpellE><span style='font-size:12.0pt;mso-bidi-font-size:10.0pt;
+font-family:"Trebuchet MS"'>ImageCellEditor</span></span><span
+style='font-family:"Trebuchet MS"'>) upon SWT components.<o:p></o:p></span></p>
+
+<h3 style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l1 level1 lfo2;
+tab-stops:list 36.0pt'><![if !supportLists]><span style='font-family:Symbol;
+mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;font-weight:normal;
+mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-family:"Trebuchet MS"'>Setup:<o:p></o:p></span></h3>
+
+<p class=MsoNormal style='margin-left:30.0pt'><span style='font-family:"Trebuchet MS"'>Get
+the latest build, and create a Java project with the additional Standard Widget
+Toolkit (SWT) Library. <o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:30.0pt'><span style='font-family:"Trebuchet MS"'>Do
+this by creating a new Java Project by pressing the ‘New’ button on the tool
+bar…<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:30.0pt'><span style='font-family:"Trebuchet MS"'>Select
+‘Java’ from the list, and the ‘Java Project’ on the right. Click Next…<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:30.0pt'><span style='font-family:"Trebuchet MS"'>Name
+the java project, and click next…<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:30.0pt'><span style='font-family:"Trebuchet MS"'>Select
+the ‘Libraries’ tab and click on the ‘Add Library…’ button;<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:30.0pt'><span style='font-family:"Trebuchet MS"'>Choose
+Standard Widget Toolkit (SWT), <span class=GramE>then</span> click ‘Finish’.
+And then ‘Finish’ again.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:30.0pt'><span style='font-family:"Trebuchet MS"'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoBodyTextIndent>Create a new Visual Class and choose to extend ‘other’
+and use the default <span class=SpellE>superclass</span> ‘<span class=SpellE>java.lang.Object</span>’.
+Then select ‘Finish’.<br>
+<!--[if gte vml 1]><v:shapetype id="_x0000_t75" coordsize="21600,21600" o:spt="75"
+ o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:386.25pt;
+ height:456pt'>
+ <v:imagedata src="SWTImageCellEditorTestCase_files/image012.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img width=515 height=608
+src="SWTImageCellEditorTestCase_files/image020.jpg" v:shapes="_x0000_i1025"><![endif]></p>
+
+<p class=MsoNormal style='margin-left:30.0pt'><span style='font-family:"Trebuchet MS"'><o:p>&nbsp;</o:p></span></p>
+
+<h3 style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l1 level1 lfo2;
+tab-stops:list 36.0pt'><![if !supportLists]><span style='font-family:Symbol;
+mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;font-weight:normal;
+mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-family:"Trebuchet MS"'>Basic
+Functionality:<o:p></o:p></span></h3>
+
+<p class=MsoBodyTextIndent style='margin-left:72.0pt;text-indent:-18.0pt;
+mso-list:l1 level2 lfo2;tab-stops:list 72.0pt'><![if !supportLists]><span
+style='font-family:"Courier New";mso-fareast-font-family:"Courier New"'><span
+style='mso-list:Ignore'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>Import some images into the java project…<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1026" type="#_x0000_t75" style='width:186.75pt;
+ height:147pt'>
+ <v:imagedata src="SWTImageCellEditorTestCase_files/image013.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img width=249 height=196
+src="SWTImageCellEditorTestCase_files/image021.jpg" v:shapes="_x0000_i1026"><![endif]><br>
+<br>
+Then on to the canvas drop a ‘Shell’ from the SWT Palette…<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1027" type="#_x0000_t75" style='width:314.25pt;
+ height:153pt'>
+ <v:imagedata src="SWTImageCellEditorTestCase_files/image016.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img width=419 height=204
+src="SWTImageCellEditorTestCase_files/image022.jpg" v:shapes="_x0000_i1027"><![endif]><br>
+<br>
+Go to the ‘Properties’ view, and select the cell editor button <span
+class=GramE>‘Image’ <span style='mso-spacerun:yes'> </span>-</span> <!--[if gte vml 1]><v:shape
+ id="_x0000_i1028" type="#_x0000_t75" style='width:157.5pt;height:30.75pt'>
+ <v:imagedata src="SWTImageCellEditorTestCase_files/image018.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img width=210 height=41
+src="SWTImageCellEditorTestCase_files/image023.jpg" v:shapes="_x0000_i1028"><![endif]><br>
+This should launch the ‘Select an Image File’ dialog. <br>
+Select to ‘Browse in’ ‘Project’. Check the ‘Search sub-directories’ box. And
+select an image from either the ‘Files’ window or the Available Images pane.<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1029" type="#_x0000_t75" style='width:390.75pt;
+ height:457.5pt'>
+ <v:imagedata src="SWTImageCellEditorTestCase_files/image024.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img width=521 height=610
+src="SWTImageCellEditorTestCase_files/image025.jpg" v:shapes="_x0000_i1029"><![endif]><br>
+Select OK.<br>
+<b style='mso-bidi-font-weight:normal'>Verify</b> that the image appears in the
+title bar of the ‘Shell’.<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1030" type="#_x0000_t75" style='width:173.25pt;
+ height:144.75pt'>
+ <v:imagedata src="SWTImageCellEditorTestCase_files/image026.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img width=231 height=193
+src="SWTImageCellEditorTestCase_files/image027.jpg" v:shapes="_x0000_i1030"><![endif]></p>
+
+<p class=MsoBodyTextIndent><br>
+<span style='mso-spacerun:yes'> </span></p>
+
+<p class=MsoBodyTextIndent style='margin-left:72.0pt;text-indent:-18.0pt;
+mso-list:l1 level2 lfo2;tab-stops:list 72.0pt'><![if !supportLists]><span
+style='font-family:"Courier New";mso-fareast-font-family:"Courier New"'><span
+style='mso-list:Ignore'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>On the same shell, drop a Button from the SWT palette.<br>
+Then select <span class=GramE>the and</span> select the cell editor button ‘Image’
+to launch the ‘Select an Image File’ dialog.<br>
+Select to ‘Browse in’ the 'File System'. <br>
+Go to a ‘Location’ where you wish to get your image from.<br>
+A list of images should then appear in the ‘Files’ pane, and all of the images
+should have thumbnails previewed in the ‘Available images’ pane.<br>
+Select the desired image and press the OK button. <br>
+<b>Verify </b>that the image should now appear upon the Button.<br
+style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></p>
+
+<p class=MsoBodyTextIndent style='margin-left:72.0pt;text-indent:-18.0pt;
+mso-list:l1 level2 lfo2;tab-stops:list 72.0pt'><![if !supportLists]><span
+style='font-family:"Courier New";mso-fareast-font-family:"Courier New"'><span
+style='mso-list:Ignore'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>Save the visual class and <b>verify</b> that the
+<b style='mso-bidi-font-weight:normal'>source</b> has been updated with code to
+include the image upon the SWT component?<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1031" type="#_x0000_t75" style='width:602.25pt;
+ height:320.25pt'>
+ <v:imagedata src="SWTImageCellEditorTestCase_files/image028.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img width=803 height=427
+src="SWTImageCellEditorTestCase_files/image029.jpg" v:shapes="_x0000_i1031"><![endif]><br>
+<br style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></p>
+
+<p class=MsoNormal style='margin-left:72.0pt;text-indent:-18.0pt;mso-list:l1 level2 lfo2;
+tab-stops:list 72.0pt'><![if !supportLists]><span style='font-family:"Courier New";
+mso-fareast-font-family:"Courier New"'><span style='mso-list:Ignore'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-family:"Trebuchet MS"'>Using
+the last example, <span class=GramE>bring</span> up the dialog box, and <b>verify</b>
+the following…<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:108.0pt;text-indent:-18.0pt;mso-list:
+l1 level3 lfo2;tab-stops:list 108.0pt'><![if !supportLists]><span
+style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
+Symbol'><u1:p></u1:p><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><b><span style='font-family:"Trebuchet MS"'>Verify</span></b><span
+style='font-family:"Trebuchet MS"'> that by selecting either the ‘Project’ or
+‘File System’ the location view will change to the appropriate location as
+expected? <o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:108.0pt;text-indent:-18.0pt;mso-list:
+l1 level3 lfo2;tab-stops:list 108.0pt'><![if !supportLists]><span
+style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
+Symbol'><u1:p></u1:p><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><b><span style='font-family:"Trebuchet MS"'>Verify</span></b><span
+style='font-family:"Trebuchet MS"'> that by selecting the ‘Search
+sub-directories’, that all the images are found in the selected director and
+that these files preview in the ‘Files’ and ‘Available images’ window? <o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:108.0pt;text-indent:-18.0pt;mso-list:
+l1 level3 lfo2;tab-stops:list 108.0pt'><![if !supportLists]><span
+style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
+Symbol'><u1:p></u1:p><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><b><span style='font-family:"Trebuchet MS"'>Verify</span></b><span
+style='font-family:"Trebuchet MS"'> that ‘<span class=GramE>Filter</span>:’ <span
+class=SpellE>combobox</span> works as expected. That when ‘*.jpg’ is selected,
+only JPG files become available? And that you’re able to input your own filter
+like ‘*.bmp’? <o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:108.0pt;text-indent:-18.0pt;mso-list:
+l1 level3 lfo2;tab-stops:list 108.0pt'><![if !supportLists]><span
+style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
+Symbol'><u1:p></u1:p><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><b><span style='font-family:"Trebuchet MS"'>Verify</span></b><span
+style='font-family:"Trebuchet MS"'> that which ever image file is selected it
+previews in the ‘Selected Image’ pane.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:108.0pt;text-indent:-18.0pt;mso-list:
+l1 level3 lfo2;tab-stops:list 108.0pt'><![if !supportLists]><span
+style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
+Symbol'><u1:p></u1:p><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><b><span style='font-family:"Trebuchet MS"'>Verify
+</span></b><span style='font-family:"Trebuchet MS";mso-bidi-font-weight:bold'>that
+the ‘Path:’ reads the appropriate path.</span><span style='font-family:"Trebuchet MS"'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:12.0pt;
+margin-left:30.0pt'><b><span style='font-size:13.0pt;font-family:"Trebuchet MS"'><u1:p></u1:p>&nbsp;<o:p></o:p></span></b></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:12.0pt;
+margin-left:54.0pt;text-indent:-18.0pt;mso-list:l3 level1 lfo6;tab-stops:list 54.0pt'><![if !supportLists]><span
+style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
+Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-family:"Trebuchet MS"'>Drop from
+the <b style='mso-bidi-font-weight:normal'>SWT palette</b> on to a content
+pane. And <b>verify</b> that an image can be added via the image property and
+that visual class will save without errors. And <b>verify</b> that the <b
+style='mso-bidi-font-weight:normal'>source</b> has been updated with code to
+include the image:<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:12.0pt;
+margin-left:90.0pt;text-indent:-18.0pt;mso-list:l3 level2 lfo6;tab-stops:list 90.0pt'><![if !supportLists]><span
+style='font-family:"Courier New";mso-fareast-font-family:"Courier New"'><span
+style='mso-list:Ignore'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-family:"Trebuchet MS"'>Shell<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:12.0pt;
+margin-left:90.0pt;text-indent:-18.0pt;mso-list:l3 level2 lfo6;tab-stops:list 90.0pt'><![if !supportLists]><span
+style='font-family:"Courier New";mso-fareast-font-family:"Courier New"'><span
+style='mso-list:Ignore'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-family:"Trebuchet MS"'>Button<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:12.0pt;
+margin-left:90.0pt;text-indent:-18.0pt;mso-list:l3 level2 lfo6;tab-stops:list 90.0pt'><![if !supportLists]><span
+style='font-family:"Courier New";mso-fareast-font-family:"Courier New"'><span
+style='mso-list:Ignore'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span class=SpellE><span style='font-family:
+"Trebuchet MS"'>CheckBox</span></span><span style='font-family:"Trebuchet MS"'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:12.0pt;
+margin-left:90.0pt;text-indent:-18.0pt;mso-list:l3 level2 lfo6;tab-stops:list 90.0pt'><![if !supportLists]><span
+style='font-family:"Courier New";mso-fareast-font-family:"Courier New"'><span
+style='mso-list:Ignore'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span class=SpellE><span style='font-family:
+"Trebuchet MS"'>RadioButton</span></span><span style='font-family:"Trebuchet MS"'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:12.0pt;
+margin-left:90.0pt;text-indent:-18.0pt;mso-list:l3 level2 lfo6;tab-stops:list 90.0pt'><![if !supportLists]><span
+style='font-family:"Courier New";mso-fareast-font-family:"Courier New"'><span
+style='mso-list:Ignore'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style='font-family:"Trebuchet MS"'>Label<o:p></o:p></span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+</div>
+
+</body>
+
+</html>

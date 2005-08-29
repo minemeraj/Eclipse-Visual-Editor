@@ -1,0 +1,49 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Java Application Launcher</title>
+</head>
+
+<body>
+
+<h2><font face="Times New Roman">Java Application Launcher </font></h2>
+<p>Currently the Visual Editor provides the capability to launch a visual 
+application using the VE's own Java application launcher by selecting the class 
+from the navigator and selecting the menu item <b>Run--&gt;Run As--&gt;Java Bean</b></p>
+<p><img border="0" src="images/java_a3.gif" width="460" height="179"></p>
+<p>This allows the user to customize various optional parameters, the Swing Look 
+&amp; Feel, and even a different JRE if not the default. This is very specific to 
+AWT/Swing applications in that the class is hosted within a JFrame (Swing) or 
+Frame (AWT) class.</p>
+<ul>
+  <li>This needs to modified such that it will support both SWT and AWT/Swing 
+  applications. </li>
+  <li>The launcher needs a way of determining if the selected visual application 
+  is an SWT or AWT/Swing application.</li>
+  <li>SWT applications need to be handled in the following manner when launched 
+  with the VE Java Launcher:<ul>
+    <li>A Visual class that extends Composite should be hosted within temporary 
+    Shell and the temporary Shell called from within a main method. Perhaps 
+    provide main method code generation if one doesn't exist.</li>
+    <li>A Visual class that extends Object and has a main method will be 
+    launched as is.</li>
+    <li>A Visual class that extends Object and doesn't have a main method will 
+    be have a main method generated.</li>
+  </ul>
+  </li>
+  <li>When the launcher wizard is displayed, the <b>Applet Parameters</b> tab 
+  and page, and the Swing Look &amp; Feel parameters should not be shown.</li>
+</ul>
+<blockquote>
+  <blockquote>
+    <p><img border="0" src="images/java_a4.jpg" width="684" height="576"> </p>
+  </blockquote>
+</blockquote>
+
+</body>
+
+</html>

@@ -1,0 +1,245 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test the ability to build in a RCP environment</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+pre          { margin-left: 10; background-color: #C0C0C0 }
+-->
+</style>
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif"><font size="3">
+Procedure</font></span></u></b> <br>
+&nbsp;</p>
+<p class="MsoNormal">This test examines VE's RCP support using the PDE 
+environment, as well as the creation, and editing of a view Part<br>
+<br>
+<b><span style="font-family: sans-serif; text-decoration: underline">
+<font size="3">Setup</font></span></b> </p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">Download the latest RCP image from eclipse (same download 
+page as that of the Eclipse image), and extract it to some local disk location.</p>
+<blockquote>
+	<p class="MsoNormal"><img border="0" src="Images/rcp.ht1.gif"></p>
+</blockquote>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">From the preference page, select the plugin development 
+target to be that of the RCP image you have just downloaded</p>
+<blockquote>
+	<p class="MsoNormal"><img border="0" src="Images/rcp.ht2.jpg"><br>&nbsp;</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Create a new plugin project RCPmail, and select <i>Yes</i> 
+	to create a rich client application on the second page of the new plugin 
+	creation wizard.&nbsp; </p>
+	<blockquote>
+		<p class="MsoNormal">
+		<img border="0" src="Images/rcp.ht5.jpg"></p>
+	</blockquote>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Select the RCP mail template from the next page, and 
+	click finish.&nbsp; A new <i>RCPmail</i> plugin project is created.&nbsp; 
+	Try to run it: select project, and user <i>RunAs</i> Eclipse Application.</p>
+	<p class="MsoNormal"><br><span style="font-family: sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; 
+	</span><br><u><b><span style="font-family: sans-serif"><font size="3">Tasks</font></span></b>
+	</u><br>&nbsp;</p>
+	<p class="MsoNormal"><font size="2"><span style="font-family: sans-serif">
+	Open the View class using the visual editor,</span></font></p>
+	<blockquote>
+		<blockquote>
+			<p class="MsoNormal">
+			<img border="0" src="Images/rcp.ht6.jpg"></p>
+		</blockquote>
+	</blockquote>
+	<p class="MsoNormal"><b>
+	<span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">
+	</span><span style="font-size: 10.0pt; font-family: sans-serif">that view 
+	looks like the view that was rendered when you ran the RCP application.</span></p>
+	<blockquote>
+		<blockquote>
+			<p class="MsoNormal">
+			<img border="0" src="Images/rcp.ht7.gif"></p>
+		</blockquote>
+	</blockquote>
+	<p class="MsoNormal">
+	<span style="font-family: sans-serif">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</span><br>Click on each label on the Free Form, and <b>
+	<font color="#0000FF">verify</font></b> that&nbsp; that the code is driven 
+	the the proper label instance in the code.</p>
+	<p class="MsoNormal">
+	Repeat the selection on the JavaBeans view and <b><font color="#0000FF">
+	verify</font></b> that&nbsp; that the code is driven the the proper label 
+	instance in the code.</p>
+	<p class="MsoNormal">
+	&nbsp;</p>
+	<p class="MsoNormal">
+	Click on the banner composite, show Grid, <b><font color="#0000FF">
+	verify</font></b> that the SWT grid shows correctly.</p>
+	<p class="MsoNormal">
+	Click on the link and delete it <b><font color="#0000FF">
+	verify</font></b>&nbsp; that the Date label now occupies the link's 
+	location. </p>
+	<p class="MsoNormal">
+	Undo and Redo, <b><font color="#0000FF">
+	verify</font></b> that the snippet analysis restore, and redo this.</p>
+	<blockquote>
+		<blockquote>
+			<p class="MsoNormal"><img border="0" src="Images/rcp.ht1.jpg"><img border="0" src="Images/rcp.ht2.gif"></p>
+		</blockquote>
+	</blockquote>
+	<p class="MsoNormal">
+	&nbsp;</p>
+	<p class="MsoNormal">
+	Drop the SWT link component and insert it in front of the Date label.</p>
+	<p class="MsoNormal">
+	Set the text property from the property sheet to be &quot;<a href="mailto:nicole@mail.org">nicole@mail.org</a>&quot;</p>
+	<p class="MsoNormal">
+	<b><font color="#0000FF">
+	verify</font></b> that the following dialog comes up denoting that you did 
+	not specify anchors.</p>
+	<p class="MsoNormal">
+	<b><font color="#0000FF">
+	verify</font></b> that the link's text is rendered correctly on the on the 
+	right side of the From: label.</p>
+	<blockquote>
+		<blockquote>
+			<p class="MsoNormal"><img border="0" src="Images/rcp.ht3.jpg"></p>
+		</blockquote>
+	</blockquote>
+	<p class="MsoNormal">Select the link to drive to the source, and add &lt;A&gt; to 
+	the text value of the link from the source pane.</p>
+	<pre style="margin-left: 10px">link.setText(&quot;&lt;A&gt;nicole@mail.org&quot;);</pre>
+	<p class="MsoNormal"> <b><font color="#0000FF">
+	verify</font></b> that the content is reflected in the property sheet.</p>
+	<p class="MsoNormal">Add &lt;/A&gt; at the end of the <i>setText</i> property in 
+	the source, and <b><font color="#0000FF">
+	verify</font></b> that the link is now enabled on the canvas</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<blockquote>
+		<blockquote>
+			<p class="MsoNormal"><img border="0" src="Images/rcp.ht4.gif"></p>
+			<p class="MsoNormal">&nbsp;</p>
+		</blockquote>
+	</blockquote>
+	<p class="MsoNormal">Add a <i>widgetSelected</i> event on the link, leave 
+	the default print debug statement. and Run as a JavaBean.</p>
+	<p class="MsoNormal"> <b><font color="#0000FF">
+	verify</font></b> that the link's event works (clicking on it will result in 
+	the print into the console).</p>
+	<p class="MsoNormal"> &nbsp;</p>
+	<p class="MsoNormal"> Try to move the Subject, Subject msg., From, Data 
+	labels around within the grid.. These labels re-use the local instance 
+	variable and require special codegen handling.</p>
+	<p class="MsoNormal"> <b><font color="#0000FF">
+	verify</font></b> that the right code is generated/updated.&nbsp; ... you 
+	can verify this by ensuring that there are no errors in the source code, and 
+	press the reload button and ensure that the reverse parsing redraw the label 
+	right where you placed them.</p>
+	<p class="MsoNormal"> &nbsp;</p>
+	<p class="MsoNormal"> &nbsp;</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Change the banner's layout to null.&nbsp; <b><font color="#0000FF">
+	verify</font></b> that the canvas looks ok, and no exceptions in the log, 
+	show grid, and verify null grid.</p>
+	<p class="MsoNormal">Drag the last instance of the label (10:34 am) to the 
+	right of the banner and <b><font color="#0000FF">
+	verify</font></b> that the proper l.setBounds is updated.</p>
+	<p class="MsoNormal">Change the banner to GridLayout, <b><font color="#0000FF">
+	verify</font></b> that banner looks ok.&nbsp; Click one Undo at the time 
+	until the banner goes back to the original GridLayout settings, and <b><font color="#0000FF">
+	verify</font></b> that in each step, the snippet analysis updates the GUI 
+	properly.</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Click on the parent widget on the JavaBean's view.&nbsp;
+	<font color="#0000FF"><b>V</b></font><b><font color="#0000FF">erify</font></b> 
+	that there is no <i>layout</i> property on the property sheet.</p>
+	<p class="MsoNormal"><font color="#0000FF"><b>V</b></font><b><font color="#0000FF">erify</font></b> 
+	that one can not change the instance field name for parent.</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Change the view's setting from the preference page</p>
+	<blockquote>
+		<blockquote>
+			<p class="MsoNormal"><img border="0" src="Images/rcp.ht10.jpg"></p>
+			<p class="MsoNormal">&nbsp;</p>
+		</blockquote>
+	</blockquote>
+	<p class="MsoNormal"><font color="#0000FF"><b>V</b></font><b><font color="#0000FF">erify</font></b> 
+	that on an editor re-open, and that the JavaBean launcher pick up these 
+	settings.</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">The Viewer's trim's icon, and text are picked up from 
+	the manifest file.&nbsp; <font color="#0000FF"><b>V</b></font><b><font color="#0000FF">erify</font></b> 
+	this on the visual editor, and <font color="#0000FF"><b>V</b></font><b><font color="#0000FF">erify</font></b> 
+	this on the JavaBean launcher.</p>
+	<p class="MsoNormal">Change the manifest's icon, and text, and
+	<font color="#0000FF"><b>V</b></font><b><font color="#0000FF">erify</font></b> 
+	that the Visual Editor picks up these changes.</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Save the file, and reload from scratch (cache will be 
+	used).&nbsp; <font color="#0000FF"><b>V</b></font><b><font color="#0000FF">erify</font></b> 
+	that the GUI is rebuilt correctly.</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Create a new RCP view, using the VE's create visual 
+	class wizard:</p>
+	<blockquote>
+		<blockquote>
+			<p class="MsoNormal"><img border="0" src="Images/rcp.ht11.jpg"></p>
+			<p class="MsoNormal">&nbsp;</p>
+		</blockquote>
+	</blockquote>
+	<p class="MsoNormal"><font color="#0000FF"><b>V</b></font><b><font color="#0000FF">erify</font></b> 
+	that a top Composite is created on top of parent.&nbsp; Drop a Button, and a 
+	CheckBox on top of the View on the Canvas, and <font color="#0000FF"><b>v</b></font><b><font color="#0000FF">erify</font></b> 
+	that on sure that they have been dropped on top of <i>top</i>.</p>
+	<p class="MsoNormal">Change the layout to RowLayout, <b><font color="#0000FF">
+	verify</font></b> 
+	that the canvas reflects this, as well as the code.</p>
+	<blockquote>
+		<blockquote>
+			<p class="MsoNormal"><img border="0" src="Images/rcp.ht12.jpg"></p>
+			<p class="MsoNormal">&nbsp;</p>
+		</blockquote>
+	</blockquote>
+	<p class="MsoNormal">Launch this file with the JavaBean launcher, and <b><font color="#0000FF">
+	verify</font></b> 
+	that it looks ok.</p>
+	<p class="MsoNormal">On the running View, <b><font color="#0000FF">verify</font></b> 
+	that one can not close the View by pressing the view's (not Shell) close 
+	button.</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Create a new Java Project (not a plugin), Open the 
+	create visual class wizard again, and try to create an RCP view using the 
+	Java Project. </p>
+	<p class="MsoNormal"><font color="#0000FF"><b>V</b></font><b><font color="#0000FF">erify</font></b> 
+	that the wizard will not let you create a ViewPart for the Java project.&nbsp; 
+	Views are only available for an RCP project.</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Create a new Plugin project that is NOT a UI plugin, 
+	make sure that the UI checkbox is unchecked.</p>
+	<blockquote>
+		<blockquote>
+			<blockquote>
+				<p class="MsoNormal"><img border="0" src="Images/rcp.ht10.gif"></p>
+			</blockquote>
+		</blockquote>
+	</blockquote>
+	<p class="MsoNormal"><font color="#0000FF"><b>V</b></font><b><font color="#0000FF">erify</font></b> 
+	that the wizard will not let you create a ViewPart for this project.</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">&nbsp;</p>
+</blockquote>
+
+</body>
+
+</html>

@@ -1,0 +1,236 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Visual Editor 1.0.0 Line Item Objectives</title>
+</head>
+
+<body>
+
+<h1><u>Visual Editor 1.0.0 Line Item Objectives</u></h1>
+
+<p>The following items need to be designed and implemented for the SWT 
+capability in the Visual Editor. Links are provided where more details and 
+explanations are needed to understand the requirements.</p>
+
+<p><font face="Times New Roman"><b><u>Note</u>: </b>The main objective is to 
+define and iterate through the various line items that it will take to create a 
+SWT extension for the VE framework.&nbsp; Furthermore; our goal is to create the 
+SWT support in two major stages.&nbsp; Initial support, and full support.&nbsp; 
+The initial support will address core platform issues requiring one to support 
+SWT widgets, whereas the full support will come to enhance VE's SWT end user 
+support.&nbsp; For example, our first goal is to support core SWT widgets (<b>org.eclipse.swt.widgets</b>), 
+and a simple SWT code pattern.&nbsp; The full support effort will enhance VE to 
+support customized widgets (<b>org.eclipse.swt.widgets.custom)</b>, and factory 
+based code patterns etc.</font></p>
+
+<h2>&nbsp;</h2>
+
+<h2><font face="Times New Roman">Line Item Contribution Process</font></h2>
+<ol>
+  <li>Review the following line items to get a basic understanding of the 
+  requirements and what needs to be implemented</li>
+  <li>Review the <a href="line_item_assignments.htm">contributors assignment 
+  list</a> and those items which have not been assigned. </li>
+  <li>Look for items of interest in which you would like to develop and 
+  contribute.</li>
+  <li>Ask and submit questions you might have about the line items to the VE 
+  development mailing list <a href="mailto:ve-dev@eclipse.org"><b>ve-dev@eclipse.org</b></a></li>
+	<li>Submit your request to the VE development mailing list (<b><a href="mailto:ve-dev@eclipse.org">ve-dev@eclipse.org</a>)
+  	</b>for the specific line item(s) you would like to develop and contribute. 
+  Please identify what line item, and contact information (i.e. email, phone, 
+  etc.).</li>
+</ol>
+
+<p>&nbsp;</p>
+
+<h2><u>Line Items</u></h2>
+<h3><font face="Times New Roman"><a href="code_parsing_and_generation.htm">Code Parsing and Generation</a></font></h3>
+<ul>
+  <li><font face="Times New Roman">Simple SWT code generation/parsing pattern 
+   
+  </font></li>
+  <li><font face="Times New Roman">Events (inner methods ...) differences from 
+  Swing</font></li>
+  <li><font face="Times New Roman">ID (information development) - provide technical 
+  documents</font></li>
+</ul>
+<h3><font face="Times New Roman">Dispose Support for Shared Widgets (e.g. Color)</font></h3>
+<ul>
+  <li>Modeling</li>
+  <li>Code generation</li>
+</ul>
+<h3><font face="Times New Roman"><a href="swt_constructor_style_bits.htm">SWT 
+Constructor style bits</a></font></h3>
+<ul>
+  <li><font face="Times New Roman">SWEET - BeanInfo extensions</font></li>
+  <li><font face="Times New Roman">Modeling and code generation</font></li>
+  <li><font face="Times New Roman">PropertySheet - break into <u>
+  families</u> - e.g. Button has style bits that define it as <b>push</b>, <b>
+  check</b>, <b>arrow</b>, <b>toggle</b>, etc..</font></li>
+  <li><font face="Times New Roman">target VM has to cope with widget 
+  reconstruction because style bits are set on construction only. </font></li>
+</ul>
+<h3><font face="Times New Roman"><a href="java_application_launcher.htm">Java Application Launcher</a></font></h3>
+<ul>
+  <li><font face="Times New Roman">Handle both 
+  Swing and SWT launching</font></li>
+  <li><font face="Times New Roman">ID (information development) - provide technical 
+  documents</font></li>
+</ul>
+<h3><a href="visual_class_wizard_and_main.htm"><font face="Times New Roman">
+Visual Class wizard and main(</font><b>String[] args</b><font face="Times New Roman">) 
+Method Creation</font></a></h3>
+<ul>
+  <li><font face="Times New Roman">Create both AWT/Swing and SWT 
+  applications. </font></li>
+  <li><font face="Times New Roman">Customized code generated when <b>
+  main</b> method stub is selected to be generated. </font></li>
+  <li><font face="Times New Roman">Popup on the class to generate a 
+  <b>main</b> method</font></li>
+  <li><font face="Times New Roman">Code assist template for <b>main</b> 
+  customized for SWT and AWT/Swing applications </font></li>
+  <li><font face="Times New Roman">ID (information development) - provide technical 
+  documents</font></li>
+</ul>
+<h3><font face="Times New Roman"><a href="label_providers_and_cell_editors.htm">Label providers and cell editors</a></font></h3>
+<ul>
+  <li><font face="Times New Roman">Rectangle </font></li>
+  <li><font face="Times New Roman">Point </font></li>
+  <li><font face="Times New Roman">Color </font></li>
+  <li><font face="Times New Roman">Font </font></li>
+  <li><font face="Times New Roman">Cursor </font></li>
+  <li><font face="Times New Roman">Image</font></li>
+  <li><font face="Times New Roman">Java Object reference - the ability to show 
+  and select from a list of visual objects applicable to a specific property 
+  setting.</font></li>
+</ul>
+<h3>SWT Containers</h3>
+<ul>
+  <li><font face="Times New Roman"><b><a href="shell.htm">Shell</a></b> </font></li>
+  <li><font face="Times New Roman"><a href="composite.htm"><b>Composite</b> </a> </font>
+<ul>
+  <li><font face="Times New Roman">Controls relationship in the model, decoders 
+  - target VM - Editparts, layout managers, PS </font></li>
+</ul>
+  </li>
+  <li><font face="Times New Roman"><b><a href="layout_support.htm">Layout 
+  support</a> </b>for Shell, Composite, and Group. This includes 
+  layout policies, layout helpers for providing U/I feedback, layout data (PS), 
+  and layout switching for: </font>
+  <ul>
+  <li><font face="Times New Roman">null layout</font></li>
+  <li><font face="Times New Roman">FillLayout </font></li>
+  <li><font face="Times New Roman">RowLayout </font></li>
+  <li><font face="Times New Roman">FormLayout</font></li>
+  <li><font face="Times New Roman">GridLayout</font></li>
+</ul>
+  </li>
+  <li><font face="Times New Roman"><b><a href="group.htm">Group</a> </b>- PS, edit part, direct edit 
+    text </font></li>
+  <li><font face="Times New Roman"><b><a href="tabfolder.htm">TabFolder/TabItem</a></b> - containment 
+    relationship in the model, decoders - target VM, EditParts (page switching, 
+    graphical and tree design), PS </font>
+    </li>
+  <li><font face="Times New Roman"><b><a href="toolbar.htm">ToolBar/ToolItem</a></b> -containment 
+    relationship in the model, decoders - target VM, Edit Parts (graphical and 
+    tree design). &nbsp;Allow controls to be dropped onto ToolBar and automatically 
+    create ToolItem. What about shared tool item controls...similar problem as 
+    shared Swing controls like JButton? </font>
+    </li>
+  <li><font face="Times New Roman"><b><a href="tree.htm">Tree/TreeItem</a></b> - 
+  containment relationship in the model, decoders - target VM, EditParts (page switching, 
+    graphical and tree design), PS</font></li>
+  <li><font face="Times New Roman"><b><a href="coolbar.htm">CoolBar/CoolItem</a></b> - containment 
+    relationship in the model, decoders, target VM EditParts (graphical and tree 
+    design)</font></li>
+  <li><font face="Times New Roman"><b>Dialog</b> - Color, Directory, File, 
+  Font, Message, Print - PS only. </font>
+    </li>
+</ul>
+<h3>SWT Controls</h3>
+<ul>
+  <li><font face="Times New Roman"><a href="button_label_text.htm">Button</a> - push, checkbox, radio, 
+  toggle + PS, edit part direct edit</font></li>
+  <li><font face="Times New Roman"><a href="button_label_text.htm">Label</a> - PS, edit part, direct edit </font></li>
+  <li><font face="Times New Roman"><a href="button_label_text.htm">Text</a> - PS, edit part, direct edit </font></li>
+  <li><font face="Times New Roman"><a href="list.htm">List</a> - PS </font></li>
+  <li><font face="Times New Roman"><a href="combo.htm">Combo</a> - PS </font></li>
+  <li><font face="Times New Roman"><a href="progressbar.htm">ProgressBar</a> - PS </font></li>
+  <li><font face="Times New Roman"><a href="scale.htm">Scale</a> - PS </font></li>
+  <li><font face="Times New Roman"><a href="slider.htm">Slider</a> - PS </font></li>
+  <li><font face="Times New Roman"><a href="sash.htm">Sash</a> - PS</font></li>
+</ul>
+<h3><font face="Times New Roman"><a href="menu.htm">SWT Menus</a> </font></h3>
+<ul>
+  <li><font face="Times New Roman">Menu/MenuItem (popup and menubar 
+  and cascade). &nbsp;</font><ul>
+  <li><font face="Times New Roman">Model relationship, target VM, edit 
+  parts, PS, decoders</font></li>
+</ul>
+  </li>
+</ul>
+<h3><font face="Times New Roman">Palette Support</font></h3>
+<ul>
+  <li><font face="Times New Roman">Re-factor GEF changes - merge in GEF 
+  modifications for Eclipse 3.0</font></li>
+  <li><font face="Times New Roman">Ability to open and configure drawers - 
+  option to load specific drawers - SWT or Swing</font></li>
+  <li><font face="Times New Roman">Customizable palette - allow users to create 
+  custom drawers and controls that can be dropped onto the canvas without using 
+  the choose bean dialog.</font></li>
+  <li><font face="Times New Roman">Ability to store customized palettes - 
+  persist custom palettes per user using configuration tools.</font></li>
+</ul>
+<h3><font face="Times New Roman">Target VM </font></h3>
+<ul>
+  <li><font face="Times New Roman">Changes to handle evaluating initStrings to deal with arguments such as display/composite</font></li>
+  <li><font face="Times New Roman">Widget reconstruction when style bits change 
+  because style bits are set on construction only</font></li>
+  <li><font face="Times New Roman">Target VM managers for handling tabfolder, 
+  toolbar, menubar, coolbar</font><ul>
+  <li><font face="Times New Roman">Needed to handle when the adding, removing, 
+  or reordering of items occurs in the remote VM</font></li>
+</ul>
+  </li>
+</ul>
+<h3><a href="context_menu_support.htm">Context Menu</a></h3>
+<ul>
+  <li><font face="Times New Roman">Eclipse plugin &nbsp;popup extensions</font></li>
+  <li><font face="Times New Roman">ObjectActionDelegates</font></li>
+  <li><font face="Times New Roman">ActionFilters</font></li>
+</ul>
+<h3>&nbsp;</h3>
+
+<h2>Stage 2 SWT support</h2>
+
+<p>The list here is by no means 
+complete but a starting point for consideration to provide full SWT support . Feel free 
+to add more as necessary.</p>
+<ul>
+  <li><font face="Times New Roman">Factory based SWT generation/parsing pattern</font></li>
+  <li><font face="Times New Roman">SWT Custom controls (e.g. 
+TableTree/TableTreeItem)</font><ul>
+  <li><font face="Times New Roman">Stacklayout</font></li>
+</ul>
+
+  </li>
+  <li><font face="Times New Roman">Eclipse extensions like wizard pages, 
+  preferences pages</font></li>
+  <li><font face="Times New Roman">Extensive visual Layout feedback and wizard 
+  dialogs to support </font>
+  <ul>
+    <li><font face="Times New Roman">FormLayout</font></li>
+    <li><font face="Times New Roman">GridLayout</font></li>
+  </ul>
+  </li>
+  <li><font face="Times New Roman">Dialog - Color, Directory, File, Font, 
+  Message, Print - resolve target VM graphic representation</font></li>
+</ul>
+
+</body>
+
+</html>

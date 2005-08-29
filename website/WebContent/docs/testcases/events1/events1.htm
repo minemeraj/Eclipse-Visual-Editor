@@ -1,0 +1,1005 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Basic Events test - Style 3 only</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+<!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif">Procedure</span></u></b>
+<br>
+<br>
+<b><span style="font-family: sans-serif">Basic Events Test / VE Style 3 Events 
+Test</span></b> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Adding Events</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Create a new empty 
+class and drop a JButton on the canvas</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Set the text of the 
+JButton to something.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch the beans view 
+to Show Events.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JButton on 
+the canvas, bring up the context menu and select Events</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that &quot;Add 
+Event...&quot;, &nbsp;actionPerformed callback, and enabled, model and text properites are 
+on the submenu</span> <br>
+<br>
+<img border=0 width=302 height=158
+src="image001.gif" v:shapes="_x0000_s1025"><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JButton on 
+the beans view and bring up the context menu and select Events</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that &quot;Add 
+Event...&quot;, actionPerformed callback, and enabled, model and text properties are 
+on the submenu</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Bring up the context 
+menu again and select actionPerformed.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+actionPerformed event shows up on the beans list.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the 
+following code is added to the JButton</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+jButton.addActionListener(<b><span style="color: #820040">new</span></b> 
+java.awt.event.ActionListener() { </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> 
+actionPerformed(java.awt.event.ActionEvent e) { &nbsp; &nbsp;</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(<span style="color: #4200FF">&quot;actionPerformed()&quot;</span>);
+<span style="color: #3F8080">// </span><b><span style="color: #71B2CF">TODO</span></b><span style="color: #3F8080"> 
+Auto-generated stub actionPerformed()</span></span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; }</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Repeat the step above</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that another 
+actionPerformed event shows up on the beans list and in the code</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Bring up the context 
+menu and select &quot;Add Event ...&quot; this time</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the Add 
+Event dialog is displayed</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the title of 
+the Wizard is the selected bean's label</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event types supported by JButton are displayed in the tree: </span><br>
+<img border=0 width=557 height=427
+src="image002.jpg" v:shapes="_x0000_s1026"><br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the events 
+which extend interfaces use the </span>
+<span style="font-size: 10.0pt; font-family: Courier">I </span>
+<span style="font-size: 10.0pt; font-family: sans-serif">icon.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the events 
+which have adapters by default use the C icon.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+action event icon is denotes that an inner class exist - the others use the 
+default icons.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Expand the action tree 
+item and the ancestor tree item</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the icon for 
+actionPerformed is colorized</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the icons 
+under ancestor are defaulted</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the icons 
+under the propertyChange (denoting properties) are in different color.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select actionPerformed 
+item</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">use existing 
+listener radio is disabled</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">extends: 
+radio is disabled</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click Finish</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that another 
+actionPerformed event shows up on the beans list and in the code</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select two out of the 
+three actionPerformed events and use the context menu to delete them.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Bring up the Add Events 
+dialog again, this time using the context menu on the beans view</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+dialog is displayed</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select key then 
+keyPressed</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the Use 
+existing listener radio is disabled</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that extends 
+and implements are enabled</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the extends 
+radio and press Finish</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+keyPressed event shows up on the beans view</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+following source is added:</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+jButton.addKeyListener(<b><span style="color: #820040">new</span></b> 
+java.awt.event.KeyAdapter() { </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> keyPressed(java.awt.event.KeyEvent 
+e) { &nbsp; &nbsp;</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(<span style="color: #4200FF">&quot;keyPressed()&quot;</span>);
+<span style="color: #3F8080">// </span><b><span style="color: #71B2CF">TODO</span></b><span style="color: #3F8080"> 
+Auto-generated stub keyPressed()</span></span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; }</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });</span><b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">
+</span></b><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Bring up the add events 
+dialog again</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+class icon next to key is colorized</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Expand the key item</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+keyPressed icon is colorized and the others are not</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the keyPressed 
+item</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the Use 
+existing listener radio is disabled</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the keyReleased 
+item</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the Use 
+existing listener and Create new listener items are enabled</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the Use 
+existing listener is selected by default</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+extends and implements radios are disabled</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the Create new 
+listener radio</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+extends and implements radios are enabled</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the Use existing 
+listener radio</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Press Finish</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+keyReleased event shows up on the beans view</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+keyReleased source is added to the existing KeyAdapter</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Bring up the add events 
+dialog again</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select key-&gt;keyTyped</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the Create new 
+listener radio</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select Implements: 
+KeyListener</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Press Finish</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the following source is added:</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+jButton.addKeyListener(<b><span style="color: #820040">new</span></b> 
+java.awt.event.KeyListener() { </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> keyTyped(java.awt.event.KeyEvent e) 
+{ &nbsp; &nbsp;</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(<span style="color: #4200FF">&quot;keyTyped()&quot;</span>);
+<span style="color: #3F8080">// </span><b><span style="color: #71B2CF">TODO</span></b><span style="color: #3F8080"> 
+Auto-generated stub keyTyped()</span></span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; }</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> keyPressed(java.awt.event.KeyEvent 
+e) {} </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> keyReleased(java.awt.event.KeyEvent 
+e) {} </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch the beans view 
+to expert mode</span> <br>
+<img border=0 width=312 height=107
+src="image003.jpg" v:shapes="_x0000_s1027"><br>
+<br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event classes are shown properly</span> <br>
+<img border=0 width=233 height=156
+src="image004.jpg" v:shapes="_x0000_s1028"><br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+events extending listeners have the I (interface) icon</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+events extending adapters have the C (class) icon</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+children events are nested under the classes properly</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the KeyAdapter 
+class and bring up the Events context menu</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+keyPressed and keyReleased items are disabled</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+keyTyped item is enabled.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the keyTyped 
+event.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that 
+keyTyped event is added to the existing adapter.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Bring up the Event 
+context menu on the adapter again.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that all of 
+the events are disabled.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop a JFrame on the 
+canvas</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2-&gt;Events on the 
+JFrame</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that 
+windowClosing and windowOpened callbacks, and enabled property are available on 
+the context menu</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select windowClosing</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+windowAdapter and windowClosing event are created correctly</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Bring up the context 
+menu again and select windowOpened</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+windowOpened event is added to the existing WindowAdapter</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Bring up the context 
+menu again and select windowOpened again</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the new 
+windowOpened event is added to a new WindowAdapter</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JFrame and 
+delete it from the canvas.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Save the class.</span>
+<br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Source Manipulation</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the keyTyped 
+event on the Adapter on tree</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+source is driven to the method declaration line of the keyTyped event.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the 
+ActionListener on the tree</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+source is driven to the addActionListener line where the inner class is declared</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the KeyAdapter 
+on the tree</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+source is driven to the addKeyListener line where the inner class is declared</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the 
+actionPerformed event on the tree</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+source is driven to the method declaration line of the actionPerformed event.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">From the source, copy 
+in the following code beneath the existing events:</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; jButton.addFocusListener(<b><span style="color: #820040">new</span></b> 
+java.awt.event.FocusAdapter() {</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> 
+focusGained(java.awt.event.FocusEvent e ) {</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println();</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; });</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+beans view updates to reflect the new event class and method</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Underneath the 
+focusGained method, copy in the following code:</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> focusLost(java.awt.event.FocusEvent 
+e) {</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println();</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+beans view updates to reflect the new event method.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Underneath the 
+FocusListener block, copy in the following code:</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; jButton.addMouseListener(<b><span style="color: #820040">new</span></b> 
+java.awt.event.MouseAdapter() {</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; });</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+beans view updates to reflect the new event class.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Go to the existing 
+KeyListener class</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the line</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: Courier New; color: #820040">
+public</span></b><span style="font-size: 10.0pt; font-family: Courier New"> <b>
+<span style="color: #820040">void</span></b> keyPressed(java.awt.event.KeyEvent 
+e) {}</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">to</span> <br>
+<b><span style="font-size: 10.0pt; font-family: Courier New; color: #820040">
+public</span></b><span style="font-size: 10.0pt; font-family: Courier New"> <b>
+<span style="color: #820040">void</span></b> keyPressed(java.awt.event.KeyEvent 
+e) { System.out.println(); }</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+beans view updates to reflect the new event method in the KeyListener.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Within the MouseAdapter 
+add the following code:</span> <br>
+<b><span style="font-size: 10.0pt; font-family: Courier New; color: purple">&nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; public</span></b><span style="font-size: 10.0pt; font-family: Courier New">
+<b><span style="color: purple">void</span></b> 
+mouseEntered(java.awt.event.MouseEvent e) {</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println();</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; }</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+beans view updates to reflect the new event method in the MouseAdapter.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the mouseEntered 
+method to be mouseExited</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+beans view updates to reflect the changed event method in the MouseAdapter.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Copy the following code 
+into the body of the KeyListener class. &nbsp; &nbsp; &nbsp; &nbsp;</span> <br>
+<b><span style="font-size: 10.0pt; font-family: Courier New; color: purple">&nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; public</span></b><span style="font-size: 10.0pt; font-family: Courier New">
+<b><span style="color: purple">void</span></b> foo(java.awt.event.KeyEvent e ) {</span>
+<br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println();</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; }</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+beans view does NOT reflect the <b>foo</b> callback.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Copy the <b>foo</b> method 
+into the body of the MouseAdapter</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+beans view does not change reflect this method.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Comment out the 
+System.out.println(); line in the mouseExited method.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+beans view updates to reflect the removed event method</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Uncomment the println 
+line</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method returns to the beans view.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Comment out the entire 
+mouseExited method</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+beans view updates to reflect the removed event method</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Uncomment the entire 
+mouseExited method</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method returns to the beans view.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Comment out the entire 
+mouseExited method again</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Uncomment the method 
+declaration and closing bracket, but not the System.out.println(); line</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method &nbsp;does not return to the beans view</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Uncomment the 
+System.out.println(); line</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method returns to the beans view.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Comment out the 
+System.out.println() line in the KeyListener's keyTyped method.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+beans view updates to reflect the removed event method</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Uncomment the 
+System.out.println() line</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method returns to the beans view.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the parameter 
+type in the mouseExited method from MouseEvent to KeyEvent.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+mouseExited event is removed from the beans view</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the parameter 
+type back to MouseEvent</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+mouseExited event returns to the beans view.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Cut the entire keyTyped 
+method in the KeyListener and paste it below the keyPressed method</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event methods swap order in the beans view</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Note</span></b><span style="font-size: 10.0pt; font-family: sans-serif">: 
+The following test is a current limitation of V5.1. Do not fail test because of 
+this.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Cut the entire 
+addKeyListener(new KeyListener) block</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event class and methods is removed from the beans view</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Paste the method back 
+in above the ActionListener at the top</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event class and methods are returned to the beans view, above the ActionListener</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to Show Events 
+in the beans view (from Expert Events)</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event methods are represented properly in the basic mode.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Revert your class to 
+the previous saved state</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+and repeat the steps of this section, making sure the source modifications 
+provoke the correct responses for the basic mode.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Once repeated, save 
+your class.</span> <br>
+<br>
+&nbsp;</p>
+<p class="MsoNormal"><b>
+<span style="font-size: 10.0pt; font-family: sans-serif">Property Changed events</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to Expert 
+Events.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open the Events wizard, 
+open the propertyChange interface icon, and select the enabled property, and use 
+the default two argument propety change method.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that a 
+propertyChange Listener with the enabled property icon was added to the JavaBean 
+view.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that 
+selecting on the &quot;enabled&quot; property drives you to the following generated code:</span>
+<br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; jFrame.addPropertyChangeListener(<span style="color: #4200FF">&quot;enabled&quot;</span>,
+<b><span style="color: #820040">new</span></b> java.beans.PropertyChangeListener() 
+{ </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> 
+propertyChange(java.beans.PropertyChangeEvent e) { </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(<span style="color: #4200FF">&quot;propertyChange(enabled)&quot;</span>);
+<span style="color: #3F8080">// </span><b><span style="color: #71B2CF">TODO</span></b><span style="color: #3F8080"> 
+Auto-generated stub &quot;enabled&quot; </span></span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; });</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open the Events wizard 
+again, and select the propertyChange-&gt;enabled property again. </span><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">&nbsp;<b><span style="color: blue">Verify
+</span></b>that the &quot;Use Existing&quot; option is not available.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the single 
+argument listener registration method</span> <br>
+<img border=0 width=635 height=172
+src="image005.gif" v:shapes="_x0000_s1029"><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">&nbsp;<b><span style="color: blue">Verify
+</span></b>that a new listener was generated on the JavaBean viewer and in the 
+source as following:</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">
+jFrame.addPropertyChangeListener(<b><span style="color: #820040">new</span></b> 
+java.beans.PropertyChangeListener() { </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <b>
+<span style="color: #820040">public</span></b> <b><span style="color: #820040">
+void</span></b> propertyChange(java.beans.PropertyChangeEvent e) { </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; <b><span style="color: #820040">if</span></b> ((e.getPropertyName().equals(<span style="color: #4200FF">&quot;enabled&quot;</span>))) 
+{ </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(<span style="color: #4200FF">&quot;propertyChange(enabled)&quot;</span>);
+<span style="color: #3F8080">// </span><b><span style="color: #71B2CF">TODO</span></b><span style="color: #3F8080"> 
+Auto-generated stub &quot;enabled&quot; </span></span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; } </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span>
+<br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; });</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open the Events wizard 
+again, and select the propertyChange-&gt;font property.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select use Existing, 
+and Finish.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">&nbsp;<b><span style="color: blue">Verify
+</span></b>that the font property was added in the JavaBean viewer.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">&nbsp;<b><span style="color: blue">Verify
+</span></b>that when clicking on the font property, the source is driven to the 
+following added if statement:</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; <b><span style="color: #820040">if</span></b> ((e.getPropertyName().equals(<span style="color: #4200FF">&quot;font&quot;</span>))) 
+{ </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(<span style="color: #4200FF">&quot;propertyChange(font)&quot;</span>);
+<span style="color: #3F8080">// </span><b><span style="color: #71B2CF">TODO</span></b><span style="color: #3F8080"> 
+Auto-generated stub &quot;font&quot; </span></span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; } &nbsp; </span><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">In the source, 
+generated if statement </span><br>
+<b><span style="font-size: 10.0pt; font-family: Courier New; color: #820040">if</span></b><span style="font-size: 10.0pt; font-family: Courier New"> 
+((e.getPropertyName().equals(<span style="color: #4200FF">&quot;font&quot;</span>))) { &nbsp;
+</span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">to</span> <br>
+<b><span style="font-size: 10.0pt; font-family: Courier New; color: #820040">if</span></b><span style="font-size: 10.0pt; font-family: Courier New"> 
+((e.getPropertyName().equals(<span style="color: #4200FF">&quot;foo&quot;</span>))) {
+</span><br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+JavaBean viewer reflect &quot;foo&quot; with a Warning (TBD).</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Delete the &quot;foo&quot; if 
+statement</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that foo is 
+removed from the JavaBean Viewer.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Deleting events</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Make sure the beans 
+view is set to basic (Show Events) mode</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the first 
+keyPressed &nbsp;event on the tree</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2-&gt;Delete the 
+keyPressed</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+contents of the event method are removed from the source.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method itself is not removed from the source</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method is removed from the beans view</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Press UNDO</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+contents of the event method return and the event method returns to the beans 
+view</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the keyTyped 
+event (next one down)</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2-&gt;Delete the 
+keyTyped </span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+contents of the event method are removed from the source.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method itself is not removed from the source</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method is removed from the beans view</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the keyPressed 
+event on the tree</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2-&gt;Delete the 
+keyPressed</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+contents of the event method are removed from the source.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method is removed from the beans view</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+entire event body (whole listener including add statement) is removed from the 
+source.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the focusGained 
+event</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Press the delete key on 
+the keyboard</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+focusGained event is removed from the beans view</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+focusGained event method is completely removed from the source</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the focusLost 
+event</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Press the delete button 
+on the toolbar</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+focusLost event is removed from the beans view</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+entire event body (whole adapter including add statement) is removed from the 
+source.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to Expert Events 
+mode</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the 
+actionPerformed event on the beans view</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Press the delete key</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+contents of the event method are removed from the source.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method itself is not removed from the source</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method is removed from the beans view</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Press UNDO</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+contents of the event method return and the event method returns to the beans 
+view</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the 
+ActionListener class on the beans view</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2-&gt;Delete</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event method and event class is removed from the beans view</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+entire event body (whole listener including add statement) is removed from the 
+source.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select all three events 
+under the KeyAdapter class by using the Ctrl key</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Press the Delete button 
+on the toolbar</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event methods are removed from the source</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event methods are removed from the beans view</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+empty Adapter class remains in the source and the beans view</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the KeyAdapter</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Press the delete key</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+Adapter class is removed from the source and the beans view</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2-&gt;Undo</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+empty Adapter class returns in the source and is shown on the beans view</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Press Ctrl-Z (Undo 
+again)</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event methods return to the source and beans view</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the KeyAdapter 
+class</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2-&gt;Delete</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+Adapter class and all its event methods are removed from the source and the 
+beans view</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Events on this bean</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Create a new Visual 
+Class extending JFrame</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Test out 
+adding/deleting/modifying events as described above on the JFrame with both 
+events extending Listeners and Adapters.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event code is generated properly in the <b>initialize</b> method.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the add 
+events wizard works properly.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+context menus on the thispart work properly.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+other event functionality works as expected.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">User defined events</span></b>
+<br>
+&nbsp;</p>
+<p class="MsoNormal"><span style="font-size: 10.0pt; font-family: sans-serif">
+Import the answer sample zip from here -&gt; <A
+	href="../test-zips/answer.zip">answer.zip</A> into a project.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open Test.java in the 
+VE</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the answerPanel 
+and bring up the add events wizard on it.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event answer is available from the events list</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+event's methods (answeredCorrectly, answeredIncorrectly) show up under answer</span>
+<br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+description of the class and methods show up ok</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+implements: class is the correct class - answer.AnswerListener</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the 
+answeredIncorrectly event and press finish.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+following code gets added to the answer panel's initializer method.</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; answerPanel.addAnswerListener(<b><span style="color: #820040">new</span></b> 
+answer.AnswerListener() { </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> 
+answeredIncorrectly(answer.AnswerEvent e) { &nbsp; &nbsp;</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(<span style="color: #4200FF">&quot;answeredIncorrectly()&quot;</span>);
+<span style="color: #3F8080">// </span><b><span style="color: #71B2CF">TODO</span></b><span style="color: #3F8080"> 
+Auto-generated stub answeredIncorrectly()</span></span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> 
+answeredCorrectly(answer.AnswerEvent e) {} </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; });</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+answerListener class and answeredIncorrectly event show up properly on the beans 
+view.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Launch the Add Event 
+wizard again.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Expand the answer event 
+class.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">the 
+answeredIncorrectly event is filled in, answeredCorrectly isn't.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select 
+answeredCorrectly</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">the use 
+existing listener option is enabled.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click finish.</span>
+<br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">the existing 
+answeredCorrectly method has a body added.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Copy the following code 
+in to replace the body of the listener.</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> 
+answeredIncorrectly(answer.AnswerEvent e) { &nbsp; &nbsp;</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; getJLabel().setForeground(java.awt.Color.red);</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; getJLabel().setText(<span style="color: #4200FF">&quot;Wrong!&quot;</span>);</span>
+<br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> 
+answeredCorrectly(answer.AnswerEvent e) {</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; getJLabel().setForeground(java.awt.Color.green);</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; getJLabel().setText(<span style="color: #4200FF">&quot;Right!&quot;</span>);</span>
+<br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the answer panel 
+and bring up the Add Events Wizard</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Expand the 
+PropertyChanged item</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">the answer 
+property shows up on the list</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">the answer 
+description shows up ok</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the two param 
+method and click finish</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">the code is 
+added correctly:</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; answerPanel.addPropertyChangeListener(<span style="color: #4200FF">&quot;answer&quot;</span>,
+<b><span style="color: #820040">new</span></b> java.beans.PropertyChangeListener() 
+{ </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <b><span style="color: #820040">public</span></b> <b>
+<span style="color: #820040">void</span></b> 
+propertyChange(java.beans.PropertyChangeEvent e) { </span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.out.println(<span style="color: #4200FF">&quot;propertyChange(answer)&quot;</span>);
+<span style="color: #3F8080">// </span><b><span style="color: #71B2CF">TODO</span></b><span style="color: #3F8080"> 
+Auto-generated stub &quot;answer&quot; </span></span><br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span> <br>
+<span style="font-size: 10.0pt; font-family: Courier New">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; });</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Use the context menu to 
+add a enabled property event to the answer panel.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Bring up the Add Events 
+Wizard again on the answer panel and select the answer property again</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">the Use 
+Existing radio is enabled and selected by default.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click Finish.</span>
+<br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">the new 
+answer property is added to the existing property change correctly</span> <br>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Save, close and reopen 
+the file.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify
+</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif">the events 
+are parsed correctly.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">If you feel like 
+running the code, the default answer is 42.</span></p>
+
+</body>
+
+</html>

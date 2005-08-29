@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE"
+ content="text/html; charset=windows-1252">
+  <title>Test code patterns from other visual tools</title>
+  <meta name="GENERATOR" content="OpenOffice.org 1.9.79  (Win32)">
+  <meta name="AUTHOR" content="Peter Walker">
+  <meta name="CREATED" content="20050825;14583844">
+  <meta name="CHANGEDBY" content="Peter Walker">
+  <meta name="CHANGED" content="20050825;17173895">
+  <style>
+	<!--
+		@page { size: 8.5in 11in }
+	-->
+	</style>
+</head>
+<body style="direction: ltr;" lang="en-US">
+<h3><font face="Times New Roman, serif"><font size="4">Procedure</font></font></h3>
+<p style="margin-bottom: 0in;"><font face="Times New Roman, serif"><font
+ size="3">This
+scenario is to verify that code patterns from other visual tools are
+parsed correctly in the Visual Editor</font></font></p>
+<h3>Setup</h3>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><font
+ face="Times New Roman, serif"><font color="#000000">Import
+<a href="jbuilder.jar">jbuilder.jar </a>and <a href="sun.jar">sun.jar</a>
+into a Java project</font></font></p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><br>
+</p>
+<h3>Working with JBuilder files</h3>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><font
+ face="Times New Roman, serif"><font size="3"><b><font color="#0000ff">Verify</font></b><font
+ color="#000000">
+- From<span style=""> </span><b>jbuilder.jar</b>,
+load/run as beans all three files, and make sure that it is WYSIWYG.</font></font></font></p>
+<p style="text-indent: 0.32in; margin-bottom: 0in; line-height: 0.17in;">
+<font face="Times New Roman, serif"><font size="3"><font color="#ff0000">Exception</font><font
+ color="#000000">:
+MyJBGridBag.java will not show the jPanel1 tab properly, as we do not
+support (at this time) the manner</font></font></font></p>
+<p style="text-indent: 0.72in; margin-bottom: 0in; line-height: 0.17in;">
+<font color="#000000"><font face="Times New Roman, serif"><font size="3">in
+which the GridBagConstraints is added.</font></font></font></p>
+<p style="margin-left: 0.73in; margin-bottom: 0in; line-height: 0.17in;">
+<font color="#000000"><font face="Times New Roman, serif">jPanel1.add(jEditorPane1,
+<b><font color="#820040">new</font></b> GridBagConstraints(1, 1, 1,
+2, 1.0, 1.0</font></font></p>
+<p style="text-indent: 1.26in; margin-bottom: 0in; line-height: 0.17in;">
+<font color="#000000"><font face="Times New Roman, serif">,GridBagConstraints.CENTER,
+GridBagConstraints.BOTH, <b><font color="#820040">new</font></b>
+Insets(26, 30, 0, 0), 0, 64));</font></font></p>
+<p style="text-indent: 1.19in; margin-bottom: 0in; line-height: 0.17in;">
+<br>
+</p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><font
+ face="Times New Roman, serif"><font size="3"><b><font color="#0000ff">Verify</font></b><font
+ color="#000000">
+that the Button's action perform event is showing.</font></font></font></p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><font
+ color="#000000"><font face="Times New Roman, serif"><font size="3">Try
+to add events, as well as deleting existing ones.</font></font></font></p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><font
+ color="#000000"><font face="Times New Roman, serif"><font size="3">Note
+that in <b>jBuilder</b> events are recognized as following:</font></font></font></p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><img
+ src="image001.jpg" name="graphics1" align="left" border="0"
+ height="433" width="819"><br clear="left">
+<br>
+</p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><br>
+</p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><font
+ color="#000000"><font face="Times New Roman, serif"><font size="3">The
+registration of a "shared" event is noted, but not the
+content.</font></font></font></p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><font
+ color="#000000"><font face="Times New Roman, serif"><font size="3">Add/remove
+components and <b><font color="#0000ff">Verify</font></b> the source
+is updated correctly.</font></font></font></p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><br>
+</p>
+<h3><font face="Times New Roman, serif"><font size="4">Working with
+NetBeans files</font></font></h3>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><font
+ face="Times New Roman, serif"><font size="3"><b><font color="#0000ff">Verify</font></b><font
+ color="#000000">
+&ndash; From <b>sun.jar,</b><span style="">
+load</span>/run as beans MySunJPanel, and make sure that it is
+WYSIWYG.</font></font></font></p>
+<p style="margin-left: 0.23in; margin-bottom: 0in; line-height: 0.17in;">
+<font face="Times New Roman, serif"><font size="3"><font color="#ff0000">Exception</font><font
+ color="#000000">:
+we do not fully support x2 arg addTab, and GridBag at this time.</font></font></font></p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><font
+ face="Times New Roman, serif"><font size="3"><b><font color="#0000ff">Verify</font></b><font
+ color="#000000">
+that the Button's action perform event is showing.</font></font></font></p>
+<p style="margin-bottom: 0in; line-height: 100%;"><font color="#000000"><font
+ face="Times New Roman, serif"><font size="3">Try
+to add events, as well as deleting existing ones.</font></font></font></p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><font
+ color="#000000"><font face="Times New Roman, serif"><font size="3">Add/remove
+components and <b><font color="#0000ff">Verify</font></b> the source
+is updated correctly.</font></font></font></p>
+</body>
+</html>

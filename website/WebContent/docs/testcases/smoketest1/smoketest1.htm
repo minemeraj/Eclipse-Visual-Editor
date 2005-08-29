@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=windows-1252">
+  <title>Basic build and functionality test - Swing/AWT</title>
+  <style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+ li.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+  </style><!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+<body>
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif;"><font
+ size="3">
+Procedure</font></span></u></b> <br>
+<br>
+<b><span style="font-family: sans-serif;">Basic Beans Visualization,
+Parse, and Launch</span></b><br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Import
+<a href="../test-zips/smoke_test_source.zip">smoke_test_source.zip</a>
+&nbsp;into an Eclipse project. &nbsp;</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Open each class
+in the Visual Editor</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the contents
+are displayed properly (correct representation of each component and
+layout). </span><br>
+<span style="font-size: 10pt; font-family: sans-serif;">Launch each
+class using the Java Bean Launcher and </span><br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the running
+program matches what is displayed on the canvas.</span> <br>
+<br>
+<br>
+<b><span style="font-family: sans-serif;">Basic Beans Inspection</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Import
+<a href="../test-zips/codegen_examples.zip">codegen_examples.zip</a>
+into an Eclipse project.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Open
+AwtComponents.java, BasicSwingComponents.java and
+MoreSwingComponents.java in the VE and </span>
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that each visual
+bean is displayed properly on the Canvas and that the Beans View
+hierarchy is correct. &nbsp;</span> <br>
+<img src="image001.jpg" v:shapes="_x0000_s1025" border="0" height="229"
+ width="272"><img src="image002.jpg" v:shapes="_x0000_s1026" border="0"
+ height="276" width="321"><img src="image003.jpg"
+ v:shapes="_x0000_s1027" border="0" height="302" width="526"><br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Run
+AwtComponents and MoreSwingComponents with the Java Bean Launcher and </span><br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> they launch
+properly and display matches the canvas.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Open
+BasicSwingComponentsBundled.java</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the strings are
+displayed properly - should match what BasicSwingComponents looks like.</span>
+<br>
+<br>
+<br>
+<b><span style="font-family: sans-serif;">Applet Launcher</span></b> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Open
+MyApplet.java</span><br>
+<span style="font-size: 10pt; font-family: sans-serif;">From the Run
+menu, select Run...</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Create a new
+Java Bean / Applet launch configuration</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Add the
+following Applet Parameters:</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">One -&gt; Hello</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Two -&gt; World</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Run the launch
+configuration.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the applet
+parameters were passed in correctly.</span> <br>
+<br>
+<br>
+<b><span style="font-family: sans-serif;">Basic Functionality
+Verification</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Note: <b>
+<span style="color: blue;">verify</span></b> generated source after
+each step to make sure it is valid.</span> </p>
+<ul style="margin-bottom: 0in;" type="square">
+  <li class="MsoNormal"><b> <span
+ style="font-size: 10pt; font-family: sans-serif;">Container, Layout
+and Properties Tests</span></b></li>
+</ul>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;">
+Perform the following tests with on JPanel, JApplet and Frame.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Create a new
+empty Visual Class and/or extend the container</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Change the
+container's layout to FlowLayout.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Place 5 or more
+components onto the container. </span></p>
+<ul style="margin-bottom: 0in;" type="disc">
+  <li class="MsoNormal"> <span
+ style="font-size: 10pt; font-family: sans-serif;">Mix different
+components ( JButton, JLabel, JRadioButton, JScrollBar, JTree,
+TextField, etc and equivalents for AWT). &nbsp;</span> </li>
+  <li class="MsoNormal"> <span
+ style="font-size: 10pt; font-family: sans-serif;">Drop some components
+on the Free Form, then drag them to the container. &nbsp;</span> </li>
+  <li class="MsoNormal"> <span
+ style="font-size: 10pt; font-family: sans-serif;">Drop the components
+using the pallette, drop menu and choose bean dialog</span> </li>
+  <li class="MsoNormal"><b> <span
+ style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> each component is
+drawn and sized correctly, and shows up on the Beans View</span></li>
+</ul>
+<p class="MsoNormal"><br>
+<span style="font-size: 10pt; font-family: sans-serif;">Change some of
+the visual properties, such as color, font, border, text, etc. on
+various components from the property sheet and source</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the property
+editors work properly</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the property
+changes are reflected on all views</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the
+container and look at the layout property.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that properties
+with subproperties have a + to expand sub properties</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that subproperties
+are displayed correctly.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that modifying the
+gap subproperties for FlowLayout are reflected on all views.</span>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Reorder the
+components visually and from the source</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the components are
+reordered properly on the canvas, beans view and source.</span>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Change the
+container's layout to every layout option (null, border, box, card,
+flow, gridbag, grid) randomly from both the PS and the source. </span><br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> sure each
+conversion happens properly.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select a
+component on the canvas and MB2-&gt;Rename Field. &nbsp;Change the name
+of the component.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the source changes
+properly, the canvas remains unchanged, and the new title is reflected
+in the beans view.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Save, close and
+reopen class.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> class is loaded and
+displayed properly.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Make sure you
+save the JPanel for the next step.</span> </p>
+&nbsp;
+<p><b> <span style="font-size: 10pt; font-family: sans-serif;">Dropping
+other Visual Beans and Preferences</span></b></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;">
+Create a new Visual Class extending JFrame.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Go to
+Window-&gt;Preferences-&gt;Java-&gt;Visual Editor and check the options
+for Generate comment for new expressions and Generate try/catch block</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Use the Choose
+Bean dialog to drop both the Swing panel created in the previous
+example. &nbsp;</span>
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the dropped
+bean appears correctly and that the code generation preferences work</span>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Go back to the
+VE preferences page, change the Look &amp; Feel and the editors to
+separate notebook tabs.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Save the file,
+close and reopen it.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the Look &amp; Feel
+changes, and the editors are on separate notebook tabs.</span>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Return to the
+preferences page and turn off any changes you don't care for</span> </p>
+&nbsp;
+<p><b> <span style="font-size: 10pt; font-family: sans-serif;">Non-Visual
+Beans Test</span></b></p>
+<p class="MsoNormal" style="margin-bottom: 12pt;">
+<span style="font-size: 10pt; font-family: sans-serif;">Create a new
+empty Visual Class (extend Object)</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Import
+<a href="../test-zips/jbcfexamplebeans.zip">jbcfexamplebeans.zip</a></span><br>
+<span style="font-size: 10pt; font-family: sans-serif;">Use the Choose
+Bean dialog to drop a BasicTypes object onto the free form</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the non-visual
+bean is displayed properly on the free form</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that you can modify
+every value on the Property Sheet to all valid values, and that the non
+primitives can be set to null.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> changes of
+properties in the source roundtrip.</span> </p>
+<br>
+<p><b><span style="font-size: 10pt; font-family: sans-serif;">Primitive
+Variable Values Test</span></b></p>
+<p class="MsoNormal" style="margin-bottom: 12pt;">
+<span style="font-size: 10pt; font-family: sans-serif;">This tests the
+ability of codegen to handle primitive variable inputs for properties<br>
+Import <a href="../test-zips/PrimitiveVariableTest.zip">PrimitiveVariableTest.zip</a><br>
+Open the file <i>test.me.PrimitiveVariableTest.java</i> in the Visual
+Editor<br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b>
+that the opened file looks like<br>
+<img src="visual1.jpg"><br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b>
+that the basicTypes bean has all properties set in the propertysheet as
+coded in the source<br>
+<i>Note</i>: an <i>IllegalArgumentException</i> is thrown on the
+property <i>shortPrim</i> but its value is set correctly in the
+propertysheet
+</span></p>
+</body>
+</html>

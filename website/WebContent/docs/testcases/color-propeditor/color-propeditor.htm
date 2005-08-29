@@ -1,0 +1,254 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test the behaviour of the Color property editor</title>
+<!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif">Procedure</span></u></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">This scenario will test 
+out the features and behavior of the Color property editor.</span> <br>
+<br>
+<span style="font-family: sans-serif"><u><b>Setup</b></u></span></p>
+<p class="MsoNormal"><span style="font-size: 10.0pt; font-family: sans-serif">
+Create a new empty Visual Class (extending Object). &nbsp;Size and drop a JButton on 
+the free form.</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Basic Functionality Inspection</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JButton on 
+the free form.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Look at the background 
+property on the sheet</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the color value label shows the RGB triplet </span><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Look at the foreground 
+property on the sheet</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the color value label shows the named constant for a color.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click on the background 
+property on the PS.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the custom editor launcher button is displayed.</span> <br>
+<img border=0 width=240 height=18
+src="image001.jpg" v:shapes="_x0000_s1025"><br>
+<span style="font-size: 7.5pt; font-family: sans-serif">&nbsp; &nbsp; </span><img border=0 width=226 height=15
+src="image002.jpg" v:shapes="_x0000_s1026"><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the editor 
+launcher button</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the color property editor is displayed (may have to click on Java Property 
+Editor on taskbar)</span> <br>
+<img border=0 width=437 height=399
+src="image003.jpg" v:shapes="_x0000_s1027"><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the correct tab is shown for the given color is brought to the front. (RGB for 
+the RGB triplet)</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the preview panel is shown.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Slide the Red slide all 
+the way to the right.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the color preview changes.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click OK to dismiss the 
+editor.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the color change updates the canvas, source and property sheet properly.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">With the background 
+property still selected, look to the top of the property sheet</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the Restore to Default and Set to Null buttons are enabled</span> <br>
+<img border=0 width=387 height=36
+src="image004.jpg" v:shapes="_x0000_s1028"><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the Restore to 
+Default button</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the JButton returns to it's default background color (204,204,204) and the 
+setBackground line is removed from the source.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the Undo button 
+on the toolbar</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the Set to Null 
+button</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the canvas changes default to the default background color (204,204,204), the 
+source is updated properly, and the PS shows an empty color value.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the Restore to 
+Default button again then click the property editor button again.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the color to a 
+different value.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the Cancel 
+button.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the background value does not change in the source, canvas and property sheet.</span>
+<br>
+<br>
+<b><span style="font-family: sans-serif">Property Editor Functionality 
+Inspection</span></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the property 
+editor button to launch the editor again.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the RGB sliders and fields reflect the value of the selected color.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the color preview reflects the value of the selected color</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to the Named 
+Colors tab. &nbsp;The rest of the tabs are provided by Sun, so there's not much point 
+in testing them out as we can't do much to fix any problems.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the basic color list contains the following values: black, blue, cyan, darkGray, 
+gray, green, lightGray, magenta, orange, pink, red, white, yellow</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the system color list contains the constant values from the SystemColor class</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the both lists are sorted alphabetically.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that color swatches are displayed next to the color titles.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose a color from the 
+basic color list.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the preview pane color to reflect the new color.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to the RGB tab.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Verify the sliders and 
+RGB fields reflect the new color's RGB value.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch back to the 
+Named Colors tab.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose a color from the 
+System color list.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the preview pane color to reflect the new color.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the previously selected basic color becomes unselected.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to the RGB tab.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Verify the sliders and 
+RGB fields reflect the new color's RGB value.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Use the sliders on the 
+RGB tab to adjust the value to 0,0,0.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to the Named 
+Colors tab</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the previously selected system color becomes unselected.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the basic color black is selected.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to the RGB tab.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Use the sliders on the 
+RGB tab to adjust the value to 255,255,0.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to the Named 
+Colors tab</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the basic color yellow is selected and the list scrolled properly.</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Source Code</span></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Hit OK to dismiss the 
+editor</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the color change on the canvas, source and property sheet.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the source code reflects the correct named color ( java.awt.Color.yellow )</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the text in the 
+source to java.awt.Color.blue</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the color change on the canvas, source and property sheet.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click off the JButton 
+to the free form, then select the JButton again. (refreshing the property sheet)</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the background 
+property and bring the color property editor again.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the Named Colors tab is in the front.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+blue is selected on the basic colors list.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose the color &quot;info&quot; 
+from the System Colors list.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+blue remains as the previous color in the preview panel </span><br>
+<img border=0 width=437 height=399
+src="image005.jpg" v:shapes="_x0000_s1029"><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Hit OK to dismiss the 
+editor</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the color change on the canvas, source and property sheet.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the source code reflects the correct named color ( java.awt.SystemColor.info )</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the text in the 
+source to java.awt.System.desktop</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the color change on the canvas, source and property sheet.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Bring up the color 
+editor again, select any color from the tabs other than Named Colors and hit OK.</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the color change on the canvas, source and property sheet.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the source code reflects the correct rgb constructor.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the RGB value in 
+the source</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the color change on the canvas and property sheet.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Try the other Color 
+&nbsp;constructors from the source:</span> <br>
+<tt style="font-family: Courier New"><b>
+<span style="font-size: 10.0pt; color: #820040">new</span></b><span style="font-size: 10.0pt"> 
+java.awt.Color(0.25F,0.5F,0.75F)</span></tt> <br>
+<tt style="font-family: Courier New"><b>
+<span style="font-size: 10.0pt; color: #820040">new</span></b><span style="font-size: 10.0pt"> 
+java.awt.Color(0.25F,0.5F,0.75F,0.5F)</span></tt> <br>
+<tt style="font-family: Courier New"><b>
+<span style="font-size: 10.0pt; color: #820040">new</span></b><span style="font-size: 10.0pt"> 
+java.awt.Color(9999999)</span></tt> <br>
+<tt style="font-family: Courier New"><b>
+<span style="font-size: 10.0pt; color: #820040">new</span></b><span style="font-size: 10.0pt"> 
+java.awt.Color(987654321,<b><span style="color: #820040">true</span></b>)</span></tt>
+<br>
+<tt style="font-family: Courier New"><b>
+<span style="font-size: 10.0pt; color: #820040">new</span></b><span style="font-size: 10.0pt"> 
+java.awt.Color(100,200,30,128)</span></tt> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+each constructor updates the canvas and property sheet correctly.</span></p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

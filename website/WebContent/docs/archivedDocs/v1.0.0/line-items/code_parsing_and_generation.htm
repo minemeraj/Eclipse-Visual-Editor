@@ -1,0 +1,67 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 6.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Code Parsing and Generation</title>
+</head>
+
+<body>
+
+<font FACE="Times New Roman">
+<h2>Code Parsing and Generation</h2>
+<p><b>Simple SWT code generation/parsing pattern (stage 1)</b></p>
+</font>
+<dir>
+  <font FACE="Times New Roman">
+  <li>Dropping a Shell will produce an instance variable, </font>
+  <font FACE="Times New Roman" COLOR="#820040"><b>private</b></font><font FACE="Times New Roman"> 
+  org.eclipse.swt.widgets.Shell shell = </font>
+  <font FACE="Times New Roman" COLOR="#820040"><b>null</b></font><font FACE="Times New Roman">, 
+  and a create method </font><font FACE="Times New Roman" COLOR="#820040"><b>
+  private</b></font><font FACE="Times New Roman"> </font>
+  <font FACE="Times New Roman" COLOR="#820040"><b>void</b></font><font face="Times New Roman"> 
+  createShell (). </li>
+  <li>Dropping a child on a container will create an instance variable for the 
+  child, and reuse the parents initialization method. See the following example:</li>
+</dir>
+<blockquote>
+  <blockquote>
+    <p><img border="0" src="images/code_p2.gif" width="716" height="267"></p>
+  </blockquote>
+</blockquote>
+</font><font face="Times New Roman">
+<dir>
+  </font><font face="Times New Roman">
+  <li>With bottom up parsing, VE will also recognize the case in which case we 
+  have a shell and a button as a child. Both are instance variables, but each is 
+  initialized by a different method. The key here is that createShell() must 
+  call the create method of the button. In the case that the <b>createButton()
+  </b>expression is removed from<b> createShell(), </b>&nbsp;code generation 
+  will remove the button (and if needed its init method) from the VE EMF 
+  model... which implies that the GUI will only show the Shell.&nbsp; See the 
+  following example:</li>
+  </font>
+</dir>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img border="0" src="images/code_p1.gif" width="589" height="300"></p>
+<font FACE="Times New Roman">
+<blockquote>
+  <p>Note: this is a first pass to the scenario where a createButton() exists, 
+  but no one (that we can understand) calls it. The WYSIWYG Free Form will 
+  reflect that. </p>
+</blockquote>
+</font>
+<dir>
+  <font FACE="Times New Roman">
+  <li>One will not be able to drop anything but a Shell or a parentless widget 
+  (e.g. Dialog) on the Free Form. </li>
+  </font>
+</dir>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

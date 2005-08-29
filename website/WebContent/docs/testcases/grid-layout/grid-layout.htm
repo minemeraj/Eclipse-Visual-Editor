@@ -1,0 +1,165 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test the behaviour of the GridLayout manager</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+ li.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+<!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif"><font size="3">
+Procedure</font></span></u></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">This scenario will test 
+out the features and behavior of the GridLayout manager.</span> <br>
+<br>
+<span style="font-family: sans-serif"><u><b><font size="3">Setup</font></b></u></span></p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><span style="font-size: 10.0pt; font-family: sans-serif">
+Create a new Visual Class extending JPanel and resize it to take up 3/4ths of 
+the Canvas. &nbsp;Set the layout of the JPanel to GridLayout</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Basic Canvas Manipulation</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose the JTable bean 
+on the palette and drop it on the JPanel.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the table takes up all the space on the JPanel.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop a JLabel on the 
+JPanel</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the size of the components are split equally horizontally</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose a JTree from the 
+palette and hover over the components on the JPanel</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that a vertical black positioning bar is shown for all possible drop locations.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop the tree on the 
+right of the JLabel.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the size of the components are split equally horizontally</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click and hold the 
+JTree. &nbsp;Move the cursor over the other components.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that a vertical black positioning bar is shown for all possible drop locations.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop the tree between 
+the table and the button.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the tree moves to the new location properly on the canvas, and the order of 
+the add statements in the source and beans view are updated.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click and drag and drop 
+a bean in the Beans View to reorder the beans.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the order of the add statements are changed and the canvas is updated 
+properly.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the order of the 
+add statements in the source.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the component moves to the new location properly on the canvas, and the 
+beans view are updated.</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Property Sheet</span></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JPanel</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the Layout property on the PS gives a value representing the GridLayout</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+there's a + to expand the sub-properties of the Layout - columns, hgap, rows, 
+vgap</span> <br>
+<img border=0 width=237 height=75
+src="image001.jpg" v:shapes="_x0000_s1025"><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the rows 
+property to 2.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the layout changes to two rows, two columns, with all components sizes and 
+placed properly.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Add two more components 
+to the JPanel.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the layout changes to two rows, three columns, with all components sizes 
+and placed properly.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that changing the hgap and vgap properties update the source and the canvas 
+correctly (establishes spacing between components).</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the hgap and 
+vgap properties in the source.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the changes are reflected in the PS and on the canvas.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Set rows to 3 in the 
+source.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the layout changes to three rows, two columns, with all components sizes 
+and placed properly, and the PS updates.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Set the rows to 0 and 
+columns to 3 in the source (needed because if rows is non-zero, columns is 
+ignored).</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the layout changes to two rows, three columns, with all components sizes 
+and placed properly, and the PS updates.</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Conversions to GridLayout</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">For each layout other 
+than GridLayout</span> </p>
+<ul type="disc" style="margin-bottom: 0in">
+  <li class="MsoNormal">
+  <span style="font-size: 10.0pt; font-family: sans-serif">Change the layout of 
+  the JPanel to the testing layout</span> </li>
+  <li class="MsoNormal">
+  <span style="font-size: 10.0pt; font-family: sans-serif">Change the layout of 
+  the JPanel back to GridLayout</span> </li>
+  <li class="MsoNormal"><b>
+  <span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+  that the number of rows/columns is calculated correctly and each component is 
+  moved and sized properly</span></li>
+</ul>
+<p class="MsoNormal"><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">The algorithm for 
+determining rows and columns is rows = round( squareroot( num components ) ), 
+columns = ceiling( squareroot( num components ) )</span></p>
+
+</body>
+
+</html>

@@ -1,0 +1,216 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test the ability to manipulate Non-Visual bean</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+<!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif"><font size="3">
+Procedure</font></span></u></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">This test examines the 
+VE’s functionality to drop a non-visual JavaBean onto the graphical canvas and 
+modify its properties by using the Property Sheet viewer. </span><br>
+<br>
+<b><span style="font-family: sans-serif; text-decoration: underline">
+<font size="3">Setup</font></span></b> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Import the jar file 
+called <a href="../test-zips/jbcfexamplebeans.zip">jbcfexamplebeans.zip</a> into an 
+Eclipse project.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open a blank template 
+class using the visual editor.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Enable the view for the 
+property sheet.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open the Choose Bean 
+dialog by clicking the button on the top palette.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the BasicTypes 
+bean from the list.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop the bean on the 
+freeform canvas. The property sheet should display information about the bean 
+and a java app should launch which displays a Frame containing information about 
+the bean’s properties.</span> <br>
+<span style="font-family: sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; </span><br>
+<u><b><span style="font-family: sans-serif"><font size="3">Tasks</font></span></b>
+</u><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Use the selection tool 
+to select the BasicTypes bean.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">For each task below, <b>
+<span style="color: blue">verify</span></b> 
+the source code properly reflect modifications made with the property sheet.</span>
+<br>
+<span style="font-family: sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; </span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">booleanPrim</span></b>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">
+</span><span style="font-size: 10.0pt; font-family: sans-serif">that editing 
+this property in the property sheet requires the use of a drop-down menu to 
+select &quot;true&quot; or &quot;false&quot;.</span> <br>
+<img border=0 width=387 height=36
+src="image001.jpg" v:shapes="_x0000_s1025"><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Unset the property 
+using the &nbsp;button in the property sheet</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">
+</span><span style="font-size: 10.0pt; font-family: sans-serif">that the value 
+reverts to false. </span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">
+</span><span style="font-size: 10.0pt; font-family: sans-serif">that the &quot;ivjBasicTypes.setbooleanPrim(<b><span style="color: purple">...</span></b>);&quot; 
+line in the source code no longer appears.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">
+</span><span style="font-size: 10.0pt; font-family: sans-serif">the Set to Null 
+button is disabled.</span> <br>
+<span style="font-family: sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; </span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">boolean</span></b>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Repeat the tasks for 
+booleanPrim, except that this property should be allowed to be set to null, and 
+unsetting it should revert it to null.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">doublePrim</span></b>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+property does not accept character values and that it does accept integer or 
+decimal values.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+property can’t be set to null.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that setting 
+the property to 0 gives it a value of 0.0, not null.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">double</span></b>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Repeat the tasks for 
+doublePrim, except that this property should be allowed to be set to null, and 
+unsetting it should revert it to null.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">charPrim</span></b>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that characters can be entered</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that setting the value to ' and \ properly escape the characters.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that typing more than one character gives a warning</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that typing 0 followed by a number creates a char by casting the typed int</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the property can't be set to null.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">character</span></b>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that characters can be entered</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that setting the value to ' and \ properly escape the characters.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that typing more than one character gives a warning</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that typing 0 followed by a number creates a char by casting the typed int</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the cell editor works after setting the property to null</span> <br>
+<span style="font-family: sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; </span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">string</span></b>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that strings can be entered.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Enter the value </span>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&quot;Frog&quot;A\B\C\</span></tt>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that an escape character was added before the double quotes and back slashes in 
+the source code.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the value can be set to null, and that entering something, and removing all 
+of the text and then hit enter the property is set to the value to &quot;&quot;.</span>
+<br>
+<span style="font-family: sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; </span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Other types</span></b>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Each type has a 
+primitive property and a corresponding java.lang counterpart. </span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the primitives can’t be set to null, and that they are reset to zero.
+</span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the java.lang types can be set to null and are reset to null.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that invalid input is not accepted, (ex. Try to set the intPrim property to &quot;1P&quot; 
+and <b><span style="color: blue">Verify</span></b> that the value of intPrim is 
+not altered).</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Test the valid ranges 
+of the primitive numeric attributes</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that shortPrim, intPrim, and longPrim do not accept decimal numbers as input.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Note: Float numbers are 
+floating point which has an internal representation that may be different to the 
+external one. &nbsp;For example, a float of 3.4 should display as 3.4 but the editor 
+should show it as 3.4000000953674316 when it is being edited. This is the 
+correct behavior as designed.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Test the valid ranges 
+of the java.lang types using the information below.</span> <br>
+<br>
+&nbsp;</p>
+<table border="1" cellpadding="4" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="68">
+  <tr>
+    <th width="33%" height="19"><b>Type</b></th>
+    <th width="33%" height="19"><b>MIN_VALUE</b></th>
+    <th width="34%" height="19"><b>MAX_VALUE</b></th>
+  </tr>
+  <tr>
+    <td width="33%" height="14">
+    <span style="font-size: 10.0pt; font-family: sans-serif">java.lang.Short</span></td>
+    <td width="33%" height="14">
+    <span style="font-size: 10.0pt; font-family: sans-serif">-32768</span></td>
+    <td width="34%" height="14">
+    <span style="font-size: 10.0pt; font-family: sans-serif">32767</span></td>
+  </tr>
+  <tr>
+    <td width="33%" height="16">
+    <span style="font-size: 10.0pt; font-family: sans-serif">java.lang.Integer</span></td>
+    <td width="33%" height="16">
+    <span style="font-size: 10.0pt; font-family: sans-serif">-2147483648</span></td>
+    <td width="34%" height="16">
+    <span style="font-size: 10.0pt; font-family: sans-serif">2147483647</span></td>
+  </tr>
+  <tr>
+    <td width="33%" height="16">
+    <span style="font-size: 10.0pt; font-family: sans-serif">ava.lang.Long</span></td>
+    <td width="33%" height="16">
+    <span style="font-size: 10.0pt; font-family: sans-serif">9223372036854775808</span></td>
+    <td width="34%" height="16">
+    <span style="font-size: 10.0pt; font-family: sans-serif">9223372036854775807</span></td>
+  </tr>
+</table>
+<p class="MsoNormal"><span style="font-family: sans-serif">&nbsp;</span></p>
+
+</body>
+
+</html>

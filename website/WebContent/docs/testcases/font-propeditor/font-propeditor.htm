@@ -1,0 +1,262 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test the behaviour of the Font property editor</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+ li.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+<!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif"><font size="3">
+Procedure</font></span></u></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">This scenario will test 
+out the features and behavior of the Font property editor.</span> <br>
+<br>
+<span style="font-family: sans-serif"><u><b><font size="3">Setup</font></b></u></span></p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><span style="font-size: 10.0pt; font-family: sans-serif">
+Create a new empty Visual Class (extending Object). &nbsp;Drop a JLabel on the free 
+form.</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Basic Functionality Inspection</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JLabel on 
+the free form.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Look at the font 
+property on the sheet</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the font value label provides the following information: font name, style, 
+and size</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click on the font 
+property on the PS.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the custom editor launcher button is displayed.</span> <br>
+<img border=0 width=235 height=17
+src="image001.jpg" v:shapes="_x0000_s1025"><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the editor 
+launcher button</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font property editor is displayed (may have to click on Java Property Editor 
+on taskbar)</span> <br>
+<img border=0 width=438 height=312
+src="image002.jpg" v:shapes="_x0000_s1026"><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Increase the font size 
+to 18.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font preview size changes.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click OK to dismiss the 
+editor.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font change updates the canvas, source and property sheet properly.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">With the font property 
+still selected, look to the top of the property sheet</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the Restore to Default and Set to Null buttons are enabled</span> <br>
+<img border=0 width=387 height=36
+src="image003.jpg" v:shapes="_x0000_s1027"><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the Restore to 
+Default button</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the JLabel returns to it's default font (Dialog bold 12) and the setFont line is 
+removed from the source.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the Set to Null 
+button</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the canvas changes default to the default font (Dialog plain 12), the source is 
+updated properly, and the PS shows an empty font value.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the Restore to 
+Default button again then click the property editor button again.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the font to a 
+different value.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the Cancel 
+button.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font value does not change in the source, canvas and property sheet.</span>
+<br>
+<br>
+<b><span style="font-family: sans-serif">Property Editor Functionality 
+Inspection</span></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click the property 
+editor button to launch the editor again.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the Name, Style, and Size boxes reflect the value of the selected font.</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the selection on the Name, Style and Size lists reflect the value of the 
+selected font.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font preview reflects the value of the selected font</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font preview is populated with an adequate default preview string.</span>
+<br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font names list contains the following values: Default, Dialog, DialogInput, 
+Monospaced, SansSerif, Serif</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font names list contains the other fonts installed on the system.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font names are sorted alphabetically.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font styles list contains the following values: plain, bold, italic, bold 
+italic</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font size list contains common font sizes, in increasing order.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that choosing a font name from the list, the font name populates the Name box, 
+and the preview updates to reflect the new font.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose each font style 
+on the style list</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that choosing a font style from the list, the font style populates the Style 
+box, and the preview updates to reflect the new style.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that choosing a font size from the list, the font size populates the Size box, 
+and the preview updates to reflect the new size.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Clear the text in the 
+font Name box.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the first name in the list becomes selected.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Type <b>dialogi</b> into the 
+Name box.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the selection changes in the list as the name is typed, refining the search as 
+the typing occurs (type-ahead search results)</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that clicking a name in the list populates the Name box with the name, clearing 
+the previously typed text.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font style box is not editable.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Clear the text in the 
+font size text.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the list selection clears and the font preview changes to a small font size.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Type in a font size in 
+the box.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font preview updates as the size is typed.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that if a font size on the list is typed, the size is selected on the list.</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that nonnumeric characters cannot be entered into the box.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that large sizes are permitted (e.g. 500)</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+font preview text is editable, change the text including pressing enter for new 
+line</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font preview area scrolls correctly when a large font size is chosen.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Maximize the Property 
+Editor window.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the GUI components are resized nicely on expansion.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font preview area can be expanded/contracted by dragging the split pane 
+handle.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the one touch expandable controls are present on the split pane handle, and work 
+properly.</span> <br>
+<img border=0 width=197 height=104
+src="image004.jpg" v:shapes="_x0000_s1028"><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Restore the Property 
+Editor window to its regular size.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Resize the window 
+smaller than usual.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+each list creates a scroll bar as needed.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Resize the window 
+larger and smaller.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the display is laid out well whenever possible.</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Source Code</span></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose a font name, and 
+set the size to 36.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">For each style on the 
+list</span> </p>
+<ul type="disc" style="margin-bottom: 0in">
+  <li class="MsoNormal">
+  <span style="font-size: 10.0pt; font-family: sans-serif">Change the font to 
+  the style</span> </li>
+  <li class="MsoNormal">
+  <span style="font-size: 10.0pt; font-family: sans-serif">Hit OK to dismiss the 
+  editor</span> </li>
+  <li class="MsoNormal"><b>
+  <span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+  the style change on the canvas, source and property sheet.</span></li>
+</ul>
+<p class="MsoNormal"><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">From the source, change 
+the style parameter in the source call to 0 </span><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">[eg </span>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">
+jLabel.setFont(<b><span style="color: #820040">new</span></b> java.awt.Font(<span style="color: #4200FF">&quot;Georgia&quot;</span>, 
+java.awt.Font.BOLD, 36));</span></tt><span style="font-size: 10.0pt; font-family: sans-serif"> 
+-&gt; </span><tt style="font-family: Courier New"><span style="font-size: 10.0pt">
+jLabel.setFont(<b><span style="color: #820040">new</span></b> java.awt.Font(<span style="color: #4200FF">&quot;Georgia&quot;</span>, 
+0, 36)); ]</span></tt> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font style changes to plain on the canvas and the PS.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Repeat with values 1 = 
+bold, 2 = italic, 3 = bold italic</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the font name in 
+the source to </span><tt style="font-family: Courier New">
+<span style="font-size: 10.0pt; color: #4200FF">&quot;sAnSseRIF&quot;</span></tt> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the font changes to SansSerif on the canvas.</span></p>
+
+</body>
+
+</html>
