@@ -1,0 +1,267 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test the behaviour of the BorderLayout manager</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+ li.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+<!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p class="MsoNormal">
+<b><u><span style="font-family: sans-serif"><font size="3">Procedure</font></span></u></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">This scenario will test 
+out the features and behavior of the BorderLayout manager.</span> <br>
+<br>
+<span style="font-family: sans-serif"><u><b><font size="3">Setup</font></b></u></span><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></p>
+<p class="MsoNormal"><span style="font-size: 10.0pt; font-family: sans-serif">
+Create a new Visual Class extending JPanel and resize it to take up 3/4ths of 
+the Canvas. &nbsp;Set the layout of the JPanel to BorderLayout.</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Basic Canvas Manipulation</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose a JButton from 
+the palette and hover over the JPanel.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the regions of the border layout are outlined in green, and that moving 
+over them highlights the region and displays the label of the region.</span> <br>
+<img border=0 width=389 height=211
+src="image001.jpg" v:shapes="_x0000_s1025"><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop the JButton in the 
+North region.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> the 
+component is its default height and takes up the entire width of the JPanel.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JButton</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify </span></b><span style="font-size: 10.0pt; font-family: sans-serif">that 
+the cursor indicates the bean can be moved, but not resized (no resize handles)</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click and hold the 
+JButton.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify </span></b><span style="font-size: 10.0pt; font-family: sans-serif">the 
+other regions are highlighted when the mouse moves over them, but North remains 
+blank.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> that 
+releasing over North is possible, and doesn't affect the code or the canvas.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click and drag the 
+JButton to the East region.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the component is its default width and takes up the entire height of the JPanel.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click and drag the 
+JButton to the South region.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the 
+component is its default height and takes up the entire width of the JPanel.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click and drag the 
+JButton to the West region.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the component is its default width and takes up the entire height of the JPanel.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click and drag the 
+JButton to the Center region.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify </span></b><span style="font-size: 10.0pt; font-family: sans-serif">the 
+component takes up the entire height and width of the JPanel.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Move the JButton back 
+to the North position, and change it's text to read &quot;North&quot; - use the PS, undo, 
+and use the Source.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select another JButton 
+from the palette and hover over the JPanel.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> the 
+North region is darkened and when the mouse hovers over North the region does 
+not become highlighted and the cursor changes to the Not cursor.</span> <br>
+<img border=0 width=384 height=207
+src="image002.jpg" v:shapes="_x0000_s1026"><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Attempt to drop the 
+JButton on the North region.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that no changes are made on the canvas and in the source. &nbsp;The cursor is no 
+longer loaded with the JButton.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select JButton again on 
+the palette and drop it in the East region.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the component is its default width and takes up the rest of the height of the 
+JPanel less the height of the North component.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the text of the 
+East button to read &quot;East&quot; - use direct Edit on the JavaBean tree.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click and hold the East 
+button.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that only the West, Center and South regions are highlighted when hovered over.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop the East Button in 
+the North region.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the East and North buttons exchange locations and are resized properly.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch the East and 
+North buttons back to their correct positions.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose another JButton 
+and hover over the JPanel.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the North and East regions are shadowed and disabled.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop the JButton in the 
+Center region</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the component is takes up the rest of the space in the JPanel less the height of 
+the North component and the width of the East component.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the text of the 
+Center button to read &quot;Center&quot; &nbsp;- use direct Edit on the Canvas.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop a JButton on the 
+free form, and drag it over the JPanel.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that South and West are the only valid drop targets.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Attempt to drop on one 
+of the blocked regions.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that no changes occur.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Remove a few of the 
+JButtons and place an assortment of other components.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Place a JCheckBox in 
+the center region.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+each component is sized and placed as expected.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Move the components 
+from one region to another graphically.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the moves occur successfully.</span> <br>
+<br>
+<br>
+<b><span style="font-family: sans-serif">Property Sheet</span></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JPanel</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the Layout property on the PS gives a value representing the BorderLayout</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+there's a + to expand the sub-properties of the Layout - hgap and vgap</span>
+<br>
+<img border=0 width=262 height=47
+src="image003.jpg" v:shapes="_x0000_s1027"><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that changing the hgap and vgap properties update the source and the canvas 
+correctly.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select each component 
+on the JPanel</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+there's a Constraint property, and it's set to a valid BorderLayout constraint - 
+North, South, East, West, Center, After Line Ends, Before Line Begins.</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the options shown on the Constraint combo are the empty positions only.</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that changing the Constraint option moves the component to the new location 
+properly and updates the source correctly.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Move a component to the 
+East position if there's not already one there.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Move a component to the 
+West position if there's not already one there.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Set the constraint on 
+the East component to After Line Ends.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Set the constraint on 
+the West component to Before Line Begins.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JPanel. 
+&nbsp;Change it's componentOrientation to RIGHT_TO_LEFT</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the East and West components have swapped places on the canvas.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the position 
+constraints in the source. </span><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">[ i.e. change </span>
+<tt style="font-family: Courier New"><b>
+<span style="font-size: 10.0pt; color: #820040">this</span></b><span style="font-size: 10.0pt">.add(getJButton1(), 
+java.awt.BorderLayout.EAST); <b>-&gt;</b> <b><span style="color: #820040">this</span></b>.add(getJButton1(), 
+java.awt.BorderLayout.WEST); ]</span></tt> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the constraint change is reflected in the property sheet and from the source.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change constraint 
+specification to use a string parameter in the source</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">[ i.e. change </span>
+<tt style="font-family: Courier New"><b>
+<span style="font-size: 10.0pt; color: #820040">this</span></b><span style="font-size: 10.0pt">.add(getJButton1(), 
+java.awt.BorderLayout.EAST); <b>-&gt;</b> <b><span style="color: #820040">this</span></b>.add(getJButton1(), 
+&quot;West&quot;); ]</span></tt> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the constraint change is reflected in the property sheet and from the source.</span>
+<br>
+<br>
+<br>
+<b><span style="font-family: sans-serif">Conversions to BorderLayout</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">For each layout other 
+than BorderLayout</span> </p>
+<ul type="disc" style="margin-bottom: 0in">
+  <li class="MsoNormal">
+  <span style="font-size: 10.0pt; font-family: sans-serif">Change the layout of 
+  the JPanel to the testing layout</span> </li>
+  <li class="MsoNormal">
+  <span style="font-size: 10.0pt; font-family: sans-serif">Change the layout of 
+  the JPanel back to BorderLayout</span> </li>
+  <li class="MsoNormal"><b>
+  <span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+  that each component gets assigned to a valid constraint and moved and sized 
+  properly</span></li>
+</ul>
+<p class="MsoNormal"><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Note: if there are more 
+than 5 components on the container then the layout is changed to BorderLayout, 
+any components over 5 will be removed. &nbsp;This is correct behavior for now.</span></p>
+
+</body>
+
+</html>

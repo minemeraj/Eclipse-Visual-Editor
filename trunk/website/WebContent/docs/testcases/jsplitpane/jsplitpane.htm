@@ -1,0 +1,268 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test the behavior of JSplitPane</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+<!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif">Procedure</span></u></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">This scenario will test 
+out the features and behavior of the JSplitPane container.</span> <br>
+<br>
+<b><u><span style="font-family: sans-serif">Setup</span></u></b><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></p>
+<p class="MsoNormal"><span style="font-size: 10.0pt; font-family: sans-serif">&nbsp;</span></p>
+<p class="MsoNormal"><span style="font-size: 10.0pt; font-family: sans-serif">
+Create a new empty Visual Class (extending Object). &nbsp;Drop a JSplitPane without 
+sizing on the free form</span> <br>
+<br>
+<b><u><span style="font-family: sans-serif">Basic Child Manipulation</span></u></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Initially the 
+JSplitPane will have a phony left and right buttons as children, sized so that 
+each button is its default size, and with a horizontal split.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Resize the JSplitPane 
+graphically both larger and smaller than its default size.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the change 
+in space only affects the right component, and the divider remains in the same 
+location.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Resize the JSplitPane 
+to take up 3/4ths of the canvas.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop a JTree on the 
+JSplitPane</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the tree is 
+placed in the left component space</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the tree 
+shows up in the Java Beans view, with &quot;left - &quot; prefixing its label.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop a JSlider on the 
+JSplitPane</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the slider 
+is placed in the right component space</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the slider 
+shows up in the Java Beans view, with &quot;right - &quot; prefixing its label.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Delete the JTree 
+component.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the slider 
+remains in the right component space</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop a JTable on the 
+JSplitPane</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the table is 
+placed in the left component space, and the slider remains in the right 
+component space.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Delete the JSlider</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the table 
+remains in the left component space</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop a JPanel on the 
+JSplitPane</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the panel is 
+placed in the right component space, and the table remains in the left component 
+space.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop a JTree on the 
+JPanel</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that 
+sub-components of children components show up on the canvas and beans view 
+properly.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">From the source, move 
+the setRightComponent statement above the setLeftComponent statement.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the canvas 
+does not change.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Comment out one of the
+</span><tt style="font-family: Courier New"><span style="font-size: 10.0pt">
+setXXXComponent</span></tt><span style="font-size: 10.0pt; font-family: sans-serif"> 
+lines.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the child 
+component is removed from the split pane and added to the free form correctly.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Remove the comment from 
+the </span><tt style="font-family: Courier New"><span style="font-size: 10.0pt">
+setXXXComponent</span></tt><span style="font-size: 10.0pt; font-family: sans-serif"> 
+line.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the child 
+component is added back to the split pane in the correct position</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click and drag the left 
+component in the Java Beans view. Drop it under the right component.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the child 
+components swap places on the canvas</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the child 
+components are swapped in the </span><tt style="font-family: Courier New">
+<span style="font-size: 10.0pt">setXXXComponent</span></tt><span style="font-size: 10.0pt; font-family: sans-serif"> 
+lines in the source</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop a JFrame on the 
+canvas and size it.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop a JSplitPane in 
+the center region of the JFrame.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop an AWT Label on 
+the left side of the split pane.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop an AWT Scrollbar 
+on the right side of the split pane.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the AWT 
+components show up correctly as children of the JSplitPane</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Delete the JFrame (and 
+all it's children).</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Orientation Changes</span></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JSplitPane.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">On the Property Sheet 
+look at the orientation property</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the 
+orientation property exists, and it has options for HORIZONTAL_SPLIT and 
+VERTICAL_SPLIT</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the orientation 
+property to VERTICAL_SPLIT</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the children 
+realign vertically on the canvas</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the source 
+has changed so </span><tt style="font-family: Courier New">
+<span style="font-size: 10.0pt">setLeftComponent</span></tt><span style="font-size: 10.0pt; font-family: sans-serif"> 
+-&gt; </span><tt style="font-family: Courier New"><span style="font-size: 10.0pt">
+setTopComponent</span></tt><span style="font-size: 10.0pt; font-family: sans-serif"> 
+and </span><tt style="font-family: Courier New"><span style="font-size: 10.0pt">
+setRightComponent</span></tt><span style="font-size: 10.0pt; font-family: sans-serif"> 
+-&gt; </span><tt style="font-family: Courier New"><span style="font-size: 10.0pt">
+setBottomComponent</span></tt> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the labels 
+in the Java Beans view change from left / right to top / bottom</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the orientation 
+property to HORIZONTAL_SPLIT</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the children 
+realign back to horizontal on the canvas</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the source 
+has changed so </span><tt style="font-family: Courier New">
+<span style="font-size: 10.0pt">setTopComponent</span></tt><span style="font-size: 10.0pt; font-family: sans-serif"> 
+-&gt; </span><tt style="font-family: Courier New"><span style="font-size: 10.0pt">
+setLeftComponent</span></tt><span style="font-size: 10.0pt; font-family: sans-serif"> 
+and </span><tt style="font-family: Courier New"><span style="font-size: 10.0pt">
+setBottomComponent</span></tt><span style="font-size: 10.0pt; font-family: sans-serif"> 
+-&gt; </span><tt style="font-family: Courier New"><span style="font-size: 10.0pt">
+setRightComponent</span></tt> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the labels 
+in the Java Beans view change from top / bottom to left / right</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Sizing / Divider / Appearance</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Move the JTree to the 
+left side of the JSplitPane if it's not there already.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the divider 
+location moved to fit the tree's preferred size</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the tree 
+component</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Add 100 to the 
+preferred size width in the property sheet</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the divider 
+location moved to fit the tree's new preferred size</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Reset the tree's 
+preferred size to default by removing the setPreferredSize line from the source 
+code.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the divider 
+location moved back to the original preferred size</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JSplitPane</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the 
+dividerLocation property to 250</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the divider 
+location moved to the specified location</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Reset the 
+dividerLocation property to default.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Set the resizeWeight 
+property to 0.75</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the divider 
+location moved to 75% of the width.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Resize the JSplitPane.</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the divider 
+location remained at 75% of the new width.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Set the 
+oneTouchExpandable property to true</span> <br>
+<img border=0 width="133" height="89"
+src="image001.jpg" v:shapes="_x0000_s1025"><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the one 
+touch expandable buttons show up on the divider bar</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Set the dividerSize 
+property to 25</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the divider 
+bar becomes 25 pixels wide</span></p>
+
+</body>
+
+</html>

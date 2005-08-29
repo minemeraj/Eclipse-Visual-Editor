@@ -1,0 +1,390 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<!--  <link rel=File-List href="SWTRowLayoutTestcase_files/filelist.xml">
+<link rel=Edit-Time-Data href="SWTRowLayoutTestcase_files/editdata.mso"> -->
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>SWT RowLayout Test Case</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author> </o:Author>
+  <o:Template>Normal</o:Template>
+  <o:LastAuthor> </o:LastAuthor>
+  <o:Revision>13</o:Revision>
+  <o:TotalTime>1485</o:TotalTime>
+  <o:Created>2004-07-01T14:40:00Z</o:Created>
+  <o:LastSaved>2004-07-02T15:25:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>792</o:Words>
+  <o:Characters>4519</o:Characters>
+  <o:Company>IBM</o:Company>
+  <o:Lines>37</o:Lines>
+  <o:Paragraphs>10</o:Paragraphs>
+  <o:CharactersWithSpaces>5301</o:CharactersWithSpaces>
+  <o:Version>10.4219</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:Compatibility>
+   <w:BreakWrappedTables/>
+   <w:SnapToGridInCell/>
+   <w:WrapTextWithPunct/>
+   <w:UseAsianBreakRules/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:1627421319 -2147483648 8 0 66047 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:Tahoma;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Arial;}
+h1
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	font-size:16.0pt;
+	font-family:Arial;
+	mso-font-kerning:16.0pt;}
+h3
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:3;
+	font-size:13.0pt;
+	font-family:Arial;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:1866670218;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-882845798 403243009 403243011 403243013 403243009 403243011 403243013 403243009 403243011 403243013;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]-->
+</head>
+
+<body lang=EN-IE style='tab-interval:36.0pt'>
+
+<div class=Section1>
+
+<h1>1.0 Procedure:</h1>
+
+<p class=MsoNormal style='margin-left:36.0pt'>This scenario will test out the
+features and behaviour of the Row layout manager in a java project with the SWT
+libraries added. </p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'>RowLayout is more commonly used
+than FillLayout because of its ability to wrap, and because it provides
+configurable margins and spacing. </p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'>RowLayout has a number of
+configuration fields. In addition, the height and width of each widget in a
+RowLayout can be specified by setting the widget’s RowData object using
+setLayoutData.<o:p></o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<h1>2.0 Setup:</h1>
+
+<p class=MsoNormal style='margin-left:36.0pt'>&nbsp;In a Java Project with the
+SWT library added, create a new Visual Class. </p>
+
+<p class=MsoNormal style='margin-left:36.0pt'>On to the canvas, drag and drop a
+Shell from the SWT drawer on the palette.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'>Then go to the Properties view
+and <b style='mso-bidi-font-weight:normal'>verify</b> that the default Layout
+for the Shell is null. Set the 'layout' property to 'RowLayout' in the property sheet
+and <b style='mso-bidi-font-weight:normal'>verify</b> the code is generated correctly.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><img width=526 height=344
+id="_x0000_i1025" src="images/setup00.jpg"></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<h1>3.0 Basic Functionality:</h1>
+
+<h3 style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo1;
+tab-stops:list 36.0pt'><![if !supportLists]><span style='font-family:Symbol;
+mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;font-weight:normal;
+mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>Layout customization.</h3>
+
+<p class=MsoNormal style='margin-left:36.0pt'>Drop a number of SWT components
+on to the Shell and <b style='mso-bidi-font-weight:normal'>verify</b> that the
+size can not be selected and that the components have a default size.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><img width=392 height=281
+id="_x0000_i1026" src="images/CustomizeRowLayout00.jpg"></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'>Set Text to each component where possible
+and <b style='mso-bidi-font-weight:normal'>verify</b> that said components
+expand to accommodate the text. And <b style='mso-bidi-font-weight:normal'>verify</b>
+that as the components expand the ‘row’ of components expands and ‘wraps’
+within the Shell container.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><img width=377 height=253
+id="_x0000_i1027" src="images/CustomizeRowLayout01.jpg"></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'>Verify</b> that when the shell is resized that the components contained
+within wrap as expected. </p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><img width=223 height=252
+id="_x0000_i1028" src="images/CustomizeRowLayout02.jpg"></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'>Verify</b> that the Layout Customization launches.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'><img width=685 height=539 id="_x0000_i1029"
+src="images/CustomizeRowLayout03.jpg"><o:p></o:p></b></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'><o:p>&nbsp;</o:p></b></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'><o:p>&nbsp;</o:p></b></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'>Verify</b> that the Row orientation can be set from Horizontal, the
+default, to Vertical. And back again.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'><img width=428 height=451 id="_x0000_i1030"
+src="images/CustomizeRowLayout04.jpg"><o:p></o:p></b></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'><o:p>&nbsp;</o:p></b></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'>Verify</b> that the row orientation can be changes from the source, at “<b
+style='mso-bidi-font-weight:normal'><i style='mso-bidi-font-style:normal'>type</i></b><i
+style='mso-bidi-font-style:normal'> = org.eclipse.swt.SWT.VERTICAL</i>”, and
+verify that these changes are reflected upon the Properties view and on the
+Shell container.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<h3 style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo1;
+tab-stops:list 36.0pt'><![if !supportLists]><span style='font-family:Symbol;
+mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;font-weight:normal;
+mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>Row Options</h3>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'>Verify</b> that by default that ‘Wrap’ and ‘Pack’ are set to True,
+i.e. that these options are checked within the dialog.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:12.0pt'>Fill</span></b>: <b style='mso-bidi-font-weight:
+normal'>Verify</b> ‘Fill’ works as expected. And <b style='mso-bidi-font-weight:
+normal'>verify</b> Fill with the Row Orientation is set to both HORIZONTAL and
+VERTICAL. Then <b style='mso-bidi-font-weight:normal'>verify</b> that these
+controls can be changed in the Source view and in the Properties view.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:12.0pt'>Justify</span></b>: <b style='mso-bidi-font-weight:
+normal'>Verify</b> that if the justify field is true widgets in a RowLayout are
+spread across the available space from left to right. And <b style='mso-bidi-font-weight:
+normal'>verify</b> that if the parent Composite grows wider, the extra space is
+distributed evenly among the widgets. The verify that if both pack and justify
+are true, widgets take their natural size, and the extra space is placed
+between the widgets in order to keep them fully justified. By default,
+RowLayout do not justify. And <b style='mso-bidi-font-weight:normal'>verify</b>
+Justify with the Row Orientation is set to both HORIZONTAL and VERTICAL.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'>Then <b style='mso-bidi-font-weight:
+normal'>verify</b> that these controls can be changed in the Source view and in
+the Properties view.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:12.0pt'>Pack</span></b>: <b style='mso-bidi-font-weight:
+normal'>Verify</b> that if the pack field is true, widgets in a RowLayout will
+take their natural size, and they will be aligned as far to the left as
+possible. <b style='mso-bidi-font-weight:normal'>Verify</b> that if pack is
+false, widgets will fill the available space, similar to the widgets in a
+FillLayout. RowLayout Pack by default. And <b style='mso-bidi-font-weight:normal'>verify</b>
+Wrap with the Row Orientation is set to both HORIZONTAL and VERTICAL.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'>Then <b style='mso-bidi-font-weight:
+normal'>verify</b> that these controls can be changed in the Source view and in
+the Properties view.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:12.0pt'>Wrap</span></b>: <b style='mso-bidi-font-weight:
+normal'>Verify</b> that the wrap field controls whether or not the RowLayout
+will wrap widgets into the next row if there isn’t enough space in the current
+row. RowLayouts wrap by default. And <b style='mso-bidi-font-weight:normal'>verify</b>
+Wrap with the Row Orientation is set to both HORIZONTAL and VERTICAL.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'>Then <b style='mso-bidi-font-weight:
+normal'>verify</b> that these controls can be changed in the Source view and in
+the Properties view.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<h3 style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo1;
+tab-stops:list 36.0pt'><![if !supportLists]><span style='font-family:Symbol;
+mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;font-weight:normal;
+mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>Spacing</h3>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'>Verify</b> the spacing, in pixels, of the controls in the dialog. These
+fields control the number of pixels between widgets (spacing) and the number of
+pixels between a widget and the side of the parent Composite (margin). By
+default, RowLayout leave 3 pixels for margins and spacing.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'><img width=429 height=399 id="_x0000_i1031"
+src="images/CustomizeRowLayout05.jpg"><o:p></o:p></b></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><b style='mso-bidi-font-weight:
+normal'><o:p>&nbsp;</o:p></b></p>
+
+<h3 style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo1;
+tab-stops:list 36.0pt'><![if !supportLists]><span style='font-family:Symbol;
+mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;font-weight:normal;
+mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>Selection and Moving widgets</h3>
+
+<p class=MsoNormal style='margin-left:36.0pt'>Select a widget and <b
+style='mso-bidi-font-weight:normal'>verify </b>that these can be moved to
+another location on the Shell</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><img width=349 height=211
+id="_x0000_i1032" src="images/CustomizeRowLayout06.jpg"><span
+style='mso-spacerun:yes'> </span><img width=343 height=203 id="_x0000_i1033"
+src="images/CustomizeRowLayout08.jpg"></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'>Select a number of widgets and <b
+style='mso-bidi-font-weight:normal'>verify</b> that these can be moved to
+another location on the Shell.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><img width=336 height=192
+id="_x0000_i1034" src="images/CustomizeRowLayout09.jpg"><span
+style='mso-spacerun:yes'> </span><img width=334 height=193 id="_x0000_i1035"
+src="images/CustomizeRowLayout10.jpg"></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-left:36.0pt'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+</div>
+
+</body>
+
+</html>

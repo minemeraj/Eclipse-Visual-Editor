@@ -1,0 +1,50 @@
+package test.me;
+
+import java.lang.String;
+
+public class Test2 {
+
+	private CustomBook customBook = null;  //  @jve:visual-constraint="146,34"
+	private CustomBook customBook1 = null;  //  @jve:visual-constraint="221,34"
+	private BookButton bookButton = null;  //  @jve:decl-index=0:visual-constraint="117,75"
+
+	/**
+	 * This method initializes customBook	
+	 * 	
+	 * @return test.me.CustomBook	
+	 */    
+	private CustomBook getCustomBook() {
+		if (customBook == null) {
+			customBook = new CustomBook();
+			//customBook.setSubBook(getCustomBook1());
+		}
+		return customBook;
+	}
+
+	/**
+	 * This method initializes customBook1	
+	 * 	
+	 * @return test.me.CustomBook	
+	 */    
+	private CustomBook getCustomBook1() {
+		if (customBook1 == null) {
+			customBook1 = new CustomBook();
+			customBook1.setSubBook(getCustomBook());
+		}
+		return customBook1;
+	}
+
+	/**
+	 * This method initializes bookButton	
+	 * 	
+	 * @return test.me.BookButton	
+	 */    
+	private BookButton getBookButton() {
+		if (bookButton == null) {
+			bookButton = new BookButton();
+			bookButton.setSize(171, 50);
+			bookButton.setBook(getCustomBook1());
+		}
+		return bookButton;
+	}
+}

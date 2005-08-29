@@ -1,0 +1,269 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=windows-1252">
+  <title>Test the behavior of JTabbedPane</title>
+  <style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+  </style><!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+<body>
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif;">Procedure</span></u></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">This scenario
+will test out the features and behavior of the JTabbedPane container.</span>
+<br>
+<br>
+<b><u><span style="font-family: sans-serif;">Setup</span></u></b><span
+ style="font-size: 10pt; font-family: sans-serif;">
+</span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;">&nbsp;</span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;">
+Create a new empty Visual Class (extending Object). &nbsp;Drop a
+JTabbedPane on the free form and resize it to take up 3/4ths of the
+Canvas.</span> <br>
+<br>
+<b><u><span style="font-family: sans-serif;">Basic Functionality
+Inspection</span></u></b>
+<br>
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif;">Adding
+children to the Tab Pane</span></b> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Initially the
+Tab Pane is just a blank area.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Choose a JPanel
+and drop it on the Tab Pane.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that a tab handle
+is created visually for the new tab.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Highlight the
+JPanel on the beans view.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that tab icon, tab
+title and tab tooltip text are on the tab component's property sheet.</span>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Set the tab
+title property to "Panel" on the PS.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Drop a JTable
+on JScrollPane onto the tab handle area of the Tab Pane.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the dropped Table
+is displayed properly.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Resize the
+JTabbedPane vertically so that the Table will need to scroll.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the scroll bar
+shows up properly.</span> <br>
+<img border="0" width="361" height="125" src="image001.jpg"
+ v:shapes="_x0000_s1025"><br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Resize the tab
+pane to a usable size.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Set the tab
+title property on the Scroll Pane to "Table on Scroll"</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Drop a
+JSplitPane and JTree on the Tab Pane from the Beans View. &nbsp;Set
+their respective tab titles.</span>
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the dropped
+beans appear correctly in the Tab Pane.</span> <br>
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif;">Selecting
+child components</span></b> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the
+JPanel bean on the Beans View.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the selected bean
+becomes viewable in the contents of the tab pane, and the selected
+bean's tab handle is selected.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the
+JTable (not the JScrollPane) on the Beans View.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the scroll
+pane and table are brought to front as the selected tab in the tab pane
+and the JTable is the selected object.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the
+first bean in the tab pane.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Right-click in
+the tab handle area.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the "Switch
+to" menu is present on the popup menu.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that options for
+each tab is available from the menu, with the list matching the tab
+titles.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the "Previous"
+option is not selectable.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Switch to the
+last tab using the "Switch to" context menu by selecting the last tab
+title.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the "Next" option
+is now not selectable from the "Switch to" menu, and that "Previous" is.</span>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Fool around
+with the various options on the "Switch to" menu</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> switching
+functionality.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Delete one of
+the children tab components.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the tab handle is
+removed on the canvas, and that the tab is no longer an option on the
+"Switch to" menu.</span> <br>
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif;">Exercising
+Tab Handles</span></b> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select a tab
+component and set it's tab icon on the property sheet.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the chosen icon is
+displayed properly on the canvas.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Switch to
+another tab component</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the icon continues
+to be shown properly when the tab handle is not selected.</span>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Set the tab
+tool tip text property on the component.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the generated code
+is valid.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Change the tab
+title to a very long string. ( eg "Table on
+Scrollxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" )</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the tab
+handles are redrawn into multiple rows correctly.</span> <br>
+<img border="0" width="355" height="165" src="image002.jpg"
+ v:shapes="_x0000_s1026"><br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the
+JTabbedPane and change the tabPlacement property to BOTTOM</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the tab handles are
+drawn properly at the bottom of the Tab Pane.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Change the long
+tab title back to a reasonable length.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Change the
+tabPlacement property to LEFT</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the tab handles are
+drawn properly on the left of the Tab Pane.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Add many more
+beans to the Tab Pane until the tab handles need an additional column</span>
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the tab
+handles are redrawn into multiple columns correctly.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Change the
+tabPlacement property to RIGHT</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the tab handles are
+drawn properly on the right of the Tab Pane.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Cull the tab
+children back to a reasonable number and change the tabPlacement back
+to TOP</span> <br>
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif;">Appearance</span></b>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the Tab
+Pane and set the backgroundColor.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the unselected tabs
+handles match the newly selected color.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Set the opaque
+property to true.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the background area
+of the tab handles match the newly selected color</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Change the font
+and the foreground properties</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the tab titles
+match the newly selected values.</span> <br>
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif;">Source code</span></b>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Rearrange the
+order of &nbsp;the add statements of the tabs.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the canvas and
+Beans Viewer reflect the new order.</span> <br>
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif;">Context Menu
+Support</span></b>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">MB2 over the
+JTabbedPane and be <b><span style="color: blue;">Verify</span></b> the
+popup menu contains a "Switch to" menu item.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Here's an
+example of the popup menu with 3 pages:</span> <br>
+<img border="0" src="image003.jpg" width="526" height="370">
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;"><br>
+Verify</span><span style="font-size: 10pt; font-family: sans-serif;">
+</span></b><span style="font-size: 10pt; font-family: sans-serif;">the
+"Switch to" menu item is disabled if there is one or less pages.</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">If there are
+pages, <b>
+<span style="color: blue;">Verify</span></b> the menu items are the
+titles of the pages. </span><br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the page selected
+is NOT included in the list of popup items.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> the <b>Next</b>
+and <b>Previous</b> menu items are also on the popup if there is more
+than one page.</span> <br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span><span
+ style="font-size: 10pt; font-family: sans-serif;">
+</span></b><span style="font-size: 10pt; font-family: sans-serif;">selecting
+the <b>Next</b>, <b>Previous</b>, or specific page will switch to the
+actual page.</span></p>
+</body>
+</html>

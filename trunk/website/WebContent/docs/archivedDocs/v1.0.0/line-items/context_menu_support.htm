@@ -1,0 +1,53 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Context Menu Support</title>
+</head>
+
+<body>
+
+<h2>Context Menu Support</h2>
+<p><b>Eclipse Popup Extensions</b></p>
+<p>Context menus (or popup menus) are provided via the Eclipse extension point
+<b>org.eclipse.ui.popupMenus </b>and need to be added for various SWT controls:</p>
+<ul>
+  <li><a href="tabfolder.htm">TabFolder</a> - <b>Switch To </b>- allow switching 
+  between the various pages of the notebook</li>
+  <li>Composite - null layout - <b>Show Grid/Hide Grid</b> - show and hide a 
+  grid of dots that allow the user to snap controls to a grid position within 
+  the composite. This helps with control alignment within the composite.</li>
+  <li>Direct edit capability - <b>setText</b> capability allows the user to 
+  change the text of a control without having to find the property in the 
+  property sheet viewer.</li>
+</ul>
+<p>&nbsp;</p>
+<p><b>ObjectActionDelegates</b></p>
+<p><b>IObjectActionDelegate</b> is an Interface for an object action that is 
+contributed into a popup menu for a view or editor. It extends <b>
+IActionDelegate</b> and adds an initialization method for connecting the 
+delegate to the part it should work with. This are used in conjunction with the 
+Eclipse popup extensions to delegate selections and editor changes to the 
+actions specified.</p>
+<p>ObjectActionDelegates need to be implemented for SWT context menu support for 
+each of the popup menus described above.</p>
+<p>&nbsp;</p>
+<p><b>ActionFilters</b></p>
+<p><b>IActionFilter</b> is an adapter which performs filtering on the actions 
+which appear in the context menu. The visibility of each action is controlled by 
+filtering only those actions that are using a specific object class and optional 
+name filter attributes that are key/value pairs. This prevents irrelevant or 
+invalid actions from showing up in the context menu. </p>
+<p>The following filters need to be implemented for SWT context menu support:</p>
+<ul>
+  <li>null layout support for Show/Hide grid</li>
+  <li>GridLayout support for Show/Hide grid</li>
+</ul>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

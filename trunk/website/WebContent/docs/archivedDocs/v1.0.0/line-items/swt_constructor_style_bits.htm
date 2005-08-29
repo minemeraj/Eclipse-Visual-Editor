@@ -1,0 +1,62 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>SWT Constructor style bits</title>
+</head>
+
+<body>
+
+<h2><font face="Times New Roman">SWT Constructor style bits </font></h2>
+<p>&nbsp;</p>
+<p><b>SWEET - BeanInfo Extensions</b></p>
+<p><font face="Times New Roman">Using SWEET (see
+<a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/sweet-swt/net.sf.sweet_swt/doc/designdoc.html?rev=HEAD&content-type=text/html">
+http://cvs.sourceforge.net/viewcvs.py/*checkout*/sweet-swt/net.sf.sweet_swt/doc/designdoc.html?rev=HEAD&amp;content-type=text/html</a>), 
+we need to define the SWT style bits so they can be modeled, set, and viewed in 
+the property sheet viewer. </font></p>
+<p><font face="Times New Roman">Currently the beaninfo classes for each the AWT/Swing 
+components supported in the VE define the various properties that are modeled, 
+can be queried in the remote VM, and can be set in the property sheet viewer 
+and source code. This is done using the getter/setter code pattern and 
+methods defined in the beaninfo classes or derived using class introspection. An 
+example is the 'text' property of a Swing JButton class which has a getText() 
+and setText(String text) method. This pattern works well for SWT controls as 
+well in which most of the properties which can be derived using class introspection.
+</font></p>
+<p><font face="Times New Roman">However, to create an instance of most SWT 
+widgets requires a 'style' parameter which is an 'int' value. This is a set of 
+bits that represent optional appearance related aspects of the widget. For 
+example, an SWT Button can be created using the style <font size="2">SWT.RADIO</font> 
+(<font size="2"><b>new org.eclipse.swt.widgets.Button (shell, 
+org.eclipse.swt.SWT.RADIO)</b></font>) which creates a radio button, or can be 
+created using other styles as well (<font size="2">SWT.PUSH, SWT.ARROW, 
+SWT.CHECK, SWT.TOGGLE, SWT.FLAT, SWT.LEFT, SWT.RIGHT, SWT.CENTER</font>). Since 
+the style is a constructor only property (cannot be set via setter method), this 
+will require some special coding considerations. </font></p>
+<p><font face="Times New Roman">These styles need to be represented correctly 
+for each SWT widget in the BeanInfo.</font></p>
+<p>&nbsp;</p>
+<p><b><font face="Times New Roman">Property Sheet Viewing</font></b></p>
+<p><font face="Times New Roman">All the style constants for all the SWT widgets 
+are defined in the <b>org.eclipse.swt.SWT</b> class. Certain styles are 
+applicable to certain specific widgets and some are common to all widgets. In 
+order to present them in the property sheet viewer, the styles must be organized 
+in &quot;families&quot; (or &quot;groupings&quot;), that allow the user to select only those SWT 
+styles that are applicable to a widget. In each &quot;family&quot;, only one selection 
+could made such as in the example above. Selecting both <font size="2">SWT.CHECK</font> 
+and <font size="2">SWT.RADIO </font>doesn't make sense so perhaps a drop-down 
+list of styles within a <b>buttonType</b> family would be implemented. </font>
+</p>
+<p>&nbsp;</p>
+<p><b><font face="Times New Roman">Modeling and code generation</font></b></p>
+<p>The style bit settings need to modeled in such a way such that code 
+generation rules will know to apply the style bits from all the style type 
+property settings to the second parameter of the SWT widget constructor.</p>
+
+</body>
+
+</html>

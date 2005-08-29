@@ -1,0 +1,112 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test Java Inheritance</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+<!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif">Procedure</span></u></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">This scenario will test 
+out the ability of the Visual Editor to work with Java inheritance.</span> <br>
+<br>
+<b><u><span style="font-family: sans-serif">Setup</span></u></b><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></p>
+<p class="MsoNormal"><span style="font-size: 10.0pt; font-family: sans-serif">&nbsp;</span></p>
+<p class="MsoNormal"><span style="font-size: 10.0pt; font-family: sans-serif">
+Import <a href="../test-zips/inheritance.zip">inheritance.zip</a> into a project. &nbsp;</span>
+<br>
+<br>
+<b><span style="font-family: sans-serif">Abstract Test</span></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Create a new visual 
+class which extends AbstractChild. &nbsp;Make sure the create inherited abstract 
+methods check is checked.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the visual representation of this new class is the JSplitPane. (on the canvas 
+and the Java Beans View icon)</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the method doNothing is created in the source.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the this bean on 
+the canvas.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the property sheet reflects the JSplitPane properties.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the property publicInt is also present on the properties sheet.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the properties protectedInt and privateInt are not present on the 
+properties sheet.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Set the publicInt 
+property to some int value (42)</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the code is generated properly to set the property.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Resize the this bean by 
+dragging the handles on the canvas.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the splitpane resizes properly on the canvas and the setSize call is generated 
+in the code.</span> <br>
+<br>
+<br>
+<b><span style="font-family: sans-serif">Concrete Test</span></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Create a new visual 
+class which extends ConcreteChild in the default package.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the visual representation of this new class is a JSplitPane containing a JLabel 
+and a JTree</span> <br>
+<img border=0 width=143 height=79
+src="image001.jpg" v:shapes="_x0000_s1025"><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the this bean on 
+the canvas.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the property sheet reflects the JSplitPane properties.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Resize the bean by 
+dragging the handles on the canvas.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the splitpane resizes properly on the canvas and the setSize call is generated 
+in the code.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the resizeWeight 
+property to 0.25</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the divider location of the split pane moves to the left.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Hit the reset to 
+default button on the Property Sheet to reset the resizeWeight property.</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the resizeWeight property resets to 0.5</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the divider location of the split pane moves to the center.</span> </p>
+
+</body>
+
+</html>

@@ -1,0 +1,121 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Layout Support</title>
+</head>
+
+<body>
+
+<h2>Layout Support</h2>
+<p>Layout support in SWT is used to control the size and position of the child 
+widgets of a composite widget. The following Layouts will be supported in VE:</p>
+<ul>
+  <li><b>null Layout</b></li>
+</ul>
+<blockquote>
+<p>With a <b>null</b> layout, the controls are laid out according to the X/Y 
+positioning of the child within the composite. This is very limited in that the 
+controls will not move or resize when the composite is resized,&nbsp; the screen 
+resolution changes, or font changes due to a different locale.</p>
+  <ul>
+    <li><font face="Times New Roman">Need Alignment dialog changes to 
+    support the SWT X/Y layout</font></li>
+  </ul>
+  <blockquote>
+<p><img border="0" src="images/layout11.jpg" width="121" height="140"></p>
+  </blockquote>
+  <ul>
+    <li>Provide the capability to show a dotted grid using a popup menu over the 
+    composite (<b>Show grid </b>vs.<b>Hide grid</b>) and a snap-to-grid 
+    capability when dropping a control onto the composite, or moving the child 
+    from one position to another within the composite</li>
+  </ul>
+</blockquote>
+<ul>
+  <li><b>FillLayout</b></li>
+</ul>
+<blockquote>
+<p>The simplest layout of all SWT layouts, the FillLayout lays out the controls 
+in a single row or column, forcing them to be the same size and fills up all 
+available space in the composite. No margins or spacing can be specified. In 
+essence, each control's height is as high as the highest control and each 
+control's width is wide as the widest control. Depending on the FillLayout type, 
+the controls will be placed either horizontally (the default) or vertically in 
+the composite.</p>
+</blockquote>
+<ul>
+  <li><b>RowLayout</b></li>
+</ul>
+<blockquote>
+<p>RowLayout aligns all controls in one row if the type is set to horizontal, 
+and one column if it is set to vertical. It has the ability to wrap, and 
+provides configurable margins and spacing. RowLayout has a number of 
+configuration fields. In addition, the height and width of each control in a 
+RowLayout can be specified by setting a RowData object into the control using 
+the setLayoutData method.</p>
+</blockquote>
+<ul>
+  <li><b>FormLayout</b></li>
+</ul>
+<blockquote>
+<p>FormLayout controls the size and position of the children using 
+FormAttachments which configure the left, top, right, and bottom edge of each 
+child. Using the FormAttachments, each side of a child can be attached to a 
+position in the parent composite or to other controls within the composite. 
+These FormAttachments are set into an instance of FormData and the FormData is 
+set for each child using the setLayoutData method. If the side of a child is not 
+given an attachment, it is not attached to anything, causing the child to 
+default to its preferred size. If a child has no attachments on any side, it is 
+automatically attached to the left and top of the parent composite respectively.</p>
+</blockquote>
+<ul>
+  <li><b>GridLayout</b></li>
+</ul>
+<blockquote>
+<p>GridLayout lays out the children of a composite in a grid like manner (rows 
+and columns). By setting the number of columns of the layout, children are laid 
+in columns from left to right and a new row is created when the number of 
+children added exceeds this number (of columns). By configuring a GridData object and 
+associating with a child using the setLayoutData method, the child can be 
+customized for various control behavior such as alignment, spanning, fill, and 
+other styles.</p>
+</blockquote>
+<p>&nbsp;</p>
+
+<p><b>Layout Policy Factory Definition</b></p>
+
+<p>For each Layout supported in the Visual Editor, a layout policy factory needs 
+to be created (see <b>ILayoutPolicyFactory</b>) and an xmi override file needs 
+to be created to associate this factory with each specific layout. The layout 
+policy factory  assigns the layout policy, layout policy helper, and 
+layout switcher for each layout.</p>
+
+<p><b>Layout Policy &amp; Helper</b></p>
+
+<p>The layout policy and it's respective helper must handle several functions 
+for the composite&nbsp; in the graphical viewer:</p>
+
+<ul>
+  <li>Dropping a newly created control from the palette</li>
+  <li>Moving control(s) around within composite</li>
+  <li>Moving control(s) from one composite to another (orphaning &amp; adding)</li>
+  <li>Deleting control(s) from a composite</li>
+  <li>Providing appropriate visual feedback as necessary for the above functions 
+  (some of this visual feedback can be fairly complex and the full capability 
+  for more difficult layouts (such as FormLayout and GridLayout) should be 
+  deferred to a later release.</li>
+</ul>
+<p><b>Layout Switching</b></p>
+
+<p>Each layout needs to handle the case in which a composite's layout is changed 
+(&quot;switched&quot;) from one layout to another in which case the layout data needs to 
+be logically generated according to the desired affect that makes the most sense 
+to the end user.</p>
+
+</body>
+
+</html>

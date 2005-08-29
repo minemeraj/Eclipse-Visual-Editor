@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <title>Create a simple SWT application</title>
+  <style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+  </style><!--[if !mso]>
+
+<style>
+
+v\:*         { behavior: url(#default#VML) }
+
+o\:*         { behavior: url(#default#VML) }
+
+.shape       { behavior: url(#default#VML) }
+
+</style>
+
+<![endif]--><!--[if gte mso 9]>
+
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+
+</xml><![endif]-->
+</head>
+<body>
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif;"><font
+ size="3">
+Procedure</font></span></u></b> <br>
+<br>
+<b><span style="font-size: 13.5pt; font-family: Arial;">Basic Visual
+Editor Test 2</span></b><br>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">This test will
+demonstrate the creation of a simple SWT graphical application using
+the Visual Editor.</span>
+<br>
+<br>
+<b><span style="font-size: 10pt; font-family: Arial;">Creating Project</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">First create a new
+Java Project by pressing the New button on the tool bar.</span> <br>
+<span style="font-size: 10pt; font-family: Arial;">Select Java from the
+list on the left, and Java Project on the right.</span> <br>
+<span style="font-size: 10pt; font-family: Arial;">Click Next, and name
+the project VE Demo and click Finish.</span> <br>
+<img alt="" style="border: 0px solid ; width: 534px; height: 434px;"
+ src="image001.jpg" v:shapes="_x0000_s1025"><br>
+</p>
+<p class="MsoNormal"><br>
+</p>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; font-family: Arial;">Adding the SWT Library</span></b></p>
+<p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Select
+the project in the Package Explorer, then mouse button 2 and select
+Properties. Choose Java Build Path on the list on the left, then the
+Libraries tab.<br>
+Press the Add Library button and choose Standard Widget Toolkit
+(SWT).&nbsp; <br>
+<br>
+</span></p>
+<p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;"><img
+ alt="" style="border: 0px solid ; width: 699px; height: 667px;"
+ src="image002.jpg" v:shapes="_x0000_s1026"><br>
+</span><span style="font-size: 10pt; font-family: Arial;">Hit the Next
+button, then Finish, then OK.<br>
+</span><b><span style="font-size: 10pt; font-family: Arial;"></span></b></p>
+<p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;"></span><b><span
+ style="font-size: 10pt; font-family: Arial;"><span
+ style="font-weight: bold;"></span><br>
+</span></b><b><span style="font-size: 10pt; font-family: Arial;"></span></b></p>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; font-family: Arial;">Creating Visual
+Class</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">Select the project
+again in the Package Explorer, then mouse button 2 and
+from the New menu, select Visual Class.</span> <br>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">In the wizard, name
+the new class <b>SayHello</b>, choose to extend other and make sure
+the Superclass is listed as java.lang.Object and click Finish.</span> <br>
+<img alt="" src="image003.jpg"
+ style="border: 0px solid ; width: 561px; height: 629px;">
+<br>
+<span style="font-size: 10pt; font-family: Arial;">The Visual Editor
+will now launch with an empty canvas.</span> <br>
+<br>
+<b><span style="font-size: 10pt; font-family: Arial;">Initial Editing</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">Select the Shell
+from the SWT drawer on the palate.<br>
+Click and drag on the canvas surface to drop and size the Shell.</span><span
+ style="font-size: 10pt; font-family: Arial;"></span><br>
+<img alt="" style="border: 0px solid ; height: 434px; width: 711px;"
+ src="image004.jpg" v:shapes="_x0000_s1027"><br>
+<span style="font-size: 10pt; font-family: Arial;">Once the Shell is
+dropped and resized properly, click on it on the canvas to Direct Edit
+the title of the shell. Enter "Say Hello"</span></p>
+<p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">into
+the white box that pops up, and press enter when done.</span> <br>
+<br>
+<img alt="" style="border: 0px solid ; width: 420px; height: 90px;"
+ src="image005.jpg" v:shapes="_x0000_s1028"><br>
+<span style="font-size: 10pt; font-family: Arial;">The title of the
+shell will change to reflect the new text.<br>
+From the Property sheet, change the value of the layout property to
+GridLayout<br>
+<img style="width: 229px; height: 148px;" alt="" src="image006.jpg"><br>
+</span> </p>
+<p class="MsoNormal"><br>
+<b><span style="font-size: 10pt; font-family: Arial;">Creating Greeting
+Text</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">Choose a Label from
+the palate. &nbsp;Move the cursor over the center of the Shell </span><span
+ style="font-size: 10pt; font-family: Arial;">click to drop.&nbsp; The
+label will be placed in the upper-left corner of the window.&nbsp;
+From the property sheet, expand the layoutData property by pressing the
++ button.&nbsp; Set the following properties: grabExcessHorizontalSpace
+-&gt; true, grabExcessVerticalSpace -&gt; true, horizontalAlignment
+-&gt; CENTER.<br>
+</span></p>
+<p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;"><br>
+</span><img alt=""
+ style="border: 0px solid ; height: 213px; width: 245px;"
+ src="image007.jpg" v:shapes="_x0000_s1031"><br>
+</p>
+<p class="MsoNormal"><br>
+</p>
+<p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">In
+the source panel, scroll to the bottom of the createSShell ()
+method.&nbsp; Look for the following line of code:<br>
+</span><span style="font-size: 10pt;"><span
+ style="font-size: 10pt; font-family: monospace;">label.setText("Label");<br>
+</span></span><span style="font-size: 10pt;"><span
+ style="font-size: 10pt; font-family: monospace;"><span
+ style="font-size: 10pt; font-family: Arial;">Change the word Label to
+Hello, so the line will read:</span><br>
+</span></span><span style="font-size: 10pt; font-family: Arial;"></span></p>
+<p style="font-family: monospace;" class="MsoNormal"><span
+ style="font-size: 10pt;">label.setText("Hello");<br>
+</span></p>
+<p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;"><br>
+The canvas will update to show the new text. Next the font size
+should be increased to make it show up better. &nbsp;Select the font
+property on the property sheet, </span><br>
+<span style="font-size: 10pt; font-family: Arial;">and press the gray
+... button on the right to bring up the font property editor.&nbsp;
+Select Arial, Bold, and size 36.&nbsp;</span><span
+ style="font-size: 10pt; font-family: Arial;"> Press OK.</span> <br>
+<img alt="" style="border: 0px solid ; height: 343px; width: 425px;"
+ src="image008.jpg" v:shapes="_x0000_s1032"><br>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">To change the label
+text's color, select the foreground property on the property sheet,
+then press the gray ... button </span><br>
+<span style="font-size: 10pt; font-family: Arial;">to launch the color
+property editor. &nbsp;Select the Named Colors tab at the top of the
+editor, then choose blue from the </span><br>
+<span style="font-size: 10pt; font-family: Arial;">basic colors list
+and press OK.</span> <br>
+</p>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; font-family: Arial;"><br>
+Adding the
+Control Panel</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">Select a Composite
+from the palate and drop it into position to the right of the
+Label.&nbsp; From the property sheet, expand the layoutData property,
+and set </span><span style="font-size: 10pt; font-family: Arial;"><span
+ style="font-size: 10pt; font-family: Arial;">grabExcessHorizontalSpace
+-&gt; true and </span></span><span
+ style="font-size: 10pt; font-family: Arial;"><span
+ style="font-size: 10pt; font-family: Arial;"><span
+ style="font-size: 10pt; font-family: Arial;">horizontalAlignment -&gt;
+CENTER.&nbsp; Select the layout property and change it to
+FillLayout.&nbsp; Expand the layout property and set the spacing sub
+property to 10.</span></span></span><br>
+<br>
+<img alt="" style="border: 0px solid ; width: 652px; height: 244px;"
+ src="image009.jpg" v:shapes="_x0000_s1029"><br>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">Next, select Label
+on the palatte and drop it on the composite.&nbsp; </span><span
+ style="font-size: 10pt; font-family: Arial;">Change the
+text property to say "Enter your name:".</span>&nbsp;&nbsp; <br>
+<span style="font-size: 10pt; font-family: Arial;">Next, drop a Text on
+the Composite using the Java Beans View.</span><br>
+<span style="font-size: 10pt; font-family: Arial;">Next, select Button
+on the palatte and drop it on the Composite after the text field using the Java 
+Beans View. &nbsp;Bring up Direct Edit on the button and change </span><span
+ style="font-size: 10pt; font-family: Arial;">its text to "Say
+Hello"</span> <br>
+</p>
+<p class="MsoNormal"><br>
+</p>
+<p class="MsoNormal"><img style="width: 398px; height: 241px;" alt=""
+ src="image010.jpg"></p>
+<p class="MsoNormal"><br>
+<b><span style="font-size: 10pt; font-family: Arial;">Adding Event</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">To make the program
+actually do something, an event needs to be added. &nbsp;Select the
+"Say Hello" button on the canvas. &nbsp;</span> <br>
+<span style="font-size: 10pt; font-family: Arial;">Mouse button two to
+bring up the context menu, go down to Events, and select Add
+Event.&nbsp; Select the selection event, <br>
+and widgetSelected, then press Finish. &nbsp;This will add an&nbsp; </span><span
+ style="font-size: 10pt; font-family: Arial;">event which will
+occur when the button is clicked. &nbsp;</span> <br>
+<img alt="" style="border: 0px solid ; height: 434px; width: 572px;"
+ src="image011.jpg" v:shapes="_x0000_s1034"><br>
+<span style="font-size: 10pt; font-family: Arial;">In the source code
+pane, look for the line of code:</span> <br>
+<span style="font-size: 10pt; font-family: Courier New;">System.out.println(<span
+ style="color: blue;">"widgetSelected()"</span>);
+<span style="color: teal;">// </span><b><span style="color: blue;">TODO</span></b><span
+ style="color: teal;"> Auto-generated stub widgetSelected()</span></span>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">Remove that line
+from the source, and replace it with the following line:</span> <br>
+<span style="font-size: 10pt; font-family: Courier New;">label.setText(<span
+ style="color: blue;">"Hello "</span> + text.getText());</span>
+<br>
+<br>
+When you are finished, your application should look something like this:<br>
+<img alt="" src="image012.jpg"
+ style="border: 0px solid ; height: 236px; width: 378px;">
+<br>
+<b><span style="font-size: 10pt; font-family: Arial;"><br>
+Running the Application</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: Arial;">Try running the
+application by selecting Run As-&gt;Java Bean from the Run menu.<br>
+The application should launch and should look like what is represented
+on the graphical canvas.<br>
+Enter your name into the text field and press the Say Hello
+button.&nbsp; The text of the Hello label should change to reflect the
+entered name.<br>
+</span></p>
+<p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;"><br>
+<span style="font-weight: bold;"></span></span></p>
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>Test Visual Editor interactions with the Eclipse workbench</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>JStinton</o:Author>
+  <o:Template>Normal</o:Template>
+  <o:LastAuthor>JStinton</o:LastAuthor>
+  <o:Revision>9</o:Revision>
+  <o:TotalTime>24</o:TotalTime>
+  <o:Created>2005-07-15T20:38:00Z</o:Created>
+  <o:LastSaved>2005-07-26T14:47:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>859</o:Words>
+  <o:Characters>4902</o:Characters>
+  <o:Company>IBM</o:Company>
+  <o:Lines>40</o:Lines>
+  <o:Paragraphs>11</o:Paragraphs>
+  <o:CharactersWithSpaces>5750</o:CharactersWithSpaces>
+  <o:Version>10.6735</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:843279226;
+	mso-list-template-ids:899567018;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l1
+	{mso-list-id:1333946656;
+	mso-list-template-ids:-1034639972;}
+@list l1:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l1:level2
+	{mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level3
+	{mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level5
+	{mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level6
+	{mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level8
+	{mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level9
+	{mso-level-tab-stop:4.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]-->
+<meta http-equiv=Content-Language content=en-us>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="3074"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=EN-US style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<p class=MsoNormal><b><u><span style='font-family:Arial'>Procedure</span></u></b>
+<br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>The purpose of this test is to
+make sure that the Visual Editor functions well as a part of the Eclipse
+workbench environment. This includes functioning well with Eclipse toolbar and
+file commands and the project/package structure.</span> <br>
+<br>
+<b><span style='font-family:Arial'>New Visual Class</span></b> <br>
+<span style='font-size:10.0pt;font-family:Arial'>In Eclipse, go to
+File-&gt;New-&gt;Other</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Expand the Java Tree Item</span>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that Visual Class is an option</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that AWT and Swing trees are underneath Java</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select AWT</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that Frame Visual Class, Panel Visual Class and Applet Visual Class are
+options</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select Swing</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that <span class=SpellE>JFrame</span> Visual Class, <span class=SpellE>JPanel</span>
+Visual Class, and <span class=SpellE>JApplet</span> Visual Class are options</span>
+<br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Press cancel</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Switch to/open the Java
+perspective</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Go to File-&gt;New menu</span>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that Visual Class is an option</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Click off the popup menu</span>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Click the Down arrow next to
+the New button on the toolbar</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that Visual Class is an option</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Click the Down arrow next to
+the New Class button on the toolbar</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> that Visual Class is an option</span>
+<br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>In the Package Explorer view,
+MB2-&gt;New</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that Visual Class is an option</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Switch to/open Java Browsing
+perspective</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that Visual Class is an option on the New popup menu in the Projects,
+Packages, Types, and Members areas </span><br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Press the New button</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Expand the Examples page</span>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> that AWT, Swing, and SWT are listed
+under the Examples tree</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Expand the AWT, Swing, and SWT
+trees</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> the examples are shown for each
+type</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select <span class=SpellE>SimpleTextEditor</span></span>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select Next and specify the
+folder and package, and hit finish</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><span
+style='font-size:10.0pt;font-family:Arial'> the example is created successfully</span>
+<br>
+<br>
+<b><span style='font-family:Arial'>Run As Java Bean</span></b> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Open the <span class=SpellE>SimpleTextEditor</span>
+example</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>From the Run-&gt;Run As menu</span>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that Run As Java Bean is an option</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Click the down arrow next to
+the Run button on the toolbar</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that Run As Java Bean is an option</span> <br>
+<br>
+<b><span style='font-family:Arial'>Java Beans View / Property Sheet</span></b> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Close the Java Beans View</span>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Go to Window-&gt;Show
+View-&gt;Other...<br>
+In the Show View dialog, expand the Java node and </span><br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that Java Beans is an option</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select Java Beans from the
+menu</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the Java Beans view is displayed properly again</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Close the Properties Sheet</span>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Go to Window-&gt;Show View
+menu</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that Properties Sheet is an option</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select Properties Sheet from
+the menu</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the Properties Sheet view is displayed properly again</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Switch to the Java perspective</span>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the Beans View and Property Sheet are rearranged properly</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Repeat the close/open test of
+the Java Beans view and Property Sheet</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that both views open and display properly</span> <br>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the property sheet and beans view respond to input after they are closed
+and opened</span> <br>
+<br>
+<b><span style='font-family:Arial'>New Visual Class Wizard</span></b> <br>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the style categories for extending types RCP, SWT, Swing, and AWT</span><span
+style='mso-spacerun:yes'>  </span><br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the <span class=SpellE>superclass</span> field is populated with the
+style that is selected</span> </p>
+
+<p class=MsoNormal style='text-indent:.25in'>*Note* - Shell will say <span
+class=SpellE>java.lang.Object</span><br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that when the Object class under the Other category is selected, the <span
+class=SpellE>superclass</span> defaults to <span class=SpellE>java.lang.Object</span></span>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the rest of the Wizard matches the options/functionality of the new Java
+class wizard</span> <br>
+<br>
+<b><span style='font-family:Arial'>Java Source Editor</span></b> <br>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the functions and context menu actions in the Java Source view contain
+all functions available from the standard Java editor</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select a bean on the Canvas</span>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the source is driven to the constructor line for the selected bean</span>
+<br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select a bean on the Java
+Beans View</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the source is driven to the constructor line for the selected bean</span>
+<br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select a modified property on
+the Property Sheet</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the source is driven to the line of code which sets the property</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select an unmodified property
+on the Property Sheet</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Set the value to something</span>
+<br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the source is driven to the newly created line of code which sets the
+property</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Select the source pane, and
+MB2 over it, then select Revert</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the source is reverted to the last saved state</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the canvas, property sheet and Java Beans view all update to reflect the
+reverted state</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Drop another bean on the
+canvas</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Go to the File menu and select
+Revert</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the source is reverted to the last saved state</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the canvas, property sheet and Java Beans view all update to reflect the
+reverted state</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Go to File-&gt;Save As and
+save the file with a new name</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Go to the class declaration
+error line in the source and use code assist to correct class name then save
+the class</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the canvas, property sheet and Java Beans view all continue to show and
+work with the class</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Drop another bean onto the
+canvas</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>From the package explorer MB2
+on the current file then select Delete</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Confirm the deletion</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Click the close button on the
+current editor window (on the tab)</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that a prompt to save the changed file is displayed</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Choose to save it, and save it
+to a new location</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Open it again in the Visual
+editor</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Without changing the contents,
+select the file from the package explorer, MB2 and select Delete</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Confirm the deletion</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>that the file is deleted and the Visual Editor is closed</span> <br>
+<br>
+<span style='font-size:10.0pt;font-family:Arial'>Switch to the Resource
+perspective</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Create a new Visual Class
+extending <span class=SpellE>JPanel</span></span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Set the background color of
+the <span class=SpellE>JPanel</span> to blue</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Save the class</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Open a new window (Window menu
+-&gt; New Window)</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Switch the new window to the
+Java perspective</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Open the new class with the
+Java editor</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Change the color line in the
+source to red</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the focus doesn't switch to the VE</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the cursor works independently in both source editors</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>when the color is changed in the Java editor, it is reflected on the
+canvas on the VE window</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Save the file in the Java
+source editor</span> <br>
+<span style='font-size:10.0pt;font-family:Arial'>Switch to the VE</span> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify </span></b><span
+style='font-size:10.0pt;font-family:Arial'>the dirty mark (*) on the file tab
+is gone</span> <br>
+<br>
+<b><span style='font-family:Arial'>Other Integration</span></b> <br>
+<b><span style='font-size:10.0pt;font-family:Arial;color:blue'>Verify</span></b><b><span
+style='font-family:Arial'> </span></b><span style='font-size:10.0pt;font-family:
+Arial'>the following buttons are added to the toolbar when the Visual Editor is
+opened: <o:p></o:p></span></br></p>
+
+<p class=MsoNormal style='text-indent:.25in'><span style='font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Arial'><!--[if gte vml 1]><v:shapetype
+ id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"
+ path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:369pt;
+ height:40.5pt'>
+ <v:imagedata src="image001.jpg" o:title="image001"/>
+</v:shape><![endif]--><![if !vml]><img width=492 height=54
+src="image001.jpg" v:shapes="_x0000_i1025"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-indent:.25in'><o:p>&nbsp;</o:p></p>
+
+<ul style='margin-top:0in' type=disc>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:list .5in'><span
+     style='font-size:10.0pt;font-family:Arial'>Delete</span> </li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:list .5in'><span
+     style='font-size:10.0pt;font-family:Arial'>Undo</span> </li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:list .5in'><span
+     style='font-size:10.0pt;font-family:Arial'>Redo</span></li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:list .5in'><span
+     style='font-size:10.0pt;font-family:Arial'>Code Synchronization Status</span></li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:list .5in'><span
+     style='font-size:10.0pt;font-family:Arial'>Selection</span> </li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:list .5in'><span
+     style='font-size:10.0pt;font-family:Arial'>Marquee</span> </li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:list .5in'><span
+     style='font-size:10.0pt;font-family:Arial'>Choose Bean</span> </li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:list .5in'><span
+     style='font-size:10.0pt;font-family:Arial'>Customize Java Bean</span> </li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:list .5in'><span
+     style='font-size:10.0pt;font-family:Arial'>Customize Layout</span></li>
+</ul>
+
+</div>
+
+</body>
+
+</html>

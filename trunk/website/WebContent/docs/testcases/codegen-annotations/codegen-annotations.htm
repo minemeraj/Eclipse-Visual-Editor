@@ -1,0 +1,211 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test free form Annotations</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+ li.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif"><font size="3">
+Procedure</font></span></u></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">This scenario is to 
+verify that freeform annotations are created, modified, and interpreted 
+correctly by the VE.</span> <br>
+<br>
+<span style="font-family: sans-serif"><u><b><font size="3">Setup</font></b></u></span><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><span style="font-size: 10.0pt; font-family: sans-serif">
+Open a new java file with the VE, for a class which subclasses java.lang.Object.</span>
+<br>
+&nbsp;</p>
+<p class="MsoNormal"><br>
+<u><b><span style="font-family: sans-serif">Object Subclass Test</span></b> </u>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop several beans on 
+the freeform surface</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that proper annotations are created for each as comments on the field 
+declaration line.</span> <br>
+<span style="font-family: sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; </span><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Move the beans around</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the annotations are properly updated.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the annotation 
+parameters in the source code</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the corresponding beans are moved on the graphical canvas.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Create a new line 
+between the end of the field declaration and the annotation comment, so that</span>
+<span style="font-size: 10.0pt; font-family: sans-serif">the entire comment 
+moves to the line below the field.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that position of the bean is still shown properly.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Save, close, and reopen 
+the file </span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that all of the beans are sized and positioned exactly as they were before.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Drop a JPanel and move 
+one of the other beans(JButton) into it. </span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the annotations for the moved bean are removed, then move it back to canvas<span style="color: blue">.</span></span>
+<br>
+<br>
+<u><b><span style="font-family: sans-serif">Inheritance Test</span></b> </u><br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open a new java file 
+with the VE, this time making the class a subclass of javax.swing.JPanel.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">When the editor is 
+opened there should be a rectangle on the canvas representing the JPanel.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Resize the rectangle.</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that annotations are applied as comments at the end of the code showing the 
+position and that the size is correct with in the initialize method.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Move the panel around
+</span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+&nbsp;that its annotations are properly updated.</span> <br>
+<span style="font-family: sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; </span><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the annotation 
+parameters in the source code</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+&nbsp;that the panel is moved on the graphical canvas.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that File-&gt;Revert properly reverts the code to last saved state, and redraws the 
+canvas. &nbsp;</span> <br>
+<span style="font-family: sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; </span><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Repeat Inheritance Test 
+alternating between the default package and other packages with the following 
+containers:</span> </p>
+<ul style="margin-top: 0in; margin-bottom: 0in" type="disc">
+  <li class="MsoNormal">
+  <span style="font-size: 10.0pt; font-family: sans-serif">JApplet, JFrame, 
+  JScrollPane, JTabbedPane, JInternalFrame, Panel, Frame, Applet</span> <br>
+  <span style="font-size: 10.0pt; font-family: sans-serif">Note: JApplet will 
+  give some problems because the applet is completely hidden by the content 
+  pane. So can't graphically move it,</span> <br>
+  <span style="font-size: 10.0pt; font-family: sans-serif">and can only resize 
+  it graphically by first selecting applet in the beans list.</span> <br>
+  <br></li>
+</ul>
+<p class="MsoNormal"><b><span style="font-family: sans-serif">Other</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Make a new file with 
+the following contents:</span> <br>
+<br>
+<tt style="font-family: Courier New"><b>
+<span style="font-size: 10.0pt; color: #820040">public</span></b><span style="font-size: 10.0pt">
+<b><span style="color: #820040">class</span></b> Empty {</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp;<b><span style="color: #820040">private</span></b> 
+javax.swing.JPanel ivjJPanel = <b><span style="color: #820040">null</span></b>; 
+&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #3F8080">// &nbsp;@jve:visual-info &nbsp;decl-index=0 
+visual-constraint=&quot;33,44&quot;</span></span></tt> <br>
+<tt style="font-family: Courier New">
+<span style="font-size: 10.0pt; color: #3F8080">&nbsp; &nbsp; &nbsp;</span><b><span style="font-size: 10.0pt; color: #820040">private</span></b><span style="font-size: 10.0pt"> 
+javax.swing.JButton ivjJButton = <b><span style="color: #820040">null</span></b>;</span></tt>
+<br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp;<b><span style="color: #820040">private</span></b> javax.swing.JButton 
+ivjJButton1 = <b><span style="color: #820040">null</span></b>;</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp;<b><span style="color: #820040">public</span></b> 
+Empty() {</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp;}</span></tt>
+<br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp;<b><span style="color: #820040">private</span></b> 
+javax.swing.JPanel getIvjJPanel() {</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<b><span style="color: #820040">if</span></b> (ivjJPanel == <b>
+<span style="color: #820040">null</span></b>) {</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp;ivjJPanel = <b><span style="color: #820040">new</span></b> javax.swing.JPanel();</span></tt>
+<br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp;ivjJPanel.add(getIvjJButton(), <b><span style="color: #820040">null</span></b>);</span></tt>
+<br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp;ivjJPanel.add(getIvjJButton1(), <b><span style="color: #820040">null</span></b>);</span></tt>
+<br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp;ivjJPanel.setSize(95, 85);</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span></tt>
+<br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<b><span style="color: #820040">return</span></b> ivjJPanel;</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; }</span></tt>
+<br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; <b>
+<span style="color: #820040">private</span></b> javax.swing.JButton 
+getIvjJButton() {</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<b><span style="color: #820040">if</span></b> (ivjJButton == <b>
+<span style="color: #820040">null</span></b>) {</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp;ivjJButton = <b><span style="color: #820040">new</span></b> 
+javax.swing.JButton();</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }</span></tt>
+<br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<b><span style="color: #820040">return</span></b> ivjJButton;</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; }</span></tt>
+<br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; <b>
+<span style="color: #820040">private</span></b> javax.swing.JButton 
+getIvjJButton1() {</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<b><span style="color: #820040">if</span></b> (ivjJButton1 == <b>
+<span style="color: #820040">null</span></b>) {</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; ivjJButton1 = <b><span style="color: #820040">new</span></b> 
+javax.swing.JButton();</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+}</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<b><span style="color: #820040">return</span></b> ivjJButton1;</span></tt> <br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">&nbsp; &nbsp; &nbsp; }</span></tt>
+<br>
+<tt style="font-family: Courier New"><span style="font-size: 10.0pt">}</span></tt>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Move the JButtons from 
+the JPanel onto the freeform. Also create a class extending JFrame, drop a 
+couple of JButtons on the content pane, and then retry the test.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that annotation marks are generated for the JButtons. </span><br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that removing the annotations of a bean causes it to be moved immediately.
+</span></p>
+
+</body>
+
+</html>

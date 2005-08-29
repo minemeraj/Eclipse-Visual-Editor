@@ -1,0 +1,57 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Visual Class Wizard and main</title>
+</head>
+
+<body>
+
+<h2>Visual Class Wizard and main(<b>String[] args</b>) Method Creation</h2>
+<p>&nbsp;</p>
+<p><b>Visual Class Wizard</b></p>
+<ul>
+  <li>The visual class wizard used to create classes to be edited in the Visual 
+  Editor is to be changed to support both SWT and AWT/Swing classes.</li>
+</ul>
+<blockquote>
+  <p><img border="0" src="images/visual5.jpg" width="505" height="619"></p>
+</blockquote>
+<ul>
+  <li>Need combo box to specify a select that could be SWT, Swing, or AWT.&nbsp; 
+  On the left side... label is <b>Toolkit </b>??</li>
+</ul>
+<p>&nbsp;</p>
+<p><b>main(String[] args) Method Creation</b></p>
+<ul>
+  <li>When the method stub for main() is selected, a customized VE code 
+  generator needs to generate code relative to the application depending whether 
+  it extends Object or extends Composite. </li>
+</ul>
+<blockquote>
+  <p><img border="0" src="images/visual6.gif" width="306" height="80"></p>
+  <p>For example, if creating a class extending Composite called MyComposite, 
+  the main method would have a few statements such as:</p>
+  <p><font color="#0000FF">Shell shell = new Shell();</font></p>
+  <p><font color="#0000FF">MyComposite myComposite = new MyComposite(shell, 
+  SWT.NONE);</font></p>
+</blockquote>
+<ul>
+  <li>Provide popup menu item on the visual class selected in the navigator that <font face="Times New Roman">
+  would generate a <b>main </b>method based on whether it's a SWT or AWT/Swing 
+  application.</font></li>
+  <li><font face="Times New Roman">Provide a <b>main</b> method template that 
+  could be used in the VE source viewer while using code assist that would 
+  generate code based on whether it's SWT or AWT/Swing.</font></li>
+</ul>
+<blockquote>
+  <p><img border="0" src="images/visual7.gif" width="569" height="103"></p>
+</blockquote>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

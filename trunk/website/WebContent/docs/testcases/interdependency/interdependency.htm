@@ -1,0 +1,158 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Projects Interdependency test</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif"><font size="3">
+Procedure</font></span></u></b> <br>
+<br>
+<b><span style="font-family: sans-serif">Interdependency Tests</span></b> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Basic 
+interdependency</span></b> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Create two new Java 
+projects - test1 and test2</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">In test1, create a new 
+Visual Class called MyPanel extending JPanel in the package &quot;hi&quot;</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">In test2, create a new 
+Visual Class called MyFrame extending JFrame</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the background 
+color of MyPanel to blue and save the file.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the VE can be used in more than one project simultaneously</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">In MyFrame, press the 
+Choose Bean button on the palette and type My</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that MyFrame 
+is listed, but MyPanel is not. Select Cancel to close the Choose Bean dialog.<BR>
+</span><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2 on test2 project 
+and select Properties. &nbsp;Go to the Java Build Path page, and the Projects tab.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Check test1 and press 
+ok.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that MyFrame 
+refreshes correctly when the build path updates.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">In MyFrame, press the 
+Choose Bean button on the palette and type My</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that both 
+MyFrame and MyPanel is listed.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select MyPanel and drop 
+it on MyFrame.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that MyPanel 
+shows up correctly on MyFrame</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to the MyPanel 
+editor</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the background 
+color to red.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Save the file.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch back to MyFrame</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-size: 10.0pt; font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that &nbsp;MyFrame 
+refreshes and displays the new color correctly.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Class rename</span></b>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2 on the MyPanel.java 
+file in the Navigator View and select Refactor-&gt;Rename.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the name of the 
+class to MyJPanel</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+source changes are reflected in both MyJPanel and MyFrame.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the remote 
+VMs for both MyJPanel and MyFrame are reloaded properly</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Package rename</span></b>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2 on package &quot;hi&quot; and 
+select Refactor-&gt;Rename</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the name of the 
+package to &quot;hello&quot;</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+source changes are reflected in both MyJPanel and MyFrame.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the remote 
+VMs for both MyJPanel and MyFrame are reloaded properly</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Project rename</span></b>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2 on project test1 
+and select Refactor-&gt;Rename</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the name of the 
+project test11</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+source changes are reflected in both MyJPanel and MyFrame.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the remote 
+VMs for both MyJPanel and MyFrame are reloaded properly</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Project move</span></b>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Create new Java project 
+test3</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2 on test2 project 
+and select Properties. &nbsp;Go to the Java Build Path page, and the Projects tab.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Check test3 and press 
+ok.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2 on package &quot;hello&quot; 
+and select Refactor-&gt;Move</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select project test3</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the remote 
+VMs for both MyJPanel and MyFrame are reloaded properly</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Causing / Repairing 
+Compilation errors</span></b> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">In the source of 
+MyJPanel, add the line </span><tt style="font-family: Courier New">
+<span style="font-size: 10.0pt">import a.b.c; </span></tt>
+<span style="font-size: 10.0pt; font-family: sans-serif">to the bottom of the 
+import statements.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Save the file, creating 
+an error.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to MyFrame</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that MyFrame 
+displays a red X on the Beans View for MyJPanel, but displays otherwise</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Return to MyJPanel and 
+remove the bogus import and save.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to MyFrame</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span><span style="font-family: sans-serif">
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that MyFrame 
+returns to displaying properly.</span></p>
+
+</body>
+
+</html>

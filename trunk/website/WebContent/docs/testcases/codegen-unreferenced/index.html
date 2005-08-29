@@ -1,0 +1,678 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=windows-1252">
+  <title>Test codegen's unreferenced bean removal mechanism</title>
+  <style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+  </style>
+</head>
+<body>
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif;"><font
+ size="3">
+Procedure</font></span></u></b> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">This document
+tests codegen's removal of unreferenced beans and also tests putting
+beans on the freeform.<br>
+</span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"><br>
+Codegen currently models <span style="font-style: italic;">every</span>
+bean. After decoding the document it removes <span
+ style="font-style: italic;">unreferenced beans.</span><br>
+</span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"></span></p>
+<table style="width: 50%; text-align: left;" border="1" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><i>Referenced</i> beanParts are
+those which:
+      <ol>
+        <li> Have <code>modelled=true</code> in the overrides <b>or</b>
+is <code>this</code> bean. </li>
+        <li> Have <code>modelled=false</code> in the overrides but has
+a <code>//@jve:decl-index=0</code> for the field/variable </li>
+        <li> Have <code>modelled=false</code>, but are referenced by
+BeanParts in 1. or 2. <i>(parent-child or property relationships)</i> </li>
+        <li> Have <code>modelled=false</code>, but are referenced by
+BeanParts in 3. <i>(parent-child or property relationships)</i> </li>
+      </ol>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"><br>
+Also this tests the mechanism which determines which beans are put on
+the freeform<br>
+</span></p>
+<table style="width: 50%; text-align: left;" border="1" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre id="comment_text_1">if(modelled){<br>    if(container==null){<br>         if(GLOBAL){<br>              (put on FF)<br>         }else{<br>              if("visual-constraint"){ <br>                   (put on FF)<br>              }<br>         }<br>    }<br>}else{<br>    if(referenced){<br>         if("visual-constraint"){<br>              (put on FF)<br>         }<br>    }<br>}</pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"><br>
+</span></p>
+<p class="MsoNormal"><br>
+<span style="font-family: sans-serif;"><u><b><font size="3">Setup</font></b></u></span></p>
+<span style="font-family: times new roman;">Import </span><a
+ href="../test-zips/UnreferencedTests.zip">UnreferencedTests.zip</a><span
+ style="font-family: times new roman;"> into a project so that the
+packages <span style="font-style: italic;">override_removal</span>, <span
+ style="font-style: italic;">override_removal_swt</span> and <span
+ style="font-style: italic;">test.me</span> are in the projects root.<br>
+Perform a <span style="font-style: italic;">Project&gt;Clean all</span>
+to remove any caches.<br>
+<br>
+</span>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"></span> <b><span
+ style="font-family: sans-serif;">References tests</span></b>
+<br>
+</p>
+<p class="MsoNormal"><br>
+</p>
+<p class="MsoNormal"><span style="font-weight: bold;">Test 1<br>
+</span>Open the file <span style="font-style: italic;">test.me.Test1.java
+</span>in the Visual Editor<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+file opens and no <span style="font-style: italic;">CustomBook</span>
+beans are on the FF <br>
+Select the first button and uncomment the line <span
+ style="font-style: italic;">//bookButton.setBook(getBook());</span><br>
+</span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+<span style="font-style: italic;">book</span> bean is on the freeform<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+buttons text changes to <span style="font-style: italic;">Book set:....</span></span><br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+<span style="font-style: italic;">book</span> property of the button is
+set and its <span style="font-style: italic;">author</span> property
+is "Book author"</span><br>
+</p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;">Select the second
+button and uncomment the line <span style="font-style: italic;">//bookButton1.setBook(book1);<br>
+</span></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+<span style="font-style: italic;">book1</span> bean is on the freeform</span><br>
+</p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+buttons text changes to <span style="font-style: italic;">Book set:....</span></span><br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+<span style="font-style: italic;">book</span> property of the button is
+set and its <span style="font-style: italic;">author</span> property
+is "Book ONE author"</span><br>
+</p>
+<p class="MsoNormal">Save and close the editor.<br>
+</p>
+<p class="MsoNormal">Reopen the file again</p>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+after all the load, the file is what it was saved as<br>
+In source update the size of one of the buttons : <span
+ style="font-style: italic;">bookButton.setSize(193, 44);</span><br>
+</span></p>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+UI is updated with the correct size and other components are not
+effected<br>
+</span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"><br>
+</span></p>
+<span style="font-size: 10pt; font-family: sans-serif;"><br>
+<br>
+</span><span style="font-weight: bold;">Test 2<br>
+</span>Open the file <span style="font-style: italic;">test.me.Test2.java
+</span>in the Visual Editor<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+file opens and the button's text is set<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+two <span style="font-style: italic;">CustomBean</span>s are visible
+on the freeform</span><br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the <span
+ style="font-style: italic;">customBook</span> bean comment the line <span
+ style="font-style: italic;">customBook.setSubBook(getCustomBook1());</span><br>
+</span>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that <span
+ style="font-style: italic;">customBook1</span> is removed from the FF</span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;">Now uncomment the
+commented line <br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that <span
+ style="font-style: italic;">customBook1</span> is back on the FF<br>
+</span><span style="font-size: 10pt; font-family: sans-serif;"><span
+ style="font-style: italic;"></span>Do a <span
+ style="font-style: italic;">Reload</span>&nbsp; by hitting the <span
+ style="font-style: italic;">pause</span> button<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+visuals stay the same</span><br>
+</p>
+<p class="MsoNormal">Save and close the editor.<br>
+</p>
+<p class="MsoNormal">Reopen the file again</p>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+after all the load, the file is what it was saved as<br>
+<span style="font-style: italic;"></span>Select the button and comment
+the line <span style="font-style: italic;">bookButton.setBook(getCustomBook());</span><br>
+</span></p>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+both <span style="font-style: italic;">CustomBook</span>s are removed
+from the FF<br>
+</span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;">Now uncomment the
+commented line <br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+both <span style="font-style: italic;">custombook</span>s are back on
+FF</span></p>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that </span><span
+ style="font-style: italic;">book</span> property of button is <span
+ style="font-style: italic;">customBook</span>. Expand it and <b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b>
+that&nbsp; its <span style="font-style: italic;">book</span> property
+is <span style="font-style: italic;">customBook1</span> <span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span><br>
+<span style="font-size: 10pt; font-family: sans-serif;"></span><span
+ style="font-size: 10pt; font-family: sans-serif;"><span
+ style="font-style: italic;"></span></span></p>
+Open the file <a href="Test2_scenario1.txt">Test2_scenario1.txt</a>
+and copy its contents into the clipboard<br>
+Paste the content into the source of <span style="font-style: italic;">Test2.java</span>
+while VE is open<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+both <span style="font-style: italic;">custombook</span>s are still on
+FF</span>
+<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that </span><span
+ style="font-style: italic;">book</span> property of button is <span
+ style="font-style: italic;">customBook1</span>. Expand it and <b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b>
+that&nbsp; its <span style="font-style: italic;">book</span> property
+is <span style="font-style: italic;">customBook</span><br>
+<br>
+<br>
+<span style="font-weight: bold;">Test 3<br>
+</span>Open the file <span style="font-style: italic;">test.me.Test3_Primitives.java
+</span>in the Visual Editor<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+file opens and the button's text is empty<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"><span
+ style="font-style: italic;"><span style="font-style: italic;"></span></span>Uncomment
+the line <span style="font-style: italic;">//jButton.setText(title);</span><br>
+</span>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+buttons text is set to <span style="font-style: italic;">Button title</span>.<span
+ style="text-decoration: underline;"><span style="font-style: italic;"></span></span><span
+ style="font-style: italic;"><span style="text-decoration: underline;"><span
+ style="font-style: italic;"><span style="text-decoration: underline;"><span
+ style="text-decoration: underline;"></span></span></span></span></span></span></p>
+<span style="font-size: 10pt; font-family: sans-serif;">Now change the
+text for the string to something different : <span
+ style="font-style: italic;">title = "New Button title";</span><br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that <span
+ style="font-style: italic;"><span style="font-style: italic;"></span></span>buttons
+text is updated properly<br>
+</span>
+<p class="MsoNormal">Save and close the editor.<br>
+</p>
+<p class="MsoNormal">Reopen the file again</p>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+after all the load, the file is what it was saved as<br>
+<span style="font-style: italic;"></span></span><br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;"></span>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><span
+ style="font-weight: bold;">Test 4</span><br>
+Open the file <span style="font-style: italic;">test.me.Test4_Events.java
+</span>in the Visual Editor<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+file opens and the button's text is empty<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"><span
+ style="font-style: italic;"><span style="font-style: italic;"></span></span>Uncomment
+the line <span style="font-style: italic;">//bookButton.setBook(getCustomBook());</span><br>
+</span>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+buttons text is updated<br>
+</span><span style="font-size: 10pt; font-family: sans-serif;"></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that <span
+ style="font-style: italic;">customBook</span> is on the FF with an
+event added to it<br>
+</span></p>
+<span style="font-size: 10pt; font-family: sans-serif;"><span
+ style="font-style: italic;"><span style="font-style: italic;"></span></span>Select
+the event and comment the line <span style="font-style: italic;">System.out.println("authorChanged()");</span><br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that <span
+ style="font-style: italic;"><span style="font-style: italic;"></span></span>the
+event disappears from the Java beans view<br>
+</span>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;">Now uncomment the
+commented line <br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+event is back</span></p>
+<p class="MsoNormal">Save and close the editor.<br>
+</p>
+<p class="MsoNormal">Reopen the file again</p>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+after all the load, the file is what it was saved as<br>
+<span style="font-style: italic;"></span></span><br>
+<br>
+<span style="font-weight: bold;">Test 5</span> <br>
+Open the file <span style="font-style: italic;">test.me.Test5_Formlayout.java
+</span>in the Visual Editor<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+there is a textfield in the upper left and a button on the bottom right
+of the composite<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"><span
+ style="font-style: italic;"><span style="font-style: italic;"></span></span></span>Change
+some values in FormData statements like <span
+ style="font-style: italic;">data1.left = new FormAttachment(11, 12);</span><br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+UI is updated appropriately and the PS shows the correct values<br>
+</span>
+<p class="MsoNormal">Save and close the editor.<br>
+</p>
+<p class="MsoNormal">Reopen the file again</p>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+after all the load, the file is what it was saved as<br>
+<span style="font-style: italic;"></span></span><span
+ style="font-size: 10pt; font-family: sans-serif;"><span
+ style="font-weight: bold;"></span><br>
+<br>
+</span><br>
+<span style="font-weight: bold;">Test 6</span> <br>
+Open the file <span style="font-style: italic;">test.me.Test6_Unmodelled_Unref.java
+</span>in the Visual Editor<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+button text is not set<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+two beans - <span style="font-style: italic;">customBook4</span> and <span
+ style="font-style: italic;">localCustomBook5 </span>are on the
+freeform</span><br>
+<span style="font-style: italic;"><span style="font-style: italic;"></span></span>Select
+the button and select the <span style="font-style: italic;">book</span>
+property in the PS. <br>
+Drop down the combo to see the list of appropriate instances<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that <span
+ style="font-style: italic;">customBook2</span> and <span
+ style="font-style: italic;">customBook4</span> are in that list
+(because they have decl-index=0)<br>
+[<span style="font-style: italic;">Defect <a
+ href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=103500">103500 </a>has
+been opened to track why the same is not happening with local
+variables] </span><br>
+Go to the source and uncomment line <span style="font-style: italic;">//bookButton.setBook(customBook);&nbsp;
+<br>
+</span></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+button's text is changed<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+list of books in the propertysheet's <span style="font-style: italic;">book</span>
+property includes <span style="font-style: italic;">customBook</span> <br>
+Replace <span style="font-style: italic;">xxxx</span> in </span><span
+ style="font-size: 10pt; font-family: sans-serif;"><span
+ style="font-style: italic;">bookButton.setBook(xxxx) </span></span><span
+ style="font-size: 10pt; font-family: sans-serif;">with each of field
+and local variables <span style="font-style: italic;">customBook[1-4]</span>
+and <span style="font-style: italic;">localCustomBook[1-5]</span><br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+button's text is changed<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+list of books in the propertysheet's <span style="font-style: italic;">book</span>
+property includes <span style="font-style: italic;">xxxx </span>[<span
+ style="font-style: italic;">customBook3 </span>and <span
+ style="font-style: italic;">localCustomBook4</span> should appear on
+FF]<br>
+</span>
+<p class="MsoNormal">Save and close the editor.<br>
+</p>
+<p class="MsoNormal">Reopen the file again</p>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+after all the load, the file is what it was saved as<br>
+<span style="font-style: italic;"></span></span><span
+ style="font-size: 10pt; font-family: sans-serif;"><span
+ style="font-weight: bold;"></span></span><br>
+<span style="font-weight: bold;">Test 7</span><br>
+Open the file <span style="font-style: italic;">test.me.Test4_LocalVar.java
+</span>in the Visual Editor<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+both buttons have text set<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+non-visuals on freeform are <span style="font-style: italic;">unusedVisualBookField</span>,
+<span style="font-style: italic;">usedFieldBook</span> and <span
+ style="font-style: italic;">unusedVisualBookLocalVar</span></span><br>
+<span style="font-size: 10pt; font-family: sans-serif;"><span
+ style="font-style: italic;"><span style="font-style: italic;"></span></span>Update
+the size on one of the buttons in the source <span
+ style="font-style: italic;">bookButton1.setSize(new
+java.awt.Dimension(253,37));</span><br>
+</span>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+button in UI is updated and all other beans stay the same<br>
+</span><span style="font-size: 10pt; font-family: sans-serif;"></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b>Save
+and close the editor.<br>
+</p>
+<p class="MsoNormal">Reopen the file again</p>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that
+after all the load, the file is what it was saved as<br>
+<br>
+<br>
+</span>
+<p><big><b><span style="font-family: sans-serif;">Modelled tests</span></b></big></p>
+<br>
+For each of the files in packages <span style="font-style: italic;">override_removal</span>
+, <span style="font-style: italic;">override_removal_swt</span> do the
+following<br>
+<ul>
+  <li>Open the file in VE</li>
+  <li><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"> </span><span
+ style="font-size: 10pt; font-family: sans-serif;">that
+the visual is as shown in corresponding image (if freeform image is
+shown, no other beans should be on freeform)<br>
+    </span></li>
+  <li>Close and reopen the file</li>
+  <li><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"> </span><span
+ style="font-size: 10pt; font-family: sans-serif;">that
+the visual still remains the same</span></li>
+  <li><span style="font-size: 10pt; font-family: sans-serif;">If
+possible please make some changes in source to kick snippet update</span></li>
+  <li><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"> </span><span
+ style="font-size: 10pt; font-family: sans-serif;">that the visuals
+update appropriately<br>
+    </span></li>
+</ul>
+<span style="font-style: italic;">override_removal_swt.</span>ColorTest.java<br>
+<img alt="" src="images/swtSP32-20050712-153253.gif"
+ style="width: 303px; height: 203px;"><br>
+<br>
+<span style="font-style: italic;">override_removal_swt.</span>FontTest.java<br>
+<img alt="" src="images/swtSP32-20050712-153240.gif"
+ style="width: 302px; height: 203px;"><br>
+<br>
+<span style="font-style: italic;">override_removal_swt.</span>GirdLayout_Griddata_Test.java<br>
+<img alt="" src="images/swtSP32-20050712-153206.gif"
+ style="width: 304px; height: 201px;"><br>
+<br>
+<span style="font-style: italic;">override_removal_swt.</span>Layout_Test.java<br>
+<img alt="" src="images/swtSP32-20050712-153143.gif"
+ style="width: 418px; height: 23px;"><br>
+<br>
+<span style="font-style: italic;">override_removal_swt.</span>Point_Rectangle_Test.java<br>
+<img alt="" src="images/swtSP32-20050712-153125.gif"
+ style="width: 303px; height: 203px;"><br>
+<br>
+<span style="font-style: italic;">override_removal_swt.</span>RowLayout_RowData_Test.java<br>
+<img alt="" src="images/swtSP32-20050712-153055.gif"
+ style="width: 303px; height: 203px;"><br>
+<br>
+<span style="font-style: italic;">override_removal_swt.</span>Test_AbsCoAdDH_SWT.java<br>
+<img alt="" src="images/swtSP32-20050712-153043.gif"
+ style="width: 263px; height: 185px;"><br>
+<br>
+<br>
+<span style="font-weight: bold;">Swing/AWT</span><br>
+<br>
+<span style="font-style: italic;">override_removal.BorderLayoutTest.java<br>
+<img alt="" src="images/imagesSP32-20050712-151236.gif"
+ style="width: 304px; height: 201px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">BoxLayoutTest.java<br>
+<img alt="" src="images/imagesSP32-20050712-151228.gif"
+ style="width: 305px; height: 204px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">CardLayoutTest.java<br>
+<img alt="" src="images/imagesSP32-20050712-151218.gif"
+ style="width: 303px; height: 203px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">CheckboxGroupTest.java<br>
+<img alt="" src="images/imagesSP32-20050712-151201.gif"
+ style="width: 315px; height: 257px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">ColorTest.java<br>
+<img alt="" src="images/imagesSP32-20050712-151134.gif"
+ style="width: 301px; height: 202px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">CursorTest.java<br>
+<img alt="" src="images/imagesSP32-20050712-151111.gif" style=""><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">Dimension_Insets_Test.java<br>
+<img alt="" src="images/imagesSP32-20050712-150511.gif"
+ style="width: 431px; height: 306px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">FlowLayoutTest.java<br>
+<img alt="" src="images/imagesSP32-20050712-151042.gif"
+ style="width: 306px; height: 203px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">FontTest.java<br>
+<img alt="" src="images/imagesSP32-20050712-151030.gif"
+ style="width: 305px; height: 205px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">GridBag_Layout_Constraints_Test.java<br>
+<img alt="" src="images/imagesSP32-20050712-151020.gif"
+ style="width: 303px; height: 202px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">Image_ImageIcon_Test.java<br>
+<img alt="" src="images/imagesSP32-20050712-151008.gif"
+ style="width: 301px; height: 202px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">KeystrokeTest.java<br>
+<img alt="" src="images/imagesSP32-20050712-150936.gif"
+ style="width: 411px; height: 66px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">Locale_Test.java<br>
+<img alt="" src="images/imagesSP32-20050712-150859.gif"
+ style="width: 393px; height: 62px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">MenuItemTest.java<br>
+<img alt="" src="images/swtSP32-20050712-172503.gif"
+ style="width: 189px; height: 113px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">Point_Rectangle_Test.java<br>
+<img alt="" src="images/imagesSP32-20050712-150802.gif"
+ style="width: 306px; height: 243px;"><br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">Table_List_ModelsTest.java<br>
+<img alt="" src="images/imagesSP32-20050712-150743.gif"
+ style="width: 140px; height: 138px;"><br>
+<br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">TableColumnTest.java<br>
+<img alt="" src="images/imagesSP32-20050712-150732.gif"
+ style="width: 188px; height: 83px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">Test_AbsCoAdDH_Swing.java<br>
+<img alt="" src="images/imagesSP32-20050712-150525.gif"
+ style="width: 301px; height: 202px;"><br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">Test_ChReDH_CoAdDH.java<br>
+<img alt="" src="images/imagesSP32-20050712-150511.gif"
+ style="width: 431px; height: 306px;"><br>
+<br>
+<br>
+</span><span style="font-style: italic;">override_removal.</span><span
+ style="font-style: italic;">TitledBorder_Test.java<br>
+<img alt="" src="images/imagesSP32-20050712-150457.gif"
+ style="width: 306px; height: 204px;"><br>
+</span>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"></span></p>
+<span style="font-family: &quot;times new roman&quot;;"></span>
+</body>
+</html>

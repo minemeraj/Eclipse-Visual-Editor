@@ -1,0 +1,214 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test the parsing and modeling of Style 2 and Style 3 events</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+<!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p class="MsoNormal">
+<b><u><span style="font-family: sans-serif"><font size="3">Procedure</font></span></u></b>
+<br>
+<br>
+<b><span style="font-family: sans-serif">Visual Editor Style 2 &amp; 3 Events Test</span></b>
+<br>
+<br>
+<b><span style="font-family: sans-serif; text-decoration: underline">
+<font size="3">Setup</font></span></b> </p>
+<p class="MsoNormal"><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Import the jar file 
+called <a href="../test-zips/events-examples.zip">events-examples.zip</a> into an 
+Eclipse project.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Style 2</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open 
+CustomerInfoS2.java in package </span>
+<span style="font-size: 10.0pt; font-family: Courier New">
+com.ibm.ivj.examples.vc.customerinfo</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the events 
+are parsed and displayed properly on the beans view in both basic and expert 
+modes.</span> <br>
+<img border=0 width=413 height=387
+src="image001.gif" v:shapes="_x0000_s1025"><br>
+<br>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select each of the 
+callbacks</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the source 
+is driven to the if statement in the shared event class</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to expert mode</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select each of the 
+listener classes</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the source 
+is driven to the place where the listener is registered with the bean.</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Delete an event in both 
+basic and expert modes</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the if block 
+is removed for that event (note that the inner class will remain with a skeleton 
+of its implements)</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Delete an event class 
+in the expert mode</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the listener 
+registration with the bean is removed</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open 
+AmortizationS2.java in package </span>
+<span style="font-size: 10.0pt; font-family: Courier New">
+com.ibm.ivj.examples.vc.swing.mortgageamortizer</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Repeat the above steps 
+with this class.</span> <br>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open the </span>
+<span style="font-size: 10.0pt; font-family: Courier New">
+com.ibm.ivj.examples.vc.swing.mortgageamortizer.AmortizationS2 class,</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the events 
+are parsed and displayed properly </span>
+<span style="font-size: 10.0pt; font-family: Courier New">(note the property 
+changed events as well)</span> <br>
+<img border=0 width=334 height=849
+src="image002.gif" v:shapes="_x0000_s1026"><br>
+<br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the source 
+is driven</span><span style="font-size: 10.0pt; font-family: Courier New"> to 
+the properties (principalAmount, amortizationPeriod .... timesPerYear) events.</span>
+<br>
+<span style="font-size: 10.0pt; font-family: Courier New">Delete each property</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">that the 
+corresponding source block (if statement) is removed.</span> <br>
+<br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Style 3</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open 
+CustomerInfoS3.java in package </span>
+<span style="font-size: 10.0pt; font-family: Courier New">
+com.ibm.ivj.examples.vc.customerinfo</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the events 
+are parsed and displayed properly on the beans view in both basic and expert 
+modes.</span> <br>
+<br>
+<img border=0 width=259 height=451
+src="image003.gif" v:shapes="_x0000_s1027"><br>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select each of the 
+events.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the source 
+is driven to the event method declaration in the inner class</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to expert mode</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select each of the 
+events classes</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the source 
+is driven to where the event class is declared and registered with the bean</span>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to basic mode</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Delete an event</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the whole 
+event class is removed</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Revert the file to 
+saved state.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Switch to expert mode</span>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Delete an event in an 
+adapter</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the entire 
+method within the adapter is removed</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Delete an event inside 
+a listener</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the body of 
+the listener method is removed</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Revert the file to 
+saved state</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Delete an adapter class</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the entire 
+adapter class is removed</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Delete a listener class</span>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the entire 
+listener class is removed</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Open 
+AmortizationS3.java in package </span>
+<span style="font-size: 10.0pt; font-family: Courier New">
+com.ibm.ivj.examples.vc.swing.mortgageamortizer</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Repeat the above steps 
+with this class.</span> <br>
+<br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif">Drag/Drop Events in 
+the Beans viewer</span></b> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">In the Beans Viewer, 
+drag/drop an event to a different location as if to move it before another 
+event.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Note: this action is 
+not allowed and normally you would see a not sign for the cursor. The is a bug 
+in GEF and a bugzilla defect opened to track this.</span> <br>
+<b><span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify
+</span></b><span style="font-size: 10.0pt; font-family: sans-serif">the event 
+doesn't move and their are no changes to the source code.</span></p>
+
+</body>
+
+</html>

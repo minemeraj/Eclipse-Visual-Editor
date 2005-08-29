@@ -1,0 +1,700 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>SWT Layout Test Case for NULL</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>IBM_User</o:Author>
+  <o:Template>Normal</o:Template>
+  <o:LastAuthor>JStinton</o:LastAuthor>
+  <o:Revision>19</o:Revision>
+  <o:TotalTime>332</o:TotalTime>
+  <o:Created>2004-06-30T08:01:00Z</o:Created>
+  <o:LastSaved>2005-07-28T18:03:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>1341</o:Words>
+  <o:Characters>7645</o:Characters>
+  <o:Company>IBM</o:Company>
+  <o:Lines>63</o:Lines>
+  <o:Paragraphs>17</o:Paragraphs>
+  <o:CharactersWithSpaces>8969</o:CharactersWithSpaces>
+  <o:Version>10.6735</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:ActiveWritingStyle Lang="EN-IE" VendorID="64" DLLVersion="131077"
+   NLCheck="1">1</w:ActiveWritingStyle>
+  <w:ActiveWritingStyle Lang="EN-GB" VendorID="64" DLLVersion="131077"
+   NLCheck="1">1</w:ActiveWritingStyle>
+  <w:ActiveWritingStyle Lang="EN-IE" VendorID="64" DLLVersion="131078"
+   NLCheck="1">1</w:ActiveWritingStyle>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:1627421319 -2147483648 8 0 66047 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:Tahoma;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Arial;}
+h1
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	font-size:16.0pt;
+	font-family:Arial;
+	mso-font-kerning:16.0pt;}
+h2
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:2;
+	font-size:14.0pt;
+	font-family:Arial;
+	font-style:italic;}
+h3
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:3;
+	font-size:13.0pt;
+	font-family:Arial;}
+p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:6.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:Tahoma;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Arial;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:901599112;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1038250994 403243009 403243011 403243013 403243009 403243011 403243013 403243009 403243011 403243013;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l0:level2
+	{mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level3
+	{mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level5
+	{mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level6
+	{mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level8
+	{mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level9
+	{mso-level-tab-stop:4.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]-->
+</head>
+
+<body lang=EN-US style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<h1><span lang=EN-IE style='mso-ansi-language:EN-IE'>1.0 Procedure:<o:p></o:p></span></h1>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>This scenario will test out the features and behaviour of the null
+layout manager in a java project with the SWT libraries added. <o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<h1><span lang=EN-IE style='mso-ansi-language:EN-IE'>2.0 Setup:<o:p></o:p></span></h1>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>In a Java Project with the SWT library added, create a new Visual Class.
+<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>On to the canvas, drag and drop a Shell from the SWT drawer on the
+palette.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Then go to the Properties view and <b style='mso-bidi-font-weight:normal'>verify</b>
+that the default Layout for the Shell is ‘Null’.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=836 height=602 id="_x0000_i1025" src="images/setup01.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'>&nbsp;<o:p></o:p></span></p>
+
+<h1><span lang=EN-IE style='mso-ansi-language:EN-IE'>3.0 Basic Canvas
+Manipulation:<o:p></o:p></span></h1>
+
+<h3 style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo2;
+tab-stops:list .5in'><![if !supportLists]><span lang=EN-IE style='font-family:
+Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
+EN-IE;font-weight:normal;mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-IE style='mso-ansi-language:EN-IE'>Drawing
+SWT components on a Null Layout region:<o:p></o:p></span></h3>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>In turn draw(select, size and drop) a Button, a <span class=SpellE>CheckBox</span>,
+a <span class=SpellE>RadioButton</span>, Text, <span class=SpellE>TextArea</span>,
+a Label, a Combo, a Progress Bar and a Slider on to the Shell.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=548 height=446 id="_x0000_i1026" src="images/SWTdraw01.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><b style='mso-bidi-font-weight:
+normal'><span lang=EN-IE style='mso-ansi-language:EN-IE'>Verify</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> that the components are drawn to
+the size as selected.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>In the source view, <b style='mso-bidi-font-weight:normal'>verify</b>
+for each component that “<span class=SpellE>org.eclipse.swt.graphics.Rectangle</span>”
+is used to set the parameter for Bounds.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>And <b style='mso-bidi-font-weight:normal'>verity</b> that this bounds
+are the same in the Properties view.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><b style='mso-bidi-font-weight:
+normal'><span lang=EN-IE style='mso-ansi-language:EN-IE'>Verify</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> that the size and location of each
+component can be changed on the Shell using the mouse.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><b style='mso-bidi-font-weight:
+normal'><span lang=EN-IE style='mso-ansi-language:EN-IE'>Verify</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> that you can change the bounds in
+the source, and these changes are reflected in the location and size of the
+component on the Shell.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><b style='mso-bidi-font-weight:
+normal'><span lang=EN-IE style='mso-ansi-language:EN-IE'><img width=645
+height=410 id="_x0000_i1027" src="images/SWTdraw02.jpg"><o:p></o:p></span></b></p>
+
+<p class=MsoNormal style='margin-left:.25in'><b style='mso-bidi-font-weight:
+normal'><span lang=EN-IE style='mso-ansi-language:EN-IE'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Also, <b style='mso-bidi-font-weight:normal'>verify</b> that by changing
+these values that this is also <span class=SpellE>refected</span> on the Shell.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><b style='mso-bidi-font-weight:
+normal'><span lang=EN-IE style='mso-ansi-language:EN-IE'>Verify</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> that a SWT component <u>cannot</u>
+be dropped on to the free form.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<h3 style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo2;
+tab-stops:list .5in'><![if !supportLists]><span lang=EN-IE style='font-family:
+Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
+EN-IE;font-weight:normal;mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-IE style='mso-ansi-language:EN-IE'>Using
+the Marquee tool:<o:p></o:p></span></h3>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Using the Marquee tool, <b style='mso-bidi-font-weight:normal'>verify</b>
+that all of the SWT components can be selected.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=533 height=321 id="_x0000_i1028" src="images/Marquee.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><b style='mso-bidi-font-weight:
+normal'><span lang=EN-IE style='mso-ansi-language:EN-IE'>Verify</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> that most of the components are
+surrounded by white selection marks, except one which should be surrounded by
+black section marks. The black selection marks indicate that this component was
+the last selected.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><b style='mso-bidi-font-weight:
+normal'><span lang=EN-IE style='mso-ansi-language:EN-IE'>Verify</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> that by resizing one of the
+components in the group that all the components get resized in sync. <o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=362 height=282 id="_x0000_i1029" src="images/Marquee01.jpg"><span
+style='mso-spacerun:yes'> </span><img width=359 height=278 id="_x0000_i1030"
+src="images/Marquee02.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Verify that the selected components can be moved.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=357 height=279 id="_x0000_i1031" src="images/Marquee03.jpg"><span
+style='mso-spacerun:yes'> </span><img width=357 height=277 id="_x0000_i1032"
+src="images/Marquee04.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<h3 style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo2;
+tab-stops:list .5in'><![if !supportLists]><span lang=EN-IE style='font-family:
+Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
+EN-IE;font-weight:normal;mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-IE style='mso-ansi-language:EN-IE'>Layout
+Customization:<o:p></o:p></span></h3>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Select just a few of the SWT components, hold the CTRL key to do this,
+on the Shell and bring up the ‘Customize Layout’ dialog.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=610 height=367 id="_x0000_i1033"
+src="images/CustomizeLayout00.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Select the </span><b style='mso-bidi-font-weight:normal'><span
+lang=EN-IE style='font-size:12.0pt;mso-ansi-language:EN-IE'>‘Align left’</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> button on the component tab, and <b
+style='mso-bidi-font-weight:normal'>verify</b> that this send all of the
+components to the left margin.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=591 height=287 id="_x0000_i1034"
+src="images/CustomizeLayout01.jpg"><span style='mso-spacerun:yes'> </span><img
+width=591 height=285 id="_x0000_i1035" src="images/CustomizeLayout02.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Undo this alignment, using <span class=SpellE>Ctrl+Z</span> or Edit –
+Undo, and <b style='mso-bidi-font-weight:normal'>verify</b> that the components
+return to their original position.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Select the </span><b style='mso-bidi-font-weight:normal'><span
+lang=EN-IE style='font-size:12.0pt;mso-ansi-language:EN-IE'>‘Align <span
+class=SpellE>center</span>’</span></b><span lang=EN-IE style='mso-ansi-language:
+EN-IE'> button on the component tab, and <b style='mso-bidi-font-weight:normal'>verify</b>
+that this send all of the components to the <span class=SpellE>center</span>
+using the component with the black selection marks as the guide.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=615 height=301 id="_x0000_i1036"
+src="images/CustomizeLayout03.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Undo this alignment, using <span class=SpellE>Ctrl+Z</span> or Edit –
+Undo, and <b style='mso-bidi-font-weight:normal'>verify</b> that the components
+return to their original position.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Still holding down the Ctrl key, select another component on the right
+hand side of the Shell. Then select the </span><b style='mso-bidi-font-weight:
+normal'><span lang=EN-IE style='font-size:12.0pt;mso-ansi-language:EN-IE'>‘Align
+Right’</span></b><span lang=EN-IE style='mso-ansi-language:EN-IE'> button.
+Verify that the component take up a right alignment.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=596 height=287 id="_x0000_i1037"
+src="images/CustomizeLayout04.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Undo this alignment, using <span class=SpellE>Ctrl+Z</span> or Edit –
+Undo, and <b style='mso-bidi-font-weight:normal'>verify</b> that the components
+return to their original position.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Select the </span><b style='mso-bidi-font-weight:normal'><span
+lang=EN-IE style='font-size:12.0pt;mso-ansi-language:EN-IE'>‘Align top’</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> button on the component tab, and <b
+style='mso-bidi-font-weight:normal'>verify</b> that this send all of the
+components to the top using the component with the black selection marks as the
+guide.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=602 height=288 id="_x0000_i1038"
+src="images/CustomizeLayout05.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Undo this alignment, using <span class=SpellE>Ctrl+Z</span> or Edit –
+Undo, and <b style='mso-bidi-font-weight:normal'>verify</b> that the components
+return to their original position.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Select the </span><b style='mso-bidi-font-weight:normal'><span
+lang=EN-IE style='font-size:12.0pt;mso-ansi-language:EN-IE'>‘Align middle’</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> button on the component tab, and <b
+style='mso-bidi-font-weight:normal'>verify</b> that this send all of the
+components to the middle using the component with the black selection marks as
+the guide.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=593 height=296 id="_x0000_i1039"
+src="images/CustomizeLayout06.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Undo this alignment, using <span class=SpellE>Ctrl+Z</span> or Edit –
+Undo, and <b style='mso-bidi-font-weight:normal'>verify</b> that the components
+return to their original position.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Select the </span><b style='mso-bidi-font-weight:normal'><span
+lang=EN-IE style='font-size:12.0pt;mso-ansi-language:EN-IE'>‘Align bottom’</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> button on the component tab, and <b
+style='mso-bidi-font-weight:normal'>verify</b> that this send all of the
+components to the bottom using the component with the black selection marks as
+the guide.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=590 height=281 id="_x0000_i1040"
+src="images/CustomizeLayout07.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Undo this alignment, using <span class=SpellE>Ctrl+Z</span> or Edit –
+Undo, and <b style='mso-bidi-font-weight:normal'>verify</b> that the components
+return to their original position.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Select the </span><b style='mso-bidi-font-weight:normal'><span
+lang=EN-IE style='font-size:12.0pt;mso-ansi-language:EN-IE'>‘Match width’</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> button on the component tab, and <b
+style='mso-bidi-font-weight:normal'>verify</b> that this resizes all of the
+components to the same width using the component with the black selection marks
+as the guide.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=591 height=282 id="_x0000_i1041"
+src="images/CustomizeLayout08.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Then select the </span><b style='mso-bidi-font-weight:normal'><span
+lang=EN-IE style='font-size:12.0pt;mso-ansi-language:EN-IE'>‘Match height’</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> button on the component tab, and <b
+style='mso-bidi-font-weight:normal'>verify</b> that this resizes all of the
+components to the same height using the component with the black selection
+marks as the guide.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=589 height=279 id="_x0000_i1042"
+src="images/CustomizeLayout09.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Undo this, using <span class=SpellE>Ctrl+Z</span> or Edit – Undo, and <b
+style='mso-bidi-font-weight:normal'>verify</b> that the components return to
+their original position.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Select the </span><b style='mso-bidi-font-weight:normal'><span
+lang=EN-IE style='font-size:12.0pt;mso-ansi-language:EN-IE'>‘Show distribution
+box’</span></b><span lang=EN-IE style='mso-ansi-language:EN-IE'> button on the
+component tab, and <b style='mso-bidi-font-weight:normal'>verify</b> that a
+blue box surrounds the selected components<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=593 height=281 id="_x0000_i1043"
+src="images/CustomizeLayout11.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Then in turn, select the </span><b style='mso-bidi-font-weight:normal'><span
+lang=EN-IE style='font-size:12.0pt;mso-ansi-language:EN-IE'>‘Distribute
+horizontally’</span></b><span lang=EN-IE style='mso-ansi-language:EN-IE'> and
+the </span><b style='mso-bidi-font-weight:normal'><span lang=EN-IE
+style='font-size:12.0pt;mso-ansi-language:EN-IE'>‘Distribute vertically’</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> buttons. <b style='mso-bidi-font-weight:
+normal'>Verify</b> that the selected components get spaced out as expected.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=589 height=279 id="_x0000_i1044"
+src="images/CustomizeLayout12.jpg"><span style='mso-spacerun:yes'> </span><img
+width=592 height=276 id="_x0000_i1045" src="images/CustomizeLayout13.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Undo this, using <span class=SpellE>Ctrl+Z</span> or Edit – Undo, and <b
+style='mso-bidi-font-weight:normal'>verify</b> that the components return to
+their original position.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<h3 style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo2;
+tab-stops:list .5in'><![if !supportLists]><span lang=EN-IE style='font-family:
+Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
+EN-IE;font-weight:normal;mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-IE style='mso-ansi-language:EN-IE'>Customize
+Layout – Layout Page:<o:p></o:p></span></h3>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Select the Shell and open the customize layout dialog.<span
+style='mso-spacerun:yes'>  </span>Select the “Layout” tab.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><!--[if gte vml 1]><v:shapetype id="_x0000_t75" coordsize="21600,21600"
+ o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f"
+ stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1049" type="#_x0000_t75" style='width:182.25pt;
+ height:211.5pt'>
+ <v:imagedata src="images/CustomizeLayoutPage.jpg" o:title="CustomizeLayoutPage"/>
+</v:shape><![endif]--><![if !vml]><img width=243 height=282
+src="images/CustomizeLayoutPage.jpg" v:shapes="_x0000_i1049"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><b style='mso-bidi-font-weight:
+normal'><span lang=EN-IE style='mso-ansi-language:EN-IE'>Verify</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> that the grid can be resized and
+that a margin can be applied to the Shell.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=366 height=287 id="_x0000_i1046" src="images/Grid00.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Turn on the “Snap to Grid” feature.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Move some of the components around and <b style='mso-bidi-font-weight:
+normal'>verify</b> that the top left corner of the rectangle ‘highlights’ and
+then ‘snaps’ to the nearest dot.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=166 height=86 id="_x0000_i1047" src="images/Grid01.jpg"><span
+style='mso-spacerun:yes'> </span><img width=163 height=89 id="_x0000_i1048"
+src="images/Grid02.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'>Turn off the “Snap to Grid” feature and <b style='mso-bidi-font-weight:
+normal'>verify</b> that a control can be moved freely.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span lang=EN-IE style='mso-ansi-language:
+EN-IE'><img width=364 height=285 id="_x0000_i1050" src="images/Grid03.jpg"><o:p></o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-IE style='mso-ansi-language:EN-IE'><o:p>&nbsp;</o:p></span></p>
+
+<h3 style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo2;
+tab-stops:list .5in'><![if !supportLists]><span lang=EN-IE style='font-family:
+Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:
+EN-IE;font-weight:normal;mso-bidi-font-weight:bold'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-IE style='mso-ansi-language:EN-IE'>Change
+to other SWT Layouts:<o:p></o:p></span></h3>
+
+<p class=MsoNormal style='margin-left:.25in'><b style='mso-bidi-font-weight:
+normal'><span lang=EN-IE style='mso-ansi-language:EN-IE'>Verify</span></b><span
+lang=EN-IE style='mso-ansi-language:EN-IE'> that the layout of the shell can be
+changed to other SWT layouts, and then <b style='mso-bidi-font-weight:normal'>verify</b>
+that this operation can be undone by selecting ‘Undo’.<o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>

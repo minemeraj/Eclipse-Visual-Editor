@@ -1,0 +1,154 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test the behaviour of the CardLayout manager</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+ li.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+</style>
+<!--[if !mso]>
+<style>
+v\:*         { behavior: url(#default#VML) }
+o\:*         { behavior: url(#default#VML) }
+.shape       { behavior: url(#default#VML) }
+</style>
+<![endif]--><!--[if gte mso 9]>
+<xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+</head>
+
+<body>
+
+<p class="MsoNormal">
+<b><u><span style="font-family: sans-serif"><font size="3">Procedure</font></span></u></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">This scenario will test 
+out the features and behavior of the CardLayout manager.</span> <br>
+<br>
+<span style="font-family: sans-serif"><u><b><font size="3">Setup</font></b></u></span></p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><span style="font-size: 10.0pt; font-family: sans-serif">
+Create a new Visual Class extending JPanel and resize it to take up 3/4ths of 
+the Canvas. &nbsp;Set the layout of the JPanel to CardLayout</span> <br>
+&nbsp;</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><b><span style="font-family: sans-serif">Basic Canvas 
+Manipulation</span></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose the JTable bean 
+on the palette and drop it on the JPanel.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the JTable is displayed properly, taking up all the space of the JPanel.</span>
+<br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the initialization method of the JTable sets the name property.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the add call on the JPanel passes in the getJTable().getName() as the constraint 
+(second parameter).</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose the JTree bean 
+on the palette and drop it on the JPanel (can not drop it on top of the &nbsp;JTable), 
+use the JavaBean viewer.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the JTree is displayed properly, taking up all the space of the JPanel, in 
+front of the JTable.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click on the JTable in 
+the Beans View.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the JTable is brought to the front.</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose the JOptionPane 
+bean on the palette and drop it between the JTable and JTree on the Beans View</span>
+<br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the JOptionPane is displayed properly, on top of all others, taking up all 
+the space of the JPanel</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Click and drag and drop 
+a bean in the Beans View to reorder the beans.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the order of the add statements are changed.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the first bean on the JPanel is shown on top</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Property Sheet</span></b> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Select the JPanel</span>
+<br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that the Layout property on the PS gives a value representing the CardLayout</span>
+<br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+there's a + to expand the sub-properties of the Layout - hgap and vgap</span>
+<br>
+<img border=0 width=241 height=48
+src="image001.jpg" v:shapes="_x0000_s1025"><br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that changing the hgap and vgap properties update the source and the canvas 
+correctly (creates space on the edge of the cards).</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the hgap and 
+vgap properties in the source (select on the given property, and make sure the 
+corresponding expression is selected in the source pane).</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the changes are reflected in the PS and on the canvas</span> <br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Change the ordering of 
+the adding of components from the source.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+the new order shows up in the Beans View and that the first component is brought 
+to the front on the canvas.</span> <br>
+<br>
+<b><span style="font-family: sans-serif">Switching from Cards that have Grids</span></b>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">Choose another JPanel 
+bean on the palette and drop it on the JPanel with a CardLayout and </span><br>
+<span style="font-size: 10.0pt; font-family: sans-serif">drop 3-4 components (e.g. JButton, 
+JCheckBox, JRadioButton, JSlider) onto it in the Beans Viewer. <BR>
+In the property sheet, 
+change the layout from a FlowLayout to a null layout.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">MB2 over the JPanel and 
+select <b>Show Grid</b>. This will display a dotted grid.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">In the Beans view, 
+select a different card.</span> <br>
+<SPAN style="font-size: 10.0pt; font-family: sans-serif; color: blue"><B>Verify</B></SPAN><span style="font-size: 10.0pt; font-family: sans-serif"> 
+that switching to another card <U>hides</U> the grid.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif">From the Beans view, 
+select the JPanel with a  null layout again. Note... &nbsp;the grid does NOT redisplay 
+until you select <b>Show Grid</b> again. This is WAD.</span> <br>
+<span style="font-size: 10.0pt; font-family: sans-serif"></span><br>
+<b><span style="font-family: sans-serif">Conversions to CardLayout</span></b>
+<br>
+<br>
+<span style="font-size: 10.0pt; font-family: sans-serif">For each layout other 
+than CardLayout</span> </p>
+<ul type="disc" style="margin-bottom: 0in">
+  <li class="MsoNormal">
+  <span style="font-size: 10.0pt; font-family: sans-serif">Change the layout of 
+  the JPanel to the testing layout</span> </li>
+  <li class="MsoNormal">
+  <span style="font-size: 10.0pt; font-family: sans-serif">Change the layout of 
+  the JPanel back to CardLayout</span> </li>
+  <li class="MsoNormal"><b>
+  <span style="font-size: 10.0pt; font-family: sans-serif; color: blue">Verify</span></b><span style="font-size: 10.0pt; font-family: sans-serif"> 
+  that the first component resizes to take up the entire JPanel </span></li>
+</ul>
+
+</body>
+
+</html>

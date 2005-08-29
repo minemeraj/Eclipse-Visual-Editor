@@ -1,0 +1,436 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=us-ascii">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>(JVELAYT08) Test the behavior of the SWT GridLayout</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>JStinton</o:Author>
+  <o:Template>Normal</o:Template>
+  <o:LastAuthor>JStinton</o:LastAuthor>
+  <o:Revision>12</o:Revision>
+  <o:TotalTime>20</o:TotalTime>
+  <o:Created>2005-07-27T14:09:00Z</o:Created>
+  <o:LastSaved>2005-07-28T14:45:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>815</o:Words>
+  <o:Characters>4647</o:Characters>
+  <o:Company>IBM</o:Company>
+  <o:Lines>38</o:Lines>
+  <o:Paragraphs>10</o:Paragraphs>
+  <o:CharactersWithSpaces>5452</o:CharactersWithSpaces>
+  <o:Version>10.6735</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Helvetica;
+	panose-1:2 11 6 4 2 2 2 2 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:536902279 -2147483648 8 0 511 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h3
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:13.5pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="2050"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=EN-US link=blue vlink=blue style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<h3><u><span style='font-family:Helvetica;mso-bidi-font-family:Arial'>Procedure</span></u><span
+style='font-family:Helvetica'><o:p></o:p></span></h3>
+
+<p><span style='font-size:10.0pt;font-family:Helvetica;mso-bidi-font-family:
+Arial'>This scenario will test out the features and behavior of the SWT
+GridLayout manager.</span><span style='font-family:Helvetica;mso-bidi-font-family:
+Arial'> </span><span style='font-family:Helvetica'><o:p></o:p></span></p>
+
+<h3><span style='font-family:Helvetica;mso-bidi-font-family:Arial'>Setup</span><span
+style='font-family:Helvetica'><o:p></o:p></span></h3>
+
+<p class=MsoNormal style='margin-bottom:12.0pt'><span style='font-size:10.0pt;
+font-family:Helvetica;mso-bidi-font-family:Arial'>Add the SWT library to your
+project if it's not already there (instructions <a href="../setupSWT.html">here</a>).
+<br>
+Import <a href="SWTGrid.zip">SWTGrid.zip</a> into this Java Project.</span><span
+style='font-family:Helvetica'><o:p></o:p></span></p>
+
+<h3><span style='font-family:Helvetica'>Basic Canvas Manipulation<o:p></o:p></span></h3>
+
+<p class=MsoNormal style='margin-bottom:12.0pt'><span style='font-size:10.0pt;
+font-family:Helvetica'>Open SWTGrid.java with the Visual Editor<br>
+<b><span style='color:#3333FF'>Verify</span></b> the example displays properly
+on the canvas:<br>
+<!--[if gte vml 1]><v:shapetype id="_x0000_t75" coordsize="21600,21600" o:spt="75"
+ o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1027" type="#_x0000_t75" style='width:325.5pt;
+ height:191.25pt'>
+ <v:imagedata src="basic1.jpg" o:title="basic1"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=434 height=255
+src="basic1.jpg" v:shapes="_x0000_i1027"><![endif]><br>
+<b><br>
+</b>Select the Shell and <b><span style='color:#3333FF'>Verify</span></b> that
+the grid shows properly:<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1028" type="#_x0000_t75" style='width:329.25pt;
+ height:195.75pt'>
+ <v:imagedata src="gridon.jpg" o:title="gridon"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=439 height=261
+src="gridon.jpg" v:shapes="_x0000_i1028"><![endif]><br
+style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:12.0pt'><span style='font-size:10.0pt;
+font-family:Helvetica'>Select the Canvas and <b><span style='color:#3333FF'>Verify</span></b>
+that the grid disappears.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:12.0pt'><span style='font-size:10.0pt;
+font-family:Helvetica'>Select a Button from the palette and attempt to drop it
+on the grid. Do not drop it yet... just drag it over the grid to observe the
+different types of feedback.<br>
+The feedback is a yellow vertical bar that indicates where the dropped
+component will be inserted into the grid and whether it will insert into a row
+or create a new column.<br>
+<br>
+<b><span style='color:#3333FF'>Verify</span></b> the grid is shown as you move
+the mouse over the Shell.<br>
+<b><span style='color:#3333FF'>Verify</span></b> the grid is hidden as you move
+the mouse out from the Shell.<br>
+<br>
+For each of the scenarios below, place the cursor near where the cursor shows
+up in the image.<br>
+<b><span style='color:#3333FF'>Verify</span></b> that the feedback indicator is
+in the same position (or near to the position depending on platform
+differences) as shown in the image.<br>
+<br>
+1)<br>
+&nbsp;<!--[if gte vml 1]><v:shape id="_x0000_i1029" type="#_x0000_t75" style='width:336.75pt;
+ height:194.25pt'>
+ <v:imagedata src="gridpos1.jpg" o:title="gridpos1"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=449 height=259
+src="gridpos1.jpg" v:shapes="_x0000_i1029"><![endif]><br>
+2)<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1038" type="#_x0000_t75" style='width:328.5pt;
+ height:191.25pt'>
+ <v:imagedata src="gridpos2.jpg" o:title="gridpos2"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=438 height=255
+src="gridpos2.jpg" v:shapes="_x0000_i1038"><![endif]><br>
+3)<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1037" type="#_x0000_t75" style='width:337.5pt;
+ height:194.25pt'>
+ <v:imagedata src="gridpos3.jpg" o:title="gridpos3"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=450 height=259
+src="gridpos3.jpg" v:shapes="_x0000_i1037"><![endif]><br>
+4)<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1036" type="#_x0000_t75" style='width:328.5pt;
+ height:194.25pt'>
+ <v:imagedata src="gridpos4.jpg" o:title="gridpos4"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=438 height=259
+src="gridpos4.jpg" v:shapes="_x0000_i1036"><![endif]><br>
+5)<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1035" type="#_x0000_t75" style='width:327.75pt;
+ height:192pt'>
+ <v:imagedata src="gridpos5.jpg" o:title="gridpos5"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=437 height=256
+src="gridpos5.jpg" v:shapes="_x0000_i1035"><![endif]><br>
+6)<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1034" type="#_x0000_t75" style='width:324.75pt;
+ height:192.75pt'>
+ <v:imagedata src="gridpos6.jpg" o:title="gridpos6"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=433 height=257
+src="gridpos6.jpg" v:shapes="_x0000_i1034"><![endif]><br>
+7)<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1033" type="#_x0000_t75" style='width:336pt;
+ height:192pt'>
+ <v:imagedata src="gridpos7.jpg" o:title="gridpos7"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=448 height=256
+src="gridpos7.jpg" v:shapes="_x0000_i1033"><![endif]><br>
+8)<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1032" type="#_x0000_t75" style='width:325.5pt;
+ height:192pt'>
+ <v:imagedata src="gridpos8.jpg" o:title="gridpos8"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=434 height=256
+src="gridpos8.jpg" v:shapes="_x0000_i1032"><![endif]><br>
+9)<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1031" type="#_x0000_t75" style='width:335.25pt;
+ height:192pt'>
+ <v:imagedata src="gridpos9.jpg" o:title="gridpos9"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=447 height=256
+src="gridpos9.jpg" v:shapes="_x0000_i1031"><![endif]><br>
+10)<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1030" type="#_x0000_t75" style='width:327.75pt;
+ height:204pt'>
+ <v:imagedata src="gridpos10.jpg" o:title="gridpos10"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=437 height=272
+src="gridpos10.jpg" v:shapes="_x0000_i1030"><![endif]><br>
+<span style='mso-spacerun:yes'>&nbsp;</span><br>
+Drop a button in the each position indicated in the list below.<br>
+<b><span style='color:#3333FF'>Verify</span></b> the button is placed in the
+position indicated, the other components reflow properly, and the grid is
+redrawn to show the new grid layout.<br>
+Press <b>undo</b> to remove the button, and drop another button in the next
+position.<br>
+Run this test in the positions indicated in the images above:<br>
+1, 2, 7, 8 and 10.<br>
+<span style='mso-spacerun:yes'>&nbsp;</span><br>
+Select a control on the Shell and drag it<br>
+<b><span style='color:#3333FF'>Verify</span></b> the grid is shown<br>
+<b><span style='color:#3333FF'>Verify</span></b> the position indicator is in
+the correct place for the various drop positions.<br>
+Drop the component at some position on the grid.<br>
+<b><span style='color:#3333FF'>Verify</span></b> the component is placed in the
+position indicated, the other components reflow properly, and the grid is
+redrawn to show the new grid layout.</span><span style='font-family:Helvetica'><br>
+</span><span style='font-size:10.0pt;font-family:Helvetica'><span
+style='mso-spacerun:yes'>&nbsp;</span><br>
+Select the Shell and drag and drop it at a different position on the canvas.<br>
+<b><span style='color:#3333FF'>Verify</span></b> the grid is redrawn properly
+at the new position.<br>
+Resize the shell by dragging the corner handles.<br>
+<b><span style='color:#3333FF'>Verify</span></b> the grid is redrawn to reflect
+the new shell size.</span><span style='font-family:Helvetica'><o:p></o:p></span></p>
+
+<h3><span style='font-family:Helvetica'>Customize Layout Window<o:p></o:p></span></h3>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Helvetica'>Select
+the Shell and launch the Customize Layout Window from the Eclipse toolbar<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1039" type="#_x0000_t75" style='width:298.5pt;
+ height:51.75pt'>
+ <v:imagedata src="openCustomizeLayout.jpg" o:title="openCustomizeLayout"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=398 height=69
+src="openCustomizeLayout.jpg" v:shapes="_x0000_i1039"><![endif]><br>
+<br>
+<b><span style='color:#3333FF'>Verify</span></b> the Customize Layout window is
+shown, with the SWT Grid layout page shown in the Layout tab<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:302.25pt;
+ height:181.5pt'>
+ <v:imagedata src="customizeGridLayoutPage.jpg" o:title="customizeGridLayoutPage"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=403 height=242
+src="customizeGridLayoutPage.jpg" v:shapes="_x0000_i1025"><![endif]><br>
+<br>
+Switch to the Component tab<br>
+<b><span style='color:#3333FF'>Verify</span></b> the Component tab says no
+customization options available.<br>
+<br>
+Select a Control on the Shell on the canvas<br>
+<b><span style='color:#3333FF'>Verify</span></b> the Component tab updates to
+show the Grid component page.<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1026" type="#_x0000_t75" style='width:302.25pt;
+ height:181.5pt'>
+ <v:imagedata src="customizeGridComponentPage.jpg" o:title="customizeGridComponentPage"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=403 height=242
+src="customizeGridComponentPage.jpg" v:shapes="_x0000_i1026"><![endif]><br>
+<br>
+Click on an empty space on the graphical canvas.<br>
+<b><span style='color:#3333FF'>Verify</span></b> that both the Layout and
+Component tabs are updated to show no customization options available.<br>
+<br>
+Select a control on the Shell again.<br>
+<b><span style='color:#3333FF'>Verify</span></b> that both the Layout and
+Component tabs are updated showing the Grid pages.<br>
+<br>
+Switch to the Component tab<br>
+Select various controls on the Shell<br>
+<b><span style='color:#3333FF'>Verify</span></b>&nbsp;the Component options'
+selections and values update as the selection changes.<br>
+<br>
+Try out changing all of the Component options<br>
+<b><span style='color:#3333FF'>Verify</span></b> each change is reflected
+properly on the canvas, in the source, and on the property sheet (Expand the
+layoutData property to see changes on the property sheet)<br>
+<b><span style='color:#3333FF'>Verify</span></b> the grid is redrawn properly
+to reflect the changes made.<br>
+<br>
+Select multiple controls on the Shell (hold down Ctrl to select many, or use
+the Marquee tool)<br>
+Change some options on the Component page.<br>
+<b><span style='color:#3333FF'>Verify</span></b> that the changes are made to
+all of the selected controls.<br>
+<br>
+Switch to the Layout tab<br>
+Try out changing all of the Layout options<br>
+<b><span style='color:#3333FF'>Verify</span></b> each change is reflected
+properly on the canvas, in the source, and on the property sheet (Select the
+shell and expand the layout property to see changes on the property sheet)<br>
+<b><span style='color:#3333FF'>Verify</span></b> the grid is redrawn properly
+to reflect the changes made.<br>
+<br>
+Revert the file to undo any modifications made.</span><span style='font-family:
+Helvetica'><o:p></o:p></span></p>
+
+<h3><span style='font-family:Helvetica'>Spanning Rows and Columns<o:p></o:p></span></h3>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Helvetica'>Select
+the Text on the shell <br>
+<b><span style='color:#3333FF'>Verify</span></b> that there's a small green
+rectangle on the east and south edges of the Text.<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1043" type="#_x0000_t75" style='width:326.25pt;
+ height:193.5pt'>
+ <v:imagedata src="spanhandles1.jpg" o:title="spanhandles1"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=435 height=258
+src="spanhandles1.jpg" v:shapes="_x0000_i1043"><![endif]><br>
+<br>
+These are handles for spanning horizontally or vertically which when dragged to
+another column or row will change the <b>horizontalSpan</b> or <b>verticalSpan</b>
+values of the GridData. Move your mouse over each green rectangle... <b><span
+style='color:blue'>Verify</span></b> the east handle change to a horizontal
+cursor</span><span style='font-family:Helvetica'> <br>
+&nbsp;<!--[if gte vml 1]><v:shape id="_x0000_i1042" type="#_x0000_t75" style='width:27pt;
+ height:24.75pt'>
+ <v:imagedata src="spanhandles2.jpg" o:title="spanhandles2"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=36 height=33
+src="spanhandles2.jpg" v:shapes="_x0000_i1042"><![endif]><br>
+</span><span style='font-size:10.0pt;font-family:Helvetica'>and the south
+handle changes to a vertical cursor</span><span style='font-family:Helvetica'> <br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1041" type="#_x0000_t75" style='width:18.75pt;
+ height:29.25pt'>
+ <v:imagedata src="spanhandles3.jpg" o:title="spanhandles3"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=25 height=39
+src="spanhandles3.jpg" v:shapes="_x0000_i1041"><![endif]><br>
+<br>
+</span><span style='font-size:10.0pt;font-family:Helvetica'>Click and drag the
+south handle down.<br>
+<b><span style='color:#3333FF'>Verify</span></b> the cells below become shaded
+as the cursor moves into them.<br>
+Position the cursor over the row below, and release<b>.<br>
+<span style='color:#3333FF'>Verify</span></b> the Text expands into the new row
+created below it properly.<br>
+<!--[if gte vml 1]><v:shape id="_x0000_i1040" type="#_x0000_t75" style='width:326.25pt;
+ height:191.25pt'>
+ <v:imagedata src="spanned1.jpg" o:title="spanned1"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=435 height=255
+src="spanned1.jpg" v:shapes="_x0000_i1040"><![endif]><br>
+<br>
+Click and drag the east handle to the left, into the first column occupied by
+the Text and release<br>
+<b><span style='color:#3333FF'>Verify</span></b> the Text shrinks to span only
+one column and the other components reflow properly</span><span
+style='font-family:Helvetica'><o:p></o:p></span></p>
+
+<h3><span style='font-family:Helvetica'>Free Play<o:p></o:p></span></h3>
+
+<p class=MsoNormal style='margin-bottom:12.0pt'><span style='font-size:10.0pt;
+font-family:Helvetica'>Create a new Visual Class extending Object, and drop a
+Shell on the Canvas.&nbsp; Set the layout of the Shell to GridLayout.<br>
+Play around with dropping various components using the GridLayout<br>
+Use the Customize Layout window the property sheet, and the source to
+manipulate the GridLayout and the component's GridData.<br>
+Drop a Composite onto the Shell, set it's layout to GridData, and add more
+components to the Composite.<br>
+<b><span style='color:#3333FF'>Verify</span></b>&nbsp;the feedback, visuals,
+and behavior all act as expected of a GridLayout.<br>
+<br>
+Save and Run your creation as a Java Bean.<br>
+<b><span style='color:#3333FF'>Verify</span></b> the running class reflects the
+same visual shown on the canvas.</span><span style='font-family:Helvetica'><o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=windows-1252">
+  <title>Test the behaviour of the BoxLayout manager</title>
+  <style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+ li.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+  </style>
+  <style>
+
+
+.shape       { behavior: url(#default#VML) }
+
+  </style>
+</head>
+<body>
+<p class="MsoNormal">
+<b><u><span style="font-family: sans-serif;"><font size="3">Procedure</font></span></u></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">This scenario
+will test out the features and behavior of the BoxLayout manager.</span>
+<br>
+<br>
+<span style="font-family: sans-serif;"><u><b><font size="3">Setup</font></b></u></span><span
+ style="font-size: 10pt; font-family: sans-serif;">
+</span></p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;">
+Create a new Visual Class extending JPanel and resize it to take up
+3/4ths of the Canvas. &nbsp;Set the layout of the JPanel to
+BoxLayout(X_AXIS)</span> <br>
+<br>
+<b><span style="font-family: sans-serif;">Basic Canvas Manipulation</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Choose a
+JButton from the palette and drop it (without sizing) onto the JPanel.</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the JButton is its
+default size and positioned on the far left horizontally on the JPanel,
+and the middle vertically.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Set the text of
+the JButton to "Button" on the Property Sheet (PS)</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the
+JButton on the panel, and move the cursor around the border of the
+button</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the cursor changes
+to Move, and not Resize.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the move dots
+(corners) but not the resize dots (middle) are shown on the border of
+the button.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Choose another
+JButton from the palette and mouse to the right of the JButton on the
+panel but do not drop.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> a vertical black
+bar indicating the drop position is shown to the right of the JButton.</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Move the cursor
+to the left of the button</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the vertical black
+bar is shown to the left of the JButton. (may be hard to see with
+border of JPanel)</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Drop the
+JButton anywhere on the panel to the right of the existing button.</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the new button is
+placed directly alongside on the right of the existing button.</span>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the new
+button and set the maximumSize property to 100,100.<br>
+You may need to press the "Show Advanced Properties" button on the
+property sheet to see the maximumSize property.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the button is
+resized to its maximumSize on the canvas.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Choose a
+JTextArea from the palette and drop it to the right of the last button.</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the text area takes
+up all the remaining space on the JPanel to the right of the buttons.</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the second button
+is squished graphically back to its default width.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the
+second button and change it's preferredSize to 100,100 on the PS.</span>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the second button
+resizes to its preferred size on the canvas.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Click and drag
+the text area over the JPanel.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the vertical black
+positioning bar indicates a drop position for all areas of the JPanel.</span>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Drop the
+JTextArea between the two buttons</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the components
+rearrange properly.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">In the Beans
+View, click and drag the first JButton below the JTextArea.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the components
+rearrange properly.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;"><font
+ color="#cc33cc"><b><u>Note</u></b>: The following test is specific to
+JDK 1.3 only and is not supported in JDK 1.4</font><br>
+Click on the JPanel and change the componentOrientation property to
+RIGHT_TO_LEFT on the PS.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the components are
+reordered from right to left.</span> <br>
+<br>
+<b><span style="font-family: sans-serif;">Alignment</span></b> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Delete the
+JTextArea and drop a JLabel</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif;">Choose each
+component on the JPanel and set the alignmentY property on each to be
+1.0</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the components are
+aligned to the bottom of the JPanel.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Choose each
+component on the JPanel and set the alignmentY property on each to be
+0.0</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the components are
+aligned to the top of the JPanel.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Change the
+components alignmentY (need to toggle the advanced properties)
+properties to different values between 1.0 and 0.0.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the components are
+aligned relative to each other according to the assigned values</span> <br>
+<br>
+<b><span style="font-family: sans-serif;">Y Axis</span></b> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the
+JPanel and change the layout to BoxLayout(Y_AXIS)</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the components are
+moved to the top left corner of the JPanel.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Drag a
+component over the JPanel</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> a horizontal black
+bar indicating the drop position is shown at all possible drop
+positions.</span> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Drop a
+JTextArea on the JPanel.</span> <br>
+<span style="font-size: 10pt; font-family: sans-serif; color: blue;"><b>Verify</b></span><span
+ style="font-size: 10pt; font-family: sans-serif;"> the text area
+expands to fill the available space in the panel.</span> <br>
+<br>
+<b><span style="font-family: sans-serif;">Conversions to BoxLayout</span></b>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">For each layout
+other than BoxLayout</span> </p>
+<ul type="disc" style="margin-bottom: 0in;">
+  <li class="MsoNormal"> <span
+ style="font-size: 10pt; font-family: sans-serif;">Change the layout of
+the JPanel to the testing layout</span> </li>
+  <li class="MsoNormal"> <span
+ style="font-size: 10pt; font-family: sans-serif;">Change the layout of
+the JPanel back to both BoxLayout(X_AXIS) and BoxLayout(Y_AXIS)</span> </li>
+  <li class="MsoNormal"><b> <span
+ style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that each component
+is moved and sized properly</span></li>
+</ul>
+<p class="MsoNormal"><br>
+<b><span style="font-family: sans-serif;">Various Tests</span></b> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Open
+HorizontalBoxLayoutPage.java, VerticalBoxLayoutPage.java and
+XAlignmentBoxLayoutPage.java </span><br>
+<span style="font-size: 10pt; font-family: sans-serif;">from <a
+ href="../test-zips/swing_layoutmanagers.zip">swing_layoutmanagers.zip</a></span><br>
+<br>
+<b><span style="font-size: 10pt; font-family: sans-serif; color: blue;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> each appears
+correctly.</span> <br>
+<br>
+<img border="0" width="509" height="275" src="image001.jpg"
+ v:shapes="_x0000_s1025"><br>
+<img border="0" width="504" height="279" src="image002.jpg"
+ v:shapes="_x0000_s1026"><br>
+<img border="0" width="510" height="279" src="image003.jpg"
+ v:shapes="_x0000_s1027"></p>
+</body>
+</html>

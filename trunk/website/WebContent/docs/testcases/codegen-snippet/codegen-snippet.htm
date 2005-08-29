@@ -1,0 +1,271 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=windows-1252">
+  <title>Test source code synchronization</title>
+  <style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+-->
+  </style>
+</head>
+<body>
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif;"><font
+ size="3">
+Procedure</font></span></u></b> <br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">This test
+should test the various aspects of the snippet update process so that
+the source to UI update mechanism is stable</span><br>
+<br>
+<span style="font-family: sans-serif;"><u><b><font size="3">Setup</font></b></u></span></p>
+<p class="MsoNormal">&nbsp;</p>
+<p style="font-family: times new roman;" class="MsoNormal"><span
+ style="font-size: 10pt;">Create an RCP Mail
+sample by performing the following steps:</span><br>
+</p>
+<ul>
+  <li style="font-family: times new roman;">Using menus go through -
+File &gt; New &gt; Project... &gt;
+Plug-in Project</li>
+  <li style="font-family: times new roman;">Enter the project name (say
+TestProject) and hit Next</li>
+  <li style="font-family: times new roman;">In the <span
+ style="font-style: italic;">Rich Client Application</span>
+group select the entry <span style="font-style: italic;">Yes</span>
+and hit Next</li>
+  <li><span style="font-family: times new roman;">From the list on the
+left select the </span><span
+ style="font-style: italic; font-family: times new roman;">RCP Mail
+Template</span><span style="font-family: times new roman;"> and hit
+Finish</span><br>
+  </li>
+</ul>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"></span> <b><span
+ style="font-family: sans-serif;">RCP View snippet update test</span></b>
+<br>
+</p>
+<p class="MsoNormal"><br>
+Open the file <span style="font-style: italic;">testproject.rcp.View</span>
+in the Visual Editor<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">
+</span><span style="font-size: 10pt; font-family: sans-serif;">that the
+file opens properly and you can see the RCP Mail View </span><br>
+&nbsp;<br>
+Select the <span style="font-style: italic;">Date:</span> label in the
+UI and in the source change its <span style="font-weight: bold;">l.setText("Date:")</span>
+to <span style="font-weight: bold;">l.setText("Day/Date:")</span><br>
+<span style="font-size: 10pt; font-family: sans-serif;"></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that just that
+label has its text updated in the UI and in the Java Beans Outline view</span>
+<br>
+<br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select the
+container named <span style="font-style: italic;">banner</span> and
+change the <span style="font-style: italic;">field name</span></span>
+property to <span style="font-style: italic;">mailHeaders</span><br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that after the
+entire snippet update, the UI is back to how it used to be. The only
+change should be that the name of field is updated in the Java Beans
+outline view.</span><br>
+</p>
+<p class="MsoNormal"><br>
+<span style="font-size: 10pt; font-family: sans-serif;">Select any
+Label with the variable name <span style="font-weight: bold;">l</span>
+and change its <span style="font-style: italic;">field name</span>
+property to <span style="font-style: italic;">someLabel</span></span><br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the variable
+names for <span style="font-style: italic;">all</span> Labels with
+variable name <span style="font-weight: bold;">l</span> are changes to
+<span style="font-style: italic;">someLabel</span></span> and that the
+snippet update correctly updates the UI and the Java Beans view.<br>
+</p>
+<p class="MsoNormal"><br>
+Select the <span style="font-style: italic;">mailHeaders</span>
+composite in the UI. Go to the <span style="font-style: italic;">layout</span>
+property in the PS and change it to null.<br>
+After the change is finished hit the <span style="font-style: italic;">undo</span>
+action <span style="font-size: 10pt; font-family: sans-serif;"></span><br>
+</p>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the UI has
+returned back to its original gridlayout form.</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"><br>
+Verify</span></b><span style="font-size: 10pt; font-family: sans-serif;">
+by expanding the <span style="font-style: italic;">layout</span>
+property of the <span style="font-style: italic;">mailHeaders </span>composite,
+that all the values are as they are in the source.<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> by expanding the <span
+ style="font-style: italic;">layout</span> property of the <span
+ style="font-style: italic;">top </span>composite, that all the values
+are as they are in the source.<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b></p>
+<p class="MsoNormal"><br>
+</p>
+<p class="MsoNormal">Go to the source of the <span
+ style="font-style: italic;">mailHeaders</span> layout and change the <span
+ style="font-style: italic;">numColumns</span> value to say 3
+(layout.numColumns = 3)<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the <span
+ style="font-style: italic;">mailHeaders</span> composite now has three
+columns with components<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b>
+</p>
+<p class="MsoNormal"><br>
+</p>
+<p class="MsoNormal">Hit Undo<br>
+</p>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the UI reverts
+back to having two clumns<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b>
+</p>
+<p class="MsoNormal"><br>
+Select the <span style="font-style: italic;">top</span> composite in
+the UI. Go to the <span style="font-style: italic;">layout</span>
+property in the PS and change it to null. [This will produce compile
+problems, but thats ok for the test]<br>
+After the change is finished hit the <span style="font-style: italic;">undo</span>
+action <span style="font-size: 10pt; font-family: sans-serif;"></span><br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the UI has
+returned back to its original gridlayout form.</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"><br>
+Verify</span></b><span style="font-size: 10pt; font-family: sans-serif;">
+by expanding the <span style="font-style: italic;">layout</span>
+property of the <span style="font-style: italic;">mailHeaders </span>composite,
+that all the values are as they are in the source.<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> by expanding the <span
+ style="font-style: italic;">layout</span> property of the <span
+ style="font-style: italic;">top </span>composite, that all the values
+are as they are in the source.<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><br>
+Select the <span style="font-style: italic;">mailHeaders</span>
+composite in the UI. Go to the <span style="font-style: italic;">layout</span>
+property in the PS and keep testing switching to other layouts and
+hitting combinations of undo/redo to see if it is stable<br>
+<b><span style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the UI has
+returned back to its original gridlayout form.</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"><br>
+Verify</span></b><span style="font-size: 10pt; font-family: sans-serif;">
+by expanding the <span style="font-style: italic;">layout</span>
+property of the <span style="font-style: italic;">mailHeaders </span>composite,
+that all the values are as they are in the source.<br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> by expanding the <span
+ style="font-style: italic;">layout</span> property of the <span
+ style="font-style: italic;">top </span>composite, that all the values
+are as they are in the source.</span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"><br>
+</span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;"></span></b><span
+ style="font-weight: bold;">Other snippet tests</span><br>
+In the above project use the <span style="font-style: italic;">New
+Java Visual Class</span> wizard to create an SWT Shell (say MyShell).
+Set the layout to RowLayout.<br>
+Drop some Composites into the Shell (composite, composite1, ...)<br>
+Select the Shell and go to its method. Reorder the order of&nbsp; the
+createComposite*() methods in the source<br>
+<span style="font-weight: bold;"></span><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that the ordering
+in the source is reflected in the UI and in the Java Beans view<br>
+</span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"><br>
+Select the shell and go to the end of its method. Select the area of
+text covering its last bracket and paste in the following source:<br>
+</span></p>
+<table style="text-align: left;" border="1" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; createComposite2();<br>
+&nbsp;&nbsp;&nbsp; }<br>
+      <br>
+&nbsp;&nbsp;&nbsp; /**<br>
+&nbsp;&nbsp;&nbsp; &nbsp;* This method initializes
+composite&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; &nbsp;*<br>
+&nbsp;&nbsp;&nbsp; &nbsp;*/&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; private void createComposite2() {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Composite composite2 = new
+Composite(sShell, SWT.NONE);&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+composite2.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_RED));&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; }<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;"> that a new
+composite of red color is added at the end of the children of the
+shell. Check this in the UI and in the Java Beans view.
+</span><span style="font-size: 10pt; font-family: sans-serif;"></span></p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"><br>
+Drop a Label on the Shell so that a field label is created. Paste the
+following source in the newly created createComposite2() method<br>
+</span></p>
+<table style="text-align: left;" border="1" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+label = new Label(composite2, SWT.NONE);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; label.setText("new Label");<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;">
+that a new label with the appropriate text is created in the red
+composite
+</span><span style="font-size: 10pt; font-family: sans-serif;"></span></p>
+<span style="font-size: 10pt; font-family: sans-serif;"><br>
+Change the text in source for newly created Label : </span>
+label.setText("updated text");<br>
+<p class="MsoNormal"><b><span
+ style="font-size: 10pt; color: blue; font-family: sans-serif;">Verify</span></b><span
+ style="font-size: 10pt; font-family: sans-serif;">
+that the text is updated in the UI and Java Beans view
+</span><span style="font-size: 10pt; font-family: sans-serif;"></span></p>
+<span style="font-size: 10pt; font-family: sans-serif;"><br>
+<br>
+</span><br>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: sans-serif;"></span></p>
+<span style="font-family: &quot;times new roman&quot;;"></span>
+</body>
+</html>
