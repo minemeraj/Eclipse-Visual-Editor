@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeTypeRef.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.8 $  $Date: 2005-08-29 18:47:06 $ 
  */
 
 
@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
+import org.eclipse.ve.internal.java.codegen.java.JavaBeanModelBuilder;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.ResolvedType;
 
 
@@ -119,6 +120,8 @@ public boolean refresh(CodeTypeRef typeRef){
 	if(typeRef==null)
 		return false;
 	if(typeRef.getTypeDecl()!=null){
+		if(fdeclType!=null && fdeclType.properties()!=null && fdeclType.properties().containsKey(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY))
+			fdeclType.setProperty(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY, null); //clear old source
 		fdeclType = typeRef.getTypeDecl();
 	}
 	return true;

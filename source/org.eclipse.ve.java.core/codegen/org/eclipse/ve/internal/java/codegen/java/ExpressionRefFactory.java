@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.31 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.32 $  $Date: 2005-08-29 18:47:06 $ 
  */
 
 import java.util.Iterator;
@@ -271,7 +271,7 @@ public static CodeExpressionRef createShadowExpression(String content, int SrcOf
 	//exp.setState(exp.STATE_EXIST) ;
 	exp.clearState();
 	exp.setState(CodeExpressionRef.STATE_EXIST, true);
-	exp.setContent(new ExpressionParser(content,SrcOffset,len, b.getModel())) ;
+	exp.setContent(new ExpressionParser(content,SrcOffset,len, b.getModel().getScannerFactory())) ;
 	exp.setOffset(ExpOffset) ;
 	return exp ;
 }   

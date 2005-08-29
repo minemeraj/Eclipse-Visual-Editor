@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.60 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.61 $  $Date: 2005-08-29 18:47:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -122,6 +122,7 @@ public class BDMMerger {
 		CodeTypeRef newType = newModel.getTypeRef();
 		if(mainType!=null && newType!=null)
 			mainType.refresh(newType);
+		mainModel.setTypeDecleration(newModel.getTypeDecleration());
 		return true;
 	}
 
