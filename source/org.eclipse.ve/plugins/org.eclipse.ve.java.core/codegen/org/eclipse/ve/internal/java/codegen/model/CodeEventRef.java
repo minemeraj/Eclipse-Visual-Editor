@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.18 $  $Date: 2005-08-29 18:47:06 $ 
+ *  $Revision: 1.19 $  $Date: 2005-08-29 21:38:20 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -320,6 +320,12 @@ public void refreshFromComposition() throws CodeGenException {
 			setExprStmt(exp.getExprStmt());
 		setEventInvocation(((CodeEventRef)exp).getEventInvocation()) ;
 		super.refreshFromJOM(exp);
+	}
+
+	public void setExprStmt(Statement statement) {
+		super.setExprStmt(statement);
+		if(fDecoder!=null)
+			fDecoder.setStatement(statement);
 	}
 
 }

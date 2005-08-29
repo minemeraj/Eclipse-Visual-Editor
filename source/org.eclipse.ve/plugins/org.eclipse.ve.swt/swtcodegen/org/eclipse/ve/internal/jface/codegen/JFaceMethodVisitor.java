@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceMethodVisitor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-29 21:38:53 $ 
  */
 package org.eclipse.ve.internal.jface.codegen;
 
@@ -64,7 +64,8 @@ public class JFaceMethodVisitor extends MethodVisitor {
 		varDeclStatement.setType((Type) ASTNode.copySubtree(ast, svd.getType()));
 		varDeclStatement.setSourceRange(svd.getStartPosition(), svd.getLength());
 		
-		WorkbenchPartArgumentCodegenHelper helper = new WorkbenchPartArgumentCodegenHelper("delegate_control", svd);
+		//TODO : Remove the AST node param - no need for it
+		WorkbenchPartArgumentCodegenHelper helper = new WorkbenchPartArgumentCodegenHelper("delegate_control", /*svd*/ null); // no need of passing in of node. It caches it and leaks memory.
 		varDeclStatement.setProperty(IMethodArgumentCodegenHelper.KEY_METHODARGUMENT_CODEGENHELPER, helper);
 		
 		
