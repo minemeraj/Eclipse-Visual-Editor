@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.61 $  $Date: 2005-08-29 18:47:06 $ 
+ *  $Revision: 1.62 $  $Date: 2005-08-29 21:38:20 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -602,6 +602,7 @@ public class BDMMerger {
 				if(mainExp.getOffset()==newExp.getOffset()){
 					// Absolutely no change, even in location
 					mainExp.setContent(newExp.getContentParser())  ;
+					mainExp.setExprStmt(newExp.getExprStmt());
 					// Code callback refs could have been added/removed/updated - 
 					// need to re-decode them if need be.
 					if(needToRedecodeExpressions.contains(mainExp))
@@ -610,6 +611,7 @@ public class BDMMerger {
 					// Offset has been changed - might have to decode it as it might contain
 					// expression ordering in it. Ex: add(comp1); add(comp2) etc.
 					mainExp.setOffset(newExp.getOffset());
+					mainExp.setExprStmt(newExp.getExprStmt());
 					// No need to refresh when a shadow expression 
 					// We also do not care about event ordering
 					if(((!(newExp instanceof CodeEventRef)) || needToRedecodeExpressions.contains(mainExp))) {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.60 $  $Date: 2005-08-29 18:47:06 $ 
+ *  $Revision: 1.61 $  $Date: 2005-08-29 21:38:20 $ 
  */
 
 
@@ -1130,6 +1130,10 @@ protected IJVEDecoder primGetDecoder() {
  */
 public void setExprStmt(Statement statement) {
 	fexpStmt = statement;
+	if(!(this instanceof CodeEventRef) && !(this instanceof CodeCallBackRef)){
+		if(fDecoder!=null)
+			fDecoder.setStatement(fexpStmt);
+	}
 }
 
 public void setNoSrcExpression(boolean noSource) {

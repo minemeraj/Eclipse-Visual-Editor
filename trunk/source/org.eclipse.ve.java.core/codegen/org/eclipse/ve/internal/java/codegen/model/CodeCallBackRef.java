@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeCallBackRef.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.11 $  $Date: 2005-08-29 21:38:20 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -120,6 +120,12 @@ public  void refreshFromComposition() throws CodeGenException {
 //	}	  
 	setState(STATE_IN_SYNC, true);  // fState |= STATE_IN_SYNC|STATE_EXIST ;
 	setState(STATE_EXIST, true);
+}
+
+public void setExprStmt(Statement statement) {
+	super.setExprStmt(statement);
+	if(fDecoder!=null)
+		fDecoder.setStatement(statement);
 }
 
 }
