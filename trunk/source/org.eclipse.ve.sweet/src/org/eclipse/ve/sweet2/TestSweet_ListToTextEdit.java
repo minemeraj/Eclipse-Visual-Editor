@@ -55,8 +55,8 @@ public class TestSweet_ListToTextEdit {
 		final IObjectDelegate personBinder = ObjectDelegate.createObjectBinder(Person.class);
 		
 		TextEditor nameTextViewer = new TextEditor(c,SWT.BORDER);
-		nameTextViewer.setContentProvider(new PropertyContentProvider("firstName"));
-		nameTextViewer.setContentConsumer(new PropertyContentConsumer("firstName"));
+		nameTextViewer.setContentProvider(new ObjectContentProvider("firstName"));
+		nameTextViewer.setContentConsumer(new ObjectContentConsumer("firstName"));
 		nameTextViewer.setInput(personBinder);
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
@@ -64,8 +64,8 @@ public class TestSweet_ListToTextEdit {
 		ageLabel.setText("Age: ");
 		
 		SpinnerEditor ageSpinnerEditor = new SpinnerEditor(c,SWT.BORDER);
-		ageSpinnerEditor.setContentProvider(new PropertyContentProvider("age"));
-		ageSpinnerEditor.setContentConsumer(new PropertyContentConsumer("age"));
+		ageSpinnerEditor.setContentProvider(new ObjectContentProvider("age"));
+		ageSpinnerEditor.setContentConsumer(new ObjectContentConsumer("age"));
 		ageSpinnerEditor.setInput(personBinder);
 		
 		Label managerLabel = new Label(c,SWT.NONE);
@@ -74,7 +74,7 @@ public class TestSweet_ListToTextEdit {
 		ListEditor managerListEditor = new ListEditor(c,SWT.BORDER);
 		managerListEditor.setContentProvider(listContentProvider);
 		managerListEditor.setLabelProvider(personLabelProvider);
-		managerListEditor.setContentConsumer(new PropertyContentConsumer("manager"));		
+		managerListEditor.setContentConsumer(new ObjectContentConsumer("manager"));		
 		managerListEditor.setInput(Person.getSampleData());
 		managerListEditor.setOutput(personBinder);
 		
@@ -85,7 +85,7 @@ public class TestSweet_ListToTextEdit {
 		ComboEditor comboListEditor = new ComboEditor(c,SWT.BORDER);
 		comboListEditor.setContentProvider(listContentProvider);
 		comboListEditor.setLabelProvider(personLabelProvider);
-		comboListEditor.setContentConsumer(new PropertyContentConsumer("manager"));
+		comboListEditor.setContentConsumer(new ObjectContentConsumer("manager"));
 		comboListEditor.setInput(Person.getSampleData());
 		comboListEditor.setOutput(personBinder);
 		

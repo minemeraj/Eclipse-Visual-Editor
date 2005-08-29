@@ -9,7 +9,7 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ve.sweet2.ObjectDelegate.ChangeListener;
 
-public class PropertyContentProvider implements IElementContentProvider {
+public class ObjectContentProvider implements IElementContentProvider {
 	
 	private String[] fPropertyNames;
 	private Object viewerInput;
@@ -18,7 +18,7 @@ public class PropertyContentProvider implements IElementContentProvider {
 	private IObjectDelegate[] fBinders;
 	private PropertyChangeListener fPropertyChangeListener;
 
-	public PropertyContentProvider(String aPropertyName){
+	public ObjectContentProvider(String aPropertyName){
 		int indexOfPeriod = aPropertyName.indexOf('.');
 		if(indexOfPeriod == -1){
 			fPropertyNames = new String[] {aPropertyName};

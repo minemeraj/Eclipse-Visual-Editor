@@ -6,7 +6,7 @@ import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 
-public class PropertyContentConsumer implements IContentConsumer {
+public class ObjectContentConsumer implements IContentConsumer {
 
 	private IObjectDelegate[] fBinders; //e.g. {ObjectBinder(Person.class),ObjectBinder(Person.class)}
 	private String[] fPropertyNames; // e.g.  {"manager","firstName"}
@@ -17,7 +17,7 @@ public class PropertyContentConsumer implements IContentConsumer {
 	private boolean isSettingValue;
 	private PropertyChangeListener propertyChangeListener;
 	
-	public PropertyContentConsumer(String aPropertyName){
+	public ObjectContentConsumer(String aPropertyName){
 		int indexOfPeriod = aPropertyName.indexOf('.');
 		if(indexOfPeriod == -1){
 			fPropertyNames = new String[] {aPropertyName};
@@ -33,7 +33,7 @@ public class PropertyContentConsumer implements IContentConsumer {
 		}		
 	}
 
-	public PropertyContentConsumer(ObjectDelegate binder, String propertyName) {
+	public ObjectContentConsumer(ObjectDelegate binder, String propertyName) {
 		this(propertyName);
 		setObjectBinder(binder);
 	}

@@ -12,7 +12,7 @@
  *  Created Aug 17, 2005 by Gili Mendel
  * 
  *  $RCSfile: BindingsTest.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-29 19:38:18 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-29 22:11:20 $ 
  */
 package org.eclipse.ve.sweet2;
 
@@ -594,15 +594,15 @@ public class BindingsTest {
 		// Person
 		TextEditor personFN = new TextEditor(personFNText);
 		personFN.setUpdatePolicy(Editor.COMMIT_MODIFY);		
-		personFN.setContentProvider(new PropertyContentProvider("firstName"));
-		personFN.setContentConsumer(new PropertyContentConsumer("firstName"));
+		personFN.setContentProvider(new ObjectContentProvider("firstName"));
+		personFN.setContentConsumer(new ObjectContentConsumer("firstName"));
 		personFN.setInput(selectedPersonBinder);
 		personFN.setOutput(selectedPersonBinder);
 		
 		TextEditor personLN = new TextEditor(personLNText);
 		personLN.setUpdatePolicy(Editor.COMMIT_MODIFY);
-		personLN.setContentProvider(new PropertyContentProvider("lastName"));
-		personLN.setContentConsumer(new PropertyContentConsumer("lastName"));
+		personLN.setContentProvider(new ObjectContentProvider("lastName"));
+		personLN.setContentConsumer(new ObjectContentConsumer("lastName"));
 		personLN.setInput(selectedPersonBinder);
 		personLN.setOutput(selectedPersonBinder);
 		
@@ -610,37 +610,37 @@ public class BindingsTest {
 	
 		TextEditor managerFN = new TextEditor(managerFNText);
 		managerFN.setUpdatePolicy(Editor.COMMIT_FOCUS);
-		managerFN.setContentProvider(new PropertyContentProvider("manager.firstName"));
-		managerFN.setContentConsumer(new PropertyContentConsumer("manager.firstName"));
+		managerFN.setContentProvider(new ObjectContentProvider("manager.firstName"));
+		managerFN.setContentConsumer(new ObjectContentConsumer("manager.firstName"));
 		managerFN.setInput(selectedPersonBinder);
 		managerFN.setOutput(selectedPersonBinder);
 				
 		TextEditor managerLN = new TextEditor(managerLNText);
 		managerLN.setUpdatePolicy(Editor.COMMIT_FOCUS);
-		managerLN.setContentProvider(new PropertyContentProvider("manager.lastName"));
-		managerLN.setContentConsumer(new PropertyContentConsumer("manager.lastName"));
+		managerLN.setContentProvider(new ObjectContentProvider("manager.lastName"));
+		managerLN.setContentConsumer(new ObjectContentConsumer("manager.lastName"));
 		managerLN.setInput(selectedPersonBinder);
 		managerLN.setOutput(selectedPersonBinder);
 		
 		// Spouse
 		TextEditor spouseFN = new TextEditor(spouseFNText);
 		spouseFN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
-		spouseFN.setContentProvider(new PropertyContentProvider("spouse.firstName"));
-		spouseFN.setContentConsumer(new PropertyContentConsumer("spouse.firstName"));
+		spouseFN.setContentProvider(new ObjectContentProvider("spouse.firstName"));
+		spouseFN.setContentConsumer(new ObjectContentConsumer("spouse.firstName"));
 		spouseFN.setInput(selectedPersonBinder);
 		spouseFN.setOutput(selectedPersonBinder);
 		
 		ListEditor spouseListEditor = new ListEditor(spouseList);
 		spouseListEditor.setContentProvider(new ListContentProvider());
 		spouseListEditor.setInput(personList);
-		spouseListEditor.setContentConsumer(new PropertyContentConsumer("spouse"));
+		spouseListEditor.setContentConsumer(new ObjectContentConsumer("spouse"));
 		spouseListEditor.setOutput(selectedPersonBinder);
 		
 		
 		TextEditor spouseLN = new TextEditor(spouseLNText);
 		spouseLN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
-		spouseLN.setContentProvider(new PropertyContentProvider("spouse.lastName"));
-		spouseLN.setContentConsumer(new PropertyContentConsumer("spouse.lastName"));
+		spouseLN.setContentProvider(new ObjectContentProvider("spouse.lastName"));
+		spouseLN.setContentConsumer(new ObjectContentConsumer("spouse.lastName"));
 		spouseLN.setInput(selectedPersonBinder);
 		spouseLN.setOutput(selectedPersonBinder);
 		
