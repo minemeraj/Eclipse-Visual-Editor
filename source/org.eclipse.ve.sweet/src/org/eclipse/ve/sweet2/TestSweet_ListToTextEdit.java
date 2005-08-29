@@ -74,18 +74,20 @@ public class TestSweet_ListToTextEdit {
 		ListEditor managerListEditor = new ListEditor(c,SWT.BORDER);
 		managerListEditor.setContentProvider(listContentProvider);
 		managerListEditor.setLabelProvider(personLabelProvider);
-//		managerListEditor.setContentConsumer(personBinder.getContentConsumer("manager"));
 		managerListEditor.setContentConsumer(new PropertyContentConsumer("manager"));		
 		managerListEditor.setInput(Person.getSampleData());
 		managerListEditor.setOutput(personBinder);
 		
 		managerListEditor.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-//		new Label(c,SWT.NONE);
+		new Label(c,SWT.NONE);
 		
-//		ComboEditor comboListEditor = new ComboEditor(c,SWT.BORDER);
-//		comboListEditor.setContentProvider(listContentProvider);
-//		comboListEditor.setLabelProvider(personLabelProvider);		
+		ComboEditor comboListEditor = new ComboEditor(c,SWT.BORDER);
+		comboListEditor.setContentProvider(listContentProvider);
+		comboListEditor.setLabelProvider(personLabelProvider);
+		comboListEditor.setContentConsumer(new PropertyContentConsumer("manager"));
+		comboListEditor.setInput(Person.getSampleData());
+		comboListEditor.setOutput(personBinder);
 		
 		listViewer.addSelectionChangedListener(new ISelectionChangedListener(){
 			public void selectionChanged(SelectionChangedEvent event) {
