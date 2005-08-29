@@ -75,16 +75,16 @@ public class TestSweet_CommitPolicies {
 		final TextEditor nameTextViewer = new TextEditor(parent,SWT.BORDER);
 		nameTextViewer.setUpdatePolicy(updatePolicy);
 		
-		nameTextViewer.setContentProvider(new PropertyContentProvider("firstName"));
+		nameTextViewer.setContentProvider(new ObjectContentProvider("firstName"));
 		nameTextViewer.setInput(personBinder);
-		final IContentConsumer nameConsumer = new PropertyContentConsumer("firstName");	
+		final IContentConsumer nameConsumer = new ObjectContentConsumer("firstName");	
 		nameTextViewer.setContentConsumer(nameConsumer);
 		nameTextViewer.setOutput(personBinder);
 		
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		final TextEditor nameTextViewer_2 = new TextEditor(parent,SWT.READ_ONLY);		
-		nameTextViewer_2.setContentProvider(new PropertyContentProvider("firstName"));
+		nameTextViewer_2.setContentProvider(new ObjectContentProvider("firstName"));
 		nameTextViewer_2.setInput(personBinder);
 		
 		nameTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -95,14 +95,14 @@ public class TestSweet_CommitPolicies {
 		
 		final SpinnerEditor ageSpinnerViewer = new SpinnerEditor(parent,SWT.BORDER);
 		ageSpinnerViewer.setUpdatePolicy(updatePolicy);		
-		ageSpinnerViewer.setContentProvider(new PropertyContentProvider("age"));
-		final IContentConsumer ageConsumer = new PropertyContentConsumer("age");
+		ageSpinnerViewer.setContentProvider(new ObjectContentProvider("age"));
+		final IContentConsumer ageConsumer = new ObjectContentConsumer("age");
 		ageSpinnerViewer.setContentConsumer(ageConsumer);
 		ageSpinnerViewer.setInput(personBinder);
 		ageSpinnerViewer.setOutput(personBinder);
 		
 		final TextEditor ageTextViewer_2 = new TextEditor(parent,SWT.READ_ONLY);
-		ageTextViewer_2.setContentProvider(new PropertyContentProvider("age"));
+		ageTextViewer_2.setContentProvider(new ObjectContentProvider("age"));
 		ageTextViewer_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		ageTextViewer_2.setInput(personBinder);
 		

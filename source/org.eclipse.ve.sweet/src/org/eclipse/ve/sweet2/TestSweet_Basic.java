@@ -49,8 +49,8 @@ public class TestSweet_Basic {
 		nameLabel.setText("Name: ");
 		
 		TextEditor nameTextEditor = new TextEditor(shell,SWT.BORDER);
-		nameTextEditor.setContentProvider(new PropertyContentProvider("firstName"));
-		nameTextEditor.setContentConsumer(new PropertyContentConsumer("firstName"));
+		nameTextEditor.setContentProvider(new ObjectContentProvider("firstName"));
+		nameTextEditor.setContentConsumer(new ObjectContentConsumer("firstName"));
 		nameTextEditor.setInput(personBinder);
 		nameTextEditor.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
 		
@@ -59,8 +59,8 @@ public class TestSweet_Basic {
 		ageLabel.setText("Age: ");
 		
 		SpinnerEditor ageSpinnerEditor = new SpinnerEditor(shell,SWT.BORDER);
-		ageSpinnerEditor.setContentProvider(new PropertyContentProvider("age"));
-		ageSpinnerEditor.setContentConsumer(new PropertyContentConsumer("age"));
+		ageSpinnerEditor.setContentProvider(new ObjectContentProvider("age"));
+		ageSpinnerEditor.setContentConsumer(new ObjectContentConsumer("age"));
 		ageSpinnerEditor.setInput(personBinder);
 				
 		
@@ -69,8 +69,8 @@ public class TestSweet_Basic {
 		nameLabel_2.setText("Name: ");		
 		
 		final TextEditor nameTextEditor_2 = new TextEditor(shell,SWT.BORDER);
-		nameTextEditor_2.setContentProvider(new PropertyContentProvider("firstName"));
-		nameTextEditor_2.setContentConsumer(new PropertyContentConsumer("firstName"));
+		nameTextEditor_2.setContentProvider(new ObjectContentProvider("firstName"));
+		nameTextEditor_2.setContentConsumer(new ObjectContentConsumer("firstName"));
 		nameTextEditor_2.setInput(personBinder);		
 		
 		nameTextEditor_2.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -80,8 +80,8 @@ public class TestSweet_Basic {
 		ageLabel_2.setText("Age: ");
 		
 		SpinnerEditor ageSpinnerEditor_2 = new SpinnerEditor(shell,SWT.BORDER);
-		ageSpinnerEditor_2.setContentProvider(new PropertyContentProvider("age"));
-		ageSpinnerEditor_2.setContentConsumer(new PropertyContentConsumer("age"));
+		ageSpinnerEditor_2.setContentProvider(new ObjectContentProvider("age"));
+		ageSpinnerEditor_2.setContentConsumer(new ObjectContentConsumer("age"));
 		ageSpinnerEditor_2.setInput(personBinder);	
 		ageSpinnerEditor_2.setOutput(personBinder);
 		
