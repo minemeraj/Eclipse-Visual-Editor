@@ -30,7 +30,7 @@ public class TextEditor extends ContentViewer implements Editor {
 	private IDomainProvider domainProvider;
 	private boolean isSettingValue = false;
 	private String lastSetValue;
-	private IObjectBinder fBinder;
+	private IObjectDelegate fBinder;
 	private Object fOutput;
 	
 	public TextEditor(Text aText){
@@ -80,8 +80,8 @@ public class TextEditor extends ContentViewer implements Editor {
 	protected void inputChanged(Object input, Object oldInput) {
 		if(input == null){
 			text.setEnabled(false);
-		} else if (input instanceof IObjectBinder){
-			final IObjectBinder binder = (IObjectBinder) input;
+		} else if (input instanceof IObjectDelegate){
+			final IObjectDelegate binder = (IObjectDelegate) input;
 			text.setEnabled(binder.getValue() != null);
 			// Listen for when the value in the binder changes
 			binder.addPropertyChangeListener(new PropertyChangeListener(){
@@ -158,6 +158,7 @@ public class TextEditor extends ContentViewer implements Editor {
 
 	public void setOutput(Object anOutput) {
 		fOutput = anOutput;
+		fContentConsumer.setObjectBinder((IObjectDelegate)anOutput);
 	}
 
 	public Object getOutput() {

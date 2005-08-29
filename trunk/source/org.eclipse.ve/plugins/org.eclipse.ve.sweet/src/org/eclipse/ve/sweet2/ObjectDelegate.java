@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
 
-public class ObjectBinder implements IObjectBinder , InvocationHandler {
+public class ObjectDelegate implements IObjectDelegate , InvocationHandler {
 
 	private Object source;
 	private Class receiverClass;
@@ -20,12 +20,12 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		source = aSource;
 	}
 
-	public static IObjectBinder createObjectBinder(Class sourceClass) {
+	public static IObjectDelegate createObjectBinder(Class sourceClass) {
 		try{
-			Object result = Proxy.newProxyInstance(ObjectBinder.class.getClassLoader(),
-					new Class[] { IObjectBinder.class }, 
-					new ObjectBinder(sourceClass));
-          return (IObjectBinder) result;
+			Object result = Proxy.newProxyInstance(ObjectDelegate.class.getClassLoader(),
+					new Class[] { IObjectDelegate.class }, 
+					new ObjectDelegate(sourceClass));
+          return (IObjectDelegate) result;
 		} catch (Exception e){
 			e.printStackTrace();
 			return null;
@@ -57,9 +57,9 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		listeners.add(aListener);
 	}
 	
-	private ObjectBinder(Class aSourceClass){
+	private ObjectDelegate(Class aSourceClass){
 		receiverClass = aSourceClass;
-		ObjectBinder.addListener(receiverClass,new ChangeListener(){
+		ObjectDelegate.addListener(receiverClass,new ChangeListener(){
 			public void objectAdded(Object newObject) {
 				
 			}
@@ -97,29 +97,6 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 				return null;				
 			}	
 		}
-	}
-
-	public IContentConsumer getContentConsumer(String string) {
-		
-		PropertyContentConsumer result = new PropertyContentConsumer(this,string);
-		return result;
-/**		
-		// See whether the property is nested or not
-		if(string.indexOf('.') >=0){
-			StringTokenizer tk = new StringTokenizer(string,".");
-			// If the property is nested we bind to a property provider that can give this to us
-			String[] properties = new String[tk.countTokens()];
-			for (int i = 0; tk.hasMoreTokens(); i++) {
-				properties[i] = tk.nextToken();				
-			}
-//			NestedPropertyProvider result = new NestedPropertyProvider(this,properties);
-			return result;
-		} else {
-//			SimplePropertyProvider result = new SimplePropertyProvider(this,string);
-			binders.add(result);
-			return result;
-		}
-**/		
 	}
 	
 	private void fireValueChanged (Object oldVal, Object newVal) {
@@ -188,7 +165,7 @@ public class ObjectBinder implements IObjectBinder , InvocationHandler {
 		}		
 	}
 
-	public void setObjectBinder(IObjectBinder anObjectBinder) {
+	public void setObjectBinder(IObjectDelegate anObjectBinder) {
 		
 	}
 }

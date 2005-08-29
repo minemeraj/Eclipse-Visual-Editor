@@ -94,8 +94,8 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 	protected void inputChanged(Object input, Object oldInput) {
 		if(input == null){
 			fSpinner.setEnabled(false);
-		} else if (input instanceof IObjectBinder){
-			final IObjectBinder binder = (IObjectBinder) input;
+		} else if (input instanceof IObjectDelegate){
+			final IObjectDelegate binder = (IObjectDelegate) input;
 			fSpinner.setEnabled(binder.getValue() != null);
 			// Listen for when the value in the binder changes
 			binder.addPropertyChangeListener(new PropertyChangeListener(){

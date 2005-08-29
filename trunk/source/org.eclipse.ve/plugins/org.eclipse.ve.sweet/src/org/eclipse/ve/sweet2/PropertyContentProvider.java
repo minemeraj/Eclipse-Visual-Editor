@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.ve.sweet2.ObjectBinder.ChangeListener;
+import org.eclipse.ve.sweet2.ObjectDelegate.ChangeListener;
 
 public class PropertyContentProvider implements IElementContentProvider {
 	
@@ -15,19 +15,19 @@ public class PropertyContentProvider implements IElementContentProvider {
 	private Object viewerInput;
 	private Method[] fGetMethods;
 	private ChangeListener changeListener;
-	private IObjectBinder[] fBinders;
+	private IObjectDelegate[] fBinders;
 	private PropertyChangeListener fPropertyChangeListener;
 
 	public PropertyContentProvider(String aPropertyName){
 		int indexOfPeriod = aPropertyName.indexOf('.');
 		if(indexOfPeriod == -1){
 			fPropertyNames = new String[] {aPropertyName};
-			fBinders = new IObjectBinder[1];
+			fBinders = new IObjectDelegate[1];
 		} else {
 			StringTokenizer tk = new StringTokenizer(aPropertyName,".");
 			// If the property is nested we bind to a property provider that can give this to us
 			fPropertyNames = new String[tk.countTokens()];
-			fBinders = new IObjectBinder[fPropertyNames.length];
+			fBinders = new IObjectDelegate[fPropertyNames.length];
 			for (int i = 0; tk.hasMoreTokens(); i++) {
 				fPropertyNames[i] = tk.nextToken();				
 			}
@@ -50,7 +50,7 @@ public class PropertyContentProvider implements IElementContentProvider {
 				fGetMethods[i] = getMethod;
 				// Alongside each getMethod is a binder for the source on which it will be invoked
 				if(i < fPropertyNames.length - 1){
-					IObjectBinder binder = ObjectBinder.createObjectBinder(getMethod.getReturnType());
+					IObjectDelegate binder = ObjectDelegate.createObjectBinder(getMethod.getReturnType());
 					fBinders[i+1] = binder;
 				}
 			}
@@ -62,8 +62,8 @@ public class PropertyContentProvider implements IElementContentProvider {
 	public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
 		// Listen to the input and refresh the viewer whenever the registered property changes
 		if(newInput == null) return;
-		if(newInput instanceof IObjectBinder){				
-			fBinders[0] = (IObjectBinder)newInput;
+		if(newInput instanceof IObjectDelegate){				
+			fBinders[0] = (IObjectDelegate)newInput;
 			viewerInput = fBinders[0].getValue();
 			initialize();
 			// 	Listen to the source binder so when its value changes we can notify listeners
@@ -80,7 +80,7 @@ public class PropertyContentProvider implements IElementContentProvider {
 			}
 		}
 		if(changeListener != null && oldInput != null){
-			ObjectBinder.removeListener(oldInput.getClass(),changeListener);
+			ObjectDelegate.removeListener(oldInput.getClass(),changeListener);
 		}
 		
 		if(changeListener == null){
@@ -97,7 +97,7 @@ public class PropertyContentProvider implements IElementContentProvider {
 			};
 		}
 		
-		ObjectBinder.addListener(newInput.getClass(),changeListener);		
+		ObjectDelegate.addListener(newInput.getClass(),changeListener);		
 		
 	}
 

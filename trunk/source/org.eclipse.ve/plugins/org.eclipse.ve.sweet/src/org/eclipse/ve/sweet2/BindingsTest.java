@@ -12,7 +12,7 @@
  *  Created Aug 17, 2005 by Gili Mendel
  * 
  *  $RCSfile: BindingsTest.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-26 21:45:47 $ 
+ *  $Revision: 1.5 $  $Date: 2005-08-29 19:38:18 $ 
  */
 package org.eclipse.ve.sweet2;
 
@@ -93,11 +93,11 @@ public class BindingsTest {
 	
 	private HibernatePersonServicesHelper dbHelper = HibernatePersonServicesHelper.getHelper();
 	private Person selectedPerson = null;
-	final IObjectBinder selectedPersonBinder = ObjectBinder.createObjectBinder(Person.class);
+	final IObjectDelegate selectedPersonBinder = ObjectDelegate.createObjectBinder(Person.class);
 	private java.util.List personList = null;
 	
-	final IObjectBinder managerPersonBinder = ObjectBinder.createObjectBinder(Person.class);
-	final IObjectBinder spousePersonBinder = ObjectBinder.createObjectBinder(Person.class);
+	final IObjectDelegate managerPersonBinder = ObjectDelegate.createObjectBinder(Person.class);
+	final IObjectDelegate spousePersonBinder = ObjectDelegate.createObjectBinder(Person.class);
 	
 	public class ListContentProvider implements IStructuredContentProvider {
 		public Object[] getElements(Object inputElement) {
@@ -595,48 +595,54 @@ public class BindingsTest {
 		TextEditor personFN = new TextEditor(personFNText);
 		personFN.setUpdatePolicy(Editor.COMMIT_MODIFY);		
 		personFN.setContentProvider(new PropertyContentProvider("firstName"));
-		personFN.setContentConsumer(selectedPersonBinder.getContentConsumer("firstName"));
+		personFN.setContentConsumer(new PropertyContentConsumer("firstName"));
 		personFN.setInput(selectedPersonBinder);
+		personFN.setOutput(selectedPersonBinder);
 		
 		TextEditor personLN = new TextEditor(personLNText);
 		personLN.setUpdatePolicy(Editor.COMMIT_MODIFY);
 		personLN.setContentProvider(new PropertyContentProvider("lastName"));
-		personLN.setContentConsumer(selectedPersonBinder.getContentConsumer("lastName"));
+		personLN.setContentConsumer(new PropertyContentConsumer("lastName"));
 		personLN.setInput(selectedPersonBinder);
+		personLN.setOutput(selectedPersonBinder);
 		
 		// Manager
 	
 		TextEditor managerFN = new TextEditor(managerFNText);
 		managerFN.setUpdatePolicy(Editor.COMMIT_FOCUS);
 		managerFN.setContentProvider(new PropertyContentProvider("manager.firstName"));
-		managerFN.setContentConsumer(selectedPersonBinder.getContentConsumer("manager.firstName"));
+		managerFN.setContentConsumer(new PropertyContentConsumer("manager.firstName"));
 		managerFN.setInput(selectedPersonBinder);
+		managerFN.setOutput(selectedPersonBinder);
 				
 		TextEditor managerLN = new TextEditor(managerLNText);
 		managerLN.setUpdatePolicy(Editor.COMMIT_FOCUS);
 		managerLN.setContentProvider(new PropertyContentProvider("manager.lastName"));
-		managerLN.setContentConsumer(selectedPersonBinder.getContentConsumer("manager.lastName"));
+		managerLN.setContentConsumer(new PropertyContentConsumer("manager.lastName"));
 		managerLN.setInput(selectedPersonBinder);
+		managerLN.setOutput(selectedPersonBinder);
 		
 		// Spouse
 		TextEditor spouseFN = new TextEditor(spouseFNText);
 		spouseFN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
 		spouseFN.setContentProvider(new PropertyContentProvider("spouse.firstName"));
-		spouseFN.setContentConsumer(selectedPersonBinder.getContentConsumer("spouse.firstName"));
+		spouseFN.setContentConsumer(new PropertyContentConsumer("spouse.firstName"));
 		spouseFN.setInput(selectedPersonBinder);
+		spouseFN.setOutput(selectedPersonBinder);
 		
 		ListEditor spouseListEditor = new ListEditor(spouseList);
 		spouseListEditor.setContentProvider(new ListContentProvider());
 		spouseListEditor.setInput(personList);
-		spouseListEditor.setContentConsumer(selectedPersonBinder.getContentConsumer("spouse"));
+		spouseListEditor.setContentConsumer(new PropertyContentConsumer("spouse"));
 		spouseListEditor.setOutput(selectedPersonBinder);
 		
 		
 		TextEditor spouseLN = new TextEditor(spouseLNText);
 		spouseLN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
 		spouseLN.setContentProvider(new PropertyContentProvider("spouse.lastName"));
-		spouseLN.setContentConsumer(selectedPersonBinder.getContentConsumer("spouse.lastName"));
+		spouseLN.setContentConsumer(new PropertyContentConsumer("spouse.lastName"));
 		spouseLN.setInput(selectedPersonBinder);
+		spouseLN.setOutput(selectedPersonBinder);
 		
 	}
 	
@@ -668,10 +674,10 @@ public class BindingsTest {
 		TableViewer backupTableViewer = new TableViewer(backupTable);
 		backupTableViewer.setContentProvider(new IStructuredContentProvider() {
 			Object[] rows = new Object[0];
-			IObjectBinder binder = null;
+			IObjectDelegate binder = null;
 			Viewer v = null;
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-				binder = (IObjectBinder) newInput;
+				binder = (IObjectDelegate) newInput;
 				v = viewer;
 				Person p = (Person)binder.getValue();
 				if (p!=null) {
