@@ -16,9 +16,9 @@ import org.eclipse.swt.widgets.Shell;
 public class TestSweet_NestedProperties {
 	
 	private static Person p;
-	private static IObjectBinder personBinder;
+	private static IObjectDelegate personBinder;
 	private static Person manager;
-	private static IObjectBinder managerBinder;
+	private static IObjectDelegate managerBinder;
 
 	public static void main(String[] args) {
 		
@@ -29,12 +29,12 @@ public class TestSweet_NestedProperties {
 		shell.setLayout(new GridLayout(2,true));
 		
 		p = new Person("John","Doe",35);
-		personBinder = ObjectBinder.createObjectBinder(Person.class);
+		personBinder = ObjectDelegate.createObjectBinder(Person.class);
 		personBinder.setValue(p);
 		
 		manager= new Person("Cheese","Big",50);
 		p.setManager(manager);
-		managerBinder = ObjectBinder.createObjectBinder(Person.class);
+		managerBinder = ObjectDelegate.createObjectBinder(Person.class);
 		managerBinder.setValue(manager);
 		
 		Group personGroup = new Group(shell,SWT.NONE);
@@ -92,7 +92,7 @@ public class TestSweet_NestedProperties {
 		}
 	}
 	
-	public static void addPersonDetailsTo(Composite parent, IObjectBinder aPersonBinder, int styleBits){
+	public static void addPersonDetailsTo(Composite parent, IObjectDelegate aPersonBinder, int styleBits){
 		
 		// First name
 		Label nameLabel = new Label(parent,SWT.NONE);

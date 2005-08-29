@@ -144,6 +144,7 @@ public class ListEditor extends AbstractListViewer implements Editor {
 	 
 	public void setOutput(Object anOutput) {
 		fOutput = anOutput;
+		fContentConsumer.setObjectBinder((IObjectDelegate)anOutput);
 	}
 	public Object getOutput() {
 		return fOutput;

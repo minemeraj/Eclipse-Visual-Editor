@@ -65,7 +65,7 @@ public class TestSweet_CommitPolicies {
 	
 	public static void createPersonFields(int updatePolicy, Composite parent){
 		
-		final IObjectBinder personBinder = ObjectBinder.createObjectBinder(Person.class);
+		final IObjectDelegate personBinder = ObjectDelegate.createObjectBinder(Person.class);
 		personBinder.setValue(p);
 		
 		// To show name have two text editors
@@ -77,8 +77,9 @@ public class TestSweet_CommitPolicies {
 		
 		nameTextViewer.setContentProvider(new PropertyContentProvider("firstName"));
 		nameTextViewer.setInput(personBinder);
-		final IContentConsumer nameConsumer = personBinder.getContentConsumer("firstName");	
+		final IContentConsumer nameConsumer = new PropertyContentConsumer("firstName");	
 		nameTextViewer.setContentConsumer(nameConsumer);
+		nameTextViewer.setOutput(personBinder);
 		
 		nameTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
@@ -95,9 +96,10 @@ public class TestSweet_CommitPolicies {
 		final SpinnerEditor ageSpinnerViewer = new SpinnerEditor(parent,SWT.BORDER);
 		ageSpinnerViewer.setUpdatePolicy(updatePolicy);		
 		ageSpinnerViewer.setContentProvider(new PropertyContentProvider("age"));
-		final IContentConsumer ageConsumer = personBinder.getContentConsumer("age");
+		final IContentConsumer ageConsumer = new PropertyContentConsumer("age");
 		ageSpinnerViewer.setContentConsumer(ageConsumer);
 		ageSpinnerViewer.setInput(personBinder);
+		ageSpinnerViewer.setOutput(personBinder);
 		
 		final TextEditor ageTextViewer_2 = new TextEditor(parent,SWT.READ_ONLY);
 		ageTextViewer_2.setContentProvider(new PropertyContentProvider("age"));

@@ -41,7 +41,7 @@ public class TestSweet_Basic {
 		t.setFont(font);
 		
 		p = new Person("John","Doe",35);		
-		final IObjectBinder personBinder = ObjectBinder.createObjectBinder(Person.class);
+		final IObjectDelegate personBinder = ObjectDelegate.createObjectBinder(Person.class);
 		personBinder.setValue(p);		
 		
 		// NAME
@@ -81,8 +81,9 @@ public class TestSweet_Basic {
 		
 		SpinnerEditor ageSpinnerEditor_2 = new SpinnerEditor(shell,SWT.BORDER);
 		ageSpinnerEditor_2.setContentProvider(new PropertyContentProvider("age"));
-		ageSpinnerEditor_2.setContentConsumer(personBinder.getContentConsumer("age"));
-		ageSpinnerEditor_2.setInput(personBinder);				
+		ageSpinnerEditor_2.setContentConsumer(new PropertyContentConsumer("age"));
+		ageSpinnerEditor_2.setInput(personBinder);	
+		ageSpinnerEditor_2.setOutput(personBinder);
 		
 		shell.setSize(500,400);
 		shell.open();

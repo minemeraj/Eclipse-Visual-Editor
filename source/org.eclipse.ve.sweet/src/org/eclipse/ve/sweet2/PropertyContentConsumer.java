@@ -6,11 +6,9 @@ import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 
-import org.omg.CORBA.INITIALIZE;
-
 public class PropertyContentConsumer implements IContentConsumer {
 
-	private IObjectBinder[] fBinders; //e.g. {ObjectBinder(Person.class),ObjectBinder(Person.class)}
+	private IObjectDelegate[] fBinders; //e.g. {ObjectBinder(Person.class),ObjectBinder(Person.class)}
 	private String[] fPropertyNames; // e.g.  {"manager","firstName"}
 	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	private Method fSetMethod; //e.g. setFirstName(String aString)
@@ -23,24 +21,25 @@ public class PropertyContentConsumer implements IContentConsumer {
 		int indexOfPeriod = aPropertyName.indexOf('.');
 		if(indexOfPeriod == -1){
 			fPropertyNames = new String[] {aPropertyName};
-			fBinders = new IObjectBinder[1];
+			fBinders = new IObjectDelegate[1];
 		} else {
 			StringTokenizer tk = new StringTokenizer(aPropertyName,".");
 			// If the property is nested we bind to a property provider that can give this to us
 			fPropertyNames = new String[tk.countTokens()];
-			fBinders = new IObjectBinder[fPropertyNames.length];
+			fBinders = new IObjectDelegate[fPropertyNames.length];
 			for (int i = 0; tk.hasMoreTokens(); i++) {
 				fPropertyNames[i] = tk.nextToken();				
 			}
 		}		
 	}
 
-	public PropertyContentConsumer(ObjectBinder binder, String propertyName) {
+	public PropertyContentConsumer(ObjectDelegate binder, String propertyName) {
 		this(propertyName);
 		setObjectBinder(binder);
 	}
 
 	public Object getValue() {
+		if(fGetMethods == null) return null;
 		try{
 			boolean deadEnd=false;
 			for (int i = 0; i < fGetMethods.length; i++) {
@@ -77,7 +76,7 @@ public class PropertyContentConsumer implements IContentConsumer {
 			e.printStackTrace();
 		} finally {
 			isSettingValue = false;
-		}
+		} 
 	}
 	
 	private Method getSetMethod() {
@@ -123,7 +122,7 @@ public class PropertyContentConsumer implements IContentConsumer {
 				fGetMethods[i] = getMethod;
 				// Alongside each getMethod is a binder for the source on which it will be invoked
 				if(i < fPropertyNames.length - 1){
-					IObjectBinder binder = ObjectBinder.createObjectBinder(getMethod.getReturnType());
+					IObjectDelegate binder = ObjectDelegate.createObjectBinder(getMethod.getReturnType());
 					fBinders[i+1] = binder;
 				}
 			}
@@ -137,7 +136,7 @@ public class PropertyContentConsumer implements IContentConsumer {
 		}		
 	}
 
-	public void setObjectBinder(IObjectBinder anObjectBinder) {
+	public void setObjectBinder(IObjectDelegate anObjectBinder) {
 		if(fBinders[0] != null){
 			fBinders[0].removePropertyChangeListener(propertyChangeListener);
 		}
