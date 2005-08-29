@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.25 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.26 $  $Date: 2005-08-29 18:47:06 $ 
  */
 
 import java.util.*;
@@ -37,7 +37,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 /*
  *  This class is the root for the Bean Decleration Model
  */
-public class BeanDeclModel extends DefaultScannerFactory implements IBeanDeclModel {
+public class BeanDeclModel implements IBeanDeclModel {
 	
 	ArrayList fBeans=null ;                           // Root Beans
 	HashMap   fBeanDecleration = new HashMap();
@@ -57,7 +57,7 @@ public class BeanDeclModel extends DefaultScannerFactory implements IBeanDeclMod
 	String                      fLineSeperator = null ;
 	int                         fState = BDM_STATE_DOWN ;
 	EditDomain					fDomain = null ; 
-	
+	IScannerFactory 			fScannerFactory = null;
 	
 /**
  * 
@@ -796,5 +796,15 @@ public void updateBeanNameChange(BeanPart bp) {
 			List list = (List) beanDependentsMap.get(bp);
 			addReferencedBeans(referencedList, list, beanDependentsMap);
 		}
+	}
+
+	public IScannerFactory getScannerFactory() {
+		if(fScannerFactory==null)
+			setScannerFactory(new DefaultScannerFactory());
+		return fScannerFactory;
+	}
+
+	public void setScannerFactory(IScannerFactory scannerFactory) {
+		this.fScannerFactory = scannerFactory;
 	}
 }

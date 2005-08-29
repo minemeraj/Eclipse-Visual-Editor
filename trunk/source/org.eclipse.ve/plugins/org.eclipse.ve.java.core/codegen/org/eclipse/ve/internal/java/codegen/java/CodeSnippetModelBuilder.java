@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CodeSnippetModelBuilder.java,v $
- *  $Revision: 1.13 $  $Date: 2005-08-24 23:30:44 $ 
+ *  $Revision: 1.14 $  $Date: 2005-08-29 18:47:05 $ 
  */
 
 import java.util.List;
@@ -23,8 +23,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.codegen.java.rules.IVisitorFactoryRule;
-import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
-import org.eclipse.ve.internal.java.codegen.model.JavaElementInfo;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.IWorkingCopyProvider;
 
@@ -39,9 +38,10 @@ protected int[] fieldEnds;
 protected int[] methodStarts;
 protected int[] methodEnds;
 protected String[] methodHandles;
+protected IScannerFactory scannerFactory;
 
 
-public CodeSnippetModelBuilder(EditDomain d, IWorkingCopyProvider wcp, String contents, String[] methodHandles, int[] importStarts, int[] importEnds, int[] fieldStarts, int[] fieldEnds, int[] methodStarts, int[] methodEnds, ICompilationUnit referenceCU, IProgressMonitor monitor){
+public CodeSnippetModelBuilder(EditDomain d, IWorkingCopyProvider wcp, String contents, String[] methodHandles, int[] importStarts, int[] importEnds, int[] fieldStarts, int[] fieldEnds, int[] methodStarts, int[] methodEnds, ICompilationUnit referenceCU, IProgressMonitor monitor, IScannerFactory scannerFactory){
 	super(d,"CodeSnippetClass_2",null, monitor); //$NON-NLS-1$
 	this.referenceCU = referenceCU;
 	this.contents = contents;
@@ -54,6 +54,7 @@ public CodeSnippetModelBuilder(EditDomain d, IWorkingCopyProvider wcp, String co
 	this.methodHandles=new String[methodHandles.length+1];
 	this.methodHandles = methodHandles;
 	this.fWCP = createPseudoWorkingCopyProvider(referenceCU, wcp.getResolver()) ;
+	this.scannerFactory = scannerFactory;
 }
 
 
@@ -119,4 +120,8 @@ protected CompilationUnit ParseJavaCode(IProgressMonitor pm) throws CodeGenExcep
 	return cu;
 }
 
+protected void CreateBeanDeclModel() throws CodeGenException {
+	super.CreateBeanDeclModel();
+	fModel.setScannerFactory(scannerFactory);
+}
 }

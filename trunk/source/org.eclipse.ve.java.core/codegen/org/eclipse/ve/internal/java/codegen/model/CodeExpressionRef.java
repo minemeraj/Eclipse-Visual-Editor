@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.59 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.60 $  $Date: 2005-08-29 18:47:06 $ 
  */
 
 
@@ -108,9 +108,9 @@ public final static int                STATE_FIELD_EXP         	= 0x4000 ;
 		start = exp.getStartPosition() ;
 		end = exp.getStartPosition() + exp.getLength();
 		String fromSource = source.substring(start, end);
-		end = ExpressionParser.indexOfLastSemiColon(fromSource, bp.getModel()) - 1 + start;
+		end = ExpressionParser.indexOfLastSemiColon(fromSource, bp.getModel().getScannerFactory()) - 1 + start;
 
-		ExpressionParser fCP = createExpressionParser(source, start , end - start + 1, bp.getModel());
+		ExpressionParser fCP = createExpressionParser(source, start , end - start + 1, bp.getModel().getScannerFactory());
 
 		fMethod = null;
 		fexpStmt = exp;
@@ -142,12 +142,12 @@ public CodeExpressionRef (Statement exp, CodeMethodRef method, int delta) {
         start = exp.getStartPosition()+delta ;
         end = exp.getStartPosition()+exp.getLength()+delta ;
         String fromSource = method.getContent().substring(start-method.getOffset(), end-method.getOffset());
-        end = ExpressionParser.indexOfLastSemiColon(fromSource, method.getTypeRef().getBeanModel())-1+start;
+        end = ExpressionParser.indexOfLastSemiColon(fromSource, method.getTypeRef().getBeanModel().getScannerFactory())-1+start;
 //    }
         
 	ExpressionParser fCP = createExpressionParser(method.getContent(),
 	                                      start-method.getOffset(),
-	                                      end-start+1, method.getTypeRef().getBeanModel()) ;
+	                                      end-start+1, method.getTypeRef().getBeanModel().getScannerFactory()) ;
 
     fMethod = method ;
     fexpStmt = exp ;
@@ -364,7 +364,7 @@ public  String  generateSource(EStructuralFeature sf) throws CodeGenException {
       String e = ExpressionTemplate.getExpression(result) ;
       ExpressionParser p = createExpressionParser(BeanMethodTemplate.getInitExprFiller()+result,
                                                 BeanMethodTemplate.getInitExprFiller().length(),
-                                                e.length(), getExpDecoder().getBeanModel()) ;
+                                                e.length(), getExpDecoder().getBeanModel().getScannerFactory()) ;
       setContent(p) ;
       setOffset(-1) ;
       setFillerContent(BeanMethodTemplate.getInitExprFiller());

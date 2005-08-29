@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.17 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.18 $  $Date: 2005-08-29 18:47:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -29,7 +29,7 @@ import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.JavaSourceSynchronizer;
 import org.eclipse.ve.internal.java.codegen.util.*;
 
-public interface IBeanDeclModel extends IScannerFactory {
+public interface IBeanDeclModel {
 	
 	public final  int           BDM_STATE_DOWN            		= 0x01 ;	
 	public final  int           BDM_STATE_UP_AND_RUNNING  		= 0x02 ;
@@ -141,6 +141,8 @@ public interface IBeanDeclModel extends IScannerFactory {
 	 *  @since 1.1
 	 */
 	public BeanPart[] getUnreferencedBeanParts();
+	public IScannerFactory getScannerFactory();
+	public void setScannerFactory(IScannerFactory scannerFactory);
 }
       
 	

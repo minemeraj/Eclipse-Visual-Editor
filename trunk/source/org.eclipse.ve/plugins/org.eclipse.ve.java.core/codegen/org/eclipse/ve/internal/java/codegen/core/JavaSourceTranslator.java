@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.86 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.87 $  $Date: 2005-08-29 18:47:06 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -407,7 +407,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
   	 */
   	protected boolean handleParseable(CompilationUnit cuAST, ICompilationUnit workingCopy, IProgressMonitor cancelMonitor) throws CodeGenException {
   		JavaBeanModelBuilder modelBldr =
-			new CodeSnippetModelBuilder(fEDomain, getWorkingCopyProvider(), currentSource, methodHandles, importStarts, importEnds, fieldStarts, fieldEnds, methodStarts, methodEnds, workingCopy, cancelMonitor);
+			new CodeSnippetModelBuilder(fEDomain, getWorkingCopyProvider(), currentSource, methodHandles, importStarts, importEnds, fieldStarts, fieldEnds, methodStarts, methodEnds, workingCopy, cancelMonitor, fBeanModel.getScannerFactory());
  
 		modelBldr.setDiagram(fVEModel);
 		IBeanDeclModel bdm = null;

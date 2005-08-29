@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormThisAnnotationDecoder.java,v $
- *  $Revision: 1.13 $  $Date: 2005-08-24 23:30:44 $ 
+ *  $Revision: 1.14 $  $Date: 2005-08-29 18:47:06 $ 
  */
 
 import java.util.logging.Level;
@@ -160,7 +160,7 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
 			String newSrc = null;
 			int len;
 
-			String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src, fBeanpart.getModel());
+			String curAnnotation = FreeFormAnnotationTemplate.getCurrentAnnotation(src, fBeanpart.getModel().getScannerFactory());
 
 			if (curAnnotation == null) {
 				// Brand New Anotation
@@ -189,7 +189,7 @@ public class FreeFormThisAnnotationDecoder extends FreeFormAnnoationDecoder {
 					newSrc = FreeFormAnnotationTemplate.getAnnotationPrefix() + newSrc;
 				int s = FreeFormAnnotationTemplate.getAnnotationStart(src);
 				s = FreeFormAnnotationTemplate.collectPrecedingSpaces(src, s);
-				int end = FreeFormAnnotationTemplate.getAnnotationEnd(src, s, fBeanpart.getModel());
+				int end = FreeFormAnnotationTemplate.getAnnotationEnd(src, s, fBeanpart.getModel().getScannerFactory());
 				len = end + 1;
 			}
 

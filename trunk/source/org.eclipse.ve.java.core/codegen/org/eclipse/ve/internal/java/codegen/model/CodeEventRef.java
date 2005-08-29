@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.17 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.18 $  $Date: 2005-08-29 18:47:06 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -193,7 +193,7 @@ public String generateSource(AbstractEventInvocation ei) throws CodeGenException
 
 	String e = ExpressionTemplate.getExpression(result);
 	int offset = result.indexOf(e) ;
-	ExpressionParser p = createExpressionParser(result, offset, e.length(), getEventDecoder().getBeanModel());
+	ExpressionParser p = createExpressionParser(result, offset, e.length(), getEventDecoder().getBeanModel().getScannerFactory());
 	setContent(p);
 	setOffset(-1);
 	fEventInvocation = ei;
