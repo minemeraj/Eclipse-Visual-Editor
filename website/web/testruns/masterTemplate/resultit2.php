@@ -34,6 +34,13 @@ header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."
        		exit("unable to link $datafile");
        if(!copy($newdatafile, $datafile))
        		exit("unable to copy $newdatafile > $datafile");
+       		
+       // Make sure that vep-home is the group and that it has rw access. This is because
+       // the current user is the web site user (such as webrun) and so group may not be
+       // correct and we would not be able to access it by hand.
+       chgrp($datafile, "vep-home");
+       chmod($datafile, 0664); 
+
        if(!unlink($newdatafile))
        		exit("unable to remove $newdatafile");
      ?>
