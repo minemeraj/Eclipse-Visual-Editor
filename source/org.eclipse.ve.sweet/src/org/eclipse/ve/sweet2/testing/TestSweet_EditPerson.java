@@ -1,4 +1,4 @@
-package org.eclipse.ve.sweet2;
+package org.eclipse.ve.sweet2.testing;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;

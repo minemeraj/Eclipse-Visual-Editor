@@ -1,4 +1,4 @@
-package org.eclipse.ve.sweet2;
+package org.eclipse.ve.sweet2.testing;
 
 
 import org.eclipse.jface.viewers.*;
@@ -6,6 +6,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ve.sweet2.ComboEditor;
+import org.eclipse.ve.sweet2.IObjectDelegate;
+import org.eclipse.ve.sweet2.ListContentProvider;
+import org.eclipse.ve.sweet2.ListEditor;
+import org.eclipse.ve.sweet2.ObjectContentConsumer;
+import org.eclipse.ve.sweet2.ObjectContentProvider;
+import org.eclipse.ve.sweet2.ObjectDelegate;
+import org.eclipse.ve.sweet2.SpinnerEditor;
+import org.eclipse.ve.sweet2.TextEditor;
 import org.eclipse.ve.sweet2.examples.Person;
 import org.eclipse.ve.sweet2.examples.PersonLabelProvider;
 /**

@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Text;
 public class SpinnerEditor extends ContentViewer implements Editor {
 
 	Spinner fSpinner;
-	private IDomainProvider domainProvider;
 	public static int DEFAULT_COMMIT_POLICY = COMMIT_MODIFY;		
 	private Listener updateListener;
 	private int updateListenerType;
@@ -124,14 +123,6 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 			return DEFAULT_COMMIT_POLICY;
 		}		
 	}	
-
-	public void setDomainProvider(IDomainProvider aDomainProvider) {
-		domainProvider = aDomainProvider;
-	}
-
-	public IDomainProvider getDomainProvider() {
-		return domainProvider;
-	}
 
 	public Spinner getSpinner() {
 		return fSpinner;

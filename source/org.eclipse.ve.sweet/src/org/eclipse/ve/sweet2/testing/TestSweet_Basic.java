@@ -1,4 +1,4 @@
-package org.eclipse.ve.sweet2;
+package org.eclipse.ve.sweet2.testing;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -13,6 +13,13 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ve.sweet2.Editor;
+import org.eclipse.ve.sweet2.IObjectDelegate;
+import org.eclipse.ve.sweet2.ObjectContentConsumer;
+import org.eclipse.ve.sweet2.ObjectContentProvider;
+import org.eclipse.ve.sweet2.ObjectDelegate;
+import org.eclipse.ve.sweet2.SpinnerEditor;
+import org.eclipse.ve.sweet2.TextEditor;
 import org.eclipse.ve.sweet2.examples.Person;
 
 /**
