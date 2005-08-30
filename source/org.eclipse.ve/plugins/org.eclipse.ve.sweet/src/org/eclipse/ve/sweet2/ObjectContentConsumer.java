@@ -35,7 +35,7 @@ public class ObjectContentConsumer implements IContentConsumer {
 
 	public ObjectContentConsumer(ObjectDelegate binder, String propertyName) {
 		this(propertyName);
-		setObjectBinder(binder);
+		ouputChanged(binder);
 	}
 
 	public Object getValue() {
@@ -136,7 +136,7 @@ public class ObjectContentConsumer implements IContentConsumer {
 		}		
 	}
 
-	public void setObjectBinder(IObjectDelegate anObjectBinder) {
+	public void ouputChanged(Object anObjectDelegate) {
 		if(fBinders[0] != null){
 			fBinders[0].removePropertyChangeListener(propertyChangeListener);
 		}
@@ -149,8 +149,12 @@ public class ObjectContentConsumer implements IContentConsumer {
 				}
 			};		
 		};
-		
-		fBinders[0] = anObjectBinder;		
+		if(anObjectDelegate instanceof IObjectDelegate){
+			fBinders[0] = (IObjectDelegate)anObjectDelegate;
+		} else {
+			fBinders[0] = ObjectDelegate.createObjectBinder(anObjectDelegate.getClass());
+			fBinders[0].setValue(anObjectDelegate);
+		}
 		fBinders[0].addPropertyChangeListener(propertyChangeListener);		
 		initialize();
 	}
