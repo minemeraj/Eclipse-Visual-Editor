@@ -1,4 +1,4 @@
-package org.eclipse.ve.sweet2;
+package org.eclipse.ve.sweet2.examples;
 
 public interface PersonInterface {
 	

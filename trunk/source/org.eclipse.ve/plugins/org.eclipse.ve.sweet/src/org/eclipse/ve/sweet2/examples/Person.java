@@ -1,4 +1,4 @@
-package org.eclipse.ve.sweet2;
+package org.eclipse.ve.sweet2.examples;
 
 import java.util.*;
 
@@ -16,12 +16,12 @@ public class Person implements PersonInterface {
 	public static Person JOHN;
 	public static Person BIG_CHEESE;
 	static{
-		JOHN = new Person("Doe","John",37);
-		JILL = new Person("Smoth","Jill",25);
-		CHRIS_CHRINGLE = new Person("Cringle","Chris",75);
+		JOHN = new Person("John","Doe",37);
+		JILL = new Person("Jill","Smith",25);
+		CHRIS_CHRINGLE = new Person("Chris","Chringle",75);
 		TOOTH_FAIRY = new Person("Tooth","Fairy",30);	
 		TOOTH_FAIRY.setManager(CHRIS_CHRINGLE);
-		BIG_CHEESE = new Person("Cheese","Big",52);
+		BIG_CHEESE = new Person("Big","Cheese",52);
 		JOHN.setManager(BIG_CHEESE);
 		JILL.setManager(BIG_CHEESE);
 		BIG_CHEESE.addBackup(CHRIS_CHRINGLE);

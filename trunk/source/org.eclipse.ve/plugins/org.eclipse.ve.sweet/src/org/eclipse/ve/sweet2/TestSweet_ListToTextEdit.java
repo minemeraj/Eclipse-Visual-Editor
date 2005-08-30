@@ -6,6 +6,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ve.sweet2.examples.Person;
+import org.eclipse.ve.sweet2.examples.PersonLabelProvider;
 /**
  * This example shows a list of people and when one is selected it is editable within text fields showing the selected person
  */

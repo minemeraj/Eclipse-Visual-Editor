@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ve.sweet2.examples.Person;
 
 /**
  * This example builds on TestSweet_CommitPolicies
