@@ -11,7 +11,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.ve.sweet2.IntegerLabelConsumer;
 import org.eclipse.ve.sweet2.ObjectContentConsumer;
 import org.eclipse.ve.sweet2.ObjectContentProvider;
-import org.eclipse.ve.sweet2.Person;
 import org.eclipse.ve.sweet2.TextEditor;
 
 public class Foil_1_PropertyBinding {

@@ -9,8 +9,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.ve.sweet2.ListContentProvider;
 import org.eclipse.ve.sweet2.ListEditor;
 import org.eclipse.ve.sweet2.ObjectContentConsumer;
-import org.eclipse.ve.sweet2.Person;
-import org.eclipse.ve.sweet2.PersonLabelProvider;
 
 public class Foil_4_ListBinding {
 
