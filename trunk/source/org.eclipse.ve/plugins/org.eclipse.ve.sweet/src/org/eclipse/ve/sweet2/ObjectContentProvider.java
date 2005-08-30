@@ -64,20 +64,23 @@ public class ObjectContentProvider implements IElementContentProvider {
 		if(newInput == null) return;
 		if(newInput instanceof IObjectDelegate){				
 			fBinders[0] = (IObjectDelegate)newInput;
-			viewerInput = fBinders[0].getValue();
-			initialize();
-			// 	Listen to the source binder so when its value changes we can notify listeners
-			if(fPropertyChangeListener == null){
-				fPropertyChangeListener = new PropertyChangeListener(){
-					public void propertyChange(PropertyChangeEvent event) {
-						// 	If the object that changed is the one we are display
-						if(fPropertyNames[fPropertyNames.length-1].equals(event.getPropertyName()) || event.getPropertyName() == null){
-							viewer.refresh();
-						}				
-					}
-				};
-				fBinders[0].addPropertyChangeListener(fPropertyChangeListener);				
-			}
+		} else if (newInput != null) {
+			fBinders[0] = ObjectDelegate.createObjectBinder(newInput.getClass());		
+			fBinders[0].setValue(newInput);
+		}
+		viewerInput = fBinders[0].getValue();
+		initialize();
+		// 	Listen to the source binder so when its value changes we can notify listeners
+		if(fPropertyChangeListener == null){
+			fPropertyChangeListener = new PropertyChangeListener(){
+				public void propertyChange(PropertyChangeEvent event) {
+					// 	If the object that changed is the one we are display
+					if(fPropertyNames[fPropertyNames.length-1].equals(event.getPropertyName()) || event.getPropertyName() == null){
+						viewer.refresh();
+					}				
+				}
+			};
+			fBinders[0].addPropertyChangeListener(fPropertyChangeListener);				
 		}
 		if(changeListener != null && oldInput != null){
 			ObjectDelegate.removeListener(oldInput.getClass(),changeListener);

@@ -104,7 +104,7 @@ public class SpinnerEditor extends ContentViewer implements Editor {
 				}
 			});
 			if(fContentConsumer != null){
-				fContentConsumer.setObjectBinder(binder);
+				fContentConsumer.ouputChanged(binder);
 			}
 		} else {
 			fSpinner.setEnabled(true);

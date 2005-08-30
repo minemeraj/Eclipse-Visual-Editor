@@ -28,6 +28,7 @@ public class TextEditor extends ContentViewer implements Editor {
 	private int updateListenerType;
 	private int commitPolicy = DEFAULT_COMMIT_POLICY;
 	private IDomainProvider domainProvider;
+	private ILabelConsumer fLabelConsumer;
 	private boolean isSettingValue = false;
 	private String lastSetValue;
 	private IObjectDelegate fBinder;
@@ -90,7 +91,7 @@ public class TextEditor extends ContentViewer implements Editor {
 				}
 			});
 			if(fContentConsumer != null){
-				fContentConsumer.setObjectBinder(binder);
+				fContentConsumer.ouputChanged(binder);
 			}
 		} else {
 			text.setEnabled(true);
@@ -119,7 +120,10 @@ public class TextEditor extends ContentViewer implements Editor {
 						isSettingValue = true;
 						// Push the changes down to the model domain
 						if (fContentConsumer != null){
-							fContentConsumer.setValue(text.getText());
+							Object value = fLabelConsumer == null ?
+									text.getText() :
+									fLabelConsumer.getObject(text.getText());
+							fContentConsumer.setValue(value);
 						}
 						isSettingValue = false;						
 					}
@@ -150,6 +154,9 @@ public class TextEditor extends ContentViewer implements Editor {
 
 	public void setContentConsumer(IContentConsumer contentConsumer) {
 		fContentConsumer = contentConsumer;
+		if(fOutput != null){
+			fContentConsumer.ouputChanged(fOutput);
+		}
 	}
 
 	public IContentConsumer getContentConsumer() {
@@ -158,10 +165,20 @@ public class TextEditor extends ContentViewer implements Editor {
 
 	public void setOutput(Object anOutput) {
 		fOutput = anOutput;
-		fContentConsumer.setObjectBinder((IObjectDelegate)anOutput);
+		if(fContentConsumer != null){
+			fContentConsumer.ouputChanged(anOutput);
+		}
 	}
 
 	public Object getOutput() {
 		return fOutput;
+	}
+
+	public ILabelConsumer getLabelConsumer() {
+		return fLabelConsumer;
+	}
+
+	public void setLabelConsumer(ILabelConsumer labelConsumer) {
+		fLabelConsumer = labelConsumer;
 	}
 }
