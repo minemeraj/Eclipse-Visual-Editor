@@ -2,9 +2,7 @@ package org.eclipse.ve.sweet2;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
 import java.util.*;
 
 public class ObjectDelegate implements IObjectDelegate , InvocationHandler {

@@ -112,7 +112,8 @@ public class TextEditor extends ContentViewer implements Editor {
 							Object value = fLabelConsumer == null ?
 									text.getText() :
 									fLabelConsumer.getObject(text.getText());
-							fContentConsumer.setValue(value);
+							if (!value.equals(fContentConsumer.getValue()))
+							    fContentConsumer.setValue(value);
 						}
 						isSettingValue = false;						
 					}
