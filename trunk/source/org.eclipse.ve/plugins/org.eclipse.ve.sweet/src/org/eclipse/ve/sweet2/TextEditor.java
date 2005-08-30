@@ -17,7 +17,6 @@ public class TextEditor extends ContentViewer implements Editor {
 	private Listener updateListener;
 	private int updateListenerType;
 	private int commitPolicy = DEFAULT_COMMIT_POLICY;
-	private IDomainProvider domainProvider;
 	private ILabelConsumer fLabelConsumer;
 	private boolean isSettingValue = false;
 	private String lastSetValue;
@@ -136,10 +135,6 @@ public class TextEditor extends ContentViewer implements Editor {
 		default:
 			return DEFAULT_COMMIT_POLICY;
 		}		
-	}
-
-	public void setDomainProvider(IDomainProvider aDomainProvider) {	
-		domainProvider = aDomainProvider;
 	}
 
 	public void setContentConsumer(IContentConsumer contentConsumer) {

@@ -12,9 +12,9 @@
  *  Created Aug 17, 2005 by Gili Mendel
  * 
  *  $RCSfile: BindingsTest.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-29 22:11:20 $ 
+ *  $Revision: 1.1 $  $Date: 2005-08-30 15:53:29 $ 
  */
-package org.eclipse.ve.sweet2;
+package org.eclipse.ve.sweet2.testing;
 
 import java.awt.peer.ListPeer;
 import java.beans.PropertyChangeEvent;
@@ -31,6 +31,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
+import org.eclipse.ve.sweet2.Editor;
+import org.eclipse.ve.sweet2.IObjectDelegate;
+import org.eclipse.ve.sweet2.ListEditor;
+import org.eclipse.ve.sweet2.ObjectContentConsumer;
+import org.eclipse.ve.sweet2.ObjectContentProvider;
+import org.eclipse.ve.sweet2.ObjectDelegate;
+import org.eclipse.ve.sweet2.TextEditor;
 import org.eclipse.ve.sweet2.hibernate.HibernatePersonServicesHelper;
 import org.eclipse.ve.sweet2.hibernate.Person;
 
