@@ -79,6 +79,8 @@ public class Foil_1_PropertyBinding {
 		ageEditor.setContentProvider(new ObjectContentProvider("age"));
 		ageEditor.setInput(person);
 		ageEditor.setLabelConsumer(new IntegerLabelConsumer());
+		ageEditor.setContentConsumer(new ObjectContentConsumer("age"));
+		ageEditor.setOutput(person);
 		
 	}
 }
