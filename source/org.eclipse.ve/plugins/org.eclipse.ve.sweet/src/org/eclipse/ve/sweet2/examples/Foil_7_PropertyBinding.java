@@ -1,17 +1,11 @@
 package org.eclipse.ve.sweet2.examples;
 
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.ve.sweet2.IntegerLabelConsumer;
-import org.eclipse.ve.sweet2.ObjectContentConsumer;
-import org.eclipse.ve.sweet2.ObjectContentProvider;
-import org.eclipse.ve.sweet2.TextEditor;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
+
+import org.eclipse.ve.sweet2.*;
 
 public class Foil_7_PropertyBinding {
 
