@@ -60,6 +60,11 @@ if(strlen($action)<1){
 			exit("<h1>Cannot restore file via copy</h1>");
 		}else{
 			echo "<h1>Success - file restored</h1>";
+           // Make sure that vep-home is the group and that it has rw access. This is because
+           // the current user is the web site user (such as webrun) and so group may not be
+           // correct and we would not be able to access it by hand.
+           chgrp($DESTFILE, "vep-home");
+           chmod($DESTFILE, 0664);			
 		}
 	}else{
 		exit("<h1>Cannot find directory $DESTDIR</h1>");
