@@ -11,7 +11,7 @@ Editor Project</font></b><br>
       <font color="#6699FF">
       <font class="indexsub"><font size="2">First-class GUI building tools for Eclipse</font></font><font size="2">
 		</font></font> </td>
-      <td style="width: 40%; text-align: right;"> <img src="vep.png"
+      <td style="width: 40%; text-align: right;"> <img src="http://www.eclipse.org/vep/WebContent/images/vep.png"
  title="" alt="Visual Editor Project Logo"> <br>
       </td>
     </tr>
