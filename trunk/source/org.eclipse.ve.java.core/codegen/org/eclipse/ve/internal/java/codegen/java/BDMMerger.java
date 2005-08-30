@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.62 $  $Date: 2005-08-29 21:38:20 $ 
+ *  $Revision: 1.63 $  $Date: 2005-08-30 20:45:07 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -405,7 +405,7 @@ public class BDMMerger {
 	protected boolean processSameCallBackExpression(CodeCallBackRef main, CodeCallBackRef updExp){
 		if(main.getOffset()!=updExp.getOffset())
 			main.setOffset(updExp.getOffset());
-		main.setContent(updExp.getContent());
+		main.setContent(updExp.getContentParser());
 		main.setExprStmt(updExp.getExprStmt());
 		return true;
 	}
