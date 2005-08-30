@@ -26,8 +26,8 @@ public class Foil_16_BindingAcrossTheGUI {
 	private Composite composite = null;
 	private Label label = null;
 	private Label label1 = null;
-	private Text managerFirstNameText = null;
-	private Text firstNameText = null;
+	private Text managerLastNameText = null;
+	private Text santaLastName = null;
 	/**
 	 * This method initializes sShell
 	 */
@@ -51,7 +51,7 @@ public class Foil_16_BindingAcrossTheGUI {
 	private void bind(){
 		
 		IObjectDelegate selectedPerson = ObjectDelegate.createObjectBinder(Person.class);
-		Person jill = Person.JILL;
+		Person santa = Person.CHRIS_CHRINGLE;
 		
 		ListEditor employeesList = new ListEditor(employees);
 		employeesList.setContentProvider(new ListContentProvider());
@@ -59,17 +59,17 @@ public class Foil_16_BindingAcrossTheGUI {
 		employeesList.setInput(Person.getSampleData());
 		employeesList.setOutput(selectedPerson);
 		
-		TextEditor managerFirstNameEditor = new TextEditor(managerFirstNameText);
-		managerFirstNameEditor.setContentProvider(new ObjectContentProvider("manager.firstName"));
+		TextEditor managerFirstNameEditor = new TextEditor(managerLastNameText);
+		managerFirstNameEditor.setContentProvider(new ObjectContentProvider("manager.lastName"));
 		managerFirstNameEditor.setInput(selectedPerson);
-		managerFirstNameEditor.setContentConsumer(new ObjectContentConsumer("manager.firstName"));
+		managerFirstNameEditor.setContentConsumer(new ObjectContentConsumer("manager.lastName"));
 		managerFirstNameEditor.setOutput(selectedPerson);
 		
-		TextEditor firstNameEditor = new TextEditor(firstNameText);
-		firstNameEditor.setContentProvider(new ObjectContentProvider("firstName"));
-		firstNameEditor.setInput(jill);
-		firstNameEditor.setContentConsumer(new ObjectContentConsumer("firstName"));
-		firstNameEditor.setOutput(jill);
+		TextEditor firstNameEditor = new TextEditor(santaLastName);
+		firstNameEditor.setContentProvider(new ObjectContentProvider("lastName"));
+		firstNameEditor.setInput(santa);
+		firstNameEditor.setContentConsumer(new ObjectContentConsumer("lastName"));
+		firstNameEditor.setOutput(santa);
 				
 	}
 	/**
@@ -95,13 +95,13 @@ public class Foil_16_BindingAcrossTheGUI {
 		composite.setLayoutData(gridData1);
 		composite.setLayout(gridLayout1);
 		label = new Label(composite, SWT.NONE);
-		label.setText("Managers first name");
-		managerFirstNameText = new Text(composite, SWT.BORDER);
-		managerFirstNameText.setLayoutData(gridData2);
+		label.setText("Manager's last name");
+		managerLastNameText = new Text(composite, SWT.BORDER);
+		managerLastNameText.setLayoutData(gridData2);
 		label1 = new Label(composite, SWT.NONE);
-		label1.setText("First name");
-		firstNameText = new Text(composite, SWT.BORDER);
-		firstNameText.setLayoutData(gridData3);
+		label1.setText("Santa's last name");
+		santaLastName = new Text(composite, SWT.BORDER);
+		santaLastName.setLayoutData(gridData3);
 	}
 
 }
