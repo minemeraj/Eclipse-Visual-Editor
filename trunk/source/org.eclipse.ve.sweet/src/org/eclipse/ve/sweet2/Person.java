@@ -8,22 +8,21 @@ public class Person implements PersonInterface {
 	private String lastName;
 	private int age;
 	private Person manager;
-	private static List sampleData;
+	private static List sampleData = new ArrayList();
+	public static Person CHRIS_CHRINGLE;
+	public static Person TOOTH_FAIRY;
+	static{
+		Person john = new Person("Doe","John",37);
+		Person jill = new Person("Smoth","Jill",25);
+		CHRIS_CHRINGLE = new Person("Cringle","Chris",75);
+		TOOTH_FAIRY = new Person("Tooth","Fairy",30);	
+		TOOTH_FAIRY.setManager(CHRIS_CHRINGLE);
+		Person manager = new Person("Cheese","Big",52);
+		john.setManager(manager);
+		jill.setManager(manager);		
+	}
 	
 	public static List getSampleData(){
-		if(sampleData == null){
-			sampleData = new ArrayList();
-			Person john = new Person("Doe","John",37);
-			Person jill = new Person("Smoth","Jill",25);
-			Person chris = new Person("Cringle","Chris",75);
-			Person manager = new Person("Cheese","Big",52);
-			john.setManager(manager);
-			jill.setManager(manager);
-			sampleData.add(john);
-			sampleData.add(jill);
-			sampleData.add(chris);
-			sampleData.add(manager);
-		}
 		return sampleData;
 	}
 
@@ -31,6 +30,7 @@ public class Person implements PersonInterface {
 		firstName = aFirstName;
 		lastName = aLastName;
 		age = anAge;
+		sampleData.add(this);
 	}
 	public String getFirstName() {
 		return firstName;

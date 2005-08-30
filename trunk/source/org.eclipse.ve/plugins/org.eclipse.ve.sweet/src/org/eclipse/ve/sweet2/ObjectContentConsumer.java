@@ -136,7 +136,7 @@ public class ObjectContentConsumer implements IContentConsumer {
 		}		
 	}
 
-	public void ouputChanged(Object anObjectDelegate) {
+	public void ouputChanged(Object anOutput) {
 		if(fBinders[0] != null){
 			fBinders[0].removePropertyChangeListener(propertyChangeListener);
 		}
@@ -149,11 +149,11 @@ public class ObjectContentConsumer implements IContentConsumer {
 				}
 			};		
 		};
-		if(anObjectDelegate instanceof IObjectDelegate){
-			fBinders[0] = (IObjectDelegate)anObjectDelegate;
+		if(anOutput instanceof IObjectDelegate){
+			fBinders[0] = (IObjectDelegate)anOutput;
 		} else {
-			fBinders[0] = ObjectDelegate.createObjectBinder(anObjectDelegate.getClass());
-			fBinders[0].setValue(anObjectDelegate);
+			fBinders[0] = ObjectDelegate.createObjectBinder(anOutput.getClass());
+			fBinders[0].setValue(anOutput);
 		}
 		fBinders[0].addPropertyChangeListener(propertyChangeListener);		
 		initialize();

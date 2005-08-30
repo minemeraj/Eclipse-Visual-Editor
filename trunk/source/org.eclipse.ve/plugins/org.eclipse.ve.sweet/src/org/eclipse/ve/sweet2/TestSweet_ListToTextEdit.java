@@ -1,6 +1,5 @@
 package org.eclipse.ve.sweet2;
 
-import java.util.List;
 
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
@@ -25,21 +24,8 @@ public class TestSweet_ListToTextEdit {
 		table_data.heightHint = 150;
 		listViewer.getControl().setLayoutData(table_data);
 		
-		IStructuredContentProvider listContentProvider = new IStructuredContentProvider(){
-			public Object[] getElements(Object inputElement) {
-				return ((List)inputElement).toArray();
-			}
-			public void dispose() {				
-			}
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			}
-		};		
-		ILabelProvider personLabelProvider = new LabelProvider(){
-			public String getText(Object element) {
-				Person p = (Person)element;
-				return p.getFirstName() + " " + p.getLastName() + " -  " + p.getAge();
-			}
-		};
+		IStructuredContentProvider listContentProvider = new ListContentProvider();		
+		ILabelProvider personLabelProvider = new PersonLabelProvider();
 		
 		listViewer.setContentProvider(listContentProvider);
 		listViewer.setLabelProvider(personLabelProvider);

@@ -119,6 +119,10 @@ public class ListEditor extends AbstractListViewer implements Editor {
 
 	public void setContentConsumer(IContentConsumer contentConsumer) {
 		fContentConsumer = contentConsumer;
+		if(fOutput != null){
+			fContentConsumer.ouputChanged(fOutput);
+			refresh();			
+		}
 		fContentConsumer.addPropertyChangeListener(new PropertyChangeListener(){
 			public void propertyChange(PropertyChangeEvent event) {
 				if(event.getPropertyName() == null){
@@ -126,7 +130,6 @@ public class ListEditor extends AbstractListViewer implements Editor {
 				}
 			}	
 		});
-		refresh();
 	}
 	
 	protected void handleSelect(SelectionEvent event) {
@@ -144,7 +147,10 @@ public class ListEditor extends AbstractListViewer implements Editor {
 	 
 	public void setOutput(Object anOutput) {
 		fOutput = anOutput;
-		fContentConsumer.ouputChanged((IObjectDelegate)anOutput);
+		if(fContentConsumer != null){
+			fContentConsumer.ouputChanged(anOutput);
+			refresh();			
+		}
 	}
 	public Object getOutput() {
 		return fOutput;
