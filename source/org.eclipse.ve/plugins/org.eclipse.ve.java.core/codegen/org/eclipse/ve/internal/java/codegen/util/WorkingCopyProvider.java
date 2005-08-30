@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkingCopyProvider.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.13 $  $Date: 2005-08-30 16:01:37 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -112,9 +112,13 @@ public class WorkingCopyProvider implements IWorkingCopyProvider {
 	}
 
 	public TypeResolver getResolver() {
-		if (internalResolver == null || CodeGenUtil.getMainType(getWorkingCopy(false))!=internalResolver.getMainType()) {
+		if (internalResolver == null || !internalResolver.getMainType().equals(CodeGenUtil.getMainType(getWorkingCopy(false)))) {
 			ICompilationUnit wc = getWorkingCopy(false);
 			if (wc != null) {
+				if(internalResolver!=null){
+					internalResolver.dispose();
+					internalResolver = null;
+				}
 				try {
 					internalResolver = new TypeResolver(wc.getImports(), CodeGenUtil.getMainType(wc));
 				} catch (JavaModelException e) {
