@@ -51,6 +51,7 @@ public class Foil_16_BindingAcrossTheGUI {
 	private void bind(){
 		
 		IObjectDelegate selectedPerson = ObjectDelegate.createObjectBinder(Person.class);
+		Person jill = Person.JILL;
 		
 		ListEditor employeesList = new ListEditor(employees);
 		employeesList.setContentProvider(new ListContentProvider());
@@ -66,9 +67,9 @@ public class Foil_16_BindingAcrossTheGUI {
 		
 		TextEditor firstNameEditor = new TextEditor(firstNameText);
 		firstNameEditor.setContentProvider(new ObjectContentProvider("firstName"));
-		firstNameEditor.setInput(selectedPerson);
+		firstNameEditor.setInput(jill);
 		firstNameEditor.setContentConsumer(new ObjectContentConsumer("firstName"));
-		firstNameEditor.setOutput(selectedPerson);
+		firstNameEditor.setOutput(jill);
 				
 	}
 	/**
