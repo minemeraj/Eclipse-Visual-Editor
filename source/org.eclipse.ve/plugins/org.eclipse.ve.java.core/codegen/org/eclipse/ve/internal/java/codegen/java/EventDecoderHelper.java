@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.22 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.23 $  $Date: 2005-08-30 20:45:04 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -578,7 +578,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	}
 	
 	protected void unadaptCallBack(Callback c) {
-		ICodeGenAdapter ca = (ICodeGenAdapter) EcoreUtil.getExistingAdapter(c,ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER) ;
+		ICodeGenAdapter ca = (ICodeGenAdapter) EcoreUtil.getExistingAdapter(c,ICodeGenAdapter.JVE_CODE_GEN_TYPE) ;
 		if (ca != null)
 			c.eAdapters().remove(ca); 
 	}

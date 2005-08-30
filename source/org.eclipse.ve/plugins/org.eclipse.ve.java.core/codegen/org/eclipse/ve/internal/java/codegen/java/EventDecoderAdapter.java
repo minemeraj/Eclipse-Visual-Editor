@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.6 $  $Date: 2005-08-30 20:45:07 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -185,7 +185,8 @@ public class EventDecoderAdapter implements ICodeGenAdapter {
 				return null;
 			}
 			public void notifyChanged(org.eclipse.emf.common.notify.Notification notification) {}
-			public org.eclipse.emf.common.notify.Notifier getTarget() {return this.getTarget();}
+			public org.eclipse.emf.common.notify.Notifier getTarget() {
+				return EventDecoderAdapter.this.getTarget();}
 			public void setTarget(org.eclipse.emf.common.notify.Notifier newTarget) {}
 
 			public boolean isAdapterForType(java.lang.Object type) { 
