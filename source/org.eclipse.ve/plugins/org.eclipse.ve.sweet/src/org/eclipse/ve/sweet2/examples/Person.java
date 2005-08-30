@@ -22,10 +22,11 @@ public class Person implements PersonInterface {
 		TOOTH_FAIRY = new Person("Tooth","Fairy",30);	
 		TOOTH_FAIRY.setManager(CHRIS_CHRINGLE);
 		BIG_CHEESE = new Person("Big","Cheese",52);
-		JOHN.setManager(BIG_CHEESE);
+		JOHN.setManager(TOOTH_FAIRY);
 		JILL.setManager(BIG_CHEESE);
 		BIG_CHEESE.addBackup(CHRIS_CHRINGLE);
 		BIG_CHEESE.addBackup(TOOTH_FAIRY);
+		
 	}
 	
 	public static List getSampleData(){

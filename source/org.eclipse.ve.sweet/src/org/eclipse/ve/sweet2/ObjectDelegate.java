@@ -144,6 +144,14 @@ public class ObjectDelegate implements IObjectDelegate , InvocationHandler {
 		}
 		isSignallingChange = false;		
 	}
+	
+	public static void refresh(Object anInstance, String propertyName){
+		List listeners = (List)typeListeners.get(anInstance.getClass());
+		Iterator iter = listeners.iterator();
+		while(iter.hasNext()){
+			((ChangeListener)iter.next()).objectChanged(anInstance,propertyName);
+		}		
+	}
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		// TODO Auto-generated method stub
