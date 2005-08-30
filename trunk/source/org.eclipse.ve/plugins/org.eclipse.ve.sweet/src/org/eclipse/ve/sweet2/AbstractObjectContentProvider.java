@@ -5,8 +5,8 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+
 import org.eclipse.ve.sweet2.ObjectDelegate.ChangeListener;
 
 public abstract class AbstractObjectContentProvider {
@@ -16,7 +16,8 @@ public abstract class AbstractObjectContentProvider {
 	protected Method[] fGetMethods;
 	private ChangeListener changeListener;
 	protected IObjectDelegate[] fBinders;
-	private PropertyChangeListener fPropertyChangeListener;
+	private PropertyChangeListener[] fPropertyChangeListeners;
+	private Viewer fViewer;
 
 	public AbstractObjectContentProvider(String aPropertyName){
 		if(aPropertyName != null){
@@ -89,9 +90,23 @@ public abstract class AbstractObjectContentProvider {
 		return null;		
 	}	
 	
+	class ConsumerListener implements PropertyChangeListener{
+		String fPropertyName;
+		ConsumerListener(String propertyName){
+			fPropertyName = propertyName;
+		}
+		public void propertyChange(PropertyChangeEvent event) {
+			// 	If the object that changed is the one we are display
+			if(fPropertyName.equals(event.getPropertyName()) || event.getPropertyName() == null){
+				fViewer.refresh();
+			}
+		}
+	}	
+	
 	public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
 		// Listen to the input and refresh the viewer whenever the registered property changes
 		if(newInput == null) return;
+		fViewer = viewer;
 		if(newInput instanceof IObjectDelegate){				
 			fBinders[0] = (IObjectDelegate)newInput;
 		} else if (newInput != null) {
@@ -101,16 +116,12 @@ public abstract class AbstractObjectContentProvider {
 		viewerInput = fBinders[0].getValue();
 		initialize();
 		// 	Listen to the source binder so when its value changes we can notify listeners
-		if(fPropertyChangeListener == null){
-			fPropertyChangeListener = new PropertyChangeListener(){
-				public void propertyChange(PropertyChangeEvent event) {
-					// 	If the object that changed is the one we are display
-					if(fPropertyNames[fPropertyNames.length-1].equals(event.getPropertyName()) || event.getPropertyName() == null){
-						viewer.refresh();
-					}				
-				}
-			};
-			fBinders[0].addPropertyChangeListener(fPropertyChangeListener);				
+		if(fPropertyChangeListeners == null){
+			fPropertyChangeListeners = new PropertyChangeListener[fBinders.length];
+			for (int i = 0; i < fBinders.length; i++) {
+				fPropertyChangeListeners[i] = new ConsumerListener(fPropertyNames[i]);
+				fBinders[i].addPropertyChangeListener(fPropertyChangeListeners[i]);					
+			}					
 		}
 		if(changeListener != null && oldInput != null){
 			ObjectDelegate.removeListener(oldInput.getClass(),changeListener);
