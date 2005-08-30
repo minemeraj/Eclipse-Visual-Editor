@@ -109,14 +109,20 @@ public final class ComboEditor extends AbstractListViewer implements Editor {
 				}
 			}	
 		});
-		refresh();		
+		if(fOutput != null){
+			fContentConsumer.ouputChanged(fOutput);
+			refresh();			
+		}		
 	}
 	public IContentConsumer getContentConsumer() {
 		return fContentConsumer;
 	}
 	public void setOutput(Object anOutput) {
 		fOutput = anOutput;
-		fContentConsumer.ouputChanged((IObjectDelegate)anOutput);		
+		if(fContentConsumer != null){
+			fContentConsumer.ouputChanged(anOutput);
+			refresh();
+		}
 	}
 	public Object getOutput() {
 		return fOutput;
