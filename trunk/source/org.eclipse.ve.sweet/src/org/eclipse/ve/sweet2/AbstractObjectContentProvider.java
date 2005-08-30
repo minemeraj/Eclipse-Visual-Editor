@@ -105,7 +105,7 @@ public abstract class AbstractObjectContentProvider {
 	
 	public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
 		// Listen to the input and refresh the viewer whenever the registered property changes
-		if(newInput == null) return;
+		if(newInput == null || fPropertyNames == null) return;
 		fViewer = viewer;
 		if(newInput instanceof IObjectDelegate){				
 			fBinders[0] = (IObjectDelegate)newInput;

@@ -107,6 +107,8 @@ public class ListEditor extends AbstractListViewer implements Editor {
 				fList.setEnabled(true);				
 				setSelection(new StructuredSelection(objectValue),true);
 			}
+		} else if (fOutput != null) {
+			fList.setEnabled(true);
 		} else {
 			fList.setEnabled(false);			
 		}
@@ -138,6 +140,8 @@ public class ListEditor extends AbstractListViewer implements Editor {
 		Object selectedObject = ((IStructuredSelection)getSelection()).getFirstElement();
 		if(fContentConsumer != null){
 			fContentConsumer.setValue(selectedObject);
+		} else if (fOutput instanceof IObjectDelegate){
+			((IObjectDelegate)fOutput).setValue(selectedObject);
 		}
 	}
 
@@ -148,9 +152,9 @@ public class ListEditor extends AbstractListViewer implements Editor {
 	public void setOutput(Object anOutput) {
 		fOutput = anOutput;
 		if(fContentConsumer != null){
-			fContentConsumer.ouputChanged(anOutput);
-			refresh();			
+			fContentConsumer.ouputChanged(anOutput);			
 		}
+		refresh();		
 	}
 	public Object getOutput() {
 		return fOutput;
