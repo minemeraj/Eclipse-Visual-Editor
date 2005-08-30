@@ -1,23 +1,11 @@
 package org.eclipse.ve.sweet2.examples;
 
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.ve.sweet2.ComboEditor;
-import org.eclipse.ve.sweet2.IObjectDelegate;
-import org.eclipse.ve.sweet2.ListContentProvider;
-import org.eclipse.ve.sweet2.ListEditor;
-import org.eclipse.ve.sweet2.ObjectContentConsumer;
-import org.eclipse.ve.sweet2.ObjectContentProvider;
-import org.eclipse.ve.sweet2.ObjectDelegate;
-import org.eclipse.ve.sweet2.TextEditor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
+
+import org.eclipse.ve.sweet2.*;
 
 public class Foil_16_BindingAcrossTheGUI {
 
