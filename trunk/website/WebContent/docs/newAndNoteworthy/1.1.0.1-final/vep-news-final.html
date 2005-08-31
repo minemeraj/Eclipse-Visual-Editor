@@ -19,7 +19,9 @@
 for SWT Menus<br>
       </b></td>
       <td style="vertical-align: top;">The Visual Editor now provides
-support for SWT Menus. <br>
+support for SWT Menus. (<a
+ href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=106694">106694</a>,
+      <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=108031">108031</a>)<br>
       <br>
       <img alt="SWT Menus Palette 1" src="swt-menus-palette.png"
  style="width: 177px; height: 183px;">&nbsp;<br>
@@ -47,16 +49,33 @@ Menubar can now be dropped onto a Shell, and MenuItems onto the MenuBar<br>
     </tr>
     <tr>
       <td align="left" valign="top" width="30%">
-      <p align="right"><b>Visual Tab selection in CTabFolders<br>
+      <p align="right"><b>Visual Tab selection in CTabFolder and
+JTabbedPane<br>
       </b></p>
       </td>
       <td valign="top" width="70%">The Visual Editor now provides the
-direct selection of the tabs in a CTabFolder, without having to use the
+direct selection of the tabs in SWT's CTabFolder and Swing's
+JTabbedPane, without having to use the
 context menu, or the <span style="font-style: italic;">Java Beans</span>
-outline view.<br>
+outline view. (<a
+ href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=100569">100569</a>)<br>
       <br>
-      <img alt="CTabFolder" src="ctabfolder.png"
- style="width: 246px; height: 126px;"><br>
+      <table style="width: 100%; text-align: left;" border="0"
+ cellpadding="2" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;">CTabFolder<br>
+            <br>
+            <img alt="CTabFolder" src="ctabfolder.png"
+ style="width: 246px; height: 126px;"></td>
+            <td style="vertical-align: top;">JTabbedPane<br>
+            <br>
+            <img alt="JTabbedPane" src="jtabbedpane.png"
+ style="width: 263px; height: 129px;"><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <br>
       </td>
     </tr>
@@ -69,9 +88,11 @@ outline view.<br>
 reparent SWT containers<br>
       </b></td>
       <td style="vertical-align: top;">The Visual Editor now allows the
-reparenting of SWT containers.<br>
+moving of an SWT container from one container to another. However&nbsp;
+non-container widgets cannot be moved from one container to another.<br>
       <br>
-      <img alt="Container reparent" src="container-reparent.png"
+      <img alt="Container reparent - multiple"
+ src="container-reparent-multiple.png"
  style="width: 300px; height: 201px;"><br>
       <br>
       </td>
@@ -84,8 +105,10 @@ reparenting of SWT containers.<br>
       <td style="vertical-align: top; text-align: right;"><span
  style="font-weight: bold;">Support for 64-bit SWT GTK</span><br>
       </td>
-      <td style="vertical-align: top;">The Visual Editor now supports
-creating SWT widgets on 64-bit systems with GTK.<br>
+      <td style="vertical-align: top;">The Visual Editor now provides
+preliminary support for
+creating SWT widgets on 64-bit systems with GTK. (<a
+ href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=97769">97769</a>)<br>
       </td>
     </tr>
     <tr>
@@ -93,11 +116,23 @@ creating SWT widgets on 64-bit systems with GTK.<br>
       <hr style="width: 100%; height: 2px;"></td>
     </tr>
     <tr>
-      <td colspan="2"><br>
+      <td style="text-align: right;" colspan="1"><span
+ style="font-weight: bold;">Bug fixes and enhancements</span><br>
       </td>
+      <td style="vertical-align: top;">The Visual Editor has fixed <a
+ href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&amp;short_desc_type=allwordssubstr&amp;short_desc=&amp;product=VE&amp;target_milestone=1.1.0.1&amp;long_desc_type=allwordssubstr&amp;long_desc=&amp;bug_file_loc_type=allwordssubstr&amp;bug_file_loc=&amp;keywords_type=allwords&amp;keywords=&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;bug_severity=blocker&amp;bug_severity=critical&amp;bug_severity=major&amp;bug_severity=normal&amp;bug_severity=minor&amp;bug_severity=trivial&amp;emailtype1=substring&amp;email1=&amp;emailtype2=substring&amp;email2=&amp;bugidtype=include&amp;bug_id=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=">79
+defects</a> along with providing <a
+ href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&amp;short_desc_type=allwordssubstr&amp;short_desc=&amp;product=VE&amp;target_milestone=1.1.0.1&amp;long_desc_type=allwordssubstr&amp;long_desc=&amp;bug_file_loc_type=allwordssubstr&amp;bug_file_loc=&amp;keywords_type=allwords&amp;keywords=&amp;bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;bug_severity=enhancement&amp;emailtype1=substring&amp;email1=&amp;emailtype2=substring&amp;email2=&amp;bugidtype=include&amp;bug_id=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=">2
+enhancements</a> for the 1.1.0.1 release.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1" style="vertical-align: top;">
+      <hr style="width: 100%; height: 2px;"></td>
     </tr>
   </tbody>
 </table>
-<b></b>
+<br>
+<br>
 </body>
 </html>
