@@ -98,6 +98,21 @@ public class TextEditor extends ContentViewer implements Editor {
 		super.setContentProvider(contentProvider);
 	}
 	
+	public void update() {
+		if(!isSettingValue){
+			isSettingValue = true;
+			// Push the changes down to the model domain
+			if (fContentConsumer != null){
+				Object value = fLabelConsumer == null ?
+						text.getText() :
+						fLabelConsumer.getObject(text.getText());
+				if (!value.equals(fContentConsumer.getValue()))
+				    fContentConsumer.setValue(value);
+			}
+			isSettingValue = false;						
+		}							
+	}
+	
 	public void setUpdatePolicy(int aCommitPolicy){
 				
 		if(updateListener != null){
@@ -105,18 +120,7 @@ public class TextEditor extends ContentViewer implements Editor {
 		} else {
 			updateListener = new Listener(){
 				public void handleEvent(Event event) {
-					if(!isSettingValue){
-						isSettingValue = true;
-						// Push the changes down to the model domain
-						if (fContentConsumer != null){
-							Object value = fLabelConsumer == null ?
-									text.getText() :
-									fLabelConsumer.getObject(text.getText());
-							if (!value.equals(fContentConsumer.getValue()))
-							    fContentConsumer.setValue(value);
-						}
-						isSettingValue = false;						
-					}
+					update();
 				}				
 			};
 		}

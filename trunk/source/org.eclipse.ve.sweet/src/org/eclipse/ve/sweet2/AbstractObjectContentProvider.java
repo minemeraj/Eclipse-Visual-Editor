@@ -67,6 +67,12 @@ public abstract class AbstractObjectContentProvider {
 	
 	protected Object lookupPropertyValue(Object anInput){		
 		try{
+			if (fPropertyNames==null)
+				if (anInput instanceof IObjectDelegate)
+					return ((IObjectDelegate)anInput).getValue();
+				else
+					return anInput;
+			
 			boolean deadEnd=false;
 			for (int i = 0; i < fGetMethods.length; i++) {
 				Object binderValue = null;
@@ -105,6 +111,15 @@ public abstract class AbstractObjectContentProvider {
 	
 	public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
 		// Listen to the input and refresh the viewer whenever the registered property changes
+		if (newInput instanceof IObjectDelegate) {
+			//TODO: clean old
+			((IObjectDelegate)newInput).addPropertyChangeListener(new PropertyChangeListener() {			
+				public void propertyChange(PropertyChangeEvent evt) {
+					viewer.refresh();			
+				}			
+			});
+		}
+			
 		if(newInput == null || fPropertyNames == null) return;
 		fViewer = viewer;
 		if(newInput instanceof IObjectDelegate){				

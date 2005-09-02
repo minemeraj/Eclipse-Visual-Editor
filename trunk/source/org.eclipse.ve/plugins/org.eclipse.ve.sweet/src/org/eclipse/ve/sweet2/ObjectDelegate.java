@@ -111,7 +111,7 @@ public class ObjectDelegate implements IObjectDelegate , InvocationHandler {
 	}
 	
 	public void setValue(Object aSource) {
-		if (aSource!=null && aSource.getClass()!=receiverClass)
+		if (aSource!=null && !receiverClass.isAssignableFrom(aSource.getClass()))
 			throw new Error("Invalide value:"+aSource);
 		Object oldSource = source;
 		source = aSource;

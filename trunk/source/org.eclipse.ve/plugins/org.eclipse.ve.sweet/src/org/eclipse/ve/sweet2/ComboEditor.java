@@ -87,6 +87,7 @@ public final class ComboEditor extends AbstractListViewer implements Editor {
 		}		
 	}
 	public void refresh() {
+		super.refresh();
 		// Get the value from the content consumer's binder and select the appropiate item in the list
 		if(fContentConsumer != null){			
 			Object objectValue = fContentConsumer.getValue();

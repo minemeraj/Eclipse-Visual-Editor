@@ -12,9 +12,9 @@
  *  Created Aug 30, 2005 by Gili Mendel
  * 
  *  $RCSfile: Foil_12_ButtonBinding.java,v $
- *  $Revision: 1.1 $  $Date: 2005-08-30 17:18:27 $ 
+ *  $Revision: 1.1 $  $Date: 2005-09-02 17:54:26 $ 
  */
-package org.eclipse.ve.sweet2;
+package org.eclipse.ve.sweet2.examples;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -24,7 +24,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import org.eclipse.ve.sweet2.examples.Person;
+import org.eclipse.ve.sweet2.*;
+import org.eclipse.ve.sweet2.ObjectDelegate.ChangeListener;
 
 public class Foil_12_ButtonBinding {
 
