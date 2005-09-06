@@ -54,7 +54,6 @@ public class TestSweet {
         age.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
         
         // Edit our Person object
-        ObjectViewerFactory.factory = new JavaObjectViewerFactory();
         final IObjectViewer personEditor = ObjectViewerFactory.edit(person);
         personEditor.bind(name, "Name");
         personEditor.bind(age, "Age");
