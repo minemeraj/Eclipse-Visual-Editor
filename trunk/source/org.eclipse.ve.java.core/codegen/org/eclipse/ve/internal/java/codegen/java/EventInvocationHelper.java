@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.16 $  $Date: 2005-09-06 16:40:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -192,7 +192,7 @@ public abstract class EventInvocationHelper extends EventDecoderHelper {
 				Resolved resolvedType = fbeanPart.getModel().getResolver().resolveType(e.getName()); 
 				JavaHelpers jclazz = null;
 				if (resolvedType!=null)
-					 jclazz = JavaRefFactory.eINSTANCE.reflectType(resolvedType.getName(), fbeanPart.getEObject());
+					 jclazz = JavaRefFactory.eINSTANCE.reflectType(resolvedType.getName(), fbeanPart.getModel().getCompositionModel().getModelResourceSet());
 				if (jclazz != null && ((JavaClass)jclazz).isExistingType()) {
 					if (p.getJavaType().isAssignableFrom(jclazz))
 						result = true;

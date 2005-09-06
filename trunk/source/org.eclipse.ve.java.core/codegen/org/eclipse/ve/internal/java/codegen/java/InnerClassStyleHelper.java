@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InnerClassStyleHelper.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.15 $  $Date: 2005-09-06 16:40:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -56,7 +56,10 @@ public class InnerClassStyleHelper extends EventInvocationHelper implements IExp
 			
 			Expression exp = (Expression) event.arguments().get(0) ;
 			
-			int index = getInvocationIndex();			
+			int index = getInvocationIndex(addToEMFmodel);	
+			if (index<0) 
+				return false;
+				
 			if (!addToEMFmodel) {
 				restoreInvocationFromModel(index);
 				return true;

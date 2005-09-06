@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.23 $  $Date: 2005-08-30 20:45:04 $ 
+ *  $Revision: 1.24 $  $Date: 2005-09-06 16:40:32 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -663,7 +663,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 		  return -1 ;		
 	}
 	
-	protected int getInvocationIndex() {
+	protected int getInvocationIndex(boolean addToModel) {
 		
 		int index=0 ;
 		// In some ordering cases, we may not be able to add an event in the proper index
@@ -684,7 +684,10 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 			     index++;
 		}		
 		List events = (List)fbeanPart.getEObject().eGet(getEventSF()) ;
-		sanityCheck &= events.size()>=index;
+		if (addToModel)
+		    sanityCheck &= events.size()>=index;
+		else
+			sanityCheck &= events.size()>index;
 		return sanityCheck?index : -1;						
 	}
 	
@@ -734,7 +737,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 				}
 			}
 			// Look for an actuall class type
-			IType[] tps = t.getCompilationUnit().getTypes() ;
+			IType[] tps = t.getCompilationUnit().getAllTypes();
 			for(int i=1; i<tps.length; i++)
 			  if (tps[i].getElementName().equals(targetName)) {
 			  	String type = tps[i].getFullyQualifiedName() ;
@@ -863,7 +866,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	public VEexpressionPriority getPriorityOfExpression() {
 		EStructuralFeature sf = getEventSF();
 		EObject parent = fbeanPart.getEObject();
-		int index = getInvocationIndex(); 
+		int index = getInvocationIndex(false); 
 		return new VEexpressionPriority(IJavaFeatureMapper.PRIORITY_EVENT, sf, index, parent) ; 				
 	}
 
