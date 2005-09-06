@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.48 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.49 $  $Date: 2005-09-06 13:07:09 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -1114,7 +1114,8 @@ public   void removeFromJVEModel()  {
 				}
 			}
 		}
-		getFFDecoder().dispose();
+		if(fFFDecoder!=null)
+			fFFDecoder.dispose();
 		fFFDecoder = null;
 		setEObject(null);
 	}
