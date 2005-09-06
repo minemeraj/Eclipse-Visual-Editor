@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.63 $  $Date: 2005-08-30 20:45:07 $ 
+ *  $Revision: 1.64 $  $Date: 2005-09-06 13:07:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -212,6 +212,7 @@ public class BDMMerger {
 			Iterator beanItr = mainModel.getBeans().iterator();
 			while (beanItr.hasNext()) {
 				BeanPart bp = (BeanPart) beanItr.next();
+				bp.getParentExpressons().clear();
 				List badExpressions = bp.getBadExpressions();
 				if(badExpressions!=null && badExpressions.size()>0){
 					for (int badExpCount = 0; badExpCount < badExpressions.size(); badExpCount++) {

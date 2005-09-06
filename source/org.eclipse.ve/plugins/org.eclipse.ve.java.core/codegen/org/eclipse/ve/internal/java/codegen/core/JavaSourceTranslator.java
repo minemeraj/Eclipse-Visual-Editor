@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.87 $  $Date: 2005-08-29 18:47:06 $ 
+ *  $Revision: 1.88 $  $Date: 2005-09-06 13:07:09 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -69,7 +69,6 @@ boolean					fmodelLoaded=false;
 boolean					fparseError=false;
 ArrayList				fListeners = new ArrayList();
 
-
 public static String    fPauseSig = CodegenEditorPartMessages.JVE_STATUS_MSG_PAUSED ;  
 public static int       fCommitAndFlushNestGuard = 0 ;
 
@@ -100,7 +99,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
   	protected String[] methodHandles;
   	protected String[] fieldHandles;
   	protected List changedHandles = new ArrayList();
-  	
+
   	/**
   	 *  ReLoad the BDM model from stratch
   	 */
@@ -419,10 +418,10 @@ IDiagramSourceDecoder fSourceDecoder = null;
 		if(!cancelMonitor.isCanceled() && bdm!=null)
 			return merge(fBeanModel, bdm, cancelMonitor);
 		return false;
- 	}
+		}
   	
   	
-  	protected void processCancel(IEditorUpdateState editorState) {  		
+	protected void processCancel(IEditorUpdateState editorState) {  		
   		primPause();		
   		editorState.setCollectingDeltas(false);
   	}
@@ -433,7 +432,6 @@ IDiagramSourceDecoder fSourceDecoder = null;
 			IEditorUpdateState editorState,
 			List allDocEvents,
 			IProgressMonitor monitor) {
-
 			fWorkingCopy = workingCopy;
 			fDisplay = disp;
 			
@@ -753,6 +751,9 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 				return false ;		 		  	
 	         BeanPart bean = (BeanPart) itr.next() ;
 	         bean.getBadExpressions().clear();
+	         
+	         // clean parent expressions which were'nt used
+	        bean.getParentExpressons().clear();
 	         
 	         // If deactivated dont add to model 
 			 if(!bean.isActive())
