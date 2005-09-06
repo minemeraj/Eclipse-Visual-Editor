@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.52 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.53 $  $Date: 2005-09-06 20:32:19 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -274,13 +274,15 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			final List declaration = new ArrayList();
 			Type type = null;
 			
+			final int offset = name.getStartPosition();
+			
 			final List parents = new ArrayList();
 			final Collection visitedMap = new ArrayList();
 			while(parent!=null){
 				parents.add(parent);
 				parent.accept(new ASTVisitor(){
 					public boolean visit(Assignment node) {
-						if(!visitedMap.contains(node) && !parents.contains(node)){
+						if(!visitedMap.contains(node) && !parents.contains(node) && node.getStartPosition()<offset){
 							visitedMap.add(node);
 							if(node.getLeftHandSide() instanceof SimpleName){
 								SimpleName lhs = (SimpleName) node.getLeftHandSide();
@@ -289,29 +291,37 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 									return false;
 								}
 							}
-						}
+						} 
+						else 
+							return false;
 						return super.visit(node);
 					}
 					public boolean visit(VariableDeclarationFragment node) {
-						if(!visitedMap.contains(node) && !parents.contains(node)){
+						if(!visitedMap.contains(node) && !parents.contains(node) && node.getStartPosition()<offset){
 							visitedMap.add(node);
 							if(name.getIdentifier().equals(node.getName().getIdentifier())){
 									values.add(node.getInitializer());
 									return false;
 							}
 						}
+						else
+							return false;
 						return super.visit(node);
 					}
 					public boolean visit(VariableDeclarationExpression node) {
-						List fragments = node.fragments();
-						for(int i=0;i<fragments.size();i++){
-							VariableDeclarationFragment frag = (VariableDeclarationFragment) fragments.get(i);
-							handleVariableDeclaration(node.getType(), frag.getName(), node);
-							if(name.getIdentifier().equals(frag.getName().getIdentifier())){
-								values.add(frag.getInitializer());
-								return false;
+						if(!visitedMap.contains(node) && !parents.contains(node) && node.getStartPosition()<offset){
+							List fragments = node.fragments();
+							for(int i=0;i<fragments.size();i++){
+								VariableDeclarationFragment frag = (VariableDeclarationFragment) fragments.get(i);
+								handleVariableDeclaration(node.getType(), frag.getName(), node);
+								if(name.getIdentifier().equals(frag.getName().getIdentifier())){
+									values.add(frag.getInitializer());
+									return false;
+								}
 							}
 						}
+						else
+							return false;
 						return super.visit(node);
 					}
 					public boolean visit(VariableDeclarationStatement node) {
@@ -322,12 +332,16 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 						}
 						return super.visit(node);
 					}
-					public boolean visit(SingleVariableDeclaration node) {
-						handleVariableDeclaration(node.getType(), node.getName(), node);
-						if(name.getIdentifier().equals(node.getName().getIdentifier())){
-							values.add(node.getInitializer());
-							return false;
+					public boolean visit(SingleVariableDeclaration node) {						
+						if(!visitedMap.contains(node) && !parents.contains(node) && node.getStartPosition()<offset){
+							handleVariableDeclaration(node.getType(), node.getName(), node);
+							if (name.getIdentifier().equals(node.getName().getIdentifier())) {
+								values.add(node.getInitializer());
+								return false;
+							}
 						}
+						else
+							return false;
 						return super.visit(node);
 					}
 					public boolean visit(FieldDeclaration node) {
