@@ -1,0 +1,17 @@
+package org.eclipse.ve.sweet.fieldviewer.jface.internal;
+
+import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IContentConsumer;
+
+public interface Editor {
+	
+	public final int COMMIT_MODIFY = 0;
+	public final int COMMIT_FOCUS = 1;	
+	public final int COMMIT_EXPLICIT = 2;	
+	
+	void setUpdatePolicy(int updatePolicy);
+	void setContentConsumer(IContentConsumer contentConsumer);
+	IContentConsumer getContentConsumer();
+	void setOutput(Object anOutput);
+	Object getOutput();
+
+}

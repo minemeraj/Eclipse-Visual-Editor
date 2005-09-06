@@ -16,6 +16,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ve.sweet.fieldviewer.jface.internal.Editor;
+import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IContentConsumer;
+import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IElementContentProvider;
+import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IObjectDelegate;
 
 public class SpinnerEditor extends ContentViewer implements Editor {
 
