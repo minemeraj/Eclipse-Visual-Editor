@@ -6,7 +6,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ve.sweet2.*;
 
-public class Foil_7_PropertyBinding {
+public class Foil_7_PropertyBinding_2 {
 
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
 	private Label label = null;
@@ -77,23 +77,17 @@ public class Foil_7_PropertyBinding {
 		person = Person.CHRIS_CHRINGLE;
 		
 		TextEditor firstNameEditor = new TextEditor(firstNameText);
-		firstNameEditor.setContentProvider(new ObjectContentProvider("firstName"));
-		firstNameEditor.setContentConsumer(new ObjectContentConsumer("firstName"));
+		firstNameEditor.setContentProvider(new ObjectConsumerProvider("firstName"));
 		firstNameEditor.setInput(person);
-		firstNameEditor.setOutput(person);
 		
 		TextEditor lastNameEditor = new TextEditor(lastNameText);
-		lastNameEditor.setContentProvider(new ObjectContentProvider("lastName"));
-		lastNameEditor.setContentConsumer(new ObjectContentConsumer("lastName"));
+		lastNameEditor.setContentProvider(new ObjectConsumerProvider("lastName"));
 		lastNameEditor.setInput(person);	
-		lastNameEditor.setOutput(person);
 				
 		TextEditor ageEditor = new TextEditor(ageText);
-		ageEditor.setContentProvider(new ObjectContentProvider("age"));
+		ageEditor.setContentProvider(new ObjectConsumerProvider("age"));
 		ageEditor.setInput(person);
-		ageEditor.setLabelConsumer(new IntegerLabelConsumer());
-		ageEditor.setContentConsumer(new ObjectContentConsumer("age"));
-		ageEditor.setOutput(person);
+		ageEditor.setLabelConsumer(new IntegerLabelConsumer()); // TODO
 		
 		// For demoing the binding
 		

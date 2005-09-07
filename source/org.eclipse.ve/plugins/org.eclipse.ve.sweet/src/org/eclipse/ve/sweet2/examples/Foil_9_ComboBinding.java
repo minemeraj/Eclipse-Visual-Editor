@@ -5,7 +5,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Shell;
-
 import org.eclipse.ve.sweet2.*;
 
 import org.eclipse.swt.widgets.Text;

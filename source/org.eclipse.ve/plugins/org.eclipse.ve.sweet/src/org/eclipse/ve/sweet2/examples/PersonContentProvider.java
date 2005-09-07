@@ -1,9 +1,9 @@
 package org.eclipse.ve.sweet2.examples;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.ve.sweet2.IElementContentProvider;
-import org.eclipse.ve.sweet2.ObjectDelegate;
+import org.eclipse.ve.sweet2.*;
 import org.eclipse.ve.sweet2.ObjectDelegate.ChangeListener;
+
 
 public class PersonContentProvider implements IElementContentProvider {
 	

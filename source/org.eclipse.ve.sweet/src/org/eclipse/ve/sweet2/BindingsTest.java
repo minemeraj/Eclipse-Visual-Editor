@@ -11,11 +11,12 @@
 /*
  *  Created Aug 17, 2005 by Gili Mendel
  * 
- *  $RCSfile: Example_EndToEnd.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-07 13:11:35 $ 
+ *  $RCSfile: BindingsTest.java,v $
+ *  $Revision: 1.8 $  $Date: 2005-09-07 13:11:59 $ 
  */
-package org.eclipse.ve.sweet2.examples;
+package org.eclipse.ve.sweet2;
 
+import java.awt.peer.ListPeer;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -29,14 +30,18 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ve.sweet2.*;
+
+import org.eclipse.ve.sweet2.Editor;
+import org.eclipse.ve.sweet2.IObjectDelegate;
+import org.eclipse.ve.sweet2.ListEditor;
+import org.eclipse.ve.sweet2.ObjectContentConsumer;
+import org.eclipse.ve.sweet2.ObjectContentProvider;
+import org.eclipse.ve.sweet2.ObjectDelegate;
+import org.eclipse.ve.sweet2.TextEditor;
 import org.eclipse.ve.sweet2.hibernate.HibernatePersonServicesHelper;
 import org.eclipse.ve.sweet2.hibernate.Person;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Label;
 
-public class Example_EndToEnd {
+public class BindingsTest {
 
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
 	private Label validationMsgLabel = null;
@@ -71,7 +76,7 @@ public class Example_EndToEnd {
 	private Label label18 = null;
 	private Label label10 = null;
 	private Table backupTable = null;
-	private Combo managerCombo = null;
+	private CCombo managerCombo = null;
 	private Text managerFNText = null;
 	private Text managerLNText = null;
 	private Button button = null;
@@ -90,24 +95,30 @@ public class Example_EndToEnd {
 	private Label label14 = null;
 	private Text spouseLNText = null;
 	private Label label19 = null;
-	private Button commitSpouseButton = null;
+	private Button button2 = null;
 	
 	
 	private HibernatePersonServicesHelper dbHelper = HibernatePersonServicesHelper.getHelper();
 	private Person selectedPerson = null;
 	final IObjectDelegate selectedPersonBinder = ObjectDelegate.createObjectBinder(Person.class);
-	final IObjectDelegate personList = ObjectDelegate.createObjectBinder(java.util.List.class);
-		
+	private java.util.List personList = null;
+	
 	final IObjectDelegate managerPersonBinder = ObjectDelegate.createObjectBinder(Person.class);
 	final IObjectDelegate spousePersonBinder = ObjectDelegate.createObjectBinder(Person.class);
-	private Label label4 = null;
-	private Label label6 = null;
-	private Label label20 = null;
-	private Label label21 = null;
-	private Label label22 = null;
-	private Label label23 = null;
-	private Label label24 = null;
 	
+	public class ListContentProvider implements IStructuredContentProvider {
+		public Object[] getElements(Object inputElement) {
+			if (inputElement instanceof java.util.List)
+			    return ((java.util.List)inputElement).toArray();
+			else 
+				return new Object[0];			
+		}
+		public void dispose() {}
+
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+		
+	}
+
 	private void createMenu() {
 		
 	
@@ -119,6 +130,8 @@ public class Example_EndToEnd {
         
         Menu fileSubMenu = new Menu (sShell, SWT.DROP_DOWN);
         fileMenuItem.setMenu (fileSubMenu);
+        
+        
         
      	MenuItem newPersonItem = new MenuItem (fileSubMenu, SWT.PUSH);
      	newPersonItem.setText ("New Person");
@@ -158,18 +171,12 @@ public class Example_EndToEnd {
 	 *
 	 */
 	private void createViewersGroup() {
-		GridData gridData24 = new org.eclipse.swt.layout.GridData();
-		gridData24.horizontalAlignment = org.eclipse.swt.layout.GridData.END;
-		gridData24.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		GridData gridData13 = new org.eclipse.swt.layout.GridData();
 		gridData13.grabExcessHorizontalSpace = true;
 		gridData13.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData13.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		viewersGroup = new Group(sShell, SWT.NONE);
 		viewersGroup.setText("Viewers model");
-		label4 = new Label(viewersGroup, SWT.NONE);
-		label4.setText("commit on modify");
-		label4.setLayoutData(gridData24);
 		createPersonGroup();
 		viewersGroup.setLayout(new GridLayout());
 		createManagerGroup();
@@ -186,10 +193,38 @@ public class Example_EndToEnd {
 		gridData5.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData5.horizontalSpan = 2;
 		
-		domainList = new List(demainGroup, SWT.V_SCROLL | SWT.BORDER);
+		domainList = new List(demainGroup, SWT.V_SCROLL);
 		domainList.setLayoutData(gridData5);
 		
-
+		domainListViewer = new ListViewer(domainList);		
+		domainListViewer.setContentProvider(new IStructuredContentProvider() {	
+			java.util.List input;
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+				if (newInput instanceof java.util.List)
+				    input=(java.util.List)newInput; 
+				else
+					input=null;
+				selectedPersonBinder.setValue(null);
+			}		
+			public void dispose() {}		
+			public Object[] getElements(Object inputElement) {
+				if (input!=null)
+				   return input.toArray();
+				else
+					return new Object[0];    
+			}		
+		});
+		domainListViewer.setLabelProvider(new LabelProvider());
+		domainListViewer.addSelectionChangedListener(new ISelectionChangedListener() {		
+			public void selectionChanged(SelectionChangedEvent event) {
+				selectedPerson = (Person) ((IStructuredSelection)event.getSelection()).getFirstElement();
+				selectedPersonBinder.setValue(selectedPerson);
+				if (selectedPerson!=null) {
+				  managerPersonBinder.setValue(selectedPerson.getManager());
+				  spousePersonBinder.setValue(selectedPerson.getSpouse());
+				}
+			}
+		});
 		
 
 	}
@@ -286,8 +321,8 @@ public class Example_EndToEnd {
 		readDBButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				runDBService(new Runnable() {				
-					public void run() {					
-						personList.setValue(dbHelper.getAllPersons());
+					public void run() {
+						personList = dbHelper.getAllPersons();
 						domainListViewer.setInput(personList);				
 					}				
 				});								
@@ -375,9 +410,6 @@ public class Example_EndToEnd {
 	 *
 	 */
 	private void createManagerGroup() {
-		GridData gridData25 = new org.eclipse.swt.layout.GridData();
-		gridData25.horizontalAlignment = org.eclipse.swt.layout.GridData.END;
-		gridData25.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		GridData gridData8 = new org.eclipse.swt.layout.GridData();
 		gridData8.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData8.grabExcessHorizontalSpace = true;
@@ -402,23 +434,13 @@ public class Example_EndToEnd {
 		managerGroup.setToolTipText("Focus Lost Policy");
 		managerGroup.setLayoutData(gridData15);
 		managerGroup.setLayout(gridLayout2);
-		label6 = new Label(managerGroup, SWT.NONE);
-		label20 = new Label(managerGroup, SWT.NONE);
-		label20.setText("commit on focus lost");
-		label20.setLayoutData(gridData25);
-		managerCombo = new Combo(managerGroup, SWT.BORDER);
+		managerCombo = new CCombo(managerGroup, SWT.NONE);
 		managerCombo.setLayoutData(gridData2);
-		managerLNText = new Text(managerGroup, SWT.NONE);
+		managerLNText = new Text(managerGroup, SWT.BORDER);
 		managerLNText.setLayoutData(gridData7);
-		managerFNText = new Text(managerGroup, SWT.NONE);
+		managerFNText = new Text(managerGroup, SWT.BORDER);
 		button = new Button(managerGroup, SWT.NONE);
 		button.setText("No Manager");
-		button.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				((Person)selectedPersonBinder.getValue()).setManager(null);
-				selectedPersonBinder.refresh(null);
-			}
-		});
 		label3 = new Label(managerGroup, SWT.NONE);
 		managerFNText.setLayoutData(gridData8);
 	}
@@ -428,9 +450,6 @@ public class Example_EndToEnd {
 	 *
 	 */
 	private void createSpouseGroup() {
-		GridData gridData26 = new org.eclipse.swt.layout.GridData();
-		gridData26.horizontalAlignment = org.eclipse.swt.layout.GridData.END;
-		gridData26.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		GridData gridData23 = new org.eclipse.swt.layout.GridData();
 		gridData23.horizontalAlignment = org.eclipse.swt.layout.GridData.END;
 		gridData23.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
@@ -458,34 +477,21 @@ public class Example_EndToEnd {
 		spouseGroup.setToolTipText("Explicity Commit Policy");
 		spouseGroup.setLayoutData(gridData16);
 		spouseGroup.setLayout(gridLayout3);
-		label21 = new Label(spouseGroup, SWT.NONE);
-		label22 = new Label(spouseGroup, SWT.NONE);
-		label22.setText("explicit commit");
-		label22.setLayoutData(gridData26);
-		label23 = new Label(spouseGroup, SWT.NONE);
-		label24 = new Label(spouseGroup, SWT.NONE);
-		spouseList = new List(spouseGroup, SWT.V_SCROLL);
+		spouseList = new List(spouseGroup, SWT.NONE);
 		spouseList.setLayoutData(gridData3);
 		label5 = new Label(spouseGroup, SWT.NONE);
 		label14 = new Label(spouseGroup, SWT.NONE);
-		spouseLNText = new Text(spouseGroup, SWT.NONE);
+		spouseLNText = new Text(spouseGroup, SWT.BORDER);
 		spouseLNText.setLayoutData(gridData22);
-		spouseFNText = new Text(spouseGroup, SWT.NONE);
+		spouseFNText = new Text(spouseGroup, SWT.BORDER);
 		spouseFNText.setLayoutData(gridData21);
 		label7 = new Label(spouseGroup, SWT.NONE);
 		label13 = new Label(spouseGroup, SWT.NONE);
 		button1 = new Button(spouseGroup, SWT.NONE);
 		button1.setText("No Spouse");
-		button1.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				((Person)selectedPersonBinder.getValue()).setSpouse(null);
-				selectedPersonBinder.refresh(null);
-			}
-		});
-		commitSpouseButton = new Button(spouseGroup, SWT.NONE);
-		commitSpouseButton.setText("Commit TextEditors");
-		commitSpouseButton.setLayoutData(gridData23);
-		
+		button2 = new Button(spouseGroup, SWT.NONE);
+		button2.setText("Commit View");
+		button2.setLayoutData(gridData23);
 		label8 = new Label(spouseGroup, SWT.NONE);
 		label19 = new Label(spouseGroup, SWT.NONE);
 	}
@@ -505,7 +511,7 @@ public class Example_EndToEnd {
 		sShell = new Shell();
 		sShell.setText("Bindings  Proof of Concept");
 		sShell.setLayout(gridLayout);
-		sShell.setSize(new org.eclipse.swt.graphics.Point(668,567));
+		sShell.setSize(new org.eclipse.swt.graphics.Point(668,530));
 		
 		createMenu();
 		sShell.setMenuBar(menuBar);
@@ -551,8 +557,17 @@ public class Example_EndToEnd {
 		addOKButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				Person p = new Person (addFNText.getText(), addLNText.getText());
-				((java.util.List)personList.getValue()).add(p);
-				personList.refresh(null);
+				java.util.List pl = (java.util.List) domainListViewer.getInput();
+				java.util.List newList;
+				if (pl!=null) {
+ 				  // make sure it is an updatable list
+				  newList = new ArrayList(pl.size()+1);
+				  newList.addAll(pl);
+				}
+				else
+					newList = new ArrayList(1);
+				newList.add(p);
+			    domainListViewer.setInput(newList);
 				addPersonShell.setVisible(false);
 			}
 		});
@@ -566,7 +581,23 @@ public class Example_EndToEnd {
 		});
 	}
 	
-	private void bind_Person() {
+	private void bind() {	
+		selectedPersonBinder.addPropertyChangeListener(new PropertyChangeListener() {		
+			public void propertyChange(PropertyChangeEvent evt) {
+				domainListViewer.refresh();					
+			}		
+		});
+		managerPersonBinder.addPropertyChangeListener(new PropertyChangeListener() {		
+			public void propertyChange(PropertyChangeEvent evt) {
+				domainListViewer.refresh();		
+			}		
+		});
+		spousePersonBinder.addPropertyChangeListener(new PropertyChangeListener() {		
+			public void propertyChange(PropertyChangeEvent evt) {
+				domainListViewer.refresh();		
+			}		
+		});
+
 		// Person
 		TextEditor personFN = new TextEditor(personFNText);
 		personFN.setUpdatePolicy(Editor.COMMIT_MODIFY);		
@@ -580,11 +611,10 @@ public class Example_EndToEnd {
 		personLN.setContentProvider(new ObjectContentProvider("lastName"));
 		personLN.setContentConsumer(new ObjectContentConsumer("lastName"));
 		personLN.setInput(selectedPersonBinder);
-		personLN.setOutput(selectedPersonBinder);				
-	}
+		personLN.setOutput(selectedPersonBinder);
+		
+		// Manager
 	
-	private void bind_Manager() {
-		// Manager		
 		TextEditor managerFN = new TextEditor(managerFNText);
 		managerFN.setUpdatePolicy(Editor.COMMIT_FOCUS);
 		managerFN.setContentProvider(new ObjectContentProvider("manager.firstName"));
@@ -599,94 +629,27 @@ public class Example_EndToEnd {
 		managerLN.setInput(selectedPersonBinder);
 		managerLN.setOutput(selectedPersonBinder);
 		
-		ComboEditor managerEditor = new ComboEditor(managerCombo);
-		managerEditor.setContentProvider(new ListContentProvider());		
-		managerEditor.setInput(personList);
-		managerEditor.setContentConsumer(new ObjectContentConsumer("manager"));		
-		managerEditor.setOutput(selectedPersonBinder);
-	}
-	
-	private void bind_Spouse() {
 		// Spouse
-		final TextEditor spouseFN = new TextEditor(spouseFNText);
+		TextEditor spouseFN = new TextEditor(spouseFNText);
 		spouseFN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
 		spouseFN.setContentProvider(new ObjectContentProvider("spouse.firstName"));
 		spouseFN.setContentConsumer(new ObjectContentConsumer("spouse.firstName"));
 		spouseFN.setInput(selectedPersonBinder);
 		spouseFN.setOutput(selectedPersonBinder);
 		
-		final TextEditor spouseLN = new TextEditor(spouseLNText);
+		ListEditor spouseListEditor = new ListEditor(spouseList);
+		spouseListEditor.setContentProvider(new ListContentProvider());
+		spouseListEditor.setInput(personList);
+		spouseListEditor.setContentConsumer(new ObjectContentConsumer("spouse"));
+		spouseListEditor.setOutput(selectedPersonBinder);
+		
+		
+		TextEditor spouseLN = new TextEditor(spouseLNText);
 		spouseLN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
 		spouseLN.setContentProvider(new ObjectContentProvider("spouse.lastName"));
 		spouseLN.setContentConsumer(new ObjectContentConsumer("spouse.lastName"));
 		spouseLN.setInput(selectedPersonBinder);
 		spouseLN.setOutput(selectedPersonBinder);
-		
-		ListEditor spouseListEditor = new ListEditor(spouseList);
-		spouseListEditor.setContentProvider(new ListContentProvider());
-		spouseListEditor.setInput(personList);
-		spouseListEditor.setContentConsumer(new ObjectContentConsumer("spouse"));
-		spouseListEditor.setOutput(selectedPersonBinder);	
-		
-		commitSpouseButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				spouseFN.update();
-				spouseLN.update();
-			}
-		});
-	}
-	
-	private void bind_domainList() {
-		domainListViewer = new ListViewer(domainList);		
-		domainListViewer.setContentProvider(new ListContentProvider());
-        domainListViewer.setInput(personList);		
-		domainListViewer.setLabelProvider(new LabelProvider());
-		domainListViewer.addSelectionChangedListener(new ISelectionChangedListener() {		
-			public void selectionChanged(SelectionChangedEvent event) {
-				selectedPerson = (Person) ((IStructuredSelection)event.getSelection()).getFirstElement();
-				selectedPersonBinder.setValue(selectedPerson);
-				if (selectedPerson!=null) {
-				  managerPersonBinder.setValue(selectedPerson.getManager());
-				  spousePersonBinder.setValue(selectedPerson.getSpouse());
-				}
-			}
-		});
-	}
-	
-	private void bind() {
-		
-		bind_domainList();
-		
-		selectedPersonBinder.addPropertyChangeListener(new PropertyChangeListener() {		
-			public void propertyChange(PropertyChangeEvent evt) {
-				domainListViewer.refresh();		
-				personList.refresh(null);
-				
-			}		
-		});
-		managerPersonBinder.addPropertyChangeListener(new PropertyChangeListener() {		
-			public void propertyChange(PropertyChangeEvent evt) {
-				domainListViewer.refresh();
-				personList.refresh(null);
-				
-			}		
-		});
-		spousePersonBinder.addPropertyChangeListener(new PropertyChangeListener() {		
-			public void propertyChange(PropertyChangeEvent evt) {
-				domainListViewer.refresh();		
-				personList.refresh(null);
-			}		
-		});
-
-		
-		
-		bind_Person();
-		
-		bind_Manager();
-		
-		bind_Spouse();
-				
-		bind_Backups();
 		
 	}
 	
@@ -714,12 +677,7 @@ public class Example_EndToEnd {
 		TableColumn backupLNCol = new TableColumn(backupTable, SWT.NONE);
 		backupLNCol.setWidth(140);
 		backupLNCol.setText("Last Name");
-	}
 		
-	
-	private void bind_Backups() {
-		
-		// backups
 		TableViewer backupTableViewer = new TableViewer(backupTable);
 		backupTableViewer.setContentProvider(new IStructuredContentProvider() {
 			Object[] rows = new Object[0];
@@ -774,8 +732,6 @@ public class Example_EndToEnd {
 		});
 		backupTableViewer.setInput(selectedPersonBinder);
 	}
-	
-			
 
 	/**
 	 * This method initializes group	
@@ -800,14 +756,8 @@ public class Example_EndToEnd {
 	 * @since 1.1.0
 	 */
 	public static void main(String[] args) {
-		
-		// Do not use hibernate.  Remove the following line
-		// if you have a DB configured, and you want to use hibernate to 
-		// persist data
-		System.setProperty("fake","true"); 
-		
 		Display display = Display.getDefault();
-		Example_EndToEnd thisClass = new Example_EndToEnd();
+		BindingsTest thisClass = new BindingsTest();
 		thisClass.createMainShell();
 		thisClass.sShell.open();
 

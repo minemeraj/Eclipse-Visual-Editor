@@ -6,13 +6,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.ve.sweet2.IObjectDelegate;
-import org.eclipse.ve.sweet2.ListContentProvider;
-import org.eclipse.ve.sweet2.ListEditor;
-import org.eclipse.ve.sweet2.ObjectContentConsumer;
-import org.eclipse.ve.sweet2.ObjectContentProvider;
-import org.eclipse.ve.sweet2.ObjectDelegate;
-import org.eclipse.ve.sweet2.TextEditor;
+import org.eclipse.ve.sweet2.*;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
 

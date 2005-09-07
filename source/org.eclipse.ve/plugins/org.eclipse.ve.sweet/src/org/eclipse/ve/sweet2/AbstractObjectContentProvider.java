@@ -11,7 +11,7 @@ import org.eclipse.ve.sweet2.ObjectDelegate.ChangeListener;
 
 public abstract class AbstractObjectContentProvider {
 	
-	private String[] fPropertyNames;
+	protected String[] fPropertyNames;
 	private Object viewerInput;
 	protected Method[] fGetMethods;
 	private ChangeListener changeListener;

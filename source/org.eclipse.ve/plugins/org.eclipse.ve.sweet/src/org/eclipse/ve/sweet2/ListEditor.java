@@ -140,7 +140,7 @@ public class ListEditor extends AbstractListViewer implements Editor {
 		Object selectedObject = ((IStructuredSelection)getSelection()).getFirstElement();
 		if(fContentConsumer != null){
 			fContentConsumer.setValue(selectedObject);
-		} else if (fOutput instanceof IObjectDelegate){
+		} else if (fOutput instanceof IObjectDelegate){			
 			((IObjectDelegate)fOutput).setValue(selectedObject);
 		}
 	}

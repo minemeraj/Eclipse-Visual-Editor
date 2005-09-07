@@ -1,9 +1,7 @@
 package org.eclipse.ve.sweet2.examples;
 
 import java.beans.PropertyChangeListener;
-
-import org.eclipse.ve.sweet2.IContentConsumer;
-import org.eclipse.ve.sweet2.ObjectDelegate;
+import org.eclipse.ve.sweet2.*;
 
 public class PersonContentConsumer implements IContentConsumer {
 	
