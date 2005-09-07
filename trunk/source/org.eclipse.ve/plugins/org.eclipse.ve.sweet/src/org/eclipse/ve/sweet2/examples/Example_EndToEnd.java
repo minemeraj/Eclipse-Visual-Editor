@@ -12,7 +12,7 @@
  *  Created Aug 17, 2005 by Gili Mendel
  * 
  *  $RCSfile: Example_EndToEnd.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-07 13:11:35 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-07 21:14:57 $ 
  */
 package org.eclipse.ve.sweet2.examples;
 
@@ -21,6 +21,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -30,6 +32,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ve.sweet2.*;
+import org.eclipse.ve.sweet2.examples.B_Foil_12_ButtonBinding.MySaveAction;
 import org.eclipse.ve.sweet2.hibernate.HibernatePersonServicesHelper;
 import org.eclipse.ve.sweet2.hibernate.Person;
 import org.eclipse.swt.widgets.Text;
@@ -54,7 +57,7 @@ public class Example_EndToEnd {
 	private ListViewer domainListViewer = null;
 	private Button readDBButton = null;
 	private Button writeDBButton = null;
-	private Button ResetButton = null;
+	private Button resetButton = null;
 	private Menu menuBar = null;
 	private Button dbDumpButton = null;
 	
@@ -107,13 +110,39 @@ public class Example_EndToEnd {
 	private Label label22 = null;
 	private Label label23 = null;
 	private Label label24 = null;
+
+	
+	public class  AddPersonAction extends Action {
+		private IObjectDelegate personDelegate;
+		public AddPersonAction() {
+			setEnabled(false);
+			personDelegate = ObjectDelegate.createObjectBinder(Person.class);
+			personDelegate.setValue(new Person());
+			personDelegate.addPropertyChangeListener(new PropertyChangeListener() {			
+				public void propertyChange(PropertyChangeEvent evt) {					
+					setEnabled(true);
+				}			
+			});
+		}
+		public void run() {			
+			java.util.List newList = new ArrayList();
+			if (personList.getValue()!=null)
+			   newList.addAll((java.util.List)personList.getValue());
+			newList.add(personDelegate.getValue());
+			personList.setValue(newList);			
+			personDelegate.setValue(new Person());
+			setEnabled(false);						
+			addPersonShell.setVisible(false);
+		}
+		
+		public IObjectDelegate getPersonDelegate() {
+			return personDelegate;
+		}
+	}
 	
 	private void createMenu() {
-		
-	
         menuBar = new Menu (sShell, SWT.BAR);
         
-                
         MenuItem fileMenuItem = new MenuItem (menuBar, SWT.CASCADE);
         fileMenuItem.setText ("File"); 
         
@@ -288,7 +317,9 @@ public class Example_EndToEnd {
 				runDBService(new Runnable() {				
 					public void run() {					
 						personList.setValue(dbHelper.getAllPersons());
-						domainListViewer.setInput(personList);				
+						domainListViewer.setInput(personList);	
+						selectedPerson = null;
+						selectedPersonBinder.setValue(selectedPerson);
 					}				
 				});								
 			}
@@ -297,25 +328,29 @@ public class Example_EndToEnd {
 		writeDBButton.setText("Save Domain Model");
 		writeDBButton.setLayoutData(gridData18);
 		writeDBButton.setToolTipText("Writes domain model to DB");
+		writeDBButton.setEnabled(useDataBase());
 		writeDBButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				runDBService(new Runnable() {				
 					public void run() {
-						dbHelper.savePersonList((java.util.List)domainListViewer.getInput());				
+						dbHelper.savePersonList((java.util.List)personList.getValue());				
 					}				
 				});										
 			}
 		});
-		ResetButton = new Button(databaseGroup, SWT.NONE);
-		ResetButton.setText("ReCreate Database Content");
-		ResetButton.setLayoutData(gridData19);
-		ResetButton.setToolTipText("Create sample DB and read it");
-		ResetButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		resetButton = new Button(databaseGroup, SWT.NONE);
+		resetButton.setText("ReCreate Database Content");
+		resetButton.setLayoutData(gridData19);
+		resetButton.setToolTipText("Create sample DB and read it");
+		resetButton.setEnabled(useDataBase());
+		resetButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				runDBService(new Runnable() {				
 					public void run() {
 						dbHelper.createSampleEntries();
-						domainListViewer.setInput(dbHelper.getAllPersons());							
+						domainListViewer.setInput(dbHelper.getAllPersons());	
+						selectedPerson = null;
+						selectedPersonBinder.setValue(selectedPerson);
 					}				
 				});
 			}
@@ -323,6 +358,7 @@ public class Example_EndToEnd {
 		dbDumpButton = new Button(databaseGroup, SWT.NONE);
 		dbDumpButton.setText("Dump DB Content");
 		dbDumpButton.setLayoutData(gridData20);
+		dbDumpButton.setEnabled(useDataBase());
 		dbDumpButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				runDBService(new Runnable() {				
@@ -524,6 +560,27 @@ public class Example_EndToEnd {
 		
 		bind();
 	}
+	
+	private void bind_AddNewPerson() {		
+		if (addPersonShell==null)
+				createAddPersonShell();
+		
+		// bind the Ok Button
+		AddPersonAction addAction = new AddPersonAction(); 
+		ButtonAction okButtonAction = new ButtonAction(addOKButton);
+		okButtonAction.setAction(addAction);
+		
+		TextEditor fnEditor = new TextEditor(addFNText);
+		fnEditor.setUpdatePolicy(Editor.COMMIT_MODIFY);		
+		fnEditor.setContentProvider(new ObjectConsumerProvider("firstName"));
+		fnEditor.setInput(addAction.getPersonDelegate());
+		
+		TextEditor lnEditor = new TextEditor(addLNText);
+		lnEditor.setUpdatePolicy(Editor.COMMIT_MODIFY);		
+		lnEditor.setContentProvider(new ObjectConsumerProvider("lastName"));
+		lnEditor.setInput(addAction.getPersonDelegate());
+		
+	}
 
 	/**
 	 * This method initializes sShell1	
@@ -548,14 +605,7 @@ public class Example_EndToEnd {
 		label16 = new Label(addPersonShell, SWT.NONE);
 		addOKButton = new Button(addPersonShell, SWT.NONE);
 		addOKButton.setText("Ok");
-		addOKButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				Person p = new Person (addFNText.getText(), addLNText.getText());
-				((java.util.List)personList.getValue()).add(p);
-				personList.refresh(null);
-				addPersonShell.setVisible(false);
-			}
-		});
+						
 		label17 = new Label(addPersonShell, SWT.NONE);
 		addCancelButton = new Button(addPersonShell, SWT.NONE);
 		addCancelButton.setText("Cancel");
@@ -564,17 +614,22 @@ public class Example_EndToEnd {
 				addPersonShell.setVisible(false);
 			}
 		});
+		
+		
+		bind_AddNewPerson();
 	}
 	
 	private void bind_Person() {
 		// Person
+		
+		// Binding option B
 		TextEditor personFN = new TextEditor(personFNText);
 		personFN.setUpdatePolicy(Editor.COMMIT_MODIFY);		
-		personFN.setContentProvider(new ObjectContentProvider("firstName"));
-		personFN.setContentConsumer(new ObjectContentConsumer("firstName"));
+		personFN.setContentProvider(new ObjectConsumerProvider("firstName"));
 		personFN.setInput(selectedPersonBinder);
-		personFN.setOutput(selectedPersonBinder);
+
 		
+		// Binding option A
 		TextEditor personLN = new TextEditor(personLNText);
 		personLN.setUpdatePolicy(Editor.COMMIT_MODIFY);
 		personLN.setContentProvider(new ObjectContentProvider("lastName"));
@@ -584,14 +639,15 @@ public class Example_EndToEnd {
 	}
 	
 	private void bind_Manager() {
-		// Manager		
+		// Manager
+		
+		// Option A
 		TextEditor managerFN = new TextEditor(managerFNText);
 		managerFN.setUpdatePolicy(Editor.COMMIT_FOCUS);
-		managerFN.setContentProvider(new ObjectContentProvider("manager.firstName"));
-		managerFN.setContentConsumer(new ObjectContentConsumer("manager.firstName"));
+		managerFN.setContentProvider(new ObjectConsumerProvider("manager.firstName"));
 		managerFN.setInput(selectedPersonBinder);
-		managerFN.setOutput(selectedPersonBinder);
 				
+		// Option B
 		TextEditor managerLN = new TextEditor(managerLNText);
 		managerLN.setUpdatePolicy(Editor.COMMIT_FOCUS);
 		managerLN.setContentProvider(new ObjectContentProvider("manager.lastName"));
@@ -608,13 +664,14 @@ public class Example_EndToEnd {
 	
 	private void bind_Spouse() {
 		// Spouse
+		
+		// Option A
 		final TextEditor spouseFN = new TextEditor(spouseFNText);
 		spouseFN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
-		spouseFN.setContentProvider(new ObjectContentProvider("spouse.firstName"));
-		spouseFN.setContentConsumer(new ObjectContentConsumer("spouse.firstName"));
+		spouseFN.setContentProvider(new ObjectConsumerProvider("spouse.firstName"));
 		spouseFN.setInput(selectedPersonBinder);
-		spouseFN.setOutput(selectedPersonBinder);
-		
+
+		// Option B
 		final TextEditor spouseLN = new TextEditor(spouseLNText);
 		spouseLN.setUpdatePolicy(Editor.COMMIT_EXPLICIT);
 		spouseLN.setContentProvider(new ObjectContentProvider("spouse.lastName"));
@@ -627,7 +684,7 @@ public class Example_EndToEnd {
 		spouseListEditor.setInput(personList);
 		spouseListEditor.setContentConsumer(new ObjectContentConsumer("spouse"));
 		spouseListEditor.setOutput(selectedPersonBinder);	
-		
+		// Explicit Commit
 		commitSpouseButton.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				spouseFN.update();
@@ -637,6 +694,7 @@ public class Example_EndToEnd {
 	}
 	
 	private void bind_domainList() {
+		// TODO: use ListEditor
 		domainListViewer = new ListViewer(domainList);		
 		domainListViewer.setContentProvider(new ListContentProvider());
         domainListViewer.setInput(personList);		
@@ -687,6 +745,8 @@ public class Example_EndToEnd {
 		bind_Spouse();
 				
 		bind_Backups();
+		
+	//	bind_AddNewPerson();  will be called when the dialog comes up
 		
 	}
 	
@@ -794,6 +854,11 @@ public class Example_EndToEnd {
 		group.setLayoutData(gridData4);
 	}
 
+	
+	public boolean useDataBase() {
+		return System.getProperty("fake") == null; 
+	}
+	
 	/**
 	 * @param args
 	 * 
@@ -804,7 +869,7 @@ public class Example_EndToEnd {
 		// Do not use hibernate.  Remove the following line
 		// if you have a DB configured, and you want to use hibernate to 
 		// persist data
-		System.setProperty("fake","true"); 
+		System.setProperty("fake","true");  
 		
 		Display display = Display.getDefault();
 		Example_EndToEnd thisClass = new Example_EndToEnd();
