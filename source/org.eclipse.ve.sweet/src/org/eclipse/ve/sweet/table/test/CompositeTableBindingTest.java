@@ -79,6 +79,7 @@ public class CompositeTableBindingTest {
 		row.address.setData("ColumnBinding", "Address");
 		row.city.setData("ColumnBinding", "City");
 		row.state.setData("ColumnBinding", "State");
+        ObjectViewerFactory.factory = new JavaObjectViewerFactory();
         final IObjectViewer personEditor = ObjectViewerFactory.edit(model);
         personEditor.bind(table, "PersonList");
 	}

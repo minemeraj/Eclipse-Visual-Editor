@@ -12,7 +12,7 @@
  *  Created Aug 17, 2005 by Gili Mendel
  * 
  *  $RCSfile: Example_EndToEnd.java,v $
- *  $Revision: 1.3 $  $Date: 2005-09-07 12:37:56 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-07 12:39:22 $ 
  */
 package org.eclipse.ve.sweet2.examples;
 
@@ -30,18 +30,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.ComboEditor;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.Editor;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.ListEditor;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IObjectDelegate;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ListContentProvider;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentConsumer;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate;
+import org.eclipse.ve.sweet2.*;
 import org.eclipse.ve.sweet2.hibernate.HibernatePersonServicesHelper;
 import org.eclipse.ve.sweet2.hibernate.Person;
-import org.eclipse.ve.sweet3.*;
-
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Label;
