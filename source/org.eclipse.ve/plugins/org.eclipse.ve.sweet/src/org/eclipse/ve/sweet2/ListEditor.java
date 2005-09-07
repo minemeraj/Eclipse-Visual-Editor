@@ -2,26 +2,11 @@ package org.eclipse.ve.sweet2;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 
-import org.eclipse.jface.util.Assert;
-import org.eclipse.jface.util.IOpenEventListener;
-import org.eclipse.jface.util.OpenStrategy;
-import org.eclipse.jface.viewers.AbstractListViewer;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.widgets.*;
 
 public class ListEditor extends AbstractListViewer implements StructuredEditor {
 		
@@ -101,10 +86,10 @@ public class ListEditor extends AbstractListViewer implements StructuredEditor {
 		// Get the value from the content consumer's binder and select the appropiate item in the list
 		if(fContentConsumer != null){			
 			Object objectValue = fContentConsumer.getValue();
+			fList.setEnabled(true);	
 			if(objectValue == null){
 				setSelection(null);				
-			} else {
-				fList.setEnabled(true);				
+			} else {							
 				setSelection(new StructuredSelection(objectValue),true);
 			}
 		} else if (fOutput != null) {

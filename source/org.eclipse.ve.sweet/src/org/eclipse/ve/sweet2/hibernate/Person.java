@@ -28,7 +28,7 @@ import EDU.oswego.cs.dl.util.concurrent.NullSync;
  *  Created Aug 2, 2005 by Gili Mendel
  * 
  *  $RCSfile: Person.java,v $
- *  $Revision: 1.1 $  $Date: 2005-08-09 20:23:23 $ 
+ *  $Revision: 1.2 $  $Date: 2005-09-07 21:14:57 $ 
  */
 /**
  *  The Person class is a simple example of a single table/object with the following
@@ -137,7 +137,7 @@ public class Person implements Serializable, Validatable, Lifecycle {
   }
   
   public Person() {
-	  super();
+	  this("","");
   }
   
 
