@@ -5,13 +5,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.ListEditor;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IObjectDelegate;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ListContentProvider;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentConsumer;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate;
-import org.eclipse.ve.sweet3.*;
+import org.eclipse.ve.sweet2.*;
 
 public class Foil_16_BindingAcrossTheGUI {
 

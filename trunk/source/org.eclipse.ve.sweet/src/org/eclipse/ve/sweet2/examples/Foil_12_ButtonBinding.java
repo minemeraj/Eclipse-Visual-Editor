@@ -12,7 +12,7 @@
  *  Created Aug 30, 2005 by Gili Mendel
  * 
  *  $RCSfile: Foil_12_ButtonBinding.java,v $
- *  $Revision: 1.3 $  $Date: 2005-09-07 12:37:56 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-07 12:39:22 $ 
  */
 package org.eclipse.ve.sweet2.examples;
 
@@ -24,12 +24,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.ButtonAction;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentConsumer;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate.ChangeListener;
-import org.eclipse.ve.sweet3.*;
+import org.eclipse.ve.sweet2.*;
+import org.eclipse.ve.sweet2.ObjectDelegate.ChangeListener;
 
 public class Foil_12_ButtonBinding {
 

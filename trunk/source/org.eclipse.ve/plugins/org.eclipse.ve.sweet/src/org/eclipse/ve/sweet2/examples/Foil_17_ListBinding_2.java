@@ -6,14 +6,13 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.ListEditor;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IObjectDelegate;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ListContentProvider;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentConsumer;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate;
-import org.eclipse.ve.sweet3.TextEditor;
-
+import org.eclipse.ve.sweet2.IObjectDelegate;
+import org.eclipse.ve.sweet2.ListContentProvider;
+import org.eclipse.ve.sweet2.ListEditor;
+import org.eclipse.ve.sweet2.ObjectContentConsumer;
+import org.eclipse.ve.sweet2.ObjectContentProvider;
+import org.eclipse.ve.sweet2.ObjectDelegate;
+import org.eclipse.ve.sweet2.TextEditor;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
 

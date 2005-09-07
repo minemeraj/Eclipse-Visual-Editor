@@ -11,8 +11,6 @@
  */
 package org.eclipse.ve.sweet.objectviewer;
 
-import org.eclipse.ve.sweet.objectviewer.pojo.JavaObjectViewerFactory;
-
 
 /**
  * ObjectViewerFactory.  Constructs ObjectViewers for an application.  Enables
@@ -26,30 +24,7 @@ public class ObjectViewerFactory {
      * The actual IObjectViewerFactory instance that will be used to create
      * new IObjectViewer objects.
      */
-    private static IObjectViewerFactory factory = null;
-    
-    /*(non-API)
-     * Method getDefault.  Return the default IObjectViewerFactory.  If none
-     * has been explicitly specified, defaults to JavaObjectViewerFactory 
-     * for editing POJOs.
-     *
-     * @return IObjectViewerFactory the default IObjectViewerFactory
-     */
-    private static IObjectViewerFactory getDefault() {
-    	if (factory == null) {
-    		factory = new JavaObjectViewerFactory();
-    	}
-    	return factory;
-    }
-    
-    /**
-     * Method setDefault.  Sets the default IObjectViewerFactory.
-     *
-     * @param factory The IObjectViewerFactory to set.
-     */
-    public static void setDefault(IObjectViewerFactory factory) {
-    	ObjectViewerFactory.factory = factory;
-    }
+    public static IObjectViewerFactory factory = null;
     
     /**
      * Construct a new IObjectViewer and set its initial input object.
@@ -58,7 +33,7 @@ public class ObjectViewerFactory {
      * @return The constructed IObjectViewer
      */
     public static IObjectViewer edit(Object input) {
-        IObjectViewer result = getDefault().construct();
+        IObjectViewer result = construct();
         result.setInput(input);
         return result;
     }
@@ -69,6 +44,6 @@ public class ObjectViewerFactory {
      * @return The IObjectViewer that was constructed.
      */
     public static IObjectViewer construct() {
-        return getDefault().construct();
+        return factory.construct();
     }
 }
