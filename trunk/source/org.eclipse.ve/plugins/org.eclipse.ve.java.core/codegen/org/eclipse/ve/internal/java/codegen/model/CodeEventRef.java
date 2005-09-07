@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeEventRef.java,v $
- *  $Revision: 1.19 $  $Date: 2005-08-29 21:38:20 $ 
+ *  $Revision: 1.20 $  $Date: 2005-09-07 20:00:14 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -328,4 +328,22 @@ public void refreshFromComposition() throws CodeGenException {
 			fDecoder.setStatement(statement);
 	}
 
+	protected void updateExpressionIndexInMethod() {
+		if(fMethod!=null){
+			// Check to see if this expression is really in the method
+			boolean presentInMethod = false;
+			Iterator eventExpItr = fMethod.getEventExpressions();
+			while (eventExpItr.hasNext()) {
+				CodeEventRef eventExp = (CodeEventRef) eventExpItr.next();
+				if(eventExp==this){
+					presentInMethod = true;
+					break;
+				}
+			}
+			if(presentInMethod){
+				fMethod.removeEventRef(this);
+				fMethod.addEventExpressionRef(this);
+			}
+		}
+	}
 }

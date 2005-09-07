@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.61 $  $Date: 2005-08-29 21:38:20 $ 
+ *  $Revision: 1.62 $  $Date: 2005-09-07 20:00:14 $ 
  */
 
 
@@ -1306,6 +1306,41 @@ public void updateDocument(boolean updateSharedDoc) {
 		updateSharedLineExpressions(updateSharedDoc);
 	}else{
 		updateDocument(updateSharedDoc, null, null); // the regular path
+	}
+}
+
+/**
+ * This expression should be at the correct index in the list of expressions of the method.
+ * This is vital for sorting of expressions in the method.
+ * 
+ */
+public void setOffset(int off) {
+	super.setOffset(off);
+	// 108967 : Fix for expressions being out of order in the method
+	updateExpressionIndexInMethod();
+}
+
+/*
+ * CodeMethodRefs always expect their list of expressions to 
+ * be in order based on their offsets. This API should be called when 
+ * the expression needs to inform the method to update its indexes.
+ */
+protected void updateExpressionIndexInMethod() {
+	if(fMethod!=null){
+		// Check to see if this expression is really in the method
+		boolean presentInMethod = false;
+		Iterator expItr = fMethod.getExpressions();
+		while (expItr.hasNext()) {
+			CodeExpressionRef exp = (CodeExpressionRef) expItr.next();
+			if(exp==this){
+				presentInMethod = true;
+				break;
+			}
+		}
+		if(presentInMethod){
+			fMethod.removeExpressionRef(this);
+			fMethod.addExpressionRef(this);
+		}
 	}
 }
 
