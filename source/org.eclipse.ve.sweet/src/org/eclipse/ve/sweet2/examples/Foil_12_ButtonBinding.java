@@ -12,7 +12,7 @@
  *  Created Aug 30, 2005 by Gili Mendel
  * 
  *  $RCSfile: Foil_12_ButtonBinding.java,v $
- *  $Revision: 1.2 $  $Date: 2005-09-06 19:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2005-09-07 12:37:56 $ 
  */
 package org.eclipse.ve.sweet2.examples;
 
@@ -29,7 +29,7 @@ import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentCo
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate.ChangeListener;
-import org.eclipse.ve.sweet2.*;
+import org.eclipse.ve.sweet3.*;
 
 public class Foil_12_ButtonBinding {
 

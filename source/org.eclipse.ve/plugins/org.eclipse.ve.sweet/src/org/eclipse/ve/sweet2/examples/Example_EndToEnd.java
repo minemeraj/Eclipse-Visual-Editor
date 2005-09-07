@@ -12,7 +12,7 @@
  *  Created Aug 17, 2005 by Gili Mendel
  * 
  *  $RCSfile: Example_EndToEnd.java,v $
- *  $Revision: 1.2 $  $Date: 2005-09-06 19:44:29 $ 
+ *  $Revision: 1.3 $  $Date: 2005-09-07 12:37:56 $ 
  */
 package org.eclipse.ve.sweet2.examples;
 
@@ -38,9 +38,10 @@ import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ListContentProv
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentConsumer;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate;
-import org.eclipse.ve.sweet2.*;
 import org.eclipse.ve.sweet2.hibernate.HibernatePersonServicesHelper;
 import org.eclipse.ve.sweet2.hibernate.Person;
+import org.eclipse.ve.sweet3.*;
+
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Label;

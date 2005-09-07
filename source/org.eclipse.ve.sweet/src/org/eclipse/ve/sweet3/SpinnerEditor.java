@@ -1,4 +1,4 @@
-package org.eclipse.ve.sweet2;
+package org.eclipse.ve.sweet3;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

@@ -10,7 +10,7 @@ import org.eclipse.ve.sweet.fieldviewer.jface.internal.ComboEditor;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ListContentProvider;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentConsumer;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
-import org.eclipse.ve.sweet2.*;
+import org.eclipse.ve.sweet3.*;
 
 import org.eclipse.swt.widgets.Text;
 

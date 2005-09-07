@@ -11,7 +11,7 @@ import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ListContentProv
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentConsumer;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate;
-import org.eclipse.ve.sweet2.*;
+import org.eclipse.ve.sweet3.*;
 
 public class Foil_15_VariableBinding {
 

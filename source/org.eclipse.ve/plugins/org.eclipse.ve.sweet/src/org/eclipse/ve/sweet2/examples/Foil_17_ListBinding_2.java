@@ -12,7 +12,8 @@ import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ListContentProv
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentConsumer;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate;
-import org.eclipse.ve.sweet2.TextEditor;
+import org.eclipse.ve.sweet3.TextEditor;
+
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
 

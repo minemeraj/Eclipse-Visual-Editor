@@ -19,9 +19,9 @@ import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IObjectDelegate
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentConsumer;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate;
-import org.eclipse.ve.sweet2.SpinnerEditor;
-import org.eclipse.ve.sweet2.TextEditor;
 import org.eclipse.ve.sweet2.examples.Person;
+import org.eclipse.ve.sweet3.SpinnerEditor;
+import org.eclipse.ve.sweet3.TextEditor;
 
 /**
  * This example builds on TestSweet_CommitPolicies
