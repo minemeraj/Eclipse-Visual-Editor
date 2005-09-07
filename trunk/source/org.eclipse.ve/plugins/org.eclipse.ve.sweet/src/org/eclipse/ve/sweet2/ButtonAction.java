@@ -12,7 +12,7 @@
  *  Created Aug 30, 2005 by Gili Mendel
  * 
  *  $RCSfile: ButtonAction.java,v $
- *  $Revision: 1.3 $  $Date: 2005-09-07 12:39:22 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-07 13:11:35 $ 
  */
 package org.eclipse.ve.sweet2;
 

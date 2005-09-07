@@ -12,7 +12,7 @@
  *  Created Aug 17, 2005 by Gili Mendel
  * 
  *  $RCSfile: Example_EndToEnd.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-07 12:39:22 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-07 13:11:35 $ 
  */
 package org.eclipse.ve.sweet2.examples;
 
@@ -29,7 +29,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-
 import org.eclipse.ve.sweet2.*;
 import org.eclipse.ve.sweet2.hibernate.HibernatePersonServicesHelper;
 import org.eclipse.ve.sweet2.hibernate.Person;

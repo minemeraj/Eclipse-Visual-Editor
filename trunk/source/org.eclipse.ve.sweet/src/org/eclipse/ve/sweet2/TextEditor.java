@@ -95,7 +95,11 @@ public class TextEditor extends ContentViewer implements Editor {
 	public void setContentProvider(IContentProvider contentProvider) {
 		Assert.isTrue(contentProvider instanceof IElementContentProvider);
 		valueProvider = (IElementContentProvider) contentProvider;
-		super.setContentProvider(contentProvider);
+		super.setContentProvider(contentProvider);		
+		if(contentProvider instanceof IContentConsumer){
+			setContentConsumer((IContentConsumer)contentProvider);
+			setOutput(getInput());
+		}
 	}
 	
 	public void update() {
