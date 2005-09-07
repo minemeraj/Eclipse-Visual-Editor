@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 
-public final class ComboEditor extends AbstractListViewer implements Editor {
+public final class ComboEditor extends AbstractListViewer implements StructuredEditor {
 
     private Combo fCombo;
 	private IContentConsumer fContentConsumer;
@@ -127,5 +127,9 @@ public final class ComboEditor extends AbstractListViewer implements Editor {
 	}
 	public Object getOutput() {
 		return fOutput;
+	}
+	public void setSelectionService(ISelectionService aSelectionService) {
+		setOutput(aSelectionService.getSource());
+		setContentConsumer(aSelectionService);
 	}
 }

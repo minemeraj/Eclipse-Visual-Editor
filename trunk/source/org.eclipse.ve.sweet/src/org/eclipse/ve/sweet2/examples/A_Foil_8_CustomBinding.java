@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ve.sweet2.*;
 
-public class Foil_8_CustomBinding_2 {
+public class A_Foil_8_CustomBinding {
 
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
 	private Text customTextField = null;
@@ -54,16 +54,25 @@ public class Foil_8_CustomBinding_2 {
 		Person santa = Person.CHRIS_CHRINGLE;
 		
 		TextEditor firstAndLastName = new TextEditor(customTextField);
-		firstAndLastName.setContentProvider(new PersonConsumerProvider());		
+		firstAndLastName.setContentProvider(new PersonContentProvider());		
 		firstAndLastName.setInput(santa);
+		firstAndLastName.setContentConsumer(new PersonContentConsumer());
+		firstAndLastName.setOutput(santa);
 		
 		TextEditor fName = new TextEditor(firstName);
-		fName.setContentProvider(new ObjectConsumerProvider("firstName"));		
+		fName.setContentProvider(new ObjectContentProvider("firstName"));		
 		fName.setInput(santa);
+		fName.setContentConsumer(new ObjectContentConsumer("firstName"));
+		fName.setOutput(santa);
+		
 
 		TextEditor lName = new TextEditor(lastName);
-		lName.setContentProvider(new ObjectConsumerProvider("lastName"));		
+		lName.setContentProvider(new ObjectContentProvider("lastName"));		
 		lName.setInput(santa);
+		lName.setContentConsumer(new ObjectContentConsumer("lastName"));
+		lName.setOutput(santa);
+
+
 		
 	}
 }

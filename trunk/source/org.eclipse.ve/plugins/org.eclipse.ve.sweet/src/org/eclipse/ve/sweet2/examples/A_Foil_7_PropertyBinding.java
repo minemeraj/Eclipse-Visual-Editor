@@ -6,7 +6,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ve.sweet2.*;
 
-public class Foil_7_PropertyBinding {
+public class A_Foil_7_PropertyBinding {
 
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
 	private Label label = null;

@@ -13,14 +13,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ve.sweet2.Editor;
-import org.eclipse.ve.sweet2.IContentConsumer;
-import org.eclipse.ve.sweet2.IObjectDelegate;
-import org.eclipse.ve.sweet2.ObjectContentConsumer;
-import org.eclipse.ve.sweet2.ObjectContentProvider;
-import org.eclipse.ve.sweet2.ObjectDelegate;
-import org.eclipse.ve.sweet2.SpinnerEditor;
-import org.eclipse.ve.sweet2.TextEditor;
+import org.eclipse.ve.sweet2.*;
 import org.eclipse.ve.sweet2.examples.Person;
 
 /**

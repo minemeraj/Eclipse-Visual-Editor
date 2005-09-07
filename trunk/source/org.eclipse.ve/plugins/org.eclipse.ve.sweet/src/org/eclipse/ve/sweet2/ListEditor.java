@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Widget;
 
-public class ListEditor extends AbstractListViewer implements Editor {
+public class ListEditor extends AbstractListViewer implements StructuredEditor {
 		
 	private IContentConsumer fContentConsumer;
 	private List fList;
@@ -158,6 +158,13 @@ public class ListEditor extends AbstractListViewer implements Editor {
 	}
 	public Object getOutput() {
 		return fOutput;
+	}
+	public void setSelectionService(ISelectionService aSelectionService) {
+		setContentConsumer(aSelectionService);
+		setOutput(aSelectionService.getSource());
 	}	 
+	public void setSelectionService(IObjectDelegate aSelectionService) {
+		setOutput(aSelectionService);
+	}
 	
 }

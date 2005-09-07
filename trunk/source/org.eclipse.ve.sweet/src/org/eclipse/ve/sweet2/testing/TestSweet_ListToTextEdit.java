@@ -6,17 +6,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ve.sweet2.ComboEditor;
-import org.eclipse.ve.sweet2.IObjectDelegate;
-import org.eclipse.ve.sweet2.ListContentProvider;
-import org.eclipse.ve.sweet2.ListEditor;
-import org.eclipse.ve.sweet2.ObjectContentConsumer;
-import org.eclipse.ve.sweet2.ObjectContentProvider;
-import org.eclipse.ve.sweet2.ObjectDelegate;
-import org.eclipse.ve.sweet2.SpinnerEditor;
-import org.eclipse.ve.sweet2.TextEditor;
-import org.eclipse.ve.sweet2.examples.Person;
-import org.eclipse.ve.sweet2.examples.PersonLabelProvider;
+import org.eclipse.ve.sweet2.*;
+import org.eclipse.ve.sweet2.examples.*;
 /**
  * This example shows a list of people and when one is selected it is editable within text fields showing the selected person
  */
