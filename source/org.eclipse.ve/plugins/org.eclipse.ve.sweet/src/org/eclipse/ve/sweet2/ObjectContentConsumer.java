@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 
 public class ObjectContentConsumer implements IContentConsumer {
 
-	private IObjectDelegate[] fBinders; //e.g. {ObjectBinder(Person.class),ObjectBinder(Person.class)}
+	protected IObjectDelegate[] fBinders; //e.g. {ObjectBinder(Person.class),ObjectBinder(Person.class)}
 	private String[] fPropertyNames; // e.g.  {"manager","firstName"}
 	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 	private Method fSetMethod; //e.g. setFirstName(String aString)

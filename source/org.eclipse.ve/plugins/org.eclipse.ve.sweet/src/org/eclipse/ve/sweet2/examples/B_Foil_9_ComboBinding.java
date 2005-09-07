@@ -9,7 +9,7 @@ import org.eclipse.ve.sweet2.*;
 
 import org.eclipse.swt.widgets.Text;
 
-public class Foil_9_ComboBinding_2 {
+public class B_Foil_9_ComboBinding {
 
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
 	private Combo managerCombo = null;
@@ -63,9 +63,8 @@ public class Foil_9_ComboBinding_2 {
 		ComboEditor managerEditor = new ComboEditor(managerCombo);
 		managerEditor.setContentProvider(new ListContentProvider("backups"));
 		managerEditor.setLabelProvider(new PersonLabelProvider());		
-		managerEditor.setInput(bigBoss);
-		managerEditor.setContentConsumer(new ObjectContentConsumer("manager"));		
-		managerEditor.setOutput(needManager);
+		managerEditor.setInput(bigBoss);		
+		managerEditor.setSelectionService(new ObjectSelectionService(needManager,"manager"));		
 		
 		
 		TextEditor needBossEditor = new TextEditor(bossLabel);

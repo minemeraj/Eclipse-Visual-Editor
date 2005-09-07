@@ -9,7 +9,7 @@ import org.eclipse.ve.sweet2.*;
 
 import org.eclipse.swt.widgets.Text;
 
-public class Foil_9_ComboBinding {
+public class A_Foil_9_ComboBinding {
 
 	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
 	private Combo managerCombo = null;

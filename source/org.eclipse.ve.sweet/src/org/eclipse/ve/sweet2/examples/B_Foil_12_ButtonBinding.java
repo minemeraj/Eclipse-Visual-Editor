@@ -11,8 +11,8 @@
 /*
  *  Created Aug 30, 2005 by Gili Mendel
  * 
- *  $RCSfile: Foil_12_ButtonBinding.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-07 13:11:35 $ 
+ *  $RCSfile: B_Foil_12_ButtonBinding.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-09-07 13:52:05 $ 
  */
 package org.eclipse.ve.sweet2.examples;
 
@@ -25,13 +25,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ve.sweet2.*;
 
-public class Foil_12_ButtonBinding {
+public class B_Foil_12_ButtonBinding {
 
 	private Shell sShell = null;
 	private Text firstName = null;
 	private Text lastName = null;
 	private Button saveButton = null;
-	public Foil_12_ButtonBinding() {
+	public B_Foil_12_ButtonBinding() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -50,7 +50,7 @@ public class Foil_12_ButtonBinding {
 		 *       installation_directory\plugins\org.eclipse.swt.win32_3.1.0.jar
 		 */
 		Display display = Display.getDefault();
-		Foil_12_ButtonBinding thisClass = new Foil_12_ButtonBinding();
+		B_Foil_12_ButtonBinding thisClass = new B_Foil_12_ButtonBinding();
 		thisClass.createSShell();
 		thisClass.sShell.open();
 
@@ -122,16 +122,12 @@ public class Foil_12_ButtonBinding {
 		final Person santa = Person.CHRIS_CHRINGLE;
 				
 		TextEditor firstNameEditor = new TextEditor(firstName);
-		firstNameEditor.setContentProvider(new ObjectContentProvider("firstName"));
+		firstNameEditor.setContentProvider(new ObjectConsumerProvider("firstName"));
 		firstNameEditor.setInput(santa);
-		firstNameEditor.setContentConsumer(new ObjectContentConsumer("firstName"));
-		firstNameEditor.setOutput(santa);
 		
 		TextEditor lastNameEditor = new TextEditor(lastName);
-		lastNameEditor.setContentProvider(new ObjectContentProvider("lastName"));
+		lastNameEditor.setContentProvider(new ObjectConsumerProvider("lastName"));
 		lastNameEditor.setInput(santa);
-		lastNameEditor.setContentConsumer(new ObjectContentConsumer("lastName"));
-		lastNameEditor.setOutput(santa);
 		
 		IAction mySave = new MySaveAction(santa);
 		ButtonAction saveAction = new ButtonAction(saveButton);

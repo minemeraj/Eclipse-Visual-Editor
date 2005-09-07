@@ -10,7 +10,7 @@ import org.eclipse.ve.sweet2.*;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
 
-public class Foil_17_ListBinding_2 {
+public class A_Foil_17_ListBinding_2 {
 
 	private Shell sShell = null;
 	private List employeesList = null;
