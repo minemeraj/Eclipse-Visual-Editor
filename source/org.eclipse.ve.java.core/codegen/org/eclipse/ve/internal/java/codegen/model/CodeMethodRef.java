@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.48 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.49 $  $Date: 2005-09-07 20:00:14 $ 
  */
 
 import java.util.*;
@@ -191,14 +191,14 @@ public  void removeEventRef(CodeEventRef ref) {
  */
 public  Iterator getExpressions() {
 	if (fExpressions == null) fExpressions = new ArrayList () ;
-	return fExpressions.iterator() ;
+	return new ArrayList(fExpressions).iterator() ; // return new arraylist to avoid Concurrent Modification Exceptions
 }
 /**
  * Get all Event expressions in this method that impact bean/s in the model
  */
 public  Iterator getEventExpressions() {
 	if (fEventExpressions == null) fEventExpressions = new ArrayList () ;
-	return fEventExpressions.iterator() ;
+	return new ArrayList(fEventExpressions).iterator() ; // return new arraylist to avoid Concurrent Modification Exceptions
 }
 
 public  Iterator getAllExpressions() {
