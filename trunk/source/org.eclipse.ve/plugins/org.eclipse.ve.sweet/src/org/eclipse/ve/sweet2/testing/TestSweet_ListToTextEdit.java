@@ -13,10 +13,10 @@ import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ListContentProv
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentConsumer;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectDelegate;
-import org.eclipse.ve.sweet2.SpinnerEditor;
-import org.eclipse.ve.sweet2.TextEditor;
 import org.eclipse.ve.sweet2.examples.Person;
 import org.eclipse.ve.sweet2.examples.PersonLabelProvider;
+import org.eclipse.ve.sweet3.SpinnerEditor;
+import org.eclipse.ve.sweet3.TextEditor;
 /**
  * This example shows a list of people and when one is selected it is editable within text fields showing the selected person
  */

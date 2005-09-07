@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IntegerLabelConsumer;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentConsumer;
 import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ObjectContentProvider;
-import org.eclipse.ve.sweet2.*;
+import org.eclipse.ve.sweet3.*;
 
 public class Foil_7_PropertyBinding {
 
