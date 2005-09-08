@@ -84,9 +84,16 @@ public final class ComboEditor extends AbstractListViewer implements StructuredE
 	public void refresh() {
 		super.refresh();
 		// Get the value from the content consumer's binder and select the appropiate item in the list
-		if(fContentConsumer != null){			
-			Object objectValue = fContentConsumer.getValue();
-			fCombo.setEnabled(true);
+		if(fContentConsumer != null){	
+			Object objectValue = fContentConsumer.getValue();	
+			boolean shouldEnableList = true;
+			if (fContentConsumer instanceof ObjectContentConsumer){
+				// If the object has a property then we only enable the list if the delegate isn't null
+				if (fOutput instanceof IObjectDelegate && ((ObjectContentConsumer)fContentConsumer).hasProperty()){
+					shouldEnableList = ((IObjectDelegate)fOutput).getValue() != null;
+				}
+			}
+			fCombo.setEnabled(shouldEnableList);
 			if(objectValue == null){
 				setSelection(null);				
 			} else {							

@@ -87,7 +87,14 @@ public class ListEditor extends AbstractListViewer implements StructuredEditor {
 		// Get the value from the content consumer's binder and select the appropiate item in the list
 		if(fContentConsumer != null){			
 			Object objectValue = fContentConsumer.getValue();
-			fList.setEnabled(true);	
+			boolean shouldEnableList = true;
+			if (fContentConsumer instanceof ObjectContentConsumer){
+				// If the object has a property then we only enable the list if the delegate isn't null
+				if (fOutput instanceof IObjectDelegate && ((ObjectContentConsumer)fContentConsumer).hasProperty()){
+					shouldEnableList = ((IObjectDelegate)fOutput).getValue() != null;
+				}
+			}
+			fList.setEnabled(shouldEnableList);
 			if(objectValue == null){
 				setSelection(null);				
 			} else {							

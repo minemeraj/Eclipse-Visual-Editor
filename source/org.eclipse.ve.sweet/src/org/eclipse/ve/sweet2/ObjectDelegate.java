@@ -171,7 +171,4 @@ public class ObjectDelegate implements IObjectDelegate , InvocationHandler {
 		}		
 	}
 
-	public void setObjectBinder(IObjectDelegate anObjectBinder) {
-		
-	}
 }

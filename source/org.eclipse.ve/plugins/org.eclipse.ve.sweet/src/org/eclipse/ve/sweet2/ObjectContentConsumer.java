@@ -67,6 +67,10 @@ public class ObjectContentConsumer implements IContentConsumer {
 		}
 		return null;				
 	}
+	
+	public boolean hasProperty(){
+		return fPropertyNames != null;
+	}
 
 	public void setValue(Object aValue) {
 		getValue(); // TODO - Need better way to ensure that the binder's contents are initialized
