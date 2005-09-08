@@ -13,6 +13,7 @@ public class ListEditor extends AbstractListViewer implements StructuredEditor {
 	private IContentConsumer fContentConsumer;
 	private List fList;
 	private Object fOutput;
+	private boolean isSettingValue;
 	
 	public ListEditor(Composite parent) {
         this(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
@@ -112,7 +113,7 @@ public class ListEditor extends AbstractListViewer implements StructuredEditor {
 		}
 		fContentConsumer.addPropertyChangeListener(new PropertyChangeListener(){
 			public void propertyChange(PropertyChangeEvent event) {
-				if(event.getPropertyName() == null){
+				if(!isSettingValue && event.getPropertyName() == null){
 					refresh();
 				}
 			}	
@@ -123,11 +124,13 @@ public class ListEditor extends AbstractListViewer implements StructuredEditor {
 		// Change the value in the consumer to be the newly selected value
 		super.handleSelect(event);
 		Object selectedObject = ((IStructuredSelection)getSelection()).getFirstElement();
+		isSettingValue = true;		
 		if(fContentConsumer != null){
 			fContentConsumer.setValue(selectedObject);
 		} else if (fOutput instanceof IObjectDelegate){			
 			((IObjectDelegate)fOutput).setValue(selectedObject);
 		}
+		isSettingValue = false;		
 	}
 
 	public IContentConsumer getContentConsumer() {
@@ -144,12 +147,8 @@ public class ListEditor extends AbstractListViewer implements StructuredEditor {
 	public Object getOutput() {
 		return fOutput;
 	}
-	public void setSelectionService(ISelectionService aSelectionService) {
+	public void setSelectionConsumer(ISelectionConsumer aSelectionService) {
 		setContentConsumer(aSelectionService);
 		setOutput(aSelectionService.getSource());
-	}	 
-	public void setSelectionService(IObjectDelegate aSelectionService) {
-		setOutput(aSelectionService);
 	}
-	
 }

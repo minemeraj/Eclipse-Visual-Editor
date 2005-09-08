@@ -58,13 +58,13 @@ public class B_Foil_17_ListBinding_2 {
 		employeesListEditor.setContentProvider(new ListContentProvider());
 		employeesListEditor.setLabelProvider(new PersonLabelProvider());
 		employeesListEditor.setInput(Person.getSampleData());
-		employeesListEditor.setOutput(selectedEmployee);
+		employeesListEditor.setSelectionConsumer(new ObjectSelectionConsumer(selectedEmployee));
 		
 		ListEditor managersListEditor = new ListEditor(managersList);
 		managersListEditor.setContentProvider(new ListContentProvider());
 		managersListEditor.setLabelProvider(new PersonLabelProvider());
 		managersListEditor.setInput(Person.getSampleData());
-		managersListEditor.setSelectionService(new ObjectSelectionService(selectedEmployee,"manager"));
+		managersListEditor.setSelectionConsumer(new ObjectSelectionConsumer(selectedEmployee,"manager"));
 
 		TextEditor managerTextEditor = new TextEditor(managerText);
 		managerTextEditor.setContentProvider(new ObjectContentProvider("manager.firstName"));

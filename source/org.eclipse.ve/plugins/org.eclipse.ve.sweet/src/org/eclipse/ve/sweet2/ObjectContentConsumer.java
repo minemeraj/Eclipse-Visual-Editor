@@ -18,6 +18,10 @@ public class ObjectContentConsumer implements IContentConsumer {
 	private PropertyChangeListener propertyChangeListener;
 	
 	public ObjectContentConsumer(String aPropertyName){
+		if(aPropertyName == null) {
+			fBinders = new IObjectDelegate[1];			
+			return;
+		}
 		int indexOfPeriod = aPropertyName.indexOf('.');
 		if(indexOfPeriod == -1){
 			fPropertyNames = new String[] {aPropertyName};
@@ -33,7 +37,7 @@ public class ObjectContentConsumer implements IContentConsumer {
 		}		
 	}
 
-	public ObjectContentConsumer(ObjectDelegate binder, String propertyName) {
+	public ObjectContentConsumer(IObjectDelegate binder, String propertyName) {
 		this(propertyName);
 		ouputChanged(binder);
 	}
@@ -70,8 +74,12 @@ public class ObjectContentConsumer implements IContentConsumer {
 		if(isSettingValue) return;
 		try{
 			isSettingValue = true;
-			getSetMethod().invoke(fBinders[fBinders.length-1].getValue(),new Object[] {aValue});
-			fBinders[fBinders.length-1].refresh(fPropertyNames[fPropertyNames.length-1]);
+			if(fPropertyNames == null){
+				fBinders[0].setValue(aValue);
+			} else {			
+				getSetMethod().invoke(fBinders[fBinders.length-1].getValue(),new Object[] {aValue});
+				fBinders[fBinders.length-1].refresh(fPropertyNames[fPropertyNames.length-1]);
+			}
 		} catch (Exception e){
 			e.printStackTrace();
 		} finally {
@@ -111,6 +119,7 @@ public class ObjectContentConsumer implements IContentConsumer {
 	}
 	
 	private void initialize(){
+		if(fPropertyNames == null) return;
 		fGetMethods = new Method[fPropertyNames.length];
 		try{
 			// fGetMethods is an array of methods that can be used to traverse each binder
@@ -143,7 +152,7 @@ public class ObjectContentConsumer implements IContentConsumer {
 		if(propertyChangeListener == null){
 			propertyChangeListener = new PropertyChangeListener(){
 				public void propertyChange(PropertyChangeEvent event) {
-					if(fPropertyNames[fPropertyNames.length-1].equals(event.getPropertyName()) || event.getPropertyName() == null){
+					if((fPropertyNames != null && fPropertyNames[fPropertyNames.length-1].equals(event.getPropertyName())) || event.getPropertyName() == null){
 						propertyChangeSupport.firePropertyChange(event);
 					}
 				}

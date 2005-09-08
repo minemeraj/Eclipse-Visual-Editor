@@ -44,7 +44,7 @@ public class B_Foil_16_BindingAcrossTheGUI {
 		employeesList.setContentProvider(new ListContentProvider());
 		employeesList.setLabelProvider(new PersonLabelProvider());
 		employeesList.setInput(Person.getSampleData());
-		employeesList.setSelectionService(selectedPerson);
+		employeesList.setSelectionConsumer(new ObjectSelectionConsumer(selectedPerson));
 		
 		TextEditor managerFirstNameEditor = new TextEditor(managerLastNameText);
 		managerFirstNameEditor.setContentProvider(new ObjectConsumerProvider("manager.lastName"));

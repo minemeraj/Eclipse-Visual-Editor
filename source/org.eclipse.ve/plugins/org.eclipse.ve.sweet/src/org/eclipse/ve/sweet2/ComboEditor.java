@@ -123,7 +123,7 @@ public final class ComboEditor extends AbstractListViewer implements StructuredE
 	public Object getOutput() {
 		return fOutput;
 	}
-	public void setSelectionService(ISelectionService aSelectionService) {
+	public void setSelectionConsumer(ISelectionConsumer aSelectionService) {
 		setOutput(aSelectionService.getSource());
 		setContentConsumer(aSelectionService);
 	}
