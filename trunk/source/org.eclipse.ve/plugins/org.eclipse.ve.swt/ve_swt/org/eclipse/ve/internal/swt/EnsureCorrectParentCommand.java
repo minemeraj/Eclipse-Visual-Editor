@@ -49,6 +49,20 @@ public class EnsureCorrectParentCommand extends CommandWrapper {
 	}
 
 	public void execute() {
+		// The javaChild may itself be wrapped by an object that takes the composite parent as an argument
+		// We need to check for this as well as the child itself
+		EStructuralFeature veWrapper_SF = javaChild.eClass().getEStructuralFeature("visual_wrapper");
+		if(veWrapper_SF != null){
+			IJavaObjectInstance wrapperObject = (IJavaObjectInstance) javaChild.eGet(veWrapper_SF);
+			if(wrapperObject != null){
+				processParseTree(wrapperObject);
+			}
+		}
+		processParseTree(javaChild);
+	}
+		
+	private void processParseTree(IJavaObjectInstance javaChild){
+	
 		if (javaChild.getAllocation() != null) {
 			if (javaChild.getAllocation() instanceof ParseTreeAllocation) {
 				CommandBuilder cbldr = new CommandBuilder(false); // Use a forward undo so that the actual apply to new allocation is last.

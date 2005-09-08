@@ -134,6 +134,15 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 	}
 
 	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
+		// If there is a visual wrapper we must instantiate this before we instante ourselves
+		EStructuralFeature visualWrapper_SF = getBean().getJavaType().getEStructuralFeature("visual_wrapper");
+		if(visualWrapper_SF != null){
+			IJavaInstance visualWrapperInstance = (IJavaInstance) getBean().eGet(visualWrapper_SF);
+			if(visualWrapperInstance != null){
+				BeanProxyUtilities.getBeanProxy(visualWrapperInstance);
+			}
+		}
+		
 		IProxy newbean = super.primInstantiateBeanProxy(expression);
 		if (newbean != null) {
 			getControlManager().setControlBeanProxy(newbean, expression, getModelChangeController());

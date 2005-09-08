@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
+  xmlns:cdm="http:///org/eclipse/ve/internal/cdm.ecore" 
+  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"
+  xmlns:org.eclipse.jem.internal.instantiation="http:///org/eclipse/jem/internal/instantiation.ecore"
+  xmlns:java="java.xmi"
+  xmlns:swt_layout="java:/org.eclipse.swt.layout"
+  xmlns:swt="java:/org.eclipse.swt.widgets">
+    
+  <swt:Composite xmi:id="Composite_Grid" layout="grid_layout">
+  	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
+	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTClassInstanceCreation" type="org.eclipse.swt.widgets.Composite">
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="NONE">
+          <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
+        </arguments>
+      </expression>	  	
+	</allocation>
+  </swt:Composite>
+  
+  <swt_layout:GridLayout xmi:id="grid_layout"/>
+   
+  <swt:Composite xmi:id="Composite_Fill" layout="fill_layout">
+  	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
+	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTClassInstanceCreation" type="org.eclipse.swt.widgets.Composite">
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="NONE">
+          <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
+        </arguments>
+      </expression>	  	
+	</allocation>
+  </swt:Composite>  
+  
+ <swt_layout:FillLayout xmi:id="fill_layout"/>
+ 
+ <swt:Composite xmi:id="Composite_Row" layout="row_layout">
+  	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
+	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTClassInstanceCreation" type="org.eclipse.swt.widgets.Composite">
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="NONE">
+          <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
+        </arguments>
+      </expression>	  	
+	</allocation>
+  </swt:Composite>
+  
+ <swt_layout:RowLayout xmi:id="row_layout"/>
+ 
+  <cdm:AnnotationEMF annotates="Composite_Grid">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="composite"/>
+  </cdm:AnnotationEMF>  
+  <cdm:AnnotationEMF annotates="Composite_Fill">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="composite"/>
+  </cdm:AnnotationEMF> 
+  <cdm:AnnotationEMF annotates="Composite_Row">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="composite"/>
+  </cdm:AnnotationEMF>   
+
+</xmi:XMI>

@@ -79,7 +79,7 @@
                path="overrides/org/eclipse/swt/custom">
          </override>
       </registration>
-      <!-- Register the override folders for JFace -->
+      <!-- Register the override folders for Workbench-->
       <registration 
             plugin="org.eclipse.ui.workbench">
          <override
@@ -87,6 +87,14 @@
                path="overrides/org/eclipse/ui/part">
          </override>  
       </registration>           
+      <!-- Register the override folders for JFace -->
+      <registration
+            plugin="org.eclipse.jface">
+         <override
+               package="org.eclipse.jface.viewers"
+               path="overrides/org/eclipse/jface/viewers">
+         </override>               
+      </registration>
       <!-- Register the override folders for Eclipse forms -->
       <registration 
             plugin="org.eclipse.ui.forms">
@@ -118,6 +126,14 @@
             plugin="org.eclipse.ui.forms">
       </palette>
    </extension>   
+   
+   <extension
+         point="org.eclipse.ve.java.core.contributors">
+      <palette
+            categories="jface/palette.xmi"
+            plugin="org.eclipse.jface">
+      </palette>
+   </extension>    
    
    <extension
          point="org.eclipse.ui.popupMenus">

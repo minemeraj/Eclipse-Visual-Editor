@@ -13,5 +13,7 @@
       graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart:false">
       <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tree_obj.gif"/>
     </addedEObjects>
+    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
+        beanLocation="GLOBAL_LOCAL"/>
   </event:AddMany>
 </xmi:XMI>

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.16 $  $Date: 2005-07-09 23:42:30 $ 
+ *  $Revision: 1.17 $  $Date: 2005-09-08 23:21:29 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -63,6 +63,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				Object template = null;
 				// Get the host, copy it and serialize to a stream
 				IJavaInstance javaBeanToCopy = (IJavaInstance) getHost().getModel();
+				
 				// Create a new EMF Resource for the copied object		
 				Resource newEMFResource = javaBeanToCopy.eResource().getResourceSet().createResource(javaBeanToCopy.eResource().getURI().appendSegment("" + javaBeanToCopy.hashCode()));				 //$NON-NLS-1$
 
@@ -79,7 +80,9 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				};
 				objectsToCopy.clear();
 				visitedObjects.clear();				
-				copyProperty(null, javaBeanToCopy);	
+				copyProperty(null, javaBeanToCopy);
+				
+				objectsToCopy.add(javaBeanToCopy.eClass().getEStructuralFeature("text"));				
 		
 				// Expand the references
 				copier.copyReferences();

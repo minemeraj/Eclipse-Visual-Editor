@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.13 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.14 $  $Date: 2005-09-08 23:21:29 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
@@ -107,7 +107,7 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 		customizeAction.setEnabled(false);
 		markAsPartListener(customizeAction);
 		
-		alignmentWindowRetargetAction = new LabelRetargetAction(CustomizeLayoutWindowAction.ACTION_ID, ""); //$NON-NLS-1$
+		alignmentWindowRetargetAction = new MenuCreatorRetargetAction(CustomizeLayoutWindowAction.ACTION_ID, ""); //$NON-NLS-1$
 		alignmentWindowRetargetAction.setImageDescriptor(CustomizeLayoutWindowAction.IMG_CUSTOMIZE_LAYOUT_BEAN);		
 		alignmentWindowRetargetAction.setHoverImageDescriptor(alignmentWindowRetargetAction.getImageDescriptor());
 		alignmentWindowRetargetAction.setDisabledImageDescriptor(CustomizeLayoutWindowAction.IMG_CUSTOMIZE_LAYOUT_BEAN_DISABLED);		

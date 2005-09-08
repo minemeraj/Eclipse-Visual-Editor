@@ -153,12 +153,28 @@
         prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/Shell.xmi#Shell_1">
       <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Shell"/>
     </children>
-    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
-        creationClassURI="java:/org.eclipse.swt.widgets#Composite">
-      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Composite"/>
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
-          value="composite"/>
-    </children>
+    
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:Stack">
+        <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
+           prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/Composite.xmi#Composite_Grid">
+          <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Composite (Grid)"/>
+        </children>                        
+        <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
+          creationClassURI="java:/org.eclipse.swt.widgets#Composite">
+            <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Composite (null)"/>
+              <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+                value="composite"/>
+        </children>  
+        <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
+           prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/Composite.xmi#Composite_Fill">
+          <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Composite (Fill)"/>
+        </children>                        
+       <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
+           prototypeURI="platform:/plugin/org.eclipse.ve.swt/palette/Composite.xmi#Composite_Row">
+          <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Composite (Row)"/>
+        </children>                
+    </children>        
+    
     <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/group_obj.gif"
         creationClassURI="java:/org.eclipse.swt.widgets#Group">
       <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Group"/>

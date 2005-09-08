@@ -6,6 +6,7 @@
 	    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
 	    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
 	    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
+        xmlns:org.eclipse.jem.java="java.xmi"	    
 	    xmlns:event="event.xmi">
 	<event:AddMany featureName="eAnnotations">
 	  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
@@ -32,5 +33,10 @@
       <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
           propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.SizePropertyDescriptor"/>
     </addedEObjects>
+  <!-- Define a relationship between the Control and an arbitrary object that may wrapper it -->
+    <addedEObjects xsi:type="ecore:EReference" name="visual_wrapper" eType="org.eclipse.jem.java:JavaClass java:/java.lang#Object"
+        upperBound="1" containment="false">
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
+    </addedEObjects>    
   </event:AddMany>
 </xmi:XMI>
