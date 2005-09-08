@@ -75,7 +75,7 @@ public class B_Foil_15_VariableBinding {
 		listEditor.setContentProvider(new ListContentProvider());
 		listEditor.setLabelProvider(new PersonLabelProvider());
 		listEditor.setInput(Person.getSampleData());
-		listEditor.setSelectionService(selectedPerson);
+		listEditor.setSelectionConsumer(new ObjectSelectionConsumer(selectedPerson));
 		
 		TextEditor firstNameEditor = new TextEditor(firstNameText);
 		firstNameEditor.setContentProvider(new ObjectConsumerProvider("firstName"));

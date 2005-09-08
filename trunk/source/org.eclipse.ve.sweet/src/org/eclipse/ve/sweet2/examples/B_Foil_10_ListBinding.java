@@ -45,7 +45,7 @@ public class B_Foil_10_ListBinding {
 		employees.setContentProvider(new ListContentProvider("backups"));
 		employees.setLabelProvider(new PersonLabelProvider());
 		employees.setInput(bigBoss);
-		employees.setSelectionService(new ObjectSelectionService(needManager, "manager"));		
+		employees.setSelectionConsumer(new ObjectSelectionConsumer(needManager, "manager"));		
 		
 		TextEditor needBossEditor = new TextEditor(bossLabel);
 		needBossEditor.setContentProvider(new ObjectContentProvider("manager.firstName"));		

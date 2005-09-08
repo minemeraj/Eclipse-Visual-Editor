@@ -64,7 +64,7 @@ public class B_Foil_9_ComboBinding {
 		managerEditor.setContentProvider(new ListContentProvider("backups"));
 		managerEditor.setLabelProvider(new PersonLabelProvider());		
 		managerEditor.setInput(bigBoss);		
-		managerEditor.setSelectionService(new ObjectSelectionService(needManager,"manager"));		
+		managerEditor.setSelectionConsumer(new ObjectSelectionConsumer(needManager,"manager"));		
 		
 		
 		TextEditor needBossEditor = new TextEditor(bossLabel);
