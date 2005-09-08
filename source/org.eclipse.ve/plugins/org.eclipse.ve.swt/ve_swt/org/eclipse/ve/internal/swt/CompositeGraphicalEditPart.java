@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.27 $ $Date: 2005-08-23 21:18:39 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.28 $ $Date: 2005-09-08 23:21:37 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -26,16 +26,19 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
+import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
+import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
@@ -196,6 +199,46 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 				}
 			}
 			return null;
+		} else if(type == LayoutList.class){
+			return new LayoutList(){
+				public void fillMenuManager(MenuManager aMenuManager) {
+					final EditDomain editDomain = EditDomain.getEditDomain(CompositeGraphicalEditPart.this);				
+					// Get the type of the current layout manager class to set who is selected in the list
+					IBeanProxy layoutBeanProxy = BeanSWTUtilities.invoke_getLayout(getCompositeProxyAdapter().getBeanProxy());
+					String currentLayoutManagerType = layoutBeanProxy == null ? null : layoutBeanProxy.getTypeProxy().getFormalTypeName();
+					String[][] layoutItems = LayoutCellEditor.getLayoutItems(editDomain);
+					// Two arg array.  First element is type, second is array of names
+					for (int i = 0; i < layoutItems[0].length; i++) {
+						final String layoutDisplayName = layoutItems[1][i];
+						final String layoutTypeName = layoutItems[0][i];
+						Action changeLayoutAction = new Action(){
+							public String getText() {
+								return layoutDisplayName;
+							}
+							public String getToolTipText() {
+								return layoutTypeName;
+							}
+							public void run() {
+								IJavaInstance newLayout = BeanUtilities.createJavaObject(layoutTypeName,getBean().eResource().getResourceSet(),(String)null);
+								// Change the layout manager
+								
+								// If no switcher apply the value
+								RuledCommandBuilder cbld = new RuledCommandBuilder(editDomain);
+								cbld.applyAttributeSetting(getBean(),sf_compositeLayout, newLayout);
+								editDomain.getCommandStack().execute(cbld.getCommand());								
+							}
+						};
+						// Set the checked state to match the current layout manager
+						// It is either the layout name (in full) or else null
+						if(currentLayoutManagerType != null && currentLayoutManagerType.equals(layoutTypeName)){
+							changeLayoutAction.setChecked(true);
+						} else if (currentLayoutManagerType == null && layoutTypeName.length() == 0){ // For null the returned list includes it as an empty string
+							changeLayoutAction.setChecked(true);
+						}
+						aMenuManager.add(changeLayoutAction);						
+					}
+				}
+			};
 		}
 		return super.getAdapter(type);
 	}

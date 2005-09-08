@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SpinnerBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:52:53 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-08 23:21:37 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -39,9 +39,12 @@ public class SpinnerBeanInfo extends IvjBeanInfo {
 		    new Object[] [] {
 				{ "readOnly" , SpinnerMessages.getString("SpinnerBeanInfo.StyleBits.ReadOnly.Name") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 				    SpinnerMessages.getString("SpinnerBeanInfo.StyleBits.ReadOnly.Value.ReadOnly") , "org.eclipse.swt.SWT.READ_ONLY" , new Integer(SWT.READ_ONLY) , //$NON-NLS-1$ //$NON-NLS-2$
+				} } ,
+				{ "border" , ControlMessages.getString("ControlBeanInfo.StyleBits.Border.Name") , Boolean.FALSE , new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				    ControlMessages.getString("ControlBeanInfo.StyleBits.Border.Value.Border") , "org.eclipse.swt.SWT.BORDER" , new Integer(SWT.BORDER)				 //$NON-NLS-1$ //$NON-NLS-2$
 				} }
-			}
-		);
+			}				
+		);		
 		return descriptor;
 	}	
 	

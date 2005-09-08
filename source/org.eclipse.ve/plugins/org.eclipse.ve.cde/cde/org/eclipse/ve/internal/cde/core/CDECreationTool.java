@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CDECreationTool.java,v $ $Revision: 1.8 $ $Date: 2005-06-28 21:39:59 $
+ * $RCSfile: CDECreationTool.java,v $ $Revision: 1.9 $ $Date: 2005-09-08 23:21:24 $
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -126,7 +126,14 @@ public class CDECreationTool extends CreationTool {
 		}
 		return result;
 	}
+	
+	protected Request createTargetRequest() {
+		CreateRequest request = new CDECreateRequest();
+		request.setFactory(getFactory());
+		return request;
+	}
 
+	
 	protected void showTargetFeedback() {
 		super.showTargetFeedback();
 		Object cursor = getTargetRequest().getExtendedData().get(Cursor.class);

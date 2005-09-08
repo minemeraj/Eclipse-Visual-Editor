@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.15 $  $Date: 2005-08-25 16:07:00 $ 
+ *  $Revision: 1.16 $  $Date: 2005-09-08 23:21:29 $ 
  */
 
 import java.util.*;
@@ -189,9 +189,9 @@ public class VCEPreSetCommand extends CommandWrapper {
 	/*
 	 * Handle seeing if this is an implicit. If it is then on promotion
 	 * we need to remove the allocation because it will now be the default allocation.
-	 * TODO This will change when we trully handle implicits. Right now on promotion it is no longer implicit. It is a new guy.
 	 */
 	private void handlePromoteImplicit(CommandBuilder cbld, EObject member) {
+		if(true) return; // TODO - We need implicits to be there
 		if (member instanceof IJavaInstance) {
 			IJavaInstance javaInstance = (IJavaInstance) member;
 			if (javaInstance.isSetAllocation()) {

@@ -134,12 +134,36 @@
       <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
           value="jFrame"/>
     </children>
-    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
-        creationClassURI="java:/javax.swing#JPanel">
-      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JPanel"/>
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
-          value="jPanel"/>
-    </children>
+    
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:Stack">    
+	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+	      prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/JPanel.xmi#JPanel_GridBag">
+	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JPanel (GridBag)"/>
+	  </children>
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+	      prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/JPanel.xmi#JPanel_null">
+	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JPanel (null)"/>
+	  </children>      	      
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+          creationClassURI="java:/java.awt#JPanel">
+        <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JPanel (Flow)"/>
+        <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="panel"/>
+      </children>    
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+	      prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/JPanel.xmi#JPanel_Border">
+	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JPanel (Border)"/>
+	  </children>   
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+	      prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/JPanel.xmi#JPanel_Card">
+	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JPanel (Card)"/>
+	  </children>   
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+	      prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/JPanel.xmi#JPanel_Grid">
+	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JPanel (Grid)"/>
+	  </children>   	  	   	  
+    </children>    
+    
     <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/scrollpane_obj.gif"
         creationClassURI="java:/javax.swing#JScrollPane">
       <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="JScrollPane"/>
@@ -268,11 +292,33 @@
       <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
           value="window"/>
     </children>
-    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
-        creationClassURI="java:/java.awt#Panel">
-      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Panel"/>
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:Stack">    
+	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+	      prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/Panel.xmi#Panel_GridBag">
+	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Panel (GridBag)"/>
+	  </children>
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+	      prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/Panel.xmi#Panel_null">
+	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Panel (null)"/>
+	  </children>      	      
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+          creationClassURI="java:/java.awt#Panel">
+        <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Panel (Flow)"/>
+        <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
           value="panel"/>
+      </children>    
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+	      prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/Panel.xmi#Panel_Border">
+	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Panel (Border)"/>
+	  </children>   
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+	      prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/Panel.xmi#Panel_Card">
+	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Panel (Card)"/>
+	  </children>   
+      <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif"
+	      prototypeURI="platform:/plugin/org.eclipse.ve.jfc/palette/Panel.xmi#Panel_Grid">
+	    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Panel (Grid)"/>
+	  </children>   	  	   	  
     </children>
     <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/scrollpane_obj.gif"
         creationClassURI="java:/java.awt#ScrollPane">

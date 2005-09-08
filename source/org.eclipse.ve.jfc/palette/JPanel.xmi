@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
+  xmlns:cdm="http:///org/eclipse/ve/internal/cdm.ecore" 
+  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"
+  xmlns:java="java.xmi"
+  xmlns:java.awt="java:/java.awt"  
+  xmlns:javax.swing="java:/javax.swing">
+    
+  <javax.swing:JPanel xmi:id="JPanel_GridBag" layout="GridBagLayout_1"/>
+  <java.awt:GridBagLayout xmi:id="GridBagLayout_1"/>
+  
+  <javax.swing:JPanel xmi:id="JPanel_null">
+    <layout xsi:nil="true"/>
+  </javax.swing:JPanel>
+  
+  <javax.swing:JPanel xmi:id="JPanel_Border" layout="BorderLayout_1"/>
+  <java.awt:BorderLayout xmi:id="BorderLayout_1"/>    
+  
+  <javax.swing:JPanel xmi:id="JPanel_Card" layout="CardLayout_1"/>
+  <java.awt:CardLayout xmi:id="CardLayout_1"/>   
+  
+  <javax.swing:JPanel xmi:id="JPanel_Grid" layout="GridLayout_1"/>
+  <java.awt:GridLayout xmi:id="GridLayout_1"/>     
+  
+  <cdm:AnnotationEMF annotates="JPanel_GridBag">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jPanel"/>
+  </cdm:AnnotationEMF>  
+  
+  <cdm:AnnotationEMF annotates="JPanel_null">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="JPanel"/>
+  </cdm:AnnotationEMF>  
+  
+  <cdm:AnnotationEMF annotates="JPanel_Border">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="JPanel"/>
+  </cdm:AnnotationEMF>    
+  
+  <cdm:AnnotationEMF annotates="JPanel_Card">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="jPanel"/>
+  </cdm:AnnotationEMF>      
+  
+  <cdm:AnnotationEMF annotates="JPanel_Grid">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="panel"/>
+  </cdm:AnnotationEMF>   
+
+</xmi:XMI>

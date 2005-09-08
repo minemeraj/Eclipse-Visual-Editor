@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.18 $  $Date: 2005-08-24 23:30:49 $ 
+ *  $Revision: 1.19 $  $Date: 2005-09-08 23:21:29 $ 
  */
 
 
@@ -69,7 +69,7 @@ public static boolean isLinux(){
 	return Platform.getOS().equals(Platform.OS_LINUX);
 }
 /*
- *  This is a read from the plugin extension point <com.ibm.etools.visualeditor.lookandfeel>
+ *  This is a read from the plugin extension point <org.eclipse.ve.java.core.lookandfeel>
  */
 public static String[][] getPluginLookAndFeelClasses(){
 	

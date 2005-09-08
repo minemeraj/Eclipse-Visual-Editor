@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.56 $  $Date: 2005-08-26 20:03:18 $ 
+ *  $Revision: 1.57 $  $Date: 2005-09-08 23:21:29 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -2272,5 +2272,9 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	
 	public String toString() {
 		return super.toString() + '(' + getTarget() +')';
+	}
+	
+	public IJavaInstance getBean(){
+		return (IJavaInstance)getTarget();
 	}
 }

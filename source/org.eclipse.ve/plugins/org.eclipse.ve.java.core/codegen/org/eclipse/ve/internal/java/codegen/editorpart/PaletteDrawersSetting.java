@@ -12,7 +12,7 @@
  *  Created May 27, 2005 by Gili Mendel
  * 
  *  $RCSfile: PaletteDrawersSetting.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-08 23:21:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -107,12 +107,17 @@ public class PaletteDrawersSetting implements EditorSettings.ISetting {
 				StringTokenizer st = new StringTokenizer(val, EditorSettings.SEPERATOR);
 				while (st.hasMoreElements()) {
 					String idOrlabel = st.nextToken();
-					int state = Integer.parseInt(st.nextToken());
-					PaletteDrawer d = getDrawer(idOrlabel);
-					if (d != null) {
-						d.setInitialState(state);
-						if (state != PaletteDrawer.INITIAL_STATE_CLOSED)
-							openedOne = true;
+					try{
+						int state = Integer.parseInt(st.nextToken());
+						PaletteDrawer d = getDrawer(idOrlabel);
+						if (d != null) {
+							d.setInitialState(state);
+							if (state != PaletteDrawer.INITIAL_STATE_CLOSED)
+								openedOne = true;
+						}
+					} catch (NumberFormatException exc){
+						// Do nothing - occurs going between releases and when categories with blank names get added
+						return;
 					}
 				}
 

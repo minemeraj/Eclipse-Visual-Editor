@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:org.eclipse.ve.internal.cde.palette="http:///org/eclipse/ve/internal/cde/palette.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
+  <org.eclipse.ve.internal.cde.palette:Drawer>
+    <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.JFace"
+        bundle="#bundle"/>
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tree_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.swt/jface/TreeViewer.xmi#TreeViewer_1">
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="TreeViewer"/>
+    </children>  
+  </org.eclipse.ve.internal.cde.palette:Drawer>
+  
+  <org.eclipse.ve.internal.cde.utility:URLResourceBundle xmi:id="bundle" bundleName="palette">
+    <bundleURLs>platform:/plugin/org.eclipse.ve.swt/palette/</bundleURLs>
+  </org.eclipse.ve.internal.cde.utility:URLResourceBundle>
+</xmi:XMI>

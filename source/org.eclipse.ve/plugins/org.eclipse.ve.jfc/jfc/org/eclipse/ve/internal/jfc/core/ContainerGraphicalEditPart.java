@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.17 $ $Date: 2005-08-24 23:38:09 $
+ * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.18 $ $Date: 2005-09-08 23:21:26 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -198,6 +198,8 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 					viewer.setProperty(SnapToGrid.PROPERTY_GRID_ORIGIN, new Point(getFigure().getBounds().x + margin, getFigure().getBounds().y + margin));
 					return new SnapToGrid(this);
 				}
+			} else if(type == LayoutList.class){
+				return LayoutManagerCellEditor.getLayoutManagerItems(EditDomain.getEditDomain(this));
 			}
 			return null;
 		}

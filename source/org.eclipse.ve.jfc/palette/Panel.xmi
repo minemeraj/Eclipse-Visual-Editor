@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
+  xmlns:cdm="http:///org/eclipse/ve/internal/cdm.ecore" 
+  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"
+  xmlns:java="java.xmi"
+  xmlns:java.awt="java:/java.awt">
+    
+  <java.awt:Panel xmi:id="Panel_GridBag" layout="GridBagLayout_1"/>
+  <java.awt:GridBagLayout xmi:id="GridBagLayout_1"/>
+  
+  <java.awt:Panel xmi:id="Panel_null">
+    <layout xsi:nil="true"/>
+  </java.awt:Panel>
+  
+  <java.awt:Panel xmi:id="Panel_Border" layout="BorderLayout_1"/>
+  <java.awt:BorderLayout xmi:id="BorderLayout_1"/>    
+  
+  <java.awt:Panel xmi:id="Panel_Card" layout="CardLayout_1"/>
+  <java.awt:CardLayout xmi:id="CardLayout_1"/>   
+  
+  <java.awt:Panel xmi:id="Panel_Grid" layout="GridLayout_1"/>
+  <java.awt:GridLayout xmi:id="GridLayout_1"/>     
+  
+  <cdm:AnnotationEMF annotates="Panel_GridBag">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="panel"/>
+  </cdm:AnnotationEMF>  
+  
+  <cdm:AnnotationEMF annotates="Panel_null">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="panel"/>
+  </cdm:AnnotationEMF>  
+  
+  <cdm:AnnotationEMF annotates="Panel_Border">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="panel"/>
+  </cdm:AnnotationEMF>    
+  
+  <cdm:AnnotationEMF annotates="Panel_Card">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="panel"/>
+  </cdm:AnnotationEMF>      
+  
+  <cdm:AnnotationEMF annotates="Panel_Grid">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="panel"/>
+  </cdm:AnnotationEMF>   
+
+</xmi:XMI>

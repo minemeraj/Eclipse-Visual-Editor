@@ -11,28 +11,30 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.11 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.12 $  $Date: 2005-09-08 23:21:24 $ 
  */
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.*;
 
 /**
  * This action on the toolbar controls whether the customize layout dialog is up or not.
  */
-public class CustomizeLayoutWindowAction extends Action {
+public class CustomizeLayoutWindowAction extends Action implements IMenuCreator {
 
 	public static String ACTION_ID = "CustomizeLayoutWindowAction"; //$NON-NLS-1$
 	protected static Point fDialogLoc;
@@ -40,6 +42,8 @@ public class CustomizeLayoutWindowAction extends Action {
 	protected IWorkbenchWindow workbenchWindow;
 	protected IEditorPart editorPart;
 	protected IEditorActionBarContributor contributor;
+	protected MenuManager toolbarMenuManager;	
+	
 	protected final static String WINDOW_TITLE = CDEMessages.CustomizeLayoutWindow_title; 
 	
 	protected static final String CUSTOMIZE_LAYOUT_PAGE_KEY = "customizeLayoutPage_Key"; //$NON-NLS-1$
@@ -190,7 +194,7 @@ public class CustomizeLayoutWindowAction extends Action {
 	};
 	
 	public CustomizeLayoutWindowAction(IWorkbenchWindow workbenchWindow, IEditorActionBarContributor contributor) {
-		super(CDEMessages.CustomizeLayoutWindowAction_label, IAction.AS_CHECK_BOX); 
+		super(CDEMessages.CustomizeLayoutWindowAction_label, IAction.AS_PUSH_BUTTON); 
 		setId(ACTION_ID);
 		setImageDescriptor(
 			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/aligndialog_obj.gif")); //$NON-NLS-1$
@@ -253,6 +257,21 @@ public class CustomizeLayoutWindowAction extends Action {
 			fDialog.setEditorPart(null);
 			update(StructuredSelection.EMPTY);
 		}
+		editorPart.getSite().getSelectionProvider().addSelectionChangedListener(new ISelectionChangedListener(){
+			public void selectionChanged(SelectionChangedEvent event) {
+				fLayoutList = null;
+				ISelection selection = event.getSelection();
+				if(selection instanceof IStructuredSelection){
+					Object firstElement = ((IStructuredSelection)selection).getFirstElement();
+					if(firstElement instanceof EditPart){
+						LayoutList layoutList = (LayoutList) ((EditPart)firstElement).getAdapter(LayoutList.class);
+						if(layoutList != null){
+							fLayoutList = layoutList;
+						}
+					}
+				}				
+			}
+		});
 	}
 	
 	private ISelectionProvider selectionProvider = new ISelectionProvider() {
@@ -272,6 +291,7 @@ public class CustomizeLayoutWindowAction extends Action {
 			this.selection = selection;
 		}
 	};
+	private LayoutList fLayoutList;
 
 	/*
 	 * This is <package-protected> because only CustomizeLayoutWindow should access it.
@@ -357,4 +377,30 @@ public class CustomizeLayoutWindowAction extends Action {
 			fDialog.update(selection);
 		}
 	}
+	
+	public IMenuCreator getMenuCreator() {
+		return this;
+	}
+
+	public Menu getMenu(Control parent) {
+		initializeToolbarMenuManager();
+		return  toolbarMenuManager.createContextMenu(parent);
+	}
+
+	public Menu getMenu(Menu parent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private void initializeToolbarMenuManager(){
+		if (toolbarMenuManager == null)
+			toolbarMenuManager = new MenuManager();
+		else
+			toolbarMenuManager.removeAll();	// Clear it out so we can refill it.
+		
+		if(fLayoutList != null){
+			fLayoutList.fillMenuManager(toolbarMenuManager);
+		}		
+	}
+
 }
