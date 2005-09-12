@@ -7,11 +7,8 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.Editor;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IContentConsumer;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IElementContentProvider;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.ILabelConsumer;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IObjectDelegate;
+
+import org.eclipse.ve.sweet2.*;
 
 public class TextEditor extends ContentViewer implements Editor {
 	

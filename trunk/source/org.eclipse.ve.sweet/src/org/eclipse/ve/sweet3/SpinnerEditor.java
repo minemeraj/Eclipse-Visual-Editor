@@ -4,22 +4,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.jface.util.Assert;
-import org.eclipse.jface.viewers.ContentViewer;
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Decorations;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.Editor;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IContentConsumer;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IElementContentProvider;
-import org.eclipse.ve.sweet.fieldviewer.jface.internal.providers.IObjectDelegate;
+import org.eclipse.swt.widgets.*;
+
+import org.eclipse.ve.sweet2.*;
 
 public class SpinnerEditor extends ContentViewer implements Editor {
 
