@@ -1,42 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" 
-		xmlns:xmi="http://www.omg.org/XMI" 
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-	    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
-	    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
-	    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
-        xmlns:org.eclipse.jem.java="java.xmi"	    
-	    xmlns:event="event.xmi">
-	<event:AddMany featureName="eAnnotations">
-	  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-	    graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart"
-	    treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlTreeEditPart">
-	  </addedEObjects>
-	  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"
-	    propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlPropertySourceAdapter"/>
-	  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
-	    beanLocation="GLOBAL_LOCAL"
-	    beanReturn="false"
-	    beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlProxyAdapter"/>
-	</event:AddMany>
-  <event:AddMany featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="bounds">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
-          propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.BoundsPropertyDescriptor"/>
-    </addedEObjects>
-    <addedEObjects xsi:type="ecore:EReference" name="location">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
-          propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LocationPropertyDescriptor"/>
-    </addedEObjects>
-    <addedEObjects xsi:type="ecore:EReference" name="size">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
-          propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.SizePropertyDescriptor"/>
-    </addedEObjects>
-  <!-- Define a relationship between the Control and an arbitrary object that may wrapper it -->
-    <addedEObjects xsi:type="ecore:EReference" name="visual_wrapper" eType="org.eclipse.jem.java:JavaClass java:/java.lang#Object"
-        upperBound="1" containment="false">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
-    </addedEObjects>    
-  </event:AddMany>
-</xmi:XMI>
+<change:ChangeDescription xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.jem.java="java.xmi" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+         <listChanges referenceValues="_eAnnotations1"/>
+         <listChanges referenceValues="_eAnnotations2"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+         <listChanges referenceValues="_eStructuralFeatures1"/>
+         <listChanges referenceValues="_eStructuralFeatures2"/>
+         <!-- Define a relationship between the Control and an arbitrary object that may wrapper it -->
+         <listChanges referenceValues="_eStructuralFeatures3"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart" treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+	  </objectsToAttach>
+   <objectsToAttach propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlPropertySourceAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"/>
+   <objectsToAttach beanLocation="GLOBAL_LOCAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlProxyAdapter" beanReturn="false" xmi:id="_eAnnotations2" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach name="bounds" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.BoundsPropertyDescriptor" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"/>
+    </objectsToAttach>
+   <objectsToAttach name="location" xmi:id="_eStructuralFeatures1" xsi:type="ecore:EReference">
+      <eAnnotations propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LocationPropertyDescriptor" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"/>
+    </objectsToAttach>
+   <objectsToAttach name="size" xmi:id="_eStructuralFeatures2" xsi:type="ecore:EReference">
+      <eAnnotations propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.SizePropertyDescriptor" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"/>
+    </objectsToAttach>
+   <objectsToAttach containment="false" eType="org.eclipse.jem.java:JavaClass java:/java.lang#Object" name="visual_wrapper" upperBound="1" xmi:id="_eStructuralFeatures3" xsi:type="ecore:EReference">
+      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
+    </objectsToAttach>
+</change:ChangeDescription>

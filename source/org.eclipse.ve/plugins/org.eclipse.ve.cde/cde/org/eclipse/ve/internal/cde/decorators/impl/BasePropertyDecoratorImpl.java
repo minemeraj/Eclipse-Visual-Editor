@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: BasePropertyDecoratorImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-13 20:30:53 $ 
  */
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -190,7 +190,7 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 */
 	protected BasePropertyDecoratorImpl() {
 		super();
-		setSource(this.getClass().getName());		
+		setSource(BasePropertyDecorator.class.getName());		
 	}
 
 	/**

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.146 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.147 $  $Date: 2005-09-13 20:31:09 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -2039,10 +2039,10 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			monitor.done();
 			setLoadIsPending(false);
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
+			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.LOAD_FROM_CACHE);			
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);				
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);			
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.INTROSPECT);
-			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.LOAD_FROM_CACHE);
 			TimerTests.basicTest.stopAccumulating(JavaClassJDOMAdaptor.REFLECT_CLASS);
 			TimerTests.basicTest.stopAccumulating(JavaClassJDOMAdaptor.REFLECT_METHODS);
 			TimerTests.basicTest.stopAccumulating(JavaMethodJDOMAdaptor.REFLECT_METHOD);

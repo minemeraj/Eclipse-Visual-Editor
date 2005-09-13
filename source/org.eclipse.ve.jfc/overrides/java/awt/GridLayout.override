@@ -1,28 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
-	xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"
-    xmlns:org.eclipse.jem.java="java.xmi" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:event="event.xmi">
- <event:AddMany   featureName="eAnnotations">
-  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
-    <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey"
-        value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.GridLayoutPolicyFactory"/>
-  </addedEObjects>
- </event:AddMany>
-
- <event:AddMany featureName="eStructuralFeatures">
-  <addedEObjects xsi:type="ecore:EReference" name="rows" eType="org.eclipse.jem.java:JavaDataType java:/#int"
-        unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-      	cellEditorValidatorClassnames="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.GridLayoutRowColumnValidator"/>
-    </addedEObjects>
-  <addedEObjects xsi:type="ecore:EReference" name="columns" eType="org.eclipse.jem.java:JavaDataType java:/#int"
-        unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-      	cellEditorValidatorClassnames="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.GridLayoutRowColumnValidator"/>
-    </addedEObjects>
- </event:AddMany>
-
-</xmi:XMI>
+<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.jem.java="java.xmi" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+         <listChanges referenceValues="_eStructuralFeatures1"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
+    <keyedValues key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey" value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.GridLayoutPolicyFactory" xsi:type="ecore:EStringToStringMapEntry"/>
+  </objectsToAttach>
+   <objectsToAttach eType="org.eclipse.jem.java:JavaDataType java:/#int" name="rows" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations cellEditorValidatorClassnames="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.GridLayoutRowColumnValidator" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+    </objectsToAttach>
+   <objectsToAttach eType="org.eclipse.jem.java:JavaDataType java:/#int" name="columns" unsettable="true" xmi:id="_eStructuralFeatures1" xsi:type="ecore:EReference">
+      <eAnnotations cellEditorValidatorClassnames="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.GridLayoutRowColumnValidator" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+    </objectsToAttach>
+</change:ChangeDescription>

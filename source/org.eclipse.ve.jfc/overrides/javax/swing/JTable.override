@@ -1,32 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore"
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:org.eclipse.jem.java="java.xmi"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
-    xmlns:gridpref="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/gridbagpreference.ecore"
-    xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"
-    xmlns:event="event.xmi">
-  <event:AddMany  featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-        treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTableTreeEditPart"
-        graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTableGraphicalEditPart:true">
-      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/table_obj.gif"/>
-    </addedEObjects>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTableProxyAdapter">
-      <keyedValues xsi:type="gridpref:Preference" typedValue="both"/>
-    </addedEObjects>
-    <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-        expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.JTableDecoder"/>        
-  </event:AddMany>
-  <event:AddMany  featureName="eStructuralFeatures">
-    <!-- Keep this order so that autocreate will be applied before columns during instantiation. -->
-    <addedEObjects xsi:type="ecore:EReference" name="autoCreateColumnsFromModel"/>
-    <addedEObjects xsi:type="ecore:EReference" name="columns" eType="org.eclipse.jem.java:JavaClass java:/javax.swing.table#TableColumn"
-        upperBound="-1">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"
-          hidden="true"/>
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
-    </addedEObjects>
-  </event:AddMany>
-</xmi:XMI>
+<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:gridpref="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/gridbagpreference.ecore" xmlns:org.eclipse.jem.java="java.xmi" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+         <listChanges referenceValues="_eAnnotations1"/>
+         <listChanges referenceValues="_eAnnotations2"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <!-- Keep this order so that autocreate will be applied before columns during instantiation. -->
+         <listChanges referenceValues="_eStructuralFeatures"/>
+         <listChanges referenceValues="_eStructuralFeatures1"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTableGraphicalEditPart:true" treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTableTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+      <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/table_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
+    </objectsToAttach>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTableProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
+      <keyedValues typedValue="both" xsi:type="gridpref:Preference"/>
+    </objectsToAttach>
+   <objectsToAttach expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.JTableDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
+   <objectsToAttach name="autoCreateColumnsFromModel" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference"/>
+   <objectsToAttach eType="org.eclipse.jem.java:JavaClass java:/javax.swing.table#TableColumn" name="columns" upperBound="-1" xmi:id="_eStructuralFeatures1" xsi:type="ecore:EReference">
+      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
+      <eAnnotations linkType="CHILD" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
+    </objectsToAttach>
+</change:ChangeDescription>

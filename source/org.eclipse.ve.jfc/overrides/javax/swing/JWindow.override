@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi">
-  <event:Add  featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-        treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneContainerTreeEditPart"
-        graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneContainerGraphicalEditPart:true">
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.creationtool.policy"
-          value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneCreationPolicy"/>
-      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/window_obj.gif"/>
-    </addedEObjects>
-  </event:Add>
-  <event:Add  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="contentPane" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
-    </addedEObjects>
-  </event:Add>
-</xmi:XMI>
+<change:ChangeDescription xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneContainerGraphicalEditPart:true" treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneContainerTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+      <keyedValues key="org.eclipse.ve.internal.cde.core.creationtool.policy" value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneCreationPolicy" xsi:type="ecore:EStringToStringMapEntry"/>
+      <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/window_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
+    </objectsToAttach>
+   <objectsToAttach name="contentPane" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations linkType="CHILD" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
+    </objectsToAttach>
+</change:ChangeDescription>

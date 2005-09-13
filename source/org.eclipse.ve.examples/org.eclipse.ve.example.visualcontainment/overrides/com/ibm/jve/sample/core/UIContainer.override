@@ -1,33 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0"
-	xmlns:xmi="http://www.omg.org/XMI" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
-    xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"    
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
-	xmlns:org.eclipse.jem.java="java.xmi"
-    xmlns:event="event.xmi">
-      
-  <event:AddMany featureName="eAnnotations">
-     <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" 
-       beanProxyClassName="com.ibm.jve.sample/com.ibm.jve.sample.internal.UIContainerProxyAdapter"/>
-     <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-        graphViewClassname="com.ibm.jve.sample/com.ibm.jve.sample.internal.UIContainerGraphicalEditPart">
-        <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" 
-          resourceName="platform:/plugin/com.ibm.jve.sample/icons/uicontainer_obj.gif"/>
-	 </addedEObjects>
-  </event:AddMany>      
-  
-<!-- Define the relationship between a UIContainer and its parts -->
-  
-  <event:AddMany featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="parts" eType="org.eclipse.jem.java:JavaClass java:/com.ibm.jve.sample.core#UIPartBase"
-        upperBound="-1" containment="false">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
-    </addedEObjects>
-  </event:AddMany>
-        
-</xmi:XMI>
+<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.jem.java="java.xmi" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+         <listChanges referenceValues="_eAnnotations1"/>
+      </value>
+      <!-- Define the relationship between a UIContainer and its parts -->
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach beanProxyClassName="com.ibm.jve.sample/com.ibm.jve.sample.internal.UIContainerProxyAdapter" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach graphViewClassname="com.ibm.jve.sample/com.ibm.jve.sample.internal.UIContainerGraphicalEditPart" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+        <graphic resourceName="platform:/plugin/com.ibm.jve.sample/icons/uicontainer_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
+	 </objectsToAttach>
+   <objectsToAttach containment="false" eType="org.eclipse.jem.java:JavaClass java:/com.ibm.jve.sample.core#UIPartBase" name="parts" upperBound="-1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
+      <eAnnotations linkType="CHILD" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
+    </objectsToAttach>
+</change:ChangeDescription>

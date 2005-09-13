@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<event:AddMany xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:event="event.xmi" 
-    xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"
-    featureName="eAnnotations">
-  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator" labelProviderClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ImageIconLabelProvider"
-      cellEditorClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ImageIconCellEditor"
-      entryExpandable="false"/>
-</event:AddMany>
+<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach cellEditorClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ImageIconCellEditor" entryExpandable="false" labelProviderClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ImageIconLabelProvider" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+</change:ChangeDescription>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<event:AddMany xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore"
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:event="event.xmi" 
-    xmlns:gridpref="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/gridbagpreference.ecore"
-    
-    featureName="eAnnotations">
-  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-    <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textarea_obj.gif"/>
-  </addedEObjects>
-  <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
-    <keyedValues xsi:type="gridpref:Preference" typedValue="both"/>
-  </addedEObjects>
-</event:AddMany>
+<change:ChangeDescription xmlns:gridpref="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/gridbagpreference.ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+         <listChanges referenceValues="_eAnnotations1"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+    <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/textarea_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
+  </objectsToAttach>
+   <objectsToAttach xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
+    <keyedValues typedValue="both" xsi:type="gridpref:Preference"/>
+  </objectsToAttach>
+</change:ChangeDescription>

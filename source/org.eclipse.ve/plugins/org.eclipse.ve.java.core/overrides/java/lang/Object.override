@@ -1,99 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:event="event.xmi">
-  <event:Add  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="class">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"
-          hidden="true"/>
-    </addedEObjects>
-  </event:Add>
-  
-  <!-- 
+<change:ChangeDescription xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach name="class" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
+    </objectsToAttach>
+   <!-- 
     This is kind of cheat, but datatypes are never introspected, so we can't get these decorators
     added to them in a normal way. By doing it here, when java.lang.Object is introspected, these
     will be done at the same time. And since Object needs to be introspected before anything else 
     can be done, these will be done before anything needs them. -->
-  
-  <event:AddMany notifierURI="java:/#boolean" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BooleanJavaLabelProvider"
-        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BooleanJavaCellEditor"
-        nullInvalid="true"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
+   <objectChanges key="java:/#boolean">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="boolean_eAnnotations"/>
+         <listChanges referenceValues="boolean_eAnnotations1"/>
+         <listChanges referenceValues="boolean_eAnnotations2"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BooleanJavaCellEditor" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BooleanJavaLabelProvider" nullInvalid="true" xmi:id="boolean_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter" xmi:id="boolean_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach xmi:id="boolean_eAnnotations2" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
       <propertySourceAdapterClassname xsi:nil="true"/>
-    </addedEObjects>
-  </event:AddMany>
-  <event:AddMany notifierURI="java:/#char" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.CharJavaCellEditor"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.CharJavaLabelProvider"
-        nullInvalid="true"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
+    </objectsToAttach>
+   <objectChanges key="java:/#char">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="char_eAnnotations"/>
+         <listChanges referenceValues="char_eAnnotations1"/>
+         <listChanges referenceValues="char_eAnnotations2"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.CharJavaCellEditor" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.CharJavaLabelProvider" nullInvalid="true" xmi:id="char_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter" xmi:id="char_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach xmi:id="char_eAnnotations2" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
       <propertySourceAdapterClassname xsi:nil="true"/>
-    </addedEObjects>
-  </event:AddMany>
-  <event:AddMany notifierURI="java:/#int" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider"
-        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:int"
-        nullInvalid="true"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
+    </objectsToAttach>
+   <objectChanges key="java:/#int">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="int_eAnnotations"/>
+         <listChanges referenceValues="int_eAnnotations1"/>
+         <listChanges referenceValues="int_eAnnotations2"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:int" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider" nullInvalid="true" xmi:id="int_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter" xmi:id="int_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach xmi:id="int_eAnnotations2" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
       <propertySourceAdapterClassname xsi:nil="true"/>
-    </addedEObjects>
-  </event:AddMany>
-  <event:AddMany notifierURI="java:/#float" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider"
-        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:float"
-        nullInvalid="true"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
+    </objectsToAttach>
+   <objectChanges key="java:/#float">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="float_eAnnotations"/>
+         <listChanges referenceValues="float_eAnnotations1"/>
+         <listChanges referenceValues="float_eAnnotations2"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:float" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider" nullInvalid="true" xmi:id="float_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter" xmi:id="float_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach xmi:id="float_eAnnotations2" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
       <propertySourceAdapterClassname xsi:nil="true"/>
-    </addedEObjects>
-  </event:AddMany>
-  <event:AddMany notifierURI="java:/#short" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider"
-        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:short"
-        nullInvalid="true"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
+    </objectsToAttach>
+   <objectChanges key="java:/#short">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="short_eAnnotations"/>
+         <listChanges referenceValues="short_eAnnotations1"/>
+         <listChanges referenceValues="short_eAnnotations2"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:short" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider" nullInvalid="true" xmi:id="short_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter" xmi:id="short_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach xmi:id="short_eAnnotations2" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
       <propertySourceAdapterClassname xsi:nil="true"/>
-    </addedEObjects>
-  </event:AddMany>
-  <event:AddMany notifierURI="java:/#long" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider"
-        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:long"
-        nullInvalid="true"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
+    </objectsToAttach>
+   <objectChanges key="java:/#long">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="long_eAnnotations"/>
+         <listChanges referenceValues="long_eAnnotations1"/>
+         <listChanges referenceValues="long_eAnnotations2"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:long" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider" nullInvalid="true" xmi:id="long_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter" xmi:id="long_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach xmi:id="long_eAnnotations2" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
       <propertySourceAdapterClassname xsi:nil="true"/>
-    </addedEObjects>
-  </event:AddMany>
-  <event:AddMany notifierURI="java:/#double" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider"
-        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:double"
-        nullInvalid="true"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
+    </objectsToAttach>
+   <objectChanges key="java:/#double">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="double_eAnnotations"/>
+         <listChanges referenceValues="double_eAnnotations1"/>
+         <listChanges referenceValues="double_eAnnotations2"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:double" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider" nullInvalid="true" xmi:id="double_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter" xmi:id="double_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach xmi:id="double_eAnnotations2" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
       <propertySourceAdapterClassname xsi:nil="true"/>
-    </addedEObjects>
-  </event:AddMany>
-  <event:AddMany notifierURI="java:/#byte" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider"
-        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:byte"
-        nullInvalid="true"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
+    </objectsToAttach>
+   <objectChanges key="java:/#byte">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="byte_eAnnotations"/>
+         <listChanges referenceValues="byte_eAnnotations1"/>
+         <listChanges referenceValues="byte_eAnnotations2"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaCellEditor:byte" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NumberJavaLabelProvider" nullInvalid="true" xmi:id="byte_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.PrimitiveProxyAdapter" xmi:id="byte_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach xmi:id="byte_eAnnotations2" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation">
       <propertySourceAdapterClassname xsi:nil="true"/>
-    </addedEObjects>
-  </event:AddMany>
-</xmi:XMI>
+    </objectsToAttach>
+</change:ChangeDescription>

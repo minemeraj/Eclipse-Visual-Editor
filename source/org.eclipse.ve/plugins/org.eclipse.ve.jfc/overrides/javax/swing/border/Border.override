@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<event:Add xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:event="event.xmi" 
-    position="0"
-    featureName="eAnnotations">
-  <!-- ************** IMPORTANT **************
-       Must keep position="0" above because this is an interface and so
-       ROOT override was performed before this and it also added a BasePropertyDecorator.
-       So that decorator took priority since it was first. By doing position="0" this
-       one will be before that one.
-       ************** IMPORTANT ************** -->      
-  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanCellRenderer:org.eclipse.ve.internal.jfc.beaninfo.BorderEditor"
-      cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFeatureEditor:org.eclipse.ve.internal.jfc.beaninfo.BorderEditor"/>
-</event:Add>
+<change:ChangeDescription xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root/%org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator%">
+      <!-- ************** IMPORTANT **************
+       Because this is an interface and ROOT override was performed before this, the root override added a BasePropertyDecorator.
+       So we just want to update it, not replace it.
+       ************** IMPORTANT ************** -->   
+      <value featureName="cellEditorClassname" dataValue="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFeatureEditor:org.eclipse.ve.internal.jfc.beaninfo.BorderEditor"/>
+      <value featureName="labelProviderClassname" dataValue="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanCellRenderer:org.eclipse.ve.internal.jfc.beaninfo.BorderEditor"/>
+   </objectChanges>
+</change:ChangeDescription>

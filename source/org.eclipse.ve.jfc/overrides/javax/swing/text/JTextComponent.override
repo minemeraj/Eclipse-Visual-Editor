@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore" 
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
-    xmlns:gridpref="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/gridbagpreference.ecore" 
-    xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"        
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
-    xmlns:event="event.xmi">
-  <event:AddMany featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-      graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ComponentGraphicalEditPart:false"/>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTextComponentProxyAdapter">
-      <keyedValues xsi:type="gridpref:Preference" typedValue="both"/>
-    </addedEObjects>
-    <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-      expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.JTextComponentDecoder"/>
-  </event:AddMany>
-  <event:AddMany  featureName="eStructuralFeatures">
-    <!-- The following features are added in this order so that they will be applied in this order. Important for correct usage. -->  
-    <addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true"/>
-    <addedEObjects xsi:type="ecore:EReference" name="selectionEnd" unsettable="true"/>
-    <addedEObjects xsi:type="ecore:EReference" name="selectionStart" unsettable="true"/>    
-  </event:AddMany>
-</xmi:XMI>
+<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:gridpref="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/gridbagpreference.ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+         <listChanges referenceValues="_eAnnotations1"/>
+         <listChanges referenceValues="_eAnnotations2"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <!-- The following features are added in this order so that they will be applied in this order. Important for correct usage. -->
+         <listChanges referenceValues="_eStructuralFeatures"/>
+         <listChanges referenceValues="_eStructuralFeatures1"/>
+         <listChanges referenceValues="_eStructuralFeatures2"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ComponentGraphicalEditPart:false" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"/>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTextComponentProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
+      <keyedValues typedValue="both" xsi:type="gridpref:Preference"/>
+    </objectsToAttach>
+   <objectsToAttach expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.JTextComponentDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
+   <objectsToAttach name="text" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference"/>
+   <objectsToAttach name="selectionEnd" unsettable="true" xmi:id="_eStructuralFeatures1" xsi:type="ecore:EReference"/>
+   <objectsToAttach name="selectionStart" unsettable="true" xmi:id="_eStructuralFeatures2" xsi:type="ecore:EReference"/>
+</change:ChangeDescription>

@@ -1,27 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" 
-	xmlns:xmi="http://www.omg.org/XMI" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
-    xmlns:org.eclipse.jem.java="java.xmi" 
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:event="event.xmi">
-  <event:AddMany  featureName="eStructuralFeatures">
-
-    <addedEObjects xsi:type="ecore:EReference" name="type" eType="org.eclipse.jem.java:JavaDataType java:/#int"
-        unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-          labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.OrientationLabelProvider"
-          cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.OrientationCellEditor"/>
-    </addedEObjects>    
-        
-  </event:AddMany>
-  <event:AddMany featureName="eAnnotations">    
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey"
-        value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.FillLayoutPolicyFactory"/>
-    </addedEObjects>
-  </event:AddMany>  
-</xmi:XMI>
+<change:ChangeDescription xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.jem.java="java.xmi" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach eType="org.eclipse.jem.java:JavaDataType java:/#int" name="type" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.OrientationCellEditor" labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.OrientationLabelProvider" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+    </objectsToAttach>
+   <objectsToAttach xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
+      <keyedValues key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey" value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.FillLayoutPolicyFactory" xsi:type="ecore:EStringToStringMapEntry"/>
+    </objectsToAttach>
+</change:ChangeDescription>

@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi">
-  <event:Add  featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text"/>
-  </event:Add>
-  <event:Add  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="mnemonic" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-          labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanCellRenderer:org.eclipse.ve.internal.jfc.beaninfo.MnemonicEditor"
-          cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFeatureEditor:org.eclipse.ve.internal.jfc.beaninfo.MnemonicEditor"/>
-    </addedEObjects>
-   </event:Add>    
-  
-</xmi:XMI>
+<change:ChangeDescription xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"/>
+   <objectsToAttach name="mnemonic" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFeatureEditor:org.eclipse.ve.internal.jfc.beaninfo.MnemonicEditor" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanCellRenderer:org.eclipse.ve.internal.jfc.beaninfo.MnemonicEditor" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+    </objectsToAttach>
+</change:ChangeDescription>

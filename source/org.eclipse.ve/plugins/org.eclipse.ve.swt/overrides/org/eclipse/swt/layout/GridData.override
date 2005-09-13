@@ -1,29 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" 
-	xmlns:xmi="http://www.omg.org/XMI" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
-    xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"
-    xmlns:org.eclipse.jem.java="java.xmi" 
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:event="event.xmi">
-  <event:AddMany  featureName="eStructuralFeatures">
-
-    <addedEObjects xsi:type="ecore:EReference" name="horizontalAlignment" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-          labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentLabelProvider"
-          cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentCellEditor"/>
-    </addedEObjects> 
-    
-   
-    <addedEObjects xsi:type="ecore:EReference" name="verticalAlignment" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-          labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentLabelProvider"
-          cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentCellEditor"/>      
-    </addedEObjects> 
-    
-  </event:AddMany>
-  
-</xmi:XMI>
+<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.jem.java="java.xmi" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+         <listChanges referenceValues="_eStructuralFeatures1"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach name="horizontalAlignment" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentCellEditor" labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentLabelProvider" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+    </objectsToAttach>
+   <objectsToAttach name="verticalAlignment" unsettable="true" xmi:id="_eStructuralFeatures1" xsi:type="ecore:EReference">
+      <eAnnotations cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentCellEditor" labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentLabelProvider" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>      
+    </objectsToAttach>
+</change:ChangeDescription>
