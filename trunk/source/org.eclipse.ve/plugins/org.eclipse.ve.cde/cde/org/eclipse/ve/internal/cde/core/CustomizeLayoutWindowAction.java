@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.13 $  $Date: 2005-09-13 16:25:06 $ 
+ *  $Revision: 1.14 $  $Date: 2005-09-13 18:56:04 $ 
  */
 
 import java.util.ArrayList;
@@ -304,8 +304,10 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 	 * dispose method is called so that it can clean up.
 	 */
 	public void dispose() {
-		workbenchWindow.getSelectionService().removeSelectionListener(selListener);
-		workbenchWindow.getPartService().removePartListener(alignmentWindowPartListener);
+		if(workbenchWindow != null){
+			workbenchWindow.getSelectionService().removeSelectionListener(selListener);
+			workbenchWindow.getPartService().removePartListener(alignmentWindowPartListener);
+		}
 		editorPart = null;
 		contributor = null;
 		workbenchWindow = null;
