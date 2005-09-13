@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridLayoutSwitcher.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.10 $  $Date: 2005-09-13 16:23:33 $ 
  */
 import java.util.Collections;
 import java.util.List;
@@ -21,8 +21,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
@@ -48,7 +47,7 @@ public GridLayoutSwitcher(VisualContainerPolicy cp) {
  * based on the number of components. For example, if you set the rows=3, and there are 
  * 10 components, the grid will be 3rows X 4columns.
  */
-public Command getCommand(EStructuralFeature sf, IJavaObjectInstance newManager) {
+public Command getCommand(EStructuralFeature sf, IJavaInstance newManager) {
 	// Calculate the number of rows based on the number of children and create the command
 	// to apply it to the layout manager.
 	IJavaObjectInstance containerBean = getContainerBean();
