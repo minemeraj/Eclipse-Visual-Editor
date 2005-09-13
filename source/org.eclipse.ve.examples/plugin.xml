@@ -1,41 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.eclipse.ve.examples"
-   name="%pluginName"
-   version="1.1.0.1"
-   provider-name="%providerName"
-   class="">
+<plugin>
 
-   <runtime>
-      <library name="dept.jar">
-         <export name="*"/>
-      </library>
-      <library name="javaexamples.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-   <requires>
-      <import plugin="org.eclipse.ve.java.core"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.jem"/>
-      <import plugin="org.eclipse.jem.proxy"/>
-      <import plugin="org.eclipse.ve.cde"/>
-      <import plugin="org.eclipse.gef"/>
-      <import plugin="org.eclipse.ve.propertysheet"/>
-      <import plugin="org.eclipse.jdt.launching"/>
-      <import plugin="org.eclipse.jem.beaninfo"/>
-      <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.core.runtime"/>
-   </requires>
-
-
-   <extension
+     <extension
          point="org.eclipse.ui.editors">
       <editor
             default="true"
