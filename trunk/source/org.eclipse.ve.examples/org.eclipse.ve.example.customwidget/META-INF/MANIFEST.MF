@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Customwidget VE Example Plug-in
 Bundle-SymbolicName: org.eclipse.ve.example.customwidget; singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.2.0
 Bundle-ClassPath: customwidgetplugin.jar
 Bundle-Activator: org.eclipse.ve.example.customwidget.CustomwidgetPlugin
 Bundle-Vendor: Eclipse.org
