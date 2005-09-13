@@ -1,52 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"    
-    xmlns:event="event.xmi">
-  <event:AddMany  featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-        treeViewClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart"
-        graphViewClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.JavaBeanGraphicalEditPart"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultJavaBeanLabelProvider">
-      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif"/>
-    </addedEObjects>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"
-        propertySourceAdapterClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanPropertySourceAdapter"/>       
-      
-    <!-- Add a property renderer to object so that everyone is displayed using the java.beans.PropertyEditor
+<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+         <listChanges referenceValues="_eAnnotations1"/>
+         <!-- Add a property renderer to object so that everyone is displayed using the java.beans.PropertyEditor
          if one can be found. Some primitive objects such as String and boolean however have a toString
-         editor installed that avoids having to instantiate the target editor -->        
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanCellRenderer"/>
-    <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-        expDecoder="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.ObjectDecoder"
-        eventDecoder="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.ObjectEventDecoder"
-        methodGenerator="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.util.DefaultMethodTextGenerator"
-        typeVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.TypeVisitor"
-        methodVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.MethodVisitor"
-        eventMethodCallBackVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.EventMethodCallBackVisitor"
-        eventMethodVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.EventMethodVisitor"
-        eventHandlerVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.EventHandlerVisitor"
-        returnStmtVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.ReturnStmtVisitor"
-        expressionVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.ExpressionVisitor"
-        eventExpressionVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.EventExpressionVisitor"
-        eventCallBackExpressionVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.EventCallBackExpressionVisitor"/>    
-
-        
-  </event:AddMany>
-  <event:Add  featureName="eStructuralFeatures">
-    <!-- Events are modeled as instances of AbstractEventInvocation on any Root class
+         editor installed that avoids having to instantiate the target editor -->
+         <listChanges referenceValues="_eAnnotations2"/>
+         <listChanges referenceValues="_eAnnotations3"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <!-- Events are modeled as instances of AbstractEventInvocation on any Root class
          Two subclasses of this exist, EventInvocation which is for events whose source is an EventSetDescriptor, e.g. Button>actionPeformed
-         and the other subclass is PropertyChangeEventInvocation for events who source is a PropertyDescriptor, e.g. Button>font -->  
-    <addedEObjects xsi:type="ecore:EReference" name="events" eType="ecore:EClass http:///org/eclipse/ve/internal/jcm.ecore#//AbstractEventInvocation"
-        upperBound="-1" containment="true"/>
-  </event:Add>
-  
-  <!-- Special one. We need to add an annotation to an attribute that was previously added in another plugin.
+         and the other subclass is PropertyChangeEventInvocation for events who source is a PropertyDescriptor, e.g. Button>font -->
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.JavaBeanGraphicalEditPart" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultJavaBeanLabelProvider" treeViewClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+      <graphic resourceName="platform:/plugin/org.eclipse.ve.java.core/icons/full/obj16/javabean_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
+    </objectsToAttach>
+   <objectsToAttach propertySourceAdapterClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanPropertySourceAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"/>
+   <objectsToAttach labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanCellRenderer" xmi:id="_eAnnotations2" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+   <objectsToAttach eventCallBackExpressionVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.EventCallBackExpressionVisitor" eventDecoder="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.ObjectEventDecoder" eventExpressionVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.EventExpressionVisitor" eventHandlerVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.EventHandlerVisitor" eventMethodCallBackVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.EventMethodCallBackVisitor" eventMethodVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.EventMethodVisitor" expDecoder="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.ObjectDecoder" expressionVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.ExpressionVisitor" methodGenerator="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.util.DefaultMethodTextGenerator" methodVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.MethodVisitor" returnStmtVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.ReturnStmtVisitor" source="codegen.CodeGenHelperClass" typeVisitor="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.codegen.java.TypeVisitor" xmi:id="_eAnnotations3" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
+   <objectsToAttach containment="true" eType="ecore:EClass http:///org/eclipse/ve/internal/jcm.ecore#//AbstractEventInvocation" name="events" upperBound="-1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference"/>
+   <!-- Special one. We need to add an annotation to an attribute that was previously added in another plugin.
        These are the property decorators for the initstring stuff. Added separately because they
        aren't available at java.model level, but are available at this level. -->
-  <event:Add notifierURI="#/allocation" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
-  </event:Add>
-</xmi:XMI>
+   <objectChanges key="X:ROOT#//@root/allocation">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_allocation_eAnnotations"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach hidden="true" xmi:id="_allocation_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
+</change:ChangeDescription>

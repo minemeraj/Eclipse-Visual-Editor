@@ -1,27 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0"
-	xmlns:xmi="http://www.omg.org/XMI" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
-    xmlns:event="event.xmi">
-    
-  <event:Add  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="text" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-          nullInvalid="true"/>
-    </addedEObjects>
-  </event:Add>
-
-  <event:Add featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-      graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart:true"
-      labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text">    
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.creationtool.policy"
-        value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.SWTLabelCreationPolicy:Label,text"/>
-      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/label_obj.gif"/>
-    </addedEObjects>
-  </event:Add>
-</xmi:XMI>  
+<change:ChangeDescription xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach name="text" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations nullInvalid="true" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+    </objectsToAttach>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart:true" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">    
+      <keyedValues key="org.eclipse.ve.internal.cde.core.creationtool.policy" value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.SWTLabelCreationPolicy:Label,text" xsi:type="ecore:EStringToStringMapEntry"/>
+      <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/label_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
+    </objectsToAttach>
+</change:ChangeDescription>

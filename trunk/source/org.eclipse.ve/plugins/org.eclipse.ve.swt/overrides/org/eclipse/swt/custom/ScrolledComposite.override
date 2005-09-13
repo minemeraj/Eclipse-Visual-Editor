@@ -1,30 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0"
-	xmlns:xmi="http://www.omg.org/XMI" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
-    xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"   
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
-	xmlns:org.eclipse.jem.java="java.xmi"
-    xmlns:org.eclipse.jem.internal.beaninfo.beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore"
-    xmlns:event="event.xmi">	
-  <event:AddMany xmi:version="2.0" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-     	graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ScrolledCompositeGraphicalEditPart:true"
-    	treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ScrolledCompositeTreeEditPart">
-      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/scrolledcomposite_obj.gif"/>
-    </addedEObjects>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
-        beanLocation="GLOBAL_GLOBAL"    
-        beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ScrolledCompositeProxyAdapter"/>
-  </event:AddMany>
-  <event:AddMany  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="content" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#Control"
-        upperBound="-1">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
-      <eAnnotations xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator" linkType="CHILD"/>
-    </addedEObjects>
-  </event:AddMany>
-</xmi:XMI>
+<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.jem.internal.beaninfo.beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore" xmlns:org.eclipse.jem.java="java.xmi" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+         <listChanges referenceValues="_eAnnotations1"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ScrolledCompositeGraphicalEditPart:true" treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ScrolledCompositeTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+      <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/scrolledcomposite_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
+    </objectsToAttach>
+   <objectsToAttach beanLocation="GLOBAL_GLOBAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ScrolledCompositeProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#Control" name="content" upperBound="-1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
+      <eAnnotations linkType="CHILD" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
+    </objectsToAttach>
+</change:ChangeDescription>

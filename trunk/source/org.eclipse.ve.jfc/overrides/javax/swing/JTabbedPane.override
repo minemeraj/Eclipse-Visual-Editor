@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore"
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:gridpref="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/gridbagpreference.ecore"
-    xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"
-    xmlns:event="event.xmi">
-  <event:AddMany  featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-        treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTabbedPaneTreeEditPart"
-        graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTabbedPaneGraphicalEditPart">
-      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/tabbedpane_obj.gif"/>
-    </addedEObjects>
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTabbedPaneProxyAdapter">
-      <keyedValues xsi:type="gridpref:Preference" typedValue="both"/>
-    </addedEObjects>
-    <addedEObjects xsi:type="codeGenHelpers:CodeGenHelperClass" source="codegen.CodeGenHelperClass"
-        expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.JTabbedPaneDecoder"/>        
-  </event:AddMany>
-  <event:Add  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="tabs" eType="ecore:EClass jtabbedPaneVisuals.ecore#JTabComponent"
-        upperBound="-1" containment="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"
-          hidden="true"/>
-    </addedEObjects>
-  </event:Add>
-</xmi:XMI>
+<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:gridpref="platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/gridbagpreference.ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+         <listChanges referenceValues="_eAnnotations1"/>
+         <listChanges referenceValues="_eAnnotations2"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTabbedPaneGraphicalEditPart" treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTabbedPaneTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+      <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/tabbedpane_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
+    </objectsToAttach>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JTabbedPaneProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
+      <keyedValues typedValue="both" xsi:type="gridpref:Preference"/>
+    </objectsToAttach>
+   <objectsToAttach expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.JTabbedPaneDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
+   <objectsToAttach containment="true" eType="ecore:EClass jtabbedPaneVisuals.ecore#JTabComponent" name="tabs" upperBound="-1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
+    </objectsToAttach>
+</change:ChangeDescription>

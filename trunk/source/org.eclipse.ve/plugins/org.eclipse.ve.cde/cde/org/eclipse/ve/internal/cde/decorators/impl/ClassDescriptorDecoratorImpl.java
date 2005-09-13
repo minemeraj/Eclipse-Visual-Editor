@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: ClassDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-13 20:30:53 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -233,6 +233,9 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 		super();
 	}
 
+  protected String getSourceDefault() {
+	return ClassDescriptorDecorator.class.getName();
+  }
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: PropertyDescriptorInformationImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-13 20:30:53 $ 
  */
 
 import java.util.Collection;
@@ -94,7 +94,7 @@ public class PropertyDescriptorInformationImpl extends EAnnotationImpl implement
 	 */	
 	protected PropertyDescriptorInformationImpl() {
 		super();
-		setSource(this.getClass().getName());		
+		setSource(PropertyDescriptorInformation.class.getName());		
 	}
 
 	/**

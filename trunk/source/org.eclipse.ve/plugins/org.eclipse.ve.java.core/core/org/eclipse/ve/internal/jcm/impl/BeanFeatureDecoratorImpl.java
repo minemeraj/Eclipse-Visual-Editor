@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanFeatureDecoratorImpl.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.11 $  $Date: 2005-09-13 20:31:09 $ 
  */
 
 import java.util.Collection;
@@ -164,7 +164,7 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 */
 	protected BeanFeatureDecoratorImpl() {
 		super();
-		setSource(this.getClass().getName());		
+		setSource(BeanFeatureDecorator.class.getName());		
 	}
 
 	/**

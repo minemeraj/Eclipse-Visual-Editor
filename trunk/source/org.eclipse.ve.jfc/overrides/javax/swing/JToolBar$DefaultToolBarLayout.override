@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<event:Add xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi" 
-    featureName="eAnnotations">
-  <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-    <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey"
-        value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.FlowLayoutPolicyFactory"/>
-  </addedEObjects>
-</event:Add>
+<change:ChangeDescription xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+    <keyedValues key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey" value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.FlowLayoutPolicyFactory" xsi:type="ecore:EStringToStringMapEntry"/>
+  </objectsToAttach>
+</change:ChangeDescription>

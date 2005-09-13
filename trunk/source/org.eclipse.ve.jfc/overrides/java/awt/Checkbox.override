@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:event="event.xmi">
-  <event:Add  featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
-        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:label">
-      <graphic xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic" resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/checkbox_obj.gif"/>
-    </addedEObjects>
-  </event:Add>
-  <event:Add  featureName="eStructuralFeatures">
-    <addedEObjects xsi:type="ecore:EReference" name="checkboxGroup" unsettable="true">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
-          labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.vce.JavaBeanLabelProvider"
-          cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.TypeReferenceCellEditor:java.awt.CheckboxGroup"/>
-    </addedEObjects>
-  </event:Add>
-</xmi:XMI>
+<change:ChangeDescription xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:label" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+      <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/checkbox_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
+    </objectsToAttach>
+   <objectsToAttach name="checkboxGroup" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.TypeReferenceCellEditor:java.awt.CheckboxGroup" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.vce.JavaBeanLabelProvider" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+    </objectsToAttach>
+</change:ChangeDescription>

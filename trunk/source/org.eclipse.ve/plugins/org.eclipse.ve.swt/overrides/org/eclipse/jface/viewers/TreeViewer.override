@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0"
-	xmlns:xmi="http://www.omg.org/XMI" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
-    xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore"   
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
-	xmlns:org.eclipse.jem.java="java.xmi"
-    xmlns:org.eclipse.jem.internal.beaninfo.beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore"	
-    xmlns:event="event.xmi">	
-
-  <event:AddMany featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
-      beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.TreeViewerProxyAdapter"
-      beanReturn="false"
-	  beanLocation="GLOBAL_LOCAL"/>
-  </event:AddMany>
-  
-  <event:AddMany featureName="eStructuralFeatures">
-    <!-- Define a relationship between the TreeViewer and the Tree -->
-    <addedEObjects xsi:type="ecore:EReference" name="tree" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#Tree"
-        upperBound="1" containment="false">
-      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator" hidden="true"/>
-      <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" mergeIntrospection="false"
-        readMethod="java:/org.eclipse.jface.viewers#TreeViewer.getTree("/>
-    </addedEObjects>
-  </event:AddMany>
-  
-</xmi:XMI>
+<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.jem.internal.beaninfo.beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore" xmlns:org.eclipse.jem.java="java.xmi" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <!-- Define a relationship between the TreeViewer and the Tree -->
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach beanLocation="GLOBAL_LOCAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.TreeViewerProxyAdapter" beanReturn="false" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach containment="false" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#Tree" name="tree" upperBound="1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
+      <eAnnotations mergeIntrospection="false" readMethod="java:/org.eclipse.jface.viewers#TreeViewer.getTree(" xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator"/>
+    </objectsToAttach>
+</change:ChangeDescription>

@@ -1,67 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" 
-    xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
-    xmlns:org.eclipse.jem.java="java.xmi" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:event="event.xmi">
-  <event:AddMany featureName="eAnnotations">
-	<addedEObjects xsi:type="ecore:EAnnotation" source="org.eclipse.ve.LayoutInfo">
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass"
-			value="java.awt.BorderLayout"/>
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName"
-			value="BorderLayout"/>
-	</addedEObjects>
-	<addedEObjects xsi:type="ecore:EAnnotation" source="org.eclipse.ve.LayoutInfo">
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass"
-			value="javax.swing.BoxLayoutX_Axis"/>
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName"
-			value="BoxLayout(X_AXIS)"/>
-	</addedEObjects>
-	<addedEObjects xsi:type="ecore:EAnnotation" source="org.eclipse.ve.LayoutInfo">
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass"
-			value="javax.swing.BoxLayoutY_Axis"/>
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName"
-			value="BoxLayout(Y_AXIS)"/>
-	</addedEObjects>
-	<addedEObjects xsi:type="ecore:EAnnotation" source="org.eclipse.ve.LayoutInfo">
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass"
-			value="java.awt.CardLayout"/>
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName"
-			value="CardLayout"/>
-	</addedEObjects>
-	<addedEObjects xsi:type="ecore:EAnnotation" source="org.eclipse.ve.LayoutInfo">
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass"
-			value="java.awt.FlowLayout"/>
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName"
-			value="FlowLayout"/>
-	</addedEObjects>
-	<addedEObjects xsi:type="ecore:EAnnotation" source="org.eclipse.ve.LayoutInfo">
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass"
-			value="java.awt.GridBagLayout"/>
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName"
-			value="GridBagLayout"/>
-	</addedEObjects>
-	<addedEObjects xsi:type="ecore:EAnnotation" source="org.eclipse.ve.LayoutInfo">
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass"
-			value="java.awt.GridLayout"/>
-		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName"
-			value="GridLayout"/>
-	</addedEObjects>
-  </event:AddMany>
-
-  <!-- Kludge Warning: Inheritance of unreal java classes can't be set because Java Reflection wipes that out and tries to
+<change:ChangeDescription xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.jem.java="java.xmi" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations"/>
+         <listChanges referenceValues="_eAnnotations1"/>
+         <listChanges referenceValues="_eAnnotations2"/>
+         <listChanges referenceValues="_eAnnotations3"/>
+         <listChanges referenceValues="_eAnnotations4"/>
+         <listChanges referenceValues="_eAnnotations5"/>
+         <listChanges referenceValues="_eAnnotations6"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach source="org.eclipse.ve.LayoutInfo" xmi:id="_eAnnotations" xsi:type="ecore:EAnnotation">
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass" value="java.awt.BorderLayout"/>
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName" value="BorderLayout"/>
+	</objectsToAttach>
+   <objectsToAttach source="org.eclipse.ve.LayoutInfo" xmi:id="_eAnnotations1" xsi:type="ecore:EAnnotation">
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass" value="javax.swing.BoxLayoutX_Axis"/>
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName" value="BoxLayout(X_AXIS)"/>
+	</objectsToAttach>
+   <objectsToAttach source="org.eclipse.ve.LayoutInfo" xmi:id="_eAnnotations2" xsi:type="ecore:EAnnotation">
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass" value="javax.swing.BoxLayoutY_Axis"/>
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName" value="BoxLayout(Y_AXIS)"/>
+	</objectsToAttach>
+   <objectsToAttach source="org.eclipse.ve.LayoutInfo" xmi:id="_eAnnotations3" xsi:type="ecore:EAnnotation">
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass" value="java.awt.CardLayout"/>
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName" value="CardLayout"/>
+	</objectsToAttach>
+   <objectsToAttach source="org.eclipse.ve.LayoutInfo" xmi:id="_eAnnotations4" xsi:type="ecore:EAnnotation">
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass" value="java.awt.FlowLayout"/>
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName" value="FlowLayout"/>
+	</objectsToAttach>
+   <objectsToAttach source="org.eclipse.ve.LayoutInfo" xmi:id="_eAnnotations5" xsi:type="ecore:EAnnotation">
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass" value="java.awt.GridBagLayout"/>
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName" value="GridBagLayout"/>
+	</objectsToAttach>
+   <objectsToAttach source="org.eclipse.ve.LayoutInfo" xmi:id="_eAnnotations6" xsi:type="ecore:EAnnotation">
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerClass" value="java.awt.GridLayout"/>
+		<details key="org.eclipse.ve.internal.jfc.core.layoutManagerDisplayName" value="GridLayout"/>
+	</objectsToAttach>
+   <!-- Kludge Warning: Inheritance of unreal java classes can't be set because Java Reflection wipes that out and tries to
        recreate it. But since the classes aren't real, it won't find them. So we just need to duplicate
        the decorators from BoxLayout for the layout policy factory. -->
-  <event:Add notifierURI="java:/javax.swing#BoxLayoutX_Axis" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey"
-          value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.BoxLayoutPolicyFactory"/>
-    </addedEObjects>
-  </event:Add>
-  <event:Add notifierURI="java:/javax.swing#BoxLayoutY_Axis" featureName="eAnnotations">
-    <addedEObjects xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey"
-          value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.BoxLayoutPolicyFactory"/>
-    </addedEObjects>
-  </event:Add>
-</xmi:XMI>
+   <objectChanges key="java:/javax.swing#BoxLayoutX_Axis">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="BoxLayoutX_Axis_eAnnotations"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach xmi:id="BoxLayoutX_Axis_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
+      <keyedValues key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey" value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.BoxLayoutPolicyFactory" xsi:type="ecore:EStringToStringMapEntry"/>
+    </objectsToAttach>
+   <objectChanges key="java:/javax.swing#BoxLayoutY_Axis">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="BoxLayoutY_Axis_eAnnotations"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach xmi:id="BoxLayoutY_Axis_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
+      <keyedValues key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey" value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.BoxLayoutPolicyFactory" xsi:type="ecore:EStringToStringMapEntry"/>
+    </objectsToAttach>
+</change:ChangeDescription>
