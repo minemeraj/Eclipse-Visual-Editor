@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.12 $  $Date: 2005-09-08 23:21:24 $ 
+ *  $Revision: 1.13 $  $Date: 2005-09-13 16:25:06 $ 
  */
 
 import java.util.ArrayList;
@@ -143,8 +143,7 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 	 * @since 1.0.0
 	 */
 	void showCustomizeLayoutWindow() {
-		if (!isChecked()) {
-			setChecked(true);
+		if (fDialog == null){
 			run();
 		} else {
 			fDialog.getShell().forceActive();
@@ -248,7 +247,7 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 			return;
 
 		editorPart = anEditorPart;
-		if (editorPart != null && editorPart.getEditorSite().getActionBarContributor() == contributor) {
+		if (editorPart != null && editorPart.getEditorSite().getActionBarContributor() == contributor && fDialog != null) {
 			runWithoutUpdate(); // Bring it up if necessary
 		} else if (fDialog != null) {
 			// Switching to no editor or to an editor that is not of interest, so hide the dialog. 
@@ -322,49 +321,42 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 	}
 
 	protected void runWithoutUpdate () {
-		// If we are checked then close the dialog
-		if (!isChecked()) {
-			if (fDialog != null) {
-				fDialog.close();
-				fDialog = null;
-			}
-		} else {
-			if (fDialog == null) {
-				fDialog = new CustomizeLayoutWindow(workbenchWindow.getShell(), this);
-				if (fDialogLoc == null) {
-					// Get the persisted position of the dialog
-					Preferences preferences = CDEPlugin.getPlugin().getPluginPreferences();
-					int x = preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_X);
-					int y = preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_Y);
-					fDialog.setLocation(new Point(x, y));
-					fDialogLoc = fDialog.getLocation();
-				} else {
+		if (fDialog == null) {
+			fDialog = new CustomizeLayoutWindow(workbenchWindow.getShell(), this);
+			if (fDialogLoc == null) {
+				// Get the persisted position of the dialog
+				Preferences preferences = CDEPlugin.getPlugin().getPluginPreferences();
+				int x = preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_X);
+				int y = preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_Y);
+				fDialog.setLocation(new Point(x, y));
+				fDialogLoc = fDialog.getLocation();
+			} else {
+				fDialog.setLocation(fDialogLoc);
+			}					
+			fDialog.open();				
+			fDialog.getShell().addControlListener(new ControlListener() {
+				public void controlMoved(ControlEvent event) {
+					fDialogLoc = fDialog.getShell().getLocation();
 					fDialog.setLocation(fDialogLoc);
-				}					
-				fDialog.open();				
-				fDialog.getShell().addControlListener(new ControlListener() {
-					public void controlMoved(ControlEvent event) {
-						fDialogLoc = fDialog.getShell().getLocation();
-						fDialog.setLocation(fDialogLoc);
-					}
-					public void controlResized(ControlEvent event) {
-					}
-				});
-				fDialog.getShell().addDisposeListener(new DisposeListener() {
-					public void widgetDisposed(DisposeEvent event) {
-						persistPreferences();
-						setChecked(false);
-						fDialog = null;
-						update(StructuredSelection.EMPTY);
-					}
-				});			
-			} else
-				fDialog.open();	// Reshow it.				
-			fDialog.setEditorPart(editorPart); // Reinitialize it
+				}
+				public void controlResized(ControlEvent event) {
+				}
+			});
+			fDialog.getShell().addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent event) {
+					persistPreferences();
+					fDialog = null;
+					update(StructuredSelection.EMPTY);
+				}
+			});			
+		} else {
+			fDialog.open();	// Reshow it.
 		}
+		fDialog.setEditorPart(editorPart); // Reinitialize it
 	}
-	protected void persistPreferences() {
-		if (fDialogLoc != null) {
+	
+protected void persistPreferences() {
+	if (fDialogLoc != null) {
 			Preferences preferences = CDEPlugin.getPlugin().getPluginPreferences();
 			preferences.setValue(CDEPlugin.CUSTOMIZELAYOUTWINDOW_X, fDialogLoc.x);
 			preferences.setValue(CDEPlugin.CUSTOMIZELAYOUTWINDOW_Y, fDialogLoc.y);

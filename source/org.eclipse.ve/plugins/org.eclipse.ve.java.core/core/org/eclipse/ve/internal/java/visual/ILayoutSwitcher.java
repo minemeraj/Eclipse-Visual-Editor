@@ -11,13 +11,13 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: ILayoutSwitcher.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-13 16:23:56 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 /**
@@ -38,7 +38,7 @@ public interface ILayoutSwitcher {
 	 * container's children that are to be adjusted to this layout manager
 	 * and applying the layout manager setting.
 	 */
-	public Command getCommand(EStructuralFeature sf, IJavaObjectInstance newManager);
+	public Command getCommand(EStructuralFeature sf, IJavaInstance newManager);
 	
 	/**
 	 * Get the command to cancel the layout manager setting, the default layout manager

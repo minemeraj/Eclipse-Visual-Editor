@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.18 $ $Date: 2005-09-08 23:21:26 $
+ * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.19 $ $Date: 2005-09-13 16:23:04 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -21,21 +21,24 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.*;
+import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
-import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+import org.eclipse.ve.internal.java.visual.*;
 
 /**
  * ViewObject for the awt Container. Creation date: (2/16/00 3:45:46 PM) @author: Joe Winchester
@@ -198,10 +201,36 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 					viewer.setProperty(SnapToGrid.PROPERTY_GRID_ORIGIN, new Point(getFigure().getBounds().x + margin, getFigure().getBounds().y + margin));
 					return new SnapToGrid(this);
 				}
-			} else if(type == LayoutList.class){
-				return LayoutManagerCellEditor.getLayoutManagerItems(EditDomain.getEditDomain(this));
-			}
-			return null;
+			} 
+		} else if (type == LayoutList.class) {
+			return new LayoutList(){
+				public void fillMenuManager(MenuManager aMenuManager) {
+					LayoutListMenuContributor layoutListMenuContributor = new LayoutListMenuContributor(){			
+						protected EditPart getEditPart() {
+							return ContainerGraphicalEditPart.this;
+						}
+						protected IJavaInstance getBean() {
+							return ContainerGraphicalEditPart.this.getBean();
+						}
+						protected EStructuralFeature getLayoutSF() {
+							return sf_containerLayout;
+						}
+						protected IBeanProxy getLayoutBeanProxyAdapter() {
+							return BeanAwtUtilities.invoke_getLayout(BeanProxyUtilities.getBeanProxy(getBean()));
+						}
+						protected String[][] getLayoutItems() {
+							return LayoutManagerCellEditor.getLayoutManagerItems(getEditDomain());
+						}
+						protected ILayoutPolicyFactory getLayoutPolicyFactory(JavaClass layoutManagerClass) {
+							return BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(layoutManagerClass, getEditDomain());
+						}
+						protected VisualContainerPolicy getVisualContainerPolicy() {
+							return getContainerPolicy();
+						}
+					};
+					layoutListMenuContributor.fillMenuManager(aMenuManager);					
+				}
+			};	
 		}
 		return super.getAdapter(type);
 	}

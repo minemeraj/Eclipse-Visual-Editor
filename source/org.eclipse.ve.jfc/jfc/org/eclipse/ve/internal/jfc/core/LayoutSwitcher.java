@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutSwitcher.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.10 $  $Date: 2005-09-13 16:23:33 $ 
  */
 
 import java.util.*;
@@ -20,8 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
@@ -41,7 +40,7 @@ public abstract class LayoutSwitcher implements ILayoutSwitcher {
 	 * Get the command to orphan the children and then add them back at the 
 	 * new calculated constraints.
 	 */
-	public Command getCommand(EStructuralFeature sf, IJavaObjectInstance newManager) {
+	public Command getCommand(EStructuralFeature sf, IJavaInstance newManager) {
 		IJavaObjectInstance containerBean = getContainerBean();
 		
 		RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain(), "change layout"); //$NON-NLS-1$
