@@ -11,17 +11,20 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: EditDomain.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.11 $  $Date: 2005-09-14 21:36:28 $ 
  */
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.logging.Level;
 
+import org.eclipse.core.runtime.*;
 import org.eclipse.gef.*;
 import org.eclipse.gef.palette.*;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -403,5 +406,47 @@ public class EditDomain extends DefaultEditDomain {
 			((DirectSelectionInput)getEditorPart()).modelSelected(model);
 		}
 	}
-
+	
+	private IConfigurationElement[] configElements;
+	private Map configElementToContributor = new HashMap();
+	public List getEditPartContributors(EditPart anEditPart) {
+		List result = new ArrayList(1);
+		if(configElements == null){
+			IExtensionPoint extp = Platform.getExtensionRegistry().getExtensionPoint("org.eclipse.ve.cde.edit_part_contributor");
+			IExtension[] extensions = extp.getExtensions();
+			List configElementsList = new ArrayList();
+			for (int i = 0; i < extensions.length; i++) {
+				IConfigurationElement[] configurationElements = extensions[i].getConfigurationElements();
+				for (int j = 0; j < configurationElements.length; j++) {
+					configElementsList.add(configurationElements[j]);
+				}
+			}
+			configElements = new IConfigurationElement[configElementsList.size()];
+			configElementsList.toArray(configElements);
+		}
+		IActionFilter actionFilter = (IActionFilter) anEditPart.getAdapter(IActionFilter.class);
+		// Now we have some of the configElements get their filter
+		for (int i = 0; i < configElements.length; i++) {
+			IConfigurationElement configElement = configElements[i];
+			IConfigurationElement[] filters = configElement.getChildren("filter");
+			for (int j = 0; j < filters.length; j++) {
+				String name = filters[j].getAttribute("name");
+				String value = filters[j].getAttribute("value");
+				if (actionFilter.testAttribute(anEditPart,name,value)){
+					// The edit part wishes to be contributed to.  See if we have a contributor existing for this, or if not create one 
+					EditPartContributor editPartContributor = (EditPartContributor)configElementToContributor.get(configElement);
+					if(editPartContributor == null){
+						try {
+							editPartContributor = (EditPartContributor) configElement.createExecutableExtension("class");
+						} catch (CoreException e) {
+							CDEPlugin.getPlugin().getLogger().log(e,Level.WARNING);
+						}
+					}
+					configElementToContributor.put(configElement,editPartContributor);
+					result.add(editPartContributor);
+				}
+			}			
+		}
+		return result;
+	}
 }
