@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-10 17:08:34 $ 
+ *  $Revision: 1.11 $  $Date: 2005-09-14 21:22:55 $ 
  */
 
 import java.util.*;
@@ -177,12 +177,6 @@ protected int reverseLineSeperator(int position) {
  */
 public String getSelectorContent() {
 	String code = getCode() ;
-	//Scanner scanner = new Scanner() ;
-	//scanner.setSource(code.toCharArray()) ;
-	//scanner.recordLineSeparator = true ;
-	//scanner.tokenizeWhiteSpace = true ;
-	//scanner.tokenizeComments = true ;
-	
 	IScanner scanner = fScannerFactory.getScanner(true, true, true);
 	scanner.setSource(code.toCharArray());
 	int token ;
@@ -203,16 +197,21 @@ public String getSelectorContent() {
 	 }
 	}
 	catch (InvalidInputException e) {
+		scanner.setSource(null); //cleanup
 		return null;
 	}
 	
-	if (token == ITerminalSymbols.TokenNameIdentifier || token == ITerminalSymbols.TokenNamenew)
-	   return new String (scanner.getCurrentTokenSource()) ;
-	else
+	if (token == ITerminalSymbols.TokenNameIdentifier || token == ITerminalSymbols.TokenNamenew){
+		String content =  new String (scanner.getCurrentTokenSource()) ;
+		scanner.setSource(null); //cleanup
+		return content;
+	}else{
+		scanner.setSource(null); //cleanup
 	   if (prevIdentifier != null)
 	      return prevIdentifier ;
 	   else
 	      return null ;
+	}
 }
 
 protected int skipSemiColonifNeeded(int right) {
@@ -221,11 +220,6 @@ protected int skipSemiColonifNeeded(int right) {
     	// hold Comments in them - so strip the comments off.
     	
     	String targetSrc = fSource.substring(fSourceOff,right);
-		//Scanner scanner = new Scanner() ;
-		//scanner.setSource(targetSrc.toCharArray()) ;
-		//scanner.recordLineSeparator = true ;
-		//scanner.tokenizeWhiteSpace = true ;
-		//scanner.tokenizeComments = true ;
 		IScanner scanner = fScannerFactory.getScanner(true, true, true);
 		scanner.setSource(targetSrc.toCharArray());
 		
@@ -241,7 +235,8 @@ protected int skipSemiColonifNeeded(int right) {
 		}
 		catch(InvalidInputException e){
 			org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e,Level.FINE) ;
-		}		
+		}
+		scanner.setSource(null); //cleanup
     }
     int index = fSource.substring(right).indexOf(';') ;
     return index<0 ? right : right+index+1 ;
@@ -249,11 +244,6 @@ protected int skipSemiColonifNeeded(int right) {
 }
 
 public static int indexOfSemiColon(String targetSrc, IScannerFactory scannerFactory) {
-	//Scanner scanner = new Scanner() ;
-	//scanner.setSource(targetSrc.toCharArray()) ;
-	//scanner.recordLineSeparator = false ;
-	//scanner.tokenizeWhiteSpace = true ;
-	//scanner.tokenizeComments = true ;
 	IScanner scanner = scannerFactory.getScanner(true, true, false);
 	scanner.setSource(targetSrc.toCharArray());
 	
@@ -270,16 +260,12 @@ public static int indexOfSemiColon(String targetSrc, IScannerFactory scannerFact
 	}
 	catch(InvalidInputException e){
 		org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e,Level.FINE) ;
-	}		
+	}
+	scanner.setSource(null); //cleanup
     return targetSrc.length();
 }
 
 public static int indexOfLastSemiColon(String targetSrc, IScannerFactory scannerFactory) {
-	//Scanner scanner = new Scanner() ;
-	//scanner.setSource(targetSrc.toCharArray()) ;
-	//scanner.recordLineSeparator = false ;
-	//scanner.tokenizeWhiteSpace = true ;
-	//scanner.tokenizeComments = true ;
 	IScanner scanner = scannerFactory.getScanner(true, true, false);
 	scanner.setSource(targetSrc.toCharArray());
 
@@ -298,6 +284,7 @@ public static int indexOfLastSemiColon(String targetSrc, IScannerFactory scanner
 	catch(InvalidInputException e){
 		org.eclipse.ve.internal.java.core.JavaVEPlugin.log(e,Level.FINE) ;
 	}
+	scanner.setSource(null); //cleanup
 	if(semicolonIndex>-1 && semicolonIndex<targetSrc.length())
 		return semicolonIndex;
     return targetSrc.length();
@@ -317,11 +304,6 @@ protected void primParseExpression() {
 	// right is now after the ; OR will be unaffected if ; is before right
 	
 	// Skip white space until EOL
-	//Scanner scanner = new Scanner() ;
-	//scanner.setSource(fSource.substring(right).toCharArray()) ;
-	//scanner.recordLineSeparator = true ;
-	//scanner.tokenizeWhiteSpace = true ;
-	//scanner.tokenizeComments = true ;
 	IScanner scanner = fScannerFactory.getScanner(true, true, true);
 	scanner.setSource(fSource.substring(right).toCharArray());
 	
@@ -376,6 +358,7 @@ protected void primParseExpression() {
     catch (InvalidInputException e) {
     	JavaVEPlugin.log(e, Level.WARNING) ;
     }
+    scanner.setSource(null); //cleanup
 }
 
 /**
@@ -437,10 +420,6 @@ protected void primParseComment() {
  
 	int scanOff = fSourceOff+fSourceLen ;
 	String scannerString = fSource.substring(scanOff);
-	//Scanner scanner = new Scanner() ;
-	//scanner.setSource(scannerString.toCharArray()) ;
-	//scanner.recordLineSeparator = true ;
-	//scanner.tokenizeComments = true ;
 	IScanner scanner = fScannerFactory.getScanner(true, false, true);
 	scanner.setSource(scannerString.toCharArray());
 	
@@ -479,7 +458,8 @@ protected void primParseComment() {
     } 
     catch (InvalidInputException e) {
     	JavaVEPlugin.log(e, Level.WARNING) ;
-    }	 
+    }
+    scanner.setSource(null); //cleanup
 }
 	
 /**
