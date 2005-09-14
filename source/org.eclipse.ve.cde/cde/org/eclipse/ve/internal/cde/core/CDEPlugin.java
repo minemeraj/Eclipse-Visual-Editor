@@ -11,13 +11,12 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.16 $  $Date: 2005-09-14 15:37:15 $ 
+ *  $Revision: 1.17 $  $Date: 2005-09-14 21:36:28 $ 
  */
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.*;
@@ -291,26 +290,5 @@ public final class CDEPlugin extends AbstractUIPlugin {
 		aStore.setDefault(SHOW_XML, false);
 		aStore.setDefault(CUSTOMIZELAYOUTWINDOW_X, 0);
 		aStore.setDefault(CUSTOMIZELAYOUTWINDOW_Y, 0);
-	}
-	public static EditPartContributor[] contributors;
-	public static EditPartContributor[] getEditPartContributors() {
-		if(contributors == null){
-			IExtensionPoint extp = Platform.getExtensionRegistry().getExtensionPoint("org.eclipse.ve.cde.edit_part_contributor");
-			IExtension[] extensions = extp.getExtensions();
-			List contributorsList = new ArrayList();
-			for (int i = 0; i < extensions.length; i++) {
-				IConfigurationElement[] configurationElements = extensions[i].getConfigurationElements();
-				for (int j = 0; j < configurationElements.length; j++) {
-					try {
-						contributorsList.add(configurationElements[i].createExecutableExtension("class"));
-					} catch (CoreException e) {	
-						getPlugin().getLogger().log(e,Level.WARNING);
-					}
-				}
-			}
-			contributors = new EditPartContributor[contributorsList.size()];
-			contributorsList.toArray(contributors);
-		}
-		return contributors;
 	}
 }

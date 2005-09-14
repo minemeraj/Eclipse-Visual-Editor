@@ -136,9 +136,12 @@
    </extension>    
    
    <extension point="org.eclipse.ve.cde.edit_part_contributor"> 
-     <contributor 
-       class="org.eclipse.ve.internal.jface.TreeViewerEditPartContributor"
-       type="org.eclipse.swt.widgets.Tree"/>
+     <contributor class="org.eclipse.ve.internal.jface.TreeViewerEditPartContributor">
+         <filter
+           name="BEANTYPE"
+           value="org.eclipse.swt.widgets.Tree">
+         </filter>             
+      </contributor>   
    </extension>
    
    <extension

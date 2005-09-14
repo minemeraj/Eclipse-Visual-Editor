@@ -15,47 +15,26 @@
          <sequence>
             <element ref="contributor" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
-         <attribute name="point" type="string" use="required">
-            <annotation>
-               <documentation>
-                  a fully qualified identifier of the target extension point
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="id" type="string">
-            <annotation>
-               <documentation>
-                  an optional identifier of the extension instance
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="name" type="string">
-            <annotation>
-               <documentation>
-                  an optional name of the extension instance
-               </documentation>
-            </annotation>
-         </attribute>
+         <attribute name="point" type="string" use="required"/>
+         <attribute name="id" type="string"/>
+         <attribute name="name" type="string"/>            
       </complexType>
    </element>
 
    <element name="contributor">
       <complexType>
-         <attribute name="class" type="string" use="required">
-            <annotation>
-               <documentation>
-                  The class that implements EditPartContributor
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="type" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-      </complexType>
+         <attribute name="class" type="string" use="required"/>
+         <sequence>
+            <element ref="filter" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>         
+       </complexType>
+   </element>
+   
+   <element name="filter">
+     <complexType>
+       <attribute name="name" type="string" use="required"/>
+       <attribute name="value" type="string" use="required"/>
+     </complexType>
    </element>
 
 </schema>

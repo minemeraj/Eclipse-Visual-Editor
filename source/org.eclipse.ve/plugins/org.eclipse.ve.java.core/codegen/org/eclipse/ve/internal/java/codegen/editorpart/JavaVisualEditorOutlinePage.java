@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.24 $  $Date: 2005-09-14 15:35:25 $ 
+ *  $Revision: 1.25 $  $Date: 2005-09-14 21:36:29 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
@@ -179,9 +180,9 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 				Object model = anEditPart.getModel();
 				if(anEditPart instanceof DefaultTreeEditPart && model instanceof IJavaInstance){
 					// See if there a contributor that is interested in this type of class
-					EditPartContributor[] editPartContributors = CDEPlugin.getEditPartContributors();
-					for (int i = 0; i < editPartContributors.length; i++) {
-						editPartContributors[i].treeEditPartActivated((DefaultTreeEditPart)anEditPart);
+					Iterator editPartContributors = jve.getEditDomain().getEditPartContributors(anEditPart).iterator();
+					while(editPartContributors.hasNext()) {
+						((EditPartContributor)editPartContributors.next()).treeEditPartActivated((DefaultTreeEditPart)anEditPart);
 					}
 				}
 			}
