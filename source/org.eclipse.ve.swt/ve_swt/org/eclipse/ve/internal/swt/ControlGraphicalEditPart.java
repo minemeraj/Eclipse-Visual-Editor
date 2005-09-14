@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.28 $ $Date: 2005-09-14 18:20:06 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.29 $ $Date: 2005-09-14 23:18:16 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractEditPart;
-import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.swt.widgets.Display;
@@ -43,7 +42,7 @@ import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 import org.eclipse.ve.internal.java.core.*;
 
-public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor {
+public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor {
 	
 	protected ImageFigureController imageFigureController;
 	protected IJavaInstance bean;
@@ -124,6 +123,22 @@ public class ControlGraphicalEditPart extends AbstractGraphicalEditPart implemen
 		errorNotifier.addErrorListener(fBeanProxyErrorListener);
 		errorNotifier.addErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE));	// This will signal initial severity if not none.
 		errorNotifier.addErrorNotifier(otherNotifier);
+		
+		// If there are any graphical editpart contributors, add the figures to the main and tooltip figure
+		if (fEditPartContributors != null) {
+			Iterator iter = fEditPartContributors.iterator();
+			IFigure contentPane = getFigure();
+			IFigure toolTipFigure = getFigure().getToolTip();
+			while (iter.hasNext()) {
+				GraphicalEditPartContributor contrib = (GraphicalEditPartContributor) iter.next();
+				IFigure figOverlay = contrib.getFigureOverLay();
+				if (figOverlay != null)
+					contentPane.add(figOverlay);
+				IFigure hoverFig = contrib.getHoverOverLay();
+				if (hoverFig != null)
+					toolTipFigure.add(hoverFig);
+			}
+		}
 	
 		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
 	}
