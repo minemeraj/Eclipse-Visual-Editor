@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlCopyEditPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-14 18:20:06 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -18,8 +18,14 @@ package org.eclipse.ve.internal.swt;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
 public class ControlCopyEditPolicy extends WidgetCopyEditPolicy {
 	
+	public ControlCopyEditPolicy(EditDomain anEditDomain) {
+		super(anEditDomain);
+	}
+
 	protected boolean shouldCopyFeature(EStructuralFeature feature, Object eObject) {		
 		if(feature != null){
 			if ("allocation".equals(feature.getName()) //$NON-NLS-1$

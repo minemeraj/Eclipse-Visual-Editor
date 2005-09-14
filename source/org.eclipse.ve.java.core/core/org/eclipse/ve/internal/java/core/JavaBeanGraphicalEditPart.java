@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-08-24 23:30:46 $
+ * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-09-14 18:20:07 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -55,7 +55,7 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 	
 	protected void createEditPolicies() {
 		super.createEditPolicies();
-		installEditPolicy(CopyAction.REQ_COPY,new DefaultCopyEditPolicy());
+		installEditPolicy(CopyAction.REQ_COPY,new DefaultCopyEditPolicy(EditDomain.getEditDomain(this)));
 	}	
 	
 	public void activate() {

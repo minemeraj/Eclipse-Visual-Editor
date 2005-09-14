@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentTreeEditPart.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-14 18:20:08 $ 
  */
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -140,7 +140,7 @@ public class ComponentTreeEditPart extends JavaBeanTreeEditPart {
 			EditPartViewer viewer = getRoot().getViewer();
 			manager = BeanTreeDirectEditManager.getDirectEditManager(ed, viewer);
 		}
-		installEditPolicy(CopyAction.REQ_COPY,new ComponentCopyEditPolicy());		
+		installEditPolicy(CopyAction.REQ_COPY,new ComponentCopyEditPolicy(EditDomain.getEditDomain(this)));		
 	}
 	
 	private void performDirectEdit(){

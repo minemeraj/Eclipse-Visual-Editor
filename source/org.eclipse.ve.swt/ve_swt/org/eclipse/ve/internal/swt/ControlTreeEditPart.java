@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlTreeEditPart.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-25 20:58:10 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-14 18:20:06 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -121,7 +121,7 @@ public class ControlTreeEditPart extends JavaBeanTreeEditPart {
 			EditPartViewer viewer = getRoot().getViewer();
 			manager = BeanTreeDirectEditManager.getDirectEditManager(ed, viewer);
 		}
-		installEditPolicy(CopyAction.REQ_COPY,new ControlCopyEditPolicy());		
+		installEditPolicy(CopyAction.REQ_COPY,new ControlCopyEditPolicy(getEditDomain()));		
 	}
 	
 	private IPropertyDescriptor getDirectEditTargetProperty() {

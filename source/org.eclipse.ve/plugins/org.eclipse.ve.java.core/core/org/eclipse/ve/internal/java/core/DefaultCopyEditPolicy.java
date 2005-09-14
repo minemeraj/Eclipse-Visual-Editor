@@ -10,20 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.17 $  $Date: 2005-09-08 23:21:29 $ 
+ *  $Revision: 1.18 $  $Date: 2005-09-14 18:20:07 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
@@ -31,14 +26,17 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
+import org.eclipse.swt.dnd.*;
+import org.eclipse.swt.widgets.Display;
+
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.impl.JavaPackageImpl;
 
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.ve.internal.cdm.Annotation;
+
+import org.eclipse.ve.internal.cde.core.AnnotationLinkagePolicy;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 
 public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	
@@ -46,6 +44,11 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	protected List objectsToCopy = new ArrayList(20);
 	protected List visitedObjects = new ArrayList(20);
 	protected EcoreUtil.Copier copier;
+	private AnnotationLinkagePolicy annotationLinkagePolicy;
+	
+	public DefaultCopyEditPolicy(EditDomain anEditDomain){
+		annotationLinkagePolicy = anEditDomain.getAnnotationLinkagePolicy();
+	}
 		
 	public Command getCommand(Request request) {
 		if(CopyAction.REQ_COPY.equals(request.getType())){
@@ -190,12 +193,22 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		if(objectsToCopy.indexOf(ePropertyValue) == -1 && shouldCopyFeature(feature, ePropertyValue)){
 			objectsToCopy.add(ePropertyValue);
 			copier.copy(ePropertyValue);
-			preExpand((IJavaInstance)ePropertyValue);			
+			preExpand((IJavaInstance)ePropertyValue);	
+			copyAnnotation(ePropertyValue);
 		}
 		// Keep walking because the object being copied might not have been added to the copy set
 		// but it might have children that are
 		if(visitedObjects.indexOf(ePropertyValue) == -1 && shouldExpandFeature(feature,ePropertyValue)){
 			expandCopySet(ePropertyValue);			
+		}
+	}
+	
+	private void copyAnnotation(EObject anObject){
+		
+		Annotation annotation = annotationLinkagePolicy.getAnnotation(anObject);
+		if(annotation != null){
+			objectsToCopy.add(annotation);
+			copier.copy(annotation);
 		}
 	}
 	
@@ -235,7 +248,14 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		
 	protected void cleanup(IJavaInstance javaBeanToCopy){
 		
-	}	
+		// Get the annotation
+		Annotation annotation = annotationLinkagePolicy.getAnnotation(javaBeanToCopy);
+		if(annotation != null){
+			Annotation copiedAnnotation = (Annotation)copier.get(annotation);
+			copiedAnnotation.getVisualInfos().clear();
+		}
+	}
+			
     protected void preExpand(final IJavaInstance javaBean){
 	 }
 

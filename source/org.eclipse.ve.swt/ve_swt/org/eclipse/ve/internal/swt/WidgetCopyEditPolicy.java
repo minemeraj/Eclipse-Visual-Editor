@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetCopyEditPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-14 18:20:06 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -25,10 +25,16 @@ import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaClass;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.core.DefaultCopyEditPolicy;
 
 public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 	
+	public WidgetCopyEditPolicy(EditDomain anEditDomain) {
+		super(anEditDomain);
+	}
+
 	private JavaClass formToolkitType;
 
 	protected void preExpand(IJavaInstance javaBean) {
