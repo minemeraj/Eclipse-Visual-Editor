@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Override Files Migration Instructions</title>
+<link rel="stylesheet" href="http://dev.eclipse.org/default_style.css" type="text/css">
+ <style type="text/css">
+  .PictureParagraph { margin-left: 10% }
+  .PictureStyle { border-style: ridge; border-width: 1px; padding: 1px }
+  
+  </style>
+</head>
+
+<body>
+
+<table border="0" cellpadding="2" width="100%">
+  <tbody>
+    <tr>
+      <td align="left" width="60%">
+	<font class="indextop">Override Files Migration</font><br>
+         <font class="indexsub">Migration of override files</font>
+      </td>
+      <td width="40%">
+	<img hspace="50" align="right" src="../../../images/reference.gif">
+      </td>
+    </tr>
+  </tbody>                                      
+</table>
+
+&nbsp;<br>
+<P>Remember this should be done after stepping up to VE 1.2 and must be done before VE 1.3 because the old file format will not be supported in VE 1.3.</P>
+<UL type="disc">
+	<LI><A href="#description">Description of change</A></LI>
+	<LI><A href="#instructions">Instructions for how to migrate</A></LI>
+</UL>
+
+<table border="0" cellpadding="2" width="100%">
+<tbody>
+  <tr>
+    <td align="left" valign="top" bgcolor="#0070a0">
+      <A name="description"><B><FONT color="#ffffff"
+				face="Arial,Helvetica">Description</FONT></B></A> 
+    </td>
+  </tr>
+</tbody>            
+</table>
+<P><BR>In VE 1.2 the override files have been migrated to the EMF API ChangeDescription classes instead of the previous internal Event classes. This will allow us to use API and to remove the internal event model.</P>
+<P>The old event model will be supported in VE 1.2 but it will be removed in VE 1.3 so any existing override files should be converted as soon as possible after the first VE 1.2 driver is available. The new format is not supported on VE 1.1.0.1 or below.</P>
+<P>The concept between the two is still the same. They both describe how to override the JEM model by adding or changing model objects. Let's take a simple example. This is the original format of the java.lang.Character override file (Character.override):</P>
+<PRE style="background-color: #eeeeee">
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;event:Add xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
+        xmlns:event="event.xmi" 
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_1.gif">     featureName="eAnnotations"&gt;
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_2.gif">   &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
+        cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.CharJavaCellEditor:class"
+        labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.CharJavaLabelProvider"
+      /&gt;
+    &lt;/event:Add&gt;
+</PRE>
+<P>This is the converted format:</P><PRE style="background-color: #eeeeee">
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;change:ChangeDescription xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" 
+         xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0"&gt;
+       &lt;objectChanges key="X:ROOT#//@root"&gt;
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_1.gif">      &lt;value featureName="eAnnotations"&gt;
+           &lt;listChanges referenceValues="<FONT color="teal">_eAnnotations</FONT>"/&gt;
+         &lt;/value&gt;
+       &lt;/objectChanges&gt;
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_2.gif">    &lt;objectsToAttach xmi:id="<FONT
+	color="teal"><I>_eAnnotations</I></FONT>" cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.CharJavaCellEditor:class"
+         labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.CharJavaLabelProvider" 
+         xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/&gt;
+    &lt;/change:ChangeDescription&gt;
+</PRE>
+<P>The elements that coorespond with each other between the two types are shown with the <IMG
+	border="0" src="http://eclipse.org/articles/images/tag_1.gif"> image in both.</P>
+<P>The old format said there was an Add event, to the feature named <I>eAnnotations</I>. What was added is in the <I>addEObjects</I> element. It added the BasePropertyDecorator.</p>
+<P>The new format uses a ChangeDescription instead of an Add. In the old format there was one event per update. If there was more than one update, there would be multiple events in the root of the XMI document. In the new format all of the changes are grouped under one ChangeDescription. Under the change description would be listed all one <I>objectChanges</I> element for each target JEM object being changed. In this case we only have one objectChanges. The <I>key</I> is the URI of the object to be changed. In our case we provide a special URI,<I>
+&quot;<B>X:ROOT#//@root</B>&quot;</I>. This special root says that the target is the JEM class that this file is being loaded for. In this case it will reference the java.lang.Character JEM class. We use this special format so that it will be unique and can be found without ever being mistaken for a true URI.</P>
+<P>So the <I>objectChanges</I> here contains a <I>value</I> element for each feature that will be changed for this target object. In our case we have one for the feature <I>eAnnotations</I>. Since <I>eAnnotations</I> is an isMany feature, we have to use the <I>listChanges</I> element to describe all of the objects that will be added to the <I>eAnnotations</I>. There would be one <I>listChanges</I> per object being added, in our case there is only one.</P>
+<P>The <I>listChanges </I>points to the object being added. In this case it is an XMI:ID reference to an object later in the file, &quot;<I>_eAnnotations</I>&quot; in this case. The actual object being added is stored later in the change description. It is stored under the <I>objectsToAttach
+</I>element. We are attaching a BasePropertyDecorator. To allow simple forward reference from the listChanges we gave it the <I>xmi:id=&quot;_eAnnotations&quot;</I> attribute setting.</P>
+<P>Here is a more complicated example. It is AbstractButton override file.</P>
+<P><PRE style="background-color: #eeeeee">
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore"
+        xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:event="event.xmi"&gt;
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_1.gif">   &lt;event:Add  featureName="eAnnotations"&gt;
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_2.gif">     &lt;addedEObjects xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+          labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text"/&gt;
+      &lt;/event:Add&gt;
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_3.gif">   &lt;event:Add  featureName="eStructuralFeatures"&gt;
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_4.gif">     &lt;addedEObjects xsi:type="ecore:EReference" name="mnemonic" unsettable="true"&gt;
+          &lt;eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"
+            labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanCellRenderer:org.eclipse.ve.internal.jfc.beaninfo.MnemonicEditor"
+            cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFeatureEditor:org.eclipse.ve.internal.jfc.beaninfo.MnemonicEditor"/&gt;
+        &lt;/addedEObjects&gt;
+      &lt;/event:Add&gt;      
+    &lt;/xmi:XMI&gt;
+</PRE>
+<P><PRE style="background-color: #eeeeee">
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;change:ChangeDescription xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0"&gt;
+       &lt;objectChanges key="X:ROOT#//@root"&gt;
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_1.gif">      &lt;value featureName="eAnnotations"&gt;
+           &lt;listChanges referenceValues="<FONT color="teal">_eAnnotations</FONT>"/&gt;
+         &lt;/value&gt;
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_3.gif">      &lt;value featureName="eStructuralFeatures"&gt;
+           &lt;listChanges referenceValues="<FONT color="olive">_eStructuralFeatures</FONT>"/&gt;
+         &lt;/value&gt;
+       &lt;/objectChanges&gt;
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_2.gif">    &lt;objectsToAttach xmi:id="<FONT
+	color="teal">_eAnnotations</FONT>" 
+         labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text" 
+         xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"/&gt;
+<IMG style="width: 24px; height: 13px;" border="0" src="http://eclipse.org/articles/images/tag_4.gif">    &lt;objectsToAttach xmi:id="<FONT
+	color="olive">_eStructuralFeatures</FONT>" name="mnemonic" unsettable="true" xsi:type="ecore:EReference"&gt;
+         &lt;eAnnotations cellEditorClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanFeatureEditor:org.eclipse.ve.internal.jfc.beaninfo.MnemonicEditor" 
+           labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.BeanCellRenderer:org.eclipse.ve.internal.jfc.beaninfo.MnemonicEditor" 
+           xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/&gt;
+       &lt;/objectsToAttach&gt;
+    &lt;/change:ChangeDescription&gt;
+</PRE>
+
+<TABLE border="0" cellpadding="2" width="100%">
+	<TBODY>
+		<TR>
+			<TD align="left" valign="top" bgcolor="#0070a0"><A
+				name="instructions"><B><FONT color="#ffffff" face="Arial,Helvetica">Migration Instructions</FONT></B></A>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<p
+>These instructions will migrate the override files to the new format. Basically what will be done is a migration feature will be installed into the development Eclipse (the one where the overrides files are being developed), the migration is executed, and then migration feature is uninstalled.</P>
+<P>To install migration feature:</P>
+<OL>
+	<LI>Download the <A href="migratesite.zip">feature zip (migratesite.zip)</A>.</LI>
+	<LI>Bring up the Eclipse IDE and select Help-&gt;Software Updates-&gt;Find and Install-&gt;Search for New Features</LI>
+	<LI>Select the &quot;New Archived Site&quot; button and select the migratesite.zip file that was downloaded above.</LI>
+	<LI>Select the &quot;Eclipse.org&quot; site and the &quot;migratezip&quot; site and hit the Finish button, select the appropriate mirror.</LI>
+	<LI>When it comes back, select &quot;migratesite&quot; and hit the &quot;Select Required&quot; button.</LI>
+	<LI>Then complete the installation with Next button.</LI>
+</OL>
+<P>Now to perform the migration, for each override directory in development, select the directory, bring up the popup menu and selec the &quot;Migrate Override Files&quot; button. This will perform the migration. It will migrate all of those that it can understand. It will bring up an error dialog listing what was wrong with any it couldn't convert. These will need to be fixed if it was syntax errors, or they will need to be converted by hand. The migration facility only understands Add and AddMany events. Other event types are not understood. They however should be rare if any. None of VE itself has used anything but Add and AddMany. If there are other types, please contact the VE mailing list for instructions.</P>
+<P>Now that they are converted the migration feature can be uninstalled and removed:<BR>
+</P>
+<OL>
+	<LI>Select Help-&gt;Software Updates-&gt;Manage Configuration</LI>
+	<LI>Select the Migrate Overrides feature, and then select the &quot;disable&quot; link from the Available Tasks list on the right window</LI>
+	<LI>After restarting, go back to Manage Configuration, and select the Show Disabled Features<BR clear="right">
+	(<IMG border="0" src="Uninstall1.jpg" width="211" height="127"> )
+	toolbar item.</LI>
+	<LI>Select the Migrate Overrides feature and then select the &quot;uinstall&quot; link from the Available Tasks list on the right window.</LI>
+</OL><P>It should now be migrated and the feature uninstalled.</P>
+
+</BODY>
+</HTML>

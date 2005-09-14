@@ -1,0 +1,2433 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+  <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+  <title>Visual Editor Performance Improvements - 1.1</title>
+
+
+  <link type="text/css" href="http://dev.eclipse.org/default_style.css" rel="stylesheet">
+
+</head>
+
+
+<body>
+
+<h2><u><font color="teal">Visual Editor
+Performance Improvements - 1.1</font></u></h2>
+
+<br>
+
+<br>
+
+<h3>Status (as of 8/30/05)</h3>
+
+<big><big><u>Total Improvement</u></big></big>
+- The total percent
+improvement&nbsp;comparing the final <a href="#VE_1.1">1.1
+GM</a> driver&nbsp;<big><b><span style="color: blue;"></span></b></big>to
+the <a href="#1.0.2_Baseline">1.0.2 baseline</a>
+measurements:<br>
+
+Open VE first time in session, cold (<a href="#scenarios">scenario
+1</a>)
+- <big><b><span style="color: blue;">32%</span></b></big><br>
+
+Open VE first time in session, warm (<a href="#scenarios">scenario
+2</a>)
+- <big><b><span style="color: blue;">45%</span></b></big><br>
+
+Open VE second time in session (<a href="#scenarios">scenario
+3</a>) - <big><b><span style="color: blue;">48%</span></b></big><br>
+
+Close/reopen project, open VE (<a href="#scenarios">scenario
+4</a>) - <big><b><span style="color: blue;">55%</span></b></big>
+<p><a href="#Post_VE_1.1_Driver_Measurements"><big><span style="text-decoration: underline;">Post VE
+1.1&nbsp;Driver measurements</span></big></a><span style="text-decoration: underline;"></span></p>
+
+<p></p>
+
+<h3>Overview</h3>
+
+<p>One of the main areas of improvement for VE in release 1.1 is
+to
+improve the overall
+time it takes to open the VE on a particular visual class java file. In
+particular, the total elapsed time from when the user selects <b>Open
+with--&gt;Visual Editor</b>,
+until the <b>Loading...</b> message is no longer
+visible... and the
+graph view, beans view, property sheet view, and source view are fully
+functional with visual components.</p>
+
+<h3>Approach</h3>
+
+<p>In order to determine whether modifications to the code would
+improve the startup time, baseline
+measurements were recorded using a medium size Swing application
+(contains 50+ Swing components).
+<u>Note</u>: Measurements have also been taken for a medium
+size SWT
+application with similar
+controls and performs the same function as the Swing application. The
+measurements for SWT were gathered starting
+at <a href="#iteration6">Iteration 6</a> and are
+denoted using the
+color <span style="color: green;">green.</span></p>
+
+<p>The same workstation was used to record measurements after
+approved
+changes were made and to analyze various theories and prototypes that
+may
+prove beneficial to improving the startup time.
+The main bugzilla defect for tracking performance improvements is bug <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=61944">61944</a>
+although some of the improvements
+listed in this bug were completed in release 1.0. Only those
+improvements from 12/15/04 and beyond are addressed
+in this document. This bug also references individual bugs that will be
+targeted for performance improvements
+for VE 1.1 (and referenced here as well).</p>
+
+<p>The Eclipse project <b><a href="./PerformanceTest.zip">PerformanceTest</a></b>
+and the class <b>UserAdmin.java</b> are used for recording
+measurements.<br>
+
+For SWT get the Eclipse project <b><a href="./performanceTestSWT.zip">PerformanceTestSWT</a></b>
+which has an equivalent <b>UserAdmin.java</b> built with
+SWT controls.</p>
+
+<p>The goal is to improve the startup time for the following <a name="scenarios"><span style="font-weight: bold; text-decoration: underline;">scenarios</span>:</a></p>
+
+<ol>
+
+  <li><b>Cold start</b> - From a rebooted machine,
+first time startup
+of the Eclipse IDE, open <b>UserAdmin.java</b>.<br>
+
+    <i>Purpose</i>: Windows libraries and programs have not
+been
+loaded. Although this scenario is the least experienced by the user it
+is worth looking at since it measures the first opening after
+restarting Windows.</li>
+
+  <li><b>Warm/First time</b> - <u>Complete
+Step 1</u>, close <b>UserAdmin.java</b>,
+close and reopen the IDE, and open <b>UserAdmin.java</b>.<br>
+
+    <i>Purpose</i>: All Windows libraries and programs have
+been
+loaded. Measures the first opening in an IDE session.</li>
+
+  <li><b>Warm/Second time</b> - <u>Complete
+Step 2</u>, close and
+reopen <b>UserAdmin.java</b>.<br>
+
+    <i>Purpose</i>: This is the most common scenario in
+that a VE
+editor has been opened at least once and the user is opening another
+editor or reopening the same class. This should be the fastest time of
+all the scenarios since the BeanInfo and palette entries have already
+been loaded and cached.</li>
+
+  <li><b>First time after close/open project</b> - <u>Complete
+Step 3</u>,
+close <b>UserAdmin.java</b>, close and reopen the project,
+reopen <b>UserAdmin.java</b>.<br>
+
+    <i>Purpose</i>: Although this scenario is not something
+the user
+would manually execute, it simulates what happens when the BeanInfo in
+a project changes and the remote VM for the BeanInfo has to be
+recycled... thus going through the process of intospection and
+recaching the BeanInfo.</li>
+
+</ol>
+
+<h3>Performance improvements line items</h3>
+
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+
+  <tbody>
+
+    <tr>
+
+      <td style="vertical-align: top; font-weight: bold;" width="21%"><big>Line
+Item [Bug#]</big></td>
+
+      <td style="vertical-align: top;" width="41%"><big><span style="font-weight: bold;">Description</span></big><br>
+
+      </td>
+
+      <td style="vertical-align: top;" width="6%"><big><span style="font-weight: bold;">Status</span></big><br>
+
+      <small>C=Complete<br>
+
+I=In process</small> </td>
+
+      <td colspan="4" style="vertical-align: top;" width="32%">
+      <table style="width: 100%; text-align: left;" border="1" cellpadding="0" cellspacing="0">
+
+        <tbody>
+
+          <tr align="center">
+
+            <td colspan="4" style="vertical-align: top;"><big><span style="font-weight: bold;">Results</span></big><br>
+
+Prototype - % improvement / time<br>
+
+            </td>
+
+          </tr>
+
+          <tr align="center">
+
+            <td colspan="4" style="vertical-align: top;"><b>Scenario</b><br>
+
+            </td>
+
+          </tr>
+
+          <tr align="center">
+
+            <td style="vertical-align: top;" width="25%">1
+            </td>
+
+            <td style="vertical-align: top;" width="25%">2
+            </td>
+
+            <td style="vertical-align: top;" width="25%">3
+            </td>
+
+            <td style="vertical-align: top;" width="25%">4
+            </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><big><big><span style="color: blue;">Iteration 1</span></big></big></b></td>
+
+      <td style="vertical-align: top;">Base line
+measurements. Eclipse
+3.0.1, GEF 3.0.1, EMF 2.0.1, VE 1.0.2</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center" width="8%"><b><a name="1.0.2_Baseline"></a>27.1s</b></td>
+
+      <td align="center" width="8%"><b>20.9s</b></td>
+
+      <td align="center" width="8%"><b>5.8s</b></td>
+
+      <td align="center" width="8%"><b>12s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="center"><b><span style="color: green;">SWT</span></b></td>
+
+      <td style="vertical-align: top;"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><b><br>
+
+      </b></td>
+
+      <td align="center"><b><span style="color: green;">17.9s</span></b></td>
+
+      <td align="center"><b><span style="color: green;">5.3s</span></b></td>
+
+      <td align="center"><b><span style="color: green;">10.5s</span></b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Need to cache
+reverse parsing [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=82099">82099</a>]</td>
+
+      <td style="vertical-align: top;">If there is a cache
+file for a
+specific javaclass, load the cache file and apply the changes to get a
+fully-introspected class without actually doing introspection.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center">8%</td>
+
+      <td align="center">10%</td>
+
+      <td align="center">3%</td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Main VE EditorPart
+doesn't need
+to reactivate the editor [part of bug <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=61944">61944</a>]
+      </td>
+
+      <td style="vertical-align: top;">JavaVisualEditorPart.openVCEViewersIfRequired()
+should call showView with IWorkbenchPage.VIEW_VISIBLE to avoid
+unnecessary flashing and negate the need to reactivate the editor.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center">3%</td>
+
+      <td align="center">0%</td>
+
+      <td align="center">2%</td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Reduce thread
+priority for spare
+VM [part of bug <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=61944">61944</a>]
+      </td>
+
+      <td style="vertical-align: top;">For larger
+applications, the
+spare VM is launched during the time the editor is still coming up.
+Reducing the thread priority when starting and restoring it to normal
+priority after it's started should minimize the impact on the current
+editor.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center">0%</td>
+
+      <td align="center">(1)%</td>
+
+      <td align="center">2%</td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><span style="color: blue;">Iteration
+1 actual results</span></b></td>
+
+      <td>Actual results after release all Iteration 1
+modifications. </td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><b>10% / 18.6s</b></td>
+
+      <td align="center"><b>8% / 5.3s</b></td>
+
+      <td align="center"><b>12% / 10.4s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><big><b><span style="color: blue;"> Total Improvement</span></b></big>
+- iteration 1</td>
+
+      <td>The total percent improvement thus far compared to the
+start.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><big><b><span style="color: blue;"><br>
+
+      </span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">10%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">8%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">12%</span></b></big></td>
+
+    </tr>
+
+    <tr>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><big><big><span style="color: blue;">Iteration 2</span></big></big></b></td>
+
+      <td style="vertical-align: top;">Base line
+measurements. Eclipse
+3.0.1, GEF 3.0.1, EMF 2.0.1, VE 1.1 - Iteration 1</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><b>18.6s</b></td>
+
+      <td align="center"><b>5.3s</b></td>
+
+      <td align="center"><b>10.4s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Reduce cost of
+rebuilding the
+Palette [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=82353">82353</a>]
+      </td>
+
+      <td style="vertical-align: top;">The palette is very
+costly the
+first time and it isn't shared for subsequent editors. Modify the UI to
+allow for easier sharing of the palette. The palette is constructed
+once and is restored to the desired state of the active editor.<br>
+
+      <u>Note</u>: The prototype measurements were done by
+returning
+from the method that actually builds the palette. But I think most if
+not all of the palette creation is done on a thread after the editor is
+up.<br>
+
+      <br>
+
+For a temporary solution, Gili added a SoftCache to the palette
+categories list contribution per workspace.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center">0%</td>
+
+      <td align="center">2%</td>
+
+      <td align="center">(2)%</td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Cache image /
+resource bundle
+files where possible [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=83039">83039</a>]
+      </td>
+
+      <td style="vertical-align: top;">From Dan Kehn:
+FileMon is
+showing the reloading of several gifs on every editor open that I
+believe are unnecessary.<br>
+
+As coded, URLResourceBundleImpl defeats the caching mechanism of
+java.util.ResourceBundle. ResourceBundle maintains a cache of
+previously loaded resource bundles keyed by class loader and resource
+bundle name.<br>
+
+      </td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Need to start the
+target VMs
+with -noverify [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=83142">83142</a>]
+      </td>
+
+      <td style="vertical-align: top;">With the -noverify
+option the
+JRE will not perform .jar/class validation which saves significant
+amount of I/O and CPU.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Look at optimized
+way of
+traversing set features [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=83189">83189</a>]
+      </td>
+
+      <td style="vertical-align: top;">InverseMaintenaceAdapter.primPropagate();<br>
+
+BeanProxyAdapter.applyAllSettings();<br>
+
+Both of these have to traverse set features. They do this by getting
+all features and seeing which are set. Because there are typically a
+lot more available features than what are set we might get a
+performance gain from modifying the code to directly walk the set
+features. <br>
+
+Estimated <u>20%</u> projected savings.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">BeaninfoClassAdapter
+should
+specify parser pool option [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=83338">83338</a>]
+      </td>
+
+      <td style="vertical-align: top;">It appears the cost
+of parsing
+is dramatically higher if no pool parser is provided
+(XMLResource.OPTION_USE_PARSER_POOL) and the default
+SAXParserFactory.newInstance() method is called. This cost can be
+reduced by providing one for the BeaninfoClassAdapter's resource set.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><span style="color: blue;">Iteration
+2 actual results</span></b></td>
+
+      <td>Actual results after releasing all Iteration 2
+modifications.<br>
+
+Percents are comparisons to the <u>previous iteration.</u><br>
+
+      </td>
+
+      <td align="center">C</td>
+
+      <td align="center"><b>26.4s</b></td>
+
+      <td align="center"><b>3% / 17.9s</b></td>
+
+      <td align="center"><b>6% / 5s</b></td>
+
+      <td align="center"><b>0% / 10.4s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><big><b><span style="color: blue;"> Total Improvement</span></b></big>
+- iteration 2</td>
+
+      <td>The total percent improvement thus far compared to the
+start.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><big><b><span style="color: blue;">2%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">14%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">13%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">13%</span></b></big></td>
+
+    </tr>
+
+    <tr>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><big><big><span style="color: blue;">Iteration 3</span></big></big></b></td>
+
+      <td style="vertical-align: top;">Base line
+measurements. Eclipse
+3.0.1, GEF 3.0.1, EMF 2.0.1, VE 1.1 - Iteration 2</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><b>26.4s</b></td>
+
+      <td align="center"><b>17.9s</b></td>
+
+      <td align="center"><b>5s</b></td>
+
+      <td align="center"><b>10.4s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">plugin dependency
+look is
+expensive [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=82890">82890</a>]
+      </td>
+
+      <td style="vertical-align: top;">On a first time
+(cold) open,
+looking in the registry for VE contributions, and tries to order
+contribution properly... looking with a profiler, it seems that these
+operations are quite expensive. In particular calls to
+ProxyPlugin.getPrereqs() is significant.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center">5-9%</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Cache constructors
+and classes
+on decorators [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=84009">84009</a>]
+      </td>
+
+      <td style="vertical-align: top;">Profiling shows
+places where
+classes and constructors are looked up to create instances of .override
+files. These could be optimized by being cached in the decorators
+themselves.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Lazy initialize
+Java method
+generated flag value [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=84379">84379</a>]
+      </td>
+
+      <td style="vertical-align: top;">JavaMethodJDOMAdaptor.setGeneratedFlag()
+actively reads the method's source to try and find if the "@generated"
+javadoc is there. The problem is that on a VE open after a project
+closed/reopened, JEM introspection for the UserAdmin reads about 23Meg
+worth of the src.zip of the JRE.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><span style="color: blue;">Iteration
+3 actual results</span></b></td>
+
+      <td>Actual results after releasing all Iteration 3
+modifications.<br>
+
+Percents are comparisons to the <u>previous iteration.</u><br>
+
+      </td>
+
+      <td align="center">C</td>
+
+      <td align="center"><b><br>
+
+      </b></td>
+
+      <td align="center"><b>8% / 16.5s</b></td>
+
+      <td align="center"><b>3% / 4.8s</b></td>
+
+      <td align="center"><b>5% / 9.8s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><big><b><span style="color: blue;"> Total Improvement</span></b></big>
+- iteration 3</td>
+
+      <td>The total percent improvement thus far compared to the
+start.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><big><b><span style="color: blue;"><br>
+
+      </span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">20%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">22%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">18%</span></b></big></td>
+
+    </tr>
+
+    <tr>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><big><big><span style="color: blue;">Iteration 4</span></big></big></b></td>
+
+      <td style="vertical-align: top;">Base line
+measurements. Eclipse
+3.0.1, GEF 3.0.1, EMF 2.0.1, VE 1.1 - Iteration 3</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><b><br>
+
+      </b></td>
+
+      <td align="center"><b>16.5s</b></td>
+
+      <td align="center"><b>4.8s</b></td>
+
+      <td align="center"><b>9.8s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">BeanInfo cache for
+performance [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=80616">80616</a>]
+      </td>
+
+      <td style="vertical-align: top;">If there is a cache
+file for a
+specific javaclass, load the cache file and apply the changes to get a
+fully-introspected class without actually doing introspection.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center">20%</td>
+
+      <td align="center">(2)%</td>
+
+      <td align="center">23%</td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><span style="color: blue;">Iteration
+4 actual results</span></b></td>
+
+      <td>Actual results after releasing all Iteration 4
+modifications.<br>
+
+Percents are comparisons to the <u>previous iteration.</u><br>
+
+      </td>
+
+      <td align="center">C</td>
+
+      <td align="center"><b>20s</b></td>
+
+      <td align="center"><b>17% / 13.6s</b></td>
+
+      <td align="center"><b>0% / 4.8s</b></td>
+
+      <td align="center"><b>30% / 6.8s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><big><b><span style="color: blue;"> Total Improvement</span></b></big>
+- iteration 4</td>
+
+      <td>The total percent improvement thus far compared to the
+start.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><big><b><span style="color: blue;">26%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">35%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">16%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">43%</span></b></big></td>
+
+    </tr>
+
+    <tr>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><big><big><span style="color: blue;">Iteration 5</span></big></big></b></td>
+
+      <td style="vertical-align: top;">Base line
+measurements. Eclipse
+3.0.1, GEF 3.0.1, EMF 2.0.1, VE 1.1 - Iteration 4</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><b>20s</b></td>
+
+      <td align="center"><b>13.6s</b></td>
+
+      <td align="center"><b>4.8s</b></td>
+
+      <td align="center"><b>6.8s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Look at target VM
+traffic and
+cache and optimize to reduce trips over the wire [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=84429">84429</a>]
+      </td>
+
+      <td style="vertical-align: top;">We make 2141 method
+invokes and
+180 field gets and 180 sets to the target VM during open of
+UserAdmin.java. If we can reduce this figure by using caching (to avoid
+repeated reflection lookup calls) and also studying the breakdown of
+the 2141 more closely we can pick up a performance saving.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">JavaMethodJDOMAdaptor.addParameters
+triggers massive reads of JRE's src.zip [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=84728">84728</a>]
+      </td>
+
+      <td style="vertical-align: top;">Megabytes of data
+from the JRE's
+src.zip file are read off disk in order to retrieve IMethod parameter
+names (below). It may be possible to lazy init more of the JEM model;
+there looks to be a lot of potential savings in avoiding the JDT model
+cache.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><span style="color: blue;"> <a name="iteration5">Iteration
+5</a> actual results</span></b></td>
+
+      <td>Actual results after releasing all Iteration 5
+modifications.<br>
+
+Percents are comparisons to the <u>previous iteration.</u><br>
+
+      </td>
+
+      <td align="center">C</td>
+
+      <td align="center"><b>6% / 18.7s</b></td>
+
+      <td align="center"><b>9% / 12.2s</b></td>
+
+      <td align="center"><b>4% / 4.6s</b></td>
+
+      <td align="center"><b>19% / 5.5s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><big><b><span style="color: blue;"> Total Improvement</span></b></big>
+- iteration 5</td>
+
+      <td>The total percent improvement thus far compared to the
+start.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><big><b><span style="color: blue;">30%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">41%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">20%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">54%</span></b></big></td>
+
+    </tr>
+
+    <tr>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><big><big><span style="color: blue;"> <a name="iteration6">Iteration
+6</a></span></big></big></b>
+- target <b>3/11/05</b></td>
+
+      <td style="vertical-align: top;">Base line
+measurements. Eclipse
+3.0.1, GEF 3.0.1, EMF 2.0.1, VE 1.1 - Iteration 5</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><b>18.7s</b></td>
+
+      <td align="center"><b>12.2s</b></td>
+
+      <td align="center"><b>4.6s</b></td>
+
+      <td align="center"><b>5.5s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">bump SetUp/UI
+threads up during
+bring up [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=85772">85772</a>]
+      </td>
+
+      <td style="vertical-align: top;">To get around <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=82567">
+bug 82567</a>,
+and ensure that background jobs do not compete with the JVE coming up,
+we will temporarily bump up Setup/UI threads, and restore them back
+down when bring up is complete. This have about 100msec improvement on
+scenario 2 (3.2 sec. to 3.1 sec ... 3%).</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Enable Transactions
+[<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=84708">84708</a>]
+      </td>
+
+      <td style="vertical-align: top;">Currently VE
+performs many
+actions that needs to be done once in a transaction...e.g., VE
+invalidates AWT components to get a new figure when a property has
+changed.... but as we come up and set up many properties, we need to
+invalidate/get Figure once.</td>
+
+      <td align="center">I</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Unused Properties [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=84611">84611</a>]
+      </td>
+
+      <td style="vertical-align: top;">Running the
+properties tool, we
+get a list of unused properties and dangling properties which take up
+extra memory and require extra I/O to load at startup.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">ProxyPlugin
+unnecessarily loaded
+PDE plug-ins [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=85887">85887</a>]
+      </td>
+
+      <td style="vertical-align: top;">ProxyPlugin.findPlugins
+forces
+the load of the PDE core plug-in via getPDEProcessForPlugin. It should
+test if the target project has the PDE plugin nature beforehand.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">VE flikers during
+snippet
+analysis [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=86721">86721</a>]
+      </td>
+
+      <td style="vertical-align: top;">A few issues here:
+      <ol>
+
+        <li> VE snoozeAlarm on every expression, event if smart
+decode
+did not change anyting.</li>
+
+        <li>FForm decoder has not smart decoding ... always
+reLaying
+out the GEF canvas</li>
+
+        <li> Event decoders do not have smart decode</li>
+
+      </ol>
+
+      </td>
+
+      <td align="center">I</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><span style="color: blue;">Iteration 6 actual results</span></b></td>
+
+      <td>Actual results after releasing all Iteration 6
+modifications.<br>
+
+Percents are comparisons to the <u>previous iteration.</u><br>
+
+      </td>
+
+      <td align="center">C</td>
+
+      <td align="center"><b>3% / 18.2s</b></td>
+
+      <td align="center"><b>(7%) / 13.1s</b></td>
+
+      <td align="center"><b>0% / 4.6s</b></td>
+
+      <td align="center"><b>(16%) / 6.4s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="center"><b><span style="color: green;">SWT - actual
+results</span></b></td>
+
+      <td><br>
+
+      </td>
+
+      <td align="center">C</td>
+
+      <td align="center"><b><br>
+
+      </b></td>
+
+      <td align="center"><b><span style="color: green;">12.3s</span></b></td>
+
+      <td align="center"><b><span style="color: green;">3.8s</span></b></td>
+
+      <td align="center"><b><span style="color: green;">5.1s</span></b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><big><b><span style="color: blue;"> Total Improvement</span></b></big>
+- iteration 6</td>
+
+      <td>The total percent improvement thus far compared to the
+start.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><big><b><span style="color: blue;">33%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">37%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">21%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">46%</span></b></big></td>
+
+    </tr>
+
+    <tr>
+
+      <td align="center"><b><span style="color: green;">SWT - total
+improvement</span></b></td>
+
+      <td><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><big><b><span style="color: green;"><br>
+
+      </span></b></big></td>
+
+      <td align="center"><big><b><span style="color: green;">31%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: green;">27%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: green;">52%</span></b></big></td>
+
+    </tr>
+
+    <tr>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td><b><big><big><span style="color: blue;"> <a name="iteration7">Iteration7</a></span></big></big></b>
+- &nbsp;</td>
+
+      <td>Base line measurements. Eclipse 3.1M7, GEF
+3.1-I20050503, EMF 2.1-I20050505, VE 1.1 - Iteration 6</td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td>Move up to Eclipse 3.1<br>
+
+      </td>
+
+      <td>Includes some fixed Eclipse performance bugs<br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><span style="color: blue;">Iteration 7 actual results</span></b></td>
+
+      <td><br>
+
+      </td>
+
+      <td align="center">C</td>
+
+      <td align="center"><b><br>
+
+      </b></td>
+
+      <td align="center"><b>4% / 12.5s</b></td>
+
+      <td align="center"><b>(6%) / 4.8s</b></td>
+
+      <td align="center"><b>11% / 5.6s</b></td>
+
+    </tr>
+
+    <tr>
+
+      <td><big><b><span style="color: blue;">Total
+Improvement</span></b></big>
+- iteration 7</td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><big><b><span style="color: blue;"><small>not
+available</small></span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">40%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">16%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">53%</span></b></big></td>
+
+    </tr>
+
+    <tr>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td><b><big><big><span style="color: blue;"> <a name="iteration8">Iteration
+8</a></span></big></big></b> - complete <b>5/20/05</b></td>
+
+      <td>Base line measurements. Eclipse 3.1M7, GEF
+3.1-I20050523, EMF
+2.1-I20050519, VE 1.1 - Iteration 7</td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Instantiate Beans
+via batch
+mechanism [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=82257">82257</a>]</td>
+
+      <td>Reduce the ping-pong effect (from IDE to remote VM and
+back
+again) of instantiating and setting properties by batching several bean
+instantiations and property settings together to be run at once. <br>
+
+      <u>Note</u>: The prototype results as measurements
+from totally
+removing the remote VM and just using the IDE directly.</td>
+
+      <td style="text-align: center;">C</td>
+
+      <td><br>
+
+      </td>
+
+      <td style="text-align: center;">20% / 21.5s</td>
+
+      <td style="text-align: center;">47% / 5.8s</td>
+
+      <td style="text-align: center;">35% / 12.4s</td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><span style="color: blue;">Iteration 8 actual results</span></b></td>
+
+      <td>Actual results after releasing all Iteration 8
+modifications.<br>
+
+      </td>
+
+      <td align="center">C</td>
+
+      <td align="center"><b><br>
+
+      </b></td>
+
+      <td align="center"><b>10% / 11.2s<br>
+
+      </b></td>
+
+      <td align="center"><b>37% /
+3.0s<br>
+
+      </b></td>
+
+      <td align="center"><b>22% / 4.4s<br>
+
+      </b></td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><big><b><span style="color: blue;"> Total Improvement</span></b></big>
+- iteration 8</td>
+
+      <td>The total percent improvement thus far compared to the
+start.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><big><b><span style="color: blue;"><small>not
+available</small><br>
+
+      </span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">46%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">47%</span></b></big></td>
+
+      <td align="center"><big><b><span style="color: blue;">63%</span></b></big></td>
+
+    </tr>
+
+    <tr>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><big><span style="color: blue;"> <a name="RemainingItems">Items
+left to complete</a></span></big></b></td>
+
+      <td style="vertical-align: top;">Remaining line
+items - either
+work in progress or yet to be assigned.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Move up to Eclipse
+3.1</td>
+
+      <td>This is built on Eclipse 3.1, GEF 3.1, and EMF 2.1 and
+will
+probably be completed once all the VE performance line items are
+completed.<br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><big><span style="color: blue;"><a name="EclipseBugs">Eclipse
+bugs</a></span></big></b></td>
+
+      <td style="vertical-align: top;"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Bundle.getEntry("/")
+could be
+faster [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=80718">80718</a>]
+      </td>
+
+      <td style="vertical-align: top;">The
+Bundle.getEntry(String)
+method will return null if the the path "/" is used. A path of "/"
+indicates the root of the bundle and should never return null.<br>
+
+      <u>Dan Kehn</u> - during performance analysis of
+Eclipse I/O, I
+noticed that Bundle.getEntry("/") is called a lot and each time
+File.exists() is ultimately called. It might be worth adding a check
+for this case to reduce I/O events, since it's pretty safe to assume
+that if the bundle exists, it has a root entry.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Excessive
+File.isFile calls for
+clients of JavaModel.getTarget(...) [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=83750">83750</a>]
+      </td>
+
+      <td style="vertical-align: top;"><u>Dan Kehn</u>
+- ... I also
+found the JDT is contributing to unnecessary I/O events (confirmed with
+FileMon and traced to File.isFile invocations). I noted that many
+callers of the JavaModel.getTarget(...) method, such as
+IJavaProject.getAllPackageFragmentRoots, have subsequent tests of
+File.isFile()...</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">MarkerAnnotationPreferences
+unnecessarily reprocesses markerAnnotationSpecification [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=83762">83762</a>]
+      </td>
+
+      <td style="vertical-align: top;"><u>Dan Kehn</u>
+- ... I also
+found the text editor is contributing to potentially avoidable I/O
+events (confirmed with FileMon and traced to
+MarkerAnnotationPreferences.getGraphicsDescriptor)...</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">BinaryMethod.getParameterNames
+does not follow IMethod API contract [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=84750">84750</a>]
+      </td>
+
+      <td style="vertical-align: top;">The
+IMethod.getParameterNames
+API documentation says, "Returns the names of parameters in this
+method. For binary types, these names are invented as 'arg'+i, where i
+starts at 1 (even if source is associated with the binary)." The last
+part is not true (see
+org.eclipse.jdt.internal.core.BinaryMethod.getParameterNames). The JVE
+uses this API to retrieve parameter names and the invocations
+associated with the rt.jar reads in 23.6M of data out of src.zip and
+costs us a considerable performance hit.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Jobs should have
+setThreadPriority() API [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=82567">82567</a>]
+      </td>
+
+      <td style="vertical-align: top;">The Visual Editor
+uses Jobs for
+many background jobs. Some of these job are driven to the background so
+to not delay CPU usage for a later time, with the need to give
+forground jobs a priority. We currently setting the Thread's priority
+withing the run() of the Job, and restore it back before the Job
+finishes. It will be preferntial for this life cycle be controled by
+the JobManager/Worker Pool.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><big><span style="color: blue;">Other Performance Items</span></big></b></td>
+
+      <td style="vertical-align: top;">These are
+performance changes
+that are not related to opening the editor but still improve the
+performance in other areas of VE.</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center" width="8%"><br>
+
+      </td>
+
+      <td align="center" width="8%"><br>
+
+      </td>
+
+      <td align="center" width="8%"><br>
+
+      </td>
+
+      <td align="center" width="8%"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">Eliminate the
+creation of a
+IScanner for every decoder [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=82101">82101</a>]
+      </td>
+
+      <td style="vertical-align: top;">JVE decoders use a
+IScanner to
+scan AST expressions for comments (before/after) and filler. Creating a
+IScanner is very expensive. The savings here will improve snippet
+analysis.</td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center">0%</td>
+
+      <td align="center">2%</td>
+
+      <td align="center">0%</td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;">XMLParserPool
+holding onto
+XMLHandler which holds on to too much [<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=85141">85141</a>]
+      </td>
+
+      <td style="vertical-align: top;"><u>EMF bug</u>
+- The problem is
+we have a global XMLParserPool, but the dang pool is holding onto a
+SAXXMIHandler, which in its "resourceSet" instance variable is holding
+on to the last ResourseSet it had parsed with. This resource set in
+this case is now invalid and should be thrown away, but the
+SAXXMIHandler won't let it be garbage collected. <br>
+
+      <b><u>Note</u>: This is fixed in EMF 2.1</b></td>
+
+      <td align="center">C</td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+      <td><br>
+
+      </td>
+
+    </tr>
+
+    <tr>
+
+      <td style="vertical-align: top;"><b><big><span style="color: blue;"><a name="CompareToJavaEditor">Comparisons
+to Java
+Editor</a></span></big></b></td>
+
+      <td style="vertical-align: top;">Since the VE is an
+extension of
+the Java Editor, measurements were taken on an Eclipse 3.0.1 driver
+against UserAdmin.java to show the timings and percent differences
+between opening just the Java Editor versus the Visual Editor. <br>
+
+      <u>Note</u>: This is compared with the driver in <b>iteration
+6.</b></td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center"><br>
+
+      </td>
+
+      <td align="center">4s vs 13.5s</td>
+
+      <td align="center">.59s vs 4.4s</td>
+
+      <td align="center">.84s vs 5.5s</td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+<br>
+
+<h3>Other Information</h3>
+
+<p><big><a href="index.html#CompareToJavaEditor">Comparisons
+to Java Editor</a></big>
+</p>
+
+<p><big><a href="index.html#EclipseBugs">Eclipse bugs
+related to VE performance</a></big>
+</p>
+
+<big><a href="index.html#RemainingItems">VE
+Performance Line Items left to
+complete</a></big>
+<br>
+
+<br>
+
+<br>
+
+<h3><a name="Post_VE_1.1_Driver_Measurements"></a>Post
+VE 1.1 Driver Measurements</h3>
+
+<table style="text-align: left; width: 85%; height: 104px;" border="3" cellpadding="2" cellspacing="2">
+
+  <tbody>
+
+    <tr>
+
+      <td style="width: 52%;"><big><span style="font-weight: bold;">Driver</span></big></td>
+
+      <td style="text-align: center;" colspan="4" rowspan="1"><big><span style="font-weight: bold;">Scenario</span></big></td>
+
+    </tr>
+
+    <tr>
+
+      <td><span style="font-weight: bold;"></span>&nbsp;</td>
+
+      <td style="font-weight: bold; text-align: center; width: 10%;">1</td>
+
+      <td style="font-weight: bold; text-align: center; width: 10%;">2</td>
+
+      <td style="font-weight: bold; text-align: center; width: 10%;">3</td>
+
+      <td style="font-weight: bold; text-align: center; width: 10%;">4</td>
+
+    </tr>
+
+    <tr>
+
+      <td><a name="VE_1.1"></a><big style="font-weight: bold;"><span style="color: rgb(0, 0, 255);">VE 1.1</span></big>
+&nbsp;- Based on Eclipse 3.1, EMF 2.1, GEF
+3.1</td>
+
+      <td style="text-align: center; color: rgb(0, 0, 255); font-weight: bold;">32% / 18.3s</td>
+
+      <td style="text-align: center; color: rgb(0, 0, 255); font-weight: bold;">45% / 11.5s</td>
+
+      <td style="text-align: center; color: rgb(0, 0, 255); font-weight: bold;">48% / 3.0s </td>
+
+      <td style="text-align: center; color: rgb(0, 0, 255); font-weight: bold;">55% / 5.3s </td>
+
+    </tr>
+
+    <tr>
+
+      <td><span style="font-weight: bold;">&nbsp; &nbsp; Note:</span> New baseline established based on VE 1.1</td>
+
+      <td style="text-align: center; font-weight: bold;">18.3</td>
+
+      <td style="text-align: center; font-weight: bold;">11.5s</td>
+
+      <td style="text-align: center; font-weight: bold;">3.0s</td>
+
+      <td style="text-align: center; font-weight: bold;">5.3s</td>
+
+    </tr>
+
+    <tr>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+      <td></td>
+
+    </tr>
+
+    <tr>
+
+      <td><span style="font-weight: bold; color: rgb(0, 0, 255);">VE 1.1.0.1</span>
+(M20050830) - Based on Eclipse 3.1, EMF 2.1,
+GEF 3.1</td>
+
+      <td style="text-align: center;">-4% / 19.1s&nbsp;</td>
+
+      <td style="text-align: center;">0% / 11.5s</td>
+
+      <td style="text-align: center;">-2% / 3.0 s</td>
+
+      <td style="text-align: center;">-2% / 5.4s</td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+<br>
+
+<br>
+
+<br>
+
+</body>
+</html>
