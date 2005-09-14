@@ -113,6 +113,23 @@
            </enablement>                              
          </action>
       </objectContribution>
+     <!-- 
+	 	Set layout option on Panel and JPanel.  Cannot do on java.awt.Container because too many "non containers"
+	 	inherit from this, including all of Swing's components so better to be explicit about who we want the ability
+	 	to set layouts onto
+	 -->      
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.jfc.core.ContainerGraphicalEditPart"
+            id="org.eclipse.ve.java.editorpart.container.setlayout.popup.object"> 
+         <action
+               label="Set Layout"
+               style="pulldown"
+               class="org.eclipse.ve.internal.java.core.SetLayoutObjectActionDelegate"
+               menubarPath="additions"
+               enablesFor="1"
+               id="org.eclipse.ve.java.editorpart.container.setlayout">
+         </action>
+      </objectContribution>            
 <!-- 
 	 Edit policy constribution example
 	 Show and Hide grid on null layout policy

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.23 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.24 $  $Date: 2005-09-14 15:35:25 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -45,10 +45,10 @@ import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.texteditor.ResourceAction;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
 
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
-import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
-import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
-import org.eclipse.ve.internal.cde.emf.DefaultTreeEditPartFactory;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
+import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.emf.*;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsTreeEditPart;
@@ -169,8 +169,28 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	public JavaVisualEditorOutlinePage(JavaVisualEditorPart jve, EditPartViewer viewer ){
 		super(viewer);
 		this.jve = jve;
+		initialize();
 	}
 	
+	private void initialize() {
+		jve.getEditDomain().setData(EditPartContributorRegistry.class, new EditPartContributorRegistry(){
+			public void treeEditPartActivated(EditPart anEditPart) {
+				// TODO Auto-generated method stub	
+				Object model = anEditPart.getModel();
+				if(anEditPart instanceof DefaultTreeEditPart && model instanceof IJavaInstance){
+					// See if there a contributor that is interested in this type of class
+					EditPartContributor[] editPartContributors = CDEPlugin.getEditPartContributors();
+					for (int i = 0; i < editPartContributors.length; i++) {
+						editPartContributors[i].treeEditPartActivated((DefaultTreeEditPart)anEditPart);
+					}
+				}
+			}
+			public void graphicalEditPartActivated(EditPart anEditPart) {
+				// TODO Auto-generated method stub				
+			}			
+		});	
+	}
+
 	public void init(IPageSite pageSite) {
 		super.init(pageSite);
 		
@@ -260,7 +280,7 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		// Put the event actions - None, Basic and Export on the menu	
 		mm.add(noEventsAction);
 		mm.add(basicEventsAction);
-		mm.add(expertEventsAction);			
+		mm.add(expertEventsAction);		
 	}
 
 	public void createControl(Composite parent){

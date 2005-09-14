@@ -13,6 +13,7 @@ package org.eclipse.ve.internal.swt;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Preferences;
 
 import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.jem.util.logger.proxyrender.EclipseLogger;
@@ -31,6 +32,7 @@ public class SwtPlugin extends Plugin {
 	public static final String FORM_TOOLKIT_CLASSNAME = "org.eclipse.ui.forms.widgets.FormToolkit"; //$NON-NLS-1$
 	public static final String FORM_TOOLKIT_TOKEN = "{formToolkit}"; // Token to represent the formToolkit in a parse tree that will be replaced by a real formtoolkit //$NON-NLS-1$
 	public static final String DISPLAY_CLASSNAME = "org.eclipse.swt.widgets.Display"; //$NON-NLS-1$	
+	public static final String DEFAULT_LAYOUT = "DEFAULT_LAYOUT"; //$NON-NLS-1$
 	
 	//The shared instance.
 	private static SwtPlugin plugin;
@@ -64,5 +66,7 @@ public class SwtPlugin extends Plugin {
 		return logger;
 	}
 	
+	public static void initializeDefaultPluginPreferences(Preferences aStore) {	
+	}
 	
 }
