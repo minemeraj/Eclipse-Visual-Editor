@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Visual Editor - Migration</title>
+<link rel="stylesheet" href="http://dev.eclipse.org/default_style.css" type="text/css">
+</head>
+
+<body>
+
+<table border="0" cellpadding="2" width="100%">
+  <tbody>
+    <tr>
+      <td align="left" width="60%">
+	<font class="indextop">Migration</font><br>
+         <font class="indexsub">Migration for VE Developers and Extenders</font>
+      </td>
+      <td width="40%">
+	<img hspace="50" align="right" src="../../images/reference.gif">
+      </td>
+    </tr>
+  </tbody>                                      
+</table>
+
+&nbsp;<br>
+
+<table border="0" cellpadding="2" width="100%">
+<tbody>
+  <tr>
+    <td align="left" valign="top" bgcolor="#0070a0">
+      <b><font color="#ffffff" face="Arial,Helvetica">Description</font></b> 
+    </td>
+  </tr>
+  <tr>
+    <td>
+    This is document links to the migration documents needed for VE developers and VE extenders (those that use VE as a base
+    and extend it).
+  </tr>
+</tbody>            
+</table>
+
+&nbsp;
+<br>
+<UL>
+  <LI><A name="VE1.2">Migrate to VE 1.2</A>
+    <UL type="square">
+      <LI><B><FONT size="+1">Migrate Palette XMI</FONT> </B>to new format.
+      It has been restructured to match directly the GEF structure instead of the old structure. For VE 1.2 the old format and new format will continue to be supported. However, do not mix in the same palette xmi file the old format and the new format. If that is done the migration facility will fail.<B>
+		The old palette format will no longer be supported in VE 1.3</B>.<B>
+		So please migrate as soon as possible before VE 1.3.</B> <A
+			href="../components/core/migration1.1/index.html#palette">Migration
+		instructions</A>.</LI>
+		<LI><B><FONT size="+1">Migrate Override files</FONT></B> from internal Event format to EMF API ChangeDescription format. The override file contents have been changed to use the EMF API ChangeDescription format. This way we are using API's. The old Event format and the new ChangeDescription format will continue to be supported for VE 1.2. <B>
+		The old event format will no longer be supported in VE 1.3</B>.<B>
+		So please migrate as soon as possible before VE 1.3. </B><A
+			href="migrate1.2/override12.html">Migration instructions</A>.</LI>
+	</UL>
+  </LI>
+</UL>
+</body>
