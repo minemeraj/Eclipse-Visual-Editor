@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.25 $  $Date: 2005-09-14 21:36:29 $ 
+ *  $Revision: 1.26 $  $Date: 2005-09-14 23:18:15 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -187,7 +187,14 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 				}
 			}
 			public void graphicalEditPartActivated(EditPart anEditPart) {
-				// TODO Auto-generated method stub				
+				Object model = anEditPart.getModel();
+				if(anEditPart instanceof CDEAbstractGraphicalEditPart && model instanceof IJavaInstance){
+					// See if there a contributor that is interested in this type of class
+					Iterator editPartContributors = jve.getEditDomain().getEditPartContributors(anEditPart).iterator();
+					while(editPartContributors.hasNext()) {
+						((EditPartContributor)editPartContributors.next()).graphicalEditPartActivated((CDEAbstractGraphicalEditPart)anEditPart);
+					}
+				}
 			}			
 		});	
 	}
