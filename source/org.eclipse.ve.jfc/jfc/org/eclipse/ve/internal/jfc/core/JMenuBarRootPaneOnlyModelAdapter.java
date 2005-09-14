@@ -11,13 +11,15 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JMenuBarRootPaneOnlyModelAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-14 23:30:20 $ 
  */
 
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import java.util.List;
+
+import org.eclipse.emf.ecore.*;
+
 import org.eclipse.jem.java.JavaClass;
+
 import org.eclipse.ve.internal.cde.core.IContainmentHandler;
 
 public class JMenuBarRootPaneOnlyModelAdapter extends ComponentModelAdapter implements IContainmentHandler {
@@ -40,5 +42,9 @@ public class JMenuBarRootPaneOnlyModelAdapter extends ComponentModelAdapter impl
 			}
 		}
 		return false;
+	}
+
+	public ChildFeature getChildToAdd(Object parent, List features) {
+		return null;
 	}
 }

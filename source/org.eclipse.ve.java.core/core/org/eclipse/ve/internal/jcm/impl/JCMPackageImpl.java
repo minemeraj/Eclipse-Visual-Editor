@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMPackageImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-14 23:30:25 $ 
  */
 
 import java.util.Map;
@@ -53,7 +53,7 @@ import org.eclipse.ve.internal.jcm.PropertyChangeEventInvocation;
 import org.eclipse.ve.internal.jcm.PropertyEvent;
 
 import org.eclipse.jem.java.JavaRefPackage;
-import org.eclipse.jem.java.impl.JavaRefPackageImpl;
+import org.eclipse.jem.java.internal.impl.JavaRefPackageImpl;
 import org.eclipse.jem.internal.instantiation.impl.InstantiationPackageImpl;
 
 /**

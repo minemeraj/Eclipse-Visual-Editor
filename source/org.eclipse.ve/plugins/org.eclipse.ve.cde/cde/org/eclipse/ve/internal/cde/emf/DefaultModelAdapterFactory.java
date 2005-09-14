@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DefaultModelAdapterFactory.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-14 23:30:22 $ 
  */
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.emf.ecore.EObject;
@@ -39,6 +41,7 @@ import org.eclipse.gef.EditPart;
 
 public class DefaultModelAdapterFactory implements IModelAdapterFactory {
 	protected ClassDescriptorDecoratorPolicy policy;
+	protected Map classStringToConstructor = new HashMap();	// Map so we don't keep looking them up. 
 
 	public DefaultModelAdapterFactory(ClassDescriptorDecoratorPolicy policy) {
 		this.policy = policy;
@@ -77,22 +80,68 @@ public class DefaultModelAdapterFactory implements IModelAdapterFactory {
 		if (classString == null)
 			return null;
 		try {
-			Class adapterClass = CDEPlugin.getClassFromString(classString);
-			Object adapter = null;
 			try {
-				Constructor ctor = adapterClass.getConstructor(new Class[] { Object.class });
-				adapter = ctor.newInstance(new Object[] { modelObject });
+				Object ctorOrClass = getConstructor(classString);
+				Object adapter = (ctorOrClass instanceof Constructor) ? ((Constructor) ctorOrClass).newInstance(new Object[] { modelObject})
+						: ((Class) ctorOrClass).newInstance();
+				CDEPlugin.setInitializationData(adapter, classString, null);
+				return adapter;
 			} catch (NoSuchMethodException e) {
-				adapter = adapterClass.newInstance();
+				return null;	// Already handled msg.
 			}
-			CDEPlugin.setInitializationData(adapter, classString, null);
-			return adapter;
 		} catch (Exception e) {
 			String message =
 				java.text.MessageFormat.format(CDEMessages.Object_noinstantiate_EXC_, new Object[] { classString }); 
 			Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, e);
 			CDEPlugin.getPlugin().getLog().log(s);
 			return null;
+		}
+	}
+	
+	/**
+	 * Return a constructor for this class string, either one that takes only one argument of type Object, or one that takes
+	 * no arguments.
+	 * @param classString
+	 * @return Constructor if it is the one argument constructor, or Class if it is the no argument constructor (so use class.newInstance() then).
+	 * @throws NoSuchMethodException if can't find appropriate constructor. This has already been logged. No need to log again.
+	 * 
+	 * @since 1.2.0
+	 */
+	protected Object getConstructor(String classString) throws NoSuchMethodException {
+		if (classStringToConstructor.containsKey(classString)) {
+			Constructor ctor = (Constructor) classStringToConstructor.get(classString);
+			if (ctor == null)
+				throw new NoSuchMethodException(classString);	// We had explicity set "null" to indicate we tried and failed.
+			return ctor;
+		} else {
+			try {
+				Class adapterClass = CDEPlugin.getClassFromString(classString);
+				Object ctorOrClass = null;
+				try {
+					ctorOrClass = adapterClass.getConstructor(new Class[] { Object.class});
+				} catch (NoSuchMethodException e) {
+					try {
+						adapterClass.getConstructor(null); // See if there is a default constructor available.
+						ctorOrClass = adapterClass;
+					} catch (NoSuchMethodException e1) {
+						// Could not find one arg or default. 
+						String message = java.text.MessageFormat.format(CDEMessages.Object_noinstantiate_EXC_, new Object[] { classString});
+						Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, e1);
+						CDEPlugin.getPlugin().getLog().log(s);
+						classStringToConstructor.put(classString, null); // Put a null out so we don't try again.
+						throw new NoSuchMethodException(classString);
+					}
+				}
+				classStringToConstructor.put(classString, ctorOrClass);
+				return ctorOrClass;
+			} catch (ClassNotFoundException e) {
+				// Could find class.
+				String message = java.text.MessageFormat.format(CDEMessages.Object_noinstantiate_EXC_, new Object[] { classString});
+				Status s = new Status(IStatus.WARNING, CDEPlugin.getPlugin().getPluginID(), 0, message, e);
+				CDEPlugin.getPlugin().getLog().log(s);
+				classStringToConstructor.put(classString, null); // Put a null out so we don't try again.
+				throw new NoSuchMethodException(classString);
+			}
 		}
 	}
 
@@ -108,18 +157,21 @@ public class DefaultModelAdapterFactory implements IModelAdapterFactory {
 		if (epClassString == null)
 			return null;
 		try {
-			Class editpartClass = CDEPlugin.getClassFromString(epClassString);
-			EditPart editpart = null;
 			try {
-				Constructor ctor = editpartClass.getConstructor(new Class[] { Object.class });
-				editpart = (EditPart) ctor.newInstance(new Object[] { modelObject });
+				Object ctorOrClass = getConstructor(epClassString);
+				EditPart editPart = null;
+				if (ctorOrClass instanceof Constructor)
+					editPart = (EditPart) ((Constructor) ctorOrClass).newInstance(new Object[] { modelObject});
+				else {
+					editPart = (EditPart) ((Class) ctorOrClass).newInstance();
+					editPart.setModel(modelObject);
+				}
+				CDEPlugin.setInitializationData(editPart, epClassString, null);
+				return editPart;
 			} catch (NoSuchMethodException e) {
-				// Use default ctor instead.
-				editpart = (EditPart) editpartClass.newInstance();
-				editpart.setModel(modelObject);
+				// Already handled msg.
+				return null;
 			}
-			CDEPlugin.setInitializationData(editpart, epClassString, null);
-			return editpart;
 		} catch (Exception e) {
 			String message =
 				java.text.MessageFormat.format(CDEMessages.Object_noinstantiate_EXC_, new Object[] { epClassString }); 

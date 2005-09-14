@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.148 $  $Date: 2005-09-14 15:35:25 $ 
+ *  $Revision: 1.149 $  $Date: 2005-09-14 23:30:25 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -74,8 +74,6 @@ import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.*;
 
-import org.eclipse.jem.internal.adapters.jdom.JavaClassJDOMAdaptor;
-import org.eclipse.jem.internal.adapters.jdom.JavaMethodJDOMAdaptor;
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoClassAdapter;
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
@@ -1812,9 +1810,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.REMOTE_INTROSPECT);
 				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);	
 				TimerTests.basicTest.startAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);
-				TimerTests.basicTest.startAccumulating(JavaClassJDOMAdaptor.REFLECT_CLASS);
-				TimerTests.basicTest.startAccumulating(JavaClassJDOMAdaptor.REFLECT_METHODS);
-				TimerTests.basicTest.startAccumulating(JavaMethodJDOMAdaptor.REFLECT_METHOD);
+//				TimerTests.basicTest.startAccumulating(JavaClassJDOMAdaptor.REFLECT_CLASS);
+//				TimerTests.basicTest.startAccumulating(JavaClassJDOMAdaptor.REFLECT_METHODS);
+//				TimerTests.basicTest.startAccumulating(JavaMethodJDOMAdaptor.REFLECT_METHOD);
 				
 				restartVMNeeded = false;	// We will be restarting the vm, don't need to have any hanging around.
 				monitor.beginTask("", 200); //$NON-NLS-1$
@@ -2043,9 +2041,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.APPLY_EXTENSIONS);				
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.REFLECT_PROPERTIES);			
 			TimerTests.basicTest.stopAccumulating(BeaninfoClassAdapter.INTROSPECT);
-			TimerTests.basicTest.stopAccumulating(JavaClassJDOMAdaptor.REFLECT_CLASS);
-			TimerTests.basicTest.stopAccumulating(JavaClassJDOMAdaptor.REFLECT_METHODS);
-			TimerTests.basicTest.stopAccumulating(JavaMethodJDOMAdaptor.REFLECT_METHOD);
+//			TimerTests.basicTest.stopAccumulating(JavaClassJDOMAdaptor.REFLECT_CLASS);
+//			TimerTests.basicTest.stopAccumulating(JavaClassJDOMAdaptor.REFLECT_METHODS);
+//			TimerTests.basicTest.stopAccumulating(JavaMethodJDOMAdaptor.REFLECT_METHOD);
 			TimerTests.basicTest.stopStep(SETUP_STEP);
 			return !monitor.isCanceled() ? Status.OK_STATUS : Status.CANCEL_STATUS;
 		}

@@ -10,9 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoFFModelAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-14 23:30:42 $ 
  */
 package org.eclipse.ve.internal.swt;
+
+import java.util.List;
 
 import org.eclipse.ve.internal.cdm.DiagramData;
 
@@ -40,6 +42,10 @@ public class NoFFModelAdapter extends ControlModelAdapter implements IContainmen
 	public boolean isParentValid(Object parent) {
 		// Parent is valid iff the parent is NOT the canvas
 		return !(parent instanceof DiagramData);
+	}
+
+	public ChildFeature getChildToAdd(Object parent, List features) {
+		return null;
 	}
 
 }

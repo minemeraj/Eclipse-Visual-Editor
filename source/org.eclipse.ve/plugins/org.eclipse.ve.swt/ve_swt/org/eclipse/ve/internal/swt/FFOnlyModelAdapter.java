@@ -16,6 +16,8 @@
  */
 package org.eclipse.ve.internal.swt;
 
+import java.util.List;
+
 import org.eclipse.ve.internal.cdm.DiagramData;
 
 import org.eclipse.ve.internal.cde.core.IContainmentHandler;
@@ -36,6 +38,10 @@ public class FFOnlyModelAdapter extends ControlModelAdapter implements IContainm
 	public boolean isParentValid(Object parent) {
 		// return true only for parents that are the freeform surface
 		return parent instanceof DiagramData;
+	}
+
+	public ChildFeature getChildToAdd(Object parent, List features) {
+		return null;
 	}	
 
 }

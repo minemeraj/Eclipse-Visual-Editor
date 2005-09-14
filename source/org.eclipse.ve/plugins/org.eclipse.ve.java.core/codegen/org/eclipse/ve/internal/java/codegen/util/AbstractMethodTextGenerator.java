@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.21 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.22 $  $Date: 2005-09-14 23:30:25 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -23,7 +23,7 @@ import org.eclipse.jdt.core.formatter.CodeFormatter;
 
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -67,7 +67,7 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 			this.fSeperator = fModel.getLineSeperator() ;
 			fmethodName = AbstractMethodTextGenerator.this.fmethodName ;
 			if (AbstractMethodTextGenerator.this.finitBeanType==null)
-				finitBeanType = ((JavaClassImpl)fComponent.eClass()).getQualifiedName();
+				finitBeanType = ((JavaClass)fComponent.eClass()).getQualifiedName();
 			else
 				finitBeanType = AbstractMethodTextGenerator.this.finitBeanType;
 			finitBeanName = AbstractMethodTextGenerator.this.finitbeanName ;
