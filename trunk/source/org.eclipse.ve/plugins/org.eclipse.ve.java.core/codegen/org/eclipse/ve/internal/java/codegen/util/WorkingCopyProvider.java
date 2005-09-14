@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkingCopyProvider.java,v $
- *  $Revision: 1.13 $  $Date: 2005-08-30 16:01:37 $ 
+ *  $Revision: 1.14 $  $Date: 2005-09-14 21:22:55 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -21,15 +21,12 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.*;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import org.eclipse.ve.internal.java.codegen.model.DefaultScannerFactory;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
@@ -215,36 +212,6 @@ public class WorkingCopyProvider implements IWorkingCopyProvider {
 
 	public IJavaElement getElement(String handle) {
 		return getElement(handle, getWorkingCopy(true));
-	}
-
-	/**
-	 * The JavaModel does not includes comments, line indents etc.
-	 * 
-	 * @deprecate
-	 */
-	public static String getCompleteElementText(IMember m) throws JavaModelException {
-
-		int left = m.getSourceRange().getOffset();
-		int right = left + m.getSourceRange().getLength();
-		String s = m.getCompilationUnit().getSource();
-
-		if (m instanceof IField) {
-			ExpressionParser p = new ExpressionParser((IField) m, new DefaultScannerFactory());
-			return p.getExpression();
-		} else {
-			// JCMMethod
-			while ((left - 1) >= 0 && (Character.isWhitespace(s.charAt(left - 1)) || (s.charAt(left - 1) == '\t')) && s.charAt(left - 1) != '\n'
-					&& s.charAt(left - 1) != '\r')
-				left--;
-
-			while (right < s.length() && Character.isWhitespace(s.charAt(right)) && s.charAt(right) != '\r' && s.charAt(right) != '\n')
-				right++;
-			while (right < s.length() && (s.charAt(right) == '\r' || s.charAt(right) == '\n'))
-				right++;
-
-			return s.substring(left, right);
-		}
-
 	}
 
 	public void selectDocumentRegion(int offset, int len) {

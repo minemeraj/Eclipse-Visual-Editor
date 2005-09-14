@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.29 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.30 $  $Date: 2005-09-14 21:22:55 $ 
  */
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -179,7 +179,7 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 		}
 	}
 	
-	protected static boolean isValidMetaComment(LineComment comment, String source){
+	protected static boolean isValidMetaComment(LineComment comment, String source, IScannerFactory scannerFactory){
 		if(	comment==null || 
 				source==null || 
 				source.length()<1 || 
@@ -187,7 +187,7 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 				(comment.getStartPosition()+comment.getLength())>source.length())
 			return false;
 		String commentSource = source.substring(comment.getStartPosition(), comment.getStartPosition()+comment.getLength());
-		String annotationSource = FreeFormAnnotationTemplate.getCurrentAnnotation(commentSource, new DefaultScannerFactory());
+		String annotationSource = FreeFormAnnotationTemplate.getCurrentAnnotation(commentSource, scannerFactory);
 		if(annotationSource!=null && annotationSource.indexOf(FreeFormAnnotationTemplate.VISUAL_INFO_DECL)>-1)
 			return true;
 		return false;
@@ -223,10 +223,10 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 						LineComment lineComment = (LineComment) comments.get(cc);
 						int commentLine = cuNode.lineNumber(lineComment.getStartPosition());
 						if(commentLine==fieldLineNumber){
-							return isValidMetaComment(lineComment, astSource);
+							return isValidMetaComment(lineComment, astSource, bdm.getScannerFactory());
 						}
 						if(commentLine==fieldLineNumber+1){
-							if(isValidMetaComment(lineComment, astSource)){
+							if(isValidMetaComment(lineComment, astSource, bdm.getScannerFactory())){
 								// This line comment is in the next line - check to see that no 
 								// other field declarations are present in that line.
 								FieldDeclaration[] fields = ((TypeDeclaration)cuNode.types().get(0)).getFields();
@@ -276,10 +276,10 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 						LineComment lineComment = (LineComment) comments.get(cc);
 						int commentLine = cuNode.lineNumber(lineComment.getStartPosition());
 						if(commentLine==fieldLineNumber){
-							return isValidMetaComment(lineComment, astSource);
+							return isValidMetaComment(lineComment, astSource, bdm.getScannerFactory());
 						}
 						if(commentLine==fieldLineNumber+1){
-							if(isValidMetaComment(lineComment, astSource)){
+							if(isValidMetaComment(lineComment, astSource, bdm.getScannerFactory())){
 								// This line comment is in the next line - check to see that no 
 								// other field declarations are present in that line.
 								if (varDecl.getParent() instanceof Block) {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventExpressionParser.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-14 21:22:55 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -91,6 +91,7 @@ public class EventExpressionParser extends ExpressionParser {
 							    int off = scanner.getLineStart(scanner.getLineNumber(startingOffset)) ;
 							    off = off + getFillerLen() ;
 							    fCallBackOffset.put(name, new Integer(off)) ;
+							    scanner.setSource(null); //cleanup
 								return off;
 							}
 						startingOffset = -1;
@@ -99,6 +100,7 @@ public class EventExpressionParser extends ExpressionParser {
 			}
 		}
 		catch (InvalidInputException ex) {}
+		scanner.setSource(null); //cleanup
 		return -1;
 	}
 		
@@ -146,6 +148,7 @@ public class EventExpressionParser extends ExpressionParser {
 			}
 		}
 		catch (InvalidInputException ex) {}
+		scanner.setSource(null); // cleanup 
 		if (start<0 || end<0) throw new CodeGenException("mulformed method") ; //$NON-NLS-1$
 		
 		// check to see if we need to delete anyting
@@ -216,6 +219,7 @@ public class EventExpressionParser extends ExpressionParser {
 			}
 		}
 		catch (InvalidInputException ex) {}
+		scanner.setSource(null); //cleanup
 		if (start < 0 || end < 0)
 			throw new CodeGenException("malformed method"); //$NON-NLS-1$
 
@@ -263,6 +267,7 @@ public class EventExpressionParser extends ExpressionParser {
 			}
 		}
 		catch (InvalidInputException ex) {}
+		scanner.setSource(null); //cleanup
 		return startingOffset ;
 	}
 	
@@ -295,7 +300,7 @@ public class EventExpressionParser extends ExpressionParser {
 			}
 		}
 		catch (InvalidInputException ex) {}
-
+		scanner.setSource(null); //cleanup
 		StringBuffer buff = new StringBuffer(getExpression());
 		buff.insert(start + startingOffset, content);
 		
@@ -360,6 +365,7 @@ public class EventExpressionParser extends ExpressionParser {
 			}
 		}
 		catch (InvalidInputException ex) {}
+		scanner.setSource(null); //cleanup
 		return startingOffset ;
 	}
 	/**

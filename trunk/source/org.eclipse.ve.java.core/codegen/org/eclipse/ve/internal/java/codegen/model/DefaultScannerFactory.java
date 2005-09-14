@@ -10,13 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultScannerFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-14 21:22:55 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.compiler.IScanner;
-import org.eclipse.jdt.internal.core.util.PublicScanner;
  
 
 /**
@@ -24,7 +26,12 @@ import org.eclipse.jdt.internal.core.util.PublicScanner;
  * @since 1.0.2
  */
 public class DefaultScannerFactory implements IScannerFactory {
-	IScanner fScanner = null;
+	
+	/*
+	 * Contains a map of the scanner options to a scanner instance.
+	 */
+	Map optionsToScannerMap = new HashMap();
+	
 	/* 
 	 * Returns one scanner per BDM as the creation of a scanner is an expensive
 	 * operation. Creating a scanner for every expression is inefficient.
@@ -32,17 +39,18 @@ public class DefaultScannerFactory implements IScannerFactory {
 	 * @return IScanner per BDM
 	 */
 	public IScanner getScanner(boolean tokenizeComments, boolean tokenizeWhiteSpace, boolean recordLineSeparator) {
-		if(fScanner==null)
-			fScanner = ToolFactory.createScanner(tokenizeComments, tokenizeWhiteSpace, false, recordLineSeparator); // assertMode is always false - hence changing it once is enough
-		((PublicScanner)fScanner).tokenizeComments = tokenizeComments;
-		((PublicScanner)fScanner).tokenizeWhiteSpace = tokenizeWhiteSpace;
-		((PublicScanner)fScanner).recordLineSeparator = recordLineSeparator;
-		// temporary fix for PublicScanner not cleaning up internals - this should be removed 
-		// once JDT defect 84398 is fixed
-		int lineEndsSize = ((PublicScanner)fScanner).lineEnds.length;
-		for (int i = 0; i < lineEndsSize; i++) 
-			((PublicScanner)fScanner).lineEnds[i]=0;
-		return fScanner;
+		String optionsKey = getOptionsKey(tokenizeComments, tokenizeWhiteSpace, recordLineSeparator);
+		IScanner scanner = (IScanner) optionsToScannerMap.get(optionsKey);
+		if(scanner==null){
+			scanner = ToolFactory.createScanner(tokenizeComments, tokenizeWhiteSpace, false, recordLineSeparator); // assertMode is always false - hence changing it once is enough
+			optionsToScannerMap.put(optionsKey, scanner);
+		}
+		return scanner;
 	}
-
+	
+	private String getOptionsKey(boolean tokenizeComments, boolean tokenizeWhiteSpace, boolean recordLineSeparator){
+		return 	new Boolean(tokenizeComments).toString() + 
+				new Boolean(tokenizeWhiteSpace).toString() + 
+				new Boolean(recordLineSeparator).toString();
+	}
 }

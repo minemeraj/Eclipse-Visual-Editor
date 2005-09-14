@@ -18,7 +18,7 @@ import org.eclipse.ve.internal.java.codegen.model.IScannerFactory;
 
 /*
  *  $RCSfile: FreeFormAnnotationTemplate.java,v $
- *  $Revision: 1.13 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.14 $  $Date: 2005-09-14 21:22:55 $ 
  */
 /**
  * @version 	1.0
@@ -228,6 +228,7 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
 				}else{
 					endOfCommentLine = scanner.getCurrentTokenStartPosition()+jveAnnotationStart-1; // Use -1 to give the EXACT position
 				}
+				scanner.setSource(null); //cleanup
 			}
 		} catch (InvalidInputException e) {
 			endOfCommentLine = -1;
