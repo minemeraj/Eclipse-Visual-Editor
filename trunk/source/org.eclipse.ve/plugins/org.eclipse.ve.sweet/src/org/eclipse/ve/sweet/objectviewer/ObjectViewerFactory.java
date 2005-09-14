@@ -11,6 +11,8 @@
  */
 package org.eclipse.ve.sweet.objectviewer;
 
+import org.eclipse.ve.sweet.objectviewer.pojo.JavaObjectViewerFactory;
+
 
 /**
  * ObjectViewerFactory.  Constructs ObjectViewers for an application.  Enables
@@ -24,7 +26,7 @@ public class ObjectViewerFactory {
      * The actual IObjectViewerFactory instance that will be used to create
      * new IObjectViewer objects.
      */
-    public static IObjectViewerFactory factory = null;
+    public static IObjectViewerFactory factory = new JavaObjectViewerFactory();
     
     /**
      * Construct a new IObjectViewer and set its initial input object.
