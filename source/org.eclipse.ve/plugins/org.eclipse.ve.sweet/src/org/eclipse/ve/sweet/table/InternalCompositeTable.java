@@ -585,8 +585,10 @@ public class InternalCompositeTable extends Composite implements Listener {
 	}
 
 	public void setTopRow(int topRow) {
+		fireRowDepartEvent();
 		this.topRow = topRow;
 		updateVisibleRows();
+		fireRowArriveEvent();
 	}
 	
 	public int getTopRow() {
