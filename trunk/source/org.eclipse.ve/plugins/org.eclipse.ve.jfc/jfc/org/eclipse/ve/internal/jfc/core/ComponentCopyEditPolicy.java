@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentCopyEditPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-14 18:20:08 $ 
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -20,11 +20,16 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.core.DefaultCopyEditPolicy;
 
 public class ComponentCopyEditPolicy extends DefaultCopyEditPolicy {
+
+	public ComponentCopyEditPolicy(EditDomain anEditDomain) {
+		super(anEditDomain);
+	}
 
 	protected void cleanup(IJavaInstance javaBeanToCopy) {
 
