@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractExpressionGenerator.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-14 23:30:25 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
 import org.eclipse.ve.internal.java.vce.templates.*;
@@ -61,7 +61,7 @@ public abstract class AbstractExpressionGenerator {
 		public ExprInfo() {
 			this.fSeperator = fModel.getLineSeperator() ;
 			if (AbstractExpressionGenerator.this.finitbeanType == null) 
-			   finitBeanType = ((JavaClassImpl)fComponent.eClass()).getQualifiedName();
+			   finitBeanType = ((JavaClass)fComponent.eClass()).getQualifiedName();
 			else
 			   finitBeanType = AbstractExpressionGenerator.this.finitbeanType;
 			finitBeanName = AbstractExpressionGenerator.this.finitbeanName ;	

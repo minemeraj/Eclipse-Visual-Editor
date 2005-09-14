@@ -11,11 +11,14 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FFOnlyModelAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-14 23:30:22 $ 
  */
 
-import org.eclipse.ve.internal.cde.core.IContainmentHandler;
+import java.util.List;
+
 import org.eclipse.ve.internal.cdm.DiagramData;
+
+import org.eclipse.ve.internal.cde.core.IContainmentHandler;
 
 public class FFOnlyModelAdapter extends ComponentModelAdapter implements IContainmentHandler {
 	
@@ -29,5 +32,10 @@ public class FFOnlyModelAdapter extends ComponentModelAdapter implements IContai
 	public boolean isParentValid(Object parent) {
 		// return true only for parents that are the freeform surface
 		return parent instanceof DiagramData;
+	}
+
+	public ChildFeature getChildToAdd(Object parent, List features) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

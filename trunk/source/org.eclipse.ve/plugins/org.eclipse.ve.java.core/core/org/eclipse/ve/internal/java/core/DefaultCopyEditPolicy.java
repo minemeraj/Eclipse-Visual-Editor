@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.18 $  $Date: 2005-09-14 18:20:07 $ 
+ *  $Revision: 1.19 $  $Date: 2005-09-14 23:30:25 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.java.impl.JavaPackageImpl;
+import org.eclipse.jem.java.JavaRefPackage;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
@@ -157,7 +157,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		if(feature == null)
 			return true;
 		// Do not copy things like JavaPackage or JavaMethod
-		if(eObject.getClass().getPackage() ==  JavaPackageImpl.class.getPackage())
+		if(eObject.getClass().getPackage() ==  JavaRefPackage.eINSTANCE.getClass().getPackage())
 			return false;
 		// Do not copy events
 		if(feature.getName().equals("events")) return false;

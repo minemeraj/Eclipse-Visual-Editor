@@ -11,14 +11,12 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: OpenActionGroup.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-14 23:30:25 $ 
  */
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.ui.IContextMenuConstants;
@@ -32,8 +30,7 @@ import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.actions.OpenWithMenu;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.java.adapters.JavaReflectionAdaptor;
-import org.eclipse.jem.internal.java.adapters.ReadAdaptor;
+import org.eclipse.jem.java.JavaClass;
 
 /**
  * This ActionGroup is for handling the Open actions on the
@@ -150,11 +147,9 @@ public class OpenActionGroup extends ActionGroup {
 			if (e instanceof EditPart) {
 				e = ((EditPart) e).getModel();
 				if (e instanceof IJavaObjectInstance) {
-					EObject eo = ((IJavaObjectInstance) e).getJavaType();
-					// KLUDGE Sort of cheat for now. Maybe can get java model to add accessor to return the IType.
-					JavaReflectionAdaptor ja = (JavaReflectionAdaptor) EcoreUtil.getExistingAdapter(eo, ReadAdaptor.TYPE_KEY);
-					if (ja != null) {
-						e = ja.getReflectionSource();
+					if (e instanceof IJavaObjectInstance) {
+						JavaClass eo = (JavaClass) ((IJavaObjectInstance) e).eClass();
+						e = eo.getReflectionType();
 					}
 				}
 			} 

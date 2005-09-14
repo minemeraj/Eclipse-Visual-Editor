@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.29 $  $Date: 2005-08-24 23:30:44 $ 
+ *  $Revision: 1.30 $  $Date: 2005-09-14 23:30:24 $ 
  */
 
 import java.text.MessageFormat;
@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.jdt.core.dom.*;
 
-import org.eclipse.jem.java.impl.JavaClassImpl;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -224,8 +224,8 @@ protected void processAMessageSend() {
  */
 protected boolean isStaticCall (String resolvedReciever, String selector, int argc)  {
 		EClassifier rClass = CodeGenUtil.getMetaClass(resolvedReciever,fModel.getCompositionModel()) ;
-		if (rClass != null  && rClass instanceof JavaClassImpl) {
-			org.eclipse.jem.java.impl.JavaClassImpl Clazz = (JavaClassImpl) rClass ;
+		if (rClass != null  && rClass instanceof JavaClass) {
+			JavaClass Clazz = (JavaClass) rClass ;
 			Iterator itr = Clazz.getPublicMethods().iterator() ;
 			while (itr.hasNext()) {
 				org.eclipse.jem.java.Method element = (org.eclipse.jem.java.Method) itr.next();
