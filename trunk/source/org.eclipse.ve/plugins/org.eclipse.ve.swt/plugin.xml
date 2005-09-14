@@ -135,6 +135,12 @@
       </palette>
    </extension>    
    
+   <extension point="org.eclipse.ve.cde.edit_part_contributor"> 
+     <contributor 
+       class="org.eclipse.ve.internal.jface.TreeViewerEditPartContributor"
+       type="org.eclipse.swt.widgets.Tree"/>
+   </extension>
+   
    <extension
          point="org.eclipse.ui.popupMenus">
 	 <!--
@@ -167,6 +173,25 @@
                id="org.eclipse.ve.java.editorpart.ctabfolder.switchto">
          </action>
       </objectContribution>
+     <!-- 
+	 	Set layout option on swt composites
+	 -->      
+      <objectContribution
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            id="org.eclipse.ve.java.editorpart.composite.setlayout.popup.object">
+         <filter
+               name="BEANTYPE"
+               value="org.eclipse.swt.widgets.Composite">
+         </filter>            
+         <action
+               label="Set Layout"
+               style="pulldown"
+               class="org.eclipse.ve.internal.java.core.SetLayoutObjectActionDelegate"
+               menubarPath="additions"
+               enablesFor="1"
+               id="org.eclipse.ve.java.editorpart.composite.setlayout">
+         </action>
+      </objectContribution>      
      <!-- 
 	 	Set Text option on swt controls
 	 -->
@@ -391,6 +416,16 @@
         point="org.eclipse.core.resources.markers">
      <super type="org.eclipse.core.resources.problemmarker"/>
   </extension>
+  
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%SWT.preferenceName SWT"
+            category="org.eclipse.ve.internal.java.vce.VCEPreferencePage"
+            class="org.eclipse.ve.internal.swt.SWTPreferencePage"
+            id="org.eclipse.ve.internal.swt.SWTPreferencePage">
+      </page>
+   </extension>  
     
 <!-- RCP ViewPart is a new style on the Create Visual Class Wizard -->  
   

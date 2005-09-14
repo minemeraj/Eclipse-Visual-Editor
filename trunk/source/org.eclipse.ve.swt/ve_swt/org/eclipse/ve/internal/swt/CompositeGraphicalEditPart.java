@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.28 $ $Date: 2005-09-08 23:21:37 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.29 $ $Date: 2005-09-14 15:35:22 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -21,26 +21,22 @@ import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.*;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
-import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
-import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
-import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
+import org.eclipse.ve.internal.java.visual.*;
 
 /**
  * ViewObject for the swt Composite. Creation date: (2/16/00 3:45:46 PM)
@@ -202,41 +198,31 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 		} else if(type == LayoutList.class){
 			return new LayoutList(){
 				public void fillMenuManager(MenuManager aMenuManager) {
-					final EditDomain editDomain = EditDomain.getEditDomain(CompositeGraphicalEditPart.this);				
-					// Get the type of the current layout manager class to set who is selected in the list
-					IBeanProxy layoutBeanProxy = BeanSWTUtilities.invoke_getLayout(getCompositeProxyAdapter().getBeanProxy());
-					String currentLayoutManagerType = layoutBeanProxy == null ? null : layoutBeanProxy.getTypeProxy().getFormalTypeName();
-					String[][] layoutItems = LayoutCellEditor.getLayoutItems(editDomain);
-					// Two arg array.  First element is type, second is array of names
-					for (int i = 0; i < layoutItems[0].length; i++) {
-						final String layoutDisplayName = layoutItems[1][i];
-						final String layoutTypeName = layoutItems[0][i];
-						Action changeLayoutAction = new Action(){
-							public String getText() {
-								return layoutDisplayName;
-							}
-							public String getToolTipText() {
-								return layoutTypeName;
-							}
-							public void run() {
-								IJavaInstance newLayout = BeanUtilities.createJavaObject(layoutTypeName,getBean().eResource().getResourceSet(),(String)null);
-								// Change the layout manager
-								
-								// If no switcher apply the value
-								RuledCommandBuilder cbld = new RuledCommandBuilder(editDomain);
-								cbld.applyAttributeSetting(getBean(),sf_compositeLayout, newLayout);
-								editDomain.getCommandStack().execute(cbld.getCommand());								
-							}
-						};
-						// Set the checked state to match the current layout manager
-						// It is either the layout name (in full) or else null
-						if(currentLayoutManagerType != null && currentLayoutManagerType.equals(layoutTypeName)){
-							changeLayoutAction.setChecked(true);
-						} else if (currentLayoutManagerType == null && layoutTypeName.length() == 0){ // For null the returned list includes it as an empty string
-							changeLayoutAction.setChecked(true);
+					LayoutListMenuContributor layoutListMenuContributor = new LayoutListMenuContributor(){
+						protected EditPart getEditPart() {
+							return CompositeGraphicalEditPart.this;
 						}
-						aMenuManager.add(changeLayoutAction);						
-					}
+						protected IJavaInstance getBean() {
+							return CompositeGraphicalEditPart.this.getBean();
+						}
+						protected EStructuralFeature getLayoutSF() {
+							return sf_compositeLayout;
+						}
+
+						protected IBeanProxy getLayoutBeanProxyAdapter() {
+							return BeanSWTUtilities.invoke_getLayout(getCompositeProxyAdapter().getBeanProxy());
+						}
+						protected String[][] getLayoutItems() {
+							return LayoutCellEditor.getLayoutItems(getEditDomain());
+						}
+						protected ILayoutPolicyFactory getLayoutPolicyFactory(JavaClass layoutManagerClass) {
+							return BeanSWTUtilities.getLayoutPolicyFactoryFromLayout(layoutManagerClass, getEditDomain());
+						}
+						protected VisualContainerPolicy getVisualContainerPolicy() {
+							return getContainerPolicy();
+						}
+					};
+					layoutListMenuContributor.fillMenuManager(aMenuManager);
 				}
 			};
 		}

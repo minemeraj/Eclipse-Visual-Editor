@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.147 $  $Date: 2005-09-13 20:31:09 $ 
+ *  $Revision: 1.148 $  $Date: 2005-09-14 15:35:25 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -2820,5 +2820,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 	public PasteJavaBeanAction getPasteImmediateBeanAction() {
 		return beansListPage.getPasteAction();
+	}
+	
+	public EditDomain getEditDomain(){
+		return editDomain;
 	}
 }
