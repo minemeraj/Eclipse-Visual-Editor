@@ -183,7 +183,7 @@
     <javac verbose="true" failonerror="true" srcdir="${builderDirectory}/tools" destdir="${builderDirectory}/tools" classpath="${eclipse.home}/plugins/org.apache.xerces_4.0.13/xercesImpl.jar:${eclipse.home}/plugins/org.apache.xerces_4.0.13/xmlParserAPIs.jar"/>
    		
     <java classname="TestVersionTracker" >
-         <arg line="${workingDirectory}/eclipse/features/org.eclipse.ve.tests_1.1.0.1/feature.xml  ${buildDirectory} ${workingDirectory}/ve-testing/test.properties" /> 
+         <arg line="${workingDirectory}/eclipse/features/org.eclipse.ve.tests_1.2/feature.xml  ${buildDirectory} ${workingDirectory}/ve-testing/test.properties" /> 
          <classpath>
             	<pathelement path="${eclipse.home}/plugins/org.apache.xerces_4.0.13/xercesImpl.jar:${eclipse.home}/plugins/org.apache.xerces_4.0.13/xmlParserAPIs.jar:${builderDirectory}/tools" />
          </classpath>
