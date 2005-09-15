@@ -6,7 +6,7 @@ import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 
-import org.eclipse.ve.internal.cde.core.TreeEditPartContributor.ImageOverlay;
+import org.eclipse.ve.internal.cde.core.ImageOverlay;
 
 
 public class TestCompositeImageDescriptor extends CompositeImageDescriptor {
@@ -26,7 +26,7 @@ public class TestCompositeImageDescriptor extends CompositeImageDescriptor {
 			Iterator iter = imageOverlays.iterator();
 			ImageOverlay overlay = (ImageOverlay)iter.next();
 			Point location = overlay.location;
-			drawImage(overlay.fImageData, size.x - location.x, size.y - location.y);
+			drawImage(overlay.imageData, size.x - location.x, size.y - location.y);
 		}
 	}
 	

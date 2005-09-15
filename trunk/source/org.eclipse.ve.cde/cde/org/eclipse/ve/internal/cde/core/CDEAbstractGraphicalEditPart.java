@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-09-14 23:18:16 $ 
+ *  $Revision: 1.2 $  $Date: 2005-09-15 18:51:51 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 /**
@@ -27,20 +26,28 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 
 	protected List fEditPartContributors;
 
-	public void addEditPartContributor(GraphicalEditPartContributor anEditPartContributor) {
+	private void addEditPartContributor(GraphicalEditPartContributor anEditPartContributor) {
 		if (fEditPartContributors == null) {
 			fEditPartContributors = new ArrayList(1);
 		}
 		fEditPartContributors.add(anEditPartContributor);
 	}
-
-	protected void fireActivated() {
-		super.fireActivated();
-		EditPartContributorRegistry contributorRegistry = (EditPartContributorRegistry) EditDomain.getEditDomain(this).getData(
-				EditPartContributorRegistry.class);
-		if (contributorRegistry != null) {
-			contributorRegistry.graphicalEditPartActivated(this);
-		}
+	
+	protected EditDomain getEditDomain(){
+		return EditDomain.getEditDomain(this);
 	}
-
+	
+	public void activate() {
+		super.activate();
+		List editPartContributors = getEditDomain().getEditPartContributors(this);
+		if(editPartContributors != null){
+			Iterator iter = editPartContributors.iterator();
+			while(iter.hasNext()){
+				GraphicalEditPartContributor graphicalEditPartContributor = ((EditPartContributor)iter.next()).getGraphicalEditPartContributor(this);
+				if(graphicalEditPartContributor != null){
+					addEditPartContributor(graphicalEditPartContributor);
+				}
+			}
+		}
+	}	
 }
