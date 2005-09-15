@@ -6,11 +6,13 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Label;
 
 public class SWTPreferencePageContents extends Composite {
 
 	private Table table = null;
 	private TableItem currentlyCheckedItem = null;
+	private Label label = null;
 
 	public SWTPreferencePageContents(Composite parent, int style) {
 		super(parent, style);
@@ -18,6 +20,8 @@ public class SWTPreferencePageContents extends Composite {
 	}
 
 	private void initialize() {
+		label = new Label(this, SWT.NONE);
+		label.setText("Default Layout");
 		this.setLayout(new GridLayout());
 		createTable();
 		setSize(new Point(300, 200));
@@ -39,15 +43,15 @@ public class SWTPreferencePageContents extends Composite {
 		table.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				TableItem selectedItem = (TableItem)e.item;
-				if(selectedItem.getChecked() && currentlyCheckedItem == selectedItem){
-					selectedItem.setChecked(true);
-				} else if(selectedItem.getChecked()){
-//					 Ensure only one item can be checked
+				if (selectedItem.getChecked()){
+//					Ensure only one item can be checked
 					if (currentlyCheckedItem != null){
 						currentlyCheckedItem.setChecked(false);
 						currentlyCheckedItem = null;
 					}					
 					currentlyCheckedItem = selectedItem;
+				} else if(selectedItem == currentlyCheckedItem){
+					currentlyCheckedItem = null;
 				}
 			}
 		});

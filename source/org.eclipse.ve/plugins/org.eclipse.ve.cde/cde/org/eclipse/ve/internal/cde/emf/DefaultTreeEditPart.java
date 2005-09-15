@@ -11,10 +11,8 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DefaultTreeEditPart.java,v $
- *  $Revision: 1.11 $  $Date: 2005-09-14 15:36:55 $ 
+ *  $Revision: 1.12 $  $Date: 2005-09-15 18:51:51 $ 
  */
-
-import java.util.*;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -25,7 +23,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.TreeEditPartContributor.ImageOverlay;
 /**
  *  A base tree editpart for EMF objects that will be using the CDE extensions paradighm. 
  *  (I.e. gets label provider from ClassDescriptorDecoratorPolicy, among other things.
@@ -36,7 +33,6 @@ public class DefaultTreeEditPart extends AbstractTreeEditPart {
 
 	protected ILabelDecorator labelDecorator;
 	protected DefaultLabelProviderNotifier labelProviderNotifier;
-	private List fEditPartContributors;
 
 	/**
 	 * Construct with model.
@@ -47,15 +43,7 @@ public class DefaultTreeEditPart extends AbstractTreeEditPart {
 	public DefaultTreeEditPart(Object model) {
 		setModel(model);
 	}
-	
-	protected void fireActivated() {
-		super.fireActivated();
-		EditPartContributorRegistry contributorRegistry = (EditPartContributorRegistry) getEditDomain().getData(EditPartContributorRegistry.class);
-		if(contributorRegistry != null){
-			contributorRegistry.treeEditPartActivated(this);
-		}		
-	}
-	
+		
 	public void activate() {
 		super.activate();
 		ILabelProvider provider = getDecoratedLabelProvider();
@@ -142,36 +130,14 @@ public class DefaultTreeEditPart extends AbstractTreeEditPart {
 	 * @see org.eclipse.gef.editparts.AbstractTreeEditPart#getImage()
 	 */
 	protected Image getImage() {
-		Image result = labelProviderNotifier != null ? labelProviderNotifier.getLabelProvider().getImage(getModel()) : super.getImage();
-		if(fEditPartContributors != null){
-			if(fEditPartContributors != null){
-				Iterator iter = fEditPartContributors.iterator();
-				TestCompositeImageDescriptor imageDescriptor = new TestCompositeImageDescriptor(result.getImageData());
-				while(iter.hasNext()){
-					ImageOverlay overlay = ((TreeEditPartContributor)iter.next()).getImageOverlay(); 
-					imageDescriptor.addOverlay(overlay);
-				}
-				return imageDescriptor.createImage();
-			}
-		}
-		return result;
+		return labelProviderNotifier != null ? labelProviderNotifier.getLabelProvider().getImage(getModel()) : super.getImage();
 	}
 
 	/**
 	 * @see org.eclipse.gef.editparts.AbstractTreeEditPart#getText()
 	 */
 	protected String getText() {
-		String result = labelProviderNotifier != null ? labelProviderNotifier.getLabelProvider().getText(getModel()) : CDEEmfMessages.DefaultTreeEditPart_getText_NoLabelProvider;
-		if(fEditPartContributors != null){
-			StringBuffer buffer = new StringBuffer(result);
-			Iterator iter = fEditPartContributors.iterator();
-			while(iter.hasNext()){
-				buffer.append(' ');
-				((TreeEditPartContributor)iter.next()).appendToText(buffer);
-			}
-			return buffer.toString();
-		}
-		return result;
+		return labelProviderNotifier != null ? labelProviderNotifier.getLabelProvider().getText(getModel()) : CDEEmfMessages.DefaultTreeEditPart_getText_NoLabelProvider;
 	}
 
 	/**
@@ -180,12 +146,5 @@ public class DefaultTreeEditPart extends AbstractTreeEditPart {
 	 */
 	public ILabelDecorator getLabelDecorator() {
 		return labelDecorator;
-	}
-
-	public void addEditPartContributor(TreeEditPartContributor anEditPartContributor) {
-		if (fEditPartContributors == null){
-			fEditPartContributors = new ArrayList(1);
-		}
-		fEditPartContributors.add(anEditPartContributor);
 	}
 }

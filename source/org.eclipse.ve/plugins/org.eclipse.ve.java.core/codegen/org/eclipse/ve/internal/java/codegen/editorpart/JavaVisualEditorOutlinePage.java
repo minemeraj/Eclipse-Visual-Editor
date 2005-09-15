@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.26 $  $Date: 2005-09-14 23:18:15 $ 
+ *  $Revision: 1.27 $  $Date: 2005-09-15 18:51:53 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
@@ -46,10 +45,10 @@ import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.texteditor.ResourceAction;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
 
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-
-import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.emf.*;
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
+import org.eclipse.ve.internal.cde.core.CustomizeLayoutWindowAction;
+import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+import org.eclipse.ve.internal.cde.emf.DefaultTreeEditPartFactory;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsTreeEditPart;
@@ -170,33 +169,6 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	public JavaVisualEditorOutlinePage(JavaVisualEditorPart jve, EditPartViewer viewer ){
 		super(viewer);
 		this.jve = jve;
-		initialize();
-	}
-	
-	private void initialize() {
-		jve.getEditDomain().setData(EditPartContributorRegistry.class, new EditPartContributorRegistry(){
-			public void treeEditPartActivated(EditPart anEditPart) {
-				// TODO Auto-generated method stub	
-				Object model = anEditPart.getModel();
-				if(anEditPart instanceof DefaultTreeEditPart && model instanceof IJavaInstance){
-					// See if there a contributor that is interested in this type of class
-					Iterator editPartContributors = jve.getEditDomain().getEditPartContributors(anEditPart).iterator();
-					while(editPartContributors.hasNext()) {
-						((EditPartContributor)editPartContributors.next()).treeEditPartActivated((DefaultTreeEditPart)anEditPart);
-					}
-				}
-			}
-			public void graphicalEditPartActivated(EditPart anEditPart) {
-				Object model = anEditPart.getModel();
-				if(anEditPart instanceof CDEAbstractGraphicalEditPart && model instanceof IJavaInstance){
-					// See if there a contributor that is interested in this type of class
-					Iterator editPartContributors = jve.getEditDomain().getEditPartContributors(anEditPart).iterator();
-					while(editPartContributors.hasNext()) {
-						((EditPartContributor)editPartContributors.next()).graphicalEditPartActivated((CDEAbstractGraphicalEditPart)anEditPart);
-					}
-				}
-			}			
-		});	
 	}
 
 	public void init(IPageSite pageSite) {

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.18 $ $Date: 2005-09-14 18:20:07 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.19 $ $Date: 2005-09-15 18:51:53 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -29,15 +29,13 @@ import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.gef.requests.ForwardedRequest;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.emf.DefaultTreeEditPart;
-import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
+import org.eclipse.ve.internal.cde.emf.*;
 
 import org.eclipse.ve.internal.jcm.*;
 
@@ -71,6 +69,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 	protected List eventInvocationsListenedTo;
 
 	protected List propertyChangeEventInvocationsListenedTo;
+	private List fEditPartContributors;	
 
 	public JavaBeanTreeEditPart(Object aModel) {
 		super(aModel);
@@ -87,9 +86,26 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 	}
 
 	public void activate() {
+		List editPartContributors = getEditDomain().getEditPartContributors(this);
+		if(editPartContributors != null){
+			Iterator iter = editPartContributors.iterator();
+			while(iter.hasNext()){
+				TreeEditPartContributor treeEditPartContributor = ((EditPartContributor)iter.next()).getTreeEditPartContributor(this);
+				if(treeEditPartContributor != null){
+					addEditPartContributor(treeEditPartContributor);
+				}
+			}
+		}		
 		super.activate();
 		getErrorNotifier().addErrorListener(fErrorListener);
 		((EObject) getModel()).eAdapters().add(getListenerAdapter());
+	}
+	
+	private void addEditPartContributor(TreeEditPartContributor treeEditPartContributor){
+		if(fEditPartContributors == null){
+			fEditPartContributors = new ArrayList(1);
+			fEditPartContributors.add(treeEditPartContributor);
+		}
 	}
 
 	protected Adapter getListenerAdapter() {
@@ -209,28 +225,63 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 		return (IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE);
 	}
 	
+	protected String getText() {
+		String text = super.getText();
+		if(fEditPartContributors != null){
+			StringBuffer buffer = new StringBuffer(text);
+			Iterator iter = fEditPartContributors.iterator();
+			while(iter.hasNext()){
+				buffer.append(' ');
+				((TreeEditPartContributor)iter.next()).appendToText(buffer);
+			}
+			return buffer.toString();
+		}
+		return text;		
+	}
+	
 	protected Image getImage() {
 		// See whether or not the JavaBean is in error
 		IErrorNotifier errorNotifier = getErrorNotifier();
 		int errorStatus = errorNotifier.getErrorStatus();
 		// If no error then just use the image
 		if (errorStatus == IErrorHolder.ERROR_NONE) {
-			return super.getImage();
-		} else {
-			// Otherwise we use an overlay image. If we have an existing overlay image and it is for the wrong severity dispose it
-			if (fOverlayImage != null && fOverlayImageSeverity != errorStatus) {
-				fOverlayImage.dispose();
-				fOverlayImage = null;
+			if(fEditPartContributors == null){
+				return super.getImage();
+			} 
+		}
+		// We either have a contributor that could add to the image or we have an error
+		if(fOverlayImage != null){
+			fOverlayImage.dispose();
+			fOverlayImage = null;
+		}
+		Image anImage = super.getImage();
+		if (anImage != null) {
+			TestCompositeImageDescriptor imageDescriptor = new TestCompositeImageDescriptor(anImage.getImageData());
+			if(errorStatus != IErrorHolder.ERROR_NONE){
+				ImageData errorImageData = null;
+				switch (errorStatus) {
+					case IErrorHolder.ERROR_SEVERE:
+						errorImageData = IErrorHolder.ErrorType.getSevereErrorImageOverlay().getImageData();
+						break;
+					case IErrorHolder.ERROR_WARNING:
+						errorImageData = IErrorHolder.ErrorType.getWarningErrorImageOverlay().getImageData();
+						break;
+					case IErrorHolder.ERROR_INFO:
+						errorImageData = IErrorHolder.ErrorType.getInformationErrorImageOverlay().getImageData();
+				}	
+				imageDescriptor.addOverlay(new ImageOverlay(errorImageData,anImage.getImageData().width,errorImageData.height));				
 			}
-			// Create an overlay image if required
-			if (fOverlayImage == null) {
-				Image anImage = super.getImage();
-				if (anImage != null) {
-					fOverlayImage = new Image(Display.getCurrent(), new JavaBeansImageDescriptor(anImage, errorStatus).getImageData());
-					fOverlayImageSeverity = errorStatus;
+			if(fEditPartContributors != null){
+				Iterator iter = fEditPartContributors.iterator();
+				while(iter.hasNext()){
+					ImageOverlay overlay = ((TreeEditPartContributor)iter.next()).getImageOverlay(); 
+					imageDescriptor.addOverlay(overlay);
 				}
 			}
-			return fOverlayImage;
+			fOverlayImage = imageDescriptor.createImage();
+			return fOverlayImage;			
+		} else {
+			return null;
 		}
 	}
 
@@ -604,4 +655,5 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 		installEditPolicy("JAVABEANS_EVENTS", new JavaBeanEventsEditPolicy()); //$NON-NLS-1$
 		installEditPolicy(CopyAction.REQ_COPY,new DefaultCopyEditPolicy(getEditDomain()));		
 	}
+
 }
