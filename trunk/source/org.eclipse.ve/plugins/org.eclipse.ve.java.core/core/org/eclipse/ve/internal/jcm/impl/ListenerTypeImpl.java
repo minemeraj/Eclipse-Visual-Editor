@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ListenerTypeImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-15 21:33:49 $ 
  */
 
 import java.util.Collection;
@@ -90,14 +90,14 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	protected static final boolean THIS_PART_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isThisPart() <em>This Part</em>}' attribute.
+	 * The flag representing the value of the '{@link #isThisPart() <em>This Part</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isThisPart()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean thisPart = THIS_PART_EDEFAULT;
+	protected static final int THIS_PART_EFLAG = 1 << 8;
 
 	/**
 	 * The cached value of the '{@link #getExtends() <em>Extends</em>}' reference.
@@ -184,7 +184,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * @generated
 	 */
 	public boolean isThisPart() {
-		return thisPart;
+		return (eFlags & THIS_PART_EFLAG) != 0;
 	}
 
 	/**
@@ -193,10 +193,10 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 	 * @generated
 	 */
 	public void setThisPart(boolean newThisPart) {
-		boolean oldThisPart = thisPart;
-		thisPart = newThisPart;
+		boolean oldThisPart = (eFlags & THIS_PART_EFLAG) != 0;
+		if (newThisPart) eFlags |= THIS_PART_EFLAG; else eFlags &= ~THIS_PART_EFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.LISTENER_TYPE__THIS_PART, oldThisPart, thisPart));
+			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.LISTENER_TYPE__THIS_PART, oldThisPart, newThisPart));
 	}
 
 	/**
@@ -430,7 +430,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 			case JCMPackage.LISTENER_TYPE__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case JCMPackage.LISTENER_TYPE__THIS_PART:
-				return thisPart != THIS_PART_EDEFAULT;
+				return ((eFlags & THIS_PART_EFLAG) != 0) != THIS_PART_EDEFAULT;
 			case JCMPackage.LISTENER_TYPE__EXTENDS:
 				return extends_ != null;
 			case JCMPackage.LISTENER_TYPE__IMPLEMENTS:
@@ -455,7 +455,7 @@ public class ListenerTypeImpl extends EObjectImpl implements ListenerType {
 		result.append(" (name: ");
 		result.append(name);
 		result.append(", thisPart: ");
-		result.append(thisPart);
+		result.append((eFlags & THIS_PART_EFLAG) != 0);
 		result.append(')');
 		return result.toString();
 	}

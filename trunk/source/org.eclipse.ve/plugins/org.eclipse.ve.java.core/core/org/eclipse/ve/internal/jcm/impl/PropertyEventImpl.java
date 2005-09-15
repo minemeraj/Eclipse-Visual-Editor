@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyEventImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-09-15 21:33:49 $ 
  */
 
 import org.eclipse.ve.internal.jcm.JCMPackage;
@@ -78,14 +78,14 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	protected static final boolean USE_IF_EXPRESSION_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isUseIfExpression() <em>Use If Expression</em>}' attribute.
+	 * The flag representing the value of the '{@link #isUseIfExpression() <em>Use If Expression</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isUseIfExpression()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean useIfExpression = USE_IF_EXPRESSION_EDEFAULT;
+	protected static final int USE_IF_EXPRESSION_EFLAG = 1 << 8;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -132,7 +132,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * @generated
 	 */
 	public boolean isUseIfExpression() {
-		return useIfExpression;
+		return (eFlags & USE_IF_EXPRESSION_EFLAG) != 0;
 	}
 
 	/**
@@ -141,10 +141,10 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * @generated
 	 */
 	public void setUseIfExpression(boolean newUseIfExpression) {
-		boolean oldUseIfExpression = useIfExpression;
-		useIfExpression = newUseIfExpression;
+		boolean oldUseIfExpression = (eFlags & USE_IF_EXPRESSION_EFLAG) != 0;
+		if (newUseIfExpression) eFlags |= USE_IF_EXPRESSION_EFLAG; else eFlags &= ~USE_IF_EXPRESSION_EFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.PROPERTY_EVENT__USE_IF_EXPRESSION, oldUseIfExpression, useIfExpression));
+			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.PROPERTY_EVENT__USE_IF_EXPRESSION, oldUseIfExpression, newUseIfExpression));
 	}
 
 	/**
@@ -206,7 +206,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 			case JCMPackage.PROPERTY_EVENT__PROPERTY_NAME:
 				return PROPERTY_NAME_EDEFAULT == null ? propertyName != null : !PROPERTY_NAME_EDEFAULT.equals(propertyName);
 			case JCMPackage.PROPERTY_EVENT__USE_IF_EXPRESSION:
-				return useIfExpression != USE_IF_EXPRESSION_EDEFAULT;
+				return ((eFlags & USE_IF_EXPRESSION_EFLAG) != 0) != USE_IF_EXPRESSION_EDEFAULT;
 		}
 		return eDynamicIsSet(eFeature);
 	}
@@ -223,7 +223,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 		result.append(" (propertyName: ");
 		result.append(propertyName);
 		result.append(", useIfExpression: ");
-		result.append(useIfExpression);
+		result.append((eFlags & USE_IF_EXPRESSION_EFLAG) != 0);
 		result.append(')');
 		return result.toString();
 	}

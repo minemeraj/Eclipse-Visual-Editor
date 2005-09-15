@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CallbackImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-15 21:33:49 $ 
  */
 
 import java.util.Collection;
@@ -71,14 +71,14 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	protected static final boolean SHARED_SCOPE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isSharedScope() <em>Shared Scope</em>}' attribute.
+	 * The flag representing the value of the '{@link #isSharedScope() <em>Shared Scope</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isSharedScope()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean sharedScope = SHARED_SCOPE_EDEFAULT;
+	protected static final int SHARED_SCOPE_EFLAG = 1 << 8;
 
 	/**
 	 * The cached value of the '{@link #getMethod() <em>Method</em>}' reference.
@@ -124,7 +124,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * @generated
 	 */
 	public boolean isSharedScope() {
-		return sharedScope;
+		return (eFlags & SHARED_SCOPE_EFLAG) != 0;
 	}
 
 	/**
@@ -133,10 +133,10 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * @generated
 	 */
 	public void setSharedScope(boolean newSharedScope) {
-		boolean oldSharedScope = sharedScope;
-		sharedScope = newSharedScope;
+		boolean oldSharedScope = (eFlags & SHARED_SCOPE_EFLAG) != 0;
+		if (newSharedScope) eFlags |= SHARED_SCOPE_EFLAG; else eFlags &= ~SHARED_SCOPE_EFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.CALLBACK__SHARED_SCOPE, oldSharedScope, sharedScope));
+			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.CALLBACK__SHARED_SCOPE, oldSharedScope, newSharedScope));
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	public boolean eIsSet(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case JCMPackage.CALLBACK__SHARED_SCOPE:
-				return sharedScope != SHARED_SCOPE_EDEFAULT;
+				return ((eFlags & SHARED_SCOPE_EFLAG) != 0) != SHARED_SCOPE_EDEFAULT;
 			case JCMPackage.CALLBACK__METHOD:
 				return method != null;
 			case JCMPackage.CALLBACK__STATEMENTS:
@@ -292,7 +292,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (sharedScope: ");
-		result.append(sharedScope);
+		result.append((eFlags & SHARED_SCOPE_EFLAG) != 0);
 		result.append(')');
 		return result.toString();
 	}

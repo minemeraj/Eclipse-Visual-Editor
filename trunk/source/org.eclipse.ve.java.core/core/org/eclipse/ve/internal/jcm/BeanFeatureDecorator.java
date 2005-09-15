@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: BeanFeatureDecorator.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-15 21:33:50 $ 
  */
 
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
@@ -37,7 +37,7 @@ import org.eclipse.emf.ecore.EAnnotation;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanFeatureDecorator()
- * @model 
+ * @model
  * @generated
  */
 public interface BeanFeatureDecorator extends EAnnotation, KeyedValueHolder{
@@ -55,7 +55,7 @@ public interface BeanFeatureDecorator extends EAnnotation, KeyedValueHolder{
 	 * @return the value of the '<em>Bean Proxy Mediator Name</em>' attribute.
 	 * @see #setBeanProxyMediatorName(String)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanFeatureDecorator_BeanProxyMediatorName()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getBeanProxyMediatorName();

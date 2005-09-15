@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: InstanceLocation.java,v 1.2 2005-02-15 23:23:55 sgunturi Exp $
+ * $Id: InstanceLocation.java,v 1.3 2005-09-15 21:33:50 rkulp Exp $
  */
 package org.eclipse.ve.internal.jcm;
 /*******************************************************************************
@@ -39,8 +39,11 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * The '<em><b>GLOBAL GLOBAL</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Instance Variable will be GLOBAL (i.e. a member of the class) and the initialization will be GLOBAL (i.e. there is a separate initialization method for the instance).
+	 * <!-- end-model-doc -->
 	 * @see #GLOBAL_GLOBAL_LITERAL
-	 * @model 
+	 * @model
 	 * @generated
 	 * @ordered
 	 */
@@ -50,8 +53,11 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * The '<em><b>GLOBAL LOCAL</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The instance variable will be GLOBAL (i.e. it will be a member of the class) and the initialization will be LOCAL (i.e. there is not a separate initialization method, the initialization will be in the initialization method of another instance),
+	 * <!-- end-model-doc -->
 	 * @see #GLOBAL_LOCAL_LITERAL
-	 * @model 
+	 * @model
 	 * @generated
 	 * @ordered
 	 */
@@ -61,8 +67,11 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * The '<em><b>LOCAL</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The instance and initialization will be LOCAL (i.e. it will be declared and initialized in the initialization method of another instance).
+	 * <!-- end-model-doc -->
 	 * @see #LOCAL_LITERAL
-	 * @model 
+	 * @model
 	 * @generated
 	 * @ordered
 	 */
@@ -72,8 +81,11 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * The '<em><b>PROPERTY</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * There will be no instance variable. It will be a property. This will be applicable if there are no settings on the instance. If there are any settings, then it will promote up to LOCAL automatically.
+	 * <!-- end-model-doc -->
 	 * @see #PROPERTY_LITERAL
-	 * @model 
+	 * @model
 	 * @generated
 	 * @ordered
 	 */
@@ -83,9 +95,6 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * The '<em><b>GLOBAL GLOBAL</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Instance Variable will be GLOBAL (i.e. a member of the class) and the initialization will be GLOBAL (i.e. there is a separate initialization method for the instance).
-	 * <!-- end-model-doc -->
 	 * @see #GLOBAL_GLOBAL
 	 * @generated
 	 * @ordered
@@ -96,9 +105,6 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * The '<em><b>GLOBAL LOCAL</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The instance variable will be GLOBAL (i.e. it will be a member of the class) and the initialization will be LOCAL (i.e. there is not a separate initialization method, the initialization will be in the initialization method of another instance),
-	 * <!-- end-model-doc -->
 	 * @see #GLOBAL_LOCAL
 	 * @generated
 	 * @ordered
@@ -109,9 +115,6 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * The '<em><b>LOCAL</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The instance and initialization will be LOCAL (i.e. it will be declared and initialized in the initialization method of another instance).
-	 * <!-- end-model-doc -->
 	 * @see #LOCAL
 	 * @generated
 	 * @ordered
@@ -122,9 +125,6 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * The '<em><b>PROPERTY</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * There will be no instance variable. It will be a property. This will be applicable if there are no settings on the instance. If there are any settings, then it will promote up to LOCAL automatically.
-	 * <!-- end-model-doc -->
 	 * @see #PROPERTY
 	 * @generated
 	 * @ordered

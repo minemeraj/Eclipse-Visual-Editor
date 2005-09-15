@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: JavaCacheData.java,v 1.2 2005-02-15 23:23:55 sgunturi Exp $
+ * $Id: JavaCacheData.java,v 1.3 2005-09-15 21:33:50 rkulp Exp $
  */
 package org.eclipse.ve.internal.jcm;
 /*******************************************************************************
@@ -37,10 +37,10 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getJavaCacheData()
- * @model 
+ * @model
  * @generated
  */
-public interface JavaCacheData extends EObject {
+public interface JavaCacheData extends EObject{
 	/**
 	 * Returns the value of the '<em><b>Names To Beans</b></em>' map.
 	 * The key is of type {@link java.lang.String},

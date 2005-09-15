@@ -11,15 +11,24 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanCompositionImpl.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.11 $  $Date: 2005-09-15 21:33:49 $ 
  */
+
+import java.util.Collection;
 
 import java.util.*;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.util.*;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -29,8 +38,12 @@ import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cdm.impl.DiagramDataImpl;
+import org.eclipse.ve.internal.jcm.BeanComposition;
+import org.eclipse.ve.internal.jcm.JCMPackage;
+import org.eclipse.ve.internal.jcm.ListenerType;
+import org.eclipse.ve.internal.jcm.MemberContainer;
+
 import org.eclipse.ve.internal.java.core.BeanUtilities;
-import org.eclipse.ve.internal.jcm.*;
 
 /**
  * <!-- begin-user-doc -->

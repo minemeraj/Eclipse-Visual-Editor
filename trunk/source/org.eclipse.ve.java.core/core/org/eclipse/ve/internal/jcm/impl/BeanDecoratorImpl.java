@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanDecoratorImpl.java,v $
- *  $Revision: 1.13 $  $Date: 2005-09-13 20:31:09 $ 
+ *  $Revision: 1.14 $  $Date: 2005-09-15 21:33:49 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -22,6 +22,12 @@ import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EModelElement;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EAnnotationImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -31,11 +37,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 import org.eclipse.ve.internal.cdm.impl.MapEntryImpl;
+import org.eclipse.ve.internal.jcm.BeanDecorator;
+import org.eclipse.ve.internal.jcm.InstanceLocation;
+import org.eclipse.ve.internal.jcm.JCMPackage;
+
 import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
-import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
@@ -123,13 +132,13 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	protected InstanceLocation beanLocation = BEAN_LOCATION_EDEFAULT;
 
 	/**
-	 * This is true if the Bean Location attribute has been set.
+	 * The flag representing whether the Bean Location attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean beanLocationESet = false;
+	protected static final int BEAN_LOCATION_ESETFLAG = 1 << 8;
 
 	/**
 	 * The default value of the '{@link #isBeanReturn() <em>Bean Return</em>}' attribute.
@@ -142,23 +151,23 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	protected static final boolean BEAN_RETURN_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isBeanReturn() <em>Bean Return</em>}' attribute.
+	 * The flag representing the value of the '{@link #isBeanReturn() <em>Bean Return</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isBeanReturn()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean beanReturn = BEAN_RETURN_EDEFAULT;
+	protected static final int BEAN_RETURN_EFLAG = 1 << 9;
 
 	/**
-	 * This is true if the Bean Return attribute has been set.
+	 * The flag representing whether the Bean Return attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean beanReturnESet = false;
+	protected static final int BEAN_RETURN_ESETFLAG = 1 << 10;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -235,8 +244,8 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	public void setBeanLocation(InstanceLocation newBeanLocation) {
 		InstanceLocation oldBeanLocation = beanLocation;
 		beanLocation = newBeanLocation == null ? BEAN_LOCATION_EDEFAULT : newBeanLocation;
-		boolean oldBeanLocationESet = beanLocationESet;
-		beanLocationESet = true;
+		boolean oldBeanLocationESet = (eFlags & BEAN_LOCATION_ESETFLAG) != 0;
+		eFlags |= BEAN_LOCATION_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_DECORATOR__BEAN_LOCATION, oldBeanLocation, beanLocation, !oldBeanLocationESet));
 	}
@@ -248,9 +257,9 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	 */
 	public void unsetBeanLocation() {
 		InstanceLocation oldBeanLocation = beanLocation;
-		boolean oldBeanLocationESet = beanLocationESet;
+		boolean oldBeanLocationESet = (eFlags & BEAN_LOCATION_ESETFLAG) != 0;
 		beanLocation = BEAN_LOCATION_EDEFAULT;
-		beanLocationESet = false;
+		eFlags &= ~BEAN_LOCATION_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, JCMPackage.BEAN_DECORATOR__BEAN_LOCATION, oldBeanLocation, BEAN_LOCATION_EDEFAULT, oldBeanLocationESet));
 	}
@@ -261,7 +270,7 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	 * @generated
 	 */
 	public boolean isSetBeanLocation() {
-		return beanLocationESet;
+		return (eFlags & BEAN_LOCATION_ESETFLAG) != 0;
 	}
 
 	/**
@@ -270,7 +279,7 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	 * @generated
 	 */
 	public boolean isBeanReturn() {
-		return beanReturn;
+		return (eFlags & BEAN_RETURN_EFLAG) != 0;
 	}
 
 	/**
@@ -279,12 +288,12 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	 * @generated
 	 */
 	public void setBeanReturn(boolean newBeanReturn) {
-		boolean oldBeanReturn = beanReturn;
-		beanReturn = newBeanReturn;
-		boolean oldBeanReturnESet = beanReturnESet;
-		beanReturnESet = true;
+		boolean oldBeanReturn = (eFlags & BEAN_RETURN_EFLAG) != 0;
+		if (newBeanReturn) eFlags |= BEAN_RETURN_EFLAG; else eFlags &= ~BEAN_RETURN_EFLAG;
+		boolean oldBeanReturnESet = (eFlags & BEAN_RETURN_ESETFLAG) != 0;
+		eFlags |= BEAN_RETURN_ESETFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_DECORATOR__BEAN_RETURN, oldBeanReturn, beanReturn, !oldBeanReturnESet));
+			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_DECORATOR__BEAN_RETURN, oldBeanReturn, newBeanReturn, !oldBeanReturnESet));
 	}
 
 	/**
@@ -293,10 +302,10 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	 * @generated
 	 */
 	public void unsetBeanReturn() {
-		boolean oldBeanReturn = beanReturn;
-		boolean oldBeanReturnESet = beanReturnESet;
-		beanReturn = BEAN_RETURN_EDEFAULT;
-		beanReturnESet = false;
+		boolean oldBeanReturn = (eFlags & BEAN_RETURN_EFLAG) != 0;
+		boolean oldBeanReturnESet = (eFlags & BEAN_RETURN_ESETFLAG) != 0;
+		if (BEAN_RETURN_EDEFAULT) eFlags |= BEAN_RETURN_EFLAG; else eFlags &= ~BEAN_RETURN_EFLAG;
+		eFlags &= ~BEAN_RETURN_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, JCMPackage.BEAN_DECORATOR__BEAN_RETURN, oldBeanReturn, BEAN_RETURN_EDEFAULT, oldBeanReturnESet));
 	}
@@ -307,7 +316,7 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	 * @generated
 	 */
 	public boolean isSetBeanReturn() {
-		return beanReturnESet;
+		return (eFlags & BEAN_RETURN_ESETFLAG) != 0;
 	}
 
 	/**
@@ -587,9 +596,9 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 		result.append(" (beanProxyClassName: ");
 		result.append(beanProxyClassName);
 		result.append(", beanLocation: ");
-		if (beanLocationESet) result.append(beanLocation); else result.append("<unset>");
+		if ((eFlags & BEAN_LOCATION_ESETFLAG) != 0) result.append(beanLocation); else result.append("<unset>");
 		result.append(", beanReturn: ");
-		if (beanReturnESet) result.append(beanReturn); else result.append("<unset>");
+		if ((eFlags & BEAN_RETURN_ESETFLAG) != 0) result.append((eFlags & BEAN_RETURN_EFLAG) != 0); else result.append("<unset>");
 		result.append(')');
 		return result.toString();
 	}

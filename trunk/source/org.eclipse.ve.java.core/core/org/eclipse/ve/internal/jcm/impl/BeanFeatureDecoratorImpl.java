@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanFeatureDecoratorImpl.java,v $
- *  $Revision: 1.11 $  $Date: 2005-09-13 20:31:09 $ 
+ *  $Revision: 1.12 $  $Date: 2005-09-15 21:33:49 $ 
  */
 
 import java.util.Collection;
@@ -150,13 +150,13 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	protected InstanceLocation beanLocation = BEAN_LOCATION_EDEFAULT;
 
 	/**
-	 * This is true if the Bean Location attribute has been set.
+	 * The flag representing whether the Bean Location attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean beanLocationESet = false;
+	protected static final int BEAN_LOCATION_ESETFLAG = 1 << 8;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -253,8 +253,8 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	public void setBeanLocation(InstanceLocation newBeanLocation) {
 		InstanceLocation oldBeanLocation = beanLocation;
 		beanLocation = newBeanLocation == null ? BEAN_LOCATION_EDEFAULT : newBeanLocation;
-		boolean oldBeanLocationESet = beanLocationESet;
-		beanLocationESet = true;
+		boolean oldBeanLocationESet = (eFlags & BEAN_LOCATION_ESETFLAG) != 0;
+		eFlags |= BEAN_LOCATION_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION, oldBeanLocation, beanLocation, !oldBeanLocationESet));
 	}
@@ -266,9 +266,9 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 */
 	public void unsetBeanLocation() {
 		InstanceLocation oldBeanLocation = beanLocation;
-		boolean oldBeanLocationESet = beanLocationESet;
+		boolean oldBeanLocationESet = (eFlags & BEAN_LOCATION_ESETFLAG) != 0;
 		beanLocation = BEAN_LOCATION_EDEFAULT;
-		beanLocationESet = false;
+		eFlags &= ~BEAN_LOCATION_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, JCMPackage.BEAN_FEATURE_DECORATOR__BEAN_LOCATION, oldBeanLocation, BEAN_LOCATION_EDEFAULT, oldBeanLocationESet));
 	}
@@ -279,7 +279,7 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 	 * @generated
 	 */
 	public boolean isSetBeanLocation() {
-		return beanLocationESet;
+		return (eFlags & BEAN_LOCATION_ESETFLAG) != 0;
 	}
 
 	/**
@@ -464,7 +464,7 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 		}
 		eDynamicUnset(eFeature);
 	}
-	
+
 	/*
 	 * Called by overrides to eIsSet to test if source is set. This is because for the 
 	 * FeatureDecorator and subclasses, setting source to the classname is considered
@@ -561,7 +561,7 @@ public class BeanFeatureDecoratorImpl extends EAnnotationImpl implements BeanFea
 		result.append(", linkType: ");
 		result.append(linkType);
 		result.append(", beanLocation: ");
-		if (beanLocationESet) result.append(beanLocation); else result.append("<unset>");
+		if ((eFlags & BEAN_LOCATION_ESETFLAG) != 0) result.append(beanLocation); else result.append("<unset>");
 		result.append(')');
 		return result.toString();
 	}

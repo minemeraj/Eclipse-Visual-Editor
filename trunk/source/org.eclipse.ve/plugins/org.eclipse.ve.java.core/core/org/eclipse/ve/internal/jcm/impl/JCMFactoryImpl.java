@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMFactoryImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-15 21:33:49 $ 
  */
 
 import java.util.Map;
@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
  */
 public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	/**
-	 * Creates and instance of the factory.
+	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated

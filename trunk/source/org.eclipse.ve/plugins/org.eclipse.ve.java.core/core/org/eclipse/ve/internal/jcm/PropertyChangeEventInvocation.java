@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeEventInvocation.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-15 21:33:50 $ 
  */
 
 import org.eclipse.jem.java.Method;
@@ -39,7 +39,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getPropertyChangeEventInvocation()
- * @model 
+ * @model
  * @generated
  */
 public interface PropertyChangeEventInvocation extends AbstractEventInvocation{

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: BeanDecorator.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-15 21:33:50 $ 
  */
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -39,7 +39,7 @@ import org.eclipse.ve.internal.java.core.IBeanProxyHost;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanDecorator()
- * @model 
+ * @model
  * @generated
  */
 public interface BeanDecorator extends EAnnotation, KeyedValueHolder{
@@ -57,7 +57,7 @@ public interface BeanDecorator extends EAnnotation, KeyedValueHolder{
 	 * @return the value of the '<em>Bean Proxy Class Name</em>' attribute.
 	 * @see #setBeanProxyClassName(String)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanDecorator_BeanProxyClassName()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getBeanProxyClassName();
