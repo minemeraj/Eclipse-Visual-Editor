@@ -117,6 +117,13 @@ public class TextEditor extends ContentViewer implements Editor {
 		}							
 	}
 	
+	public void setLabelProvider(IBaseLabelProvider labelProvider) {
+		super.setLabelProvider(labelProvider);
+		if(labelProvider instanceof ILabelConsumer){
+			setLabelConsumer((ILabelConsumer)labelProvider);
+		}
+	}
+	
 	public void setUpdatePolicy(int aCommitPolicy){
 				
 		if(updateListener != null){
