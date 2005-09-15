@@ -70,14 +70,14 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	protected static final boolean VALUE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #getTypedValue() <em>Value</em>}' attribute.
+	 * The flag representing the value of the '{@link #getTypedValue() <em>Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getTypedValue()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean value = VALUE_EDEFAULT;
+	protected static final int VALUE_EFLAG = 1 << 8;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -124,7 +124,7 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * @generated
 	 */
 	public boolean getTypedValue() {
-		return value;
+		return (eFlags & VALUE_EFLAG) != 0;
 	}
 
 	/**
@@ -133,10 +133,10 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * @generated
 	 */
 	public void setTypedValue(boolean newValue) {
-		boolean oldValue = value;
-		value = newValue;
+		boolean oldValue = (eFlags & VALUE_EFLAG) != 0;
+		if (newValue) eFlags |= VALUE_EFLAG; else eFlags &= ~VALUE_EFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, CDMPackage.KEYED_BOOLEAN__VALUE, oldValue, value));
+			eNotify(new ENotificationImpl(this, Notification.SET, CDMPackage.KEYED_BOOLEAN__VALUE, oldValue, newValue));
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 			case CDMPackage.KEYED_BOOLEAN__KEY:
 				return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
 			case CDMPackage.KEYED_BOOLEAN__VALUE:
-				return value != VALUE_EDEFAULT;
+				return ((eFlags & VALUE_EFLAG) != 0) != VALUE_EDEFAULT;
 		}
 		return eDynamicIsSet(eFeature);
 	}
@@ -215,7 +215,7 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 		result.append(" (key: ");
 		result.append(key);
 		result.append(", value: ");
-		result.append(value);
+		result.append((eFlags & VALUE_EFLAG) != 0);
 		result.append(')');
 		return result.toString();
 	}
@@ -296,4 +296,5 @@ public class KeyedBooleanImpl extends EObjectImpl implements BasicEMap.Entry {
 		EObject container = eContainer();
 		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
 	}
+
 } //KeyedBooleanImpl

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: CategoryImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import java.util.Collection;
 
@@ -157,7 +157,7 @@ public abstract class CategoryImpl extends DrawerImpl implements Category {
 			case PalettePackage.CATEGORY__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
 			case PalettePackage.CATEGORY__VISIBLE:
-				return visible != VISIBLE_EDEFAULT;
+				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
 			case PalettePackage.CATEGORY__DEFAULT_ENTRY:
 				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
 			case PalettePackage.CATEGORY__ID:

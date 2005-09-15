@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: UtilityPackageImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
  */
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -149,10 +149,10 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 	 * @generated
 	 */
 	public static UtilityPackage init() {
-		if (isInited) return (UtilityPackage)EPackage.Registry.INSTANCE.get(UtilityPackage.eNS_URI);
+		if (isInited) return (UtilityPackage)EPackage.Registry.INSTANCE.getEPackage(UtilityPackage.eNS_URI);
 
-		// Obtain or create and register package.
-		UtilityPackageImpl theUtilityPackage = (UtilityPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof EPackage ? EPackage.Registry.INSTANCE.get(eNS_URI) : new UtilityPackageImpl());
+		// Obtain or create and register package
+		UtilityPackageImpl theUtilityPackage = (UtilityPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof UtilityPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new UtilityPackageImpl());
 
 		isInited = true;
 
@@ -161,18 +161,21 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 		EcorePackageImpl.init();
 
 		// Obtain or create and register interdependencies
-		PalettePackageImpl thePalettePackage = (PalettePackageImpl)(EPackage.Registry.INSTANCE.get(PalettePackage.eNS_URI) instanceof EPackage ? EPackage.Registry.INSTANCE.get(PalettePackage.eNS_URI) : PalettePackageImpl.eINSTANCE);
-		DecoratorsPackageImpl theDecoratorsPackage = (DecoratorsPackageImpl)(EPackage.Registry.INSTANCE.get(DecoratorsPackage.eNS_URI) instanceof EPackage ? EPackage.Registry.INSTANCE.get(DecoratorsPackage.eNS_URI) : DecoratorsPackageImpl.eINSTANCE);
+		PalettePackageImpl thePalettePackage = (PalettePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PalettePackage.eNS_URI) instanceof PalettePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PalettePackage.eNS_URI) : PalettePackage.eINSTANCE);
+		DecoratorsPackageImpl theDecoratorsPackage = (DecoratorsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DecoratorsPackage.eNS_URI) instanceof DecoratorsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DecoratorsPackage.eNS_URI) : DecoratorsPackage.eINSTANCE);
 
-		// Step 1: create meta-model objects
+		// Create package meta-data objects
 		theUtilityPackage.createPackageContents();
 		thePalettePackage.createPackageContents();
 		theDecoratorsPackage.createPackageContents();
 
-		// Step 2: complete initialization
+		// Initialize created meta-data
 		theUtilityPackage.initializePackageContents();
 		thePalettePackage.initializePackageContents();
 		theDecoratorsPackage.initializePackageContents();
+
+		// Mark meta-data to indicate it can't be changed
+		theUtilityPackage.freeze();
 
 		return theUtilityPackage;
 	}
@@ -389,29 +392,30 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 		translatableStringEClass.getESuperTypes().add(this.getAbstractString());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(abstractStringEClass, AbstractString.class, "AbstractString", IS_ABSTRACT, !IS_INTERFACE);
+		initEClass(abstractStringEClass, AbstractString.class, "AbstractString", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(constantStringEClass, ConstantString.class, "ConstantString", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getConstantString_String(), ecorePackage.getEString(), "string", " ", 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(constantStringEClass, ConstantString.class, "ConstantString", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getConstantString_String(), ecorePackage.getEString(), "string", " ", 0, 1, ConstantString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(resourceBundleEClass, ResourceBundle.class, "ResourceBundle", IS_ABSTRACT, !IS_INTERFACE);
+		initEClass(resourceBundleEClass, ResourceBundle.class, "ResourceBundle", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(urlResourceBundleEClass, URLResourceBundle.class, "URLResourceBundle", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getURLResourceBundle_BundleName(), ecorePackage.getEString(), "bundleName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getURLResourceBundle_BundleURLs(), ecorePackage.getEString(), "bundleURLs", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(urlResourceBundleEClass, URLResourceBundle.class, "URLResourceBundle", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getURLResourceBundle_BundleName(), ecorePackage.getEString(), "bundleName", null, 0, 1, URLResourceBundle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getURLResourceBundle_BundleURLs(), ecorePackage.getEString(), "bundleURLs", null, 0, -1, URLResourceBundle.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(graphicEClass, Graphic.class, "Graphic", IS_ABSTRACT, !IS_INTERFACE);
+		initEClass(graphicEClass, Graphic.class, "Graphic", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(gifFileGraphicEClass, GIFFileGraphic.class, "GIFFileGraphic", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getGIFFileGraphic_ResourceName(), ecorePackage.getEString(), "resourceName", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(gifFileGraphicEClass, GIFFileGraphic.class, "GIFFileGraphic", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getGIFFileGraphic_ResourceName(), ecorePackage.getEString(), "resourceName", null, 0, 1, GIFFileGraphic.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(translatableStringEClass, TranslatableString.class, "TranslatableString", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getTranslatableString_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getTranslatableString_Bundle(), this.getResourceBundle(), null, "bundle", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(translatableStringEClass, TranslatableString.class, "TranslatableString", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTranslatableString_Key(), ecorePackage.getEString(), "key", null, 0, 1, TranslatableString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTranslatableString_Bundle(), this.getResourceBundle(), null, "bundle", null, 0, 1, TranslatableString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(iGraphicEClass, IGraphic.class, "IGraphic", IS_ABSTRACT, IS_INTERFACE);
+		initEClass(iGraphicEClass, IGraphic.class, "IGraphic", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);
 	}
+
 }

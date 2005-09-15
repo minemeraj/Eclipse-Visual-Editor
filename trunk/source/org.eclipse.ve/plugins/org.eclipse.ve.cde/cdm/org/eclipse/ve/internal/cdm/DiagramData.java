@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: DiagramData.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
  */
 
 
@@ -35,7 +35,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.ve.internal.cdm.CDMPackage#getDiagramData()
- * @model 
+ * @model
  * @generated
  */
 public interface DiagramData extends EObject{

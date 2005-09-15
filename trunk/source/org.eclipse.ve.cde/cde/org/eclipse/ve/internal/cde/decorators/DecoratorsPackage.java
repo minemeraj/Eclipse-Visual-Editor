@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: DecoratorsPackage.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-15 21:27:15 $ 
  */
 
 
@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.EcorePackage;
  * </ul>
  * <!-- end-user-doc -->
  * @see org.eclipse.ve.internal.cde.decorators.DecoratorsFactory
+ * @model kind="package"
  * @generated
  */
 public interface DecoratorsPackage extends EPackage{

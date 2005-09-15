@@ -5,7 +5,7 @@
     editDirectory="/org.eclipse.ve.cde.edit/src" editorDirectory="/org.eclipse.ve.cde.editor/src"
     modelPluginID="" modelName="Cdm" editPluginClass="org.eclipse.ve.internal.cdm.provider.CdmEditPlugin"
     editorPluginClass="org.eclipse.ve.internal.cdm.presentation.CdmEditorPlugin" updateClasspath="false"
-    usedGenPackages="../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+    booleanFlagsField="eFlags" booleanFlagsReservedBits="8" usedGenPackages="../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
   <foreignModel>..\rose\cdmmodel.mdl</foreignModel>
   <foreignModel>WorkspaceRoot</foreignModel>
   <foreignModel>../..</foreignModel>

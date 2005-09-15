@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility;
 /*
  *  $RCSfile: GIFFileGraphic.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:15 $ 
  */
 
 import java.lang.String;
@@ -33,7 +33,7 @@ import java.lang.String;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getGIFFileGraphic()
- * @model 
+ * @model
  * @generated
  */
 public interface GIFFileGraphic extends Graphic{
@@ -53,7 +53,7 @@ public interface GIFFileGraphic extends Graphic{
 	 * @return the value of the '<em>Resource Name</em>' attribute.
 	 * @see #setResourceName(String)
 	 * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getGIFFileGraphic_ResourceName()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getResourceName();

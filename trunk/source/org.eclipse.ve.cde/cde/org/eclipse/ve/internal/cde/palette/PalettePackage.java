@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: PalettePackage.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-15 21:27:16 $ 
  */
  
 import org.eclipse.emf.ecore.EAttribute;
@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.EcorePackage;
  * </ul>
  * <!-- end-user-doc -->
  * @see org.eclipse.ve.internal.cde.palette.PaletteFactory
+ * @model kind="package"
  * @generated
  */
 public interface PalettePackage extends EPackage{

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: RootImpl.java,v 1.1 2005-06-20 23:54:40 rkulp Exp $
+ * $Id: RootImpl.java,v 1.2 2005-09-15 21:27:15 rkulp Exp $
  */
 package org.eclipse.ve.internal.cde.palette.impl;
 
@@ -258,7 +258,7 @@ public class RootImpl extends ContainerImpl implements Root {
 			case PalettePackage.ROOT__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
 			case PalettePackage.ROOT__VISIBLE:
-				return visible != VISIBLE_EDEFAULT;
+				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
 			case PalettePackage.ROOT__DEFAULT_ENTRY:
 				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
 			case PalettePackage.ROOT__ID:

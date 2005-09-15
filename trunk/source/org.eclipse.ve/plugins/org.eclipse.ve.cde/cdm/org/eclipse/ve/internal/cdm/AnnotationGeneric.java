@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: AnnotationGeneric.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
  */
  
  import java.lang.String;
@@ -33,7 +33,7 @@ package org.eclipse.ve.internal.cdm;
  * </p>
  *
  * @see org.eclipse.ve.internal.cdm.CDMPackage#getAnnotationGeneric()
- * @model 
+ * @model
  * @generated
  */
 public interface AnnotationGeneric extends Annotation{

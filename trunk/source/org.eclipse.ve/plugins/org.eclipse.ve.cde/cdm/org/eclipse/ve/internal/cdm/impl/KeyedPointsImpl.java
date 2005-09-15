@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: KeyedPointsImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:15 $ 
  */
  
 import java.util.Collection;
@@ -285,4 +285,5 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 		EObject container = eContainer();
 		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
 	}
+
 } //KeyedPointsImpl

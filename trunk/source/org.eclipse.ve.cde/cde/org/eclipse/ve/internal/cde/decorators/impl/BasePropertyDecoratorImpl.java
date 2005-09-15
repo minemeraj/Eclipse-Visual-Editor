@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: BasePropertyDecoratorImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2005-09-13 20:30:53 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -90,13 +90,13 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 */
 	protected String labelProviderClassname = LABEL_PROVIDER_CLASSNAME_EDEFAULT;
 	/**
-	 * This is true if the Label Provider Classname attribute has been set.
+	 * The flag representing whether the Label Provider Classname attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean labelProviderClassnameESet = false;
+	protected static final int LABEL_PROVIDER_CLASSNAME_ESETFLAG = 1 << 8;
 
 	/**
 	 * The default value of the '{@link #getCellEditorClassname() <em>Cell Editor Classname</em>}' attribute.
@@ -118,13 +118,13 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 */
 	protected String cellEditorClassname = CELL_EDITOR_CLASSNAME_EDEFAULT;
 	/**
-	 * This is true if the Cell Editor Classname attribute has been set.
+	 * The flag representing whether the Cell Editor Classname attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean cellEditorClassnameESet = false;
+	protected static final int CELL_EDITOR_CLASSNAME_ESETFLAG = 1 << 9;
 
 	/**
 	 * The default value of the '{@link #isNullInvalid() <em>Null Invalid</em>}' attribute.
@@ -137,23 +137,23 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	protected static final boolean NULL_INVALID_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isNullInvalid() <em>Null Invalid</em>}' attribute.
+	 * The flag representing the value of the '{@link #isNullInvalid() <em>Null Invalid</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isNullInvalid()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean nullInvalid = NULL_INVALID_EDEFAULT;
+	protected static final int NULL_INVALID_EFLAG = 1 << 10;
 
 	/**
-	 * This is true if the Null Invalid attribute has been set.
+	 * The flag representing whether the Null Invalid attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean nullInvalidESet = false;
+	protected static final int NULL_INVALID_ESETFLAG = 1 << 11;
 
 	/**
 	 * The default value of the '{@link #isEntryExpandable() <em>Entry Expandable</em>}' attribute.
@@ -166,23 +166,23 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	protected static final boolean ENTRY_EXPANDABLE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isEntryExpandable() <em>Entry Expandable</em>}' attribute.
+	 * The flag representing the value of the '{@link #isEntryExpandable() <em>Entry Expandable</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isEntryExpandable()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean entryExpandable = ENTRY_EXPANDABLE_EDEFAULT;
+	protected static final int ENTRY_EXPANDABLE_EFLAG = 1 << 12;
 
 	/**
-	 * This is true if the Entry Expandable attribute has been set.
+	 * The flag representing whether the Entry Expandable attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean entryExpandableESet = false;
+	protected static final int ENTRY_EXPANDABLE_ESETFLAG = 1 << 13;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -237,8 +237,8 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	public void setLabelProviderClassnameGen(String newLabelProviderClassname) {
 		String oldLabelProviderClassname = labelProviderClassname;
 		labelProviderClassname = newLabelProviderClassname;
-		boolean oldLabelProviderClassnameESet = labelProviderClassnameESet;
-		labelProviderClassnameESet = true;
+		boolean oldLabelProviderClassnameESet = (eFlags & LABEL_PROVIDER_CLASSNAME_ESETFLAG) != 0;
+		eFlags |= LABEL_PROVIDER_CLASSNAME_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.BASE_PROPERTY_DECORATOR__LABEL_PROVIDER_CLASSNAME, oldLabelProviderClassname, labelProviderClassname, !oldLabelProviderClassnameESet));
 	}
@@ -257,9 +257,9 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 */
 	public void unsetLabelProviderClassnameGen() {
 		String oldLabelProviderClassname = labelProviderClassname;
-		boolean oldLabelProviderClassnameESet = labelProviderClassnameESet;
+		boolean oldLabelProviderClassnameESet = (eFlags & LABEL_PROVIDER_CLASSNAME_ESETFLAG) != 0;
 		labelProviderClassname = LABEL_PROVIDER_CLASSNAME_EDEFAULT;
-		labelProviderClassnameESet = false;
+		eFlags &= ~LABEL_PROVIDER_CLASSNAME_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, DecoratorsPackage.BASE_PROPERTY_DECORATOR__LABEL_PROVIDER_CLASSNAME, oldLabelProviderClassname, LABEL_PROVIDER_CLASSNAME_EDEFAULT, oldLabelProviderClassnameESet));
 	}
@@ -270,7 +270,7 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * @generated
 	 */
 	public boolean isSetLabelProviderClassname() {
-		return labelProviderClassnameESet;
+		return (eFlags & LABEL_PROVIDER_CLASSNAME_ESETFLAG) != 0;
 	}
 
 	/**
@@ -290,8 +290,8 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	public void setCellEditorClassname(String newCellEditorClassname) {
 		String oldCellEditorClassname = cellEditorClassname;
 		cellEditorClassname = newCellEditorClassname;
-		boolean oldCellEditorClassnameESet = cellEditorClassnameESet;
-		cellEditorClassnameESet = true;
+		boolean oldCellEditorClassnameESet = (eFlags & CELL_EDITOR_CLASSNAME_ESETFLAG) != 0;
+		eFlags |= CELL_EDITOR_CLASSNAME_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.BASE_PROPERTY_DECORATOR__CELL_EDITOR_CLASSNAME, oldCellEditorClassname, cellEditorClassname, !oldCellEditorClassnameESet));
 	}
@@ -303,9 +303,9 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 */
 	public void unsetCellEditorClassname() {
 		String oldCellEditorClassname = cellEditorClassname;
-		boolean oldCellEditorClassnameESet = cellEditorClassnameESet;
+		boolean oldCellEditorClassnameESet = (eFlags & CELL_EDITOR_CLASSNAME_ESETFLAG) != 0;
 		cellEditorClassname = CELL_EDITOR_CLASSNAME_EDEFAULT;
-		cellEditorClassnameESet = false;
+		eFlags &= ~CELL_EDITOR_CLASSNAME_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, DecoratorsPackage.BASE_PROPERTY_DECORATOR__CELL_EDITOR_CLASSNAME, oldCellEditorClassname, CELL_EDITOR_CLASSNAME_EDEFAULT, oldCellEditorClassnameESet));
 	}
@@ -316,7 +316,7 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * @generated
 	 */
 	public boolean isSetCellEditorClassname() {
-		return cellEditorClassnameESet;
+		return (eFlags & CELL_EDITOR_CLASSNAME_ESETFLAG) != 0;
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * @generated
 	 */
 	public boolean isNullInvalid() {
-		return nullInvalid;
+		return (eFlags & NULL_INVALID_EFLAG) != 0;
 	}
 
 	/**
@@ -334,12 +334,12 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * @generated
 	 */
 	public void setNullInvalid(boolean newNullInvalid) {
-		boolean oldNullInvalid = nullInvalid;
-		nullInvalid = newNullInvalid;
-		boolean oldNullInvalidESet = nullInvalidESet;
-		nullInvalidESet = true;
+		boolean oldNullInvalid = (eFlags & NULL_INVALID_EFLAG) != 0;
+		if (newNullInvalid) eFlags |= NULL_INVALID_EFLAG; else eFlags &= ~NULL_INVALID_EFLAG;
+		boolean oldNullInvalidESet = (eFlags & NULL_INVALID_ESETFLAG) != 0;
+		eFlags |= NULL_INVALID_ESETFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.BASE_PROPERTY_DECORATOR__NULL_INVALID, oldNullInvalid, nullInvalid, !oldNullInvalidESet));
+			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.BASE_PROPERTY_DECORATOR__NULL_INVALID, oldNullInvalid, newNullInvalid, !oldNullInvalidESet));
 	}
 
 	/**
@@ -348,10 +348,10 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * @generated
 	 */
 	public void unsetNullInvalid() {
-		boolean oldNullInvalid = nullInvalid;
-		boolean oldNullInvalidESet = nullInvalidESet;
-		nullInvalid = NULL_INVALID_EDEFAULT;
-		nullInvalidESet = false;
+		boolean oldNullInvalid = (eFlags & NULL_INVALID_EFLAG) != 0;
+		boolean oldNullInvalidESet = (eFlags & NULL_INVALID_ESETFLAG) != 0;
+		if (NULL_INVALID_EDEFAULT) eFlags |= NULL_INVALID_EFLAG; else eFlags &= ~NULL_INVALID_EFLAG;
+		eFlags &= ~NULL_INVALID_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, DecoratorsPackage.BASE_PROPERTY_DECORATOR__NULL_INVALID, oldNullInvalid, NULL_INVALID_EDEFAULT, oldNullInvalidESet));
 	}
@@ -362,7 +362,7 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * @generated
 	 */
 	public boolean isSetNullInvalid() {
-		return nullInvalidESet;
+		return (eFlags & NULL_INVALID_ESETFLAG) != 0;
 	}
 
 	/**
@@ -371,7 +371,7 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * @generated
 	 */
 	public boolean isEntryExpandable() {
-		return entryExpandable;
+		return (eFlags & ENTRY_EXPANDABLE_EFLAG) != 0;
 	}
 
 	/**
@@ -380,12 +380,12 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * @generated
 	 */
 	public void setEntryExpandable(boolean newEntryExpandable) {
-		boolean oldEntryExpandable = entryExpandable;
-		entryExpandable = newEntryExpandable;
-		boolean oldEntryExpandableESet = entryExpandableESet;
-		entryExpandableESet = true;
+		boolean oldEntryExpandable = (eFlags & ENTRY_EXPANDABLE_EFLAG) != 0;
+		if (newEntryExpandable) eFlags |= ENTRY_EXPANDABLE_EFLAG; else eFlags &= ~ENTRY_EXPANDABLE_EFLAG;
+		boolean oldEntryExpandableESet = (eFlags & ENTRY_EXPANDABLE_ESETFLAG) != 0;
+		eFlags |= ENTRY_EXPANDABLE_ESETFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.BASE_PROPERTY_DECORATOR__ENTRY_EXPANDABLE, oldEntryExpandable, entryExpandable, !oldEntryExpandableESet));
+			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.BASE_PROPERTY_DECORATOR__ENTRY_EXPANDABLE, oldEntryExpandable, newEntryExpandable, !oldEntryExpandableESet));
 	}
 
 	/**
@@ -394,10 +394,10 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * @generated
 	 */
 	public void unsetEntryExpandable() {
-		boolean oldEntryExpandable = entryExpandable;
-		boolean oldEntryExpandableESet = entryExpandableESet;
-		entryExpandable = ENTRY_EXPANDABLE_EDEFAULT;
-		entryExpandableESet = false;
+		boolean oldEntryExpandable = (eFlags & ENTRY_EXPANDABLE_EFLAG) != 0;
+		boolean oldEntryExpandableESet = (eFlags & ENTRY_EXPANDABLE_ESETFLAG) != 0;
+		if (ENTRY_EXPANDABLE_EDEFAULT) eFlags |= ENTRY_EXPANDABLE_EFLAG; else eFlags &= ~ENTRY_EXPANDABLE_EFLAG;
+		eFlags &= ~ENTRY_EXPANDABLE_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, DecoratorsPackage.BASE_PROPERTY_DECORATOR__ENTRY_EXPANDABLE, oldEntryExpandable, ENTRY_EXPANDABLE_EDEFAULT, oldEntryExpandableESet));
 	}
@@ -408,7 +408,7 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * @generated
 	 */
 	public boolean isSetEntryExpandable() {
-		return entryExpandableESet;
+		return (eFlags & ENTRY_EXPANDABLE_ESETFLAG) != 0;
 	}
 
 	/**
@@ -666,13 +666,13 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 		result.append(" (cellEditorValidatorClassnames: ");
 		result.append(cellEditorValidatorClassnames);
 		result.append(", labelProviderClassname: ");
-		if (labelProviderClassnameESet) result.append(labelProviderClassname); else result.append("<unset>");
+		if ((eFlags & LABEL_PROVIDER_CLASSNAME_ESETFLAG) != 0) result.append(labelProviderClassname); else result.append("<unset>");
 		result.append(", cellEditorClassname: ");
-		if (cellEditorClassnameESet) result.append(cellEditorClassname); else result.append("<unset>");
+		if ((eFlags & CELL_EDITOR_CLASSNAME_ESETFLAG) != 0) result.append(cellEditorClassname); else result.append("<unset>");
 		result.append(", nullInvalid: ");
-		if (nullInvalidESet) result.append(nullInvalid); else result.append("<unset>");
+		if ((eFlags & NULL_INVALID_ESETFLAG) != 0) result.append((eFlags & NULL_INVALID_EFLAG) != 0); else result.append("<unset>");
 		result.append(", entryExpandable: ");
-		if (entryExpandableESet) result.append(entryExpandable); else result.append("<unset>");
+		if ((eFlags & ENTRY_EXPANDABLE_ESETFLAG) != 0) result.append((eFlags & ENTRY_EXPANDABLE_EFLAG) != 0); else result.append("<unset>");
 		result.append(')');
 		return result.toString();
 	}

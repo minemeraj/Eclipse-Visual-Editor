@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: CreationToolEntryImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import java.util.Collection;
 
@@ -40,6 +40,7 @@ import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
+
 
 
 import org.eclipse.ve.internal.cdm.model.KeyedValueHolderHelper;
@@ -254,7 +255,7 @@ public abstract class CreationToolEntryImpl extends AbstractToolEntryImpl implem
 			case PalettePackage.CREATION_TOOL_ENTRY__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
 			case PalettePackage.CREATION_TOOL_ENTRY__VISIBLE:
-				return visible != VISIBLE_EDEFAULT;
+				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
 			case PalettePackage.CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
 				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
 			case PalettePackage.CREATION_TOOL_ENTRY__ID:

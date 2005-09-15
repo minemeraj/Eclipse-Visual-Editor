@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: PropertySourceAdapterInformationImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-13 20:30:53 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import java.util.Collection;
 
@@ -67,13 +67,13 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	protected String propertySourceAdapterClassname = PROPERTY_SOURCE_ADAPTER_CLASSNAME_EDEFAULT;
 	
 	/**
-	 * This is true if the Property Source Adapter Classname attribute has been set.
+	 * The flag representing whether the Property Source Adapter Classname attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean propertySourceAdapterClassnameESet = false;
+	protected static final int PROPERTY_SOURCE_ADAPTER_CLASSNAME_ESETFLAG = 1 << 8;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -110,8 +110,8 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	public void setPropertySourceAdapterClassname(String newPropertySourceAdapterClassname) {
 		String oldPropertySourceAdapterClassname = propertySourceAdapterClassname;
 		propertySourceAdapterClassname = newPropertySourceAdapterClassname;
-		boolean oldPropertySourceAdapterClassnameESet = propertySourceAdapterClassnameESet;
-		propertySourceAdapterClassnameESet = true;
+		boolean oldPropertySourceAdapterClassnameESet = (eFlags & PROPERTY_SOURCE_ADAPTER_CLASSNAME_ESETFLAG) != 0;
+		eFlags |= PROPERTY_SOURCE_ADAPTER_CLASSNAME_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_SOURCE_ADAPTER_INFORMATION__PROPERTY_SOURCE_ADAPTER_CLASSNAME, oldPropertySourceAdapterClassname, propertySourceAdapterClassname, !oldPropertySourceAdapterClassnameESet));
 	}
@@ -123,9 +123,9 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	 */
 	public void unsetPropertySourceAdapterClassname() {
 		String oldPropertySourceAdapterClassname = propertySourceAdapterClassname;
-		boolean oldPropertySourceAdapterClassnameESet = propertySourceAdapterClassnameESet;
+		boolean oldPropertySourceAdapterClassnameESet = (eFlags & PROPERTY_SOURCE_ADAPTER_CLASSNAME_ESETFLAG) != 0;
 		propertySourceAdapterClassname = PROPERTY_SOURCE_ADAPTER_CLASSNAME_EDEFAULT;
-		propertySourceAdapterClassnameESet = false;
+		eFlags &= ~PROPERTY_SOURCE_ADAPTER_CLASSNAME_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, DecoratorsPackage.PROPERTY_SOURCE_ADAPTER_INFORMATION__PROPERTY_SOURCE_ADAPTER_CLASSNAME, oldPropertySourceAdapterClassname, PROPERTY_SOURCE_ADAPTER_CLASSNAME_EDEFAULT, oldPropertySourceAdapterClassnameESet));
 	}
@@ -136,7 +136,7 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	 * @generated
 	 */
 	public boolean isSetPropertySourceAdapterClassname() {
-		return propertySourceAdapterClassnameESet;
+		return (eFlags & PROPERTY_SOURCE_ADAPTER_CLASSNAME_ESETFLAG) != 0;
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
-	
+
 	/*
 	 * Called by overrides to eIsSet to test if source is set. This is because for the 
 	 * FeatureDecorator and subclasses, setting source to the classname is considered
@@ -351,7 +351,7 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (propertySourceAdapterClassname: ");
-		if (propertySourceAdapterClassnameESet) result.append(propertySourceAdapterClassname); else result.append("<unset>");
+		if ((eFlags & PROPERTY_SOURCE_ADAPTER_CLASSNAME_ESETFLAG) != 0) result.append(propertySourceAdapterClassname); else result.append("<unset>");
 		result.append(')');
 		return result.toString();
 	}

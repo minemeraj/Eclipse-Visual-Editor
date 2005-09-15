@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: PropertyDescriptorDecorator.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:15 $ 
  */
 
 /**
@@ -105,7 +105,7 @@ public interface PropertyDescriptorDecorator extends FeatureDescriptorDecorator,
 	 * @return the value of the '<em>Always Incompatible</em>' attribute.
 	 * @see #setAlwaysIncompatible(boolean)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getPropertyDescriptorDecorator_AlwaysIncompatible()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	boolean isAlwaysIncompatible();
