@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: LinkType.java,v 1.2 2005-02-15 23:23:55 sgunturi Exp $
+ * $Id: LinkType.java,v 1.3 2005-09-15 21:33:50 rkulp Exp $
  */
 package org.eclipse.ve.internal.jcm;
 /*******************************************************************************
@@ -39,8 +39,11 @@ public final class LinkType extends AbstractEnumerator {
 	 * The '<em><b>NORMAL</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * <p>This is a normal linkage (which is the default). When a source object is being deleted and a target object is pointed to through a feature listed as NORMAL, then this target object will be deleted if there are no other references to it.
+	 * <!-- end-model-doc -->
 	 * @see #NORMAL_LITERAL
-	 * @model 
+	 * @model
 	 * @generated
 	 * @ordered
 	 */
@@ -50,8 +53,13 @@ public final class LinkType extends AbstractEnumerator {
 	 * The '<em><b>CHILD</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * <p>This is a child linkage. When a source object is being deleted and there is a target object pointed to through a CHILD linkage, then the target object will be deleted except if there are any other CHILD references to the target.
+	 * <p>
+	 * A child reference basically means that the target is a child of the source and if the source goes away you want the target to go away.
+	 * <!-- end-model-doc -->
 	 * @see #CHILD_LITERAL
-	 * @model 
+	 * @model
 	 * @generated
 	 * @ordered
 	 */
@@ -61,8 +69,15 @@ public final class LinkType extends AbstractEnumerator {
 	 * The '<em><b>DEPENDENCY</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * <p>This is a dependency linkage. This is slightly reversed from NORMAL and CHILD in that it comes into effect only from the target side instead of the source side.
+	 * <p>
+	 * So, when a target is being deleted, it will look at all references to it and for any that are marked as dependency the source object will be investigated. If the source object has no child references to it, then the source object will be deleted too.
+	 * <p>
+	 * That is what dependency means. It means the source depends on the target and if the target goes away the source should go away, except if it is being held on to by a strong link such as a CHILD link.
+	 * <!-- end-model-doc -->
 	 * @see #DEPENDENCY_LITERAL
-	 * @model 
+	 * @model
 	 * @generated
 	 * @ordered
 	 */
@@ -72,9 +87,6 @@ public final class LinkType extends AbstractEnumerator {
 	 * The '<em><b>NORMAL</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * <p>This is a normal linkage (which is the default). When a source object is being deleted and a target object is pointed to through a feature listed as NORMAL, then this target object will be deleted if there are no other references to it.
-	 * <!-- end-model-doc -->
 	 * @see #NORMAL
 	 * @generated
 	 * @ordered
@@ -85,11 +97,6 @@ public final class LinkType extends AbstractEnumerator {
 	 * The '<em><b>CHILD</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * <p>This is a child linkage. When a source object is being deleted and there is a target object pointed to through a CHILD linkage, then the target object will be deleted except if there are any other CHILD references to the target.
-	 * <p>
-	 * A child reference basically means that the target is a child of the source and if the source goes away you want the target to go away.
-	 * <!-- end-model-doc -->
 	 * @see #CHILD
 	 * @generated
 	 * @ordered
@@ -100,13 +107,6 @@ public final class LinkType extends AbstractEnumerator {
 	 * The '<em><b>DEPENDENCY</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * <p>This is a dependency linkage. This is slightly reversed from NORMAL and CHILD in that it comes into effect only from the target side instead of the source side.
-	 * <p>
-	 * So, when a target is being deleted, it will look at all references to it and for any that are marked as dependency the source object will be investigated. If the source object has no child references to it, then the source object will be deleted too.
-	 * <p>
-	 * That is what dependency means. It means the source depends on the target and if the target goes away the source should go away, except if it is being held on to by a strong link such as a CHILD link.
-	 * <!-- end-model-doc -->
 	 * @see #DEPENDENCY
 	 * @generated
 	 * @ordered

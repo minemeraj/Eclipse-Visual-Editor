@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: Listener.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.3 $  $Date: 2005-09-15 21:33:50 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -38,7 +38,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getListener()
- * @model 
+ * @model
  * @generated
  */
 public interface Listener extends EObject{

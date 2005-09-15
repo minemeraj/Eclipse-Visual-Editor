@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: BeanComposition.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-15 21:33:50 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -32,7 +32,7 @@ import org.eclipse.ve.internal.cdm.DiagramData;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanComposition()
- * @model 
+ * @model
  * @generated
  */
 public interface BeanComposition extends DiagramData, MemberContainer{

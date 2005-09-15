@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: JCMPackage.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-15 21:33:50 $ 
  */
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.EcorePackage;
  * </ul>
  * <!-- end-user-doc -->
  * @see org.eclipse.ve.internal.jcm.JCMFactory
+ * @model kind="package"
  * @generated
  */
 public interface JCMPackage extends EPackage{
@@ -1330,7 +1331,8 @@ public interface JCMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Keyed Instance Location</em>'.
 	 * @see java.util.Map.Entry
-	 * @model keyType="java.lang.String" valueType="org.eclipse.ve.internal.jcm.InstanceLocation" 
+	 * @model keyType="java.lang.String"
+	 *        valueType="org.eclipse.ve.internal.jcm.InstanceLocation"
 	 * @generated
 	 */
 	EClass getKeyedInstanceLocation();
@@ -1384,7 +1386,8 @@ public interface JCMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Names To Beans</em>'.
 	 * @see java.util.Map.Entry
-	 * @model keyType="java.lang.String" valueType="org.eclipse.emf.ecore.EObject" 
+	 * @model keyType="java.lang.String"
+	 *        valueType="org.eclipse.emf.ecore.EObject"
 	 * @generated
 	 */
 	EClass getNamesToBeans();

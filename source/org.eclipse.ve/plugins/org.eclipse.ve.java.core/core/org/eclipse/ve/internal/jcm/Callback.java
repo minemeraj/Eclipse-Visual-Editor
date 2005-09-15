@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: Callback.java,v $
- *  $Revision: 1.4 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-15 21:33:50 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -41,7 +41,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getCallback()
- * @model 
+ * @model
  * @generated
  */
 public interface Callback extends EObject{
@@ -56,7 +56,7 @@ public interface Callback extends EObject{
 	 * @return the value of the '<em>Shared Scope</em>' attribute.
 	 * @see #setSharedScope(boolean)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getCallback_SharedScope()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	boolean isSharedScope();

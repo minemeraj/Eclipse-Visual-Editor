@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyEvent.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.3 $  $Date: 2005-09-15 21:33:50 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -37,10 +37,10 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getPropertyEvent()
- * @model 
+ * @model
  * @generated
  */
-public interface PropertyEvent extends EObject {
+public interface PropertyEvent extends EObject{
 	/**
 	 * Returns the value of the '<em><b>Property Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -52,7 +52,7 @@ public interface PropertyEvent extends EObject {
 	 * @return the value of the '<em>Property Name</em>' attribute.
 	 * @see #setPropertyName(String)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getPropertyEvent_PropertyName()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getPropertyName();
@@ -78,7 +78,7 @@ public interface PropertyEvent extends EObject {
 	 * @return the value of the '<em>Use If Expression</em>' attribute.
 	 * @see #setUseIfExpression(boolean)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getPropertyEvent_UseIfExpression()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	boolean isUseIfExpression();

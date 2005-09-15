@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocation.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.3 $  $Date: 2005-09-15 21:33:50 $ 
  */
 
 import org.eclipse.jem.internal.beaninfo.BeanEvent;
@@ -36,10 +36,10 @@ import org.eclipse.jem.internal.beaninfo.BeanEvent;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getEventInvocation()
- * @model 
+ * @model
  * @generated
  */
-public interface EventInvocation extends AbstractEventInvocation {
+public interface EventInvocation extends AbstractEventInvocation{
 	/**
 	 * Returns the value of the '<em><b>Event</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -51,7 +51,7 @@ public interface EventInvocation extends AbstractEventInvocation {
 	 * @return the value of the '<em>Event</em>' reference.
 	 * @see #setEvent(BeanEvent)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getEventInvocation_Event()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	BeanEvent getEvent();

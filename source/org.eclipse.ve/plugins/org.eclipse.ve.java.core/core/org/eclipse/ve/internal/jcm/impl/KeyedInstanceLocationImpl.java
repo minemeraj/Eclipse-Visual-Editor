@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: KeyedInstanceLocationImpl.java,v 1.2 2005-02-15 23:23:54 sgunturi Exp $
+ * $Id: KeyedInstanceLocationImpl.java,v 1.3 2005-09-15 21:33:49 rkulp Exp $
  */
 package org.eclipse.ve.internal.jcm.impl;
 /*******************************************************************************
@@ -303,4 +303,5 @@ public class KeyedInstanceLocationImpl extends EObjectImpl implements BasicEMap.
 		EObject container = eContainer();
 		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
 	}
+
 } //KeyedInstanceLocationImpl

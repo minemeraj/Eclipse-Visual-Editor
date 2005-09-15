@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: ListenerType.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:55 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-15 21:33:50 $ 
  */
 
 import org.eclipse.jem.java.JavaClass;
@@ -43,7 +43,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getListenerType()
- * @model 
+ * @model
  * @generated
  */
 public interface ListenerType extends EObject{
@@ -61,7 +61,7 @@ public interface ListenerType extends EObject{
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getListenerType_Name()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getName();
@@ -90,7 +90,7 @@ public interface ListenerType extends EObject{
 	 * @return the value of the '<em>This Part</em>' attribute.
 	 * @see #setThisPart(boolean)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getListenerType_ThisPart()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	boolean isThisPart();
@@ -116,7 +116,7 @@ public interface ListenerType extends EObject{
 	 * @return the value of the '<em>Extends</em>' reference.
 	 * @see #setExtends(JavaClass)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getListenerType_Extends()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	JavaClass getExtends();
@@ -158,7 +158,7 @@ public interface ListenerType extends EObject{
 	 * @return the value of the '<em>Is</em>' reference.
 	 * @see #setIs(JavaClass)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getListenerType_Is()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	JavaClass getIs();

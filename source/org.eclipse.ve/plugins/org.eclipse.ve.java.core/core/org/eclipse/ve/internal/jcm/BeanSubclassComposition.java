@@ -35,7 +35,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getBeanSubclassComposition()
- * @model 
+ * @model
  * @generated
  */
 public interface BeanSubclassComposition extends BeanComposition{

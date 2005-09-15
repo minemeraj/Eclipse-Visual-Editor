@@ -36,10 +36,10 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.ve.internal.jcm.JCMPackage#getJCMMethod()
- * @model 
+ * @model
  * @generated
  */
-public interface JCMMethod extends MemberContainer {
+public interface JCMMethod extends MemberContainer{
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -51,7 +51,7 @@ public interface JCMMethod extends MemberContainer {
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getJCMMethod_Name()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getName();
@@ -93,7 +93,7 @@ public interface JCMMethod extends MemberContainer {
 	 * @return the value of the '<em>Return</em>' reference.
 	 * @see #setReturn(EObject)
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getJCMMethod_Return()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	EObject getReturn();
