@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility;
 /*
  *  $RCSfile: TranslatableString.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-15 21:27:15 $ 
  */
 
 import java.lang.String;
@@ -30,10 +30,10 @@ import java.lang.String;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getTranslatableString()
- * @model 
+ * @model
  * @generated
  */
-public interface TranslatableString extends AbstractString {
+public interface TranslatableString extends AbstractString{
 
 
 	/**
@@ -47,7 +47,7 @@ public interface TranslatableString extends AbstractString {
 	 * @return the value of the '<em>Key</em>' attribute.
 	 * @see #setKey(String)
 	 * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getTranslatableString_Key()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getKey();
@@ -73,7 +73,7 @@ public interface TranslatableString extends AbstractString {
 	 * @return the value of the '<em>Bundle</em>' reference.
 	 * @see #setBundle(ResourceBundle)
 	 * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getTranslatableString_Bundle()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	ResourceBundle getBundle();

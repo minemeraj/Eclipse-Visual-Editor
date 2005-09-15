@@ -11,8 +11,10 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: URLResourceBundleImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-15 21:27:16 $ 
  */
+import java.util.Collection;
+
 import java.net.*;
 import java.util.*;
 

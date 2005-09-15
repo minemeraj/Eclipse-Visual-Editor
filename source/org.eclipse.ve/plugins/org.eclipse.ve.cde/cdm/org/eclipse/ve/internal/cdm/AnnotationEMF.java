@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: AnnotationEMF.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
  */
 
 
@@ -34,7 +34,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.ve.internal.cdm.CDMPackage#getAnnotationEMF()
- * @model 
+ * @model
  * @generated
  */
 public interface AnnotationEMF extends Annotation{
@@ -74,7 +74,7 @@ public interface AnnotationEMF extends Annotation{
 	 * @return the value of the '<em>Annotates</em>' reference.
 	 * @see #setAnnotates(EObject)
 	 * @see org.eclipse.ve.internal.cdm.CDMPackage#getAnnotationEMF_Annotates()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	EObject getAnnotates();

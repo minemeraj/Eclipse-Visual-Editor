@@ -11,19 +11,30 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: PaletteCmpImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.common.util.*;
-import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.ve.internal.cde.palette.*;
+import org.eclipse.ve.internal.cde.palette.AbstractToolEntry;
+import org.eclipse.ve.internal.cde.palette.Category;
+import org.eclipse.ve.internal.cde.palette.Group;
+import org.eclipse.ve.internal.cde.palette.PaletteCmp;
+import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.Permissions;
+
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 /**
@@ -250,7 +261,7 @@ public class PaletteCmpImpl extends RootImpl implements PaletteCmp {
 			case PalettePackage.PALETTE_CMP__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
 			case PalettePackage.PALETTE_CMP__VISIBLE:
-				return visible != VISIBLE_EDEFAULT;
+				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
 			case PalettePackage.PALETTE_CMP__DEFAULT_ENTRY:
 				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
 			case PalettePackage.PALETTE_CMP__ID:

@@ -54,6 +54,26 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	/**
+	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypedKey()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String KEY_EDEFAULT = null;
+
+	/**
+	 * The default value of the '{@link #getTypedValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypedValue()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Object VALUE_EDEFAULT = null;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -175,7 +195,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	public void eUnset(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case CDMPackage.KEYED_DYNAMIC__KEY:
-				setTypedKey((String)null);
+				setTypedKey(KEY_EDEFAULT);
 				return;
 			case CDMPackage.KEYED_DYNAMIC__VALUE:
 				unsetTypedValue();
@@ -192,7 +212,7 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 	public boolean eIsSet(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case CDMPackage.KEYED_DYNAMIC__KEY:
-				return getTypedKey() != null;
+				return KEY_EDEFAULT == null ? getTypedKey() != null : !KEY_EDEFAULT.equals(getTypedKey());
 			case CDMPackage.KEYED_DYNAMIC__VALUE:
 				return isSetTypedValue();
 		}
@@ -275,4 +295,5 @@ public class KeyedDynamicImpl extends EObjectImpl implements BasicEMap.Entry {
 		EObject container = eContainer();
 		return container == null ? null : (EMap)container.eGet(eContainmentFeature());
 	}
+
 } //KeyedDynamicImpl

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility;
 /*
  *  $RCSfile: URLResourceBundle.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:15 $ 
  */
 
 
@@ -59,7 +59,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getURLResourceBundle()
- * @model 
+ * @model
  * @generated
  */
 public interface URLResourceBundle extends ResourceBundle{
@@ -76,7 +76,7 @@ public interface URLResourceBundle extends ResourceBundle{
 	 * @return the value of the '<em>Bundle Name</em>' attribute.
 	 * @see #setBundleName(String)
 	 * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getURLResourceBundle_BundleName()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getBundleName();

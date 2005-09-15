@@ -11,8 +11,10 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: CategoryCmpImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-15 21:27:15 $ 
  */
+import java.util.Collection;
+
 import java.util.*;
 
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -272,7 +274,7 @@ public class CategoryCmpImpl extends CategoryImpl implements CategoryCmp {
 			case PalettePackage.CATEGORY_CMP__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
 			case PalettePackage.CATEGORY_CMP__VISIBLE:
-				return visible != VISIBLE_EDEFAULT;
+				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
 			case PalettePackage.CATEGORY_CMP__DEFAULT_ENTRY:
 				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
 			case PalettePackage.CATEGORY_CMP__ID:

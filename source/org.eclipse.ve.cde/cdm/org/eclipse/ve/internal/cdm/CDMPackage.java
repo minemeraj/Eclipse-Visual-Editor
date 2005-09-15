@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: CDMPackage.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
  */
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.EReference;
  * </ul>
  * <!-- end-user-doc -->
  * @see org.eclipse.ve.internal.cdm.CDMFactory
+ * @model kind="package"
  * @generated
  */
 public interface CDMPackage extends EPackage{
@@ -926,7 +927,9 @@ public interface CDMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Keyed Location</em>'.
 	 * @see java.util.Map.Entry
-	 * @model features="value key" valueType="org.eclipse.ve.internal.cdm.model.Point" valueDataType="org.eclipse.ve.internal.cdm.ViewPoint" keyType="java.lang.String" 
+	 * @model features="value key" 
+	 *        valueType="org.eclipse.ve.internal.cdm.model.Point" valueDataType="org.eclipse.ve.internal.cdm.ViewPoint"
+	 *        keyType="java.lang.String"
 	 * @generated
 	 */
 	EClass getKeyedLocation();
@@ -959,7 +962,9 @@ public interface CDMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Keyed Size</em>'.
 	 * @see java.util.Map.Entry
-	 * @model features="value key" valueType="org.eclipse.ve.internal.cdm.model.Dimension" valueDataType="org.eclipse.ve.internal.cdm.ViewDimension" keyType="java.lang.String" 
+	 * @model features="value key" 
+	 *        valueType="org.eclipse.ve.internal.cdm.model.Dimension" valueDataType="org.eclipse.ve.internal.cdm.ViewDimension"
+	 *        keyType="java.lang.String"
 	 * @generated
 	 */
 	EClass getKeyedSize();
@@ -992,7 +997,9 @@ public interface CDMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Keyed Constraint</em>'.
 	 * @see java.util.Map.Entry
-	 * @model features="value key" valueType="org.eclipse.ve.internal.cdm.model.Rectangle" valueDataType="org.eclipse.ve.internal.cdm.ViewRectangle" keyType="java.lang.String" 
+	 * @model features="value key" 
+	 *        valueType="org.eclipse.ve.internal.cdm.model.Rectangle" valueDataType="org.eclipse.ve.internal.cdm.ViewRectangle"
+	 *        keyType="java.lang.String"
 	 * @generated
 	 */
 	EClass getKeyedConstraint();
@@ -1046,7 +1053,9 @@ public interface CDMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Keyed Points</em>'.
 	 * @see java.util.Map.Entry
-	 * @model features="value key" valueType="org.eclipse.ve.internal.cdm.model.Point" valueDataType="org.eclipse.ve.internal.cdm.ViewPoint" valueMany="true" keyType="java.lang.String" 
+	 * @model features="value key" 
+	 *        valueType="org.eclipse.ve.internal.cdm.model.Point" valueDataType="org.eclipse.ve.internal.cdm.ViewPoint" valueMany="true"
+	 *        keyType="java.lang.String"
 	 * @generated
 	 */
 	EClass getKeyedPoints();
@@ -1166,7 +1175,8 @@ public interface CDMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Keyed Generic</em>'.
 	 * @see java.util.Map.Entry
-	 * @model keyType="java.lang.String" valueType="org.eclipse.emf.ecore.EObject" valueContainment="true" 
+	 * @model keyType="java.lang.String"
+	 *        valueType="org.eclipse.emf.ecore.EObject" valueContainment="true"
 	 * @generated
 	 */
 	EClass getKeyedGeneric();
@@ -1199,7 +1209,9 @@ public interface CDMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Keyed Integer</em>'.
 	 * @see java.util.Map.Entry
-	 * @model features="value key" valueType="int" keyType="java.lang.String" 
+	 * @model features="value key" 
+	 *        valueType="int"
+	 *        keyType="java.lang.String"
 	 * @generated
 	 */
 	EClass getKeyedInteger();
@@ -1232,7 +1244,8 @@ public interface CDMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Map Entry</em>'.
 	 * @see java.util.Map.Entry
-	 * @model keyType="java.lang.String" valueType="java.lang.String" 
+	 * @model keyType="java.lang.String"
+	 *        valueType="java.lang.String"
 	 * @generated
 	 */
 	EClass getMapEntry();
@@ -1265,7 +1278,8 @@ public interface CDMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Keyed Dynamic</em>'.
 	 * @see java.util.Map.Entry
-	 * @model keyType="java.lang.String" keyTransient="true" keyVolatile="true" valueType="java.lang.Object" valueUnsettable="true" valueTransient="true" valueVolatile="true" 
+	 * @model keyType="java.lang.String" keyTransient="true" keyVolatile="true"
+	 *        valueType="java.lang.Object" valueUnsettable="true" valueTransient="true" valueVolatile="true"
 	 * @generated
 	 */
 	EClass getKeyedDynamic();
@@ -1298,7 +1312,8 @@ public interface CDMPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Keyed Boolean</em>'.
 	 * @see java.util.Map.Entry
-	 * @model keyType="java.lang.String" valueType="boolean" 
+	 * @model keyType="java.lang.String"
+	 *        valueType="boolean"
 	 * @generated
 	 */
 	EClass getKeyedBoolean();

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: FeatureDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2005-09-13 20:30:53 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import java.util.Collection;
 import java.util.Iterator;
@@ -67,14 +67,15 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 
 	
 	/**
-	 * The cached value of the '{@link #isHidden() <em>Hidden</em>}' attribute.
+	 * The flag representing the value of the '{@link #isHidden() <em>Hidden</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isHidden()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean hidden = HIDDEN_EDEFAULT;
+	protected static final int HIDDEN_EFLAG = 1 << 8;
+
 	/**
 	 * The cached value of the '{@link #getHelpContextIdsString() <em>Help Context Ids String</em>}' attribute list.
 	 * <!-- begin-user-doc -->
@@ -95,14 +96,15 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	protected static final boolean PREFERRED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isPreferred() <em>Preferred</em>}' attribute.
+	 * The flag representing the value of the '{@link #isPreferred() <em>Preferred</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isPreferred()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean preferred = PREFERRED_EDEFAULT;
+	protected static final int PREFERRED_EFLAG = 1 << 9;
+
 	/**
 	 * The cached value of the '{@link #getCategoryString() <em>Category String</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -272,7 +274,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * @generated
 	 */
 	public boolean isHidden() {
-		return hidden;
+		return (eFlags & HIDDEN_EFLAG) != 0;
 	}
 
 	/**
@@ -281,10 +283,10 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * @generated
 	 */
 	public void setHidden(boolean newHidden) {
-		boolean oldHidden = hidden;
-		hidden = newHidden;
+		boolean oldHidden = (eFlags & HIDDEN_EFLAG) != 0;
+		if (newHidden) eFlags |= HIDDEN_EFLAG; else eFlags &= ~HIDDEN_EFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__HIDDEN, oldHidden, hidden));
+			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__HIDDEN, oldHidden, newHidden));
 	}
 
 	/**
@@ -305,7 +307,7 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * @generated
 	 */
 	public boolean isPreferred() {
-		return preferred;
+		return (eFlags & PREFERRED_EFLAG) != 0;
 	}
 
 	/**
@@ -314,10 +316,10 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	 * @generated
 	 */
 	public void setPreferred(boolean newPreferred) {
-		boolean oldPreferred = preferred;
-		preferred = newPreferred;
+		boolean oldPreferred = (eFlags & PREFERRED_EFLAG) != 0;
+		if (newPreferred) eFlags |= PREFERRED_EFLAG; else eFlags &= ~PREFERRED_EFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__PREFERRED, oldPreferred, preferred));
+			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__PREFERRED, oldPreferred, newPreferred));
 	}
 
 	/**
@@ -411,11 +413,11 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__REFERENCES:
 				return references != null && !references.isEmpty();
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__HIDDEN:
-				return hidden != HIDDEN_EDEFAULT;
+				return ((eFlags & HIDDEN_EFLAG) != 0) != HIDDEN_EDEFAULT;
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
 				return helpContextIdsString != null && !helpContextIdsString.isEmpty();
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__PREFERRED:
-				return preferred != PREFERRED_EDEFAULT;
+				return ((eFlags & PREFERRED_EFLAG) != 0) != PREFERRED_EDEFAULT;
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__CATEGORY_STRING:
 				return categoryString != null;
 			case DecoratorsPackage.FEATURE_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:
@@ -544,11 +546,11 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (hidden: ");
-		result.append(hidden);
+		result.append((eFlags & HIDDEN_EFLAG) != 0);
 		result.append(", helpContextIdsString: ");
 		result.append(helpContextIdsString);
 		result.append(", preferred: ");
-		result.append(preferred);
+		result.append((eFlags & PREFERRED_EFLAG) != 0);
 		result.append(')');
 		return result.toString();
 	}

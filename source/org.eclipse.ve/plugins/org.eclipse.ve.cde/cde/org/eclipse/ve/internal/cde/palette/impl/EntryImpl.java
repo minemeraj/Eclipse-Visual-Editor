@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: EntryImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,9 +20,17 @@ import java.util.Map;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.ve.internal.cde.palette.Entry;
+import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.Permissions;
+
 import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.jface.resource.ImageDescriptor;
 
@@ -104,14 +112,14 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	protected static final boolean VISIBLE_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isVisible() <em>Visible</em>}' attribute.
+	 * The flag representing the value of the '{@link #isVisible() <em>Visible</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isVisible()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean visible = VISIBLE_EDEFAULT;
+	protected static final int VISIBLE_EFLAG = 1 << 8;
 
 	/**
 	 * The default value of the '{@link #isDefaultEntry() <em>Default Entry</em>}' attribute.
@@ -189,6 +197,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 */	
 	protected EntryImpl() {
 		super();
+		eFlags |= VISIBLE_EFLAG;
 	}
 
 	/**
@@ -426,7 +435,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 			case PalettePackage.ENTRY__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
 			case PalettePackage.ENTRY__VISIBLE:
-				return visible != VISIBLE_EDEFAULT;
+				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
 			case PalettePackage.ENTRY__DEFAULT_ENTRY:
 				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
 			case PalettePackage.ENTRY__ID:
@@ -525,7 +534,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 		result.append(", icon32Name: ");
 		result.append(icon32Name);
 		result.append(", visible: ");
-		result.append(visible);
+		result.append((eFlags & VISIBLE_EFLAG) != 0);
 		result.append(", id: ");
 		result.append(id);
 		result.append(", modification: ");
@@ -564,7 +573,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * @generated
 	 */
 	public boolean isVisible() {
-		return visible;
+		return (eFlags & VISIBLE_EFLAG) != 0;
 	}
 
 	/**
@@ -573,10 +582,10 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * @generated
 	 */
 	public void setVisible(boolean newVisible) {
-		boolean oldVisible = visible;
-		visible = newVisible;
+		boolean oldVisible = (eFlags & VISIBLE_EFLAG) != 0;
+		if (newVisible) eFlags |= VISIBLE_EFLAG; else eFlags &= ~VISIBLE_EFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__VISIBLE, oldVisible, visible));
+			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__VISIBLE, oldVisible, newVisible));
 	}
 
 	/**

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: ClassDescriptorDecorator.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.TreeEditPart;
@@ -42,7 +42,7 @@ import org.eclipse.ve.internal.cdm.KeyedValueHolder;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator()
- * @model 
+ * @model
  * @generated
  */
 public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, KeyedValueHolder{
@@ -62,7 +62,7 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * @return the value of the '<em>Customizer Classname</em>' attribute.
 	 * @see #setCustomizerClassname(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_CustomizerClassname()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
   String getCustomizerClassname();
@@ -93,7 +93,7 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * @return the value of the '<em>Tree View Classname</em>' attribute.
 	 * @see #setTreeViewClassname(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_TreeViewClassname()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
   String getTreeViewClassname();
@@ -124,7 +124,7 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * @return the value of the '<em>Graph View Classname</em>' attribute.
 	 * @see #setGraphViewClassname(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_GraphViewClassname()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
   String getGraphViewClassname();
@@ -155,7 +155,7 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * @return the value of the '<em>Model Adapter Classname</em>' attribute.
 	 * @see #setModelAdapterClassname(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_ModelAdapterClassname()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
   String getModelAdapterClassname();
@@ -184,7 +184,7 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * @return the value of the '<em>Default Palette</em>' attribute.
 	 * @see #setDefaultPalette(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_DefaultPalette()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
   String getDefaultPalette();
@@ -215,7 +215,7 @@ public interface ClassDescriptorDecorator extends FeatureDescriptorDecorator, Ke
 	 * @return the value of the '<em>Label Provider Classname</em>' attribute.
 	 * @see #setLabelProviderClassname(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getClassDescriptorDecorator_LabelProviderClassname()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
   String getLabelProviderClassname();

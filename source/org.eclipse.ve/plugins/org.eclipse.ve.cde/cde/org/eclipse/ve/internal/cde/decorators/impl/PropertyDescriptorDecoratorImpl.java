@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: PropertyDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2005-09-13 20:30:53 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -95,13 +95,13 @@ public class PropertyDescriptorDecoratorImpl
 	protected String labelProviderClassname = LABEL_PROVIDER_CLASSNAME_EDEFAULT;
 
 	/**
-	 * This is true if the Label Provider Classname attribute has been set.
+	 * The flag representing whether the Label Provider Classname attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean labelProviderClassnameESet = false;
+	protected static final int LABEL_PROVIDER_CLASSNAME_ESETFLAG = 1 << 10;
 
 	/**
 	 * The default value of the '{@link #getCellEditorClassname() <em>Cell Editor Classname</em>}' attribute.
@@ -124,13 +124,13 @@ public class PropertyDescriptorDecoratorImpl
 	protected String cellEditorClassname = CELL_EDITOR_CLASSNAME_EDEFAULT;
 
 	/**
-	 * This is true if the Cell Editor Classname attribute has been set.
+	 * The flag representing whether the Cell Editor Classname attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean cellEditorClassnameESet = false;
+	protected static final int CELL_EDITOR_CLASSNAME_ESETFLAG = 1 << 11;
 
 	/**
 	 * The default value of the '{@link #isNullInvalid() <em>Null Invalid</em>}' attribute.
@@ -143,23 +143,23 @@ public class PropertyDescriptorDecoratorImpl
 	protected static final boolean NULL_INVALID_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isNullInvalid() <em>Null Invalid</em>}' attribute.
+	 * The flag representing the value of the '{@link #isNullInvalid() <em>Null Invalid</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isNullInvalid()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean nullInvalid = NULL_INVALID_EDEFAULT;
+	protected static final int NULL_INVALID_EFLAG = 1 << 12;
 
 	/**
-	 * This is true if the Null Invalid attribute has been set.
+	 * The flag representing whether the Null Invalid attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean nullInvalidESet = false;
+	protected static final int NULL_INVALID_ESETFLAG = 1 << 13;
 
 	/**
 	 * The default value of the '{@link #isEntryExpandable() <em>Entry Expandable</em>}' attribute.
@@ -172,23 +172,23 @@ public class PropertyDescriptorDecoratorImpl
 	protected static final boolean ENTRY_EXPANDABLE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isEntryExpandable() <em>Entry Expandable</em>}' attribute.
+	 * The flag representing the value of the '{@link #isEntryExpandable() <em>Entry Expandable</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isEntryExpandable()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean entryExpandable = ENTRY_EXPANDABLE_EDEFAULT;
+	protected static final int ENTRY_EXPANDABLE_EFLAG = 1 << 14;
 
 	/**
-	 * This is true if the Entry Expandable attribute has been set.
+	 * The flag representing whether the Entry Expandable attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean entryExpandableESet = false;
+	protected static final int ENTRY_EXPANDABLE_ESETFLAG = 1 << 15;
 
 	/**
 	 * The default value of the '{@link #isDesigntimeProperty() <em>Designtime Property</em>}' attribute.
@@ -202,22 +202,23 @@ public class PropertyDescriptorDecoratorImpl
 
 	
 	/**
-	 * The cached value of the '{@link #isDesigntimeProperty() <em>Designtime Property</em>}' attribute.
+	 * The flag representing the value of the '{@link #isDesigntimeProperty() <em>Designtime Property</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isDesigntimeProperty()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean designtimeProperty = DESIGNTIME_PROPERTY_EDEFAULT;
+	protected static final int DESIGNTIME_PROPERTY_EFLAG = 1 << 16;
+
 	/**
-	 * This is true if the Designtime Property attribute has been set.
+	 * The flag representing whether the Designtime Property attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean designtimePropertyESet = false;
+	protected static final int DESIGNTIME_PROPERTY_ESETFLAG = 1 << 17;
 
 	/**
 	 * The default value of the '{@link #isAlwaysIncompatible() <em>Always Incompatible</em>}' attribute.
@@ -230,14 +231,14 @@ public class PropertyDescriptorDecoratorImpl
 	protected static final boolean ALWAYS_INCOMPATIBLE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isAlwaysIncompatible() <em>Always Incompatible</em>}' attribute.
+	 * The flag representing the value of the '{@link #isAlwaysIncompatible() <em>Always Incompatible</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isAlwaysIncompatible()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean alwaysIncompatible = ALWAYS_INCOMPATIBLE_EDEFAULT;
+	protected static final int ALWAYS_INCOMPATIBLE_EFLAG = 1 << 18;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -267,7 +268,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public boolean isDesigntimeProperty() {
-		return designtimeProperty;
+		return (eFlags & DESIGNTIME_PROPERTY_EFLAG) != 0;
 	}
 
 	/**
@@ -276,12 +277,12 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public void setDesigntimeProperty(boolean newDesigntimeProperty) {
-		boolean oldDesigntimeProperty = designtimeProperty;
-		designtimeProperty = newDesigntimeProperty;
-		boolean oldDesigntimePropertyESet = designtimePropertyESet;
-		designtimePropertyESet = true;
+		boolean oldDesigntimeProperty = (eFlags & DESIGNTIME_PROPERTY_EFLAG) != 0;
+		if (newDesigntimeProperty) eFlags |= DESIGNTIME_PROPERTY_EFLAG; else eFlags &= ~DESIGNTIME_PROPERTY_EFLAG;
+		boolean oldDesigntimePropertyESet = (eFlags & DESIGNTIME_PROPERTY_ESETFLAG) != 0;
+		eFlags |= DESIGNTIME_PROPERTY_ESETFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESIGNTIME_PROPERTY, oldDesigntimeProperty, designtimeProperty, !oldDesigntimePropertyESet));
+			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESIGNTIME_PROPERTY, oldDesigntimeProperty, newDesigntimeProperty, !oldDesigntimePropertyESet));
 	}
 
 	/**
@@ -290,10 +291,10 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public void unsetDesigntimeProperty() {
-		boolean oldDesigntimeProperty = designtimeProperty;
-		boolean oldDesigntimePropertyESet = designtimePropertyESet;
-		designtimeProperty = DESIGNTIME_PROPERTY_EDEFAULT;
-		designtimePropertyESet = false;
+		boolean oldDesigntimeProperty = (eFlags & DESIGNTIME_PROPERTY_EFLAG) != 0;
+		boolean oldDesigntimePropertyESet = (eFlags & DESIGNTIME_PROPERTY_ESETFLAG) != 0;
+		if (DESIGNTIME_PROPERTY_EDEFAULT) eFlags |= DESIGNTIME_PROPERTY_EFLAG; else eFlags &= ~DESIGNTIME_PROPERTY_EFLAG;
+		eFlags &= ~DESIGNTIME_PROPERTY_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESIGNTIME_PROPERTY, oldDesigntimeProperty, DESIGNTIME_PROPERTY_EDEFAULT, oldDesigntimePropertyESet));
 	}
@@ -304,7 +305,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public boolean isSetDesigntimeProperty() {
-		return designtimePropertyESet;
+		return (eFlags & DESIGNTIME_PROPERTY_ESETFLAG) != 0;
 	}
 
 	/**
@@ -313,7 +314,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public boolean isAlwaysIncompatible() {
-		return alwaysIncompatible;
+		return (eFlags & ALWAYS_INCOMPATIBLE_EFLAG) != 0;
 	}
 
 	/**
@@ -322,10 +323,10 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public void setAlwaysIncompatible(boolean newAlwaysIncompatible) {
-		boolean oldAlwaysIncompatible = alwaysIncompatible;
-		alwaysIncompatible = newAlwaysIncompatible;
+		boolean oldAlwaysIncompatible = (eFlags & ALWAYS_INCOMPATIBLE_EFLAG) != 0;
+		if (newAlwaysIncompatible) eFlags |= ALWAYS_INCOMPATIBLE_EFLAG; else eFlags &= ~ALWAYS_INCOMPATIBLE_EFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ALWAYS_INCOMPATIBLE, oldAlwaysIncompatible, alwaysIncompatible));
+			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ALWAYS_INCOMPATIBLE, oldAlwaysIncompatible, newAlwaysIncompatible));
 	}
 
 	/**
@@ -488,11 +489,11 @@ public class PropertyDescriptorDecoratorImpl
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__REFERENCES:
 				return references != null && !references.isEmpty();
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__HIDDEN:
-				return hidden != HIDDEN_EDEFAULT;
+				return ((eFlags & HIDDEN_EFLAG) != 0) != HIDDEN_EDEFAULT;
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
 				return helpContextIdsString != null && !helpContextIdsString.isEmpty();
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__PREFERRED:
-				return preferred != PREFERRED_EDEFAULT;
+				return ((eFlags & PREFERRED_EFLAG) != 0) != PREFERRED_EDEFAULT;
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CATEGORY_STRING:
 				return categoryString != null;
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:
@@ -514,7 +515,7 @@ public class PropertyDescriptorDecoratorImpl
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESIGNTIME_PROPERTY:
 				return isSetDesigntimeProperty();
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ALWAYS_INCOMPATIBLE:
-				return alwaysIncompatible != ALWAYS_INCOMPATIBLE_EDEFAULT;
+				return ((eFlags & ALWAYS_INCOMPATIBLE_EFLAG) != 0) != ALWAYS_INCOMPATIBLE_EDEFAULT;
 		}
 		return eDynamicIsSet(eFeature);
 	}
@@ -742,8 +743,8 @@ public class PropertyDescriptorDecoratorImpl
 	public void setLabelProviderClassnameGen(String newLabelProviderClassname) {
 		String oldLabelProviderClassname = labelProviderClassname;
 		labelProviderClassname = newLabelProviderClassname;
-		boolean oldLabelProviderClassnameESet = labelProviderClassnameESet;
-		labelProviderClassnameESet = true;
+		boolean oldLabelProviderClassnameESet = (eFlags & LABEL_PROVIDER_CLASSNAME_ESETFLAG) != 0;
+		eFlags |= LABEL_PROVIDER_CLASSNAME_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__LABEL_PROVIDER_CLASSNAME, oldLabelProviderClassname, labelProviderClassname, !oldLabelProviderClassnameESet));
 	}
@@ -762,9 +763,9 @@ public class PropertyDescriptorDecoratorImpl
 	 */
 	public void unsetLabelProviderClassnameGen() {
 		String oldLabelProviderClassname = labelProviderClassname;
-		boolean oldLabelProviderClassnameESet = labelProviderClassnameESet;
+		boolean oldLabelProviderClassnameESet = (eFlags & LABEL_PROVIDER_CLASSNAME_ESETFLAG) != 0;
 		labelProviderClassname = LABEL_PROVIDER_CLASSNAME_EDEFAULT;
-		labelProviderClassnameESet = false;
+		eFlags &= ~LABEL_PROVIDER_CLASSNAME_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__LABEL_PROVIDER_CLASSNAME, oldLabelProviderClassname, LABEL_PROVIDER_CLASSNAME_EDEFAULT, oldLabelProviderClassnameESet));
 	}
@@ -775,7 +776,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public boolean isSetLabelProviderClassname() {
-		return labelProviderClassnameESet;
+		return (eFlags & LABEL_PROVIDER_CLASSNAME_ESETFLAG) != 0;
 	}
 
 	/**
@@ -795,8 +796,8 @@ public class PropertyDescriptorDecoratorImpl
 	public void setCellEditorClassname(String newCellEditorClassname) {
 		String oldCellEditorClassname = cellEditorClassname;
 		cellEditorClassname = newCellEditorClassname;
-		boolean oldCellEditorClassnameESet = cellEditorClassnameESet;
-		cellEditorClassnameESet = true;
+		boolean oldCellEditorClassnameESet = (eFlags & CELL_EDITOR_CLASSNAME_ESETFLAG) != 0;
+		eFlags |= CELL_EDITOR_CLASSNAME_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_CLASSNAME, oldCellEditorClassname, cellEditorClassname, !oldCellEditorClassnameESet));
 	}
@@ -808,9 +809,9 @@ public class PropertyDescriptorDecoratorImpl
 	 */
 	public void unsetCellEditorClassname() {
 		String oldCellEditorClassname = cellEditorClassname;
-		boolean oldCellEditorClassnameESet = cellEditorClassnameESet;
+		boolean oldCellEditorClassnameESet = (eFlags & CELL_EDITOR_CLASSNAME_ESETFLAG) != 0;
 		cellEditorClassname = CELL_EDITOR_CLASSNAME_EDEFAULT;
-		cellEditorClassnameESet = false;
+		eFlags &= ~CELL_EDITOR_CLASSNAME_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_CLASSNAME, oldCellEditorClassname, CELL_EDITOR_CLASSNAME_EDEFAULT, oldCellEditorClassnameESet));
 	}
@@ -821,7 +822,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public boolean isSetCellEditorClassname() {
-		return cellEditorClassnameESet;
+		return (eFlags & CELL_EDITOR_CLASSNAME_ESETFLAG) != 0;
 	}
 
 	/**
@@ -830,7 +831,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public boolean isNullInvalid() {
-		return nullInvalid;
+		return (eFlags & NULL_INVALID_EFLAG) != 0;
 	}
 
 	/**
@@ -839,12 +840,12 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public void setNullInvalid(boolean newNullInvalid) {
-		boolean oldNullInvalid = nullInvalid;
-		nullInvalid = newNullInvalid;
-		boolean oldNullInvalidESet = nullInvalidESet;
-		nullInvalidESet = true;
+		boolean oldNullInvalid = (eFlags & NULL_INVALID_EFLAG) != 0;
+		if (newNullInvalid) eFlags |= NULL_INVALID_EFLAG; else eFlags &= ~NULL_INVALID_EFLAG;
+		boolean oldNullInvalidESet = (eFlags & NULL_INVALID_ESETFLAG) != 0;
+		eFlags |= NULL_INVALID_ESETFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__NULL_INVALID, oldNullInvalid, nullInvalid, !oldNullInvalidESet));
+			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__NULL_INVALID, oldNullInvalid, newNullInvalid, !oldNullInvalidESet));
 	}
 
 	/**
@@ -853,10 +854,10 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public void unsetNullInvalid() {
-		boolean oldNullInvalid = nullInvalid;
-		boolean oldNullInvalidESet = nullInvalidESet;
-		nullInvalid = NULL_INVALID_EDEFAULT;
-		nullInvalidESet = false;
+		boolean oldNullInvalid = (eFlags & NULL_INVALID_EFLAG) != 0;
+		boolean oldNullInvalidESet = (eFlags & NULL_INVALID_ESETFLAG) != 0;
+		if (NULL_INVALID_EDEFAULT) eFlags |= NULL_INVALID_EFLAG; else eFlags &= ~NULL_INVALID_EFLAG;
+		eFlags &= ~NULL_INVALID_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__NULL_INVALID, oldNullInvalid, NULL_INVALID_EDEFAULT, oldNullInvalidESet));
 	}
@@ -867,7 +868,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public boolean isSetNullInvalid() {
-		return nullInvalidESet;
+		return (eFlags & NULL_INVALID_ESETFLAG) != 0;
 	}
 
 	/**
@@ -876,7 +877,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public boolean isEntryExpandable() {
-		return entryExpandable;
+		return (eFlags & ENTRY_EXPANDABLE_EFLAG) != 0;
 	}
 
 	/**
@@ -885,12 +886,12 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public void setEntryExpandable(boolean newEntryExpandable) {
-		boolean oldEntryExpandable = entryExpandable;
-		entryExpandable = newEntryExpandable;
-		boolean oldEntryExpandableESet = entryExpandableESet;
-		entryExpandableESet = true;
+		boolean oldEntryExpandable = (eFlags & ENTRY_EXPANDABLE_EFLAG) != 0;
+		if (newEntryExpandable) eFlags |= ENTRY_EXPANDABLE_EFLAG; else eFlags &= ~ENTRY_EXPANDABLE_EFLAG;
+		boolean oldEntryExpandableESet = (eFlags & ENTRY_EXPANDABLE_ESETFLAG) != 0;
+		eFlags |= ENTRY_EXPANDABLE_ESETFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ENTRY_EXPANDABLE, oldEntryExpandable, entryExpandable, !oldEntryExpandableESet));
+			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ENTRY_EXPANDABLE, oldEntryExpandable, newEntryExpandable, !oldEntryExpandableESet));
 	}
 
 	/**
@@ -899,10 +900,10 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public void unsetEntryExpandable() {
-		boolean oldEntryExpandable = entryExpandable;
-		boolean oldEntryExpandableESet = entryExpandableESet;
-		entryExpandable = ENTRY_EXPANDABLE_EDEFAULT;
-		entryExpandableESet = false;
+		boolean oldEntryExpandable = (eFlags & ENTRY_EXPANDABLE_EFLAG) != 0;
+		boolean oldEntryExpandableESet = (eFlags & ENTRY_EXPANDABLE_ESETFLAG) != 0;
+		if (ENTRY_EXPANDABLE_EDEFAULT) eFlags |= ENTRY_EXPANDABLE_EFLAG; else eFlags &= ~ENTRY_EXPANDABLE_EFLAG;
+		eFlags &= ~ENTRY_EXPANDABLE_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ENTRY_EXPANDABLE, oldEntryExpandable, ENTRY_EXPANDABLE_EDEFAULT, oldEntryExpandableESet));
 	}
@@ -913,7 +914,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	public boolean isSetEntryExpandable() {
-		return entryExpandableESet;
+		return (eFlags & ENTRY_EXPANDABLE_ESETFLAG) != 0;
 	}
 
 	/**
@@ -928,17 +929,17 @@ public class PropertyDescriptorDecoratorImpl
 		result.append(" (cellEditorValidatorClassnames: ");
 		result.append(cellEditorValidatorClassnames);
 		result.append(", labelProviderClassname: ");
-		if (labelProviderClassnameESet) result.append(labelProviderClassname); else result.append("<unset>");
+		if ((eFlags & LABEL_PROVIDER_CLASSNAME_ESETFLAG) != 0) result.append(labelProviderClassname); else result.append("<unset>");
 		result.append(", cellEditorClassname: ");
-		if (cellEditorClassnameESet) result.append(cellEditorClassname); else result.append("<unset>");
+		if ((eFlags & CELL_EDITOR_CLASSNAME_ESETFLAG) != 0) result.append(cellEditorClassname); else result.append("<unset>");
 		result.append(", nullInvalid: ");
-		if (nullInvalidESet) result.append(nullInvalid); else result.append("<unset>");
+		if ((eFlags & NULL_INVALID_ESETFLAG) != 0) result.append((eFlags & NULL_INVALID_EFLAG) != 0); else result.append("<unset>");
 		result.append(", entryExpandable: ");
-		if (entryExpandableESet) result.append(entryExpandable); else result.append("<unset>");
+		if ((eFlags & ENTRY_EXPANDABLE_ESETFLAG) != 0) result.append((eFlags & ENTRY_EXPANDABLE_EFLAG) != 0); else result.append("<unset>");
 		result.append(", designtimeProperty: ");
-		if (designtimePropertyESet) result.append(designtimeProperty); else result.append("<unset>");
+		if ((eFlags & DESIGNTIME_PROPERTY_ESETFLAG) != 0) result.append((eFlags & DESIGNTIME_PROPERTY_EFLAG) != 0); else result.append("<unset>");
 		result.append(", alwaysIncompatible: ");
-		result.append(alwaysIncompatible);
+		result.append((eFlags & ALWAYS_INCOMPATIBLE_EFLAG) != 0);
 		result.append(')');
 		return result.toString();
 	}

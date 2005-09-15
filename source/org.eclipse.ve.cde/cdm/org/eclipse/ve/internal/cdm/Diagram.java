@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: Diagram.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-15 21:27:16 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -33,7 +33,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  *
  * @see org.eclipse.ve.internal.cdm.CDMPackage#getDiagram()
- * @model 
+ * @model
  * @generated
  */
 public interface Diagram extends KeyedValueHolder{
@@ -80,7 +80,7 @@ public interface Diagram extends KeyedValueHolder{
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @see org.eclipse.ve.internal.cdm.CDMPackage#getDiagram_Id()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getId();

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: Annotation.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-15 21:27:16 $ 
  */
 
 
@@ -54,7 +54,7 @@ public interface Annotation extends KeyedValueHolder{
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	VisualInfo getVisualInfo(Diagram aDiagram);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: UtilityFactoryImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
  */
 import org.eclipse.ve.internal.cde.utility.*;
 
@@ -32,7 +32,7 @@ public class UtilityFactoryImpl extends EFactoryImpl implements UtilityFactory {
 	
 	
 	/**
-	 * Creates and instance of the factory.
+	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -151,4 +151,5 @@ public class UtilityFactoryImpl extends EFactoryImpl implements UtilityFactory {
 	public static UtilityPackage getPackage() {
 		return UtilityPackage.eINSTANCE;
 	}
+
 }

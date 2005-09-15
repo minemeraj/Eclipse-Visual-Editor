@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: BasePropertyDecorator.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-15 21:27:15 $ 
  */
 
 
@@ -40,7 +40,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getBasePropertyDecorator()
- * @model 
+ * @model
  * @generated
  */
 public interface BasePropertyDecorator extends EAnnotation{
@@ -293,7 +293,7 @@ public interface BasePropertyDecorator extends EAnnotation{
 	 * @generated
 	 */
 	boolean isSetEntryExpandable();
-	
+
 	/** 
 	 * @param source for the object whose property the label provider is going to be used for 
 	 * @return An instantiated label provider

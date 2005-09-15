@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility;
 /*
  *  $RCSfile: ConstantString.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-15 21:27:15 $ 
  */
 
 import java.lang.String;
@@ -28,10 +28,10 @@ import java.lang.String;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.utility.UtilityPackage#getConstantString()
- * @model 
+ * @model
  * @generated
  */
-public interface ConstantString extends AbstractString {
+public interface ConstantString extends AbstractString{
 
 
 	/**

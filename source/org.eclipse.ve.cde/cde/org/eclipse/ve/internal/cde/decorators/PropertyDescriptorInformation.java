@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: PropertyDescriptorInformation.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:15 $ 
  */
 
 
@@ -47,7 +47,7 @@ import org.eclipse.emf.ecore.EAnnotation;
  * </p>
  *
  * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getPropertyDescriptorInformation()
- * @model 
+ * @model
  * @generated
  */
 public interface PropertyDescriptorInformation extends EAnnotation{
@@ -91,7 +91,7 @@ public interface PropertyDescriptorInformation extends EAnnotation{
 	 * @return the value of the '<em>Property Descriptor Classname</em>' attribute.
 	 * @see #setPropertyDescriptorClassname(String)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getPropertyDescriptorInformation_PropertyDescriptorClassname()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	String getPropertyDescriptorClassname();

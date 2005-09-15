@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: ClassDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2005-09-13 20:30:53 $ 
+ *  $Revision: 1.10 $  $Date: 2005-09-15 21:27:15 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -765,11 +765,11 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__REFERENCES:
 				return references != null && !references.isEmpty();
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__HIDDEN:
-				return hidden != HIDDEN_EDEFAULT;
+				return ((eFlags & HIDDEN_EFLAG) != 0) != HIDDEN_EDEFAULT;
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
 				return helpContextIdsString != null && !helpContextIdsString.isEmpty();
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__PREFERRED:
-				return preferred != PREFERRED_EDEFAULT;
+				return ((eFlags & PREFERRED_EFLAG) != 0) != PREFERRED_EDEFAULT;
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CATEGORY_STRING:
 				return categoryString != null;
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:

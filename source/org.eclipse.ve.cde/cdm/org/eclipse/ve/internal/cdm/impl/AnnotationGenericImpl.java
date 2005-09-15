@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: AnnotationGenericImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import java.util.Collection;
 
@@ -63,13 +63,13 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	protected String annotatesID = ANNOTATES_ID_EDEFAULT;
 	
 	/**
-	 * This is true if the Annotates ID attribute has been set.
+	 * The flag representing whether the Annotates ID attribute has been set.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean annotatesIDESet = false;
+	protected static final int ANNOTATES_ID_ESETFLAG = 1 << 8;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -106,8 +106,8 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	public void setAnnotatesID(String newAnnotatesID) {
 		String oldAnnotatesID = annotatesID;
 		annotatesID = newAnnotatesID;
-		boolean oldAnnotatesIDESet = annotatesIDESet;
-		annotatesIDESet = true;
+		boolean oldAnnotatesIDESet = (eFlags & ANNOTATES_ID_ESETFLAG) != 0;
+		eFlags |= ANNOTATES_ID_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, CDMPackage.ANNOTATION_GENERIC__ANNOTATES_ID, oldAnnotatesID, annotatesID, !oldAnnotatesIDESet));
 	}
@@ -119,9 +119,9 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 */
 	public void unsetAnnotatesID() {
 		String oldAnnotatesID = annotatesID;
-		boolean oldAnnotatesIDESet = annotatesIDESet;
+		boolean oldAnnotatesIDESet = (eFlags & ANNOTATES_ID_ESETFLAG) != 0;
 		annotatesID = ANNOTATES_ID_EDEFAULT;
-		annotatesIDESet = false;
+		eFlags &= ~ANNOTATES_ID_ESETFLAG;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.UNSET, CDMPackage.ANNOTATION_GENERIC__ANNOTATES_ID, oldAnnotatesID, ANNOTATES_ID_EDEFAULT, oldAnnotatesIDESet));
 	}
@@ -132,7 +132,7 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 * @generated
 	 */
 	public boolean isSetAnnotatesID() {
-		return annotatesIDESet;
+		return (eFlags & ANNOTATES_ID_ESETFLAG) != 0;
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (annotatesID: ");
-		if (annotatesIDESet) result.append(annotatesID); else result.append("<unset>");
+		if ((eFlags & ANNOTATES_ID_ESETFLAG) != 0) result.append(annotatesID); else result.append("<unset>");
 		result.append(')');
 		return result.toString();
 	}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: PropertyDescriptorInformationImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-13 20:30:53 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-15 21:27:15 $ 
  */
 
 import java.util.Collection;
@@ -58,16 +58,15 @@ public class PropertyDescriptorInformationImpl extends EAnnotationImpl implement
 	protected static final boolean ADAPTER_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isAdapter() <em>Adapter</em>}' attribute.
+	 * The flag representing the value of the '{@link #isAdapter() <em>Adapter</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #isAdapter()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean adapter = ADAPTER_EDEFAULT;
+	protected static final int ADAPTER_EFLAG = 1 << 8;
 
-	
 	/**
 	 * The default value of the '{@link #getPropertyDescriptorClassname() <em>Property Descriptor Classname</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -112,7 +111,7 @@ public class PropertyDescriptorInformationImpl extends EAnnotationImpl implement
 	 * @generated
 	 */
 	public boolean isAdapter() {
-		return adapter;
+		return (eFlags & ADAPTER_EFLAG) != 0;
 	}
 
 	/**
@@ -121,10 +120,10 @@ public class PropertyDescriptorInformationImpl extends EAnnotationImpl implement
 	 * @generated
 	 */
 	public void setAdapter(boolean newAdapter) {
-		boolean oldAdapter = adapter;
-		adapter = newAdapter;
+		boolean oldAdapter = (eFlags & ADAPTER_EFLAG) != 0;
+		if (newAdapter) eFlags |= ADAPTER_EFLAG; else eFlags &= ~ADAPTER_EFLAG;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_INFORMATION__ADAPTER, oldAdapter, adapter));
+			eNotify(new ENotificationImpl(this, Notification.SET, DecoratorsPackage.PROPERTY_DESCRIPTOR_INFORMATION__ADAPTER, oldAdapter, newAdapter));
 	}
 
 	/**
@@ -279,7 +278,7 @@ public class PropertyDescriptorInformationImpl extends EAnnotationImpl implement
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_INFORMATION__REFERENCES:
 				return references != null && !references.isEmpty();
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_INFORMATION__ADAPTER:
-				return adapter != ADAPTER_EDEFAULT;
+				return ((eFlags & ADAPTER_EFLAG) != 0) != ADAPTER_EDEFAULT;
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_INFORMATION__PROPERTY_DESCRIPTOR_CLASSNAME:
 				return PROPERTY_DESCRIPTOR_CLASSNAME_EDEFAULT == null ? propertyDescriptorClassname != null : !PROPERTY_DESCRIPTOR_CLASSNAME_EDEFAULT.equals(propertyDescriptorClassname);
 		}
@@ -370,7 +369,7 @@ public class PropertyDescriptorInformationImpl extends EAnnotationImpl implement
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (adapter: ");
-		result.append(adapter);
+		result.append((eFlags & ADAPTER_EFLAG) != 0);
 		result.append(", propertyDescriptorClassname: ");
 		result.append(propertyDescriptorClassname);
 		result.append(')');

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: CDMPackageImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import java.util.Map;
 
@@ -240,23 +240,24 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 	 * @generated
 	 */
 	public static CDMPackage init() {
-		if (isInited) return (CDMPackage)EPackage.Registry.INSTANCE.get(CDMPackage.eNS_URI);
+		if (isInited) return (CDMPackage)EPackage.Registry.INSTANCE.getEPackage(CDMPackage.eNS_URI);
 
-		// Obtain or create and register package.
-		CDMPackageImpl theCDMPackage = (CDMPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof EPackage ? EPackage.Registry.INSTANCE.get(eNS_URI) : new CDMPackageImpl());
+		// Obtain or create and register package
+		CDMPackageImpl theCDMPackage = (CDMPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof CDMPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new CDMPackageImpl());
 
 		isInited = true;
 
 		// Initialize simple dependencies
 		EcorePackageImpl.init();
 
-		// Obtain or create and register interdependencies
-
-		// Step 1: create meta-model objects
+		// Create package meta-data objects
 		theCDMPackage.createPackageContents();
 
-		// Step 2: complete initialization
+		// Initialize created meta-data
 		theCDMPackage.initializePackageContents();
+
+		// Mark meta-data to indicate it can't be changed
+		theCDMPackage.freeze();
 
 		return theCDMPackage;
 	}
@@ -899,81 +900,82 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 		diagramFigureEClass.getESuperTypes().add(this.getKeyedValueHolder());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(diagramDataEClass, DiagramData.class, "DiagramData", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getDiagramData_Diagrams(), this.getDiagram(), this.getDiagram_DiagramData(), "diagrams", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getDiagramData_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(diagramDataEClass, DiagramData.class, "DiagramData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDiagramData_Diagrams(), this.getDiagram(), this.getDiagram_DiagramData(), "diagrams", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramData_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(diagramEClass, Diagram.class, "Diagram", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDiagram_Name(), ecorePackage.getEString(), "name", " ", 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getDiagram_Id(), ecorePackage.getEString(), "id", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getDiagram_DiagramData(), this.getDiagramData(), this.getDiagramData_Diagrams(), "diagramData", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getDiagram_VisualInfos(), this.getVisualInfo(), this.getVisualInfo_Diagram(), "visualInfos", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getDiagram_Figures(), this.getDiagramFigure(), null, "figures", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(diagramEClass, Diagram.class, "Diagram", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDiagram_Name(), ecorePackage.getEString(), "name", " ", 0, 1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagram_Id(), ecorePackage.getEString(), "id", null, 0, 1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagram_DiagramData(), this.getDiagramData(), this.getDiagramData_Diagrams(), "diagramData", null, 0, 1, Diagram.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagram_VisualInfos(), this.getVisualInfo(), this.getVisualInfo_Diagram(), "visualInfos", null, 0, -1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagram_Figures(), this.getDiagramFigure(), null, "figures", null, 0, -1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(visualInfoEClass, VisualInfo.class, "VisualInfo", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getVisualInfo_Diagram(), this.getDiagram(), this.getDiagram_VisualInfos(), "diagram", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(visualInfoEClass, VisualInfo.class, "VisualInfo", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getVisualInfo_Diagram(), this.getDiagram(), this.getDiagram_VisualInfos(), "diagram", null, 1, 1, VisualInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(keyedValueHolderEClass, KeyedValueHolder.class, "KeyedValueHolder", IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getKeyedValueHolder_KeyedValues(), this.getMapEntry(), null, "keyedValues", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(keyedValueHolderEClass, KeyedValueHolder.class, "KeyedValueHolder", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getKeyedValueHolder_KeyedValues(), this.getMapEntry(), null, "keyedValues", null, 0, -1, KeyedValueHolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(keyedLocationEClass, Map.Entry.class, "KeyedLocation", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedLocation_Value(), this.getViewPoint(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getKeyedLocation_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(keyedLocationEClass, Map.Entry.class, "KeyedLocation", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKeyedLocation_Value(), this.getViewPoint(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKeyedLocation_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(keyedSizeEClass, Map.Entry.class, "KeyedSize", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedSize_Value(), this.getViewDimension(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getKeyedSize_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(keyedSizeEClass, Map.Entry.class, "KeyedSize", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKeyedSize_Value(), this.getViewDimension(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKeyedSize_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(keyedConstraintEClass, Map.Entry.class, "KeyedConstraint", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedConstraint_Value(), this.getViewRectangle(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getKeyedConstraint_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(keyedConstraintEClass, Map.Entry.class, "KeyedConstraint", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKeyedConstraint_Value(), this.getViewRectangle(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKeyedConstraint_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(annotationEClass, Annotation.class, "Annotation", IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getAnnotation_VisualInfos(), this.getVisualInfo(), null, "visualInfos", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(annotationEClass, Annotation.class, "Annotation", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getAnnotation_VisualInfos(), this.getVisualInfo(), null, "visualInfos", null, 0, -1, Annotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		EOperation op = addEOperation(annotationEClass, this.getVisualInfo(), "getVisualInfo");
 		addEParameter(op, this.getDiagram(), "aDiagram");
 
-		initEClass(keyedPointsEClass, Map.Entry.class, "KeyedPoints", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedPoints_Value(), this.getViewPoint(), "value", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getKeyedPoints_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(keyedPointsEClass, Map.Entry.class, "KeyedPoints", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKeyedPoints_Value(), this.getViewPoint(), "value", null, 0, -1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKeyedPoints_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(annotationEMFEClass, AnnotationEMF.class, "AnnotationEMF", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getAnnotationEMF_Annotates(), theEcorePackage.getEObject(), null, "annotates", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(annotationEMFEClass, AnnotationEMF.class, "AnnotationEMF", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getAnnotationEMF_Annotates(), theEcorePackage.getEObject(), null, "annotates", null, 0, 1, AnnotationEMF.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(annotationGenericEClass, AnnotationGeneric.class, "AnnotationGeneric", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getAnnotationGeneric_AnnotatesID(), ecorePackage.getEString(), "annotatesID", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(annotationGenericEClass, AnnotationGeneric.class, "AnnotationGeneric", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAnnotationGeneric_AnnotatesID(), ecorePackage.getEString(), "annotatesID", null, 0, 1, AnnotationGeneric.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(diagramFigureEClass, DiagramFigure.class, "DiagramFigure", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDiagramFigure_Type(), ecorePackage.getEString(), "type", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getDiagramFigure_ChildFigures(), this.getDiagramFigure(), null, "childFigures", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(diagramFigureEClass, DiagramFigure.class, "DiagramFigure", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDiagramFigure_Type(), ecorePackage.getEString(), "type", null, 0, 1, DiagramFigure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramFigure_ChildFigures(), this.getDiagramFigure(), null, "childFigures", null, 0, -1, DiagramFigure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(keyedGenericEClass, Map.Entry.class, "KeyedGeneric", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedGeneric_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEReference(getKeyedGeneric_Value(), theEcorePackage.getEObject(), null, "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED);
+		initEClass(keyedGenericEClass, Map.Entry.class, "KeyedGeneric", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKeyedGeneric_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getKeyedGeneric_Value(), theEcorePackage.getEObject(), null, "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(keyedIntegerEClass, Map.Entry.class, "KeyedInteger", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedInteger_Value(), ecorePackage.getEInt(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getKeyedInteger_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(keyedIntegerEClass, Map.Entry.class, "KeyedInteger", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKeyedInteger_Value(), ecorePackage.getEInt(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKeyedInteger_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(mapEntryEClass, Map.Entry.class, "MapEntry", IS_ABSTRACT, IS_INTERFACE);
-		initEAttribute(getMapEntry_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getMapEntry_Value(), ecorePackage.getEString(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(mapEntryEClass, Map.Entry.class, "MapEntry", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getMapEntry_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMapEntry_Value(), ecorePackage.getEString(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(keyedDynamicEClass, Map.Entry.class, "KeyedDynamic", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedDynamic_Key(), ecorePackage.getEString(), "key", null, 0, 1, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getKeyedDynamic_Value(), theEcorePackage.getEJavaObject(), "value", null, 0, 1, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(keyedDynamicEClass, Map.Entry.class, "KeyedDynamic", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKeyedDynamic_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKeyedDynamic_Value(), theEcorePackage.getEJavaObject(), "value", null, 0, 1, Map.Entry.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(keyedBooleanEClass, Map.Entry.class, "KeyedBoolean", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getKeyedBoolean_Key(), ecorePackage.getEString(), "key", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
-		initEAttribute(getKeyedBoolean_Value(), ecorePackage.getEBoolean(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED);
+		initEClass(keyedBooleanEClass, Map.Entry.class, "KeyedBoolean", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKeyedBoolean_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKeyedBoolean_Value(), ecorePackage.getEBoolean(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
-		initEDataType(viewDimensionEDataType, Dimension.class, "ViewDimension", IS_SERIALIZABLE);
-		initEDataType(viewPointEDataType, Point.class, "ViewPoint", IS_SERIALIZABLE);
-		initEDataType(viewRectangleEDataType, Rectangle.class, "ViewRectangle", IS_SERIALIZABLE);
+		initEDataType(viewDimensionEDataType, Dimension.class, "ViewDimension", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(viewPointEDataType, Point.class, "ViewPoint", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(viewRectangleEDataType, Rectangle.class, "ViewRectangle", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);
 	}
+
 } //CDMPackageImpl

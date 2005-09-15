@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: FeatureDescriptorDecorator.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:15 $ 
  */
 
 
@@ -113,7 +113,7 @@ public interface FeatureDescriptorDecorator extends EAnnotation{
 	 * @return the value of the '<em>Hidden</em>' attribute.
 	 * @see #setHidden(boolean)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getFeatureDescriptorDecorator_Hidden()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	boolean isHidden();
@@ -155,7 +155,7 @@ public interface FeatureDescriptorDecorator extends EAnnotation{
 	 * @return the value of the '<em>Preferred</em>' attribute.
 	 * @see #setPreferred(boolean)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getFeatureDescriptorDecorator_Preferred()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	boolean isPreferred();
@@ -181,7 +181,7 @@ public interface FeatureDescriptorDecorator extends EAnnotation{
 	 * @return the value of the '<em>Category String</em>' reference.
 	 * @see #setCategoryString(AbstractString)
 	 * @see org.eclipse.ve.internal.cde.decorators.DecoratorsPackage#getFeatureDescriptorDecorator_CategoryString()
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	AbstractString getCategoryString();
@@ -218,7 +218,7 @@ public interface FeatureDescriptorDecorator extends EAnnotation{
 	 * <!-- begin-model-doc -->
 	 * Answer whether this filter flag passed in is in this features filterFlags.
 	 * <!-- end-model-doc -->
-	 * @model 
+	 * @model
 	 * @generated
 	 */
 	boolean isFiltered(String flag);

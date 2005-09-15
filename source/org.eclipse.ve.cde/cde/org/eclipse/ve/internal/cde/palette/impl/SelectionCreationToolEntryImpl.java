@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: SelectionCreationToolEntryImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-15 21:27:15 $ 
  */
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -21,16 +21,22 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.ve.internal.cde.palette.PalettePackage;
+import org.eclipse.ve.internal.cde.palette.Permissions;
+import org.eclipse.ve.internal.cde.palette.SelectionCreationToolEntry;
+
 import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.palette.*;
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 /**
@@ -312,7 +318,7 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ICON32_NAME:
 				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__VISIBLE:
-				return visible != VISIBLE_EDEFAULT;
+				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
 				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ID:

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility;
 /*
  *  $RCSfile: UtilityPackage.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-15 21:27:16 $ 
  */
 
 
@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.EcorePackage;
  * </ul>
  * <!-- end-user-doc -->
  * @see org.eclipse.ve.internal.cde.utility.UtilityFactory
+ * @model kind="package"
  * @generated
  */
 public interface UtilityPackage extends EPackage{
@@ -364,7 +365,7 @@ public interface UtilityPackage extends EPackage{
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>IGraphic</em>'.
 	 * @see org.eclipse.ve.internal.cde.emf.IGraphic
-	 * @model instanceClass="org.eclipse.ve.internal.cde.emf.IGraphic" 
+	 * @model instanceClass="org.eclipse.ve.internal.cde.emf.IGraphic"
 	 * @generated
 	 */
 	EClass getIGraphic();
