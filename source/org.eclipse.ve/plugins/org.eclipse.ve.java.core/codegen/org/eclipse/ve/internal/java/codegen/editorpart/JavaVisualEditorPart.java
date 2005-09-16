@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.149 $  $Date: 2005-09-14 23:30:25 $ 
+ *  $Revision: 1.150 $  $Date: 2005-09-16 14:22:35 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -2527,6 +2527,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			return getPropertySheetPage();
 		else if (adapterKey == BeansList.class)
 			return getContentOutlinePage();
+		else if (adapterKey == Resource.class)
+			return modelBuilder.getModelRoot().eResource();
 		else if (adapterKey == EditPartViewer.class)
 			return primaryViewer;	// Current impl. only has one active editpart viewer. The outline viewer is its own IWorkbenchPart.
 		else if (adapterKey == CommandStack.class)
