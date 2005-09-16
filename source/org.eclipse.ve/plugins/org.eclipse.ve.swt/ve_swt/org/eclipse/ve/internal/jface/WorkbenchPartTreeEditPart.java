@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartTreeEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-16 21:52:05 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -26,6 +26,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart;
 
+import org.eclipse.ve.internal.swt.ControlTreeEditPart;
 import org.eclipse.ve.internal.swt.SwtPlugin;
 
 /**
@@ -60,6 +61,9 @@ public class WorkbenchPartTreeEditPart extends JavaBeanTreeEditPart {
 	protected EditPart createChildEditPart(Object model) {
 		EditPart childEP = super.createChildEditPart(model);
 		childEP.installEditPolicy(EditPolicy.CONTAINER_ROLE, new WorkbenchParentArgumentEditPolicy());	//This will override the Tree_Container_Role that is added by the child.
+		// Create special property source adapter for the only child to return no descriptors
+		if (childEP instanceof ControlTreeEditPart)
+			((ControlTreeEditPart)childEP).setPropertySource(new WorkbenchPartChildPropertySourceAdapter());
 		return childEP;
 	}
 
