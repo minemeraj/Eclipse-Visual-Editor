@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.51 $  $Date: 2005-09-16 13:34:48 $ 
+ *  $Revision: 1.52 $  $Date: 2005-09-16 16:25:00 $ 
  */
 
 
@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
@@ -33,6 +34,7 @@ import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cdm.*;
+import org.eclipse.ve.internal.cdm.Annotation;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -1151,6 +1153,22 @@ public static Collection getReferences(Object o, boolean includeO) {
 				}
 			}
 		}
+	}
+	
+	public static String getTypeName(Type type){
+		String typeName = null;
+		if(type!=null){
+			if(type.isSimpleType()){
+				typeName = ((SimpleType)type).getName().getFullyQualifiedName();
+			}else if(type.isQualifiedType()){
+				typeName = ((QualifiedType)type).getName().getFullyQualifiedName();
+			}else if(type.isArrayType()){
+				typeName = getTypeName(((ArrayType)type).getElementType());
+			}else if(type.isPrimitiveType()){
+				typeName = ((PrimitiveType)type).getPrimitiveTypeCode().toString();
+			}
+		}
+		return typeName;
 	}
 }
 
