@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.62 $  $Date: 2005-09-07 20:00:14 $ 
+ *  $Revision: 1.63 $  $Date: 2005-09-16 13:34:48 $ 
  */
 
 
@@ -448,8 +448,6 @@ public  void refreshFromComposition() throws CodeGenException {
 	
 	if (fDecoder == null) throw new CodeGenException ("No Decoder") ; //$NON-NLS-1$
 	
-	if (fDecoder.isImplicit(fArguments))
-	    return ;	
 	if (fDecoder.isDeleted()) {
 		boolean isSrc = isStateSet(STATE_NO_SRC);
 		boolean isMaster = isStateSet(STATE_MASTER);
@@ -1071,8 +1069,12 @@ public String toString(){
    	if (isStateSet(STATE_FIELD_EXP))
    		states = states.concat("STATE_FIELD_EXP#"); //$NON-NLS-1$  
 	states = states.concat("}"+" Offset: "+getOffset()+" upTo:"+(getOffset()+getLen())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	if (isStateSet(STATE_NO_SRC) && fMasteredExpression != null)
-		return fMasteredExpression.getContent() + states;
+	if (isStateSet(STATE_NO_SRC)) {
+		if (fMasteredExpression != null)
+		    return fMasteredExpression.getContent() + states;
+		else
+			return (fBean.getSimpleName()+"/"+ fDecoder.getSF().getName()+": "+states);
+	}
 	else
 	    return super.toString() + states;
 }

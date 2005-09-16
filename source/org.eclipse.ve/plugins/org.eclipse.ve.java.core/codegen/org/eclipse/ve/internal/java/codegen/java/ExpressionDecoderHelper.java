@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionDecoderHelper.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-26 19:22:18 $ 
+ *  $Revision: 1.15 $  $Date: 2005-09-16 13:34:48 $ 
  */
 import java.util.Collection;
 import java.util.List;
@@ -89,13 +89,6 @@ public abstract class ExpressionDecoderHelper implements IExpressionDecoderHelpe
 		return fExprSig;
 	}
 
-	/**
-	 *  If this expression is implicit, should the generate() be called ?
-	 *  Default is no, helpers should overide this otherwise.
-	 */
-	public boolean isGenerateOnImplicit() {
-		return false;
-	}
 
 	/**
 	 * Most helpers should consider overiding this one

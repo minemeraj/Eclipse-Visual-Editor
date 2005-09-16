@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeAddDecoderHelper.java,v $
- *  $Revision: 1.26 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.27 $  $Date: 2005-09-16 13:34:38 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -432,7 +432,8 @@ public class CompositeAddDecoderHelper extends AbstractContainerAddDecoderHelper
 	 * @todo Generated comment
 	 */
 	protected CodeExpressionRef getInitExpression() {
-		CodeExpressionRef init =  fAddedPart.getInitExpression();
+		BeanPart source = fAddedPart.isImplicit()?fAddedPart.getImplicitParent():fAddedPart;
+		CodeExpressionRef init =  source.getInitExpression();
 		if (init==null) {			
 			Iterator itr = fAddedPart.getNoSrcExpressions().iterator();
 			while (itr.hasNext()) {

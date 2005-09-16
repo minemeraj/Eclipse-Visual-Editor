@@ -18,13 +18,14 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.11 $  $Date: 2005-09-16 13:34:48 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.dom.*;
 
@@ -44,6 +45,7 @@ public class BeanPartDecleration {
 	String 	name = null ;  // Decleration simple Name
 	String 	type = null;
 	boolean typeResolved = false;
+	boolean implicitDecleration = false;
 
 	CodeMethodRef declaredMethod = null;  // if null it is an instance variable
 	boolean  inModel = false;             // A declaration will only be inserted to the BDM when the scope is resolved
@@ -59,6 +61,16 @@ public class BeanPartDecleration {
 	public BeanPartDecleration (String name, String type) {
 		this (name);
 		setType(type);
+	}
+	
+	public BeanPartDecleration (BeanPart implicitFromBean, EStructuralFeature implicitFeature) {		
+		this("Implicit["+implicitFromBean.getSimpleName()+"/"+implicitFeature.getName()+"]");
+		setType(implicitFeature.getEType().getName());
+		if (implicitFromBean.getDecleration().isInstanceVar())
+		   setDeclaringMethod(null);
+		else
+		   setDeclaringMethod(implicitFromBean.getInitMethod());
+		implicitDecleration=true;
 	}
 	
 	public BeanPartDecleration (FieldDeclaration fd) {
@@ -352,5 +364,9 @@ public class BeanPartDecleration {
 	 */
 	public boolean isSingleDecleration() {
 		return beanParts.size()<=1;
+	}
+	
+	public boolean isImplicitDecleration() {
+		return implicitDecleration;
 	}
 }

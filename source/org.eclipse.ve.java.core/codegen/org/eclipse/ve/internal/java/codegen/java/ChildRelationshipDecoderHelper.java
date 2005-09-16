@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ChildRelationshipDecoderHelper.java,v $
- *  $Revision: 1.24 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.25 $  $Date: 2005-09-16 13:34:48 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -25,6 +25,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.rules.VCEPostSetCommand;
@@ -505,6 +506,8 @@ public String generate(Object[] args) throws CodeGenException {
         fAddedPart.addBackRef(fbeanPart, (EReference)fFmapper.getFeature(null)) ;
       }
       
+    if (fOwner.getExprRef().isStateSet(CodeExpressionRef.STATE_NO_SRC))
+    	return null;
 	ExpressionTemplate exp = getExpressionTemplate() ;
       fExprSig = exp.toString() ;	                                                 
       return fExprSig ;	     	
@@ -555,7 +558,7 @@ public Object[] getArgsHandles(Statement expr) {
 			if (fFmapper.getDecorator() != null)
 				methodName = fFmapper.getDecorator().getWriteMethod().getName();
 			if (methodName == null)
-				methodName = AbstractFeatureMapper.getWriteMethod(fExpr);
+				methodName = AbstractFeatureMapper.getPropertyMethod(fExpr);
 			if(methodName!=null)
 				return fFmapper.getFeaturePriority(methodName);
 		}

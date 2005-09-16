@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.23 $  $Date: 2005-08-24 23:30:44 $ 
+ *  $Revision: 1.24 $  $Date: 2005-09-16 13:34:47 $ 
  */
 import java.util.logging.Level;
 
@@ -186,8 +186,6 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 
 		if (!Initialize(feature))
 			return null;
-		if (isImplicit(args) && !fhelper.isGenerateOnImplicit())
-			return null;
 
 		// Go for it
 
@@ -283,32 +281,9 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 	 *  Although should not expect it to change ...
 	 */
 
-	public boolean isImplicit(Object[] args) {
-		// TODO  Need to be looked at again : org.eclipse.ve.internal.cde.core.CDEHack.fixMe() ;
-		if (true)
-			return false;
-		if (getHelper().isImplicit(args) && !fhelper.isGenerateOnImplicit()) {
-			//fExprRef.setState(CodeExpressionRef.STATE_EXIST | CodeExpressionRef.STATE_IN_SYNC |
-			//                  CodeExpressionRef.STATE_IMPLICIT | fExprRef.getState()) ;
-			fExprRef.setState(CodeExpressionRef.STATE_EXIST, true);
-			fExprRef.setState(CodeExpressionRef.STATE_IN_SYNC, true);
-			fExprRef.setState(CodeExpressionRef.STATE_IMPLICIT, true);
-			fExprRef.setContent((ExpressionParser) null);
-			return true;
-		} else {
-			// fExprRef.setState(fExprRef.getState() & ~CodeExpressionRef.STATE_IMPLICIT) ;	
-			fExprRef.setState(CodeExpressionRef.STATE_IMPLICIT, false);
-			return false;
-		}
-	}
-
 	public String reflectExpression(String expSig) throws CodeGenException {
 		if (!isDeleted()) {
-			if (isImplicit(null))
-				return null;
-
 			return fhelper.primRefreshFromComposition(expSig);
-
 		} else {
 			return null;
 		}

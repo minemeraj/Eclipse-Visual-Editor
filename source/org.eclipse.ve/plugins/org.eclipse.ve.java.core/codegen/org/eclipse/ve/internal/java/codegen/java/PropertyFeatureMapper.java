@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: PropertyFeatureMapper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.13 $  $Date: 2005-09-16 13:34:47 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -121,16 +121,76 @@ protected boolean isHardCodedMethod (String method, Object bean) {
 protected void processHardCodedProperty(String method, Object bean) {
 }
 
-public EStructuralFeature getFeature (Statement exprStmt) {
+public EStructuralFeature getImplicitFeature (Expression implicitExpression) {
+	if (fSF != null)
+		return fSF;
+	if (fRefObj == null || implicitExpression == null)
+		return null;
+		
+
+	List args = null;
+	if (implicitExpression instanceof MethodInvocation)
+		args = ((MethodInvocation) implicitExpression).arguments();
+	
+	fMethodName = getPropertyMethod(implicitExpression);
+
+	if (isHardCodedMethod(fMethodName, fRefObj)) {
+		processHardCodedProperty(fMethodName, fRefObj);
+	}
+	else {
+		Iterator itr = getPropertiesIterator(fRefObj);
+		// Find a write method that matches the one in the Expression.
+		while (itr.hasNext()) {
+			try {
+				PropertyDecorator pd = (PropertyDecorator) itr.next();
+
+				if (pd.getField() == null){
+					Method m = pd.getReadMethod();
+					if (m == null
+							|| !m.getName().equals(fMethodName)
+							|| args == null
+							|| (m.listParametersWithoutReturn().length != args.size()))
+						continue;
+
+					//TODO: Need to check argument types
+					fSF = (EStructuralFeature) pd.getEModelElement();
+					fSFname = fSF.getName();
+					fPD = pd;
+					break;
+				} else {
+					if (pd.getField().getName().equals(fMethodName)){
+						fSF = (EStructuralFeature) pd.getEModelElement();
+						fSFname = fSF.getName();
+						fPD = pd;
+						fisMethod = false;						
+						break;						
+					}
+				}
+			} catch (Exception e) {
+				if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
+					JavaVEPlugin.log("PropertyFeatureMapper.getFeature() : " + e, Level.WARNING); //$NON-NLS-1$
+				continue;
+			}
+
+		}
+	}
+
+	if (fSF != null) {
+		fSFname = fSF.getName();
+	}
+	return fSF;		
+}
+
+public EStructuralFeature getFeature (Statement settingStatement) {
 	
 	if (fSF != null)
 		return fSF;
-	if (fRefObj == null || exprStmt == null || 
-	    !(exprStmt instanceof ExpressionStatement))
+	if (fRefObj == null || settingStatement == null || 
+	    !(settingStatement instanceof ExpressionStatement))
 		return null;
 
-	Expression expr = ((ExpressionStatement)exprStmt).getExpression();	
-	getMethodName(exprStmt);
+	Expression expr = ((ExpressionStatement)settingStatement).getExpression();	
+	getMethodName(settingStatement);
 
 	List args = null;
 	if (expr instanceof MethodInvocation)

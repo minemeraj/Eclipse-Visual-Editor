@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.50 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.51 $  $Date: 2005-09-16 13:34:48 $ 
  */
 
 
@@ -973,7 +973,7 @@ public static BeanPart getBeanPart (IBeanDeclModel model, String name, CodeMetho
 }
 
 /**
- * Add the references this object makes in his allocation (contructor),
+ * return EObject references this object makes in his allocation (contructor),
  * by traversing the allocation parsed tree.
  * 
  * @param o root object 
@@ -1103,6 +1103,13 @@ public static Collection getReferences(Object o, boolean includeO) {
 					}
 				};
 				expression.accept(bpFinder);
+			}
+			else if (ja instanceof ImplicitAllocation) {
+				// We need to get the parent from the implicit parent
+				// e.g., TreeViewer.getTree()'s parent is the TreeViewer's constructor
+				EObject pObj = ((ImplicitAllocation)ja).getParent();
+				BeanPart bp = fbeanPart.getModel().getABean(pObj);
+				return getAllocationReferences(bp);
 			}
 		}
 		return bps;

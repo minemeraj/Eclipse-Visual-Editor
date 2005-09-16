@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.50 $  $Date: 2005-08-24 23:30:44 $ 
+ *  $Revision: 1.51 $  $Date: 2005-09-16 13:34:47 $ 
  */
 
 import java.util.*;
@@ -19,10 +19,13 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
 
+import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.*;
 
@@ -778,6 +781,44 @@ public BeanPart createThisBeanPartIfNeeded(CodeMethodRef initMethod) {
         bean.addInitMethod(initMethod) ;
      
      return bean ;	
+}
+
+public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf, boolean createImplicitInitExpression) {
+	BeanPart implicitBean = null;
+	try {
+		// Create the implicit bean
+		BeanPartDecleration bpd = new BeanPartDecleration(parent, sf);
+		implicitBean = new BeanPart(bpd);	
+		implicitBean.setImplicitParent(parent);
+		parent.getModel().addBean(implicitBean);
+		implicitBean.createEObject();
+		ImplicitAllocation ia = InstantiationFactory.eINSTANCE.createImplicitAllocation(parent.getEObject(), sf);
+		((IJavaObjectInstance)implicitBean.getEObject()).setAllocation(ia);
+		
+		if (createImplicitInitExpression) {
+			// Create an init expressio
+			implicitBean.addInitMethod(parent.getInitMethod());
+			EStructuralFeature asf = CodeGenUtil.getAllocationFeature(implicitBean.getEObject());
+			ExpressionRefFactory eGen = new ExpressionRefFactory(implicitBean, asf);	
+			// prime the proper helpers
+			CodeExpressionRef initExpression = eGen.createFromJVEModelWithNoSrc(null);
+			initExpression.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
+			// Force a full cascaded decoding (SWT decoders may generate other expressions).
+			initExpression.decodeExpression();			
+		}
+		// Let the parent point to its implicit child
+		if (sf.isMany()) 
+			((List)parent.getEObject().eGet(sf)).add(implicitBean.getEObject());
+		else
+		  parent.getEObject().eSet(sf, implicitBean.getEObject());
+		
+		ExpressionRefFactory eGen = new ExpressionRefFactory(parent, sf);		
+		// prime the proper helpers
+		eGen.createFromJVEModelWithNoSrc(new Object[] { implicitBean.getEObject() } );
+	} catch (CodeGenException e) {
+		JavaVEPlugin.log(e);
+	}
+	return implicitBean;
 }
 
 }
