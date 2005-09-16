@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AggregateDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-16 13:34:48 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -114,11 +114,6 @@ public class AggregateDecoderHelper implements IExpressionDecoderHelper{
 		return null;
 	}
 
-	public boolean isImplicit(Object[] args) {
-		if(decodedHelper!=null)
-			return decodedHelper.isImplicit(args);
-		return false;
-	}
 
 	public void setDecodingContent(Statement exp) {
 		for (int i = 0; i < helpers.length; i++) {
@@ -154,11 +149,6 @@ public class AggregateDecoderHelper implements IExpressionDecoderHelper{
 			decodedHelper.unadaptToCompositionModel();
 	}
 
-	public boolean isGenerateOnImplicit() {
-		if(decodedHelper!=null)
-			return decodedHelper.isGenerateOnImplicit();
-		return false;
-	}
 
 	public Object[] getAddedInstance() {
 		if(decodedHelper!=null)

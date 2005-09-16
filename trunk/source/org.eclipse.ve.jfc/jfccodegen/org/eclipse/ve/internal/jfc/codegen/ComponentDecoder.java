@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ComponentDecoder.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.11 $  $Date: 2005-09-16 13:34:49 $ 
  */
 
 
@@ -52,7 +52,7 @@ protected String getMethod() {
 	       method = fFeatureMapper.getDecorator().getWriteMethod().getName() ;
 	    	    
 	  if (method == null)
-	    method = AbstractFeatureMapper.getWriteMethod(fExpr) ;	  
+	    method = AbstractFeatureMapper.getPropertyMethod(fExpr) ;	  
 	    
 	 return method ;
 }
@@ -101,7 +101,7 @@ protected boolean isMethod(String mSig, EStructuralFeature sf) {
 				return true ;
 			
 	if (method == null)
-		method = AbstractFeatureMapper.getWriteMethod(fExpr) ;	  
+		method = AbstractFeatureMapper.getPropertyMethod(fExpr) ;	  
 	return method != null && method.equals(mSig) ;	
 } 
 

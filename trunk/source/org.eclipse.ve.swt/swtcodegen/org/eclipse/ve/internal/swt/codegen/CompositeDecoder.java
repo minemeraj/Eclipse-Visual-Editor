@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeDecoder.java,v $
- *  $Revision: 1.20 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.21 $  $Date: 2005-09-16 13:34:38 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -112,7 +112,7 @@ public class CompositeDecoder extends AbstractCompositeDecoder {
 		if (fFeatureMapper.getFeature(fExpr) == null) {
 			// not a regular property, but given that it was parsed in... this could be
 			// a control feature
-			String method = AbstractFeatureMapper.getWriteMethod(fExpr);
+			String method = AbstractFeatureMapper.getPropertyMethod(fExpr);
 			if (method!=null) {
 				if (method.indexOf(ADD_METHOD_PREFIX)>=0) {
 					fFeatureMapper = getAppropriateFeatureMapper(ADD_METHOD_SF_NAME) ;

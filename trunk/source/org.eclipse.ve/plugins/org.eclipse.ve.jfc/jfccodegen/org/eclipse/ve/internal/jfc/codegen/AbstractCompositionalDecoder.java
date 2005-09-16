@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.codegen;
 
 /*
  *  $RCSfile: AbstractCompositionalDecoder.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:38:13 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-16 13:34:49 $ 
  */
 import java.util.List;
 import java.util.logging.Level;
@@ -184,7 +184,7 @@ public abstract class AbstractCompositionalDecoder extends ContainerDecoder {
 				// Specelized Feature mappers may be able to get it anyhow.
 				method = fFeatureMapper.getMethodName();
 		if (method == null)
-			method = AbstractFeatureMapper.getWriteMethod(fExpr);
+			method = AbstractFeatureMapper.getPropertyMethod(fExpr);
 		return method != null && method.equals(methodName);
 	}
 

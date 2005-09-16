@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: IExpressionDecoderHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.11 $  $Date: 2005-09-16 13:34:48 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -83,18 +83,11 @@ public interface IExpressionDecoderHelper {
  *  @return a boolean denoting the existance of this feature in the composition
  */
    public boolean primIsDeleted() ;
-   
-   public boolean isImplicit(Object args[]) ;
-   
+      
    public String getCurrentExpression() ;
    
    public void adaptToCompositionModel(IExpressionDecoder decoder) ;
    public void unadaptToCompositionModel() ;
-   /**
-    *  If this expression is implicit, should the generate() be called ?
-    *  Default is no, helpers should overide this otherwise.
-    */
-   public boolean isGenerateOnImplicit() ;
    public void setDecodingContent (Statement exp) ;
    public Object[] getArgsHandles(Statement exp) ;
    public Object[] getAddedInstance() ;

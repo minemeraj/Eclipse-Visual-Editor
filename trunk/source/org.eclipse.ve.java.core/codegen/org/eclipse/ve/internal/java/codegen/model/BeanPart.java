@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.49 $  $Date: 2005-09-06 13:07:09 $ 
+ *  $Revision: 1.50 $  $Date: 2005-09-16 13:34:48 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -67,6 +67,7 @@ public class BeanPart {
     List        	fBadExpressions = null;
     boolean			isInJVEModel = false ;
     boolean			fSettingProcessingRequired = false ;
+    BeanPart		fimplicitParent = null;
     int				uniqueIndex = 0;
     IBeanSourceGenerator generator = null;
     
@@ -505,6 +506,8 @@ public String toString () {
 	   message+="[DISPOSED]"; //$NON-NLS-1$
    if(!isActive())
 	   message+="[INACTIVE]"; //$NON-NLS-1$
+   if (isImplicit())
+	   message+="[IMPLICIT]";
    return message;
 }
 
@@ -914,6 +917,12 @@ public   void removeFromJVEModel()  {
 			if (e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
 				return e;
 		}
+		itr = getNoSrcExpressions().iterator();
+		while (itr.hasNext()) {
+			CodeExpressionRef e = (CodeExpressionRef) itr.next();
+			if (e.isStateSet(CodeExpressionRef.STATE_INIT_EXPR))
+				return e;
+		}
 		return null;
 	}
 	public int getUniqueIndex() {
@@ -1118,5 +1127,19 @@ public   void removeFromJVEModel()  {
 			fFFDecoder.dispose();
 		fFFDecoder = null;
 		setEObject(null);
+	}
+
+	
+	public boolean isImplicit() {
+		return fimplicitParent!=null;
+	}
+
+	
+	public void setImplicitParent(BeanPart parent) {
+		this.fimplicitParent = parent;
+	}
+	
+	public BeanPart getImplicitParent() {
+		return fimplicitParent;
 	}
 }

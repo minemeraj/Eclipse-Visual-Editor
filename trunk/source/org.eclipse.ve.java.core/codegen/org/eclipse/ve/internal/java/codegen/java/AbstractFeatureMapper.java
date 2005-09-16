@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractFeatureMapper.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.15 $  $Date: 2005-09-16 13:34:48 $ 
  */
 import java.util.logging.Level;
 
@@ -94,7 +94,7 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 
 	protected String getMethodName(Statement exp) {
 		if (fMethodName == null)
-			fMethodName = getWriteMethod(exp);
+			fMethodName = getPropertyMethod(exp);
 		return fMethodName;
 	}
 
@@ -116,13 +116,32 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 		return IJavaFeatureMapper.PRIORITY_DEFAULT;
 	}
 	
+	static protected String getPropertyMethod(Expression e) {
+		
+		// TODO Must deal with non Literal also
+		if (e instanceof MethodInvocation)
+			return ((MethodInvocation) e).getName().getIdentifier();
+		else if (e instanceof Assignment) {
+			// public field access, e.g., gridBagConstraints.gridx = 0 ;
+			if (((Assignment) e).getLeftHandSide() instanceof QualifiedName) {
+				return ((QualifiedName) ((Assignment) e).getLeftHandSide()).getName().getIdentifier();
+			} else  if (((Assignment) e).getRightHandSide() instanceof ClassInstanceCreation) {
+				return "new" ; //$NON-NLS-1$
+			}
+			else if (((Assignment) e).getLeftHandSide() instanceof SimpleName) {
+				return ((SimpleName) ((Assignment) e).getLeftHandSide()).getIdentifier();
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 *  Extract the end resulted write method or public field access.
 	 * 
 	 * Only ExpressionStatement, VariableDeclarationStatement is supported
 	 * (moved from CodeGenUtil)
 	 */	
-	static public String getWriteMethod(Statement expr)	{
+	static public String getPropertyMethod(Statement expr)	{
 		
 		Expression e = null;
 		if (expr instanceof ExpressionStatement)
@@ -137,33 +156,9 @@ public abstract class AbstractFeatureMapper implements IJavaFeatureMapper {
 		}
 
 		if (e != null) {
-
 			if (expr == null)
 				return null;
-			// TODO Must deal with non Literal also
-			if (e instanceof MethodInvocation)
-				return ((MethodInvocation) e).getName().getIdentifier();
-			else if (e instanceof Assignment) {
-				// public field access, e.g., gridBagConstraints.gridx = 0 ;
-				if (((Assignment) e).getLeftHandSide() instanceof QualifiedName) {
-					return ((QualifiedName) ((Assignment) e).getLeftHandSide()).getName().getIdentifier();
-				} else  if (((Assignment) e).getRightHandSide() instanceof ClassInstanceCreation) {
-					return "new" ; //$NON-NLS-1$
-				}
-				else if (((Assignment) e).getLeftHandSide() instanceof SimpleName) {
-					return ((SimpleName) ((Assignment) e).getLeftHandSide()).getIdentifier();
-				}
-			}
-			//		else if (expr instanceof LocalDeclaration) {
-			//			TypeReference tr = ((LocalDeclaration)expr).type ;
-			//			if (tr instanceof QualifiedTypeReference)
-			//				return "new " + tokensToString(((QualifiedTypeReference)tr).tokens) ;
-			// //$NON-NLS-1$
-			//			else {
-			//				// TODO Need to resolve
-			//				return "new" ; //$NON-NLS-1$
-			//			}
-			//		}
+			return getPropertyMethod(e);
 		}
 		return null;
 	}

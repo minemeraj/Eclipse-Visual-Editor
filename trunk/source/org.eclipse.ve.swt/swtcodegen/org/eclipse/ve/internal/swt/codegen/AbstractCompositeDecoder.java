@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractCompositeDecoder.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.13 $  $Date: 2005-09-16 13:34:38 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -190,7 +190,7 @@ public abstract class AbstractCompositeDecoder extends SWTControlDecoder {
 				// Specelized Feature mappers may be able to get it anyhow.
 				method = fFeatureMapper.getMethodName();
 		if (method == null)
-			method = AbstractFeatureMapper.getWriteMethod(fExpr);
+			method = AbstractFeatureMapper.getPropertyMethod(fExpr);
 		return method != null && method.equals(methodName);
 	}
 

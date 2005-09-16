@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionRefFactory.java,v $
- *  $Revision: 1.32 $  $Date: 2005-08-29 18:47:06 $ 
+ *  $Revision: 1.33 $  $Date: 2005-09-16 13:34:48 $ 
  */
 
 import java.util.Iterator;
@@ -128,7 +128,25 @@ public CodeExpressionRef createFromJVEModel(Object[] args) throws CodeGenExcepti
 		return exp;
 	}
    
-      
+/**
+ *  Create a CodeExpressionRef from the VCE model
+ */   
+public CodeExpressionRef createFromJVEModelWithNoSrc(Object[] args) throws CodeGenException {
+   	
+      	if (fExpr != null)
+			return fExpr;
+		if (getExistingExpressionRef(args) != null)
+			throw new CodeGenException("Expression already exists"); //$NON-NLS-1$
+
+		CodeMethodRef mr = fBeanPart.getInitMethod();
+		CodeExpressionRef exp = new CodeExpressionRef(mr, fBeanPart);
+		exp.setArguments(args);
+		exp.clearState();
+		exp.setState(CodeExpressionRef.STATE_EXIST, true);
+		exp.setNoSrcExpression(true);
+		exp.generateSource(fSF);		
+		return exp;
+	}      
    
    
 /**
