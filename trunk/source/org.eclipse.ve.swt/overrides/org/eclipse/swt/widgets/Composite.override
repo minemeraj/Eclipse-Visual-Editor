@@ -5,7 +5,6 @@
          <listChanges referenceValues="_eAnnotations"/>
          <listChanges referenceValues="_eAnnotations1"/>
          <listChanges referenceValues="_eAnnotations2"/>
-         <listChanges referenceValues="_eAnnotations3"/>
       </value>
       <value featureName="eStructuralFeatures">
          <!-- Layout property has special property sheet processing for changing layoutData properties (constraints) when layouts are switched -->
@@ -17,9 +16,8 @@
    <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeGraphicalEditPart:true" treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
     </objectsToAttach>
-   <objectsToAttach propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositePropertySourceAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"/>
-   <objectsToAttach beanLocation="GLOBAL_GLOBAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter" xmi:id="_eAnnotations2" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
-   <objectsToAttach expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.CompositeDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations3" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
+   <objectsToAttach beanLocation="GLOBAL_GLOBAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.CompositeDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
    <objectsToAttach name="layout" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
       <eAnnotations propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LayoutPropertyDescriptor" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"/>
     </objectsToAttach>
