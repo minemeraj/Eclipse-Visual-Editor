@@ -385,6 +385,18 @@
             id="org.eclipse.ve.internal.java.codegen.editorpart.BeansList">
       </view>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="XML View"
+            icon="icons/full/ctool16/javavisualeditor_co.gif"
+            category="org.eclipse.jdt.ui.java"
+            class="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart"
+            id="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart">
+      </view>
+   </extension>   
+   
 <!-- ========================================================================================= -->
 <!-- Extend the Java perspective so the Java Beans viewer appears beneath the resources viewer -->
 <!-- and the Properties appears stacked on the problems view at the bottom                     -->

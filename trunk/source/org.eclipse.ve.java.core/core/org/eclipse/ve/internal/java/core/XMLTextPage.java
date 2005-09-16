@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: XMLTextPage.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-16 14:22:47 $ 
  */
 
 
@@ -19,11 +19,10 @@ package org.eclipse.ve.internal.java.core;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.part.Page;
 
-public class XMLTextPage extends Page {
+public class XMLTextPage extends Page implements IPageBookViewPage {
 	protected XMLTextViewer viewer;
 	protected String fText = ""; //$NON-NLS-1$
 	
