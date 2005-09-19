@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-09-15 18:51:51 $ 
+ *  $Revision: 1.3 $  $Date: 2005-09-19 20:37:48 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -43,11 +43,23 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 		if(editPartContributors != null){
 			Iterator iter = editPartContributors.iterator();
 			while(iter.hasNext()){
-				GraphicalEditPartContributor graphicalEditPartContributor = ((EditPartContributor)iter.next()).getGraphicalEditPartContributor(this);
+				GraphicalEditPartContributor graphicalEditPartContributor = ((EditPartContributorFactory)iter.next()).getGraphicalEditPartContributor(this);
 				if(graphicalEditPartContributor != null){
 					addEditPartContributor(graphicalEditPartContributor);
 				}
 			}
 		}
-	}	
+	}
+	
+	public void deactivate() {
+		if (fEditPartContributors != null) {
+			for (Iterator itr = fEditPartContributors.iterator(); itr.hasNext();) {
+				EditPartContributor contributor = (EditPartContributor) itr.next();
+				contributor.dispose();
+				
+			}
+			fEditPartContributors = null;
+		}
+		super.deactivate();
+	}
 }

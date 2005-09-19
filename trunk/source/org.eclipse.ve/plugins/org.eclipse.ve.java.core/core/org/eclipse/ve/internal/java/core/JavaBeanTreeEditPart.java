@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.19 $ $Date: 2005-09-15 18:51:53 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.20 $ $Date: 2005-09-19 20:37:49 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -90,7 +90,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 		if(editPartContributors != null){
 			Iterator iter = editPartContributors.iterator();
 			while(iter.hasNext()){
-				TreeEditPartContributor treeEditPartContributor = ((EditPartContributor)iter.next()).getTreeEditPartContributor(this);
+				TreeEditPartContributor treeEditPartContributor = ((EditPartContributorFactory)iter.next()).getTreeEditPartContributor(this);
 				if(treeEditPartContributor != null){
 					addEditPartContributor(treeEditPartContributor);
 				}
@@ -145,6 +145,14 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 	}
 
 	public void deactivate() {
+		if (fEditPartContributors != null) {
+			for (Iterator itr = fEditPartContributors.iterator(); itr.hasNext();) {
+				EditPartContributor contributor = (EditPartContributor) itr.next();
+				contributor.dispose();
+				
+			}
+			fEditPartContributors = null;
+		}
 		((EObject) getModel()).eAdapters().remove(getListenerAdapter());
 		getErrorNotifier().removeErrorListener(fErrorListener);
 		// Make sure we not listening to stale event invocations as these may still try and signal us when we are deactivated
