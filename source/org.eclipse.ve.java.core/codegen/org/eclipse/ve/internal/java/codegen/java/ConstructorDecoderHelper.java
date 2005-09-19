@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.54 $  $Date: 2005-09-16 13:34:47 $ 
+ *  $Revision: 1.55 $  $Date: 2005-09-19 21:46:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -471,6 +471,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			getExpressionReferences().addAll(CodeGenUtil.getReferences(parentBean.getEObject(), false));
 			getExpressionReferences().add(parentBean.getEObject());
 			ImplicitAllocation ia = (ImplicitAllocation) ((IJavaObjectInstance)fbeanPart.getEObject()).getAllocation();
+			// TODO: problems with a JFrame/Content pane... both need to be on the FreeForm
 			fbeanPart.addBackRef(parentBean, (EReference)ia.getFeature());
 			return ia;
 		}
