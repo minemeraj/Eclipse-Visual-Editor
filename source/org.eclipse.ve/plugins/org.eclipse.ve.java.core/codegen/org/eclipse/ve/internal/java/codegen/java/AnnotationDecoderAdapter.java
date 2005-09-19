@@ -11,22 +11,17 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.31 $  $Date: 2005-09-16 16:25:00 $ 
+ *  $Revision: 1.32 $  $Date: 2005-09-19 15:46:11 $ 
  */
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.internal.ui.refactoring.RefactoringSavePreferences;
-import org.eclipse.jdt.ui.refactoring.RenameSupport;
-import org.eclipse.ui.IEditorSite;
 
 import org.eclipse.ve.internal.cdm.AnnotationEMF;
 import org.eclipse.ve.internal.cdm.VisualInfo;
@@ -398,39 +393,6 @@ protected void performLocalRename(final ICompilationUnit compilationUnit, BeanPa
 	collector.addRequest(oldVarName, afterOffset, newFieldName, bpRetMethod);
 }
 
-protected void performGlobalRename(BeanPart nameChangedBP, final IField bpField, final String newFieldName){
-	final IEditorSite es = nameChangedBP.getModel().getDomain().getEditorPart().getEditorSite();
-	// If a dialog opens, the main shell loses focus and property is re-applied,
-	// hence do this process async()
-	// WARNING - NO BDM members should be in the async, as it will be stale
-	nameChangedBP.getModel().getDomain().getEditorPart().getEditorSite().getShell().getDisplay().asyncExec(
-		new Runnable() {
-			public void run() {
-				boolean previousRefactoringSaveEditors = RefactoringSavePreferences.getSaveAllEditors();
-				RefactoringSavePreferences.setSaveAllEditors(true);
-				try {
-					RenameSupport rename =
-							RenameSupport.create(
-								bpField,
-								newFieldName,
-								RenameSupport.UPDATE_GETTER_METHOD
-									| RenameSupport.UPDATE_TEXTUAL_MATCHES
-									| RenameSupport.UPDATE_REFERENCES
-									| RenameSupport.UPDATE_SETTER_METHOD);
-					rename.perform(es.getShell(), es.getWorkbenchWindow());
-				} catch (CoreException e) {
-					JavaVEPlugin.log(e, Level.WARNING);
-				} catch (InterruptedException e) {
-				} catch (InvocationTargetException e) {
-					JavaVEPlugin.log(e, Level.WARNING);
-				}finally{
-					RefactoringSavePreferences.setSaveAllEditors(previousRefactoringSaveEditors);
-				}
-			}
-		}
-	);
-}
-
 protected void renameField(Notification msg){
 	Map.Entry entry = (Map.Entry) msg.getNewValue();
 	final String newFieldName = (String) entry.getValue();
@@ -441,22 +403,8 @@ protected void renameField(Notification msg){
 	}
 	if(nameChangedBP!=null){
 		ICompilationUnit cu = fDecoder.getBeanModel().getCompilationUnit();
-		
-		final IField bpField = getField(cu, nameChangedBP);
 		IMethod bpRetMethod = getReturnMethod(cu, nameChangedBP);
-		boolean needLocalRename = true;
-		try {
-			boolean isFieldPrivate = bpField!=null && Flags.isPrivate(bpField.getFlags());
-			boolean isMethodPrivate = bpRetMethod!=null && Flags.isPrivate(bpRetMethod.getFlags());
-			needLocalRename = (bpField==null || isFieldPrivate) && (bpRetMethod==null || isMethodPrivate);
-		} catch (JavaModelException e1) {
-			JavaVEPlugin.log(e1, Level.FINE);
-		}
-		
-		if(needLocalRename)
-			performLocalRename(cu, nameChangedBP, newFieldName, bpRetMethod);
-		else
-			performGlobalRename(nameChangedBP, bpField, newFieldName);
+		performLocalRename(cu, nameChangedBP, newFieldName, bpRetMethod);
 	}
 }
 
