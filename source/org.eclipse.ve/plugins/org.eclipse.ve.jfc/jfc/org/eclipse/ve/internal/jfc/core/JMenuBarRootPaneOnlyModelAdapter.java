@@ -11,10 +11,8 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JMenuBarRootPaneOnlyModelAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-14 23:30:20 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-19 20:44:14 $ 
  */
-
-import java.util.List;
 
 import org.eclipse.emf.ecore.*;
 
@@ -44,7 +42,4 @@ public class JMenuBarRootPaneOnlyModelAdapter extends ComponentModelAdapter impl
 		return false;
 	}
 
-	public ChildFeature getChildToAdd(Object parent, List features) {
-		return null;
-	}
 }
