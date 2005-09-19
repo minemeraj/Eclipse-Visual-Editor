@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+<template 
+	name="jve-model" 
+	id="org.eclipse.ve.java.core.templates.comment.jve-model" 
+	description="%annotation.jve-model.description" 
+	context="java" 
+	enabled="true"
+	>// @jve:decl-index=0:</template>
+<template 
+	name="jve-float" 
+	id="org.eclipse.ve.java.core.templates.comment.jve-float" 
+	description="%annotation.jve-float.description" 
+	context="java" 
+	enabled="true"
+	>// @jve:decl-index=0:visual-constraint=""</template>
+<template 
+	name="jve-xy" 
+	id="org.eclipse.ve.java.core.templates.comment.jve-xy" 
+	description="%annotation.jve-xy.description" 
+	context="java" 
+	enabled="true"
+	>// @jve:decl-index=0:visual-constraint="100,100${cursor}"</template>
+</templates>

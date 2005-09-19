@@ -535,5 +535,13 @@
 		</run>
 	</builder>
    </extension>
+   <extension
+         id="org.eclipse.ve.java.core.templates"
+         name="VE templates"
+         point="org.eclipse.ui.editors.templates">
+      <include
+            file="templates/codegen-annotation-templates.xml"
+            translations="templates/codegen-annotation-templates.properties"/>
+   </extension>
 
 </plugin>
