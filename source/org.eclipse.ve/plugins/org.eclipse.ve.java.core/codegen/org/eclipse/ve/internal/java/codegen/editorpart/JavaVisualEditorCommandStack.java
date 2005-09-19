@@ -11,14 +11,17 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorCommandStack.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-19 20:37:49 $ 
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.eclipse.gef.commands.*;
 
 import org.eclipse.ve.internal.cde.core.ModelChangeController;
+
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /*
  * This is a dummy command stack that executes commands but does not actually keep a stack
@@ -52,6 +55,8 @@ class JavaVisualEditorCommandStack extends CommandStack {
 					aCommand.execute();
 				}
 			}, false);
+		} catch (RuntimeException e) {
+			JavaVEPlugin.log(e, Level.WARNING);
 		} finally {
 			notifyListeners();
 			aCommand.dispose();

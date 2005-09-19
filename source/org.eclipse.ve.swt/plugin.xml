@@ -136,7 +136,7 @@
    </extension>    
    
    <extension point="org.eclipse.ve.cde.edit_part_contributor"> 
-     <contributor class="org.eclipse.ve.internal.jface.TreeViewerEditPartContributor">
+     <contributor class="org.eclipse.ve.internal.jface.TreeViewerEditPartContributorFactory">
          <filter
            name="BEANTYPE"
            value="org.eclipse.swt.widgets.Tree">

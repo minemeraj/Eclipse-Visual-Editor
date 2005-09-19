@@ -1,19 +1,32 @@
+/*******************************************************************************
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/*
+ *  $RCSfile: EditPartContributor.java,v $
+ *  $Revision: 1.4 $  $Date: 2005-09-19 20:37:48 $ 
+ */
 package org.eclipse.ve.internal.cde.core;
+ 
 
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.TreeEditPart;
-
+/**
+ * Base EditPart contributor. The tree and graphical editpart contributors extend from this one.
+ * @since 1.2.0
+ */
 public interface EditPartContributor {
 	
 	/**
+	 * Tell the contributor to dispose. This will be called when the edit part has been deactivated.
 	 * 
-	 * @param treeEditPart A tree edit part that matches the filter for the extension
-	 * @return a tree edit part contributor
 	 * 
 	 * @since 1.2.0
 	 */
-	TreeEditPartContributor getTreeEditPartContributor(TreeEditPart treeEditPart);
-	
-	GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart);	
-	
+	public void dispose();
+
 }

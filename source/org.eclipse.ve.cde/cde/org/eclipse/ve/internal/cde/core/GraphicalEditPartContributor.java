@@ -10,14 +10,18 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GraphicalEditPartContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-09-14 23:18:16 $ 
+ *  $Revision: 1.2 $  $Date: 2005-09-19 20:37:48 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import org.eclipse.draw2d.IFigure;
  
-
-public interface GraphicalEditPartContributor {
+/**
+ * Graphical Editpart Contributor inteface.
+ * 
+ * @since 1.2.0
+ */
+public interface GraphicalEditPartContributor extends EditPartContributor {
 	IFigure getHoverOverLay();
 	IFigure getFigureOverLay();
 }

@@ -3,10 +3,12 @@
 <schema targetNamespace="org.eclipse.ve.cde">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.ve.cde" id="edit_part_contributor" name="Edit Part Contributor Extension"/>
+         <meta.schema plugin="org.eclipse.ve.cde" id="edit_part_contributor" name="Edit Part Contributor Factory Extension"/>
       </appInfo>
       <documentation>
-         
+         This extension is used to contribute EditPartContributorFactories. And EditPartContributor allows extensions to contribute to an editpart to do more than the base code will do. A contributor for the BeansViewer editpart and for the GraphicalViewer editpart can be contributed to an edit part.
+&lt;p&gt;
+The filter is used to determine if this contributor applies to the incoming editpart. This allows the factory to not be created until actually needed. Once created for an editor it will be reused for that editor until the editor closes.
       </documentation>
    </annotation>
 
@@ -15,26 +17,67 @@
          <sequence>
             <element ref="contributor" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
-         <attribute name="point" type="string" use="required"/>
-         <attribute name="id" type="string"/>
-         <attribute name="name" type="string"/>            
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
    <element name="contributor">
+      <annotation>
+         <documentation>
+            The contributorFactory. It must implement &lt;code&gt;org.eclipse.ve.internal.cde.core.EditPartContributorFactory&lt;/code&gt;.
+         </documentation>
+      </annotation>
       <complexType>
-         <attribute name="class" type="string" use="required"/>
          <sequence>
             <element ref="filter" minOccurs="0" maxOccurs="unbounded"/>
-         </sequence>         
-       </complexType>
+         </sequence>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
    </element>
-   
+
    <element name="filter">
-     <complexType>
-       <attribute name="name" type="string" use="required"/>
-       <attribute name="value" type="string" use="required"/>
-     </complexType>
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
    </element>
 
 </schema>
