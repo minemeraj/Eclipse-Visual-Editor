@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: DrawerImpl.java,v 1.2 2005-09-15 21:27:15 rkulp Exp $
+ * $Id: DrawerImpl.java,v 1.3 2005-09-19 18:31:39 pwalker Exp $
  */
 package org.eclipse.ve.internal.cde.palette.impl;
 
@@ -284,7 +284,7 @@ public class DrawerImpl extends ContainerImpl implements Drawer {
 	}
 
 	protected PaletteEntry createPaletteEntry() {
-		return new PaletteDrawer(getLabel());
+		return new PaletteDrawer(getLabel(), getSmallIcon());
 	}
 	
 	protected void configurePaletteEntry(PaletteEntry entry, Map entryToPaletteEntry) {
