@@ -2,7 +2,7 @@
 <xmi:XMI xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:org.eclipse.ve.internal.cde.palette="http:///org/eclipse/ve/internal/cde/palette.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
-  <org.eclipse.ve.internal.cde.palette:Drawer>
+  <org.eclipse.ve.internal.cde.palette:Drawer icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/pal/swing_components.gif">
     <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.SwingComponents"
         bundle="#bundle"/>
     <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/button_obj.gif"
@@ -125,7 +125,7 @@
           value="jEditorPane"/>
     </children>
   </org.eclipse.ve.internal.cde.palette:Drawer>
-  <org.eclipse.ve.internal.cde.palette:Drawer>
+  <org.eclipse.ve.internal.cde.palette:Drawer icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/pal/swing_containers.gif">
     <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.SwingContainers"
         bundle="#bundle"/>
     <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/frame_obj.gif"
@@ -219,7 +219,7 @@
           value="jApplet"/>
     </children>
   </org.eclipse.ve.internal.cde.palette:Drawer>
-  <org.eclipse.ve.internal.cde.palette:Drawer>
+  <org.eclipse.ve.internal.cde.palette:Drawer icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/pal/swing_menus.gif">
     <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.SwingMenus"
         bundle="#bundle"/>
     <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/menubar_obj.gif"
@@ -265,7 +265,7 @@
           value="jRadioButtonMenuItem"/>
     </children>
   </org.eclipse.ve.internal.cde.palette:Drawer>
-  <org.eclipse.ve.internal.cde.palette:Drawer>
+  <org.eclipse.ve.internal.cde.palette:Drawer icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/pal/awt_controls.gif">
     <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.AWTControls"
         bundle="#bundle"/>
     <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/frame_obj.gif"
