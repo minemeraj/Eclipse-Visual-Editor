@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: PropertySourceAdapterInformationImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-19 15:45:35 $ 
  */
 import java.util.Collection;
 
@@ -78,10 +78,10 @@ public class PropertySourceAdapterInformationImpl extends EAnnotationImpl implem
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated
 	 */	
 	protected PropertySourceAdapterInformationImpl() {
 		super();
-		setSource(PropertySourceAdapterInformation.class.getName());		
 	}
 
 	/**

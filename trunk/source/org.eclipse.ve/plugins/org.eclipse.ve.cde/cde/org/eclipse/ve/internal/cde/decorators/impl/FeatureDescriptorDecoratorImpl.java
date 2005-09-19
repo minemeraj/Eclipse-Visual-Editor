@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: FeatureDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.10 $  $Date: 2005-09-19 15:45:31 $ 
  */
 import java.util.Collection;
 import java.util.Iterator;
@@ -145,20 +145,10 @@ public abstract class FeatureDescriptorDecoratorImpl extends EAnnotationImpl imp
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated
 	 */	
 	protected FeatureDescriptorDecoratorImpl() {
 		super();
-		setSource(getSourceDefault());		
-	}
-	
-	/**
-	 * Subclasses should override and return the default source.
-	 * @return
-	 * 
-	 * @since 1.2.0
-	 */
-	protected String getSourceDefault() {
-		return FeatureDescriptorDecorator.class.getName();
 	}
 
 	/**

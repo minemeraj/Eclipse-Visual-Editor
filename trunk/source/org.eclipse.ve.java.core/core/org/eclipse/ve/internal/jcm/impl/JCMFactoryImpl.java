@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMFactoryImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2005-09-15 21:33:49 $ 
+ *  $Revision: 1.10 $  $Date: 2005-09-19 15:47:07 $ 
  */
 
 import java.util.Map;
@@ -108,20 +108,20 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public BeanDecorator createBeanDecorator() {
 		BeanDecoratorImpl beanDecorator = new BeanDecoratorImpl();
+		beanDecorator.setSource(BeanDecorator.class.getName());
 		return beanDecorator;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public BeanFeatureDecorator createBeanFeatureDecorator() {
 		BeanFeatureDecoratorImpl beanFeatureDecorator = new BeanFeatureDecoratorImpl();
+		beanFeatureDecorator.setSource(BeanFeatureDecorator.class.getName());
 		return beanFeatureDecorator;
 	}
 
