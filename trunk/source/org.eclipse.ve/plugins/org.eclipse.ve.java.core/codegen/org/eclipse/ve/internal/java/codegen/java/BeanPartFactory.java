@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.51 $  $Date: 2005-09-16 13:34:47 $ 
+ *  $Revision: 1.52 $  $Date: 2005-09-19 21:46:09 $ 
  */
 
 import java.util.*;
@@ -524,6 +524,43 @@ protected void normalizeDecleration(BeanPart bp, CodeMethodRef method) {
 }
 
 /**
+ * This method is called when an implicit instance is added to the JVE model.
+ * It will only create the BeanPart, 
+ */
+public BeanPart createImplicitFromJVEModel(IJavaObjectInstance component, ICompilationUnit cu) throws CodeGenException {
+		
+	  ImplicitAllocation allocation = (ImplicitAllocation)component.getAllocation();
+	  // This should drive the creation of the implicit
+	  BeanPart parent = fBeanModel.getABean(allocation.getParent());
+	  EStructuralFeature sf = allocation.getFeature();
+	  
+	  BeanPart implicitBean = null;
+	  try {
+			// Create the implicit bean
+			BeanPartDecleration bpd = new BeanPartDecleration(parent, sf);
+			implicitBean = new BeanPart(bpd);	
+			implicitBean.setImplicitParent(parent);
+			parent.getModel().addBean(implicitBean);
+			implicitBean.setEObject(component);
+			
+			// Create an init expressio
+			implicitBean.addInitMethod(parent.getInitMethod());
+			EStructuralFeature asf = CodeGenUtil.getAllocationFeature(implicitBean.getEObject());
+			ExpressionRefFactory eGen = new ExpressionRefFactory(implicitBean, asf);	
+			// prime the proper helpers
+			CodeExpressionRef initExpression = eGen.createFromJVEModelWithNoSrc(null);
+			initExpression.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
+			
+			 eGen = new ExpressionRefFactory(parent, sf);		
+			// prime the proper helpers
+			eGen.createFromJVEModelWithNoSrc(new Object[] { implicitBean.getEObject() } );
+		} catch (CodeGenException e) {
+			JavaVEPlugin.log(e);
+		}
+		return implicitBean;	  
+}
+
+/**
  * This method is called when an instance is added to the JVE model.
  * It will only create the BeanPart, and generate the Instance Variable decleration
  * in the source.
@@ -533,6 +570,9 @@ protected void normalizeDecleration(BeanPart bp, CodeMethodRef method) {
  */
 public BeanPart createFromJVEModel(IJavaObjectInstance component, ICompilationUnit cu) throws CodeGenException {
 		
+	
+	  if (component.getAllocation() instanceof ImplicitAllocation)
+		  return createImplicitFromJVEModel(component, cu);
 			
       IType cuType = CodeGenUtil.getMainType(cu) ;
       String varName = getVarRule().getInstanceVariableName(component,cuType,fCompositionModel,fBeanModel) ;    
