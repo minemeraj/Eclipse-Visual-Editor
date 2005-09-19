@@ -11,10 +11,8 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FFOnlyModelAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-14 23:30:22 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-19 20:44:14 $ 
  */
-
-import java.util.List;
 
 import org.eclipse.ve.internal.cdm.DiagramData;
 
@@ -34,8 +32,4 @@ public class FFOnlyModelAdapter extends ComponentModelAdapter implements IContai
 		return parent instanceof DiagramData;
 	}
 
-	public ChildFeature getChildToAdd(Object parent, List features) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

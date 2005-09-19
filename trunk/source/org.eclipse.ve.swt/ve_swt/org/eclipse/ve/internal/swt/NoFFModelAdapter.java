@@ -10,11 +10,9 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoFFModelAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-14 23:30:42 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-19 20:44:14 $ 
  */
 package org.eclipse.ve.internal.swt;
-
-import java.util.List;
 
 import org.eclipse.ve.internal.cdm.DiagramData;
 
@@ -44,8 +42,5 @@ public class NoFFModelAdapter extends ControlModelAdapter implements IContainmen
 		return !(parent instanceof DiagramData);
 	}
 
-	public ChildFeature getChildToAdd(Object parent, List features) {
-		return null;
-	}
 
 }
