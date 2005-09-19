@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: DecoratorsFactoryImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-19 15:45:35 $ 
  */
 import org.eclipse.ve.internal.cde.decorators.*;
 
@@ -59,50 +59,51 @@ public class DecoratorsFactoryImpl extends EFactoryImpl implements DecoratorsFac
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * 
 	 */
 	public BasePropertyDecorator createBasePropertyDecorator() {
 		BasePropertyDecoratorImpl basePropertyDecorator = new BasePropertyDecoratorImpl();
+		basePropertyDecorator.setSource(BasePropertyDecorator.class.getName());
 		return basePropertyDecorator;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public ClassDescriptorDecorator createClassDescriptorDecorator() {
 		ClassDescriptorDecoratorImpl classDescriptorDecorator = new ClassDescriptorDecoratorImpl();
+		classDescriptorDecorator.setSource(ClassDescriptorDecorator.class.getName());
 		return classDescriptorDecorator;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public PropertyDescriptorDecorator createPropertyDescriptorDecorator() {
 		PropertyDescriptorDecoratorImpl propertyDescriptorDecorator = new PropertyDescriptorDecoratorImpl();
+		propertyDescriptorDecorator.setSource(PropertyDescriptorDecorator.class.getName());
 		return propertyDescriptorDecorator;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public PropertySourceAdapterInformation createPropertySourceAdapterInformation() {
 		PropertySourceAdapterInformationImpl propertySourceAdapterInformation = new PropertySourceAdapterInformationImpl();
+		propertySourceAdapterInformation.setSource(PropertySourceAdapterInformation.class.getName());
 		return propertySourceAdapterInformation;
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public PropertyDescriptorInformation createPropertyDescriptorInformation() {
 		PropertyDescriptorInformationImpl propertyDescriptorInformation = new PropertyDescriptorInformationImpl();
+		propertyDescriptorInformation.setSource(PropertyDescriptorInformation.class.getName());
 		return propertyDescriptorInformation;
 	}
 

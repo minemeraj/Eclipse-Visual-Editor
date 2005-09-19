@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: PropertyDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.10 $  $Date: 2005-09-19 15:45:35 $ 
  */
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -249,10 +249,6 @@ public class PropertyDescriptorDecoratorImpl
 		super();
 	}
 
-	protected String getSourceDefault() {
-		return PropertyDescriptorDecorator.class.getName();
-	}
-	
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

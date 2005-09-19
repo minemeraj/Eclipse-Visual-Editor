@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanDecoratorImpl.java,v $
- *  $Revision: 1.14 $  $Date: 2005-09-15 21:33:49 $ 
+ *  $Revision: 1.15 $  $Date: 2005-09-19 15:47:07 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -172,10 +172,10 @@ public class BeanDecoratorImpl extends EAnnotationImpl implements BeanDecorator 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated
 	 */
 	protected BeanDecoratorImpl() {
 		super();
-		setSource(BeanDecorator.class.getName());		
 	}
 
 	/**
