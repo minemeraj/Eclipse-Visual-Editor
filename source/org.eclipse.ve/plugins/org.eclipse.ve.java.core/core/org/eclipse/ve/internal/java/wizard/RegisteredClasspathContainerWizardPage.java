@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RegisteredClasspathContainerWizardPage.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:49 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-19 21:36:27 $ 
  */
 package org.eclipse.ve.internal.java.wizard;
 
@@ -19,7 +19,8 @@ import java.text.MessageFormat;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
+import org.eclipse.jdt.ui.ISharedImages;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.wizards.IClasspathContainerPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -67,10 +68,10 @@ public class RegisteredClasspathContainerWizardPage extends WizardPage implement
 		Group g = createGroup(c,2);
 		g.setText(InternalMessages.ClasspathWizardPage_Group_Buildpath_Includes); 
 		if ( fExternalJarImage == null ) {
-			fExternalJarImage = org.eclipse.jdt.internal.ui.JavaPlugin.getDefault().getImageRegistry().get(JavaPluginImages.IMG_OBJS_EXTJAR);
+			fExternalJarImage = JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_EXTERNAL_ARCHIVE);
 		}
 		if ( fExternalJarWithSourceImage == null ) {
-			fExternalJarWithSourceImage = org.eclipse.jdt.internal.ui.JavaPlugin.getDefault().getImageRegistry().get(JavaPluginImages.IMG_OBJS_EXTJAR_WSRC);			
+			fExternalJarWithSourceImage = JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_EXTERNAL_ARCHIVE_WITH_SOURCE);			
 		}
 		// Get the entries
 		IConfigurationElement[] libraries = configData.getChildren(JavaVEPlugin.PI_LIBRARY);
