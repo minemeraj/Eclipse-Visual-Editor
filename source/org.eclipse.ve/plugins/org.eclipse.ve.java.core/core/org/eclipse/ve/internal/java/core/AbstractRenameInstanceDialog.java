@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractRenameInstanceDialog.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-20 23:05:50 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -21,7 +21,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.JavaConventions;
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -31,8 +30,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 
@@ -166,8 +167,8 @@ public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
 			
 		}
 		
-		titleImage = JavaPluginImages.DESC_WIZBAN_REFACTOR_TYPE.createImage(parentComposite.getDisplay());
-		errorImage = JavaPluginImages.DESC_OBJS_REFACTORING_ERROR.createImage(parentComposite.getDisplay());
+		titleImage = CDEPlugin.getImageFromPlugin(JavaVEPlugin.getPlugin(), "icons/typerefact_wiz.gif"); // internal cleanup - copied from 'org.eclipse.jdt.ui\icons\full\wizban\typerefact_wiz.gif'
+		errorImage = domain.getEditorPart().getSite().getWorkbenchWindow().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
 		setTitleImage(titleImage);
 
 		return beanNamesContainer;
@@ -239,8 +240,8 @@ public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
 	public boolean close() {
 		if (titleImage != null)
 			titleImage.dispose();
-		if(errorImage!=null)
-			errorImage.dispose();
+		//if(errorImage!=null) // workbench image - dont dispose
+		//	errorImage.dispose();
 		return super.close();
 	}
 
