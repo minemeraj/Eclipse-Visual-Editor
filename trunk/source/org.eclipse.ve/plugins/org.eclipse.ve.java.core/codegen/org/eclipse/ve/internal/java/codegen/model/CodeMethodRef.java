@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.49 $  $Date: 2005-09-07 20:00:14 $ 
+ *  $Revision: 1.50 $  $Date: 2005-09-20 22:09:37 $ 
  */
 
 import java.util.*;
@@ -405,6 +405,9 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
  */
 protected  boolean isGrouping (BeanPart bp, List expressions, int index) {
 	boolean result = false;
+	if (bp.getInitExpression().isStateSet(CodeExpressionRef.STATE_INIT_EXPR)&&
+		bp.isImplicit())
+		bp = bp.getImplicitParent();
 	for (int i=index; i>=0; i--) {	
 	    CodeExpressionRef exp = (CodeExpressionRef) expressions.get(i);
 		if (exp.getBean()!=bp)
@@ -532,6 +535,8 @@ protected void addExpressionToSortedList(List sortedList, CodeExpressionRef exp)
 	int index = -1;
 	VEexpressionPriority expPriority = exp.getPriority();
 	List dependantBeans = exp.getReferences();
+	if (exp.getBean().isImplicit())
+		dependantBeans.add(exp.getBean().getImplicitParent().getEObject());
 	
 	// find a target insersion window (first/last)
 	// Start from the end, as expression may not be sorted

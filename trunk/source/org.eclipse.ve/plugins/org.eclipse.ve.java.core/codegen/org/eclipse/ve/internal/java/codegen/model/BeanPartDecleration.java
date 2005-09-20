@@ -18,7 +18,7 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.11 $  $Date: 2005-09-16 13:34:48 $ 
+ *  $Revision: 1.12 $  $Date: 2005-09-20 22:09:37 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -28,6 +28,8 @@ import java.util.List;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.dom.*;
+
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
  
@@ -63,8 +65,12 @@ public class BeanPartDecleration {
 		setType(type);
 	}
 	
+	static protected String getImplicitName(BeanPart parent, EStructuralFeature sf) {
+		return parent.getSimpleName()+"."+Utilities.getPropertyDecorator(sf).getReadMethod().getName()+"()";
+	}
+	
 	public BeanPartDecleration (BeanPart implicitFromBean, EStructuralFeature implicitFeature) {		
-		this("Implicit["+implicitFromBean.getSimpleName()+"/"+implicitFeature.getName()+"]");
+		this(getImplicitName(implicitFromBean, implicitFeature));
 		setType(implicitFeature.getEType().getName());
 		if (implicitFromBean.getDecleration().isInstanceVar())
 		   setDeclaringMethod(null);
