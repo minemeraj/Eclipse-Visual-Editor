@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SynchronizerWorkItem.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.9 $  $Date: 2005-09-20 14:28:34 $ 
  */
 
 import java.util.*;
@@ -19,11 +19,10 @@ import java.util.logging.Level;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.core.SourceType;
 import org.eclipse.jface.text.DocumentEvent;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
 
@@ -186,8 +185,13 @@ public class SynchronizerWorkItem {
 			
 		}
 		
-		protected boolean isMainType(SourceType t) {
-			if (t == null) return false ;
+		/**
+		 * 
+		 * @param t  Has to be a SourceType
+		 * @return
+		 */
+		protected boolean isMainType(IType t) {
+			if (t == null || !isSourceIType(t)) return false ;
 			IType mainT = CodeGenUtil.getMainType(t.getCompilationUnit()) ;
 			return mainT.equals(t) ;
 		}
@@ -197,14 +201,23 @@ public class SynchronizerWorkItem {
 			
 			IJavaElement result = elm ;
 			
-			while (!(elm instanceof SourceType) && elm != null)
+			while (!(isSourceIType(elm)) && elm != null)
 			   elm = elm.getParent() ;
 			 // Only overide result, if we found a parent type that is NOT the main type
 			if (elm != null) {
-				if (!isMainType((SourceType)elm)) 
+				if (!isMainType((IType)elm)) 
 				   result = elm ; 
 			}			
 			return result ;
+		}
+		
+		protected boolean isSourceIType(IJavaElement element){
+			boolean isSourceType = false;
+			if (element instanceof IType) {
+				IType iType = (IType) element;
+				isSourceType = !iType.isBinary();
+			}
+			return isSourceType;
 		}
 		
 		/**
@@ -227,7 +240,7 @@ public class SynchronizerWorkItem {
 				   changeTo += docDeltaTextLength;
 				for(int off=changeFrom;off<changeTo;off++){
 					elm = cu.getElementAt(off);
-					if (elm instanceof SourceType) 
+					if (isSourceIType(elm)) 
 						continue;
 					if(elm!=null)
 						break;
@@ -236,9 +249,9 @@ public class SynchronizerWorkItem {
 					elm = promoteToInnerTypeElementIfNeeded(cu.getElementAt(docDelta.getOffset()));
 					
 				int len = isBeforeActualChange?docDelta.getLength():docDeltaTextLength;
-				if (elm instanceof SourceType && isMainType((SourceType)elm)) {
+				if (isSourceIType(elm) && isMainType((IType)elm)) {
 					// JDT does not designate fields
-					SourceType st = (SourceType) elm ;
+					IType st = (IType) elm ;
 					IField[] f = st.getFields() ;
 					// The following will try to set _handle
 					
