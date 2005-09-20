@@ -10,17 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractStyleContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-20 22:04:42 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
-import org.eclipse.jdt.ui.text.JavaTextTools;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -28,8 +22,8 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
-import org.eclipse.ve.internal.java.vce.rules.IEditorStylePrefUI;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
+import org.eclipse.ve.internal.java.vce.rules.IEditorStylePrefUI;
 
 
 
@@ -89,23 +83,6 @@ public abstract class AbstractStyleContributor implements IEditorStylePrefUI{
 		return button;
 	}
 	
-	protected  SourceViewer createPreview(Composite parent, int span, int col, int row) {
-		SourceViewer previewViewer= new SourceViewer(parent, null, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
-		JavaTextTools tools= JavaPlugin.getDefault().getJavaTextTools();
-		previewViewer.configure(new JavaSourceViewerConfiguration(tools, null));
-		previewViewer.getTextWidget().setFont(JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT));
-//		previewViewer.getTextWidget().setTabs(getPositiveIntValue((String) fWorkingValues.get(JavaCore.FORMATTER_TAB_SIZE), 0));
-		previewViewer.setEditable(false);
-//		previewViewer.setDocument(fRulePreviewDoc);
-		Control control= previewViewer.getControl();
-		GridData gdata= new GridData(GridData.FILL_BOTH);
-		gdata.widthHint= Dialog.convertWidthInCharsToPixels(getFontMetrics(parent),col);
-		gdata.heightHint= Dialog.convertHeightInCharsToPixels(getFontMetrics(parent),row);
-		gdata.horizontalSpan = span ;
-		control.setLayoutData(gdata);
-		return previewViewer;
-}	
-		
 	public final Control createUI(Composite parent) {
 		fRootControl = buildUI (parent) ;
 		fRootControl.addDisposeListener(new DisposeListener() {

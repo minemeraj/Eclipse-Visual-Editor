@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPrefContributor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-20 21:37:38 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-20 22:04:42 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
@@ -21,8 +21,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jface.dialogs.*;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -298,51 +296,6 @@ public class VCEPrefContributor extends AbstractStyleContributor {
 		tab.setControl(c);
 
 		createMethodListDialog(c);
-
-	}
-
-	protected void createTemplateTab(TabFolder tabF) {
-		TabItem tab = new TabItem(tabF, SWT.NONE);
-		tab.setText(CodegenJavaRulesMessages.VCEPrefContributor_Tab_Templates_Text); 
-		Composite c = new Composite(tabF, SWT.NONE);
-		GridLayout gl = new GridLayout(2, false);
-		c.setLayout(gl);
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		c.setLayoutData(gd);
-		tab.setControl(c);
-
-		Table templates = new Table(c, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		GridData td = new GridData(GridData.BEGINNING);
-		td.widthHint = 200;
-		templates.setLayoutData(gd);
-		TableLayout tableLayout = new TableLayout();
-		tableLayout.addColumnData(new ColumnWeightData(100, 200));
-		templates.setLayout(tableLayout);
-		templates.setHeaderVisible(true);
-		templates.setLinesVisible(true);
-
-		Label f = createLabel(c, "", null); // Filler //$NON-NLS-1$
-		 ((GridData) f.getLayoutData()).grabExcessHorizontalSpace = true;
-		((GridData) f.getLayoutData()).horizontalAlignment = GridData.FILL;
-
-		TableColumn tc = new TableColumn(templates, SWT.NONE);
-		tc.setText(CodegenJavaRulesMessages.VCEPrefContributor_Table_Templates_TableColumn_Template); 
-		tc.setWidth(200);
-		TableItem ti = new TableItem(templates, SWT.NONE);
-		ti.setText(0, CodegenJavaRulesMessages.VCEPrefContributor_Table_Templates_TableColumn_Sample); 
-		templates.select(0);
-
-		createLabel(c, CodegenJavaRulesMessages.VCEPrefContributor_TemplatePreview_Label_Text, null); 
-		Button bEdit = new Button(c, SWT.PUSH);
-		GridData bgd = new GridData(GridData.HORIZONTAL_ALIGN_END);
-		bEdit.setLayoutData(bgd);
-		bEdit.setText(CodegenJavaRulesMessages.VCEPrefContributor_TemplatePreview_Edit_Button_Text); 
-		SourceViewer sv = createPreview(c, 2, 70, 7);
-		Document d = new Document();
-		sv.setDocument(d);
-		d.set("public  JButton getMyButton() {\n    if (myButton == null) {\n         .....\n    }\n    return myButton ;\n}"); //$NON-NLS-1$
-
-		createCheckBox(c, CodegenJavaRulesMessages.VCEPrefContributor_Check_UseFormatter_Text, SWT.NONE); 
 
 	}
 
