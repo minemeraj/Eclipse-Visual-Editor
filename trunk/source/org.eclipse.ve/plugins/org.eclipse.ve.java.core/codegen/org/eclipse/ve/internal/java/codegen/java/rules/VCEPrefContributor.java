@@ -10,23 +10,24 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VCEPrefContributor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-20 21:37:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.core.JavaConventions;
-import org.eclipse.jdt.internal.ui.wizards.dialogfields.IListAdapter;
-import org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.jface.dialogs.*;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -54,9 +55,9 @@ public class VCEPrefContributor extends AbstractStyleContributor {
 	private static String[] currentMethods = null;
 	
 	private boolean fMethodsAreSaved = true;	// Until we make a change they are considered saved.
-	private ArrayList methods;	
-	private ListDialogField df;	
-
+	private ArrayList methods;
+	private TableViewer tv;
+	
 	/**
 	 * @param useCache if false will read the Store
 	 * @return the list of initialization methods.
@@ -117,102 +118,172 @@ public class VCEPrefContributor extends AbstractStyleContributor {
 		return buf;
 	}
 	
-	protected void createMethodListDialog(Composite parent) {
-
-		final Composite c = new Composite(parent, SWT.NONE);
-		c.setLayout(new GridLayout(2, false));
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.horizontalSpan = 2;
-		c.setLayoutData(gd);
-
-		ILabelProvider lp = new LabelProvider();
-
-		IListAdapter la = new IListAdapter() {
-
-			String processEdit(String Title, String input) {
-				IInputValidator v = new IInputValidator() {
-					public java.lang.String isValid(java.lang.String newText) {
-						IStatus stat = JavaConventions.validateMethodName(newText);
-						if (stat.isOK()) {
-							return null;
-						} else
-							return stat.getMessage();
-					}
-				};
-				InputDialog d = new InputDialog(c.getShell(), Title, MName, input, v);
-				d.open();
-				// InputDialog returns null if Cancel is pressed.
-				// Hence when Cancel is pressed, return the original value.
-				String mod = d.getValue();
-				if (mod == null)
-					return input;
-				else
-					return mod;
-			}
-			String editElement(ListDialogField field) {
-				String result = processEdit(MDialogName, (String) field.getSelectedElements().get(0));
-				if (result != null) {
-					String current = (String) field.getSelectedElements().get(0);
-					field.replaceElement(current, result);
-					int index = methods.indexOf(current);
-					methods.remove(index);
-					methods.add(index, result);
-					fMethodsAreSaved = false;
+	private String processEdit(Shell parentShell, String Title, String input) {
+		IInputValidator v = new IInputValidator() {
+			public java.lang.String isValid(java.lang.String newText) {
+				IStatus stat = JavaConventions.validateMethodName(newText);
+				if (stat.isOK()) {
+					return null;
 				} else
-					result = (String) field.getSelectedElements().get(0);
-				return result;
-			}
-			public void customButtonPressed(ListDialogField field, int index) {
-				switch (index) {
-					// Add
-					case 0 :
-						String result = processEdit(MDialogName, ""); //$NON-NLS-1$
-						if (result != null && result.length() > 0) {
-							// Do no add duplicates
-							for (Iterator itr = field.getElements().iterator(); itr.hasNext();)
-								if (((String) itr.next()).equals(result))
-									return;
-							field.addElement(result);
-							methods.add(result);
-							fMethodsAreSaved = false;
-						}
-						break;
-						// Edit 
-					case 1 :
-						editElement(field);
-						break;
-						// Remove
-					case 3 :
-						methods.removeAll(field.getSelectedElements());
-						field.removeElements(field.getSelectedElements());
-						fMethodsAreSaved = false;
-						break;
-				}
-			}
-			public void selectionChanged(ListDialogField field) {
-			}
-			public void doubleClicked(ListDialogField field) {
-				editElement(field);
+					return stat.getMessage();
 			}
 		};
+		InputDialog d = new InputDialog(parentShell, Title, MName, input, v);
+		d.open();
+		// InputDialog returns null if Cancel is pressed.
+		// Hence when Cancel is pressed, return the original value.
+		String mod = d.getValue();
+		if (mod == null)
+			return input;
+		else
+			return mod;
+	}
 
+	protected void createMethodListDialog(Composite parent) {
 		String[] current = getMethodsFromStore();
 		methods = new ArrayList(current.length);
 		for (int i = 0; i < current.length; i++) {
 			methods.add(current[i]);
 		}
 		
-		df = new ListDialogField(la, fbuttonsTxt, lp);
-		df.setLabelText(CodegenJavaRulesMessages.VCEPrefContributor_InitMethodsList_Text); 
-
-		df.setTableColumns(new ListDialogField.ColumnsDescription(new String[] { MName }, true));
-		df.setElements(methods);
-
-		GridData lgd = new GridData(GridData.FILL_HORIZONTAL);
-		lgd.horizontalSpan = 2;
-		Control[] LblListButt = df.doFillIntoGrid(c, 3);
-		LblListButt[0].setLayoutData(lgd);
-
+		// top Composite
+		Composite top = new Composite(parent, SWT.NONE);
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.horizontalSpan=2;
+		top.setLayoutData(gd);
+		top.setLayout(new GridLayout(2, false));
+		
+		// label
+		Label label = new Label(top, SWT.NONE);
+		label.setText(CodegenJavaRulesMessages.VCEPrefContributor_InitMethodsList_Text);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		label.setLayoutData(gd);
+		
+		// list of methods
+		Table table = new Table(top, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION | SWT.BORDER);
+		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
+		gd = new GridData(GridData.FILL_BOTH);
+		gd.horizontalSpan=1;
+		gd.verticalSpan=3;
+		table.setLayoutData(gd);
+		TableColumn tc = new TableColumn(table, SWT.NONE);
+		tc.setText(MName);
+		tv = new TableViewer(table);
+		tv.setLabelProvider(new ITableLabelProvider(){
+			public Image getColumnImage(Object element, int columnIndex) {return null;}
+			public String getColumnText(Object element, int columnIndex) {
+				if (element instanceof String) {
+					String methodName = (String) element;
+					return methodName;
+				}
+				return null;
+			}
+			public void addListener(ILabelProviderListener listener) {}
+			public void dispose() {}
+			public boolean isLabelProperty(Object element, String property) {return true;}
+			public void removeListener(ILabelProviderListener listener) {}
+		});
+		tv.setContentProvider(new IStructuredContentProvider(){
+			public Object[] getElements(Object inputElement) {
+				if (inputElement instanceof List) {
+					List list = (List) inputElement;
+					return list.toArray();
+				}
+				return null;
+			}
+			public void dispose() {}
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+		});
+		tv.setInput(methods);
+		TableLayout tableLayout = new TableLayout();
+		tableLayout.addColumnData(new ColumnWeightData(1, false));
+		table.setLayout(tableLayout);
+						
+		// add button
+		final Button addButton = new Button(top, SWT.PUSH);
+		addButton.setText(fbuttonsTxt[0]);
+		gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL|GridData.GRAB_VERTICAL);
+		gd.verticalAlignment = SWT.END;
+		addButton.setLayoutData(gd);
+		
+		// edit button
+		final Button editButton = new Button(top, SWT.PUSH);
+		editButton.setText(fbuttonsTxt[1]);
+		gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		editButton.setLayoutData(gd);
+		
+		// add button
+		final Button removeButton = new Button(top, SWT.PUSH);
+		removeButton.setText(fbuttonsTxt[3]);
+		gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL|GridData.GRAB_VERTICAL);
+		gd.verticalAlignment = SWT.BEGINNING;
+		removeButton.setLayoutData(gd);
+		
+		// button listeners
+		addButton.addSelectionListener(new SelectionListener(){
+			public void widgetSelected(SelectionEvent e) {
+				String newMethodName = processEdit(addButton.getShell(), MDialogName, ""); //$NON-NLS-1$
+				methods.add(newMethodName);
+				fMethodsAreSaved = false;
+				tv.refresh();
+				editButton.setEnabled(!tv.getSelection().isEmpty());
+				removeButton.setEnabled(!tv.getSelection().isEmpty());
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {widgetSelected(e);}
+		});
+		editButton.addSelectionListener(new SelectionListener(){
+			public void widgetSelected(SelectionEvent e) {
+				if (tv.getSelection() instanceof IStructuredSelection) {
+					IStructuredSelection strSel = (IStructuredSelection) tv.getSelection();
+					String originalMethodName = (String)strSel.getFirstElement();
+					String newMethodName = processEdit(editButton.getShell(), MDialogName, originalMethodName);
+					if(!newMethodName.equals(originalMethodName)){
+						methods.add(methods.indexOf(originalMethodName), newMethodName);
+						methods.remove(originalMethodName);
+						fMethodsAreSaved = false;
+						tv.refresh();
+						editButton.setEnabled(!tv.getSelection().isEmpty());
+						removeButton.setEnabled(!tv.getSelection().isEmpty());
+					}
+				}
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {widgetSelected(e);}
+		});
+		removeButton.addSelectionListener(new SelectionListener(){
+			public void widgetSelected(SelectionEvent e) {
+				if (tv.getSelection() instanceof IStructuredSelection) {
+					IStructuredSelection strSel = (IStructuredSelection) tv.getSelection();
+					String originalMethodName = (String)strSel.getFirstElement();
+					methods.remove(originalMethodName);
+					fMethodsAreSaved = false;
+					tv.refresh();
+					editButton.setEnabled(!tv.getSelection().isEmpty());
+					removeButton.setEnabled(!tv.getSelection().isEmpty());
+				}
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {widgetSelected(e);}
+		});
+		
+		// table selection listener
+		addButton.setEnabled(true);
+		editButton.setEnabled(!tv.getSelection().isEmpty());
+		removeButton.setEnabled(!tv.getSelection().isEmpty());
+		tv.getTable().addSelectionListener(new SelectionListener(){
+			public void widgetSelected(SelectionEvent e) {
+				Object selection = null;
+				if (tv.getSelection() instanceof IStructuredSelection) {
+					IStructuredSelection strSel = (IStructuredSelection) tv.getSelection();
+					selection = strSel.getFirstElement();
+				}
+				addButton.setEnabled(true);
+				editButton.setEnabled(selection!=null);
+				removeButton.setEnabled(selection!=null);
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {widgetSelected(e);}
+			
+		});
 	}
 
 	protected void createPrefTab(TabFolder tabF) {
@@ -306,7 +377,8 @@ public class VCEPrefContributor extends AbstractStyleContributor {
 		for (int i = 0; i < DefaultMethods.length; i++) {
 			methods.add(DefaultMethods[i]);
 		}
-		df.setElements(methods);
+		if(tv!=null)
+			tv.setInput(methods);
 	}
 
 }
