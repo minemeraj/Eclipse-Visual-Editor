@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.52 $  $Date: 2005-09-19 21:46:09 $ 
+ *  $Revision: 1.53 $  $Date: 2005-09-20 22:09:37 $ 
  */
 
 import java.util.*;
@@ -523,6 +523,12 @@ protected void normalizeDecleration(BeanPart bp, CodeMethodRef method) {
 		bp.setBeanPartDecleration(modelDecleration);		
 }
 
+
+protected void generateSetFeatures(BeanPart bp) throws CodeGenException {
+	DefaultMethodTextGenerator gen = new DefaultMethodTextGenerator(bp.getEObject(), bp.getModel());
+	gen.generateExpressionsContent();
+}
+
 /**
  * This method is called when an implicit instance is added to the JVE model.
  * It will only create the BeanPart, 
@@ -554,6 +560,8 @@ public BeanPart createImplicitFromJVEModel(IJavaObjectInstance component, ICompi
 			 eGen = new ExpressionRefFactory(parent, sf);		
 			// prime the proper helpers
 			eGen.createFromJVEModelWithNoSrc(new Object[] { implicitBean.getEObject() } );
+			
+			generateSetFeatures(implicitBean);
 		} catch (CodeGenException e) {
 			JavaVEPlugin.log(e);
 		}
