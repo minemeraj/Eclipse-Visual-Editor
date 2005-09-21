@@ -1,10 +1,16 @@
 package org.eclipse.ve.internal.jface;
 
+import java.util.List;
+
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.*;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.TreeEditPart;
 import org.eclipse.swt.graphics.*;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -12,26 +18,23 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
+
+import org.eclipse.ve.internal.propertysheet.command.WrapperedPropertyDescriptor;
 
 /**
  * Contributor factory for JFace TreeViewer.
  * 
  * @since 1.2.0
  */
-public class TreeViewerEditPartContributorFactory implements EditPartContributorFactory {
+public class TreeViewerEditPartContributorFactory implements AdaptableContributorFactory {
 
-	private IJavaInstance getTreeViewer(EditPart anEditPart) {
+	private IJavaInstance getTreeViewer(IJavaInstance aTree) {
 
-		Object model = anEditPart.getModel();
-		if (model instanceof IJavaInstance) {
-			IJavaInstance javaModel = (IJavaInstance) model;
-			// See whether this has a TreeViewer pointing to it or not
-			JavaClass treeViewerClass = Utilities.getJavaClass("org.eclipse.jface.viewers.TreeViewer", javaModel.eResource().getResourceSet());
-			return (IJavaInstance) InverseMaintenanceAdapter.getFirstReferencedBy(javaModel, (EReference) treeViewerClass
-					.getEStructuralFeature("tree"));
-		} else {
-			return null;
-		}
+		// See whether this has a TreeViewer pointing to it or not
+		JavaClass treeViewerClass = Utilities.getJavaClass("org.eclipse.jface.viewers.TreeViewer", aTree.eResource().getResourceSet());
+		return (IJavaInstance) InverseMaintenanceAdapter.getFirstReferencedBy(aTree, (EReference) treeViewerClass
+				.getEStructuralFeature("tree"));
 	}
 
 	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/cview16/test_overlay.gif")
@@ -53,7 +56,7 @@ public class TreeViewerEditPartContributorFactory implements EditPartContributor
 
 	public TreeEditPartContributor getTreeEditPartContributor(TreeEditPart treeEditPart) {
 
-		Object treeViewer = getTreeViewer(treeEditPart);
+		Object treeViewer = getTreeViewer((IJavaInstance) treeEditPart.getModel());
 		if (treeViewer != null) {
 			// This tree is pointed to by a tree viewer
 			return new TreeViewerTreeEditPartContributor();
@@ -92,12 +95,32 @@ public class TreeViewerEditPartContributorFactory implements EditPartContributor
 
 	public GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart) {
 
-		Object treeViewer = getTreeViewer(graphicalEditPart);
+		Object treeViewer = getTreeViewer((IJavaInstance) graphicalEditPart.getModel());
 
 		if (treeViewer != null) {
 			return new TreeViewerGraphicalEditPartContributor();
 		} else {
 			return null;
 		}
+	}
+
+	public PropertySourceContributor getPropertySourceContributor(final PropertySourceAdapter propertySourceAdapter) {
+		return new PropertySourceContributor(){
+			public void contributePropertyDescriptors(List descriptorsList) {
+				IJavaInstance tree = (IJavaInstance)propertySourceAdapter.getTarget();
+				// Get the tree viewer
+				
+				IJavaInstance treeViewer = getTreeViewer(tree);
+				try{
+					IPropertySource treeViewerPropertySource = (IPropertySource) EcoreUtil.getRegisteredAdapter(treeViewer, IPropertySource.class);		
+					IPropertyDescriptor[] treeViewerDescriptors = treeViewerPropertySource.getPropertyDescriptors();
+					for (int i = 0; i < treeViewerDescriptors.length; i++) {
+						descriptorsList.add(new WrapperedPropertyDescriptor(treeViewerPropertySource,treeViewerDescriptors[i]));
+					}
+				} catch (Exception exc){
+					
+				}
+			}
+		};
 	}
 }

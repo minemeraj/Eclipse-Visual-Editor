@@ -3,12 +3,12 @@
 <schema targetNamespace="org.eclipse.ve.cde">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.ve.cde" id="edit_part_contributor" name="Edit Part Contributor Factory Extension"/>
+         <meta.schema plugin="org.eclipse.ve.cde" id="contributor" name="Contributor Factory Extension"/>
       </appInfo>
       <documentation>
-         This extension is used to contribute EditPartContributorFactories. And EditPartContributor allows extensions to contribute to an editpart to do more than the base code will do. A contributor for the BeansViewer editpart and for the GraphicalViewer editpart can be contributed to an edit part.
+         This extension is used to contribute AdaptableContributorFactories. These allos EditPartContributor instances to be added to an editpart to do more than the base code will do. A contributor for the BeansViewer editpart and for the GraphicalViewer editpart can be contributed to an edit part and also to the property sheet
 &lt;p&gt;
-The filter is used to determine if this contributor applies to the incoming editpart. This allows the factory to not be created until actually needed. Once created for an editor it will be reused for that editor until the editor closes.
+The filter is used to determine if this contributor applies to the incoming adaptable.  This is typically an edit part or a property source adapter. This allows the factory to not be created until actually needed. Once created for an editor it will be reused for that editor until the editor closes.
       </documentation>
    </annotation>
 

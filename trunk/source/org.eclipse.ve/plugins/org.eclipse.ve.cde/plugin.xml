@@ -19,7 +19,7 @@
 -->
    <extension-point id="adapter" name="Descriptor Adapter by Decorator Type"/>
    
-   <extension-point id="edit_part_contributor" name="%edit_part_contributor.extensionpoint.name" schema="schema/edit_part_contributor.exsd"/>   
+   <extension-point id="contributor" name="%contributor.extensionpoint.name" schema="schema/contributor.exsd"/>   
 
    <extension
          point="org.eclipse.emf.ecore.generated_package">
