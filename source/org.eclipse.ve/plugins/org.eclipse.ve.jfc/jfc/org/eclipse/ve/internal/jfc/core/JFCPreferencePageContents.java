@@ -9,9 +9,9 @@ import org.eclipse.swt.widgets.*;
 public class JFCPreferencePageContents extends Composite {
 
 	private Label label1 = null;
-	private Tree tree = null;
+	private Table table = null;
 	private static final String TYPE_NAME = "TYPE_NAME";
-	private TreeItem currentlyCheckedItem;
+	private TableItem currentlyCheckedItem;
 	
 	public JFCPreferencePageContents(Composite parent, int style) {
 		super(parent, style);
@@ -31,12 +31,13 @@ public class JFCPreferencePageContents extends Composite {
 		String[][] layoutItems = JFCVisualPlugin.getPlugin().getLayoutManagers();
 		String defaultLayoutTypeName = fStore.getString(JFCVisualPlugin.DEFAULT_LAYOUTMANAGER);		
 		for (int i = 0; i < layoutItems[0].length; i++) {
-			TreeItem item = new TreeItem(tree,SWT.NONE);
+			TableItem item = new TableItem(table,SWT.NONE);
 			item.setText(layoutItems[0][i]);
 			String typeName = layoutItems[1][i];
 			item.setData(TYPE_NAME,typeName);
 			if(typeName != null && typeName.equals(defaultLayoutTypeName)){
 				item.setChecked(true);
+				currentlyCheckedItem = item;
 			}
 		}		
 	}
@@ -50,16 +51,15 @@ public class JFCPreferencePageContents extends Composite {
 		gridData1.grabExcessHorizontalSpace = true;
 		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
-		tree = new Tree(this, SWT.CHECK | SWT.BORDER);
-		tree.setLayoutData(gridData1);
-		tree.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		table = new Table(this, SWT.CHECK | SWT.BORDER);
+		table.setLayoutData(gridData1);
+		table.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				TreeItem selectedItem = (TreeItem)e.item;
+				TableItem selectedItem = (TableItem)e.item;
 				if (selectedItem.getChecked()){
 //					Ensure only one item can be checked
 					if (currentlyCheckedItem != null){
 						currentlyCheckedItem.setChecked(false);
-						currentlyCheckedItem = null;
 					}					
 					currentlyCheckedItem = selectedItem;
 				} else if(selectedItem == currentlyCheckedItem){

@@ -16,13 +16,22 @@
          <listChanges referenceValues="_eStructuralFeatures1"/>
       </value>
    </objectChanges>
-   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ContainerGraphicalEditPart" treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ContainerTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+   <objectsToAttach xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+        graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ContainerGraphicalEditPart" 
+        treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ContainerTreeEditPart">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" 
+        key="org.eclipse.ve.internal.cde.core.creationtool.policy" 
+        value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.DefaultLayoutManagerCreationPolicy:java.awt.Container"/>      
     </objectsToAttach>
-   <objectsToAttach beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ContainerProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
-   <objectsToAttach expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.ContainerDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
+   <objectsToAttach xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
+     beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ContainerProxyAdapter"/>
+   <objectsToAttach xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"
+     expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.ContainerDecoder"
+     source="codegen.CodeGenHelperClass"/>
    <objectsToAttach name="layout" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
-      <eAnnotations propertyDescriptorClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.LayoutPropertyDescriptor" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"/>
+      <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
+         propertyDescriptorClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.LayoutPropertyDescriptor"/>
     </objectsToAttach>
    <objectsToAttach containment="true" eType="ecore:EClass containerVisuals.ecore#ConstraintComponent" name="components" upperBound="-1" xmi:id="_eStructuralFeatures1" xsi:type="ecore:EReference">
       <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>

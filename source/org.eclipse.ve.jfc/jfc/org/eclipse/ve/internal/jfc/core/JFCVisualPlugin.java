@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFCVisualPlugin.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-21 10:39:45 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-21 11:37:52 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -21,7 +21,7 @@ public class JFCVisualPlugin extends Plugin {
 
 	private static JFCVisualPlugin PLUGIN;
 	public static final String DEFAULT_LAYOUTMANAGER = "DEFAULT_LAYOUTMANAGER";
-	public static final String DEFAULT_LAYOUTMANAGER_VALUE = "javax.swing.GridBagLayout";
+	public static final String DEFAULT_LAYOUTMANAGER_VALUE = "java.awt.GridBagLayout";
 	public static final String PREFERENCE_PAGE_ID =  "org.eclipse.ve.internal.jfc.PreferencePage"; //$NON-NLS-1$
 	private String[][] layoutManagers;
 
@@ -38,7 +38,7 @@ public class JFCVisualPlugin extends Plugin {
 		  layoutManagers = new String[][] {
 		    new String[] {"null","FlowLayout","BorderLayout","GridBagLayout","GridLayout",
 				         "BoxLayout(X_AXIS)","BoxLayout(Y_AXIS)","CardLayout"},
-		    new String[] {null,"javax.swing.FlowLayout","javax.swing.BorderLayout","javax.swing.GridBagLayout","javax.swing.GridLayout",
+		    new String[] {null,"java.awt.FlowLayout","java.awt.BorderLayout","java.awt.GridBagLayout","java.awt.GridLayout",
 				         "javax.swing.BoxLayoutX_Axis","javax.swing.BoxLayoutY_Axis","java.awt.CardLayout"}
 		  };
 		};

@@ -48,6 +48,8 @@ public class SWTPreferencePageContents extends Composite {
 						currentlyCheckedItem.setChecked(false);
 					}
 					currentlyCheckedItem = selectedItem;
+				} else {
+					currentlyCheckedItem = null;
 				}
 			}
 		});
@@ -65,6 +67,7 @@ public class SWTPreferencePageContents extends Composite {
 			item.setData(TYPE_NAME,typeName);
 			if(typeName != null && typeName.equals(defaultLayoutTypeName)){
 				item.setChecked(true);
+				currentlyCheckedItem = item;
 			}
 		}
 	}
