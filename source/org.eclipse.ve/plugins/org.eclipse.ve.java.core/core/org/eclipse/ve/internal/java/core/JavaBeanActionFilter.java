@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanActionFilter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.10 $  $Date: 2005-09-21 23:09:04 $ 
  */
 import org.eclipse.emf.ecore.*;
 import org.eclipse.gef.EditPart;
@@ -104,13 +104,13 @@ public class JavaBeanActionFilter extends CDEActionFilter {
 	public boolean testAttribute(Object target, String name, String value) {
 		if (!(target instanceof EditPart))	//Can only handle edit parts
 			return false;
-			
-		if (name.equals(BEAN_TYPE_STRING) && ((EditPart) target).getModel() instanceof IJavaInstance) {
+		EditPart editPart = (EditPart)target;
+		if (name.equals(BEAN_TYPE_STRING) && (editPart.getModel() instanceof IJavaInstance)) {
 			// Really don't like fluffing it up. But that is the best way because isInstance tests in java model land are complicated.
 			// Besides it only will fluff it up once per project and find that it is invalid only once. So following tests will be quicker.
-			EClassifier type = JavaRefFactory.eINSTANCE.reflectType(value, JavaEditDomainHelper.getResourceSet(EditDomain.getEditDomain((EditPart)target)));
+			EClassifier type = JavaRefFactory.eINSTANCE.reflectType(value, JavaEditDomainHelper.getResourceSet(EditDomain.getEditDomain(editPart)));
 			if (type != null)
-				return type.isInstance(((EditPart) target).getModel());
+				return type.isInstance(editPart.getModel());
 		}
 		
 		// Pass this test up to the parent CDEActionFilter

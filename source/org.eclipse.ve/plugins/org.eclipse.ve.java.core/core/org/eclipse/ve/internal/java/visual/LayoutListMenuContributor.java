@@ -59,7 +59,6 @@ public abstract class LayoutListMenuContributor {
 				}
 				public void run() {
 					RuledCommandBuilder cbld = new RuledCommandBuilder(editDomain);								
-					// null involves cancelling
 					ILayoutPolicyFactory layoutFactory = null;
 					IJavaInstance newLayout = null;					
 					if(layoutTypeName == null || layoutTypeName.length() == 0){

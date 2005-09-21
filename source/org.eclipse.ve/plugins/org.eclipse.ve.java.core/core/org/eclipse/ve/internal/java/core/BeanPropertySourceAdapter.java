@@ -9,17 +9,20 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.11 $ $Date: 2005-08-25 20:36:05 $
+ * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.12 $ $Date: 2005-09-21 23:09:04 $
  */
 package org.eclipse.ve.internal.java.core;
 
-import java.util.List;
+import java.util.*;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.ui.IActionFilter;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
@@ -29,7 +32,9 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.java.JavaClass;
+import org.eclipse.jem.java.JavaRefFactory;
 
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
@@ -38,8 +43,9 @@ import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
  * 
  * @since 1.0.0
  */
-public class BeanPropertySourceAdapter extends PropertySourceAdapter {
+public class BeanPropertySourceAdapter extends PropertySourceAdapter implements IAdaptable {
 
+	private List fPropertySourceContributors;	
 	/**
 	 * Get the target as a bean.
 	 * @return 
@@ -75,6 +81,47 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter {
 			}
 		}
 		return false;
+	}
+	
+	
+	public IPropertyDescriptor[] getPropertyDescriptors() {
+		if(fPropertySourceContributors == null){
+			return super.getPropertyDescriptors();
+		} else {
+			IPropertyDescriptor[] descriptors = super.getPropertyDescriptors();
+			// See if there is a contributor who wishes to add their own descriptors
+			List descriptorsList = new ArrayList(descriptors.length + 5);
+			for (int i = 0; i < descriptors.length; i++) {
+				descriptorsList.add(descriptors[i]);
+			}			
+			Iterator iter = fPropertySourceContributors.iterator();
+			while(iter.hasNext()){
+				((PropertySourceContributor)iter.next()).contributePropertyDescriptors(descriptorsList);
+			}
+			return (IPropertyDescriptor[]) descriptorsList.toArray(new IPropertyDescriptor[descriptorsList.size()]);
+		}
+	}
+	
+	private void addPropertySourceContributor(PropertySourceContributor propertySourceContributor){
+		if(fPropertySourceContributors == null){
+			fPropertySourceContributors = new ArrayList(1);
+			fPropertySourceContributors.add(propertySourceContributor);
+		}
+	}	
+	
+	public void setTarget(Notifier newTarget) {
+		super.setTarget(newTarget);
+		// See if there are any contributors registered for the JavaClass type that wish to register
+		List adaptableContributors = domain.getContributors(this);
+		if(adaptableContributors != null){
+			Iterator iter = adaptableContributors.iterator();
+			while(iter.hasNext()){
+				PropertySourceContributor propertySourceContributor = ((AdaptableContributorFactory)iter.next()).getPropertySourceContributor(this);
+				if(propertySourceContributor != null){
+					addPropertySourceContributor(propertySourceContributor);
+				}
+			}
+		}				
 	}
 
 	/*
@@ -146,6 +193,34 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter {
 	 */
 	protected List getAllFeatures(EClass cls) {
 		return cls instanceof JavaClass ? ((JavaClass) cls).getAllProperties() : super.getAllFeatures(cls);
+	}
+
+	public static final String BEAN_TYPE_STRING = "BEANTYPE"; //$NON-NLS-1$
+	
+	public EditDomain getEditDomain(){
+		return domain;
+	}
+	
+	private static IActionFilter SINGLETON_FILTER;
+	public Object getAdapter(Class aKey) {
+		if (aKey == IActionFilter.class) {
+			if(SINGLETON_FILTER == null){
+				SINGLETON_FILTER = new CDEActionFilter(){
+					public boolean testAttribute(Object target, String name, String value) {
+						BeanPropertySourceAdapter propSourceAdapter = (BeanPropertySourceAdapter)target;
+						if (name.equals(BEAN_TYPE_STRING) && (propSourceAdapter.getTarget() instanceof IJavaInstance)) {
+							EClassifier type = JavaRefFactory.eINSTANCE.reflectType(value, JavaEditDomainHelper.getResourceSet( propSourceAdapter.getEditDomain()));
+							if (type != null)
+								return type.isInstance(propSourceAdapter.getTarget());
+						}					
+						// Pass this test up to the parent CDEActionFilter
+						return super.testAttribute(target, name, value);
+					}
+				};
+			}
+			return SINGLETON_FILTER;
+		};
+		return null;
 	}
 
 }

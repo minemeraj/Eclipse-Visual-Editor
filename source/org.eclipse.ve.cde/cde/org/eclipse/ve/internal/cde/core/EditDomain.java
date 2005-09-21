@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: EditDomain.java,v $
- *  $Revision: 1.12 $  $Date: 2005-09-19 20:37:48 $ 
+ *  $Revision: 1.13 $  $Date: 2005-09-21 23:09:01 $ 
  */
 
 import java.text.MessageFormat;
@@ -32,6 +32,7 @@ import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cdm.DiagramData;
 
 import org.eclipse.ve.internal.cde.commands.AddAnnotationsCommand;
+import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
@@ -408,10 +409,10 @@ public class EditDomain extends DefaultEditDomain {
 	}
 	
 	private IConfigurationElement[] configElements;
-	private EditPartContributorFactory[] contributorFactories;
+	private AdaptableContributorFactory[] contributorFactories;
 	// This factory is used whenever a factory could not be successfully created so that it doesn't spend time trying each time.
 	// It is a factory that will return no contributors.
-	private static EditPartContributorFactory INVALID_FACTORY = new EditPartContributorFactory(){
+	private static AdaptableContributorFactory INVALID_FACTORY = new AdaptableContributorFactory(){
 	
 		public GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart) {
 			return null;
@@ -420,13 +421,17 @@ public class EditDomain extends DefaultEditDomain {
 		public TreeEditPartContributor getTreeEditPartContributor(TreeEditPart treeEditPart) {
 			return null;
 		}
+
+		public PropertySourceContributor getPropertySourceContributor(PropertySourceAdapter propertySourceAdapter) {
+			return null;
+		}
 	
 	};
 	
 	
-	public List getEditPartContributors(EditPart anEditPart) {
+	public List getContributors(IAdaptable anAdaptable) {
 		if(configElements == null){
-			IExtensionPoint extp = Platform.getExtensionRegistry().getExtensionPoint("org.eclipse.ve.cde.edit_part_contributor");
+			IExtensionPoint extp = Platform.getExtensionRegistry().getExtensionPoint("org.eclipse.ve.cde.contributor");
 			IExtension[] extensions = extp.getExtensions();
 			List configElementsList = new ArrayList();
 			for (int i = 0; i < extensions.length; i++) {
@@ -437,9 +442,9 @@ public class EditDomain extends DefaultEditDomain {
 				}
 			}
 			configElements = (IConfigurationElement[]) configElementsList.toArray(new IConfigurationElement[configElementsList.size()]);
-			contributorFactories = new EditPartContributorFactory[configElements.length];
+			contributorFactories = new AdaptableContributorFactory[configElements.length];
 		}
-		IActionFilter actionFilter = (IActionFilter) anEditPart.getAdapter(IActionFilter.class);
+		IActionFilter actionFilter = (IActionFilter) anAdaptable.getAdapter(IActionFilter.class);
 		// Now we have some of the configElements get their filter
 		List result = new ArrayList(1);
 		for (int i = 0; i < configElements.length; i++) {
@@ -448,12 +453,12 @@ public class EditDomain extends DefaultEditDomain {
 			for (int j = 0; j < filters.length; j++) {
 				String name = filters[j].getAttribute("name");
 				String value = filters[j].getAttribute("value");
-				if (actionFilter.testAttribute(anEditPart,name,value)){
+				if (actionFilter.testAttribute(anAdaptable,name,value)){
 					// The edit part wishes to be contributed to.  See if we have a contributor existing for this, or if not create one 
-					EditPartContributorFactory editPartContributorFactory = contributorFactories[i];
+					AdaptableContributorFactory editPartContributorFactory = contributorFactories[i];
 					if(editPartContributorFactory == null){
 						try {
-							editPartContributorFactory = contributorFactories[i] = (EditPartContributorFactory) configElement.createExecutableExtension("class");
+							editPartContributorFactory = contributorFactories[i] = (AdaptableContributorFactory) configElement.createExecutableExtension("class");
 						} catch (CoreException e) {
 							CDEPlugin.getPlugin().getLogger().log(e,Level.WARNING);
 							contributorFactories[i] = INVALID_FACTORY;

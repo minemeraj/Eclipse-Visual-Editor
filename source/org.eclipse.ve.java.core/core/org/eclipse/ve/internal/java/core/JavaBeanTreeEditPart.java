@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.20 $ $Date: 2005-09-19 20:37:49 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.21 $ $Date: 2005-09-21 23:09:04 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -86,11 +86,11 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 	}
 
 	public void activate() {
-		List editPartContributors = getEditDomain().getEditPartContributors(this);
+		List editPartContributors = getEditDomain().getContributors(this);
 		if(editPartContributors != null){
 			Iterator iter = editPartContributors.iterator();
 			while(iter.hasNext()){
-				TreeEditPartContributor treeEditPartContributor = ((EditPartContributorFactory)iter.next()).getTreeEditPartContributor(this);
+				TreeEditPartContributor treeEditPartContributor = ((AdaptableContributorFactory)iter.next()).getTreeEditPartContributor(this);
 				if(treeEditPartContributor != null){
 					addEditPartContributor(treeEditPartContributor);
 				}

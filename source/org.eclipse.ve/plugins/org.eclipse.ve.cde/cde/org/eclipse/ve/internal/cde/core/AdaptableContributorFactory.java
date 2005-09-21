@@ -9,16 +9,18 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: EditPartContributorFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2005-09-19 20:37:48 $ 
+ *  $RCSfile: AdaptableContributorFactory.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-09-21 23:09:01 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.TreeEditPart;
 
+import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
+
 /**
- * Factory for EditPart Contributors. It is contributed through the "org.eclipse.ve.cde.edit_part_contributor" extension point.
+ * Factory for Adaptable Contributors. It is contributed through the "org.eclipse.ve.contributor" extension point.
  * <p>
  * There will only be one instance per editor, so it should not maintain state. 
  * It will not be told when it is no longer of use so any state may hold onto system resoures by accident.
@@ -28,7 +30,7 @@ import org.eclipse.gef.TreeEditPart;
  * The factory will be selected via the filter mechanism in the extension point.
  * @since 1.2.0
  */
-public interface EditPartContributorFactory {
+public interface AdaptableContributorFactory {
 
 	/**
 	 * Return the tree edit part contributor or null if it will not be contributing.
@@ -46,6 +48,15 @@ public interface EditPartContributorFactory {
 	 * 
 	 * @since 1.2.0
 	 */
-	GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart);	
+	GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart);
+	
+	/**
+	 * Return the PropertySourceCongtributor or null if it will not be contributing. 
+	 * @param propertySourceAdapter
+	 * @return property source contributor of <code>null</code> if not contributing.
+	 * 
+	 * @since 1.2.0
+	 */
+	PropertySourceContributor getPropertySourceContributor(PropertySourceAdapter propertySourceAdapter);
 	
 }
