@@ -13,12 +13,13 @@ package org.eclipse.ve.internal.swt;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jdt.ui.wizards.IClasspathContainerPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public  class SWTContainerWizardPage extends WizardPage implements IClasspathContainerPage {
 	
@@ -30,7 +31,7 @@ public  class SWTContainerWizardPage extends WizardPage implements IClasspathCon
 		super("Standard Widget Toolkit (SWT)"); //$NON-NLS-1$
 		setTitle(SWTMessages.SWTContainerWizardPage_wizardTitle); 
 		setMessage(SWTMessages.SWTContainerWizardPage_wizardMessage); 
-		setImageDescriptor(JavaPluginImages.DESC_WIZBAN_ADD_LIBRARY);
+		setImageDescriptor(JavaVEPlugin.imageDescriptorFromPlugin(SwtPlugin.getDefault().getBundle().getSymbolicName(), "icons/addlibrary_wiz.gif"));
 	}	
 	
 	public void createControl(Composite parent) {
