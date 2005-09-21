@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: XMLViewPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-09-16 14:22:35 $ 
+ *  $Revision: 1.2 $  $Date: 2005-09-21 10:39:50 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -20,9 +20,12 @@ import java.util.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gef.commands.CommandStackListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.*;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
@@ -31,7 +34,7 @@ import org.eclipse.ve.internal.java.core.XMLTextPage;
 
 public class XMLViewPart extends ContentOutline {
 	
-	public class XMLViewTextPage extends XMLTextPage {
+	public class XMLViewTextPage extends XMLTextPage implements IContentOutlinePage {
 		Map XML_SAVE_CACHE_OPTIONS = new HashMap(3);
 		public EditDomain domain;		
 		public XMLViewTextPage(EditDomain anEditDomain) {
@@ -46,14 +49,25 @@ public class XMLViewPart extends ContentOutline {
 	        });
 		}
 		public void refresh() {
-			Resource resource = domain.getDiagramData().eResource(); 
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			try {
-				resource.save(os, XML_SAVE_CACHE_OPTIONS);
-				setText(os.toString());
-			} catch (Exception e) {
-				setText(""); //$NON-NLS-1$
+			if(domain.getDiagramData() != null){
+				Resource resource = domain.getDiagramData().eResource(); 
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				try {
+					resource.save(os, XML_SAVE_CACHE_OPTIONS);
+					setText(os.toString());
+				} catch (Exception e) {
+					setText(""); //$NON-NLS-1$
+				}
 			}
+		}
+		public void addSelectionChangedListener(ISelectionChangedListener listener) {			
+		}
+		public ISelection getSelection() {
+			return null;
+		}
+		public void removeSelectionChangedListener(ISelectionChangedListener listener) {			
+		}
+		public void setSelection(ISelection selection) {			
 		}
 	}
 

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CDECreationTool.java,v $ $Revision: 1.9 $ $Date: 2005-09-08 23:21:24 $
+ * $RCSfile: CDECreationTool.java,v $ $Revision: 1.10 $ $Date: 2005-09-21 10:39:47 $
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -68,7 +68,10 @@ public class CDECreationTool extends CreationTool {
 		 * 
 		 * @since 1.0.0
 		 */
-		public Command getCommand(Command aCommand, EditDomain domain, CreateRequest createRequest);
+		public Command getPostCreateCommand(Command aCommand, EditDomain domain, CreateRequest createRequest);
+		
+		public Command getPreCreateCommand(EditDomain domain, CreateRequest createRequest);
+		
 	}
 
 	protected CreationPolicy fCreationPolicy;
@@ -122,7 +125,7 @@ public class CDECreationTool extends CreationTool {
 				}
 				fHasLookedupCreationPolicy = true;
 			}
-			if (fCreationPolicy != null) { return fCreationPolicy.getCommand(result, (EditDomain) getDomain(), getCreateRequest()); }
+			if (fCreationPolicy != null) { return fCreationPolicy.getPostCreateCommand(result, (EditDomain) getDomain(), getCreateRequest()); }
 		}
 		return result;
 	}

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.29 $ $Date: 2005-09-14 15:35:22 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.30 $ $Date: 2005-09-21 10:39:14 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -208,7 +208,7 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 						protected EStructuralFeature getLayoutSF() {
 							return sf_compositeLayout;
 						}
-
+						
 						protected IBeanProxy getLayoutBeanProxyAdapter() {
 							return BeanSWTUtilities.invoke_getLayout(getCompositeProxyAdapter().getBeanProxy());
 						}
@@ -220,6 +220,10 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 						}
 						protected VisualContainerPolicy getVisualContainerPolicy() {
 							return getContainerPolicy();
+						}
+						protected String getPreferencePageID() {
+							return SwtPlugin.PREFERENCE_PAGE_ID;
+
 						}
 					};
 					layoutListMenuContributor.fillMenuManager(aMenuManager);

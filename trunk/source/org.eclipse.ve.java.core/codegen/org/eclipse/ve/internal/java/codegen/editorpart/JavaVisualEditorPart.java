@@ -11,10 +11,9 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.150 $  $Date: 2005-09-16 14:22:35 $ 
+ *  $Revision: 1.151 $  $Date: 2005-09-21 10:39:50 $ 
  */
 
-import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.*;
@@ -37,7 +36,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.CommandStack;
-import org.eclipse.gef.commands.CommandStackListener;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.*;
 import org.eclipse.gef.palette.ToolEntry;
@@ -59,9 +57,8 @@ import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.*;
-import org.eclipse.swt.dnd.*;
-import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
@@ -138,7 +135,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	protected JavaSelectionProvider mainSelectionProvider;
 
 	protected GraphicalViewer primaryViewer;
-	protected XMLTextPage xmlTextPage;
 	private CustomPalettePage palettePage;	// Palette page for the palette viewer	
 
 	protected JaveVisualEditorLoadingFigureController loadingFigureController;
@@ -555,6 +551,9 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		if (store.getBoolean(VCEPreferences.OPEN_JAVABEANS_VIEW)) {
 			site.getPage().showView("org.eclipse.ve.internal.java.codegen.editorpart.BeansList", null, IWorkbenchPage.VIEW_VISIBLE); //$NON-NLS-1$
 		}
+		if (VCEPreferences.isXMLTextOn()){
+			site.getPage().showView("org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart", null, IWorkbenchPage.VIEW_VISIBLE); //$NON-NLS-1$			
+		}
 
 	}
 
@@ -838,15 +837,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 * Create the primary viewer, which is the Graphical Viewer.
 	 */
 	protected Control createPrimaryViewer(Composite parent) {
-		if (VCEPreferences.isXMLTextOn()) {
-			// If the Pref store wants the XML page put it on a sash
-			SashForm sashform = new SashForm(parent, SWT.VERTICAL);
-			createGraphicalViewer(sashform);
-			createXMLTextViewerControl(sashform);
-			return sashform;
-		} else {
-			return createGraphicalViewer(parent);
-		}
+		return createGraphicalViewer(parent);
 	}
 
 	protected Control createGraphicalViewer(Composite parent) {
@@ -999,7 +990,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					doTimerStep = false;	// Done with first load, don't do it again.
 					PerformanceMonitorUtil.getMonitor().snapshot(101);	// Done complete load everything is now changable by user.					
 				}
-				refreshTextPage();
 			} catch (RuntimeException e) {
 				noLoadPrompt(e);
 				throw e;
@@ -1046,34 +1036,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		
 	}
 	private Action copyXMLAction;
-	protected void createXMLTextViewerControl(Composite parent) {
-		xmlTextPage = new XMLTextPage();
-		xmlTextPage.createControl(parent);
-		xmlTextPage.getControl().addFocusListener(focusListener);
-
-		// Add a command stack listener to refresh the text of the XML source page
-		// each time something happens
-		editDomain.getCommandStack().addCommandStackListener(new CommandStackListener() {
-			public void commandStackChanged(java.util.EventObject anEventObject) {
-				refreshTextPage();
-			}
-		});
-
-		// Having created the page give it the initial source
-		refreshTextPage();
-		
-		copyXMLAction = new Action(){
-			public void runWithEvent(Event event){
-				Clipboard cb = new Clipboard(Display.getDefault());
-				cb.setContents(new Object[] {xmlTextPage.getSelectedText()}, new Transfer[] {TextTransfer.getInstance()});
-				cb.dispose();						
-			}
-			public void run(){
-				runWithEvent(null);
-			}
-		};
-		
-	}
 
 	private static final Map XML_SAVE_CACHE_OPTIONS;
 	static {
@@ -1081,22 +1043,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
 		XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));
         XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8");//$NON-NLS-1$
-	}
-	public void refreshTextPage() {
-		if (xmlTextPage != null && modelBuilder != null && modelBuilder.getModelRoot() != null) {
-			if (modelBuilder.getModelRoot().eResource() != null) {
-				ByteArrayOutputStream os = new ByteArrayOutputStream();
-				try {
-					modelBuilder.getModelRoot().eResource().save(os, XML_SAVE_CACHE_OPTIONS);
-					xmlTextPage.setText(os.toString());
-				} catch (Exception e) {
-					JavaVEPlugin.log(e, Level.WARNING);
-					xmlTextPage.setText(""); //$NON-NLS-1$
-				}
-			} else {
-				xmlTextPage.setText(""); //$NON-NLS-1$
-			}
-		}
 	}
 
 	private static final URI BASE_PALLETE = URI.createURI("platform:/plugin/org.eclipse.ve.java.core/java_palette.xmi"); //$NON-NLS-1$
@@ -2187,7 +2133,6 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 								} else
 									rootPropertySheetEntry.refreshFromRoot();
 							}
-							refreshTextPage();	// Because model has been updated.
 						}
 					});
 				}

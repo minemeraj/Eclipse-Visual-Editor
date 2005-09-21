@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableColumnCreationPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.5 $  $Date: 2005-09-21 10:39:14 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -45,7 +45,7 @@ public class TableColumnCreationPolicy implements CreationPolicy {
 
 	protected static final String fDefaultWidth = "60"; //$NON-NLS-1$
 
-	public Command getCommand(Command aCommand, final EditDomain domain, final CreateRequest createRequest) {
+	public Command getPostCreateCommand(Command aCommand, final EditDomain domain, final CreateRequest createRequest) {
 		Command setTableColumnSettingCommand = new CommandWrapper() {
 
 			protected boolean prepare() {
@@ -69,6 +69,10 @@ public class TableColumnCreationPolicy implements CreationPolicy {
 		result.append(setTableColumnSettingCommand);
 		result.append(aCommand);
 		return result;
+	}
+
+	public Command getPreCreateCommand(EditDomain domain, CreateRequest createRequest) {
+		return null;
 	}
 
 }

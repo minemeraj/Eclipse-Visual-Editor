@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: RootPaneCreationPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-21 10:39:45 $ 
  */
 
 import org.eclipse.emf.ecore.*;
@@ -44,7 +44,7 @@ public class RootPaneCreationPolicy implements CreationPolicy {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.emf.EMFCreationTool.CreationPolicy#getCommand(org.eclipse.gef.commands.Command, org.eclipse.ve.internal.cde.core.EditDomain, org.eclipse.gef.requests.CreateRequest)
 	 */
-	public Command getCommand(
+	public Command getPostCreateCommand(
 		Command aCommand,
 		EditDomain domain,
 		CreateRequest aCreateRequest) {
@@ -101,6 +101,10 @@ public class RootPaneCreationPolicy implements CreationPolicy {
 			cbld.setApplyRules(oldApply);
 			cbld.setPropertyRule(oldProperty);
 		}
+	}
+
+	public Command getPreCreateCommand(EditDomain domain, CreateRequest createRequest) {
+		return null;
 	}
 
 }

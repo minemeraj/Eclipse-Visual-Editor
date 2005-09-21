@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTCLabelCreationPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.3 $  $Date: 2005-09-21 10:39:13 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -32,7 +32,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 
 public class SWTCLabelCreationPolicy extends SWTLabelCreationPolicy {
-	public Command getCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest){
+	public Command getPostCreateCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest){
 		
 		Command setCLabelCommand = new CommandWrapper(){
 			

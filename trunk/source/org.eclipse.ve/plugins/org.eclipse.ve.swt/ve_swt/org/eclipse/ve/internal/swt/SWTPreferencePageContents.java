@@ -6,13 +6,13 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.Label;
 
 public class SWTPreferencePageContents extends Composite {
 
 	private Table table = null;
 	private TableItem currentlyCheckedItem = null;
 	private Label label = null;
+	private static final String TYPE_NAME = "TYPE_NAME";
 
 	public SWTPreferencePageContents(Composite parent, int style) {
 		super(parent, style);
@@ -44,14 +44,10 @@ public class SWTPreferencePageContents extends Composite {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				TableItem selectedItem = (TableItem)e.item;
 				if (selectedItem.getChecked()){
-//					Ensure only one item can be checked
-					if (currentlyCheckedItem != null){
+					if(currentlyCheckedItem != null){
 						currentlyCheckedItem.setChecked(false);
-						currentlyCheckedItem = null;
-					}					
+					}
 					currentlyCheckedItem = selectedItem;
-				} else if(selectedItem == currentlyCheckedItem){
-					currentlyCheckedItem = null;
 				}
 			}
 		});
@@ -60,16 +56,13 @@ public class SWTPreferencePageContents extends Composite {
 	public void init(Preferences fStore) {
 		
 		// Fill the layout table with the allowable layouts
-		String[][] layoutItems = new String[][] {
-			new String[] {"null","GridLayout","FillLayout","RowLayout","FormLayout"},
-			new String[] {null,"org.eclipse.swt.layout.GridLayout","org.eclipse.swt.layout.FillLayout","org.eclipse.swt.layout.RowLayout","org.eclipse.swt.layout.FormLayout"}
-		};
+		String[][] layoutItems = SwtPlugin.getDefault().getLayouts();
 		String defaultLayoutTypeName = fStore.getString(SwtPlugin.DEFAULT_LAYOUT);		
 		for (int i = 0; i < layoutItems[0].length; i++) {
 			TableItem item = new TableItem(table,SWT.NONE);
 			item.setText(layoutItems[0][i]);
 			String typeName = layoutItems[1][i];
-			item.setData("TYPE_NAME",typeName);
+			item.setData(TYPE_NAME,typeName);
 			if(typeName != null && typeName.equals(defaultLayoutTypeName)){
 				item.setChecked(true);
 			}
@@ -77,10 +70,6 @@ public class SWTPreferencePageContents extends Composite {
 	}
 	
 	public String getLayoutTypeName() {
-		if (table.getSelectionCount() == 1){
-			return (String) table.getSelection()[0].getData("TYPE_NAME");
-		} else {
-			return null;
-		}
+		return (String) (currentlyCheckedItem == null ? null : currentlyCheckedItem.getData(TYPE_NAME));
 	}
 }

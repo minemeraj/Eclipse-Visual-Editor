@@ -13,8 +13,13 @@
          <listChanges referenceValues="_eStructuralFeatures1"/>
       </value>
    </objectChanges>
-   <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeGraphicalEditPart:true" treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+   <objectsToAttach xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+        graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeGraphicalEditPart:true" 
+        treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeTreeEditPart" xmi:id="_eAnnotations">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" 
+        key="org.eclipse.ve.internal.cde.core.creationtool.policy" 
+        value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.DefaultLayoutCreationPolicy:org.eclipse.swt.widgets.Composite"/>
     </objectsToAttach>
    <objectsToAttach beanLocation="GLOBAL_GLOBAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
    <objectsToAttach expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.CompositeDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>

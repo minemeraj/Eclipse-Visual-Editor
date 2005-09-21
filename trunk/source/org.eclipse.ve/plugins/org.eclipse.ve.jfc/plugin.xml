@@ -571,4 +571,16 @@
             class="org.eclipse.ve.internal.jfc.codegen.AWTChooseBeanContributor">
       </contributor>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%JFC.preferencename Swing"
+            category="org.eclipse.ve.internal.java.vce.VCEPreferencePage"
+            class="org.eclipse.ve.internal.jfc.core.JFCPreferencePage"
+            id="org.eclipse.ve.internal.jfc.PreferencePage">
+      </page>
+   </extension>     
+   <extension point="org.eclipse.core.runtime.preferences">
+     <initializer class="org.eclipse.ve.internal.jfc.core.JFCPreferenceInitializer"/>
+   </extension>   
 </plugin>

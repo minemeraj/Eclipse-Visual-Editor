@@ -33,10 +33,4 @@ public class SWTPreferencePage extends org.eclipse.jface.preference.PreferencePa
 		fStore.setValue(SwtPlugin.DEFAULT_LAYOUT,pageContents.getLayoutTypeName());	
 		return true;
 	}
-	
-	protected void performDefaults() {
-		fStore.setValue(SwtPlugin.DEFAULT_LAYOUT,"org.eclipse.swt.widgets.layout.GridLayout");
-		super.performDefaults();
-	}
-
 }

@@ -388,10 +388,13 @@
    
    <extension
          point="org.eclipse.ui.views">
+      <category
+         id="org.eclipse.jdt.ui.java.ve"
+         name="Visual Editor"/>
       <view
             name="XML View"
-            icon="icons/full/ctool16/javavisualeditor_co.gif"
-            category="org.eclipse.jdt.ui.java"
+            icon="icons/full/ctool16/general.gif"
+            category="org.eclipse.jdt.ui.java.ve"
             class="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart"
             id="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart">
       </view>

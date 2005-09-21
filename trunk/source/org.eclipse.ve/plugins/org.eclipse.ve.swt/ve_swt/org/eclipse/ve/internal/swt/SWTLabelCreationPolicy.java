@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: SWTLabelCreationPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.7 $  $Date: 2005-09-21 10:39:14 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -33,7 +33,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 public class SWTLabelCreationPolicy extends LabelCreationPolicy {
 	
-public Command getCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest){
+public Command getPostCreateCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest){
 	
 	Command setLabelCommand = new CommandWrapper(){
 		
