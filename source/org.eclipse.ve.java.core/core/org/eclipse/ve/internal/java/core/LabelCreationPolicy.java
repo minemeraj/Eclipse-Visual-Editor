@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 
 /*
- * $RCSfile: LabelCreationPolicy.java,v $ $Revision: 1.7 $ $Date: 2005-08-24 23:30:45 $
+ * $RCSfile: LabelCreationPolicy.java,v $ $Revision: 1.8 $ $Date: 2005-09-21 10:39:50 $
  */
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -46,7 +46,7 @@ public class LabelCreationPolicy implements CreationPolicy, IExecutableExtension
 
 	protected String fPropertyKey = "text"; //$NON-NLS-1$
 
-	public Command getCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest) {
+	public Command getPostCreateCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest) {
 
 		Command setLabelCommand = new CommandWrapper() {
 
@@ -112,6 +112,10 @@ public class LabelCreationPolicy implements CreationPolicy, IExecutableExtension
 		} else {
 			fLabelKey = s;
 		}
+	}
+
+	public Command getPreCreateCommand(EditDomain domain, CreateRequest createRequest) {
+		return null;
 	}
 
 }

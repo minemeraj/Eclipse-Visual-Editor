@@ -47,6 +47,11 @@
             plugin="org.eclipse.swt"
             registryType="org.eclipse.jem.IDE"/>
    </extension>   
+
+   <extension point="org.eclipse.core.runtime.preferences">
+     <initializer class="org.eclipse.ve.internal.swt.SWTPreferenceInitializer"/>
+   </extension>
+   
    <extension
          point="org.eclipse.jem.beaninfo.registrations">
       <registration

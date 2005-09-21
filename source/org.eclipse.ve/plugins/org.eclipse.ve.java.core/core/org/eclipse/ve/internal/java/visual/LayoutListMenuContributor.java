@@ -4,6 +4,10 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -35,6 +39,10 @@ public abstract class LayoutListMenuContributor {
 		return EditDomain.getEditDomain(getEditPart());		
 	}
 	
+	protected IJavaInstance getNewLayoutInstance(String layoutTypeName){
+		return layoutTypeName == null ? null : BeanUtilities.createJavaObject(layoutTypeName,getBean().eResource().getResourceSet(),(String)null);
+	}
+	
 	public void fillMenuManager(MenuManager aMenuManager){
 		final EditDomain editDomain = EditDomain.getEditDomain(getEditPart());				
 		// Get the type of the current layout manager class to set who is selected in the list
@@ -55,22 +63,26 @@ public abstract class LayoutListMenuContributor {
 				public void run() {
 					RuledCommandBuilder cbld = new RuledCommandBuilder(editDomain);								
 					// null involves cancelling
-					IJavaInstance newLayout = layoutTypeName.length() == 0 ? null : BeanUtilities.createJavaObject(layoutTypeName,getBean().eResource().getResourceSet(),(String)null);
-					// 	Change the layout manager
-					JavaClass layoutManagerClass = Utilities.getJavaClass(layoutTypeName,getBean().eResource().getResourceSet());
-					ILayoutPolicyFactory layoutFactory = getLayoutPolicyFactory(layoutManagerClass);					
-					if (layoutFactory != null) {
-						VisualContainerPolicy cp = getVisualContainerPolicy();
-						cp.setContainer(getBean());
-						ILayoutSwitcher switcher = layoutFactory.getLayoutSwitcher(cp);
-						if (switcher != null) {
-							cbld.append(switcher.getCommand(getLayoutSF(), newLayout));
+					if(layoutTypeName == null){
+						cbld.cancelAttributeSetting(getBean(),getLayoutSF());
+					} else {
+						// 	Change the layout manager
+						IJavaInstance newLayout = getNewLayoutInstance(layoutTypeName);					
+						JavaClass layoutManagerClass = Utilities.getJavaClass(layoutTypeName,getBean().eResource().getResourceSet());
+						ILayoutPolicyFactory layoutFactory = getLayoutPolicyFactory(layoutManagerClass);					
+						if (layoutFactory != null) {
+							VisualContainerPolicy cp = getVisualContainerPolicy();
+							cp.setContainer(getBean());
+							ILayoutSwitcher switcher = layoutFactory.getLayoutSwitcher(cp);
+							if (switcher != null) {
+								cbld.append(switcher.getCommand(getLayoutSF(), newLayout));
+							}
+						} else {							
+							// 	If no switcher apply the value
+							cbld.applyAttributeSetting(getBean(),getLayoutSF(), newLayout);
 						}
-					} else {							
-						// If no switcher apply the value
-						cbld.applyAttributeSetting(getBean(),getLayoutSF(), newLayout);
+						editDomain.getCommandStack().execute(cbld.getCommand());
 					}
-					editDomain.getCommandStack().execute(cbld.getCommand());								
 				}
 			};
 			// Set the checked state to match the current layout manager
@@ -82,6 +94,20 @@ public abstract class LayoutListMenuContributor {
 			}
 			aMenuManager.add(changeLayoutAction);						
 		}
+		if(aMenuManager.getItems() != null){
+			new MenuItem(aMenuManager.getMenu(),SWT.SEPARATOR);
+			// Create a separator and then a "Preferences" that opens the preference page directly to change the default layout
+			aMenuManager.add(new Action(){
+				public void run() {
+					String prefID = getPreferencePageID();
+					PreferencesUtil.createPreferenceDialogOn(Display.getCurrent().getActiveShell(), prefID, new String[]{prefID}, null).open();
+				}
+				public String getText() {
+					return "Preferences";
+				}
+			});
+		}
 	}
+	protected abstract String getPreferencePageID();
 
 }

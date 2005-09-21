@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.19 $ $Date: 2005-09-13 16:23:04 $
+ * $RCSfile: ContainerGraphicalEditPart.java,v $ $Revision: 1.20 $ $Date: 2005-09-21 10:39:46 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -28,6 +28,7 @@ import org.eclipse.gef.*;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.java.JavaClass;
@@ -218,6 +219,12 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 						protected IBeanProxy getLayoutBeanProxyAdapter() {
 							return BeanAwtUtilities.invoke_getLayout(BeanProxyUtilities.getBeanProxy(getBean()));
 						}
+						protected IJavaInstance getNewLayoutInstance(String layoutTypeName) {
+							JavaClass javaClass = Utilities.getJavaClass(layoutTypeName,getBean().eResource().getResourceSet());
+							ILayoutPolicyFactory factory =
+								BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(javaClass, getEditDomain());
+							return factory.getLayoutManagerInstance((IJavaObjectInstance) getBean(), javaClass, getBean().eResource().getResourceSet());		
+						}
 						protected String[][] getLayoutItems() {
 							return LayoutManagerCellEditor.getLayoutManagerItems(getEditDomain());
 						}
@@ -226,6 +233,9 @@ public class ContainerGraphicalEditPart extends ComponentGraphicalEditPart {
 						}
 						protected VisualContainerPolicy getVisualContainerPolicy() {
 							return getContainerPolicy();
+						}
+						protected String getPreferencePageID() {
+							return JFCVisualPlugin.PREFERENCE_PAGE_ID;
 						}
 					};
 					layoutListMenuContributor.fillMenuManager(aMenuManager);					

@@ -56,5 +56,6 @@ Require-Bundle: org.eclipse.ve.cde,
  org.eclipse.jem.workbench,
  org.eclipse.core.runtime,
  org.eclipse.jem.util,
- org.eclipse.jem.workbench
+ org.eclipse.jem.workbench,
+ org.eclipse.ui
 Eclipse-AutoStart: true

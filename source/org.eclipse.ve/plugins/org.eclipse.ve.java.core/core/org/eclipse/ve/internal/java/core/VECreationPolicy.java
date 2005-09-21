@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VECreationPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-20 23:54:34 $ 
+ *  $Revision: 1.2 $  $Date: 2005-09-21 10:39:50 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -54,5 +54,5 @@ public abstract class VECreationPolicy implements CreationPolicy {
 	 * @since 1.0.0
 	 */
 	public abstract String getDefaultSuperString(EClass superClass);
-
+	
 }

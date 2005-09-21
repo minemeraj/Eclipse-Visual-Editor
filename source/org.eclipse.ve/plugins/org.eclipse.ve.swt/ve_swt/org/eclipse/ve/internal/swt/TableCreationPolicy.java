@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableCreationPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.6 $  $Date: 2005-09-21 10:39:14 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -44,7 +44,7 @@ public class TableCreationPolicy implements CreationPolicy {
 	protected static final String fHeaderVisible = "headerVisible"; //$NON-NLS-1$
 	protected static final String fLinesVisible = "linesVisible"; //$NON-NLS-1$
 
-	public Command getCommand(Command aCommand, final EditDomain domain, final CreateRequest createRequest) {
+	public Command getPostCreateCommand(Command aCommand, final EditDomain domain, final CreateRequest createRequest) {
 		Command setTableSettingsCommand = new CommandWrapper() {
 
 			protected boolean prepare() {
@@ -74,6 +74,10 @@ public class TableCreationPolicy implements CreationPolicy {
 		result.append(setTableSettingsCommand);
 		result.append(aCommand);
 		return result;
+	}
+
+	public Command getPreCreateCommand(EditDomain domain, CreateRequest createRequest) {
+		return null;
 	}
 
 }

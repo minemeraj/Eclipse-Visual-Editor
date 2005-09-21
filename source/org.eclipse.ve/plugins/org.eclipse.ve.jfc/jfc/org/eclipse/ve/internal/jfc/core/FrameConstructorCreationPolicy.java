@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FrameConstructorCreationPolicy.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.11 $  $Date: 2005-09-21 10:39:45 $ 
  */
 
 import java.util.*;
@@ -36,7 +36,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 public class FrameConstructorCreationPolicy extends VECreationPolicy {
 
-	public Command getCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest) {
+	public Command getPostCreateCommand(Command aCommand, final EditDomain domain, final CreateRequest aCreateRequest) {
 
 		IJavaObjectInstance newJavaObject = (IJavaObjectInstance) aCreateRequest.getNewObject();
 		if (newJavaObject.getAllocation() != null)
@@ -147,6 +147,11 @@ public class FrameConstructorCreationPolicy extends VECreationPolicy {
 			}
 		}
 		return ("super()"); //$NON-NLS-1$
+	}
+
+
+	public Command getPreCreateCommand(EditDomain domain, CreateRequest createRequest) {
+		return null;
 	}
 
 }
