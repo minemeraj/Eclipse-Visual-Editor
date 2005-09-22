@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.21 $ $Date: 2005-09-21 23:09:04 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.22 $ $Date: 2005-09-22 13:04:03 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -662,6 +662,10 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 		super.createEditPolicies();
 		installEditPolicy("JAVABEANS_EVENTS", new JavaBeanEventsEditPolicy()); //$NON-NLS-1$
 		installEditPolicy(CopyAction.REQ_COPY,new DefaultCopyEditPolicy(getEditDomain()));		
+	}
+	
+	public IJavaInstance getBean(){
+		return (IJavaInstance) getModel();
 	}
 
 }

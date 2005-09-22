@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.12 $ $Date: 2005-09-21 23:09:04 $
+ * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.13 $ $Date: 2005-09-22 13:04:03 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.IActionFilter;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
@@ -44,8 +43,7 @@ import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
  * @since 1.0.0
  */
 public class BeanPropertySourceAdapter extends PropertySourceAdapter implements IAdaptable {
-
-	private List fPropertySourceContributors;	
+	
 	/**
 	 * Get the target as a bean.
 	 * @return 
@@ -83,47 +81,6 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter implements 
 		return false;
 	}
 	
-	
-	public IPropertyDescriptor[] getPropertyDescriptors() {
-		if(fPropertySourceContributors == null){
-			return super.getPropertyDescriptors();
-		} else {
-			IPropertyDescriptor[] descriptors = super.getPropertyDescriptors();
-			// See if there is a contributor who wishes to add their own descriptors
-			List descriptorsList = new ArrayList(descriptors.length + 5);
-			for (int i = 0; i < descriptors.length; i++) {
-				descriptorsList.add(descriptors[i]);
-			}			
-			Iterator iter = fPropertySourceContributors.iterator();
-			while(iter.hasNext()){
-				((PropertySourceContributor)iter.next()).contributePropertyDescriptors(descriptorsList);
-			}
-			return (IPropertyDescriptor[]) descriptorsList.toArray(new IPropertyDescriptor[descriptorsList.size()]);
-		}
-	}
-	
-	private void addPropertySourceContributor(PropertySourceContributor propertySourceContributor){
-		if(fPropertySourceContributors == null){
-			fPropertySourceContributors = new ArrayList(1);
-			fPropertySourceContributors.add(propertySourceContributor);
-		}
-	}	
-	
-	public void setTarget(Notifier newTarget) {
-		super.setTarget(newTarget);
-		// See if there are any contributors registered for the JavaClass type that wish to register
-		List adaptableContributors = domain.getContributors(this);
-		if(adaptableContributors != null){
-			Iterator iter = adaptableContributors.iterator();
-			while(iter.hasNext()){
-				PropertySourceContributor propertySourceContributor = ((AdaptableContributorFactory)iter.next()).getPropertySourceContributor(this);
-				if(propertySourceContributor != null){
-					addPropertySourceContributor(propertySourceContributor);
-				}
-			}
-		}				
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
