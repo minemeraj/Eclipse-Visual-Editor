@@ -52,7 +52,7 @@ public abstract class LayoutListMenuContributor {
 			final String layoutTypeName = layoutItems[0][i];
 			Action changeLayoutAction = new Action(){
 				public String getText() {
-					return layoutDisplayName == null ? "null" : layoutDisplayName;
+					return layoutDisplayName == null ? "null" : layoutDisplayName; //$NON-NLS-1$
 				}
 				public String getToolTipText() {
 					return getText();
@@ -101,7 +101,7 @@ public abstract class LayoutListMenuContributor {
 					PreferencesUtil.createPreferenceDialogOn(Display.getCurrent().getActiveShell(), prefID, new String[]{prefID}, null).open();
 				}
 				public String getText() {
-					return "Preferences";
+					return InternalVisualMessages.getString("LayoutListMenuContributor.Preferences"); //$NON-NLS-1$
 				}
 			});
 		}
