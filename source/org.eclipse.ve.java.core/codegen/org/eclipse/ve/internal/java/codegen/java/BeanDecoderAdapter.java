@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.21 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.22 $  $Date: 2005-09-22 16:07:04 $ 
  */
 
 import java.util.*;
@@ -23,11 +23,10 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
-import org.eclipse.jdt.internal.ui.viewsupport.ImageDescriptorRegistry;
-import org.eclipse.jdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jdt.ui.ISharedImages;
+import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -51,7 +50,6 @@ public class BeanDecoderAdapter extends MemberDecoderAdapter implements  IAdapta
   protected  BeanPart fBean=null ;			   // Component associated with this adapter
   Hashtable  fChildrens    = new Hashtable() ;    // Hold Exp. Decoder Adapters for components SF
   HashMap	 fSettings     = new HashMap() ;
-  private   ImageDescriptorRegistry fJavaImageRegistry= null;
   Label		 fpreviousLabel = null ;  // remember the last label, in case we are paused
   
                         	
@@ -62,13 +60,7 @@ public class BeanDecoderAdapter extends MemberDecoderAdapter implements  IAdapta
   	if (fEventsSF != null) return fEventsSF ;
   	 fEventsSF = JavaInstantiation.getSFeature((IJavaObjectInstance)fBean.getEObject(),JavaBeanEventUtilities.EVENTS);
   	 return fEventsSF ;
-  }                        	
-                        	
-  private ImageDescriptorRegistry getImageRegistry() {
-		if (fJavaImageRegistry==null)
-		    fJavaImageRegistry= JavaPlugin.getImageDescriptorRegistry();
-		return fJavaImageRegistry;
-  }                      	
+  }           	
   
 /**
  * 
@@ -621,35 +613,21 @@ public BeanDecoderAdapter getRefAdapter(IExpressionDecoder d, int msgType) {
 public Label getInstanceDisplayInformation() {	
 	Label l = new Label() ;
 	
-	ImageDescriptor	d = null ;
+	ISharedImages sharedImages = JavaUI.getSharedImages();
+	Image d = null ;
 	if (fBean.getDecleration().isInstanceVar()) {
 		if (fBean.getFieldDeclHandle() != null) {
 			IJavaElement je = JavaCore.create(fBean.getFieldDeclHandle());
 			if (je instanceof IField) {
-				IField f = (IField) je;
-				int flags = 0;
-				try {
-					flags = f.getFlags();
-				}
-				catch (JavaModelException e) {
-					f = CodeGenUtil.getFieldByName(fBean.getSimpleName(), fbeanModel.getCompilationUnit());
-					if (f != null) {
-						fBean.setFieldDeclHandle(f.getHandleIdentifier()) ;
-						try {
-							flags = f.getFlags();
-						}
-						catch (JavaModelException e1) {}
-					}
-				}
-				d = JavaElementImageProvider.getFieldImageDescriptor(false, flags);
+				d = WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider().getImage(je);
 			}
 		}		
 		if (d == null)
-		   d =  JavaElementImageProvider.getFieldImageDescriptor(false, 0) ;
+		   d =  sharedImages.getImage(ISharedImages.IMG_FIELD_DEFAULT);
 	}
 	else
-	       d = JavaPluginImages.DESC_OBJS_LOCAL_VARIABLE ;
-    l.setIcon(getImageRegistry().get(d)) ;
+	       d = sharedImages.getImage(ISharedImages.IMG_OBJS_LOCAL_VARIABLE);
+    l.setIcon(d) ;
     l.setText(fBean.getSimpleName()+"\t"+fBean.getType()) ;     //$NON-NLS-1$
     return l ;	
 } 
@@ -660,35 +638,19 @@ public String getInstanceName() {
 
 public Label getReturnMethodDisplayInformation() {
 	Label l = new Label() ;
-		
+	
+	ISharedImages sharedImages = JavaUI.getSharedImages();
 	if (!fBean.getModel().isStateSet(IBeanDeclModel.BDM_STATE_DOWN) && fBean.getReturnedMethod() != null) {
-		ImageDescriptor d = null;
+		Image d = null;
 		if (fBean.getReturnedMethod().getMethodHandle() != null) {
 			IJavaElement je = JavaCore.create(fBean.getInitMethod().getMethodHandle());
 			if (je instanceof IMethod) {
-				IMethod m = (IMethod) je;
-				int flags = 0;
-				try {
-					flags = m.getFlags();
-				}
-				catch (JavaModelException e) {
-					IJavaElement[] elms = fBean.getModel().getCompilationUnit().findElements(je);
-					if (elms != null && elms.length > 0 && elms[0] instanceof IMethod) {
-						m = (IMethod) elms[0];
-						fBean.getInitMethod().setMethodHandle(m.getHandleIdentifier());
-						try {
-							flags = m.getFlags();
-						}
-						catch (JavaModelException e1) {}
-					}
-				}
-				d = JavaElementImageProvider.getMethodImageDescriptor(false, flags);
+				d = WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider().getImage(je);
 			}
-
 		}
 		if (d == null)
-			d = JavaElementImageProvider.getMethodImageDescriptor(false, 0);
-		l.setIcon(getImageRegistry().get(d));
+			d = sharedImages.getImage(ISharedImages.IMG_OBJS_DEFAULT);
+		l.setIcon(d);
 		l.setText(fBean.getInitMethod().getMethodName() + CodeGenJavaMessages.BeanDecoderAdapter____5); 
 		fpreviousLabel = l ;
 	}
