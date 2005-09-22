@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.36 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.37 $  $Date: 2005-09-22 16:29:29 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -27,9 +27,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.*;
 import org.eclipse.jdt.internal.corext.util.*;
-import org.eclipse.jdt.internal.corext.util.Messages;
-import org.eclipse.jdt.internal.ui.*;
+import org.eclipse.jdt.internal.ui.JavaUIMessages;
 import org.eclipse.jdt.internal.ui.util.*;
+import org.eclipse.jdt.ui.ISharedImages;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
@@ -293,7 +294,7 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 			beanNameComposite.setLayoutData(gd);
 			beanNameComposite.setLayout(new GridLayout(2, false));
 			Label image = new Label(beanNameComposite, SWT.NONE);
-			image.setImage(JavaPlugin.getDefault().getImageRegistry().get(JavaPluginImages.IMG_FIELD_PUBLIC));
+			image.setImage(JavaUI.getSharedImages().getImage(ISharedImages.IMG_FIELD_PUBLIC));
 			Label beanNameLabel = new Label(beanNameComposite, SWT.NONE);
 			beanNameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			beanNameLabel.setText(ChooseBeanMessages.ChooseBeanDialog_Label_BeanName); 
