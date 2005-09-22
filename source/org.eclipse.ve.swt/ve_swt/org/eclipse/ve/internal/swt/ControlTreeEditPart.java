@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlTreeEditPart.java,v $
- *  $Revision: 1.9 $  $Date: 2005-09-14 18:20:06 $ 
+ *  $Revision: 1.10 $  $Date: 2005-09-22 12:55:56 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -29,8 +29,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.java.JavaClass;
 
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IErrorNotifier;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
@@ -104,12 +104,16 @@ public class ControlTreeEditPart extends JavaBeanTreeEditPart {
 	
 
 	public Object getAdapter(Class type) {
-		if (type == IPropertySource.class)
-			if (propertySource != null)
+		if (type == IPropertySource.class) {
+			if (propertySource != null) {
 				return propertySource;
-			else
+			} else {
 				return EcoreUtil.getRegisteredAdapter((EObject)getModel(), IPropertySource.class);
-				
+			}
+		} else if (type == LayoutList.class){
+			return BeanSWTUtilities.getDefaultLayoutList();
+		}
+		
 		return super.getAdapter(type);
 	}
 	

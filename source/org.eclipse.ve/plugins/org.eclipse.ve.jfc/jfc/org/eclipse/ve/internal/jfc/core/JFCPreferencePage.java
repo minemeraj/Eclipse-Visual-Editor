@@ -30,12 +30,12 @@ public class JFCPreferencePage extends org.eclipse.jface.preference.PreferencePa
 	}
 	
 	public boolean performOk(){
-//		fStore.setValue(JFCVisualPlugin.DEFAULT_LAYOUT,pageContents.getLayoutTypeName());	
+		fStore.setValue(JFCVisualPlugin.DEFAULT_LAYOUTMANAGER,pageContents.getLayoutManagerName());	
 		return true;
 	}
 	
 	protected void performDefaults() {
-//		fStore.setValue(SwtPlugin.DEFAULT_LAYOUT,"org.eclipse.swt.widgets.layout.GridLayout");
+		pageContents.setLayoutManagerName(JFCVisualPlugin.DEFAULT_LAYOUTMANAGER_VALUE);
 		super.performDefaults();
 	}
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.30 $ $Date: 2005-09-14 18:20:08 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.31 $ $Date: 2005-09-22 12:55:58 $
  */
 import java.util.*;
 
@@ -216,6 +216,8 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 			return constraintHandler;
 		} else if (type == IActionFilter.class)
 			return getComponentActionFilter();
+		else if (type == LayoutList.class)
+			return BeanAwtUtilities.getDefaultLayoutList();
 		else if (type == IErrorHolder.class)
 			return errorNotifier;
 		Object result = super.getAdapter(type);

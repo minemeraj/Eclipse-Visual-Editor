@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ComponentTreeEditPart.java,v $
- *  $Revision: 1.9 $  $Date: 2005-09-14 18:20:08 $ 
+ *  $Revision: 1.10 $  $Date: 2005-09-22 12:55:58 $ 
  */
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -63,12 +63,15 @@ public class ComponentTreeEditPart extends JavaBeanTreeEditPart {
 	}
 	
 	public Object getAdapter(Class type) {
-		if (type == IPropertySource.class)
-			if (propertySource != null)
+		if (type == IPropertySource.class) {
+			if (propertySource != null) {
 				return propertySource;
-			else
+			} else {
 				return EcoreUtil.getRegisteredAdapter((EObject)getModel(), IPropertySource.class);
-				
+			}
+		} else if (type == LayoutList.class){
+			return BeanAwtUtilities.getDefaultLayoutList();
+		}		
 		return super.getAdapter(type);
 	}
 
@@ -154,6 +157,5 @@ public class ComponentTreeEditPart extends JavaBeanTreeEditPart {
 		else
 			super.performRequest(request);
 	}
-	
 
 }

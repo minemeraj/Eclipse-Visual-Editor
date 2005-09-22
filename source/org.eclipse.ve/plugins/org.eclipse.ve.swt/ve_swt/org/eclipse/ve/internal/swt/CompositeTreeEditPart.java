@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.11 $ $Date: 2005-06-15 20:19:21 $
+ * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-09-22 12:55:56 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -17,16 +17,21 @@ package org.eclipse.ve.internal.swt;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.*;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.*;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.editpolicies.AbstractEditPolicy;
+import org.eclipse.jface.action.MenuManager;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.java.JavaClass;
 
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.EditPartRunnable;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
@@ -111,6 +116,12 @@ public class CompositeTreeEditPart extends ControlTreeEditPart {
 		treeContainerPolicy = new TreeVisualContainerEditPolicy(getContainerPolicy());
 		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, treeContainerPolicy);
 		createLayoutPolicyHelper();
+		installEditPolicy("TEST",new AbstractEditPolicy(){
+			public Command getCommand(Request request) {
+				System.out.println(request.getType());
+				return null;
+			}
+		});
 	}
 
 	protected void createLayoutPolicyHelper() {
@@ -151,5 +162,43 @@ public class CompositeTreeEditPart extends ControlTreeEditPart {
 		sf_compositeLayout = JavaInstantiation.getReference(rset, SWTConstants.SF_COMPOSITE_LAYOUT);
 		sf_compositeControls = JavaInstantiation.getReference(rset, SWTConstants.SF_COMPOSITE_CONTROLS);
 	}
+	
+	public Object getAdapter(Class type) {
+		if(type == LayoutList.class){
+			return new LayoutList(){
+				public void fillMenuManager(MenuManager aMenuManager) {
+					LayoutListMenuContributor layoutListMenuContributor = new LayoutListMenuContributor(){
+						protected EditPart getEditPart() {
+							return CompositeTreeEditPart.this;
+						}
+						protected IJavaInstance getBean() {
+							return CompositeTreeEditPart.this.getBean();
+						}
+						protected EStructuralFeature getLayoutSF() {
+							return sf_compositeLayout;
+						}
+						
+						protected IBeanProxy getLayoutBeanProxyAdapter() {
+							return BeanSWTUtilities.invoke_getLayout(getCompositeProxyAdapter().getBeanProxy());
+						}
+						protected String[][] getLayoutItems() {
+							return LayoutCellEditor.getLayoutItems(getEditDomain());
+						}
+						protected ILayoutPolicyFactory getLayoutPolicyFactory(JavaClass layoutManagerClass) {
+							return BeanSWTUtilities.getLayoutPolicyFactoryFromLayout(layoutManagerClass, getEditDomain());
+						}
+						protected VisualContainerPolicy getVisualContainerPolicy() {
+							return getContainerPolicy();
+						}
+						protected String getPreferencePageID() {
+							return SwtPlugin.PREFERENCE_PAGE_ID;
 
+						}
+					};
+					layoutListMenuContributor.fillMenuManager(aMenuManager);
+				}
+			};
+		}
+		return super.getAdapter(type);
+	}
 }

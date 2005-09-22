@@ -11,16 +11,23 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: BeanAwtUtilities.java,v $ $Revision: 1.38 $ $Date: 2005-08-25 16:50:28 $
+ * $RCSfile: BeanAwtUtilities.java,v $ $Revision: 1.39 $ $Date: 2005-09-22 12:55:58 $
  */
 
+import java.awt.Component;
 import java.util.List;
 import java.util.logging.Level;
+
+import javax.swing.*;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPart;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -29,14 +36,12 @@ import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
 import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.GridController;
+import org.eclipse.ve.internal.cde.core.*;
 
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
-import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
-import org.eclipse.ve.internal.java.visual.VisualUtilities;
+import org.eclipse.ve.internal.java.visual.*;
 
 /**
  * Helper class with useful methods for working with awt bean proxies
@@ -50,6 +55,8 @@ public class BeanAwtUtilities {
 	public static final String FEEDBACKCONTROLLER_CLASSNAME = COMPONENTMANAGER_CLASSNAME + "$ComponentManagerFeedbackController"; //$NON-NLS-1$
 
 	public static final String COMPONENTMANAGEREXTENSION_CLASSNAME = COMPONENTMANAGER_CLASSNAME + "$ComponentManagerExtension"; //$NON-NLS-1$
+
+	private static LayoutList DEFAULT_LAYOUTLIST;
 
 	private Point offscreenLocation;
 
@@ -1468,5 +1475,24 @@ public class BeanAwtUtilities {
 
 	protected BeanAwtUtilities() {
 	}
+
+	public static LayoutList getDefaultLayoutList() {
+		if (DEFAULT_LAYOUTLIST == null){
+			DEFAULT_LAYOUTLIST = new LayoutList(){
+				public void fillMenuManager(MenuManager aMenuManager) {
+					aMenuManager.add(new Action(){
+						public void run() {
+							String prefID = JFCVisualPlugin.PREFERENCE_PAGE_ID;
+							PreferencesUtil.createPreferenceDialogOn(Display.getCurrent().getActiveShell(), prefID, new String[]{prefID}, null).open();
+						}
+						public String getText() {
+							return InternalVisualMessages.getString("LayoutListMenuContributor.Preferences"); //$NON-NLS-1$
+						}
+					});					
+				}				
+			};
+		}
+		return DEFAULT_LAYOUTLIST;
+	}	
 
 }

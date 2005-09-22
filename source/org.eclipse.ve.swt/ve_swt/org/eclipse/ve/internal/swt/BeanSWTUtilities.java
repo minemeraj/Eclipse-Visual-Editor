@@ -18,6 +18,10 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -30,6 +34,7 @@ import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.LayoutList;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.JCMMethod;
@@ -37,12 +42,16 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
+import org.eclipse.ve.internal.java.visual.*;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 import org.eclipse.ve.internal.java.visual.VisualUtilities;
 
 import org.eclipse.ve.internal.swt.ControlManager.FeedbackController;
 
 public class BeanSWTUtilities {
+
+	private static LayoutList DEFAULT_LAYOUTLIST;
+
 	// JCMMethod proxies are cached in a registry constants.
     public IMethodProxy getManagerDefaultLocationMethodProxy,
 		getManagerDefaultBoundsMethodProxy,
@@ -894,5 +903,24 @@ public class BeanSWTUtilities {
 		} catch (JavaModelException e) {
 		}
 		return false;
+	}
+
+	public static LayoutList getDefaultLayoutList() {
+		if (DEFAULT_LAYOUTLIST == null){
+			DEFAULT_LAYOUTLIST = new LayoutList(){
+				public void fillMenuManager(MenuManager aMenuManager) {
+					aMenuManager.add(new Action(){
+						public void run() {
+							String prefID = SwtPlugin.PREFERENCE_PAGE_ID;
+							PreferencesUtil.createPreferenceDialogOn(Display.getCurrent().getActiveShell(), prefID, new String[]{prefID}, null).open();
+						}
+						public String getText() {
+							return InternalVisualMessages.getString("LayoutListMenuContributor.Preferences"); //$NON-NLS-1$
+						}
+					});					
+				}				
+			};
+		}
+		return DEFAULT_LAYOUTLIST;
 	}
 }

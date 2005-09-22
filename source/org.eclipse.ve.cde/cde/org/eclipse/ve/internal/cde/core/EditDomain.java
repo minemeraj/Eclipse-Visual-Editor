@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: EditDomain.java,v $
- *  $Revision: 1.13 $  $Date: 2005-09-21 23:09:01 $ 
+ *  $Revision: 1.14 $  $Date: 2005-09-22 12:55:53 $ 
  */
 
 import java.text.MessageFormat;
@@ -32,7 +32,6 @@ import org.eclipse.ve.internal.cdm.Diagram;
 import org.eclipse.ve.internal.cdm.DiagramData;
 
 import org.eclipse.ve.internal.cde.commands.AddAnnotationsCommand;
-import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
@@ -420,11 +419,7 @@ public class EditDomain extends DefaultEditDomain {
 	
 		public TreeEditPartContributor getTreeEditPartContributor(TreeEditPart treeEditPart) {
 			return null;
-		}
-
-		public PropertySourceContributor getPropertySourceContributor(PropertySourceAdapter propertySourceAdapter) {
-			return null;
-		}
+		}		
 	
 	};
 	

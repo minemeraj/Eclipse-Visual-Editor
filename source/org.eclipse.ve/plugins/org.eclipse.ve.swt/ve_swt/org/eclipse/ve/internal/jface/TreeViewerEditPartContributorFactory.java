@@ -1,16 +1,11 @@
 package org.eclipse.ve.internal.jface;
 
-import java.util.List;
-
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.TreeEditPart;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.ui.views.properties.IPropertyDescriptor;
-import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -18,9 +13,6 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
-
-import org.eclipse.ve.internal.propertysheet.command.WrapperedPropertyDescriptor;
 
 /**
  * Contributor factory for JFace TreeViewer.
@@ -104,23 +96,4 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 		}
 	}
 
-	public PropertySourceContributor getPropertySourceContributor(final PropertySourceAdapter propertySourceAdapter) {
-		return new PropertySourceContributor(){
-			public void contributePropertyDescriptors(List descriptorsList) {
-				IJavaInstance tree = (IJavaInstance)propertySourceAdapter.getTarget();
-				// Get the tree viewer
-				
-				IJavaInstance treeViewer = getTreeViewer(tree);
-				try{
-					IPropertySource treeViewerPropertySource = (IPropertySource) EcoreUtil.getRegisteredAdapter(treeViewer, IPropertySource.class);		
-					IPropertyDescriptor[] treeViewerDescriptors = treeViewerPropertySource.getPropertyDescriptors();
-					for (int i = 0; i < treeViewerDescriptors.length; i++) {
-						descriptorsList.add(new WrapperedPropertyDescriptor(treeViewerPropertySource,treeViewerDescriptors[i]));
-					}
-				} catch (Exception exc){
-					
-				}
-			}
-		};
-	}
 }

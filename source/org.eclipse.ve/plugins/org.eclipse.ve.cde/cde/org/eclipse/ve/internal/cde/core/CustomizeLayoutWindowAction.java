@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.14 $  $Date: 2005-09-13 18:56:04 $ 
+ *  $Revision: 1.15 $  $Date: 2005-09-22 12:55:53 $ 
  */
 
 import java.util.ArrayList;
@@ -50,7 +50,6 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 
 	public static final ImageDescriptor IMG_CUSTOMIZE_LAYOUT_BEAN_DISABLED = CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/dlcl16/aligndialog_obj.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor IMG_CUSTOMIZE_LAYOUT_BEAN = CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/aligndialog_obj.gif"); //$NON-NLS-1$
-	
 	
 	/**
 	 * Add an Layout customization page class to the viewer. The page will be brought to front on the Layout tab whenever it's 
@@ -395,6 +394,11 @@ protected void persistPreferences() {
 		if(fLayoutList != null){
 			fLayoutList.fillMenuManager(toolbarMenuManager);
 		}		
+	}
+
+	public void fillMenuManager(MenuManager aMenuManager) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
