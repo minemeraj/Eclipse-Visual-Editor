@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-09-22 12:55:56 $
+ * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-09-22 19:35:00 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -116,12 +116,6 @@ public class CompositeTreeEditPart extends ControlTreeEditPart {
 		treeContainerPolicy = new TreeVisualContainerEditPolicy(getContainerPolicy());
 		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, treeContainerPolicy);
 		createLayoutPolicyHelper();
-		installEditPolicy("TEST",new AbstractEditPolicy(){
-			public Command getCommand(Request request) {
-				System.out.println(request.getType());
-				return null;
-			}
-		});
 	}
 
 	protected void createLayoutPolicyHelper() {
