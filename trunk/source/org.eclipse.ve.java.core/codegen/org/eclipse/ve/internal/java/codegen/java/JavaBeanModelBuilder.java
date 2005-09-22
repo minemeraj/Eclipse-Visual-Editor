@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.33 $  $Date: 2005-08-24 23:30:44 $ 
+ *  $Revision: 1.34 $  $Date: 2005-09-22 22:13:16 $ 
  */
 
 import java.util.*;
@@ -253,7 +253,7 @@ protected void cleanModel () {
 		boolean removeFlag = false;
 
 		if (!bean.getSimpleName().equals(BeanPart.THIS_NAME)) {
-			if (bean.getInitExpression() == null && !bean.isInstanceInstantiation()){
+			if (bean.getInitExpression() == null && !bean.isInstanceInstantiation() && !bean.isImplicit()){
 				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 					JavaVEPlugin.log("*Discarting a beanPart " + bean, Level.FINE); //$NON-NLS-1$
 				removeFlag = true;

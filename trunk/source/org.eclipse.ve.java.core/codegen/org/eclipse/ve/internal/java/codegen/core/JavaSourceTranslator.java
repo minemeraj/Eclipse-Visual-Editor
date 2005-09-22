@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.88 $  $Date: 2005-09-06 13:07:09 $ 
+ *  $Revision: 1.89 $  $Date: 2005-09-22 22:13:16 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -613,6 +613,8 @@ void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
     JavaCacheData cache = VEModelCacheUtility.getJavaCacheData(fVEModel);
 	while (itr.hasNext()) {
 	   BeanPart bean = (BeanPart) itr.next() ;
+	   if (bean.isImplicit()) continue;
+	   
 	   EObject obj = createAJavaInstance(bean,cache,pm);
 	   String annotatedName= bean.getSimpleName() ;
 	   

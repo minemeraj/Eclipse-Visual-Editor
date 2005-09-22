@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.63 $  $Date: 2005-09-16 13:34:48 $ 
+ *  $Revision: 1.64 $  $Date: 2005-09-22 22:13:16 $ 
  */
 
 
@@ -863,8 +863,8 @@ public int isEquivalent(AbstractCodeRef code) throws CodeGenException  {
 		if(isStateSet(CodeExpressionRef.STATE_INIT_EXPR) && exp1.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
 			expEquivalency = true;
 		}else{
-			String expc1 = exp1.getMethodNameContent();
-			String expc2 = getMethodNameContent();
+			String expc1 = exp1.isStateSet(CodeExpressionRef.STATE_NO_SRC)? "" : exp1.getMethodNameContent();
+			String expc2 = isStateSet(CodeExpressionRef.STATE_NO_SRC)? "" : getMethodNameContent();
 			expEquivalency = expc1.equals(expc2);
 		}
 		

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.19 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.20 $  $Date: 2005-09-22 22:13:16 $ 
  */
 package org.eclipse.ve.internal.java.core;
  
@@ -202,8 +202,13 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 	 */
 	protected IProxy allocate(ImplicitAllocation implicit, IExpression expression) {
 		EObject source = implicit.getParent();
-		IBeanProxyHost proxyhost = (IBeanProxyHost) EcoreUtil.getExistingAdapter(source, IBeanProxyHost.BEAN_PROXY_TYPE);
-		return ((IInternalBeanProxyHost) proxyhost).getBeanPropertyProxyValue(implicit.getFeature(), expression, ForExpression.ROOTEXPRESSION);
+		IBeanProxyHost proxyhost = (IBeanProxyHost) EcoreUtil.getRegisteredAdapter(source, IBeanProxyHost.BEAN_PROXY_TYPE);
+		if (!proxyhost.isBeanProxyInstantiated() && !((IInternalBeanProxyHost) proxyhost).hasInstantiationErrors()) {
+			proxyhost.instantiateBeanProxy(expression);
+		}
+		if (!((IInternalBeanProxyHost) proxyhost).hasInstantiationErrors())
+			return ((IInternalBeanProxyHost) proxyhost).getBeanPropertyProxyValue(implicit.getFeature(), expression, ForExpression.ROOTEXPRESSION);
+		return null;
 	}
 	
 	/**
@@ -228,7 +233,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 	 */
 	protected IBeanProxy allocate(ImplicitAllocation implicit) {
 		EObject source = implicit.getParent();
-		IBeanProxyHost proxyhost = (IBeanProxyHost) EcoreUtil.getExistingAdapter(source, IBeanProxyHost.BEAN_PROXY_TYPE);
+		IBeanProxyHost proxyhost = (IBeanProxyHost) EcoreUtil.getRegisteredAdapter(source, IBeanProxyHost.BEAN_PROXY_TYPE);
 		return proxyhost.getBeanPropertyProxyValue(implicit.getFeature());		
 	}
 	

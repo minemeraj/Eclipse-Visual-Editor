@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.53 $  $Date: 2005-09-20 22:09:37 $ 
+ *  $Revision: 1.54 $  $Date: 2005-09-22 22:13:16 $ 
  */
 
 import java.util.*;
@@ -830,27 +830,58 @@ public BeanPart createThisBeanPartIfNeeded(CodeMethodRef initMethod) {
      
      return bean ;	
 }
-
+/**
+ * 
+ * This method is called by the construction of a wrapper (parent).
+ * 
+ * Set up an implicit BeanPart, given a parent, and a parent feature.
+ * It is typically called when a Parent constructor is reverse parsed.
+ * 
+ * During the visiting portion, an "implicit" Bean may have been created
+ * without the decode information (e.g., SF, parent etc.)
+ * 
+ * will merge this information forward.
+ * 
+ * TreeViewer treeViewer = new TreeViewer(....)  
+ * treeViewer.getTree().setEnabled(true).
+ * 
+ *    
+ * 
+ * @param parent
+ * @param sf
+ * @param createImplicitInitExpression
+ * @return
+ * 
+ * @since 1.2.0
+ */
 public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf, boolean createImplicitInitExpression) {
 	BeanPart implicitBean = null;
 	try {
 		// Create the implicit bean
 		BeanPartDecleration bpd = new BeanPartDecleration(parent, sf);
-		implicitBean = new BeanPart(bpd);	
-		implicitBean.setImplicitParent(parent);
-		parent.getModel().addBean(implicitBean);
+		BeanPartDecleration current = fBeanModel.getModelDecleration(bpd);
+		if (current!= null) {
+			current.setType(bpd.getType());
+			bpd = current;
+			implicitBean = bpd.getBeanParts()[0];			
+		}
+		else {
+		  implicitBean = new BeanPart(bpd);	
+		  implicitBean.setImplicitParent(parent);
+		  parent.getModel().addBean(implicitBean);
+		}
+		
 		implicitBean.createEObject();
 		ImplicitAllocation ia = InstantiationFactory.eINSTANCE.createImplicitAllocation(parent.getEObject(), sf);
-		((IJavaObjectInstance)implicitBean.getEObject()).setAllocation(ia);
+		((IJavaObjectInstance)implicitBean.getEObject()).setAllocation(ia);		
 		
 		if (createImplicitInitExpression) {
-			// Create an init expressio
 			implicitBean.addInitMethod(parent.getInitMethod());
 			EStructuralFeature asf = CodeGenUtil.getAllocationFeature(implicitBean.getEObject());
 			ExpressionRefFactory eGen = new ExpressionRefFactory(implicitBean, asf);	
 			// prime the proper helpers
 			CodeExpressionRef initExpression = eGen.createFromJVEModelWithNoSrc(null);
-			initExpression.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
+			initExpression.setNoSrcExpression(true);
 			// Force a full cascaded decoding (SWT decoders may generate other expressions).
 			initExpression.decodeExpression();			
 		}

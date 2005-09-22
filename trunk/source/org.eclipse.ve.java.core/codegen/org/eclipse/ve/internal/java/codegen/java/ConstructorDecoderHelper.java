@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.56 $  $Date: 2005-09-20 22:09:37 $ 
+ *  $Revision: 1.57 $  $Date: 2005-09-22 22:13:16 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -467,8 +467,9 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			return createParseTreeAllocation(ast, expOfMethod);
 		}
 		else if (fbeanPart.isImplicit()) {			
-			BeanPart parentBean = fbeanPart.getImplicitParent();				
-//			getExpressionReferences().addAll(CodeGenUtil.getReferences(parentBean.getEObject(), false));
+			BeanPart parentBean = fbeanPart.getImplicitParent();
+			// Make sure that the implicit picks up the reference to the parent 
+			getExpressionReferences().addAll(CodeGenUtil.getReferences(parentBean.getEObject(), false));
 //			getExpressionReferences().add(parentBean.getEObject());
 			getExpressionReferences().add(parentBean.getEObject());
 			ImplicitAllocation ia = (ImplicitAllocation) ((IJavaObjectInstance)fbeanPart.getEObject()).getAllocation();

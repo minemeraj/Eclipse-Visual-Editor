@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.27 $  $Date: 2005-09-16 13:34:48 $ 
+ *  $Revision: 1.28 $  $Date: 2005-09-22 22:13:16 $ 
  */
 
 import java.util.*;
@@ -68,7 +68,7 @@ public class BeanDeclModel implements IBeanDeclModel {
  */	
 private boolean isPriority(BeanPart b) {
 	String s = b.getType() ;
-	return  (s.equals("java.awt.GridBagConstraints"));	//$NON-NLS-1$
+	return  (s!=null && s.equals("java.awt.GridBagConstraints"));	//$NON-NLS-1$
 }
 
 /**

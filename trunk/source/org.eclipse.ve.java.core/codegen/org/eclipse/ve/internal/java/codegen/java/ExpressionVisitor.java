@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.30 $  $Date: 2005-09-14 23:30:24 $ 
+ *  $Revision: 1.31 $  $Date: 2005-09-22 22:13:16 $ 
  */
 
 import java.text.MessageFormat;
@@ -59,11 +59,46 @@ BeanPart  processSingleNameReference (MethodInvocation stmt) {
 	  return getBeanPart(name, fMethod);   	 
 }
 
+
+BeanPart  processRefToImplicitSend(MethodInvocation stmt) {
+	MethodInvocation selection = (MethodInvocation) stmt.getExpression();
+	
+	String beanName = selection.toString();	
+	BeanPart bp = fModel.getBeanReturned(beanName);
+	
+	if (bp==null) {
+	   String parentName = selection.getExpression().toString();
+	   BeanPart parent = fModel.getABean(parentName);
+	   if (parent==null && fReTryLater!=null) { 
+				fReTryLater.add(this);
+				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+					JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$		
+				return null;
+	   }
+	  BeanPartDecleration decl = new BeanPartDecleration(beanName);
+	  decl.setDeclaringMethod(null);
+	  if (fModel.getModelDecleration(decl)!=null)
+		decl = fModel.getModelDecleration(decl); // reuse the existing mone
+	  bp = new BeanPart(decl) ;  
+	  bp.addInitMethod(fMethod) ;
+	  bp.setImplicitParent(parent);
+	  fModel.addBean (bp) ;
+	}
+	return bp;
+}
+
 /**
  *  Process a Reference to a MessageSend, e.g., getFooBean().setFoo()
  */
 BeanPart  processRefToMessageSend  (MethodInvocation stmt) {	   
-  	  	// Check to see if the Model already knows about 
+  	  	// Check to see if the Model already knows about
+	    Expression selectorExpr = stmt.getExpression();
+	    if (selectorExpr instanceof MethodInvocation) {
+	    	MethodInvocation sel = (MethodInvocation) selectorExpr;
+	    	if (sel.getExpression() != null)
+	    		return processRefToImplicitSend(stmt);
+	    }
+	
 		String selector = ((MethodInvocation)stmt.getExpression()).getName().getIdentifier();
 
 		BeanPart b = null;
