@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractRenameInstanceDialog.java,v $
- *  $Revision: 1.7 $  $Date: 2005-09-20 23:05:50 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-22 16:40:49 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -31,6 +31,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
@@ -168,7 +169,7 @@ public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
 		}
 		
 		titleImage = CDEPlugin.getImageFromPlugin(JavaVEPlugin.getPlugin(), "icons/typerefact_wiz.gif"); // internal cleanup - copied from 'org.eclipse.jdt.ui\icons\full\wizban\typerefact_wiz.gif'
-		errorImage = domain.getEditorPart().getSite().getWorkbenchWindow().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+		errorImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
 		setTitleImage(titleImage);
 
 		return beanNamesContainer;
