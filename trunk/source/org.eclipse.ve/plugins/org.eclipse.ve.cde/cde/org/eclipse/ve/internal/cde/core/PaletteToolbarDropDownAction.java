@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: PaletteToolbarDropDownAction.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.4 $  $Date: 2005-09-22 12:55:53 $ 
  */
 
 import java.util.Iterator;
@@ -104,7 +104,7 @@ public class PaletteToolbarDropDownAction extends PaletteToolEntryAction impleme
 		if (container instanceof PaletteDrawer) {
 			// Create a new MenuManager which will appear as a sub menu
 			IMenuManager parentMenuManager = menuManager;	
-			menuManager = new MenuManager(container.getLabel());			
+			menuManager = new MenuManager(container.getLabel());
 			parentMenuManager.add(menuManager);
 		} else
 			menuManager.add(new Separator());	// It's a group, so just add separator, and rest will be on same menu.

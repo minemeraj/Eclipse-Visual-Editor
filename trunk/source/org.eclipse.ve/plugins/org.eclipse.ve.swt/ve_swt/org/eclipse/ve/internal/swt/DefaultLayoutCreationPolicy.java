@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultLayoutCreationPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-09-21 10:39:14 $ 
+ *  $Revision: 1.2 $  $Date: 2005-09-22 12:55:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -48,7 +48,7 @@ public class DefaultLayoutCreationPolicy implements CreationPolicy , IExecutable
 				if(model.getJavaType().getQualifiedName().equals(typeName)){ 
 					// Get the type of layout to set
 					String defaultLayoutTypeName = SwtPlugin.getDefault().getPluginPreferences().getString(SwtPlugin.DEFAULT_LAYOUT);
-					if(defaultLayoutTypeName != null){	
+					if(defaultLayoutTypeName != null && defaultLayoutTypeName.length()>0){	
 						RuledCommandBuilder bldr = new RuledCommandBuilder(domain);
 						IJavaInstance layoutInstance = BeanUtilities.createJavaObject(defaultLayoutTypeName,model.eResource().getResourceSet(),(String)null);
 						EStructuralFeature layout_SF = model.eClass().getEStructuralFeature("layout");

@@ -10,14 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AdaptableContributorFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2005-09-21 23:09:01 $ 
+ *  $Revision: 1.2 $  $Date: 2005-09-22 12:55:53 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.TreeEditPart;
-
-import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 /**
  * Factory for Adaptable Contributors. It is contributed through the "org.eclipse.ve.contributor" extension point.
@@ -49,14 +47,5 @@ public interface AdaptableContributorFactory {
 	 * @since 1.2.0
 	 */
 	GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart);
-	
-	/**
-	 * Return the PropertySourceCongtributor or null if it will not be contributing. 
-	 * @param propertySourceAdapter
-	 * @return property source contributor of <code>null</code> if not contributing.
-	 * 
-	 * @since 1.2.0
-	 */
-	PropertySourceContributor getPropertySourceContributor(PropertySourceAdapter propertySourceAdapter);
 	
 }

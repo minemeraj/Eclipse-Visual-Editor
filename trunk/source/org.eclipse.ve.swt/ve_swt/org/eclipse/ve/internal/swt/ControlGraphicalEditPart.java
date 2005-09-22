@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.29 $ $Date: 2005-09-14 23:18:16 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.30 $ $Date: 2005-09-22 12:55:56 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -193,23 +193,26 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 	}
 	
 	public Object getAdapter(Class type) {
-		if (type == IVisualComponent.class)
+		if (type == IVisualComponent.class) {
 			return getVisualComponent();
-		else if (type == IPropertySource.class)
-			if (propertySource != null)
+		} else if (type == IPropertySource.class) {
+			if (propertySource != null) {
 				return propertySource;
-			else
+			} else {
 				return EcoreUtil.getRegisteredAdapter((IJavaObjectInstance) getModel(), IPropertySource.class);
-		else if (type == IConstraintHandler.class) {
+			}
+		} else if (type == IConstraintHandler.class) {
 			if (constraintHandler == null) {
 				constraintHandler = new ControlVisualModelAdapter(getModel());
 			}
 			return constraintHandler;
-		}
-		else if (type == IActionFilter.class)
+		} else if (type == IActionFilter.class) {
 			return getControlActionFilter();
-		else if (type == IErrorHolder.class)
+		} else if (type == IErrorHolder.class) {
 			return errorNotifier;
+		} else if (type == LayoutList.class){
+			return BeanSWTUtilities.getDefaultLayoutList();
+		}		
 		Object result = super.getAdapter(type);
 		if ( result != null ) {
 			return result;

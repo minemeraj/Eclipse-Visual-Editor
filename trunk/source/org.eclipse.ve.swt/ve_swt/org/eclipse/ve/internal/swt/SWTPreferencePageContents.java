@@ -75,4 +75,23 @@ public class SWTPreferencePageContents extends Composite {
 	public String getLayoutTypeName() {
 		return (String) (currentlyCheckedItem == null ? null : currentlyCheckedItem.getData(TYPE_NAME));
 	}
+	public void setLayoutTypeName(String layoutManagerName) {
+		for (int i = 0; i < table.getItemCount(); i++) {
+			TableItem item = table.getItem(i);
+			if(layoutManagerName == null || layoutManagerName.length()==0){
+				if(item.getData(TYPE_NAME) == null){
+					item.setChecked(true);
+					currentlyCheckedItem = item;
+					continue;
+				}
+			} else {
+				if(layoutManagerName.equals(item.getData(TYPE_NAME))){
+					item.setChecked(true);
+					currentlyCheckedItem = item;
+					continue;
+				}
+			}
+			item.setChecked(false);
+		}
+	}	
 }

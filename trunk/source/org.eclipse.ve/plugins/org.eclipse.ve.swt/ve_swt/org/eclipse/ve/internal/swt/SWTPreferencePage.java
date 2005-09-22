@@ -33,4 +33,8 @@ public class SWTPreferencePage extends org.eclipse.jface.preference.PreferencePa
 		fStore.setValue(SwtPlugin.DEFAULT_LAYOUT,pageContents.getLayoutTypeName());	
 		return true;
 	}
+	protected void performDefaults() {
+		pageContents.setLayoutTypeName(SwtPlugin.DEFAULT_LAYOUT_VAUE);
+		super.performDefaults();
+	}
 }

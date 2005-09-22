@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.17 $ $Date: 2005-08-24 23:38:10 $
+ * $RCSfile: ContainerTreeEditPart.java,v $ $Revision: 1.18 $ $Date: 2005-09-22 12:55:58 $
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -18,16 +18,20 @@ import java.util.*;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.*;
@@ -173,6 +177,49 @@ public class ContainerTreeEditPart extends ComponentTreeEditPart {
 		sf_containerLayout = JavaInstantiation.getReference(rset, JFCConstants.SF_CONTAINER_LAYOUT);
 		sf_constraintComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_CONSTRAINT_COMPONENT);
 		sf_containerComponents = JavaInstantiation.getReference(rset, JFCConstants.SF_CONTAINER_COMPONENTS);
+	}
+	
+	public Object getAdapter(Class type) {
+		if (type == LayoutList.class) {
+			return new LayoutList(){
+				public void fillMenuManager(MenuManager aMenuManager) {
+					LayoutListMenuContributor layoutListMenuContributor = new LayoutListMenuContributor(){			
+						protected EditPart getEditPart() {
+							return ContainerTreeEditPart.this;
+						}
+						protected IJavaInstance getBean() {
+							return ContainerTreeEditPart.this.getBean();
+						}
+						protected EStructuralFeature getLayoutSF() {
+							return sf_containerLayout;
+						}
+						protected IBeanProxy getLayoutBeanProxyAdapter() {
+							return BeanAwtUtilities.invoke_getLayout(BeanProxyUtilities.getBeanProxy(getBean()));
+						}
+						protected IJavaInstance getNewLayoutInstance(String layoutTypeName) {
+							JavaClass javaClass = Utilities.getJavaClass(layoutTypeName,getBean().eResource().getResourceSet());
+							ILayoutPolicyFactory factory =
+								BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(javaClass, getEditDomain());
+							return factory.getLayoutManagerInstance((IJavaObjectInstance) getBean(), javaClass, getBean().eResource().getResourceSet());		
+						}
+						protected String[][] getLayoutItems() {
+							return LayoutManagerCellEditor.getLayoutManagerItems(getEditDomain());
+						}
+						protected ILayoutPolicyFactory getLayoutPolicyFactory(JavaClass layoutManagerClass) {
+							return BeanAwtUtilities.getLayoutPolicyFactoryFromLayoutManger(layoutManagerClass, getEditDomain());
+						}
+						protected VisualContainerPolicy getVisualContainerPolicy() {
+							return getContainerPolicy();
+						}
+						protected String getPreferencePageID() {
+							return JFCVisualPlugin.PREFERENCE_PAGE_ID;
+						}
+					};
+					layoutListMenuContributor.fillMenuManager(aMenuManager);					
+				}
+			};	
+		}
+		return super.getAdapter(type);
 	}
 
 }
