@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-09-22 19:35:00 $
+ * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.14 $ $Date: 2005-09-22 19:53:29 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -18,13 +18,10 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.gef.*;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.AbstractEditPolicy;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.jface.action.MenuManager;
 
 import org.eclipse.jem.internal.instantiation.base.*;
@@ -32,8 +29,6 @@ import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.EditPartRunnable;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
