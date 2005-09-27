@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.65 $  $Date: 2005-09-27 15:12:09 $ 
+ *  $Revision: 1.66 $  $Date: 2005-09-27 21:09:11 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -1162,7 +1162,8 @@ public class BDMMerger {
 		if(modelBP==null){
 			BeanPartDecleration otherModelBPDecl = otherModelBP.getDecleration();
 			BeanPartDecleration modelBPDecl = model.getModelDecleration(otherModelBPDecl);
-			updateBPDeclAST(otherModelBPDecl, modelBPDecl);
+			if (!modelBPDecl.isImplicitDecleration())
+			    updateBPDeclAST(otherModelBPDecl, modelBPDecl);
 			BeanPart[] modelBPs = modelBPDecl==null?null:modelBPDecl.getBeanParts();
 			if(modelBPs!=null && modelBPs.length>0){
 				for (int i = 0; i < modelBPs.length; i++) {
