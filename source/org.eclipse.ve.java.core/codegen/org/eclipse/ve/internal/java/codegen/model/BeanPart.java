@@ -11,13 +11,12 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.50 $  $Date: 2005-09-16 13:34:48 $ 
+ *  $Revision: 1.51 $  $Date: 2005-09-27 15:12:09 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -67,7 +66,11 @@ public class BeanPart {
     List        	fBadExpressions = null;
     boolean			isInJVEModel = false ;
     boolean			fSettingProcessingRequired = false ;
+    // A Bean is implicit, if it has an implicit allocation,
+    // It may have an implicit, or explicit Source Instance Var. decleration
+    // If it has an explicit decleration, it can be accessed both explicitly and implicitly.
     BeanPart		fimplicitParent = null;
+    String			fimplicitInvocation = null;
     int				uniqueIndex = 0;
     IBeanSourceGenerator generator = null;
     
@@ -270,7 +273,17 @@ public  void removeEventExpression(CodeEventRef exp) {
  *
  */
 public String getSimpleName () {
-	return fDecleration.getName() ;
+	if (!fDecleration.isImplicitDecleration())
+	   return fDecleration.getName() ;
+	else
+	   return getImplicitName();
+	 
+}
+
+public String getImplicitName() {
+	if (isImplicit()) 
+		return fimplicitParent.getSimpleName()+fimplicitInvocation;	
+	return null;
 }
 
 
@@ -501,13 +514,13 @@ public void setModel(IBeanDeclModel model) {
 }
 
 public String toString () {
-   String message = super.toString() + "  " + fDecleration.getName() + "(" + fDecleration.getType() + ")";	 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+   String message = super.toString() + "  " + getSimpleName() + "(" + fDecleration.getType() + ")";	 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
    if(isDisposed())
 	   message+="[DISPOSED]"; //$NON-NLS-1$
    if(!isActive())
 	   message+="[INACTIVE]"; //$NON-NLS-1$
    if (isImplicit())
-	   message+="[IMPLICIT]";
+	   message+="[IMPLICIT:"+getImplicitName()+"]";
    return message;
 }
 
@@ -594,6 +607,7 @@ public  void dispose() {
 					}
 				}
 		}
+		bp.removeChild(this);
 	}
 	
 	// dipose bean init methods
@@ -1135,7 +1149,12 @@ public   void removeFromJVEModel()  {
 	}
 
 	
-	public void setImplicitParent(BeanPart parent) {
+	public void setImplicitParent(BeanPart parent, EStructuralFeature sf) {
+		if (sf!=null)
+		   this.fimplicitInvocation = BeanPartDecleration.getImplicitName(sf);
+		else {		   
+		   this.fimplicitInvocation = fDecleration.getName().substring(parent.getSimpleName().length());
+		}
 		this.fimplicitParent = parent;
 	}
 	

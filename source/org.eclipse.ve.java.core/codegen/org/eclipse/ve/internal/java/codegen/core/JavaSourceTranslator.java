@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.89 $  $Date: 2005-09-22 22:13:16 $ 
+ *  $Revision: 1.90 $  $Date: 2005-09-27 15:12:09 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -606,8 +606,9 @@ protected EObject  createAJavaInstance(BeanPart bean, JavaCacheData cache, IProg
  * @param pm  Expects a new progress monitor as a beginTask() will be called
  */
 void  createJavaInstances (IProgressMonitor pm) throws CodeGenException {
-	pm.beginTask("", fBeanModel.getBeans().size()+5); // +5 for disposing the error beans //$NON-NLS-1$
-	Iterator itr = fBeanModel.getBeans().iterator() ;
+	List beans = fBeanModel.getBeans(false);
+	pm.beginTask("", beans.size()+5); // +5 for disposing the error beans //$NON-NLS-1$
+	Iterator itr = beans.iterator() ;
 	ArrayList err = new ArrayList() ;
     BeanSubclassComposition comp = fVEModel.getModelRoot() ;
     JavaCacheData cache = VEModelCacheUtility.getJavaCacheData(fVEModel);
@@ -689,7 +690,7 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 		expProgressMonitor.beginTask("",  getTotalExpressionCount()); //$NON-NLS-1$
 		
 	    // Decode the relevant expressions	
-		Iterator itr = fBeanModel.getBeans().iterator() ;
+		Iterator itr = fBeanModel.getBeans(true).iterator() ;
 		ArrayList badExprssions = new ArrayList() ;
 		while (itr.hasNext()) {
 			if (isDown(pm)) 
@@ -747,7 +748,7 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 	      // Decoders have analyzed and acted on the Expressions - 
 	      // it is time to hook them together withn the Compsition
 	      // Model
-	      itr = fBeanModel.getBeans().iterator() ;
+	      itr = fBeanModel.getBeans(true).iterator() ;
 		  while (itr.hasNext()) {
 		  	 if (isDown(pm))
 				return false ;		 		  	
@@ -800,7 +801,7 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
  */
 private int getTotalExpressionCount() {
 	int count=0;
-	Iterator bitr = fBeanModel.getBeans().iterator();
+	Iterator bitr = fBeanModel.getBeans(false).iterator();
 	while (bitr.hasNext()) {
 		BeanPart bp = (BeanPart) bitr.next();
 		count += bp.getRefEventExpressions().size();
@@ -1025,7 +1026,7 @@ protected void deleteBeanPart(ICompilationUnit CU, Vector changedElements, BeanP
 protected boolean removeStaleMethods(ICompilationUnit workingCU, Vector changedElements, IProgressMonitor pm) throws CodeGenException {
 	boolean removed=false ;
 	
-	Iterator itr = fBeanModel.getBeans().iterator() ;
+	Iterator itr = fBeanModel.getBeans(false).iterator() ;
 	while (itr.hasNext()) {
 		BeanPart bean = (BeanPart)itr.next() ;
 		EObject obj = bean.getEObject() ;

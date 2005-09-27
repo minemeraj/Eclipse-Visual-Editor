@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CodeSnippetMergelet.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.13 $  $Date: 2005-09-27 15:12:09 $ 
  */
 
 import java.util.*;
@@ -112,7 +112,7 @@ private CodeExpressionRef getOriginal(CodeExpressionRef exp) throws CodeGenExcep
  * Get the coresponding BeanPart
  */
 private BeanPart getOriginal (BeanPart b) {
-	Iterator itr = fBeanModel.getBeans().iterator() ;
+	Iterator itr = fBeanModel.getBeans(false).iterator() ;
 	while (itr.hasNext()) {
 		BeanPart bean = (BeanPart) itr.next() ;
 		if (bean.isEquivalent(b)) 

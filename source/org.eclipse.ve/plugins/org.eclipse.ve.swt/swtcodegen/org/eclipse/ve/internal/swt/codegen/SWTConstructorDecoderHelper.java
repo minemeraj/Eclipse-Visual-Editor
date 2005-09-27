@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.27 $  $Date: 2005-08-26 18:52:41 $ 
+ *  $Revision: 1.28 $  $Date: 2005-09-27 15:12:06 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -86,7 +86,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 			}
 		} else {
 			// decoder was not active yet
-			fParent = CodeGenUtil.determineParentBeanpart(fbeanPart);			
+			fParent = CodeGenUtil.determineParentBeanpart(fbeanPart);		
 		}
 		return fParent;
 	}

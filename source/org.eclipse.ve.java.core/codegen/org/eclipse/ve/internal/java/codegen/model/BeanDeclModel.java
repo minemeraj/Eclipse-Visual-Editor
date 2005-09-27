@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.28 $  $Date: 2005-09-22 22:13:16 $ 
+ *  $Revision: 1.29 $  $Date: 2005-09-27 15:12:09 $ 
  */
 
 import java.util.*;
@@ -64,17 +64,20 @@ public class BeanDeclModel implements IBeanDeclModel {
  * This is a temporary workaround for the fact that we do not
  * have the notion of bean processing proirity see
  * defect 256142
- * 
+ * @deprecated, bean processing order was fixed... need to verify with defect above
  */	
 private boolean isPriority(BeanPart b) {
 	String s = b.getType() ;
-	return  (s!=null && s.equals("java.awt.GridBagConstraints"));	//$NON-NLS-1$
+	return  (s!=null && 
+			s.equals("java.awt.GridBagConstraints")); //$NON-NLS-1$
 }
 
 /**
  * Get all Beans
+ * @param sortByInitOffset, if true, Beans will be sorted according to 
+ *                          thier init expression's offset.
  */	
-public List getBeans() {
+public List getBeans(boolean sortByInitOffset) {
 	ArrayList v = new ArrayList() ;
 	
 	Iterator e = fBeansKey.values().iterator();
@@ -85,6 +88,28 @@ public List getBeans() {
 	  else
 	     v.add(o) ;
 	}
+	
+	if (sortByInitOffset) {		 
+		//TODO: this is a simlification of the order (method calls) of bean creation
+		Collections.sort(v, new Comparator() {
+			public int compare(Object o1, Object o2) {
+			    CodeExpressionRef e1 = ((BeanPart)o1).getInitExpression();
+			    CodeExpressionRef e2 = ((BeanPart)o2).getInitExpression();
+			    if (e1==null) 
+			    	if (e2==null)
+			    		return 0;
+			    	else
+			    		return 1;
+			    else 
+			    	if (e2==null)
+			    		return -1;
+			    	else 			    	
+			    		return (e1.getOffset()>=e2.getOffset()?1:-1);
+			    	    
+			}
+		});
+	}
+	
 	return v ;
 }	
 
@@ -97,7 +122,7 @@ public List getEventHandlers() {
 public synchronized void dispose() {
 	fState = BDM_STATE_DOWN ;
 
-	List beans = getBeans() ;
+	List beans = getBeans(false) ;
 	for (int i=beans.size()-1; i>=0; i--) {
 		BeanPart b = (BeanPart) beans.remove(i) ;
 		// clean up all expression adapters
@@ -186,7 +211,7 @@ public void deleteDesignatedBeans() {
  */	
 public BeanPart[] getBeansInializedByMethod(String methodHandle) {
 	List beans = new ArrayList () ;
-	Iterator itr = getBeans().iterator() ;
+	Iterator itr = getBeans(false).iterator() ;
 	while (itr.hasNext()) {
 		BeanPart b = (BeanPart)itr.next() ;
 		if(b.getInitMethod()!=null && // consider beanparts with fields but no methods
@@ -447,7 +472,7 @@ public void removeMethodRef(CodeMethodRef mr) {
 	// TODO  Need to deal with multi beans per method
 	fBeanInitMethod.remove(mr.getMethodHandle()) ;
 	fBeanReturns.remove(mr.getMethodName()) ;
-	Iterator allBeans = getBeans().iterator();
+	Iterator allBeans = getBeans(false).iterator();
 	while(allBeans.hasNext()){
 		BeanPart bean = (BeanPart)allBeans.next();
 		if(bean.getInitMethod()!=null && bean.getInitMethod().equals(mr))
@@ -455,7 +480,7 @@ public void removeMethodRef(CodeMethodRef mr) {
 		if(bean.getReturnedMethod()!=null && bean.getReturnedMethod().equals(mr))
 			bean.removeReturnMethod(mr);
 	}
-	allBeans = getBeans().iterator();
+	allBeans = getBeans(false).iterator();
 	while(allBeans.hasNext()){
 		BeanPart bean = (BeanPart)allBeans.next();
 		CodeExpressionRef exps[] = new CodeExpressionRef[bean.getRefExpressions().size()];
@@ -540,7 +565,7 @@ public Collection getBeansInitilizedByMethod(CodeMethodRef mref) {
    // TODO  We should have a hash table for these
    if (mref == null) return null ;
    ArrayList beans = new ArrayList() ;
-   Iterator itr = getBeans().iterator() ;
+   Iterator itr = getBeans(false).iterator() ;
    while (itr.hasNext()) {
 	BeanPart b = (BeanPart) itr.next();
 	if (b.getInitMethod()!=null && b.getInitMethod().equals(mref)) beans.add(b) ;
@@ -719,7 +744,7 @@ public void updateBeanNameChange(BeanPart bp) {
 	public BeanPart[] getUnreferencedBeanParts(){
 		// determine references first
 		HashMap beanDependentsMap = new HashMap();
-		for (Iterator unrefItr = getBeans().iterator(); unrefItr.hasNext();) {
+		for (Iterator unrefItr = getBeans(false).iterator(); unrefItr.hasNext();) {
 			BeanPart bp = (BeanPart) unrefItr.next();
 			Collection all = bp.getRefExpressions();
 			all.addAll(bp.getNoSrcExpressions());						
@@ -744,7 +769,7 @@ public void updateBeanNameChange(BeanPart bp) {
 			}			
 		}
 		
-		List unreferenced = new ArrayList(getBeans());
+		List unreferenced = new ArrayList(getBeans(false));
 		List referenced = new ArrayList();
 		
 		for (Iterator unrefItr = unreferenced.iterator(); unrefItr.hasNext();) {

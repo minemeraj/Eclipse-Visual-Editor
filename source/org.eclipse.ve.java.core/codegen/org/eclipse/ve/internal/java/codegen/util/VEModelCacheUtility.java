@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.18 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.19 $  $Date: 2005-09-27 15:12:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -118,7 +118,7 @@ public class VEModelCacheUtility {
 	public static void annotateEMFModelWithCache(IBeanDeclModel bdm) {
 		IVEModelInstance model = bdm.getCompositionModel();
 		JavaCacheData cache = JCMFactory.eINSTANCE.createJavaCacheData();
-		Iterator itr = bdm.getBeans().iterator();
+		Iterator itr = bdm.getBeans(false).iterator();
 		while (itr.hasNext()) {
 			BeanPart bp = (BeanPart) itr.next();
 			cache.getNamesToBeans().put(bp.getUniqueName(),bp.getEObject());

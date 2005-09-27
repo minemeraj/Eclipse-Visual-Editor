@@ -11,15 +11,14 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.54 $  $Date: 2005-09-22 22:13:16 $ 
+ *  $Revision: 1.55 $  $Date: 2005-09-27 15:12:09 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
@@ -545,7 +544,7 @@ public BeanPart createImplicitFromJVEModel(IJavaObjectInstance component, ICompi
 			// Create the implicit bean
 			BeanPartDecleration bpd = new BeanPartDecleration(parent, sf);
 			implicitBean = new BeanPart(bpd);	
-			implicitBean.setImplicitParent(parent);
+			implicitBean.setImplicitParent(parent, sf);
 			parent.getModel().addBean(implicitBean);
 			implicitBean.setEObject(component);
 			
@@ -830,6 +829,18 @@ public BeanPart createThisBeanPartIfNeeded(CodeMethodRef initMethod) {
      
      return bean ;	
 }
+
+static void setBeanPartAsImplicit (BeanPart implicitBean, BeanPart parent, EStructuralFeature sf) throws CodeGenException {
+	
+	implicitBean.setImplicitParent(parent, sf);
+	// Let the parent point to its implicit child
+    parent.getEObject().eSet(sf, implicitBean.getEObject());		
+	ExpressionRefFactory eGen = new ExpressionRefFactory(parent, sf);		
+	// prime the proper helpers
+	eGen.createFromJVEModelWithNoSrc(new Object[] { implicitBean.getEObject() } );
+	implicitBean.addBackRef(parent, (EReference)sf);
+	
+}
 /**
  * 
  * This method is called by the construction of a wrapper (parent).
@@ -854,7 +865,49 @@ public BeanPart createThisBeanPartIfNeeded(CodeMethodRef initMethod) {
  * 
  * @since 1.2.0
  */
-public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf, boolean createImplicitInitExpression) {
+public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf) {
+	BeanPart implicitBean = null;
+	try {
+		// Create the implicit bean
+		BeanPartDecleration bpd = new BeanPartDecleration(parent, sf);
+		BeanPartDecleration current = fBeanModel.getModelDecleration(bpd);
+		if (current!= null) {
+			// Implicit decleration was parsed in via a "parent.getImplicit().setFoo();" expression
+			current.setType(bpd.getType());
+			bpd = current;
+			implicitBean = bpd.getBeanParts()[0];			
+		}
+		else { 
+		  // Create an implicit bean
+		  implicitBean = new BeanPart(bpd);	
+		  implicitBean.setImplicitParent(parent, sf);
+		  parent.getModel().addBean(implicitBean);
+		}
+		
+		if (implicitBean.getDecleration().isImplicitDecleration()) {
+			// BeanPart is being created from scratch.
+			implicitBean.createEObject();
+			ImplicitAllocation ia = InstantiationFactory.eINSTANCE.createImplicitAllocation(parent.getEObject(), sf);
+			((IJavaObjectInstance)implicitBean.getEObject()).setAllocation(ia);		
+			
+			implicitBean.addInitMethod(parent.getInitMethod());
+			EStructuralFeature asf = CodeGenUtil.getAllocationFeature(implicitBean.getEObject());
+			ExpressionRefFactory eGen = new ExpressionRefFactory(implicitBean, asf);	
+			// prime the proper helpers
+			CodeExpressionRef initExpression = eGen.createFromJVEModelWithNoSrc(null);
+			initExpression.setNoSrcExpression(true);
+			// Force a full cascaded decoding (SWT decoders may generate other expressions).
+			initExpression.decodeExpression();
+			// During building, this bean will be added the to EMF model
+		}
+		setBeanPartAsImplicit(implicitBean, parent, sf);
+	} catch (CodeGenException e) {
+		JavaVEPlugin.log(e);
+	}
+	return implicitBean;
+}
+
+public BeanPart restoreImplicitBeanPart (BeanPart parent, EStructuralFeature sf, boolean createImplicitInitExpression) {
 	BeanPart implicitBean = null;
 	try {
 		// Create the implicit bean
@@ -867,13 +920,12 @@ public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf, 
 		}
 		else {
 		  implicitBean = new BeanPart(bpd);	
-		  implicitBean.setImplicitParent(parent);
+		  implicitBean.setImplicitParent(parent, sf);
 		  parent.getModel().addBean(implicitBean);
 		}
 		
-		implicitBean.createEObject();
-		ImplicitAllocation ia = InstantiationFactory.eINSTANCE.createImplicitAllocation(parent.getEObject(), sf);
-		((IJavaObjectInstance)implicitBean.getEObject()).setAllocation(ia);		
+		EObject implicit = (EObject) parent.getEObject().eGet(sf);
+		implicitBean.setEObject(implicit);
 		
 		if (createImplicitInitExpression) {
 			implicitBean.addInitMethod(parent.getInitMethod());
@@ -885,15 +937,7 @@ public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf, 
 			// Force a full cascaded decoding (SWT decoders may generate other expressions).
 			initExpression.decodeExpression();			
 		}
-		// Let the parent point to its implicit child
-		if (sf.isMany()) 
-			((List)parent.getEObject().eGet(sf)).add(implicitBean.getEObject());
-		else
-		  parent.getEObject().eSet(sf, implicitBean.getEObject());
-		
-		ExpressionRefFactory eGen = new ExpressionRefFactory(parent, sf);		
-		// prime the proper helpers
-		eGen.createFromJVEModelWithNoSrc(new Object[] { implicitBean.getEObject() } );
+		setBeanPartAsImplicit(implicitBean, parent, sf);
 	} catch (CodeGenException e) {
 		JavaVEPlugin.log(e);
 	}
