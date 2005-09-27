@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.18 $  $Date: 2005-08-29 18:47:06 $ 
+ *  $Revision: 1.19 $  $Date: 2005-09-27 15:12:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -45,7 +45,7 @@ public interface IBeanDeclModel {
 	 * @since 1.0.0
 	 */
 	public TypeResolver getResolver();
-	public List getBeans() ;
+	public List getBeans(boolean sortByInitOffset) ;
 	public void addBean (BeanPart bean) ;
 	public void addMethodReturningABean(String method,String beanName) throws CodeGenException ;
 	public BeanPart getABean(String name) ;

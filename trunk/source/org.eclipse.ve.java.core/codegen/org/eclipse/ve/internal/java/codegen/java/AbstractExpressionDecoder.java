@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AbstractExpressionDecoder.java,v $
- *  $Revision: 1.24 $  $Date: 2005-09-16 13:34:47 $ 
+ *  $Revision: 1.25 $  $Date: 2005-09-27 15:12:09 $ 
  */
 import java.util.logging.Level;
 
@@ -197,7 +197,7 @@ public abstract class AbstractExpressionDecoder implements IExpressionDecoder {
 		
 		if (fExprRef.isStateSet(CodeExpressionRef.STATE_NO_SRC)) {
 			fhelper.adaptToCompositionModel(this);
-			return result ;
+			return null ;
 		}
 
 		if (result == null && !(fhelper instanceof SimpleAttributeDecoderHelper)) {

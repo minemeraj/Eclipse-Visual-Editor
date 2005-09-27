@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.24 $  $Date: 2005-09-06 16:40:32 $ 
+ *  $Revision: 1.25 $  $Date: 2005-09-27 15:12:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -708,7 +708,7 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
 	
 	
 	protected BeanPart findABean(String simpleName) {
-		List l = fbeanPart.getModel().getBeans() ;
+		List l = fbeanPart.getModel().getBeans(false) ;
 		for (int i = 0; i < l.size(); i++) {
 			if (((BeanPart)l.get(i)).getSimpleName().equals(simpleName) &&
 				(((BeanPart)l.get(i)).getInitMethod() == fbeanPart.getInitMethod()))

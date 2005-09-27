@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.34 $  $Date: 2005-09-22 22:13:16 $ 
+ *  $Revision: 1.35 $  $Date: 2005-09-27 15:12:09 $ 
  */
 
 import java.util.*;
@@ -245,7 +245,7 @@ void  setLineSeperator() {
  */
 protected void cleanModel () {
 	fMonitor.subTask(CodeGenJavaMessages.JavaBeanModelBuilder_Task_CleanModel); 
-	Iterator itr = fModel.getBeans().iterator() ;
+	Iterator itr = fModel.getBeans(false).iterator() ;
 	ArrayList err = new ArrayList() ;
 	
 	while (itr.hasNext()) {
@@ -333,7 +333,7 @@ protected List getInnerTypes() {
 protected  void analyzeEvents(IVisitorFactoryRule visitorFactoryRule) {
 	TimerTests.basicTest.startStep("Parse Events"); //$NON-NLS-1$
 	fMonitor.subTask(CodeGenJavaMessages.JavaBeanModelBuilder_Task_AnalyzeEvents); 
-	Iterator itr = fModel.getBeans().iterator() ;
+	Iterator itr = fModel.getBeans(false).iterator() ;
 	// EventParser will cache event information, and will 
 	// Scan methods for event expressions.
 	EventsParser p = new EventsParser(fModel, fastCU) ;
@@ -443,7 +443,7 @@ public IBeanDeclModel build () throws CodeGenException {
 	    }
 	    
 	    // Update the parent
-	    Iterator itr = fModel.getBeans().iterator() ;
+	    Iterator itr = fModel.getBeans(false).iterator() ;
 		while (itr.hasNext()) {
 	       BeanPart bean = (BeanPart) itr.next() ;
 	       bean.setModel(fModel) ;

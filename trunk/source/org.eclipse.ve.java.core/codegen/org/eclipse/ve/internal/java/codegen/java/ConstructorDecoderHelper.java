@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.57 $  $Date: 2005-09-22 22:13:16 $ 
+ *  $Revision: 1.58 $  $Date: 2005-09-27 15:12:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -453,9 +453,9 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				if (receiver != null) {
 					if (receiver instanceof SimpleName) {
 						BeanPart parent = fbeanPart.getModel().getABean(((SimpleName)receiver).getIdentifier());
-						if (parent!=null)
+						if (parent!=null) {							
 							return createImplicitAllocation (parent.getEObject(), ast);
-					    	
+						}
 					}
 					else if (receiver instanceof MethodInvocation) {
 						return createAllocation (receiver, expOfMethod);
@@ -466,30 +466,52 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			}		
 			return createParseTreeAllocation(ast, expOfMethod);
 		}
-		else if (fbeanPart.isImplicit()) {			
-			BeanPart parentBean = fbeanPart.getImplicitParent();
-			// Make sure that the implicit picks up the reference to the parent 
-			getExpressionReferences().addAll(CodeGenUtil.getReferences(parentBean.getEObject(), false));
-//			getExpressionReferences().add(parentBean.getEObject());
-			getExpressionReferences().add(parentBean.getEObject());
-			ImplicitAllocation ia = (ImplicitAllocation) ((IJavaObjectInstance)fbeanPart.getEObject()).getAllocation();
-			// TODO: problems with a JFrame/Content pane... both need to be on the FreeForm
-			fbeanPart.addBackRef(parentBean, (EReference)ia.getFeature());
-			return ia;
+		else if (fbeanPart.isImplicit()) {
+			IJavaObjectInstance obj = (IJavaObjectInstance)fbeanPart.getEObject();
+			if (obj.isSetAllocation())
+				return obj.getAllocation();							
 		}
 		return null;
 	}
 	
 	
-	protected void createImplicitInstances(EStructuralFeature sf, JavaClass clazz) {
-		
+	protected void createImplicitInstancesIfNeeded() {
+		//TODO:  This will need to be some BeanInfo magic, hard
+		//       code it for now.
+	    JavaClass clazz = (JavaClass) ((IJavaObjectInstance) fbeanPart.getEObject()).getJavaType();	
+		if (clazz.getName().equals("TreeViewer")) {
+			EStructuralFeature tree = clazz.getEStructuralFeature("tree");
+			BeanPartFactory bpf = new BeanPartFactory(fbeanPart.getModel(),fbeanPart.getModel().getCompositionModel());
+			bpf.createImplicitBeanPart(fbeanPart,tree);			
+		}
 	}
 	
-	protected Object[] createImplicitArgs (EObject parent, EStructuralFeature sf) {
-		return new Object[] { parent, sf };
+	protected void designateAsImplicit (boolean updateModel) throws CodeGenException {
+		
+		ImplicitAllocation ia = (ImplicitAllocation)((IJavaObjectInstance)fbeanPart.getEObject()).getAllocation();
+		EStructuralFeature sf = ia.getFeature() ;		
+		BeanPart parent = fbeanPart.getModel().getABean(ia.getParent());		
+		// Add reference to the visual parent, It is required here that the parent's init
+		// expression has beed decoded already!!
+		getExpressionReferences().addAll(CodeGenUtil.getReferences(ia.getParent(), false));
+		// we also have a dependency on the implicitParent
+		//TODO: FreeForm issues
+		getExpressionReferences().add(parent.getEObject());
+		
+		fbeanPart.setImplicitParent(parent, sf);
+		
+		if (updateModel) {
+			// It is possible that during decode, and implicit BeanPart was already fluffed up.
+			// Now is the time to replace it with this bean.
+			BeanPart old = fbeanPart.getModel().getABean(fbeanPart.getImplicitName());
+			if (old!=null && old != fbeanPart) {
+				old.dispose();
+			}		
+			BeanPartFactory.setBeanPartAsImplicit(fbeanPart, parent, sf);
+		}
 	}
-			
-	protected void createImplicitInstancesIfNeeded() {
+	
+	protected void restoreImplicitInstancesIfNeeded() {
 		
 		//TODO:  This will need to be some BeanInfo magic, hard
 		//       code it for now.
@@ -497,7 +519,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		if (clazz.getName().equals("TreeViewer")) {
 			EStructuralFeature tree = clazz.getEStructuralFeature("tree");
 			BeanPartFactory bpf = new BeanPartFactory(fbeanPart.getModel(),fbeanPart.getModel().getCompositionModel());
-			bpf.createImplicitBeanPart(fbeanPart,tree, true);			
+			bpf.restoreImplicitBeanPart(fbeanPart,tree, true);			
 		}
 	}
 	
@@ -516,16 +538,29 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		// SMART UPDATE
 		if(!CodeGenUtil.areAllocationsEqual(obj.getAllocation(), alloc)) {
 			obj.setAllocation(alloc) ;
+			if (alloc instanceof ImplicitAllocation) {
+				designateAsImplicit(true);
+			}
 			createImplicitInstancesIfNeeded();
+		}
+		else if (alloc instanceof ImplicitAllocation) {
+			designateAsImplicit(false);
 		}
 		
 		return true;
 	}
 	
 	public boolean restore() throws CodeGenException {
-		// Update the references (fReferences) from the allocation PT. 
-		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
-		InstantiationFactory.eINSTANCE.createParseTreeAllocation(getParsedTree(getAST(),expOfMethod, fOwner.getExprRef().getOffset(), fbeanPart.getModel(), getExpressionReferences()));
+		JavaAllocation alloc = ((IJavaObjectInstance)fbeanPart.getEObject()).getAllocation(); 
+		if (!(alloc instanceof ImplicitAllocation)) {
+			// Update the references (fReferences) from the allocation PT. 
+			CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+			getParsedTree(getAST(),expOfMethod, fOwner.getExprRef().getOffset(), fbeanPart.getModel(), getExpressionReferences());
+			restoreImplicitInstancesIfNeeded();
+		}
+		else 
+			designateAsImplicit(false);
+		
 		return true;
 	}	
 	/**

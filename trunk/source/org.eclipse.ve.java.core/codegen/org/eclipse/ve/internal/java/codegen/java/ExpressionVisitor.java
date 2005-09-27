@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.31 $  $Date: 2005-09-22 22:13:16 $ 
+ *  $Revision: 1.32 $  $Date: 2005-09-27 15:12:09 $ 
  */
 
 import java.text.MessageFormat;
@@ -64,7 +64,7 @@ BeanPart  processRefToImplicitSend(MethodInvocation stmt) {
 	MethodInvocation selection = (MethodInvocation) stmt.getExpression();
 	
 	String beanName = selection.toString();	
-	BeanPart bp = fModel.getBeanReturned(beanName);
+	BeanPart bp = fModel.getABean(beanName);
 	
 	if (bp==null) {
 	   String parentName = selection.getExpression().toString();
@@ -74,14 +74,15 @@ BeanPart  processRefToImplicitSend(MethodInvocation stmt) {
 				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 					JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$		
 				return null;
-	   }
+	   }	  
 	  BeanPartDecleration decl = new BeanPartDecleration(beanName);
-	  decl.setDeclaringMethod(null);
+	  decl.setImplicitDecleration(true);
+	  decl.setDeclaringMethod(parent.getDecleration().isInstanceVar()?null:parent.getInitMethod());
 	  if (fModel.getModelDecleration(decl)!=null)
 		decl = fModel.getModelDecleration(decl); // reuse the existing mone
 	  bp = new BeanPart(decl) ;  
 	  bp.addInitMethod(fMethod) ;
-	  bp.setImplicitParent(parent);
+	  bp.setImplicitParent(parent, null);
 	  fModel.addBean (bp) ;
 	}
 	return bp;
@@ -100,7 +101,6 @@ BeanPart  processRefToMessageSend  (MethodInvocation stmt) {
 	    }
 	
 		String selector = ((MethodInvocation)stmt.getExpression()).getName().getIdentifier();
-
 		BeanPart b = null;
 		if (selector != null) {
 			b = fModel.getBeanReturned(selector);
@@ -111,7 +111,6 @@ BeanPart  processRefToMessageSend  (MethodInvocation stmt) {
 			}
 		}
 		return b;
-		  	      	  	  		
 }
 
 /**
@@ -164,7 +163,7 @@ protected BeanPart processFieldAccess (MethodInvocation stmt) {
 protected BeanPart[] processCreateMethod(MethodInvocation stmt, boolean canRetry) {
 	
 	    ArrayList beans = new ArrayList();	
-		List l = fModel.getBeans();
+		List l = fModel.getBeans(false);
 		for (int i = 0; i < l.size(); i++) {
 			BeanPart bp = (BeanPart) l.get(i);
 			if (bp.getInitMethod() != null) {

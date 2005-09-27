@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.64 $  $Date: 2005-09-06 13:07:09 $ 
+ *  $Revision: 1.65 $  $Date: 2005-09-27 15:12:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -148,7 +148,7 @@ public class BDMMerger {
 	 * @since 1.1
 	 */
 	private boolean activateDeactivatedBeans() {
-		Iterator mainBeansItr = mainModel.getBeans().iterator();
+		Iterator mainBeansItr = mainModel.getBeans(false).iterator();
 		while(mainBeansItr.hasNext()){
 			if (monitor.isCanceled())
 				return false;			
@@ -208,8 +208,9 @@ public class BDMMerger {
 	 */
 	private boolean clean() {
 		boolean cleaned = true;
-		if(mainModel.getBeans()!=null){
-			Iterator beanItr = mainModel.getBeans().iterator();
+		List beansLst = mainModel.getBeans(false);
+		if(beansLst!=null){
+			Iterator beanItr = beansLst.iterator();
 			while (beanItr.hasNext()) {
 				BeanPart bp = (BeanPart) beanItr.next();
 				bp.getParentExpressons().clear();
@@ -267,7 +268,7 @@ public class BDMMerger {
 		try {
 			// Decoders have analyzed and acted on the Expressions - 
 			// it is time to hook them together withn the Compsition Model
-			Iterator itr = mainModel.getBeans().iterator() ;
+			Iterator itr = mainModel.getBeans(false).iterator() ;
 			while (itr.hasNext()) {
 				if (monitor.isCanceled())
 					return false;
@@ -788,7 +789,7 @@ public class BDMMerger {
 			// beanpart's parent expressions list - so check the parent expressions of all bean parts 
 			// to determine if anyone will be adding this expression to the Shell beanpart later on.
 			CodeExpressionRef parentExpression = null;
-			Iterator newBeansItr = newModel.getBeans().iterator();
+			Iterator newBeansItr = newModel.getBeans(true).iterator();
 			while (newBeansItr.hasNext() && parentExpression==null) {
 				BeanPart newBean = (BeanPart) newBeansItr.next();
 				List newBPParentExps = newBean.getParentExpressons();
@@ -965,7 +966,7 @@ public class BDMMerger {
 	
 	protected boolean updateNonRegularBeanPartExpressions(){
 		boolean merge = true;
-		List mainModelBeans = mainModel.getBeans() ;
+		List mainModelBeans = mainModel.getBeans(false) ;
 		mainModelBeans = orderBeansToMerge(mainModelBeans);
 		// Update changed bean parts
 		Iterator mainModelBeansItr = mainModelBeans.iterator();
@@ -1021,7 +1022,7 @@ public class BDMMerger {
 		boolean update = true;
 		// Update the regular expressions of all beans
 		HashMap beansInMethodMap = new HashMap();
-		Iterator mainModelBeansItr = mainModel.getBeans().iterator();
+		Iterator mainModelBeansItr = mainModel.getBeans(true).iterator();
 		while (mainModelBeansItr.hasNext()) {
 			BeanPart bp = (BeanPart) mainModelBeansItr.next();
 			String key = "null"; //$NON-NLS-1$
@@ -1451,7 +1452,7 @@ public class BDMMerger {
 	 */
 	protected boolean addNewBeans(){
 		boolean add = true ;
-		Iterator newBeansItr = newModel.getBeans().iterator();
+		Iterator newBeansItr = newModel.getBeans(false).iterator();
 		while (newBeansItr.hasNext()) {
 			if (monitor.isCanceled())
 				return false;
@@ -1510,7 +1511,7 @@ public class BDMMerger {
 	protected boolean removeDeletedBeans(){
 		boolean removed = true ;
 		List visitedDecls = new ArrayList();
-		Iterator mainBeansItr = mainModel.getBeans().iterator();
+		Iterator mainBeansItr = mainModel.getBeans(false).iterator();
 		while(mainBeansItr.hasNext()){
 			if (monitor.isCanceled())
 				return false;			
@@ -1644,7 +1645,7 @@ public class BDMMerger {
 	 */
 	protected boolean addThisMethod(){
 		boolean add = true ;
-		Iterator newBeansItr = newModel.getBeans().iterator();
+		Iterator newBeansItr = newModel.getBeans(false).iterator();
 		while (newBeansItr.hasNext()) {
 			if (monitor.isCanceled())
 				return false;

@@ -18,7 +18,7 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.13 $  $Date: 2005-09-22 22:13:16 $ 
+ *  $Revision: 1.14 $  $Date: 2005-09-27 15:12:09 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -45,7 +45,7 @@ public class BeanPartDecleration {
 	ASTNode fieldDecl = null ;
 	String  fieldDeclHandle = null ;   // IField handle
 	String  declerationHandle = null;  // BeanPartDeclerationHandle provide a unique decl. name
-	String 	name = null ;  // Decleration simple Name
+	String 	name = null ;  		 // Decleration simple Name	
 	String 	type = null;
 	boolean typeResolved = false;
 	boolean implicitDecleration = false;
@@ -66,9 +66,11 @@ public class BeanPartDecleration {
 		setType(type);
 	}
 	
-	static protected String getImplicitName(BeanPart parent, EStructuralFeature sf) {
-		return parent.getSimpleName()+"."+Utilities.getPropertyDecorator(sf).getReadMethod().getName()+"()";
+
+	static public String getImplicitName(EStructuralFeature sf) {
+		return "."+Utilities.getPropertyDecorator(sf).getReadMethod().getName()+"()";
 	}
+	
 	
 	/**
 	 * This is a bean with no formal source decleration, it is implicitly created by the 
@@ -79,8 +81,8 @@ public class BeanPartDecleration {
 	 * 
 	 * @since 1.2.0
 	 */
-	public BeanPartDecleration (BeanPart implicitFromBean, EStructuralFeature implicitFeature) {		
-		this(getImplicitName(implicitFromBean, implicitFeature));
+	public BeanPartDecleration (BeanPart implicitFromBean, EStructuralFeature implicitFeature) {
+		this (implicitFromBean.getSimpleName()+getImplicitName(implicitFeature));
 		JavaClass clazz = (JavaClass) implicitFeature.getEType();
 		setType(clazz.getQualifiedName());
 		if (implicitFromBean.getDecleration().isInstanceVar())
@@ -162,7 +164,7 @@ public class BeanPartDecleration {
 		return name;
 	}
 	public void addBeanPart(BeanPart bp) {
-		if (!bp.getSimpleName().equals(name))
+		if (!isImplicitDecleration() && !bp.getSimpleName().equals(name))
 			throw new IllegalArgumentException();
 		if (!beanParts.contains(bp))
 			beanParts.add(bp);			
@@ -289,6 +291,8 @@ public class BeanPartDecleration {
 		}
 		b.append(beanParts.size()+" BeanParts "); //$NON-NLS-1$
 		b.append("["+name+" ("+type+")]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (isImplicitDecleration())
+			b.append(" [IMPLICIT]");
 		return b.toString();
 	}
 	public String getDeclerationHandle() {
@@ -386,4 +390,9 @@ public class BeanPartDecleration {
 	public boolean isImplicitDecleration() {
 		return implicitDecleration;
 	}
+	
+	public void setImplicitDecleration(boolean imp) {
+		implicitDecleration=imp;		
+	}
+	
 }

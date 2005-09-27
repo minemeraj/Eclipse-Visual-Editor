@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java.rules;
 /*
  *  $RCSfile: InstanceVariableCreationRule.java,v $
- *  $Revision: 1.19 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.20 $  $Date: 2005-09-27 15:12:09 $ 
  */
 import java.util.*;
 
@@ -255,7 +255,8 @@ public class InstanceVariableCreationRule implements IInstanceVariableCreationRu
 			}
 
 			if (bdm != null) {
-				BeanPart beans[] = (BeanPart[]) bdm.getBeans().toArray(new BeanPart[bdm.getBeans().size()]);
+				List beanslst = bdm.getBeans(false);
+				BeanPart beans[] = (BeanPart[]) beanslst.toArray(new BeanPart[beanslst.size()]);
 				for (int i = 0; i < beans.length; i++) {
 					if (beans[i].getSimpleName().equals(name)) {
 						name = base + Integer.toString(Index++);
