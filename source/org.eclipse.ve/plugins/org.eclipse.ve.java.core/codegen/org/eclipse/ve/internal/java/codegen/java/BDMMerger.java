@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.66 $  $Date: 2005-09-27 21:09:11 $ 
+ *  $Revision: 1.67 $  $Date: 2005-09-28 15:57:18 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -984,11 +984,29 @@ public class BDMMerger {
 			if(updateBP != null){
 				merge = merge && updateNonRegularBeanPartExpressions(mainBP, updateBP);
 			}else{
-				JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
+				if(mainBP.getDecleration().isImplicitDecleration())
+					clearImplicitDeclarationBeanPart(mainBP);
+				else 
+					JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
 			}
 		}
 		return merge;
 	}
+	
+	/**
+	 * This API is called when a main beanpart having a implicit declaration
+	 * is not present in the snippet bdm. 
+	 * 
+	 * @param mainBP
+	 * 
+	 * @since 1.2.0
+	 */
+	private void clearImplicitDeclarationBeanPart(BeanPart mainBP) {
+		processExpressions(mainBP.getRefCallBackExpressions(), new ArrayList());
+		processExpressions(mainBP.getRefEventExpressions(), new ArrayList());
+		processExpressions(mainBP.getRefExpressions(), new ArrayList());
+	}
+
 	protected void orderBeanPartExpressions(BeanPart bp, List orderedList){
 		if(bp==null || bp.getRefExpressions()==null)
 			return;
@@ -1055,7 +1073,10 @@ public class BDMMerger {
 					orderBeanPartExpressions(updateBP, orderedUpdatedExpressions);
 					
 				}else{
-					JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
+					if(mainBP.getDecleration().isImplicitDecleration())
+						clearImplicitDeclarationBeanPart(mainBP);
+					else
+						JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
 				}
 			}
 			update = update && processInitExpressions(orderedMainExpressions, orderedUpdatedExpressions);
@@ -1162,8 +1183,7 @@ public class BDMMerger {
 		if(modelBP==null){
 			BeanPartDecleration otherModelBPDecl = otherModelBP.getDecleration();
 			BeanPartDecleration modelBPDecl = model.getModelDecleration(otherModelBPDecl);
-			if (!modelBPDecl.isImplicitDecleration())
-			    updateBPDeclAST(otherModelBPDecl, modelBPDecl);
+			updateBPDeclAST(otherModelBPDecl, modelBPDecl);
 			BeanPart[] modelBPs = modelBPDecl==null?null:modelBPDecl.getBeanParts();
 			if(modelBPs!=null && modelBPs.length>0){
 				for (int i = 0; i < modelBPs.length; i++) {
@@ -1202,7 +1222,7 @@ public class BDMMerger {
 	 * @since 1.1
 	 */
 	private void updateBPDeclAST(BeanPartDecleration otherModelBPDecl, BeanPartDecleration mainModelBPDecl) {
-		if(otherModelBPDecl!=null && mainModelBPDecl!=null){
+		if(otherModelBPDecl!=null && mainModelBPDecl!=null && !mainModelBPDecl.isImplicitDecleration()){
 			if(		otherModelBPDecl.getFieldDeclHandle()!=null && 
 					mainModelBPDecl.getFieldDeclHandle()!=null && 
 					otherModelBPDecl.getFieldDeclHandle().equals(mainModelBPDecl.getFieldDeclHandle()))
@@ -1534,6 +1554,8 @@ public class BDMMerger {
 			BeanPart[] newBPs = newBPDecl==null?new BeanPart[0]: newBPDecl.getBeanParts();
 			if(mainBPs.length!=newBPs.length){
 				for (int i = 0; i < mainBPs.length; i++) {
+					if(mainBPs[i].getDecleration().isImplicitDecleration())	// Implicit declarations beanparts are special
+						continue; // Dont remove them as they are maintained by parent's declaration
 					toDeleteBeansList.add(mainBPs[i]);
 				}
 			}else{
@@ -1558,6 +1580,9 @@ public class BDMMerger {
 	protected boolean shouldRemoveMainBean(BeanPart mainBean, BeanPart newBean){
 		// Remove bean if type has changed	
 		boolean shouldRemove = false;
+		if(mainBean.isImplicit() && newBean.isImplicit()){
+			shouldRemove = !mainBean.getImplicitName().equals(newBean.getImplicitName());
+		}else{
 		String mainType;
 		String newType;
 		boolean isMainBeanThisPart = mainBean.getSimpleName().equals(BeanPart.THIS_NAME);
@@ -1614,6 +1639,7 @@ public class BDMMerger {
 					shouldRemove = true;
 				}
 			}
+		}
 		}
 		return shouldRemove;
 	}

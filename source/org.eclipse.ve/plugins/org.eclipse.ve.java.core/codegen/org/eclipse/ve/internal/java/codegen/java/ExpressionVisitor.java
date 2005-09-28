@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.32 $  $Date: 2005-09-27 15:12:09 $ 
+ *  $Revision: 1.33 $  $Date: 2005-09-28 15:57:18 $ 
  */
 
 import java.text.MessageFormat;
@@ -64,11 +64,15 @@ BeanPart  processRefToImplicitSend(MethodInvocation stmt) {
 	MethodInvocation selection = (MethodInvocation) stmt.getExpression();
 	
 	String beanName = selection.toString();	
-	BeanPart bp = fModel.getABean(beanName);
+	BeanPart bp = CodeGenUtil.getBeanPart(fModel, beanName, fMethod, fExpression.getOffset());
+	if(bp==null)
+		bp = fModel.getABean(beanName);
 	
 	if (bp==null) {
 	   String parentName = selection.getExpression().toString();
-	   BeanPart parent = fModel.getABean(parentName);
+	   BeanPart parent = CodeGenUtil.getBeanPart(fModel, parentName, fMethod, fExpression.getOffset());
+	   if(parent==null)
+		   parent = fModel.getABean(parentName);
 	   if (parent==null && fReTryLater!=null) { 
 				fReTryLater.add(this);
 				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
