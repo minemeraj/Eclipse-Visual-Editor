@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.51 $  $Date: 2005-09-27 15:12:09 $ 
+ *  $Revision: 1.52 $  $Date: 2005-09-28 15:57:18 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -659,10 +659,12 @@ public  void dispose() {
 public boolean isEquivalent(BeanPart b) {
    if (b==null) return false ;
    if(this==b) return true;
+   BeanPartDecleration thisDecl = getDecleration();
+   BeanPartDecleration bDecl = b.getDecleration();
+   if(thisDecl!=null && bDecl!=null && thisDecl.isImplicitDecleration() && bDecl.isImplicitDecleration())
+	   return getImplicitName().equals(b.getImplicitName());
    if (getSimpleName().equals(b.getSimpleName()) &&
        getType().equals(b.getType())){
-		BeanPartDecleration thisDecl = getDecleration();
-		BeanPartDecleration bDecl = b.getDecleration();
 		if(thisDecl!=null && bDecl!=null){
 			return thisDecl.getBeanPartIndex(this)== bDecl.getBeanPartIndex(b);
 		}else{
