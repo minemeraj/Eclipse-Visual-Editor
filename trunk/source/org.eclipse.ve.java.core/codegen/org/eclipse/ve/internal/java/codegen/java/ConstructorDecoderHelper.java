@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.58 $  $Date: 2005-09-27 15:12:09 $ 
+ *  $Revision: 1.59 $  $Date: 2005-09-28 20:35:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -452,7 +452,14 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				Expression receiver = ((MethodInvocation)ast).getExpression();
 				if (receiver != null) {
 					if (receiver instanceof SimpleName) {
-						BeanPart parent = fbeanPart.getModel().getABean(((SimpleName)receiver).getIdentifier());
+						String parentName = ((SimpleName)receiver).getIdentifier();
+						BeanPart parent = CodeGenUtil.getBeanPart(
+								fbeanPart.getModel(), 
+								parentName, 
+								fOwner.getExprRef().getMethod(), 
+								fOwner.getExprRef().getOffset());
+						if(parent==null)
+							parent = fbeanPart.getModel().getABean(parentName);
 						if (parent!=null) {							
 							return createImplicitAllocation (parent.getEObject(), ast);
 						}
@@ -503,10 +510,17 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		if (updateModel) {
 			// It is possible that during decode, and implicit BeanPart was already fluffed up.
 			// Now is the time to replace it with this bean.
-			BeanPart old = fbeanPart.getModel().getABean(fbeanPart.getImplicitName());
+			String name = fbeanPart.getImplicitName();
+			BeanPart old = CodeGenUtil.getBeanPart(
+					fbeanPart.getModel(), 
+					name, 
+					fOwner.getExprRef().getMethod(), 
+					fOwner.getExprRef().getOffset());
+			if(old==null)
+				old = fbeanPart.getModel().getABean(name);
 			if (old!=null && old != fbeanPart) {
 				old.dispose();
-			}		
+			}
 			BeanPartFactory.setBeanPartAsImplicit(fbeanPart, parent, sf);
 		}
 	}
