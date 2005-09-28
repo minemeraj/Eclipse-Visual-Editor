@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.67 $  $Date: 2005-09-28 15:57:18 $ 
+ *  $Revision: 1.68 $  $Date: 2005-09-28 20:35:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -984,7 +984,7 @@ public class BDMMerger {
 			if(updateBP != null){
 				merge = merge && updateNonRegularBeanPartExpressions(mainBP, updateBP);
 			}else{
-				if(mainBP.getDecleration().isImplicitDecleration())
+				if(mainBP.isImplicit())
 					clearImplicitDeclarationBeanPart(mainBP);
 				else 
 					JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
@@ -1073,7 +1073,7 @@ public class BDMMerger {
 					orderBeanPartExpressions(updateBP, orderedUpdatedExpressions);
 					
 				}else{
-					if(mainBP.getDecleration().isImplicitDecleration())
+					if(mainBP.isImplicit())
 						clearImplicitDeclarationBeanPart(mainBP);
 					else
 						JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
@@ -1554,7 +1554,7 @@ public class BDMMerger {
 			BeanPart[] newBPs = newBPDecl==null?new BeanPart[0]: newBPDecl.getBeanParts();
 			if(mainBPs.length!=newBPs.length){
 				for (int i = 0; i < mainBPs.length; i++) {
-					if(mainBPs[i].getDecleration().isImplicitDecleration())	// Implicit declarations beanparts are special
+					if(mainBPs[i].isImplicit())	// Implicit declarations beanparts are special
 						continue; // Dont remove them as they are maintained by parent's declaration
 					toDeleteBeansList.add(mainBPs[i]);
 				}
