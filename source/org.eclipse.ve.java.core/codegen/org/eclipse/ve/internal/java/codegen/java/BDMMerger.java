@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.68 $  $Date: 2005-09-28 20:35:28 $ 
+ *  $Revision: 1.69 $  $Date: 2005-09-29 14:20:24 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -984,9 +984,7 @@ public class BDMMerger {
 			if(updateBP != null){
 				merge = merge && updateNonRegularBeanPartExpressions(mainBP, updateBP);
 			}else{
-				if(mainBP.isImplicit())
-					clearImplicitDeclarationBeanPart(mainBP);
-				else 
+				if(!(mainBP.getDecleration()!=null && mainBP.getDecleration().isImplicitDecleration()))
 					JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
 			}
 		}
@@ -1073,9 +1071,7 @@ public class BDMMerger {
 					orderBeanPartExpressions(updateBP, orderedUpdatedExpressions);
 					
 				}else{
-					if(mainBP.isImplicit())
-						clearImplicitDeclarationBeanPart(mainBP);
-					else
+					if(!(mainBP.getDecleration()!=null && mainBP.getDecleration().isImplicitDecleration()))
 						JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
 				}
 			}
@@ -1554,9 +1550,11 @@ public class BDMMerger {
 			BeanPart[] newBPs = newBPDecl==null?new BeanPart[0]: newBPDecl.getBeanParts();
 			if(mainBPs.length!=newBPs.length){
 				for (int i = 0; i < mainBPs.length; i++) {
-					if(mainBPs[i].isImplicit())	// Implicit declarations beanparts are special
-						continue; // Dont remove them as they are maintained by parent's declaration
-					toDeleteBeansList.add(mainBPs[i]);
+					if(	mainBPs[i].getDecleration()!=null && 
+						mainBPs[i].getDecleration().isImplicitDecleration()) // Implicit declarations beanparts are special
+						clearImplicitDeclarationBeanPart(mainBPs[i]); // Dont remove them as they are maintained by parent's declaration - just clear them
+					else
+						toDeleteBeansList.add(mainBPs[i]);
 				}
 			}else{
 				for (int i = 0; i < mainBPs.length; i++) {
