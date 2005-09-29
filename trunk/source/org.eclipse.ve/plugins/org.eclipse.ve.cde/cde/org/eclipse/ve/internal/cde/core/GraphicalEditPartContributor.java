@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GraphicalEditPartContributor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-09-19 20:37:48 $ 
+ *  $Revision: 1.3 $  $Date: 2005-09-29 15:06:59 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.gef.GraphicalEditPart;
  
 /**
  * Graphical Editpart Contributor inteface.
@@ -22,6 +23,7 @@ import org.eclipse.draw2d.IFigure;
  * @since 1.2.0
  */
 public interface GraphicalEditPartContributor extends EditPartContributor {
-	IFigure getHoverOverLay();
-	IFigure getFigureOverLay();
+	public IFigure getHoverOverLay();
+	public IFigure getFigureOverLay();
+	public GraphicalEditPart [] getActionBarChildren();
 }

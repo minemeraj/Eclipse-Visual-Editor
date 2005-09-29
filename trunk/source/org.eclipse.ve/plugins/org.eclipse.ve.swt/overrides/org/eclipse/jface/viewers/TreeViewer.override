@@ -13,5 +13,6 @@
    <objectsToAttach containment="false" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#Tree" name="tree" upperBound="1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
       <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
       <eAnnotations mergeIntrospection="false" readMethod="java:/org.eclipse.jface.viewers#TreeViewer.getTree(" xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator"/>
+      <eAnnotations linkType="DEPENDENCY" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
     </objectsToAttach>
 </change:ChangeDescription>

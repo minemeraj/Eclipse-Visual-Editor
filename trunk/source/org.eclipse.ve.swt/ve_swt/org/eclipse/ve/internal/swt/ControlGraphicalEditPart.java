@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.30 $ $Date: 2005-09-22 12:55:56 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.31 $ $Date: 2005-09-29 15:07:02 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -18,6 +18,7 @@ import java.util.*;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.draw2d.*;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -41,6 +42,8 @@ import org.eclipse.ve.internal.cde.core.ImageFigure;
 import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsGraphicalEditPart;
+import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsGraphicalEditPart.ActionBarGraphicalEditPart;
 
 public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor {
 	
@@ -55,6 +58,9 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 	
 	protected DirectEditManager manager = null;
 	protected IPropertyDescriptor sfDirectEditProperty = null;
+	private ActionBarMouseMotionListener myMouseListener = null;
+	private ActionBarEditPartListener myEditPartListener = null;
+	private boolean actionBarEditpartSelected = false;
 
 	public ControlGraphicalEditPart(Object model) {
 		setModel(model);
@@ -138,6 +144,8 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 				if (hoverFig != null)
 					toolTipFigure.add(hoverFig);
 			}
+			getFigure().addMouseMotionListener(this.myMouseListener = new ActionBarMouseMotionListener());
+			addEditPartListener(myEditPartListener = new ActionBarEditPartListener());
 		}
 	
 		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
@@ -157,6 +165,10 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		}
 		errorNotifier.dispose();
 		super.deactivate();
+		if (fEditPartContributors != null) {
+			getFigure().removeMouseMotionListener(this.myMouseListener);
+			removeEditPartListener(this.myEditPartListener);
+		}
 	}
 
 	/**
@@ -377,4 +389,128 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 			super.performRequest(request);
 		}
 	}
+
+	/**
+	 * 
+	 */
+	private class ActionBarMouseMotionListener extends MouseMotionListener.Stub {
+		SubclassCompositionComponentsGraphicalEditPart.ActionBarGraphicalEditPart actionBarEditPart = (ActionBarGraphicalEditPart) getEditDomain().getData(SubclassCompositionComponentsGraphicalEditPart.ActionBarGraphicalEditPart.class);
+		public List actionBarChildren = Collections.EMPTY_LIST;
+		IFigure actionBarFigure = null;
+		boolean mouseInsideActionBar = false;
+		boolean mouseInsideControlFigure = false;
+		boolean actionBarVisible = false;
+
+		public void mouseEntered(MouseEvent me) {
+			if (me.getSource() == actionBarFigure) {
+				mouseInsideActionBar = true;
+			}
+			if (me.getSource() == getFigure()) {
+				mouseInsideControlFigure = true;
+			}
+			if (mouseInsideActionBar || mouseInsideControlFigure)
+				Display.getCurrent().timerExec(1000, showActionBarRunnable);
+		}
+
+		public void mouseExited(MouseEvent me) {
+			if (me.getSource() == getFigure())
+				mouseInsideControlFigure = false;
+			if (me.getSource() == actionBarFigure) {
+				mouseInsideActionBar = false;
+			}
+			if (!mouseInsideActionBar && !mouseInsideControlFigure  && !actionBarEditpartSelected) {
+				Display.getCurrent().timerExec(1000, hideActionBarRunnable);
+			}
+		}
+
+		public void showActionBar() {
+			if (actionBarFigure == null) {
+				actionBarFigure = actionBarEditPart.getFigure();
+				populateActionBar();
+				if (actionBarChildren != null && !actionBarChildren.isEmpty()) {
+					actionBarFigure.addMouseMotionListener(myMouseListener);
+					Point location = getFigure().getBounds().getLocation();
+					actionBarFigure.setLocation(new Point(location.x + 2, location.y - actionBarFigure.getSize().height - 2));
+					if (!actionBarVisible) {
+						actionBarFigure.setVisible(true);
+						actionBarVisible = true;
+					}
+				}
+			}
+		}
+		/** the <code>Runnable</code> used for showing the action bar with a delay timer */
+		public Runnable showActionBarRunnable = new Runnable() {
+			public void run() {
+				if (mouseInsideActionBar || mouseInsideControlFigure) {
+					showActionBar();
+				}
+			}
+		};
+		/** the <code>Runnable</code> used for removing the action bar with a delay timer */
+		public Runnable hideActionBarRunnable = new Runnable() {
+			public void run() {
+				if (!mouseInsideActionBar && !mouseInsideControlFigure && !actionBarEditpartSelected) {
+					hideActionBar();
+				}
+			}
+		};
+		public void hideActionBar() {
+			if (actionBarVisible) {
+				actionBarFigure.setVisible(false);
+				actionBarVisible = false;
+				actionBarFigure.removeMouseMotionListener(myMouseListener);
+				actionBarEditPart.removeEditPartListener(myEditPartListener);
+				actionBarFigure = null;
+				actionBarEditPart.addActionBarChildren((Collections.EMPTY_LIST));
+				actionBarEditPart.refresh();
+			}
+		}
+		private void populateActionBar() {
+			if (actionBarChildren.isEmpty()) {
+				actionBarChildren = new ArrayList();
+				Iterator iter = fEditPartContributors.iterator();
+				while (iter.hasNext()) {
+					GraphicalEditPartContributor contrib = (GraphicalEditPartContributor) iter.next();
+					GraphicalEditPart [] children = contrib.getActionBarChildren();
+					if (children != null) {
+						for (int i = 0; i < children.length; i++) {
+							actionBarChildren.add(children[i]);
+						}
+					}
+				}
+			}
+			if (!actionBarChildren.isEmpty()) {
+				actionBarEditPart.addEditPartListener(myEditPartListener);
+				actionBarEditPart.addActionBarChildren(actionBarChildren);
+				actionBarEditPart.refresh();
+			}
+		}
+	}
+
+	class ActionBarEditPartListener extends EditPartListener.Stub {
+
+		public void childAdded(EditPart editpart, int arg1) {
+			if (editpart != null) {
+				editpart.addEditPartListener(myEditPartListener);
+			}
+		};
+
+		public void removingChild(EditPart child, int index) {
+			child.removeEditPartListener(myEditPartListener);
+			super.removingChild(child, index);
+		}
+
+		public void selectedStateChanged(EditPart part) {
+			if (part != null && part.getSelected() == EditPart.SELECTED_PRIMARY
+					&& (myMouseListener.actionBarChildren.contains(part) || part == ControlGraphicalEditPart.this)) {
+				Display.getCurrent().asyncExec(myMouseListener.showActionBarRunnable);
+				if (myMouseListener.actionBarChildren.contains(part))
+					actionBarEditpartSelected = true;
+			} else {
+				actionBarEditpartSelected = false;
+				Display.getCurrent().asyncExec(myMouseListener.hideActionBarRunnable);
+			}
+		}
+	};
+	
 }  
