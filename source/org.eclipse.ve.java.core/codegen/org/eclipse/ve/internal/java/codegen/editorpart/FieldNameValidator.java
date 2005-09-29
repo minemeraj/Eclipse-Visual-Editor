@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FieldNameValidator.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.8 $  $Date: 2005-09-29 21:20:18 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -129,6 +129,31 @@ public class FieldNameValidator implements ICellEditorValidator, ISourced {
 		KEYWORDS.add("while");
 	}
 	
+	/**
+	 * Determines if a given name is a valid java variable name or not. 
+	 * if invalid a reason is given, and <code>null</code> is returned.
+	 *  
+	 * @param name
+	 * @return  <code>null</code> if valid, else reason
+	 * 
+	 * @since 1.2.0
+	 */
+	public static String isValidName(String name){
+		if(name==null || name.length()<1)
+			return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
+		if(name.length()>0 && !Character.isJavaIdentifierStart(name.charAt(0)))
+			return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
+		if(name.length()>1){
+			if (KEYWORDS.contains(name))
+				return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_;
+			for (int cc = 1; cc < name.length(); cc++) {
+				if(!Character.isJavaIdentifierPart(name.charAt(cc)))
+					return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
+			}
+		}
+		return null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
 	 */
@@ -137,18 +162,9 @@ public class FieldNameValidator implements ICellEditorValidator, ISourced {
 			String name = (String) value;
 			if(name.equals(getCurrentName()))
 				return null;
-			if(name==null || name.length()<1)
-				return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
-			if(name.length()>0 && !Character.isJavaIdentifierStart(name.charAt(0)))
-				return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
-			if(name.length()>1){
-				if (KEYWORDS.contains(name))
-					return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_;
-				for (int cc = 1; cc < name.length(); cc++) {
-					if(!Character.isJavaIdentifierPart(name.charAt(cc)))
-						return CodegenEditorPartMessages.FieldNameValidator_InvalidVariableName_INFO_; 
-				}
-			}
+			String isValidName = isValidName(name);
+			if(isValidName!=null)
+				return isValidName;
 			if(sources!=null && sources.length>0 && sources[0] instanceof EObject){
 				EObject instance = (EObject) sources[0];
 				BeanPart bp = getBeanPart(instance);

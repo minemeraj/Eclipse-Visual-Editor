@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.37 $  $Date: 2005-09-22 16:29:29 $ 
+ *  $Revision: 1.38 $  $Date: 2005-09-29 21:20:18 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -303,6 +303,12 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 		
 			beanNameText = new Text(beanNameComposite, SWT.BORDER|SWT.BORDER);
 			beanNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			beanNameText.addModifyListener(new ModifyListener(){
+				public void modifyText(ModifyEvent e) {
+					beanName = beanNameText.getText();
+					updateStatus();
+				}
+			});
 		}
 		
 		// finished
@@ -351,10 +357,7 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 						eObject = prototypeFactory.createPrototype(javaClass);
 					}
 					if(beanName==null || beanName.trim().length()<1){
-						beanName = ((IJavaObjectInstance) eObject).getJavaType().getJavaName();
-						if (beanName.indexOf('.') > 0)
-							beanName = beanName.substring(beanName.lastIndexOf('.') + 1);
-						beanName = CDEUtilities.lowCaseFirstCharacter(beanName);
+						beanName = getDefaultBeanName(((IJavaObjectInstance) eObject).getJavaType().getJavaName());
 					}
 					ChooseBeanDialogUtilities.setBeanName(eObject, beanName, editDomain);
 					newResults[(i*2)] = eObject;
@@ -365,6 +368,14 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 		}else{
 			return results;
 		}
+	}
+
+	protected String getDefaultBeanName(String qualTypeName) {
+		String defaultName = qualTypeName;
+		if (defaultName.indexOf('.') > 0)
+			defaultName = defaultName.substring(defaultName.lastIndexOf('.') + 1);
+		defaultName = CDEUtilities.lowCaseFirstCharacter(defaultName);
+		return defaultName;
 	}
 	
 	protected boolean isValidContributor(){
@@ -500,21 +511,31 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 		filterString = string;
 	}
 	
-	private void updateStatus(){
-		TypeInfo[] typeSelection = bv.getSelection();
-		TypeInfo selected = (typeSelection==null || typeSelection.length<1) ? null : typeSelection[0];
-		if(selected==null){
+	protected void typeSelectionChange(TypeInfo selectedType){
+		if(selectedType==null){
 			pkgName.setImage(null);
 			pkgName.setText("");
 		}else{
-			pkgName.setImage(pkgLabelProvider.getImage(selected));
-			pkgName.setText(pkgLabelProvider.getText(selected));
+			pkgName.setImage(pkgLabelProvider.getImage(selectedType));
+			pkgName.setText(pkgLabelProvider.getText(selectedType));
 		}
-		updateStatus(ChooseBeanDialogUtilities.getClassStatus(selected, pkg.getElementName(), resourceSet, javaSearchScope));
+		beanName = getDefaultBeanName(selectedType.getTypeName());
+		if(beanNameText!=null && !beanNameText.isDisposed()){
+			beanNameText.setText(beanName);
+		}
+		updateStatus();
+	}
+	
+	protected void updateStatus(){
+		TypeInfo[] typeSelection = bv.getSelection();
+		TypeInfo selected = (typeSelection==null || typeSelection.length<1) ? null : typeSelection[0];
+		updateStatus(ChooseBeanDialogUtilities.getClassStatus(selected, pkg.getElementName(), resourceSet, javaSearchScope, beanName));
 	}
 
 	public void widgetSelected(SelectionEvent e) {
-		updateStatus();
+		TypeInfo[] typeSelection = bv.getSelection();
+		TypeInfo selected = (typeSelection==null || typeSelection.length<1) ? null : typeSelection[0];
+		typeSelectionChange(selected);
 	}
 
 	public void widgetDefaultSelected(SelectionEvent e) {
