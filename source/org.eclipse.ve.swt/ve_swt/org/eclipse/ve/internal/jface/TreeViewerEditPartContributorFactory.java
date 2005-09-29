@@ -12,7 +12,12 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.ImageFigure;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
+import org.eclipse.ve.internal.java.core.JavaBeanGraphicalEditPart;
+
+import org.eclipse.ve.internal.swt.SwtPlugin;
 
 /**
  * Contributor factory for JFace TreeViewer.
@@ -29,7 +34,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 				.getEStructuralFeature("tree"));
 	}
 
-	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/cview16/test_overlay.gif")
+	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/cview16/treeviewer_overlay.gif")
 			.getImageData();
 
 	private static class TreeViewerTreeEditPartContributor implements TreeEditPartContributor {
@@ -56,26 +61,42 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 		return null;
 	}
 
-	static Image fImage = CDEPlugin.getImageFromPlugin(CDEPlugin.getPlugin(), "icons/full/cview16/test_overlay.gif");
+	static Image treeViewerOverlayImage = CDEPlugin.getImageFromPlugin(CDEPlugin.getPlugin(), "icons/full/cview16/treeviewer_overlay.gif");
+	static Image treeOverlayImage = CDEPlugin.getImageFromPlugin(CDEPlugin.getPlugin(), "icons/full/cview16/tree_overlay.gif");
+	static Image treeViewerImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer_obj.gif");
 
 	private static class TreeViewerGraphicalEditPartContributor implements GraphicalEditPartContributor {
 
+		JavaBeanGraphicalEditPart treeViewerEditpart = null;
+
+		private Object treeViewer;
+
+		public TreeViewerGraphicalEditPartContributor(Object treeViewer) {
+			this.treeViewer = treeViewer;
+		}
+
 		public void dispose() {
+			if (treeViewerEditpart != null)
+				treeViewerEditpart.deactivate();
 		}
 
 		public IFigure getHoverOverLay() {
-			return new Label("I am a Tree with a JFace Tree Viewer");
+			if (treeViewer != null)
+				return new Label("I am a Tree with a Tree Viewer");
+			else
+				return new Label("I am a Tree without a Tree Viewer");
 		}
 
 		public IFigure getFigureOverLay() {
-			Rectangle bounds = fImage.getBounds();
+			final Image image = treeViewer != null ? treeViewerOverlayImage : treeOverlayImage;
+			Rectangle bounds = image.getBounds();
 			IFigure fig = new Figure() {
 
 				protected void paintFigure(Graphics graphics) {
 					super.paintFigure(graphics);
-					if (fImage != null) {
+					if (image != null) {
 						// Clear some background so the image can be seen
-						graphics.drawImage(fImage, getLocation().x + 2, getLocation().y + 2);
+						graphics.drawImage(image, getLocation().x + 2, getLocation().y + 2);
 					}
 				}
 			};
@@ -83,17 +104,28 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 			fig.setVisible(true);
 			return fig;
 		}
+
+		public GraphicalEditPart[] getActionBarChildren() {
+			if (treeViewer != null)
+				return new GraphicalEditPart[] {new JavaBeanGraphicalEditPart(treeViewer) {
+					protected IFigure createFigure() {
+						Label label = (Label)super.createFigure();
+						ImageFigure fig = new ImageFigure();
+						fig.setImage(treeViewerImage);
+						fig.add(fErrorIndicator);
+						fig.setToolTip(label.getToolTip());
+						return fig;
+					}
+					protected void setupLabelProvider() {
+						// don't do anything here, we'll provide our own image.
+					}
+				}};
+			return null;
+		}
 	}
 
 	public GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart) {
-
-		Object treeViewer = getTreeViewer((IJavaInstance) graphicalEditPart.getModel());
-
-		if (treeViewer != null) {
-			return new TreeViewerGraphicalEditPartContributor();
-		} else {
-			return null;
-		}
+		return new TreeViewerGraphicalEditPartContributor(getTreeViewer((IJavaInstance) graphicalEditPart.getModel()));
 	}
 
 }
