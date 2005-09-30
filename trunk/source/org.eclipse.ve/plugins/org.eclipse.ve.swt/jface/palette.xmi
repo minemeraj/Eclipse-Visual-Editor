@@ -5,7 +5,7 @@
   <org.eclipse.ve.internal.cde.palette:Drawer>
     <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.JFace"
         bundle="#bundle"/>
-    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tree_obj.gif"
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/treeviewer_obj.gif"
         prototypeURI="platform:/plugin/org.eclipse.ve.swt/jface/TreeViewer.xmi#TreeViewer_1">
       <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="TreeViewer"/>
     </children>  

@@ -11,17 +11,19 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  * $RCSfile: SubclassCompositionComponentsGraphicalEditPart.java,v $ $Revision:
- * 1.1 $ $Date: 2005-09-29 15:06:56 $
+ * 1.1 $ $Date: 2005-09-30 17:36:13 $
  */
 import java.util.*;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.swt.graphics.Color;
 
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -39,7 +41,8 @@ public class SubclassCompositionComponentsGraphicalEditPart
 			CompositionComponentsGraphicalEditPart
 		implements IFreeFormRoot {
 	private ActionBarGraphicalEditPart actionBarEditpart = null;
-	
+	static final Color VERY_LIGHT_GRAY = new Color(null, 210, 210, 210);
+
 	public SubclassCompositionComponentsGraphicalEditPart(Object model) {
 		super(model);
 	}
@@ -122,8 +125,24 @@ public class SubclassCompositionComponentsGraphicalEditPart
 
 		protected IFigure createFigure() {
 			IFigure actionBarFigure = new RoundedRectangle() {
+				int heightReduction = 3;
 				protected void fillShape(Graphics graphics) {
-					graphics.fillGradient(getBounds().getCopy(), false);
+					Rectangle rect = getBounds().getCopy().expand(-1, -1);
+					rect.height -= heightReduction;
+					graphics.fillGradient(rect, false);
+				}
+				protected void outlineShape(Graphics graphics) {
+					graphics.setForegroundColor(ColorConstants.darkGray);
+					Rectangle f = Rectangle.SINGLETON;
+					Rectangle r = getBounds();
+					f.x = r.x + lineWidth / 2;
+					f.y = r.y + lineWidth / 2;
+					f.width = r.width - lineWidth;
+					f.height = r.height - lineWidth - heightReduction;
+					graphics.drawRoundRectangle(f, corner.width, corner.height);
+					// draw the tail to the fake bubble
+					graphics.drawPolyline(new int[] { r.x + 4, r.y + r.height - heightReduction, r.x + 3, r.y + r.height, r.x + 8,
+							r.y + r.height - heightReduction});
 				}
 			};
 			FlowLayout fl = new FlowLayout();
@@ -131,7 +150,7 @@ public class SubclassCompositionComponentsGraphicalEditPart
 			fl.setMinorAlignment(FlowLayout.ALIGN_RIGHTBOTTOM);
 			actionBarFigure.setLayoutManager(fl);
 			actionBarFigure.setForegroundColor(ColorConstants.buttonLightest);
-			actionBarFigure.setBackgroundColor(ColorConstants.lightGray);
+			actionBarFigure.setBackgroundColor(VERY_LIGHT_GRAY);
 			actionBarFigure.setVisible(false);
 			return actionBarFigure;
 		}
@@ -159,7 +178,7 @@ public class SubclassCompositionComponentsGraphicalEditPart
 				if (size.height > abHeight)
 					abHeight = size.height;
 			}
-			getFigure().setSize(abWidth + 6, abHeight + 6);
+			getFigure().setSize(abWidth + 20, abHeight + 6);
 		}
 
 		protected EditPart createChild(Object model) {
