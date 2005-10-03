@@ -2,8 +2,6 @@ Legend:
   (+) work on this can start right away, or has started already.
   (-) Requires new or changed API
 
-+ Add support for more SWT widgets
-  + (Joe) Label
 + Write more default converters between object types.
 + Write tests for the updatables on the model side.
 + Write tests for the binding code.
@@ -14,8 +12,7 @@ Legend:
 + Write examples with validation.
 + Build end-to-end example.
 + Write updatables for POJOs.
-- Support virtual tables.
-- Maybe expose something like EMFDerivedUpdatableValue in a more generic way?
+- (Boris) Support virtual tables.
 - Support other cell editors, not just TextCellEditor.
 - (Boris) How are factories registered, and how does the look-up work?
 - Are factories for IUpdatables, IConverters, IValidators all treated in the same way?
@@ -25,3 +22,8 @@ Legend:
   - Factories are registered for a longer time than the life of a concrete binding context.
   - Validation on sub-parts
   - Allow overriding of factories in subcontexts.
+  
+
+Done:
+- (Boris) Maybe expose something like EMFDerivedUpdatableValue in a more generic way?
++ (Joe) Add support for binding to a Label
