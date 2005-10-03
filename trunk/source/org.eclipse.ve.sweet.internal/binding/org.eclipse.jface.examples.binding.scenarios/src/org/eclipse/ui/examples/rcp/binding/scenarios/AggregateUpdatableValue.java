@@ -10,12 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AggregateUpdatableValue.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:13:36 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-03 21:04:22 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import java.util.StringTokenizer;
 
+import org.eclipse.jface.binding.ChangeEvent;
+import org.eclipse.jface.binding.IChangeEvent;
+import org.eclipse.jface.binding.IChangeListener;
 import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.jface.binding.UpdatableValue;
  
@@ -23,10 +26,17 @@ public class AggregateUpdatableValue extends UpdatableValue {
 	
 	private IUpdatableValue[] updatableValues;
 	private String delimiter;
+	private IChangeListener listener = new IChangeListener(){
+		public void handleChange(IChangeEvent changeEvent) {
+			fireChangeEvent(ChangeEvent.CHANGE, null, null);
+		}};
 
 	public AggregateUpdatableValue(IUpdatableValue[] updatableValues, String delimiter){
 		this.updatableValues = updatableValues;
 		this.delimiter = delimiter;
+		for (int i = 0; i < updatableValues.length; i++) {
+			updatableValues[i].addChangeListener(listener);
+		}
 	}
 
 	public void setValue(Object value) {
@@ -53,6 +63,13 @@ public class AggregateUpdatableValue extends UpdatableValue {
 
 	public Class getValueType() {
 		return String.class;
+	}
+	
+	public void dispose() {
+		for (int i = 0; i < updatableValues.length; i++) {
+			updatableValues[i].removeChangeListener(listener);
+		}
+		super.dispose();
 	}
 
 }
