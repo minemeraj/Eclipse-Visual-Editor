@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jface.binding.viewers;
+package org.eclipse.jface.binding.internal.viewers;
 
 import java.util.ArrayList;
 import java.util.List;

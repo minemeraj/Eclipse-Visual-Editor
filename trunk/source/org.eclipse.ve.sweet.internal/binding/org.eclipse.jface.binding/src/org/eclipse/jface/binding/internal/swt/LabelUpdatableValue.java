@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.jface.binding.swt;
+package org.eclipse.jface.binding.internal.swt;
 
 import org.eclipse.jface.binding.UpdatableValue;
 import org.eclipse.swt.widgets.Label;

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jface.binding.viewers;
+package org.eclipse.jface.binding.internal.viewers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class TableViewerUpdatableTable extends Updatable implements
 			String[] strings = (String[])labels.get(row);
 			String oldValue = strings[column];
 			strings[column] = (String) value;
-			fireChangeEvent(ChangeEvent.CHANGE, null, null, row);
+			fireChangeEvent(ChangeEvent.CHANGE, oldValue, value, row);
 			viewer.update(element, null);
 		}
 	}
