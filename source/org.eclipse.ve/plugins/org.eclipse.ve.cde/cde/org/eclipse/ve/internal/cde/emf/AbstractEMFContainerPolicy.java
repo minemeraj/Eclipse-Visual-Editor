@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: AbstractEMFContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-03 19:21:04 $ 
  */
 
 import java.util.*;
@@ -21,6 +21,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.IContainmentHandler.NoAddException;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 /**
  * Container Policy for EMF (MOF) containment relationship.
@@ -133,39 +134,221 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 		// By default it is the type of the structural feature. 
 		return containmentSF.getEType().isInstance(child);
 	}
+	
+	/**
+	 * Create a command builder.
+	 * <p>
+	 * Subclasses may override to provide a different command builder.
+	 * 
+	 * @param regCmd
+	 * @return a new command builder to use
+	 * 
+	 * @since 1.2.0
+	 */
+	protected CommandBuilder createCommandBuilder(boolean regCmd) {
+		return new CommandBuilder(regCmd);
+	}
+	
+	private IModelAdapterFactory modelAdapterFactory;
+	private boolean retrievedModelAdapterFactory;
+	
+	/**
+	 * Get the model adapter factory.
+	 * @return model adapter factory, or <code>null</code> if there isn't one.
+	 * 
+	 * @since 1.2.0
+	 */
+	protected final IModelAdapterFactory getModelAdapterFactory() {
+		if (!retrievedModelAdapterFactory) {
+			modelAdapterFactory = CDEUtilities.getModelAdapterFactory(domain);
+			retrievedModelAdapterFactory = true;
+		}
+		return modelAdapterFactory;
+	}
 
 	/**
-	 * Is parent acceptable. Sometimes even though the parent may accept
-	 * a child, the child may not accept the parent.
+	 * Return the adjusted true child if {@link IContainmentHandler} decides for a different one.
+	 * @param child child to send in
+	 * @param creation <code>true</code> if this is for a creation, <code>false</code> if this for an add.
+	 * @param preCmds CommandBuilder for commands to be executed before the adds
+	 * @param postCmds CommandBuilder for commands to be executed after the adds
+	 * @return the child to add  (maybe different than the one sent it) or <code>null</code> if handler handled child
+	 * @throws NoAddException thrown if the handler determines that the parent is not valid for this child.
+	 * 
+	 * @since 1.2.0
+	 */
+	protected Object getTrueChild(Object child, boolean creation, CommandBuilder preCmds, CommandBuilder postCmds) throws NoAddException {
+		// Go to the IContainmentHandler to decide what to do with the child.
+		IModelAdapterFactory fact = getModelAdapterFactory();
+		if (fact != null) {
+			IContainmentHandler handler = (IContainmentHandler) fact.getAdapter(child, IContainmentHandler.class);
+			if (handler != null) {
+				child = handler.contributeToDropRequest(container, child, preCmds, postCmds, creation, getEditDomain());
+			}
+		}
+		return child;
+	}
+	
+	public final Command getCreateCommand(Object child, Object positionBeforeChild) {
+		CommandBuilder preCmds = createCommandBuilder(true), postCmds = createCommandBuilder(true);
+		try {
+			child = getTrueChild(child, true, preCmds, postCmds);
+		} catch (NoAddException e) {
+			return UnexecutableCommand.INSTANCE;
+		}
+
+		if (preCmds.isDead() || postCmds.isDead())
+			return UnexecutableCommand.INSTANCE;
+		
+		if (child != null) {
+			getCreateCommand(child, positionBeforeChild, preCmds);
+		}
+
+		preCmds.append(postCmds.getCommand());
+		if (preCmds.isEmpty() || preCmds.isDead())
+			return UnexecutableCommand.INSTANCE;
+		else
+			return preCmds.getCommand();
+	}
+
+	protected void getCreateCommand(Object child, Object positionBeforeChild, CommandBuilder cbldr) {
+		EStructuralFeature containmentSF = getContainmentSF(child, positionBeforeChild, CREATE_REQ);
+		if (containmentSF == null)
+			cbldr.markDead();
+		else
+			cbldr.append(getCreateCommand(child, positionBeforeChild, containmentSF));
+	}
+	
+	/**
+	 * Create a  child. It tests validity too. 
+	 * <p>
+	 * Subclasses should override {@link #primCreateCommand(Object, Object, EStructuralFeature)} to change
+	 * actual create processing.
 	 * @param child
+	 * @param positionBeforeChild
+	 * @param containmentSF
 	 * @return
 	 * 
 	 * @since 1.1.0.1
 	 */
-	protected boolean isParentAcceptable(Object child) {
-		IModelAdapterFactory fact = CDEUtilities.getModelAdapterFactory(domain);
-		if (fact != null) {
-			IContainmentHandler handler = (IContainmentHandler) fact.getAdapter(child, IContainmentHandler.class);
-			if (handler != null)
-				return handler.isParentValid(container);
-		}
-		return true;
-	}
-	
-	public Command getCreateCommand(Object child, Object positionBeforeChild) {
-		EStructuralFeature containmentSF = getContainmentSF(child, positionBeforeChild, CREATE_REQ);
-		if (containmentSF == null)
+	protected Command getCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		if (!isValidChild(child, containmentSF))
 			return UnexecutableCommand.INSTANCE;
-		return getCreateCommand(child, positionBeforeChild, containmentSF);
+		else
+			return primCreateCommand(child, positionBeforeChild, containmentSF);
+	}
+
+	/**
+	 * Internal create a child where we have the child has already been tested for validity. This should
+	 * be overridden by subclasses to do something different.
+	 * @param child
+	 * @param positionBeforeChild
+	 * @param containmentSF
+	 * 
+	 * @since 1.1.0.1
+	 */
+	protected Command primCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		if (!containmentSF.isMany() && ((EObject) container).eIsSet(containmentSF))
+			return UnexecutableCommand.INSTANCE; // This is a single valued feature, and it is already set.
+		else {
+			CommandBuilder cBld = createCommandBuilder(true); //$NON-NLS-1$
+			cBld.applyAttributeSetting((EObject) container, containmentSF, child, positionBeforeChild);
+			List annotations = AnnotationPolicy.getAllAnnotations(new ArrayList(), child, domain.getAnnotationLinkagePolicy());
+			return AnnotationPolicy.getCreateRequestCommand(annotations, cBld.getCommand(), domain);
+		}
 	}
 	
 	
-	public Command getAddCommand(List children, Object positionBeforeChild) {
+	public final Command getAddCommand(List children, Object positionBeforeChild) {
+		CommandBuilder preCmds = createCommandBuilder(true), postCmds = createCommandBuilder(true);
+		// We may be modifying the list, so we'll do a copy of it. Even if we
+		// modify it we still should to make the coding simpler.
+		int origSize = children.size();
+		children = new ArrayList(children);
+		for (ListIterator childrenItr = children.listIterator(); childrenItr.hasNext();) {
+			Object child = childrenItr.next();
+			try {
+				Object newChild = getTrueChild(child, false, preCmds, postCmds);
+				if (newChild != child)
+					if (newChild == null)
+						childrenItr.remove();	// Said don't add this child.
+					else
+						childrenItr.set(newChild);	// Said change the child.
+			} catch (NoAddException e) {
+				return UnexecutableCommand.INSTANCE;
+			}
+		}
+		
+		if (preCmds.isDead() || postCmds.isDead())
+			return UnexecutableCommand.INSTANCE;
+				
+		if (!children.isEmpty() || origSize == 0) {
+			// Either there are childre.
+			// Or it  could be that the handlers simply removed them all. If they did, then this is valid and we shouldn't go on to getAddCommand.
+			// This is because if we sent an empty list into getAddCommand some subclasses treat this as invalid. But the handlers have determined
+			// that it is valid. If children is empty and original is empty then the handlers didn't do it, so let normal processing handle it.
+			getAddCommand(children, positionBeforeChild, preCmds);
+		}
+		
+		preCmds.append(postCmds.getCommand());
+		if (preCmds.isEmpty() || preCmds.isDead())
+			return UnexecutableCommand.INSTANCE;
+		else
+			return preCmds.getCommand();
+		
+	}
+
+	protected void getAddCommand(List children, Object positionBeforeChild, CommandBuilder cbldr) {
 		EStructuralFeature containmentSF = getContainmentSF(children, positionBeforeChild, ADD_REQ);
 		if (containmentSF == null)
-			return UnexecutableCommand.INSTANCE;		
-		return getAddCommand(children, positionBeforeChild, containmentSF);
+			cbldr.markDead();		
+		cbldr.append(getAddCommand(children, positionBeforeChild, containmentSF));
 	}
+	
+	/**
+	 * Add children. It tests validity of the children too.
+	 * <p>
+	 * Subclasses should override {@link #primAddCommand(List, Object, EStructuralFeature)} to do something different.
+	 * @param children
+	 * @param positionBeforeChild
+	 * @param containmentSF
+	 * @return
+	 * 
+	 * @since 1.1.0.1
+	 */
+	protected Command getAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		Iterator itr = children.iterator();
+		while (itr.hasNext()) {
+			Object child = itr.next();
+			if (!isValidChild(child, containmentSF)) {
+				return UnexecutableCommand.INSTANCE;
+			}
+		}
+
+		return primAddCommand(children, positionBeforeChild, containmentSF);
+	}
+	
+	/**
+	 * Internal add children where we have the children already tested for validity..
+	 * <p>
+	 * Subclasses should override this to do something different.
+	 * @param children
+	 * @param positionBeforeChild
+	 * @param containmentSF
+	 * @param cbldr
+	 * 
+	 * @since 1.1.0.1
+	 */
+	protected Command primAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		if (!containmentSF.isMany() && (((EObject) container).eIsSet(containmentSF) || children.size() > 1)) {
+			return UnexecutableCommand.INSTANCE;	// This is a single valued feature, and it is already set or there is more than one child being added.
+		} else {
+			CommandBuilder cbldr = createCommandBuilder(true);
+			cbldr.applyAttributeSettings((EObject) container, containmentSF, children, positionBeforeChild);
+			return cbldr.getCommand();
+		}
+	}
+	
 	
 	public Command getDeleteDependentCommand(Object child) {
 		EStructuralFeature containmentSF = getContainmentSF(child, null, DELETE_REQ);
@@ -189,85 +372,8 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 	}
 	
 
-	/**
-	 * Create a  child. It tests validity too. 
-	 * <p>
-	 * Subclasses should override {@link #primCreateCommand(Object, Object, EStructuralFeature)} to change
-	 * actual create processing.
-	 * @param child
-	 * @param positionBeforeChild
-	 * @param containmentSF
-	 * @return
-	 * 
-	 * @since 1.1.0.1
-	 */
-	protected Command getCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		if (!isValidChild(child, containmentSF) || !isParentAcceptable(child))
-			return UnexecutableCommand.INSTANCE;
-		return primCreateCommand(child, positionBeforeChild, containmentSF);
-	}
 
-	/**
-	 * Internal create a child where we have the child has already been tested for validity. This should
-	 * be overridden by subclasses to do something different.
-	 * @param child
-	 * @param positionBeforeChild
-	 * @param containmentSF
-	 * @return
-	 * 
-	 * @since 1.1.0.1
-	 */
-	protected Command primCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		if (!containmentSF.isMany() && ((EObject) container).eIsSet(containmentSF))
-			return UnexecutableCommand.INSTANCE; // This is a single valued feature, and it is already set.
 
-		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
-		cBld.applyAttributeSetting((EObject) container, containmentSF, child, positionBeforeChild);
-		List annotations = AnnotationPolicy.getAllAnnotations(new ArrayList(), child, domain.getAnnotationLinkagePolicy());
-		return AnnotationPolicy.getCreateRequestCommand(annotations, cBld.getCommand(), domain);
-	}
-
-	/**
-	 * Add children. It tests validity of the children too.
-	 * <p>
-	 * Subclasses should override {@link #primAddCommand(List, Object, EStructuralFeature)} to do something different.
-	 * @param children
-	 * @param positionBeforeChild
-	 * @param containmentSF
-	 * @return
-	 * 
-	 * @since 1.1.0.1
-	 */
-	protected Command getAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		Iterator itr = children.iterator();
-		while (itr.hasNext()) {
-			Object child = itr.next();
-			if (!isValidChild(child, containmentSF) || !isParentAcceptable(child))
-				return UnexecutableCommand.INSTANCE;
-		}
-
-		return primAddCommand(children, positionBeforeChild, containmentSF);
-	}
-
-	/**
-	 * Internal add children where we have the children already tested for validity..
-	 * <p>
-	 * Subclasses should override this to do something different.
-	 * @param children
-	 * @param positionBeforeChild
-	 * @param containmentSF
-	 * @return
-	 * 
-	 * @since 1.1.0.1
-	 */
-	protected Command primAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		if (!containmentSF.isMany() && (((EObject) container).eIsSet(containmentSF) || children.size() > 1))
-			return UnexecutableCommand.INSTANCE;	// This is a single valued feature, and it is already set or there is more than one child being added.
-
-		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
-		cBld.applyAttributeSettings((EObject) container, containmentSF, children, positionBeforeChild);
-		return cBld.getCommand();
-	}
 
 	/**
 	 * Delete a child.
@@ -278,7 +384,7 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 	 * @since 1.1.0.1
 	 */
 	protected Command getDeleteDependentCommand(Object child, EStructuralFeature containmentSF) {
-		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
+		CommandBuilder cBld = createCommandBuilder(true); //$NON-NLS-1$
 		cBld.cancelAttributeSetting((EObject) container, containmentSF, child);
 		if (containmentSF instanceof EReference && ((EReference) containmentSF).isContainment()) {
 			// A containment feature means we have annotations to worry about.
@@ -297,7 +403,7 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 	 * @since 1.1.0.1
 	 */
 	protected Command getOrphanChildrenCommand(List children, EStructuralFeature containmentSF) {
-		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
+		CommandBuilder cBld = createCommandBuilder(true); //$NON-NLS-1$
 		cBld.cancelAttributeSettings((EObject) container, containmentSF, children);
 		return cBld.getCommand();
 	}
@@ -312,7 +418,7 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 	 * @since 1.1.0.1
 	 */
 	protected Command getMoveChildrenCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
+		CommandBuilder cBld = createCommandBuilder(true); //$NON-NLS-1$
 		if (children.contains(positionBeforeChild))
 			return UnexecutableCommand.INSTANCE;
 		// We clone the list because cancelAttributeSettings fools around with the list itself.

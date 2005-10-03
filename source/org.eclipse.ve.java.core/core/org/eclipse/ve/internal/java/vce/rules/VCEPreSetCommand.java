@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.16 $  $Date: 2005-09-08 23:21:29 $ 
+ *  $Revision: 1.17 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import java.util.*;
@@ -19,7 +19,6 @@ import java.util.*;
 import org.eclipse.emf.ecore.*;
 
 import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cdm.Annotation;
@@ -187,28 +186,10 @@ public class VCEPreSetCommand extends CommandWrapper {
 	}
 
 	/*
-	 * Handle seeing if this is an implicit. If it is then on promotion
-	 * we need to remove the allocation because it will now be the default allocation.
-	 */
-	private void handlePromoteImplicit(CommandBuilder cbld, EObject member) {
-		if(true) return; // TODO - We need implicits to be there
-		if (member instanceof IJavaInstance) {
-			IJavaInstance javaInstance = (IJavaInstance) member;
-			if (javaInstance.isSetAllocation()) {
-				JavaAllocation alloc = javaInstance.getAllocation();
-				if (alloc != null && alloc instanceof ImplicitAllocation) {
-					cbld.cancelAttributeSetting(javaInstance, JavaInstantiation.getAllocationFeature(javaInstance));
-				}
-			}
-		}
-	}
-	
-	/*
 	 * Promote to global, assumption is that not already contained by a non-<properties> relationship AND not already
 	 * have initializes and return set for it.
 	 */
 	protected JCMMethod promoteGlobal(CommandBuilder cbld, CommandBuilder memberBldr, EObject member) {
-		handlePromoteImplicit(cbld, member);
 		JCMMethod m = createInitMethod(cbld, member);
 		memberBldr.applyAttributeSetting(getComposition(), JCMPackage.eINSTANCE.getMemberContainer_Members(), member);		
 		return m;
@@ -219,7 +200,6 @@ public class VCEPreSetCommand extends CommandWrapper {
 	 * have initializes and return set for it.
 	 */	
 	protected JCMMethod promoteLocal(CommandBuilder cbld, CommandBuilder memberBldr, EObject member, JCMMethod method) {
-		handlePromoteImplicit(cbld, member);
 		cbld.applyAttributeSetting(method, JCMPackage.eINSTANCE.getJCMMethod_Initializes(), member);
 		memberBldr.applyAttributeSetting(method, JCMPackage.eINSTANCE.getMemberContainer_Members(), member);
 		return method;
@@ -230,7 +210,6 @@ public class VCEPreSetCommand extends CommandWrapper {
 	 * have initializes and return set for it.
 	 */	
 	protected JCMMethod promoteGlobalLocal(CommandBuilder cbld, CommandBuilder memberBldr, EObject member, JCMMethod method) {
-		handlePromoteImplicit(cbld, member);
 		// The initializes method is from the argument
 		cbld.applyAttributeSetting(method, JCMPackage.eINSTANCE.getJCMMethod_Initializes(), member);
 		// The member is added to the composition
@@ -326,6 +305,21 @@ public class VCEPreSetCommand extends CommandWrapper {
 		// to be applied at the end.
 		// Visit all of the set references. Here is the visitor we will use.
 		final EReference allocationFeature = value instanceof IJavaInstance ? JavaInstantiation.getAllocationFeature((IJavaInstance) value) : null;
+		
+		final boolean isImplicit = value instanceof IJavaInstance && ((IJavaInstance) value).isImplicitAllocation();
+		EObject implicitParent = null;
+		if (isImplicit) {
+			// We need to process implicit because parent may not yet be assigned.
+			// Need to assign parent so that the implicit can get a location when it needs to.
+			ImplicitAllocation alloc = (ImplicitAllocation) ((IJavaInstance) value).getAllocation();
+			implicitParent = alloc.getParent();
+			if (implicitParent.eContainer() == null) {
+				handleValue(cbld, incomingMethod, implicitParent, null, false, processed);
+			}
+		}
+		
+		final EObject finalImplicitParent = implicitParent;
+		
 		class FeatureVisitor implements FeatureValueProvider.Visitor {
 			public boolean hadChildren;		// During walking children, did it have children.
 			public CommandBuilder mBldr;
@@ -341,8 +335,15 @@ public class VCEPreSetCommand extends CommandWrapper {
 								Object kid = kids.next();
 								if (!hadChildren) {
 									if (!containment) {
-										mBldr = new CommandBuilder();
-										visitMethod = getMethod(cbld, mBldr, value, ref, visitMethod);
+										if (!isImplicit) {
+											mBldr = new CommandBuilder();
+											visitMethod = getMethod(cbld, mBldr, value, ref, visitMethod);
+										} else {
+											// TODO For now implicits will always be in implicit. Future we could have a settting that says over "n" properties means
+											// move from implicit to membership.
+											mBldr = new CommandBuilder();
+											mBldr.applyAttributeSetting(getMethod(cbld, mBldr, finalImplicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);											
+										}
 									}
 									hadChildren = true;
 								}
@@ -356,14 +357,21 @@ public class VCEPreSetCommand extends CommandWrapper {
 								Object kid = featureValue;
 								if (!hadChildren) {
 									if (!containment) {
-										mBldr = new CommandBuilder();
-										visitMethod = getMethod(cbld, mBldr, value, ref, visitMethod);
+										if (!isImplicit) {
+											mBldr = new CommandBuilder();
+											visitMethod = getMethod(cbld, mBldr, value, ref, visitMethod);
+										} else {
+											// TODO For now implicits will always be in implicit. Future we could have a settting that says over "n" properties means
+											// move from implicit to membership.
+											mBldr = new CommandBuilder();
+											mBldr.applyAttributeSetting(getMethod(cbld, mBldr, finalImplicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);																						
+										}
 									}
 									hadChildren = true;
 								}
 								if (kid != null && !processed.contains(kid))
 									handleValue(cbld, visitMethod, (EObject) kid, ref, ref.isContainment(), processed);
-							}
+							} 
 						}
 					}
 				}
@@ -371,29 +379,34 @@ public class VCEPreSetCommand extends CommandWrapper {
 			}
 		
 		};
-
+		
 		FeatureVisitor visitor = new FeatureVisitor();
 		FeatureValueProvider.FeatureValueProviderHelper.visitSetFeatures(value, visitor);
 		
 		if (!visitor.hadChildren && !containment && value.eContainer() == null) {
-			InstanceLocation promoteType = incomingMethod != null ? settingType(value, feature) : InstanceLocation.GLOBAL_GLOBAL_LITERAL;	// no current JCMMethod, then can only be global. 
-			// If here, then we don't have any settings, so we can use the same builder for both promotion and membership.
-			handleAnnotation(value, cbld);	// Need to handle annotation first.			
-			switch (promoteType.getValue()) {
-				case InstanceLocation.GLOBAL_GLOBAL:
-					promoteGlobal(cbld, cbld, value);
-					break;
-				case InstanceLocation.LOCAL:
-					promoteLocal(cbld, cbld, value, incomingMethod);
-					break;
-				case InstanceLocation.GLOBAL_LOCAL:
-					promoteGlobalLocal(cbld, cbld ,value,incomingMethod);
-					break;
-				case InstanceLocation.PROPERTY:
-					// Make sure it is a <properties> of the requested member container.
-					cbld.applyAttributeSetting(incomingMethod, JCMPackage.eINSTANCE.getMemberContainer_Properties(), value);
-					break;
-			}				
+			if (!isImplicit) {
+				InstanceLocation promoteType = incomingMethod != null ? settingType(value, feature) : InstanceLocation.GLOBAL_GLOBAL_LITERAL; // no current JCMMethod, then can only be global. 
+				// If here, then we don't have any settings, so we can use the same builder for both promotion and membership.
+				handleAnnotation(value, cbld); // Need to handle annotation first.			
+				switch (promoteType.getValue()) {
+					case InstanceLocation.GLOBAL_GLOBAL:
+						promoteGlobal(cbld, cbld, value);
+						break;
+					case InstanceLocation.LOCAL:
+						promoteLocal(cbld, cbld, value, incomingMethod);
+						break;
+					case InstanceLocation.GLOBAL_LOCAL:
+						promoteGlobalLocal(cbld, cbld, value, incomingMethod);
+						break;
+					case InstanceLocation.PROPERTY:
+						// Make sure it is a <properties> of the requested member container.
+						cbld.applyAttributeSetting(incomingMethod, JCMPackage.eINSTANCE.getMemberContainer_Properties(), value);
+						break;
+				} 
+			} else {
+				// Implicit with no children (properties) will be implicit in the method of the implicit parent.
+				cbld.applyAttributeSetting(getMethod(cbld, null, implicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);
+			}
 		} else if (containment)
 			handleAnnotation(value, cbld);	// Need to handle annotation before actual setting is done.
 		else if (visitor.mBldr != null)

@@ -1,0 +1,18 @@
+Component		->	ComponentModelAdapter
+  Label			->	LabelContainmentHandler
+  Container
+    Panel		->	PanelContainmentHandler:Panel
+      Applet		->	AppletContainmentHandler
+        JApplet		->	RootPaneContainmentHandler
+    Window		->	WindowContainmentHandler
+      Dialog
+        JDialog		->	JWindowJDialogContainmentHander
+      Frame		->	FFOnlyModelAdapter
+        JFrame		->	RootPaneContainmentHandler
+      JWindow		->	JWindowJDialogContainmentHander
+    JComponent
+      JInternalFrame	->	RootPaneContainmentHandler:false
+      JLabel		->	LabelContainmentHandler
+      JMenuBar		->	JMenuBarRootPaneOnlyModelAdapter
+      JPanel		->	PanelContainmentHandler:JPanel
+      JPopupMenu	->	FFOnlyModelAdapter

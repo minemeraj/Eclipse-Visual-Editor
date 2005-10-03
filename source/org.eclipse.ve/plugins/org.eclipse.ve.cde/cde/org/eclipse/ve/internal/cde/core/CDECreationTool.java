@@ -9,23 +9,19 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CDECreationTool.java,v $ $Revision: 1.10 $ $Date: 2005-09-21 10:39:47 $
+ * $RCSfile: CDECreationTool.java,v $ $Revision: 1.11 $ $Date: 2005-10-03 19:21:04 $
  */
 package org.eclipse.ve.internal.cde.core;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.text.*;
-import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.LayerManager;
-import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.swt.graphics.Cursor;
 
-import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
-import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.emf.IDomainedFactory;
 
 /**
@@ -43,38 +39,6 @@ import org.eclipse.ve.internal.cde.emf.IDomainedFactory;
 public class CDECreationTool extends CreationTool {
 
 	public static String CREATION_POLICY_KEY = "org.eclipse.ve.internal.cde.core.creationtool.policy";
-
-	/**
-	 * Creation Policy.
-	 * <p>
-	 * This is called when the type of the new object from the creation request's factory (must be an EMF object) supports a CreationPolicy. This
-	 * policy is used to massage the command for the creation to add other commands before/after the main command.
-	 * 
-	 * @since 1.0.0
-	 */
-	public interface CreationPolicy {
-
-		/**
-		 * Get the command to do creation. Take the incoming aCommand and return a command that uses this command and adds more commands before or
-		 * after it.
-		 * 
-		 * @param aCommand
-		 *            the starting command to work with
-		 * @param domain
-		 *            the editDomain to work in
-		 * @param createRequest
-		 *            the create request that is being processed.
-		 * @return the new modified command, or the original if unchanged.
-		 * 
-		 * @since 1.0.0
-		 */
-		public Command getPostCreateCommand(Command aCommand, EditDomain domain, CreateRequest createRequest);
-		
-		public Command getPreCreateCommand(EditDomain domain, CreateRequest createRequest);
-		
-	}
-
-	protected CreationPolicy fCreationPolicy;
 
 	protected boolean fHasLookedupCreationPolicy = false;
 
@@ -102,38 +66,6 @@ public class CDECreationTool extends CreationTool {
 		CreationFactory fact = getFactory();
 		if (fact instanceof IDomainedFactory)
 			((IDomainedFactory) fact).setEditDomain((EditDomain) getDomain());
-	}
-
-	protected Command getCommand() {
-		Command result = super.getCommand();
-		if (result != null) {
-			if (fCreationPolicy == null && !fHasLookedupCreationPolicy) {
-				Object type = getFactory().getObjectType();
-				if (type instanceof EClassifier) {
-					ClassDescriptorDecorator decorator = (ClassDescriptorDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(
-							(EClassifier) type, ClassDescriptorDecorator.class, CREATION_POLICY_KEY);
-					if (decorator != null) {
-						String creationPolicyClassName = (String) decorator.getKeyedValues().get(CREATION_POLICY_KEY);
-						if (creationPolicyClassName != null) {
-							try {
-								fCreationPolicy = (CreationPolicy) CDEPlugin.createInstance(null, creationPolicyClassName);
-							} catch (Exception exc) {
-								// If the class can't be created then just drop down and let the regular command be returned
-							}
-						}
-					}
-				}
-				fHasLookedupCreationPolicy = true;
-			}
-			if (fCreationPolicy != null) { return fCreationPolicy.getPostCreateCommand(result, (EditDomain) getDomain(), getCreateRequest()); }
-		}
-		return result;
-	}
-	
-	protected Request createTargetRequest() {
-		CreateRequest request = new CDECreateRequest();
-		request.setFactory(getFactory());
-		return request;
 	}
 
 	

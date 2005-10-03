@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.rules;
 /*
  *  $RCSfile: RuledWrapperedPropertyDescriptor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import org.eclipse.gef.commands.Command;
@@ -21,8 +21,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.*;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.propertysheet.*;
-import org.eclipse.ve.internal.propertysheet.command.*;
+
+import org.eclipse.ve.internal.propertysheet.IEToolsPropertyDescriptor;
+import org.eclipse.ve.internal.propertysheet.ISourcedPropertyDescriptor;
+import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
 
 /**
  * This is a RuledWrapperedPropertyDescriptor that will use the 

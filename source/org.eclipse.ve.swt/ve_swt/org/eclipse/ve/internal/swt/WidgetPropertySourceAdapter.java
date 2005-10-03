@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.29 $ $Date: 2005-06-30 13:47:25 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.30 $ $Date: 2005-10-03 19:20:48 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -235,7 +235,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		// We also can't deal with style bits on things that are implicitly created, cause these are given to us by 
 		// whomever created them and can't be altered as there is no constructor to re-generate
 		if (((EObject) getTarget()).eContainmentFeature() != JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart()
-			&& !(((IJavaInstance)getTarget()).getAllocation() instanceof ImplicitAllocation))
+			&& !(((IJavaInstance)getTarget()).isImplicitAllocation()))
 			mergeStyleBits(descriptorsList, (JavaClass) getBean().getJavaType());
 		
 		return (IPropertyDescriptor[]) descriptorsList.toArray(new IPropertyDescriptor[descriptorsList.size()]);
@@ -406,7 +406,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		if (explicitStyle == STYLE_NOT_SET) {
 			IBeanProxy styleBeanProxy = null;
 			// Get the arguments from the source that are the style bits that are explicitly set
-			if (getBean().getAllocation() instanceof ParseTreeAllocation) {
+			if (getBean().isParseTreeAllocation()) {
 				PTExpression styleExpression = getStyleExpression(((ParseTreeAllocation) getBean().getAllocation()).getExpression());
 				if (styleExpression != null) {
 					try {
@@ -669,7 +669,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 				return;	// The property has not changed. Don't do anything.
 				
 			JavaAllocation alloc = getBean().getAllocation();
-			if (alloc instanceof ParseTreeAllocation) {
+			if (alloc.isParseTree()) {
 				// Get the changed allocation. If null, then it means don't change it. This could occur because the expression
 				// was not understood, so we couldn't change the style.
 				PTExpression newAllocation = getChangedAllocation(((ParseTreeAllocation) alloc).getExpression(), propertyID,

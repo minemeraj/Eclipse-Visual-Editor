@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMPackageImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2005-09-14 23:30:25 $ 
+ *  $Revision: 1.10 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import java.util.Map;
@@ -22,17 +22,20 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.impl.EcorePackageImpl;
 
 import org.eclipse.jem.internal.beaninfo.BeaninfoPackage;
 import org.eclipse.jem.internal.beaninfo.impl.BeaninfoPackageImpl;
 import org.eclipse.jem.internal.instantiation.InstantiationPackage;
+import org.eclipse.jem.internal.instantiation.impl.InstantiationPackageImpl;
+import org.eclipse.jem.java.JavaRefPackage;
+import org.eclipse.jem.java.internal.impl.JavaRefPackageImpl;
 
-import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
-import org.eclipse.ve.internal.cde.decorators.DecoratorsFactory;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.impl.CDMPackageImpl;
+
 import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
 import org.eclipse.ve.internal.jcm.BeanComposition;
 import org.eclipse.ve.internal.jcm.BeanDecorator;
@@ -52,9 +55,9 @@ import org.eclipse.ve.internal.jcm.MemberContainer;
 import org.eclipse.ve.internal.jcm.PropertyChangeEventInvocation;
 import org.eclipse.ve.internal.jcm.PropertyEvent;
 
-import org.eclipse.jem.java.JavaRefPackage;
-import org.eclipse.jem.java.internal.impl.JavaRefPackageImpl;
-import org.eclipse.jem.internal.instantiation.impl.InstantiationPackageImpl;
+import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
+import org.eclipse.ve.internal.cde.decorators.DecoratorsFactory;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -773,6 +776,15 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getMemberContainer_Implicits() {
+		return (EReference)memberContainerEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getMemberContainer_Properties() {
 		return (EReference)memberContainerEClass.getEStructuralFeatures().get(0);
 	}
@@ -825,6 +837,7 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		memberContainerEClass = createEClass(MEMBER_CONTAINER);
 		createEReference(memberContainerEClass, MEMBER_CONTAINER__PROPERTIES);
 		createEReference(memberContainerEClass, MEMBER_CONTAINER__MEMBERS);
+		createEReference(memberContainerEClass, MEMBER_CONTAINER__IMPLICITS);
 
 		listenerEClass = createEClass(LISTENER);
 		createEReference(listenerEClass, LISTENER__LISTENED_BY);
@@ -957,6 +970,7 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		initEClass(memberContainerEClass, MemberContainer.class, "MemberContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getMemberContainer_Properties(), theEcorePackage.getEObject(), null, "properties", null, 0, -1, MemberContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getMemberContainer_Members(), theEcorePackage.getEObject(), null, "members", null, 0, -1, MemberContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberContainer_Implicits(), theEcorePackage.getEObject(), null, "implicits", null, 0, -1, MemberContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(listenerEClass, Listener.class, "Listener", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getListener_ListenedBy(), this.getAbstractEventInvocation(), this.getAbstractEventInvocation_Listener(), "listenedBy", null, 0, -1, Listener.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

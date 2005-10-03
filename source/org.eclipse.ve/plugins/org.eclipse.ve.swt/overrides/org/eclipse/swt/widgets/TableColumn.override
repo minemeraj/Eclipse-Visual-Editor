@@ -7,8 +7,9 @@
          <listChanges referenceValues="_eAnnotations2"/>
       </value>
    </objectChanges>
-   <objectsToAttach labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-	  <keyedValues key="org.eclipse.ve.internal.cde.core.creationtool.policy" value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableColumnCreationPolicy" xsi:type="ecore:EStringToStringMapEntry"/>
+   <objectsToAttach labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text" 
+       modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableColumnContainmentHandler"
+       xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/column_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
     </objectsToAttach>
    <objectsToAttach beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ItemProxyAdapter:parentItems='java:/org.eclipse.swt.widgets#Table/tableColumns'" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>

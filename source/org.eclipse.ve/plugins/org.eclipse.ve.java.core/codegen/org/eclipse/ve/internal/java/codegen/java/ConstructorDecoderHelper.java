@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.59 $  $Date: 2005-09-28 20:35:28 $ 
+ *  $Revision: 1.60 $  $Date: 2005-10-03 19:20:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
@@ -242,10 +243,10 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		 */
 		private PTInstanceReference createBeanPartExpression(final List ref, BeanPart bp) {
 			PTInstanceReference ptref = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-			IJavaObjectInstance o = (IJavaObjectInstance)bp.getEObject();
+			IJavaInstance o = (IJavaInstance)bp.getEObject();
 			if (ref!=null && !ref.contains(o))
 			    ref.add(o);
-			ptref.setObject(o);
+			ptref.setReference(o);
 			return ptref;
 		}
 
@@ -462,7 +463,8 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 							parent = fbeanPart.getModel().getABean(parentName);
 						if (parent!=null) {							
 							return createImplicitAllocation (parent.getEObject(), ast);
-						}
+					    	
+					}
 					}
 					else if (receiver instanceof MethodInvocation) {
 						return createAllocation (receiver, expOfMethod);
@@ -473,10 +475,9 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			}		
 			return createParseTreeAllocation(ast, expOfMethod);
 		}
-		else if (fbeanPart.isImplicit()) {
+		else if (fbeanPart.isImplicit()) {			
 			IJavaObjectInstance obj = (IJavaObjectInstance)fbeanPart.getEObject();
-			if (obj.isSetAllocation())
-				return obj.getAllocation();							
+			return obj.getAllocation();							
 		}
 		return null;
 	}
@@ -490,7 +491,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			EStructuralFeature tree = clazz.getEStructuralFeature("tree");
 			BeanPartFactory bpf = new BeanPartFactory(fbeanPart.getModel(),fbeanPart.getModel().getCompositionModel());
 			bpf.createImplicitBeanPart(fbeanPart,tree);			
-		}
+	}
 	}
 	
 	protected void designateAsImplicit (boolean updateModel) throws CodeGenException {
@@ -520,11 +521,11 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				old = fbeanPart.getModel().getABean(name);
 			if (old!=null && old != fbeanPart) {
 				old.dispose();
-			}
+	}
 			BeanPartFactory.setBeanPartAsImplicit(fbeanPart, parent, sf);
 		}
 	}
-	
+			
 	protected void restoreImplicitInstancesIfNeeded() {
 		
 		//TODO:  This will need to be some BeanInfo magic, hard
@@ -567,8 +568,8 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	public boolean restore() throws CodeGenException {
 		JavaAllocation alloc = ((IJavaObjectInstance)fbeanPart.getEObject()).getAllocation(); 
 		if (!(alloc instanceof ImplicitAllocation)) {
-			// Update the references (fReferences) from the allocation PT. 
-			CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
+		// Update the references (fReferences) from the allocation PT. 
+		CodeMethodRef expOfMethod = (fOwner!=null && fOwner.getExprRef()!=null) ? fOwner.getExprRef().getMethod():null;
 			getParsedTree(getAST(),expOfMethod, fOwner.getExprRef().getOffset(), fbeanPart.getModel(), getExpressionReferences());
 			restoreImplicitInstancesIfNeeded();
 		}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.rules;
 /*
  *  $RCSfile: RuledCommandBuilder.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import java.util.*;
@@ -92,7 +92,7 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @param post The post command to be appended.
 	 */
 	public void appendPost(Command post) {
-		if (post != null) {
+		if (!isDead() && post != null) {
 			if (postCommand == null)
 				postCommand = new CompoundCommand("Postset of properties"); //$NON-NLS-1$
 			postCommand.append(post);
@@ -103,9 +103,11 @@ public class RuledCommandBuilder extends CommandBuilder {
 		if (regularCmd)
 			internalAppend(preCmd);
 		else {
-			if (buildUp == null)
-				buildUp = new CompoundCommand();
-			buildUp.append(preCmd);
+			if (!isDead()) {
+				if (buildUp == null)
+					buildUp = new CompoundCommand();
+				buildUp.append(preCmd);
+			}
 		}
 		return buildUp;
 	}
@@ -151,7 +153,7 @@ public class RuledCommandBuilder extends CommandBuilder {
 	
 	protected void propertyUnset(EObject target, EStructuralFeature feature, Object oldValue) {
 		// Unset a specific value from a many-valued feature.
-		if (feature instanceof EReference) {
+		if (!isDead() && feature instanceof EReference) {
 			// If feature is not an EReference, then post isn't in effect.
 			appendPost(createPost(oldValue));
 		}
@@ -168,7 +170,7 @@ public class RuledCommandBuilder extends CommandBuilder {
 	}	
 	
 	protected CompoundCommand propertyAdds(EObject target, EStructuralFeature feature, List values, CompoundCommand buildUp) {
-		if (feature instanceof EReference) {
+		if (!isDead() && feature instanceof EReference) {
 			// If feature is not an EReference, then pre isn't in effect.
 			Iterator itr = values.iterator();
 			while (itr.hasNext()) {
@@ -184,15 +186,17 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#applyAttributeSetting(EObject, EStructuralFeature, Object, int)
 	 */
 	public void applyAttributeSetting(EObject target, EStructuralFeature feature, Object value, int index) {
-		CompoundCommand buildUp = null;
-		if (applyRules)
-			buildUp = propertyAdd(target, feature, value, buildUp);
-			
-		if (buildUp == null)
-			super.applyAttributeSetting(target, feature, value, index);
-		else {
-			buildUp.append(internalApplyAttributeSetting(target, feature, value, index));
-			internalAppend(buildUp);
+		if (!isDead()) {
+			CompoundCommand buildUp = null;
+			if (applyRules)
+				buildUp = propertyAdd(target, feature, value, buildUp);
+
+			if (buildUp == null)
+				super.applyAttributeSetting(target, feature, value, index);
+			else {
+				buildUp.append(internalApplyAttributeSetting(target, feature, value, index));
+				internalAppend(buildUp);
+			} 
 		}		
 	}
 
@@ -208,15 +212,17 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#applyAttributeSetting(EObject, EStructuralFeature, Object, Object)
 	 */
 	public void applyAttributeSetting(EObject target, EStructuralFeature feature, Object value, Object before) {
-		CompoundCommand buildUp = null;
-		if (applyRules)
-			buildUp = propertyAdd(target, feature, value, buildUp);
+		if (!isDead()) {
+			CompoundCommand buildUp = null;
+			if (applyRules)
+				buildUp = propertyAdd(target, feature, value, buildUp);
 
-		if (buildUp == null)
-			super.applyAttributeSetting(target, feature, value, before);
-		else {
-			buildUp.append(internalApplyAttributeSetting(target, feature, value, before));
-			internalAppend(buildUp);
+			if (buildUp == null)
+				super.applyAttributeSetting(target, feature, value, before);
+			else {
+				buildUp.append(internalApplyAttributeSetting(target, feature, value, before));
+				internalAppend(buildUp);
+			} 
 		}		
 	}
 
@@ -226,19 +232,21 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#applyAttributeSetting(EObject, EStructuralFeature, Object)
 	 */
 	public void applyAttributeSetting(EObject target, EStructuralFeature feature, Object value) {
-		CompoundCommand buildUp = null;
-		if (applyRules) {
-			if (!feature.isMany())
-				buildUp = propertySet(target, feature, value, buildUp);
-			else
-				buildUp = propertyAdd(target, feature, value, buildUp);
-		}
-		
-		if (buildUp == null)
-			super.applyAttributeSetting(target, feature, value);
-		else {
-			buildUp.append(internalApplyAttributeSetting(target, feature, value));
-			internalAppend(buildUp);
+		if (!isDead()) {
+			CompoundCommand buildUp = null;
+			if (applyRules) {
+				if (!feature.isMany())
+					buildUp = propertySet(target, feature, value, buildUp);
+				else
+					buildUp = propertyAdd(target, feature, value, buildUp);
+			}
+
+			if (buildUp == null)
+				super.applyAttributeSetting(target, feature, value);
+			else {
+				buildUp.append(internalApplyAttributeSetting(target, feature, value));
+				internalAppend(buildUp);
+			}
 		}
 	}
 
@@ -248,15 +256,17 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#applyAttributeSettings(EObject, EStructuralFeature, List, int)
 	 */
 	public void applyAttributeSettings(EObject target, EStructuralFeature feature, List values, int index) {
-		CompoundCommand buildUp = null;
-		if (applyRules)
-			buildUp = propertyAdds(target, feature, values, buildUp);
-			
-		if (buildUp == null)
-			super.applyAttributeSettings(target, feature, values, index);
-		else {
-			buildUp.append(internalApplyAttributeSettings(target, feature, values, index));
-			internalAppend(buildUp);
+		if (!isDead()) {
+			CompoundCommand buildUp = null;
+			if (applyRules)
+				buildUp = propertyAdds(target, feature, values, buildUp);
+
+			if (buildUp == null)
+				super.applyAttributeSettings(target, feature, values, index);
+			else {
+				buildUp.append(internalApplyAttributeSettings(target, feature, values, index));
+				internalAppend(buildUp);
+			}
 		}
 	}
 
@@ -266,15 +276,17 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#applyAttributeSettings(EObject, EStructuralFeature, List, Object)
 	 */
 	public void applyAttributeSettings(EObject target, EStructuralFeature feature, List values, Object before) {
-		CompoundCommand buildUp = null;
-		if (applyRules)
-			buildUp = propertyAdds(target, feature, values, buildUp);	
+		if (!isDead()) {
+			CompoundCommand buildUp = null;
+			if (applyRules)
+				buildUp = propertyAdds(target, feature, values, buildUp);
 
-		if (buildUp == null)
-			super.applyAttributeSettings(target, feature, values, before);
-		else {
-			buildUp.append(internalApplyAttributeSettings(target, feature, values, before));
-			internalAppend(buildUp);
+			if (buildUp == null)
+				super.applyAttributeSettings(target, feature, values, before);
+			else {
+				buildUp.append(internalApplyAttributeSettings(target, feature, values, before));
+				internalAppend(buildUp);
+			} 
 		}		
 	}
 
@@ -284,15 +296,17 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#applyAttributeSettings(EObject, EStructuralFeature, List)
 	 */
 	public void applyAttributeSettings(EObject target, EStructuralFeature feature, List values) {
-		CompoundCommand buildUp = null;
-		if (applyRules)
-			buildUp= propertyAdds(target, feature, values, buildUp);
-		
-		if (buildUp == null)
-			super.applyAttributeSettings(target, feature, values);
-		else {
-			buildUp.append(internalApplyAttributeSettings(target, feature, values));
-			internalAppend(buildUp);
+		if (!isDead()) {
+			CompoundCommand buildUp = null;
+			if (applyRules)
+				buildUp = propertyAdds(target, feature, values, buildUp);
+
+			if (buildUp == null)
+				super.applyAttributeSettings(target, feature, values);
+			else {
+				buildUp.append(internalApplyAttributeSettings(target, feature, values));
+				internalAppend(buildUp);
+			} 
 		}		
 	}
 
@@ -302,9 +316,11 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#cancelAttributeSetting(EObject, EStructuralFeature, Object)
 	 */
 	public void cancelAttributeSetting(EObject target, EStructuralFeature feature, Object value) {
-		if (applyRules)
-			propertyUnset(target, feature, value);
-		super.cancelAttributeSetting(target, feature, value);
+		if (!isDead()) {
+			if (applyRules)
+				propertyUnset(target, feature, value);
+			super.cancelAttributeSetting(target, feature, value);
+		}
 	}
 	
 	// Special class to do clear of entire list. Need to do this special because
@@ -390,24 +406,28 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#cancelAttributeSetting(EObject, EStructuralFeature)
 	 */
 	public void cancelAttributeSetting(EObject target, EStructuralFeature feature) {
-		if (applyRules) {
-			if (feature instanceof EReference) {
-				if (feature.isMany()) {
-					listClear(target, feature);
-				} else {
-					if (target.eIsSet(feature))
-						appendPost(createPost(target.eGet(feature)));
+		if (!isDead()) {
+			if (applyRules) {
+				if (feature instanceof EReference) {
+					if (feature.isMany()) {
+						listClear(target, feature);
+					} else {
+						if (target.eIsSet(feature))
+							appendPost(createPost(target.eGet(feature)));
+					}
 				}
 			}
+			super.cancelAttributeSetting(target, feature);
 		}
-		super.cancelAttributeSetting(target, feature);
 	}
 
 	protected void listClear(EObject target, EStructuralFeature feature) {
-		// If feature is many, this means clear out the entire feature. Need to use the special commands for this.
-		ClearAttributeSettingPostCommand post = new ClearAttributeSettingPostCommand(domain, isPropertyRule());
-		internalAppend(new GatherClearAttributeSettingCommand((List) target.eGet(feature), post));	// So that it gives the list over to the post command before the list is cleared.
-		appendPost(post);
+		if (!isDead()) {
+			// If feature is many, this means clear out the entire feature. Need to use the special commands for this.
+			ClearAttributeSettingPostCommand post = new ClearAttributeSettingPostCommand(domain, isPropertyRule());
+			internalAppend(new GatherClearAttributeSettingCommand((List) target.eGet(feature), post)); // So that it gives the list over to the post command before the list is cleared.
+			appendPost(post);
+		}
 	}
 
 	/**
@@ -416,16 +436,18 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#cancelAttributeSettings(EObject, EStructuralFeature, List)
 	 */
 	public void cancelAttributeSettings(EObject target, EStructuralFeature feature, List values) {
-		if (applyRules) {
-			if (feature instanceof EReference) {
-				// If feature is not an EReference, then post isn't in effect.
-				Iterator itr = values.iterator();
-				while (itr.hasNext()) {
-					appendPost(createPost(itr.next()));
+		if (!isDead()) {
+			if (applyRules) {
+				if (feature instanceof EReference) {
+					// If feature is not an EReference, then post isn't in effect.
+					Iterator itr = values.iterator();
+					while (itr.hasNext()) {
+						appendPost(createPost(itr.next()));
+					}
 				}
-			}		
+			}
+			super.cancelAttributeSettings(target, feature, values);
 		}
-		super.cancelAttributeSettings(target, feature, values);
 	}
 
 	/**
@@ -434,14 +456,16 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#cancelGroupAttributeSetting(List, EStructuralFeature)
 	 */
 	public void cancelGroupAttributeSetting(List targets, EStructuralFeature feature) {
-		if (applyRules) {
-			Iterator iter = targets.iterator();
-			while ( iter.hasNext() ) {
-				EObject object = (EObject) iter.next();
-				cancelAttributeSetting(object , feature);
-			}
-		} else
-			super.cancelGroupAttributeSetting(targets, feature);
+		if (!isDead()) {
+			if (applyRules) {
+				Iterator iter = targets.iterator();
+				while (iter.hasNext()) {
+					EObject object = (EObject) iter.next();
+					cancelAttributeSetting(object, feature);
+				}
+			} else
+				super.cancelGroupAttributeSetting(targets, feature);
+		}
 	}
 
 	/**
@@ -451,11 +475,14 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#getCommand()
 	 */
 	public Command getCommand() {
-		if (postCommand != null) {
-			CompoundCommand c = new CompoundCommand();
-			c.append(super.getCommand());
-			c.append(postCommand.unwrap());
-			return c.unwrap();
+		if (!isDead()) {
+			if (postCommand != null) {
+				CompoundCommand c = new CompoundCommand();
+				c.append(super.getCommand());
+				c.append(postCommand.unwrap());
+				return c.unwrap();
+			} else
+				return super.getCommand();
 		} else
 			return super.getCommand();
 	}
@@ -475,17 +502,19 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#replaceAttributeSetting(EObject, EStructuralFeature, Object, int)
 	 */
 	public void replaceAttributeSetting(EObject target, EStructuralFeature feature, Object newValue, int index) {
-		CompoundCommand buildUp = null;
-		if (applyRules) {
-			buildUp = propertyAdd(target, feature, newValue, buildUp);	// Treat it as an add, we will get the old value here to unset it.
-			propertyUnset(target, feature, ((List) target.eGet(feature)).get(index));
-		}
+		if (!isDead()) {
+			CompoundCommand buildUp = null;
+			if (applyRules) {
+				buildUp = propertyAdd(target, feature, newValue, buildUp); // Treat it as an add, we will get the old value here to unset it.
+				propertyUnset(target, feature, ((List) target.eGet(feature)).get(index));
+			}
 
-		if (buildUp == null)
-			super.replaceAttributeSetting(target, feature, newValue, index);
-		else {
-			buildUp.append(internalReplaceAttributeSetting(target, feature, newValue, index));
-			internalAppend(buildUp);
+			if (buildUp == null)
+				super.replaceAttributeSetting(target, feature, newValue, index);
+			else {
+				buildUp.append(internalReplaceAttributeSetting(target, feature, newValue, index));
+				internalAppend(buildUp);
+			} 
 		}		
 	}
 
@@ -495,17 +524,19 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 * @see org.eclipse.ve.internal.cde.commands.CommandBuilder#replaceEntireAttributeSettingList(EObject, EStructuralFeature, List)
 	 */
 	public void replaceEntireAttributeSettingList(EObject target, EStructuralFeature feature, List list) {
-		CompoundCommand buildUp = null;
-		if (applyRules) {
-			// This is tricky. It is like a clear list followed by an apply all.
-			buildUp = propertyAdds(target, feature, list, buildUp);
-			listClear(target, feature);
-		}
-		if (buildUp == null)
-			super.replaceEntireAttributeSettingList(target, feature, list);
-		else {
-			buildUp.append(internalReplaceEntireAttributeSettingList(target, feature, list));
-			internalAppend(buildUp);
+		if (!isDead()) {
+			CompoundCommand buildUp = null;
+			if (applyRules) {
+				// This is tricky. It is like a clear list followed by an apply all.
+				buildUp = propertyAdds(target, feature, list, buildUp);
+				listClear(target, feature);
+			}
+			if (buildUp == null)
+				super.replaceEntireAttributeSettingList(target, feature, list);
+			else {
+				buildUp.append(internalReplaceEntireAttributeSettingList(target, feature, list));
+				internalAppend(buildUp);
+			}
 		}
 	}
 

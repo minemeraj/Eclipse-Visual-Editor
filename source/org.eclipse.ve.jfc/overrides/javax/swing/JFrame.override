@@ -11,8 +11,10 @@
          <listChanges referenceValues="_eStructuralFeatures1"/>
       </value>
    </objectChanges>
-   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerGraphicalEditPart" treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-      <keyedValues key="org.eclipse.ve.internal.cde.core.creationtool.policy" value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneCreationPolicy" xsi:type="ecore:EStringToStringMapEntry"/>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerGraphicalEditPart" 
+       treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerTreeEditPart" 
+       modelAdapterClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneContainmentHandler"
+       xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/frame_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
     </objectsToAttach>
    <objectsToAttach beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JFrameProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>

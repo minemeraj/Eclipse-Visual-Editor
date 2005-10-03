@@ -11,8 +11,11 @@
    <objectsToAttach name="text" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
       <eAnnotations cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LinkJavaClassCellEditor" nullInvalid="true" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
     </objectsToAttach>
-   <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LinkGraphicalEditPart:true" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-  	    <keyedValues key="org.eclipse.ve.internal.cde.core.creationtool.policy" value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.SWTLinkCreationPolicy:Link,text" xsi:type="ecore:EStringToStringMapEntry"/>
+   <objectsToAttach 
+       graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LinkGraphicalEditPart:true" 
+       labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:text" 
+       modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LinkContainmentHandler"
+       xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
     	<graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/link_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
 	</objectsToAttach>
 </change:ChangeDescription>

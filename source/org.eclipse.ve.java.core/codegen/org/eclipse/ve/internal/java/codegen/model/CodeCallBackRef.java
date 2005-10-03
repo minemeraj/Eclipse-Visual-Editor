@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeCallBackRef.java,v $
- *  $Revision: 1.11 $  $Date: 2005-08-29 21:38:20 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-03 19:20:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -18,11 +18,11 @@ package org.eclipse.ve.internal.java.codegen.model;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.Statement;
 
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.codegen.java.IJVEDecoder;
 import org.eclipse.ve.internal.java.codegen.java.PropertyChangedInnerStyleHelper;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.ExpressionParser;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author Gili Mendel

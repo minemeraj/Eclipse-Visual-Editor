@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: IModelAdapterFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-03 19:21:04 $ 
  */
 
 /**
@@ -51,5 +51,33 @@ public interface IModelAdapterFactory {
 	 * Adapters should be lightweight because they are created and released frequently.
 	 * They shouldn't hold onto data other than the model.
 	 */
-	public Object getAdapter(Object modelObject, Class adapter);	
+	public IModelAdapter getAdapter(Object modelObject, Class adapter);	
+	
+	/**
+	 * For modelObject's that can have types, we want to see if the type itself
+	 * has the requested adapter type.
+	 * 
+	 * @param type
+	 * @param adapter
+	 * @return
+	 * 
+	 * @since 1.2.0
+	 */
+	public boolean typeHasAdapter(Object type, Class adapter);
+	
+	/**
+	 * For modelObject's that can have types, get super type Adapter. This is so that
+	 * a model adapter can do something <b>in addition to</b> the default from super types.
+	 * <p>
+	 * This should only be called from IModelAdapter's themselves. Only they know if they
+	 * want the super adapter too.
+	 *  
+	 * @param superType
+	 * @param modelObject
+	 * @param adapter
+	 * @return
+	 * 
+	 * @since 1.2.0
+	 */
+	public IModelAdapter getSuperAdapter(Object superType, Object modelObject, Class adapter);
 }

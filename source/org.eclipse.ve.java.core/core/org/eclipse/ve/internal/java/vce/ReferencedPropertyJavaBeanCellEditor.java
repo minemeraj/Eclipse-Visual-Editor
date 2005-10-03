@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: ReferencedPropertyJavaBeanCellEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:49 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import java.util.ArrayList;
@@ -27,17 +27,18 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
-import org.eclipse.ve.internal.propertysheet.INeedData;
-import org.eclipse.ve.internal.propertysheet.ISourced;
-import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
+
+import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+
+import org.eclipse.ve.internal.propertysheet.*;
 
 /**
  * A Java Bean cell editor which lists all beans of the speficied type which has the 

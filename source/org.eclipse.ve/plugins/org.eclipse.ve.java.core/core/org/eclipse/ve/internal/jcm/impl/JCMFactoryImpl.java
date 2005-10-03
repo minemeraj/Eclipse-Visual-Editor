@@ -11,17 +11,18 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMFactoryImpl.java,v $
- *  $Revision: 1.10 $  $Date: 2005-09-19 15:47:07 $ 
+ *  $Revision: 1.11 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import java.util.Map;
 
-import org.eclipse.ve.internal.jcm.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
+
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
+import org.eclipse.ve.internal.jcm.*;
 
 /**
  * <!-- begin-user-doc -->

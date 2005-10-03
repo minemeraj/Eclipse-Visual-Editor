@@ -11,13 +11,12 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.55 $  $Date: 2005-09-27 15:12:09 $ 
+ *  $Revision: 1.56 $  $Date: 2005-10-03 19:20:56 $ 
  */
 
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
@@ -26,14 +25,11 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.*;
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
-import org.eclipse.ve.internal.cde.core.CDECreationTool;
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
-import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
-import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
@@ -45,7 +41,6 @@ import org.eclipse.ve.internal.java.codegen.java.rules.IThisReferenceRule;
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.java.core.VECreationPolicy;
 
 
 
@@ -357,47 +352,50 @@ protected void generateNullConstructorIfNeeded(BeanPart b, CodeMethodRef iniMeth
   													   b.getSimpleName(),
                                                        name,     
                                                        null) ;    
-            template.setSeperator(fBeanModel.getLineSeperator()) ;   
+            template.setSeperator(fBeanModel.getLineSeperator()) ;
+            
+// TODO See https://bugs.eclipse.org/bugs/show_bug.cgi?id=110853
+// This whole block of code needs to be changed in the way this bug describes.             
             // A null constructor may not be suffience.  check to see
             // if there is any Creation Policy that overides the default5
-            JavaClass clazz = (JavaClass)((IJavaObjectInstance)b.getEObject()).getJavaType() ;
-            if (clazz.getSupertype() != null) {
-                VECreationPolicy  policy = null ;
-                JavaClass superClazz = clazz.getSupertype();
-                ClassDescriptorDecorator decorator = (ClassDescriptorDecorator)ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(superClazz, 
-                                                                           ClassDescriptorDecorator.class, 
-                                                                           CDECreationTool.CREATION_POLICY_KEY);            
-                if ( decorator != null ) {
-                    String creationPolicyClassName = (String)decorator.getKeyedValues().get(CDECreationTool.CREATION_POLICY_KEY);
-                    if (creationPolicyClassName != null) {
-						try {
-							Class cpClass = CDEPlugin.getClassFromString(creationPolicyClassName);
-							if (VECreationPolicy.class.isAssignableFrom(cpClass)) {
-								policy = (VECreationPolicy) cpClass.newInstance();
-								CDEPlugin.setInitializationData(policy, creationPolicyClassName, null);
-							}
-						} catch (ClassCastException e) {
-							JavaVEPlugin.log(e, Level.WARNING);
-						} catch (ClassNotFoundException e) {
-							JavaVEPlugin.log(e, Level.WARNING);
-						} catch (InstantiationException e) {
-							JavaVEPlugin.log(e, Level.WARNING);
-						} catch (IllegalAccessException e) {
-							JavaVEPlugin.log(e, Level.WARNING);
-						} catch (CoreException e) {
-							JavaVEPlugin.log(e, Level.WARNING);
-						}
-						if (policy != null) {
-							String superOveride = policy.getDefaultSuperString(superClazz);
-							if (superOveride != null)
-								template.setSuperInitString(superOveride + ";"); //$NON-NLS-1$
-						}
-						
-					}
-                       
-                }
-                
-            }
+//            JavaClass clazz = (JavaClass)((IJavaObjectInstance)b.getEObject()).getJavaType() ;
+//            if (clazz.getSupertype() != null) {
+//                VECreationPolicy  policy = null ;
+//                JavaClass superClazz = clazz.getSupertype();
+//                ClassDescriptorDecorator decorator = (ClassDescriptorDecorator)ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(superClazz, 
+//                                                                           ClassDescriptorDecorator.class, 
+//                                                                           CDECreationTool.CREATION_POLICY_KEY);            
+//                if ( decorator != null ) {
+//                    String creationPolicyClassName = (String)decorator.getKeyedValues().get(CDECreationTool.CREATION_POLICY_KEY);
+//                    if (creationPolicyClassName != null) {
+//						try {
+//							Class cpClass = CDEPlugin.getClassFromString(creationPolicyClassName);
+//							if (VECreationPolicy.class.isAssignableFrom(cpClass)) {
+//								policy = (VECreationPolicy) cpClass.newInstance();
+//								CDEPlugin.setInitializationData(policy, creationPolicyClassName, null);
+//							}
+//						} catch (ClassCastException e) {
+//							JavaVEPlugin.log(e, Level.WARNING);
+//						} catch (ClassNotFoundException e) {
+//							JavaVEPlugin.log(e, Level.WARNING);
+//						} catch (InstantiationException e) {
+//							JavaVEPlugin.log(e, Level.WARNING);
+//						} catch (IllegalAccessException e) {
+//							JavaVEPlugin.log(e, Level.WARNING);
+//						} catch (CoreException e) {
+//							JavaVEPlugin.log(e, Level.WARNING);
+//						}
+//						if (policy != null) {
+//							String superOveride = policy.getDefaultSuperString(superClazz);
+//							if (superOveride != null)
+//								template.setSuperInitString(superOveride + ";"); //$NON-NLS-1$
+//						}
+//						
+//					}
+//                       
+//                }
+//                
+//            }
             String callInit="" ; //$NON-NLS-1$
             // Is the bean an instance of Applet ??? In this case we do not want to call 
             // the init method.            
@@ -578,7 +576,7 @@ public BeanPart createImplicitFromJVEModel(IJavaObjectInstance component, ICompi
 public BeanPart createFromJVEModel(IJavaObjectInstance component, ICompilationUnit cu) throws CodeGenException {
 		
 	
-	  if (component.getAllocation() instanceof ImplicitAllocation)
+	  if (component.isImplicitAllocation())
 		  return createImplicitFromJVEModel(component, cu);
 			
       IType cuType = CodeGenUtil.getMainType(cu) ;
@@ -879,17 +877,17 @@ public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf) 
 		}
 		else { 
 		  // Create an implicit bean
-		  implicitBean = new BeanPart(bpd);	
+		implicitBean = new BeanPart(bpd);	
 		  implicitBean.setImplicitParent(parent, sf);
-		  parent.getModel().addBean(implicitBean);
+		parent.getModel().addBean(implicitBean);
 		}
 		
 		if (implicitBean.getDecleration().isImplicitDecleration()) {
 			// BeanPart is being created from scratch.
-			implicitBean.createEObject();
-			ImplicitAllocation ia = InstantiationFactory.eINSTANCE.createImplicitAllocation(parent.getEObject(), sf);
-			((IJavaObjectInstance)implicitBean.getEObject()).setAllocation(ia);		
-			
+		implicitBean.createEObject();
+		ImplicitAllocation ia = InstantiationFactory.eINSTANCE.createImplicitAllocation(parent.getEObject(), sf);
+		((IJavaObjectInstance)implicitBean.getEObject()).setAllocation(ia);
+		
 			implicitBean.addInitMethod(parent.getInitMethod());
 			EStructuralFeature asf = CodeGenUtil.getAllocationFeature(implicitBean.getEObject());
 			ExpressionRefFactory eGen = new ExpressionRefFactory(implicitBean, asf);	
@@ -897,7 +895,7 @@ public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf) 
 			CodeExpressionRef initExpression = eGen.createFromJVEModelWithNoSrc(null);
 			initExpression.setNoSrcExpression(true);
 			// Force a full cascaded decoding (SWT decoders may generate other expressions).
-			initExpression.decodeExpression();
+			initExpression.decodeExpression();			
 			// During building, this bean will be added the to EMF model
 		}
 		setBeanPartAsImplicit(implicitBean, parent, sf);
@@ -906,7 +904,7 @@ public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf) 
 	}
 	return implicitBean;
 }
-
+		
 public BeanPart restoreImplicitBeanPart (BeanPart parent, EStructuralFeature sf, boolean createImplicitInitExpression) {
 	BeanPart implicitBean = null;
 	try {
@@ -931,7 +929,7 @@ public BeanPart restoreImplicitBeanPart (BeanPart parent, EStructuralFeature sf,
 			implicitBean.addInitMethod(parent.getInitMethod());
 			EStructuralFeature asf = CodeGenUtil.getAllocationFeature(implicitBean.getEObject());
 			ExpressionRefFactory eGen = new ExpressionRefFactory(implicitBean, asf);	
-			// prime the proper helpers
+		// prime the proper helpers
 			CodeExpressionRef initExpression = eGen.createFromJVEModelWithNoSrc(null);
 			initExpression.setNoSrcExpression(true);
 			// Force a full cascaded decoding (SWT decoders may generate other expressions).

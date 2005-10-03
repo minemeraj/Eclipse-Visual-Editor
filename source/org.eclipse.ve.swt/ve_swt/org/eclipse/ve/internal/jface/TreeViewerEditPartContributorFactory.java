@@ -115,7 +115,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 						fig.add(fErrorIndicator);
 						fig.setToolTip(label.getToolTip());
 						return fig;
-					}
+	}
 					protected void setupLabelProvider() {
 						// don't do anything here, we'll provide our own image.
 					}
@@ -126,6 +126,5 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 
 	public GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart) {
 		return new TreeViewerGraphicalEditPartContributor(getTreeViewer((IJavaInstance) graphicalEditPart.getModel()));
-	}
-
+}
 }

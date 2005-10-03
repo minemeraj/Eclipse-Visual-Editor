@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.33 $  $Date: 2005-08-26 14:29:05 $
+ *  $Revision: 1.34 $  $Date: 2005-10-03 19:20:48 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -1379,7 +1379,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	 * Look for SWT.NONE as the second argument.
 	 */
 	private boolean isNoStyleSet(IJavaObjectInstance child) {
-		if (child != null && child.getAllocation() instanceof ParseTreeAllocation) {
+		if (child != null && child.isParseTreeAllocation()) {
 			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) child.getAllocation();
 			PTExpression allocationExpression = ptAlloc.getExpression();
 			if (allocationExpression instanceof PTClassInstanceCreation) {

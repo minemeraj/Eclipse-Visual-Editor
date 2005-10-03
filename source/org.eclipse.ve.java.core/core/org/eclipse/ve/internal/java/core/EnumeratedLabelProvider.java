@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.java.core;
 /*
- * $RCSfile: EnumeratedLabelProvider.java,v $ $Revision: 1.10 $ $Date: 2005-08-24 23:30:46 $
+ * $RCSfile: EnumeratedLabelProvider.java,v $ $Revision: 1.11 $ $Date: 2005-10-03 19:20:57 $
  */
 import java.util.logging.Level;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.java.JavaHelpers;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 /**
  * Label Provider for Enumerated Java Beans. This uses the enumerated values that are retrieved from the PropertyDescriptor

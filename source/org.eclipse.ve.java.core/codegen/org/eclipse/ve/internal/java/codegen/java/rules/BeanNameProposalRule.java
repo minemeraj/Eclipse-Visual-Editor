@@ -19,12 +19,13 @@ package org.eclipse.ve.internal.java.codegen.java.rules;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.IType;
+
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
-import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
 
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
 
 /**
  * @author richkulp

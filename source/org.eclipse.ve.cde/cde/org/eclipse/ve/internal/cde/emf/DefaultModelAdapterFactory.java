@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DefaultModelAdapterFactory.java,v $
- *  $Revision: 1.7 $  $Date: 2005-09-14 23:30:22 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-03 19:21:04 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -19,10 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditPart;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.gef.EditPart;
 
 /**
  * Base editpart factory. It is used to create editparts on a 
@@ -30,11 +31,10 @@ import org.eclipse.gef.EditPart;
  * 
  * The default procedure, unless the factory is subclassed, is:
  * 1) Is the modelObject itself an instance of the adapterClass, if so, return it.
- * 2) Go to the ClassDescriptorDecoratorPolicy that the factory was created with,
+ * 2) If the modelObject is IAdaptable, see if it can create the requested class.
+ * 3) Go to the ClassDescriptorDecoratorPolicy that the factory was created with,
  *    use the modelAdapterClassname from the policy, if it has one.
- * 3) If the returned adapter is instanceof the adapterclass, return it.
- * 4) Else, if the adapter itself is IAdaptable, ask the adapter for the
- *    adapterClass.
+ * 4) If the returned adapter is instanceof the adapterclass, return it.
  * 5) Finally, for the special case of IConstraintHandler, create an appropriate
  *    graphical EditPart and ask it for the adapter class through getAdapter.
  */
@@ -47,43 +47,82 @@ public class DefaultModelAdapterFactory implements IModelAdapterFactory {
 		this.policy = policy;
 	}
 
-	public Object getAdapter(Object modelObject, Class adapterClass) {
+	public IModelAdapter getAdapter(Object modelObject, Class adapterClass) {
 		if (adapterClass.isInstance(modelObject))
-			return modelObject;
+			return (IModelAdapter) modelObject;
+		
+		if (modelObject instanceof IAdaptable) {
+			IModelAdapter adapter = (IModelAdapter) ((IAdaptable) modelObject).getAdapter(adapterClass);
+			if (adapter != null)
+				return adapter;
+		}
 
-		Object adapter = createAdapter(modelObject);
-		if (adapterClass.isInstance(adapter))
+		
+		IModelAdapter adapter = createAdapter(modelObject, adapterClass);
+		if (adapter != null)
 			return adapter;
 
-		if (adapter instanceof IAdaptable)
-			return ((IAdaptable) adapter).getAdapter(adapterClass);
 
 		// Else one fallback for IConstraintHandler
 		if (adapterClass == IConstraintHandler.class) {
 			EditPart ep = createEditPart(modelObject);
 			if (ep != null)
-				return ((IAdaptable) ep).getAdapter(adapterClass);
+				return (IModelAdapter) ((IAdaptable) ep).getAdapter(adapterClass);
 		}
 
 		return null;
 	}
 
+	public boolean typeHasAdapter(Object type, Class adapter) {
+		return (type instanceof EClassifier) && policy.getModelAdapterClassname((EClassifier) type) != null;
+	}
+	
+	public IModelAdapter getSuperAdapter(Object superType, Object modelObject, Class adapter) {
+		if (superType instanceof EClassifier) {
+			
+		}
+		return null;
+	}
+	
 	/*
 	 * This is an internal method to create the model adapter.
 	 * The model adapter must have a constructor that takes an Object, this
 	 * will be the model the adapter is wrappering.
 	 */
-	protected Object createAdapter(Object modelObject) {
+	protected IModelAdapter createAdapter(Object modelObject, Class adaptTo) {
 		if (!(modelObject instanceof EObject))
 			return null;
-		String classString = policy.getModelAdapterClassname(((EObject) modelObject).eClass());
+		return createAdapter(((EObject) modelObject).eClass(), modelObject, adaptTo);
+	}
+
+	/**
+	 * @param modelObject
+	 * @param adaptTo
+	 * @return
+	 * 
+	 * @since 1.2.0
+	 */
+	private IModelAdapter createAdapter(EClassifier type, Object modelObject, Class adaptTo) {
+		String classString = policy.getModelAdapterClassname(type);
 		if (classString == null)
 			return null;
 		try {
 			try {
 				Object ctorOrClass = getConstructor(classString);
-				Object adapter = (ctorOrClass instanceof Constructor) ? ((Constructor) ctorOrClass).newInstance(new Object[] { modelObject})
-						: ((Class) ctorOrClass).newInstance();
+				IModelAdapter adapter;
+				if (ctorOrClass instanceof Constructor) {
+					Constructor constructor = (Constructor) ctorOrClass;
+					if (adaptTo.isAssignableFrom(constructor.getDeclaringClass()))
+						adapter = (IModelAdapter) constructor.newInstance(new Object[] {modelObject});
+					else
+						return null;	// Doesn't convert to desired type.
+				} else {
+					Class clazz = (Class) ctorOrClass;
+					if (adaptTo.isAssignableFrom(clazz))
+						adapter = (IModelAdapter) clazz.newInstance();
+					else
+						return null;	// Doesn't convert to desired type.
+				}
 				CDEPlugin.setInitializationData(adapter, classString, null);
 				return adapter;
 			} catch (NoSuchMethodException e) {
@@ -109,10 +148,10 @@ public class DefaultModelAdapterFactory implements IModelAdapterFactory {
 	 */
 	protected Object getConstructor(String classString) throws NoSuchMethodException {
 		if (classStringToConstructor.containsKey(classString)) {
-			Constructor ctor = (Constructor) classStringToConstructor.get(classString);
-			if (ctor == null)
+			Object ctorOrClass = classStringToConstructor.get(classString);
+			if (ctorOrClass == null)
 				throw new NoSuchMethodException(classString);	// We had explicity set "null" to indicate we tried and failed.
-			return ctor;
+			return ctorOrClass;
 		} else {
 			try {
 				Class adapterClass = CDEPlugin.getClassFromString(classString);

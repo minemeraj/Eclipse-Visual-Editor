@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: AnnotationPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-03 19:21:04 $ 
  */
 
 import java.util.*;
@@ -181,6 +181,12 @@ public class AnnotationPolicy
 	/**
 	 * This command is used in the CreateRequest of the ContainerEditPolicy. It makes sure that
 	 * the annotations are added at the right time.
+	 * @param annotations list of annotations to create
+	 * @param childCreateCommand the current set of commands to create the child
+	 * @param domain the editdomain
+	 * @return the command to do both the annotations and the child create.
+	 * 
+	 * @since 1.2.0
 	 */
 	public static Command getCreateRequestCommand(List annotations, Command childCreateCommand, EditDomain domain) {
 		CompoundCommand c = new CompoundCommand(childCreateCommand.getLabel());

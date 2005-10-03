@@ -11,19 +11,12 @@
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 /*
  *  $RCSfile: JavaBeansLauncher.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.10 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.StringTokenizer;
+import java.util.*;
 /**
  * This class is designed to help test VCE generated JavaBeans
  * This launcher will run the main method, if available.  Otherwise it delegates the launching to

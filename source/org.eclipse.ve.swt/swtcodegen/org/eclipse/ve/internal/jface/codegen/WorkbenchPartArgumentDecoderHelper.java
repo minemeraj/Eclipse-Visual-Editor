@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartArgumentDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-03 19:20:48 $ 
  */
 package org.eclipse.ve.internal.jface.codegen;
 
@@ -57,7 +57,7 @@ public class WorkbenchPartArgumentDecoderHelper extends ExpressionDecoderHelper 
 			boolean allocationNeedsUpdate = true; // SF is set fine - how about allocation?
 			if(fbeanPart.getEObject() instanceof IJavaInstance){
 				IJavaInstance ji = (IJavaInstance) fbeanPart.getEObject();
-				if(ji.getAllocation() instanceof ImplicitAllocation){
+				if(ji.isImplicitAllocation()){
 					ImplicitAllocation ia = (ImplicitAllocation) ji.getAllocation();
 					if(ia.getParent()!=null && ia.getParent().equals(thisEObject))
 						allocationNeedsUpdate = false;

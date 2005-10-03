@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontCustomPropertyEditor.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.13 $  $Date: 2005-10-03 19:20:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -423,7 +423,7 @@ public class FontCustomPropertyEditor extends Composite {
 		}
 		sizeField.setText(String.valueOf(fd.getHeight()));
 		previewText.setFont(value);
-		if (fExistingValue != null && fExistingValue.getAllocation() instanceof ParseTreeAllocation) {
+		if (fExistingValue != null && fExistingValue.isParseTreeAllocation()) {
 			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) fExistingValue.getAllocation();
 			PTExpression exp = ptAlloc.getExpression();
 			if (exp instanceof PTClassInstanceCreation) 
@@ -447,7 +447,7 @@ public class FontCustomPropertyEditor extends Composite {
 		isUpdating = true;
 		jfaceStylesList.setSelection(0);
 		// Get the method name and symbolic name if it's a JFace ParseTreeAllocation
-		if (fExistingValue != null && fExistingValue.getAllocation() instanceof ParseTreeAllocation) {
+		if (fExistingValue != null && fExistingValue.isParseTreeAllocation()) {
 			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) fExistingValue.getAllocation();
 			PTExpression exp = ptAlloc.getExpression();
 			if (exp instanceof PTMethodInvocation	&& 

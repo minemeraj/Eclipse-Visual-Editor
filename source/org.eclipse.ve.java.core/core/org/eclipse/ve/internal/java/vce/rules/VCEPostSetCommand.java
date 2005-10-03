@@ -11,35 +11,27 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPostSetCommand.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
-import org.eclipse.emf.ecore.EAnnotation;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 
-import org.eclipse.ve.internal.cde.core.AnnotationPolicy;
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.commands.NoOpCommand;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.ve.internal.cdm.Annotation;
 import org.eclipse.ve.internal.cdm.CDMPackage;
+
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.commands.NoOpCommand;
+import org.eclipse.ve.internal.cde.core.AnnotationPolicy;
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
 import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.jcm.BeanFeatureDecorator;
-import org.eclipse.ve.internal.jcm.JCMPackage;
-import org.eclipse.ve.internal.jcm.MemberContainer;
-import org.eclipse.ve.internal.jcm.JCMMethod;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
 
 /**
@@ -120,7 +112,7 @@ public class VCEPostSetCommand extends CommandWrapper {
 			;	// Continue, it will go away.
 		else if (contained)
 			;	// Continue, it will go away. If it is contained, it can't have a method.
-		else if (containmentFeature == JCMPackage.eINSTANCE.getMemberContainer_Members()) {
+		else if (containmentFeature == JCMPackage.eINSTANCE.getMemberContainer_Members() || containmentFeature == JCMPackage.eINSTANCE.getMemberContainer_Implicits()) {
 			delayDelete = true;	// We are a member of something, delay the delete.
 			if (child) {
 				// force it to go away if no other child relationship references it.
@@ -284,13 +276,13 @@ public class VCEPostSetCommand extends CommandWrapper {
 		if (initMethod != null) {
 			cbld.cancelAttributeSetting(initMethod, initSF, value);
 			if (initMethod.getInitializes().isEmpty())
-				if (!initMethod.eIsSet(returnSF))
+				if (initMethod.eContainer() != null && !initMethod.eIsSet(returnSF))
 					cbld.cancelAttributeSetting(initMethod.eContainer(), initMethod.eContainmentFeature(), initMethod);
 		}
 		
 		if (returnMethod != null) {
 			cbld.cancelAttributeSetting(returnMethod, returnSF, value);
-			if (returnMethod.getInitializes().isEmpty())
+			if (returnMethod.eContainer() != null && returnMethod.getInitializes().isEmpty())
 				cbld.cancelAttributeSetting(returnMethod.eContainer(), returnMethod.eContainmentFeature(), returnMethod);
 		}	
 	}

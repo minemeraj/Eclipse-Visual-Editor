@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IEventDecoder.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:44 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-03 19:20:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,8 +18,7 @@ package org.eclipse.ve.internal.java.codegen.java;
 import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
-import org.eclipse.ve.internal.jcm.Callback;
+
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 
 /**

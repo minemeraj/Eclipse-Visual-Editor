@@ -32,6 +32,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
+import org.eclipse.ve.internal.cde.core.EditDomain;
+
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
@@ -109,17 +111,10 @@ public class BeanViewer extends TypeInfoViewer{
 	private boolean showOnlyBeans = false;
 	private ResourceSet resourceSet = null;
 	private IJavaSearchScope scope = null;
-	
-	public BeanViewer(Composite parent, Label progressLabel, IJavaSearchScope scope, 
-								IPackageFragment pkg, ResourceSet resourceSet) {
-		super(parent, SWT.NONE, progressLabel, scope, IJavaSearchConstants.CLASS, null);
-		this.resourceSet = resourceSet;
-		this.scope = scope;
-		this.pkg = pkg;
-	}
+	private EditDomain editDomain;
 
 	private boolean isValidBean(TypeInfo type) {
-		IStatus status = ChooseBeanDialogUtilities.getClassStatus(type, pkg.getElementName(), resourceSet, scope);
+		IStatus status = ChooseBeanDialogUtilities.getClassStatus(type, pkg.getElementName(), resourceSet, scope, editDomain);
 		return status.isOK();
 	}
 
@@ -178,6 +173,15 @@ public class BeanViewer extends TypeInfoViewer{
 		super.setSearchPattern(text);
 	}
 	
+	public BeanViewer(Composite parent, Label progressLabel, IJavaSearchScope scope, 
+								IPackageFragment pkg, ResourceSet resourceSet, EditDomain editDomain) {
+		super(parent, SWT.NONE, progressLabel, scope, IJavaSearchConstants.CLASS, null);
+		this.resourceSet = resourceSet;
+		this.scope = scope;
+		this.pkg = pkg;
+		this.editDomain = editDomain;
+	}
+
 	public void showOnlyBeans(boolean showOnlyBeans){
 		this.showOnlyBeans = showOnlyBeans;
 	}

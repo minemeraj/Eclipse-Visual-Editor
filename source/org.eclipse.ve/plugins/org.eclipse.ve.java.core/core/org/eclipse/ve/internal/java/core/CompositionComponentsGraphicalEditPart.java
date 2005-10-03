@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CompositionComponentsGraphicalEditPart.java,v $
- *  $Revision: 1.15 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.16 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import java.util.*;
@@ -111,7 +111,7 @@ public class CompositionComponentsGraphicalEditPart extends ContentsGraphicalEdi
 			// has a lot of behavior that relies on the live JavaBean being present
 			IJavaInstance javaModel = (IJavaInstance)model;
 			JavaHelpers awtComponentClass = Utilities.getJavaType("java.awt.Component",javaModel.eResource().getResourceSet()); //$NON-NLS-1$
-			// This is a hack because the trap to no use the defined edit part for Component must not be generalized
+			// TODO This is a hack because the trap to no use the defined edit part for Component must not be generalized
 			// A better fix would be that the edit part is more robust and can deal with no bean proxy there
 			if(modelBeanProxy == null || (awtComponentClass.isAssignableFrom(javaModel.eClass()) && !modelBeanProxy.isBeanProxyInstantiated())){
 				// The DefaultGraphicalEditPart will show the icon and its label provider will indicate to the

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.37 $ $Date: 2005-08-12 18:29:07 $
+ * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.38 $ $Date: 2005-10-03 19:20:48 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
-import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -199,7 +198,7 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 		// If we don't declare the fact that implicit allocation is not owned then we dispose them
 		// and we shouldn't as it is the responsibility of the owner to dispose them
 		JavaAllocation allocation = getJavaObject().getAllocation();
-		if (allocation instanceof ImplicitAllocation) {
+		if (allocation.isImplicit()) {
 			setOwnsProxy(false);
 		}
 	}

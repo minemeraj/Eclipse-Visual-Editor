@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScrolledCompositeContainerPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-11 21:42:58 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-03 19:20:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -48,13 +48,13 @@ public class ScrolledCompositeContainerPolicy extends CompositeContainerPolicy {
 		return (content == null);
 	}
 
-	public Command getCreateCommand(Object child, Object positionBeforeChild) {
+	protected Command getCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
 		Command setAsContent;
 		EObject parent = (EObject)getContainer();
 		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
 		cBld.applyAttributeSetting(parent, sfLayoutData, child, positionBeforeChild);
 		setAsContent = cBld.getCommand();
-		return super.getCreateCommand(child, positionBeforeChild).chain(setAsContent);
+		return super.getCreateCommand(child, positionBeforeChild, containmentSF).chain(setAsContent);
 	}
 
 	protected Command getDeleteDependentCommand(Object child, EStructuralFeature containmentSF) {

@@ -12,7 +12,7 @@
  *  Created May 27, 2005 by Gili Mendel
  * 
  *  $RCSfile: SashSetting.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Control;
 
 import org.eclipse.ve.internal.cde.core.CustomSashForm;
 

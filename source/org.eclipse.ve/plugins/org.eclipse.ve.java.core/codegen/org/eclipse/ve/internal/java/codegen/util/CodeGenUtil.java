@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.52 $  $Date: 2005-09-16 16:25:00 $ 
+ *  $Revision: 1.53 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 
@@ -992,7 +992,7 @@ public static Collection getReferences(Object o, boolean includeO) {
 		ParseTreeAllocation ptAlloc = (ParseTreeAllocation) alloc;
 		ParseVisitor visitor = new ParseVisitor() {
 			public boolean visit(PTInstanceReference node) {
-				IJavaObjectInstance r = node.getObject();				
+				IJavaInstance r = node.getReference();				
 				refs.addAll(getReferences(r,true));	
 				return false;
 			}
@@ -1085,33 +1085,34 @@ public static Collection getReferences(Object o, boolean includeO) {
 		if(fbeanPart.getEObject()!=null && fbeanPart.getEObject() instanceof IJavaObjectInstance){
 			IJavaObjectInstance jo = (IJavaObjectInstance) fbeanPart.getEObject();
 			JavaAllocation ja = jo.getAllocation();
-			if (ja instanceof ParseTreeAllocation) {
-				ParseTreeAllocation pta = (ParseTreeAllocation) ja;
-				PTExpression expression = pta.getExpression();
-				NaiveExpressionFlattener bpFinder = new NaiveExpressionFlattener(){
-					public boolean visit(PTInstanceReference node) {
-						IJavaObjectInstance obj = node.getObject() ;
-					    BeanPart bp = fbeanPart.getModel().getABean(obj);
-					    if (bp!=null)
-					    	  bps.add(bp);
-					    else {
-					    	if (obj!=null && obj.isSetAllocation()) {
-					    		JavaAllocation alloc = obj.getAllocation();
-					    		if (alloc instanceof ParseTreeAllocation)
-					    			((ParseTreeAllocation) alloc).getExpression().accept(this);
-					    	} 
-					    }
-						return super.visit(node);
-					}
-				};
-				expression.accept(bpFinder);
-			}
-			else if (ja instanceof ImplicitAllocation) {
-				// We need to get the parent from the implicit parent
-				// e.g., TreeViewer.getTree()'s parent is the TreeViewer's constructor
-				EObject pObj = ((ImplicitAllocation)ja).getParent();
-				BeanPart bp = fbeanPart.getModel().getABean(pObj);
-				return getAllocationReferences(bp);
+			if (ja != null) {
+				if (ja.isParseTree()) {
+					ParseTreeAllocation pta = (ParseTreeAllocation) ja;
+					PTExpression expression = pta.getExpression();
+					NaiveExpressionFlattener bpFinder = new NaiveExpressionFlattener() {
+
+						public boolean visit(PTInstanceReference node) {
+							IJavaInstance obj = node.getReference();
+							BeanPart bp = fbeanPart.getModel().getABean(obj);
+							if (bp != null)
+								bps.add(bp);
+							else {
+								if (obj != null && obj.isParseTreeAllocation()) {
+									ParseTreeAllocation alloc = (ParseTreeAllocation) obj.getAllocation();
+									alloc.getExpression().accept(this);
+								}
+							}
+							return super.visit(node);
+						}
+					};
+					expression.accept(bpFinder);
+				} else if (ja.isImplicit()) {
+					// We need to get the parent from the implicit parent
+					// e.g., TreeViewer.getTree()'s parent is the TreeViewer's constructor
+					EObject pObj = ((ImplicitAllocation) ja).getParent();
+					BeanPart bp = fbeanPart.getModel().getABean(pObj);
+					return getAllocationReferences(bp);
+				}
 			}
 		}
 		return bps;

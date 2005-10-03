@@ -11,16 +11,19 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: JavaBeanLabelProvider.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:30:49 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
+
 import org.eclipse.ve.internal.propertysheet.INeedData;
 
 /**

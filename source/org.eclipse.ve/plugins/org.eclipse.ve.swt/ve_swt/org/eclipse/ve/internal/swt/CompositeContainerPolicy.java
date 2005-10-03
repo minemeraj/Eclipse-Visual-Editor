@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.21 $$  $$Date: 2005-08-24 23:52:55 $$ 
+ *  $$Revision: 1.22 $$  $$Date: 2005-10-03 19:20:48 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -20,18 +20,14 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 
-import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 
-import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-
-import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 public class CompositeContainerPolicy extends VisualContainerPolicy {
 	
@@ -45,81 +41,6 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
 		sfLayoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
-	}
-	
-	public Command getCreateCommand(Object child, Object positionBeforeChild) {
-		Command result = super.getCreateCommand(child, positionBeforeChild);
-		if (result.canExecute()) {
-			// If we already have a java allocation then check to see whether it is a prototype instance with a 
-			// {parentComposite} that needs substituting with the real parent
-			if (child instanceof IJavaObjectInstance && ((IJavaObjectInstance) child).getAllocation() != null) {
-				Command insertCorrectParentCommand = new EnsureCorrectParentCommand((IJavaObjectInstance) child, (IJavaObjectInstance) getContainer());
-				return insertCorrectParentCommand.chain(result);
-			} else {
-				return createInitStringCommand((IJavaObjectInstance) child).chain(result);
-			}
-		} else
-			return result;
-	}
-		
-	/**
-	 * This is a temporary hack to add an initialization string (allocation) to a dropped component
-	 * which contain a parsed tree referencing the parent.
-	 * 
-	 * Rich has not implemented a ref. parsed tree yet, so use this as a deprecated method
-	 * 
-	 * @param parent
-	 * @return
-	 * 
-	 * @since 1.0.0
-	 */
-	
-	private Command createInitStringCommand(IJavaObjectInstance child) {
-					
-		// Class Creation tree - new Foo(args[])
-		PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation() ;
-		ic.setType(child.getJavaType().getJavaName()) ;
-		
-		// set the arguments
-		PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference() ;
-		ir.setObject((IJavaObjectInstance)getContainer()) ;	
-		PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess();	
-		PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT") ; //$NON-NLS-1$
-		fa.setField("NONE"); //$NON-NLS-1$
-		fa.setReceiver(name) ;
-		
-		
-		ic.getArguments().add(ir);
-		ic.getArguments().add(fa) ;
-		
-		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
-		ApplyAttributeSettingCommand applyCmd = new ApplyAttributeSettingCommand();
-		applyCmd.setTarget(child);
-		applyCmd.setAttribute(child.eClass().getEStructuralFeature("allocation")); //$NON-NLS-1$
-		applyCmd.setAttributeSettingValue(alloc);	
-		
-		return applyCmd;		
-		
-	}
-	
-	
-	protected Command primAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		Command command = super.primAddCommand(children, positionBeforeChild, containmentSF);
-		if (command.canExecute()) {
-			CompoundCommand cmd = new CompoundCommand();
-			Iterator iter = children.iterator();
-			while (iter.hasNext()) {
-				try {
-					cmd.append(new EnsureCorrectParentCommand((IJavaObjectInstance) iter.next(), (IJavaObjectInstance) getContainer()));
-				} catch (ClassCastException e) {
-					// OK, just in case not a java object. It should be.
-				}
-			}
-
-			cmd.append(command);
-			return cmd;
-		} else
-			return command;
 	}
 	
 	protected Command getOrphanTheChildrenCommand(List children) {

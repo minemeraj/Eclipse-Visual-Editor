@@ -14,15 +14,13 @@
  */
 package org.eclipse.ve.internal.swt;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 
@@ -49,64 +47,42 @@ public class EnsureCorrectParentCommand extends CommandWrapper {
 	}
 
 	public void execute() {
-		// The javaChild may itself be wrapped by an object that takes the composite parent as an argument
-		// We need to check for this as well as the child itself
-		EStructuralFeature veWrapper_SF = javaChild.eClass().getEStructuralFeature("visual_wrapper");
-		if(veWrapper_SF != null){
-			IJavaObjectInstance wrapperObject = (IJavaObjectInstance) javaChild.eGet(veWrapper_SF);
-			if(wrapperObject != null){
-				processParseTree(wrapperObject);
-			}
-		}
 		processParseTree(javaChild);
 	}
-		
-	private void processParseTree(IJavaObjectInstance javaChild){
-	
-		if (javaChild.getAllocation() != null) {
-			if (javaChild.getAllocation() instanceof ParseTreeAllocation) {
-				CommandBuilder cbldr = new CommandBuilder(false); // Use a forward undo so that the actual apply to new allocation is last.
-				PTExpression expression = ((ParseTreeAllocation) javaChild.getAllocation()).getExpression();
-				if (expression instanceof PTClassInstanceCreation) {
-					visitClassInstanceCreation((PTClassInstanceCreation) expression, cbldr);
-				} else if (expression instanceof PTMethodInvocation) {
-					visitMethodInvocation((PTMethodInvocation) expression, cbldr);
-				}
-				if (!cbldr.isEmpty()) {
-					// ReCreate the allocation feature so that CodeGen will reGenerate the constructor
-					ParseTreeAllocation newAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-					cbldr.applyAttributeSetting(newAlloc, InstantiationPackage.eINSTANCE.getParseTreeAllocation_Expression(), expression);
-					cbldr.applyAttributeSetting(javaChild, JavaInstantiation.getAllocationFeature(javaChild), newAlloc);
-					command = cbldr.getCommand();
-					command.execute();
-				}
-			}
-		}
-	}
 
-	private void visitClassInstanceCreation(PTClassInstanceCreation expression, CommandBuilder cbldr) {
-		visitArguments(expression, InstantiationPackage.eINSTANCE.getPTClassInstanceCreation_Arguments(), expression.getArguments(), cbldr);
-	}
+	private void processParseTree(IJavaInstance javaChild) {
 
-	private void visitMethodInvocation(PTMethodInvocation expression, CommandBuilder cbldr) {
-		visitArguments(expression, InstantiationPackage.eINSTANCE.getPTMethodInvocation_Arguments(), expression.getArguments(), cbldr);
-	}
+		if (javaChild.isParseTreeAllocation()) {
+			final CommandBuilder cbldr = new CommandBuilder(false); // Use a forward undo so that the actual apply to new allocation is last.
+			PTExpression expression = ((ParseTreeAllocation) javaChild.getAllocation()).getExpression();
+			// Create a visitor to find all references to parent composite flag and convert to parent reference.
+			ParseVisitor visitor = new ParseVisitor() {
 
-	private void visitArguments(EObject expression, EStructuralFeature feature, List arguments, CommandBuilder cbldr) {
-		// Find all references to {parentComposite} and swop them with a pointer to the real composite parent
-		ArrayList argsCopy = new ArrayList(arguments.size());
-		argsCopy.addAll(arguments); // Use a copy so we don't access and change the same collection in the loop
-		for (int i = 0; i < argsCopy.size(); i++) {
-			Object argument = argsCopy.get(i);
-			if (argument instanceof PTName && SwtPlugin.PARENT_COMPOSITE_TOKEN.equals(((PTName) argument).getName())) { //$NON-NLS-1$
-				PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-				parentRef.setObject(correctParent);
-				cbldr.replaceAttributeSetting(expression, feature, parentRef, i);
-			} else if (argument instanceof PTInstanceReference) {
-				PTInstanceReference instanceReference = (PTInstanceReference) argument;
-				if (instanceReference.getObject() != correctParent) {
-					cbldr.applyAttributeSetting(instanceReference, InstantiationPackage.eINSTANCE.getPTInstanceReference_Object(), correctParent);
+				public boolean visit(PTName node) {
+					if (SwtPlugin.PARENT_COMPOSITE_TOKEN.equals(node.getName())) {
+						PTInstanceReference parentRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+						parentRef.setReference(correctParent);
+						EObject container = node.eContainer();
+						EStructuralFeature containingFeature = node.eContainingFeature();
+						if (containingFeature.isMany())
+							cbldr.replaceAttributeSetting(container, containingFeature, parentRef, ((List) container.eGet(containingFeature))
+									.indexOf(node));
+						else
+							cbldr.applyAttributeSetting(container, containingFeature, parentRef);
+					}
+					return true;
 				}
+
+			};
+			expression.accept(visitor);
+
+			if (!cbldr.isEmpty()) {
+				// ReCreate the allocation feature so that CodeGen will reGenerate the constructor
+				ParseTreeAllocation newAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+				cbldr.applyAttributeSetting(newAlloc, InstantiationPackage.eINSTANCE.getParseTreeAllocation_Expression(), expression);
+				cbldr.applyAttributeSetting(javaChild, JavaInstantiation.getAllocationFeature(javaChild), newAlloc);
+				command = cbldr.getCommand();
+				command.execute();
 			}
 		}
 	}

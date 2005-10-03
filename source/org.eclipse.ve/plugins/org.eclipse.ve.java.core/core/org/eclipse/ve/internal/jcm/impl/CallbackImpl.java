@@ -18,31 +18,28 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CallbackImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-15 21:33:49 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-03 19:20:56 $ 
  */
 
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.jem.internal.instantiation.PTExpression;
+import org.eclipse.jem.java.Method;
 
 import org.eclipse.ve.internal.jcm.Callback;
 import org.eclipse.ve.internal.jcm.JCMPackage;
-import org.eclipse.jem.java.Method;
 
 /**
  * <!-- begin-user-doc -->

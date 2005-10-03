@@ -11,8 +11,10 @@
          <listChanges referenceValues="_eStructuralFeatures1"/>
       </value>
    </objectChanges>
-   <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableGraphicalEditPart:false" treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-	  <keyedValues key="org.eclipse.ve.internal.cde.core.creationtool.policy" value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableCreationPolicy" xsi:type="ecore:EStringToStringMapEntry"/>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableGraphicalEditPart:false" 
+       treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableEditPart" 
+       modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableContainmentHandler"
+       xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/table_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
     </objectsToAttach>
    <objectsToAttach beanLocation="GLOBAL_LOCAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter:items='tableColumns'" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>

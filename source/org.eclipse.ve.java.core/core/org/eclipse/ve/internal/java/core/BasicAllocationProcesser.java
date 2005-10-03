@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BasicAllocationProcesser.java,v $
- *  $Revision: 1.20 $  $Date: 2005-09-22 22:13:16 $ 
+ *  $Revision: 1.21 $  $Date: 2005-10-03 19:20:57 $ 
  */
 package org.eclipse.ve.internal.java.core;
  
@@ -69,7 +69,7 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 			// It might be possible that the reference has not yet been instantiated. This could happen because we are refering to an
 			// object in the constructor that is not on the freeform and is not a property or a child of bean that is on the freeform.
 			// In that case it won't be instantiated on its own. So we will need to instantiate here.
-			IInternalBeanProxyHost proxyHost = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(node.getObject());
+			IInternalBeanProxyHost proxyHost = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(node.getReference());
 			IExpression exp = getExpression();
 			if (!proxyHost.isBeanProxyInstantiated() && !proxyHost.inInstantiation()) {			
 				// Instantiate it.
@@ -234,7 +234,12 @@ public class BasicAllocationProcesser implements IAllocationProcesser {
 	protected IBeanProxy allocate(ImplicitAllocation implicit) {
 		EObject source = implicit.getParent();
 		IBeanProxyHost proxyhost = (IBeanProxyHost) EcoreUtil.getRegisteredAdapter(source, IBeanProxyHost.BEAN_PROXY_TYPE);
-		return proxyhost.getBeanPropertyProxyValue(implicit.getFeature());		
+		if (!proxyhost.isBeanProxyInstantiated() && !((IInternalBeanProxyHost) proxyhost).hasInstantiationErrors()) {
+			proxyhost.instantiateBeanProxy();
+		}
+		if (!((IInternalBeanProxyHost) proxyhost).hasInstantiationErrors())
+			return proxyhost.getBeanPropertyProxyValue(implicit.getFeature());
+		return null;
 	}
 	
 	/**

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPropertyRule.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import org.eclipse.emf.ecore.EObject;
@@ -20,6 +20,7 @@ import org.eclipse.gef.commands.Command;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
+
 import org.eclipse.ve.internal.java.rules.IPropertyRule;
 
 /**

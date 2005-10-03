@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: IConstraintHandler.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-03 19:21:04 $ 
  */
 
 /**
@@ -28,7 +28,7 @@ package org.eclipse.ve.internal.cde.core;
  * such method won't be called.
  */
 import org.eclipse.gef.commands.Command;
-public interface IConstraintHandler {
+public interface IConstraintHandler extends IModelAdapter {
 	
 	/**
 	 * isResizeable

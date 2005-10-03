@@ -11,11 +11,12 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: PointJavaClassLabelProvider.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 
 import org.eclipse.jface.viewers.LabelProvider;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IPointBeanProxy;

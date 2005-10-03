@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: JCMPackage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-09-15 21:33:50 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
@@ -336,13 +336,22 @@ public interface JCMPackage extends EPackage{
 	int BEAN_COMPOSITION__MEMBERS = CDMPackage.DIAGRAM_DATA_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Implicits</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BEAN_COMPOSITION__IMPLICITS = CDMPackage.DIAGRAM_DATA_FEATURE_COUNT + 2;
+
+	/**
 	 * The feature id for the '<em><b>Components</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BEAN_COMPOSITION__COMPONENTS = CDMPackage.DIAGRAM_DATA_FEATURE_COUNT + 2;
+	int BEAN_COMPOSITION__COMPONENTS = CDMPackage.DIAGRAM_DATA_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Listener Types</b></em>' containment reference list.
@@ -351,7 +360,7 @@ public interface JCMPackage extends EPackage{
 	 * @generated
 	 * @ordered
 	 */
-	int BEAN_COMPOSITION__LISTENER_TYPES = CDMPackage.DIAGRAM_DATA_FEATURE_COUNT + 3;
+	int BEAN_COMPOSITION__LISTENER_TYPES = CDMPackage.DIAGRAM_DATA_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the the '<em>Bean Composition</em>' class.
@@ -360,7 +369,7 @@ public interface JCMPackage extends EPackage{
 	 * @generated
 	 * @ordered
 	 */
-	int BEAN_COMPOSITION_FEATURE_COUNT = CDMPackage.DIAGRAM_DATA_FEATURE_COUNT + 4;
+	int BEAN_COMPOSITION_FEATURE_COUNT = CDMPackage.DIAGRAM_DATA_FEATURE_COUNT + 5;
 
 
 	/**
@@ -542,13 +551,22 @@ public interface JCMPackage extends EPackage{
 	int MEMBER_CONTAINER__MEMBERS = 1;
 
 	/**
+	 * The feature id for the '<em><b>Implicits</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_CONTAINER__IMPLICITS = 2;
+
+	/**
 	 * The number of structural features of the the '<em>Member Container</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER_CONTAINER_FEATURE_COUNT = 2;
+	int MEMBER_CONTAINER_FEATURE_COUNT = 3;
 
 	/**
 	 * The feature id for the '<em><b>Listened By</b></em>' reference list.
@@ -782,6 +800,15 @@ public interface JCMPackage extends EPackage{
 	int BEAN_SUBCLASS_COMPOSITION__MEMBERS = BEAN_COMPOSITION__MEMBERS;
 
 	/**
+	 * The feature id for the '<em><b>Implicits</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BEAN_SUBCLASS_COMPOSITION__IMPLICITS = BEAN_COMPOSITION__IMPLICITS;
+
+	/**
 	 * The feature id for the '<em><b>Components</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -853,6 +880,15 @@ public interface JCMPackage extends EPackage{
 	 * @ordered
 	 */
 	int JCM_METHOD__MEMBERS = MEMBER_CONTAINER__MEMBERS;
+
+	/**
+	 * The feature id for the '<em><b>Implicits</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JCM_METHOD__IMPLICITS = MEMBER_CONTAINER__IMPLICITS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1614,6 +1650,17 @@ public interface JCMPackage extends EPackage{
 	 * @generated
 	 */
 	EReference getMemberContainer_Members();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.ve.internal.jcm.MemberContainer#getImplicits <em>Implicits</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Implicits</em>'.
+	 * @see org.eclipse.ve.internal.jcm.MemberContainer#getImplicits()
+	 * @see #getMemberContainer()
+	 * @generated
+	 */
+	EReference getMemberContainer_Implicits();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.ve.internal.jcm.MemberContainer#getProperties <em>Properties</em>}'.

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontJavaClassLabelProvider.java,v $
- *  $Revision: 1.11 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-03 19:20:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -36,7 +36,7 @@ public class FontJavaClassLabelProvider extends LabelProvider {
 		/*
 		 * For JFace fonts, show the label based on the ParseTreeAllocation information
 		 */
-		if (element != null && element.getAllocation() instanceof ParseTreeAllocation) {
+		if (element != null && element.isParseTreeAllocation()) {
 			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) element.getAllocation();
 			PTExpression exp = ptAlloc.getExpression();
 			if (exp instanceof PTMethodInvocation && ((PTMethodInvocation) exp).getReceiver() instanceof PTMethodInvocation

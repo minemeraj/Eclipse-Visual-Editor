@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneContainerPolicy.java,v $
- *  $Revision: 1.11 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-03 19:21:01 $ 
  */
 
 import java.util.*;
@@ -112,34 +112,30 @@ public class JSplitPaneContainerPolicy extends BaseJavaContainerPolicy {
 		return result;
 	}
 	
-	public Command getAddCommand(List children, Object positionBeforeChild) {
+	protected void getAddCommand(List children, Object positionBeforeChild, CommandBuilder cbldr) {
 		// The code logic can only handle setting one component at a time.
-		if (children == null || children.isEmpty() || children.size() > 1)
-			return UnexecutableCommand.INSTANCE;
-		Object child = children.get(0);
-		// Determine the structural feature to use for this child based on what is already set in the JSplitPane 
-		// and the positionBeforeChild component (it could be null). Also add commands to a command builder
-		// for any repositioning of the current component. 
-		// If null is returned, no SF was return, just return the CommandBuilder
-		CommandBuilder cBldr = new CommandBuilder();
-		EStructuralFeature containmentSF = getStructuralFeature(child, positionBeforeChild, cBldr);
-		if (containmentSF != null)
-			cBldr.append(primAddCommand(children, positionBeforeChild, containmentSF));
-		return cBldr.getCommand();
+		if (children.isEmpty() || children.size() > 1)
+			cbldr.markDead();
+		else {
+			Object child = children.get(0);
+			// Determine the structural feature to use for this child based on what is already set in the JSplitPane 
+			// and the positionBeforeChild component (it could be null). Also add commands to a command builder
+			// for any repositioning of the current component. 
+			// If null is returned, no SF was return, just return the CommandBuilder
+			EStructuralFeature containmentSF = getStructuralFeature(child, positionBeforeChild, cbldr);
+			if (!cbldr.isDead())
+				cbldr.append(primAddCommand(children, positionBeforeChild, containmentSF));
+		}
 	}
-	/**
-	 * Determine whether the component should be added as the left or right component
-	 */
-	public Command getCreateCommand(Object child, Object positionBeforeChild) {
+
+	protected void getCreateCommand(Object child, Object positionBeforeChild, CommandBuilder cbldr) {
 		// Determine the structural feature to use for this child based on what is already set in the JSplitPane 
 		// and the positionBeforeChild component (it could be null). Also add commands to a command builder
 		// for any repositioning of the current component. 
 		// If null is returned, no SF was return, just return the CommandBuilder
-		CommandBuilder cBldr = new CommandBuilder(); //$NON-NLS-1$
-		EStructuralFeature containmentSF = getStructuralFeature(child, positionBeforeChild, cBldr);
-		if (containmentSF != null)
-			cBldr.append(primCreateCommand(child, positionBeforeChild, containmentSF));
-		return cBldr.getCommand();
+		EStructuralFeature containmentSF = getStructuralFeature(child, positionBeforeChild, cbldr);
+		if (!cbldr.isDead())
+			cbldr.append(primCreateCommand(child, positionBeforeChild, containmentSF));
 	}
 	
 	/**
@@ -154,15 +150,15 @@ public class JSplitPaneContainerPolicy extends BaseJavaContainerPolicy {
 	 * setting the new child to the right component which is done by the caller.
 	 */
 	protected EStructuralFeature getStructuralFeature(Object child, Object positionBeforeChild, CommandBuilder cmdbldr) {
-		if (!isValidChild(child, null) || !isParentAcceptable(child)) {
-			cmdbldr.append(UnexecutableCommand.INSTANCE);
+		if (!isValidChild(child, null)) {
+			cmdbldr.markDead();
 			return null;
 		}
 		EObject[] components = determineSplitpaneOccupants();
 
 		// If both components are occupied, we can't add any more.
 		if ((components[LEFT_COMP] != null || components[TOP_COMP] != null) && (components[RIGHT_COMP] != null || components[BOTTOM_COMP] != null)) {
-			cmdbldr.append(UnexecutableCommand.INSTANCE);
+			cmdbldr.markDead();
 			return null;
 		}
 		// Get the orientation from the live JSplitPane and set the SF's based on this setting.
@@ -228,6 +224,8 @@ public class JSplitPaneContainerPolicy extends BaseJavaContainerPolicy {
 				return leftTopSF;
 			}
 		}
+		
+		cmdbldr.markDead();
 		return null;
 	}
 	

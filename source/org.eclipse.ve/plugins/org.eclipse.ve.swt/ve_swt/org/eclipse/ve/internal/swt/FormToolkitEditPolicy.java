@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: FormToolkitEditPolicy.java,v $$
- *  $$Revision: 1.6 $$  $$Date: 2005-08-24 23:52:56 $$ 
+ *  $$Revision: 1.7 $$  $$Date: 2005-10-03 19:20:48 $$ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -49,7 +49,7 @@ public class FormToolkitEditPolicy extends ContainerEditPolicy {
 		public void execute() {
 			// 1) Make sure there is a FormToolkit object and create one if required
 			// 2) Substitute any {formToolkit} PTNames in the allocation with this instance
-			if(javaChild.getAllocation() instanceof ParseTreeAllocation){
+			if(javaChild.isParseTreeAllocation()){
 				editDomain = EditDomain.getEditDomain(getHost());
 				PTExpression expression = ((ParseTreeAllocation)javaChild.getAllocation()).getExpression();					
 				if(expression instanceof PTMethodInvocation){
@@ -71,7 +71,7 @@ public class FormToolkitEditPolicy extends ContainerEditPolicy {
 					formToolkit = ensureFormToolkitExists();					
 					// Change the reference in the parse tree to point to the toolkit
 					PTInstanceReference formToolkitRef = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-					formToolkitRef.setObject(formToolkit);
+					formToolkitRef.setReference(formToolkit);
 					methodInvocation.setReceiver(formToolkitRef);
 					changedAllocation = true;
 				}

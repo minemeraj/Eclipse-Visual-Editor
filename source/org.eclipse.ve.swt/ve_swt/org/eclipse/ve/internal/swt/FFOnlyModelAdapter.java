@@ -18,6 +18,8 @@ package org.eclipse.ve.internal.swt;
 
 import org.eclipse.ve.internal.cdm.DiagramData;
 
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.IContainmentHandler;
 ;
 
@@ -33,9 +35,11 @@ public class FFOnlyModelAdapter extends ControlModelAdapter implements IContainm
 		super(model);
 	}
 	
-	public boolean isParentValid(Object parent) {
-		// return true only for parents that are the freeform surface
-		return parent instanceof DiagramData;
-	}	
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+		// return child only for parents that are the freeform surface
+		if (!(parent instanceof DiagramData))
+				throw new NoAddException("Parent is invalid for this child.");
+		return child;
+	}
 
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PTExpressionComparator.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-03 19:20:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -275,7 +275,7 @@ public class PTExpressionComparator extends ParseVisitor {
 		Object otherAST = pop();
 		if (otherAST instanceof PTInstanceReference) {
 			PTInstanceReference otherInstanceReference = (PTInstanceReference) otherAST;
-			if(node.getObject()!=null && otherInstanceReference.getObject()!=null && node.getObject().equals(otherInstanceReference.getObject()))
+			if(node.getReference()!=null && otherInstanceReference.getReference()!=null && node.getReference().equals(otherInstanceReference.getReference()))
 				return super.visit(node);
 		}
 		notEqual();

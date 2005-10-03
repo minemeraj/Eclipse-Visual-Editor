@@ -7,7 +7,6 @@
       </value>
    </objectChanges>
    <objectsToAttach labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:title" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-    <keyedValues key="org.eclipse.ve.internal.cde.core.creationtool.policy" value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.FrameConstructorCreationPolicy" xsi:type="ecore:EStringToStringMapEntry"/>
     <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/dialog_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
   </objectsToAttach>
    <objectsToAttach beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.DialogProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ObjectEventDecoder.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-03 19:20:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.dom.*;
 
 import org.eclipse.ve.internal.jcm.EventInvocation;
 import org.eclipse.ve.internal.jcm.PropertyChangeEventInvocation;
+
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 
 /**
