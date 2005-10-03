@@ -404,14 +404,24 @@ public class DatabindingService {
 		return result;
 	}
 
-	public IUpdatableValue createUpdatableValue(Object object, Object feature)
+	/**
+	 * Creates an updatable value from the given object and feature ID.
+	 * This method looks up a factory registered for the given object's
+	 * type. I the given object is itself an IUpdatableValue, this method
+	 * creates a derived updatable value.
+	 * @param object
+	 * @param featureID
+	 * @return
+	 * @throws BindingException
+	 */
+	public IUpdatableValue createUpdatableValue(Object object, Object featureID)
 			throws BindingException {
 
 		Class clazz = object.getClass();
 
 		if (object instanceof IUpdatableValue) {
 			return new DerivedUpdatableValue(this, ((IUpdatableValue) object),
-					feature);
+					featureID);
 		}
 
 		IUpdatableValueFactory valueFactory = null;
@@ -423,7 +433,7 @@ public class DatabindingService {
 			throw new BindingException("Couldn't find a factory");
 		}
 		IUpdatableValue result = valueFactory.createUpdatableValue(object,
-				feature);
+				featureID);
 		createdUpdatables.add(result);
 		return result;
 	}
