@@ -13,24 +13,24 @@ package org.eclipse.jface.binding.internal.viewers;
 
 import org.eclipse.jface.binding.IChangeEvent;
 import org.eclipse.jface.binding.UpdatableValue;
-import org.eclipse.jface.viewers.AbstractListViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 
-public class AbstractListViewerUpdatableValue extends UpdatableValue {
+public class StructuredViewerUpdatableValue extends UpdatableValue {
 
 	public static final String SELECTION = "selection";
 
-	private final AbstractListViewer viewer;
+	private final StructuredViewer viewer;
 
 	private final String attribute;
 
 	private boolean updating = false;
 
-	public AbstractListViewerUpdatableValue(AbstractListViewer viewer,
+	public StructuredViewerUpdatableValue(StructuredViewer viewer,
 			String attribute) {
 		this.viewer = viewer;
 		this.attribute = attribute;
