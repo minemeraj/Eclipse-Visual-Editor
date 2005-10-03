@@ -11,10 +11,11 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: EventCallback.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
-import org.eclipse.ve.internal.jcm.*;
+import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
+import org.eclipse.ve.internal.jcm.Callback;
 
 /**
  * This is used by the JavaBeans tree view model to show an event callback

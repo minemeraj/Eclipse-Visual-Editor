@@ -23,7 +23,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
-import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -856,7 +855,7 @@ public class BeanSWTUtilities {
 
 	public static boolean isValidBeanLocation(EditDomain domain, EObject childComponent, EObject targetContainer) {
 		try{
-			if(((IJavaInstance)childComponent).getAllocation() instanceof ImplicitAllocation){
+			if(((IJavaInstance)childComponent).isImplicitAllocation()){
 				return false;
 			}
 		} catch (ClassCastException e){	

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialogUtilities.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-29 21:20:18 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-03 19:20:56 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -32,13 +32,10 @@ import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 import org.eclipse.ve.internal.cdm.Annotation;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
-import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.java.codegen.editorpart.FieldNameValidator;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.java.core.PrototypeFactory;
 import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
  
 /**
@@ -141,8 +138,8 @@ public class ChooseBeanDialogUtilities {
 	 * 
 	 * @since 1.2.0
 	 */
-	public static IStatus getClassStatus(Object selected, String packageName, ResourceSet resourceSet, IJavaSearchScope javaSearchScope, String name){
-		IStatus status = getClassStatus(selected, packageName, resourceSet, javaSearchScope);
+	public static IStatus getClassStatus(Object selected, String packageName, ResourceSet resourceSet, IJavaSearchScope javaSearchScope, String name, EditDomain domain){
+		IStatus status = getClassStatus(selected, packageName, resourceSet, javaSearchScope, domain);
 		if(status.isOK()){
 			String message = FieldNameValidator.isValidName(name);
 			if(message!=null){
@@ -169,7 +166,7 @@ public class ChooseBeanDialogUtilities {
 	 * 
 	 * @since 1.1
 	 */
-	public static IStatus getClassStatus(Object selected, String packageName, ResourceSet resourceSet, IJavaSearchScope javaSearchScope){
+	public static IStatus getClassStatus(Object selected, String packageName, ResourceSet resourceSet, IJavaSearchScope javaSearchScope, EditDomain editDomain){
 		Throwable t = null;
 		String message = new String(); 
 		boolean isInstantiable = true;
@@ -184,18 +181,14 @@ public class ChooseBeanDialogUtilities {
 				boolean isDefaultConstructorSearchRequired = true;
 				// The base set of rules is that classes can only be instantiated if they have default constructors
 				// Some classes however (such as SWT controls) don't conform to this, however can still be created
-				// The base ClassDescriptorDecorator has a key of "org.eclipse.ve.internal.PrototypeFactory" that returns a class name
-				// implementing "org.eclipse.ve.internal.PrototypeFactory" that can create the EMF model for this
-				// If such a decorator exists then the selection is assumed to be valid
+				// If there is a containment handler then the selection is assumed to be valid
 				if(resourceSet!=null){
-					EClass selectedEMFClass = Utilities.getJavaClass(ti.getFullyQualifiedName(), resourceSet);
-					ClassDescriptorDecorator decorator =
-						(ClassDescriptorDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(
-							selectedEMFClass,
-							ClassDescriptorDecorator.class,
-							PrototypeFactory.PROTOTYPE_FACTORY_KEY);
-					if(decorator != null) {
-						isDefaultConstructorSearchRequired = false;
+					IModelAdapterFactory modelAdapterFactory = CDEUtilities.getModelAdapterFactory(editDomain);
+					if (modelAdapterFactory != null) {
+						EClass selectedEMFClass = Utilities.getJavaClass(ti.getFullyQualifiedName(), resourceSet);
+						if (modelAdapterFactory.typeHasAdapter(selectedEMFClass, IContainmentHandler.class)) {
+							isDefaultConstructorSearchRequired = false;
+						}
 					}
 				}
 				
@@ -319,5 +312,4 @@ public class ChooseBeanDialogUtilities {
 		}
 		return proposal;
 	}
-
 }

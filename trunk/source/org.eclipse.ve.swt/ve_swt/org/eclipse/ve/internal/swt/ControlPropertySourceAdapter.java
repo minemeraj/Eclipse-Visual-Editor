@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.17 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.18 $  $Date: 2005-10-03 19:20:48 $ 
  */
 import java.util.*;
 
@@ -95,7 +95,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 						// 	See if the method name is the same as the factory one
 						if(methodInvocation.getName().equals(factoryArgs[1])){				
 							// 	See if this is a call to the factory object itself as the receiver
-							if(receiver.getObject().getJavaType().getQualifiedName().equals(factoryArgs[0])){
+							if(receiver.getReference().getJavaType().getQualifiedName().equals(factoryArgs[0])){
 								// Match the argument types
 								Object[] argTypes = (Object[])factoryArgs[3];
 								if (methodInvocation.getArguments().size() == argTypes.length){	
@@ -241,7 +241,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 			return booleanValue; 
 		} else {
 			PTInstanceReference reference = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-			reference.setObject((IJavaObjectInstance)val);
+			reference.setReference(val);
 			return reference;
 		}
 		
@@ -283,7 +283,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 		return Utilities.getJavaClass(aName.getName(),getBean().eResource().getResourceSet());		
 	}
 	private JavaClass getJavaClass(PTInstanceReference anExpression){
-		return (JavaClass) anExpression.getObject().getJavaType();		
+		return (JavaClass) anExpression.getReference().getJavaType();		
 	}
 	
 	public IPropertyDescriptor[] getPropertyDescriptors() {

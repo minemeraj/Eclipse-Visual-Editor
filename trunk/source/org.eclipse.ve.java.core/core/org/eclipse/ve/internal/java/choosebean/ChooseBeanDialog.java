@@ -10,14 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.38 $  $Date: 2005-09-29 21:20:18 $ 
+ *  $Revision: 1.39 $  $Date: 2005-10-03 19:20:56 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,11 +50,10 @@ import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
-import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
+import org.eclipse.ve.internal.cde.core.CDEUtilities;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 
-import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
  
 /**
@@ -193,7 +191,7 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 		progressLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		progressLabel.setAlignment(SWT.RIGHT);
 		
-		bv = new BeanViewer(area, progressLabel, javaSearchScope, pkg, resourceSet); 
+		bv = new BeanViewer(area, progressLabel, javaSearchScope, pkg, resourceSet, editDomain); 
 		gd = new GridData(GridData.FILL_BOTH);
 		PixelConverter converter= new PixelConverter(bv.getTable());
 		gd.widthHint= converter.convertWidthInCharsToPixels(70);
@@ -307,7 +305,7 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 				public void modifyText(ModifyEvent e) {
 					beanName = beanNameText.getText();
 					updateStatus();
-				}
+		}
 			});
 		}
 		
@@ -333,29 +331,8 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 				if (results[i] instanceof IType) {
 					IType type = (IType) results[i];
 					String realFQN = type.getFullyQualifiedName('$');
-					// If there is a prototype factory use this to create the default instance
-					PrototypeFactory prototypeFactory = null;
 					JavaClass javaClass = Utilities.getJavaClass(realFQN, resourceSet);					
-					try {
-						
-						ClassDescriptorDecorator decorator =
-							(ClassDescriptorDecorator) ClassDecoratorFeatureAccess.getDecoratorWithKeyedFeature(
-									javaClass,
-									ClassDescriptorDecorator.class,
-									PrototypeFactory.PROTOTYPE_FACTORY_KEY);
-						if(decorator != null){
-							String prototypeFactoryName = (String)decorator.getKeyedValues().get(PrototypeFactory.PROTOTYPE_FACTORY_KEY);
-							prototypeFactory = (PrototypeFactory) CDEPlugin.createInstance(null,prototypeFactoryName);
-						}
-					} catch (Exception e) {
-						JavaVEPlugin.getPlugin().getLogger().log(Level.WARNING,e);
-					}
-					EObject eObject = null;
-					if(prototypeFactory == null){
-						eObject = javaClass.getEPackage().getEFactoryInstance().create(javaClass);
-					} else {
-						eObject = prototypeFactory.createPrototype(javaClass);
-					}
+					EObject eObject = javaClass.getEPackage().getEFactoryInstance().create(javaClass);
 					if(beanName==null || beanName.trim().length()<1){
 						beanName = getDefaultBeanName(((IJavaObjectInstance) eObject).getJavaType().getJavaName());
 					}
@@ -369,7 +346,7 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 			return results;
 		}
 	}
-
+	
 	protected String getDefaultBeanName(String qualTypeName) {
 		String defaultName = qualTypeName;
 		if (defaultName.indexOf('.') > 0)
@@ -525,11 +502,11 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 		}
 		updateStatus();
 	}
-	
+
 	protected void updateStatus(){
 		TypeInfo[] typeSelection = bv.getSelection();
 		TypeInfo selected = (typeSelection==null || typeSelection.length<1) ? null : typeSelection[0];
-		updateStatus(ChooseBeanDialogUtilities.getClassStatus(selected, pkg.getElementName(), resourceSet, javaSearchScope, beanName));
+		updateStatus(ChooseBeanDialogUtilities.getClassStatus(selected, pkg.getElementName(), resourceSet, javaSearchScope, beanName, editDomain));
 	}
 
 	public void widgetSelected(SelectionEvent e) {

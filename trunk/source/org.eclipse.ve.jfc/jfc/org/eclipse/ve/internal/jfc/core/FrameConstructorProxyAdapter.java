@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.15 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.16 $  $Date: 2005-10-03 19:21:01 $ 
  */
 
 import java.util.List;
@@ -52,19 +52,17 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 		// TODO This is really a bad way to do this. We should never have a temporary like this.
 		// The code shouldn't even generate something like this.
 		disposeParentOnRelease = false;
-		if (getJavaObject().isSetAllocation()) {
-			JavaAllocation allocation = getJavaObject().getAllocation();
-			if (allocation instanceof ParseTreeAllocation) {
-				// Can only handle parse tree, and only if Frame is first argument.
-				PTExpression allocExp = ((ParseTreeAllocation) allocation).getExpression();
-				if (allocExp instanceof PTClassInstanceCreation) {
-					PTClassInstanceCreation newClass = (PTClassInstanceCreation) allocExp;
-					List args = newClass.getArguments();
-					if (args.size() == 1) {
-						PTExpression arg1 = (PTExpression) args.get(0);
-						disposeParentOnRelease = arg1 instanceof PTClassInstanceCreation
-								&& "java.awt.Frame".equals(((PTClassInstanceCreation) arg1).getType()); //$NON-NLS-1$
-					}
+		if (getJavaObject().isParseTreeAllocation()) {
+			// Can only handle parse tree, and only if Frame is first argument.
+			ParseTreeAllocation allocation = (ParseTreeAllocation) getJavaObject().getAllocation();
+			PTExpression allocExp = allocation.getExpression();
+			if (allocExp instanceof PTClassInstanceCreation) {
+				PTClassInstanceCreation newClass = (PTClassInstanceCreation) allocExp;
+				List args = newClass.getArguments();
+				if (args.size() == 1) {
+					PTExpression arg1 = (PTExpression) args.get(0);
+					disposeParentOnRelease = arg1 instanceof PTClassInstanceCreation
+							&& "java.awt.Frame".equals(((PTClassInstanceCreation) arg1).getType()); //$NON-NLS-1$
 				}
 			}
 		}

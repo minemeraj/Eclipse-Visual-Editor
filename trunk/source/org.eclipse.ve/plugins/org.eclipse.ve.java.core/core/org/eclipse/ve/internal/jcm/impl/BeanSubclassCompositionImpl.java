@@ -21,15 +21,12 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -38,6 +35,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.jcm.JCMMethod;
 import org.eclipse.ve.internal.jcm.JCMPackage;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -182,6 +180,8 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 					return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
 				case JCMPackage.BEAN_SUBCLASS_COMPOSITION__MEMBERS:
 					return ((InternalEList)getMembers()).basicRemove(otherEnd, msgs);
+				case JCMPackage.BEAN_SUBCLASS_COMPOSITION__IMPLICITS:
+					return ((InternalEList)getImplicits()).basicRemove(otherEnd, msgs);
 				case JCMPackage.BEAN_SUBCLASS_COMPOSITION__LISTENER_TYPES:
 					return ((InternalEList)getListenerTypes()).basicRemove(otherEnd, msgs);
 				case JCMPackage.BEAN_SUBCLASS_COMPOSITION__THIS_PART:
@@ -210,6 +210,8 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 				return getProperties();
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__MEMBERS:
 				return getMembers();
+			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__IMPLICITS:
+				return getImplicits();
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__COMPONENTS:
 				return getComponents();
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__LISTENER_TYPES:
@@ -244,6 +246,10 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__MEMBERS:
 				getMembers().clear();
 				getMembers().addAll((Collection)newValue);
+				return;
+			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__IMPLICITS:
+				getImplicits().clear();
+				getImplicits().addAll((Collection)newValue);
 				return;
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__COMPONENTS:
 				getComponents().clear();
@@ -283,6 +289,9 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__MEMBERS:
 				getMembers().clear();
 				return;
+			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__IMPLICITS:
+				getImplicits().clear();
+				return;
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__COMPONENTS:
 				getComponents().clear();
 				return;
@@ -314,6 +323,8 @@ public class BeanSubclassCompositionImpl extends BeanCompositionImpl implements 
 				return properties != null && !properties.isEmpty();
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__MEMBERS:
 				return members != null && !members.isEmpty();
+			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__IMPLICITS:
+				return implicits != null && !implicits.isEmpty();
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__COMPONENTS:
 				return components != null && !components.isEmpty();
 			case JCMPackage.BEAN_SUBCLASS_COMPOSITION__LISTENER_TYPES:

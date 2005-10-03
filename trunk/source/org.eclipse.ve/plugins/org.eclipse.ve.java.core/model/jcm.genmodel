@@ -5,7 +5,8 @@
     editDirectory="/org.eclipse.ve.java.core.edit/src" editorDirectory="/org.eclipse.ve.java.core.editor/src"
     modelPluginID="" modelName="jcm" editPluginClass="org.eclipse.ve.internal.jcm.provider.jcmEditPlugin"
     editorPluginClass="org.eclipse.ve.internal.jcm.presentation.jcmEditorPlugin" updateClasspath="false"
-    booleanFlagsField="eFlags" booleanFlagsReservedBits="8" usedGenPackages="../../org.eclipse.ve.cde/model/cdmmodel.genmodel#//cdm ../../org.eclipse.jem/model/javaModel.genmodel#//java ../../org.eclipse.jem.beaninfo/model/introspect.genmodel#//beaninfo ../../org.eclipse.jem/model/instance.genmodel#//instantiation ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+    booleanFlagsField="eFlags" booleanFlagsReservedBits="8" importerID="org.eclipse.emf.importer.rose"
+    usedGenPackages="../../org.eclipse.ve.cde/model/cdmmodel.genmodel#//cdm ../../org.eclipse.jem/model/javaModel.genmodel#//java ../../org.eclipse.jem.beaninfo/model/introspect.genmodel#//beaninfo ../../org.eclipse.jem/model/instance.genmodel#//instantiation ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
   <foreignModel>..\rose\jcmmodel.mdl</foreignModel>
   <foreignModel>WorkspaceRoot</foreignModel>
   <foreignModel>../..</foreignModel>
@@ -51,6 +52,7 @@
     <genClasses ecoreClass="jcm.ecore#//MemberContainer">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jcm.ecore#//MemberContainer/properties"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jcm.ecore#//MemberContainer/members"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference jcm.ecore#//MemberContainer/implicits"/>
     </genClasses>
     <genClasses ecoreClass="jcm.ecore#//Listener">
       <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference jcm.ecore#//Listener/listenedBy"/>

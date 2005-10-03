@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InnerClassStyleHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2005-09-06 16:40:32 $ 
+ *  $Revision: 1.16 $  $Date: 2005-10-03 19:20:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,15 +18,13 @@ import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.Statement;
-
 
 import org.eclipse.jem.internal.beaninfo.MethodProxy;
-import org.eclipse.ve.internal.jcm.*;
-
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.Method;
+
+import org.eclipse.ve.internal.jcm.*;
+
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeCallBackRef;
 import org.eclipse.ve.internal.java.codegen.util.IEventSrcGenerator;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChangeParentShellObjectActionDelegate.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-03 19:20:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -36,6 +36,7 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaHelpers;
 
@@ -148,7 +149,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 				// set the arguments
 				if (selectedIndex > 0) {
 					ir = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-					ir.setObject((IJavaObjectInstance) shellList.get(selectedIndex - 1));
+					ir.setReference((IJavaObjectInstance) shellList.get(selectedIndex - 1));
 					if (orgArgs != null && !orgArgs.isEmpty()) {
 						// First argument is another Shell reference... just replace it with the new reference,
 						// old additional args stay in same place.
@@ -240,7 +241,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 			 * already has a parent set as the first argument. If it does, select this in the list.
 			 */
 			initialIndex = -1;
-			IJavaObjectInstance firstArg = null;
+			IJavaInstance firstArg = null;
 			EditDomain domain = EditDomain.getEditDomain(thisEditPart);
 			IJavaObjectInstance thisModel = (IJavaObjectInstance) thisEditPart.getModel();
 			ParseTreeAllocation allocation = (ParseTreeAllocation) thisModel.getAllocation();
@@ -248,7 +249,7 @@ public class ChangeParentShellObjectActionDelegate implements IObjectActionDeleg
 			if (exp instanceof PTClassInstanceCreation && !((PTClassInstanceCreation) exp).getArguments().isEmpty()) {
 				Object argExp = ((PTClassInstanceCreation) exp).getArguments().get(0);
 				if (argExp instanceof PTInstanceReference) {
-					firstArg = ((PTInstanceReference) argExp).getObject();
+					firstArg = ((PTInstanceReference) argExp).getReference();
 				} else
 					initialIndex = 0;
 			} else {

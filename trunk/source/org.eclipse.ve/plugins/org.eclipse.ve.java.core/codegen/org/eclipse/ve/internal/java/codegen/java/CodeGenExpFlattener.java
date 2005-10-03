@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenExpFlattener.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.11 $  $Date: 2005-10-03 19:20:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
@@ -65,7 +65,7 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 		 * @see org.eclipse.jem.internal.instantiation.ParseVisitor#visit(org.eclipse.jem.internal.instantiation.PTTypeLiteral)
 		 */
 		public boolean visit(PTInstanceReference node) {
-			IJavaObjectInstance obj = node.getObject() ;
+			IJavaInstance obj = node.getReference() ;
 			if (frefList!= null && !frefList.contains(obj))
 				frefList.add(obj);
 		    BeanPart bp = fmodel.getABean(obj);
@@ -87,7 +87,7 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 		    		JavaAllocation alloc = obj.getAllocation();
 		    		if (alloc instanceof InitStringAllocation)
 		    			getStringBuffer().append(((InitStringAllocation) alloc).getInitString());
-		    		else if ((alloc instanceof ParseTreeAllocation)) {
+		    		else if (alloc.isParseTree()) {
 		    			visitedList.add(obj);
 		    			((ParseTreeAllocation) alloc).getExpression().accept(this);
 		    		}

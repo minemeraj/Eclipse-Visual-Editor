@@ -10,8 +10,11 @@
          <listChanges referenceValues="_eStructuralFeatures1"/>
       </value>
    </objectChanges>
-   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerGraphicalEditPart" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:title" treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-      <keyedValues key="org.eclipse.ve.internal.cde.core.creationtool.policy" value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneCreationPolicy" xsi:type="ecore:EStringToStringMapEntry"/>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerGraphicalEditPart" 
+       labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:title" 
+       treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerTreeEditPart" 
+       modelAdapterClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneContainmentHandler:false"
+       xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/internalframe_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
     </objectsToAttach>
    <objectsToAttach expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.JFrameDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations1" xsi:type="codeGenHelpers:CodeGenHelperClass"/>

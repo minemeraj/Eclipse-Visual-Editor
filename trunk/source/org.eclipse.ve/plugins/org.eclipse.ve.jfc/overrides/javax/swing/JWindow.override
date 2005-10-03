@@ -8,8 +8,10 @@
          <listChanges referenceValues="_eStructuralFeatures"/>
       </value>
    </objectChanges>
-   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneContainerGraphicalEditPart:true" treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneContainerTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-      <keyedValues key="org.eclipse.ve.internal.cde.core.creationtool.policy" value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneCreationPolicy" xsi:type="ecore:EStringToStringMapEntry"/>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneContainerGraphicalEditPart:true" 
+       treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneContainerTreeEditPart" 
+       modelAdapterClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.JWindowJDialogContainmentHandler"
+       xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/window_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
     </objectsToAttach>
    <objectsToAttach name="contentPane" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">

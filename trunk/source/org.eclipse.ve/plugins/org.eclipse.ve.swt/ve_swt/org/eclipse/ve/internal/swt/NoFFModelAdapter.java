@@ -10,12 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoFFModelAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-19 20:44:14 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-03 19:20:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import org.eclipse.ve.internal.cdm.DiagramData;
 
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.IContainmentHandler;
  
 
@@ -34,12 +36,11 @@ public class NoFFModelAdapter extends ControlModelAdapter implements IContainmen
 		super(aControl);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.IContainmentHandler#isParentValid(java.lang.Object)
-	 */
-	public boolean isParentValid(Object parent) {
-		// Parent is valid iff the parent is NOT the canvas
-		return !(parent instanceof DiagramData);
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+		// return child only for parents that are the freeform surface
+		if (parent instanceof DiagramData)
+			throw new NoAddException("Parent is invalid for this child.");
+		return child;
 	}
 
 

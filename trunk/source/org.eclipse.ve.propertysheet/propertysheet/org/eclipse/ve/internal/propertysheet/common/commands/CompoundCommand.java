@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet.common.commands;
 /*
  *  $RCSfile: CompoundCommand.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:44:29 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-03 19:20:39 $ 
  */
 
 import java.util.*;
@@ -186,6 +186,11 @@ public class CompoundCommand extends AbstractCommand {
 	public boolean isEmpty() {
 		return commandList.isEmpty();
 	}
+	
+	public Command chain(Command command) {
+		append(command);
+		return this;
+	}
 
 	/**
 	 * Returns whether all the commands can execute so that {@link #isExecutable} can be cached.
@@ -330,7 +335,10 @@ public class CompoundCommand extends AbstractCommand {
 	 */
 	public void append(Command command) {
 		if (command != null) {
-			commandList.add(command);
+			if (command instanceof CompoundCommand)
+				commandList.addAll(((CompoundCommand) command).commandList);	// Just add them all in instead of nesting. Makes it easier to debug. The only problem is if the command could be added to after adding here, but nobody would think to do that. We wouldn't see that.
+			else
+				commandList.add(command);
 		}
 	}
 
@@ -412,7 +420,7 @@ public class CompoundCommand extends AbstractCommand {
 			if (command.canExecute()) {
 				try {
 					command.execute();
-					commandList.add(command);
+					append(command);
 					return true;
 				} catch (RuntimeException exception) {
 					CommonPlugin.INSTANCE.log(new WrappedException(CommonPlugin.INSTANCE.getString("_UI_IgnoreException_exception"), exception).fillInStackTrace()); //$NON-NLS-1$
@@ -437,7 +445,7 @@ public class CompoundCommand extends AbstractCommand {
 		if (command == null) {
 			return false;
 		} else if (command.canExecute()) {
-			commandList.add(command);
+			append(command);
 			return true;
 		} else {
 			command.dispose();

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-06-22 21:05:25 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-03 19:21:01 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -50,7 +50,7 @@ public class ImageProxyAdapter extends BeanProxyAdapter {
 	protected IProxy primInstantiateDroppedPart(IExpression expression) throws AllocationException {
 		// Check if we have somewhere a getImage(). If we do, put on to the expression
 		// a separate test for the result of the argument to getImage(), and if null, throw an NPE.
-		if (getJavaObject().isSetAllocation()) {
+		if (getJavaObject().isParseTreeAllocation()) {
 			try {
 				ParseTreeAllocation ptAlloc = (ParseTreeAllocation) getJavaObject().getAllocation();
 				try {

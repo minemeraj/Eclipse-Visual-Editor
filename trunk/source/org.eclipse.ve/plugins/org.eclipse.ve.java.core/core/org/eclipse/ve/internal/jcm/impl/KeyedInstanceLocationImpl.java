@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: KeyedInstanceLocationImpl.java,v 1.3 2005-09-15 21:33:49 rkulp Exp $
+ * $Id: KeyedInstanceLocationImpl.java,v 1.4 2005-10-03 19:20:57 rkulp Exp $
  */
 package org.eclipse.ve.internal.jcm.impl;
 /*******************************************************************************
@@ -17,10 +17,8 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EMap;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;

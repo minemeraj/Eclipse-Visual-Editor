@@ -11,16 +11,17 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaEditDomainHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.IJavaProject;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 /**
  * This contains keys to the EditDomain in the
  * JBCF case, and helper methods to set it up.

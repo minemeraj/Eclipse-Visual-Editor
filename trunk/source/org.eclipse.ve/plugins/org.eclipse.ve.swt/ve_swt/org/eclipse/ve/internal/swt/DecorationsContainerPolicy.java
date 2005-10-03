@@ -83,24 +83,22 @@ public class DecorationsContainerPolicy extends CompositeContainerPolicy {
 					// Add or create, then we need to look at constructor. This is because it is not
 					// already set by us and so we can't easily determine its setting on us.
 					IJavaObjectInstance javaChild = (IJavaObjectInstance) child;
-					if (javaChild.getAllocation() != null) {
-						if (javaChild.getAllocation() instanceof ParseTreeAllocation) {
-							PTExpression expression = ((ParseTreeAllocation) javaChild.getAllocation()).getExpression();
-							if (expression instanceof PTClassInstanceCreation) {
-								PTClassInstanceCreation ptc = (PTClassInstanceCreation) expression;
-								List args = ptc.getArguments();
-								if (args.size() == 2) {
-									PTExpression arg = (PTExpression) args.get(1);
-									if (arg instanceof PTFieldAccess) {
-										PTFieldAccess ptf = (PTFieldAccess) arg;
-										if (ptf.getReceiver() instanceof PTName) {
-											if ("org.eclipse.swt.SWT".equals(((PTName) ptf.getReceiver()).getName())) { // $NON_NLS-1$
-												if ("BAR".equals(ptf.getField()))
-													return true;
-											}
+					if (javaChild.isParseTreeAllocation()) {
+						PTExpression expression = ((ParseTreeAllocation) javaChild.getAllocation()).getExpression();
+						if (expression instanceof PTClassInstanceCreation) {
+							PTClassInstanceCreation ptc = (PTClassInstanceCreation) expression;
+							List args = ptc.getArguments();
+							if (args.size() == 2) {
+								PTExpression arg = (PTExpression) args.get(1);
+								if (arg instanceof PTFieldAccess) {
+									PTFieldAccess ptf = (PTFieldAccess) arg;
+									if (ptf.getReceiver() instanceof PTName) {
+										if ("org.eclipse.swt.SWT".equals(((PTName) ptf.getReceiver()).getName())) { // $NON_NLS-1$
+											if ("BAR".equals(ptf.getField()))
+												return true;
 										}
-											
 									}
+										
 								}
 							}
 						}

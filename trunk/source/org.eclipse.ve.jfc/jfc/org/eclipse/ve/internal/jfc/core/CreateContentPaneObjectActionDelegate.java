@@ -17,7 +17,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: CreateContentPaneObjectActionDelegate.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-03 19:21:01 $ 
  */
 
 import java.util.Iterator;
@@ -96,7 +96,7 @@ public class CreateContentPaneObjectActionDelegate
 		while(eps.hasNext()) {
 			EditPart ep = (EditPart) eps.next();
 			IJavaObjectInstance model = (IJavaObjectInstance) ep.getModel();
-			RootPaneCreationPolicy.createContentPane(cb, domain, model);
+			RootPaneContainmentHandler.createContentPane(cb, domain, model);
 		}
 		
 		domain.getCommandStack().execute(cb.getCommand());

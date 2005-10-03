@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.29 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.30 $  $Date: 2005-10-03 19:21:01 $ 
  */
 
 import java.util.*;
@@ -516,7 +516,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 								else{
 									// both current and new constraints are not null
 									IJavaObjectInstance javaConstraint = (IJavaObjectInstance) currentConstraint;
-									if (javaConstraint.getAllocation() instanceof ParseTreeAllocation && tmpAddedConstraintInstance.getAllocation() instanceof ParseTreeAllocation) {
+									if (javaConstraint.isParseTreeAllocation() && tmpAddedConstraintInstance.isParseTreeAllocation()) {
 										ParseTreeAllocation currentPTAlloc = (ParseTreeAllocation) javaConstraint.getAllocation();
 										ParseTreeAllocation newPTAlloc = (ParseTreeAllocation) tmpAddedConstraintInstance.getAllocation();
 										

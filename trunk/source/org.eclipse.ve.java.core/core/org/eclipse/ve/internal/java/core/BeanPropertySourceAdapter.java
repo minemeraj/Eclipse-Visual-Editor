@@ -9,11 +9,11 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.13 $ $Date: 2005-09-22 13:04:03 $
+ * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.14 $ $Date: 2005-10-03 19:20:57 $
  */
 package org.eclipse.ve.internal.java.core;
 
-import java.util.*;
+import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.Notifier;
@@ -26,16 +26,18 @@ import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaRefFactory;
 
-import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.CDEActionFilter;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
+
+import org.eclipse.ve.internal.jcm.JCMPackage;
 
 /**
  * Property Source adaptor for Beans.
@@ -141,7 +143,7 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter implements 
 	}
 	
 	protected boolean shouldAllowAnnotationRename() {
-		return !(((IJavaInstance)getTarget()).getAllocation() instanceof ImplicitAllocation);
+		return getEObject().eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Members();	// In a members, has a name to rename.
 	}
 
 	/*

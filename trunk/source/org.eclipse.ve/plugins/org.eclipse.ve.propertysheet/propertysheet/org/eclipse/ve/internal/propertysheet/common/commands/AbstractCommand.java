@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet.common.commands;
 /*
  *  $RCSfile: AbstractCommand.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:44:29 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:39 $ 
  */
 
 import java.util.Collection;
@@ -170,17 +170,8 @@ public abstract class AbstractCommand extends Command {
 	 * @return a new chained compound command.
 	 */
 	public Command chain(Command command) {
-		class ChainedCompoundCommand extends CompoundCommand {
-			public ChainedCompoundCommand() {
-			}
 
-			public Command chain(Command c) {
-				append(c);
-				return this;
-			}
-		}
-
-		CompoundCommand result = new ChainedCompoundCommand();
+		CompoundCommand result = new CompoundCommand();
 		result.append(this);
 		result.append(command);
 		return result;

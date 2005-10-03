@@ -12,18 +12,17 @@ package org.eclipse.ve.internal.swt;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 
 /*
  *  $RCSfile: CompositePropertySourceAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-03 19:20:48 $ 
  */
 
 public class CompositePropertySourceAdapter extends ControlPropertySourceAdapter {
 	
 	protected boolean includeFeature(EStructuralFeature sfeature) {
 		
-		boolean isImplicit = getBean().getAllocation() instanceof ImplicitAllocation;		
+		boolean isImplicit = getBean().isImplicitAllocation();		
 		// Do not include the "layout" feature if we are implicit
 		// This is to allow for the Composite argument in something like the method
 		// createPartControl(Composite aComposite)

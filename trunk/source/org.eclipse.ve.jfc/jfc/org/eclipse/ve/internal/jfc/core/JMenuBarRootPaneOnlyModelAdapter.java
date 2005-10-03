@@ -11,13 +11,15 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JMenuBarRootPaneOnlyModelAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-19 20:44:14 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-03 19:21:01 $ 
  */
 
 import org.eclipse.emf.ecore.*;
 
 import org.eclipse.jem.java.JavaClass;
 
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.IContainmentHandler;
 
 public class JMenuBarRootPaneOnlyModelAdapter extends ComponentModelAdapter implements IContainmentHandler {
@@ -25,21 +27,18 @@ public class JMenuBarRootPaneOnlyModelAdapter extends ComponentModelAdapter impl
 	public JMenuBarRootPaneOnlyModelAdapter(Object model) {
 		super(model);
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.ve.internal.cde.core.IContainmentHandler#isParentValid(java.lang.Object)
-	 */
-	public boolean isParentValid(Object parent) {
+	
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
 		if (parent instanceof EObject) {
 			EClass parentClass = ((EObject)parent).eClass();
 			if (parentClass instanceof JavaClass) {
 				EStructuralFeature sf = parentClass.getEStructuralFeature("JMenuBar"); //$NON-NLS-1$
 				if (sf != null) {
-					return true;
+					return child;
 				}
 			}
 		}
-		return false;
+		throw new NoAddException("This child can only be dropped on a class that takes a JMenuBar.");
 	}
 
 }

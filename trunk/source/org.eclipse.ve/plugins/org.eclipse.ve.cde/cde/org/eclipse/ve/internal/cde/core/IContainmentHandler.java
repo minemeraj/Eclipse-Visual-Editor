@@ -10,34 +10,84 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.cde.core;
 
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+
 
 /*
  *  $RCSfile: IContainmentHandler.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-19 20:44:13 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-03 19:21:04 $ 
  */
 
 /**
  * This is used to determine containment questions
  * about a child about to be added to a parent.
- *
+ * <p>
  * This will be returned from the IModelAdapterFactory.getAdapter.
  * If the child doesn't care, then there is no need of the
- * handler, and it should return null.
+ * handler.
+ * 
+ * @since 1.0.0
  */
-public interface IContainmentHandler {
+public interface IContainmentHandler extends IModelAdapter {
 
 	/**
-	 * Return whether the parent is valid for this child.
-	 * It is possible that the child is valid for the parent,
-	 * but the parent is not acceptable to the child.
+	 * No Add permitted exception.
 	 * <p>
-	 * This will be called if the child is of a valid type for the parent.
+	 * This is thrown by {@link IContainmentHandler#contributeToRequest(Object, Object, CommandBuilder, CommandBuilder)}
+	 * if the handler determines that the add/create should not occur. The message in the exception may be displayed to the
+	 * user sometime in the future when such display capability is implemeted.
 	 * 
-	 * @param parent
-	 * @return 
-	 * 
-	 * @since 1.0.0
+	 * @since 1.2.0
 	 */
-	public boolean isParentValid(Object parent);
+	public static class NoAddException extends Exception {
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct with a message.
+		 * <p>
+		 * Some time in the future this msg may be displayed to user as to why Add/Create was not permitted by adapter.
+		 * @param msg
+		 * 
+		 * @since 1.2.0
+		 */
+		public NoAddException(String msg) {
+			super(msg);
+		}
+	}
+	
+	/**
+	 * Handle contribution to create/add request.
+	 * <p>
+	 * The handler can do:
+	 * <ol>
+	 * <li><b>Nothing:</b> In which case it should just return the child as entered. This means it had nothing to contribute.</li>
+	 * <li><b>Handle everything:</b> In which case it should return <code>null</code> and use the pre/post Cmd Builders to do it.</li>
+	 * <li><b>Reject parent or some other error:</b> In which case it should throw the {@link NoAddException}. This is for when the parent is not valid for this child, or for some
+	 * other reason the child could not be added as determined by this handler.</li>
+	 * <li><b>Add to the request:</b> In which case it should return the child as entered. And use the pre/post Cmd builders to do the additions.</li>
+	 * <li><b>Replace the request:</b> In which case it should return a different child. This different child is the one that will be added instead. In
+	 * this case this different child <b>WILL NOT</b> have its IContainmentAdapter called on it. It will be assumed to be good and will be added. It 
+	 * must be a valid child for the parent so that the parent ContainerPolicy can add it.
+	 * <li><b>Combination of Add to request and replace the request:</b> In which case it would use the pre/post Cmd builders and return a different child.</li>
+	 * </ol>
+	 * <p>
+	 * <b>Note:</b>Some important restrictions. Fro a create, at the time of the call, the child is not yet in any resourceSet. You should use either 
+	 * edit domain or the parent to find the resourceSet. 
+	 * @param parent parent being added to
+	 * @param child child being added
+	 * @param preCmds CommandBuilder for commands to be executed before any of the child/children are added. Handler may add to this command builder any commands
+	 * 	it wants to be executed before the actual adds.
+	 * @param postCmds CommandBuilder for commands to be executed after all of the child/children are added. Handler may add to this command builder any commands
+	 * 	it wants to be executed after the actual adds.
+	 * @param creation <code>true</code> if this a creation request. <code>false</code> if this is an add request.
+	 * @return child to add instead of (or the same child) as the child sent it, or <code>null</code> if no add is to be done. Though the command builders will still be added to the request.
+	 * 	This child, if different than the one sent into the method, will not have an IContainmentHandler called against it. It is assumed that the
+	 * 	child is fine and can be added. (The only check that will be done is if the child is a valid type for parent).
+	 * @throws NoAddException if the handler determines that the child should not be added to the parent.
+	 * 
+	 * @since 1.2.0
+	 */
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException;
+	
 	
 }

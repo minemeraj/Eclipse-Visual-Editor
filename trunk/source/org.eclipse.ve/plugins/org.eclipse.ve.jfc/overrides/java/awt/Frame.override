@@ -6,8 +6,10 @@
          <listChanges referenceValues="_eAnnotations1"/>
       </value>
    </objectChanges>
-   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.WindowGraphicalEditPart:false" labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:title" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-    <keyedValues key="org.eclipse.ve.internal.cde.core.creationtool.policy" xsi:type="ecore:EStringToStringMapEntry"/>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.WindowGraphicalEditPart:false" 
+       labelProviderClassname="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.DefaultLabelProviderWithNameAndAttribute:title" 
+       modelAdapterClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.FFOnlyModelAdapter"
+       xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
     <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/frame_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
   </objectsToAttach>
    <objectsToAttach beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.FrameProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>

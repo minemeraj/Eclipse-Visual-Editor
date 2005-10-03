@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ParentChildRelationship.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java.rules;
 
 import org.eclipse.emf.ecore.EReference;
+
 import org.eclipse.ve.internal.cde.rules.IRuleRegistry;
 
 /**

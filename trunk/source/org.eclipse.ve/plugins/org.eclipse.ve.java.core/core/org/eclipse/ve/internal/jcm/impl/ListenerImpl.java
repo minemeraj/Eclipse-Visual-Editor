@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ListenerImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-05-11 22:41:32 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import java.util.Collection;
@@ -29,6 +29,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
@@ -39,6 +40,8 @@ import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
 import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.ve.internal.jcm.Listener;
 import org.eclipse.ve.internal.jcm.ListenerType;
+
+
 
 /**
  * <!-- begin-user-doc -->

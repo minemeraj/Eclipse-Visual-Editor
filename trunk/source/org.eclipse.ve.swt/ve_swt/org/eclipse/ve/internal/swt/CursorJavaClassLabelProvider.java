@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CursorJavaClassLabelProvider.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-03 19:20:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -38,7 +38,7 @@ public class CursorJavaClassLabelProvider extends LabelProvider {
 
 	public static String getText(IJavaInstance element) {
 		String initStr = ""; //$NON-NLS-1$
-		if (element.getAllocation() instanceof ParseTreeAllocation) {
+		if (element.isParseTreeAllocation()) {
 			PTExpression exp = ((ParseTreeAllocation) element.getAllocation()).getExpression();
 			if (exp instanceof PTClassInstanceCreation) {
 				NaiveExpressionFlattener flattener = new NaiveExpressionFlattener();

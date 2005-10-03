@@ -33,7 +33,7 @@ public class ColorJavaClassLabelProvider extends LabelProvider {
 	}
 
 	public static String getText(IJavaInstance element) {
-		if (element != null && element.getAllocation() instanceof ParseTreeAllocation) {
+		if (element != null && element.isParseTreeAllocation()) {
 			ParseTreeAllocation ptAlloc = (ParseTreeAllocation) element.getAllocation();
 			PTExpression exp = ptAlloc.getExpression();
 			StringBuffer colorLabelBuffer = new StringBuffer(""); //$NON-NLS-1$

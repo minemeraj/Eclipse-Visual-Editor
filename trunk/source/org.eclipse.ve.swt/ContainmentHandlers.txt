@@ -1,0 +1,21 @@
+Widget			->	WidgetContainmentHandler
+  Control
+    Label		->	LabelContainmentHandler
+    Link		->	LinkContainmentHandler
+    Scrollable
+      Composite		->	CompositeContainmentHandler:Composite
+        Group		->	CompositeContainmentHandler:Group
+        Table		->	TableContainmentHandler
+        Canvas
+          CLabel	->	CLabelContainmentHandler
+          Decorations
+            Shell	->	ShellContainmentHandler
+  Item
+    TableColumn		->	TableColumnContainmentHandler
+    
+Viewer
+  ContentViewer
+    StructuredViewer
+      AbstractTreeViewer
+        TreeViewer	->	TreeViewerContainmentHandler
+      

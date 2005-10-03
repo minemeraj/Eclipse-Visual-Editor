@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm;
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainer.java,v $
- *  $Revision: 1.3 $  $Date: 2005-09-15 21:33:50 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:57 $ 
  */
 
 import org.eclipse.emf.common.util.EList;
@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.jcm.MemberContainer#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.MemberContainer#getMembers <em>Members</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.MemberContainer#getImplicits <em>Implicits</em>}</li>
  * </ul>
  * </p>
  *
@@ -51,12 +52,30 @@ public interface MemberContainer extends EObject{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This is the collection of members. Members are values that are located in this container AND have either a declaration or property settings.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Members</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getMemberContainer_Members()
 	 * @model type="org.eclipse.emf.ecore.EObject" containment="true"
 	 * @generated
 	 */
 	EList getMembers();
+
+	/**
+	 * Returns the value of the '<em><b>Implicits</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This contains implicit settings. These are settings that are properties of members but they are not explicitly set. They are the value of a setting that has not been set. It is a default value. Unlike properties, implicit may have further settings on them.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Implicits</em>' containment reference list.
+	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getMemberContainer_Implicits()
+	 * @model type="org.eclipse.emf.ecore.EObject" containment="true"
+	 * @generated
+	 */
+	EList getImplicits();
 
 	/**
 	 * Returns the value of the '<em><b>Properties</b></em>' containment reference list.
@@ -67,6 +86,9 @@ public interface MemberContainer extends EObject{
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Properties are values that are settings of properties on members, but do not have any settings on themselves. If the value has set property settings then it should be in members instead.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Properties</em>' containment reference list.
 	 * @see org.eclipse.ve.internal.jcm.JCMPackage#getMemberContainer_Properties()
 	 * @model type="org.eclipse.emf.ecore.EObject" containment="true"

@@ -9,7 +9,5 @@
    </objectChanges>
    <objectsToAttach beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.WidgetProxyAdapter" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
    <objectsToAttach expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTControlDecoder" methodGenerator="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTNoReturnMethodTextGenerator" modelled="true" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations1" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
-   <objectsToAttach modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.NoFFModelAdapter" xmi:id="_eAnnotations2" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-    <keyedValues key="org.eclipse.ve.internal.prototypefactory" value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.WidgetPrototypeFactory" xsi:type="ecore:EStringToStringMapEntry"/>
-  </objectsToAttach>
+   <objectsToAttach modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.WidgetContainmentHandler" xmi:id="_eAnnotations2" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"/>
 </change:ChangeDescription>

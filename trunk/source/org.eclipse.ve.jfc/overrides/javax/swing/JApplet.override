@@ -10,9 +10,10 @@
          <listChanges referenceValues="_eStructuralFeatures1"/>
       </value>
    </objectChanges>
-   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerGraphicalEditPart:true" treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerTreeEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
-      <keyedValues key="org.eclipse.ve.internal.cde.core.creationtool.policy" value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneCreationPolicy" xsi:type="ecore:EStringToStringMapEntry"/>
-    </objectsToAttach>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerGraphicalEditPart:true" 
+       treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneJMenuBarContainerTreeEditPart" 
+       modelAdapterClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.RootPaneContainmentHandler"
+       xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"/>
    <objectsToAttach expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.JFrameDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations1" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
    <objectsToAttach name="contentPane" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
       <eAnnotations linkType="CHILD" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>

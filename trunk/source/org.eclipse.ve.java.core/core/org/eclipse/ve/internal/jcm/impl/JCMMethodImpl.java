@@ -21,16 +21,13 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -194,6 +191,8 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 					return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
 				case JCMPackage.JCM_METHOD__MEMBERS:
 					return ((InternalEList)getMembers()).basicRemove(otherEnd, msgs);
+				case JCMPackage.JCM_METHOD__IMPLICITS:
+					return ((InternalEList)getImplicits()).basicRemove(otherEnd, msgs);
 				default:
 					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
 			}
@@ -212,6 +211,8 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 				return getProperties();
 			case JCMPackage.JCM_METHOD__MEMBERS:
 				return getMembers();
+			case JCMPackage.JCM_METHOD__IMPLICITS:
+				return getImplicits();
 			case JCMPackage.JCM_METHOD__NAME:
 				return getName();
 			case JCMPackage.JCM_METHOD__INITIALIZES:
@@ -237,6 +238,10 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 			case JCMPackage.JCM_METHOD__MEMBERS:
 				getMembers().clear();
 				getMembers().addAll((Collection)newValue);
+				return;
+			case JCMPackage.JCM_METHOD__IMPLICITS:
+				getImplicits().clear();
+				getImplicits().addAll((Collection)newValue);
 				return;
 			case JCMPackage.JCM_METHOD__NAME:
 				setName((String)newValue);
@@ -265,6 +270,9 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 			case JCMPackage.JCM_METHOD__MEMBERS:
 				getMembers().clear();
 				return;
+			case JCMPackage.JCM_METHOD__IMPLICITS:
+				getImplicits().clear();
+				return;
 			case JCMPackage.JCM_METHOD__NAME:
 				setName(NAME_EDEFAULT);
 				return;
@@ -289,6 +297,8 @@ public class JCMMethodImpl extends MemberContainerImpl implements JCMMethod {
 				return properties != null && !properties.isEmpty();
 			case JCMPackage.JCM_METHOD__MEMBERS:
 				return members != null && !members.isEmpty();
+			case JCMPackage.JCM_METHOD__IMPLICITS:
+				return implicits != null && !implicits.isEmpty();
 			case JCMPackage.JCM_METHOD__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case JCMPackage.JCM_METHOD__INITIALIZES:

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetCopyEditPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-09-14 18:20:06 $ 
+ *  $Revision: 1.10 $  $Date: 2005-10-03 19:20:48 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -47,7 +47,7 @@ public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 		// The allocation may contain references to the parent Composite
 		// These should be replaced with the {parentComposite} for when it is pasted into the new target
 		JavaAllocation allocation = copiedJavaBean.getAllocation();
-		if(allocation instanceof ParseTreeAllocation){
+		if(allocation.isParseTree()){
 			// An SWT Constructor contains a constructor with two arguments, the first of which is the parent
 			PTExpression expression = ((ParseTreeAllocation)allocation).getExpression();
 			if(expression instanceof PTClassInstanceCreation){
@@ -73,7 +73,7 @@ public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 	private void replaceFormToolkitToken(List arguments) {
 		for(int i=0; i<arguments.size(); i++){
 			Object arg = arguments.get(i);
-			if(arg instanceof PTInstanceReference && getFormToolkitType().isAssignableFrom(((PTInstanceReference)arg).getObject().getJavaType())){
+			if(arg instanceof PTInstanceReference && getFormToolkitType().isAssignableFrom(((PTInstanceReference)arg).getReference().getJavaType())){
 				// Create a PTName for {formToolkit}
 				PTName parentCompositeName = InstantiationFactory.eINSTANCE.createPTName(SwtPlugin.FORM_TOOLKIT_TOKEN);
 				arguments.set(i,parentCompositeName);				
@@ -85,7 +85,7 @@ public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 		for(int i=0; i<arguments.size(); i++){
 			Object arg = arguments.get(i);
 			// If the argument is an instance reference that points to the parent then replace it with the token
-			if(arg instanceof PTInstanceReference && ((PTInstanceReference)arg).getObject() == parent){
+			if(arg instanceof PTInstanceReference && ((PTInstanceReference)arg).getReference() == parent){
 				// Create a PTName for {parentComposite}
 				PTName parentCompositeName = InstantiationFactory.eINSTANCE.createPTName(SwtPlugin.PARENT_COMPOSITE_TOKEN);
 				arguments.set(i,parentCompositeName);

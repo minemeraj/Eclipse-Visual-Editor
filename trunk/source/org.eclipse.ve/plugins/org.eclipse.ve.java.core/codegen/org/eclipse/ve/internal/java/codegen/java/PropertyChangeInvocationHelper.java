@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeInvocationHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-08-24 23:30:44 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-03 19:20:56 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -25,8 +25,6 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.jcm.*;
-import org.eclipse.ve.internal.jcm.PropertyChangeEventInvocation;
-import org.eclipse.ve.internal.jcm.PropertyEvent;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;

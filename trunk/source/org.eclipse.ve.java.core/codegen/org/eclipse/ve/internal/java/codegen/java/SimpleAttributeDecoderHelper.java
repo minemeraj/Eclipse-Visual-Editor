@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.41 $  $Date: 2005-09-16 13:34:48 $ 
+ *  $Revision: 1.42 $  $Date: 2005-10-03 19:20:56 $ 
  */
 
 import java.util.List;
@@ -158,7 +158,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 					String currentInitString = currentInitStrAlloc.getInitString();
 					if(currentInitString.trim().equals(newInitString.trim()))
 						changed = false;
-				}else if(currentAlloc instanceof ParseTreeAllocation){
+				}else if(currentAlloc.isParseTree()){
 					ParseTreeAllocation currentPTAlloc = (ParseTreeAllocation) currentAlloc;
 					PTExpression currentPTExpression = currentPTAlloc.getExpression();
 					CodeExpressionRef exp = fOwner.getExprRef();
@@ -338,7 +338,7 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 		String mtd = fFmapper.getMethodName();
         if (mtd == null) {
         	if (JavaVEPlugin.isLoggingLevel(Level.WARNING))
-        		JavaVEPlugin.log("No Write JCMMethod found for "+fFmapper.getFeature(null)+" on "+fbeanPart.getUniqueName(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
+        		JavaVEPlugin.log("No Write Method found for "+fFmapper.getFeature(null)+" on "+fbeanPart.getUniqueName(),Level.WARNING) ; //$NON-NLS-1$ //$NON-NLS-2$
             return null ;
         }
 		String sel = fbeanPart.getSimpleName();

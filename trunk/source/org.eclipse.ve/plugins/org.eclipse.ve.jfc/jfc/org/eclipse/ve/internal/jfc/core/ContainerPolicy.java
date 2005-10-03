@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ContainerPolicy.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.11 $  $Date: 2005-10-03 19:21:01 $ 
  */
 
 import java.util.*;
@@ -25,9 +25,9 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IContainmentHandler.NoAddException;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
-import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -74,15 +74,34 @@ public class ContainerPolicy extends VisualContainerPolicy {
 	 * Get the create command for the child constraint listed here at the position.
 	 */
 	public Command getCreateCommand(Object childConstraintComponent, Object childComponent, Object positionBeforeChild) {
-		// Verify that the component and the child are valid.
-		if (!isValidChild(childConstraintComponent, containmentSF) || !isValidComponent(childComponent) || !isParentAcceptable(childComponent))
+		CommandBuilder preCmds = createCommandBuilder(true);
+		CommandBuilder postCmds = createCommandBuilder(true);
+		try {
+			childComponent = getTrueChild(childComponent, true, preCmds, postCmds);
+			if (childComponent != null)
+				if (!isValidComponent(childComponent))
+					return UnexecutableCommand.INSTANCE;
+		} catch (NoAddException e) {
 			return UnexecutableCommand.INSTANCE;
+		}
+		
+		if (preCmds.isDead() || postCmds.isDead())
+			return UnexecutableCommand.INSTANCE;
+		
+		if (childComponent != null) {
+			// Add the child to the component.
+			preCmds.applyAttributeSetting((EObject) childConstraintComponent, sfConstraintComponent, childComponent);
+			getCreateCommand(childConstraintComponent, positionBeforeChild != null ? InverseMaintenanceAdapter.getIntermediateReference(
+					(EObject) container, (EReference) containmentSF, sfConstraintComponent, (EObject) positionBeforeChild) : null, preCmds);
 			
-		// Add the child to the component.
-		CommandBuilder cb = new CommandBuilder();
-		cb.applyAttributeSetting((EObject) childConstraintComponent, sfConstraintComponent, childComponent);
-		cb.append(primCreateCommand(childConstraintComponent, positionBeforeChild != null ? InverseMaintenanceAdapter.getIntermediateReference((EObject) container, (EReference) containmentSF, sfConstraintComponent, (EObject) positionBeforeChild) : null, containmentSF));
-		return cb.getCommand();
+		}
+		
+		preCmds.append(postCmds.getCommand());
+		if (preCmds.isEmpty() || preCmds.isDead())
+			return UnexecutableCommand.INSTANCE;
+		else
+			return preCmds.getCommand();
+
 	}
 	
 	/**
@@ -97,26 +116,56 @@ public class ContainerPolicy extends VisualContainerPolicy {
 		//
 		// It is assumed that both lists are the same length.
 
+		CommandBuilder preCmds = createCommandBuilder(true);
+		CommandBuilder postCmds = createCommandBuilder(true);
 
 		RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-		cb.setApplyRules(false);	
-		Iterator cons = constraints.iterator();
+		cb.setApplyRules(false);
+		constraints = new ArrayList(constraints);	// We'll be possibly modifying the list, so make a copy. Our contract doesn't state we can change the original.
+		ListIterator cons = constraints.listIterator();
 		Iterator chlds = children.iterator();
 		while (cons.hasNext()) {
 			Object childConstraintComponent = cons.next();
-			Object childComponent = chlds.next();
-			if (!isValidChild(childConstraintComponent, containmentSF) || !isValidComponent(childComponent) || !isParentAcceptable(childComponent)
-					|| !(BeanUtilities.isValidBeanLocation(domain, (EObject) childComponent)))
+			if (!isValidChild(childConstraintComponent, sfConstraintComponent))
 				return UnexecutableCommand.INSTANCE;
+			Object childComponent = chlds.next();
+			try {
+				childComponent = getTrueChild(childComponent, false, preCmds, postCmds);
+				if (childComponent != null)
+					if (!isValidComponent(childComponent))
+						return UnexecutableCommand.INSTANCE;
+					else
+						;
+				else {
+					cons.remove();	// Remove the constraint since handler said no child for this one.
+					continue;	// Handler set skip this one.
+				}
+			} catch (NoAddException e) {
+				return UnexecutableCommand.INSTANCE;
+			}			
 			cb.applyAttributeSetting((EObject) childConstraintComponent, sfConstraintComponent, childComponent);
 		}
 
-		// We added the component to the constraint components outside of Ruled control because there is no need for
-		// extra preset commands since the setting of constraintComponent itself will be under Ruled control and will handle
-		// the component setting automatically.		
-		cb.setApplyRules(true);
-		cb.applyAttributeSettings((EObject) container, containmentSF, constraints, positionBeforeChild != null ? InverseMaintenanceAdapter.getIntermediateReference((EObject) container, (EReference) containmentSF, sfConstraintComponent, (EObject) positionBeforeChild) : null);		
-		return cb.getCommand();
+		if (preCmds.isDead() || postCmds.isDead())
+			return UnexecutableCommand.INSTANCE;
+
+		if (!constraints.isEmpty()) {
+			// We added the component to the constraint components outside of Ruled control because there is no need for
+			// extra preset commands since the setting of constraintComponent itself will be under Ruled control and will handle
+			// the component setting automatically.		
+			cb.setApplyRules(true);
+			cb.applyAttributeSettings((EObject) container, containmentSF, constraints, positionBeforeChild != null ? InverseMaintenanceAdapter
+					.getIntermediateReference((EObject) container, (EReference) containmentSF, sfConstraintComponent, (EObject) positionBeforeChild)
+					: null);
+			preCmds.append(cb.getCommand());
+		}
+		
+		preCmds.append(postCmds.getCommand());
+		if (preCmds.isEmpty() || preCmds.isDead())
+			return UnexecutableCommand.INSTANCE;
+		else
+			return preCmds.getCommand();
+		
 	}
 	
 	/**

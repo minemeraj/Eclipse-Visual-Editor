@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ImageIconCellEditor.java,v $
- *  $Revision: 1.11 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-03 19:21:01 $ 
  */
 
 import java.util.StringTokenizer;
@@ -90,7 +90,7 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 	 * Find the argument to the new ImageIcon. Turn it into a string.
 	 */
 	public static String getPathFromInitializationAllocation(JavaAllocation allocation) {
-		if (allocation instanceof ParseTreeAllocation) {
+		if (allocation.isParseTree()) {
 			PTExpression exp = ((ParseTreeAllocation) allocation).getExpression();
 			if (exp instanceof PTClassInstanceCreation && ((PTClassInstanceCreation) exp).getType().equals(IMAGE_ICON_CLASSNAME) && ((PTClassInstanceCreation) exp).getArguments().size() == 1) {
 				NaiveExpressionFlattener flattener = new NaiveExpressionFlattener();

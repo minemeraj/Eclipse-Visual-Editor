@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainerImpl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-03 19:20:56 $ 
  */
 
 import java.util.Collection;
@@ -45,12 +45,23 @@ import org.eclipse.ve.internal.jcm.MemberContainer;
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.MemberContainerImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.MemberContainerImpl#getMembers <em>Members</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.impl.MemberContainerImpl#getImplicits <em>Implicits</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
 public class MemberContainerImpl extends EObjectImpl implements MemberContainer {
+	/**
+	 * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getProperties()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList properties = null;
+
 	/**
 	 * The cached value of the '{@link #getMembers() <em>Members</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -62,14 +73,14 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	protected EList members = null;
 
 	/**
-	 * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
+	 * The cached value of the '{@link #getImplicits() <em>Implicits</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getProperties()
+	 * @see #getImplicits()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList properties = null;
+	protected EList implicits = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -106,6 +117,18 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList getImplicits() {
+		if (implicits == null) {
+			implicits = new EObjectContainmentEList(EObject.class, this, JCMPackage.MEMBER_CONTAINER__IMPLICITS);
+		}
+		return implicits;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList getProperties() {
 		if (properties == null) {
 			properties = new EObjectContainmentEList(EObject.class, this, JCMPackage.MEMBER_CONTAINER__PROPERTIES);
@@ -125,6 +148,8 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 					return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
 				case JCMPackage.MEMBER_CONTAINER__MEMBERS:
 					return ((InternalEList)getMembers()).basicRemove(otherEnd, msgs);
+				case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
+					return ((InternalEList)getImplicits()).basicRemove(otherEnd, msgs);
 				default:
 					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
 			}
@@ -143,6 +168,8 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 				return getProperties();
 			case JCMPackage.MEMBER_CONTAINER__MEMBERS:
 				return getMembers();
+			case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
+				return getImplicits();
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -162,6 +189,10 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 				getMembers().clear();
 				getMembers().addAll((Collection)newValue);
 				return;
+			case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
+				getImplicits().clear();
+				getImplicits().addAll((Collection)newValue);
+				return;
 		}
 		eDynamicSet(eFeature, newValue);
 	}
@@ -179,6 +210,9 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 			case JCMPackage.MEMBER_CONTAINER__MEMBERS:
 				getMembers().clear();
 				return;
+			case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
+				getImplicits().clear();
+				return;
 		}
 		eDynamicUnset(eFeature);
 	}
@@ -194,6 +228,8 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 				return properties != null && !properties.isEmpty();
 			case JCMPackage.MEMBER_CONTAINER__MEMBERS:
 				return members != null && !members.isEmpty();
+			case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
+				return implicits != null && !implicits.isEmpty();
 		}
 		return eDynamicIsSet(eFeature);
 	}

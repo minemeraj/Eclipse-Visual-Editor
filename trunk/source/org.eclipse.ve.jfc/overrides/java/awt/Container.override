@@ -20,9 +20,6 @@
         graphViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ContainerGraphicalEditPart" 
         treeViewClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ContainerTreeEditPart">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.jfc/icons/full/clcl16/panel_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" 
-        key="org.eclipse.ve.internal.cde.core.creationtool.policy" 
-        value="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.DefaultLayoutManagerCreationPolicy:java.awt.Container"/>      
     </objectsToAttach>
    <objectsToAttach xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
      beanProxyClassName="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.ContainerProxyAdapter"/>

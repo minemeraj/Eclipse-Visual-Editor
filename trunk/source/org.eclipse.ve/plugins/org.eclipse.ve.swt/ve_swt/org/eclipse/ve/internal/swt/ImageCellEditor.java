@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ImageCellEditor.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-03 19:20:48 $ 
  */
 
 import java.util.StringTokenizer;
@@ -97,7 +97,7 @@ public class ImageCellEditor extends DialogCellEditor
 	 */
 	public static String getPathFromInitializationAllocation(
 			JavaAllocation allocation) {
-		if (allocation instanceof ParseTreeAllocation) {
+		if (allocation.isParseTree()) {
 			PTExpression exp = ((ParseTreeAllocation) allocation)
 					.getExpression();
 			if (exp instanceof PTClassInstanceCreation

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderContainerPolicy.java,v $
- *  $Revision: 1.11 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-03 19:20:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -71,13 +71,9 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 		return classControl.isInstance(child);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ve.internal.cde.core.ContainerPolicy#getCreateCommand(java.lang.Object, java.lang.Object)
-	 */
-	public Command getCreateCommand(Object child, Object positionBeforeChild) {
-		return super.getCreateCommand(child, positionBeforeChild).chain(getCreateTabItemCommand(child, (EObject) positionBeforeChild));
+
+	protected Command getCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		return super.getCreateCommand(child, positionBeforeChild, containmentSF).chain(getCreateTabItemCommand(child, (EObject) positionBeforeChild));
 	}
 
 	/*
@@ -254,7 +250,7 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 
 		// set the arguments
 		PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference();
-		ir.setObject((IJavaObjectInstance) getContainer());
+		ir.setReference((IJavaObjectInstance) getContainer());
 		PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess();
 		PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT"); //$NON-NLS-1$
 		fa.setField("NONE"); //$NON-NLS-1$

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.commands;
 /*
  *  $RCSfile: CommandBuilder.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-03 19:21:04 $ 
  */
 
 
@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 import org.eclipse.ve.internal.propertysheet.command.ForwardUndoCompoundCommand;
@@ -36,8 +37,10 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
  */
 
 public class CommandBuilder {
-	protected CompoundCommand cmpCmd;
+	private CompoundCommand cmpCmd;
 	private boolean appendAndExecute;
+	private boolean dead;
+	private String reasonDead;
 
 	/**
 	 * Create a command builder. The parm regularCmd says create
@@ -77,11 +80,77 @@ public class CommandBuilder {
 	}
 	
 	/**
+	 * Answer if this builder is dead.
+	 * @return
+	 * 
+	 * @since 1.2.0
+	 */
+	public final boolean isDead() {
+		return dead;
+	}
+	
+	/**
+	 * Mark this builder as dead.
+	 * <p>
+	 * This is used to mark it as unexecutable in a quicker manner than using getCommand().canExecute().
+	 * Once marked dead it won't add any more and will return an unexecutable command. The compound
+	 * command being created will be thrown away and any already executed commands will be undone. 
+	 * 
+	 * @see #markDead(String)
+	 * @since 1.2.0
+	 */
+	public final void markDead() {
+		if (!dead) {
+			dead = true;
+			if (appendAndExecute && !cmpCmd.isEmpty()) {
+				cmpCmd.undo();
+				cmpCmd.dispose();
+			}
+			cmpCmd.append(UnexecutableCommand.INSTANCE);
+		}
+	}
+	
+	/**
+	 * Mark dead with a reason.
+	 * <p>
+	 * The reason can be queried. In the future the VE may be able to display why to the customer and this reason will then be shown.
+	 * <p>
+	 * If called when not dead, the reason will be saved. If called when already dead, only the first call will store the reason, the
+	 * rest of the calls the reason will be ignored.
+	 * @param reason
+	 * 
+	 * @see #getReason()
+	 * @since 1.2.0
+	 */
+	public final void markDead(String reason) {
+		if (!dead) {
+			this.reasonDead = reason;
+			markDead();
+		} else if (reasonDead == null)
+			this.reasonDead = reason;
+	}
+	
+	/**
+	 * Get the reason it is dead.
+	 * <p>
+	 * It will return <code>null</code> if not dead or not marked dead with a reason.
+	 * @return reason pr <code>null</code> if not dead or not marked dead with a reason.
+	 * 
+	 * @since 1.2.0
+	 */
+	public final String getReason() {
+		return reasonDead;
+	}
+	
+	/**
 	 * Return the command, unwrapping if only one command. If no commands, then
 	 * null is returned.
 	 */
 	public Command getCommand(){
-		return cmpCmd.isEmpty() ? null : cmpCmd.unwrap();
+		if (!isDead())
+			return cmpCmd.isEmpty() ? null : cmpCmd.unwrap();
+		else
+			return UnexecutableCommand.INSTANCE;
 	}
 	
 	/**
@@ -267,6 +336,10 @@ public class CommandBuilder {
 	
 	/**
 	 * Cancel a list attribute setting value. Cancel out the entries from the values list.
+	 * <p>
+	 * <b>Note:</b> The values list will be modified by the execution of the command. Because
+	 * of this if the list is needed otherwise, then a copy of the list should be 
+	 * sent in instead.
 	 */
 	public void cancelAttributeSettings(EObject target , EStructuralFeature feature , List values){
 	
@@ -310,10 +383,16 @@ public class CommandBuilder {
 	}
 	
 	protected void internalAppend(Command cmd) {
-		if (appendAndExecute)
-			cmpCmd.appendAndExecute(cmd);
-		else
-			cmpCmd.append(cmd);
+		if (cmd != null) {
+			if (!isDead())
+				if (cmd.canExecute()) {
+					if (appendAndExecute)
+						cmpCmd.appendAndExecute(cmd);
+					else
+						cmpCmd.append(cmd);
+				} else
+					markDead(); // Mark it dead so that further appends aren't added.
+		}
 	}
 		
 	/**
@@ -329,8 +408,11 @@ public class CommandBuilder {
 	 * how to work with this concept.
 	 */
 	public void setExecuteAndAppend(boolean appendAndExecute) {
-		if (appendAndExecute || (this.appendAndExecute && cmpCmd.isEmpty()))
+		if (!isDead() && (appendAndExecute || (this.appendAndExecute && cmpCmd.isEmpty()))) {
+			if (!this.appendAndExecute && !cmpCmd.isEmpty())
+				cmpCmd.execute();	// This is the switch to append and execute and we have something to execute.
 			this.appendAndExecute = appendAndExecute;
+		}
 	}
 
 	public boolean isExecuteAndAppend() {

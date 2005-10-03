@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanCompositionImpl.java,v $
- *  $Revision: 1.11 $  $Date: 2005-09-15 21:33:49 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-03 19:20:56 $ 
  */
 
 import java.util.Collection;
@@ -54,6 +54,7 @@ import org.eclipse.ve.internal.java.core.BeanUtilities;
  * <ul>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanCompositionImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanCompositionImpl#getMembers <em>Members</em>}</li>
+ *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanCompositionImpl#getImplicits <em>Implicits</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanCompositionImpl#getComponents <em>Components</em>}</li>
  *   <li>{@link org.eclipse.ve.internal.jcm.impl.BeanCompositionImpl#getListenerTypes <em>Listener Types</em>}</li>
  * </ul>
@@ -81,6 +82,16 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * @ordered
 	 */
 	protected EList members = null;
+
+	/**
+	 * The cached value of the '{@link #getImplicits() <em>Implicits</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getImplicits()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList implicits = null;
 
 	/**
 	 * The cached value of the '{@link #getComponents() <em>Components</em>}' reference list.
@@ -130,6 +141,18 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 			members = new EObjectContainmentEList(EObject.class, this, JCMPackage.BEAN_COMPOSITION__MEMBERS);
 		}
 		return members;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList getImplicits() {
+		if (implicits == null) {
+			implicits = new EObjectContainmentEList(EObject.class, this, JCMPackage.BEAN_COMPOSITION__IMPLICITS);
+		}
+		return implicits;
 	}
 
 	/**
@@ -203,6 +226,8 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 					return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
 				case JCMPackage.BEAN_COMPOSITION__MEMBERS:
 					return ((InternalEList)getMembers()).basicRemove(otherEnd, msgs);
+				case JCMPackage.BEAN_COMPOSITION__IMPLICITS:
+					return ((InternalEList)getImplicits()).basicRemove(otherEnd, msgs);
 				case JCMPackage.BEAN_COMPOSITION__LISTENER_TYPES:
 					return ((InternalEList)getListenerTypes()).basicRemove(otherEnd, msgs);
 				default:
@@ -227,6 +252,8 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 				return getProperties();
 			case JCMPackage.BEAN_COMPOSITION__MEMBERS:
 				return getMembers();
+			case JCMPackage.BEAN_COMPOSITION__IMPLICITS:
+				return getImplicits();
 			case JCMPackage.BEAN_COMPOSITION__COMPONENTS:
 				return getComponents();
 			case JCMPackage.BEAN_COMPOSITION__LISTENER_TYPES:
@@ -257,6 +284,10 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 			case JCMPackage.BEAN_COMPOSITION__MEMBERS:
 				getMembers().clear();
 				getMembers().addAll((Collection)newValue);
+				return;
+			case JCMPackage.BEAN_COMPOSITION__IMPLICITS:
+				getImplicits().clear();
+				getImplicits().addAll((Collection)newValue);
 				return;
 			case JCMPackage.BEAN_COMPOSITION__COMPONENTS:
 				getComponents().clear();
@@ -289,6 +320,9 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 			case JCMPackage.BEAN_COMPOSITION__MEMBERS:
 				getMembers().clear();
 				return;
+			case JCMPackage.BEAN_COMPOSITION__IMPLICITS:
+				getImplicits().clear();
+				return;
 			case JCMPackage.BEAN_COMPOSITION__COMPONENTS:
 				getComponents().clear();
 				return;
@@ -314,6 +348,8 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 				return properties != null && !properties.isEmpty();
 			case JCMPackage.BEAN_COMPOSITION__MEMBERS:
 				return members != null && !members.isEmpty();
+			case JCMPackage.BEAN_COMPOSITION__IMPLICITS:
+				return implicits != null && !implicits.isEmpty();
 			case JCMPackage.BEAN_COMPOSITION__COMPONENTS:
 				return components != null && !components.isEmpty();
 			case JCMPackage.BEAN_COMPOSITION__LISTENER_TYPES:
@@ -332,6 +368,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 			switch (derivedFeatureID) {
 				case JCMPackage.BEAN_COMPOSITION__PROPERTIES: return JCMPackage.MEMBER_CONTAINER__PROPERTIES;
 				case JCMPackage.BEAN_COMPOSITION__MEMBERS: return JCMPackage.MEMBER_CONTAINER__MEMBERS;
+				case JCMPackage.BEAN_COMPOSITION__IMPLICITS: return JCMPackage.MEMBER_CONTAINER__IMPLICITS;
 				default: return -1;
 			}
 		}
@@ -348,6 +385,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 			switch (baseFeatureID) {
 				case JCMPackage.MEMBER_CONTAINER__PROPERTIES: return JCMPackage.BEAN_COMPOSITION__PROPERTIES;
 				case JCMPackage.MEMBER_CONTAINER__MEMBERS: return JCMPackage.BEAN_COMPOSITION__MEMBERS;
+				case JCMPackage.MEMBER_CONTAINER__IMPLICITS: return JCMPackage.BEAN_COMPOSITION__IMPLICITS;
 				default: return -1;
 			}
 		}
