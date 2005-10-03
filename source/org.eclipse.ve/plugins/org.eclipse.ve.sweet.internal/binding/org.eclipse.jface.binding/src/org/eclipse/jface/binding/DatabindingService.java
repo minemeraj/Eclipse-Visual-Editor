@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.binding.internal.DerivedUpdatableValue;
+
 public class DatabindingService {
 
 	private static class Pair {
@@ -406,12 +408,12 @@ public class DatabindingService {
 			throws BindingException {
 
 		Class clazz = object.getClass();
-		// TODO the factory has to be aware of the fact that the object is an
-		// updatable for this to work. I think we have to address this at the
-		// API level. -BB
+
 		if (object instanceof IUpdatableValue) {
-			clazz = ((IUpdatableValue) object).getValueType();
+			return new DerivedUpdatableValue(this, ((IUpdatableValue) object),
+					feature);
 		}
+
 		IUpdatableValueFactory valueFactory = null;
 		while (valueFactory == null && clazz != Object.class) {
 			valueFactory = (IUpdatableValueFactory) valueFactories.get(clazz);
