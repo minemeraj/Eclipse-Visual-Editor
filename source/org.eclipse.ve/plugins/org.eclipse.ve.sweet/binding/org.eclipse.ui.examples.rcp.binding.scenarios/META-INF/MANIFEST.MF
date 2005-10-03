@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Scenarios Plug-in
+Bundle-SymbolicName: org.eclipse.ui.examples.rcp.binding.scenarios
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.ui.examples.rcp.binding.scenarios.ScenariosPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.examples.rcp.adventurebuilder,
+ org.eclipse.ui.examples.rcp.adventurebuilder.model,
+ org.eclipse.jface.binding,
+ org.eclipse.jface.examples.binding.emf
+Eclipse-AutoStart: true
