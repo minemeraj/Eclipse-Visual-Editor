@@ -174,6 +174,31 @@ public class DatabindingService {
 		}
 	}
 
+	public void bindTable(Object target, Object targetFeature, Object model,
+			Object modelFeature) throws BindingException {
+		bindTable(createUpdatableTable(target, targetFeature),
+				createUpdatableTable(model, modelFeature));
+	}
+
+	public void bindTable(Object target, Object targetFeature, Object model,
+			Object modelFeature,
+			final IConverter modelToTargetElementConverter,
+			final IConverter[] modelToTargetValueConverters)
+			throws BindingException {
+		bindTable(createUpdatableTable(target, targetFeature),
+				createUpdatableTable(model, modelFeature),
+				modelToTargetElementConverter, modelToTargetValueConverters);
+	}
+
+	public void bindTable(Object target, Object targetFeature,
+			IUpdatableTable model,
+			final IConverter modelToTargetElementConverter,
+			final IConverter[] modelToTargetValueConverters)
+			throws BindingException {
+		bindTable(createUpdatableTable(target, targetFeature), model,
+				modelToTargetElementConverter, modelToTargetValueConverters);
+	}
+
 	/**
 	 * Convenience method for binding the given target to the given model value,
 	 * using converters obtained by calling getConverter().
@@ -405,10 +430,11 @@ public class DatabindingService {
 	}
 
 	/**
-	 * Creates an updatable value from the given object and feature ID.
-	 * This method looks up a factory registered for the given object's
-	 * type. I the given object is itself an IUpdatableValue, this method
-	 * creates a derived updatable value.
+	 * Creates an updatable value from the given object and feature ID. This
+	 * method looks up a factory registered for the given object's type. I the
+	 * given object is itself an IUpdatableValue, this method creates a derived
+	 * updatable value.
+	 * 
 	 * @param object
 	 * @param featureID
 	 * @return
