@@ -9,54 +9,56 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.jface.binding.swt;
+package org.eclipse.jface.binding.internal.swt;
 
 import org.eclipse.jface.binding.IChangeEvent;
 import org.eclipse.jface.binding.UpdatableValue;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 
-public class TableUpdatableValue extends UpdatableValue {
+public class TextUpdatableValue extends UpdatableValue {
 
-	private final Table table;
+	private final Text text;
+
+	public int listenerType;
+
+	public static final int DEFAULT_UPDATE_POLICY = SWT.Modify;
 
 	private boolean updating = false;
 
-	public TableUpdatableValue(Table table, String attribute) {
-		this.table = table;
-		if (attribute.equals("selection")) {
-			table.addSelectionListener(new SelectionListener() {
-				public void widgetSelected(SelectionEvent e) {
-					if (!updating) {
-						fireChangeEvent(IChangeEvent.CHANGE, null, null);
-					}
-				}
+	public TextUpdatableValue(Text text) {
+		this(text, DEFAULT_UPDATE_POLICY);
+	}
 
-				public void widgetDefaultSelected(SelectionEvent e) {
-					widgetSelected(e);
+	public TextUpdatableValue(Text text, int listenerType) {
+		this.text = text;
+		this.listenerType = listenerType;
+		text.addListener(listenerType, new Listener() {
+			public void handleEvent(Event event) {
+				if (!updating) {
+					fireChangeEvent(IChangeEvent.CHANGE, null, null);
 				}
-			});
-		} else {
-			throw new IllegalArgumentException();
-		}
+			}
+		});
 	}
 
 	public void setValue(Object value) {
 		try {
 			updating = true;
-			table.setSelection(((Integer) value).intValue());
+			text.setText(value == null ? "" : value.toString());
 		} finally {
 			updating = false;
 		}
 	}
 
 	public Object getValue() {
-		return new Integer(table.getSelectionIndex());
+		return text.getText();
 	}
 
 	public Class getValueType() {
-		return Integer.class;
+		return String.class;
 	}
 
 }

@@ -9,40 +9,40 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.jface.binding.viewers;
+package org.eclipse.jface.binding.internal.swt;
 
 import org.eclipse.jface.binding.IChangeEvent;
 import org.eclipse.jface.binding.UpdatableValue;
-import org.eclipse.jface.viewers.AbstractListViewer;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.widgets.Spinner;
 
-public class AbstractListViewerUpdatableValue extends UpdatableValue {
+public class SpinnerUpdatableValue extends UpdatableValue {
 
 	public static final String SELECTION = "selection";
 
-	private final AbstractListViewer viewer;
+	public static final String MAX = "max";
+
+	public static final String MIN = "min";
+
+	private final Spinner spinner;
 
 	private final String attribute;
 
 	private boolean updating = false;
 
-	public AbstractListViewerUpdatableValue(AbstractListViewer viewer,
-			String attribute) {
-		this.viewer = viewer;
+	public SpinnerUpdatableValue(Spinner spinner, String attribute) {
+		this.spinner = spinner;
 		this.attribute = attribute;
 		if (attribute.equals(SELECTION)) {
-			viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event) {
+			spinner.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
 					if (!updating) {
 						fireChangeEvent(IChangeEvent.CHANGE, null, null);
 					}
 				}
 			});
-		} else {
+		} else if (!attribute.equals(MIN) && !attribute.equals(MAX)) {
 			throw new IllegalArgumentException();
 		}
 	}
@@ -50,8 +50,13 @@ public class AbstractListViewerUpdatableValue extends UpdatableValue {
 	public void setValue(Object value) {
 		try {
 			updating = true;
+			int intValue = ((Integer) value).intValue();
 			if (attribute.equals(SELECTION)) {
-				viewer.setSelection(new StructuredSelection(value));
+				spinner.setSelection(intValue);
+			} else if (attribute.equals(MIN)) {
+				spinner.setMinimum(intValue);
+			} else if (attribute.equals(MAX)) {
+				spinner.setMaximum(intValue);
 			}
 		} finally {
 			updating = false;
@@ -59,24 +64,21 @@ public class AbstractListViewerUpdatableValue extends UpdatableValue {
 	}
 
 	public Object getValue() {
+		int value;
 		if (attribute.equals(SELECTION)) {
-			ISelection selection = viewer.getSelection();
-			if (selection instanceof IStructuredSelection) {
-				IStructuredSelection sel = (IStructuredSelection) selection;
-				return sel.getFirstElement();
-			}
-			return null;
+			value = spinner.getSelection();
+		} else if (attribute.equals(MIN)) {
+			value = spinner.getMinimum();
+		} else if (attribute.equals(MAX)) {
+			value = spinner.getMaximum();
 		} else {
 			throw new AssertionError("unexpected attribute");
 		}
+		return new Integer(value);
 	}
 
 	public Class getValueType() {
-		if (attribute.equals(SELECTION)) {
-			return Object.class;
-		} else {
-			throw new AssertionError("unexpected attribute");
-		}
+		return Integer.class;
 	}
 
 }
