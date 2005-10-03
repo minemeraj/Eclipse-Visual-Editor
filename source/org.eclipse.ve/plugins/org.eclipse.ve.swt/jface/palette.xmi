@@ -5,10 +5,12 @@
   <org.eclipse.ve.internal.cde.palette:Drawer>
     <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.JFace"
         bundle="#bundle"/>
-    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/treeviewer_obj.gif"
-        prototypeURI="platform:/plugin/org.eclipse.ve.swt/jface/TreeViewer.xmi#TreeViewer_1">
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/treeviewer_obj.gif"
+        creationClassURI="java:/org.eclipse.jface.viewers#TreeViewer">
       <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="TreeViewer"/>
-    </children>  
+      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
+          value="treeViewer"/>
+    </children>        
   </org.eclipse.ve.internal.cde.palette:Drawer>
   
   <org.eclipse.ve.internal.cde.utility:URLResourceBundle xmi:id="bundle" bundleName="palette">
