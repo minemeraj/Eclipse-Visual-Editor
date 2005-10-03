@@ -26,6 +26,8 @@ public class EMFUpdatableValue extends UpdatableValue {
 	private final EStructuralFeature attribute;
 
 	private AdapterImpl adapter;
+	
+	private boolean updating = false;
 
 	public EMFUpdatableValue(EObject object,
 			final EStructuralFeature attribute, boolean oversensitiveListening) {
@@ -38,7 +40,7 @@ public class EMFUpdatableValue extends UpdatableValue {
 		if (oversensitiveListening) {
 			adapter = new EContentAdapter() {
 				public void notifyChanged(Notification notification) {
-					if (!notification.isTouch()) {
+					if (!notification.isTouch() && !updating) {
 						fireChangeEvent(IChangeEvent.CHANGE, null, null);
 					}
 					super.notifyChanged(notification);
@@ -47,7 +49,7 @@ public class EMFUpdatableValue extends UpdatableValue {
 		} else {
 			adapter = new AdapterImpl() {
 				public void notifyChanged(Notification notification) {
-					if (!notification.isTouch()) {
+					if (!notification.isTouch() && !updating) {
 						if (attribute.equals(notification.getFeature())) {
 							fireChangeEvent(IChangeEvent.CHANGE, null, null);
 						}
@@ -60,7 +62,12 @@ public class EMFUpdatableValue extends UpdatableValue {
 	}
 
 	public void setValue(Object value) {
-		object.eSet(attribute, value);
+		updating = true;
+		try {
+			object.eSet(attribute, value);
+		} finally {
+			updating = false;
+		}
 	}
 
 	public Object getValue() {
