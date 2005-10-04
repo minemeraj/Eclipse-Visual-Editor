@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ListBinding.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-04 14:25:46 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-04 18:27:54 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -32,6 +32,7 @@ import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
 import org.eclipse.ui.examples.rcp.adventure.Lodging;
+import org.eclipse.swt.widgets.Display;
 
 public class ListBinding extends Composite {
 
@@ -43,13 +44,20 @@ public class ListBinding extends Composite {
 	private ListViewer listViewer;
 	private Label label2 = null;
 	private Text txtName = null;
-	
+	private Label validationMessage = null;
 	public ListBinding(Composite parent, int style) throws BindingException{
 		super(parent,style);
 		initialize();
 	}
 	
 	private void initialize() throws BindingException {
+		GridData gridData11 = new org.eclipse.swt.layout.GridData();
+		gridData11.horizontalSpan = 2;
+		gridData11.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		gridData11.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		validationMessage = new Label(this, SWT.NONE);
+		validationMessage.setForeground(getDisplay().getSystemColor(SWT.COLOR_RED));
+		validationMessage.setLayoutData(gridData11);
 		setLayout(new GridLayout(2,false));
 		GridData gridData6 = new org.eclipse.swt.layout.GridData();
 		gridData6.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -97,6 +105,8 @@ public class ListBinding extends Composite {
 		dbs.bindValue(txtDefaultLodging, "text", listViewerSelection, "description");
 		
 		dbs.bindValue(txtName, "text" , listViewerSelection , "name" );
+		
+		dbs.bindValue(validationMessage, "text", dbs.getCombinedValidationMessage());
 		
 	}
 	/**
