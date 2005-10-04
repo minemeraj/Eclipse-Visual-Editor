@@ -51,7 +51,8 @@ public class StructuredViewerUpdatableValue extends UpdatableValue {
 		try {
 			updating = true;
 			if (attribute.equals(SELECTION)) {
-				viewer.setSelection(new StructuredSelection(value));
+				viewer.setSelection(value == null ? StructuredSelection.EMPTY
+						: new StructuredSelection(value));
 			}
 		} finally {
 			updating = false;

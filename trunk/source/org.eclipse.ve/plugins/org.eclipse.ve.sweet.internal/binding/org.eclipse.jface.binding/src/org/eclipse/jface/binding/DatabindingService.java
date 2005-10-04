@@ -286,8 +286,12 @@ public class DatabindingService {
 						String validationError = targetValidator.isValid(value);
 						updateValidationError(validationError);
 						if (validationError == null) {
-							model.setValue(targetToModelConverter
-									.convert(value));
+							try {
+								model.setValue(targetToModelConverter
+										.convert(value));
+							} catch (Exception ex) {
+								updateValidationError("An error occurred while setting the value.");
+							}
 						}
 					}
 				} else {
@@ -595,17 +599,17 @@ public class DatabindingService {
 	protected void updatePartialValidationError(
 			String partialValidationErrorOrNull) {
 		combinedValidationMessage
-				.setValue(partialValidationErrorOrNull == null ? ""
+				.setValueAndNotify(partialValidationErrorOrNull == null ? ""
 						: partialValidationErrorOrNull);
 		partialValidationMessage
-				.setValue(partialValidationErrorOrNull == null ? ""
+				.setValueAndNotify(partialValidationErrorOrNull == null ? ""
 						: partialValidationErrorOrNull);
 	}
 
 	protected void updateValidationError(String validationErrorOrNull) {
-		combinedValidationMessage.setValue(validationErrorOrNull == null ? ""
+		combinedValidationMessage.setValueAndNotify(validationErrorOrNull == null ? ""
 				: validationErrorOrNull);
-		validationMessage.setValue(validationErrorOrNull == null ? ""
+		validationMessage.setValueAndNotify(validationErrorOrNull == null ? ""
 				: validationErrorOrNull);
 	}
 }
