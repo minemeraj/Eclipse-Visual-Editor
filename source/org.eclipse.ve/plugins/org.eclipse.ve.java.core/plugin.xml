@@ -392,11 +392,12 @@
          id="org.eclipse.jdt.ui.java.ve"
          name="Visual Editor"/>
       <view
-            name="XML View"
-            icon="icons/full/ctool16/general.gif"
             category="org.eclipse.jdt.ui.java.ve"
             class="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart"
-            id="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart">
+            fastViewWidthRatio="50"
+            icon="icons/full/ctool16/general.gif"
+            id="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart"
+            name="XML View">
       </view>
    </extension>   
    
@@ -435,6 +436,10 @@
                relationship="left"
                id="org.eclipse.gef.ui.palette_view">
          </view>
+         <view
+               id="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart"
+               relationship="fast"
+               visible="false"/>
          
       </perspectiveExtension>
       
@@ -471,7 +476,11 @@
                visible="false"
                relationship="left"
                id="org.eclipse.gef.ui.palette_view">
-         </view>         
+         </view>
+         <view
+               id="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart"
+               relationship="fast"
+               visible="false"/>         
       </perspectiveExtension>
 <!-- ======================================================+==================== -->
 <!-- Extend the Debug perspective so the JavaBeans appears on top of the outline -->

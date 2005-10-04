@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: XMLViewPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-09-21 10:39:50 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-04 17:04:41 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -35,18 +35,25 @@ import org.eclipse.ve.internal.java.core.XMLTextPage;
 public class XMLViewPart extends ContentOutline {
 	
 	public class XMLViewTextPage extends XMLTextPage implements IContentOutlinePage {
-		Map XML_SAVE_CACHE_OPTIONS = new HashMap(3);
-		public EditDomain domain;		
+		protected Map XML_SAVE_CACHE_OPTIONS = new HashMap(3);
+		protected EditDomain domain;
+		protected CommandStackListener stackListener = new CommandStackListener(){
+			public void commandStackChanged(EventObject event) {
+				refresh();
+			}	        	
+        };
+        
 		public XMLViewTextPage(EditDomain anEditDomain) {
 			domain = anEditDomain;
 			XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
 			XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_LINE_WIDTH, new Integer(100));
 	        XML_SAVE_CACHE_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8");//$NON-NLS-1$	
-	        domain.getCommandStack().addCommandStackListener(new CommandStackListener(){
-				public void commandStackChanged(EventObject event) {
-					refresh();
-				}	        	
-	        });
+	        domain.getCommandStack().addCommandStackListener(stackListener);
+		}
+		
+		public void dispose() {
+			domain.getCommandStack().removeCommandStackListener(stackListener);
+			super.dispose();
 		}
 		public void refresh() {
 			if(domain.getDiagramData() != null){
