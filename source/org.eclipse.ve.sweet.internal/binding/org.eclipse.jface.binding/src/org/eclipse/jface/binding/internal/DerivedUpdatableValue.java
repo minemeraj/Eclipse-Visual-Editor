@@ -55,14 +55,18 @@ public class DerivedUpdatableValue extends UpdatableValue {
 			innerUpdatableValue.removeChangeListener(innerChangeListener);
 			innerUpdatableValue.dispose();
 		}
-		try {
-			this.innerUpdatableValue = databindingService.createUpdatableValue(
-					currentOuterValue, feature);
-		} catch (BindingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (currentOuterValue == null) {
+			innerUpdatableValue = null;
+		} else {
+			try {
+				this.innerUpdatableValue = databindingService
+						.createUpdatableValue(currentOuterValue, feature);
+			} catch (BindingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			innerUpdatableValue.addChangeListener(innerChangeListener);
 		}
-		innerUpdatableValue.addChangeListener(innerChangeListener);
 	}
 
 	public void setValue(Object value) {
@@ -70,7 +74,8 @@ public class DerivedUpdatableValue extends UpdatableValue {
 	}
 
 	public Object getValue() {
-		return innerUpdatableValue.getValue();
+		return innerUpdatableValue == null ? null : innerUpdatableValue
+				.getValue();
 	}
 
 	public Class getValueType() {
