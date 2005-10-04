@@ -10,17 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeViewerContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-04 15:41:48 $ 
  */
 package org.eclipse.ve.internal.jface;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
-import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
-import org.eclipse.jem.internal.instantiation.InstantiationFactory;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
@@ -29,7 +27,9 @@ import org.eclipse.ve.internal.cde.core.IContainmentHandler;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
+import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 
+import org.eclipse.ve.internal.swt.EnsureCorrectParentCommand;
 import org.eclipse.ve.internal.swt.WidgetContainmentHandler;
  
 
@@ -52,6 +52,7 @@ public class TreeViewerContainmentHandler implements IContainmentHandler {
 				JavaClass treeClass = (JavaClass) JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Tree", rset);
 				if (treeClass.isInstance(pjo)) {
 					// Dropping tree viewer onto a tree.
+					return dropOnTree(pjo, cjo, preCmds, domain);
 				} else {
 					JavaHelpers compositeClass = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Composite", rset);
 					if (compositeClass.isInstance(pjo)) {
@@ -77,5 +78,31 @@ public class TreeViewerContainmentHandler implements IContainmentHandler {
 		preCmds.applyAttributeSetting(treeViewer, treeFeature, tree);
 		return tree;
 	}
+	
+	/*
+	 * Dropping on a tree.
+	 */
+	private Object dropOnTree(IJavaObjectInstance parentTree, IJavaObjectInstance treeViewer, CommandBuilder preCmds, EditDomain domain) {
+		if (!treeViewer.isSetAllocation()) {
+			// Needs an allocation. Use default of new Widget(parent, SWT.NONE);
+			ParseTreeAllocation parseTreeAllocation = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+			PTClassInstanceCreation classInstanceCreation = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation(treeViewer.getJavaType().getQualifiedNameForReflection(), null);
+			PTInstanceReference parentReference = InstantiationFactory.eINSTANCE.createPTInstanceReference(parentTree);
+			classInstanceCreation.getArguments().add(parentReference);
+			parseTreeAllocation.setExpression(classInstanceCreation);			
+			preCmds.applyAttributeSetting(treeViewer, JavaInstantiation.getAllocationFeature(treeViewer), parseTreeAllocation);
+		} else if (treeViewer.isParseTreeAllocation())
+			preCmds.append(new EnsureCorrectParentCommand(treeViewer, parentTree));
+		
+		// Set the new tree viewer's "tree" feature to the parent tree.
+		EStructuralFeature treeFeature = treeViewer.eClass().getEStructuralFeature("tree");
+		preCmds.applyAttributeSetting(treeViewer, treeFeature, parentTree);
+		
+		// Assign membership of the new TreeViewer to be relative to the tree.
+		RuledCommandBuilder rcb = new RuledCommandBuilder(domain);
+		rcb.assignMembership(treeViewer, parentTree);
+		preCmds.append(rcb.getCommand());
+		return null;	// There is no child in this case because the parent is a tree already.
+	}	
 
 }

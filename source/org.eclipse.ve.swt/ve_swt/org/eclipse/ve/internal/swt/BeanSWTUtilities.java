@@ -68,7 +68,8 @@ public class BeanSWTUtilities {
 		setCTabFolderSelectionAtLocationMethodProxy,
 		imageCaptureAbortMethodProxy,
 		imageCaptureStartCaptureMethodProxy,
-		managerTableGetAllColumnRects;
+		managerTableGetAllColumnRects,
+		managerTreeGetAllColumnRects;
 
 	private Map controlManagerFeedbackController;
 
@@ -564,7 +565,27 @@ public class BeanSWTUtilities {
 		}
 		return (IArrayBeanProxy) constants.managerTableGetAllColumnRects.invokeCatchThrowableExceptions(null, new IBeanProxy[] {table});
 	}
-	
+
+	/**
+	 * Invoke get all column rectangles for a tree.
+	 * @param table
+	 * @return 5-tuple array (TreeColumnProxy, xIntegerProxy, yIntegerProxy, widthIntegerProxy, heightIntegerProxy, ....)
+	 * or <code>null</code> if no columns or not visible
+	 * 
+	 * @see org.eclipse.ve.internal.swt.targetvm.TreeManager#getColumnRects(org.eclipse.swt.widgets.Tree)
+	 * @since 1.1.0
+	 */
+	public static IArrayBeanProxy invoke_Tree_getAllColumnRects(IBeanProxy table) {
+		BeanSWTUtilities constants = getConstants(table);
+
+		if (constants.managerTreeGetAllColumnRects == null) {
+			constants.managerTreeGetAllColumnRects = table.getProxyFactoryRegistry().getBeanTypeProxyFactory()
+			.getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.TreeManager").getMethodProxy( //$NON-NLS-1$
+					"getColumnRects", //$NON-NLS-1$
+					new String[] {"org.eclipse.swt.widgets.Tree"}); //$NON-NLS-1$
+		}
+		return (IArrayBeanProxy) constants.managerTreeGetAllColumnRects.invokeCatchThrowableExceptions(null, new IBeanProxy[] {table});
+	}
     /**
      * Return the ILayoutPolicyFactory for the layout of a compositeProxy
      */
