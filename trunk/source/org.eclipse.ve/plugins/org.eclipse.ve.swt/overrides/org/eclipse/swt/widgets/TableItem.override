@@ -6,6 +6,6 @@
          <listChanges referenceValues="_eAnnotations1"/>
       </value>
    </objectChanges>
-   <objectsToAttach beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ItemProxyAdapter:parentItems='java:/org.eclipse.swt.widgets#Table/tableColumns'" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ItemProxyAdapter:parentItems='java:/org.eclipse.swt.widgets#Table/items'" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
    <objectsToAttach expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTWidgetChildDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations1" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
 </change:ChangeDescription>

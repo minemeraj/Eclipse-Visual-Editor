@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: TableColumnGraphicalEditPart.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $RCSfile: TableTreeColumnGraphicalEditPart.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-10-04 15:41:48 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -41,7 +41,7 @@ import org.eclipse.ve.internal.java.core.BeanDirectEditPolicy;
  * 
  * @since 1.0.0
  */
-public class TableColumnGraphicalEditPart extends AbstractGraphicalEditPart {
+public class TableTreeColumnGraphicalEditPart extends AbstractGraphicalEditPart {
 
 	protected IPropertyDescriptor sfDirectEditProperty = null;
 

@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: TableColumnContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $RCSfile: TableTreeColumnContainmentHandler.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-10-04 15:41:47 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -34,14 +34,14 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
  * 
  * @since 1.2.0
  */
-public class TableColumnContainmentHandler extends WidgetContainmentHandler {
+public class TableTreeColumnContainmentHandler extends WidgetContainmentHandler {
 
 	/**
 	 * @param model
 	 * 
 	 * @since 1.2.0
 	 */
-	public TableColumnContainmentHandler(Object model) {
+	public TableTreeColumnContainmentHandler(Object model) {
 		super(model);
 	}
 

@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: TableGraphicalEditPart.java,v $
- *  $Revision: 1.12 $  $Date: 2005-10-04 15:41:47 $ 
+ *  $RCSfile: TreeGraphicalEditPart.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-10-04 15:41:47 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -24,30 +24,37 @@ import org.eclipse.ve.internal.cde.core.ContainerPolicy;
  
 
 /**
- * SWT Table graphical editpart.
+ * swt Tree Graphical edit part.
  * @since 1.2.0
  */
-public class TableGraphicalEditPart extends AbstractTableTreeGraphicalEditPart {
+public class TreeGraphicalEditPart extends AbstractTableTreeGraphicalEditPart {
 
 	/**
 	 * @param aModel
 	 * 
 	 * @since 1.2.0
 	 */
-	public TableGraphicalEditPart(Object aModel) {
+	public TreeGraphicalEditPart(Object aModel) {
 		super(aModel);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.swt.AbstractTableTreeGraphicalEditPart#getContainerPolicy()
+	 */
 	protected ContainerPolicy getContainerPolicy() {
-		return new TableContainerPolicy(getEditDomain());
+		return new TreeContainerPolicy(getEditDomain());
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.swt.AbstractTableTreeGraphicalEditPart#getAllColumnRects(org.eclipse.jem.internal.proxy.core.IBeanProxy)
+	 */
 	protected IArrayBeanProxy getAllColumnRects(IBeanProxy modelProxy) {
-		return BeanSWTUtilities.invoke_Table_getAllColumnRects(modelProxy);
+		return BeanSWTUtilities.invoke_Tree_getAllColumnRects(modelProxy);
 	}
-
+	
 	public void setModel(Object model) {
 		super.setModel(model);
-		sfColumns = JavaInstantiation.getSFeature(((EObject) model).eClass().eResource().getResourceSet(), SWTConstants.SF_TABLE_COLUMNS);
+		sfColumns = JavaInstantiation.getSFeature(((EObject) model).eClass().eResource().getResourceSet(), SWTConstants.SF_TREE_COLUMNS);
 	}
+
 }

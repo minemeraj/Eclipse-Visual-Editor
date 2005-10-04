@@ -12,7 +12,7 @@
       </value>
    </objectChanges>
    <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableGraphicalEditPart:false" 
-       treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableEditPart" 
+       treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableTreeEditPart" 
        modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TableContainmentHandler"
        xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/table_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>

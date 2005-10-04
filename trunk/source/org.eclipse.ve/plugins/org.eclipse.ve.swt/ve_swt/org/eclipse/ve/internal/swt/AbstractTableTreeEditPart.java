@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: TableEditPart.java,v $ $Revision: 1.2 $ $Date: 2005-08-24 23:52:55 $
+ * $RCSfile: AbstractTableTreeEditPart.java,v $ $Revision: 1.1 $ $Date: 2005-10-04 15:41:48 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -19,22 +19,20 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.EditPolicy;
 
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
-
-import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.ContainerPolicy;
+import org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
 /**
- * Table has a relationship "columns" which holds its children which are org.eclipse.swt.widgets.TableColumn instances
+ * Table has a relationship "columns" which holds its children which are org.eclipse.swt.widgets.TableColumn or TreeColumn nstances
  */
-public class TableEditPart extends ControlTreeEditPart {
+public abstract class AbstractTableTreeEditPart extends ControlTreeEditPart {
 
 	protected EStructuralFeature sfColumns;
 
-	public TableEditPart(Object model) {
+	public AbstractTableTreeEditPart(Object model) {
 		super(model);
 	}
 
@@ -45,7 +43,7 @@ public class TableEditPart extends ControlTreeEditPart {
 
 		public void notifyChanged(Notification msg) {
 			if (msg.getFeature() == sfColumns)
-				queueExec(TableEditPart.this, "COLUMNS"); //$NON-NLS-1$
+				queueExec(AbstractTableTreeEditPart.this, "COLUMNS"); //$NON-NLS-1$
 		}
 	};
 
@@ -61,20 +59,12 @@ public class TableEditPart extends ControlTreeEditPart {
 
 	protected void createEditPolicies() {
 		super.createEditPolicies();
-		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy(new TableContainerPolicy(
-				EditDomain.getEditDomain(this))));
+		installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new TreeContainerEditPolicy(getContainerPolicy()));
 	}
+	
+	protected abstract ContainerPolicy getContainerPolicy();
 
 	public List getChildJavaBeans() {
 		return (List) ((EObject) getModel()).eGet(sfColumns);
-	}
-
-	/*
-	 * @see EditPart#setModel(Object)
-	 */
-	public void setModel(Object model) {
-		super.setModel(model);
-		ResourceSet rset = ((EObject) model).eResource().getResourceSet();
-		sfColumns = JavaInstantiation.getSFeature(rset, SWTConstants.SF_TABLE_COLUMNS);
 	}
 }

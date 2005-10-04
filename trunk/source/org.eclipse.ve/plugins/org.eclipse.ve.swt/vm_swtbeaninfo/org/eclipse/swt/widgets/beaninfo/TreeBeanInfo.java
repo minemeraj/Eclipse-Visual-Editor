@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeBeanInfo.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.11 $  $Date: 2005-10-04 15:41:48 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -64,6 +64,37 @@ public EventSetDescriptor[] getEventSetDescriptors() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		PropertyDescriptor aDescriptorList[] = {
+				// columnCount
+				super.createPropertyDescriptor(getBeanClass(),"columnCount", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, TableMessages.getString("columnCountDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, TableMessages.getString("columnCountSD"), //$NON-NLS-1$
+				}
+				),
+				// columns
+				super.createPropertyDescriptor(getBeanClass(),"columns", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, TableMessages.getString("columnsDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, TableMessages.getString("columnsSD"), //$NON-NLS-1$
+				}
+				),
+				// gridLineWidth
+				super.createPropertyDescriptor(getBeanClass(),"gridLineWidth", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, TableMessages.getString("gridLineWidthDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, TableMessages.getString("gridLineWidthSD"), //$NON-NLS-1$
+				}
+				),
+				// headerHeight
+				super.createPropertyDescriptor(getBeanClass(),"headerHeight", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, TableMessages.getString("headerHeightDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, TableMessages.getString("headerHeightSD"), //$NON-NLS-1$
+				}
+				),
+				// headerVisible
+				super.createPropertyDescriptor(getBeanClass(),"headerVisible", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, TableMessages.getString("headerVisibleDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, TableMessages.getString("headerVisibleSD"), //$NON-NLS-1$
+				}
+				),
+				
 			// itemCount
 			super.createPropertyDescriptor(getBeanClass(),"itemCount", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TreeMessages.getString("itemCountDN"), //$NON-NLS-1$
@@ -83,6 +114,12 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				DESIGNTIMEPROPERTY, Boolean.FALSE,
 			}
 			),
+			// linesVisible
+			super.createPropertyDescriptor(getBeanClass(),"linesVisible", new Object[] { //$NON-NLS-1$
+				DISPLAYNAME, TableMessages.getString("linesVisibleDN"), //$NON-NLS-1$
+				SHORTDESCRIPTION, TableMessages.getString("linesVisibleSD"), //$NON-NLS-1$
+			}
+			),			
 			// parentItem
 			super.createPropertyDescriptor(getBeanClass(),"parentItem", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TreeMessages.getString("parentItemDN"), //$NON-NLS-1$

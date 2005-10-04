@@ -74,6 +74,8 @@ public class SWTConstants {
 		
 		SF_TABLE_COLUMNS,
 		SF_TABLE_ITEMS,
+		SF_TREE_COLUMNS,
+		SF_TREE_ITEMS,
 		SF_TABFOLDER_ITEMS,
 		SF_TABITEM_CONTROL,
 		SF_CTABFOLDER_ITEMS,
@@ -87,11 +89,13 @@ public class SWTConstants {
 		
 	public static final String
 		POINT_CLASS_NAME,
-		RECTANGLE_CLASS_NAME;
+		RECTANGLE_CLASS_NAME,
+		TABLE_CLASS_NAME;
 		
 	static {
 		POINT_CLASS_NAME = "org.eclipse.swt.graphics.Point"; //$NON-NLS-1$
 		RECTANGLE_CLASS_NAME = "org.eclipse.swt.graphics.Rectangle"; //$NON-NLS-1$
+		TABLE_CLASS_NAME = "org.eclipse.swt.widgets.Table"; //$NON-NLS-1$
 	}		
 		
 	static {
@@ -154,6 +158,8 @@ public class SWTConstants {
 		
 		SF_TABLE_COLUMNS = URI.createURI("java:/org.eclipse.swt.widgets#Table/tableColumns");    //$NON-NLS-1$
 		SF_TABLE_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#Table/tableItems");    //$NON-NLS-1$
+		SF_TREE_COLUMNS = URI.createURI("java:/org.eclipse.swt.widgets#Tree/treeColumns");    //$NON-NLS-1$
+		SF_TREE_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#Tree/treeItems");    //$NON-NLS-1$		
 		SF_TABFOLDER_ITEMS = URI.createURI("java:/org.eclipse.swt.widgets#TabFolder/items");	 //$NON-NLS-1$
 		SF_TABITEM_CONTROL = URI.createURI("java:/org.eclipse.swt.widgets#TabItem/control");	 //$NON-NLS-1$
 		SF_CTABFOLDER_ITEMS = URI.createURI("java:/org.eclipse.swt.custom#CTabFolder/items");	 //$NON-NLS-1$

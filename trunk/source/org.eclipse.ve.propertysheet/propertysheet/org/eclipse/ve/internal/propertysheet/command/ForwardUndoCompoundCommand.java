@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet.command;
 /*
  *  $RCSfile: ForwardUndoCompoundCommand.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:44:29 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-04 15:41:49 $ 
  */
 
 
@@ -34,6 +34,13 @@ public class ForwardUndoCompoundCommand extends CompoundCommand {
 
 	public ForwardUndoCompoundCommand(String label) {
 		super(label);
+	}
+	
+	public void append(Command command) {
+		// Can't merge compound commands into forward undo's. It would mess up the ordering. CompoundCommands must be undone
+		// properly (in reverse), while sequential compound commands must be undone in the forward order.
+		if (command != null)
+			commandList.add(command);
 	}
 
 	/**

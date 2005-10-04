@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTWidgetChildDecoder.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-04 15:41:48 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -36,6 +36,8 @@ public class SWTWidgetChildDecoder extends SWTControlDecoder {
 		allocationFeatures=new HashMap();
 		allocationFeatures.put("org.eclipse.swt.widgets.TableColumn",TableDecoder.ADD_METHOD_SF_NAME); //$NON-NLS-1$
 		allocationFeatures.put("org.eclipse.swt.widgets.TableItem",TableDecoder.ADD_TABLEITEMS_METHOD_SF_NAME); //$NON-NLS-1$
+		allocationFeatures.put("org.eclipse.swt.widgets.TreeColumn",TreeDecoder.ADD_METHOD_SF_NAME); //$NON-NLS-1$
+		allocationFeatures.put("org.eclipse.swt.widgets.TreeItem",TreeDecoder.ADD_TREEITEMS_METHOD_SF_NAME); //$NON-NLS-1$		
 		allocationFeatures.put("org.eclipse.swt.widgets.TabItem",TabFolderDecoder.ADD_METHOD_SF_NAME); //$NON-NLS-1$
 		allocationFeatures.put("org.eclipse.swt.custom.CTabItem",CTabFolderDecoder.ADD_METHOD_SF_NAME); //$NON-NLS-1$
 		allocationFeatures.put("org.eclipse.swt.widgets.CoolItem",CoolBarDecoder.ADD_METHOD_SF_NAME); //$NON-NLS-1$

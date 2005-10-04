@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+<change:ChangeDescription xmlns:org.eclipse.jem.java="java.xmi" xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
    <objectChanges key="X:ROOT#//@root">
       <value featureName="eAnnotations">
          <listChanges referenceValues="_eAnnotations"/>
          <listChanges referenceValues="_eAnnotations1"/>
+         <listChanges referenceValues="_eAnnotations2"/>
       </value>
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+         <listChanges referenceValues="_eStructuralFeatures1"/>
+      </value>
+
    </objectChanges>
-   <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ControlGraphicalEditPart:false" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
+   <objectsToAttach 
+      graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TreeGraphicalEditPart:false" 
+      treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TreeTreeEditPart"       
+      xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tree_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
     </objectsToAttach>
-   <objectsToAttach beanLocation="GLOBAL_LOCAL" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach beanLocation="GLOBAL_LOCAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TreeProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.TreeDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
+   <objectsToAttach eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#TreeColumn" name="treeColumns" upperBound="-1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
+      <eAnnotations linkType="CHILD" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
+    </objectsToAttach>
+   <objectsToAttach eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#TreeItem" name="treeItems" upperBound="-1" xmi:id="_eStructuralFeatures1" xsi:type="ecore:EReference">
+      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
+      <eAnnotations linkType="CHILD" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
+    </objectsToAttach>
+   
 </change:ChangeDescription>

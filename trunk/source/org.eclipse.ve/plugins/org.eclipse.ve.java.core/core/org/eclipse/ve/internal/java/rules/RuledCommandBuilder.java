@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.rules;
 /*
  *  $RCSfile: RuledCommandBuilder.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-03 19:20:57 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-04 15:41:48 $ 
  */
 
 import java.util.*;
@@ -538,6 +538,34 @@ public class RuledCommandBuilder extends CommandBuilder {
 				internalAppend(buildUp);
 			}
 		}
+	}
+	
+	/**
+	 * This is used to assign membership to values that aren't being referenced directly but need to 
+	 * have membership assigned. For example a visual controller that returns a visual and the visual
+	 * is what is hooked into the model as a child of some other visual. In this case the controller
+	 * would not be child of something and it would not be on the freeform, so it would not normally
+	 * be dragged in via standard settings. This method will assign membership through a command to
+	 * the most logical place.
+	 * @param target object that needs membership assignment
+	 * @param relativeTo object that the target should be relative. In other words if the target is
+	 * normally local to something else, this object is what it should be local to.
+	 * 
+	 * @since 1.2.0
+	 */
+	public void assignMembership(EObject target, EObject relativeTo) {
+		if (!isDead()) {
+			CompoundCommand buildUp = null;
+			if (applyRules) {
+				buildUp = appendPre(createPre(relativeTo, null, target), null);
+			}
+
+			if (buildUp == null)
+				return;
+			else {
+				internalAppend(buildUp.unwrap());
+			}
+		}		
 	}
 
 	/**
