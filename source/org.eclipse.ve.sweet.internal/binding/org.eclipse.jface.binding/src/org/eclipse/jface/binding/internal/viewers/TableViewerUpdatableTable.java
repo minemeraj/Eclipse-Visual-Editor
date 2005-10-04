@@ -211,7 +211,9 @@ public class TableViewerUpdatableTable extends Updatable implements
 	}
 
 	public void setValues(int index, Object[] values) {
-		labels.set(index, values);
+		String[] stringValues = new String[values.length];
+		System.arraycopy(values, 0, stringValues, 0, values.length);
+		labels.set(index, stringValues);
 		viewer.update(elements.get(index), null);
 	}
 
