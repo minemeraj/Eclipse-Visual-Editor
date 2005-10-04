@@ -10,13 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ModelChangeController.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.10 $  $Date: 2005-10-04 18:08:41 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.jface.util.ListenerList;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
@@ -32,6 +33,59 @@ import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
  * @since 1.1.0
  */
 public abstract class ModelChangeController {
+	
+	/**
+	 * Event object for ModelChange event.
+	 * <p>
+	 * This class is not meant to be implemented or subclassed by customers.
+	 * @since 1.2.0
+	 */
+	public static class ModelChangeEvent extends EventObject {
+
+		private static final long serialVersionUID = 1L;
+		
+		/**
+		 * Transaction started event.
+		 * @see #getEvent()
+		 * @since 1.2.0
+		 */
+		public static final int TRANSACTION_STARTED = 0;
+		
+		/**
+		 * Transaction completed event.
+		 * @see #getEvent()
+		 * @since 1.2.0
+		 */
+		public static final int TRANSACTION_COMPLETED = 1;
+
+		private final int event;
+		
+		protected ModelChangeEvent(Object source, int event) {
+			super(source);
+			this.event = event;
+		}
+		
+		
+		public final int getEvent() {
+			return event;
+		}
+		
+	}
+	
+	/**
+	 * Listener for model change events.
+	 * 
+	 * @since 1.2.0
+	 */
+	public interface ModelChangeListener {
+		/**
+		 * Event notification
+		 * @param event event. The source is the model change controller. The {@link ModelChangeEvent#getEvent()} is the event.
+		 * 
+		 * @since 1.2.0
+		 */
+		public void transactionEvent(ModelChangeEvent event);
+	}
 
     public static final String MODEL_CHANGE_CONTROLLER_KEY = "org.eclipse.ve.internal.cde.core.ModelChangeController"; //$NON-NLS-1$
 
@@ -117,6 +171,8 @@ public abstract class ModelChangeController {
     public static HashKey createHashKey(Object firstObject, Object secondObject){
         return new HashKey(firstObject,secondObject);
     }
+    
+    protected ListenerList listeners;
 
     /**
      * Default ctor.
@@ -135,6 +191,30 @@ public abstract class ModelChangeController {
      */
     public ModelChangeController(Display display) {
     	this.display = display;
+    }
+    
+    /**
+     * Add a model change listener. If the listener already is added, it won't be added again.
+     * @param listener
+     * 
+     * @since 1.2.0
+     */
+    public void addModelChangeListener(ModelChangeListener listener) {
+    	if (listeners == null)
+    		listeners = new ListenerList();
+    	listeners.add(listener);
+    }
+    
+    /**
+     * Remove a model change listener. If the listener is not registered then there will be no effect.
+     * The listener may be removed during noticiation of an event.
+     * @param listener
+     * 
+     * @since 1.2.0
+     */
+    public void removeModelChangeListener(ModelChangeListener listener) {
+    	if (listener != null)
+    		listeners.remove(listener);
     }
 
     /**
@@ -257,10 +337,35 @@ public abstract class ModelChangeController {
      * @param phase Optional phase flag. It is up to the callers to determine what phase is. <code>null</code> if no phase indication needed.
      * @since 1.0.2
      */
-    public synchronized void transactionBeginning(Object phase) {
-        compoundChangeCount++;
-        if (phase != null)
-        	phases.add(phase);
+    public void transactionBeginning(Object phase) {
+    	boolean starting;
+        synchronized (this) {
+			starting = (0 == compoundChangeCount++);
+			if (phase != null)
+				phases.add(phase);
+		}
+        if (starting)
+        	fireModelChangeEvent(new ModelChangeEvent(this, ModelChangeEvent.TRANSACTION_STARTED));
+    }
+    
+    protected void fireModelChangeEvent(final ModelChangeEvent event) {
+    	if (listeners != null) {
+			final Object[] ll = listeners.getListeners();
+			final int[] index = new int[1];
+			ISafeRunnable safeRunnable = new ISafeRunnable() {
+
+				public void run() throws Exception {
+					((ModelChangeListener) ll[index[0]]).transactionEvent(event);
+				}
+
+				public void handleException(Throwable exception) {
+				}
+
+			};
+			for (int i = 0; i < ll.length; i++) {
+				Platform.run(safeRunnable);
+			}
+		}
     }
 
     /**
@@ -281,6 +386,7 @@ public abstract class ModelChangeController {
      */
     public void transactionEnded(Object phase) {
     	boolean executeRunnables = false;
+    	boolean transactionEnded = false;
         synchronized (this) {
 			if (phase == null || phases.remove(phase)) {
 				compoundChangeCount--;
@@ -288,6 +394,7 @@ public abstract class ModelChangeController {
 					compoundChangeCount = 0;
 					phases.clear(); // Can't have any phases waiting, and if we did, then there is a nesting problem, so just clear the list.
 					executeRunnables = uniqueRunnables != null && !uniqueRunnables.isEmpty();
+					transactionEnded = true;
 				}
 			}
 		}
@@ -307,6 +414,20 @@ public abstract class ModelChangeController {
         	else
         		executeAsyncRunnables();
         }
+        
+        if (transactionEnded) {
+        	// Execute async if not on ui thread so that this notification occurs
+        	// after ALL asyncrunnables have run.
+        	if (display != null && Display.getCurrent() != display)
+        		display.asyncExec(new Runnable() {
+					public void run() {
+						fireModelChangeEvent(new ModelChangeEvent(this, ModelChangeEvent.TRANSACTION_COMPLETED));
+					}
+				});
+        	else
+        		fireModelChangeEvent(new ModelChangeEvent(this, ModelChangeEvent.TRANSACTION_COMPLETED));
+        	
+        }
     }
 
     protected void executeAsyncRunnables() {
@@ -319,7 +440,6 @@ public abstract class ModelChangeController {
 			 * @see org.eclipse.core.runtime.ISafeRunnable#handleException(java.lang.Throwable)
 			 */
 			public void handleException(Throwable exception) {
-				CDEPlugin.getPlugin().getLog().log(new Status(IStatus.WARNING, CDEPlugin.getPlugin().getBundle().getSymbolicName(), 0, "", exception)); //$NON-NLS-1$
 			}
 
 			/* (non-Javadoc)
