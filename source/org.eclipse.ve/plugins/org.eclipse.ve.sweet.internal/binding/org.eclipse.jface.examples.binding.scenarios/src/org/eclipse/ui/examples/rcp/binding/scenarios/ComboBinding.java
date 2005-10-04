@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComboBinding.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:13:36 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-04 14:25:46 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -84,11 +84,9 @@ public class ComboBinding extends Composite {
 				new IdentityConverter(Object.class,Lodging.class),
 				new IdentityConverter(Lodging.class,Object.class));
 		
-		IUpdatableValue defaultLodging = dbs.createUpdatableValue(
-				skiTrip,emfPackage.getAdventure_DefaultLodging());
+		IUpdatableValue defaultLodging = dbs.createUpdatableValue(skiTrip,emfPackage.getAdventure_DefaultLodging());
 		
-		dbs.bindValue(txtDefaultLodging, "text", new EMFDerivedUpdatableValue(
-				defaultLodging, emfPackage.getLodging_Description()));
+		dbs.bindValue(txtDefaultLodging, "text", defaultLodging, "description");
 		
 	}
 	/**
