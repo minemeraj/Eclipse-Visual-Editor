@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ListBinding.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:13:36 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-04 14:25:46 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -92,15 +92,11 @@ public class ListBinding extends Composite {
 		IUpdatableValue defaultLodging = dbs.createUpdatableValue(
 				skiTrip,emfPackage.getAdventure_DefaultLodging());
 		
-//		This is the API we want to head towards - JRW instead of the much longer one below that exposes the internals		
-//		dbs.bindValue(txtDefaultLodging, "text", defaultLodging, emfPackage.getLodging_Description());
+		IUpdatableValue listViewerSelection = dbs.createUpdatableValue(listViewer,"selection");
 		
-		dbs.bindValue(txtDefaultLodging, "text", new EMFDerivedUpdatableValue(
-				defaultLodging, emfPackage.getLodging_Description()));
-
-		dbs.bindValue(txtName, "text", new EMFDerivedUpdatableValue(
-				defaultLodging, emfPackage.getLodging_Name()));
+		dbs.bindValue(txtDefaultLodging, "text", listViewerSelection, "description");
 		
+		dbs.bindValue(txtName, "text" , listViewerSelection , "name" );
 		
 	}
 	/**
