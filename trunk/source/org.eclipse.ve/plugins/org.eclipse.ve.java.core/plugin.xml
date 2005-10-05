@@ -395,9 +395,9 @@
             category="org.eclipse.jdt.ui.java.ve"
             class="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart"
             fastViewWidthRatio="50"
-            icon="icons/full/ctool16/general.gif"
+            icon="icons/full/ctool16/xmlview.gif"
             id="org.eclipse.ve.internal.java.codegen.editorpart.XMLViewPart"
-            name="XML View">
+            name="VE Model: XMI View">
       </view>
    </extension>   
    
