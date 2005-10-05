@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.33 $ $Date: 2005-10-05 14:15:25 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.34 $ $Date: 2005-10-05 18:51:16 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -394,13 +394,18 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 	 * 
 	 */
 	private class ActionBarMouseMotionListener extends MouseMotionListener.Stub {
-		SubclassCompositionComponentsGraphicalEditPart.ActionBarGraphicalEditPart actionBarEditPart = (ActionBarGraphicalEditPart) getEditDomain().getData(SubclassCompositionComponentsGraphicalEditPart.ActionBarGraphicalEditPart.class);
+		SubclassCompositionComponentsGraphicalEditPart.ActionBarGraphicalEditPart actionBarEditPart = null;
 		public List actionBarChildren = Collections.EMPTY_LIST;
 		IFigure actionBarFigure = null;
 		boolean mouseInsideActionBar = false;
 		boolean mouseInsideControlFigure = false;
 		boolean actionBarVisible = false;
 
+		private SubclassCompositionComponentsGraphicalEditPart.ActionBarGraphicalEditPart getActionBarEditPart () {
+			if (actionBarEditPart == null)
+				actionBarEditPart = (ActionBarGraphicalEditPart) getEditDomain().getData(SubclassCompositionComponentsGraphicalEditPart.ActionBarGraphicalEditPart.class);
+			return actionBarEditPart;
+		}
 		public void mouseEntered(MouseEvent me) {
 			if (me.getSource() == actionBarFigure) {
 				mouseInsideActionBar = true;
@@ -425,7 +430,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 
 		public void showActionBar() {
 			if (actionBarFigure == null) {
-				actionBarFigure = actionBarEditPart.getFigure();
+				actionBarFigure = getActionBarEditPart().getFigure();
 				populateActionBar();
 				if (actionBarChildren != null && !actionBarChildren.isEmpty()) {
 					actionBarFigure.addMouseMotionListener(myMouseListener);
@@ -459,10 +464,11 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 				actionBarFigure.setVisible(false);
 				actionBarVisible = false;
 				actionBarFigure.removeMouseMotionListener(myMouseListener);
-				actionBarEditPart.removeEditPartListener(myEditPartListener);
+				getActionBarEditPart().removeEditPartListener(myEditPartListener);
 				actionBarFigure = null;
-				actionBarEditPart.addActionBarChildren((Collections.EMPTY_LIST));
-				actionBarEditPart.refresh();
+				getActionBarEditPart().addActionBarChildren((Collections.EMPTY_LIST));
+				getActionBarEditPart().refresh();
+				actionBarEditPart = null; // clear the cache of this so we can re-get the next time we need it
 			}
 		}
 		private void populateActionBar() {
@@ -480,9 +486,9 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 				}
 			}
 			if (!actionBarChildren.isEmpty()) {
-				actionBarEditPart.addEditPartListener(myEditPartListener);
-				actionBarEditPart.addActionBarChildren(actionBarChildren);
-				actionBarEditPart.refresh();
+				getActionBarEditPart().addEditPartListener(myEditPartListener);
+				getActionBarEditPart().addActionBarChildren(actionBarChildren);
+				getActionBarEditPart().refresh();
 			}
 		}
 	}

@@ -86,9 +86,9 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 
 		public IFigure getHoverOverLay() {
 			if (treeViewer != null)
-				return new Label("I am a Tree with a Tree Viewer");
+				return new Label("I am a Tree with a Viewer");
 			else
-				return new Label("I am a Tree without a Tree Viewer");
+				return new Label("I am a Tree without a Viewer");
 		}
 
 		public IFigure getFigureOverLay() {
@@ -130,7 +130,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 					ImageFigure fig = new ImageFigure();
 					fig.setImage(noTreeViewerImage);
 					fig.add(fErrorIndicator);
-					label.getToolTip().add(new Label("Make me into TreeViewer"));
+					label.getToolTip().add(new Label("Make me into a Viewer"));
 					fig.setToolTip(label.getToolTip());
 					return fig;
 				}
