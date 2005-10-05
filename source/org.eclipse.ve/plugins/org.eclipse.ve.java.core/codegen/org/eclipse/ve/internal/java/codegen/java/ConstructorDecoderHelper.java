@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.61 $  $Date: 2005-10-05 13:25:19 $ 
+ *  $Revision: 1.62 $  $Date: 2005-10-05 13:27:40 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -493,12 +493,12 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			bpf.createImplicitBeanPart(bp,feature);			
 		}
 	}
-	}
+	
 	
 	protected void createImplicitInstancesIfNeeded() {
 		primCreateImplicitInstanceIfNeeded(fbeanPart, null);
 	}
-	}
+	
 	
 	protected void designateAsImplicit (boolean updateModel) throws CodeGenException {
 		
