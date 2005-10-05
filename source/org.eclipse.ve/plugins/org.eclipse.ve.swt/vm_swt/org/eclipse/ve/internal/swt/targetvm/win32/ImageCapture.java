@@ -102,7 +102,7 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		} catch (NoClassDefFoundError e) {
 		} // might not be on 3.1 of SWT
 		if (specialClass) {
-			print_bits = print_bits | PRF_CHILDREN;
+			print_bits |= PRF_CHILDREN;
 		}
 		GC gc = new GC(image);
 		
@@ -112,7 +112,15 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		if (f != null)
 			gc.setFont(f);
 		
-		OS.SendMessage(aControl.handle, WM_PRINT, gc.handle, print_bits);
+		int hwnd = aControl.handle;
+		if (aControl instanceof Tree) {
+			int hwndParent = OS.GetParent(hwnd);
+			if (hwndParent != aControl.getParent().handle) {
+				hwnd = hwndParent;
+				print_bits |= PRF_CHILDREN;		
+			}
+		}
+		OS.SendMessage(hwnd, WM_PRINT, gc.handle, print_bits);
 
 		gc.dispose();
 		return image;
