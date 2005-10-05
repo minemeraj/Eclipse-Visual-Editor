@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeMethodRef.java,v $
- *  $Revision: 1.50 $  $Date: 2005-09-20 22:09:37 $ 
+ *  $Revision: 1.51 $  $Date: 2005-10-05 17:58:07 $ 
  */
 
 import java.util.*;
@@ -405,8 +405,10 @@ protected void addExpression (List l, CodeExpressionRef exp, int index) throws C
  */
 protected  boolean isGrouping (BeanPart bp, List expressions, int index) {
 	boolean result = false;
-	if (bp.getInitExpression().isStateSet(CodeExpressionRef.STATE_INIT_EXPR)&&
-		bp.isImplicit())
+	if (bp.isImplicit() &&
+		bp.getInitExpression()!=null && 
+		bp.getInitExpression().isStateSet(CodeExpressionRef.STATE_NO_SRC))
+		
 		bp = bp.getImplicitParent();
 	for (int i=index; i>=0; i--) {	
 	    CodeExpressionRef exp = (CodeExpressionRef) expressions.get(i);
