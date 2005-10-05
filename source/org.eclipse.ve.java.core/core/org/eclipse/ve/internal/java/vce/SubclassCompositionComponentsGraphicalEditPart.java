@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  * $RCSfile: SubclassCompositionComponentsGraphicalEditPart.java,v $ $Revision:
- * 1.1 $ $Date: 2005-10-05 14:15:25 $
+ * 1.1 $ $Date: 2005-10-05 18:51:17 $
  */
 import java.util.*;
 
@@ -166,7 +166,14 @@ public class SubclassCompositionComponentsGraphicalEditPart
 		}
 		
 		protected void createEditPolicies() {
-			installEditPolicy(EditPolicy.LAYOUT_ROLE, new FlowLayoutEditPolicy(new BaseJavaContainerPolicy(EditDomain.getEditDomain(this))));
+			installEditPolicy(EditPolicy.LAYOUT_ROLE, new FlowLayoutEditPolicy(new BaseJavaContainerPolicy(EditDomain.getEditDomain(this))) {
+				protected void showLayoutTargetFeedback(Request request) {
+					// Don't do anything... don't want to move around the action bar editparts
+				}
+				protected boolean isHorizontal() {
+					return true;
+				}
+			});
 		}
 
 		protected void refreshChildren() {
