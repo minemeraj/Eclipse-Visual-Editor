@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  * $RCSfile: SubclassCompositionComponentsGraphicalEditPart.java,v $ $Revision:
- * 1.1 $ $Date: 2005-10-05 18:51:17 $
+ * 1.1 $ $Date: 2005-10-05 22:45:17 $
  */
 import java.util.*;
 
@@ -20,6 +20,7 @@ import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.swt.graphics.Color;
@@ -40,9 +41,8 @@ public class SubclassCompositionComponentsGraphicalEditPart
 			CompositionComponentsGraphicalEditPart
 		implements IFreeFormRoot {
 	private ActionBarGraphicalEditPart actionBarEditpart = null;
-	static final Color VERY_LIGHT_GRAY = new Color(null, 255, 255, 225);
-//	static final Color VERY_LIGHT_GRAY = new Color(null, 210, 210, 210);
-	static final int ACTIONBAR_FIGURE_MARGIN = 6;
+	static final Color VERY_LIGHT_YELLOW = new Color(null, 255, 255, 220);
+	static final int ACTIONBAR_FIGURE_MARGIN = 5;
 
 	public SubclassCompositionComponentsGraphicalEditPart(Object model) {
 		super(model);
@@ -86,8 +86,6 @@ public class SubclassCompositionComponentsGraphicalEditPart
 		if (actionBarEditpart == null) {
 			actionBarEditpart = new ActionBarGraphicalEditPart();
 			actionBarEditpart.setParent(getRoot());
-			IFigure fig = actionBarEditpart.getFigure();	
-			getLayer(LayerConstants.HANDLE_LAYER).add(fig);
 			actionBarEditpart.addNotify();
 			if (!actionBarEditpart.isActive())
 				actionBarEditpart.activate();
@@ -102,7 +100,6 @@ public class SubclassCompositionComponentsGraphicalEditPart
 		
 		// Remove the action bar editpart
 		if (actionBarEditpart != null) {
-			getLayer(LayerConstants.HANDLE_LAYER).remove(actionBarEditpart.getFigure());
 			actionBarEditpart.deactivate();
 			actionBarEditpart = null;
 		}
@@ -117,20 +114,56 @@ public class SubclassCompositionComponentsGraphicalEditPart
 	 * Special editpart for the action bar to host the editpart contributors 
 	 */
 	public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
-
+		IFigure actionBarFigure = null;
+		Polyline connectionFigure = null;
+		RectangleFigure anchorFigure = null;
 		List actionBarChildren = null;
 
+		public void activate() {
+			super.activate();
+			getLayer(LayerConstants.HANDLE_LAYER).add(getFigure());
+		}
+		public void deactivate() {
+			super.deactivate();
+			getLayer(LayerConstants.HANDLE_LAYER).remove(getFigure());
+			if (connectionFigure != null) {
+				getLayer(LayerConstants.HANDLE_LAYER).remove(connectionFigure);
+				getLayer(LayerConstants.HANDLE_LAYER).remove(anchorFigure);
+			}
+		}
 		public void addActionBarChildren(List actionBarChildren) {
 			this.actionBarChildren = actionBarChildren;
 		}
 
+		public void show(Rectangle hostBounds, int orientation) {
+			Rectangle bounds = actionBarFigure.getBounds();
+			actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width / 2 - 10, hostBounds.y - bounds.height - 7));
+			actionBarFigure.setVisible(true);
+			if (connectionFigure == null && anchorFigure == null) {
+				connectionFigure = new Polyline();
+				connectionFigure.setLineWidth(2);
+				anchorFigure = new RectangleFigure();
+				anchorFigure.setSize(4,4);
+				anchorFigure.setBackgroundColor(ColorConstants.black);
+				getLayer(LayerConstants.HANDLE_LAYER).add(connectionFigure);
+				getLayer(LayerConstants.HANDLE_LAYER).add(anchorFigure);
+			}
+			PointList pl = new PointList(new int[] { hostBounds.x + hostBounds.width / 2 - 12, hostBounds.y + 10, bounds.x + 7,
+					bounds.y + bounds.height - 1});
+			connectionFigure.setPoints(pl);
+			connectionFigure.setVisible(true);
+			anchorFigure.setLocation(new Point(hostBounds.x + hostBounds.width / 2 - 14, hostBounds.y + 11));
+			anchorFigure.setVisible(true);
+		}
+		public void hide() {
+			actionBarFigure.setVisible(false);
+			connectionFigure.setVisible(false);
+			anchorFigure.setVisible(false);
+		}
 		protected IFigure createFigure() {
-			IFigure actionBarFigure = new RoundedRectangle() {
-				int heightReduction = 12;
+			actionBarFigure = new RoundedRectangle() {
 				protected void fillShape(Graphics graphics) {
-					Rectangle rect = getBounds().getCopy();
-//					Rectangle rect = getBounds().getCopy().expand(-1, -1);
-					rect.height -= heightReduction;
+					Rectangle rect = getBounds().getCopy().expand(-1, -1);
 					graphics.fillGradient(rect, false);
 				}
 				protected void outlineShape(Graphics graphics) {
@@ -140,36 +173,35 @@ public class SubclassCompositionComponentsGraphicalEditPart
 					f.x = r.x + lineWidth / 2;
 					f.y = r.y + lineWidth / 2;
 					f.width = r.width - lineWidth;
-					f.height = r.height - lineWidth - heightReduction;
+					f.height = r.height - lineWidth;
 					graphics.drawRoundRectangle(f, corner.width, corner.height);
-//					// draw the tail to the fake bubble
-//					graphics.drawPolyline(new int[] { r.x + 5, r.y + r.height - heightReduction, r.x + 4, r.y + r.height, r.x + 8,
-//							r.y + r.height - heightReduction});
-					graphics.setBackgroundColor(ColorConstants.darkGray);
-					graphics.fillRectangle(r.x + 7, r.y + r.height - heightReduction - 2, 4, 4);
-					graphics.fillRectangle(r.x, r.y + r.height-4, 4, 4);
-					// Draw the connecting line from the bottom of the action bar to the bottom left
-					// so the figure can looked connected to the main figure
-					graphics.setForegroundColor(ColorConstants.blue);
-					graphics.drawLine(r.x + 7, r.y + r.height - heightReduction, r.x, r.y + r.height);
 				}
 			};
-			XYLayout fl = new XYLayout();
-//			fl.setMajorAlignment(FlowLayout.ALIGN_CENTER);
-//			fl.setMinorAlignment(FlowLayout.ALIGN_CENTER);
-//			fl.setSpacing(5);
-			actionBarFigure.setLayoutManager(fl);
+			// Use XY positioning
+			XYLayout xylayout = new XYLayout();
+			actionBarFigure.setLayoutManager(xylayout);
+
+			// For the fill gradient, left to right go from white to very light yellow to show depth
 			actionBarFigure.setForegroundColor(ColorConstants.buttonLightest);
-			actionBarFigure.setBackgroundColor(new Color(null,255,255,220));
+			actionBarFigure.setBackgroundColor(VERY_LIGHT_YELLOW);
+
 			actionBarFigure.setVisible(false);
 			return actionBarFigure;
 		}
 		
 		protected void createEditPolicies() {
-			installEditPolicy(EditPolicy.LAYOUT_ROLE, new FlowLayoutEditPolicy(new BaseJavaContainerPolicy(EditDomain.getEditDomain(this))) {
+			// Need a layout policy in order to provide selection capability on the action edit parts
+			installEditPolicy(EditPolicy.LAYOUT_ROLE, new FlowLayoutEditPolicy(new BaseJavaContainerPolicy(EditDomain.getEditDomain(this)) {
+
+				protected boolean isValidChild(Object child, EStructuralFeature containmentSF) {
+					return false;
+				}
+			}) {
+
 				protected void showLayoutTargetFeedback(Request request) {
 					// Don't do anything... don't want to move around the action bar editparts
 				}
+
 				protected boolean isHorizontal() {
 					return true;
 				}
@@ -198,19 +230,21 @@ public class SubclassCompositionComponentsGraphicalEditPart
 				if (size.height > abHeight)
 					abHeight = size.height;
 			}
-			getFigure().setSize(abWidth + 25, abHeight + ACTIONBAR_FIGURE_MARGIN + 18);
+			getFigure().setSize(abWidth + 25, abHeight + ACTIONBAR_FIGURE_MARGIN*2);
 		}
-		private void setChildrenConstraints () {
+		
+		private void setChildrenConstraints() {
 			List children = getFigure().getChildren();
 			LayoutManager lm = getFigure().getLayoutManager();
-			if (children.isEmpty() || lm == null) {
-				return;
-			}
+			if (children.isEmpty() || lm == null) { return; }
 			int abWidth = ACTIONBAR_FIGURE_MARGIN;
 			for (int i = 0; i < children.size(); i++) {
 				IFigure childFigure = (IFigure) children.get(i);
 				if (lm.getConstraint(childFigure) == null)
-					getFigure().setConstraint(childFigure, new Rectangle(abWidth, ACTIONBAR_FIGURE_MARGIN, childFigure.getPreferredSize().width, childFigure.getPreferredSize().height));
+					getFigure().setConstraint(
+							childFigure,
+							new Rectangle(abWidth, ACTIONBAR_FIGURE_MARGIN, childFigure.getPreferredSize().width,
+									childFigure.getPreferredSize().height));
 				abWidth += childFigure.getPreferredSize().width + ACTIONBAR_FIGURE_MARGIN;
 			}
 		}

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.34 $ $Date: 2005-10-05 18:51:16 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.35 $ $Date: 2005-10-05 22:45:17 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -18,7 +18,6 @@ import java.util.*;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -60,6 +59,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 	protected IPropertyDescriptor sfDirectEditProperty = null;
 	private ActionBarMouseMotionListener myMouseListener = null;
 	private ActionBarEditPartListener myEditPartListener = null;
+	private ActionBarFigureListener myHostFigureListener = null;
 	private boolean actionBarEditpartSelected = false;
 
 	public ControlGraphicalEditPart(Object model) {
@@ -146,6 +146,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 			}
 			getFigure().addMouseMotionListener(this.myMouseListener = new ActionBarMouseMotionListener());
 			addEditPartListener(myEditPartListener = new ActionBarEditPartListener());
+			getFigure().addFigureListener(this.myHostFigureListener = new ActionBarFigureListener());
 		}
 	
 		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
@@ -168,6 +169,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		if (fEditPartContributors != null) {
 			getFigure().removeMouseMotionListener(this.myMouseListener);
 			removeEditPartListener(this.myEditPartListener);
+			getFigure().removeFigureListener(myHostFigureListener);
 		}
 	}
 
@@ -434,10 +436,9 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 				populateActionBar();
 				if (actionBarChildren != null && !actionBarChildren.isEmpty()) {
 					actionBarFigure.addMouseMotionListener(myMouseListener);
-					Rectangle figBounds = getFigure().getBounds();
-					actionBarFigure.setLocation(new Point((figBounds.x + figBounds.width/2) + 8, figBounds.y - actionBarFigure.getSize().height));
+//					actionBarFigure.setLocation(new Point((figBounds.x + figBounds.width/2) + 8, figBounds.y - actionBarFigure.getSize().height));
 					if (!actionBarVisible) {
-						actionBarFigure.setVisible(true);
+						getActionBarEditPart().show(getFigure().getBounds().getCopy(), 0);
 						actionBarVisible = true;
 					}
 				}
@@ -461,13 +462,13 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		};
 		public void hideActionBar() {
 			if (actionBarVisible) {
-				actionBarFigure.setVisible(false);
+				getActionBarEditPart().hide();
 				actionBarVisible = false;
 				actionBarFigure.removeMouseMotionListener(myMouseListener);
 				getActionBarEditPart().removeEditPartListener(myEditPartListener);
-				actionBarFigure = null;
 				getActionBarEditPart().addActionBarChildren((Collections.EMPTY_LIST));
 				getActionBarEditPart().refresh();
+				actionBarFigure = null;
 				actionBarEditPart = null; // clear the cache of this so we can re-get the next time we need it
 			}
 		}
@@ -518,5 +519,12 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 			}
 		}
 	};
+	class ActionBarFigureListener implements FigureListener {
+
+		public void figureMoved(IFigure source) {
+			Display.getCurrent().asyncExec(myMouseListener.showActionBarRunnable);
+		}
+		
+	}
 	
 }  
