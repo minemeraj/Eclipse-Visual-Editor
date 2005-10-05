@@ -11,9 +11,8 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.27 $  $Date: 2005-08-29 18:47:06 $ 
+ *  $Revision: 1.28 $  $Date: 2005-10-05 15:25:09 $ 
  */
-import java.awt.Point;
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -22,8 +21,9 @@ import org.eclipse.jdt.core.IField;
 import org.eclipse.ve.internal.cdm.CDMFactory;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.impl.KeyedConstraintImpl;
-import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
-import org.eclipse.ve.internal.cdm.model.Rectangle;
+import org.eclipse.ve.internal.cdm.model.*;
+
+import org.eclipse.ve.internal.cde.core.XYLayoutUtility;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
@@ -80,7 +80,10 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 			FreeFormAnnotationTemplate fft = getFFtemplate() ;
 			if (constraint instanceof Rectangle) {
 				Rectangle r = (Rectangle) constraint;
-				fft.setPosition(new Point(r.x,r.y)) ;
+				if (r.width == XYLayoutUtility.PREFERRED_SIZE && r.height == XYLayoutUtility.PREFERRED_SIZE)
+					fft.setPosition(r.getLocation());
+				else
+					fft.setRectangle(r);
 			}else if (constraint instanceof Boolean) {
 				// Free Form or not
 				if (!((Boolean)constraint).booleanValue())
@@ -125,13 +128,16 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 			Object curVal = getAnnotationValue();
 			if (curVal instanceof Rectangle) {
 				Rectangle rVal = (Rectangle) curVal;
-				if (args[0] == rVal.x && args[1] == rVal.y)
+				if (args[0] == rVal.x && args[1] == rVal.y && (args.length == 2 || (args[2] == rVal.width && args[3] == rVal.height)))
 					return true;
 			}
 		  } catch (CodeGenException e1) {}
           
 	      KeyedConstraintImpl c = (KeyedConstraintImpl) CDMFactory.eINSTANCE.create(CDMPackage.eINSTANCE.getKeyedConstraint());
-	      c.setValue(new Rectangle(args[0],args[1],-1,-1)) ;
+	      if (args.length == 2)
+	    	  c.setValue(new Rectangle(args[0],args[1],XYLayoutUtility.PREFERRED_SIZE,XYLayoutUtility.PREFERRED_SIZE));
+	      else
+	    	  c.setValue(new Rectangle(args[0],args[1],args[2], args[3]));
 	      try {
 	      	setAnnotationValue (c) ;
 	      }

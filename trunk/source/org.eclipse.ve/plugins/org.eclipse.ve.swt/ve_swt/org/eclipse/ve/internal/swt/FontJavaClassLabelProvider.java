@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FontJavaClassLabelProvider.java,v $
- *  $Revision: 1.12 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.13 $  $Date: 2005-10-05 15:25:09 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -62,7 +62,7 @@ public class FontJavaClassLabelProvider extends LabelProvider {
 			if (fontBeanProxy == null) return ""; //$NON-NLS-1$ 
 			IBeanTypeProxy environmentBeanTypeProxy = fontBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
 					"org.eclipse.ve.internal.swt.targetvm.Environment"); //$NON-NLS-1$
-			IMethodProxy getFontLabelMethodProxy = environmentBeanTypeProxy.getMethodProxy("getFontLabel", new IBeanTypeProxy[] { fontBeanProxy.getTypeProxy()}); //$NON-NLS-1$
+			IMethodProxy getFontLabelMethodProxy = environmentBeanTypeProxy.getMethodProxy("getFontLabel", new String[] {"org.eclipse.swt.graphics.Font"}); //$NON-NLS-1$ //$NON-NLS-2$
 			IStringBeanProxy fontLabelBeanProxy = (IStringBeanProxy) getFontLabelMethodProxy.invoke(environmentBeanTypeProxy, fontBeanProxy);
 			return fontLabelBeanProxy.stringValue();
 		} catch (ThrowableProxy exc) {

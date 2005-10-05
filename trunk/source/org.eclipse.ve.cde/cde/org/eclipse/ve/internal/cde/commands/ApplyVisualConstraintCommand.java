@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.commands;
 /*
  *  $RCSfile: ApplyVisualConstraintCommand.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-05 15:25:08 $ 
  */
 
 import org.eclipse.ve.internal.cdm.*;
@@ -55,7 +55,7 @@ public class ApplyVisualConstraintCommand extends CommandWrapper {
 		KeyedConstraintImpl c = (KeyedConstraintImpl) CDMFactory.eINSTANCE.create(CDMPackage.eINSTANCE.getKeyedConstraint());
 		c.setKey(CDMModelConstants.VISUAL_CONSTRAINT_KEY);
 		if (fNewConstraint instanceof Rectangle) {
-			c.setValue(fNewConstraint);
+			c.setValue(new Rectangle((Rectangle) fNewConstraint));
 		} else if (fNewConstraint instanceof Point) {
 			// Setting size instead of entire constraint.
 			Object oldV = fTarget.getKeyedValues().get(CDMModelConstants.VISUAL_CONSTRAINT_KEY);
