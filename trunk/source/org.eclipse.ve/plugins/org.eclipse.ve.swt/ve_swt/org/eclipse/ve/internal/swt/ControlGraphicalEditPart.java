@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.32 $ $Date: 2005-09-30 17:36:14 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.33 $ $Date: 2005-10-05 14:15:25 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -430,7 +430,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 				if (actionBarChildren != null && !actionBarChildren.isEmpty()) {
 					actionBarFigure.addMouseMotionListener(myMouseListener);
 					Rectangle figBounds = getFigure().getBounds();
-					actionBarFigure.setLocation(new Point(figBounds.x + figBounds.width/2, figBounds.y - actionBarFigure.getSize().height - 4));
+					actionBarFigure.setLocation(new Point((figBounds.x + figBounds.width/2) + 8, figBounds.y - actionBarFigure.getSize().height));
 					if (!actionBarVisible) {
 						actionBarFigure.setVisible(true);
 						actionBarVisible = true;

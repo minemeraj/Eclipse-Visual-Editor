@@ -5,7 +5,8 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.TreeEditPart;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -34,7 +35,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 				.getEStructuralFeature("tree"));
 	}
 
-	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/cview16/treeviewer_overlay.gif")
+	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer_overlay.gif")
 			.getImageData();
 
 	private static class TreeViewerTreeEditPartContributor implements TreeEditPartContributor {
@@ -61,17 +62,20 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 		return null;
 	}
 
-	static Image treeViewerOverlayImage = CDEPlugin.getImageFromPlugin(CDEPlugin.getPlugin(), "icons/full/cview16/treeviewer_overlay.gif");
-	static Image treeOverlayImage = CDEPlugin.getImageFromPlugin(CDEPlugin.getPlugin(), "icons/full/cview16/tree_overlay.gif");
+	static Image treeViewerOverlayImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer_overlay.gif");
+	static Image treeOverlayImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/tree_overlay.gif");
 	static Image treeViewerImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer_obj.gif");
+	static Image noTreeViewerImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/no_treeviewer_obj.gif");
 
 	private static class TreeViewerGraphicalEditPartContributor implements GraphicalEditPartContributor {
 
 		JavaBeanGraphicalEditPart treeViewerEditpart = null;
 
+		private Object tree;
 		private Object treeViewer;
 
-		public TreeViewerGraphicalEditPartContributor(Object treeViewer) {
+		public TreeViewerGraphicalEditPartContributor(Object tree, Object treeViewer) {
+			this.tree = tree;
 			this.treeViewer = treeViewer;
 		}
 
@@ -89,7 +93,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 
 		public IFigure getFigureOverLay() {
 			final Image image = treeViewer != null ? treeViewerOverlayImage : treeOverlayImage;
-			Rectangle bounds = image.getBounds();
+			org.eclipse.swt.graphics.Rectangle bounds = image.getBounds();
 			IFigure fig = new Figure() {
 
 				protected void paintFigure(Graphics graphics) {
@@ -115,16 +119,31 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 						fig.add(fErrorIndicator);
 						fig.setToolTip(label.getToolTip());
 						return fig;
-	}
+					}
 					protected void setupLabelProvider() {
 						// don't do anything here, we'll provide our own image.
 					}
 				}};
-			return null;
+			else return new GraphicalEditPart[] {new JavaBeanGraphicalEditPart(tree) {
+				protected IFigure createFigure() {
+					Label label = (Label)super.createFigure();
+					ImageFigure fig = new ImageFigure();
+					fig.setImage(noTreeViewerImage);
+					fig.add(fErrorIndicator);
+					label.getToolTip().add(new Label("Make me into TreeViewer"));
+					fig.setToolTip(label.getToolTip());
+					return fig;
+				}
+				protected void setupLabelProvider() {
+					// don't do anything here, we'll provide our own image.
+				}
+			}};
 		}
 	}
 
 	public GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart) {
-		return new TreeViewerGraphicalEditPartContributor(getTreeViewer((IJavaInstance) graphicalEditPart.getModel()));
-}
+		Object tree = graphicalEditPart.getModel();
+		return new TreeViewerGraphicalEditPartContributor(tree, getTreeViewer((IJavaInstance)tree));
+	}
+
 }

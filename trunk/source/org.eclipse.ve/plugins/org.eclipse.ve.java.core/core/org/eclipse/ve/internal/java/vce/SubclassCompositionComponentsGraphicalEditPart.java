@@ -11,13 +11,12 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  * $RCSfile: SubclassCompositionComponentsGraphicalEditPart.java,v $ $Revision:
- * 1.1 $ $Date: 2005-09-30 17:36:13 $
+ * 1.1 $ $Date: 2005-10-05 14:15:25 $
  */
 import java.util.*;
 
 import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -41,7 +40,9 @@ public class SubclassCompositionComponentsGraphicalEditPart
 			CompositionComponentsGraphicalEditPart
 		implements IFreeFormRoot {
 	private ActionBarGraphicalEditPart actionBarEditpart = null;
-	static final Color VERY_LIGHT_GRAY = new Color(null, 210, 210, 210);
+	static final Color VERY_LIGHT_GRAY = new Color(null, 255, 255, 225);
+//	static final Color VERY_LIGHT_GRAY = new Color(null, 210, 210, 210);
+	static final int ACTIONBAR_FIGURE_MARGIN = 6;
 
 	public SubclassCompositionComponentsGraphicalEditPart(Object model) {
 		super(model);
@@ -125,9 +126,10 @@ public class SubclassCompositionComponentsGraphicalEditPart
 
 		protected IFigure createFigure() {
 			IFigure actionBarFigure = new RoundedRectangle() {
-				int heightReduction = 3;
+				int heightReduction = 12;
 				protected void fillShape(Graphics graphics) {
-					Rectangle rect = getBounds().getCopy().expand(-1, -1);
+					Rectangle rect = getBounds().getCopy();
+//					Rectangle rect = getBounds().getCopy().expand(-1, -1);
 					rect.height -= heightReduction;
 					graphics.fillGradient(rect, false);
 				}
@@ -140,17 +142,25 @@ public class SubclassCompositionComponentsGraphicalEditPart
 					f.width = r.width - lineWidth;
 					f.height = r.height - lineWidth - heightReduction;
 					graphics.drawRoundRectangle(f, corner.width, corner.height);
-					// draw the tail to the fake bubble
-					graphics.drawPolyline(new int[] { r.x + 4, r.y + r.height - heightReduction, r.x + 3, r.y + r.height, r.x + 8,
-							r.y + r.height - heightReduction});
+//					// draw the tail to the fake bubble
+//					graphics.drawPolyline(new int[] { r.x + 5, r.y + r.height - heightReduction, r.x + 4, r.y + r.height, r.x + 8,
+//							r.y + r.height - heightReduction});
+					graphics.setBackgroundColor(ColorConstants.darkGray);
+					graphics.fillRectangle(r.x + 7, r.y + r.height - heightReduction - 2, 4, 4);
+					graphics.fillRectangle(r.x, r.y + r.height-4, 4, 4);
+					// Draw the connecting line from the bottom of the action bar to the bottom left
+					// so the figure can looked connected to the main figure
+					graphics.setForegroundColor(ColorConstants.blue);
+					graphics.drawLine(r.x + 7, r.y + r.height - heightReduction, r.x, r.y + r.height);
 				}
 			};
-			FlowLayout fl = new FlowLayout();
-			fl.setMajorAlignment(FlowLayout.ALIGN_CENTER);
-			fl.setMinorAlignment(FlowLayout.ALIGN_RIGHTBOTTOM);
+			XYLayout fl = new XYLayout();
+//			fl.setMajorAlignment(FlowLayout.ALIGN_CENTER);
+//			fl.setMinorAlignment(FlowLayout.ALIGN_CENTER);
+//			fl.setSpacing(5);
 			actionBarFigure.setLayoutManager(fl);
 			actionBarFigure.setForegroundColor(ColorConstants.buttonLightest);
-			actionBarFigure.setBackgroundColor(VERY_LIGHT_GRAY);
+			actionBarFigure.setBackgroundColor(new Color(null,255,255,220));
 			actionBarFigure.setVisible(false);
 			return actionBarFigure;
 		}
@@ -161,24 +171,41 @@ public class SubclassCompositionComponentsGraphicalEditPart
 
 		protected void refreshChildren() {
 			super.refreshChildren();
+			setChildrenConstraints();
 			calculateFigureSize();
 		}
 
+		/*
+		 * Calculate and set the action bar size
+		 */
 		private void calculateFigureSize() {
-			// Calculate and set action bar size
 			List children = getFigure().getChildren();
 			if (children.isEmpty()) {
 				return;
 			}
-			int abWidth = 0;
+			int abWidth = ACTIONBAR_FIGURE_MARGIN;
 			int abHeight = 0;
 			for (int i = 0; i < children.size(); i++) {
 				Dimension size = ((IFigure) children.get(i)).getPreferredSize();
-				abWidth += size.width + ((FlowLayout) getFigure().getLayoutManager()).getMinorSpacing();
+				abWidth += size.width + ACTIONBAR_FIGURE_MARGIN;
 				if (size.height > abHeight)
 					abHeight = size.height;
 			}
-			getFigure().setSize(abWidth + 20, abHeight + 6);
+			getFigure().setSize(abWidth + 25, abHeight + ACTIONBAR_FIGURE_MARGIN + 18);
+		}
+		private void setChildrenConstraints () {
+			List children = getFigure().getChildren();
+			LayoutManager lm = getFigure().getLayoutManager();
+			if (children.isEmpty() || lm == null) {
+				return;
+			}
+			int abWidth = ACTIONBAR_FIGURE_MARGIN;
+			for (int i = 0; i < children.size(); i++) {
+				IFigure childFigure = (IFigure) children.get(i);
+				if (lm.getConstraint(childFigure) == null)
+					getFigure().setConstraint(childFigure, new Rectangle(abWidth, ACTIONBAR_FIGURE_MARGIN, childFigure.getPreferredSize().width, childFigure.getPreferredSize().height));
+				abWidth += childFigure.getPreferredSize().width + ACTIONBAR_FIGURE_MARGIN;
+			}
 		}
 
 		protected EditPart createChild(Object model) {
