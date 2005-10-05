@@ -12,6 +12,10 @@ Legend:
 + Write examples with validation.
 + Build end-to-end example.
 + Write updatables for POJOs.
+- Validation: keystroke-by-keystroke validation should use VERIFY event type and set e.doit to false if not valid
+- How does sorting and filtering affect the data binding story?
+- Adding/Removing/Reordering columns in a table.
+- Support binding to an editable combo. (What does this mean)?
 - (Boris) Support virtual tables.
 - Support other cell editors, not just TextCellEditor.
 - (Boris) How are factories registered, and how does the look-up work?

@@ -21,6 +21,8 @@ public class ChangeEvent implements IChangeEvent {
 	private final Object newValue;
 
 	private int position;
+	
+	private boolean vetoed = false;
 
 	public ChangeEvent(IUpdatable updatable, int changeType, Object oldValue,
 			Object newValue) {
@@ -54,6 +56,14 @@ public class ChangeEvent implements IChangeEvent {
 
 	public int getPosition() {
 		return position;
+	}
+
+	public void setVeto(boolean veto) {
+		vetoed = veto;
+	}
+
+	public boolean getVeto() {
+		return vetoed;
 	}
 
 }

@@ -14,6 +14,8 @@ package org.eclipse.jface.binding.internal.swt;
 import org.eclipse.jface.binding.IChangeEvent;
 import org.eclipse.jface.binding.UpdatableValue;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
@@ -39,6 +41,18 @@ public class TextUpdatableValue extends UpdatableValue {
 			public void handleEvent(Event event) {
 				if (!updating) {
 					fireChangeEvent(IChangeEvent.CHANGE, null, null);
+				}
+			}
+		});
+		text.addVerifyListener(new VerifyListener() {
+			public void verifyText(VerifyEvent e) {
+				String currentText = TextUpdatableValue.this.text.getText();
+				String newText = currentText.substring(0, e.start) + e.text
+						+ currentText.substring(e.end);
+				IChangeEvent changeEvent = fireChangeEvent(IChangeEvent.VERIFY,
+						currentText, newText);
+				if (changeEvent.getVeto()) {
+					e.doit = false;
 				}
 			}
 		});

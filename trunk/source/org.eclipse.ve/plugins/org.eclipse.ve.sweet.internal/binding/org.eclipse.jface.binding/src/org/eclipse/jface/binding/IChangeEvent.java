@@ -31,6 +31,15 @@ public interface IChangeEvent {
 	 * the removed element before the removal will be returned by getPosition().
 	 */
 	public static final int REMOVE = 3;
+	
+	/**
+	 * Change type constant used to inform listeners about a pending change
+	 * that can still be vetoed. The updatable's value has not been changed
+	 * yet, <code>getNewValue()</code> returns the new value that will be
+	 * the updatable's new value if the change is not vetoed by calling
+	 * <code>setVeto(true)</code>. 
+	 */
+	public static final int VERIFY = 4;
 
 	/**
 	 * Returns the updatable that was changed.
@@ -69,4 +78,17 @@ public interface IChangeEvent {
 	 * @return the position of the changed element
 	 */
 	public int getPosition();
+	
+	/**
+	 * If the change event is of type VERIFY, listeners can call this method
+	 * to veto the change.
+	 */
+	public void setVeto(boolean veto);
+	
+	/**
+	 * If the change event is of type VERIFY, this method returns true if this
+	 * event has been vetoed by a listener. 
+	 * @return <code>true</code> if the change has been vetoed.
+	 */
+	public boolean getVeto();
 }
