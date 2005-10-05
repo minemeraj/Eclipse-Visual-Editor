@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableTreeColumnContainmentHandler.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-05 18:11:02 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-05 18:18:09 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -51,7 +51,7 @@ public class TableTreeColumnContainmentHandler extends WidgetContainmentHandler 
 
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation,
 			final EditDomain domain) throws NoAddException {
-		if (creation && child instanceof IJavaObjectInstance) {
+		if (creation && child instanceof IJavaObjectInstance && parent instanceof IJavaObjectInstance) {
 			IJavaObjectInstance tjo = (IJavaObjectInstance) child;
 			if (!tjo.isSetAllocation() && !tjo.isAnyFeatureSet()) {
 				// If it has an allocation or properties we can't convert it. It is had been fine-tuned. Otherwise we will create a new one if not
