@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.60 $  $Date: 2005-10-03 19:20:56 $ 
+ *  $Revision: 1.61 $  $Date: 2005-10-05 13:25:19 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -483,14 +483,20 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	}
 	
 	
-	protected void createImplicitInstancesIfNeeded() {
+	public static void primCreateImplicitInstanceIfNeeded(BeanPart bp, EStructuralFeature sf) {
 		//TODO:  This will need to be some BeanInfo magic, hard
 		//       code it for now.
-	    JavaClass clazz = (JavaClass) ((IJavaObjectInstance) fbeanPart.getEObject()).getJavaType();	
+	    JavaClass clazz = (JavaClass) ((IJavaObjectInstance) bp.getEObject()).getJavaType();	
 		if (clazz.getName().equals("TreeViewer")) {
-			EStructuralFeature tree = clazz.getEStructuralFeature("tree");
-			BeanPartFactory bpf = new BeanPartFactory(fbeanPart.getModel(),fbeanPart.getModel().getCompositionModel());
-			bpf.createImplicitBeanPart(fbeanPart,tree);			
+			EStructuralFeature feature = sf==null?clazz.getEStructuralFeature("tree"):sf;
+			BeanPartFactory bpf = new BeanPartFactory(bp.getModel(),bp.getModel().getCompositionModel());
+			bpf.createImplicitBeanPart(bp,feature);			
+		}
+	}
+	}
+	
+	protected void createImplicitInstancesIfNeeded() {
+		primCreateImplicitInstanceIfNeeded(fbeanPart, null);
 	}
 	}
 	

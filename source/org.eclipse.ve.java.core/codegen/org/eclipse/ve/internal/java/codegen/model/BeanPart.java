@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.52 $  $Date: 2005-09-28 15:57:18 $ 
+ *  $Revision: 1.53 $  $Date: 2005-10-05 13:25:19 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
+import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
@@ -436,17 +437,19 @@ public final BeanPart[] getBackRefs() {
  */
 public void addBackRef (BeanPart bean, EReference sf) {
 	
-	IParentChildRelationship pcRule = (IParentChildRelationship) CodeGenUtil.getEditorStyle(fDecleration.getModel()).getRule(IParentChildRelationship.RULE_ID) ;
+	IParentChildRelationship pcRule = fDecleration.getModel()!=null ? (IParentChildRelationship) CodeGenUtil.getEditorStyle(fDecleration.getModel()).getRule(IParentChildRelationship.RULE_ID):null ;
 		
 	if (!fbackReferences.contains(bean))
 	   fbackReferences.add(bean) ;
     // Refresh the bean's status
-	fDecleration.getModel().addBean(this) ;
-    if (bean != null && getModel().getCompositionModel() != null)
-	   if (pcRule.isChildRelationShip(sf))  {
-	   	  fContainer = bean.getEObject() ; 
-          getModel().getCompositionModel().getModelRoot().getComponents().remove(getEObject()) ;
-       }
+	if (fDecleration.getModel()!=null) {
+		fDecleration.getModel().addBean(this) ;
+	    if (sf!=null && bean != null && getModel().getCompositionModel() != null)
+		   if (pcRule.isChildRelationShip(sf))  {
+		   	  fContainer = bean.getEObject() ; 
+	          getModel().getCompositionModel().getModelRoot().getComponents().remove(getEObject()) ;
+	       }
+	}
       
 }
 
@@ -571,9 +574,24 @@ public void disposeMethod (CodeMethodRef m, IBeanDeclModel model) {
 public  void dispose() {
 
 	if (isDisposed()) return ;
+		
+	BeanPart           implicitParent = null; 
+	EStructuralFeature implicitFeature = null;
+	
+
+	// If we disposing an implicit/explicit decleration, than an implicit/implicit
+	// will be generated under the cover.... 
+	if (isImplicit() && !getDecleration().isImplicitDecleration()) { 		
+		implicitFeature = ((ImplicitAllocation)((IJavaObjectInstance)getEObject()).getAllocation()).getFeature();
+		implicitParent = getImplicitParent();
+	}
+	
+	
+	
 	setDisposed(true);
 	
     IBeanDeclModel model = fDecleration.getModel() ;
+    
     
 
     if (fFFDecoder!=null)
@@ -584,9 +602,12 @@ public  void dispose() {
 	
 	// TODO: This should not work on the child relationship... need to work 
 	//       on the inverse adapter instead
-	for (int i = 0; i < fbackReferences.size(); i++) {
+	
+	// Get a copy, as we are going to update the back references here
+	BeanPart[] backRef = (BeanPart[]) fbackReferences.toArray(new BeanPart[fbackReferences.size()]);
+	for (int i = 0; i < backRef.length; i++) {
 		// This should be empty if decoders had the chance to do their thing
-		BeanPart bp = (BeanPart) fbackReferences.get(i);	
+		BeanPart bp = backRef[i];	
 		Collection beanParts = bp.getRefExpressions();
 		beanParts.addAll(bp.getNoSrcExpressions());
 		for (Iterator iter = beanParts.iterator(); iter.hasNext();) {
@@ -609,7 +630,9 @@ public  void dispose() {
 		}
 		bp.removeChild(this);
 	}
-	
+
+
+
 	// dipose bean init methods
 	CodeMethodRef[] beanInitMethods = (CodeMethodRef[]) fBeanInitMethods.toArray(new CodeMethodRef[fBeanInitMethods.size()]);
 	for (int i = 0; i < beanInitMethods.length; i++) 
@@ -634,6 +657,7 @@ public  void dispose() {
 	}
 	
 
+	setImplicitParent(null, null);
 	fBeanInitMethods.clear() ;
 	fEventInitMethods.clear() ;
 	fBeanRefExpressions.clear() ;
@@ -654,6 +678,11 @@ public  void dispose() {
 	fDecleration.removeBeanPart(this);
 	fDecleration = null;
 	fEObject = null ;	
+	
+	if (implicitParent!=null) {
+		// Drive the implicit/implicit decoding again
+		ConstructorDecoderHelper.primCreateImplicitInstanceIfNeeded(implicitParent, implicitFeature);
+	}
 }
 
 public boolean isEquivalent(BeanPart b) {
@@ -1152,12 +1181,21 @@ public   void removeFromJVEModel()  {
 
 	
 	public void setImplicitParent(BeanPart parent, EStructuralFeature sf) {
-		if (sf!=null)
-		   this.fimplicitInvocation = BeanPartDecleration.getImplicitName(sf);
-		else {		   
-		   this.fimplicitInvocation = fDecleration.getName().substring(parent.getSimpleName().length());
+		if (parent!=null) {
+			if (sf!=null) 
+			   this.fimplicitInvocation = BeanPartDecleration.getImplicitName(sf);		   		
+			else 		   
+			   this.fimplicitInvocation = fDecleration.getName().substring(parent.getSimpleName().length());		
+			this.fimplicitParent = parent;		
+			addBackRef(parent, (EReference)sf);
 		}
-		this.fimplicitParent = parent;
+		else {
+			if (fimplicitParent!=null) {
+			  removeBackRef(fimplicitParent, false );
+			  fimplicitInvocation=null;
+			  fimplicitParent=null;
+			}
+		}
 	}
 	
 	public BeanPart getImplicitParent() {
