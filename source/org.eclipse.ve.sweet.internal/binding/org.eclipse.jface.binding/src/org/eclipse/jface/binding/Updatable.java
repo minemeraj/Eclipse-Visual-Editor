@@ -27,12 +27,12 @@ abstract public class Updatable implements IUpdatable {
 		changeListeners.remove(changeListener);
 	}
 
-	protected void fireChangeEvent(int changeType, Object oldValue,
+	protected IChangeEvent fireChangeEvent(int changeType, Object oldValue,
 			Object newValue) {
-		fireChangeEvent(changeType, oldValue, newValue, 0);
+		return fireChangeEvent(changeType, oldValue, newValue, 0);
 	}
 
-	protected void fireChangeEvent(int changeType, Object oldValue,
+	protected IChangeEvent fireChangeEvent(int changeType, Object oldValue,
 			Object newValue, int position) {
 		ChangeEvent changeEvent = new ChangeEvent(this, changeType, oldValue,
 				newValue, position);
@@ -41,6 +41,7 @@ abstract public class Updatable implements IUpdatable {
 		for (int i = 0; i < listeners.length; i++) {
 			listeners[i].handleChange(changeEvent);
 		}
+		return changeEvent;
 	}
 
 	public void dispose() {

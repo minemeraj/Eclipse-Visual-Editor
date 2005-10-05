@@ -24,7 +24,7 @@ public class DatabindingService {
 	private static class Pair {
 		private final Object a;
 
-		private final Object b;
+		private Object b;
 
 		Pair(Object a, Object b) {
 			this.a = a;
@@ -52,14 +52,18 @@ public class DatabindingService {
 
 	private List createdUpdatables = new ArrayList();
 
-	private SettableValue partialValidationMessage = new SettableValue(
-			String.class);
-
 	private Map tableFactories = new HashMap();
+
+	private Map valueFactories = new HashMap();
+
+	private List validationMessages = new ArrayList();
+
+	private List partialValidationMessages = new ArrayList();
 
 	private SettableValue validationMessage = new SettableValue(String.class);
 
-	private Map valueFactories = new HashMap();
+	private SettableValue partialValidationMessage = new SettableValue(
+			String.class);
 
 	public DatabindingService() {
 		registerValueFactories();
@@ -276,21 +280,33 @@ public class DatabindingService {
 		IChangeListener listener = new IChangeListener() {
 			public void handleChange(IChangeEvent changeEvent) {
 				if (changeEvent.getUpdatable() == target) {
-					// the target (usually a widget) has changed, validate the
-					// value and update the source
-					Object value = target.getValue();
-					String partialValidationError = targetValidator
-							.isPartiallyValid(value);
-					updatePartialValidationError(partialValidationError);
-					if (partialValidationError == null) {
+					if (changeEvent.getChangeType() == IChangeEvent.VERIFY) {
+						// we are notified of a pending change, do validation
+						// and
+						// veto the change if it is not valid
+						Object value = changeEvent.getNewValue();
+						String partialValidationError = targetValidator
+								.isPartiallyValid(value);
+						updatePartialValidationError(this,
+								partialValidationError);
+						if (partialValidationError != null) {
+							changeEvent.setVeto(true);
+						}
+					} else {
+						// the target (usually a widget) has changed, validate
+						// the
+						// value and update the source
+						Object value = target.getValue();
 						String validationError = targetValidator.isValid(value);
-						updateValidationError(validationError);
+						updatePartialValidationError(this, null);
+						updateValidationError(this, validationError);
 						if (validationError == null) {
 							try {
 								model.setValue(targetToModelConverter
 										.convert(value));
 							} catch (Exception ex) {
-								updateValidationError("An error occurred while setting the value.");
+								updateValidationError(this,
+										"An error occurred while setting the value.");
 							}
 						}
 					}
@@ -596,20 +612,54 @@ public class DatabindingService {
 	protected void registerValueFactories() {
 	}
 
-	protected void updatePartialValidationError(
+	protected void updatePartialValidationError(IChangeListener listener,
 			String partialValidationErrorOrNull) {
-		combinedValidationMessage
-				.setValueAndNotify(partialValidationErrorOrNull == null ? ""
-						: partialValidationErrorOrNull);
-		partialValidationMessage
-				.setValueAndNotify(partialValidationErrorOrNull == null ? ""
-						: partialValidationErrorOrNull);
+		removeValidationListenerAndMessage(partialValidationMessages, listener);
+		if (partialValidationErrorOrNull != null) {
+			partialValidationMessages.add(new Pair(listener,
+					partialValidationErrorOrNull));
+		}
+		updateValidationMessage(
+				combinedValidationMessage,
+				partialValidationMessages.size() > 0 ? partialValidationMessages
+						: validationMessages);
+		updateValidationMessage(partialValidationMessage,
+				partialValidationMessages);
 	}
 
-	protected void updateValidationError(String validationErrorOrNull) {
-		combinedValidationMessage.setValueAndNotify(validationErrorOrNull == null ? ""
-				: validationErrorOrNull);
-		validationMessage.setValueAndNotify(validationErrorOrNull == null ? ""
-				: validationErrorOrNull);
+	protected void updateValidationError(IChangeListener listener,
+			String validationErrorOrNull) {
+		removeValidationListenerAndMessage(validationMessages, listener);
+		if (validationErrorOrNull != null) {
+			validationMessages.add(new Pair(listener, validationErrorOrNull));
+		}
+		updateValidationMessage(
+				combinedValidationMessage,
+				partialValidationMessages.size() > 0 ? partialValidationMessages
+						: validationMessages);
+		updateValidationMessage(validationMessage, validationMessages);
 	}
+
+	private void updateValidationMessage(
+			SettableValue validationSettableMessage, List listOfPairs) {
+		if (listOfPairs.size() == 0) {
+			validationSettableMessage.setValueAndNotify("");
+		} else {
+			validationSettableMessage.setValueAndNotify(((Pair) listOfPairs
+					.get(listOfPairs.size() - 1)).b);
+		}
+	}
+
+	private void removeValidationListenerAndMessage(List listOfPairs,
+			Object first) {
+		for (int i = listOfPairs.size() - 1; i >= 0; i--) {
+			Pair pair = (Pair) listOfPairs.get(i);
+			if (pair.a.equals(first)) {
+				listOfPairs.remove(i);
+				return;
+			}
+		}
+		return;
+	}
+
 }
