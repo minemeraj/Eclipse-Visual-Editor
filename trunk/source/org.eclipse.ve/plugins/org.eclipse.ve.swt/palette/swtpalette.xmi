@@ -99,17 +99,17 @@
       <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
           value="table"/>
     </children>
-    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/column_obj.gif"
-        creationClassURI="java:/org.eclipse.swt.widgets#TableColumn">
-      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="TableColumn"/>
-      <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
-          value="tableColumn"/>
-    </children>
     <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tree_obj.gif"
         creationClassURI="java:/org.eclipse.swt.widgets#Tree">
       <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Tree"/>
       <keyedValues xsi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition"
           value="tree"/>
+    </children>    
+    <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/column_obj.gif"
+        creationClassURI="java:/org.eclipse.swt.widgets#TableColumn">
+      <!-- We are using TableColumn because that is the most likely one. But TableColumn has a special containment handler which allows dropping on a tree too. -->  
+      <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Column"
+        bundle="#bundle"/>
     </children>
     <children xsi:type="org.eclipse.ve.internal.cde.palette:Stack">
 	  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFCreationToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/toolbar_obj.gif"
