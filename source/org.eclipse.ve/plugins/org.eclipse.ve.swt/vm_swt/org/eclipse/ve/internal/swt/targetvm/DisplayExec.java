@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DisplayExec.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-05 15:25:09 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -86,6 +86,8 @@ public class DisplayExec implements ICallback {
 	 * @since 1.0.0
 	 */
 	public void asyncExec(Display display) {
+		if (display == null)
+			display = Display.getDefault();
 		display.asyncExec(new ExecRunnable());
 	}	
 

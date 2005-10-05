@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartHost.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-05 15:25:09 $ 
  */
 package org.eclipse.ve.internal.jface.targetvm;
 
@@ -36,9 +36,9 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class WorkbenchPartHost {
 
-	public static final int MIN_X = 300;
+	private static final int MIN_WIDTH = 300;
 
-	public static final int MIN_Y = 175;
+	private static final int MIN_HEIGHT = 175;
 
 	/**
 	 * Create a workbench part, return the workbenchpart host, and the parent composite that is used to be the parent sent to createPartControl.
@@ -85,9 +85,10 @@ public class WorkbenchPartHost {
 
 			public Point computeSize(int wHint, int hHint, boolean changed) {
 				Point preferredSize = super.computeSize(wHint, hHint, changed);
-				return new Point(Math.max(preferredSize.x, MIN_X), Math.max(preferredSize.y, MIN_Y));
+				return new Point(Math.max(preferredSize.x, ((Integer) this.getData(WIDTH)).intValue()), Math.max(preferredSize.y, ((Integer) this.getData(HEIGHT)).intValue()));
 			}
 		};
+		setWorkbenchPartWorkingSize(workbenchPartArgument, MIN_WIDTH, MIN_HEIGHT);	// Set initial preferred side.
 		workbenchPartArgument.setLayout(new FillLayout());
 		viewForm.setContent(workbenchPartArgument);
 
@@ -121,6 +122,24 @@ public class WorkbenchPartHost {
 		aWorkbenchPart.createPartControl(workbenchPartArgument);
 		return new Composite[] { folder, workbenchPartArgument};
 
+	}
+	
+	private static final String WIDTH = "width";
+	private static final String HEIGHT = "height";
+	
+	/**
+	 * Set the preferred minimum size for the workbench part.
+	 * @param workbenchPart the workbenchpart returned in the second argument of the {@link #createWorkbenchPart(Composite, IWorkbenchPart, String, String, boolean, int)} returned array.
+	 * @param width the min width (it will accept no less than {@link #MIN_WIDTH}. If set to less than that it will use the MIN_WIDTH instead).
+	 * @param height the min height (it will accept no less than {@link #MIN_HEIGHT}. If set to less than that it will use the MIN_HEIGHT instead).
+	 * 
+	 * @since 1.2.0
+	 */
+	public static void setWorkbenchPartWorkingSize(Composite workbenchPart, int width, int height) {
+		if (!workbenchPart.isDisposed()) {
+			workbenchPart.setData(WIDTH, new Integer(Math.max(width, MIN_WIDTH)));
+			workbenchPart.setData(HEIGHT, new Integer(Math.max(height, MIN_HEIGHT)));
+		}
 	}
 
 }

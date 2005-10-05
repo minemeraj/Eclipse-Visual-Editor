@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualInfoPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-05 15:25:08 $ 
  */
 
 import java.util.*;
@@ -147,7 +147,22 @@ public class VisualInfoPolicy {
 				setupVisualInfoAdapter(annotation.getVisualInfo(diagram));
 		}
 		
+		/**
+		 * Called when visual infos have been added/removed for the diagram of interest.
+		 * @param eventType
+		 * @param oldVI
+		 * @param newVI
+		 * 
+		 * @since 1.0.0
+		 */
 		public abstract void notifyVisualInfo(int eventType, VisualInfo oldVI, VisualInfo newVI);
+		
+		/**
+		 * Called for any VisualInfoChanges, including KeyValues.
+		 * @param msg notification of change. Notifier will be the {@link VisualInfo}.
+		 * 
+		 * @since 1.0.0
+		 */
 		public abstract void notifyVisualInfoChanges(Notification msg);		
 		
 		/**

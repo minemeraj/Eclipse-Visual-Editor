@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualInfoXYLayoutEditPolicy.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.13 $  $Date: 2005-10-05 15:25:08 $ 
  */
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -184,9 +184,8 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 				if (handler != null) {
 					sizeCommand = handler.contributeSizeCommand(constraint.width, constraint.height, dom);
 					if (sizeCommand != null)
-						constraint.width = constraint.height = -1;
-				} else
-					constraint.width = constraint.height = -1; // No handler, so no resize.
+						constraint.width = constraint.height = XYLayoutUtility.PREFERRED_SIZE;	// Size command handled updating model, so we change constraint to default size, so it wipes old size out of visual info if one was there.
+				}
 			} else if (pointChanged)
 				newConstraint = new Point(constraint.x, constraint.y);
 			else {
@@ -307,7 +306,7 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	protected Object getChildConstraint(EditPart child, Object kv) {
 		Rectangle constraint;
 		if (kv instanceof Rectangle)
-			constraint = (Rectangle) kv;
+			constraint = new Rectangle((Rectangle) kv);
 		else {
 			constraint = XYLayoutUtility.modifyPreferredCDMRectangle(new Rectangle(), true, true, true);
 		}

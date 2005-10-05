@@ -10,15 +10,19 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.java.codegen.util;
 
-import java.awt.Point;
+
+import java.util.regex.Pattern;
 
 import org.eclipse.jdt.core.compiler.*;
+
+import org.eclipse.ve.internal.cdm.model.Point;
+import org.eclipse.ve.internal.cdm.model.Rectangle;
 
 import org.eclipse.ve.internal.java.codegen.model.IScannerFactory;
 
 /*
  *  $RCSfile: FreeFormAnnotationTemplate.java,v $
- *  $Revision: 1.14 $  $Date: 2005-09-14 21:22:55 $ 
+ *  $Revision: 1.15 $  $Date: 2005-10-05 15:25:09 $ 
  */
 /**
  * @version 	1.0
@@ -34,7 +38,7 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
     
     public final static String ANNOTATION_PREFIX = "  "+ANNOTATION_START ; //$NON-NLS-1$
     
-    String positionString = ""; //$NON-NLS-1$
+    String constraintString = ""; //$NON-NLS-1$
     String parseString = ""; //$NON-NLS-1$
     
     /**
@@ -45,18 +49,22 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
         super(VISUAL_INFO_TYPE);
     }
     
-    public FreeFormAnnotationTemplate(int x, int y) {
-        super(VISUAL_INFO_TYPE);
-        setPosition(new Point(x,y)) ;
-    }
-    
     public void setPosition (Point point) {
     	if(point==null)
-    		positionString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+"\"\""; //$NON-NLS-1$
+    		constraintString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+"\"\""; //$NON-NLS-1$
     	else
-    		positionString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+
-                   "\""+Integer.toString(point.x)+","+Integer.toString(point.y)+"\"" ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    		constraintString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+
+                   "\""+point.toString()+"\"" ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
+    
+    public void setRectangle(Rectangle rect) {
+    	if(rect==null)
+    		constraintString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+"\"\""; //$NON-NLS-1$
+    	else
+    		constraintString = VISUAL_CONTENT_TYPE+ExpressionTemplate.EQL+
+                   "\""+rect.toString()+"\"" ; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+    
     
     protected static int getSigOnSameLine(int s, String src, String sig) {
         int start = src.indexOf(sig,s) ;
@@ -162,6 +170,8 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
       }
     }
     
+    private static final Pattern ANNOTATION_ARG_PATTERN = Pattern.compile(",");
+    
     public static int[] getAnnotationArgs(String src, int start) {
         int s = getAnnotationArgStart(src,start) ;
         if (s < 0) return null; // If no args start was found, return null
@@ -170,10 +180,11 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
         if (sep < 0) return null ;
         int end = src.indexOf('"', sep);
         
-        int[] result = new int[2] ;
-        result[0] = Integer.parseInt(src.substring(s,sep)) ;
-        result[1] = Integer.parseInt(src.substring(sep+1,end)) ;
-        
+        String[] split = ANNOTATION_ARG_PATTERN.split(src.substring(s, end));
+        int[] result = new int[split.length] ;
+        for (int i = 0; i < split.length; i++) {
+			result[i] = Integer.parseInt(split[i]);
+		}
         return result ;
         
     }
@@ -287,9 +298,9 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
 	 */
 	protected String determineContent() {
 		String content = parseString;
-		if(content!=null && content.length()>0 && positionString!=null && positionString.length()>0)
+		if(content!=null && content.length()>0 && constraintString!=null && constraintString.length()>0)
 			content = content + "," ; //$NON-NLS-1$
-		content = content + positionString;
+		content = content + constraintString;
 		return content;
 	}
 }

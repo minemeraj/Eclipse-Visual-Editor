@@ -10,12 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-07-08 18:35:35 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-05 15:25:09 $ 
  */
 package org.eclipse.ve.internal.jface;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.common.notify.Notifier;
@@ -32,6 +33,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
+import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.*;
@@ -76,6 +78,8 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 	private static final Object IMAGE_DATA_COLLECTION_ERROR_KEY = new Object();
 	
 	private EStructuralFeature sf_delegate_control;
+	
+	private int setMinWidth = -1, setMinHeight = -1;
 
 	/**
 	 * @param domain
@@ -224,9 +228,51 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 			
 			});
 			
+			/**
+			 * Call {@link org.eclipse.ve.internal.jface.targetvm.WorkbenchPartHost#setWorkbenchPartWorkingSize(Composite, int, int)}
+			 */
+			expression.createMethodInvocation(ForExpression.ROOTEXPRESSION,
+					workbenchPartHostTypeProxy.getMethodProxy(expression, "setWorkbenchPartWorkingSize", new String[] {"org.eclipse.swt.widgets.Composite", "int", "int"}),
+					false,
+					3
+					);
+			expression.createProxyExpression(ForExpression.METHOD_ARGUMENT, workbenchParent);
+			expression.createPrimitiveLiteral(ForExpression.METHOD_ARGUMENT, setMinWidth);
+			expression.createPrimitiveLiteral(ForExpression.METHOD_ARGUMENT, setMinHeight);
+			
 			return workbenchPart;
 		} else
 			return null;	// This should never happen.
+	}
+	
+	/**
+	 * Called to set the minimum displayed size of the workbench part.
+	 * @param width
+	 * @param height
+	 * 
+	 * @since 1.2.0
+	 */
+	public void setWorkbenchPartMinDisplayedSize(int width, int height) {
+		setMinWidth = width;
+		setMinHeight = height;
+		if (isBeanProxyInstantiated()) {
+			try {
+				DisplayManager.asyncExec(getBeanProxyDomain().getProxyFactoryRegistry(), new DisplayManager.DisplayRunnable() {
+
+					public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
+						IMethodProxy setWorkSizeMethod = getBeanTypeProxy(TARGETVM_WORKBENCHPARTHOST).getMethodProxy("setWorkbenchPartWorkingSize",
+								new String[] { "org.eclipse.swt.widgets.Composite", "int", "int"});
+						IStandardBeanProxyFactory factory = workbenchParent.getProxyFactoryRegistry().getBeanProxyFactory();
+						setWorkSizeMethod.invoke(null, new IBeanProxy[] { (IBeanProxy) workbenchParent,
+								factory.createBeanProxyWith(setMinWidth), factory.createBeanProxyWith(setMinHeight)});
+						return null;
+					}
+				});
+				revalidateBeanProxy();
+			} catch (ThrowableProxy e) {
+				JavaVEPlugin.log(e, Level.WARNING);
+			}
+		}
 	}
 	
 	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
