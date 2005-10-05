@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.32 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.33 $  $Date: 2005-10-05 18:11:03 $ 
  */
 
 import java.util.regex.Pattern;
@@ -98,7 +98,8 @@ public class BeanUtilities {
 		JavaAllocation allocation) {
 		IJavaInstance result = null;
 		result = (IJavaInstance) javaHelpers.getEPackage().getEFactoryInstance().create(javaHelpers);
-		result.setAllocation(allocation);
+		if (allocation != null)
+			result.setAllocation(allocation);
 
 		if (aResourceSet != null) {
 			// This method call on BeanProxyUtilities creates an adaptor in the argument resource set
