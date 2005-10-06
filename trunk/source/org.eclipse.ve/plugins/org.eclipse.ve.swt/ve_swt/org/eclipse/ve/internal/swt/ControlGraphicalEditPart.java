@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.35 $ $Date: 2005-10-05 22:45:17 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.36 $ $Date: 2005-10-06 21:59:20 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -57,7 +57,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 	
 	protected DirectEditManager manager = null;
 	protected IPropertyDescriptor sfDirectEditProperty = null;
-	private ActionBarMouseMotionListener myMouseListener = null;
+	private ActionBarMouseMotionListener myMouseMotionListener = null;
 	private ActionBarEditPartListener myEditPartListener = null;
 	private ActionBarFigureListener myHostFigureListener = null;
 	private boolean actionBarEditpartSelected = false;
@@ -144,7 +144,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 				if (hoverFig != null)
 					toolTipFigure.add(hoverFig);
 			}
-			getFigure().addMouseMotionListener(this.myMouseListener = new ActionBarMouseMotionListener());
+			getFigure().addMouseMotionListener(this.myMouseMotionListener = new ActionBarMouseMotionListener());
 			addEditPartListener(myEditPartListener = new ActionBarEditPartListener());
 			getFigure().addFigureListener(this.myHostFigureListener = new ActionBarFigureListener());
 		}
@@ -167,7 +167,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		errorNotifier.dispose();
 		super.deactivate();
 		if (fEditPartContributors != null) {
-			getFigure().removeMouseMotionListener(this.myMouseListener);
+			getFigure().removeMouseMotionListener(this.myMouseMotionListener);
 			removeEditPartListener(this.myEditPartListener);
 			getFigure().removeFigureListener(myHostFigureListener);
 		}
@@ -398,6 +398,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 	private class ActionBarMouseMotionListener extends MouseMotionListener.Stub {
 		SubclassCompositionComponentsGraphicalEditPart.ActionBarGraphicalEditPart actionBarEditPart = null;
 		public List actionBarChildren = Collections.EMPTY_LIST;
+		public List actionBarFigures = Collections.EMPTY_LIST;
 		IFigure actionBarFigure = null;
 		boolean mouseInsideActionBar = false;
 		boolean mouseInsideControlFigure = false;
@@ -409,7 +410,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 			return actionBarEditPart;
 		}
 		public void mouseEntered(MouseEvent me) {
-			if (me.getSource() == actionBarFigure) {
+			if (me.getSource() == actionBarFigure || mouseWithinActionBar(me)) {
 				mouseInsideActionBar = true;
 			}
 			if (me.getSource() == getFigure()) {
@@ -420,14 +421,20 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		}
 
 		public void mouseExited(MouseEvent me) {
-			if (me.getSource() == getFigure())
+			if (me.getSource() == getFigure()) {
 				mouseInsideControlFigure = false;
-			if (me.getSource() == actionBarFigure) {
+			}
+			if (me.getSource() == actionBarFigure && !mouseWithinActionBar(me)) {
 				mouseInsideActionBar = false;
 			}
 			if (!mouseInsideActionBar && !mouseInsideControlFigure  && !actionBarEditpartSelected) {
 				Display.getCurrent().timerExec(1000, hideActionBarRunnable);
 			}
+		}
+		private boolean mouseWithinActionBar(MouseEvent me) {
+			if (actionBarFigure == null) return false;
+			Rectangle bounds = actionBarFigure.getBounds();
+			return (bounds.x < me.x && bounds.y < me.y && bounds.x + bounds.width > me.x && bounds.y + bounds.height > me.y);
 		}
 
 		public void showActionBar() {
@@ -435,8 +442,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 				actionBarFigure = getActionBarEditPart().getFigure();
 				populateActionBar();
 				if (actionBarChildren != null && !actionBarChildren.isEmpty()) {
-					actionBarFigure.addMouseMotionListener(myMouseListener);
-//					actionBarFigure.setLocation(new Point((figBounds.x + figBounds.width/2) + 8, figBounds.y - actionBarFigure.getSize().height));
+					actionBarFigure.addMouseMotionListener(myMouseMotionListener);
 					if (!actionBarVisible) {
 						getActionBarEditPart().show(getFigure().getBounds().getCopy(), 0);
 						actionBarVisible = true;
@@ -464,8 +470,11 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 			if (actionBarVisible) {
 				getActionBarEditPart().hide();
 				actionBarVisible = false;
-				actionBarFigure.removeMouseMotionListener(myMouseListener);
+				actionBarFigure.removeMouseMotionListener(myMouseMotionListener);
 				getActionBarEditPart().removeEditPartListener(myEditPartListener);
+				for (int i = 0; i < actionBarChildren.size(); i++) {
+					((EditPart)actionBarChildren.get(i)).removeEditPartListener(myEditPartListener);
+				}
 				getActionBarEditPart().addActionBarChildren((Collections.EMPTY_LIST));
 				getActionBarEditPart().refresh();
 				actionBarFigure = null;
@@ -475,6 +484,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		private void populateActionBar() {
 			if (actionBarChildren.isEmpty()) {
 				actionBarChildren = new ArrayList();
+				actionBarFigures = new ArrayList();
 				Iterator iter = fEditPartContributors.iterator();
 				while (iter.hasNext()) {
 					GraphicalEditPartContributor contrib = (GraphicalEditPartContributor) iter.next();
@@ -482,6 +492,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 					if (children != null) {
 						for (int i = 0; i < children.length; i++) {
 							actionBarChildren.add(children[i]);
+							actionBarFigures.add(children[i].getFigure());
 						}
 					}
 				}
@@ -509,20 +520,21 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 
 		public void selectedStateChanged(EditPart part) {
 			if (part != null && part.getSelected() == EditPart.SELECTED_PRIMARY
-					&& (myMouseListener.actionBarChildren.contains(part) || part == ControlGraphicalEditPart.this)) {
-				Display.getCurrent().asyncExec(myMouseListener.showActionBarRunnable);
-				if (myMouseListener.actionBarChildren.contains(part))
+					&& (myMouseMotionListener.actionBarChildren.contains(part) || part == ControlGraphicalEditPart.this)) {
+				Display.getCurrent().asyncExec(myMouseMotionListener.showActionBarRunnable);
+				if (myMouseMotionListener.actionBarChildren.contains(part))
 					actionBarEditpartSelected = true;
 			} else {
 				actionBarEditpartSelected = false;
-				Display.getCurrent().asyncExec(myMouseListener.hideActionBarRunnable);
+				Display.getCurrent().asyncExec(myMouseMotionListener.hideActionBarRunnable);
 			}
 		}
 	};
 	class ActionBarFigureListener implements FigureListener {
 
 		public void figureMoved(IFigure source) {
-			Display.getCurrent().asyncExec(myMouseListener.showActionBarRunnable);
+			myMouseMotionListener.hideActionBar();
+			Display.getCurrent().asyncExec(myMouseMotionListener.showActionBarRunnable);
 		}
 		
 	}

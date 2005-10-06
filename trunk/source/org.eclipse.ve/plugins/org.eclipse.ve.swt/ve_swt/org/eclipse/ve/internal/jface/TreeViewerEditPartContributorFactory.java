@@ -127,10 +127,11 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 			else return new GraphicalEditPart[] {new JavaBeanGraphicalEditPart(tree) {
 				protected IFigure createFigure() {
 					Label label = (Label)super.createFigure();
-					ImageFigure fig = new ImageFigure();
-					fig.setImage(noTreeViewerImage);
+//					ImageFigure imgfig = new ImageFigure();
+//					imgfig.setImage(noTreeViewerImage);
+					Button fig = new Button(noTreeViewerImage);
 					fig.add(fErrorIndicator);
-					label.getToolTip().add(new Label("Make me into a Viewer"));
+					label.getToolTip().add(new Label("Click here to transform to a Viewer"));
 					fig.setToolTip(label.getToolTip());
 					return fig;
 				}
