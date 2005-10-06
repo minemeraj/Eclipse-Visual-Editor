@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  * $RCSfile: SubclassCompositionComponentsGraphicalEditPart.java,v $ $Revision:
- * 1.1 $ $Date: 2005-10-05 22:45:17 $
+ * 1.1 $ $Date: 2005-10-06 21:59:20 $
  */
 import java.util.*;
 
@@ -23,6 +23,8 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Color;
 
 import org.eclipse.ve.internal.cde.core.*;
@@ -137,22 +139,32 @@ public class SubclassCompositionComponentsGraphicalEditPart
 
 		public void show(Rectangle hostBounds, int orientation) {
 			Rectangle bounds = actionBarFigure.getBounds();
-			actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width / 2 - 10, hostBounds.y - bounds.height - 7));
+			actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width / 2 + 3, hostBounds.y - bounds.height - 7));
 			actionBarFigure.setVisible(true);
 			if (connectionFigure == null && anchorFigure == null) {
-				connectionFigure = new Polyline();
-				connectionFigure.setLineWidth(2);
+				connectionFigure = new Polyline() {
+
+					protected void outlineShape(Graphics g) {
+						try {
+							g.setAntialias(SWT.ON);
+						} catch (SWTException e) {
+							// For OS platforms that don't support Antialias
+						}
+						super.outlineShape(g);
+					}
+				};
+				connectionFigure.setLineWidth(1);
 				anchorFigure = new RectangleFigure();
-				anchorFigure.setSize(4,4);
-				anchorFigure.setBackgroundColor(ColorConstants.black);
+				anchorFigure.setSize(5, 5);
+				anchorFigure.setBackgroundColor(ColorConstants.lightGreen);
 				getLayer(LayerConstants.HANDLE_LAYER).add(connectionFigure);
 				getLayer(LayerConstants.HANDLE_LAYER).add(anchorFigure);
 			}
-			PointList pl = new PointList(new int[] { hostBounds.x + hostBounds.width / 2 - 12, hostBounds.y + 10, bounds.x + 7,
-					bounds.y + bounds.height - 1});
+			PointList pl = new PointList(new int[] { hostBounds.x + hostBounds.width / 5, hostBounds.y + hostBounds.height / 5, bounds.x - 8,
+					bounds.y + bounds.height / 2 + 5, bounds.x, bounds.y + bounds.height / 2 + 5});
 			connectionFigure.setPoints(pl);
 			connectionFigure.setVisible(true);
-			anchorFigure.setLocation(new Point(hostBounds.x + hostBounds.width / 2 - 14, hostBounds.y + 11));
+			anchorFigure.setLocation(new Point(hostBounds.x + hostBounds.width / 5 - 3, hostBounds.y + hostBounds.height / 5 + 1));
 			anchorFigure.setVisible(true);
 		}
 		public void hide() {
