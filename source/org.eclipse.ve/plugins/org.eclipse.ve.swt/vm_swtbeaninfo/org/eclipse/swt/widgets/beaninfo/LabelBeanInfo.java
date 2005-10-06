@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LabelBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:52:53 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-06 15:18:50 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -18,6 +18,8 @@ import java.beans.BeanDescriptor;
 import java.beans.PropertyDescriptor;
 
 import org.eclipse.swt.SWT;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
  
 /**
  * 
@@ -74,7 +76,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"alignment", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, LabelMessages.getString("alignmentDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, LabelMessages.getString("alignmentSD"), //$NON-NLS-1$
-		      	ENUMERATIONVALUES, new Object[] {
+		      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 					LabelMessages.getString("LabelBeanInfo.StyleBits.TextAlignment.Value.Left"), new Integer(org.eclipse.swt.SWT.LEFT), //$NON-NLS-1$
 			      		"org.eclipse.swt.SWT.LEFT", //$NON-NLS-1$
 			      	LabelMessages.getString("LabelBeanInfo.StyleBits.TextAlignment.Value.Center"), new Integer(org.eclipse.swt.SWT.CENTER), //$NON-NLS-1$
@@ -95,7 +97,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, LabelMessages.getString("textDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, LabelMessages.getString("textSD"), //$NON-NLS-1$
-				FACTORY_CREATION , new Object[] { 
+				IBaseBeanInfoConstants.FACTORY_CREATION , new Object[] { 
 					new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createLabel" , new Integer(1) , //$NON-NLS-1$ , //$NON-NLS-2$ 
 						new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } , //$NON-NLS-1$ , //$NON-NLS-2$ , //$NON-NLS-3$
 					new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createLabel" , new Integer(1) , //$NON-NLS-1$ , //$NON-NLS-2$ 
@@ -104,7 +106,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			),
 			// style bit
 			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
-				FACTORY_CREATION  , new Object[] { 
+				IBaseBeanInfoConstants.FACTORY_CREATION  , new Object[] { 
 						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createLabel" , new Integer(2) , //$NON-NLS-1$ , //$NON-NLS-2$
 								new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } } //$NON-NLS-1$ , //$NON-NLS-2$ , //$NON-NLS-3$
 			}

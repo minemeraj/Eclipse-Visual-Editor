@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JSeparatorBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JSeparatorBeanInfo extends IvjBeanInfo {
 		
@@ -121,7 +123,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"orientation", new Object[] { //$NON-NLS-1$
 	      			DISPLAYNAME, JSeparatorMessages.getString("orientation.Name"), //$NON-NLS-1$
 	      			SHORTDESCRIPTION, JSeparatorMessages.getString("orientation.Desc"), //$NON-NLS-1$
-	      			ENUMERATIONVALUES, new Object[] {
+	      			IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      				JSeparatorMessages.getString("orientation.HORIZONTAL"), new Integer(javax.swing.SwingConstants.HORIZONTAL), //$NON-NLS-1$
 	      				"javax.swing.SwingConstants.HORIZONTAL", //$NON-NLS-1$
 	      				JSeparatorMessages.getString("orientation.VERTICAL"), new Integer(javax.swing.SwingConstants.VERTICAL), //$NON-NLS-1$

@@ -10,12 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: KeyListenerEventSet.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:52:53 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-06 15:18:51 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 import java.util.ResourceBundle;
+
+import org.eclipse.jem.beaninfo.vm.BaseBeanInfo;
  
 
 /**
@@ -64,7 +66,7 @@ public class KeyListenerEventSet {
 				IvjBeanInfo.SHORTDESCRIPTION, resources.getString("KeySD"), //$NON-NLS-1$
 				IvjBeanInfo.INDEFAULTEVENTSET, Boolean.FALSE,
 				IvjBeanInfo.PREFERRED, Boolean.FALSE,
-				IvjBeanInfo.EVENTADAPTERCLASS, "org.eclipse.swt.events.KeyAdapter"			 //$NON-NLS-1$
+				BaseBeanInfo.EVENTADAPTERCLASS, "org.eclipse.swt.events.KeyAdapter"			 //$NON-NLS-1$
 		   		}, 
 				aDescriptorList, org.eclipse.swt.events.KeyListener.class,
 				"addKeyListener", "removeKeyListener");//$NON-NLS-2$//$NON-NLS-1$

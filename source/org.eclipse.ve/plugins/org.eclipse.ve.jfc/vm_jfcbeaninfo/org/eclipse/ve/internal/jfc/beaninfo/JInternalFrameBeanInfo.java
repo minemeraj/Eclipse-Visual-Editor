@@ -11,10 +11,13 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JInternalFrameBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.BaseBeanInfo;
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JInternalFrameBeanInfo extends IvjBeanInfo {
 		
@@ -166,7 +169,7 @@ public EventSetDescriptor internalFrameEventSetDescriptor() {
 	      				SHORTDESCRIPTION, JInternalFrameMessages.getString("internalFrameEventsSD"), //$NON-NLS-1$
 	      				INDEFAULTEVENTSET, Boolean.TRUE,
 	      				PREFERRED, Boolean.TRUE,
-	      				EVENTADAPTERCLASS, "javax.swing.event.InternalFrameAdapter"			 //$NON-NLS-1$
+	      				BaseBeanInfo.EVENTADAPTERCLASS, "javax.swing.event.InternalFrameAdapter"			 //$NON-NLS-1$
 	      			}, 
 						aDescriptorList, javax.swing.event.InternalFrameListener.class,
 						"addInternalFrameListener", "removeInternalFrameListener");//$NON-NLS-2$//$NON-NLS-1$
@@ -941,7 +944,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    	DISPLAYNAME, JInternalFrameMessages.getString("defaultCloseOperation.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JInternalFrameMessages.getString("defaultCloseOperation.Desc"), //$NON-NLS-1$
 	      	PREFERRED, Boolean.TRUE,
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			JInternalFrameMessages.getString("defaultCloseOperation.DO_NOTHING_ON_CLOSE"), new Integer(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE), //$NON-NLS-1$
 	      				"javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE", //$NON-NLS-1$
 	            	JInternalFrameMessages.getString("defaultCloseOperation.HIDE_ON_CLOSE"), new Integer(javax.swing.WindowConstants.HIDE_ON_CLOSE), //$NON-NLS-1$

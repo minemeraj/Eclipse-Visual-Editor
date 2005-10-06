@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: LabelBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class LabelBeanInfo extends IvjBeanInfo {
 	private static java.util.ResourceBundle reslabel = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.label");  //$NON-NLS-1$
@@ -139,7 +141,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"alignment", new Object[] {//$NON-NLS-1$
 			DISPLAYNAME, reslabel.getString("alignmentDN"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, reslabel.getString("alignmentClassSD"), //$NON-NLS-1$
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			reslabel.getString("LEFTEnumDN"), new Integer(java.awt.Label.LEFT), //$NON-NLS-1$
 	      				"java.awt.Label.LEFT",//$NON-NLS-1$
 	      			reslabel.getString("CENTEREnumDN"), new Integer(java.awt.Label.CENTER), //$NON-NLS-1$

@@ -10,11 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SashFormBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:53 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-06 15:18:51 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.PropertyDescriptor;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 /**
  * 
@@ -42,7 +44,7 @@ public class SashFormBeanInfo extends IvjBeanInfo {
 					super.createPropertyDescriptor(getBeanClass(), "orientation", new Object[] { //$NON-NLS-1$
 							DISPLAYNAME, SashFormMessages.getString("orientationDN"), //$NON-NLS-1$
 									SHORTDESCRIPTION, SashFormMessages.getString("orientationSD"), //$NON-NLS-1$
-									ENUMERATIONVALUES,
+									IBaseBeanInfoConstants.ENUMERATIONVALUES,
 									new Object[] { SashFormMessages.getString("orientation.vertical"), new Integer(org.eclipse.swt.SWT.VERTICAL), //$NON-NLS-1$
 											"org.eclipse.swt.SWT.VERTICAL", //$NON-NLS-1$
 											SashFormMessages.getString("orientation.horizontal"), new Integer(org.eclipse.swt.SWT.HORIZONTAL), //$NON-NLS-1$

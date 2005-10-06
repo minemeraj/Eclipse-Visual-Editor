@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: AbstractButtonBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class AbstractButtonBeanInfo extends IvjBeanInfo {
 
@@ -828,7 +830,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			DISPLAYNAME, resAbstractButton.getString("PropDesc.horizontalAlignment.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.HorizontalAlignment.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			resAbstractButton.getString("Alignment.LEFT"), new Integer(javax.swing.SwingConstants.LEFT), //$NON-NLS-1$
 	      				"javax.swing.SwingConstants.LEFT", //$NON-NLS-1$
 	      			resAbstractButton.getString("Alignment.CENTER"), new Integer(javax.swing.SwingConstants.CENTER), //$NON-NLS-1$
@@ -847,7 +849,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			DISPLAYNAME, resAbstractButton.getString("PropDesc.horizontalTextPosition.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.HorizontalTextPosition.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			resAbstractButton.getString("Alignment.LEFT"), new Integer(javax.swing.SwingConstants.LEFT), //$NON-NLS-1$
 	      				"javax.swing.SwingConstants.LEFT", //$NON-NLS-1$
 	      			resAbstractButton.getString("Alignment.CENTER"), new Integer(javax.swing.SwingConstants.CENTER), //$NON-NLS-1$
@@ -961,7 +963,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			DISPLAYNAME, resAbstractButton.getString("PropDesc.verticalAlignment.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.VerticalAlignment.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			resAbstractButton.getString("Alignment.TOP"), new Integer(javax.swing.SwingConstants.TOP), //$NON-NLS-1$
 	      				"javax.swing.SwingConstants.TOP", //$NON-NLS-1$
 	      			resAbstractButton.getString("Alignment.CENTER"), new Integer(javax.swing.SwingConstants.CENTER), //$NON-NLS-1$
@@ -975,7 +977,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"verticalTextPosition", new Object[] { //$NON-NLS-1$
 			DISPLAYNAME, resAbstractButton.getString("PropDesc.verticalTextPosition.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resAbstractButton.getString("PropDesc.VerticalTextPosition.Desc"), //$NON-NLS-1$
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			resAbstractButton.getString("Alignment.TOP"), new Integer(javax.swing.SwingConstants.TOP), //$NON-NLS-1$
 	      				"javax.swing.SwingConstants.TOP", //$NON-NLS-1$
 	      			resAbstractButton.getString("Alignment.CENTER"), new Integer(javax.swing.SwingConstants.CENTER), //$NON-NLS-1$

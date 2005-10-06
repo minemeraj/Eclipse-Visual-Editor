@@ -10,13 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableBeanInfo.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.15 $  $Date: 2005-10-06 15:18:51 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
 import org.eclipse.swt.SWT;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
  
 /**
  * 
@@ -161,7 +163,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			),
 			// style bit
 			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
-				FACTORY_CREATION  , new Object[] { 
+				IBaseBeanInfoConstants.FACTORY_CREATION  , new Object[] { 
 						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createTable" , new Integer(1) , 
 								new String[] { "org.eclipse.swt.widgets.Composite" , "int"} } }				
 			}

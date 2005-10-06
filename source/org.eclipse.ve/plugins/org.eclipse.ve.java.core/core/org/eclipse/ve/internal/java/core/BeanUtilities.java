@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.33 $  $Date: 2005-10-05 18:11:03 $ 
+ *  $Revision: 1.34 $  $Date: 2005-10-06 15:18:33 $ 
  */
 
 import java.util.regex.Pattern;
@@ -25,6 +25,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.ILabelProvider;
 
+import org.eclipse.jem.internal.beaninfo.BeanDecorator;
+import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -37,8 +39,7 @@ import org.eclipse.ve.internal.cdm.impl.KeyedBooleanImpl;
 import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+import org.eclipse.ve.internal.cde.emf.*;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.jcm.*;
@@ -494,5 +495,29 @@ public class BeanUtilities {
 			}
 		}
 		return false;
-	}	
+	}
+	
+	/**
+	 * Go through the BeanInfo BeanDecorator heirarchy for the given java type finding the first one that has
+	 * a FeatureAttribute value for the given key. It may return <code>null</code> if either key was not set
+	 * on any in the heirarchy, or the key was found but it was explicitly set to <code>null</code> as a value.
+	 * @param javaType
+	 * @param featureAttributeKey
+	 * @return the first set attribute value or <code>null</code> if first set was set to null, or none were found set.
+	 * 
+	 * @since 1.2.0
+	 */
+	public static FeatureAttributeValue getSetBeanDecoratorFeatureAttributeValue(JavaHelpers javaType, String featureAttributeKey) {
+		ClassDecoratorTypeIterator classItr = new ClassDecoratorTypeIterator(javaType, BeanDecorator.class);
+
+		// Now for each bean decorator, determine if the feature attribute is set, return it if it is set.
+		while (classItr.hasNext()) {
+			BeanDecorator bd = (BeanDecorator) classItr.next();
+			if (bd.getAttributes().containsKey(featureAttributeKey))
+				return (FeatureAttributeValue) bd.getAttributes().get(featureAttributeKey);
+		}
+
+		// None with a set key was found.
+		return null;
+	}
 }

@@ -10,12 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabFolder2ListenerEventSet.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-05 19:40:38 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-06 15:18:51 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 import java.util.ResourceBundle;
+
+import org.eclipse.jem.beaninfo.vm.BaseBeanInfo;
  
 
 /**
@@ -111,7 +113,7 @@ public class CTabFolder2ListenerEventSet {
 				IvjBeanInfo.SHORTDESCRIPTION, resources.getString("CTabFolder2SD"), //$NON-NLS-1$
 				IvjBeanInfo.INDEFAULTEVENTSET, Boolean.FALSE,
 				IvjBeanInfo.PREFERRED, Boolean.TRUE,
-				IvjBeanInfo.EVENTADAPTERCLASS, "org.eclipse.swt.custom.CTabFolder2Adapter"			 //$NON-NLS-1$
+				BaseBeanInfo.EVENTADAPTERCLASS, "org.eclipse.swt.custom.CTabFolder2Adapter"			 //$NON-NLS-1$
 		   		}, 
 				aDescriptorList, org.eclipse.swt.custom.CTabFolder2Listener.class,
 				"addCTabFolder2Listener", "removeCTabFolder2Listener");//$NON-NLS-2$//$NON-NLS-1$

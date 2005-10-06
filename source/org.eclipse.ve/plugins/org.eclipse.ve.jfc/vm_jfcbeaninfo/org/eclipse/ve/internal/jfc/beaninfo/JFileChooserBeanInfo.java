@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JFileChooserBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JFileChooserBeanInfo extends IvjBeanInfo {
 
@@ -1028,7 +1030,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				DISPLAYNAME, JFileChooserMessages.getString("JFileChooser.PropDesc.dialogType.Name"), //$NON-NLS-1$
 				SHORTDESCRIPTION, JFileChooserMessages.getString("JFileChooser.PropDesc.dialogType.Desc"), //$NON-NLS-1$
 				BOUND, Boolean.TRUE,
-				ENUMERATIONVALUES, new Object[] {
+				IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 					JFileChooserMessages.getString("dialogType.OPEN_DIALOG"), new Integer(javax.swing.JFileChooser.OPEN_DIALOG), //$NON-NLS-1$
 							"javax.swing.JFileChooser.OPEN_DIALOG", //$NON-NLS-1$
 					JFileChooserMessages.getString("dialogType.SAVE_DIALOG"), new Integer(javax.swing.JFileChooser.SAVE_DIALOG), //$NON-NLS-1$
@@ -1069,7 +1071,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				DISPLAYNAME, JFileChooserMessages.getString("JFileChooser.PropDesc.fileSelectionMode.Name"), //$NON-NLS-1$
 				SHORTDESCRIPTION, JFileChooserMessages.getString("JFileChooser.PropDesc.fileSelectionMode.Desc"), //$NON-NLS-1$
 				BOUND, Boolean.TRUE,
-				ENUMERATIONVALUES, new Object[] {
+				IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 					JFileChooserMessages.getString("fileSelectionMode.FILES_ONLY"), new Integer(javax.swing.JFileChooser.OPEN_DIALOG), //$NON-NLS-1$
 							"javax.swing.JFileChooser.OPEN_DIALOG", //$NON-NLS-1$
 					JFileChooserMessages.getString("fileSelectionMode.DIRECTORIES_ONLY"), new Integer(javax.swing.JFileChooser.SAVE_DIALOG), //$NON-NLS-1$

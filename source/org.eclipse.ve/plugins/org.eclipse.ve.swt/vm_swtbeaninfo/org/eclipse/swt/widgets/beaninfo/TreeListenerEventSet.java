@@ -10,12 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeListenerEventSet.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:52:53 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-06 15:18:51 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 import java.util.ResourceBundle;
+
+import org.eclipse.jem.beaninfo.vm.BaseBeanInfo;
  
 
 /**
@@ -66,7 +68,7 @@ public class TreeListenerEventSet {
 				IvjBeanInfo.SHORTDESCRIPTION, resources.getString("TreeSD"), //$NON-NLS-1$
 				IvjBeanInfo.INDEFAULTEVENTSET, Boolean.TRUE,
 				IvjBeanInfo.PREFERRED, Boolean.TRUE,
-				IvjBeanInfo.EVENTADAPTERCLASS, "org.eclipse.swt.events.TreeAdapter"			 //$NON-NLS-1$
+				BaseBeanInfo.EVENTADAPTERCLASS, "org.eclipse.swt.events.TreeAdapter"			 //$NON-NLS-1$
 		   		}, 
 				aDescriptorList, org.eclipse.swt.events.TreeListener.class,
 				"addTreeListener", "removeTreeListener");//$NON-NLS-2$//$NON-NLS-1$

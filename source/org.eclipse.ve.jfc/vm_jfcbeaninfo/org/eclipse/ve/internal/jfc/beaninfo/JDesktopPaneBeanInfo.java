@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JDesktopPaneBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JDesktopPaneBeanInfo extends IvjBeanInfo {
 		
@@ -207,7 +209,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      		SHORTDESCRIPTION, JDesktopMessages.getString("dragMode.Desc"), //$NON-NLS-1$
 	      		BOUND, Boolean.TRUE,
 	      		PREFERRED, Boolean.TRUE,
-	      		ENUMERATIONVALUES, new Object[] {
+	      		IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			JDesktopMessages.getString("dragMode.LIVE_DRAG_MODE"), new Integer(javax.swing.JDesktopPane.LIVE_DRAG_MODE), //$NON-NLS-1$
 	      				"javax.swing.JDesktopPane.LIVE_DRAG_MODE", //$NON-NLS-1$
 	      			JDesktopMessages.getString("dragMode.OUTLINE_DRAG_MODE"), new Integer(javax.swing.JDesktopPane.OUTLINE_DRAG_MODE), //$NON-NLS-1$

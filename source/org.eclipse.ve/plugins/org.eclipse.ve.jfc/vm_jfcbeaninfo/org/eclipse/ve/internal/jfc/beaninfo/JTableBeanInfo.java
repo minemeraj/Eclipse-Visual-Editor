@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JTableBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JTableBeanInfo extends IvjBeanInfo {
 		
@@ -1353,7 +1355,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    	// autoResizeMode
 			super.createPropertyDescriptor(getBeanClass(),"autoResizeMode", new Object[] { //$NON-NLS-1$
 	      		SHORTDESCRIPTION, resJTable.getString("AutoCreateColumnsFromModel.autoResizeMode.Desc"), //$NON-NLS-1$
-	      		ENUMERATIONVALUES, new Object[] {
+	      		IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			resJTable.getString("AutoResize.Off"), new Integer(javax.swing.JTable.AUTO_RESIZE_OFF), //$NON-NLS-1$
 	      				"javax.swing.JTable.AUTO_RESIZE_OFF", //$NON-NLS-1$
 	      			resJTable.getString("AutoResize.Next_Column"), new Integer(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN), //$NON-NLS-1$
@@ -1551,7 +1553,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"selectionMode", new Object[] { //$NON-NLS-1$
 			DISPLAYNAME, resJTable.getString("selectionMode.Desc"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resJTable.getString("SelectionMode.Desc"), //$NON-NLS-1$
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			resJTable.getString("SelectionMode.SINGLE_SELECTION"), new Integer(javax.swing.ListSelectionModel.SINGLE_SELECTION), //$NON-NLS-1$
 	      				"javax.swing.ListSelectionModel.SINGLE_SELECTION", //$NON-NLS-1$
 					resJTable.getString("SelectionMode.SINGLE_INTERVAL_SELECTION"), new Integer(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION), //$NON-NLS-1$

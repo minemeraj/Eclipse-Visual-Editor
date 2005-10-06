@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: FileDialogBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 public class FileDialogBeanInfo extends IvjBeanInfo {
 	private static java.util.ResourceBundle resfiledialog = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.filedialog");  //$NON-NLS-1$
 	
@@ -217,7 +219,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    	super.createPropertyDescriptor(getBeanClass(),"mode", new Object[] {//$NON-NLS-1$
 			DISPLAYNAME, resfiledialog.getString("modeDN"),		    	 //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resfiledialog.getString("modeSD"), //$NON-NLS-1$
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      				resfiledialog.getString("LOADEnumDN"), new Integer(java.awt.FileDialog.LOAD), //$NON-NLS-1$
 	      				"java.awt.FileDialog.LOAD",//$NON-NLS-1$
 	      				resfiledialog.getString("SAVEEnumDN"), new Integer(java.awt.FileDialog.SAVE), //$NON-NLS-1$

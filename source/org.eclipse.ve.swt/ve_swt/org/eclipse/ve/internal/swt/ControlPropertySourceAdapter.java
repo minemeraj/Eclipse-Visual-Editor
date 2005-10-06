@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.18 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.19 $  $Date: 2005-10-06 15:18:51 $ 
  */
 import java.util.*;
 
@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
@@ -44,9 +45,6 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
 public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 	
 	private static final Integer NO_FACTORY = new Integer(-1);
-	
-	// TODO Temporary - needs to go away when we do factories and consructors
-	public static final String FACTORY_CREATION = "FACTORY_CREATION";//$NON-NLS-1$
 	
 	private Map factoryArguments = new HashMap(2); // Map for factory arguments, keyed by property name and value is argument number of method invocation
 	
@@ -82,7 +80,8 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				//   new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(1) ,
 				//   	new String[] { "org.eclipse.swt.Composite" , "java.lang.String" } }				
 				EMap attributes = propertyDecorator.getAttributes();
-				Object object = attributes.get(FACTORY_CREATION);
+				// TODO Temporary - needs to go away when we do factories and consructors
+				Object object = attributes.get(IBaseBeanInfoConstants.FACTORY_CREATION);
 				if(object != null){
 					// The object is a multi arg array for each possible factory method
 					Object[] factories = (Object[]) ((FeatureAttributeValue)object).getValue();

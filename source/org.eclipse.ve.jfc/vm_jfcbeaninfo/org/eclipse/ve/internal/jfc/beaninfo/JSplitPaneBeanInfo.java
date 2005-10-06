@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JSplitPaneBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JSplitPaneBeanInfo extends IvjBeanInfo {
 		
@@ -569,7 +571,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, JSplitPaneMessages.getString("orientation.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
 	      	PREFERRED, Boolean.TRUE,
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			JSplitPaneMessages.getString("orientation.VERTICAL_SPLIT"), new Integer(javax.swing.JSplitPane.VERTICAL_SPLIT), //$NON-NLS-1$
 	      				"javax.swing.JSplitPane.VERTICAL_SPLIT", //$NON-NLS-1$
 	      			JSplitPaneMessages.getString("orientation.HORIZONTAL_SPLIT"), new Integer(javax.swing.JSplitPane.HORIZONTAL_SPLIT), //$NON-NLS-1$

@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JScrollPaneBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JScrollPaneBeanInfo extends IvjBeanInfo {
 		
@@ -432,7 +434,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"horizontalScrollBarPolicy", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JScrollPaneMessages.getString("horizontalScrollBarPolicy.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("horizontalScrollBarPolicy.Desc"), //$NON-NLS-1$
-	      		ENUMERATIONVALUES, new Object[] {
+	      		IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			JScrollPaneMessages.getString("ScrollBarPolicy.AS_NEEDED"), new Integer(javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), //$NON-NLS-1$
 	      				"javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED", //$NON-NLS-1$
 	      			JScrollPaneMessages.getString("ScrollBarPolicy.NEVER"), new Integer(javax.swing.JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), //$NON-NLS-1$
@@ -488,7 +490,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"verticalScrollBarPolicy", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JScrollPaneMessages.getString("verticalScrollBarPolicy.Name"), //$NON-NLS-1$
 	      		SHORTDESCRIPTION, JScrollPaneMessages.getString("verticalScrollBarPolicy.Desc"), //$NON-NLS-1$
-	      		ENUMERATIONVALUES, new Object[] {
+	      		IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			JScrollPaneMessages.getString("ScrollBarPolicy.AS_NEEDED"), new Integer(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED), //$NON-NLS-1$
 	      				"javax.swing.JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED", //$NON-NLS-1$
 	      			JScrollPaneMessages.getString("ScrollBarPolicy.NEVER"), new Integer(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_NEVER), //$NON-NLS-1$

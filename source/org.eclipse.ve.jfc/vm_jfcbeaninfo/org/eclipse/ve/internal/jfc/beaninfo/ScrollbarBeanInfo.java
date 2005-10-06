@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: ScrollbarBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class ScrollbarBeanInfo extends IvjBeanInfo {
 	private static java.util.ResourceBundle resscrollbar = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.scrollbar");  //$NON-NLS-1$
@@ -365,7 +367,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"orientation", new Object[] {//$NON-NLS-1$
 			DISPLAYNAME, resscrollbar.getString("orientationDN"),				 //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resscrollbar.getString("orientationSD"), //$NON-NLS-1$
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      				resscrollbar.getString("HORIZONTALEnumDN"), new Integer(java.awt.Scrollbar.HORIZONTAL), //$NON-NLS-1$
 	      				"java.awt.Scrollbar.HORIZONTAL",//$NON-NLS-1$
 	      				resscrollbar.getString("VERTICALEnumDN"), new Integer(java.awt.Scrollbar.VERTICAL), //$NON-NLS-1$

@@ -10,13 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBeanInfo.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.10 $  $Date: 2005-10-06 15:18:51 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
 import org.eclipse.swt.SWT;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
  
 /**
  * 
@@ -181,7 +183,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TextMessages.getString("textDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TextMessages.getString("textSD"), //$NON-NLS-1$
-				FACTORY_CREATION , new Object[] { new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(1) , 
+				IBaseBeanInfoConstants.FACTORY_CREATION , new Object[] { new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(1) , 
 						new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } }				
 			}
 			),
@@ -207,7 +209,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			),			
 			// style bit
 			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
-				FACTORY_CREATION  , new Object[] { 
+				IBaseBeanInfoConstants.FACTORY_CREATION  , new Object[] { 
 						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(2) , 
 								new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } ,
 						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(1) , 

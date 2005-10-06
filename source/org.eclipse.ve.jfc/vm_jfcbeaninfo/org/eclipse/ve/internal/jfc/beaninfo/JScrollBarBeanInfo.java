@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JScrollBarBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JScrollBarBeanInfo extends IvjBeanInfo {
 		
@@ -432,7 +434,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      			DISPLAYNAME, JScrollBarMessages.getString("orientation.Name"), //$NON-NLS-1$
 	      			SHORTDESCRIPTION, JScrollBarMessages.getString("orientation.Desc"), //$NON-NLS-1$
 	      			PREFERRED, Boolean.TRUE,
-	      			ENUMERATIONVALUES, new Object[] {
+	      			IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      				JScrollBarMessages.getString("orientation.HORIZONTAL"), new Integer(javax.swing.JScrollBar.HORIZONTAL), //$NON-NLS-1$
 	      				"javax.swing.JScrollBar.HORIZONTAL", //$NON-NLS-1$
 	      				JScrollBarMessages.getString("orientation.VERTICAL"), new Integer(javax.swing.JScrollBar.VERTICAL), //$NON-NLS-1$

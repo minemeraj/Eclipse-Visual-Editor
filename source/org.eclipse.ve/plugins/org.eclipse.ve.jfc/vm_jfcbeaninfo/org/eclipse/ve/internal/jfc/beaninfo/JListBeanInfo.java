@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JListBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JListBeanInfo extends IvjBeanInfo {
 		
@@ -785,7 +787,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"selectionMode", new Object[] { //$NON-NLS-1$
 	      	DISPLAYNAME, JListMessages.getString("selectionMode.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JListMessages.getString("selectionMode.Desc"), //$NON-NLS-1$
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			JListMessages.getString("selectionMode.SINGLE_SELECTION"), new Integer(javax.swing.ListSelectionModel.SINGLE_SELECTION), //$NON-NLS-1$
 	      				"javax.swing.ListSelectionModel.SINGLE_SELECTION", //$NON-NLS-1$
 					JListMessages.getString("selectionMode.SINGLE_INTERVAL_SELECTION"), new Integer(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION), //$NON-NLS-1$
