@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.53 $  $Date: 2005-10-05 13:25:19 $ 
+ *  $Revision: 1.54 $  $Date: 2005-10-06 21:52:09 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -844,12 +844,18 @@ public   void addToJVEModel() throws CodeGenException {
 		// Need to figure out who owns this bean part,
 		// Instance variables are owned/scoped by the composition
 		if (fDecleration.isInstanceVar()) {
-			//  Composition is the owner		
-			bsc.getMembers().add(getEObject());
+			//  Composition is the owner	
+			if (getDecleration().isImplicitDecleration())
+				bsc.getImplicits().add(getEObject());
+			else
+				bsc.getMembers().add(getEObject());
 		}
 		else {
 			// We better have an initMethod
-			m.getCompMethod().getMembers().add(getEObject());
+			if (getDecleration().isImplicitDecleration())
+				m.getCompMethod().getImplicits().add(getEObject());
+			else
+				m.getCompMethod().getMembers().add(getEObject());
 		}
 	}
 	
