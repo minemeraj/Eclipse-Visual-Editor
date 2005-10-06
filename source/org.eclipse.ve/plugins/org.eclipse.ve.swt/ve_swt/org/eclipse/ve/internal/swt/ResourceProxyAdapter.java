@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.16 $ $Date: 2005-08-24 23:52:55 $
+ * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.17 $ $Date: 2005-10-06 19:57:25 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -44,7 +44,7 @@ public class ResourceProxyAdapter extends UIThreadOnlyProxyAdapter {
 		// new Font(top.getDisplay(), data);
 		// We don't have a clean way to distinguish which is which now so this has to look at the parse tree and be harded coded for
 		// JFace registries.  Bugzilla 91358 tracks the fact we should re-visit this solution		
-		if(allocation != null){
+		if(allocation != null && allocation instanceof ParseTreeAllocation){
 			try {
 				PTExpression expression = ((ParseTreeAllocation) allocation).getExpression();
 				if (expression instanceof PTMethodInvocation) {
