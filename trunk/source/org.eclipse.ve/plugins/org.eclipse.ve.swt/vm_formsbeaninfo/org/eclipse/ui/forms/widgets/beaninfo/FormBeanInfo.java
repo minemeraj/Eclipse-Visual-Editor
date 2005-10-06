@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-24 23:52:57 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-06 15:18:51 $ 
  */
 package org.eclipse.ui.forms.widgets.beaninfo;
 
@@ -19,6 +19,8 @@ import java.beans.PropertyDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
 import org.eclipse.ui.forms.widgets.Form;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
  
 /**
  * 
@@ -68,7 +70,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"backgroundImageAlignment", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, FormMessages.getString("backgroundImageAlignmentDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, FormMessages.getString("backgroundImageAlignmentSD"), //$NON-NLS-1$
-		      	ENUMERATIONVALUES, new Object[] {
+		      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 					FormMessages.getString("LEFTnumDN"), new Integer(SWT.LEFT), //$NON-NLS-1$
       				"org.eclipse.swt.SWT.LEFT",//$NON-NLS-1$
       				FormMessages.getString("RIGHTnumDN"), new Integer(SWT.RIGHT), //$NON-NLS-1$

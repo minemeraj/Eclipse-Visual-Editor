@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JFrameBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JFrameBeanInfo extends IvjBeanInfo {
 
@@ -258,7 +260,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JFrameMessages.getString("defaultCloseOperation.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JFrameMessages.getString("defaultCloseOperation.Desc"), //$NON-NLS-1$
 	      	PREFERRED, Boolean.TRUE,
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			JFrameMessages.getString("defaultCloseOperation.DO_NOTHING"), new Integer(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE), //$NON-NLS-1$
 	      				"javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE", //$NON-NLS-1$
 	            	JFrameMessages.getString("defaultCloseOperation.HIDE"), new Integer(javax.swing.WindowConstants.HIDE_ON_CLOSE), //$NON-NLS-1$

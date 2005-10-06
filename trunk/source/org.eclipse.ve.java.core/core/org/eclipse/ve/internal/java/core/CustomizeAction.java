@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.17 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.18 $  $Date: 2005-10-06 15:18:33 $ 
  */
 
 import java.util.List;
@@ -21,6 +21,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 import org.eclipse.jem.internal.beaninfo.BeanDecorator;
 import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
@@ -67,7 +68,7 @@ public class CustomizeAction extends SelectionAction {
 				// The BeanInfo on the target VM holds a key of "EXPLICIT_PROPERTY_CHANGE" that takes Boolean values
 				// The purpose of this is so that the BeanInfo can indicate that it wishes to fire property change events to signal what has changed
 				// versus having the VE automatically try to determine the set of changed properties
-				FeatureAttributeValue beanInfoChangeFlag = (FeatureAttributeValue) beanDecor.getAttributes().get("EXPLICIT_PROPERTY_CHANGE");
+				FeatureAttributeValue beanInfoChangeFlag = (FeatureAttributeValue) beanDecor.getAttributes().get(IBaseBeanInfoConstants.EXPLICIT_PROPERTY_CHANGE);
 				explicitPropertyChange = beanInfoChangeFlag != null ? ((Boolean) beanInfoChangeFlag.getValue()).booleanValue() : false;
 				return beanDecor.getCustomizerClass();
 			}

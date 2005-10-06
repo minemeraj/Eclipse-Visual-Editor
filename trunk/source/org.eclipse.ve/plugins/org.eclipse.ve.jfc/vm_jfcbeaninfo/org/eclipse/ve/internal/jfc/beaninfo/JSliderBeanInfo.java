@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JSliderBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JSliderBeanInfo extends IvjBeanInfo {
 		
@@ -572,7 +574,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"orientation", new Object[] { //$NON-NLS-1$
 					DISPLAYNAME, JSliderMessages.getString("orientation.Name"), //$NON-NLS-1$
 	      			SHORTDESCRIPTION, JSliderMessages.getString("orientation.spacing"), //$NON-NLS-1$
-	      			ENUMERATIONVALUES, new Object[] {
+	      			IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      				JSliderMessages.getString("orientation.HORIZONTAL"), new Integer(javax.swing.JSlider.HORIZONTAL), //$NON-NLS-1$
 	      				"javax.swing.JSlider.HORIZONTAL", //$NON-NLS-1$
 	      				JSliderMessages.getString("orientation.VERTICAL"), new Integer(javax.swing.JSlider.VERTICAL), //$NON-NLS-1$

@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JTextFieldBeanInfo.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JTextFieldBeanInfo extends IvjBeanInfo {
 		
@@ -276,7 +278,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JTextFieldMessages.getString("horizontalAlignment.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JTextFieldMessages.getString("horizontalAlignment.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      		JTextFieldMessages.getString("Alignment.LEFT"), new Integer(javax.swing.JTextField.LEFT), //$NON-NLS-1$
 	      			"javax.swing.JTextField.LEFT", //$NON-NLS-1$
 	      		JTextFieldMessages.getString("Alignment.CENTER"), new Integer(javax.swing.JTextField.CENTER), //$NON-NLS-1$

@@ -10,13 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ButtonBeanInfo.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.15 $  $Date: 2005-10-06 15:18:50 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
 import org.eclipse.swt.SWT;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
  
 /**
  * 
@@ -82,7 +84,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"alignment", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ButtonMessages.getString("alignmentDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ButtonMessages.getString("alignmentSD"), //$NON-NLS-1$
-		      	ENUMERATIONVALUES, new Object[] {
+		      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 					ButtonMessages.getString("alignment.left"), new Integer(org.eclipse.swt.SWT.LEFT), //$NON-NLS-1$
 		      			"org.eclipse.swt.SWT.LEFT", //$NON-NLS-1$
 		      		ButtonMessages.getString("alignment.center"), new Integer(org.eclipse.swt.SWT.CENTER), //$NON-NLS-1$
@@ -113,13 +115,13 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ButtonMessages.getString("textDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ButtonMessages.getString("textSD"), //$NON-NLS-1$
-				FACTORY_CREATION , new Object[] { new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createButton" , new Integer(1) , 
+				IBaseBeanInfoConstants.FACTORY_CREATION , new Object[] { new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createButton" , new Integer(1) , 
 					new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } }
 			}
 			),
 			// style bit
 			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
-				FACTORY_CREATION  , new Object[] { 
+				IBaseBeanInfoConstants.FACTORY_CREATION  , new Object[] { 
 						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createButton" , new Integer(2) , 
 								new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } }				
 			}

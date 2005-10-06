@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JOptionPaneBeanInfo.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JOptionPaneBeanInfo extends IvjBeanInfo {
 
@@ -838,7 +840,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JOptionPaneMessages.getString("messageType.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JOptionPaneMessages.getString("messagetype.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			JOptionPaneMessages.getString("messagetype.ERROR"), new Integer(javax.swing.JOptionPane.ERROR_MESSAGE), //$NON-NLS-1$
 	      				"javax.swing.JOptionPane.ERROR_MESSAGE", //$NON-NLS-1$
 	      			JOptionPaneMessages.getString("messagetype.INFORMATION"), new Integer(javax.swing.JOptionPane.INFORMATION_MESSAGE), //$NON-NLS-1$
@@ -857,7 +859,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, JOptionPaneMessages.getString("optionType.Name"), //$NON-NLS-1$
 	      	SHORTDESCRIPTION, JOptionPaneMessages.getString("optionType.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			JOptionPaneMessages.getString("optionType.DEFAULT"), new Integer(javax.swing.JOptionPane.DEFAULT_OPTION), //$NON-NLS-1$
 	      				"javax.swing.JOptionPane.DEFAULT_OPTION", //$NON-NLS-1$
 	      			JOptionPaneMessages.getString("optionType.YES_NO"), new Integer(javax.swing.JOptionPane.YES_NO_OPTION), //$NON-NLS-1$

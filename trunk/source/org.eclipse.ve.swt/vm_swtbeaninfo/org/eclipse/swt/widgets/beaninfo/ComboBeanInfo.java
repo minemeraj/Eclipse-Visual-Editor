@@ -10,13 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComboBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-06 15:18:50 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
 import org.eclipse.swt.SWT;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
  
 /**
  * 
@@ -79,7 +81,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"orientation", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ComboMessages.getString("orientationDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ComboMessages.getString("orientationSD"), //$NON-NLS-1$
-		      	ENUMERATIONVALUES, new Object[] {
+		      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 						ComboMessages.getString("orientation.left_to_right"), new Integer(org.eclipse.swt.SWT.LEFT_TO_RIGHT), //$NON-NLS-1$
 				   		"org.eclipse.swt.SWT.LEFT_TO_RIGHT", //$NON-NLS-1$
 				   		ComboMessages.getString("orientation.right_to_left"), new Integer(org.eclipse.swt.SWT.RIGHT_TO_LEFT), //$NON-NLS-1$

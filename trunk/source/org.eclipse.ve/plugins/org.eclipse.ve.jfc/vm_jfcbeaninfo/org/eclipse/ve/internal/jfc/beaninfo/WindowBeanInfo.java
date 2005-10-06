@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: WindowBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.BaseBeanInfo;
 
 public class WindowBeanInfo extends IvjBeanInfo {
 	private static java.util.ResourceBundle reswindow = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.window");  //$NON-NLS-1$
@@ -305,7 +307,7 @@ public EventSetDescriptor windowEventSetDescriptor() {
 	      				SHORTDESCRIPTION, reswindow.getString("windowEventsSD"), //$NON-NLS-1$
 	      				INDEFAULTEVENTSET, Boolean.TRUE,
 	      				PREFERRED, Boolean.TRUE,
-	      				EVENTADAPTERCLASS, "java.awt.event.WindowAdapter"			 //$NON-NLS-1$
+	      				BaseBeanInfo.EVENTADAPTERCLASS, "java.awt.event.WindowAdapter"			 //$NON-NLS-1$
 	      			}, 
 						aDescriptorList, java.awt.event.WindowListener.class,
 						"addWindowListener", "removeWindowListener");//$NON-NLS-2$//$NON-NLS-1$

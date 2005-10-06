@@ -11,11 +11,13 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: ContainerBeanInfo.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.awt.FocusTraversalPolicy;
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.BaseBeanInfo;
 public class ContainerBeanInfo extends IvjBeanInfo {
 	private static java.util.ResourceBundle rescontainer = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.container");  //$NON-NLS-1$
 	
@@ -59,7 +61,7 @@ public java.beans.EventSetDescriptor containerEventSetDescriptor() {
 						"container", new Object[] {//$NON-NLS-1$
 						DISPLAYNAME, rescontainer.getString("containerEventsDN"), //$NON-NLS-1$
 	      				SHORTDESCRIPTION, rescontainer.getString("containerEventsSD"), //$NON-NLS-1$
-						EVENTADAPTERCLASS, "java.awt.event.ContainerAdapter",	      				 //$NON-NLS-1$
+						BaseBeanInfo.EVENTADAPTERCLASS, "java.awt.event.ContainerAdapter",	      				 //$NON-NLS-1$
 	      			}, 
 						aDescriptorList, java.awt.event.ContainerListener.class,
 						"addContainerListener", "removeContainerListener");//$NON-NLS-2$//$NON-NLS-1$

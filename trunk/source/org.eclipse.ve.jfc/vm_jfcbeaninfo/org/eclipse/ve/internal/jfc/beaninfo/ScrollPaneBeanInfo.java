@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: ScrollPaneBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class ScrollPaneBeanInfo extends IvjBeanInfo {
 	private static java.util.ResourceBundle resscrollpane = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.scrollpane");  //$NON-NLS-1$
@@ -243,7 +245,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"scrollbarDisplayPolicy", new Object[] {//$NON-NLS-1$
 			DISPLAYNAME, resscrollpane.getString("scrollbarDisplayPolicyDN"),				 //$NON-NLS-1$
 	      	SHORTDESCRIPTION, resscrollpane.getString("scrollbarDisplayPolicySD"), //$NON-NLS-1$
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			resscrollpane.getString("asNeededEnumDN"), new Integer(java.awt.ScrollPane.SCROLLBARS_AS_NEEDED), //$NON-NLS-1$
 	      				"java.awt.ScrollPane.SCROLLBARS_AS_NEEDED",//$NON-NLS-1$
 	      			resscrollpane.getString("alwaysEnumDN"), new Integer(java.awt.ScrollPane.SCROLLBARS_ALWAYS), //$NON-NLS-1$

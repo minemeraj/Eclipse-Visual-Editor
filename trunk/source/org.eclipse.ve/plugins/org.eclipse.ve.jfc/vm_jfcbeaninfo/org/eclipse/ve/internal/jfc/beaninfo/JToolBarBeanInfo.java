@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JToolBarBeanInfo.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JToolBarBeanInfo extends IvjBeanInfo {
 		
@@ -293,7 +295,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	SHORTDESCRIPTION, JToolBarMessages.getString("orientation.Desc"), //$NON-NLS-1$
 	      	BOUND, Boolean.TRUE,
 	      	PREFERRED, Boolean.TRUE,
-	      	ENUMERATIONVALUES, new Object[] {
+	      	IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      			JToolBarMessages.getString("orientation.VERTICAL"), new Integer(javax.swing.JToolBar.VERTICAL), //$NON-NLS-1$
 	      				"javax.swing.JToolBar.VERTICAL", //$NON-NLS-1$
 	      			JToolBarMessages.getString("orientation.HORIZONTAL"), new Integer(javax.swing.JToolBar.HORIZONTAL), //$NON-NLS-1$

@@ -11,11 +11,14 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: ComponentBeanInfo.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.awt.dnd.DropTarget;
 import java.beans.*;
+
+import org.eclipse.jem.beaninfo.vm.BaseBeanInfo;
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 /**
  * BeanInfo descriptor for a standard AWT component.
  */
@@ -96,7 +99,7 @@ public EventSetDescriptor componentEventSetDescriptor() {
 						"component", new Object[] {//$NON-NLS-1$
 						DISPLAYNAME, rescomponent.getString("componentEventsDN"), //$NON-NLS-1$
 	      				SHORTDESCRIPTION, rescomponent.getString("componentEventsSD"), //$NON-NLS-1$
-						EVENTADAPTERCLASS, "java.awt.event.ComponentAdapter" //$NON-NLS-1$	      				
+						BaseBeanInfo.EVENTADAPTERCLASS, "java.awt.event.ComponentAdapter" //$NON-NLS-1$	      				
 	      			}, 
 						aDescriptorList, java.awt.event.ComponentListener.class,
 						"addComponentListener", "removeComponentListener");//$NON-NLS-2$//$NON-NLS-1$
@@ -149,7 +152,7 @@ public EventSetDescriptor focusEventSetDescriptor() {
 						DISPLAYNAME, rescomponent.getString("focusEventsDN"), //$NON-NLS-1$
 	      				SHORTDESCRIPTION, rescomponent.getString("focusEventsSD"), //$NON-NLS-1$
 	      				EXPERT, Boolean.TRUE ,
-	      				EVENTADAPTERCLASS, "java.awt.event.FocusAdapter" //$NON-NLS-1$
+	      				BaseBeanInfo.EVENTADAPTERCLASS, "java.awt.event.FocusAdapter" //$NON-NLS-1$
 	      			}, 
 						aDescriptorList, java.awt.event.FocusListener.class,
 						"addFocusListener", "removeFocusListener");//$NON-NLS-2$//$NON-NLS-1$
@@ -1379,7 +1382,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
             super.createPropertyDescriptor(getBeanClass(), "componentOrientation", new Object[] {//$NON-NLS-1$
               DISPLAYNAME, rescomponent.getString("componentOrientationDN"),  //$NON-NLS-1$
               SHORTDESCRIPTION,rescomponent.getString("componentOrientationSD"),  //$NON-NLS-1$
-              ENUMERATIONVALUES, new Object[] {
+              IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
                           rescomponent.getString("componentOrientation.LEFT_TO_RIGHT"), java.awt.ComponentOrientation.LEFT_TO_RIGHT,  //$NON-NLS-1$
                           "java.awt.ComponentOrientation.LEFT_TO_RIGHT",//$NON-NLS-1$
                           rescomponent.getString("componentOrientation.RIGHT_TO_LEFT"), java.awt.ComponentOrientation.RIGHT_TO_LEFT,  //$NON-NLS-1$
@@ -1488,7 +1491,7 @@ public EventSetDescriptor hierarchyBoundsEventSetDescriptor() {
 						"hierarchyBounds", new Object[] {//$NON-NLS-1$
 						DISPLAYNAME, rescomponent.getString("hierarchyBoundsEventsDN"), //$NON-NLS-1$
 	      				SHORTDESCRIPTION, rescomponent.getString("hierarchyBoundsEventsSD"), //$NON-NLS-1$
-						EVENTADAPTERCLASS, "java.awt.event.HierarchyBoundsAdapter", //$NON-NLS-1$	      				
+						BaseBeanInfo.EVENTADAPTERCLASS, "java.awt.event.HierarchyBoundsAdapter", //$NON-NLS-1$	      				
 	      				EXPERT, Boolean.TRUE
 	      			    }, 
 						aDescriptorList, java.awt.event.HierarchyBoundsListener.class,
@@ -1606,7 +1609,7 @@ public EventSetDescriptor keyEventSetDescriptor() {
 						"key", new Object[] {//$NON-NLS-1$
 						DISPLAYNAME, rescomponent.getString("keyEventsDN"), //$NON-NLS-1$
 	      				SHORTDESCRIPTION, rescomponent.getString("keyEventsSD"), //$NON-NLS-1$
-	      				EVENTADAPTERCLASS, "java.awt.event.KeyAdapter", //$NON-NLS-1$
+	      				BaseBeanInfo.EVENTADAPTERCLASS, "java.awt.event.KeyAdapter", //$NON-NLS-1$
 	      			}, 
 						aDescriptorList, java.awt.event.KeyListener.class,
 						"addKeyListener", "removeKeyListener");//$NON-NLS-2$//$NON-NLS-1$
@@ -1701,7 +1704,7 @@ public EventSetDescriptor mouseEventSetDescriptor() {
 						"mouse", new Object[] {//$NON-NLS-1$
 						DISPLAYNAME, rescomponent.getString("mouseEventsDN"), //$NON-NLS-1$
 	      				SHORTDESCRIPTION, rescomponent.getString("mouseEventsSD"), //$NON-NLS-1$
-	      				EVENTADAPTERCLASS, "java.awt.event.MouseAdapter", //$NON-NLS-1$	      				
+	      				BaseBeanInfo.EVENTADAPTERCLASS, "java.awt.event.MouseAdapter", //$NON-NLS-1$	      				
 	      			}, 
 						aDescriptorList, java.awt.event.MouseListener.class,
 						"addMouseListener", "removeMouseListener");//$NON-NLS-2$//$NON-NLS-1$
@@ -1754,7 +1757,7 @@ public EventSetDescriptor mouseMotionEventSetDescriptor() {
 						"mouseMotion", new Object[] {//$NON-NLS-1$
 						DISPLAYNAME, rescomponent.getString("mouseMotionEventsDN"), //$NON-NLS-1$
 	      				SHORTDESCRIPTION, rescomponent.getString("mouseMotionEventsSD"), //$NON-NLS-1$
-	      				EVENTADAPTERCLASS, "java.awt.event.MouseMotionAdapter", //$NON-NLS-1$
+	      				BaseBeanInfo.EVENTADAPTERCLASS, "java.awt.event.MouseMotionAdapter", //$NON-NLS-1$
 	      				EXPERT, Boolean.TRUE
 	      			}, 
 						aDescriptorList, java.awt.event.MouseMotionListener.class,

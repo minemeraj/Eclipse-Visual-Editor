@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.23 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.24 $  $Date: 2005-10-06 15:18:33 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
@@ -57,7 +58,6 @@ import org.eclipse.ve.internal.propertysheet.IEToolsPropertyDescriptor;
 public class BeanPropertyDescriptorAdapter extends AbstractPropertyDescriptorAdapter implements IEToolsPropertyDescriptor {
 	
 	public static final Class BEAN_PROPERTY_DESCRIPTOR_TYPE = BeanPropertyDescriptorAdapter.class;
-	public static final String ATTRIBUTE_NAME_ENUMERATIONVALUES = "enumerationValues"; //$NON-NLS-1$
 	protected Class editorClass , labelProviderClass; // The editor class is cache'd to save repeated calculation - The instance however cannot be as this involves
 	private String editorClassNameAndData;
 	private String labelProviderClassNameAndData;
@@ -114,7 +114,7 @@ public CellEditor createPropertyEditor(Composite parent){
 			// that was arranged in a tiplicate repeating pattern of displayName, value, initString
 			// e.g. "On" , Boolean.TRUE , "Boolean.TRUE" , "Off" , Boolean.FALSE , "Boolean.FALSE"
 			// or	 "Vertical" , new Integer(0) , "java.awt.Scrollbar.HORIZONTAL" , "Horizontal" , new Integer(1) , "java.awt.Scrollbar.VERTICAL"
-			FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyDecorator.getAttributes().get(ATTRIBUTE_NAME_ENUMERATIONVALUES);
+			FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyDecorator.getAttributes().get(IBaseBeanInfoConstants.ENUMERATIONVALUES);
 			if (featureValue != null){
 				return new BeanPropertyEnumeratedCellEditor(
 					parent,
@@ -274,7 +274,7 @@ public ILabelProvider getLabelProvider(){
 				return labelProvider = new BeanCellRenderer(propertyEditorClass.getQualifiedNameForReflection());
 			}
 			// 3	-	Look for the enumeration values
-			FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyDecorator.getAttributes().get(ATTRIBUTE_NAME_ENUMERATIONVALUES);
+			FeatureAttributeValue featureValue = (FeatureAttributeValue)propertyDecorator.getAttributes().get(IBaseBeanInfoConstants.ENUMERATIONVALUES);
 			if (featureValue != null) {
 				return labelProvider = new EnumeratedLabelProvider(
 							(Object[])featureValue.getValue(),

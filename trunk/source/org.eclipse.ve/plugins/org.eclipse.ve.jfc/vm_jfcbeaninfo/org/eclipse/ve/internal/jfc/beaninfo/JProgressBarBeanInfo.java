@@ -11,13 +11,15 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JProgressBarBeanInfo.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:11 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.beans.*;
 
 import javax.swing.BoundedRangeModel;
 import javax.swing.plaf.ProgressBarUI;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JProgressBarBeanInfo extends IvjBeanInfo {
 		
@@ -358,7 +360,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      			DISPLAYNAME, JProgressBarMessages.getString("orientation.Name"), //$NON-NLS-1$
 	      			SHORTDESCRIPTION, JProgressBarMessages.getString("orientation.Desc"), //$NON-NLS-1$
 	      			PREFERRED, Boolean.TRUE,
-	      			ENUMERATIONVALUES, new Object[] {
+	      			IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      				JProgressBarMessages.getString("orientation.HORIZONTAL"), new Integer(javax.swing.JProgressBar.HORIZONTAL), //$NON-NLS-1$
 	      				"javax.swing.JProgressBar.HORIZONTAL", //$NON-NLS-1$
 	      				JProgressBarMessages.getString("orientation.VERTICAL"), new Integer(javax.swing.JProgressBar.VERTICAL), //$NON-NLS-1$

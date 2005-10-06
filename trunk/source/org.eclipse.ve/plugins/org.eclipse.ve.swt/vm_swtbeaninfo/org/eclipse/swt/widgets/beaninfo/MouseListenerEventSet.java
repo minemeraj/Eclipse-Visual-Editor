@@ -10,12 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: MouseListenerEventSet.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-06 15:18:50 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 import java.util.ResourceBundle;
+
+import org.eclipse.jem.beaninfo.vm.BaseBeanInfo;
  
 
 /**
@@ -78,7 +80,7 @@ public class MouseListenerEventSet {
 				IvjBeanInfo.SHORTDESCRIPTION, resources.getString("MouseSD"), //$NON-NLS-1$
 				IvjBeanInfo.INDEFAULTEVENTSET, Boolean.FALSE,
 				IvjBeanInfo.PREFERRED, Boolean.FALSE,
-				IvjBeanInfo.EVENTADAPTERCLASS, "org.eclipse.swt.events.MouseAdapter"			 //$NON-NLS-1$
+				BaseBeanInfo.EVENTADAPTERCLASS, "org.eclipse.swt.events.MouseAdapter"			 //$NON-NLS-1$
 		   		}, 
 				aDescriptorList, org.eclipse.swt.events.MouseListener.class,
 				"addMouseListener", "removeMouseListener");//$NON-NLS-2$//$NON-NLS-1$

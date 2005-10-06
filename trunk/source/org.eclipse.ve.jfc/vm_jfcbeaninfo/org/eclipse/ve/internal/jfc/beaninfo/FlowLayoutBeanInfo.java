@@ -11,10 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: FlowLayoutBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-06 15:18:44 $ 
  */
 
 import java.awt.FlowLayout;
+
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class FlowLayoutBeanInfo extends IvjBeanInfo {
 
@@ -56,7 +58,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 		super.createPropertyDescriptor(getBeanClass(),"alignment" ,new Object[] { //$NON-NLS-1$
 			DISPLAYNAME , FlowLayoutMessages.getString("alignment.Name"), //$NON-NLS-1$
 			SHORTDESCRIPTION, FlowLayoutMessages.getString("alignment.Desc"), //$NON-NLS-1$
-			ENUMERATIONVALUES, new Object[] {
+			IBaseBeanInfoConstants.ENUMERATIONVALUES, new Object[] {
 	      		FlowLayoutMessages.getString("LEFT"), new Integer(FlowLayout.LEFT), "java.awt.FlowLayout.LEFT", //$NON-NLS-1$ //$NON-NLS-2$
 	           	FlowLayoutMessages.getString("CENTER"), new Integer(FlowLayout.CENTER), "java.awt.FlowLayout.CENTER", //$NON-NLS-1$ //$NON-NLS-2$
 	          	FlowLayoutMessages.getString("RIGHT"),new Integer(FlowLayout.RIGHT), "java.awt.FlowLayout.RIGHT", //$NON-NLS-1$ //$NON-NLS-2$
