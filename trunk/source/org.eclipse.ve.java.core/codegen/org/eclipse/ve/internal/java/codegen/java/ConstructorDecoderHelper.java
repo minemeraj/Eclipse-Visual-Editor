@@ -10,15 +10,18 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.62 $  $Date: 2005-10-05 13:27:40 $ 
+ *  $Revision: 1.63 $  $Date: 2005-10-06 19:57:24 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
 import java.util.*;
 
-import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.dom.*;
 
+import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
+import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -30,6 +33,8 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.FieldResolvedType;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
+import org.eclipse.ve.internal.java.core.BeanUtilities;
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
 /**
  * @author Gili Mendel
@@ -483,51 +488,68 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	}
 	
 	
+	public static EStructuralFeature getRequiredImplicitFeature (IJavaObjectInstance obj) {
+		// TODO: this may return null, String or String[]
+		FeatureAttributeValue val = BeanUtilities.getSetBeanDecoratorFeatureAttributeValue(obj.getJavaType(), IBaseBeanInfoConstants.REQUIRED_IMPLICIT_PROPERTIES);
+		if (val!=null) {
+		   return obj.getJavaType().getEStructuralFeature((String)val.getValue());
+		}
+		return null;
+	}
+	
 	public static void primCreateImplicitInstanceIfNeeded(BeanPart bp, EStructuralFeature sf) {
-		//TODO:  This will need to be some BeanInfo magic, hard
-		//       code it for now.
-	    JavaClass clazz = (JavaClass) ((IJavaObjectInstance) bp.getEObject()).getJavaType();	
-		if (clazz.getName().equals("TreeViewer")) {
-			EStructuralFeature feature = sf==null?clazz.getEStructuralFeature("tree"):sf;
+		if (sf==null) 
+			sf = getRequiredImplicitFeature((IJavaObjectInstance)bp.getEObject());
+		
+		if (sf!=null) {			
 			BeanPartFactory bpf = new BeanPartFactory(bp.getModel(),bp.getModel().getCompositionModel());
-			bpf.createImplicitBeanPart(bp,feature);			
+			bpf.createImplicitBeanPart(bp,sf);			
 		}
 	}
 	
+	public static void primRemoveImplicitInstanceIfNeeded(BeanPart bp, EStructuralFeature sf) {
+		if (sf==null) 
+			sf = getRequiredImplicitFeature((IJavaObjectInstance)bp.getEObject());
+		
+		if (sf!=null) {			
+			BeanPartFactory bpf = new BeanPartFactory(bp.getModel(),bp.getModel().getCompositionModel());
+			bpf.removeImplicitBeanPart(bp,sf);			
+		}
+	}
 	
-	protected void createImplicitInstancesIfNeeded() {
+	protected void createImplicitInstancesIfNeeded() throws CodeGenException {
 		primCreateImplicitInstanceIfNeeded(fbeanPart, null);
+	}
+	
+	protected void removeImplicitInstancesIfNeeded() throws CodeGenException {
+		primRemoveImplicitInstanceIfNeeded(fbeanPart, null);
 	}
 	
 	
 	protected void designateAsImplicit (boolean updateModel) throws CodeGenException {
 		
-		ImplicitAllocation ia = (ImplicitAllocation)((IJavaObjectInstance)fbeanPart.getEObject()).getAllocation();
-		EStructuralFeature sf = ia.getFeature() ;		
-		BeanPart parent = fbeanPart.getModel().getABean(ia.getParent());		
+		ImplicitAllocation ia = (ImplicitAllocation) ((IJavaObjectInstance) fbeanPart.getEObject()).getAllocation();
+		EStructuralFeature sf = ia.getFeature();
+		BeanPart parent = fbeanPart.getModel().getABean(ia.getParent());
 		// Add reference to the visual parent, It is required here that the parent's init
 		// expression has beed decoded already!!
 		getExpressionReferences().addAll(CodeGenUtil.getReferences(ia.getParent(), false));
 		// we also have a dependency on the implicitParent
-		//TODO: FreeForm issues
+		// TODO: FreeForm issues
 		getExpressionReferences().add(parent.getEObject());
-		
+
 		fbeanPart.setImplicitParent(parent, sf);
-		
+
 		if (updateModel) {
 			// It is possible that during decode, and implicit BeanPart was already fluffed up.
 			// Now is the time to replace it with this bean.
 			String name = fbeanPart.getImplicitName();
-			BeanPart old = CodeGenUtil.getBeanPart(
-					fbeanPart.getModel(), 
-					name, 
-					fOwner.getExprRef().getMethod(), 
-					fOwner.getExprRef().getOffset());
-			if(old==null)
+			BeanPart old = CodeGenUtil.getBeanPart(fbeanPart.getModel(), name, fOwner.getExprRef().getMethod(), fOwner.getExprRef().getOffset());
+			if (old == null)
 				old = fbeanPart.getModel().getABean(name);
-			if (old!=null && old != fbeanPart) {
+			if (old != null && old != fbeanPart) {
 				old.dispose();
-	}
+			}
 			BeanPartFactory.setBeanPartAsImplicit(fbeanPart, parent, sf);
 		}
 	}
@@ -559,7 +581,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 		// SMART UPDATE
 		if(!CodeGenUtil.areAllocationsEqual(obj.getAllocation(), alloc)) {
 			obj.setAllocation(alloc) ;
-			if (alloc instanceof ImplicitAllocation) {
+			if (alloc.isImplicit()) {
 				designateAsImplicit(true);
 			}
 			createImplicitInstancesIfNeeded();
@@ -684,6 +706,11 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	 * @see org.eclipse.ve.internal.java.codegen.java.IExpressionDecoderHelper#removeFromModel()
 	 */
 	public void removeFromModel() {
+		try {
+			removeImplicitInstancesIfNeeded();
+		} catch (CodeGenException e) {
+			JavaVEPlugin.log(e);
+		}
 		EStructuralFeature f = fFmapper.getFeature(null);
 		// We do not want to remove the allocation... as if the EObject is 
 		// still contained int he model (membership)... bean proxy will try

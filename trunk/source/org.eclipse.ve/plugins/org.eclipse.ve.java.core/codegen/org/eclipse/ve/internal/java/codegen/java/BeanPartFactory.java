@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.56 $  $Date: 2005-10-03 19:20:56 $ 
+ *  $Revision: 1.57 $  $Date: 2005-10-06 19:57:24 $ 
  */
 
 import java.util.*;
@@ -565,6 +565,10 @@ public BeanPart createImplicitFromJVEModel(IJavaObjectInstance component, ICompi
 		return implicitBean;	  
 }
 
+
+
+
+
 /**
  * This method is called when an instance is added to the JVE model.
  * It will only create the BeanPart, and generate the Instance Variable decleration
@@ -685,6 +689,7 @@ public void removeBeanPart (BeanPart bean) {
 	IType tp = CodeGenUtil.getMainType(fBeanModel.getCompilationUnit()) ;
 	
 	if (bean.getDecleration().isInstanceVar() &&
+		!bean.getDecleration().isImplicitDecleration() &&
 		bean.getDecleration().isSingleDecleration()) { 	  
 	  IField f = tp.getField(bean.getSimpleName()) ;
 	  if (f != null) {		// delete the field
@@ -702,7 +707,8 @@ public void removeBeanPart (BeanPart bean) {
 	else {
 		// It is a local variable, and it is possible that
 		// It is a reusable instance.
-		needRefresh=bean.getDecleration();
+		if (!bean.getDecleration().isImplicitDecleration())
+		    needRefresh=bean.getDecleration();
 	}
 	 
 	// TODO  Need to maintain Bean Ref Count in method, and remove it when the last ref. is gone
@@ -828,7 +834,7 @@ public BeanPart createThisBeanPartIfNeeded(CodeMethodRef initMethod) {
      return bean ;	
 }
 
-static void setBeanPartAsImplicit (BeanPart implicitBean, BeanPart parent, EStructuralFeature sf) throws CodeGenException {
+static public void setBeanPartAsImplicit (BeanPart implicitBean, BeanPart parent, EStructuralFeature sf) throws CodeGenException {
 	
 	implicitBean.setImplicitParent(parent, sf);
 	// Let the parent point to its implicit child
@@ -836,9 +842,24 @@ static void setBeanPartAsImplicit (BeanPart implicitBean, BeanPart parent, EStru
 	ExpressionRefFactory eGen = new ExpressionRefFactory(parent, sf);		
 	// prime the proper helpers
 	eGen.createFromJVEModelWithNoSrc(new Object[] { implicitBean.getEObject() } );
-	implicitBean.addBackRef(parent, (EReference)sf);
-	
+	implicitBean.addBackRef(parent, (EReference)sf);	
 }
+
+static public void unSetBeanPartAsImplicit (BeanPart implicitBean, BeanPart parent, EStructuralFeature sf) {
+	BeanDecoderAdapter a =
+		(BeanDecoderAdapter) EcoreUtil.getExistingAdapter(parent.getEObject(), ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
+	a.getSettingAdapters(sf);
+	// Remove the parent->child relationship
+	ICodeGenAdapter settings[] = a.getSettingAdapters(sf);
+	for (int i = 0; i < settings.length; i++) 
+		if (settings[i] instanceof ExpressionDecoderAdapter) {
+			ExpressionDecoderAdapter ea = (ExpressionDecoderAdapter)settings[i];
+	        ea.getDecoder().getExprRef().dispose(); 
+		}
+	implicitBean.removeBackRef(parent, true);
+	implicitBean.setImplicitParent(null,null);
+}
+
 /**
  * 
  * This method is called by the construction of a wrapper (parent).
@@ -904,7 +925,15 @@ public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf) 
 	}
 	return implicitBean;
 }
-		
+
+public void removeImplicitBeanPart (BeanPart parent, EStructuralFeature sf) {
+	BeanPart implicitBean = null;
+	IJavaObjectInstance implicit = (IJavaObjectInstance)parent.getEObject().eGet(sf);
+	implicitBean = parent.getModel().getABean(implicit);
+	unSetBeanPartAsImplicit(implicitBean, parent, sf);	
+	implicitBean.dispose();	
+}
+
 public BeanPart restoreImplicitBeanPart (BeanPart parent, EStructuralFeature sf, boolean createImplicitInitExpression) {
 	BeanPart implicitBean = null;
 	try {
