@@ -12,7 +12,7 @@
  *  Created Oct 5, 2005 by Gili Mendel
  * 
  *  $RCSfile: ViewerConstructorDecoderHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-06 19:57:25 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-06 22:01:10 $ 
  */
  
 package org.eclipse.ve.internal.jface.codegen;
@@ -118,6 +118,10 @@ public class ViewerConstructorDecoderHelper extends ConstructorDecoderHelper {
 		}
 		else
 		   super.removeImplicitInstancesIfNeeded();		
+	}
+	
+	protected void restoreImplicitInstancesIfNeeded() {
+		
 	}
 
 
