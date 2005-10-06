@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MemberDecoderAdapter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-06 22:01:09 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -281,6 +281,7 @@ public void notifyChanged(Notification msg){
 		return;
 
 	switch (msg.getFeatureID(MemberContainer.class)) {
+		case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
 		case JCMPackage.MEMBER_CONTAINER__MEMBERS :
 			// Generate/remove meta, and skelatons in the BDM
 			processMembers(msg);
