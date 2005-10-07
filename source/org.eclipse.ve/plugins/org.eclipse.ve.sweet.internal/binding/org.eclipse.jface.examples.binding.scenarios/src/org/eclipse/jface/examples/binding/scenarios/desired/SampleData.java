@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SampleData.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-04 13:17:23 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-07 17:47:16 $ 
  */
 package org.eclipse.jface.examples.binding.scenarios.desired;
 
@@ -76,7 +76,7 @@ public class SampleData {
 	
 	public static DatabindingService getSWTtoEMFDatabindingService(Control aControl){
 		
-		DatabindingService dbs = new SWTDatabindingService(aControl);
+		DatabindingService dbs = new SWTDatabindingService(aControl, null);
 
 		IUpdatableValueFactory emfValueFactory = new IUpdatableValueFactory() {
 			public IUpdatableValue createUpdatableValue(Object object,Object attribute) {

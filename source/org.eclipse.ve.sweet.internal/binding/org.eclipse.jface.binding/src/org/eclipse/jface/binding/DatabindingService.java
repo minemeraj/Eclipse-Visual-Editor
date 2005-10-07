@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.binding.internal.DerivedUpdatableValue;
+import org.eclipse.jface.binding.internal.ValueBinding;
 
 public class DatabindingService {
 
@@ -65,9 +66,16 @@ public class DatabindingService {
 	private SettableValue partialValidationMessage = new SettableValue(
 			String.class);
 
-	public DatabindingService() {
+	private DatabindingService parent;
+
+	public DatabindingService(DatabindingService parent) {
+		this.parent = parent;
 		registerValueFactories();
 		registerConverters();
+	}
+
+	public DatabindingService() {
+		this(null);
 	}
 
 	public void addUpdatableTableFactory(Class clazz,
@@ -277,48 +285,11 @@ public class DatabindingService {
 			final IConverter targetToModelConverter,
 			final IConverter modelToTargetConverter,
 			final IValidator targetValidator) {
-		IChangeListener listener = new IChangeListener() {
-			public void handleChange(IChangeEvent changeEvent) {
-				if (changeEvent.getUpdatable() == target) {
-					if (changeEvent.getChangeType() == IChangeEvent.VERIFY) {
-						// we are notified of a pending change, do validation
-						// and
-						// veto the change if it is not valid
-						Object value = changeEvent.getNewValue();
-						String partialValidationError = targetValidator
-								.isPartiallyValid(value);
-						updatePartialValidationError(this,
-								partialValidationError);
-						if (partialValidationError != null) {
-							changeEvent.setVeto(true);
-						}
-					} else {
-						// the target (usually a widget) has changed, validate
-						// the
-						// value and update the source
-						Object value = target.getValue();
-						String validationError = targetValidator.isValid(value);
-						updatePartialValidationError(this, null);
-						updateValidationError(this, validationError);
-						if (validationError == null) {
-							try {
-								model.setValue(targetToModelConverter
-										.convert(value));
-							} catch (Exception ex) {
-								updateValidationError(this,
-										"An error occurred while setting the value.");
-							}
-						}
-					}
-				} else {
-					target.setValue(modelToTargetConverter.convert(model
-							.getValue()));
-				}
-			};
-		};
-		target.addChangeListener(listener);
-		model.addChangeListener(listener);
-		target.setValue(modelToTargetConverter.convert(model.getValue()));
+		ValueBinding valueBinding = new ValueBinding(this, target, model,
+				targetToModelConverter, modelToTargetConverter, targetValidator);
+		target.addChangeListener(valueBinding);
+		model.addChangeListener(valueBinding);
+		valueBinding.updateTargetFromModel();
 	}
 
 	/**
@@ -440,13 +411,20 @@ public class DatabindingService {
 			tableFactory = (IUpdatableTableFactory) tableFactories.get(clazz);
 			clazz = clazz.getSuperclass();
 		}
-		if (tableFactory == null) {
-			throw new BindingException("Couldn't find a table factory");
+		IUpdatableTable result = null;
+		if (tableFactory != null) {
+			result = tableFactory.createUpdatableTable(object, feature);
 		}
-		IUpdatableTable result = tableFactory.createUpdatableTable(object,
-				feature);
-		createdUpdatables.add(result);
-		return result;
+		if (result == null && parent != null) {
+			result = parent.createUpdatableTable(object, feature);
+		}
+		if (result != null) {
+			createdUpdatables.add(result);
+			return result;
+		}
+		throw new BindingException(
+				"Couldn't create an updatable table for object=" + object
+						+ ", feature=" + feature);
 	}
 
 	/**
@@ -475,13 +453,21 @@ public class DatabindingService {
 			valueFactory = (IUpdatableValueFactory) valueFactories.get(clazz);
 			clazz = clazz.getSuperclass();
 		}
-		if (valueFactory == null) {
-			throw new BindingException("Couldn't find a factory");
+
+		IUpdatableValue result = null;
+		if (valueFactory != null) {
+			result = valueFactory.createUpdatableValue(object, featureID);
 		}
-		IUpdatableValue result = valueFactory.createUpdatableValue(object,
-				featureID);
-		createdUpdatables.add(result);
-		return result;
+		if (result == null && parent != null) {
+			result = parent.createUpdatableValue(object, featureID);
+		}
+		if (result != null) {
+			createdUpdatables.add(result);
+			return result;
+		}
+		throw new BindingException(
+				"Couldn't create an updatable value for object=" + object
+						+ ", feature=" + featureID);
 	}
 
 	public void dispose() {
@@ -612,7 +598,7 @@ public class DatabindingService {
 	protected void registerValueFactories() {
 	}
 
-	protected void updatePartialValidationError(IChangeListener listener,
+	public void updatePartialValidationError(IChangeListener listener,
 			String partialValidationErrorOrNull) {
 		removeValidationListenerAndMessage(partialValidationMessages, listener);
 		if (partialValidationErrorOrNull != null) {
@@ -627,7 +613,7 @@ public class DatabindingService {
 				partialValidationMessages);
 	}
 
-	protected void updateValidationError(IChangeListener listener,
+	public void updateValidationError(IChangeListener listener,
 			String validationErrorOrNull) {
 		removeValidationListenerAndMessage(validationMessages, listener);
 		if (validationErrorOrNull != null) {
