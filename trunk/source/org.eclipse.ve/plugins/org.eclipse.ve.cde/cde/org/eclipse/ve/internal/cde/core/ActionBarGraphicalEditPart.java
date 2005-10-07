@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-07 15:31:31 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-07 15:34:04 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -36,8 +36,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 	RectangleFigure anchorFigure = null;	// Small rectangle to anchor the connection to in the host figure
 	List actionBarChildren = null;
 
-	static final Color VERY_LIGHT_YELLOW = new Color(null, 255, 255, 220);
-
+	static final Color ACTIONBAR_BACKGROUND_COLOR = new Color(null, 255, 255, 220); // very light yellow
 	static final int ACTIONBAR_FIGURE_MARGIN = 5;
 
 	public void activate() {
@@ -120,7 +119,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 
 		// For the fill gradient, left to right go from white to very light yellow to show depth
 		actionBarFigure.setForegroundColor(ColorConstants.buttonLightest);
-		actionBarFigure.setBackgroundColor(VERY_LIGHT_YELLOW);
+		actionBarFigure.setBackgroundColor(ACTIONBAR_BACKGROUND_COLOR);
 
 		actionBarFigure.setVisible(false);
 		return actionBarFigure;
