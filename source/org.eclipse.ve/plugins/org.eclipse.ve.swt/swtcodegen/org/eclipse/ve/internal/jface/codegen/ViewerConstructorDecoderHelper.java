@@ -12,7 +12,7 @@
  *  Created Oct 5, 2005 by Gili Mendel
  * 
  *  $RCSfile: ViewerConstructorDecoderHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-06 22:01:10 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-07 20:40:45 $ 
  */
  
 package org.eclipse.ve.internal.jface.codegen;
@@ -76,6 +76,15 @@ public class ViewerConstructorDecoderHelper extends ConstructorDecoderHelper {
 				
 	}
 	
+	protected void restoreImplicitFeature() throws CodeGenException {
+		EStructuralFeature sf = getImplicitFeature();
+		EObject implicit = (EObject) fbeanPart.getEObject().eGet(sf);
+		
+		ExpressionRefFactory eGen = new ExpressionRefFactory(fbeanPart, sf);		
+		// prime the proper helpers
+		eGen.createFromJVEModelWithNoSrc(new Object[] { implicit } );
+	}
+	
 	
 	protected EObject getImplicitChild() {
 		IJavaObjectInstance obj = (IJavaObjectInstance)fbeanPart.getEObject();
@@ -121,7 +130,15 @@ public class ViewerConstructorDecoderHelper extends ConstructorDecoderHelper {
 	}
 	
 	protected void restoreImplicitInstancesIfNeeded() {
-		
+		if (isExplicitConstructor()) {
+			try {
+				restoreImplicitFeature();
+			} catch (CodeGenException e) {
+				
+			}
+		}
+		else
+		   super.restoreImplicitInstancesIfNeeded();				
 	}
 
 
