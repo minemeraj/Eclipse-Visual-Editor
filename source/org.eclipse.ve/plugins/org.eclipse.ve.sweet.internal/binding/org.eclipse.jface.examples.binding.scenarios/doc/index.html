@@ -1,0 +1,64 @@
+<html>
+<head>
+</head>
+<body>
+<h1>Data Binding Proposal</h1>
+<h2>Introduction</h2>
+Displaying and editing model data in a UI usually consists of the following steps:
+<ol>
+<li>Creating the UI widget that displays the data and optionally makes it editable.</li>
+<li>If the data can be edited in the UI, attaching a listener to the UI widget that validates the change and updates the model data at appropriate times.</li>
+<li>If the model data can change through other means while it is displayed in the UI, attaching a listener to the model object and updating the UI widget upon model changes.</li>
+<li>Initializing the UI widget's state based on the current model state</li>
+</ol>
+The data binding framework addresses steps 2 to 4. It abstracts from the details of attaching listeners to both the UI and the model sides for updating the other side's state by offering an API that allows to <i>bind</i> a UI widget to model data.
+<h2>Goals</h2>
+This is a list of goals that we would like to achieve with the data binding framework:
+<ul>
+<li>Easy to use</li>
+<ul>
+<li>Binding should be one line of code, easy to read/understand, and CodeAssist-friendly</li>
+<li>Consistent usage across controls / data types</li>
+<li>Should not require new or custom controls</li>
+<li>Ability to designate nested binding (e.g., person.shippingAddress.Street)</li>
+</ul>
+<li>Easily Extensible / Configurable</li>
+<ul>
+<li>Extendible for custom controls, data types (event models, derived properties etc.)</li>
+<li>Bind policies (on the binding service)</li>
+<li>Configurable with validation, and data conversion, traceability.</li>
+</ul>
+<li>Separation of concerns</li>
+<ul>
+<li>Creating widgets</li>
+<li>Binding</li>
+<li>Conversion</li>
+<li>Validation</li>
+</ul>
+<li>Lifecycle management</li>
+<ul>
+<li>Single management across the GUI (multiple binds to the same object, really is bound to the same object)</li>
+<li>Cleanup (e.g., Listeners) should be done automatically</li>
+</ul>
+<li>Validation</li>
+<ul>
+<li>At the property level</li>
+<li>At object level</li>
+<li>Across multiple Objects</li>
+</ul>
+<li>Conversion</li>
+<ul>
+<li>Basic conversion need be available</li>
+<li>Simple data types from/to String</li>
+<li>Monetary amounts ($ 1,096.23)</li>
+<li>Time/date conversion (locale, time zone)</li>
+</ul>
+<li>Support for nesting</li>
+<ul>
+<li>The simplest form of binding, is to bind properties of two instances (e.g., TextField/text, and Person/firstName)., where changes to properties on one end, reflects to the other.  Another common scenario is that an instance is bounded to an instance that can itself change (e.g., current selected Person instance).</li>
+</ul>
+</ul>
+<h2>Scenarios</h2>
+Concrete end-user scenarios, listed in a separate document (<a href="scenarios.html">scenarios.html</a>), are driving the development of the data binding framework.
+</body>
+</html>
