@@ -17,6 +17,7 @@ import org.eclipse.jface.binding.internal.viewers.TableViewerUpdatableTable;
 import org.eclipse.jface.viewers.AbstractListViewer;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Combo;
@@ -28,8 +29,19 @@ import org.eclipse.swt.widgets.Text;
 
 public class SWTDatabindingService extends DatabindingService {
 
-	public SWTDatabindingService(Control control) {
+	private final int validatePolicy;
+	private final int updatePolicy;
+
+	/**
+	 * 
+	 * @param control
+	 * @param validatePolicy one of SWT.Modify, SWT.FocusOut, or SWT.None
+	 * @param updatePolicy one of SWT.Modify, SWT.FocusOut, or SWT.None
+	 */
+	public SWTDatabindingService(Control control, int validatePolicy, int updatePolicy) {
 		super();
+		this.validatePolicy = validatePolicy;
+		this.updatePolicy = updatePolicy;
 		control.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				dispose();
@@ -56,7 +68,7 @@ public class SWTDatabindingService extends DatabindingService {
 		addUpdatableValueFactory(Text.class, new IUpdatableValueFactory() {
 			public IUpdatableValue createUpdatableValue(Object object,
 					Object attribute) {
-				return new TextUpdatableValue((Text) object);
+				return new TextUpdatableValue((Text) object, SWT.Modify, SWT.Modify);
 			}
 		});
 		addUpdatableValueFactory(Label.class, new IUpdatableValueFactory() {
@@ -102,5 +114,13 @@ public class SWTDatabindingService extends DatabindingService {
 				return new TableUpdatableValue((Table) object, "selection");
 			}
 		});
+	}
+
+	public int getUpdatePolicy() {
+		return updatePolicy;
+	}
+
+	public int getValidatePolicy() {
+		return validatePolicy;
 	}
 }

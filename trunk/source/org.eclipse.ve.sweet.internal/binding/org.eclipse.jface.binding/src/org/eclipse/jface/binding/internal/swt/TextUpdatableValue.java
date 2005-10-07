@@ -24,35 +24,40 @@ public class TextUpdatableValue extends UpdatableValue {
 
 	private final Text text;
 
-	public int listenerType;
-
-	public static final int DEFAULT_UPDATE_POLICY = SWT.Modify;
-
 	private boolean updating = false;
 
-	public TextUpdatableValue(Text text) {
-		this(text, DEFAULT_UPDATE_POLICY);
-	}
-
-	public TextUpdatableValue(Text text, int listenerType) {
-		this.text = text;
-		this.listenerType = listenerType;
-		text.addListener(listenerType, new Listener() {
-			public void handleEvent(Event event) {
-				if (!updating) {
-					fireChangeEvent(IChangeEvent.CHANGE, null, null);
-				}
+	private Listener validateListener = new Listener() {
+		public void handleEvent(Event event) {
+			if (!updating) {
+				fireChangeEvent(IChangeEvent.CHANGE, null, text.getText());
 			}
-		});
+		}
+	};
+
+	private Listener updateListener = new Listener() {
+		public void handleEvent(Event event) {
+			if (!updating) {
+				fireChangeEvent(IChangeEvent.CHANGE, null, text.getText());
+			}
+		}
+	};
+
+	public TextUpdatableValue(Text text, int updatePolicy, int validatePolicy) {
+		this.text = text;
+		if (updatePolicy != SWT.None) {
+			text.addListener(updatePolicy, updateListener);
+		}
 		text.addVerifyListener(new VerifyListener() {
 			public void verifyText(VerifyEvent e) {
-				String currentText = TextUpdatableValue.this.text.getText();
-				String newText = currentText.substring(0, e.start) + e.text
-						+ currentText.substring(e.end);
-				IChangeEvent changeEvent = fireChangeEvent(IChangeEvent.VERIFY,
-						currentText, newText);
-				if (changeEvent.getVeto()) {
-					e.doit = false;
+				if (!updating) {
+					String currentText = TextUpdatableValue.this.text.getText();
+					String newText = currentText.substring(0, e.start) + e.text
+							+ currentText.substring(e.end);
+					IChangeEvent changeEvent = fireChangeEvent(
+							IChangeEvent.VERIFY, currentText, newText);
+					if (changeEvent.getVeto()) {
+						e.doit = false;
+					}
 				}
 			}
 		});

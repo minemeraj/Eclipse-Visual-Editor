@@ -2,11 +2,8 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.DatabaseMetaData;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.jface.binding.swt.SWTDatabindingService;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -14,7 +11,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class Showcase extends Composite {
@@ -81,11 +77,12 @@ public class Showcase extends Composite {
 		shell.setText("JFace Binding Showcase");
 		new Showcase(shell, SWT.NONE);
 		shell.open();
-		while (!display.isDisposed()) {
+		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
 		}
+		display.dispose();
 	}
 
 }
