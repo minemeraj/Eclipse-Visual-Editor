@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.63 $  $Date: 2005-10-06 19:57:24 $ 
+ *  $Revision: 1.64 $  $Date: 2005-10-07 20:40:46 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -25,7 +25,6 @@ import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
@@ -555,14 +554,10 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 	}
 			
 	protected void restoreImplicitInstancesIfNeeded() {
-		
-		//TODO:  This will need to be some BeanInfo magic, hard
-		//       code it for now.
-	    JavaClass clazz = (JavaClass) ((IJavaObjectInstance) fbeanPart.getEObject()).getJavaType();	
-		if (clazz.getName().equals("TreeViewer")) {
-			EStructuralFeature tree = clazz.getEStructuralFeature("tree");
+	    EStructuralFeature sf = getRequiredImplicitFeature((IJavaObjectInstance)fbeanPart.getEObject());		
+		if (sf!=null) {			
 			BeanPartFactory bpf = new BeanPartFactory(fbeanPart.getModel(),fbeanPart.getModel().getCompositionModel());
-			bpf.restoreImplicitBeanPart(fbeanPart,tree, true);			
+			bpf.restoreImplicitBeanPart(fbeanPart,sf, true);			
 		}
 	}
 	
