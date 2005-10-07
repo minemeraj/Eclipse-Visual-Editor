@@ -14,7 +14,7 @@ public class DatabindingServiceTest extends TestCase {
 
 	DatabindingService dbs;
 
-	IUpdatableValue updatableValueRelaxedMock;
+	IUpdatableValue updatableValueRMock;
 
 	IValidator validatorMock;
 
@@ -44,7 +44,7 @@ public class DatabindingServiceTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		dbs = new DatabindingService();
-		updatableValueRelaxedMock = (IUpdatableValue) Mocks
+		updatableValueRMock = (IUpdatableValue) Mocks
 				.createRelaxedMock(IUpdatableValue.class);
 		validatorMock = (IValidator) Mocks.createMock(IValidator.class);
 		settableValue1 = new SettableValue(Object.class);
@@ -52,26 +52,26 @@ public class DatabindingServiceTest extends TestCase {
 	}
 
 	protected void tearDown() throws Exception {
-		Mocks.verify(updatableValueRelaxedMock);
+		Mocks.verify(updatableValueRMock);
 		Mocks.verify(validatorMock);
 		super.tearDown();
 	}
 
 	public void testBindValueModel() {
-		Mocks.reset(updatableValueRelaxedMock);
-		updatableValueRelaxedMock.addChangeListener(null);
-		updatableValueRelaxedMock.getValue();
-		Mocks.startChecking(updatableValueRelaxedMock);
-		dbs.bindValue(settableValue1, updatableValueRelaxedMock,
+		Mocks.reset(updatableValueRMock);
+		updatableValueRMock.addChangeListener(null);
+		updatableValueRMock.getValue();
+		Mocks.startChecking(updatableValueRMock);
+		dbs.bindValue(settableValue1, updatableValueRMock,
 				identityConverter, identityConverter, validatorMock);
-		Mocks.verify(updatableValueRelaxedMock);
+		Mocks.verify(updatableValueRMock);
 	}
 
 	public void testBindValueTarget() {
-		updatableValueRelaxedMock.addChangeListener(null);
-		updatableValueRelaxedMock.setValue(null);
-		Mocks.startChecking(updatableValueRelaxedMock);
-		dbs.bindValue(updatableValueRelaxedMock, settableValue2,
+		updatableValueRMock.addChangeListener(null);
+		updatableValueRMock.setValue(null);
+		Mocks.startChecking(updatableValueRMock);
+		dbs.bindValue(updatableValueRMock, settableValue2,
 				identityConverter, identityConverter, validatorMock);
 	}
 
