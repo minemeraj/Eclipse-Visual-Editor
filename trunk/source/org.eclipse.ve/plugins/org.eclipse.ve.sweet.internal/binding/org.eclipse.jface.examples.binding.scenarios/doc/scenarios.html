@@ -1,0 +1,221 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="de">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Data Binding Scenario</title>
+</head>
+
+<body>
+
+<h1>Data Binding Scenario</h1>
+<p>These scenarios are designed to provide the core functional requirements for 
+the binding framework and prove the binding API by covering a set of patterns 
+that commonly occur in a data bound GUI. In their simplest form they will be 
+written using SWT controls including the support for structured JFace controls (e.g., 
+ComboViewer, ListViewer, TreeViewer, ListViewer and Progress Viewer)</p>
+<p>Initially each scenario will be built with as little surrounding framework as 
+possible, so they could be classes that open a Shell in their main or they could 
+be RCP views. Validation exceptions that occur will be fed back via console 
+messages. In the later examples Eclipse frameworks will be used such as building 
+a preference page, where the validation provided by JFace will be used to 
+provide a richer user interface experience. </p>
+<p>Initially, a simple EMF based model will be the bases for these examples. 
+This is since EMF object have built in event notitication support. Beyond M3, a 
+Pojo support will have to be added.</p>
+<h2>Property Binding</h2>
+<p>Binding simple values, in essence is the ability to bind a property of one 
+object to another. This is typically done to bind a text control to a portion of 
+a domain model. The expectation is to have a simple, one line, intuitive API:
+</p>
+<h3>First Tier Priority</h3>
+<ol>
+	<li>Binding the name property of an Adventure object to the contents of Text 
+	controls, no conversion, no validation.</li>
+	<li>Binding the name property of an Adventure object to the contents of Text 
+	controls, no conversion, no validation. The Text widget editable is set to 
+	false.by the developer (can not change the name)</li>
+	<li>Binding of a read-only property of an Adventure object to the contents 
+	of Text controls, no conversion, no validation. Text control is not editable 
+	as a side effect of binding to a read-only property..</li>
+	<li>Binding a nested property of an Adventure object to the content of a 
+	Text control, no conversion, no validation.</li>
+	<li>Binding the name property of an Adventure object to the contents of Text 
+	controls where conversion occurs – the model data is held all in uppercase 
+	and displayed in lowercase with the first letter capitalized.</li>
+	<li>Binding the name property of an Adventure object to the contents of Text 
+	controls where validation occurs and the name cannot be longer than 15 
+	characters and cannot contain spaces</li>
+	<li>Binding the price property of an Adventure to a Text control. Price is a 
+	double and Text accepts String so conversion will have to occur. Validation 
+	ensure that the value is positive.</li>
+	<li>Binding the price property of an Adventure to a Text control but with 
+	custom conversion – the double will be validated to only have two decimal 
+	places and displayed with a leading currency symbol, and can be entered with 
+	or without the currency symbol.</li>
+	<li>Binding a boolean property to a CheckBox. Adventure will have a Boolean 
+	property “petsAllowed”</li>
+	<li>Binding a boolean property to a Radio Button set of Yes/No</li>
+	<li>Binding an int property that accepts different static values to a radio 
+	button set that displays the values. Adventure will have an int property 
+	called “transport” with int values of 0=”Bus”, 2=”Self Drive”, 3=”Taxi”. 
+	This could also be done with a 1.5 version using an Enum.</li>
+	<li>Binding a Transportation departure time to a Text control that formats 
+	and validates the time to and from a String. There are property bindings 
+	that bind elements of the GUI to elements to GUI and also elements of the 
+	domain to elements of the domain.</li>
+	<li>Binding the max value of a spinner to another spinner. </li>
+	<li>Binding the enabled state of several Text controls to a check box. There 
+	will be two check boxes, so as each is enabled/disabled the other one 
+	follows as do the states of the Text controls. </li>
+	<li>Binding the enabled state of a Text control to a radio button set that 
+	represents the states “enabled” and “disabled”. There will be a check box as 
+	well that shadows the enabled state and also drives it that affects the 
+	radio button set as well as the radio button set affecting the check box.</li>
+</ol>
+<h3>Second Tiered Priority</h3>
+<ol>
+	<li>Binding the name property of an Adventure object to the contents of Text 
+	controls where the refresh from the GUI to the Adventure occurs on key 
+	stroke, occurs on focus being lost, and occurs with an explicit “Apply” 
+	button.</li>
+</ol>
+<h2>Custom Binding</h2>
+<h3>First Tier</h3>
+<ol>
+	<li>Binding the price property of an Adventure to two spinner controls – one 
+	that shows the dollar portion and one that shows the cents.</li>
+	<li>Binding a Transportation departure time to two Text controls, one that 
+	shows the hours and one for the minutes, both of which validate the entry.</li>
+	<li>Binding a derived aggregate property of an Adventure that does not exist 
+	to a text field. For example, the name and description combined together 
+	with a comma separating them. Also combined together on a multi line text 
+	field with a line feed separating them. The text would render the combined 
+	property, as well as accept input and change the Adventure, and also the 
+	derived property would refresh itself if either of the properties that make 
+	it up (name and description) change.</li>
+</ol>
+<h3>Second Tiered Priority</h3>
+<h2>List binding</h2>
+<p>A common scenario is that a control like a combo, List, Tree or Table 
+displays some data that represents a collection of objects. Selection of a 
+single object then makes that object the focus of the GUI so that it can be 
+edited. In another scenario the selected object represents a property value of 
+another object, such as an adventure’s default lodging from a list of lodgings. 
+Bindings these kinds of controls implies the need to bind the control’s content 
+(list) and optionally binding the control’s selection/s. As with the Property 
+bindings, the goal is to keep the API simple and intuitive. <br>
+These scenarios cover basic selection of an item in a list and editing it with 
+different ways the list’s values are provided. The assumption here is a single 
+selection.</p>
+<h3>First Tier</h3>
+<ol>
+	<li>Selecting the lodgings for an adventure and editing the properties of 
+	the selected lodging. If no lodging is selected the input controls for name 
+	and adventure are disabled.</li>
+	<li>Selecting the Categories from a java.util.Collection of Catalogs and 
+	editing the name of each category. </li>
+	<li>Selecting the Categories from an Array of Catalogs and editing the name 
+	of each category.</li>
+	<li>List adventures and for the selected adventure allow its default 
+	lodging’s name and description to be changed in text controls. If there is 
+	no selected adventure or the default lodging is null the text controls are 
+	disabled. This is a nested property. Allow this to occur so that the 
+	selected adventure can change (the source of the nested property alters) and 
+	also so that the source of the nested property is not expected to change.</li>
+</ol>
+<p>These scenarios cover the list selection driving the property of another 
+object. In the case where there are cascaded lists, they should be written so 
+that in some cases the selection drives the domain that then propagates a 
+downstream list, and in others the downstream list is bound directly to the 
+selected object from the upstream list so there is a mix of GUI to Domain to GUI 
+and GUI to GUI to GUI.</p>
+<ol>
+	<li>For a given adventure editing its default lodging by selecting from a 
+	list of available lodgings. A button can also set the default lodging to 
+	null.</li>
+	<li>List an adventure and allow the selected adventure to have its default 
+	lodging set from a list of default lodgings. </li>
+	<li>List catalogs and allow the selected catalog to have its adventures 
+	listed and for the selected adventure the default lodging set from a list of 
+	available lodgings for the given selected category</li>
+</ol>
+<h3>Second Tiered Priority</h3>
+<ol>
+	<li>For a given adventure all the list of activates to be set via a muti 
+	selection list of available activities. </li>
+	<li>Selected items are included as activities and de-selected items removed.</li>
+	<li>For a given adventure all the list of activities to be set via a Table 
+	with CHECK style</li>
+</ol>
+<h2>Tables</h2>
+<h3>First Tier</h3>
+<ol>
+	<li>For a given catalog’s account objects show these in a Table with columns 
+	that represent the first name, and last name and state. (Table may or may 
+	not be read only)</li>
+	<li>For a given catalog’s account objects show these in a Table with columns 
+	that represent the first name, and time to read and state. Time to read 
+	requires a converter and valuator. (Table may or may not be read only)</li>
+	<li>For a given catalog’s account objects show these in a Table with columns 
+	that represent the first and last name combined together, the state and 
+	phone. The phone should be formatted and the state displayed with the state 
+	description as well as two character identifier.</li>
+	<li>For a given catalog’s account objects show these in a Table with columns 
+	for first name, state and phone. These are editable with text for name, 
+	combo or state and text for phone with validation.</li>
+	<li>A scenario that demonstrates the use of virtual scrolling</li>
+</ol>
+<h3>Second Tiered Priority</h3>
+<p>Provide table filtering not all rows are to be listed.</p>
+<h2>Trees</h2>
+<h3>First Tier</h3>
+<ol>
+	<li>A Tree of Catalogs and beneath each Catalog a list of lodgings</li>
+	<li>A tree that shows a directory structure over the file system, together 
+	with a Text input that validates a directory and drives the root of where 
+	the tree starts displaying its entries from.</li>
+</ol>
+<h3>Second Tiered Priority</h3>
+<p>Provide element filtering (not every element is to be shown).</p>
+<h2>Other event models</h2>
+<ol>
+	<li>The EMF event model has a build in event notification model which helps 
+	the GUI to be notified of model changes. The binding framework should be 
+	implemented against other models including
+		<ol>
+	<li>A JavaBeans model that uses PropertyChangeListener</li>
+	<li>A model that does not signal events. In this case, update to bounded 
+	visuals will generate the proper events. The framework will also provide a 
+	mechanism to fire a change event to induce proper refreshes. <br>
+	Preference page validation hookup</li>
+	</ol>
+</li>
+</ol>
+<p>An Eclipse preference page is a good real world example to attempt to use the 
+binding framework with. Two examples should be chosen. </p>
+<p>One that takes an existing preference page (whose model is a preference store) 
+and converts just the code concerned with model retrieval and update to the 
+binding framework but leaving the rest of the code intact.</p>
+<p>The second example would convert as much of the binding and validation as 
+possible to the binding framework. The portions that could not be converted 
+across would show the areas where the framework may be lacking. The validation 
+feedback would be displayed in the preference page status bar and show the 
+integration between binding validation and preference page feedback.</p>
+<h2>VE User admin</h2>
+<p>This is an example that allows editing of users, accounts, address and covers 
+most model relationships and binding issues. It was used by the VE team before 
+as the showcase example for their Swing data binding functionality and should be 
+replicated in SWT using the binding framework.</p>
+<h2>Tooling support</h2>
+<p>User will be able to select a Visual, and bind it to a domain Object’s 
+property. Properties will be reflected by their domain’s name (e.g., firstName).</p>
+<p>User will be able to select a domain object and bind it to existing (or 
+generated) visual.<br>
+Sample Applications</p>
+<p>We re going to be using using the following data model, taken from the 
+AdventureBuilder example application:</p>
+
+</body>
+
+</html>
