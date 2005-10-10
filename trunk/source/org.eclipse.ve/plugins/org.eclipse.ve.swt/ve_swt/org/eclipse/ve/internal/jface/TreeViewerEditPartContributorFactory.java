@@ -133,6 +133,11 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 					fig.add(fErrorIndicator);
 					label.getToolTip().add(new Label("Click here to transform to a Viewer"));
 					fig.setToolTip(label.getToolTip());
+					fig.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent event) {
+							System.out.println("execute commands to make a viewer");
+						};
+					});
 					return fig;
 				}
 				protected void setupLabelProvider() {
