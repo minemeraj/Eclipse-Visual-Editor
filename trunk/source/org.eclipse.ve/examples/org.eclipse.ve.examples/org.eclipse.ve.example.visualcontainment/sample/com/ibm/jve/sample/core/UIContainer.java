@@ -23,7 +23,8 @@ import org.eclipse.swt.widgets.Composite;
  */
 public abstract class UIContainer {
 	private Composite root = null;
-	private String name = null;
+	protected String name = null;
+	private boolean isReal = true;
 
 	/**
 	 * 
@@ -111,7 +112,13 @@ public abstract class UIContainer {
 		return root;
 		
 	}
-	
-	
 
+	public boolean isReal() {
+		return isReal;
+	}
+
+	public void setReal(boolean isReal) {
+		this.isReal = isReal;
+	}
+	
 }

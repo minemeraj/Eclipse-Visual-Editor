@@ -5,10 +5,18 @@
   xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"
   xmlns:org.eclipse.jem.internal.instantiation="http:///org/eclipse/jem/internal/instantiation.ecore"
   xmlns:java="java.xmi"
+  xmlns:swt="java:/org.eclipse.swt.widgets"
   xmlns:sample="java:/com.ibm.jve.sample.components">
-    
-  <sample:UILabelTextPart xmi:id="UILabelTextPart_1">
+  
+  <swt:Label xmi:id="Label_1">
   	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
+	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="getUIContainer">
+		<receiver xsi:type="org.eclipse.jem.internal.instantiation:PTInstanceReference" object="UILabelTextPart_1"/>
+      </expression>	  	
+	</allocation>
+  </swt:Label>
+  
+  <sample:UILabelTextPart xmi:id="UILabelTextPart_1" uiContainer="Label_1">
 	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTClassInstanceCreation" type="com.ibm.jve.sample.components.UILabelTextPart">
         <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
         <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTStringLiteral" literalValue="Label"/>

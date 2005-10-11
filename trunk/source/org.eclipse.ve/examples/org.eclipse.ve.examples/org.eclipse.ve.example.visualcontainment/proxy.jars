@@ -1,1 +1,1 @@
-vm/jvesamplevm.jar=/com.ibm.jve.sample/bin
+vm/jvesamplevm.jar=/org.eclipse.ve.example.visualcontainment/bin
