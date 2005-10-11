@@ -110,7 +110,7 @@ none
 </ol>
 <h3>Deferred Items</h3>
 none
-<h2>Binding to a read-only combo</h2>
+<h2>Binding to a read-only Combo or List</h2>
 <h3>Committed Items</h3>
 <ol>
 	<li>Binding the current selection of a read-only combo to the country property (of type String)
@@ -120,25 +120,29 @@ none
 	of an Account object. The list of possible values does not change dynamically,
 	it is given as a list of Country objects. The Country object's name property is used for displaying in
 	the combo viewer, and it is used as the value that is set on the Account object.</li>
-	<li>For a given adventure editing its default lodging by selecting from a 
-	list of available lodgings displaying the Lodging's name property. A button can also
-	set the default lodging to null. The list of available lodgings can change over time,
-	as can the name of any lodging. Both kinds of updates should update the combo viewer,
-	updating the name of a selected lodging should preserve the selection.</li>
+	<li>Binding the current selection of a read-only combo viewer to a given adventure's
+	default lodging. The combo items display the Lodging's name property. To set the
+	default lodging to null, there is an empty entry in the list of combo items. The list
+	of available lodgings can change over time, as can the name of any lodging. Both
+	kinds of updates should update the combo viewer, updating the name of a selected
+	lodging should preserve the selection.</li>
 </ol>
 <h3>Proposed Items</h3>
 <ol>
+	<li>For a given adventure editing its default activities by selecting from a 
+	list viewer (with SWT.MULTI) showing available activities displaying the
+	Activities's name property. The list of available activities can change over
+	time, as can the name of any activity. Both kinds of updates should update
+	the list viewer, updating the name of a selected lodging should preserve
+	the selection.</li>
 </ol>
 <h3>Deferred Items</h3>
-<ol>
-</ol>
-<h2>Collection binding</h2>
+none
+<h2>Master-detail</h2>
 <p>A common scenario is that a control like a combo, List, Tree or Table 
 displays some data that represents a collection of objects. Selection of a 
 single object then makes that object the focus of the GUI so that it can be 
-edited. In another scenario the selected object represents a property value of 
-another object, such as an adventure’s default lodging from a list of lodgings. 
-Bindings these kinds of controls implies the need to bind the control’s content 
+edited. Bindings these kinds of controls implies the need to bind the control’s content 
 (list) and optionally binding the control’s selection/s. As with the Property 
 bindings, the goal is to keep the API simple and intuitive. <br>
 These scenarios cover basic selection of an item in a list and editing it with 
