@@ -135,6 +135,7 @@ none
 	time, as can the name of any activity. Both kinds of updates should update
 	the list viewer, updating the name of a selected lodging should preserve
 	the selection.</li>
+	<li>Like the previous scenario, but use a Table with CHECK style</li>
 </ol>
 <h3>Deferred Items</h3>
 none
@@ -159,37 +160,11 @@ selection.</p>
 	and "Remove"; clicking on "Add" creates a new lodging and selects it so
 	it can be edited, clicking on "Remove" removes the currently selected
 	lodging from the list.</li>
-	<li>Selecting the Categories from a java.util.Collection of Catalogs and 
-	editing the name of each category. </li>
-	<li>Selecting the Categories from an Array of Catalogs and editing the name 
-	of each category.</li>
 	<li>List adventures and for the selected adventure allow its default 
 	lodging’s name and description to be changed in text controls. If there is 
 	no selected adventure or the default lodging is null the text controls are 
-	disabled. This is a nested property. Allow this to occur so that the 
-	selected adventure can change (the source of the nested property alters) and 
-	also so that the source of the nested property is not expected to change.</li>
-</ol>
-<p>These scenarios cover the list selection driving the property of another 
-object. In the case where there are cascaded lists, they should be written so 
-that in some cases the selection drives the domain that then propagates a 
-downstream list, and in others the downstream list is bound directly to the 
-selected object from the upstream list so there is a mix of GUI to Domain to GUI 
-and GUI to GUI to GUI.</p>
-<ol>
-	<li>List an adventure and allow the selected adventure to have its default 
-	lodging set from a list of default lodgings. </li>
-	<li>List catalogs and allow the selected catalog to have its adventures 
-	listed and for the selected adventure the default lodging set from a list of 
-	available lodgings for the given selected category</li>
-</ol>
-<h3>Second Tiered Priority</h3>
-<ol>
-	<li>For a given adventure all the list of activates to be set via a muti 
-	selection list of available activities. </li>
-	<li>Selected items are included as activities and de-selected items removed.</li>
-	<li>For a given adventure all the list of activities to be set via a Table 
-	with CHECK style</li>
+	disabled. This is a nested property. The default lodging can be changed
+	elsewhere, and the list</li>
 </ol>
 <h2>Tables</h2>
 <h3>First Tier</h3>
