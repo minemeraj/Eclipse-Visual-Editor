@@ -91,8 +91,12 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 				return new Label("I am a Tree without a Viewer");
 		}
 
+		/*
+		 * Return an overlay image for the tree viewer only
+		 */
 		public IFigure getFigureOverLay() {
-			final Image image = treeViewer != null ? treeViewerOverlayImage : treeOverlayImage;
+			if (treeViewer == null) return null; 
+			final Image image = treeViewerOverlayImage;
 			org.eclipse.swt.graphics.Rectangle bounds = image.getBounds();
 			IFigure fig = new Figure() {
 
@@ -127,8 +131,6 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 			else return new GraphicalEditPart[] {new JavaBeanGraphicalEditPart(tree) {
 				protected IFigure createFigure() {
 					Label label = (Label)super.createFigure();
-//					ImageFigure imgfig = new ImageFigure();
-//					imgfig.setImage(noTreeViewerImage);
 					Button fig = new Button(noTreeViewerImage);
 					fig.add(fErrorIndicator);
 					label.getToolTip().add(new Label("Click here to transform to a Viewer"));

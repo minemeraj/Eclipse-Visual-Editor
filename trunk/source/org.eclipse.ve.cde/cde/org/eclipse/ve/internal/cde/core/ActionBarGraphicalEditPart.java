@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-07 15:34:04 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-11 20:08:23 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -33,7 +33,6 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 
 	IFigure actionBarFigure = null;			// Action bar that contains the editpart contributor figures
 	Polyline connectionFigure = null;		// Connection from the host figure to the action bar
-	RectangleFigure anchorFigure = null;	// Small rectangle to anchor the connection to in the host figure
 	List actionBarChildren = null;
 
 	static final Color ACTIONBAR_BACKGROUND_COLOR = new Color(null, 255, 255, 220); // very light yellow
@@ -49,7 +48,6 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 		getLayer(LayerConstants.HANDLE_LAYER).remove(getFigure());
 		if (connectionFigure != null) {
 			getLayer(LayerConstants.HANDLE_LAYER).remove(connectionFigure);
-			getLayer(LayerConstants.HANDLE_LAYER).remove(anchorFigure);
 		}
 	}
 
@@ -59,10 +57,16 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 
 	public void show(Rectangle hostBounds, int orientation) {
 		Rectangle bounds = actionBarFigure.getBounds();
-		actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width / 2 + 3, hostBounds.y - bounds.height - 7));
+		actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width + 14, hostBounds.y - bounds.height - 14));
+//		actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width + 9, hostBounds.y + hostBounds.height + 9));
+//		actionBarFigure.setLocation(new Point(hostBounds.x - bounds.width - 9, hostBounds.y + hostBounds.height + 9));
 		actionBarFigure.setVisible(true);
-		if (connectionFigure == null && anchorFigure == null) {
+		if (connectionFigure == null) {
 			connectionFigure = new Polyline() {
+				PointList hostBorderPoints = null;
+				PointList actionBarBorderPoints = null;
+				PointList hostPoints = null;
+				PointList actionBarPoints = null;
 
 				protected void outlineShape(Graphics g) {
 					try {
@@ -70,28 +74,122 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 					} catch (SWTException e) {
 						// For OS platforms that don't support Antialias
 					}
-					super.outlineShape(g);
+					g.setForegroundColor(ColorConstants.black);
+					if (hostBorderPoints != null) {
+//						g.setForegroundColor(ColorConstants.black);
+//						g.setLineWidth(1);
+//						g.drawPolyline(hostBorderPoints);
+					}
+					if (hostPoints != null) {
+						g.setForegroundColor(ColorConstants.green);
+						g.setLineWidth(2);
+						g.drawPolyline(hostPoints);
+					}
+					if (actionBarBorderPoints != null) {
+//						g.setForegroundColor(ColorConstants.black);
+//						g.setLineWidth(1);
+//						Point fp = actionBarBorderPoints.getFirstPoint();
+//						Point lp = actionBarBorderPoints.getPoint(2);
+//						Rectangle rect = new Rectangle(fp.x, fp.y, lp.x - fp.x, lp.y - fp.y);
+//						g.drawRoundRectangle(rect, 8, 8);
+					}
+					if (actionBarPoints != null) {
+						g.setForegroundColor(ColorConstants.green);
+						g.setLineWidth(2);
+						Point fp = actionBarPoints.getFirstPoint();
+						Point lp = actionBarPoints.getPoint(2);
+						Rectangle rect = new Rectangle(fp.x, fp.y, lp.x - fp.x, lp.y - fp.y);
+						g.drawRoundRectangle(rect, 8, 8);
+					}
+					g.setForegroundColor(ColorConstants.lightGreen);
+					g.setLineWidth(2);
+					PointList anchorLinePoints = new PointList(2);
+//					Point p1 = hostBorderPoints.getPoint(3);
+//					Point p2 = actionBarBorderPoints.getPoint(1);
+					Point p1 = hostPoints.getPoint(3);
+					Point p2 = actionBarPoints.getPoint(1);
+					anchorLinePoints.addPoint(p1);
+					anchorLinePoints.addPoint(p2);
+					g.drawPolyline(anchorLinePoints);
+
+					g.setForegroundColor(ColorConstants.darkGray);
+					g.setLineWidth(1);
+					anchorLinePoints = new PointList(2);
+					anchorLinePoints.addPoint(p1.x-2, p1.y-2);
+					anchorLinePoints.addPoint(p2.x-2, p2.y-2);
+//					g.drawPolyline(anchorLinePoints);
+
+					anchorLinePoints = new PointList(2);
+					anchorLinePoints.addPoint(p1.x+1, p1.y+2);
+					anchorLinePoints.addPoint(p2.x+2, p2.y);
+//					g.drawPolyline(anchorLinePoints);
 				}
+				/*
+				 * points should contain 10 points... first 5 is the points for the host figure,
+				 * last 5 is the points for the action bar figure.
+				 */
+				public void setPoints(PointList points) {
+					super.setPoints(points);
+					hostBorderPoints = null;
+					hostPoints = null;
+					actionBarBorderPoints = null;
+					actionBarPoints = null;
+					if (points.size() == 10) {
+						hostBorderPoints = new PointList(5);
+						hostPoints = new PointList(5);
+						actionBarBorderPoints = new PointList(5);
+						actionBarPoints = new PointList(5);
+						for (int i = 0; i < 5; i++) {
+							hostBorderPoints.addPoint(points.getPoint(i));
+						}
+						hostPoints.addPoint(hostBorderPoints.getPoint(0).x + 2, hostBorderPoints.getPoint(0).y + 2);
+						hostPoints.addPoint(hostBorderPoints.getPoint(1).x + 2, hostBorderPoints.getPoint(1).y - 2);
+						hostPoints.addPoint(hostBorderPoints.getPoint(2).x - 2, hostBorderPoints.getPoint(2).y - 2);
+						hostPoints.addPoint(hostBorderPoints.getPoint(3).x - 2, hostBorderPoints.getPoint(3).y + 2);
+						hostPoints.addPoint(hostBorderPoints.getPoint(4).x + 2, hostBorderPoints.getPoint(4).y + 2);
+
+						for (int i = 5; i < 10; i++) {
+							actionBarBorderPoints.addPoint(points.getPoint(i));
+						}
+						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(0).x + 2, actionBarBorderPoints.getPoint(0).y + 2);
+						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(1).x + 2, actionBarBorderPoints.getPoint(1).y - 2);
+						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(2).x - 2, actionBarBorderPoints.getPoint(2).y - 2);
+						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(3).x - 2, actionBarBorderPoints.getPoint(3).y + 2);
+						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(4).x + 2, actionBarBorderPoints.getPoint(4).y + 2);
+					}
+				};
 			};
 			connectionFigure.setLineWidth(1);
-			anchorFigure = new RectangleFigure();
-			anchorFigure.setSize(5, 5);
-			anchorFigure.setBackgroundColor(ColorConstants.lightGreen);
 			getLayer(LayerConstants.HANDLE_LAYER).add(connectionFigure);
-			getLayer(LayerConstants.HANDLE_LAYER).add(anchorFigure);
 		}
-		PointList pl = new PointList(new int[] { hostBounds.x + hostBounds.width / 5, hostBounds.y + hostBounds.height / 5, bounds.x - 8,
-				bounds.y + bounds.height / 2 + 5, bounds.x, bounds.y + bounds.height / 2 + 5});
+		PointList pl = new PointList();
+		Rectangle hb = hostBounds.getCopy();
+		hb.x -= 5;
+		hb.y -= 5;
+		hb.width += 10;
+		hb.height += 10;
+		pl.addPoint(hb.x, hb.y);
+		pl.addPoint(hb.x, hb.y + hb.height);
+		pl.addPoint(hb.x + hb.width, hb.y + hb.height);
+		pl.addPoint(hb.x + hb.width, hb.y);
+		pl.addPoint(hb.x, hb.y);
+		Rectangle afBounds = actionBarFigure.getBounds().getCopy();
+		afBounds.x -= 3;
+		afBounds.y -= 3;
+		afBounds.width += 6;
+		afBounds.height += 6;
+		pl.addPoint(afBounds.x, afBounds.y);
+		pl.addPoint(afBounds.x, afBounds.y + afBounds.height);
+		pl.addPoint(afBounds.x + afBounds.width, afBounds.y + afBounds.height);
+		pl.addPoint(afBounds.x + afBounds.width, afBounds.y);
+		pl.addPoint(afBounds.x, afBounds.y);
 		connectionFigure.setPoints(pl);
 		connectionFigure.setVisible(true);
-		anchorFigure.setLocation(new Point(hostBounds.x + hostBounds.width / 5 - 3, hostBounds.y + hostBounds.height / 5 + 1));
-		anchorFigure.setVisible(true);
 	}
 
 	public void hide() {
 		actionBarFigure.setVisible(false);
 		connectionFigure.setVisible(false);
-		anchorFigure.setVisible(false);
 	}
 
 	protected IFigure createFigure() {
