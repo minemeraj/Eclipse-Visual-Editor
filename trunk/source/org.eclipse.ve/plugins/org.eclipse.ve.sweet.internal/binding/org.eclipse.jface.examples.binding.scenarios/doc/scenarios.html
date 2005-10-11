@@ -136,6 +136,7 @@ none
 	the list viewer, updating the name of a selected lodging should preserve
 	the selection.</li>
 	<li>Like the previous scenario, but use a Table with CHECK style</li>
+	<li>Handle null entries in lists by displaying an empty item</li>
 </ol>
 <h3>Deferred Items</h3>
 none
@@ -166,36 +167,49 @@ selection.</p>
 	disabled. This is a nested property. The default lodging can be changed
 	elsewhere, and the list</li>
 </ol>
-<h2>Tables</h2>
-<h3>First Tier</h3>
+<h3>Proposed Items</h3>
 <ol>
-	<li>For a given catalog’s account objects show these in a Table with columns 
-	that represent the first name, and last name and state. (Table may or may 
-	not be read only)</li>
-	<li>For a given catalog’s account objects show these in a Table with columns 
+	<li>Preventing selection changes in the master list if the detail widgets are
+	dirty (or not valid). An example of this is Eclipse's launch configuration dialog.</li>
+</ol>
+<h2>Tables</h2>
+<h3>Committed Items</h3>
+<ol>
+	<li>For a given catalog’s account objects show these in a Table viewer with columns 
+	that represent the first name, and last name and state. The table is read-only.</li>
+	<li>For a given catalog’s account objects show these in a Table viewer with columns 
+	that represent the first name, and last name and state. The table is read-write.</li>
+	<li>For a given catalog’s account objects show these in a Table viewer with columns 
 	that represent the first name, and time to read and state. Time to read 
-	requires a converter and valuator. (Table may or may not be read only)</li>
-	<li>For a given catalog’s account objects show these in a Table with columns 
+	requires a converter and validator. The table is read-write.</li>
+	<li>For a given catalog’s account objects show these in a Table viewer with columns 
 	that represent the first and last name combined together, the state and 
 	phone. The phone should be formatted and the state displayed with the state 
-	description as well as two character identifier.</li>
-	<li>For a given catalog’s account objects show these in a Table with columns 
+	description as well as two character identifier. (Non-editable)</li>
+	<li>For a given catalog’s account objects show these in a Table viewer with columns 
 	for first name, state and phone. These are editable with text for name, 
 	combo or state and text for phone with validation.</li>
-	<li>A scenario that demonstrates the use of virtual scrolling</li>
 </ol>
-<h3>Second Tiered Priority</h3>
-<p>Provide table filtering not all rows are to be listed.</p>
+<h3>Proposed Items</h3>
+<ol>
+	<li>A scenario that demonstrates the use of virtual scrolling</li>
+	<li>Handle null entries in tables by displaying an empty row that is not editable.</li>
+	<li>Provide table filtering not all rows are to be listed.</li>
+	<li>Handle table sorting.</li>
+	<li>Binding to a custom table control such as CompositeTable.</li>
+</ol>
 <h2>Trees</h2>
-<h3>First Tier</h3>
+<h3>Committed Items</h3>
 <ol>
 	<li>A Tree of Catalogs and beneath each Catalog a list of lodgings</li>
 	<li>A tree that shows a directory structure over the file system, together 
 	with a Text input that validates a directory and drives the root of where 
 	the tree starts displaying its entries from.</li>
 </ol>
-<h3>Second Tiered Priority</h3>
-<p>Provide element filtering (not every element is to be shown).</p>
+<h3>Proposed Items</h3>
+<ol>
+	<li>Provide element filtering (not every element is to be shown).</li>
+</ol>
 <h2>Other event models</h2>
 <ol>
 	<li>The EMF event model has a build in event notification model which helps 
