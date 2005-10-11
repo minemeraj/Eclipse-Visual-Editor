@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarGraphicalEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-11 20:08:23 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-11 21:26:01 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -79,7 +79,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 //						g.setForegroundColor(ColorConstants.black);
 //						g.setLineWidth(1);
 //						g.drawPolyline(hostBorderPoints);
-					}
+				}
 					if (hostPoints != null) {
 						g.setForegroundColor(ColorConstants.green);
 						g.setLineWidth(2);
@@ -157,7 +157,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(3).x - 2, actionBarBorderPoints.getPoint(3).y + 2);
 						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(4).x + 2, actionBarBorderPoints.getPoint(4).y + 2);
 					}
-				};
+			};
 			};
 			connectionFigure.setLineWidth(1);
 			getLayer(LayerConstants.HANDLE_LAYER).add(connectionFigure);
@@ -291,12 +291,16 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 			super(domain);
 		}
 
-		public Command getAddCommand(List children, Object positionBeforeChild) {
-			return null;
+		public Result getAddCommand(List children, Object positionBeforeChild) {
+			return new Result(children);
 		}
 
-		public Command getCreateCommand(Object child, Object positionBeforeChild) {
-			return null;
+		public Result getCreateCommand(Object child, Object positionBeforeChild) {
+			return new Result(Collections.singletonList(child));
+		}
+		
+		public Result getCreateCommand(List children, Object positionBeforeChild) {
+			return new Result(children);
 		}
 
 		public Command getDeleteDependentCommand(Object child) {

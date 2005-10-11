@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.40 $ $Date: 2005-08-26 14:29:05 $
+ * $Revision: 1.41 $ $Date: 2005-10-11 21:23:47 $
  */
 import java.util.*;
 
@@ -621,7 +621,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			return UnexecutableCommand.INSTANCE;
 		List children = getHost().getChildren();
 		if (children.isEmpty()) // If no children, just add to the end
-			return containerPolicy.getCreateCommand(request.getNewObject(), null);
+			return containerPolicy.getCreateCommand(request.getNewObject(), null).getCommand();
 
 		Point position = getLocationFromRequest(request).getCopy();
 		// This point is absolute. Make it relative to the model
@@ -636,7 +636,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 
 		if (gridReq.type == REPLACE_FILLER) {
 			// Just replace a filler label with the new control
-			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart.getModel()));
+			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart.getModel()).getCommand());
 			cb.append(containerPolicy.getDeleteDependentCommand(editPart.getModel()));
 
 		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
@@ -780,7 +780,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		
 		// If child is not one of the children this is an add request (i.e. orphaned from one container and added to this container).
 		if (childIndex == -1 && children.isEmpty())
-			return containerPolicy.getAddCommand(Collections.singletonList(child), null);
+			return containerPolicy.getAddCommand(Collections.singletonList(child), null).getCommand();
 
 		// If it's an add child request, see if it's a valid add (can only add composites, not controls).
 		if (childIndex == -1 && !(BeanSWTUtilities.isValidBeanLocation(containerPolicy.getEditDomain(), (IJavaObjectInstance)child, (EObject) containerPolicy.getContainer())))
@@ -860,7 +860,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 				if (beforeEP != null)
 					cb.append(helper.createFillerLabelsForMovedControlCommands(child, (EObject) beforeEP.getModel()));
 				else
-					cb.append(containerPolicy.getCreateCommand(helper.createFillerLabelObject(), null));
+					cb.append(containerPolicy.getCreateCommand(helper.createFillerLabelObject(), null).getCommand());
 			}
 		}
 		if (cb.isEmpty())

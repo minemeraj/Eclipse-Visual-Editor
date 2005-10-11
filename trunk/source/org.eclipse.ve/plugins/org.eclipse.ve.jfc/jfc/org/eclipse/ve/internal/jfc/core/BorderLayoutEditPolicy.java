@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutEditPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 import java.util.*;
@@ -29,6 +29,7 @@ import org.eclipse.gef.requests.*;
 import org.eclipse.swt.SWT;
 
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
+import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -116,14 +117,10 @@ private void addRegionFeedback(Request request) {
  */
 protected Command createAddCommand(EditPart childEditPart, Object constraint) {
 	if (constraint == null || !(constraint instanceof String)) return UnexecutableCommand.INSTANCE;
-	List children = new ArrayList(1);
-	IJavaObjectInstance child = (IJavaObjectInstance)childEditPart.getModel();
-	children.add(child);
-	Command addCmd = UnexecutableCommand.INSTANCE;
 	if (fLayoutPolicyHelper.isRegionAvailable((String)constraint)) {
-		addCmd = fLayoutPolicyHelper.getAddChildrenCommand(children, Collections.singletonList(constraint), null); // We can't really insert before other objects with Border layout yet
-	}
-	return addCmd;
+		return fLayoutPolicyHelper.getAddChildrenCommand(Collections.singletonList(childEditPart.getModel()), Collections.singletonList(constraint), null).getCommand(); 
+	} else
+		return UnexecutableCommand.INSTANCE;
 }
 /**
  * The constraint is an IJavaObjectInstance with the string for the region
@@ -139,7 +136,7 @@ protected Command createChangeConstraintCommand(EditPart childEditPart, Object c
 protected Command createCreateCommand(Object child, String aConstraint) {
 	Command addCmd = UnexecutableCommand.INSTANCE;
 	if (fLayoutPolicyHelper.isRegionAvailable(aConstraint)) {
-		addCmd = fLayoutPolicyHelper.getCreateChildCommand(child,aConstraint,null); // We can't really insert before other objects with Border layout yet
+		addCmd = fLayoutPolicyHelper.getCreateChildCommand(child,aConstraint,null).getCommand();
 	}
 	return addCmd;
 }

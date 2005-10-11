@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.17 $ $Date: 2005-10-06 19:57:25 $
+ * $RCSfile: ResourceProxyAdapter.java,v $ $Revision: 1.18 $ $Date: 2005-10-11 21:23:47 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -44,21 +44,17 @@ public class ResourceProxyAdapter extends UIThreadOnlyProxyAdapter {
 		// new Font(top.getDisplay(), data);
 		// We don't have a clean way to distinguish which is which now so this has to look at the parse tree and be harded coded for
 		// JFace registries.  Bugzilla 91358 tracks the fact we should re-visit this solution		
-		if(allocation != null && allocation instanceof ParseTreeAllocation){
-			try {
-				PTExpression expression = ((ParseTreeAllocation) allocation).getExpression();
-				if (expression instanceof PTMethodInvocation) {
-					PTExpression getRegistryEntry = ((PTMethodInvocation) expression).getReceiver(); // JFaceResources.getFontRegistry().getBold(...);
-					if (getRegistryEntry instanceof PTMethodInvocation) {
-						PTExpression registryMethod = ((PTMethodInvocation) getRegistryEntry).getReceiver(); // JFaceResources.getFontRegistry()
-						if (registryMethod instanceof PTName
-								&& ((PTName) registryMethod).getName().equals("org.eclipse.jface.resource.JFaceResources")) {	//$NON-NLS-1$
-							return true;
-						}
+		if(allocation != null && allocation.isParseTree()){
+			PTExpression expression = ((ParseTreeAllocation) allocation).getExpression();
+			if (expression instanceof PTMethodInvocation) {
+				PTExpression getRegistryEntry = ((PTMethodInvocation) expression).getReceiver(); // JFaceResources.getFontRegistry().getBold(...);
+				if (getRegistryEntry instanceof PTMethodInvocation) {
+					PTExpression registryMethod = ((PTMethodInvocation) getRegistryEntry).getReceiver(); // JFaceResources.getFontRegistry()
+					if (registryMethod instanceof PTName
+							&& ((PTName) registryMethod).getName().equals("org.eclipse.jface.resource.JFaceResources")) {	//$NON-NLS-1$
+						return true;
 					}
 				}
-			} catch (ClassCastException e) {
-				// It wasn't a ParseTree. This is rare.
 			}
 		}
 		return false;

@@ -10,9 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScrolledCompositeContainerPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-11 21:23:47 $ 
  */
 package org.eclipse.ve.internal.swt;
+
+import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -29,11 +31,13 @@ import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 
 public class ScrolledCompositeContainerPolicy extends CompositeContainerPolicy {
 	
+	protected EStructuralFeature sfContent;
+	
 	public ScrolledCompositeContainerPolicy(EditDomain domain) {
 		super(domain);
 		
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
-		sfLayoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_SCROLLEDCOMPOSITE_CONTENT);
+		sfContent = JavaInstantiation.getReference(rset, SWTConstants.SF_SCROLLEDCOMPOSITE_CONTENT);
 	}
 	
 	/*
@@ -44,26 +48,36 @@ public class ScrolledCompositeContainerPolicy extends CompositeContainerPolicy {
 			return false;
 			
 		IJavaObjectInstance scrolledCompositeBean = (IJavaObjectInstance) getContainer();
-		IJavaInstance content = (IJavaInstance) scrolledCompositeBean.eGet(sfLayoutData);
+		IJavaInstance content = (IJavaInstance) scrolledCompositeBean.eGet(sfContent);
 		return (content == null);
 	}
 
-	protected Command getCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		Command setAsContent;
+	protected Command primCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
 		EObject parent = (EObject)getContainer();
-		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
-		cBld.applyAttributeSetting(parent, sfLayoutData, child, positionBeforeChild);
-		setAsContent = cBld.getCommand();
-		return super.getCreateCommand(child, positionBeforeChild, containmentSF).chain(setAsContent);
+		// We apply to parent AFTER creating child so that at the time the parent receives the content setting the child is
+		// a true child of the ScrolledComposite.
+		CommandBuilder cBld = new CommandBuilder();
+		cBld.append(super.primCreateCommand(child, positionBeforeChild, containmentSF));
+		cBld.applyAttributeSetting(parent, sfContent, child);
+		return cBld.getCommand();
 	}
-
+	
 	protected Command getDeleteDependentCommand(Object child, EStructuralFeature containmentSF) {
-		Command removeContent;
 		EObject parent = (EObject)getContainer();
-		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
-		cBld.applyAttributeSetting(parent,sfLayoutData,null);
-		removeContent = cBld.getCommand();
-		return removeContent.chain(super.getDeleteDependentCommand(child, containmentSF));
+		// We remove the content setting BEFORE we remove the child so that the parent doesn't have an invalid child as a content setting.
+		CommandBuilder cBld = new CommandBuilder();
+		cBld.cancelAttributeSetting(parent,sfContent);
+		cBld.append(super.getDeleteDependentCommand(child, containmentSF));
+		return cBld.getCommand();
+	}
+	
+	protected Command getOrphanTheChildrenCommand(List children) {
+		EObject parent = (EObject)getContainer();
+		// Need to cancel the content because it won't be the content when the chilren are moved. (Technically there is only one child!).
+		CommandBuilder cbld = new CommandBuilder();
+		cbld.cancelAttributeSetting(parent, sfContent);
+		cbld.append(super.getOrphanTheChildrenCommand(children));
+		return cbld.getCommand();
 	}
 	
 }

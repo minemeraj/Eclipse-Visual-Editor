@@ -11,14 +11,11 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTableContainerPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 
-import java.util.List;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -54,13 +51,5 @@ public class JTableContainerPolicy extends BaseJavaContainerPolicy {
 			return (proxy instanceof IBooleanBeanProxy) ? !((IBooleanBeanProxy) proxy).booleanValue() : false;
 		}
 		return false;
-	}
-	
-	public Command getCreateCommand(Object constraintComponent, Object childComponent, Object position) {
-		return getCreateCommand(childComponent, position);
-	}
-	
-	public Command getAddCommand(List componentConstraints, List childrenComponents, Object position) {
-		return getAddCommand(childrenComponents, position);
 	}
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 
@@ -65,14 +65,14 @@ public abstract class LayoutPolicyHelper implements ILayoutPolicyHelper {
 		return (IJavaObjectInstance) policy.getContainer();
 	}
 	
-	public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {		
+	public VisualContainerPolicy.CorelatedResult getCreateChildCommand(Object childComponent, Object constraint, Object position) {		
 		EObject constraintComponent = visualFact.create(classConstraintComponent);
 		if (constraint != NO_CONSTRAINT_VALUE)
 			constraintComponent.eSet(JavaInstantiation.getSFeature(getContainer(), JFCConstants.SF_CONSTRAINT_CONSTRAINT), constraint != null ? convertConstraint(constraint) : null);	// Put the constraint into the constraint component.
 		return policy.getCreateCommand(constraintComponent, childComponent, position);
 	}
 	
-	public Command getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
+	public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
 		ArrayList componentConstraints = new ArrayList(childrenComponents.size());
 		Iterator itr = constraints.iterator();
 		while (itr.hasNext()) {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FlowLayoutEditPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 import java.util.Collections;
@@ -19,6 +19,7 @@ import java.util.Collections;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
+
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /**
@@ -42,11 +43,11 @@ public class FlowLayoutEditPolicy extends org.eclipse.ve.internal.cde.core.FlowL
 
 		// We need to create a constraint and send this and the child over to the container policy.
 		Object child = childEditPart.getModel();
-		return helper.getAddChildrenCommand(Collections.singletonList(child), Collections.singletonList(null), before != null ? before.getModel() : null);
+		return helper.getAddChildrenCommand(Collections.singletonList(child), Collections.singletonList(null), before != null ? before.getModel() : null).getCommand();
 	}
 	protected Command getCreateCommand(CreateRequest aRequest) {
 		Object child = aRequest.getNewObject();
 		EditPart before = getInsertionReference(aRequest);
-		return helper.getCreateChildCommand(child, null, before != null ? before.getModel() : null);
+		return helper.getCreateChildCommand(child, null, before != null ? before.getModel() : null).getCommand();
 	}
 }

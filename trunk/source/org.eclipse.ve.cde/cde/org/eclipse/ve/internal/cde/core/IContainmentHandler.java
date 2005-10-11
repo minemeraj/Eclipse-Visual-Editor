@@ -15,7 +15,7 @@ import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 
 /*
  *  $RCSfile: IContainmentHandler.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-03 19:21:04 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-11 21:26:01 $ 
  */
 
 /**
@@ -71,10 +71,10 @@ public interface IContainmentHandler extends IModelAdapter {
 	 * <li><b>Combination of Add to request and replace the request:</b> In which case it would use the pre/post Cmd builders and return a different child.</li>
 	 * </ol>
 	 * <p>
-	 * <b>Note:</b>Some important restrictions. Fro a create, at the time of the call, the child is not yet in any resourceSet. You should use either 
+	 * <b>Note:</b>Some important restrictions. For a create, at the time of the call, the child is not yet in any resourceSet. You should use either 
 	 * edit domain or the parent to find the resourceSet. 
 	 * @param parent parent being added to
-	 * @param child child being added
+	 * @param child child being added.
 	 * @param preCmds CommandBuilder for commands to be executed before any of the child/children are added. Handler may add to this command builder any commands
 	 * 	it wants to be executed before the actual adds.
 	 * @param postCmds CommandBuilder for commands to be executed after all of the child/children are added. Handler may add to this command builder any commands
@@ -82,7 +82,9 @@ public interface IContainmentHandler extends IModelAdapter {
 	 * @param creation <code>true</code> if this a creation request. <code>false</code> if this is an add request.
 	 * @return child to add instead of (or the same child) as the child sent it, or <code>null</code> if no add is to be done. Though the command builders will still be added to the request.
 	 * 	This child, if different than the one sent into the method, will not have an IContainmentHandler called against it. It is assumed that the
-	 * 	child is fine and can be added. (The only check that will be done is if the child is a valid type for parent).
+	 * 	child is fine and can be added. (The only check that will be done is if the child is a valid type for parent). Implementers must
+	 *  handle if they changed the child for a non-creation required, they must decide if the child should be deleted because it should no longer
+	 *  be in the model. If they decide that they must put in postCmd code to delete it. 
 	 * @throws NoAddException if the handler determines that the child should not be added to the parent.
 	 * 
 	 * @since 1.2.0

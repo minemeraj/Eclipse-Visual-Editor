@@ -31,7 +31,6 @@
          propertyDescriptorClassname="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.core.LayoutPropertyDescriptor"/>
     </objectsToAttach>
    <objectsToAttach containment="true" eType="ecore:EClass containerVisuals.ecore#ConstraintComponent" name="components" upperBound="-1" xmi:id="_eStructuralFeatures1" xsi:type="ecore:EReference">
-      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
-      <eAnnotations mergeIntrospection="false" xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator"/>
+      <eAnnotations hidden="true" mergeIntrospection="false" xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator"/>
     </objectsToAttach>
 </change:ChangeDescription>

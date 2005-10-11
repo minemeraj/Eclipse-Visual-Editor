@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-11 21:23:47 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -19,22 +19,23 @@ import java.util.List;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
+
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
-import org.eclipse.ve.internal.cde.core.ContainerPolicy;
+
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 /**
  * 
  * @since 1.0.0
  */
 public abstract class LayoutPolicyHelper implements ILayoutPolicyHelper {
 	
-	protected ContainerPolicy policy;	
+	protected VisualContainerPolicy policy;	
 	
 public LayoutPolicyHelper(VisualContainerPolicy ep){
 	setContainerPolicy(ep);
@@ -46,30 +47,12 @@ protected IJavaObjectInstance getContainer() {
 	return (IJavaObjectInstance) policy.getContainer();
 }
 		
-public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {
-
-	Command createContributionCmd = policy.getCreateCommand(childComponent, position);
-	if (createContributionCmd == null || !createContributionCmd.canExecute())
-		return UnexecutableCommand.INSTANCE;	// It can't be created
-		
-	CompoundCommand command = new CompoundCommand("");		 //$NON-NLS-1$
-	// TODO Add layoutData here to the compound command
-	command.append(createContributionCmd);
-
-	return command.unwrap();
+public VisualContainerPolicy.CorelatedResult getCreateChildCommand(Object childComponent, Object constraint, Object position) {
+	return policy.getCreateCommand(childComponent, constraint, position);
 }
 
-public Command getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
-
-	Command addContributionCmd = policy.getAddCommand(childrenComponents, position);
-	if (addContributionCmd == null || !addContributionCmd.canExecute())
-		return UnexecutableCommand.INSTANCE;	// It can't be added.
-		
-	CompoundCommand command = new CompoundCommand("");		 //$NON-NLS-1$
-	command.append(getChangeConstraintCommand(childrenComponents, constraints));
-	command.append(addContributionCmd);
-
-	return command.unwrap();
+public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
+	return policy.getAddCommand(constraints, childrenComponents, position);
 }
 
 public Command getOrphanChildrenCommand(List children) {

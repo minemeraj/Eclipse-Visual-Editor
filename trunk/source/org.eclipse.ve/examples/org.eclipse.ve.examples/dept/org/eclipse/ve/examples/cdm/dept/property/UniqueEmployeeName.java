@@ -11,8 +11,13 @@
 package org.eclipse.ve.examples.cdm.dept.property;
 /*
  *  $RCSfile: UniqueEmployeeName.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:16:43 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-11 21:23:51 $ 
  */
+
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.gef.commands.CompoundCommand;
 
 import org.eclipse.ve.examples.cdm.dept.Company;
 import org.eclipse.ve.examples.cdm.dept.Employee;
@@ -25,11 +30,11 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
  */
 public class UniqueEmployeeName extends CommandWrapper {
 	protected Company company;
-	protected Employee employee;
+	protected List employees;
 	
-	public UniqueEmployeeName(Company company, Employee employee) {
+	public UniqueEmployeeName(Company company, List employees) {
 		this.company = company;
-		this.employee = employee;
+		this.employees = employees;
 	}
 	
 	protected boolean prepare() {
@@ -37,18 +42,23 @@ public class UniqueEmployeeName extends CommandWrapper {
 	}
 	
 	public void execute() {
-		
-		String newName = PropertySupport.getUniqueEmployeeName(company, employee.getName());
-		if (!newName.equals(employee.getName())) {
-			// Rather than come up with a new Command to specifically change the name, we will use the 
-			// PropertySheet support to do it.
-			SetPropertyValueCommand pcmd = new SetPropertyValueCommand();
-			pcmd.setTarget(PropertySupport.getPropertySource(employee));
-			pcmd.setPropertyId(Employee.NAME);
-			pcmd.setPropertyValue(newName);
-			command = pcmd;
-			command.execute();
+		CompoundCommand cc = new CompoundCommand();
+		for (Iterator itr = employees.iterator(); itr.hasNext();) {
+			Employee employee = (Employee) itr.next();
+			String newName = PropertySupport.getUniqueEmployeeName(company, employee.getName());
+			if (!newName.equals(employee.getName())) {
+				// Rather than come up with a new Command to specifically change the name, we will use the 
+				// PropertySheet support to do it.
+				SetPropertyValueCommand pcmd = new SetPropertyValueCommand();
+				pcmd.setTarget(PropertySupport.getPropertySource(employee));
+				pcmd.setPropertyId(Employee.NAME);
+				pcmd.setPropertyValue(newName);
+				cc.add(pcmd);
+			}
 		}
+		command = cc.unwrap();
+		command.execute();
+
 	}
 	
 	public void undo() {

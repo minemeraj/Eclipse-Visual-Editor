@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutPolicyHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-11 21:23:47 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -20,8 +20,6 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
@@ -175,13 +173,13 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 	 * If any of the constraints are null such as when the regions are all
 	 * occupied, return the UnexecutableCommand.
 	 */
-	public Command getAddChildrenCommand(List children, List constraints, Object position) {
+	public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List children, List constraints, Object position) {
 		Object constraint = null;
 		Iterator itr = constraints.iterator();
 		while (itr.hasNext()) {
 			Object next = itr.next();
-			if (next == null)
-				return UnexecutableCommand.INSTANCE;
+			if (next == null) 
+				return VisualContainerPolicy.createUnexecutableResult(children, constraints);
 			if (REAL_INTERNAL_TAGS.contains(next))
 				constraint = next;
 		}
@@ -197,31 +195,35 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 		IJavaInstance right = (IJavaInstance) viewFormBean.eGet(sfRightControl);
 		IJavaInstance center = (IJavaInstance) viewFormBean.eGet(sfCenterControl);
 		IJavaInstance content = (IJavaInstance) viewFormBean.eGet(sfContentControl);
+				
+		VisualContainerPolicy.CorelatedResult result = super.getAddChildrenCommand(Collections.singletonList(child), Collections.singletonList(null), position);
+		if (!result.getChildren().isEmpty()) {
+			EObject parent = getContainer();
+			child = result.getChildren().get(0);
+			CommandBuilder cBld = new CommandBuilder();
+			cBld.append(result.getCommand());
+			if(left == null && ((String) REAL_INTERNAL_TAGS.get(LEFT_INDEX)).equals(constraint))
+				cBld.applyAttributeSetting(parent, sfLeftControl, child, position);
+			else if(right == null && ((String) REAL_INTERNAL_TAGS.get(RIGHT_INDEX)).equals(constraint))
+				cBld.applyAttributeSetting(parent, sfRightControl, child, position);
+			else if(center == null && ((String) REAL_INTERNAL_TAGS.get(CENTER_INDEX)).equals(constraint))
+				cBld.applyAttributeSetting(parent, sfCenterControl, child, position);
+			else if(content == null && ((String) REAL_INTERNAL_TAGS.get(CONTENT_INDEX)).equals(constraint))
+				cBld.applyAttributeSetting(parent, sfContentControl, child, position);
+			result.setCommand(cBld.getCommand());
+		}
+		return result;
 		
-		Command setAsContent;
-		EObject parent = getContainer();
-		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
-		
-		if(left == null && ((String) REAL_INTERNAL_TAGS.get(LEFT_INDEX)).equals(constraint))
-			cBld.applyAttributeSetting(parent, sfLeftControl, child, position);
-		else if(right == null && ((String) REAL_INTERNAL_TAGS.get(RIGHT_INDEX)).equals(constraint))
-			cBld.applyAttributeSetting(parent, sfRightControl, child, position);
-		else if(center == null && ((String) REAL_INTERNAL_TAGS.get(CENTER_INDEX)).equals(constraint))
-			cBld.applyAttributeSetting(parent, sfCenterControl, child, position);
-		else if(content == null && ((String) REAL_INTERNAL_TAGS.get(CONTENT_INDEX)).equals(constraint))
-			cBld.applyAttributeSetting(parent, sfContentControl, child, position);
-		
-		setAsContent = cBld.getCommand();
-		return super.getCreateChildCommand(child, constraint, position).chain(setAsContent);
 	}
 	
 	/**
 	 * If the constraint is null such as when the regions are all
 	 * occupied, return the UnexecutableCommand.
 	 */
-	public Command getCreateChildCommand(Object child, Object constraint, Object position) {
-		if (constraint == null)
-			return UnexecutableCommand.INSTANCE;
+	public VisualContainerPolicy.CorelatedResult getCreateChildCommand(Object child, Object constraint, Object position) {
+		if (constraint == null) {
+			return VisualContainerPolicy.createUnexecutableResult(child, constraint);
+		}
 		
 		EStructuralFeature sfLeftControl = JavaInstantiation.getSFeature(getContainer(), SWTConstants.SF_VIEWFORM_TOPLEFT);
 		EStructuralFeature sfRightControl = JavaInstantiation.getSFeature(getContainer(), SWTConstants.SF_VIEWFORM_TOPRIGHT);
@@ -234,21 +236,23 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 		IJavaInstance center = (IJavaInstance) viewFormBean.eGet(sfCenterControl);
 		IJavaInstance content = (IJavaInstance) viewFormBean.eGet(sfContentControl);
 		
-		Command setAsContent;
-		EObject parent = getContainer();
-		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
-		
-		if(left == null && ((String) REAL_INTERNAL_TAGS.get(LEFT_INDEX)).equals(constraint))
-			cBld.applyAttributeSetting(parent, sfLeftControl, child, position);
-		else if(right == null && ((String) REAL_INTERNAL_TAGS.get(RIGHT_INDEX)).equals(constraint))
-			cBld.applyAttributeSetting(parent, sfRightControl, child, position);
-		else if(center == null && ((String) REAL_INTERNAL_TAGS.get(CENTER_INDEX)).equals(constraint))
-			cBld.applyAttributeSetting(parent, sfCenterControl, child, position);
-		else if(content == null && ((String) REAL_INTERNAL_TAGS.get(CONTENT_INDEX)).equals(constraint))
-			cBld.applyAttributeSetting(parent, sfContentControl, child, position);
-		
-		setAsContent = cBld.getCommand();
-		return super.getCreateChildCommand(child, constraint, position).chain(setAsContent);
+		VisualContainerPolicy.CorelatedResult result = super.getCreateChildCommand(Collections.singletonList(child), Collections.singletonList(null), position);
+		if (!result.getChildren().isEmpty()) {
+			EObject parent = getContainer();
+			child = result.getChildren().get(0);
+			CommandBuilder cBld = new CommandBuilder();
+			cBld.append(result.getCommand());
+			if(left == null && ((String) REAL_INTERNAL_TAGS.get(LEFT_INDEX)).equals(constraint))
+				cBld.applyAttributeSetting(parent, sfLeftControl, child, position);
+			else if(right == null && ((String) REAL_INTERNAL_TAGS.get(RIGHT_INDEX)).equals(constraint))
+				cBld.applyAttributeSetting(parent, sfRightControl, child, position);
+			else if(center == null && ((String) REAL_INTERNAL_TAGS.get(CENTER_INDEX)).equals(constraint))
+				cBld.applyAttributeSetting(parent, sfCenterControl, child, position);
+			else if(content == null && ((String) REAL_INTERNAL_TAGS.get(CONTENT_INDEX)).equals(constraint))
+				cBld.applyAttributeSetting(parent, sfContentControl, child, position);
+			result.setCommand(cBld.getCommand());
+		}
+		return result;
 	}
 
 	public String getCurrentConstraint(Point p) {
@@ -303,11 +307,12 @@ public class ViewFormLayoutPolicyHelper extends LayoutPolicyHelper {
 		// return a collection with no constraints and later when it does the 
 		// getCreateChildCommand, return the UnexecutableCommand command.
 		if (regions == null || regions.length < children.size())
-			return Collections.nCopies(children.size(), null);
-		else
+			constraints.addAll(Collections.nCopies(children.size(), null));
+		else {
 			// otherwise add the regions to a Vector.
 			for (int i = 0; i < children.size(); i++)
 				constraints.add(regions[i]);
+		}
 		return constraints;
 	}
 	

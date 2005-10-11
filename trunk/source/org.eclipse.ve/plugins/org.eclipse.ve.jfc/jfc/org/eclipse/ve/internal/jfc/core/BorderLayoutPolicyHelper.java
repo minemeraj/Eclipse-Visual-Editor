@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutPolicyHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.11 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 import java.util.*;
@@ -20,15 +20,13 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.proxy.core.*;
+
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-
-import org.eclipse.jem.internal.proxy.core.*;
 
 /**
  * Border Layout Policy Helper.
@@ -226,25 +224,25 @@ public String[] getAvailableRegions() {
 	}
 	return tags;
 }
-/**
- * Defect 203278/199705 - if any of the constraints are null such as when the regions are all
- * occupied, return the UnexecutableCommand.
- */
-	public Command getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
+	public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
+		/**
+		 * Defect 203278/199705 - if any of the constraints are null such as when the regions are all
+		 * occupied, return the UnexecutableCommand.
+		 */
 		Iterator itr = constraints.iterator();
 		while (itr.hasNext()) {
 			if (itr.next() == null)
-				return UnexecutableCommand.INSTANCE;
+				return VisualContainerPolicy.createUnexecutableResult(childrenComponents, constraints);
 		}
 	return super.getAddChildrenCommand(childrenComponents, constraints, position);
 }
-/**
- * Defect 199705 - if the constraint is null such as when the regions are all
- * occupied, return the UnexecutableCommand.
- */
-public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {
+public VisualContainerPolicy.CorelatedResult getCreateChildCommand(Object childComponent, Object constraint, Object position) {
+	/**
+	 * Defect 199705 - if the constraint is null such as when the regions are all
+	 * occupied, return the UnexecutableCommand.
+	 */
 	if (constraint == null)
-		return UnexecutableCommand.INSTANCE;
+		return VisualContainerPolicy.createUnexecutableResult(childComponent, constraint);
 	return super.getCreateChildCommand(childComponent, constraint, position);
 }
 public String getCurrentConstraint(Point p) {
@@ -301,11 +299,12 @@ public List getDefaultConstraint(List children) {
 	// return a collection with no constraints and later when it does the 
 	// getCreateChildCommand, return the UnexecutableCommand command.
 	if (regions == null || regions.length < children.size())
-		return Collections.nCopies(children.size(), null);
-	else
+		constraints.addAll(Collections.nCopies(children.size(), null));
+	else {
 		// otherwise add the regions to a Vector.
 		for (int i = 0; i < children.size(); i++)
 			constraints.add(regions[i]);
+	}
 	return constraints;
 }
 /**

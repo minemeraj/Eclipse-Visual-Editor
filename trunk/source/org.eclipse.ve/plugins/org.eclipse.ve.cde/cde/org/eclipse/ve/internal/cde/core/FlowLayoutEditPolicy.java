@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: FlowLayoutEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-11 21:26:01 $ 
  */
 
 import java.util.Collections;
@@ -82,7 +82,7 @@ public void deactivate() {
 }
 
 protected Command createAddCommand(EditPart childEP, EditPart beforeEP) {
-	return  containerPolicy.getAddCommand(Collections.singletonList(childEP.getModel()), beforeEP != null ? beforeEP.getModel() : null);
+	return  containerPolicy.getAddCommand(childEP.getModel(), beforeEP != null ? beforeEP.getModel() : null).getCommand();
 }
 
 protected Command getDeleteDependantCommand(Request aRequest) {
@@ -101,7 +101,7 @@ protected Command getOrphanChildrenCommand(Request req) {
 
 protected Command getCreateCommand(CreateRequest req){
 	EditPart before = getInsertionReference(req);
-	return containerPolicy.getCreateCommand(req.getNewObject(), before != null ? before.getModel() : null);
+	return containerPolicy.getCreateCommand(req.getNewObject(), before != null ? before.getModel() : null).getCommand();
 }
 /* (non-Javadoc)
  * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#eraseLayoutTargetFeedback(org.eclipse.gef.Request)

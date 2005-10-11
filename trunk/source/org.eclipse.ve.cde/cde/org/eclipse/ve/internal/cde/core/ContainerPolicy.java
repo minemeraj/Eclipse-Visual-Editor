@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: ContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-11 21:26:00 $ 
  */
 
 import java.util.*;
@@ -80,50 +80,158 @@ public void setContainer(Object container) {
 }
 
 /**
+ * The result of the getAdd/Create commands. It contains the command that results and
+ * the true list of children that were added/created. This may be the same as the original list
+ * or it may be different. It depends on the policy implementation. The policy may decide to 
+ * change the children that actually get added/created.
+ * 
+ * @since 1.2.0
+ */
+public static class Result {
+	protected Command command;
+	protected List children;
+	
+	public Result(List children) {
+		this.children = children;
+	}
+	
+	/**
+	 * Get the command that is to be executed.
+	 * @return the command or <code>null</code> if no command.
+	 * 
+	 * @since 1.2.0
+	 */
+	public final Command getCommand() {
+		return command;
+	}
+	
+	/**
+	 * The list of children that were actually created/added.
+	 * @return the list of children actually created/added.
+	 * 
+	 * @since 1.2.0
+	 */
+	public final List getChildren() {
+		return children;
+	}
+	
+	/**
+	 * Set the command. Not meant to used by clients. It is here for ContainerPolicy implementers
+	 * to set the command.
+	 * @param command
+	 * 
+	 * @since 1.2.0
+	 */
+	public void setCommand(Command command) {
+		this.command = command;
+	}
+	
+	/**
+	 * Set the children result list. Not meant to used by clients. It is here for ContainerPolicy implementers
+	 * to set the children result list.
+	 * @param children
+	 * 
+	 * @since 1.2.0
+	 */
+	public void setChildren(List children) {
+		this.children = children;
+	}
+}
+
+/**
  * Return the command to add the children in the request. Insert them before
  * the child specified by position. If position is null, then add them
  * all to the end of the list of children. Add means the children were in the model
  * (i.e. they were orphaned) or are in the model in the case this is a shared
  * relationship (in other words this child is a logical child and is a physical
  * child somewhere else).
- *
- * Note: If the children CANNOT be added, then the command returned should probably
+ * <p>
+ * It is possible that some specialized container may decide to actually change the set of children being
+ * added. The result list could have a different set of
+ * children, different number of children, or even be empty. If of interest the resulting list can be
+ * retrieved from the result (@link Result#getChildren()}).
+ * <p>
+ * <B>Note:</b> If the children CANNOT be added, then the command returned should probably
  * be the UnexecutableCommand.INSTANCE so that none of the other parts of the
  * add request (such as constraints being set or annotations added) should be 
  * performed. If it returns null instead, these other parts would still be added,
  * and this could be an error in the DiagramData. It is up to the developer to
  * decide if null is valid return value.
- *
- * Note: Annotations don't need to be handled for add because "add" means the
+ * <p>
+ * <b>Note:</b> Annotations don't need to be handled for add because "add" means the
  * model objects are either still in the model or where orphaned. In either
  * case the annotations are left in the DiagramData.
+ * @param children children to add. The list may be modified, so don't use an unmodifiable list.
+ * @param positionBeforeChild
+ * @return
+ * 
+ * @since 1.2.0
  */
-public abstract Command getAddCommand(List children, Object positionBeforeChild);
+public abstract Result getAddCommand(List children, Object positionBeforeChild);
+
+/**
+ * A convenience method to add one child. 
+ * @param child
+ * @param positionBeforeChild
+ * @return
+ * 
+ * @since 1.2.0
+ */
+public Result getAddCommand(Object child, Object positionBeforeChild) {
+	return getAddCommand(Collections.singletonList(child), positionBeforeChild);
+}
 
 
 /**
- * Return the command to create the child in the request. Insert it before
- * the child specified by position. If position is null, then add it
- * all to the end of the list of children. Create means this is brand new child
+ * A convenience method to create one child.
+ * @param child
+ * @param positionBeforeChild
+ * @return
+ * 
+ * @see #getCreateCommand(List, Object, List)
+ * @since 1.2.0
+ */
+public Result getCreateCommand(Object child, Object positionBeforeChild) {
+	return getCreateCommand(Collections.singletonList(child), positionBeforeChild);
+}
+
+/**
+ * Return the command to create the children in the request. Insert them before
+ * the child specified by position. If position is null, then add 
+ * all to the end of the list of children. Create means these are brand new children
  * never before in the model.
- *
- * Note: If the child CANNOT be added, then the command returned should probably
+ * <p>
+ * It is possible that some specialized container may decide to actually change the set of children being
+ * created. The result list could have a different set of
+ * children, different number of children, or even be empty. If of interest the resulting list can be
+ * retrieved from the result (@link Result#getChildren()}).
+ * <p>
+ * <b>Note:</b> If a child CANNOT be added, then the command returned should probably
  * be the UnexecutableCommand.INSTANCE so that none of the other parts of the
  * add request (such as constraints being set or annotations added) should be 
  * performed. If it returns null instead, these other parts would still be added,
  * and this could be an error in the DiagramData. It is up to the developer to
  * decide if null is valid return value.
- *
- * Note: Annotations need to be handled here. After creating the create command
- * for the model object, pass this command, along with the rest of the required
+ * <p>
+ * <b>Note:</b>Annotations need to be handled here. After creating the create command
+ * for the model objects, pass this command, along with the rest of the required
  * parameters, to the AnnotationPolicy.getAddAllAnnotationsCommand(...). And then return
  * the returned command. It will contain the create command passed in at the
  * appropriate position within the returned command. It is assumed
  * that the annotations for the model object have already been created and attached
  * to the model object through the AnnotationLinkagePolicy. It will detect them
  * through this linkage.
- */ 
-public abstract Command getCreateCommand(Object child, Object positionBeforeChild);
+ * <p>
+ * <b>Note:</b> Implementations must not modify the children list directly.
+ * @param children children to create. May be an unmodifiable list. The resulting children will be in the result if needed.
+ * @param positionBeforeChild
+ * @return
+ * 
+ * @see #getCreateCommand(List, Object)
+ * @since 1.2.0
+ */
+public abstract Result getCreateCommand(List children, Object positionBeforeChild);
+
 
 /**
  * Return the command to delete the child in the request. Delete means the child is
@@ -268,11 +376,12 @@ public Command getCommand(Request request){
 		return getDeleteDependentCommand(((ForwardedRequest) request).getSender().getModel());
 	}
 	
-	if (RequestConstants.REQ_CREATE.equals(request.getType()))
-		return getCreateCommand(((CreateRequest) request).getNewObject(), null);
+	if (RequestConstants.REQ_CREATE.equals(request.getType())) {
+		return getCreateCommand(((CreateRequest) request).getNewObject(), null).getCommand();
+	}
 	
 	if (RequestConstants.REQ_ADD.equals(request.getType())) {
-		return getAddCommand(getChildren((GroupRequest) request), null);
+		return getAddCommand(getChildren((GroupRequest) request), null).getCommand();
 	}
 			
 	if (RequestConstants.REQ_ORPHAN_CHILDREN.equals(request.getType()))

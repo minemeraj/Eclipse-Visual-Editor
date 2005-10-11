@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.14 $  $Date: 2005-07-11 20:59:42 $ 
+ *  $Revision: 1.15 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 import java.util.*;
@@ -27,17 +27,19 @@ import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
+import org.eclipse.ve.internal.jcm.BeanDecorator;
+
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-import org.eclipse.ve.internal.jcm.BeanDecorator;
 /**
  * GridBag layout policy helper.
  *
@@ -163,6 +165,8 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 			Object child = children.get(i);
 			if (child instanceof IJavaObjectInstance)
 				constraints.add(getDefaultConstraint((IJavaObjectInstance) child));
+			else
+				constraints.add(null);
 		}
 		return constraints;
 	}
@@ -829,16 +833,21 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.jfc.core.ILayoutPolicyHelper#getAddChildrenCommand(java.util.List, java.util.List, java.lang.Object)
 	 */
-	public Command getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
+	public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
 		if (childrenComponents.isEmpty() || constraints.isEmpty() || (childrenComponents.size() > 1))
-			return UnexecutableCommand.INSTANCE;
+			return VisualContainerPolicy.createUnexecutableResult(childrenComponents, constraints);
 
 		EObject constraintComponent = visualFact.create(classConstraintComponent);
-		List componentConstraints = Collections.singletonList(constraintComponent);
 		GridBagConstraint gridBagConstraint = (GridBagConstraint) constraints.get(0);
 		IJavaObjectInstance component = (IJavaObjectInstance) childrenComponents.get(0);
-		// If this component is added or moved from within this or another gridbag layout, use it's existing constraint so
+		// If this component is added or moved from within this or another gridbag layout, use it's existing constraint as much as possible so
 		// we don't lose the original settings... we just want to set the gridx, gridy settings.
+		// This will work because even though orphan would clear these out, at this time the orphan has not executed so these values are still
+		// here to work with.
+		//
+		// What we will do is see if we have an old griddata constraint, if we do, we will just change the grid x/y to the values out
+		// of the incoming constraint. Then we will apply the old griddata constraint to the new constraint component so that
+		// it will be used instead of the incoming constraint.
 		CommandBuilder cb = new CommandBuilder();
 		EObject cc = InverseMaintenanceAdapter.getIntermediateReference(component, sfComponents, sfConstraintComponent, component);
 		if (cc != null) {
@@ -854,14 +863,17 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 				cb.append(componentCB.getCommand());
 			}
 		}
-		// No commands created so the constraint didn't exist or wasn't a GridBagConstraint. Just create the default. 
+		// No commands created so the constraint didn't exist or wasn't a GridBagConstraint. Just create the default using the incoming constraint. 
 		if (cb.isEmpty())
 			constraintComponent.eSet(sfConstraintConstraint, gridBagConstraint != null ? convertConstraint(gridBagConstraint) : null);
-		// Put the constraint into the constraint component.
 
-		cb.append(policy.getAddCommand(componentConstraints, childrenComponents, position));
-		return cb.getCommand();
+		// Now get the add command and see if the child was actually added.
+		VisualContainerPolicy.CorelatedResult result = policy.getAddCommand(constraints, childrenComponents, position);
+		cb.append(result.getCommand());
+		result.setCommand(cb.getCommand());
+		return result;
 	}
+	
 	public Command getSpanChildrenCommand(EditPart childEditPart, Point childCellLocation, Point endCellLocation, int spanDirection) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject constraintComponent =

@@ -113,7 +113,7 @@
          <attribute name="container" type="string">
             <annotation>
                <documentation>
-                  
+                  Visual element requires this container path.
                </documentation>
             </annotation>
          </attribute>

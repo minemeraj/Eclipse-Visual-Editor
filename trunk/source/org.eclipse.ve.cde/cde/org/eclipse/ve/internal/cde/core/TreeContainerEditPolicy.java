@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: TreeContainerEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-11 21:26:01 $ 
  */
 
 import java.util.*;
@@ -83,7 +83,7 @@ public Command getCommand(Request req){
  */
 protected Command getAddCommand(ChangeBoundsRequest request) {	
 	EditPart beforePart = findBeforePart(findIndexOfTreeItemAt(request.getLocation()), Collections.EMPTY_LIST, getHost().getChildren());
-	return  containerPolicy.getAddCommand(ContainerPolicy.getChildren(request), beforePart != null ? beforePart.getModel() : null);
+	return  containerPolicy.getAddCommand(ContainerPolicy.getChildren(request), beforePart != null ? beforePart.getModel() : null).getCommand();
 }
 	
 /**
@@ -91,7 +91,7 @@ protected Command getAddCommand(ChangeBoundsRequest request) {
  */
 protected Command getCreateCommand(CreateRequest request) {	
 	EditPart beforePart = findBeforePart(findIndexOfTreeItemAt(request.getLocation()), Collections.EMPTY_LIST, getHost().getChildren());
-	return  containerPolicy.getCreateCommand(request.getNewObject(), beforePart != null ? beforePart.getModel() : null);
+	return  containerPolicy.getCreateCommand(request.getNewObject(), beforePart != null ? beforePart.getModel() : null).getCommand();
 }
 
 /**
@@ -111,7 +111,6 @@ protected Command getMoveChildrenCommand(ChangeBoundsRequest request) {
 	
 	List editparts = request.getEditParts();
 	List children = getHost().getChildren();
-	EditPart parent = getHost();
 	// The request has the new location of where we are to move the children.
 	
 	int newIndex = findIndexOfTreeItemAt( request.getLocation() );
@@ -119,43 +118,23 @@ protected Command getMoveChildrenCommand(ChangeBoundsRequest request) {
 			
 	// Iterate through the selected children, and determine if this is a valid
 	// location to move each one to.
-	// It is invalid if it is a move and all of them have them same index location.
-	// This means that nothing actually moved. If this is an orphan, then
-	// this can never be bad because at least one will change position.
-	// TODO Doesn't quite work. Need to think to determine if anything moved or not. Don't quire have new location correct for the test.
-	boolean isMove = true;
+	// It is invalid all of them have them same index location they had before.
+	// This means that nothing actually moved. 
 	boolean isChanged = false;	// Flag to indicate something has actually moved.
 	int index = newIndex;		// Index of where next child will go.
 	for( int i = 0; i < editparts.size(); i++, index++ ){
 		EditPart child = (EditPart)editparts.get(i);
-		if (isMove && child.getParent() != parent)
-			isMove = false;	// It is now orphan/add
-		if (isMove && !isChanged) {
+		if (!isChanged) {
 			int oldIndex = children.indexOf( child );
 			if( oldIndex != index && oldIndex + 1 != index )
 				isChanged = true;
 		}
 	}
 	
-	if (isMove && !isChanged)
+	if (!isChanged)
 		return UnexecutableCommand.INSTANCE;
-
-	if (isMove) {
+	else
 		return containerPolicy.getMoveChildrenCommand(ContainerPolicy.getChildren(request), beforePart != null ? beforePart.getModel() : null);
-	} else {
-		// Need to do it as Orphan/Add
-		List childrenModels = ContainerPolicy.getChildren(request);
-		Command cmd = containerPolicy.getOrphanChildrenCommand(childrenModels);
-		if (cmd != null) {
-			Command cmd1 = containerPolicy.getAddCommand(childrenModels, beforePart != null ? beforePart.getModel() : null);
-			if (cmd1 != null)
-				cmd = cmd.chain(cmd1);
-			else
-				return UnexecutableCommand.INSTANCE;
-		} else
-			return UnexecutableCommand.INSTANCE;
-		return cmd;
-	}
 }
 
 }

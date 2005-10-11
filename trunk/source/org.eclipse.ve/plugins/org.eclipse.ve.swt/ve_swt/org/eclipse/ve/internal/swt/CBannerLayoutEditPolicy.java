@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerLayoutEditPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-22 16:22:09 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-11 21:23:47 $ 
  */
 package org.eclipse.ve.internal.swt;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -127,14 +128,10 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 	 */
 	protected Command createAddCommand(EditPart childEditPart, Object constraint) {
 		if (constraint == null || !(constraint instanceof String)) return UnexecutableCommand.INSTANCE;
-		List children = new ArrayList(1);
-		IJavaObjectInstance child = (IJavaObjectInstance)childEditPart.getModel();
-		children.add(child);
-		Command addCmd = UnexecutableCommand.INSTANCE;
 		if (fLayoutPolicyHelper.isRegionAvailable((String)constraint)) {
-			addCmd = fLayoutPolicyHelper.getAddChildrenCommand(children, Collections.singletonList(constraint), null); 
-		}
-		return addCmd;
+			return fLayoutPolicyHelper.getAddChildrenCommand(Collections.singletonList(childEditPart.getModel()), Collections.singletonList(constraint), null).getCommand(); 
+		} else
+			return UnexecutableCommand.INSTANCE;
 	}
 	
 	/**
@@ -150,11 +147,10 @@ public class CBannerLayoutEditPolicy extends LayoutEditPolicy{
 	 * Create the command to add it.
 	 */
 	protected Command createCreateCommand(Object child, String aConstraint) {
-		Command addCmd = UnexecutableCommand.INSTANCE;
 		if (fLayoutPolicyHelper.isRegionAvailable(aConstraint)) {
-			addCmd = fLayoutPolicyHelper.getCreateChildCommand(child,aConstraint,null);
-		}
-		return addCmd;
+			return fLayoutPolicyHelper.getCreateChildCommand(child,aConstraint,null).getCommand();
+		} else
+			return UnexecutableCommand.INSTANCE;
 	}
 	
 	/**

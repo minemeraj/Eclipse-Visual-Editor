@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: CardLayoutPolicyHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 import java.util.*;
@@ -20,16 +20,16 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 
-import org.eclipse.ve.internal.cde.commands.CancelAttributeSettingCommand;
-import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
+
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
-import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 
 /**
  * @version 	1.0
@@ -61,46 +61,62 @@ public class CardLayoutPolicyHelper extends LayoutPolicyHelper {
 		return Collections.nCopies(children.size(), NO_CONSTRAINT_VALUE);
 	}
 
-	/**
-	 * @see org.eclipse.ve.internal.jfc.core.ILayoutPolicyHelper#getCreateChildCommand(Object, Object, Object)
-	 */
-	public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {		
-		CommandBuilder cb = new CommandBuilder(""); //$NON-NLS-1$
-		Command applyCmd = null;
+
+	public VisualContainerPolicy.CorelatedResult getCreateChildCommand(Object childComponent, Object constraint, Object position) {		
+		CommandBuilder cb = new CommandBuilder(); 
 		EObject constraintComponent = visualFact.create(classConstraintComponent);
 		if (constraint != NO_CONSTRAINT_VALUE)
 			constraintComponent.eSet(JavaInstantiation.getSFeature(getContainer(), JFCConstants.SF_CONSTRAINT_CONSTRAINT), convertConstraint(constraint));	// Put the constraint into the constraint component.
 		else {
 			constraintComponent.eSet(JavaInstantiation.getSFeature(getContainer(), JFCConstants.SF_CONSTRAINT_CONSTRAINT), getDefaultStringConstraintObject());	// So no errors while being added because card layout can't handle null constraint and we can't get the name until component construction.
-			applyCmd = getConstraintCommand(childComponent, constraintComponent);
 		}
-		cb.append(policy.getCreateCommand(constraintComponent, childComponent, position));
-		cb.append(applyCmd);
-		return cb.getCommand();
+		VisualContainerPolicy.CorelatedResult result = policy.getCreateCommand(constraintComponent, childComponent, position);
+		cb.append(result.getCommand());
+		if (constraint == NO_CONSTRAINT_VALUE && !result.getChildren().isEmpty())
+			cb.append(getConstraintCommand(result.getChildren().get(0), constraintComponent));	// The child was added. Use the true child (from the list, it may of changed).
+		result.setCommand(cb.getCommand());
+		return result;
 	}
 
+	private static class CardConstraintWrapper extends VisualContainerPolicy.ConstraintWrapper {
 
-	public Command getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
-		CompoundCommand constraintCommands = new CompoundCommand();
+		public final Object constraint2;
+
+		public CardConstraintWrapper(Object constraintComponent, Object constraint) {
+			super(constraintComponent);
+			constraint2 = constraint;
+		}
+		
+		
+	}
+	public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
 		ArrayList componentConstraints = new ArrayList(childrenComponents.size());
 		int i = 0;
 		Iterator itr = constraints.iterator();
 		while (itr.hasNext()) {
 			EObject constraintComponent = visualFact.create(classConstraintComponent);
-			componentConstraints.add(constraintComponent);
 			Object constraint = itr.next();
+			componentConstraints.add(new CardConstraintWrapper(constraintComponent, constraint));
 			if (constraint != NO_CONSTRAINT_VALUE)
 				constraintComponent.eSet(sfConstraintConstraint, convertConstraint(constraint));	// Put the constraint into the constraint component.
 			else {
 				constraintComponent.eSet(JavaInstantiation.getSFeature(getContainer(), JFCConstants.SF_CONSTRAINT_CONSTRAINT), getDefaultStringConstraintObject());				
-				constraintCommands.append(getConstraintCommand(childrenComponents.get(i), constraintComponent));
 			}
 			i++;
 		}
 		CommandBuilder cb = new CommandBuilder();
-		cb.append(policy.getAddCommand(componentConstraints, childrenComponents, position));
-		cb.append(constraintCommands.unwrap());
-		return cb.getCommand();
+		VisualContainerPolicy.CorelatedResult result = policy.getAddCommand(componentConstraints, childrenComponents, position);
+		cb.append(result.getCommand());
+		itr = result.getChildren().iterator();
+		Iterator constraintsItr = result.getCorelatedList().iterator();
+		while (itr.hasNext()) {
+			Object child = itr.next();
+			Object constraint = constraintsItr.next();
+			if (((CardConstraintWrapper) constraint).constraint2 == NO_CONSTRAINT_VALUE)
+				cb.append(getConstraintCommand(child, (EObject) ((CardConstraintWrapper) constraint).getConstraint()));
+		}
+		result.setCommand(cb.getCommand());
+		return result;
 	}
 	/**
 	 * Check to see if the 'name' attribute is part-of, and set for a given EObject
@@ -114,20 +130,20 @@ public class CardLayoutPolicyHelper extends LayoutPolicyHelper {
 	}
 
 	protected Command getConstraintCommand(Object childComponent, EObject constraintComponent) {
+		RuledCommandBuilder rcb = new RuledCommandBuilder(policy.getEditDomain());
 		// Check if 'name' is set... which is used by default as the constraint.
 		// If not,we need to set a place holder constraint and a special command
 		// so that later on when we execute the command, we can derive the constraint
 		// name from the annotation composition name and set the name property.
 	
 		if (!isNameSet((EObject)childComponent)) {
-			return new ApplyCardLayoutConstraintCommand(constraintComponent, (EObject)childComponent, policy.getEditDomain());
+			rcb.append(new ApplyCardLayoutConstraintCommand(constraintComponent, (EObject)childComponent, policy.getEditDomain()));
+			return rcb.getCommand();
 		}
 		
 		if (constraintComponent.eIsSet(sfConstraintConstraint)) {
-			CancelAttributeSettingCommand cmd = new CancelAttributeSettingCommand();
-			cmd.setTarget(constraintComponent);
-			cmd.setAttribute(sfConstraintConstraint);
-			return cmd;
+			rcb.cancelAttributeSetting(constraintComponent, sfConstraintConstraint);
+			return rcb.getCommand();
 		}
 		
 		return null;

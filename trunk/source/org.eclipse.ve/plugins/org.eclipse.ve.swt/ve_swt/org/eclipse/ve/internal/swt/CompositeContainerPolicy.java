@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.22 $$  $$Date: 2005-10-03 19:20:48 $$ 
+ *  $$Revision: 1.23 $$  $$Date: 2005-10-11 21:23:47 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -22,6 +22,7 @@ import org.eclipse.gef.commands.Command;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
@@ -87,12 +88,60 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		return false;
 	}
 
-	public Command getCreateCommand(Object constraintComponent, Object childComponent, Object position) {
-		return null;
+	protected void getCreateCommand(List constraints, List children, Object position, CommandBuilder cbld) {
+		// First create the create commands for the children so that we can let standard verification of the children be done.
+		CommandBuilder createBuilder = createCommandBuilder(true); 
+		getCreateCommand(children, position, createBuilder);
+		if (createBuilder.isDead()) {
+			cbld.markDead();
+			return;
+		}
+		// Walk the constraints and apply to the children.
+		Iterator constraintsItr = constraints.iterator();
+		Iterator childrenItr = children.iterator();
+		while(childrenItr.hasNext()) {
+			EObject child = (EObject) childrenItr.next();
+			Object constraint = constraintsItr.next();
+			if (constraint instanceof ConstraintWrapper)
+				constraint = ((ConstraintWrapper) constraint).getConstraint();
+			if (constraint != null)
+				cbld.applyAttributeSetting(child, sfLayoutData, constraint);
+		}
+		
+		// Now apply the create commands. They should be in the list after the apply of the layout data so that
+		// when they actually execute the layout data will already be set.
+		cbld.append(createBuilder.getCommand());
 	}
 
-	public Command getAddCommand(List componentConstraints, List childrenComponents, Object position) {
-		return null;
+	protected void getAddCommand(List constraints, List children, Object position, CommandBuilder cbld) {
+
+		// First create the add commands for the children so that we can let standard verification of the children be done.
+		CommandBuilder addBuilder = createCommandBuilder(true); 
+		getAddCommand(children, position, addBuilder);
+		if (addBuilder.isDead()) {
+			cbld.markDead();
+			return;
+		}
+		
+		// Walk the constraints and apply to the children.
+		// The constraints need to be applied through a ruled builder because the children are already in the model for an add
+		// so we need to have the constraints handled through rules to get added to the model correctly.
+		RuledCommandBuilder rcb = new RuledCommandBuilder(domain);
+		Iterator constraintsItr = constraints.iterator();
+		Iterator childrenItr = children.iterator();
+		while(childrenItr.hasNext()) {
+			EObject child = (EObject) childrenItr.next();
+			Object constraint = constraintsItr.next();
+			if (constraint instanceof ConstraintWrapper)
+				constraint = ((ConstraintWrapper) constraint).getConstraint();
+			if (constraint != null)
+				rcb.applyAttributeSetting(child, sfLayoutData, constraint);
+		}
+		
+		// The add commands should be in the list after the apply of the layout data so that
+		// when they actually execute the layout data will already be set.
+		cbld.append(rcb.getCommand());
+		cbld.append(addBuilder.getCommand());
 	}		
 
 }

@@ -16,8 +16,7 @@
     </objectsToAttach>
    <objectsToAttach beanLocation="GLOBAL_LOCAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.MenuProxyAdapter" beanReturn="false" xmi:id="_eAnnotations2" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
    <objectsToAttach eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#MenuItem" name="items" upperBound="-1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
-      <eAnnotations mergeIntrospection="false" xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator"/>
-      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
+      <eAnnotations mergeIntrospection="false" hidden="true" xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator"/>
       <eAnnotations linkType="CHILD" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
     </objectsToAttach>
 </change:ChangeDescription>

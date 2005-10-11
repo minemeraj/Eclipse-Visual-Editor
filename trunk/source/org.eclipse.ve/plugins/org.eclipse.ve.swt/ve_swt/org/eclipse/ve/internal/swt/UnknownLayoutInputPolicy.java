@@ -11,11 +11,10 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: UnknownLayoutInputPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-11 21:23:47 $ 
  */
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
@@ -65,8 +64,7 @@ public EditPolicy createChildEditPolicy(EditPart aChild){
 protected Command getAddCommand(Request request) {
 	ChangeBoundsRequest cbReq = (ChangeBoundsRequest) request;	
 	List children = VisualContainerPolicy.getChildren(cbReq);
-	List constraints = Collections.nCopies(children.size(), null);
-	return fLayoutPolicyHelper.getAddChildrenCommand(children, constraints, null);
+	return fLayoutPolicyHelper.getAddChildrenCommand(children, Collections.nCopies(children.size(), null), null).getCommand();
 }
 
 /**
@@ -74,7 +72,7 @@ protected Command getAddCommand(Request request) {
  */
 protected Command getCreateCommand(CreateRequest request) {
 	// Unknown means no constraint and add at end.
-	return fLayoutPolicyHelper.getCreateChildCommand(request.getNewObject(), null, null);
+	return fLayoutPolicyHelper.getCreateChildCommand(request.getNewObject(), null, null).getCommand();
 }
 
 /**

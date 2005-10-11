@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: AnnotationPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-03 19:21:04 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-11 21:26:01 $ 
  */
 
 import java.util.*;
@@ -175,6 +175,24 @@ public class AnnotationPolicy
 			}
 		}
 
+		return annotations;
+	}
+	
+	/**
+	 * Get all annotations for all of the model objects.
+	 * @param annotations
+	 * @param modelObjects
+	 * @param policy
+	 * @return
+	 * 
+	 * @see #getAllAnnotations(List, Object, AnnotationLinkagePolicy)
+	 * @since 1.2.0
+	 */
+	public static List getAllAnnotations(List annotations, List modelObjects, AnnotationLinkagePolicy policy) {
+		for (Iterator itr = modelObjects.iterator(); itr.hasNext();) {
+			Object modelObject = itr.next();
+			annotations = getAllAnnotations(annotations, modelObject, policy);
+		}
 		return annotations;
 	}
 

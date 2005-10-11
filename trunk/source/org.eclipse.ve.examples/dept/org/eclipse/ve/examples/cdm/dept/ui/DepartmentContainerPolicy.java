@@ -11,7 +11,7 @@
 package org.eclipse.ve.examples.cdm.dept.ui;
 /*
  *  $RCSfile: DepartmentContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:16:43 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-11 21:23:51 $ 
  */
 
 import java.util.*;
@@ -41,32 +41,43 @@ public class DepartmentContainerPolicy extends ContainerPolicy {
 	/**
 	 * Add a  child.
 	 */
-	public Command getAddCommand(List children, Object position) {
+	public Result getAddCommand(List children, Object position) {
+		Result result = new Result(children);
 		Iterator itr = children.iterator();
 		while (itr.hasNext()) {
 			Object child = itr.next();
-			if (!(child instanceof Employee))
-				return UnexecutableCommand.INSTANCE;
-			if (container.equals(((Employee) child).getManages()))
-				return UnexecutableCommand.INSTANCE;	// Can't add an employee to the same she manages.			
+			if (!(child instanceof Employee)) {
+				result.setCommand(UnexecutableCommand.INSTANCE);
+				return result;
+			}
+			if (container.equals(((Employee) child).getManages())) {
+				result.setCommand(UnexecutableCommand.INSTANCE);	// Can't add an employee to the same she manages.
+				return result;
+			}
 		}
 		
-		return new AddEmployeesCommand((Department) container, children, (Employee) position);
+		result.setCommand(new AddEmployeesCommand((Department) container, children, (Employee) position));
+		return result;
 	}
 	
 	/**
 	 * Create a  child.
 	 */
-	public Command getCreateCommand(Object child, Object position) {
-		if (!(child instanceof Employee))
-			return UnexecutableCommand.INSTANCE;
+	public Result getCreateCommand(List children, Object position) {
+		Result result = new Result(children);
+		for (Iterator itr=children.iterator(); itr.hasNext(); ) {
+			if (!(itr.next() instanceof Employee)) {
+				result.setCommand(UnexecutableCommand.INSTANCE);
+				return result;
+			}
+		}
 			
 		Department parent = (Department) container;
-		List children = Collections.singletonList(child);
 		CompoundCommand cc = new CompoundCommand();
-		cc.append(new UniqueEmployeeName(parent.getCompany(), (Employee) child));	// Since this is a new employee, need to verify the name is unique.
+		cc.append(new UniqueEmployeeName(parent.getCompany(), children));	// Since this is a new employee, need to verify the name is unique.
 		cc.append(new AddEmployeesCommand(parent, children, (Employee) position));
-		return AnnotationPolicy.getCreateRequestCommand(AnnotationPolicy.getAllAnnotations(new ArrayList(), child, domain.getAnnotationLinkagePolicy()), cc, domain);
+		result.setCommand(AnnotationPolicy.getCreateRequestCommand(AnnotationPolicy.getAllAnnotations(new ArrayList(), children, domain.getAnnotationLinkagePolicy()), cc, domain));
+		return result;
 	}
 	
 	/**

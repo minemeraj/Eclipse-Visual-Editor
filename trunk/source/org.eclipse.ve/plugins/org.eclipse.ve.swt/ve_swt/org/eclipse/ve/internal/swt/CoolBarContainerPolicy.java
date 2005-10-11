@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.swt;
 
 /*
  *  $RCSfile: CoolBarContainerPolicy.java,v $
- *  $Revision: 1.12 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.13 $  $Date: 2005-10-11 21:23:47 $ 
  */
 
 import java.util.*;
@@ -73,10 +73,10 @@ public class CoolBarContainerPolicy extends CompositeContainerPolicy {
 	}
 
 
-	protected Command getCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		return super.getCreateCommand(child, positionBeforeChild, containmentSF).chain(getCreateCoolItemCommand(child, (EObject) positionBeforeChild));
+	protected Command primCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		return super.primCreateCommand(child, positionBeforeChild, containmentSF).chain(getCreateCoolItemCommand(child, (EObject) positionBeforeChild));
 	}
-
+	
 	/*
 	 * Create the command to create the parse tree allocation for the CoolItem, the command to set the child as the 'control' property setting of the
 	 * CoolItem, and the command to set the CoolItem as a child of the CoolBar.

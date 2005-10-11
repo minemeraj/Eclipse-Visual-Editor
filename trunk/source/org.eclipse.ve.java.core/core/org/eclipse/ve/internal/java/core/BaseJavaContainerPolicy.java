@@ -57,6 +57,7 @@ public class BaseJavaContainerPolicy extends AbstractEMFContainerPolicy {
 	 * @see org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy#getAddCommand(java.util.List, java.lang.Object, org.eclipse.emf.ecore.EStructuralFeature)
 	 */
 	protected Command getAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		// Test done here and not in isValidChild because bean location only makes sense for add, not create.
 		Iterator itr = children.iterator();
 		while (itr.hasNext()) {
 			Object child = itr.next();

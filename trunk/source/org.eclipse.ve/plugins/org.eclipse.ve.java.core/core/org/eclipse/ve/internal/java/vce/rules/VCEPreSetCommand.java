@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.17 $  $Date: 2005-10-03 19:20:57 $ 
+ *  $Revision: 1.18 $  $Date: 2005-10-11 21:23:48 $ 
  */
 
 import java.util.*;
@@ -164,7 +164,8 @@ public class VCEPreSetCommand extends CommandWrapper {
 		// Find the method that eventually initializes the value (i.e. Keep going until we find one that does an initializes).
 		// Walk up containment until we find a method, or we get to the top, but don't go beyond <members> containment. The
 		// one that is at <members> should have an initialize method. Where we stop we need to create an initializes.
-		EStructuralFeature members = JCMPackage.eINSTANCE.getMemberContainer_Members();				
+		EStructuralFeature members = JCMPackage.eINSTANCE.getMemberContainer_Members();
+		EStructuralFeature implicits = JCMPackage.eINSTANCE.getMemberContainer_Implicits();	
 		EObject v = value;
 		EObject oldV = null;
 		JCMMethod initMethod = null;
@@ -173,6 +174,10 @@ public class VCEPreSetCommand extends CommandWrapper {
 			if (initMethod != null)
 				return initMethod;
 			EStructuralFeature cFeature = v.eContainmentFeature();
+			if (cFeature == implicits) {
+				// This is an implicit, so this container is the method to use.
+				return (JCMMethod) v.eContainer();
+			}
 			if (cFeature == members || v.eContainer() instanceof BeanSubclassComposition) {
 				// This guy should of had an initialize, but didn't so we create one.
 				initMethod = createInitMethod(cbld, v);

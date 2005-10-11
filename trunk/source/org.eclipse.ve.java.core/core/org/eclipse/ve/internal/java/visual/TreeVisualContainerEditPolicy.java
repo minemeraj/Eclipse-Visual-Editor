@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: TreeVisualContainerEditPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-11 21:23:48 $ 
  */
 
 import java.util.*;
@@ -62,14 +62,14 @@ public class TreeVisualContainerEditPolicy extends TreeContainerEditPolicy imple
 		}
 		
 		List constraints = helper.getDefaultConstraint(children);
-		return helper.getAddChildrenCommand(children, constraints, beforePart != null ? beforePart.getModel() : null);
+		return helper.getAddChildrenCommand(children, constraints, beforePart != null ? beforePart.getModel() : null).getCommand();
 	}
 	
 	protected Command getCreateCommand(CreateRequest request) {
 		EditPart beforePart = findBeforePart(findIndexOfTreeItemAt(request.getLocation()), Collections.EMPTY_LIST, getHost().getChildren());
 		Object child = request.getNewObject();
 		List constraints = helper.getDefaultConstraint(Collections.singletonList(child));
-		return helper.getCreateChildCommand(child, constraints.get(0), beforePart != null ? beforePart.getModel() : null);
+		return helper.getCreateChildCommand(child, constraints.get(0), beforePart != null ? beforePart.getModel() : null).getCommand();
 	}
 		
 	public boolean testAttribute(Object target, String name, String value) {
