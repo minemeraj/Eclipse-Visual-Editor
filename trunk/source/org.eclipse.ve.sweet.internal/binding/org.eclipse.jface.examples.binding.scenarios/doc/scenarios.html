@@ -150,12 +150,15 @@ different ways the list’s values are provided. The assumption here is a single
 selection.</p>
 <h3>Committed Items</h3>
 <ol>
-    <li>Displaying a list of Adventure objects, using their names. The list
-    updates as names of Adventures are updated in a text widget that is bound
-    to one of the Adventure object's name property.</li>
-	<li>Selecting the lodgings for an adventure and editing the properties of 
-	the selected lodging. If no lodging is selected the input controls for name 
-	and adventure are disabled.</li>
+    <li>Displaying the catalog's list of Adventure objects in a list viewer,
+    using their names. The name of the currently selected Adventure can be
+    edited in a text widget. There is always a selected Adventure object.</li>
+	<li>Selecting from the list of lodgings for an adventure and editing the properties of 
+	the selected lodging in text widgets. If no lodging is selected the input
+	controls for name and adventure are disabled. There are two buttons "Add"
+	and "Remove"; clicking on "Add" creates a new lodging and selects it so
+	it can be edited, clicking on "Remove" removes the currently selected
+	lodging from the list.</li>
 	<li>Selecting the Categories from a java.util.Collection of Catalogs and 
 	editing the name of each category. </li>
 	<li>Selecting the Categories from an Array of Catalogs and editing the name 
