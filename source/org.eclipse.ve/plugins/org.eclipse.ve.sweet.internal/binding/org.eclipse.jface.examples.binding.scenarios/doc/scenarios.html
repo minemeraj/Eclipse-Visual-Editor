@@ -83,13 +83,12 @@ a domain model. The expectation is to have a simple, one line, intuitive API:
 	radio button set as well as the radio button set affecting the check box.</li>
 </ol>
 <h3>Deferred Items</h3>
+none
 <h2>Custom Binding</h2>
 <h3>Committed Items</h3>
 <ol>
 	<li>Binding the price property of an Adventure to two spinner controls – one 
 	that shows the dollar portion and one that shows the cents.</li>
-	<li>Binding a Transportation departure time to two Text controls, one that 
-	shows the hours and one for the minutes, both of which validate the entry.</li>
 	<li>Binding a derived aggregate property of an Adventure that does not exist 
 	to a text field. For example, the name and description combined together 
 	with a comma separating them. Also combined together on a multi line text 
@@ -99,7 +98,18 @@ a domain model. The expectation is to have a simple, one line, intuitive API:
 	it up (name and description) change.</li>
 </ol>
 <h3>Proposed Items</h3>
+<ol>
+	<li>Binding a Transportation departure time to two Text controls, one that 
+	shows the hours and one for the minutes, both of which validate the entry.</li>
+	<li>Binding a Transportation departure time to two Spinner controls, one that 
+	shows the hours and one for the minutes. When the minutes spinner changes from
+	59 to 00, the hours spinner should be incremented; when it changes from 00 to 59,
+	the hours spinner should be decremented.</li>
+	<li>Binding a custom control (one that is not part of SWT already) for editing
+	time to a Transportation departure time.</li>
+</ol>
 <h3>Deferred Items</h3>
+none
 <h2>List binding</h2>
 <p>A common scenario is that a control like a combo, List, Tree or Table 
 displays some data that represents a collection of objects. Selection of a 
