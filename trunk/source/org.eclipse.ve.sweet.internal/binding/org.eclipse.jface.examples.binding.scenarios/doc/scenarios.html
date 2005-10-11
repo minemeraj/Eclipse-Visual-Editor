@@ -89,6 +89,9 @@ none
 <ol>
 	<li>Binding the price property of an Adventure to two spinner controls – one 
 	that shows the dollar portion and one that shows the cents.</li>
+</ol>
+<h3>Proposed Items</h3>
+<ol>
 	<li>Binding a derived aggregate property of an Adventure that does not exist 
 	to a text field. For example, the name and description combined together 
 	with a comma separating them. Also combined together on a multi line text 
@@ -96,9 +99,6 @@ none
 	property, as well as accept input and change the Adventure, and also the 
 	derived property would refresh itself if either of the properties that make 
 	it up (name and description) change.</li>
-</ol>
-<h3>Proposed Items</h3>
-<ol>
 	<li>Binding a Transportation departure time to two Text controls, one that 
 	shows the hours and one for the minutes, both of which validate the entry.</li>
 	<li>Binding a Transportation departure time to two Spinner controls, one that 
@@ -110,7 +110,29 @@ none
 </ol>
 <h3>Deferred Items</h3>
 none
-<h2>List binding</h2>
+<h2>Binding to a read-only combo</h2>
+<h3>Committed Items</h3>
+<ol>
+	<li>Binding the current selection of a read-only combo to the country property (of type String)
+	of an Account object. The list of possible values does not come from a model object,
+	it is given as a list or array of String objects.</li>
+	<li>Binding the current selection of a read-only combo viewer to the country property (of type String)
+	of an Account object. The list of possible values does not change dynamically,
+	it is given as a list of Country objects. The Country object's name property is used for displaying in
+	the combo viewer, and it is used as the value that is set on the Account object.</li>
+	<li>For a given adventure editing its default lodging by selecting from a 
+	list of available lodgings displaying the Lodging's name property. A button can also
+	set the default lodging to null. The list of available lodgings can change over time,
+	as can the name of any lodging. Both kinds of updates should update the combo viewer,
+	updating the name of a selected lodging should preserve the selection.</li>
+</ol>
+<h3>Proposed Items</h3>
+<ol>
+</ol>
+<h3>Deferred Items</h3>
+<ol>
+</ol>
+<h2>Collection binding</h2>
 <p>A common scenario is that a control like a combo, List, Tree or Table 
 displays some data that represents a collection of objects. Selection of a 
 single object then makes that object the focus of the GUI so that it can be 
@@ -122,8 +144,11 @@ bindings, the goal is to keep the API simple and intuitive. <br>
 These scenarios cover basic selection of an item in a list and editing it with 
 different ways the list’s values are provided. The assumption here is a single 
 selection.</p>
-<h3>First Tier</h3>
+<h3>Committed Items</h3>
 <ol>
+    <li>Displaying a list of Adventure objects, using their names. The list
+    updates as names of Adventures are updated in a text widget that is bound
+    to one of the Adventure object's name property.</li>
 	<li>Selecting the lodgings for an adventure and editing the properties of 
 	the selected lodging. If no lodging is selected the input controls for name 
 	and adventure are disabled.</li>
@@ -145,9 +170,6 @@ downstream list, and in others the downstream list is bound directly to the
 selected object from the upstream list so there is a mix of GUI to Domain to GUI 
 and GUI to GUI to GUI.</p>
 <ol>
-	<li>For a given adventure editing its default lodging by selecting from a 
-	list of available lodgings. A button can also set the default lodging to 
-	null.</li>
 	<li>List an adventure and allow the selected adventure to have its default 
 	lodging set from a list of default lodgings. </li>
 	<li>List catalogs and allow the selected catalog to have its adventures 
