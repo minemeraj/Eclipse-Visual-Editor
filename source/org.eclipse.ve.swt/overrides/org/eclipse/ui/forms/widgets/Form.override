@@ -11,9 +11,6 @@
    <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.FormGraphicalEditPart" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
 	  </objectsToAttach>
    <objectsToAttach eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#Composite" name="body" unsettable="false" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
-      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
-      <eAnnotations mergeIntrospection="false" xsi:type="beaninfo:PropertyDecorator">
-        <readMethod xsi:type="org.eclipse.jem.java.JavaMethod"/>
-      </eAnnotations>
+      <eAnnotations hidden="true" xsi:type="beaninfo:PropertyDecorator"/>
     </objectsToAttach>
 </change:ChangeDescription>

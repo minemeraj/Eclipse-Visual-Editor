@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: ILayoutPolicyHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-11 21:23:48 $ 
  */
 
 import java.util.List;
@@ -38,25 +38,34 @@ public interface ILayoutPolicyHelper {
  * if null, the code used would be add(Component, null). If NO_CONSTRAINT_VALUE
  * is used, then add(Component) will be used in bean proxy, but code generation
  * has decided to use add(Component, component.getName()).
+ * 
+ * @since 1.0.0
  */
 public static final Object NO_CONSTRAINT_VALUE = new Object();
 
 /**
- * Create the children at these constraints and before the position.
- * childComponent: The child to create.
- * constraint: The constraint to be applied.
- * position: The child to be placed before (null if at end).
+ * Create the child with the given constraint.
+ * 
+ * @param childComponent
+ * @param constraint constraint to create with. The type of this is implementation dependent.
+ * @param position
+ * @return
+ * 
+ * @since 1.2.0
  */
-public Command getCreateChildCommand(Object childComponent, Object constraint, Object position);
+public VisualContainerPolicy.CorelatedResult getCreateChildCommand(Object childComponent, Object constraint, Object position);
 
 /**
- * Add the children at these constraints and before the position.
- * childrenComponent: The children to add.
- * constraints: The constraints to be applied.
- * position: The children to be placed before (null if at end).
- * ContainerEditPolicy: The container edit policy.
+ * Add the children with the given constraints.
+ * 
+ * @param childrenComponents children to add. 
+ * @param constraints constraints for the children. The type is implementation dependent. 
+ * @param position
+ * @return
+ * 
+ * @since 1.2.0
  */
-public Command getAddChildrenCommand(List childrenComponents, List constraints, Object position);
+public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List childrenComponents, List constraints, Object position);
 
 /**
  * Change the constraint for the children.

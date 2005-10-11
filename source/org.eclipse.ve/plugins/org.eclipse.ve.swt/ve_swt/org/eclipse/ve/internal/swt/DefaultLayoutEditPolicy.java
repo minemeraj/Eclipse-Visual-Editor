@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
 import java.util.Collections;
+
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
+
 import org.eclipse.ve.internal.cde.core.FlowLayoutEditPolicy;
+
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 /*
- * $RCSfile: DefaultLayoutEditPolicy.java,v $ $Revision: 1.3 $ $Date: 2005-08-24 23:52:55 $
+ * $RCSfile: DefaultLayoutEditPolicy.java,v $ $Revision: 1.4 $ $Date: 2005-10-11 21:23:47 $
  */
 /**
  * Default layout edit policy for SWT layouts. Allows insertion between components and standard
@@ -38,12 +41,12 @@ public class DefaultLayoutEditPolicy extends FlowLayoutEditPolicy {
 		// We need to create a constraint and send this and the child over to the container policy.
 		Object child = childEditPart.getModel();
 		return helper.getAddChildrenCommand(Collections.singletonList(child), Collections.singletonList(null), before != null ? before
-				.getModel() : null);
+				.getModel() : null).getCommand();
 	}
 	protected Command getCreateCommand(CreateRequest aRequest) {
 		Object child = aRequest.getNewObject();
 		EditPart before = getInsertionReference(aRequest);
-		return helper.getCreateChildCommand(child, null, before != null ? before.getModel() : null);
+		return helper.getCreateChildCommand(child, null, before != null ? before.getModel() : null).getCommand();
 	}
 	/**
 	 * @see org.eclipse.gef.editpolicies.FlowLayoutEditPolicy#isHorizontal()

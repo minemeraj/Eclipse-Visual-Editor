@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutEditPolicy.java,v $
- *  $Revision: 1.22 $  $Date: 2005-08-23 21:13:04 $ 
+ *  $Revision: 1.23 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 import java.util.*;
@@ -177,9 +177,12 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		if (gridbagconstraint != null) {
 			CommandBuilder cb = new CommandBuilder();
 			// get the command to apply the gridbagconstraint to the ComponentConstraint
-			cb.append(helper.getCreateChildCommand(child, gridbagconstraint, null));
-			// get the commands for other components that may have been affect by inserting a column and/or row
-			cb.append(getAdjustConstraintsCommand(child, position, cellLocation));
+			VisualContainerPolicy.CorelatedResult result = helper.getCreateChildCommand(child, gridbagconstraint, null);
+			cb.append(result.getCommand());
+			if (!result.getChildren().isEmpty()) {
+				// get the commands for other components that may have been affect by inserting a column and/or row
+				cb.append(getAdjustConstraintsCommand(result.getChildren().get(0), position, cellLocation));
+			}
 			return cb.getCommand();
 		}
 		return UnexecutableCommand.INSTANCE;
@@ -281,7 +284,7 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		if (cb.isEmpty()) {
 			// No gridbag constraint found, create a new one with the specific gridx & gridy settings
 			GridBagConstraint gridbagconstraint = helper.getConstraint(component, cellLocation.x, cellLocation.y);
-			cb.append(helper.getCreateChildCommand(component, gridbagconstraint, null));
+			cb.append(helper.getChangeConstraintCommand(Collections.singletonList(component), Collections.singletonList(gridbagconstraint)));
 		}
 		// get the commands for other components that may have been affect by inserting a column and/or row
 		cb.append(getAdjustConstraintsCommand(component, position, cellLocation));
@@ -299,15 +302,9 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		resetHightlightedRowHeaders();
 		return helper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) aRequest));
 	}
-	/**
-	 * The child editpart is about to be added to the parent.
-	 * The child is an existing child that was orphaned from a previous parent.
-	 */
+
 	protected Command createAddCommand(EditPart childEditPart, Object cellLocation) {
-		// We need to create a constraint and send this and the child over to the container policy.
-		Object child = childEditPart.getModel();
-		GridBagConstraint gridbagconst = helper.getConstraint((IJavaObjectInstance) child, ((Point)cellLocation).x, ((Point)cellLocation).y);
-		return helper.getAddChildrenCommand(Collections.singletonList(child), Collections.singletonList(gridbagconst), null);
+		return null; 	// Never called. We override getAddCommand.
 	}
 	protected Command createChangeConstraintCommand(EditPart childEditPart, Object constraint) {
 		return helper.getChangeConstraintCommand(Collections.singletonList(childEditPart.getModel()), Collections.singletonList(constraint));
@@ -671,9 +668,14 @@ public class GridBagLayoutEditPolicy extends ConstrainedLayoutEditPolicy impleme
 		cellLocation = getGridBagLayoutGridFigure().getCellLocation(position.x, position.y, nearAColumn, nearARow);
 		
 		CommandBuilder cb = new CommandBuilder();
-		cb.append(createAddCommand((EditPart)editParts.get(0), cellLocation));
-		// get the commands for other components that may have been affect by inserting a column and/or row
-		cb.append(getAdjustConstraintsCommand(((EditPart)editParts.get(0)).getModel(), position, cellLocation));
+		Object child = ((EditPart) editParts.get(0)).getModel();
+		GridBagConstraint gridbagconst = helper.getConstraint((IJavaObjectInstance) child, cellLocation.x, cellLocation.y);
+		VisualContainerPolicy.CorelatedResult result = helper.getAddChildrenCommand(Collections.singletonList(child), Collections.singletonList(gridbagconst), null);
+		cb.append(result.getCommand());
+		if (!result.getChildren().isEmpty()) {
+			// get the commands for other components that may have been affect by inserting a column and/or row
+			cb.append(getAdjustConstraintsCommand(result.getChildren().get(0), position, cellLocation));
+		}
 		return cb.getCommand();
 	}
 	protected Command getSpanChildrenCommand(Request generic) {

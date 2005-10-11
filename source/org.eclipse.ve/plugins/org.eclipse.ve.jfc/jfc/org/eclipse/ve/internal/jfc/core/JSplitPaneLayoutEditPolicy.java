@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneLayoutEditPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 import org.eclipse.gef.*;
@@ -53,9 +53,9 @@ protected Command getAddCommand(Request request) {
 	Command addContributionCmd = null;
 	if (RequestConstants.REQ_ADD.equals(request.getType())) {
 		if (containerPolicy.isRightComponentOccupiedAndOnlyComponent())
-			addContributionCmd = containerPolicy.getAddCommand(ContainerPolicy.getChildren((GroupRequest) request), getHost().getChildren().get(0));
+			addContributionCmd = containerPolicy.getAddCommand(ContainerPolicy.getChildren((GroupRequest) request), getHost().getChildren().get(0)).getCommand();
 		else
-			addContributionCmd = containerPolicy.getAddCommand(ContainerPolicy.getChildren((GroupRequest) request), null);
+			addContributionCmd = containerPolicy.getAddCommand(ContainerPolicy.getChildren((GroupRequest) request), null).getCommand();
 	}
 	if (addContributionCmd == null)
 		return UnexecutableCommand.INSTANCE;	// It can't be added.
@@ -79,9 +79,9 @@ protected Command getCreateCommand(CreateRequest request) {
 	Command createContributionCmd = null;
 	if (RequestConstants.REQ_CREATE.equals(request.getType())) {
 		if (containerPolicy.isRightComponentOccupiedAndOnlyComponent())
-			createContributionCmd = containerPolicy.getCreateCommand(request.getNewObject(), getHost().getChildren().get(0));
+			createContributionCmd = containerPolicy.getCreateCommand(request.getNewObject(), getHost().getChildren().get(0)).getCommand();
 		else 
-			createContributionCmd = containerPolicy.getCreateCommand(request.getNewObject(), null);
+			createContributionCmd = containerPolicy.getCreateCommand(request.getNewObject(), null).getCommand();
 	}
 	if (createContributionCmd == null)
 		return UnexecutableCommand.INSTANCE;	// It can't be created.

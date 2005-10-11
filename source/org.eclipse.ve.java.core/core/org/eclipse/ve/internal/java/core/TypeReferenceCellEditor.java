@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.16 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.17 $  $Date: 2005-10-11 21:23:48 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -36,6 +36,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
 
+import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 
@@ -92,11 +93,13 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 			
 			CompoundCommand createAndSetVisualCommand = new CompoundCommand("Create instance and set visual command"); //$NON-NLS-1$
 			
-			Command createCommand = editPolicy.getCreateCommand(newJavaInstance,null);
-			createAndSetVisualCommand.add(createCommand);
+			ContainerPolicy.Result result = editPolicy.getCreateCommand(newJavaInstance, null);
+			createAndSetVisualCommand.add(result.getCommand());
 			
-			Command visualInfoCommand = BeanUtilities.getSetEmptyVisualContraintsCommand(newJavaInstance, false, editDomain);
-			createAndSetVisualCommand.add(visualInfoCommand);
+			if (!result.getChildren().isEmpty()) {
+				Command visualInfoCommand = BeanUtilities.getSetEmptyVisualContraintsCommand((IJavaInstance) result.getChildren().get(0), false, editDomain);
+				createAndSetVisualCommand.add(visualInfoCommand);
+			}
 			
 			editDomain.getCommandStack().execute(createAndSetVisualCommand);
 			

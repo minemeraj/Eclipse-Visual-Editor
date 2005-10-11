@@ -16,8 +16,7 @@
    <objectsToAttach beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TabFolderProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
    <objectsToAttach expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.TabFolderDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
    <objectsToAttach containment="false" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#TabItem" name="items" upperBound="-1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
-      <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
       <eAnnotations linkType="CHILD" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
-      <eAnnotations mergeIntrospection="false" xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator"/>
+      <eAnnotations mergeIntrospection="false" hidden="true" xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator"/>
     </objectsToAttach>
 </change:ChangeDescription>

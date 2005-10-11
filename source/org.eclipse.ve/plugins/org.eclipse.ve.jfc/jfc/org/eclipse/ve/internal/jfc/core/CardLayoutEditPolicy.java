@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: CardLayoutEditPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.10 $  $Date: 2005-10-11 21:23:50 $ 
  */
 import java.util.*;
 
@@ -145,7 +145,7 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 			childrenComponents.add(((EditPart) iter.next()).getModel());
 		List constraints = helper.getDefaultConstraint(childrenComponents);
 		// Graphically we always add at the end.
-		return helper.getAddChildrenCommand(childrenComponents, constraints, null);
+		return helper.getAddChildrenCommand(childrenComponents, constraints, null).getCommand();
 	}
 
 	/*
@@ -262,7 +262,7 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 		
 		List constraints = helper.getDefaultConstraint(Collections.singletonList(child));
 		
-		return helper.getCreateChildCommand(child, constraints.get(0), null);
+		return helper.getCreateChildCommand(child, constraints.get(0), null).getCommand();
 	}
 
 	/*

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabFolderContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-11 21:23:47 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -71,8 +71,8 @@ public class CTabFolderContainerPolicy extends CompositeContainerPolicy {
 		return classControl.isInstance(child);
 	}
 
-	protected Command getCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		return super.getCreateCommand(child, positionBeforeChild, containmentSF).chain(getCreateCTabItemCommand(child, (EObject) positionBeforeChild));
+	protected Command primCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		return super.primCreateCommand(child, positionBeforeChild, containmentSF).chain(getCreateCTabItemCommand(child, (EObject) positionBeforeChild));
 	}
 
 	/*

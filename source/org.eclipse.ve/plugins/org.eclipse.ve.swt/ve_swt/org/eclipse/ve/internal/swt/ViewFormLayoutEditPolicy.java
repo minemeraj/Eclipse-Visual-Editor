@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormLayoutEditPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-22 16:46:40 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-11 21:23:47 $ 
  */
 package org.eclipse.ve.internal.swt;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -32,7 +33,6 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.swt.SWT;
 
 import org.eclipse.jem.internal.instantiation.base.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
@@ -140,14 +140,10 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 	 */
 	protected Command createAddCommand(EditPart childEditPart, Object constraint) {
 		if (constraint == null || !(constraint instanceof String)) return UnexecutableCommand.INSTANCE;
-		List children = new ArrayList(1);
-		IJavaObjectInstance child = (IJavaObjectInstance)childEditPart.getModel();
-		children.add(child);
-		Command addCmd = UnexecutableCommand.INSTANCE;
 		if (fLayoutPolicyHelper.isRegionAvailable((String)constraint)) {
-			addCmd = fLayoutPolicyHelper.getAddChildrenCommand(children, Collections.singletonList(constraint), null); 
-		}
-		return addCmd;
+			return fLayoutPolicyHelper.getAddChildrenCommand(Collections.singletonList(childEditPart.getModel()), Collections.singletonList(constraint), null).getCommand(); 
+		} else
+			return UnexecutableCommand.INSTANCE;
 	}
 	
 	/**
@@ -165,7 +161,7 @@ public class ViewFormLayoutEditPolicy extends LayoutEditPolicy{
 	protected Command createCreateCommand(Object child, String aConstraint) {
 		Command addCmd = UnexecutableCommand.INSTANCE;
 		if (fLayoutPolicyHelper.isRegionAvailable(aConstraint)) {
-			addCmd = fLayoutPolicyHelper.getCreateChildCommand(child,aConstraint,null);
+			addCmd = fLayoutPolicyHelper.getCreateChildCommand(child,aConstraint,null).getCommand();
 		}
 		return addCmd;
 	}

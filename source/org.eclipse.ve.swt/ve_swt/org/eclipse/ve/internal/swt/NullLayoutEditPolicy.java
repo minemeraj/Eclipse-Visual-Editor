@@ -66,17 +66,16 @@ protected Command createAddCommand(EditPart childEditPart, Object constraint) {
 	// We need to create a constraint and send this and the child over to the container policy.
 	Object child = childEditPart.getModel();
 	NullLayoutPolicyHelper.NullConstraint nullconst = new NullLayoutPolicyHelper.NullConstraint((Rectangle) constraint, true, true);	
-	return helper.getAddChildrenCommand(Collections.singletonList(child), Collections.singletonList(nullconst), null);
+	return helper.getAddChildrenCommand(Collections.singletonList(child), Collections.singletonList(nullconst), null).getCommand();
 }
 
 protected Command getCreateCommand(CreateRequest aRequest) {
 	Object child = aRequest.getNewObject();
-	Object parent = getHost().getModel() ;
 	Object constraint = translateToModelConstraint(getConstraintFor(aRequest));			
 	
 	NullLayoutPolicyHelper.NullConstraint nullconst = new NullLayoutPolicyHelper.NullConstraint((Rectangle) constraint, true, true);
 	
-	return helper.getCreateChildCommand(child, parent, nullconst, null);
+	return helper.getCreateChildCommand(child, nullconst, null).getCommand();
 }
 
 protected Command getDeleteDependantCommand(Request aRequest) {

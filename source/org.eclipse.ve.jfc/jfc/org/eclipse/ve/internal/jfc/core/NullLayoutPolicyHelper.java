@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NullLayoutPolicyHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 import java.util.*;
@@ -75,42 +75,49 @@ public void setContainerPolicy(VisualContainerPolicy policy) {
 	this.policy = policy;
 }
 
-public Command getCreateChildCommand(Object childComponent, Object constraint, Object position) {
+public VisualContainerPolicy.CorelatedResult getCreateChildCommand(Object childComponent, Object constraint, Object position) {
 	EClass constraintComponentClass = (EClass) ((EObject) policy.getContainer()).eResource().getResourceSet().getEObject(JFCConstants.CLASS_CONTAINER_CONSTRAINTCOMPONENT, true);
 	EFactory visualFact = JFCConstants.getFactory(constraintComponentClass);
 	
 	EObject constraintComponent = visualFact.create(constraintComponentClass);
 	constraintComponent.eSet(JavaInstantiation.getSFeature((IJavaObjectInstance) policy.getContainer(), JFCConstants.SF_CONSTRAINT_CONSTRAINT),  null);	// Put the null into the constraint component so that nothing is added in the add
-	Command createContributionCmd = policy.getCreateCommand(constraintComponent, childComponent, position);
-	if (createContributionCmd == null || !createContributionCmd.canExecute())
-		return UnexecutableCommand.INSTANCE;	// It can't be created
-			
-	CompoundCommand command = new CompoundCommand("");		 //$NON-NLS-1$
-	command.append(createChangeConstraintCommand((IJavaObjectInstance) childComponent, (NullConstraint) constraint));
-	command.append(createContributionCmd);
-
-	return command.unwrap();
+	
+	VisualContainerPolicy.CorelatedResult result = policy.getCreateCommand(constraintComponent, childComponent, position);
+	CommandBuilder cbld = new CommandBuilder();
+	if (!result.getChildren().isEmpty()) {
+		cbld.append(createChangeConstraintCommand((IJavaObjectInstance) result.getChildren().get(0), (NullConstraint) constraint));
+	}
+	cbld.append(result.getCommand());
+	result.setCommand(cbld.getCommand());
+	return result;
 }
 
-public Command getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
+private static class NullConstraintWrapper extends VisualContainerPolicy.ConstraintWrapper {
+
+	public final NullConstraint nullConstraint;
+
+	public NullConstraintWrapper(Object constraintComponent, NullConstraint nullConstraint) {
+		super(constraintComponent);
+		this.nullConstraint = nullConstraint;
+	}
+	
+}
+public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
 	EClass constraintComponentClass = (EClass) ((EObject) policy.getContainer()).eResource().getResourceSet().getEObject(JFCConstants.CLASS_CONTAINER_CONSTRAINTCOMPONENT, true);
 	EFactory visualFact = JFCConstants.getFactory(constraintComponentClass);
 	ArrayList componentConstraints = new ArrayList(childrenComponents.size());
 	for (int i=0; i<childrenComponents.size(); i++) {
 		EObject constraintComponent = visualFact.create(constraintComponentClass);
 		constraintComponent.eSet(JavaInstantiation.getSFeature((IJavaObjectInstance) policy.getContainer(), JFCConstants.SF_CONSTRAINT_CONSTRAINT),  null);	// Put the null into the constraint component so that nothing is added in the add
-		componentConstraints.add(constraintComponent);
+		componentConstraints.add(new NullConstraintWrapper(constraintComponent, (NullConstraint) constraints.get(i)));
 	}
 	
-	Command addContributionCmd = policy.getAddCommand(componentConstraints, childrenComponents, position);
-	if (addContributionCmd == null || !addContributionCmd.canExecute())
-		return UnexecutableCommand.INSTANCE;	// It can't be added.
-		
-	CompoundCommand command = new CompoundCommand("");		 //$NON-NLS-1$
-	command.append(getChangeConstraintCommand(childrenComponents, constraints));
-	command.append(addContributionCmd);
-
-	return command.unwrap();
+	VisualContainerPolicy.CorelatedResult result = policy.getAddCommand(componentConstraints, childrenComponents, position);		
+	CompoundCommand command = new CompoundCommand();
+	command.append(getChangeConstraintCommand(result.getChildren(), result.getCorelatedList()));
+	command.append(result.getCommand());
+	result.setCommand(command.unwrap());
+	return result;
 }
 
 public Command getOrphanChildrenCommand(List children) {
@@ -163,7 +170,11 @@ public Command getChangeConstraintCommand(List children, List constraints) {
 	Iterator conItr = constraints.iterator();
 	CompoundCommand cmd = new CompoundCommand();
 	while (childItr.hasNext()) {
-		cmd.append(createChangeConstraintCommand((IJavaObjectInstance) childItr.next(), (NullConstraint) conItr.next()));
+		Object constraint = conItr.next();
+		// It may of been passed in from getAdd which would of had constraint wrapper instead.
+		if (constraint instanceof NullConstraintWrapper)
+			constraint = ((NullConstraintWrapper) constraint).nullConstraint;
+		cmd.append(createChangeConstraintCommand((IJavaObjectInstance) childItr.next(), (NullConstraint) constraint));
 	}
 	
 	return !cmd.isEmpty() ? cmd.unwrap() : null;

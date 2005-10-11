@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ContainerPolicy.java,v $
- *  $Revision: 1.11 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 import java.util.*;
@@ -19,13 +19,11 @@ import java.util.*;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IContainmentHandler.NoAddException;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
@@ -70,104 +68,7 @@ public class ContainerPolicy extends VisualContainerPolicy {
 		return classComponent.isInstance(component);
 	}
 		
-	/**
-	 * Get the create command for the child constraint listed here at the position.
-	 */
-	public Command getCreateCommand(Object childConstraintComponent, Object childComponent, Object positionBeforeChild) {
-		CommandBuilder preCmds = createCommandBuilder(true);
-		CommandBuilder postCmds = createCommandBuilder(true);
-		try {
-			childComponent = getTrueChild(childComponent, true, preCmds, postCmds);
-			if (childComponent != null)
-				if (!isValidComponent(childComponent))
-					return UnexecutableCommand.INSTANCE;
-		} catch (NoAddException e) {
-			return UnexecutableCommand.INSTANCE;
-		}
 		
-		if (preCmds.isDead() || postCmds.isDead())
-			return UnexecutableCommand.INSTANCE;
-		
-		if (childComponent != null) {
-			// Add the child to the component.
-			preCmds.applyAttributeSetting((EObject) childConstraintComponent, sfConstraintComponent, childComponent);
-			getCreateCommand(childConstraintComponent, positionBeforeChild != null ? InverseMaintenanceAdapter.getIntermediateReference(
-					(EObject) container, (EReference) containmentSF, sfConstraintComponent, (EObject) positionBeforeChild) : null, preCmds);
-			
-		}
-		
-		preCmds.append(postCmds.getCommand());
-		if (preCmds.isEmpty() || preCmds.isDead())
-			return UnexecutableCommand.INSTANCE;
-		else
-			return preCmds.getCommand();
-
-	}
-	
-	/**
-	 * Get the add constraints and components command for the list and position.
-	 */
-	public Command getAddCommand(List constraints, List children, Object positionBeforeChild) {
-		// We need to create the add children to constraints command first.
-		// This is because we can't set the children into the constraints except
-		// at command execution time. If we do it now it would immediately
-		// make the change and this would strip the child out even if the commands
-		// were never executed.
-		//
-		// It is assumed that both lists are the same length.
-
-		CommandBuilder preCmds = createCommandBuilder(true);
-		CommandBuilder postCmds = createCommandBuilder(true);
-
-		RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-		cb.setApplyRules(false);
-		constraints = new ArrayList(constraints);	// We'll be possibly modifying the list, so make a copy. Our contract doesn't state we can change the original.
-		ListIterator cons = constraints.listIterator();
-		Iterator chlds = children.iterator();
-		while (cons.hasNext()) {
-			Object childConstraintComponent = cons.next();
-			if (!isValidChild(childConstraintComponent, sfConstraintComponent))
-				return UnexecutableCommand.INSTANCE;
-			Object childComponent = chlds.next();
-			try {
-				childComponent = getTrueChild(childComponent, false, preCmds, postCmds);
-				if (childComponent != null)
-					if (!isValidComponent(childComponent))
-						return UnexecutableCommand.INSTANCE;
-					else
-						;
-				else {
-					cons.remove();	// Remove the constraint since handler said no child for this one.
-					continue;	// Handler set skip this one.
-				}
-			} catch (NoAddException e) {
-				return UnexecutableCommand.INSTANCE;
-			}			
-			cb.applyAttributeSetting((EObject) childConstraintComponent, sfConstraintComponent, childComponent);
-		}
-
-		if (preCmds.isDead() || postCmds.isDead())
-			return UnexecutableCommand.INSTANCE;
-
-		if (!constraints.isEmpty()) {
-			// We added the component to the constraint components outside of Ruled control because there is no need for
-			// extra preset commands since the setting of constraintComponent itself will be under Ruled control and will handle
-			// the component setting automatically.		
-			cb.setApplyRules(true);
-			cb.applyAttributeSettings((EObject) container, containmentSF, constraints, positionBeforeChild != null ? InverseMaintenanceAdapter
-					.getIntermediateReference((EObject) container, (EReference) containmentSF, sfConstraintComponent, (EObject) positionBeforeChild)
-					: null);
-			preCmds.append(cb.getCommand());
-		}
-		
-		preCmds.append(postCmds.getCommand());
-		if (preCmds.isEmpty() || preCmds.isDead())
-			return UnexecutableCommand.INSTANCE;
-		else
-			return preCmds.getCommand();
-		
-	}
-	
 	/**
 	 * Delete the dependent. The child is the component, not the constraintComponent.
 	 */
@@ -223,6 +124,49 @@ public class ContainerPolicy extends VisualContainerPolicy {
 		cb.setApplyRules(false);
 		cb.cancelGroupAttributeSetting(constraints, sfConstraintComponent);	// Cancel out all of the component settings not under rule control since we are keeping them.
 		return cb.getCommand();
+	}
+
+	protected void getCreateCommand(List constraints, List children, Object position, CommandBuilder cbld) {
+		// For AWT Container, add and create are the same because add will still handle correctly adding the child annotation if needed
+		// through the rule builder.
+		getAddCommand(constraints, children, position, cbld);
+	}
+
+	protected void getAddCommand(List constraints, List children, Object position, CommandBuilder cbld) {
+		RuledCommandBuilder rcb = new RuledCommandBuilder(domain);
+		Iterator childrenItr = children.iterator();
+		Iterator constraintsItr = constraints.iterator();
+		List componentConstraints = new ArrayList(constraints.size());
+		// First we go through and add the children to the constraint components. This is done without rules because no need
+		// to use rules yet since the constraint components are not yet in the model.
+		// Then we add the constraint components to the container. This time with rules. 
+		rcb.setApplyRules(false);
+		while (childrenItr.hasNext()) {
+			Object childConstraintComponent = constraintsItr.next();
+			if (childConstraintComponent instanceof ConstraintWrapper)
+				childConstraintComponent = ((ConstraintWrapper) childConstraintComponent).getConstraint();
+			componentConstraints.add(childConstraintComponent);
+			if (!isValidChild(childConstraintComponent, sfConstraintComponent)) {
+				cbld.markDead();
+				return;
+			}
+			Object childComponent = childrenItr.next();
+			if (!isValidComponent(childComponent)) {
+				cbld.markDead();
+				return;
+			}
+			rcb.applyAttributeSetting((EObject) childConstraintComponent, sfConstraintComponent, childComponent);
+		}
+		
+		// We added the component to the constraint components outside of Ruled control because there is no need for
+		// extra preset commands since the setting of constraintComponents themselves will be under Ruled control and will handle
+		// the component setting automatically. But now we apply rules so that the add of the constraint component walks through and
+		// gets all children.
+		rcb.setApplyRules(true);
+		rcb.applyAttributeSettings((EObject) container, containmentSF, componentConstraints, position!= null ? InverseMaintenanceAdapter
+				.getIntermediateReference((EObject) container, (EReference) containmentSF, sfConstraintComponent,
+						(EObject) position) : null);
+		cbld.append(rcb.getCommand());
 	}
 
 }

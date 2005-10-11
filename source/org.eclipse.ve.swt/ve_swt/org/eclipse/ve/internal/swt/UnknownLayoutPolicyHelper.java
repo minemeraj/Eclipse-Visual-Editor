@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: UnknownLayoutPolicyHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-11 21:23:47 $ 
  */
 
 import java.util.*;
@@ -51,7 +51,6 @@ public class UnknownLayoutPolicyHelper extends LayoutPolicyHelper {
 	}
 
 	protected void cancelConstraints(CommandBuilder commandBuilder, List children) {
-		// TODO Auto-generated method stub		
 	}
 	
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutSwitcher.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-11 21:23:50 $ 
  */
 
 import java.util.*;
@@ -127,7 +127,7 @@ private Command removeComponents(List comps) {
 	// Having orphansed the components from the container, add them to the free form
 	// Some of the components might not be returned by methods ( so they are therefore not referencable by the free form
 	// so this will need more thought - JRW
-	cc.add(freeFormContainerPolicy.getAddCommand(comps,null));
+	cc.add(freeFormContainerPolicy.getAddCommand(comps,null).getCommand());
 
 	return cc;
 }

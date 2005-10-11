@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: AbstractEMFContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-03 19:21:04 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-11 21:26:01 $ 
  */
 
 import java.util.*;
@@ -63,6 +63,58 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 		ORPHAN_REQ = 4;	// The request for the containment feature is an orphan request. Children are currently contained in this container.
 
 	
+	/**
+	 * Result returned when corelated objects list are available. {@link AbstractEMFContainerPolicy} doesn't
+	 * return this by default, but subclasses may.
+	 * 
+	 * @since 1.2.0
+	 */
+	public static class CorelatedResult extends Result {
+
+		protected List corelatedList;
+
+		/**
+		 * @param children
+		 * @param corelatedList
+		 * 
+		 * @since 1.2.0
+		 */
+		public CorelatedResult(List children, List corelatedList) {
+			super(children);
+			this.corelatedList = corelatedList;
+		}
+		
+		/**
+		 * Create with only children, no corelated objects.
+		 * @param children
+		 * 
+		 * @since 1.2.0
+		 */
+		public CorelatedResult(List children) {
+			super(children);
+		}
+		
+		/**
+		 * Get the result list of corelated objects, if any. <code>null</code> if there aren't any.
+		 * @return result list of corelated objects or <code>null</code> if none were sent in.
+		 * 
+		 * @since 1.2.0
+		 */
+		public final List getCorelatedList() {
+			return corelatedList;
+		}
+		
+		/**
+		 * Set the corelated. Not meant to used by clients. It is here for ContainerPolicy implementers
+		 * to set the corelated list.
+		 * @param corelatedList
+		 * 
+		 * @since 1.2.0
+		 */
+		public void setCorelatedList(List corelatedList) {
+			this.corelatedList = corelatedList;
+		}
+	}
 	/**
 	 * Used by default as the containment feature. Subclasses should override
 	 * {@link #getContainmentSF(List, int)} and {@link #getContainmentSF(Object, int)}
@@ -189,28 +241,121 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 		return child;
 	}
 	
-	public final Command getCreateCommand(Object child, Object positionBeforeChild) {
-		CommandBuilder preCmds = createCommandBuilder(true), postCmds = createCommandBuilder(true);
-		try {
-			child = getTrueChild(child, true, preCmds, postCmds);
-		} catch (NoAddException e) {
-			return UnexecutableCommand.INSTANCE;
+	/**
+	 * Process a list of children and possible list of co-related objects to get the true list children and co-related objects.
+	 * <p>
+	 * Most of the time there is no list of co-related objects, but sometimes there may be. For example in the AWT world there
+	 * could be a correlated list of constraints that go with each child. Now if a child was removed from the child list, then
+	 * the entry from the corelatedObjects list must also be removed, otherwise they would get out of sync. If the list is <code>null</code>
+	 * then no working of the corelated objects is performed.
+	 * <p>
+	 * The incoming lists will not be modified. If there are any changes then new lists will be created and placed into the result instead.
+	 *
+	 * @param corelatedResult incoming result containing the children and the corelated list, if any. If no corelated list is <code>null</code>, then
+	 * corelated objects checking will be done.
+	 * @param creation
+	 * @param preCmds
+	 * @param postCmds
+	 * @throws NoAddException
+	 * 
+	 * @since 1.2.0
+	 */
+	public void getTrueChildren(CorelatedResult corelatedResult, boolean creation, CommandBuilder preCmds, CommandBuilder postCmds) throws NoAddException {
+		ListIterator corelatedItr = null;
+		boolean changedChildrenList = false;
+		for (ListIterator childrenItr = corelatedResult.getChildren().listIterator(); childrenItr.hasNext();) {
+			Object child = childrenItr.next();
+			if (corelatedItr != null)
+				corelatedItr.next();
+			Object newChild = getTrueChild(child, creation, preCmds, postCmds);
+			if (newChild != child) {
+				if (!changedChildrenList) {
+					// We will be modifying, so make a copy of the list, and create an iterator starting at where we currently are.
+					List newChildren = new ArrayList(corelatedResult.getChildren());
+					corelatedResult.setChildren(newChildren);
+					childrenItr = newChildren.listIterator(childrenItr.previousIndex());
+					childrenItr.next();	
+					changedChildrenList = true;
+				}
+				if (newChild == null) {
+					if (corelatedResult.getCorelatedList() != null) {
+						if (corelatedItr == null) {
+							// We will be modifying, so make a copy of the list, and create an iterator starting at where we currently are.
+							List newCo = new ArrayList(corelatedResult.getCorelatedList());
+							corelatedResult.setCorelatedList(newCo);
+							corelatedItr = newCo.listIterator(childrenItr.previousIndex());
+							corelatedItr.next();
+						}
+						corelatedItr.remove();	// Remove the corresponding correlated object.
+					}
+					childrenItr.remove();	// Said don't add this child.
+				} else
+					childrenItr.set(newChild);	// Said change the child.
+			}
 		}
+	}
 
-		if (preCmds.isDead() || postCmds.isDead())
-			return UnexecutableCommand.INSTANCE;
+	public final Result getCreateCommand(List children, Object positionBeforeChild) {
+		CorelatedResult result = new CorelatedResult(children);
+		CommandBuilder preCmds = createCommandBuilder(true), postCmds = createCommandBuilder(true);
+		int origSize = children.size();
+		try {
+			getTrueChildren(result, true, preCmds, postCmds);
+		} catch (NoAddException e) {
+			preCmds.markDead();
+		}
 		
-		if (child != null) {
-			getCreateCommand(child, positionBeforeChild, preCmds);
+		if (preCmds.isDead() || postCmds.isDead()) {
+			result.setCommand(UnexecutableCommand.INSTANCE);
+			return result;
+		}
+		
+		if (!result.getChildren().isEmpty() || origSize == 0) {
+			// Either there are children.
+			// Or it  could be that the handlers simply removed them all. If they did, then this is valid and we shouldn't go on to getAddCommand.
+			// This is because if we sent an empty list into getAddCommand some subclasses treat this as invalid. But the handlers have determined
+			// that it is valid. If children is empty and original is empty then the handlers didn't do it, so let normal processing handle it.
+			getCreateCommand(result.getChildren(), positionBeforeChild, preCmds);
 		}
 
 		preCmds.append(postCmds.getCommand());
 		if (preCmds.isEmpty() || preCmds.isDead())
-			return UnexecutableCommand.INSTANCE;
+			result.setCommand(UnexecutableCommand.INSTANCE);
 		else
-			return preCmds.getCommand();
+			result.setCommand(preCmds.getCommand());
+		return result;
+	}
+	
+	/**
+	 * Process the finalized list of children for create.
+	 * <p>
+	 * By default this just calls {@link #getCreateCommand(Object, Object, CommandBuilder)}
+	 * for each child. Subclasses can override if they want to handle the list all at once.
+	 * @param children
+	 * @param positionBeforeChild
+	 * @param cbldr
+	 * 
+	 * @since 1.2.0
+	 */
+	protected void getCreateCommand(List children, Object positionBeforeChild, CommandBuilder cbldr) {
+		for (Iterator itr = children.iterator(); itr.hasNext();) {
+			getCreateCommand(itr.next(), positionBeforeChild, cbldr);
+		}
 	}
 
+	/**
+	 * Handle one child for create. 
+	 * <p>This is the default create, called once for each child on the create list. It gets the the structural feature and
+	 * then calls {@link #getCreateCommand(Object, Object, EStructuralFeature)}.
+	 * <p>
+	 * Subclasses should normally override {@link #primCreateCommand(Object, Object, EStructuralFeature)} to change
+	 * actual create processing.
+	 * @param child
+	 * @param positionBeforeChild
+	 * @param cbldr
+	 * 
+	 * @since 1.2.0
+	 */
 	protected void getCreateCommand(Object child, Object positionBeforeChild, CommandBuilder cbldr) {
 		EStructuralFeature containmentSF = getContainmentSF(child, positionBeforeChild, CREATE_REQ);
 		if (containmentSF == null)
@@ -259,45 +404,50 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 	}
 	
 	
-	public final Command getAddCommand(List children, Object positionBeforeChild) {
+	public final Result getAddCommand(List children, Object positionBeforeChild) {
+		CorelatedResult result = new CorelatedResult(children);
 		CommandBuilder preCmds = createCommandBuilder(true), postCmds = createCommandBuilder(true);
-		// We may be modifying the list, so we'll do a copy of it. Even if we
-		// modify it we still should to make the coding simpler.
 		int origSize = children.size();
-		children = new ArrayList(children);
-		for (ListIterator childrenItr = children.listIterator(); childrenItr.hasNext();) {
-			Object child = childrenItr.next();
-			try {
-				Object newChild = getTrueChild(child, false, preCmds, postCmds);
-				if (newChild != child)
-					if (newChild == null)
-						childrenItr.remove();	// Said don't add this child.
-					else
-						childrenItr.set(newChild);	// Said change the child.
-			} catch (NoAddException e) {
-				return UnexecutableCommand.INSTANCE;
-			}
+		try {
+			getTrueChildren(result, false, preCmds, postCmds);
+		} catch (NoAddException e) {
+			preCmds.markDead();
 		}
 		
-		if (preCmds.isDead() || postCmds.isDead())
-			return UnexecutableCommand.INSTANCE;
+		if (preCmds.isDead() || postCmds.isDead()) {
+			result.setCommand(UnexecutableCommand.INSTANCE);
+			return result;
+		}
 				
-		if (!children.isEmpty() || origSize == 0) {
-			// Either there are childre.
+		if (!result.getChildren().isEmpty() || origSize == 0) {
+			// Either there are children.
 			// Or it  could be that the handlers simply removed them all. If they did, then this is valid and we shouldn't go on to getAddCommand.
 			// This is because if we sent an empty list into getAddCommand some subclasses treat this as invalid. But the handlers have determined
 			// that it is valid. If children is empty and original is empty then the handlers didn't do it, so let normal processing handle it.
-			getAddCommand(children, positionBeforeChild, preCmds);
+			getAddCommand(result.getChildren(), positionBeforeChild, preCmds);
 		}
 		
 		preCmds.append(postCmds.getCommand());
 		if (preCmds.isEmpty() || preCmds.isDead())
-			return UnexecutableCommand.INSTANCE;
+			result.setCommand(UnexecutableCommand.INSTANCE);
 		else
-			return preCmds.getCommand();
+			result.setCommand(preCmds.getCommand());
+		return result;
 		
 	}
 
+	/**
+	 * Add the children and put the commands into the command builder.
+	 * <p>
+	 * The default implementation will get the containment feature and then call {@link #getAddCommand(List, Object, EStructuralFeature)}.
+	 * Subclasses should not normally override this method or {@link #getAddCommand(List, Object, EStructuralFeature)}, instead they should
+	 * normally override {@link #primAddCommand(List, Object, EStructuralFeature)}.
+	 * @param children
+	 * @param positionBeforeChild
+	 * @param cbldr
+	 * 
+	 * @since 1.2.0
+	 */
 	protected void getAddCommand(List children, Object positionBeforeChild, CommandBuilder cbldr) {
 		EStructuralFeature containmentSF = getContainmentSF(children, positionBeforeChild, ADD_REQ);
 		if (containmentSF == null)

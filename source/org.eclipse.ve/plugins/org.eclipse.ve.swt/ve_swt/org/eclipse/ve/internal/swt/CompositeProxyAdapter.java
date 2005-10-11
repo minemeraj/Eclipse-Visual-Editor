@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.39 $ $Date: 2005-10-05 17:42:13 $
+ * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.40 $ $Date: 2005-10-11 21:23:47 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -189,16 +189,6 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
             }
         }
 		
-	}
-	
-	protected void setupBeanProxy(IBeanProxy beanProxy) {
-		super.setupBeanProxy(beanProxy);
-		// TODO Hack for now till I can talk this through with Rich properly - JRW
-		// If we don't declare the fact that implicit allocation is not owned then we dispose them
-		// and we shouldn't as it is the responsibility of the owner to dispose them		
-		if (getJavaObject().isImplicitAllocation()) {
-			setOwnsProxy(false);
-		}
 	}
 
 	/**

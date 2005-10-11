@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: BeanPropertyDescriptorAdapter.java,v $
- *  $Revision: 1.24 $  $Date: 2005-10-06 15:18:33 $ 
+ *  $Revision: 1.25 $  $Date: 2005-10-11 21:23:48 $ 
  */ 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -72,7 +72,7 @@ public CellEditor createPropertyEditor(Composite parent){
 	else if ("".equals(editorClassNameAndData)) //$NON-NLS-1$
 		return null;	// Specifically requested no cell editor
 	
-	if (!((EStructuralFeature) getTarget()).isChangeable())
+	if (isReadOnly())
 		return null;	// The feature is a read-only, so no editor to allow changes
 	
 	PropertyDecorator propertyDecorator = null;  // Decorator holding java.beans.PropertyDescriptor information from the BeanInfo
@@ -346,7 +346,12 @@ public String getDescription(){
 }
 
 public boolean isReadOnly(){
-	return !(((EStructuralFeature) getTarget()).isChangeable());
+	if (!(((EStructuralFeature) getTarget()).isChangeable()))
+		return true;	// Explicitly not changeable.
+	PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator((EModelElement)target);
+	if (propertyDecorator.isSetDesignTime() && propertyDecorator.isDesignTime())
+		return false;	// Explicitly isDesignTime, which makes it changable, so not read-only.
+	return !propertyDecorator.isWriteable();	// Not writable, so is read-only.
 }
 
 public String primGetDisplayName(){

@@ -11,7 +11,7 @@
 package org.eclipse.ve.examples.cdm.dept.ui;
 /*
  *  $RCSfile: CompanyContainerPolicy.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:16:43 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-11 21:23:51 $ 
  */
 
 import java.util.*;
@@ -40,33 +40,40 @@ public class CompanyContainerPolicy extends ContainerPolicy {
 	/**
 	 * Add a  child.
 	 */
-	public Command getAddCommand(List children, Object position) {
+	public Result getAddCommand(List children, Object position) {
+		Result result = new Result(children);
 		Iterator itr = children.iterator();
 		while (itr.hasNext()) {
 			Object child = itr.next();
-			if (!(child instanceof Department))
-				return UnexecutableCommand.INSTANCE;
+			if (!(child instanceof Department)) {
+				result.setCommand(UnexecutableCommand.INSTANCE);
+				return result;
+			}
 		}
 		
-		return new AddDepartmentsCommand((Company) container, children, (Department) position);
+		result.setCommand(new AddDepartmentsCommand((Company) container, children, (Department) position));
+		return result;
 	}
 	
 	/**
 	 * Create a  child.
 	 */
-	public Command getCreateCommand(Object child, Object position) {
-		if (!(child instanceof Department))
-			return UnexecutableCommand.INSTANCE;
+	public Result getCreateCommand(List children, Object position) {
+		Result result = new Result(children);
+		for (Iterator itr=children.iterator(); itr.hasNext(); ) {
+			if (!(itr.next() instanceof Department)) {
+				result.setCommand(UnexecutableCommand.INSTANCE);
+				return result;
+			}
+		}
 			
 		Company parent = (Company) container;
-		Department dept = (Department) child;
 		
-		List children = new ArrayList(1);
-		children.add(child);
 		CompoundCommand cc = new CompoundCommand();
-		cc.append(new UniqueDepartmentName(parent, dept));	// Since this is a new department, need to verify the names are unique.
+		cc.append(new UniqueDepartmentName(parent, children));	// Since this is a new department, need to verify the names are unique.
 		cc.append(new AddDepartmentsCommand(parent, children, (Department) position));
-		return AnnotationPolicy.getCreateRequestCommand(AnnotationPolicy.getAllAnnotations(new ArrayList(), child, domain.getAnnotationLinkagePolicy()), cc, domain);
+		result.setCommand(AnnotationPolicy.getCreateRequestCommand(AnnotationPolicy.getAllAnnotations(new ArrayList(), children, domain.getAnnotationLinkagePolicy()), cc, domain));
+		return result;
 	}
 	
 	/**

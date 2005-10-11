@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NullLayoutEditPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-11 21:23:50 $ 
  */
 import java.util.Collections;
 
@@ -26,6 +26,7 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
+import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 import org.eclipse.ve.internal.cde.core.XYLayoutEditPolicy;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
@@ -64,7 +65,7 @@ protected Command createAddCommand(EditPart childEditPart, Object constraint) {
 	// We need to create a constraint and send this and the child over to the container policy.
 	Object child = childEditPart.getModel();
 	NullLayoutPolicyHelper.NullConstraint nullconst = new NullLayoutPolicyHelper.NullConstraint((Rectangle) constraint, true, true);	
-	return helper.getAddChildrenCommand(Collections.singletonList(child), Collections.singletonList(nullconst), null);
+	return helper.getAddChildrenCommand(Collections.singletonList(child), Collections.singletonList(nullconst), null).getCommand();
 }
 
 protected Command getCreateCommand(CreateRequest aRequest) {
@@ -73,7 +74,7 @@ protected Command getCreateCommand(CreateRequest aRequest) {
 	
 	NullLayoutPolicyHelper.NullConstraint nullconst = new NullLayoutPolicyHelper.NullConstraint((Rectangle) constraint, true, true);
 	
-	return helper.getCreateChildCommand(child, nullconst, null);
+	return helper.getCreateChildCommand(child, nullconst, null).getCommand();
 }
 
 protected Command getDeleteDependantCommand(Request aRequest) {

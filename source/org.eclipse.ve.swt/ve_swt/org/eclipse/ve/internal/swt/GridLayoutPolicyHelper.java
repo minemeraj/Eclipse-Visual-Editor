@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.34 $  $Date: 2005-10-03 19:20:48 $
+ *  $Revision: 1.35 $  $Date: 2005-10-11 21:23:47 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -645,7 +645,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 										// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
 										EObject beforeObject = findNextValidObject(childRect.x + childRect.width, childRect.y + childRect.height - 1);
 										for (int j = 0; j < rect.width - newgridDataWidth; j++) {
-											componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+											componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject).getCommand());
 										}
 										childRect.y--;
 									}
@@ -688,7 +688,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 										// otherwise put a filler label in place of the cell the is left open by decrementing the vertical span
 										EObject beforeObject = findNextValidObject(childRect.x + 1, childRect.y + childRect.height - 1);
 										for (int j = 0; j < rect.width; j++) {
-											componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+											componentCB.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject).getCommand());
 										}
 										childRect.y--;
 									}
@@ -763,7 +763,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		if (atRow >= table[0].length) {
 			for (int i = 0; i < table.length; i++) {
 				if (table[i][table[0].length-1] == EMPTY)
-					cb.append(policy.getCreateCommand(createFillerLabelObject(), null));
+					cb.append(policy.getCreateCommand(createFillerLabelObject(), null).getCommand());
 			}
 		}
 		
@@ -790,7 +790,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			}
 			if (addFiller)
 				// These are the columns where the empty labels are put
-				cb.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+				cb.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject).getCommand());
 		}
 		return cb.getCommand();
 	}
@@ -828,7 +828,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				}
 				if (addFiller)
 					// These are the columns where the empty labels are put
-					cb.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+					cb.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject).getCommand());
 			}
 		}
 		return cb.getCommand();
@@ -855,7 +855,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				cb.append(getCommandForAddCreateMoveChild(request, addedControl, beforeObject));
 			else if (table[i][cell.y] == EMPTY)
 				// These are the columns where the empty labels are put
-				cb.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject));
+				cb.append(policy.getCreateCommand(createFillerLabelObject(), beforeObject).getCommand());
 		}
 		return cb.getCommand();
 	}
@@ -919,7 +919,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 						child = ((FillerLabel)child).realObject;
 				} else 
 					child = null;
-				cb.append(policy.getCreateCommand(createFillerLabelObject(), child));
+				cb.append(policy.getCreateCommand(createFillerLabelObject(), child).getCommand());
 			}
 		}
 		return cb.getCommand();
@@ -945,7 +945,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			if (i == table[0].length - 1) {
 				for (int j = 0; j < table.length; j++) {
 					if (table[j][i] == EMPTY)
-						cb.append(policy.getCreateCommand(createFillerLabelObject(), null));
+						cb.append(policy.getCreateCommand(createFillerLabelObject(), null).getCommand());
 				}
 			}
 			if (table[atColumn][i] != EMPTY) {
@@ -979,7 +979,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 						// a control that spans horizontal, not vertically, and starts atColumn.
 						if ((rect.width == defaultHorizontalSpan && rect.height == defaultVerticalSpan)
 								|| (rect.width > defaultHorizontalSpan && rect.height == defaultVerticalSpan && rect.x == atColumn))
-							cb.append(policy.getCreateCommand(createFillerLabelObject(), child));
+							cb.append(policy.getCreateCommand(createFillerLabelObject(), child).getCommand());
 
 						// If the column is going through a control that is spanning more than one column,
 						// we need to expand it by one instead of adding filler. Only do this if
@@ -992,18 +992,18 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 						// the control after this one... or at the end (nextChild=null)
 						else if (rect.height > defaultVerticalSpan) {
 							if (rect.y == i)
-								cb.append(policy.getCreateCommand(createFillerLabelObject(), child));
+								cb.append(policy.getCreateCommand(createFillerLabelObject(), child).getCommand());
 							else {
 								EObject nextChild = null;
 								if (atColumn + 1 < numColumns)
 									nextChild = findNextValidObject(atColumn + 1, i);
 								else if (i + 1 < table[0].length)
 									nextChild = findNextValidObject(0, i + 1);
-								cb.append(policy.getCreateCommand(createFillerLabelObject(), nextChild));
+								cb.append(policy.getCreateCommand(createFillerLabelObject(), nextChild).getCommand());
 							}
 						}
 					} else
-						cb.append(policy.getCreateCommand(createFillerLabelObject(), child));
+						cb.append(policy.getCreateCommand(createFillerLabelObject(), child).getCommand());
 				}
 			}
 		}
@@ -1065,7 +1065,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				// If the deleted child spans horizontally, loop through and create appropriate
 				// number of filler labels.
 				for (int j = 0; j < rect.width; j++) {
-					cb.append(policy.getCreateCommand(createFillerLabelObject(), nextChild));
+					cb.append(policy.getCreateCommand(createFillerLabelObject(), nextChild).getCommand());
 				}
 			}
 		}
@@ -1098,7 +1098,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				if (nextChild == beforeChild)
 					nextChild = movedChild;
 				for (int j = 0; j < rect.width; j++) {
-					cb.append(policy.getCreateCommand(createFillerLabelObject(), nextChild));
+					cb.append(policy.getCreateCommand(createFillerLabelObject(), nextChild).getCommand());
 				}
 			}
 		}
@@ -1452,10 +1452,10 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	private Command getCommandForAddCreateMoveChild(Request request, Object child, Object beforeObject) {
 		CommandBuilder cb = new CommandBuilder();
 		if (request instanceof CreateRequest)
-			cb.append(policy.getCreateCommand(child, beforeObject));
+			cb.append(policy.getCreateCommand(child, beforeObject).getCommand());
 		else if (request instanceof ChangeBoundsRequest) {
 			if (RequestConstants.REQ_ADD.equals(request.getType()))
-				cb.append(policy.getAddCommand(Collections.singletonList(child), beforeObject));
+				cb.append(policy.getAddCommand(Collections.singletonList(child), beforeObject).getCommand());
 			else
 				cb.append(policy.getMoveChildrenCommand(Collections.singletonList(child), beforeObject));
 			
