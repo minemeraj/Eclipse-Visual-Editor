@@ -16,7 +16,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ve.internal.swt.targetvm.PreventShellCloseMinimizeListener;
 
 import com.ibm.jve.sample.core.UIContainer;
 
@@ -66,7 +65,6 @@ protected static Composite getWorkbenchShell(){
 //		Shell dialogParent = new Shell();
 //		shell = new Shell(dialogParent,SWT.SHELL_TRIM);
 		shell = new Shell();
-		shell.addShellListener(new PreventShellCloseMinimizeListener());
 		shell.setBounds(fx,fy,200,200);
 		shell.setText("UIContainerHost");
 		shell.setLayout(new RowLayout());

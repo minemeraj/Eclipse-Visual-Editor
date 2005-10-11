@@ -19,7 +19,7 @@ public class ConcreteUIContainer extends UIContainer {
 
 	protected void create() {
 		parent = createBaseContainer(1, false);
-		Composite c1 = createComposite(parent, 1);
+		createComposite(parent, 1);
 	}
 	
 }

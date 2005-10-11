@@ -26,6 +26,11 @@ import com.ibm.jve.sample.core.UIContainer;
  */
 public class SimpleContainer extends UIContainer {
 	private Composite parent = null;
+	protected UILabelTextPart firstName; 
+	protected Label dummy;
+	protected UILabelTextPart lastName;
+	protected Label dummy2; 	
+	protected UIDropDownComboPart prefix;
 
 	/**
 	 * 
@@ -45,11 +50,11 @@ public class SimpleContainer extends UIContainer {
 		Label name = new Label(c1, SWT.NONE);
 		name.setText("Complete Name:");
 				
-		UILabelTextPart firstName = new UILabelTextPart(c1, "First Name:");
-		Label dummy = new Label(c1, SWT.NONE);		
-		UILabelTextPart lastName = new UILabelTextPart(c1, "Last Name:");
-		Label dummy2 = new Label(c1, SWT.NONE);
-		UIDropDownComboPart prefix = new UIDropDownComboPart(c1, "Title:", new String[]{"Mr.", "Mrs.", "Ms.", "Miss.", "Dr."});
+		firstName = new UILabelTextPart(c1, "First Name:");
+		dummy = new Label(c1, SWT.NONE);		
+		lastName = new UILabelTextPart(c1, "Last Name:");
+		dummy2 = new Label(c1, SWT.NONE);
+		prefix = new UIDropDownComboPart(c1, "Title:", new String[]{"Mr.", "Mrs.", "Ms.", "Miss.", "Dr."});
 		
 
 	}

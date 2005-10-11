@@ -3,8 +3,8 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.eclipse.ve.internal.cde.palette="http:///org/eclipse/ve/internal/cde/palette.ecore"
     xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore">
   <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="UI Parts"/>
-  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/com.ibm.jve.sample/icons/label_obj.gif"
-      prototypeURI="platform:/plugin/com.ibm.jve.sample/prototypes/UILabelTextPart.xmi#UILabelTextPart_1">
+  <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.example.visualcontainment/icons/label_obj.gif"
+      prototypeURI="platform:/plugin/org.eclipse.ve.example.visualcontainment/prototypes/UILabelTextPart.xmi#UILabelTextPart_1">
     <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:ConstantString" string="Label Text"/>
   </children>
 </org.eclipse.ve.internal.cde.palette:Drawer>
