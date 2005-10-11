@@ -7,3 +7,4 @@ Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.jface.binding,
  org.junit
+Export-Package: org.eclipse.jface.tests.binding.util

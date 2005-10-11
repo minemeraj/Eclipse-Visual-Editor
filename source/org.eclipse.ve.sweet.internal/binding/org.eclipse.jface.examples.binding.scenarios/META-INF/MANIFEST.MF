@@ -10,5 +10,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.examples.rcp.adventurebuilder,
  org.eclipse.ui.examples.rcp.adventurebuilder.model,
  org.eclipse.jface.binding,
- org.eclipse.jface.examples.binding.emf
+ org.eclipse.jface.examples.binding.emf,
+ org.junit
 Eclipse-AutoStart: true
