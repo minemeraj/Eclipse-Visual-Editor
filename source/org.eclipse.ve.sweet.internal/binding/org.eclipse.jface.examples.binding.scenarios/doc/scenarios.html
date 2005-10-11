@@ -28,7 +28,7 @@ Pojo support will have to be added.</p>
 object to another. This is typically done to bind a text control to a portion of 
 a domain model. The expectation is to have a simple, one line, intuitive API:
 </p>
-<h3>First Tier Priority</h3>
+<h3>Committed Items</h3>
 <ol>
 	<li>Binding the name property of an Adventure object to the contents of Text 
 	controls, no conversion, no validation.</li>
@@ -55,33 +55,36 @@ a domain model. The expectation is to have a simple, one line, intuitive API:
 	or without the currency symbol.</li>
 	<li>Binding a boolean property to a CheckBox. Adventure will have a Boolean 
 	property “petsAllowed”</li>
+	<li>Binding a Transportation departure time to a Text control that formats 
+	and validates the time to and from a String. There are property bindings 
+	that bind elements of the GUI to elements to GUI and also elements of the 
+	domain to elements of the domain.</li>
+	<li>Binding the max value of a spinner to another spinner.</li>
+	<li>Binding the enabled state of several Text controls to a check box. There 
+	will be two check boxes, so as each is enabled/disabled the other one 
+	follows as do the states of the Text controls.</li>
+	<li>Changing the update policy to be not automatic, but on explicit method
+	call (e.g. triggered by a button click)</li>
+</ol>
+<h3>Proposed Items</h3>
+<ol>
+	<li>Binding the name property of an Adventure object to the contents of Text 
+	controls where the update of the Adventure model object occurs on key 
+	stroke, occurs on focus being lost, and occurs with an explicit “Apply” 
+	button.</li>
 	<li>Binding a boolean property to a Radio Button set of Yes/No</li>
 	<li>Binding an int property that accepts different static values to a radio 
 	button set that displays the values. Adventure will have an int property 
 	called “transport” with int values of 0=”Bus”, 2=”Self Drive”, 3=”Taxi”. 
 	This could also be done with a 1.5 version using an Enum.</li>
-	<li>Binding a Transportation departure time to a Text control that formats 
-	and validates the time to and from a String. There are property bindings 
-	that bind elements of the GUI to elements to GUI and also elements of the 
-	domain to elements of the domain.</li>
-	<li>Binding the max value of a spinner to another spinner. </li>
-	<li>Binding the enabled state of several Text controls to a check box. There 
-	will be two check boxes, so as each is enabled/disabled the other one 
-	follows as do the states of the Text controls. </li>
 	<li>Binding the enabled state of a Text control to a radio button set that 
 	represents the states “enabled” and “disabled”. There will be a check box as 
 	well that shadows the enabled state and also drives it that affects the 
 	radio button set as well as the radio button set affecting the check box.</li>
 </ol>
-<h3>Second Tiered Priority</h3>
-<ol>
-	<li>Binding the name property of an Adventure object to the contents of Text 
-	controls where the refresh from the GUI to the Adventure occurs on key 
-	stroke, occurs on focus being lost, and occurs with an explicit “Apply” 
-	button.</li>
-</ol>
+<h3>Deferred Items</h3>
 <h2>Custom Binding</h2>
-<h3>First Tier</h3>
+<h3>Committed Items</h3>
 <ol>
 	<li>Binding the price property of an Adventure to two spinner controls – one 
 	that shows the dollar portion and one that shows the cents.</li>
@@ -95,7 +98,8 @@ a domain model. The expectation is to have a simple, one line, intuitive API:
 	derived property would refresh itself if either of the properties that make 
 	it up (name and description) change.</li>
 </ol>
-<h3>Second Tiered Priority</h3>
+<h3>Proposed Items</h3>
+<h3>Deferred Items</h3>
 <h2>List binding</h2>
 <p>A common scenario is that a control like a combo, List, Tree or Table 
 displays some data that represents a collection of objects. Selection of a 
