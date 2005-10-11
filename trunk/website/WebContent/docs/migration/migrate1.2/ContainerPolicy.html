@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Override Files Migration Instructions</title>
+<link rel="stylesheet" href="http://dev.eclipse.org/default_style.css" type="text/css">
+ <style type="text/css">
+  .PictureParagraph { margin-left: 10% }
+  .PictureStyle { border-style: ridge; border-width: 1px; padding: 1px }
+  
+  </style>
+</head>
+
+<body>
+
+<table border="0" cellpadding="2" width="100%">
+  <tbody>
+    <tr>
+      <td align="left" width="60%">
+	<font class="indextop">ContainerPolicy/ILayoutPolicyHelper Migration</font><br>
+         <font class="indexsub">Migration of ContainerPolicy and ILayoutPolicyHelper</font></td>
+      <td width="40%">
+	<img hspace="50" align="right" src="../../../images/reference.gif">
+      </td>
+    </tr>
+  </tbody>                                      
+</table>
+
+&nbsp;<br>
+<P>The ContainerPolicy and it subclasses and ILayoutPolicyHelper have been changed. The basic change is that there is now the capability of dropping one class and having a different class be the actual class dropped. </P>
+
+<table border="0" cellpadding="2" width="100%">
+<tbody>
+  <tr>
+    <td align="left" valign="top" bgcolor="#0070a0">
+      <A name="description"><B><FONT color="#ffffff"
+				face="Arial,Helvetica">Description</FONT></B></A> 
+    </td>
+  </tr>
+</tbody>            
+</table>
+<P>To allow this we now have the concept of changing the object
+being dropped depending on the parent.</P>
+<P>This may sound weird, but take JFace TreeViewer as an example. What
+we want is to take a TreeViewer from the palette and drop it on a
+Composite. What we want to happen then is a TreeViewer is created, and
+then the &quot;tree&quot; property of the TreeViewer is added as the
+child of the Composite, and not the TreeViewer itself. Or take the case
+of dropping the TreeViewer onto a Tree. In this case we want a
+TreeViewer created that points to the Tree, but there is no child added
+to the Tree itself. The current structure doesn't permit this. The
+object in the loaded cursor is what must be dropped. So to do this in
+the current way is we would need to drop the TreeViewer onto the
+freeform, and then set the Tree from it into the Composite. This is
+cumbersome.</P>
+<P>ContainerPolicy has been changed such that on adds and creates it will get the IContainmentHandler for the object that is being dropped, and it will ask it to contribute to the drop. The IContainmentHandler has the options of:<BR>
+</P>
+<UL>
+	<LI><B>Doing Nothing</B>: In this case the ContainerPolicy will take the object being dropped, treat it as a normal child as in the past and add it to the parent if it is valid.</LI>
+	<LI><B>Return a different child</B>: In this case the ContainerPolicy will take the different child and treat it as the object being dropped instead and do the normal processing with the new child instead.</LI>
+	<LI><B>Do everything</B>: In this case it returns no child so the ContainerPolicy will treat it as if no child was being added. The handler would of created all of the necessary commands to do what it wanted to do.</LI>
+	<LI><B>Combination of the above</B>: It can do any combination of the above, such as return the same child, but create some commands that should also be executed, return a different child but create some commands that should be executed, return no child but create some commands that should also be executed.</LI>
+	<LI><B>Stop the drop</B>: One final option is that the handler can tell the ContainerPolicy that it should not allow any drops at all. For example this could be used to indicate that the child does not accept the parent as a parent. An example of this would be SWT Shell as the child. Shell can't be a child of any Composite, but Shell subclasses Control, so the Composite would think that Shell is valid child. So the Shell handler would indicate that it can't be dropped on a Composite.</LI>
+</UL>
+<P>The IContainmentHandler is an instance of an IModelAdapter. The override file for a class would indicate what IModelAdapter to use for a class. The ContainerPolicy gets the IContainmentHandler for the class of the object being dropped. This is how the override file specifies the IModelAdapter:<BR>
+</P>
+<PRE style="background-color: #eeeeee">
+   &lt;objectsToAttach xsi:type=&quot;org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator&quot;
+ <IMG style="width: 24px; height: 13px;" border="0"
+	src="http://eclipse.org/articles/images/tag_1.gif">    modelAdapterClassname=&quot;org.eclipse.ve.swt/org.eclipse.ve.internal.jface.TreeViewerContainmentHandler&quot; 
+        xmi:id=&quot;_eAnnotations1&quot;/&gt;
+</PRE>
+<P>The line at <IMG border="0"
+	src="http://eclipse.org/articles/images/tag_1.gif"> shows the class name of the IModelAdapter for the JFace TreeViewer.</P>
+<P>Here is the java doc for the IContainmentHandler's contribute method:<BR>
+</P>
+<PRE style="background-color: #eeeeee"><FONT size="-1">public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException;
+------<P>Handle contribution to create/add request.</P><P>The handler can do: 
+</P>
+<OL>
+<LI><B>Nothing:</B> In which case it should just return the child as entered. 
+This means it had nothing to contribute. 
+</LI>
+	<LI><B>Handle everything:</B> In which case it should return <CODE>null</CODE> 
+and use the pre/post Cmd Builders to do it. 
+</LI>
+	<LI><B>Reject parent or some other error:</B> In which case it should throw the 
+NoAddException. This is for when the parent is not valid for this child, or for 
+some other reason the child could not be added as determined by this handler. 
+</LI>
+	<LI><B>Add to the request:</B> In which case it should return the child as 
+entered. And use the pre/post Cmd builders to do the additions. 
+</LI>
+	<LI><B>Replace the request:</B> In which case it should return a different 
+child. This different child is the one that will be added instead. In this case 
+this different child <B>WILL NOT</B> have its IContainmentAdapter called on it. 
+It will be assumed to be good and will be added. It must be a valid child for 
+the parent so that the parent ContainerPolicy can add it. 
+</LI>
+	<LI><B>Combination of Add to request and replace the request:</B> In which case 
+it would use the pre/post Cmd builders and return a different child. </LI>
+</OL>
+<P><B>Note:</B>Some important restrictions. For a create, at the time of the 
+call, the child is not yet in any resourceSet. You should use either edit domain 
+or the parent to find the resourceSet. 
+</P>
+<DL>
+<DT>Parameters:
+</DT>
+	<DD><B>parent</B> parent being added to
+</DD>
+	<DD><B>child</B> child being added.
+</DD>
+	<DD><B>preCmds</B> CommandBuilder for commands to be executed before any of the 
+child/children are added. Handler may add to this command builder any commands 
+it wants to be executed before the actual adds.
+</DD>
+	<DD><B>postCmds</B> CommandBuilder for commands to be executed after all of the 
+child/children are added. Handler may add to this command builder any commands 
+it wants to be executed after the actual adds.
+</DD>
+	<DD><B>creation</B> <CODE>true</CODE> if this a creation request. 
+<CODE>false</CODE> if this is an add request.
+</DD>
+	<DT>Returns:
+</DT>
+	<DD>child to add instead of (or the same child) as the child sent it, or 
+<CODE>null</CODE> if no add is to be done. Though the command builders will 
+still be added to the request. This child, if different than the one sent into 
+the method, will not have an IContainmentHandler called against it. It is 
+assumed that the child is fine and can be added. (The only check that will be 
+done is if the child is a valid type for parent). Implementers must handle if 
+they changed the child for a non-creation required, they must decide if the 
+child should be deleted because it should no longer be in the model. If they 
+decide that they must put in postCmd code to delete it.
+</DD>
+	<DT>Throws:
+</DT>
+	<DD>NoAddException if the handler determines that the child should not be added 
+to the parent.
+</DD>
+	<DT>@since
+</DT>
+	<DD>1.2.0</DD>
+</DL></FONT></PRE>
+<P></P>
+<TABLE border="0" cellpadding="2" width="100%">
+	<TBODY>
+		<TR>
+			<TD align="left" valign="top" bgcolor="#0070a0"><A
+				name="migration"><B><FONT color="#ffffff" face="Arial,Helvetica">Migration</FONT></B></A>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P>Now here are the major changes for migration. There is no migration utility. Code will need to be changed. It is not compatible with older subclasses.</P>
+<H1>org.eclipse.ve.internal.cde.core.ContainerPolicy</H1>
+<P>The getAddCommand and the getCreateCommand now return a ContainerPolicy.Result instance instead of a command. The reason for this is because some callers may need to know the actual children that were dropped, not just the command that will be used to perform the drop. The Result class has an accessor to get both the command to use and the list of real children added or created.</P>
+<H1>org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy</H1>
+<P>The getAddCommand and getCreateCommand have been made final. The reason for this is to make sure that the processing the IContainmentHandler is performed. Sometimes these methods had been overridden and tried to do something different. If they had not been made final then it would be very easy to have the IContainmentHandler processing skipped. These methods will do the IContainmentHandler processing and then call delegate methods with the revised true list of children. Subclasses need to implement the appropriate delegate methods instead of these methods. See the javadoc for the <code>getCreateCommand(List children, Object positionBeforeChild, CommandBuilder cbldr)</code> and the <code>getAddCommand(List children, Object positionBeforeChild, CommandBuilder cbldr)</code> for how overrides should be done.</P>
+<H1>org.eclipse.ve.internal.java.visual.VisualContainerPolicy</H1>
+<P>The getAddCommand and getCreateCommand that took children and constraints have been made final and return a VisualContainerPolicy.CorelatedResult instance instead of a command. The reason for this is to make sure that the processing the IContainmentHandler is performed. Sometimes these methods had been overridden and tried to do something different. If they had not been made final then it would be very easy to have the IContainmentHandler processing skipped. These methods will do the IContainmentHandler processing and then call delegate methods with the revised true list of children. Subclasses need to implement the appropriate delegate methods instead of these methods. The results has an accessor to get the children acutally dropped, and also the list of constraints that are associated with each child in the children list. The constraints themselves will not actually be changed, just some may of been removed from the list if the cooresponding child by index was removed from the original children list.</P>
+<P>See the javadoc and implementation of VisualContainerPolicy getAddCommand and getCreateCommand to see what is changed and how subclasses need to be changed.</P>
+<H1>org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper</H1>
+<P>The getAddCommand and getCreateCommand have been changed to return a VisualContainerPolicy.CorelatedResult instead of a command. This go in hand with the same changes made to the VisualContainerPolicy.</P>
+<P>Many other classes have been changed too, but they were changed just to match the new methods and the new Result class. To see a use of the Result class look at org.eclipse.ve.internal.jfc.core.NullLayoutPolicyHelper.getAddCommand.</P>
+<PRE style="background-color: #eeeeee">public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
+	EClass constraintComponentClass = (EClass) ((EObject) policy.getContainer()).eResource().getResourceSet().getEObject(JFCConstants.CLASS_CONTAINER_CONSTRAINTCOMPONENT, true);
+	EFactory visualFact = JFCConstants.getFactory(constraintComponentClass);
+	ArrayList componentConstraints = new ArrayList(childrenComponents.size());
+	for (int i=0; i&lt;childrenComponents.size(); i++) {
+		EObject constraintComponent = visualFact.create(constraintComponentClass);
+		constraintComponent.eSet(JavaInstantiation.getSFeature((IJavaObjectInstance) policy.getContainer(), JFCConstants.SF_CONSTRAINT_CONSTRAINT),  null);	// Put the null into the constraint component so that nothing is added in the add
+<IMG style="width: 24px; height: 13px;" border="0"
+	src="http://eclipse.org/articles/images/tag_1.gif">		componentConstraints.add(new NullConstraintWrapper(constraintComponent, (NullConstraint) constraints.get(i)));
+	}
+	
+	VisualContainerPolicy.CorelatedResult result = policy.getAddCommand(componentConstraints, childrenComponents, position);		
+	CompoundCommand command = new CompoundCommand();
+<IMG style="width: 24px; height: 13px;" border="0"
+	src="http://eclipse.org/articles/images/tag_2.gif">	command.append(getChangeConstraintCommand(result.getChildren(), result.getCorelatedList()));
+	command.append(result.getCommand());
+	result.setCommand(command.unwrap());
+	return result;
+}
+
+private static class NullConstraintWrapper extends VisualContainerPolicy.ConstraintWrapper {
+
+	public final NullConstraint nullConstraint;
+
+	public NullConstraintWrapper(Object constraintComponent, NullConstraint nullConstraint) {
+		super(constraintComponent);
+		this.nullConstraint = nullConstraint;
+	}
+	
+}
+
+public Command getChangeConstraintCommand(List children, List constraints) {
+	Iterator childItr = children.iterator();
+	Iterator conItr = constraints.iterator();
+	CompoundCommand cmd = new CompoundCommand();
+	while (childItr.hasNext()) {
+		Object constraint = conItr.next();
+		// It may of been passed in from getAdd which would of had constraint wrapper instead.
+<IMG style="width: 24px; height: 13px;" border="0"
+	src="http://eclipse.org/articles/images/tag_3.gif">		if (constraint instanceof NullConstraintWrapper)
+			constraint = ((NullConstraintWrapper) constraint).nullConstraint;
+		cmd.append(createChangeConstraintCommand((IJavaObjectInstance) childItr.next(), (NullConstraint) constraint));
+	}
+	
+	return !cmd.isEmpty() ? cmd.unwrap() : null;
+}</PRE>
+<H1></H1>
+<P><IMG style="width: 24px; height: 13px;" border="0"
+	src="http://eclipse.org/articles/images/tag_1.gif"> Here we are building up the list of constraints to use for the components. We use a new inner class called NullConstraintWrapper. This guy wrappers the constraintComponent, which is required by the awt VisualContainerPolicy, and the separate NullConstraint, which is the bounds of the component being added. The null constraint wrapper returns the constraintComponent for the constraint inside the VisualContainerPolicy.</P>
+<P><IMG style="width: 24px; height: 13px;" border="0"
+	src="http://eclipse.org/articles/images/tag_2.gif"> Here we send the list of true children along with the coorresponding list of NullConstraintWrappers to the change constraint command.</P>
+<P><IMG style="width: 24px; height: 13px;" border="0"
+	src="http://eclipse.org/articles/images/tag_3.gif"> Here we check to see if the constraint is a NullConstraintWrapper, and if it is we get the null constraint out of it instead. This method, getChangeConstraint, could of been called by itself, in which case the list of constraints would of all been null constraints. That is why the instanceof check is performed.</P>
+<H1></H1>
+</BODY>
+</HTML>
