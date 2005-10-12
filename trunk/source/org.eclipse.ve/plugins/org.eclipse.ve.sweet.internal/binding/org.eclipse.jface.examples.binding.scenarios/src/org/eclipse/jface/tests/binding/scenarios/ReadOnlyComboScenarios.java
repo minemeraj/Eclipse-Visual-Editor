@@ -12,14 +12,15 @@
  *  Created Oct 12, 2005 by Gili Mendel
  * 
  *  $RCSfile: ReadOnlyComboScenarios.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-12 17:54:15 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-12 18:02:34 $ 
  */
  
 package org.eclipse.jface.tests.binding.scenarios;
 
 import java.util.*;
 
-import org.eclipse.jface.binding.*;
+import org.eclipse.jface.binding.BindingException;
+import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
@@ -37,6 +38,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		super.setUp();	
 		combo = new Combo (getComposite(), SWT.READ_ONLY|SWT.DROP_DOWN);
 		cviewer = new ComboViewer(combo);
+		
 		
 	}
 
