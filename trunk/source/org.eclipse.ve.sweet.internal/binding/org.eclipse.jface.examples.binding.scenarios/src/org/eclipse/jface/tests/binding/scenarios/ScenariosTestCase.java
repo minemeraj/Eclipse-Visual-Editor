@@ -51,7 +51,10 @@ abstract public class ScenariosTestCase extends TestCase {
 	}
 
 	protected void spinEventLoop(int secondsToWaitWithNoEvents) {
-		while (!composite.getDisplay().readAndDispatch())
+		if(!composite.isVisible()) {
+			composite.getShell().open();
+		}
+		while (composite.getDisplay().readAndDispatch())
 			;
 		try {
 			Thread.sleep(secondsToWaitWithNoEvents * 1000);
