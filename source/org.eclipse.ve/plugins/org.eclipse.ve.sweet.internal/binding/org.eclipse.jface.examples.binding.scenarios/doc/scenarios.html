@@ -210,6 +210,15 @@ selection.</p>
 <ol>
 	<li>Provide element filtering (not every element is to be shown).</li>
 </ol>
+<h2>Error detection scenarios</h2>
+<h3>Proposed Items</h3>
+<ol>
+	<li>Binding to a non-existing (null) or disposed control should generate a BindingException.</li>
+	<li>Binding to a non-existing feature id for a control (say, the max value of a text widget) should generate a BindingException.</li>
+	<li>Binding to a null model object should throw a BindingException.</li>
+	<li>Binding to a non-existing feature id for a model object (say, the foo feature of an Adventure object) should throw a BindingException.</li>
+	<li>Providing converters that don't convert to or from the correct type should throw a BindingException.</li>
+</ol>
 <h2>Other event models</h2>
 <ol>
 	<li>The EMF event model has a build in event notification model which helps 
