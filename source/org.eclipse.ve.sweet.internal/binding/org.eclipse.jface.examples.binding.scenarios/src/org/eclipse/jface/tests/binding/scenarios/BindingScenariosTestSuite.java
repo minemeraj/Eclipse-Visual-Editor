@@ -58,6 +58,7 @@ public class BindingScenariosTestSuite extends TestSuite {
 
 	public BindingScenariosTestSuite() {
 		addTestSuite(PropertyScenarios.class);
+		addTestSuite(CustomScenarios.class);		
 	}
 
 	public static Shell getShell() {
