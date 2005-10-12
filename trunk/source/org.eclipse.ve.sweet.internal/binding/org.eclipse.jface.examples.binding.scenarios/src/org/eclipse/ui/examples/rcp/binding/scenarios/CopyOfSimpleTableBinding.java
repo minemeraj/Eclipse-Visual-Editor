@@ -60,6 +60,7 @@ public class CopyOfSimpleTableBinding extends Composite {
 
 		final Catalog catalog = SampleData.CATALOG_2005;
 		
+		/*
 		theRowObject.getDateField().setData("columnIndex", "0");
 		
 		TableBindingContext bindingContext = ...bindingContext
@@ -78,7 +79,7 @@ public class CopyOfSimpleTableBinding extends Composite {
 		bindableList.addColumn("propertyName". validator); // ie: binding to a Combo
 		bindableList.addColumn("propertyName". dbs.getBindable(object, property, validator)); // ie: binding to a Combo
 		dbs.bind(bindableTable, bindableList);
-
+*/
 		
 		dbs.bindTable(dbs.createUpdatableTable(tableViewer, "contents"),
 				new EMFUpdatableTable(catalog, "lodgings", new String[] {

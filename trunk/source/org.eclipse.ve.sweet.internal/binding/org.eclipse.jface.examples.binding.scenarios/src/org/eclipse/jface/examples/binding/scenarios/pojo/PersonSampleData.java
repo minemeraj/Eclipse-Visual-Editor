@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PersonSampleData.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-12 12:10:12 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-12 18:06:54 $ 
  */
 package org.eclipse.jface.examples.binding.scenarios.pojo;
 
@@ -26,6 +26,7 @@ import org.eclipse.jface.binding.swt.SWTDatabindingService;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
 import org.eclipse.jface.examples.binding.javabean.JavaBeanUpdatableValue;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
@@ -77,7 +78,7 @@ public class PersonSampleData {
 	
 	public static DatabindingService getSWTtoJavaBeanDatabindingService(Control aControl){
 		
-		DatabindingService dbs = new SWTDatabindingService(aControl);
+		DatabindingService dbs = new SWTDatabindingService(aControl, SWT.FocusOut, SWT.FocusOut);
 
 		IUpdatableValueFactory emfValueFactory = new IUpdatableValueFactory() {
 			public IUpdatableValue createUpdatableValue(Object object,Object attribute) {
