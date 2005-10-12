@@ -1,16 +1,12 @@
 package org.eclipse.jface.tests.binding.scenarios;
 
-import java.util.List;
-
 import junit.framework.TestCase;
 
 import org.eclipse.jface.binding.DatabindingService;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
 /**
@@ -50,6 +46,7 @@ abstract public class ScenariosTestCase extends TestCase {
 			shell.setLayout(new FillLayout());
 			result = shell;
 		}
+		result.setText(getName()); // In the case that the shell() becomes visible.
 		return result;
 	}
 
