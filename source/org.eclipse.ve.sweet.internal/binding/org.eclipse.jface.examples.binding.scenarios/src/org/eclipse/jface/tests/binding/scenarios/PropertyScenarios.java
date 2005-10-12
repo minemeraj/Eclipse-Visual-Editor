@@ -41,13 +41,17 @@ public class PropertyScenarios extends ScenariosTestCase {
 		Adventure adventure = SampleData.WINTER_HOLIDAY;
 		Text text = new Text(getComposite(), SWT.BORDER);
 		getDbs().bindValue(text, "text", adventure, "name");
-		spinEventLoop(1);
+		// uncomment the following line to see what's happening
+		// happening
+		// spinEventLoop(1);
 		assertEquals(adventure.getName(), text.getText());
 		text.setText("foobar");
-		spinEventLoop(1);
+		// uncomment the following line to see what's happening
+		// spinEventLoop(1);
 		assertEquals("foobar", adventure.getName());
 		adventure.setName("barfoo");
-		spinEventLoop(1);
+		// uncomment the following line to see what's happening
+		// spinEventLoop(1);
 		assertEquals("barfoo", text.getText());
 	}
 

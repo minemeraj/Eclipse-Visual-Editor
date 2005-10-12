@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Shell;
  * To run this test suite, right-click and select "Run As JUnit Plug-in Test".
  * This will also start an Eclipse instance. To clean up the launch configuration,
  * open up its "Main" tab and select "[No Application] - Headless Mode" as the
- * application to run.
+ * application to run. You can also run this class as an SWT application.
  */
 
 public class BindingScenariosTestSuite extends TestSuite {
@@ -44,7 +44,6 @@ public class BindingScenariosTestSuite extends TestSuite {
 					d = display;
 				}
 				shell = new Shell(d, SWT.SHELL_TRIM);
-				shell.open();
 			}
 
 			protected void tearDown() throws Exception {
