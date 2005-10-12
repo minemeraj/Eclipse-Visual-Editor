@@ -1,5 +1,7 @@
 package org.eclipse.jface.tests.binding.scenarios;
 
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.eclipse.jface.binding.DatabindingService;
@@ -26,6 +28,7 @@ abstract public class ScenariosTestCase extends TestCase {
 	private boolean disposeDisplay = false;
 
 	private Shell shell;
+
 
 	protected Composite getComposite() {
 		return composite;
