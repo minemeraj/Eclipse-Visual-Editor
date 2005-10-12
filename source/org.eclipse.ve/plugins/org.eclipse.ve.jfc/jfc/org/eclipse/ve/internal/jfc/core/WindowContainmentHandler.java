@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WindowContainmentHandler.java,v $ $Revision: 1.1 $ $Date: 2005-10-03 19:21:01 $
+ * $RCSfile: WindowContainmentHandler.java,v $ $Revision: 1.2 $ $Date: 2005-10-12 15:45:14 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -203,12 +203,14 @@ public class WindowContainmentHandler extends ComponentModelAdapter implements I
 					// Null ctor and on free form is just do as is.
 					if (parent != freeform)
 						throw new NoAddException("Child can only be dropped on free form surface or a valid parent.");
-				}
+				} else
+					throw new NoAddException("Child has no valid parents and no null constructor. Cannot be dropped.");
 			} else if (hasNullConstructor) {
 				// Null ctor and on free form is just do as is.
 				if (parent != freeform)
 					throw new NoAddException("Child can only be dropped on free form surface or a valid parent.");
-			}
+			} else
+				throw new NoAddException("Child has no valid parents and no null constructor. Cannot be dropped.");
 		} else if (parent != freeform)
 			throw new NoAddException("Child can only be dropped on free form surface.");	// It has an allocation. In which case we can't look into and change it at this time.
 		return childToDrop;
