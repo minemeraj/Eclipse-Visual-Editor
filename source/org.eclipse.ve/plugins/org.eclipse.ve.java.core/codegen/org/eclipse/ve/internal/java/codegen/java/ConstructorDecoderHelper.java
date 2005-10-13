@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.64 $  $Date: 2005-10-07 20:40:46 $ 
+ *  $Revision: 1.65 $  $Date: 2005-10-13 20:31:05 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -26,6 +26,8 @@ import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
+
+import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
@@ -539,25 +541,33 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 
 		fbeanPart.setImplicitParent(parent, sf);
 
+		// It is possible that during decode, and implicit BeanPart was already fluffed up.
+		// Now is the time to replace it with this bean.
+		String name = fbeanPart.getImplicitName();
+		BeanPart old = CodeGenUtil.getBeanPart(fbeanPart.getModel(), name, fOwner.getExprRef().getMethod(), fOwner.getExprRef().getOffset());
+		if (old == null)
+			old = fbeanPart.getModel().getABean(name);
+		if (old != null && old != fbeanPart) {
+			old.dispose();
+		}
 		if (updateModel) {
-			// It is possible that during decode, and implicit BeanPart was already fluffed up.
-			// Now is the time to replace it with this bean.
-			String name = fbeanPart.getImplicitName();
-			BeanPart old = CodeGenUtil.getBeanPart(fbeanPart.getModel(), name, fOwner.getExprRef().getMethod(), fOwner.getExprRef().getOffset());
-			if (old == null)
-				old = fbeanPart.getModel().getABean(name);
-			if (old != null && old != fbeanPart) {
-				old.dispose();
-			}
 			BeanPartFactory.setBeanPartAsImplicit(fbeanPart, parent, sf);
 		}
 	}
 			
 	protected void restoreImplicitInstancesIfNeeded() {
 	    EStructuralFeature sf = getRequiredImplicitFeature((IJavaObjectInstance)fbeanPart.getEObject());		
-		if (sf!=null) {			
-			BeanPartFactory bpf = new BeanPartFactory(fbeanPart.getModel(),fbeanPart.getModel().getCompositionModel());
-			bpf.restoreImplicitBeanPart(fbeanPart,sf, true);			
+		if (sf!=null) {
+			EObject implicit = (EObject) fbeanPart.getEObject().eGet(sf);
+			EStructuralFeature containingSF = implicit.eContainingFeature();
+			// Use the BeanPartFactory to create a new BeanPart only when
+			// the implicit is in the implicits of the container. Else, some 
+			// other expression will create a BeanPart, and we dont want two
+			// BeanParts with the same eObject instance.
+			if(containingSF==JCMPackage.eINSTANCE.getMemberContainer_Implicits()){
+				BeanPartFactory bpf = new BeanPartFactory(fbeanPart.getModel(),fbeanPart.getModel().getCompositionModel());
+				bpf.restoreImplicitBeanPart(fbeanPart,sf, true);
+			}
 		}
 	}
 	

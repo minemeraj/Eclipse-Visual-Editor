@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CompositionDecoderAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.13 $  $Date: 2005-10-13 20:31:05 $ 
  */
 import java.util.Iterator;
 import java.util.List;
@@ -152,6 +152,7 @@ public void notifyChanged(Notification msg){
       	      // All settings, and parent/child relationships have be set in the model
       		  processSettings(msg) ;    	
       		  break ;
+        case JCMPackage.BEAN_SUBCLASS_COMPOSITION__IMPLICITS:
         case JCMPackage.BEAN_SUBCLASS_COMPOSITION__MEMBERS:
         	  // Generate/remove meta, and skelatons in the BDM
               processMembers(msg) ;
