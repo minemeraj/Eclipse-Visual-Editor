@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.69 $  $Date: 2005-09-29 14:20:24 $ 
+ *  $Revision: 1.70 $  $Date: 2005-10-13 20:31:05 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -426,7 +426,7 @@ public class BDMMerger {
 		BeanPart newBean = newExp.getBean();
 		if(newMethodRef!=null && newExp!=null){
 			CodeMethodRef mainMethod = mainModel.getMethod(newMethodRef.getMethodHandle());
-			BeanPart mainBean = determineCorrespondingBeanPart(newBean, mainModel);
+			BeanPart mainBean = getMainBDMBean(newBean);
 			if(mainMethod!=null && mainBean!=null){
 				CodeCallBackRef callBack = new CodeCallBackRef(newExp.getExprStmt(), mainMethod);
 				callBack.setBean(mainBean);
@@ -448,11 +448,9 @@ public class BDMMerger {
 	 * 
 	 * @since 1.0.0
 	 */
-	protected boolean updateCallBackExpressions(BeanPart mainBeanPart, BeanPart updatedBeanPart){
+	protected boolean updateCallBackExpressions(List mainCallBackExpressions, List updatedCallBackExpressions){
 		boolean processed = true;
-		List mainCallBackExpressions = new ArrayList(mainBeanPart.getRefCallBackExpressions());
-		List updatedCallBackExpressions = new ArrayList(updatedBeanPart.getRefCallBackExpressions());
-		
+
 		for(int mainExpCount = 0; mainExpCount < mainCallBackExpressions.size(); mainExpCount++ ){
 			CodeCallBackRef mainExp = (CodeCallBackRef) mainCallBackExpressions.get(mainExpCount);
 			boolean equivalentExpFound = false ;
@@ -488,45 +486,7 @@ public class BDMMerger {
 		}
 		return processed;
 	}
-	
-	/**
-	 * Updates the regular and event expressions of the main BDMs beanpart with the new BDMs beanpart.
-	 *  
-	 * @param mainBeanPart
-	 * @param updatedBeanPart
-	 * @return Return whether a successful update of the main BDM has been performed.
-	 * 
-	 * @since 1.0.0
-	 */
-	protected boolean updateEventExpressions(BeanPart mainBeanPart, BeanPart updatedBeanPart){
-		List allMainBPExpressions = new ArrayList(mainBeanPart.getRefEventExpressions()) ;
-		List allUpdateBPExpressions = new ArrayList(updatedBeanPart.getRefEventExpressions()) ;
-		return processExpressions(allMainBPExpressions, allUpdateBPExpressions) ;
-	}
-	
-	/**
-	 * Updates the beanpart of the main BDM with the contents of the beanpart in the updated BDM.
-	 * Things which are updated are:
-	 *  # Method offsets of the init method of the beanpart
-	 *  # The return method of the beanpart (methods could have merged or split)
-	 *  # The call back expressions are updated
-	 *  # The regular and event expressions are updated.
-	 *  
-	 * @param mainBeanPart
-	 * @param updatedBeanPart
-	 * @return Return whether a successful update of the main BDM has been performed.
-	 * 
-	 * @since 1.0.0
-	 */
-	protected boolean updateNonRegularBeanPartExpressions(BeanPart mainBeanPart, BeanPart updatedBeanPart) {
-		updateMethodOffsetAndContent(mainBeanPart.getInitMethod(), updatedBeanPart.getInitMethod()) ;
-		updateReturnMethod(mainBeanPart, updatedBeanPart);
-		boolean update = updateCallBackExpressions(mainBeanPart, updatedBeanPart);
-		update = update && updateParentExpressions(mainBeanPart, updatedBeanPart);
-		update = update && updateEventExpressions(mainBeanPart, updatedBeanPart);
-		return update ;
-	}
-
+		
 	/**
 	 * Parent expressions are those expressions which actually belong to the passed in 'mainBeanPart',
 	 * but which physically exist in the parent's method. Ex: createComposite(); - Here the expression 
@@ -943,7 +903,7 @@ public class BDMMerger {
 	/**
 	 * Get the coresponding BeanPart
 	 */
-	private BeanPart getMainBDMBean (BeanPart b) {
+	protected BeanPart getMainBDMBean (BeanPart b) {
 		return determineCorrespondingBeanPart(b, mainModel);
 	}
 	
@@ -964,27 +924,46 @@ public class BDMMerger {
 		return merge;
 	}
 	
+	/**
+	 * Updates the beanpart of the main BDM with the contents of the beanpart in the updated BDM.
+	 * Things which are updated are:
+	 *  # The return method of the beanpart (methods could have merged or split)
+	 *  # The call back expressions are updated
+	 *  # The parent and event expressions are updated.
+	 *  
+	 * @param mainBeanPart
+	 * @param updatedBeanPart
+	 * @return Return whether a successful update of the main BDM has been performed.
+	 * 
+	 * @since 1.0.0
+	 */
 	protected boolean updateNonRegularBeanPartExpressions(){
 		boolean merge = true;
-		List mainModelBeans = mainModel.getBeans(false) ;
-		mainModelBeans = orderBeansToMerge(mainModelBeans);
+		List newModelBeans = newModel.getBeans(false) ;
+		newModelBeans = orderBeansToMerge(newModelBeans);
 		// Update changed bean parts
-		Iterator mainModelBeansItr = mainModelBeans.iterator();
+		Iterator newModelBeansItr = newModelBeans.iterator();
 		// Update all beans EXCEPT the regular expressions - they need to be done in order of expressions in method
-		while (mainModelBeansItr.hasNext()) {
+		while (newModelBeansItr.hasNext()) {
 			if (monitor.isCanceled())
 				return false;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
-			BeanPart mainBP = (BeanPart) mainModelBeansItr.next();
+			BeanPart newModelBP = (BeanPart) newModelBeansItr.next();
 			// sometimes when statements (createTable()) are disposed in other methods, the beanpart (table)
 			// is disposed. Check to see if it is still in the model before proceeding with the merge.
-			if(mainBP.getModel()==null) 
-				continue;
-			BeanPart updateBP = determineCorrespondingBeanPart(mainBP, newModel);
-			if(updateBP != null){
-				merge = merge && updateNonRegularBeanPartExpressions(mainBP, updateBP);
+			BeanPart mainModelBP = getMainBDMBean(newModelBP);
+			if(mainModelBP != null){
+				if(mainModelBP.isDisposed() || mainModelBP.getModel()==null) 
+					continue;
+				updateReturnMethod(mainModelBP, newModelBP);
+				merge = merge && updateCallBackExpressions(new ArrayList(newModelBP.getRefCallBackExpressions()), new ArrayList(mainModelBP.getRefCallBackExpressions()));
+				merge = merge && updateParentExpressions(newModelBP, mainModelBP);
+				merge = merge && processExpressions(new ArrayList(newModelBP.getRefEventExpressions()), new ArrayList(mainModelBP.getRefEventExpressions()));
 			}else{
-				if(!(mainBP.getDecleration()!=null && mainBP.getDecleration().isImplicitDecleration()))
+				if(newModelBP.getDecleration()!=null && newModelBP.getDecleration().isImplicitDecleration()){
+					merge = merge && updateCallBackExpressions(new ArrayList(newModelBP.getRefCallBackExpressions()), new ArrayList());
+					merge = merge && processExpressions(new ArrayList(newModelBP.getRefEventExpressions()), new ArrayList());
+				}else
 					JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
 			}
 		}
@@ -1038,9 +1017,9 @@ public class BDMMerger {
 		boolean update = true;
 		// Update the regular expressions of all beans
 		HashMap beansInMethodMap = new HashMap();
-		Iterator mainModelBeansItr = mainModel.getBeans(true).iterator();
-		while (mainModelBeansItr.hasNext()) {
-			BeanPart bp = (BeanPart) mainModelBeansItr.next();
+		Iterator newModelBeansItr = newModel.getBeans(true).iterator();
+		while (newModelBeansItr.hasNext()) {
+			BeanPart bp = (BeanPart) newModelBeansItr.next();
 			String key = "null"; //$NON-NLS-1$
 			if(bp.getInitMethod()!=null && bp.getInitMethod().getMethodHandle()!=null)
 				key = bp.getInitMethod().getMethodHandle();
@@ -1057,21 +1036,22 @@ public class BDMMerger {
 			List orderedUpdatedExpressions = new ArrayList();
 			String key = (String) methodHandleItr.next();
 			List beans = (List) beansInMethodMap.get(key);
-			Iterator mainBeansItr = beans.iterator();
+			Iterator newBeansItr = beans.iterator();
 			// TODO - no need to order for null handles maybe?
-			while (mainBeansItr.hasNext()) {
-				BeanPart mainBP = (BeanPart) mainBeansItr.next();
-				if(mainBP.isDisposed() || mainBP.getModel()==null)
-					continue;
-				BeanPart updateBP = determineCorrespondingBeanPart(mainBP, newModel);
-				if(updateBP != null){
-
+			while (newBeansItr.hasNext()) {
+				BeanPart newBP = (BeanPart) newBeansItr.next();
+				BeanPart mainBP = getMainBDMBean(newBP);
+				if(mainBP != null){
+					if(mainBP.isDisposed() || mainBP.getModel()==null)
+						continue;
 					// Order the bean expressions
+					orderBeanPartExpressions(newBP, orderedUpdatedExpressions);
 					orderBeanPartExpressions(mainBP, orderedMainExpressions);
-					orderBeanPartExpressions(updateBP, orderedUpdatedExpressions);
 					
 				}else{
-					if(!(mainBP.getDecleration()!=null && mainBP.getDecleration().isImplicitDecleration()))
+					if(newBP.getDecleration()!=null && newBP.getDecleration().isImplicitDecleration()){
+						orderBeanPartExpressions(newBP, orderedUpdatedExpressions);
+					}else
 						JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
 				}
 			}
@@ -1160,7 +1140,7 @@ public class BDMMerger {
 //		}
 //	}
 
-	protected BeanPart determineCorrespondingBeanPart(BeanPart otherModelBP, IBeanDeclModel model) {
+	private BeanPart determineCorrespondingBeanPart(BeanPart otherModelBP, IBeanDeclModel model) {
 		BeanPart modelBP = null;
 		if(newBDMToMainBDMBeanPartMap.size()>0){
 			// check to see if we created the bean part ourselves - without
@@ -1475,8 +1455,10 @@ public class BDMMerger {
 				return false;
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			final BeanPart beanPart = (BeanPart) newBeansItr.next();			
-			if( determineCorrespondingBeanPart(beanPart, mainModel) == null &&
+			if( getMainBDMBean(beanPart) == null &&
 				beanPart.getInitMethod()!=null){
+				if(beanPart.getDecleration().isImplicitDecleration())
+					continue; // implicit declaration beans are created by main-bdm expressions when decoding.
 				monitor.subTask(beanPart.getSimpleName());
 				if(beanPart.getSimpleName().equals(BeanPart.THIS_NAME))
 					add = add && createThisBean(beanPart);
@@ -1654,7 +1636,7 @@ public class BDMMerger {
 		
 		BeanPart updateReturnedBP = newModel.getBeanReturned(newMethodRef.getMethodName());
 		if(updateReturnedBP!=null){
-			BeanPart mainReturnedBP = determineCorrespondingBeanPart(updateReturnedBP, mainModel);
+			BeanPart mainReturnedBP = getMainBDMBean(updateReturnedBP);
 			if(mainReturnedBP!=null){
 				// we habe a bean which is returned with this method - hook them up
 				mainReturnedBP.addReturnMethod(mainMethodRef);

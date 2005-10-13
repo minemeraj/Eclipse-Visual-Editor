@@ -12,7 +12,7 @@
  *  Created Oct 5, 2005 by Gili Mendel
  * 
  *  $RCSfile: ViewerConstructorDecoderHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-07 20:40:45 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-13 20:31:02 $ 
  */
  
 package org.eclipse.ve.internal.jface.codegen;
@@ -26,6 +26,8 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
+
+import org.eclipse.ve.internal.jcm.JCMPackage;
 
 import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
@@ -53,6 +55,19 @@ public class ViewerConstructorDecoderHelper extends ConstructorDecoderHelper {
 		EObject implicit = getImplicitChild();
 		BeanPart implicitBean = fbeanPart.getModel().getABean(implicit);
 		EObject parent = fbeanPart.getEObject();
+		
+		// Check to see if there is already an existing tree
+		EObject currentImplicit = (EObject) parent.eGet(sf);
+		if(currentImplicit!=null && currentImplicit!=implicit){
+			// There is a different implcit child already existing - 
+			// check if its an implicit
+			if(currentImplicit.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Implicits()){
+				// dipose the implicit bean
+				BeanPart currentImplicitBP = fbeanPart.getModel().getABean(currentImplicit);
+				if(currentImplicitBP!=null)
+					currentImplicitBP.dispose();
+			}
+		}
 		
 		parent.eSet(sf, implicit);		
 		ExpressionRefFactory eGen = new ExpressionRefFactory(fbeanPart, sf);		

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.58 $  $Date: 2005-10-06 22:01:09 $ 
+ *  $Revision: 1.59 $  $Date: 2005-10-13 20:31:05 $ 
  */
 
 import java.util.*;
@@ -956,6 +956,7 @@ public BeanPart restoreImplicitBeanPart (BeanPart parent, EStructuralFeature sf,
 		
 		EObject implicit = (EObject) parent.getEObject().eGet(sf);
 		implicitBean.setEObject(implicit);
+		implicitBean.setIsInJVEModel(implicit!=null);
 		
 		if (createImplicitInitExpression) {
 			implicitBean.addInitMethod(parent.getInitMethod());
