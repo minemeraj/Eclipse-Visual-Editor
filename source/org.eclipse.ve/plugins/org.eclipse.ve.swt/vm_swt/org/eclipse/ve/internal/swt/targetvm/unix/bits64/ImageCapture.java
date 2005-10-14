@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-24 03:34:57 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-14 22:37:10 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix.bits64;
 
@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.*;
  
 
 /**
- * GTK version of Image Capture
- * @since 1.0.0
+ * 64 bit GTK version of Image Capture
+ * @since 1.1.0
  */
 public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapture{
 
@@ -51,8 +51,8 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 			Menu menu = decorations.getMenuBar();
 			try{
 				Class osClass = Class.forName("org.eclipse.swt.internal.gtk.OS"); //$NON-NLS-1$
-				Method method = osClass.getMethod("GTK_WIDGET_HEIGHT", new Class[]{int.class}); //$NON-NLS-1$
-				Object ret = method.invoke(menu, new Object[]{new Integer(menu.handle)});
+				Method method = osClass.getMethod("GTK_WIDGET_HEIGHT", new Class[]{long.class}); //$NON-NLS-1$
+				Object ret = method.invoke(menu, new Object[]{new Long(menu.handle)});
 				if(ret!=null){
 					int menuBarHeight = ((Integer)ret).intValue();
 					trim.y -= menuBarHeight;
@@ -72,7 +72,10 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 			}
 		}
 		if(image==null){
-			image = getImageOfHandle(control.handle, control.getDisplay(), includeChildren);
+			// Use reflection to get the control handle to avoid linking problems with being
+			// compiled on a 32 bit machine against 32 bit swt.
+			long handle = readLongFieldValue(Widget.class, control, "handle"); //$NON-NLS-1$
+			image = getImageOfHandle(handle, control.getDisplay(), includeChildren);
 		}
 		if (control instanceof Decorations) {
 			Decorations decorations = (Decorations) control;
