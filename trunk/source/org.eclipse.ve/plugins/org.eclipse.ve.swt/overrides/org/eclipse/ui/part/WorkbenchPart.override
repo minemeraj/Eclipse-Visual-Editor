@@ -15,9 +15,9 @@
       <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
       <eAnnotations linkType="CHILD" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
     </objectsToAttach>
-   <objectsToAttach beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.WorkbenchPartProxyAdapter" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
-   <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.WorkbenchPartGraphicalEditPart" labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.WorkbenchPartLabelProvider" treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.WorkbenchPartTreeEditPart" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">     
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.rcp.WorkbenchPartProxyAdapter" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.rcp.WorkbenchPartGraphicalEditPart" labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.rcp.WorkbenchPartLabelProvider" treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.rcp.WorkbenchPartTreeEditPart" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">     
         <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/rcp_app.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
 	 </objectsToAttach>
-   <objectsToAttach methodVisitor="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.codegen.JFaceMethodVisitor" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
+   <objectsToAttach methodVisitor="org.eclipse.ve.swt/org.eclipse.ve.internal.rcp.codegen.WorkbenchPartMethodVisitor" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
 </change:ChangeDescription>
