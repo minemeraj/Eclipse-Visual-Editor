@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.23 $  $Date: 2005-08-05 19:47:09 $ 
+ *  $Revision: 1.24 $  $Date: 2005-10-14 17:45:07 $ 
  */
 
 import java.util.HashMap;
@@ -22,8 +22,8 @@ import java.util.logging.Level;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.ui.dialogs.StatusUtil;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.*;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
@@ -34,6 +34,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin.FoundIDs;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -291,27 +292,34 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 				// Check the status of whether or not we are in a proper source folder
 				if(getContainerRoot() != null){
 					IProject project = getContainerRoot().getProject();
-					if(project != null){
-						JavaProject javaProject = (JavaProject) project.getNature(JavaCore.NATURE_ID);
-						if(javaProject != null){
-							if(ProxyPlugin.isPDEProject(javaProject)){
-								if (!javaProject.isOnClasspath(getPackageFragmentRoot())){							
+					if(project != null && project.hasNature(JavaCore.NATURE_ID)){
+						IJavaProject javaProject = JavaCore.create(project);
+						if(ProxyPlugin.isPDEProject(javaProject)){
+							if (!javaProject.isOnClasspath(getPackageFragmentRoot())){	
+								// TODO Why is this here? It needs to be verified if needed. The root should of already evaluated no matter whether a pde or not.
+								fSourceFolderStatus = new StatusInfo(
+									IStatus.ERROR,
+									"", 
+									JavaVEPlugin.PLUGIN_ID);
+							}
+							else {
+								// TODO KLUDGE https://bugs.eclipse.org/bugs/show_bug.cgi?id=90750
+								// It does a check to see if the project is a PDE project, 
+								// and if it is, does it have "org.eclipse.ui" in it. 
+								// This was added as a kludge to be able to create SWT controls 
+								// in PDE projects because since we currently can't update the 
+								// PDE plugin.xml there was no way to make sure that SWT was in the classpath.
+								// This should of been done through the contributor instead. 
+								// This is not the proper place for it. It should be removed from here.
+								//
+								//Must include the ui plugin	
+								FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(javaProject);
+								boolean uiIncluded = foundIds.pluginIds.get("org.eclipse.ui") == Boolean.TRUE;//$NON-NLS-1$
+								if (!uiIncluded)
 									fSourceFolderStatus = new StatusInfo(
-										IStatus.ERROR,
-										"", 
-										JavaVEPlugin.PLUGIN_ID);
-								}
-								else {
-									// Must include the ui plugin									
-									HashMap plugins = new HashMap();
-									ProxyPlugin.getPlugin().getIDsFound(javaProject, new HashMap(), new HashMap(), plugins, new HashMap());
-									boolean uiIncluded = plugins.get("org.eclipse.ui")!=null;//$NON-NLS-1$
-									if (!uiIncluded)
-										fSourceFolderStatus = new StatusInfo(
-												IStatus.ERROR,
-												"", 
-												JavaVEPlugin.PLUGIN_ID);
-								}
+											IStatus.ERROR,
+											"", 
+											JavaVEPlugin.PLUGIN_ID);
 							}
 						}
 					}

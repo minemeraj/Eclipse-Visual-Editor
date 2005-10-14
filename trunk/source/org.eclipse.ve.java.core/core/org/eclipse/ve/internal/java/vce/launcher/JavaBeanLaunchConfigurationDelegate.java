@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.21 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.22 $  $Date: 2005-10-14 17:45:07 $ 
  */
 
 
@@ -41,6 +41,7 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.ProxyLaunchSupport.LaunchInfo;
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin.FoundIDs;
 import org.eclipse.jem.internal.proxy.remote.LocalFileConfigurationContributorController;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -49,6 +50,12 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
 public class JavaBeanLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
 	
+	/**
+	 * Comment for <code>IS_SWT</code>
+	 * 
+	 * @since 1.2.0
+	 */
+	public static final String IS_SWT = "isSWT";
 	static String LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.JavaBeansLauncher"; //$NON-NLS-1$
 	static String JFC_LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.JFCLauncher"; //$NON-NLS-1$
 	static String SWT_LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.SWTLauncher"; //$NON-NLS-1$
@@ -146,7 +153,7 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	// TODO: refactor launchers into appropriate packages
 	
 	IJavaProject project = verifyJavaProject(configuration);
-	if ( isJFaceProject(project) ){
+	if ( isRCPPlugin(project) ){
 		launchersList = launchersList + "," + RCP_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
 		
 		// Ensure necessary classes are available for the launcher.
@@ -188,7 +195,7 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 		}		
 	}
 	
-	if (configuration.getAttribute("isSWT", false)) { //$NON-NLS-1$
+	if (configuration.getAttribute(IS_SWT, false)) { //$NON-NLS-1$
 		// SWT support is provided by the included library, so just add the launcher.
 		launchersList = launchersList + "," + SWT_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
 	}
@@ -238,11 +245,10 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	return args.toString();
 }
 
-private boolean isJFaceProject(IJavaProject proj) {
-	Map containers = new HashMap(), plugins = new HashMap();
+private boolean isRCPPlugin(IJavaProject proj) {
 	try {
-		ProxyPlugin.getPlugin().getIDsFound(proj, containers, new HashMap(), plugins, new HashMap());
-		return plugins.get("org.eclipse.jface") != null ? ((Boolean) plugins.get("org.eclipse.jface")).booleanValue() : false; //$NON-NLS-1$ //$NON-NLS-2$
+		FoundIDs foundids = ProxyPlugin.getPlugin().getIDsFound(proj);
+		return foundids.pluginIds.get("org.eclipse.ui.workbench") == Boolean.TRUE;
 	} catch (JavaModelException e) {
 	}
 	return false;

@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialogUtilities.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-03 19:20:56 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-14 17:45:07 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
@@ -27,7 +28,10 @@ import org.eclipse.jdt.internal.corext.util.TypeInfo;
 import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
+import org.eclipse.jem.internal.proxy.core.ContributorExtensionPointInfo;
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
+import org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo.ContainerPaths;
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin.FoundIDs;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
@@ -45,61 +49,86 @@ import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
  */
 public class ChooseBeanDialogUtilities {
 
+	/**
+	 * Comment for <code>JAVA_VE_SYMBOLICNAME</code>
+	 * 
+	 * @since 1.2.0
+	 */
+	private static final String JAVA_VE_SYMBOLICNAME = JavaVEPlugin.getPlugin().getBundle().getSymbolicName();
+	/**
+	 * Comment for <code>CONTRIBUTOR_EXTENSIONPOINT</code>
+	 * 
+	 * @since 1.2.0
+	 */
+	private static final String CONTRIBUTOR_EXTENSIONPOINT = JAVA_VE_SYMBOLICNAME+".choosebean";
 	public static final String PI_CONTAINER = "container"; //$NON-NLS-1$	
 	public static final String PI_PLUGIN = "plugin"; //$NON-NLS-1$
 	public static final IChooseBeanContributor[] NO_CONTRIBS = new IChooseBeanContributor[0];
 	private static HashMap contributorNameImageMap = new HashMap();
+	private static ContributorExtensionPointInfo contributorInfo;
+	
+	private static void processContributorExtensionPoint() {
+		contributorInfo = ProxyPlugin.processContributionExtensionPoint(CONTRIBUTOR_EXTENSIONPOINT);
+	}
 	
 	public static IChooseBeanContributor[] determineContributors(IJavaProject project){
-		Map containerIDs = new HashMap();
-		Map pluginsIDs = new HashMap();
+		if (contributorInfo == null)
+			processContributorExtensionPoint();
+		
 		try {
-			ProxyPlugin.getPlugin().getIDsFound(project, containerIDs, new HashMap(), pluginsIDs, new HashMap());
-			List contributorList = new ArrayList();
-			IExtensionPoint exp = Platform.getExtensionRegistry().getExtensionPoint(JavaVEPlugin.getPlugin().getBundle().getSymbolicName(),
-					"choosebean"); //$NON-NLS-1$
-			IExtension[] extensions = exp.getExtensions();
-
-			if (extensions.length > 0) {
-
-				// Ensure that the org.eclipse.ve.java plugins are the first in the list
-				IExtension[] orderedExtensions = new IExtension[extensions.length];
-				int index = 0;
-				String veBaseBundleName = JavaVEPlugin.getPlugin().getBundle().getSymbolicName();
-				for (int i = 0; i < extensions.length; i++) {
-					if (extensions[i].getNamespace().equals(veBaseBundleName)) {
-						orderedExtensions[index++] = extensions[i];
+			if (!contributorInfo.containerPathContributions.containerIdToContributions.isEmpty() || !contributorInfo.pluginToContributions.isEmpty()) {
+				FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(project);
+				List contributorList = new ArrayList();
+				List veContributorList = new ArrayList();	// JavaVe contributors, so they always show first.
+				for (Iterator containers = foundIds.containerIds.entrySet().iterator(); containers.hasNext();) {
+					Entry entry = (Entry) containers.next();
+					ContainerPaths paths = (ContainerPaths) entry.getValue();
+					IConfigurationElement[] configs = (IConfigurationElement[]) contributorInfo.containerPathContributions.getContributors((String) entry.getKey(), paths.getVisibleContainerPaths());
+					addContributor(contributorList, veContributorList, configs);
+				}
+				
+				for (Iterator plugins = foundIds.pluginIds.entrySet().iterator(); plugins.hasNext();) {
+					Entry entry = (Entry) plugins.next();
+					if (entry.getValue() == Boolean.TRUE) {
+						IConfigurationElement[] configs = (IConfigurationElement[]) contributorInfo.pluginToContributions.get(entry.getKey());
+						addContributor(contributorList, veContributorList, configs);
 					}
 				}
-				// Any remaining extensions go to the end
-				for (int i = 0; i < extensions.length; i++) {
-					if (!extensions[i].getNamespace().equals(veBaseBundleName)) {
-						orderedExtensions[index++] = extensions[i];
-					}
-				}
-
-				for (int ec = 0; ec < orderedExtensions.length; ec++) {
-					IConfigurationElement[] configElms = orderedExtensions[ec].getConfigurationElements();
-					for (int cc = 0; cc < configElms.length; cc++) {
-						IConfigurationElement celm = configElms[cc];
-						if (containerIDs.get(celm.getAttributeAsIs(PI_CONTAINER)) == Boolean.TRUE
-								|| pluginsIDs.get(celm.getAttributeAsIs(PI_PLUGIN)) == Boolean.TRUE) {
-							try {
-								IChooseBeanContributor contributor = (IChooseBeanContributor) celm.createExecutableExtension("class"); //$NON-NLS-1$
-								contributorList.add(contributor);
-							} catch (CoreException e) {
-								JavaVEPlugin.log(e, Level.FINE);
-							} catch (ClassCastException e) {
-								JavaVEPlugin.log(e, Level.FINE);
-							}
-						}
-					}
-				}
+				if (!veContributorList.isEmpty() || !contributorList.isEmpty() ) {
+					veContributorList.addAll(contributorList);
+					return (IChooseBeanContributor[]) veContributorList.toArray(new IChooseBeanContributor[veContributorList.size()]);
+				} else
+					return NO_CONTRIBS;
 			}
-			return !contributorList.isEmpty() ? (IChooseBeanContributor[]) contributorList.toArray(new IChooseBeanContributor[contributorList.size()]) : NO_CONTRIBS;
 		} catch (JavaModelException e) {
 			JavaVEPlugin.log(e, Level.FINE);
-			return NO_CONTRIBS;
+		}
+		return NO_CONTRIBS;
+	}
+
+	/**
+	 * @param contributorList
+	 * @param veContributorList
+	 * @param configs
+	 * @throws InvalidRegistryObjectException
+	 * @throws CoreException 
+	 * 
+	 * @since 1.2.0
+	 */
+	private static void addContributor(List contributorList, List veContributorList, IConfigurationElement[] configs) {
+		for (int i = 0; i < configs.length; i++) {
+			try {
+				IChooseBeanContributor contributor = (IChooseBeanContributor) configs[i].createExecutableExtension("class"); //$NON-NLS-1$
+				if (configs[i].getNamespace().equals(JAVA_VE_SYMBOLICNAME))
+					veContributorList.add(contributor);
+				else
+					contributorList.add(contributor);
+
+			} catch (CoreException e) {
+				JavaVEPlugin.log(e, Level.FINE);
+			} catch (ClassCastException e) {
+				JavaVEPlugin.log(e, Level.FINE);
+			}
 		}
 	}
 	
@@ -145,7 +174,7 @@ public class ChooseBeanDialogUtilities {
 			if(message!=null){
 				status = new Status(
 						IStatus.ERROR, 
-						JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 
+						JAVA_VE_SYMBOLICNAME, 
 						IStatus.ERROR, 
 						message, 
 						null);
@@ -257,7 +286,7 @@ public class ChooseBeanDialogUtilities {
 		}
 		Status status = new Status(
 							isInstantiable?IStatus.OK:IStatus.ERROR, 
-							JavaVEPlugin.getPlugin().getBundle().getSymbolicName(), 
+							JAVA_VE_SYMBOLICNAME, 
 							isInstantiable?IStatus.OK:IStatus.ERROR, 
 							message, 
 							t);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.151 $  $Date: 2005-09-21 10:39:50 $ 
+ *  $Revision: 1.152 $  $Date: 2005-10-14 17:45:07 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -76,6 +76,7 @@ import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry;
+import org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo.ContainerPaths;
 import org.eclipse.jem.util.PerformanceMonitorUtil;
 import org.eclipse.jem.util.TimerTests;
 import org.eclipse.jem.util.plugin.JEMUtilPlugin;
@@ -1510,36 +1511,37 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					
 					// Now run though visible containers ids.
 					final DefaultVEContributor[] defaultVE = new DefaultVEContributor[1];
+					List visibleContainerContributors = new ArrayList();
 					if (!regResult.configInfo.getContainerIds().isEmpty()) {
-						for (Iterator iter = regResult.configInfo.getContainerIds().entrySet().iterator(); iter.hasNext();) {
-							Map.Entry entry = (Map.Entry) iter.next();
-							if (((Boolean) entry.getValue()).booleanValue()) {
-								final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getContainerConfigurations((String) entry.getKey());
-								if (contributors != null) {
-									for (int i = 0; i < contributors.length; i++) {
-										final int ii = i;
-										Platform.run(new ISafeRunnable() {
-											public void handleException(Throwable exception) {
-												// Default logs exception for us.
-											}
-											public void run() throws Exception {
-												if (contributors[ii].getName().equals(PI_PALETTE)) {
-													if (defaultVE[0] == null)
-														defaultVE[0] = new DefaultVEContributor();
-													defaultVE[0].paletteContribution = contributors[ii];
-													rebuildPalette = defaultVE[0].contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
-												} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
-													Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
-													if (contributor instanceof IVEContributor)
-														rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
-													else if (contributor instanceof IVEContributor1)
-														rebuildPalette = ((IVEContributor1) contributor).contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
-												}
-											}
-										});
+						for (Iterator iter = regResult.configInfo.getContainerIds().values().iterator(); iter.hasNext();) {
+							ContainerPaths paths = (ContainerPaths) iter.next();
+							IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getContainerConfigurations(paths.getContainerId(), paths.getVisibleContainerPaths());
+							if (contributors.length > 0)
+								visibleContainerContributors.addAll(Arrays.asList(contributors));
+						}
+					}
+					if (!visibleContainerContributors.isEmpty()) {
+						for (int i = 0; i < visibleContainerContributors.size(); i++) {
+							final IConfigurationElement element = (IConfigurationElement) visibleContainerContributors.get(i);
+							Platform.run(new ISafeRunnable() {
+								public void handleException(Throwable exception) {
+									// Default logs exception for us.
+								}
+								public void run() throws Exception {
+									if (element.getName().equals(PI_PALETTE)) {
+										if (defaultVE[0] == null)
+											defaultVE[0] = new DefaultVEContributor();
+										defaultVE[0].paletteContribution = element;
+										rebuildPalette = defaultVE[0].contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
+									} else if (element.getName().equals(PI_CONTRIBUTOR)){
+										Object contributor = element.createExecutableExtension(PI_CLASS);
+										if (contributor instanceof IVEContributor)
+											rebuildPalette = ((IVEContributor) contributor).contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
+										else if (contributor instanceof IVEContributor1)
+											rebuildPalette = ((IVEContributor1) contributor).contributePalleteCats(paletteDrawers, rset) || rebuildPalette;
 									}
 								}
-							}
+							});
 						}
 					}
 					
@@ -1599,34 +1601,26 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					}
 					
 					// Now run though visible containers ids.
-					if (!regResult.configInfo.getContainerIds().isEmpty()) {
-						for (Iterator iter = regResult.configInfo.getContainerIds().entrySet().iterator(); iter.hasNext();) {
-							Map.Entry entry = (Map.Entry) iter.next();
-							if (((Boolean) entry.getValue()).booleanValue()) {
-								final IConfigurationElement[] contributors = JavaVEPlugin.getPlugin().getContainerConfigurations((String) entry.getKey());
-								if (contributors != null) {
-									for (int i = 0; i < contributors.length; i++) {
-										final int ii = i;
-										Platform.run(new ISafeRunnable() {
-											public void handleException(Throwable exception) {
-												// Default logs exception for us.
-											}
-											public void run() throws Exception {
-												if (contributors[ii].getName().equals(PI_PALETTE)) {
-													if (defaultVE[0] == null)
-														defaultVE[0] = new DefaultVEContributor();
-													defaultVE[0].paletteContribution = contributors[ii];
-													rebuildPalette = defaultVE[0].modifyPaletteCatsList(paletteDrawers) || rebuildPalette;
-												} else if (contributors[ii].getName().equals(PI_CONTRIBUTOR)){
-													Object contributor = contributors[ii].createExecutableExtension(PI_CLASS);
-													if (contributor instanceof IVEContributor1)
-														rebuildPalette = ((IVEContributor1) contributor).modifyPaletteCatsList(paletteDrawers) || rebuildPalette;
-												}
-											}
-										});
+					if (!visibleContainerContributors.isEmpty()) {
+						for (int i = 0; i < visibleContainerContributors.size(); i++) {
+							final IConfigurationElement element = (IConfigurationElement) visibleContainerContributors.get(i);
+							Platform.run(new ISafeRunnable() {
+								public void handleException(Throwable exception) {
+									// Default logs exception for us.
+								}
+								public void run() throws Exception {
+									if (element.getName().equals(PI_PALETTE)) {
+										if (defaultVE[0] == null)
+											defaultVE[0] = new DefaultVEContributor();
+										defaultVE[0].paletteContribution = element;
+										rebuildPalette = defaultVE[0].modifyPaletteCatsList(paletteDrawers) || rebuildPalette;
+									} else if (element.getName().equals(PI_CONTRIBUTOR)){
+										Object contributor = element.createExecutableExtension(PI_CLASS);
+										if (contributor instanceof IVEContributor1)
+											rebuildPalette = ((IVEContributor1) contributor).modifyPaletteCatsList(paletteDrawers) || rebuildPalette;
 									}
 								}
-							}
+							});
 						}
 					}
 					

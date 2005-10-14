@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.37 $  $Date: 2005-07-20 23:12:19 $ 
+ *  $Revision: 1.38 $  $Date: 2005-10-14 17:45:07 $ 
  */
 
 import java.io.IOException;
@@ -31,6 +31,8 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
+import org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo.ContainerPaths;
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin.FoundIDs;
 
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
@@ -373,22 +375,31 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 		}
 	}
 	
-	public static void updateProjectClassPath(String pluginId, String container, IJavaProject project, IProgressMonitor monitor) {
+	public static void updateProjectClassPath(String pluginId, String containerId, IJavaProject project, IProgressMonitor monitor) {
 		if (project != null) {
 			try {
 				if (!ProxyPlugin.isPDEProject(project)) { // Don't do anything if this is a plugin project
-					Map containers = new HashMap(), plugins = new HashMap();
-					ProxyPlugin.getPlugin().getIDsFound(project, containers, new HashMap(), plugins, new HashMap());
-					if (!((container != null && containers.get(container) == Boolean.TRUE))) {
-						if (container != null && plugins.isEmpty()) {
-							// TODO If we are a plugin project, we should add the plugin... not the container.
-							// For now just add the container to the project so the class will compile correctly
-							IClasspathEntry[] cp = project.getRawClasspath();
-							IClasspathEntry[] newcp = new IClasspathEntry[cp.length + 1];
-							System.arraycopy(cp, 0, newcp, 0, cp.length);
-							newcp[cp.length] = JavaCore.newContainerEntry(new Path(container));
-							project.setRawClasspath(newcp, new SubProgressMonitor(monitor, 100));
-						}
+					FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(project);
+					// We only test container id (i.e. the first segment of the path. Since we can't add any
+					// customized container path we can't test if a customized one is here.
+					// We would need to use a new library wizard to allow customization, but even
+					// then we would have problems because we couldn't tell the wizard what customization
+					// we were interested in.
+					// 
+					// For example, SWT_CONTAINER. We have a customization for JFACE, but we don't know
+					// how to create one because the format is "/SWT_CONTAINER/something/JFACE" We don't
+					// know what to put in for "something".
+					//
+					// So we just check if we have any visible container paths for this id.
+					ContainerPaths cntrpaths = (ContainerPaths) foundIds.containerIds.get(containerId);
+					if (cntrpaths == null || cntrpaths.getVisibleContainerPaths().length == 0) {
+						// TODO If we are a plugin project, we should add the plugin... not the container.
+						// For now just add the container to the project so the class will compile correctly
+						IClasspathEntry[] cp = project.getRawClasspath();
+						IClasspathEntry[] newcp = new IClasspathEntry[cp.length + 1];
+						System.arraycopy(cp, 0, newcp, 0, cp.length);
+						newcp[cp.length] = JavaCore.newContainerEntry(new Path(containerId));
+						project.setRawClasspath(newcp, new SubProgressMonitor(monitor, 100));
 					}
 				}
 			} catch (JavaModelException e) {

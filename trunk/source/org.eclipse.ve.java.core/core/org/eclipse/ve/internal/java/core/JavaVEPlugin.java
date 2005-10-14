@@ -11,12 +11,11 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaVEPlugin.java,v $
- *  $Revision: 1.34 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.35 $  $Date: 2005-10-14 17:45:07 $ 
  */
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
 import java.util.logging.Level;
 
 import org.eclipse.core.resources.IProject;
@@ -27,6 +26,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import org.eclipse.jem.internal.proxy.core.ContributorExtensionPointInfo;
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.jem.util.logger.proxyrender.EclipseLogger;
@@ -216,14 +216,7 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 	
-	/*
-	 * Map of container id's to their ordered array of contribution config elements.
-	 */
-	protected Map containerToContributions = null;
-	/*
-	 * Map of plugin id's to their ordered array of contribution config elements.
-	 */
-	protected Map pluginToContributions = null;
+	protected ContributorExtensionPointInfo veContributionInfo;
 	
 	/**
 	 * Return the plugin ordered array of configuration elements for the given container, or <code>null</code> if not contributed.
@@ -233,10 +226,10 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	 * 
 	 * @since 1.0.0
 	 */
-	public synchronized IConfigurationElement[] getContainerConfigurations(String containerid) {
-		if (containerToContributions == null)
-			processProxyContributionExtensionPoint();
-		return (IConfigurationElement[]) containerToContributions.get(containerid);
+	public synchronized IConfigurationElement[] getContainerConfigurations(String containerid, String[] containerPaths) {
+		if (veContributionInfo == null)
+			processVEContributionExtensionPoint();
+		return (IConfigurationElement[]) veContributionInfo.containerPathContributions.getContributors(containerid, containerPaths);
 	}
 
 	/**
@@ -248,15 +241,13 @@ public class JavaVEPlugin extends AbstractUIPlugin {
 	 * @since 1.0.0
 	 */
 	public synchronized IConfigurationElement[] getPluginConfigurations(String pluginid) {
-		if (pluginToContributions == null)
-			processProxyContributionExtensionPoint();
-		return (IConfigurationElement[]) pluginToContributions.get(pluginid);
+		if (veContributionInfo == null)
+			processVEContributionExtensionPoint();
+		return (IConfigurationElement[]) veContributionInfo.pluginToContributions.get(pluginid);
 	}
 	
-	protected synchronized void processProxyContributionExtensionPoint() {
-		ProxyPlugin.ContributorExtensionPointInfo info = ProxyPlugin.processContributionExtensionPoint(PI_CONTRIBUTION_EXTENSION_POINT);
-		containerToContributions = info.containerToContributions;
-		pluginToContributions = info.pluginToContributions;
+	protected synchronized void processVEContributionExtensionPoint() {
+		veContributionInfo = ProxyPlugin.processContributionExtensionPoint(PI_CONTRIBUTION_EXTENSION_POINT);
 	}
 
 }
