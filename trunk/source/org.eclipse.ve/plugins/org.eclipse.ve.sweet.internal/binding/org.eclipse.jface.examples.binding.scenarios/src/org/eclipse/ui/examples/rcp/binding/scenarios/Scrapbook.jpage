@@ -1,0 +1,1 @@
+The method abs(double) in the type Math is not applicable for the arguments (Double)Double d = new Double("500.62");d.intValue()(int) 500
