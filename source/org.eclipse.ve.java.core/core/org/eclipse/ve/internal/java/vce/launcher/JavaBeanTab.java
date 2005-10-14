@@ -11,12 +11,10 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.15 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.16 $  $Date: 2005-10-14 17:45:07 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -29,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.ui.ILaunchConfigurationTab;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.debug.ui.launcher.JavaLaunchConfigurationTab;
 import org.eclipse.jdt.internal.launching.JavaLaunchConfigurationUtils;
@@ -47,6 +46,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin.FoundIDs;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferencePage;
@@ -461,7 +461,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		config.setAttribute(JavaBeanLaunchConfigurationDelegate.PACK, fPackWindow.getSelection() || fPackSWTWindow.getSelection());
 		
 		// TODO: Remove this swt specific code later
-		config.setAttribute("isSWT", isSWTProject(getJavaProject())); //$NON-NLS-1$
+		config.setAttribute(JavaBeanLaunchConfigurationDelegate.IS_SWT, isSWTProject(getJavaProject()));
 	}
 			
 	/**
@@ -569,10 +569,10 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 	private boolean isSWTProject(IJavaProject project) {
 		boolean value = false;
 		if (project != null) {
-			Map containers = new HashMap(), plugins = new HashMap();
 			try {
-				ProxyPlugin.getPlugin().getIDsFound(project, containers, new HashMap(), plugins, new HashMap());
-				value = (containers.containsKey("SWT_CONTAINER") || plugins.containsKey("org.eclipse.swt")); //$NON-NLS-1$ //$NON-NLS-2$
+				FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(project);
+				// It is considered an SWT project even if SWT is hidden because someone needs it and we need to setup the launch correctly.
+				value = foundIds.containerIds.get("SWT_CONTAINER") != null || foundIds.pluginIds.containsKey("org.eclipse.swt"); //$NON-NLS-1$
 			} catch (JavaModelException e) {
 			}
 		}

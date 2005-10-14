@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.39 $  $Date: 2005-10-03 19:20:56 $ 
+ *  $Revision: 1.40 $  $Date: 2005-10-14 17:45:07 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -144,7 +144,7 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 		this.project = packageFragment.getJavaProject();
 		this.disableOthers = disableOthers;
 		this.unmodifieableContributors = contributors != null ? Arrays.asList(contributors) : Arrays.asList(ChooseBeanDialogUtilities.determineContributors(project));
-		if(unmodifieableContributors==null || unmodifieableContributors.size() < 1)
+		if(unmodifieableContributors==null || unmodifieableContributors.isEmpty())
 			selectedContributor = -1;
 		else if(!isValidContributor())
 			selectedContributor = 0;

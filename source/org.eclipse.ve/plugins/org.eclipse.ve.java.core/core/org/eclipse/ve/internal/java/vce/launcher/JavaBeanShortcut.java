@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.15 $  $Date: 2005-10-14 17:45:07 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -34,6 +34,7 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin.FoundIDs;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
@@ -196,7 +197,7 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, type.getJavaProject().getElementName());
 			// TODO: remove swt hack
 			if (isSWTProject(type.getJavaProject())) {
-				wc.setAttribute("isSWT", true); //$NON-NLS-1$
+				wc.setAttribute(JavaBeanLaunchConfigurationDelegate.IS_SWT, true); //$NON-NLS-1$
 			}
 			config = wc.doSave();		
 		} catch (CoreException ce) {
@@ -215,10 +216,10 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 	private boolean isSWTProject(IJavaProject project) {
 		boolean value = false;
 		if (project != null) {
-			Map containers = new HashMap(), plugins = new HashMap();
 			try {
-				ProxyPlugin.getPlugin().getIDsFound(project, containers, new HashMap(), plugins, new HashMap());
-				value = (containers.containsKey("SWT_CONTAINER") || plugins.containsKey("org.eclipse.swt")); //$NON-NLS-1$ //$NON-NLS-2$
+				FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(project);
+				// It is considered an SWT project even if SWT is hidden because someone needs it and we need to setup the launch correctly.
+				value = foundIds.containerIds.get("SWT_CONTAINER") != null || foundIds.pluginIds.containsKey("org.eclipse.swt"); //$NON-NLS-1$
 			} catch (JavaModelException e) {
 			}
 		}

@@ -94,6 +94,7 @@
       </registration>           
       <!-- Register the override folders for JFace -->
       <registration
+            container="SWT_CONTAINER/JFACE"
             plugin="org.eclipse.jface">
          <override
                package="org.eclipse.jface.viewers"
@@ -136,6 +137,7 @@
          point="org.eclipse.ve.java.core.contributors">
       <palette
             categories="jface/palette.xmi"
+            container="SWT_CONTAINER/JFACE"
             plugin="org.eclipse.jface">
       </palette>
    </extension>    
@@ -310,7 +312,7 @@
       </objectContribution>
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
-            id="org.eclipse.ve.internal.jface.codegen.rootcontainer.popup.object">
+            id="org.eclipse.ve.internal.rcp.codegen.rootcontainer.popup.object">
          <visibility>
          	<or>
 	            <objectState
@@ -331,8 +333,8 @@
          </visibility>
          <action
                label="%PopupMenus.RootContainer.Label &amp;Create container"
-               class="org.eclipse.ve.internal.jface.codegen.WorkbenchPartRootContainerObjectActionDelegate"
-               id="org.eclipse.ve.internal.jface.codegen.rootcontainer.action">
+               class="org.eclipse.ve.internal.rcp.codegen.WorkbenchPartRootContainerObjectActionDelegate"
+               id="org.eclipse.ve.internal.rcp.codegen.rootcontainer.action">
            <enablement>
               <objectState
                     name="CHANGEABLE"
@@ -446,13 +448,13 @@
          priority="50"/>
    <visualElement
          category="org.eclipse.ve.rcp.cat"
-         contributor="org.eclipse.ve.internal.jface.codegen.wizards.contributors.RCPViewClassCreationSourceContributor"
+         contributor="org.eclipse.ve.internal.rcp.codegen.wizards.contributors.RCPViewClassCreationSourceContributor"
          icon="icons/full/clcl16/rcp_app.gif"
          name="%NewStyleComponent.View"
          type="org.eclipse.ui.part.ViewPart"/>
    <visualElement
          category="org.eclipse.ve.rcp.cat"
-         contributor="org.eclipse.ve.internal.jface.codegen.wizards.contributors.RCPEditorClassCreationSourceContributor"
+         contributor="org.eclipse.ve.internal.rcp.codegen.wizards.contributors.RCPEditorClassCreationSourceContributor"
          icon="icons/full/clcl16/rcp_editor.gif"
          name="%NewStyleComponent.Editor"
          type="org.eclipse.ui.part.EditorPart"/>

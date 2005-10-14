@@ -27,6 +27,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
+import org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo.ContainerPaths;
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin.FoundIDs;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
@@ -42,8 +44,6 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 import org.eclipse.ve.internal.java.visual.*;
-import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
-import org.eclipse.ve.internal.java.visual.VisualUtilities;
 
 import org.eclipse.ve.internal.swt.ControlManager.FeedbackController;
 
@@ -916,14 +916,15 @@ public class BeanSWTUtilities {
 	 */
 	public static boolean isJFaceProject(EditDomain editDomain) {
 		IJavaProject proj = JavaEditDomainHelper.getJavaProject(editDomain);
-		Map containers = new HashMap(), plugins = new HashMap();
-		try {
-			ProxyPlugin.getPlugin().getIDsFound(proj, containers, new HashMap(), plugins, new HashMap());
-			return plugins.get("org.eclipse.jface") != null ? ((Boolean) plugins.get("org.eclipse.jface")).booleanValue() : false; //$NON-NLS-1$ //$NON-NLS-2$
-		} catch (JavaModelException e) {
+		if (proj != null) {
+			try {
+				FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(proj);
+				ContainerPaths cpaths = (ContainerPaths) foundIds.containerIds.get("SWT_CONTAINER");
+				return (cpaths != null && cpaths.getVisibleContainerPaths().length > 0) || foundIds.pluginIds.containsKey("org.eclipse.swt"); //$NON-NLS-1$
+			} catch (JavaModelException e) {
+			}
 		}
-		return false;
-	}
+		return false;	}
 
 	public static LayoutList getDefaultLayoutList() {
 		if (DEFAULT_LAYOUTLIST == null){
