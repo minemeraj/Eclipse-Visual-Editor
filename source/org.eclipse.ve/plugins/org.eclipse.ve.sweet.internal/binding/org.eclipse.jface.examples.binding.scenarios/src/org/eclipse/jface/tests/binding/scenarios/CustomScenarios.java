@@ -50,12 +50,28 @@ public class CustomScenarios extends ScenariosTestCase {
 		
 		getDbs().bindValue(getDbs().createUpdatableValue(text, "text"),customUpdatable_comma);
 		// spinEventLoop(1);
+		// Make sure that the description on the model match the widget
 		assertEquals(adventure.getDescription() + "," + adventure.getName(), text.getText());
+		
+		// Change the widget to newDescription,newName and ensure the model is updated
 		text.setText("newDescription,newName");
 		assertEquals("newDescription", adventure.getDescription());
 		assertEquals("newName", adventure.getName());		
 		
-		text.setText("newDescription");
+		// Change the model to newDescription_0 and newName_0 and ensure the GUI is updated
+		adventure.setDescription("newDescription_0");
+		adventure.setName("newName_0");
+		assertEquals("newDescription_0,newName_0",text.getText());
+		
+		// Change text to newDescription_1 with no comma and ensure the model is updated correctly with no name
+		text.setText("newDescription_1");
+		assertEquals("newDescription_1", adventure.getDescription());
+		assertEquals(null,adventure.getName());
+		
+		// Change text to newName with a preceeding comma and ensure the model is updated correctly with no description
+		text.setText(",newName_1");
+		assertEquals(null,adventure.getDescription());
+		assertEquals("newName_1",adventure.getName());
 		
 	}
 

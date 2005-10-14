@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SampleData.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-07 17:47:16 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-14 14:04:55 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -32,6 +32,7 @@ import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
 import org.eclipse.ui.examples.rcp.adventure.Lodging;
+import org.eclipse.ui.examples.rcp.adventure.Transportation;
  
 public class SampleData {
 	
@@ -40,6 +41,8 @@ public class SampleData {
 	public static Lodging YOUTH_HOSTEL;
 	public static Lodging CAMP_GROUND; 	
 	public static Catalog CATALOG_2005;
+	public static Transportation GREYHOUND_BUS;
+	public static Transportation EXECUTIVE_JET;	
 
 	static{
 		initializeData();
@@ -72,6 +75,14 @@ public class SampleData {
 		CATALOG_2005.getLodgings().add(CAMP_GROUND);
 		
 		WINTER_HOLIDAY.setDefaultLodging(YOUTH_HOSTEL);
+		
+		GREYHOUND_BUS = adventureFactory.createTransportation();
+		GREYHOUND_BUS.setArrivalTime("14:30");
+		CATALOG_2005.getTransportations().add(GREYHOUND_BUS);
+		
+		EXECUTIVE_JET = adventureFactory.createTransportation();
+		EXECUTIVE_JET.setArrivalTime("11:10");
+		CATALOG_2005.getTransportations().add(EXECUTIVE_JET);
 		
 	}
 	
