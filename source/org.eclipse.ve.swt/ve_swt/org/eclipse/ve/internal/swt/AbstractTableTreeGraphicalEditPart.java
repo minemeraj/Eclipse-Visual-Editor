@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractTableTreeGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-04 15:41:48 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-14 22:03:20 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -125,6 +125,7 @@ public abstract class AbstractTableTreeGraphicalEditPart extends ControlGraphica
 	}
 
 	protected void createEditPolicies() {
+		super.createEditPolicies();
 		installEditPolicy(EditPolicy.CONTAINER_ROLE, new FlowLayoutEditPolicy(getContainerPolicy(), Boolean.TRUE));
 	}
 	
