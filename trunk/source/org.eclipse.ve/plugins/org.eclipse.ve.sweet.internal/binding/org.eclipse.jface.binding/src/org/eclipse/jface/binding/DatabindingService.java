@@ -143,7 +143,7 @@ public class DatabindingService {
 						int row = changeEvent.getPosition();
 						targetTable.setElementAndValues(row,
 								modelToTargetElementConverter
-										.convert(changeEvent.getNewValue()),
+										.convertModel(changeEvent.getNewValue()),
 								getConvertedModelValues(modelTable,
 										modelToTargetValueConverters,
 										columnCount, row));
@@ -151,7 +151,7 @@ public class DatabindingService {
 						int row = changeEvent.getPosition();
 						targetTable.addElementWithValues(row,
 								modelToTargetElementConverter
-										.convert(changeEvent.getNewValue()),
+										.convertModel(changeEvent.getNewValue()),
 								getConvertedModelValues(modelTable,
 										modelToTargetValueConverters,
 										columnCount, row));
@@ -172,14 +172,14 @@ public class DatabindingService {
 		}
 		for (int i = 0; i < targetTable.getSize(); i++) {
 			targetTable.setElementAndValues(i, modelToTargetElementConverter
-					.convert(modelTable.getElement(i)),
+					.convertModel(modelTable.getElement(i)),
 					getConvertedModelValues(modelTable,
 							modelToTargetValueConverters, columnCount, i));
 		}
 		while (targetTable.getSize() < modelTable.getSize()) {
 			int index = targetTable.getSize();
 			targetTable.addElementWithValues(index,
-					modelToTargetElementConverter.convert(modelTable
+					modelToTargetElementConverter.convertModel(modelTable
 							.getElement(index)), getConvertedModelValues(
 							modelTable, modelToTargetValueConverters,
 							columnCount, index));
@@ -393,10 +393,10 @@ public class DatabindingService {
 	private void checkConverterTypes(
 			final IConverter modelToTargetElementConverter, Class fromType,
 			Class toType) throws BindingException {
-		if (!modelToTargetElementConverter.getFromType().isAssignableFrom(
+		if (!modelToTargetElementConverter.getModelType().isAssignableFrom(
 				fromType)
 				|| !toType.isAssignableFrom(modelToTargetElementConverter
-						.getToType())) {
+						.getTargetType())) {
 			throw new BindingException(
 					"converter from/to types don't match element types");
 		}
@@ -488,7 +488,7 @@ public class DatabindingService {
 		Object[] convertedValues = new Object[columnCount];
 		for (int i = 0; i < columnCount; i++) {
 			convertedValues[i] = modelToTargetValueConverters[i]
-					.convert(modelValues[i]);
+					.convertModel(modelValues[i]);
 		}
 		return convertedValues;
 	}
@@ -513,16 +513,19 @@ public class DatabindingService {
 
 	public IConverter getStringToDoubleConverter() {
 		IConverter doubleConverter = new IConverter() {
-			public Object convert(Object object) {
+			public Object convertModel(Object object) {
 				return new Double((String) object);
 			}
 
-			public Class getFromType() {
+			public Class getModelType() {
 				return String.class;
 			}
 
-			public Class getToType() {
+			public Class getTargetType() {
 				return double.class;
+			}
+			public Object convertTarget(Object aDouble){
+				return aDouble.toString();
 			}
 		};
 		return doubleConverter;
@@ -530,16 +533,19 @@ public class DatabindingService {
 
 	public IConverter getToStringConverter(final Class fromClass) {
 		IConverter toStringConverter = new IConverter() {
-			public Object convert(Object object) {
+			public Object convertModel(Object object) {
 				return object.toString();
 			}
 
-			public Class getFromType() {
+			public Class getModelType() {
 				return fromClass;
 			}
 
-			public Class getToType() {
+			public Class getTargetType() {
 				return String.class;
+			}
+			public Object convertTarget(Object aString){
+				return aString;
 			}
 		};
 		return toStringConverter;
@@ -567,16 +573,19 @@ public class DatabindingService {
 		converters.put(new Pair(String.class, Double.class), doubleConverter);
 		converters.put(new Pair(String.class, double.class), doubleConverter);
 		IConverter integerConverter = new IConverter() {
-			public Object convert(Object object) {
-				return new Integer((String) object);
+			public Object convertModel(Object aString) {
+				return new Integer((String) aString);
 			}
 
-			public Class getFromType() {
+			public Class getModelType() {
 				return String.class;
 			}
 
-			public Class getToType() {
+			public Class getTargetType() {
 				return int.class;
+			}
+			public Object convertTarget(Object anInteger){
+				return anInteger.toString();
 			}
 		};
 		converters.put(new Pair(String.class, Integer.class), integerConverter);

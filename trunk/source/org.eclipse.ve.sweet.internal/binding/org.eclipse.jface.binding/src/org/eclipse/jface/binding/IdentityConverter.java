@@ -33,15 +33,18 @@ public class IdentityConverter implements IConverter {
 		this.toType = toType;
 	}
 
-	public Object convert(Object object) {
+	public Object convertModel(Object object) {
+		return object;
+	}
+	public Object convertTarget(Object object){
 		return object;
 	}
 
-	public Class getFromType() {
+	public Class getModelType() {
 		return fromType;
 	}
 
-	public Class getToType() {
+	public Class getTargetType() {
 		return toType;
 	}
 

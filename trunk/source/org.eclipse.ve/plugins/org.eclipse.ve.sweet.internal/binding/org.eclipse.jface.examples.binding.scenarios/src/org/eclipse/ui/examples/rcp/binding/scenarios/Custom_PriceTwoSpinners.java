@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Custom_PriceTwoSpinners.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 14:04:56 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-17 11:06:29 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -83,57 +83,52 @@ public class Custom_PriceTwoSpinners extends Composite {
 		dbs.bindValue(lblPrice,"text",skiTrip,"price");
 		dbs.bindValue(txtPrice,"text",skiTrip,"price");
 				
+		final int[] cent;
+		final int[] dollar;
+		
 		dbs.bindValue(
 				dbs.createUpdatableValue(spin_Dollars,"selection"),
 				dbs.createUpdatableValue(skiTrip, "price"),				
 				new IConverter(){
-					public Class getFromType() { return Integer.TYPE; }
-					public Class getToType() { return Double.TYPE; }
-					public Object convert(Object object) {
+					private double cents;
+					public Class getModelType() { return Integer.TYPE; }
+					public Class getTargetType() { return Double.TYPE; }
+					public Object convertModel(Object object) {
 						// Argument is an Integer representing the dollar portion.  Add to cents to make the new price
-						Double oldPrice = new Double(skiTrip.getPrice());
-						double cents = oldPrice.doubleValue() - oldPrice.intValue();
 						double newPrice = cents + ((Integer)object).intValue();
 						return new Double(newPrice);
 					}
-				},
-				new IConverter(){
-						public Class getFromType() { return Double.TYPE; }
-						public Class getToType() { return Integer.TYPE; }
-						public Object convert(Object object) {
-							// Return the dollar portion only
-							Double price = (Double)object;
-							int dollars = price.intValue();							
-							return new Integer(dollars);
-						}					
-					}					
-				);	
+					public Object convertTarget(Object object){
+						// Argument is a Double representing the price.  Return dollars only and remember the cents
+						Double price = (Double)object;
+						int dollars = price.intValue();
+						cents = price.doubleValue() - dollars;
+						return new Integer(dollars);						
+					}
+				},null);	
 		
 		dbs.bindValue(
 				dbs.createUpdatableValue(spin_Cents,"selection"),
 				dbs.createUpdatableValue(skiTrip, "price"),				
 				new IConverter(){
-					public Class getFromType() { return Integer.TYPE; }
-					public Class getToType() { return Double.TYPE; }
-					public Object convert(Object object) {
-						// Argument is an Integer representing the cents portion.  Add to dollars to make the new price
-						Double oldPrice = new Double(skiTrip.getPrice());
-						double dollars = oldPrice.intValue();
+					private double dollars;
+					public Class getModelType() { return Integer.TYPE; }
+					public Class getTargetType() { return Double.TYPE; }
+					public Object convertModel(Object object) {
+						// Argument is an Integer representing the cents portion.  
+						// Add to dollars to make the new price
 						double newPrice = dollars + ((Integer)object).doubleValue()/100;
 						return new Double(newPrice);
 					}
-				},
-				new IConverter(){
-						public Class getFromType() { return Double.TYPE; }
-						public Class getToType() { return Integer.TYPE; }
-						public Object convert(Object object) {
-							// Return the cents portion only							
-							Double price = (Double)object;
-							double cents = price.doubleValue() - price.intValue();	
-							cents = cents * 100;
-							return new Integer((int)cents);
-						}					
-					}					
-				);			
+					public Object convertTarget(Object object){
+						// Return the cents portion only and remember the dollars
+						Double price = (Double)object;
+						dollars = price.intValue();
+						double cents = price.doubleValue() - price.intValue();	
+						cents = cents * 100;
+						return new Integer((int)cents);						
+					}
+				},null);
+							
 	}
 }

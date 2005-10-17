@@ -71,7 +71,7 @@ public class ValueBinding implements IChangeListener {
 		String validationError = doValidateTarget(value);
 		if (validationError == null) {
 			try {
-				model.setValue(targetToModelConverter.convert(value));
+				model.setValue(targetToModelConverter.convertModel(value));
 			} catch (Exception ex) {
 				context.updateValidationError(this,
 						"An error occurred while setting the value.");
@@ -92,6 +92,6 @@ public class ValueBinding implements IChangeListener {
 	}
 
 	public void updateTargetFromModel() {
-		target.setValue(modelToTargetConverter.convert(model.getValue()));
+		target.setValue(targetToModelConverter.convertTarget(model.getValue()));
 	}
 }
