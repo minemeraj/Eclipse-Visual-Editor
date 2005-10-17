@@ -39,7 +39,8 @@ public class DatabindingServiceTest extends TestCase {
 		public Object convertModel(Object object) {
 			return object;
 		}
-		public Object convertTarget(Object object){
+
+		public Object convertTarget(Object object) {
 			return object;
 		}
 	};
@@ -65,8 +66,8 @@ public class DatabindingServiceTest extends TestCase {
 		updatableValueRMock.addChangeListener(null);
 		updatableValueRMock.getValue();
 		Mocks.startChecking(updatableValueRMock);
-		dbs.bindValue(settableValue1, updatableValueRMock,
-				identityConverter, identityConverter, validatorMock);
+		dbs.bindValue(settableValue1, updatableValueRMock, identityConverter,
+				validatorMock);
 		Mocks.verify(updatableValueRMock);
 	}
 
@@ -74,8 +75,8 @@ public class DatabindingServiceTest extends TestCase {
 		updatableValueRMock.addChangeListener(null);
 		updatableValueRMock.setValue(null);
 		Mocks.startChecking(updatableValueRMock);
-		dbs.bindValue(updatableValueRMock, settableValue2,
-				identityConverter, identityConverter, validatorMock);
+		dbs.bindValue(updatableValueRMock, settableValue2, identityConverter,
+				validatorMock);
 	}
 
 	public void testBindValuePropagation() throws BindingException {
