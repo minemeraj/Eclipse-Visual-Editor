@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-07 16:30:36 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-17 21:55:16 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -29,10 +29,15 @@ import org.eclipse.swt.widgets.Display;
 public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEditPart {
 
 	protected List fEditPartContributors;
-	private ActionBarMouseMotionListener fMouseMotionListener = null;
-	private ActionBarEditPartListener fEditPartListener = null;
+	private ActionBarController fActionBarController = null;
+	private ActionBarEditPartListener fActionBarEditPartListener = null;
 	private ActionBarFigureListener fHostFigureListener = null;
+	private ActionBarActionListener fActionListener = null;
+	private EditPartContributionChangeListener fContributionChangeListener;
 	private boolean actionBarEditpartSelected = false;
+	private List actionBarChildren = Collections.EMPTY_LIST;
+	private List figureOverlayCache;
+	private List hoverOverlayCache;
 
 	private void addEditPartContributor(GraphicalEditPartContributor anEditPartContributor) {
 		if (fEditPartContributors == null) {
@@ -47,35 +52,27 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	
 	public void activate() {
 		super.activate();
-		List editPartContributors = getEditDomain().getContributors(this);
-		if(editPartContributors != null){
-			Iterator iter = editPartContributors.iterator();
+		List editPartContributorFactories = getEditDomain().getContributors(this);
+		if(editPartContributorFactories != null){
+			fContributionChangeListener = new EditPartContributionChangeListener () {
+				public void contributionChanged(EditPartContributor editpartContributor) {
+					refreshContributors();
+				}
+			};
+			Iterator iter = editPartContributorFactories.iterator();
 			while(iter.hasNext()){
 				GraphicalEditPartContributor graphicalEditPartContributor = ((AdaptableContributorFactory)iter.next()).getGraphicalEditPartContributor(this);
 				if(graphicalEditPartContributor != null){
 					addEditPartContributor(graphicalEditPartContributor);
+					graphicalEditPartContributor.addContributionChangeListener(fContributionChangeListener);
 				}
 			}
-		}
-		// If there are any graphical editpart contributors, add the figures to the main and tooltip figure
-		if (fEditPartContributors != null) {
-			Iterator iter = fEditPartContributors.iterator();
-			IFigure contentPane = getFigure();
-			IFigure toolTipFigure = getFigure().getToolTip();
-			while (iter.hasNext()) {
-				GraphicalEditPartContributor contrib = (GraphicalEditPartContributor) iter.next();
-				IFigure figOverlay = contrib.getFigureOverLay();
-				if (figOverlay != null)
-					contentPane.add(figOverlay);
-				IFigure hoverFig = contrib.getHoverOverLay();
-				if (hoverFig != null)
-					toolTipFigure.add(hoverFig);
-			}
-			getFigure().addMouseMotionListener(this.fMouseMotionListener = new ActionBarMouseMotionListener());
-			addEditPartListener(fEditPartListener = new ActionBarEditPartListener());
+			getFigure().addMouseMotionListener(this.fActionBarController = new ActionBarController());
+			addEditPartListener(fActionBarEditPartListener = new ActionBarEditPartListener());
 			getFigure().addFigureListener(this.fHostFigureListener = new ActionBarFigureListener());
+			fActionListener = new ActionBarActionListener();
+			addContributors();
 		}
-	
 	}
 	
 	public void deactivate() {
@@ -85,8 +82,8 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 				contributor.dispose();
 				
 			}
-			getFigure().removeMouseMotionListener(this.fMouseMotionListener);
-			removeEditPartListener(this.fEditPartListener);
+			getFigure().removeMouseMotionListener(this.fActionBarController);
+			removeEditPartListener(this.fActionBarEditPartListener);
 			getFigure().removeFigureListener(fHostFigureListener);
 
 			fEditPartContributors = null;
@@ -94,13 +91,11 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 		super.deactivate();
 	}
 	/*
-	 * Mouse motion listener for the Action Bar
-	 * Listens for mouse movement over the host figure and displays action bar editpart and its children
+	 * Action Bar Controller
+	 * Listens for mouse movement over the host figure and displays the action bar editpart and its children
 	 */
-	private class ActionBarMouseMotionListener extends MouseMotionListener.Stub {
+	private class ActionBarController extends MouseMotionListener.Stub {
 		ActionBarGraphicalEditPart actionBarEditPart = null;
-		public List actionBarChildren = Collections.EMPTY_LIST;
-		public List actionBarFigures = Collections.EMPTY_LIST;
 		IFigure actionBarFigure = null;
 		boolean mouseInsideActionBar = false;
 		boolean mouseInsideControlFigure = false;
@@ -114,6 +109,7 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 		public void mouseEntered(MouseEvent me) {
 			if (me.getSource() == actionBarFigure || mouseWithinActionBar(me)) {
 				mouseInsideActionBar = true;
+//				System.out.println("mouse entered ActionBarFigure");
 			}
 			if (me.getSource() == getFigure()) {
 				mouseInsideControlFigure = true;
@@ -126,8 +122,9 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			if (me.getSource() == getFigure()) {
 				mouseInsideControlFigure = false;
 			}
-			if (me.getSource() == actionBarFigure && !mouseWithinActionBar(me)) {
+			if (!mouseWithinActionBar(me)) {
 				mouseInsideActionBar = false;
+//				System.out.println("mouse exited ActionBarFigure");
 			}
 			if (!mouseInsideActionBar && !mouseInsideControlFigure  && !actionBarEditpartSelected) {
 				Display.getCurrent().timerExec(1000, hideActionBarRunnable);
@@ -139,12 +136,39 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			return (bounds.x < me.x && bounds.y < me.y && bounds.x + bounds.width > me.x && bounds.y + bounds.height > me.y);
 		}
 
+		private void highlightActionBarChildren(MouseEvent me) {
+			if (actionBarFigure == null) return;
+			List children = actionBarEditPart.getChildren();
+			for (int i = 0; i < children.size(); i++) {
+				IFigure child = ((GraphicalEditPart)children.get(i)).getFigure();
+				Rectangle bounds = child.getBounds();
+				if (bounds.x < me.x && bounds.y < me.y && bounds.x + bounds.width > me.x && bounds.y + bounds.height > me.y) {
+					child.setBorder(new LineBorder(ColorConstants.darkGreen));
+					child.repaint();
+				}
+				else if (child.getBorder() != null) {
+					child.setBorder(null);
+					child.repaint();
+				}
+			}
+		}
+		/*
+		 * If hovering over one of the action bar editparts, draw a focus rectangle around the child
+		 * 
+		 * @see org.eclipse.draw2d.MouseMotionListener#mouseHover(org.eclipse.draw2d.MouseEvent)
+		 */
+		public void mouseMoved(MouseEvent me) {
+			if (mouseWithinActionBar(me)) {
+				highlightActionBarChildren(me);
+			}
+		}
+		
 		public void showActionBar() {
 			if (actionBarFigure == null) {
 				actionBarFigure = getActionBarEditPart().getFigure();
 				populateActionBar();
 				if (actionBarChildren != null && !actionBarChildren.isEmpty()) {
-					actionBarFigure.addMouseMotionListener(fMouseMotionListener);
+					actionBarFigure.addMouseMotionListener(fActionBarController);
 					if (!actionBarVisible) {
 						getActionBarEditPart().show(getFigure().getBounds().getCopy(), 0);
 						actionBarVisible = true;
@@ -169,14 +193,16 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			}
 		};
 		public void hideActionBar() {
+			mouseInsideActionBar = false;
 			if (actionBarVisible) {
+				actionBarFigure.removeMouseMotionListener(fActionBarController);
+				getActionBarEditPart().removeEditPartListener(fActionBarEditPartListener);
+				for (int i = 0; i < actionBarChildren.size(); i++) {
+					((EditPart)actionBarChildren.get(i)).removeEditPartListener(fActionBarEditPartListener);
+				}
 				getActionBarEditPart().hide();
 				actionBarVisible = false;
-				actionBarFigure.removeMouseMotionListener(fMouseMotionListener);
-				getActionBarEditPart().removeEditPartListener(fEditPartListener);
-				for (int i = 0; i < actionBarChildren.size(); i++) {
-					((EditPart)actionBarChildren.get(i)).removeEditPartListener(fEditPartListener);
-				}
+				mouseInsideActionBar = false;
 				getActionBarEditPart().addActionBarChildren((Collections.EMPTY_LIST));
 				getActionBarEditPart().refresh();
 				actionBarFigure = null;
@@ -184,23 +210,8 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			}
 		}
 		private void populateActionBar() {
-			if (actionBarChildren.isEmpty()) {
-				actionBarChildren = new ArrayList();
-				actionBarFigures = new ArrayList();
-				Iterator iter = fEditPartContributors.iterator();
-				while (iter.hasNext()) {
-					GraphicalEditPartContributor contrib = (GraphicalEditPartContributor) iter.next();
-					GraphicalEditPart [] children = contrib.getActionBarChildren();
-					if (children != null) {
-						for (int i = 0; i < children.length; i++) {
-							actionBarChildren.add(children[i]);
-							actionBarFigures.add(children[i].getFigure());
-						}
-					}
-				}
-			}
 			if (!actionBarChildren.isEmpty()) {
-				getActionBarEditPart().addEditPartListener(fEditPartListener);
+				getActionBarEditPart().addEditPartListener(fActionBarEditPartListener);
 				getActionBarEditPart().addActionBarChildren(actionBarChildren);
 				getActionBarEditPart().refresh();
 			}
@@ -208,30 +219,34 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	}
 
 	/*
-	 * Editpart listener that listens for selection of action bar editparts
+	 * Editpart listener that listens for selection of action bar editparts and adds listeners
+	 * to the editparts depending on whether they action editparts or just selectable editparts.
 	 */
 	class ActionBarEditPartListener extends EditPartListener.Stub {
 
 		public void childAdded(EditPart editpart, int arg1) {
 			if (editpart != null) {
-				editpart.addEditPartListener(fEditPartListener);
+				if (editpart instanceof ActionBarActionEditPart)
+					((ActionBarActionEditPart)editpart).addActionListener(fActionListener);
+				editpart.addEditPartListener(fActionBarEditPartListener);
 			}
 		};
 
 		public void removingChild(EditPart child, int index) {
-			child.removeEditPartListener(fEditPartListener);
-			super.removingChild(child, index);
+			if (child instanceof ActionBarActionEditPart)
+				((ActionBarActionEditPart)child).removeActionListener(fActionListener);
+			child.removeEditPartListener(fActionBarEditPartListener);
 		}
 
 		public void selectedStateChanged(EditPart part) {
 			if (part != null && part.getSelected() == EditPart.SELECTED_PRIMARY
-					&& (fMouseMotionListener.actionBarChildren.contains(part) || part == CDEAbstractGraphicalEditPart.this)) {
-				Display.getCurrent().asyncExec(fMouseMotionListener.showActionBarRunnable);
-				if (fMouseMotionListener.actionBarChildren.contains(part))
+					&& (actionBarChildren.contains(part) || part == CDEAbstractGraphicalEditPart.this)) {
+				Display.getCurrent().asyncExec(fActionBarController.showActionBarRunnable);
+				if (actionBarChildren.contains(part))
 					actionBarEditpartSelected = true;
 			} else {
 				actionBarEditpartSelected = false;
-				Display.getCurrent().asyncExec(fMouseMotionListener.hideActionBarRunnable);
+				Display.getCurrent().asyncExec(fActionBarController.hideActionBarRunnable);
 			}
 		}
 	};
@@ -242,9 +257,87 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	class ActionBarFigureListener implements FigureListener {
 
 		public void figureMoved(IFigure source) {
-			fMouseMotionListener.hideActionBar();
-			Display.getCurrent().asyncExec(fMouseMotionListener.showActionBarRunnable);
+			fActionBarController.hideActionBar();
+			Display.getCurrent().asyncExec(fActionBarController.showActionBarRunnable);
 		}
 		
+	}
+
+	/*
+	 * Listens for when the mouse is pressed on the action type edit parts.
+	 * When this occurs the action bar should be dismissed.
+	 */
+	class ActionBarActionListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent event) {
+			fActionBarController.hideActionBar();
+		}
+		
+	}
+	public void refresh() {
+		super.refresh();
+	}
+
+	/*
+	 * From the editpart contributores, add the figure overlays, hover overlays, and action bar children
+	 */
+	private void addContributors() {
+		if (fEditPartContributors != null) {
+			Iterator iter = fEditPartContributors.iterator();
+			figureOverlayCache = new ArrayList();
+			hoverOverlayCache = new ArrayList();
+			IFigure contentPane = getFigure();
+			IFigure toolTipFigure = getFigure().getToolTip();
+			while (iter.hasNext()) {
+				GraphicalEditPartContributor contrib = (GraphicalEditPartContributor) iter.next();
+				// Contribute the figure overlay
+				IFigure figOverlay = contrib.getFigureOverLay();
+				if (figOverlay != null) {
+					contentPane.add(figOverlay);
+					figureOverlayCache.add(figOverlay);
+				}
+				// Contribute the hover overlay
+				IFigure hoverFig = contrib.getHoverOverLay();
+				if (hoverFig != null) {
+					toolTipFigure.add(hoverFig);
+					hoverOverlayCache.add(hoverFig);
+				}
+				actionBarChildren = new ArrayList();
+				GraphicalEditPart[] children = contrib.getActionBarChildren();
+				if (children != null) {
+					for (int i = 0; i < children.length; i++) {
+						actionBarChildren.add(children[i]);
+					}
+				}
+			}
+		}
+	}
+	
+	/*
+	 * Clear out the figure overlays, hover overlays, and action bar children
+	 */
+	private void removeContributors() {
+		if (fEditPartContributors != null) {
+			IFigure fig = getFigure();
+			if (figureOverlayCache != null) {
+				Iterator iterator = figureOverlayCache.iterator();
+				while (iterator.hasNext())
+					fig.remove((IFigure) iterator.next());
+				figureOverlayCache = null;
+			}
+			if (hoverOverlayCache != null) {
+				fig = getFigure().getToolTip();
+				Iterator iterator = hoverOverlayCache.iterator();
+				while (iterator.hasNext())
+					fig.remove((IFigure) iterator.next());
+				hoverOverlayCache = null;
+			}
+			actionBarChildren = Collections.EMPTY_LIST;
+		}
+	}
+	
+	private void refreshContributors() {
+		removeContributors();
+		addContributors();
 	}
 }
