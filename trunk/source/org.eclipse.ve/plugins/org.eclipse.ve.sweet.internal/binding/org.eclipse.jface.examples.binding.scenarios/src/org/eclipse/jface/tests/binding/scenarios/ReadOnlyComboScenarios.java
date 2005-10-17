@@ -12,7 +12,7 @@
  *  Created Oct 12, 2005 by Gili Mendel
  * 
  *  $RCSfile: ReadOnlyComboScenarios.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-12 18:02:34 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-17 13:20:06 $ 
  */
  
 package org.eclipse.jface.tests.binding.scenarios;
@@ -116,8 +116,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		// Bind the ComboViewer's selection to the Adventure's default lodging.
 		getDbs().bindValue(
 				cviewer, "selection", skiAdventure ,"defaultLodging",
-				new IdentityConverter(Object.class,Lodging.class),
-				new IdentityConverter(Lodging.class,Object.class));
+				new IdentityConverter(Object.class,Lodging.class));
 		
 		// Check to see that the initial selection is the currentDefault Lodging
 		assertEquals(getViewerSelection(), skiAdventure.getDefaultLodging());

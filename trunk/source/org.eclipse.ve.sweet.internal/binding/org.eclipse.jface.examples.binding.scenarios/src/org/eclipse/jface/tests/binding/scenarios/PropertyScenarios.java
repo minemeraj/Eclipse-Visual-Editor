@@ -92,21 +92,6 @@ public class PropertyScenarios extends ScenariosTestCase {
 			public Object convertTarget(Object object){
 				return object.toString();
 			}
-		}, new IConverter() {
-			public Class getModelType() {
-				return Integer.class;
-			}
-
-			public Class getTargetType() {
-				return String.class;
-			}
-
-			public Object convertModel(Object object) {
-				return object.toString();
-			}
-			public Object convertTarget(Object object){
-				return new Integer((String)object);
-			}
 		});
 		assertEquals(new Integer(cart.getLodgingDays()).toString(), text
 				.getText());

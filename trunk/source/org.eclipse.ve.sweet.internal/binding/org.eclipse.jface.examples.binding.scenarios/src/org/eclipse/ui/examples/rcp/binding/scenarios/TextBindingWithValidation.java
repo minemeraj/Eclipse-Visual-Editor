@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBindingWithValidation.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-05 21:34:05 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-17 13:20:06 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -73,7 +73,7 @@ public class TextBindingWithValidation extends Composite {
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
 		IdentityConverter identity = new IdentityConverter(String.class);
-		dbs.bindValue(txtDescription, "text", skiTrip, "description", identity, identity, new IValidator(){
+		dbs.bindValue(txtDescription, "text", skiTrip, "description", identity, new IValidator(){
 			public String isPartiallyValid(Object value) {
 				return isValid(value);
 			}

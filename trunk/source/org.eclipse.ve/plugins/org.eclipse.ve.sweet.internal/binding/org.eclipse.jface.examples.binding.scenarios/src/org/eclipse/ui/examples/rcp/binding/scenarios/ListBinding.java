@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ListBinding.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-04 18:27:54 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-17 13:20:06 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -94,8 +94,7 @@ public class ListBinding extends Composite {
 		
 		dbs.bindValue(
 				listViewer,"selection",skiTrip,emfPackage.getAdventure_DefaultLodging(),
-				new IdentityConverter(Object.class,Lodging.class),
-				new IdentityConverter(Lodging.class,Object.class));
+				new IdentityConverter(Object.class,Lodging.class));
 		
 		IUpdatableValue defaultLodging = dbs.createUpdatableValue(
 				skiTrip,emfPackage.getAdventure_DefaultLodging());

@@ -13,9 +13,12 @@ package org.eclipse.jface.tests.binding.scenarios;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.binding.scenarios.AggregateUpdatableValue;
+import org.eclipse.ui.examples.rcp.binding.scenarios.PriceCentsConverter;
+import org.eclipse.ui.examples.rcp.binding.scenarios.PriceDollarsConverter;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
 /**
@@ -40,6 +43,7 @@ public class CustomScenarios extends ScenariosTestCase {
 	public void testScenario01() throws BindingException {
 		// Binding the name property of an Adventure object to the contents of
 		// Text controls, no conversion, no validation.
+	
 		Adventure adventure = SampleData.WINTER_HOLIDAY;
 		Text text = new Text(getComposite(), SWT.BORDER);
 
