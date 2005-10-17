@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SampleData.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-07 17:47:16 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-17 23:06:29 $ 
  */
 package org.eclipse.jface.examples.binding.scenarios.desired;
 
@@ -25,6 +25,7 @@ import org.eclipse.jface.binding.IUpdatableValueFactory;
 import org.eclipse.jface.binding.swt.SWTDatabindingService;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
@@ -76,7 +77,7 @@ public class SampleData {
 	
 	public static DatabindingService getSWTtoEMFDatabindingService(Control aControl){
 		
-		DatabindingService dbs = new SWTDatabindingService(aControl, null);
+		DatabindingService dbs = new SWTDatabindingService(aControl, SWT.None, SWT.FocusOut);
 
 		IUpdatableValueFactory emfValueFactory = new IUpdatableValueFactory() {
 			public IUpdatableValue createUpdatableValue(Object object,Object attribute) {

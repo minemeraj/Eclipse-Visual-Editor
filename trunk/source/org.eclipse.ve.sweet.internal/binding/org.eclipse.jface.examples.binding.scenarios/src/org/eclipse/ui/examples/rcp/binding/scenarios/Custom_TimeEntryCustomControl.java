@@ -10,17 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Custom_TimeEntryCustomControl.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 14:04:56 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import java.text.ParseException;
-
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.IUpdatableValueFactory;
-import org.eclipse.jface.binding.UpdatableValue;
+import org.eclipse.jface.binding.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -57,8 +51,8 @@ public class Custom_TimeEntryCustomControl extends Composite {
 		
 		Transportation bus = SampleData.GREYHOUND_BUS;
 		
-		dbs.addUpdatableValueFactory(TimeEntry.class,new IUpdatableValueFactory() {
-			public IUpdatableValue createUpdatableValue(Object object, Object attribute) {
+		dbs.addUpdatableFactory(TimeEntry.class,new IUpdatableFactory() {
+			public IUpdatable createUpdatable(Object object, Object attribute) {
 				if("time".equals(attribute)){
 					return new TimeEntryUpdatableValue((TimeEntry)object);
 				} else {
@@ -67,9 +61,9 @@ public class Custom_TimeEntryCustomControl extends Composite {
 			}
 		});
 
-		dbs.bindValue(lbl_time,"text",bus,"arrivalTime");
-		dbs.bindValue(timeEntry,"time",bus,"arrivalTime");
-		dbs.bindValue(timeEntry1,"time",bus,"arrivalTime");		
+		dbs.bind(lbl_time,"text",bus,"arrivalTime");
+		dbs.bind(timeEntry,"time",bus,"arrivalTime");
+		dbs.bind(timeEntry1,"time",bus,"arrivalTime");		
 		
 	}
 

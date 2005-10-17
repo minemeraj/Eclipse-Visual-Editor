@@ -11,15 +11,10 @@
 package org.eclipse.jface.tests.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
-import org.eclipse.ui.examples.rcp.binding.scenarios.AggregateUpdatableValue;
-import org.eclipse.ui.examples.rcp.binding.scenarios.PriceCentsConverter;
-import org.eclipse.ui.examples.rcp.binding.scenarios.PriceDollarsConverter;
-import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
+import org.eclipse.ui.examples.rcp.binding.scenarios.*;
 
 /**
  * To run the tests in this class, right-click and select "Run As JUnit Plug-in
@@ -47,8 +42,8 @@ public class CustomConverterScenarios extends ScenariosTestCase {
 		spinner_dollars.setMaximum(10000);
 		Spinner spinner_cents = new Spinner(getComposite(),SWT.NONE);		
 		
-		getDbs().bindValue(spinner_dollars,"selection",skiTrip,"price",new PriceDollarsConverter());	
-		getDbs().bindValue(spinner_cents,"selection",skiTrip,"price",new PriceCentsConverter());		
+		getDbs().bind(spinner_dollars,"selection",skiTrip,"price",new PriceDollarsConverter());	
+		getDbs().bind(spinner_cents,"selection",skiTrip,"price",new PriceCentsConverter());		
 		// spinEventLoop(1);
 		// Make sure that the selection on the spinner_dollars matches the dollars of the price
 		assertEquals(spinner_dollars.getSelection(), new Double(skiTrip.getPrice()).intValue());

@@ -10,29 +10,20 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SampleData.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-14 14:04:55 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-17 23:06:29 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.jface.binding.IUpdatableTable;
-import org.eclipse.jface.binding.IUpdatableTableFactory;
-import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.IUpdatableValueFactory;
+import org.eclipse.jface.binding.*;
 import org.eclipse.jface.binding.swt.SWTDatabindingService;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
+import org.eclipse.jface.examples.binding.emf.EMFUpdatableCollection;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.examples.rcp.adventure.Adventure;
-import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
-import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
-import org.eclipse.ui.examples.rcp.adventure.Catalog;
-import org.eclipse.ui.examples.rcp.adventure.Lodging;
-import org.eclipse.ui.examples.rcp.adventure.Transportation;
+import org.eclipse.ui.examples.rcp.adventure.*;
  
 public class SampleData {
 	
@@ -48,7 +39,7 @@ public class SampleData {
 		initializeData();
 	}
 	
-	private static void initializeData(){
+	public static void initializeData(){
 	
 		AdventureFactory adventureFactory = AdventurePackage.eINSTANCE.getAdventureFactory();
 		
@@ -90,32 +81,24 @@ public class SampleData {
 		
 		DatabindingService dbs = new SWTDatabindingService(aControl, SWT.Modify, SWT.Modify);
 
-		IUpdatableValueFactory emfValueFactory = new IUpdatableValueFactory() {
-			public IUpdatableValue createUpdatableValue(Object object,Object attribute) {
-				if(attribute instanceof EStructuralFeature){
-					EStructuralFeature attr = (EStructuralFeature) attribute;
-					return new EMFUpdatableValue((EObject) object, attr, !attr.isChangeable());
-				} else {
-					EObject eObject = (EObject)object;
-					EStructuralFeature attr = eObject.eClass().getEStructuralFeature((String)attribute);
-					return new EMFUpdatableValue(eObject , attr, !attr.isChangeable());
-				} 
-			}
-		};
-		dbs.addUpdatableValueFactory(EObjectImpl.class, emfValueFactory);
-		
-		IUpdatableTableFactory emfTableFactory = new IUpdatableTableFactory(){
-			public IUpdatableTable createUpdatableTable(Object object, Object attribute) {
-				if(attribute instanceof String){					
-					return new EMFUpdatableTable((EObject)object,(String)attribute,null);
-				} else {
-					EStructuralFeature attr = (EStructuralFeature) attribute;
-					return new EMFUpdatableTable((EObject)object,attr.getName(),null);					
+		IUpdatableFactory emfFactory = new IUpdatableFactory(){		
+			public IUpdatable createUpdatable(Object object, Object attribute) {
+				EObject eObject = (EObject)object;
+				EStructuralFeature attr;
+				if (attribute instanceof EStructuralFeature)
+					attr = (EStructuralFeature)attribute;
+				else
+					attr = eObject.eClass().getEStructuralFeature((String)attribute);
+				if (attr.isMany()) {					
+					return new EMFUpdatableCollection(eObject, attr, !attr.isChangeable());
 				}
-			}			
-		};
+				else
+					return new EMFUpdatableValue(eObject , attr, !attr.isChangeable());
+					
+			}
 		
-		dbs.addUpdatableTableFactory(EObjectImpl.class, emfTableFactory);
+		};				
+		dbs.addUpdatableFactory(EObjectImpl.class, emfFactory);
 				
 		return dbs;
 		

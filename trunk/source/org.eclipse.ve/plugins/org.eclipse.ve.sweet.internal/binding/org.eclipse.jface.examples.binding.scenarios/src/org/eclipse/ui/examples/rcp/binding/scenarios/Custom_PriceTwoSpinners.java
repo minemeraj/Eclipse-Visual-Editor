@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Custom_PriceTwoSpinners.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-17 13:20:06 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-17 23:06:29 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -80,12 +80,12 @@ public class Custom_PriceTwoSpinners extends Composite {
 		
 		final Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 		
-		dbs.bindValue(lblPrice,"text",skiTrip,"price");
-		dbs.bindValue(txtPrice,"text",skiTrip,"price");
+		dbs.bind(lblPrice,"text",skiTrip,"price");
+		dbs.bind(txtPrice,"text",skiTrip,"price");
 						
-		dbs.bindValue(spin_Dollars,"selection",skiTrip, "price",new PriceDollarsConverter());	
+		dbs.bind(spin_Dollars,"selection",skiTrip, "price",new PriceDollarsConverter());	
 		
-		dbs.bindValue(spin_Cents,"selection",skiTrip, "price",new PriceCentsConverter());
+		dbs.bind(spin_Cents,"selection",skiTrip, "price",new PriceCentsConverter());
 							
 	}
 }

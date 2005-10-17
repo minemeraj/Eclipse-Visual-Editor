@@ -4,22 +4,22 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+/*
+ *  Created Oct 14, 2005 by Gili Mendel
+ * 
+ *  $RCSfile: IUpdatableFactory.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-10-17 23:06:30 $ 
+ */
+ 
 package org.eclipse.jface.binding;
+ 
 
-public interface IUpdatableTable extends IUpdatableCollection {
-
-	public Class[] getColumnTypes();
+public interface IUpdatableFactory {
 	
-	public Object[] getValues(int index);
-
-	public void setElementAndValues(int index, Object element, Object[] values);
-
-	public int addElementWithValues(int index, Object element, Object[] values);
-
-	public void setValues(int index, Object[] values);
-	
+		// Factory would determine what type of IUpdatable to created from the attribute.
+		IUpdatable createUpdatable(Object object, Object attribute);
 }

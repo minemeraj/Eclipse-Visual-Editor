@@ -11,11 +11,7 @@
 
 package org.eclipse.jface.binding;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.jface.binding.internal.DerivedUpdatableValue;
 import org.eclipse.jface.binding.internal.ValueBinding;
@@ -23,6 +19,7 @@ import org.eclipse.jface.binding.internal.ValueBinding;
 public class DatabindingService {
 
 	private static class Pair {
+
 		private final Object a;
 
 		private Object b;
@@ -35,7 +32,8 @@ public class DatabindingService {
 		public boolean equals(Object obj) {
 			if (obj.getClass() != Pair.class) {
 				return false;
-			} else {
+			}
+			else {
 				Pair other = (Pair) obj;
 				return a.equals(other.a) && b.equals(other.b);
 			}
@@ -46,16 +44,35 @@ public class DatabindingService {
 		}
 	}
 
-	private SettableValue combinedValidationMessage = new SettableValue(
-			String.class);
+	public static class CollectionChangeListener implements IChangeListener {
+
+		IUpdatableCollection source, target;
+
+		public CollectionChangeListener(IUpdatableCollection source, IUpdatableCollection target) {
+			this.source = source;
+			this.target = target;
+		}
+
+		public void handleChange(IChangeEvent changeEvent) {
+			if (changeEvent.getUpdatable() == source) {
+				int row = changeEvent.getPosition();
+				if (changeEvent.getChangeType() == ChangeEvent.CHANGE)
+					target.setElement(row, changeEvent.getNewValue());
+				else if (changeEvent.getChangeType() == ChangeEvent.ADD)
+					target.addElement(changeEvent.getNewValue(), row);
+				else if (changeEvent.getChangeType() == ChangeEvent.REMOVE)
+					target.removeElement(row);
+			}
+		}
+	};
+
+	private SettableValue combinedValidationMessage = new SettableValue(String.class);
 
 	private Map converters = new HashMap();
 
 	private List createdUpdatables = new ArrayList();
 
-	private Map tableFactories = new HashMap();
-
-	private Map valueFactories = new HashMap();
+	private Map updatableFactories = new HashMap(50);
 
 	private List validationMessages = new ArrayList();
 
@@ -63,8 +80,7 @@ public class DatabindingService {
 
 	private SettableValue validationMessage = new SettableValue(String.class);
 
-	private SettableValue partialValidationMessage = new SettableValue(
-			String.class);
+	private SettableValue partialValidationMessage = new SettableValue(String.class);
 
 	private DatabindingService parent;
 
@@ -78,137 +94,43 @@ public class DatabindingService {
 		this(null);
 	}
 
-	public void addUpdatableTableFactory(Class clazz,
-			IUpdatableTableFactory factory) {
-		tableFactories.put(clazz, factory);
+	public void addUpdatableFactory(Class clazz, IUpdatableFactory factory) {
+		updatableFactories.put(clazz, factory);
 	}
 
-	public void addUpdatableValueFactory(Class clazz,
-			IUpdatableValueFactory factory) {
-		valueFactories.put(clazz, factory);
-	}
+	/*
+	 * specialized to bind two IUpdatableCollection
+	 */
+	public void bind(IUpdatableCollection targetCollection, IUpdatableCollection modelCollection, IConverter converter, final IValidator validator) throws BindingException {
 
-	public void bindTable(IUpdatableTable targetTable,
-			IUpdatableTable modelTable) throws BindingException {
-		if (!targetTable.getElementType().isAssignableFrom(
-				modelTable.getElementType())) {
-			throw new BindingException("no converter from "
-					+ modelTable.getElementType() + " to "
-					+ targetTable.getElementType());
-		}
-		Class[] modelColumnTypes = modelTable.getColumnTypes();
-		if (targetTable.getColumnTypes().length != modelColumnTypes.length) {
-			throw new BindingException("column counts don't match");
-		}
-		IConverter modelToTargetElementConverter = new IdentityConverter(
-				targetTable.getElementType());
-		IConverter[] modelToTargetLabelConverters = new IConverter[modelColumnTypes.length];
-		for (int i = 0; i < modelToTargetLabelConverters.length; i++) {
-			modelToTargetLabelConverters[i] = new IdentityConverter(
-					modelColumnTypes[i]);
-		}
-		bindTable(targetTable, modelTable, modelToTargetElementConverter,
-				modelToTargetLabelConverters);
-	}
+		//TODO use a ValueBindings, and deal with validator
+		
+		// Verify element conversion types
+		Class convertedClass = converter.getTargetType();
+		if (!targetCollection.getElementType().isAssignableFrom(convertedClass)) { throw new BindingException("no converter from "
+				+ convertedClass.getName() + " to " + targetCollection.getElementType().getName());
 
-	public void bindTable(final IUpdatableTable targetTable,
-			final IUpdatableTable modelTable,
-			final IConverter modelToTargetElementConverter,
-			final IConverter[] modelToTargetValueConverters)
-			throws BindingException {
-		final int columnCount = targetTable.getColumnTypes().length;
-		if (modelTable.getColumnTypes().length != columnCount) {
-			throw new BindingException("number of columns doesn't match");
 		}
-		checkConverterTypes(modelToTargetElementConverter, modelTable
-				.getElementType(), targetTable.getElementType());
-		for (int i = 0; i < columnCount; i++) {
-			checkConverterTypes(modelToTargetValueConverters[i], modelTable
-					.getColumnTypes()[i], targetTable.getColumnTypes()[i]);
+		convertedClass = converter.getModelType();
+		if (!modelCollection.getElementType().isAssignableFrom(convertedClass)) { throw new BindingException("no converter from "
+				+ convertedClass.getName() + " to " + modelCollection.getElementType().getName());
+
 		}
 
-		IChangeListener listener = new IChangeListener() {
-			public void handleChange(IChangeEvent changeEvent) {
-				if (changeEvent.getUpdatable() == targetTable) {
-					if (changeEvent.getChangeType() == ChangeEvent.CHANGE) {
-						int row = changeEvent.getPosition();
-						modelTable.setElementAndValues(row, targetTable
-								.getElement(row), getConvertedModelValues(
-								targetTable, modelToTargetValueConverters,
-								columnCount, row));
-					}
-					// TODO ADD case, REMOVE case
-				} else {
-					if (changeEvent.getChangeType() == ChangeEvent.CHANGE) {
-						int row = changeEvent.getPosition();
-						targetTable.setElementAndValues(row,
-								modelToTargetElementConverter
-										.convertModel(changeEvent.getNewValue()),
-								getConvertedModelValues(modelTable,
-										modelToTargetValueConverters,
-										columnCount, row));
-					} else if (changeEvent.getChangeType() == ChangeEvent.ADD) {
-						int row = changeEvent.getPosition();
-						targetTable.addElementWithValues(row,
-								modelToTargetElementConverter
-										.convertModel(changeEvent.getNewValue()),
-								getConvertedModelValues(modelTable,
-										modelToTargetValueConverters,
-										columnCount, row));
-					} else if (changeEvent.getChangeType() == ChangeEvent.REMOVE) {
-						int row = changeEvent.getPosition();
-						targetTable.removeElement(row);
-					}
-				}
-			}
-		};
-		targetTable.addChangeListener(listener);
-		modelTable.addChangeListener(listener);
-		// TODO filling a table for the first time is not efficient - need one
-		// call for filling the table, or some beginChange/endChange scheme
-		// TODO don't forget support for virtual tables!
-		while (targetTable.getSize() > modelTable.getSize()) {
-			targetTable.removeElement(0);
-		}
-		for (int i = 0; i < targetTable.getSize(); i++) {
-			targetTable.setElementAndValues(i, modelToTargetElementConverter
-					.convertModel(modelTable.getElement(i)),
-					getConvertedModelValues(modelTable,
-							modelToTargetValueConverters, columnCount, i));
-		}
-		while (targetTable.getSize() < modelTable.getSize()) {
-			int index = targetTable.getSize();
-			targetTable.addElementWithValues(index,
-					modelToTargetElementConverter.convertModel(modelTable
-							.getElement(index)), getConvertedModelValues(
-							modelTable, modelToTargetValueConverters,
-							columnCount, index));
-		}
-	}
+		// Start listening, giving that target the ability to "refresh" as we set
+		// it up with model values
+		targetCollection.addChangeListener(new CollectionChangeListener(targetCollection, modelCollection));
+		modelCollection.addChangeListener(new CollectionChangeListener(modelCollection, targetCollection));
 
-	public void bindTable(Object target, Object targetFeature, Object model,
-			Object modelFeature) throws BindingException {
-		bindTable(createUpdatableTable(target, targetFeature),
-				createUpdatableTable(model, modelFeature));
-	}
+		// Remove old, if any
+		while (targetCollection.getSize() > 0)
+			targetCollection.removeElement(0);
 
-	public void bindTable(Object target, Object targetFeature, Object model,
-			Object modelFeature,
-			final IConverter modelToTargetElementConverter,
-			final IConverter[] modelToTargetValueConverters)
-			throws BindingException {
-		bindTable(createUpdatableTable(target, targetFeature),
-				createUpdatableTable(model, modelFeature),
-				modelToTargetElementConverter, modelToTargetValueConverters);
-	}
+		// Set the target List with the content of the Model List
+		for (int i = 0; i < modelCollection.getSize(); i++) {
+			targetCollection.addElement(modelCollection.getElement(i), i);
+		}
 
-	public void bindTable(Object target, Object targetFeature,
-			IUpdatableTable model,
-			final IConverter modelToTargetElementConverter,
-			final IConverter[] modelToTargetValueConverters)
-			throws BindingException {
-		bindTable(createUpdatableTable(target, targetFeature), model,
-				modelToTargetElementConverter, modelToTargetValueConverters);
 	}
 
 	/**
@@ -220,11 +142,24 @@ public class DatabindingService {
 	 * @param model
 	 *            the model value
 	 */
-	public void bindValue(final IUpdatableValue target,
-			final IUpdatableValue source) throws BindingException {
-		final IConverter targetToModelConverter = getConverter(target
-				.getValueType(), source.getValueType());
-		bindValue(target, source, targetToModelConverter);
+	public void bind(final IUpdatable target, final IUpdatable source) throws BindingException {
+		IConverter converter=null;
+		if (target instanceof IUpdatableValue)  
+			if (source instanceof IUpdatableValue) {
+				IUpdatableValue tgt=(IUpdatableValue)target, src=(IUpdatableValue)source;
+				converter = getConverter(tgt.getValueType(), src.getValueType());				
+			}
+			else 
+				throw new BindingException("Incompatible instances of IUpdatable");
+		else if (target instanceof IUpdatableCollection)
+			if (source instanceof IUpdatableCollection) {
+				IUpdatableCollection tgt=(IUpdatableCollection)target, src=(IUpdatableCollection)source;
+				converter = getConverter(tgt.getElementType(), src.getElementType());				
+			}				
+			else 
+				throw new BindingException("Incompatible instances of IUpdatable");
+		
+		bind(target, source, converter);
 	}
 
 	/**
@@ -238,7 +173,7 @@ public class DatabindingService {
 	 *            the target value
 	 * @param model
 	 *            the model value
-	 * @param targetToModelConverter
+	 * @param converter
 	 *            the converter for converting from target values to model
 	 *            values
 	 * @param modelToTargetConverter
@@ -246,11 +181,9 @@ public class DatabindingService {
 	 *            values
 	 * @throws BindingException 
 	 */
-	public void bindValue(final IUpdatableValue target,
-			final IUpdatableValue model,
-			final IConverter targetToModelConverter) throws BindingException {
-		final IValidator targetValidator = getValidator(targetToModelConverter);
-		bindValue(target, model, targetToModelConverter,targetValidator);
+	public void bind(final IUpdatable target, final IUpdatable model, final IConverter converter) throws BindingException {
+		final IValidator targetValidator = getValidator(converter);				
+		bind(target, model, converter, targetValidator);
 	}
 
 	/**
@@ -265,27 +198,40 @@ public class DatabindingService {
 	 * 
 	 * @param target
 	 *            the target value
-	 * @param source
+	 * @param model
 	 *            the model value
-	 * @param targetToModelConverter
+	 * @param converter
 	 *            the converter for converting from target values to model
-	 *            values
-	 * @param modelToTargetConverter
-	 *            the converter for converting from model values to target
 	 *            values
 	 * @param targetValidator
 	 *            the validator for validating updated target values
 	 */
-	public void bindValue(final IUpdatableValue target,
-			final IUpdatableValue model,
-			final IConverter targetToModelConverter,
+	public void bind(final IUpdatableValue target, final IUpdatableValue model, final IConverter converter,
 			final IValidator targetValidator) {
-		ValueBinding valueBinding = new ValueBinding(this, target, model,
-				targetToModelConverter, null, targetValidator);
+		ValueBinding valueBinding = new ValueBinding(this, target, model, converter, null, targetValidator);
 		target.addChangeListener(valueBinding);
 		model.addChangeListener(valueBinding);
 		valueBinding.updateTargetFromModel();
 	}
+	
+	
+	public void bind(final IUpdatable target, final IUpdatable model, final IConverter converter, final IValidator targetValidator) throws BindingException {
+		if (target instanceof IUpdatableValue)  
+			if (model instanceof IUpdatableValue) {
+				IUpdatableValue tgt=(IUpdatableValue)target, mdl=(IUpdatableValue)model;				
+				bind(tgt, mdl, converter, targetValidator);
+			}
+			else 
+				throw new BindingException("Incompatible instances of IUpdatable");
+		else if (target instanceof IUpdatableCollection)
+			if (model instanceof IUpdatableCollection) {
+				IUpdatableCollection tgt=(IUpdatableCollection)target, mdl=(IUpdatableCollection)model;				
+				bind(tgt, mdl, converter, targetValidator);
+			}				
+			else 
+				throw new BindingException("Incompatible instances of IUpdatable");
+	}
+			
 
 	/**
 	 * Convenience method for binding the given target object's feature to the
@@ -299,9 +245,8 @@ public class DatabindingService {
 	 * @param modelValue
 	 *            the model value
 	 */
-	public void bindValue(Object targetObject, Object targetFeature,
-			IUpdatableValue modelValue) throws BindingException {
-		bindValue(createUpdatableValue(targetObject, targetFeature), modelValue);
+	public void bind(Object targetObject, Object targetFeature, IUpdatable modelValue) throws BindingException {
+		bind(createUpdatable(targetObject, targetFeature), modelValue);
 	}
 
 	/**
@@ -318,10 +263,8 @@ public class DatabindingService {
 	 * @param modelFeature
 	 *            the feature identifier for the model object
 	 */
-	public void bindValue(Object targetObject, Object targetFeature,
-			Object modelObject, Object modelFeature) throws BindingException {
-		bindValue(createUpdatableValue(targetObject, targetFeature),
-				createUpdatableValue(modelObject, modelFeature));
+	public void bind(Object targetObject, Object targetFeature, Object modelObject, Object modelFeature) throws BindingException {
+		bind(createUpdatable(targetObject, targetFeature), createUpdatable(modelObject, modelFeature));
 	}
 
 	/**
@@ -337,20 +280,19 @@ public class DatabindingService {
 	 *            the model object
 	 * @param modelFeature
 	 *            the feature identifier for the model object
-	 * @param targetToModelConverter
+	 * @param converter
 	 *            the converter for converting from target values to model
 	 *            values
 	 * @param modelToTargetConverter
 	 *            the converter for converting from model values to target
 	 *            values
 	 */
-	public void bindValue(Object targetObject, Object targetFeature,
-			Object modelObject, Object modelFeature,
-			final IConverter targetToModelConverter) throws BindingException {
-		bindValue(createUpdatableValue(targetObject, targetFeature),
-				createUpdatableValue(modelObject, modelFeature),
-				targetToModelConverter);
+	public void bind(Object targetObject, Object targetFeature, Object modelObject, Object modelFeature, final IConverter converter)
+			throws BindingException {
+		bind(createUpdatable(targetObject, targetFeature), createUpdatable(modelObject, modelFeature), converter);
 	}
+	
+
 
 	/**
 	 * Convenience method for binding the given target object's feature to the
@@ -365,59 +307,58 @@ public class DatabindingService {
 	 *            the model object
 	 * @param modelFeature
 	 *            the feature identifier for the model object
-	 * @param targetToModelConverter
+	 * @param converter
 	 *            the converter for converting from target values to model
-	 *            values
-	 * @param modelToTargetConverter
-	 *            the converter for converting from model values to target
 	 *            values
 	 * @param targetValidator
 	 *            the validator for validating updated target values
 	 */
-	public void bindValue(Object targetObject, Object targetFeature,
-			Object modelObject, Object modelFeature,
-			IConverter targetToModelConverter,IValidator targetValidator)
-			throws BindingException {
-		bindValue(createUpdatableValue(targetObject, targetFeature),
-				createUpdatableValue(modelObject, modelFeature),
-				targetToModelConverter, targetValidator);
+	public void bind(Object targetObject, Object targetFeature, Object modelObject, Object modelFeature, IConverter converter,
+			IValidator validator) throws BindingException {
+		bind(createUpdatable(targetObject, targetFeature), createUpdatable(modelObject, modelFeature), converter,
+				validator);
 	}
 
-	private void checkConverterTypes(
-			final IConverter modelToTargetElementConverter, Class fromType,
-			Class toType) throws BindingException {
-		if (!modelToTargetElementConverter.getModelType().isAssignableFrom(
-				fromType)
-				|| !toType.isAssignableFrom(modelToTargetElementConverter
-						.getTargetType())) {
-			throw new BindingException(
-					"converter from/to types don't match element types");
-		}
+	private void checkConverterTypes(final IConverter modelToTargetElementConverter, Class fromType, Class toType) throws BindingException {
+		if (!modelToTargetElementConverter.getModelType().isAssignableFrom(fromType)
+				|| !toType.isAssignableFrom(modelToTargetElementConverter.getTargetType())) { throw new BindingException(
+				"converter from/to types don't match element types"); }
 	}
 
-	public IUpdatableTable createUpdatableTable(Object object, Object feature)
-			throws BindingException {
-
-		Class clazz = object.getClass();
-		IUpdatableTableFactory tableFactory = null;
-		while (tableFactory == null && clazz != Object.class) {
-			tableFactory = (IUpdatableTableFactory) tableFactories.get(clazz);
+	/**
+	 * 
+	 * This create an adaptable for Object, using clazz and its supers for factories.
+	 * 
+	 * @param clazz is the root class from which to look for registered updatable factories  
+	 * @param object is the instance we need an updatable for
+	 * @param featureID is the property designated the updatable object.
+	 * @return updatable for the given object
+	 * @throws BindingException
+	 * 
+	 */
+	private IUpdatable primCreateUpdatable(Class clazz, Object object, Object featureID) throws BindingException {
+		IUpdatableFactory factory = null;
+		while (factory == null && clazz != Object.class) {
+			factory = (IUpdatableFactory) updatableFactories.get(clazz);
 			clazz = clazz.getSuperclass();
 		}
-		IUpdatableTable result = null;
-		if (tableFactory != null) {
-			result = tableFactory.createUpdatableTable(object, feature);
+
+		IUpdatable result = null;
+		if (factory != null) {
+			result = factory.createUpdatable(object, featureID);
+			// It is possible that this (class) level's factory can not provide an Updatable for featureID
+			if (result == null) {
+				result = createUpdatable(clazz, featureID);
+			}
 		}
 		if (result == null && parent != null) {
-			result = parent.createUpdatableTable(object, feature);
+			result = parent.createUpdatable(object, featureID);
 		}
 		if (result != null) {
 			createdUpdatables.add(result);
 			return result;
 		}
-		throw new BindingException(
-				"Couldn't create an updatable table for object=" + object
-						+ ", feature=" + feature);
+		throw new BindingException("Couldn't create an updatable value for object=" + object + ", feature=" + featureID);
 	}
 
 	/**
@@ -426,41 +367,19 @@ public class DatabindingService {
 	 * given object is itself an IUpdatableValue, this method creates a derived
 	 * updatable value.
 	 * 
-	 * @param object
-	 * @param featureID
-	 * @return
+	 * @param object is the instance we need an updatable for
+	 * @param featureID is the property designated the updatable object.
+	 * @return updatable for the given object	 
 	 * @throws BindingException
 	 */
-	public IUpdatableValue createUpdatableValue(Object object, Object featureID)
-			throws BindingException {
 
-		Class clazz = object.getClass();
-
-		if (object instanceof IUpdatableValue) {
-			return new DerivedUpdatableValue(this, ((IUpdatableValue) object),
-					featureID);
-		}
-
-		IUpdatableValueFactory valueFactory = null;
-		while (valueFactory == null && clazz != Object.class) {
-			valueFactory = (IUpdatableValueFactory) valueFactories.get(clazz);
-			clazz = clazz.getSuperclass();
-		}
-
-		IUpdatableValue result = null;
-		if (valueFactory != null) {
-			result = valueFactory.createUpdatableValue(object, featureID);
-		}
-		if (result == null && parent != null) {
-			result = parent.createUpdatableValue(object, featureID);
-		}
-		if (result != null) {
-			createdUpdatables.add(result);
-			return result;
-		}
-		throw new BindingException(
-				"Couldn't create an updatable value for object=" + object
-						+ ", feature=" + featureID);
+	public IUpdatable createUpdatable(Object object, Object featureID) throws BindingException {
+		if (object instanceof IUpdatableValue)
+			return new DerivedUpdatableValue(this, ((IUpdatableValue) object), featureID);
+		else if (object instanceof IUpdatableCollection) 
+			throw new BindingException("TODO: need to implement this"); // TODO:
+		
+		return primCreateUpdatable(object.getClass(), object, featureID);
 	}
 
 	public void dispose() {
@@ -474,28 +393,13 @@ public class DatabindingService {
 		return combinedValidationMessage;
 	}
 
-	private Object[] getConvertedModelValues(final IUpdatableTable modelTable,
-			final IConverter[] modelToTargetValueConverters,
-			final int columnCount, int index) {
-		Object[] modelValues = modelTable.getValues(index);
-		Object[] convertedValues = new Object[columnCount];
-		for (int i = 0; i < columnCount; i++) {
-			convertedValues[i] = modelToTargetValueConverters[i]
-					.convertModel(modelValues[i]);
-		}
-		return convertedValues;
-	}
-
-	public IConverter getConverter(Class fromType, Class toType)
-			throws BindingException {
+	public IConverter getConverter(Class fromType, Class toType) throws BindingException {
 		if (fromType == toType) {
 			return new IdentityConverter(fromType, toType);
-		} else {
-			IConverter converter = (IConverter) converters.get(new Pair(
-					fromType, toType));
-			if (converter == null) {
-				throw new BindingException("no converter");
-			}
+		}
+		else {
+			IConverter converter = (IConverter) converters.get(new Pair(fromType, toType));
+			if (converter == null) { throw new BindingException("no converter"); }
 			return converter;
 		}
 	}
@@ -506,6 +410,7 @@ public class DatabindingService {
 
 	public IConverter getStringToDoubleConverter() {
 		IConverter doubleConverter = new IConverter() {
+
 			public Object convertModel(Object object) {
 				return new Double((String) object);
 			}
@@ -517,7 +422,8 @@ public class DatabindingService {
 			public Class getTargetType() {
 				return double.class;
 			}
-			public Object convertTarget(Object aDouble){
+
+			public Object convertTarget(Object aDouble) {
 				return aDouble.toString();
 			}
 		};
@@ -526,6 +432,7 @@ public class DatabindingService {
 
 	public IConverter getToStringConverter(final Class fromClass) {
 		IConverter toStringConverter = new IConverter() {
+
 			public Object convertModel(Object object) {
 				return object.toString();
 			}
@@ -537,7 +444,8 @@ public class DatabindingService {
 			public Class getTargetType() {
 				return String.class;
 			}
-			public Object convertTarget(Object aString){
+
+			public Object convertTarget(Object aString) {
 				return aString;
 			}
 		};
@@ -566,6 +474,7 @@ public class DatabindingService {
 		converters.put(new Pair(String.class, Double.class), doubleConverter);
 		converters.put(new Pair(String.class, double.class), doubleConverter);
 		IConverter integerConverter = new IConverter() {
+
 			public Object convertModel(Object aString) {
 				return new Integer((String) aString);
 			}
@@ -577,69 +486,52 @@ public class DatabindingService {
 			public Class getTargetType() {
 				return int.class;
 			}
-			public Object convertTarget(Object anInteger){
+
+			public Object convertTarget(Object anInteger) {
 				return anInteger.toString();
 			}
 		};
 		converters.put(new Pair(String.class, Integer.class), integerConverter);
 		converters.put(new Pair(String.class, int.class), integerConverter);
-		converters.put(new Pair(Double.class, String.class),
-				getToStringConverter(Double.class));
-		converters.put(new Pair(double.class, String.class),
-				getToStringConverter(double.class));
-		converters.put(new Pair(Object.class, String.class),
-				getToStringConverter(Object.class));
-		converters.put(new Pair(Integer.class, String.class),
-				getToStringConverter(Object.class));
-		converters.put(new Pair(Integer.class, int.class),
-				new IdentityConverter(Integer.class, int.class));
-		converters.put(new Pair(int.class, Integer.class),
-				new IdentityConverter(int.class, Integer.class));
+		converters.put(new Pair(Double.class, String.class), getToStringConverter(Double.class));
+		converters.put(new Pair(double.class, String.class), getToStringConverter(double.class));
+		converters.put(new Pair(Object.class, String.class), getToStringConverter(Object.class));
+		converters.put(new Pair(Integer.class, String.class), getToStringConverter(Object.class));
+		converters.put(new Pair(Integer.class, int.class), new IdentityConverter(Integer.class, int.class));
+		converters.put(new Pair(int.class, Integer.class), new IdentityConverter(int.class, Integer.class));
 	}
 
 	protected void registerValueFactories() {
 	}
 
-	public void updatePartialValidationError(IChangeListener listener,
-			String partialValidationErrorOrNull) {
+	public void updatePartialValidationError(IChangeListener listener, String partialValidationErrorOrNull) {
 		removeValidationListenerAndMessage(partialValidationMessages, listener);
 		if (partialValidationErrorOrNull != null) {
-			partialValidationMessages.add(new Pair(listener,
-					partialValidationErrorOrNull));
+			partialValidationMessages.add(new Pair(listener, partialValidationErrorOrNull));
 		}
-		updateValidationMessage(
-				combinedValidationMessage,
-				partialValidationMessages.size() > 0 ? partialValidationMessages
-						: validationMessages);
-		updateValidationMessage(partialValidationMessage,
-				partialValidationMessages);
+		updateValidationMessage(combinedValidationMessage, partialValidationMessages.size() > 0 ? partialValidationMessages : validationMessages);
+		updateValidationMessage(partialValidationMessage, partialValidationMessages);
 	}
 
-	public void updateValidationError(IChangeListener listener,
-			String validationErrorOrNull) {
+	public void updateValidationError(IChangeListener listener, String validationErrorOrNull) {
 		removeValidationListenerAndMessage(validationMessages, listener);
 		if (validationErrorOrNull != null) {
 			validationMessages.add(new Pair(listener, validationErrorOrNull));
 		}
-		updateValidationMessage(
-				combinedValidationMessage,
-				partialValidationMessages.size() > 0 ? partialValidationMessages
-						: validationMessages);
+		updateValidationMessage(combinedValidationMessage, partialValidationMessages.size() > 0 ? partialValidationMessages : validationMessages);
 		updateValidationMessage(validationMessage, validationMessages);
 	}
 
-	private void updateValidationMessage(
-			SettableValue validationSettableMessage, List listOfPairs) {
+	private void updateValidationMessage(SettableValue validationSettableMessage, List listOfPairs) {
 		if (listOfPairs.size() == 0) {
 			validationSettableMessage.setValueAndNotify("");
-		} else {
-			validationSettableMessage.setValueAndNotify(((Pair) listOfPairs
-					.get(listOfPairs.size() - 1)).b);
+		}
+		else {
+			validationSettableMessage.setValueAndNotify(((Pair) listOfPairs.get(listOfPairs.size() - 1)).b);
 		}
 	}
 
-	private void removeValidationListenerAndMessage(List listOfPairs,
-			Object first) {
+	private void removeValidationListenerAndMessage(List listOfPairs, Object first) {
 		for (int i = listOfPairs.size() - 1; i >= 0; i--) {
 			Pair pair = (Pair) listOfPairs.get(i);
 			if (pair.a.equals(first)) {

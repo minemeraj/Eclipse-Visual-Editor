@@ -10,14 +10,19 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComboBinding.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-04 13:17:23 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
  */
 package org.eclipse.jface.examples.binding.scenarios.desired;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.jface.binding.*;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingService;
 import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.jface.binding.IdentityConverter;
+import org.eclipse.jface.examples.binding.emf.*;
 import org.eclipse.jface.examples.binding.emf.EMFDerivedUpdatableValue;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -68,19 +73,44 @@ public class ComboBinding extends Composite {
 		bind();
 	}
 	private void bind() throws BindingException{
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);		
+		dbs = SampleData.getSWTtoEMFDatabindingService(this);	
+		
+		IUpdatableFactory emfFactory = new IUpdatableFactory(){		
+			public IUpdatable createUpdatable(Object object, Object attribute) {
+				EObject eObject = (EObject)object;
+				EStructuralFeature attr;
+				if (attribute instanceof EStructuralFeature)
+					attr = (EStructuralFeature)attribute;
+				else
+					attr = eObject.eClass().getEStructuralFeature((String)attribute);
+				if (attr.isMany()) {
+					// TODO: This really needs to be a UpdatableTable
+					return new EMFUpdatableCollection(eObject, attr, !attr.isChangeable());
+				}
+				else
+					return new EMFUpdatableValue(eObject , attr, !attr.isChangeable());
+					
+			}
+		
+		};				
+		dbs.addUpdatableFactory(EObjectImpl.class, emfFactory);
+		
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
 		
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
-		Catalog catalog = SampleData.CATALOG_2005;		
+		Catalog catalog = SampleData.CATALOG_2005;	
 		
-		dbs.bindContents(comboViewer,catalog,"lodgings");
+		dbs.bind(comboViewer, "contents", catalog, "lodgings",
+				new ToStringIdentityListConverter(Lodging.class),
+				new EMFIdentityLabelProvider(Lodging.class, "name")				
+		);
+				
 		
-		dbs.bindValue(comboViewer,"selection",skiTrip,"defaultLodging");
+		dbs.bindValue(comboViewer,"selection",skiTrip,"defaultLodging", new IdentityConverter(Lodging.class), new IdentityConverter(Lodging.class));
 		
 		IUpdatableValue defaultLodging = dbs.createUpdatableValue(skiTrip,"defaultLodging");
 		
-		dbs.bindContents(txtDefaultLodging, defaultLodging, "description");
+		dbs.bindValue(txtDefaultLodging, "text", defaultLodging, "description");
 		
 	}
 	/**

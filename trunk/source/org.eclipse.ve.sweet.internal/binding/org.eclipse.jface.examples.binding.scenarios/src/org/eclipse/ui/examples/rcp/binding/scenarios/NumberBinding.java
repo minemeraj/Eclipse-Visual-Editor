@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NumberBinding.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:13:36 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -81,9 +81,9 @@ public class NumberBinding {
 		
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 		
-		dbs.bindValue(txtPrice,"text",skiTrip,emfPackage.getAdventure_Price());		
-		dbs.bindValue(lblPrice,"text",skiTrip,emfPackage.getAdventure_Price());		
-		dbs.bindValue(txtPrice_2,"text",skiTrip,emfPackage.getAdventure_Price());		
+		dbs.bind(txtPrice,"text",skiTrip,emfPackage.getAdventure_Price());		
+		dbs.bind(lblPrice,"text",skiTrip,emfPackage.getAdventure_Price());		
+		dbs.bind(txtPrice_2,"text",skiTrip,emfPackage.getAdventure_Price());		
 		
 	}
 

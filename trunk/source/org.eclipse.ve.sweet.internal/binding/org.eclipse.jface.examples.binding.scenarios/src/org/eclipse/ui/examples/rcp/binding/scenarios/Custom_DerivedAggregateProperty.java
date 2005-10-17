@@ -10,25 +10,16 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Custom_DerivedAggregateProperty.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 14:04:55 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.jface.binding.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
-import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
-import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
-import org.eclipse.swt.widgets.Group;
 
 public class Custom_DerivedAggregateProperty extends Composite {
 
@@ -67,20 +58,20 @@ public class Custom_DerivedAggregateProperty extends Composite {
 		
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 		
-		dbs.bindValue(txtDescription,"text",skiTrip,"description");
-		dbs.bindValue(txtName,"text",skiTrip,"name");	
+		dbs.bind(txtDescription,"text",skiTrip,"description");
+		dbs.bind(txtName,"text",skiTrip,"name");	
 		
 		AdventureNameAndDescription customUpdatable = new AdventureNameAndDescription(skiTrip);
-		dbs.bindValue(dbs.createUpdatableValue(txtCustom,"text"),customUpdatable);
+		dbs.bind(dbs.createUpdatable(txtCustom,"text"),customUpdatable);
 		
-		IUpdatableValue descriptionUpdatable = dbs.createUpdatableValue(skiTrip,"description");
-		IUpdatableValue nameUpdatable = dbs.createUpdatableValue(skiTrip,"name");
+		IUpdatableValue descriptionUpdatable = (IUpdatableValue) dbs.createUpdatable(skiTrip,"description");
+		IUpdatableValue nameUpdatable = (IUpdatableValue) dbs.createUpdatable(skiTrip,"name");
 		
 		AggregateUpdatableValue customUpdatable_1 = new AggregateUpdatableValue( new IUpdatableValue[] {descriptionUpdatable,nameUpdatable} , ",");
-		dbs.bindValue(dbs.createUpdatableValue(txtCustom_1,"text"),customUpdatable_1);
+		dbs.bind(dbs.createUpdatable(txtCustom_1,"text"),customUpdatable_1);
 		
 		AggregateUpdatableValue customUpdatable_2 = new AggregateUpdatableValue( new IUpdatableValue[] {descriptionUpdatable,nameUpdatable} , "\n");
-		dbs.bindValue(dbs.createUpdatableValue(txtCustom_multi,"text"),customUpdatable_2);
+		dbs.bind(dbs.createUpdatable(txtCustom_multi,"text"),customUpdatable_2);
 		
 //		IUpdatableValue descriptionUpdatable = dbs.createUpdatableValue(skiTrip,emfPackage.getAdventure_Description());
 //		IUpdatableValue nameUpdatable = dbs.createUpdatableValue(skiTrip,emfPackage.getAdventure_Name());		

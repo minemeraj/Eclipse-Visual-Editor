@@ -10,21 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBindingWithValidation.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-17 13:20:06 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-17 23:06:29 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.jface.binding.IValidator;
-import org.eclipse.jface.binding.IdentityConverter;
+import org.eclipse.jface.binding.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 
 public class TextBindingWithValidation extends Composite {
@@ -73,7 +67,7 @@ public class TextBindingWithValidation extends Composite {
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
 		IdentityConverter identity = new IdentityConverter(String.class);
-		dbs.bindValue(txtDescription, "text", skiTrip, "description", identity, new IValidator(){
+		dbs.bind(txtDescription, "text", skiTrip, "description", identity, new IValidator(){
 			public String isPartiallyValid(Object value) {
 				return isValid(value);
 			}
@@ -84,11 +78,11 @@ public class TextBindingWithValidation extends Composite {
 				return null;
 			}});
 
-		dbs.bindValue(txtName, "text", skiTrip, "name");
+		dbs.bind(txtName, "text", skiTrip, "name");
 
-		dbs.bindValue(txtLocation, "text", skiTrip, "location");
+		dbs.bind(txtLocation, "text", skiTrip, "location");
 		
-		dbs.bindValue(validationMessage, "text", dbs.getCombinedValidationMessage());
+		dbs.bind(validationMessage, "text", dbs.getCombinedValidationMessage());
 	}
 
 	/**

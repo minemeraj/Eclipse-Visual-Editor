@@ -10,21 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LabelBinding.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:13:36 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
-import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 
 public class LabelBinding extends Composite {
@@ -85,11 +81,11 @@ public class LabelBinding extends Composite {
 		
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 		
-		dbs.bindValue(txtName,"text",skiTrip,emfPackage.getAdventure_Name());
-		dbs.bindValue(lblName,"text",skiTrip,emfPackage.getAdventure_Name());
+		dbs.bind(txtName,"text",skiTrip,emfPackage.getAdventure_Name());
+		dbs.bind(lblName,"text",skiTrip,emfPackage.getAdventure_Name());
 		
-		dbs.bindValue(txtDescription,"text",skiTrip,emfPackage.getAdventure_Description());
-		dbs.bindValue(lblDescription,"text",skiTrip,emfPackage.getAdventure_Description());
+		dbs.bind(txtDescription,"text",skiTrip,emfPackage.getAdventure_Description());
+		dbs.bind(lblDescription,"text",skiTrip,emfPackage.getAdventure_Description());
 		
 	}
 
