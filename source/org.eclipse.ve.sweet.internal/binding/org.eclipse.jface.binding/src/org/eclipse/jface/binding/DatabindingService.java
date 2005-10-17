@@ -224,10 +224,7 @@ public class DatabindingService {
 			final IUpdatableValue source) throws BindingException {
 		final IConverter targetToModelConverter = getConverter(target
 				.getValueType(), source.getValueType());
-		final IConverter modelToTargetConverter = getConverter(source
-				.getValueType(), target.getValueType());
-		bindValue(target, source, targetToModelConverter,
-				modelToTargetConverter);
+		bindValue(target, source, targetToModelConverter);
 	}
 
 	/**
@@ -247,14 +244,13 @@ public class DatabindingService {
 	 * @param modelToTargetConverter
 	 *            the converter for converting from model values to target
 	 *            values
+	 * @throws BindingException 
 	 */
 	public void bindValue(final IUpdatableValue target,
 			final IUpdatableValue model,
-			final IConverter targetToModelConverter,
-			final IConverter modelToTargetConverter) {
+			final IConverter targetToModelConverter) throws BindingException {
 		final IValidator targetValidator = getValidator(targetToModelConverter);
-		bindValue(target, model, targetToModelConverter,
-				modelToTargetConverter, targetValidator);
+		bindValue(target, model, targetToModelConverter,targetValidator);
 	}
 
 	/**
@@ -283,10 +279,9 @@ public class DatabindingService {
 	public void bindValue(final IUpdatableValue target,
 			final IUpdatableValue model,
 			final IConverter targetToModelConverter,
-			final IConverter modelToTargetConverter,
 			final IValidator targetValidator) {
 		ValueBinding valueBinding = new ValueBinding(this, target, model,
-				targetToModelConverter, modelToTargetConverter, targetValidator);
+				targetToModelConverter, null, targetValidator);
 		target.addChangeListener(valueBinding);
 		model.addChangeListener(valueBinding);
 		valueBinding.updateTargetFromModel();
@@ -351,11 +346,10 @@ public class DatabindingService {
 	 */
 	public void bindValue(Object targetObject, Object targetFeature,
 			Object modelObject, Object modelFeature,
-			final IConverter targetToModelConverter,
-			final IConverter modelToTargetConverter) throws BindingException {
+			final IConverter targetToModelConverter) throws BindingException {
 		bindValue(createUpdatableValue(targetObject, targetFeature),
 				createUpdatableValue(modelObject, modelFeature),
-				targetToModelConverter, modelToTargetConverter);
+				targetToModelConverter);
 	}
 
 	/**
@@ -382,12 +376,11 @@ public class DatabindingService {
 	 */
 	public void bindValue(Object targetObject, Object targetFeature,
 			Object modelObject, Object modelFeature,
-			IConverter targetToModelConverter,
-			IConverter modelToTargetConverter, IValidator targetValidator)
+			IConverter targetToModelConverter,IValidator targetValidator)
 			throws BindingException {
 		bindValue(createUpdatableValue(targetObject, targetFeature),
 				createUpdatableValue(modelObject, modelFeature),
-				targetToModelConverter, modelToTargetConverter, targetValidator);
+				targetToModelConverter, targetValidator);
 	}
 
 	private void checkConverterTypes(
