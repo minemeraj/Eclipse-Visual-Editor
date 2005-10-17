@@ -10,17 +10,17 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EditPartContributor.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-19 20:37:48 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-17 21:55:16 $ 
  */
 package org.eclipse.ve.internal.cde.core;
- 
 
 /**
  * Base EditPart contributor. The tree and graphical editpart contributors extend from this one.
+ * 
  * @since 1.2.0
  */
 public interface EditPartContributor {
-	
+
 	/**
 	 * Tell the contributor to dispose. This will be called when the edit part has been deactivated.
 	 * 
@@ -29,4 +29,19 @@ public interface EditPartContributor {
 	 */
 	public void dispose();
 
+	/**
+	 * 
+	 * Add a listener that can be notified when the state of the editpart has changed.
+	 * 
+	 * @since 1.2.0
+	 */
+	public void addContributionChangeListener(EditPartContributionChangeListener listener);
+
+	/**
+	 * 
+	 * Remove editpart contribution change listener.
+	 * 
+	 * @since 1.2.0
+	 */
+	public void removeContributionChangeListener(EditPartContributionChangeListener listener);
 }
