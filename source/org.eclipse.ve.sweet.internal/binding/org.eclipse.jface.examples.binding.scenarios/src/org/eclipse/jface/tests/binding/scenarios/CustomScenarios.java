@@ -13,12 +13,9 @@ package org.eclipse.jface.tests.binding.scenarios;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.binding.scenarios.AggregateUpdatableValue;
-import org.eclipse.ui.examples.rcp.binding.scenarios.PriceCentsConverter;
-import org.eclipse.ui.examples.rcp.binding.scenarios.PriceDollarsConverter;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
 /**
@@ -47,12 +44,12 @@ public class CustomScenarios extends ScenariosTestCase {
 		Adventure adventure = SampleData.WINTER_HOLIDAY;
 		Text text = new Text(getComposite(), SWT.BORDER);
 
-		IUpdatableValue descriptionUpdatable = getDbs().createUpdatableValue(adventure,"description");
-		IUpdatableValue nameUpdatable = getDbs().createUpdatableValue(adventure,"name");
+		IUpdatableValue descriptionUpdatable = (IUpdatableValue) getDbs().createUpdatable(adventure,"description");
+		IUpdatableValue nameUpdatable = (IUpdatableValue) getDbs().createUpdatable(adventure,"name");
 		
 		AggregateUpdatableValue customUpdatable_comma = new AggregateUpdatableValue( new IUpdatableValue[] {descriptionUpdatable,nameUpdatable} , ",");
 		
-		getDbs().bindValue(getDbs().createUpdatableValue(text, "text"),customUpdatable_comma);
+		getDbs().bind(getDbs().createUpdatable(text, "text"),customUpdatable_comma);
 		// spinEventLoop(1);
 		// Make sure that the description on the model match the widget
 		assertEquals(adventure.getDescription() + "," + adventure.getName(), text.getText());

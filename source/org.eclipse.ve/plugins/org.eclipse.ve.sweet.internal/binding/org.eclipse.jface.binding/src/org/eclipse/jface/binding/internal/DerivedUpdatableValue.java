@@ -59,8 +59,8 @@ public class DerivedUpdatableValue extends UpdatableValue {
 			innerUpdatableValue = null;
 		} else {
 			try {
-				this.innerUpdatableValue = databindingService
-						.createUpdatableValue(currentOuterValue, feature);
+				this.innerUpdatableValue = (IUpdatableValue) databindingService
+						.createUpdatable(currentOuterValue, feature);
 			} catch (BindingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

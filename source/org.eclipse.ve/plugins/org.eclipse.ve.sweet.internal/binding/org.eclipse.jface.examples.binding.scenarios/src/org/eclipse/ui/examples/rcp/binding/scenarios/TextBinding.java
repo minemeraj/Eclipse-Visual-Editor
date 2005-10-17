@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBinding.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:13:36 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -68,14 +68,14 @@ public class TextBinding extends Composite {
 		
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 		
-		dbs.bindValue(txtDescription,"text",skiTrip,"description");
-		dbs.bindValue(txtDescription_1,"text",skiTrip,"description");		
+		dbs.bind(txtDescription,"text",skiTrip,"description");
+		dbs.bind(txtDescription_1,"text",skiTrip,"description");		
 		
-		dbs.bindValue(txtName,"text",skiTrip,"name");		
-		dbs.bindValue(txtName_1,"text",skiTrip,"name");
+		dbs.bind(txtName,"text",skiTrip,"name");		
+		dbs.bind(txtName_1,"text",skiTrip,"name");
 		
-		dbs.bindValue(txtLocation,"text",skiTrip,"location");		
-		dbs.bindValue(txtLocation_1,"text",skiTrip,"location");		
+		dbs.bind(txtLocation,"text",skiTrip,"location");		
+		dbs.bind(txtLocation_1,"text",skiTrip,"location");		
 				
 	}
 	/**

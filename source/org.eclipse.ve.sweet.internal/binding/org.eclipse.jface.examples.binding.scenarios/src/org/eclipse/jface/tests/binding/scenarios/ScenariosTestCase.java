@@ -66,6 +66,7 @@ abstract public class ScenariosTestCase extends TestCase {
 	protected void setUp() throws Exception {
 		composite = new Composite(getShell(), SWT.NONE);
 		composite.setLayout(new GridLayout());
+		SampleData.initializeData();  // test may manipulate the data... let all start from fresh
 		dbs = SampleData.getSWTtoEMFDatabindingService(composite);
 	}
 
@@ -75,6 +76,8 @@ abstract public class ScenariosTestCase extends TestCase {
 		if (shell != null) {
 			shell.dispose();
 		}
+		else
+			dbs.dispose();
 		if (display != null && disposeDisplay) {
 			display.dispose();
 		}

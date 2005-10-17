@@ -10,17 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.Converter;
-import org.eclipse.jface.binding.IConverter;
-import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.IValidator;
-import org.eclipse.jface.binding.IdentityConverter;
+import org.eclipse.jface.binding.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.examples.rcp.adventure.Adventure;
-import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
-import org.eclipse.ui.examples.rcp.adventure.Cart;
+import org.eclipse.ui.examples.rcp.adventure.*;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
 /**
@@ -47,7 +40,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 
 	public void testScenario01() throws BindingException {
 		Text text = new Text(getComposite(), SWT.BORDER);
-		getDbs().bindValue(text, "text", adventure, "name");
+		getDbs().bind(text, "text", adventure, "name");
 		// uncomment the following line to see what's happening
 		// happening
 		// spinEventLoop(1);
@@ -67,7 +60,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// Text controls, no conversion, no validation. The Text widget editable
 		// is set to false.by the developer (can not change the name)
 		Text text = new Text(getComposite(), SWT.READ_ONLY);
-		getDbs().bindValue(text, "text", adventure, "name");
+		getDbs().bind(text, "text", adventure, "name");
 		assertEquals(adventure.getName(), text.getText());
 	}
 
@@ -80,7 +73,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// bind to the lodgingDays feature, which is read-only and always one
 		// less than the number of adventure days.
 		Text text = new Text(getComposite(), SWT.BORDER);
-		getDbs().bindValue(text, "text", cart, "lodgingDays", new IConverter() {
+		getDbs().bind(text, "text", cart, "lodgingDays", new IConverter() {
 			public Class getModelType() {
 				return String.class;
 			}
@@ -117,9 +110,9 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// be to the new default lodging's description, shouldn't we move this
 		// scenario to the master/detail section? I'm assuming the latter for
 		// now.
-		IUpdatableValue defaultLodging = getDbs().createUpdatableValue(
+		IUpdatableValue defaultLodging = (IUpdatableValue) getDbs().createUpdatable(
 				adventure, "defaultLodging");
-		getDbs().bindValue(text, "text", defaultLodging, "description");
+		getDbs().bind(text, "text", defaultLodging, "description");
 
 		// test changing the description
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
@@ -157,7 +150,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// capitalized.
 		Text text = new Text(getComposite(), SWT.BORDER);
 		adventure.setName("UPPERCASE");
-		getDbs().bindValue(text, "text", adventure, "name", new IConverter() {
+		getDbs().bind(text, "text", adventure, "name", new IConverter() {
 			public Class getModelType() {
 				return String.class;
 			}
@@ -197,7 +190,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		final String noSpacesMessage = "Name must not contain spaces.";
 		final String max15CharactersMessage = "Maximum length for name is 15 characters.";
 		adventure.setName("ValidValue");
-		getDbs().bindValue(text, "text", adventure, "name",
+		getDbs().bind(text, "text", adventure, "name",
 				new IdentityConverter(String.class), new IValidator() {
 					public String isPartiallyValid(Object value) {
 						return isValid(value);
@@ -235,7 +228,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// is a double and Text accepts String so conversion will have to occur.
 		// Validation ensure that the value is positive
 		Text text = new Text(getComposite(), SWT.BORDER);
-		getDbs().bindValue(text, "text", adventure, "name",
+		getDbs().bind(text, "text", adventure, "name",
 				new Converter(String.class, double.class) {
 
 					public Object convertModel(Object fromObject) {

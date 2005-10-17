@@ -66,7 +66,7 @@ public class DatabindingServiceTest extends TestCase {
 		updatableValueRMock.addChangeListener(null);
 		updatableValueRMock.getValue();
 		Mocks.startChecking(updatableValueRMock);
-		dbs.bindValue(settableValue1, updatableValueRMock, identityConverter,
+		dbs.bind(settableValue1, updatableValueRMock, identityConverter,
 				validatorMock);
 		Mocks.verify(updatableValueRMock);
 	}
@@ -75,14 +75,14 @@ public class DatabindingServiceTest extends TestCase {
 		updatableValueRMock.addChangeListener(null);
 		updatableValueRMock.setValue(null);
 		Mocks.startChecking(updatableValueRMock);
-		dbs.bindValue(updatableValueRMock, settableValue2, identityConverter,
+		dbs.bind(updatableValueRMock, settableValue2, identityConverter,
 				validatorMock);
 	}
 
 	public void testBindValuePropagation() throws BindingException {
 		settableValue1.setValue(o1);
 		settableValue2.setValue(o2);
-		dbs.bindValue(settableValue1, settableValue2);
+		dbs.bind(settableValue1, settableValue2);
 		assertEquals(o2, settableValue1.getValue());
 		settableValue1.setValue(o1);
 		assertEquals(o2, settableValue2.getValue());
