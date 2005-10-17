@@ -13,7 +13,7 @@ Xvfb :42 -screen 0 1024x768x24 -ac &
 sleep 3
 Xnest :43 -display :42 -depth 24 &
 sleep 3
-fvwm2 -display localhost:43.0 &
+twm -display localhost:43.0 -f /IBMMNT1/jvebuild/twmrc-random &
 sleep 3
 
 DISPLAY=$HOSTNAME:43.0
