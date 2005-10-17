@@ -60,9 +60,11 @@
 			<param name="zipname" value="eclipse-SDK.zip"/>
 		</antcall>
 		<!-- Extract doc.zip so we can create links in VE java doc -->
+		<!-- TODO this is broke as of Eclipse 3.2 - this is now a jar file - need to fix
 		<exec dir="${buildDirectory}/plugins/org.eclipse.platform.doc.isv" executable="unzip">
 			<arg line="-o -qq doc.zip" />
 	   	</exec>
+	   	-->
 	</target>
 
 	<target name="getEMF" depends="getInit" description="Extract the EMF.">
