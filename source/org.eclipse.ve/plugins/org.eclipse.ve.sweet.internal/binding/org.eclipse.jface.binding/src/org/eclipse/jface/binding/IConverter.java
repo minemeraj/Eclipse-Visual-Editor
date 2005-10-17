@@ -17,13 +17,13 @@ public interface IConverter {
 	 * Returns the class whose instances can be converted by this converter.
 	 * @return the class whose instances can be converted
 	 */
-	public Class getFromType();
+	public Class getModelType();
 
 	/**
 	 * Returns the class to which this converter can convert.
 	 * @return the class to which this converter can convert
 	 */
-	public Class getToType();
+	public Class getTargetType();
 
 	/**
 	 * Returns the result of the conversion of the given object. The given
@@ -33,5 +33,15 @@ public interface IConverter {
 	 * @param object the object to convert
 	 * @return the converted object
 	 */
-	public Object convert(Object object);
+	public Object convertModel(Object fromObject);
+
+	/**
+	 * Returns the result of the conversion of the given object. The given
+	 * object must be an instance of getToType(), and the result must be an
+	 * instance of getFromType().
+	 * 
+	 * @param object the object to convert
+	 * @return the converted object
+	 */	
+	public Object convertTarget(Object toObject);
 }

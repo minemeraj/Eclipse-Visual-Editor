@@ -28,15 +28,18 @@ public class DatabindingServiceTest extends TestCase {
 
 	private static IConverter identityConverter = new IConverter() {
 
-		public Class getFromType() {
+		public Class getModelType() {
 			return Object.class;
 		}
 
-		public Class getToType() {
+		public Class getTargetType() {
 			return Object.class;
 		}
 
-		public Object convert(Object object) {
+		public Object convertModel(Object object) {
+			return object;
+		}
+		public Object convertTarget(Object object){
 			return object;
 		}
 	};

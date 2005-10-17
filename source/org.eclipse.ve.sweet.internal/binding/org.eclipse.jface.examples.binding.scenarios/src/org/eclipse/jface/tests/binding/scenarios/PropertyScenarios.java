@@ -78,28 +78,34 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// less than the number of adventure days.
 		Text text = new Text(getComposite(), SWT.BORDER);
 		getDbs().bindValue(text, "text", cart, "lodgingDays", new IConverter() {
-			public Class getFromType() {
+			public Class getModelType() {
 				return String.class;
 			}
 
-			public Class getToType() {
+			public Class getTargetType() {
 				return Integer.class;
 			}
 
-			public Object convert(Object object) {
+			public Object convertModel(Object object) {
 				return new Integer((String) object);
 			}
+			public Object convertTarget(Object object){
+				return object.toString();
+			}
 		}, new IConverter() {
-			public Class getFromType() {
+			public Class getModelType() {
 				return Integer.class;
 			}
 
-			public Class getToType() {
+			public Class getTargetType() {
 				return String.class;
 			}
 
-			public Object convert(Object object) {
+			public Object convertModel(Object object) {
 				return object.toString();
+			}
+			public Object convertTarget(Object object){
+				return new Integer((String)object);
 			}
 		});
 		assertEquals(new Integer(cart.getLodgingDays()).toString(), text
