@@ -22,7 +22,9 @@ public interface IUpdatableValue extends IUpdatable {
 	 * an instance of the value type returned by getValueType(). If the value
 	 * type is an object type, then the given value may be </code>null</code>.
 	 * 
-	 * TODO we probably need to be able to veto a change. Maybe returning a status?
+	 * TODO we probably need to be able to veto a change. Maybe returning a
+	 * status?
+	 * @param value 
 	 */
 	public void setValue(Object value);
 
@@ -31,7 +33,7 @@ public interface IUpdatableValue extends IUpdatable {
 	 * returned by getValueType(). If the value type is an object type, then the
 	 * returned value may be </code>null</code>.
 	 * 
-	 * @return
+	 * @return the current value
 	 */
 	public Object getValue();
 
@@ -39,7 +41,7 @@ public interface IUpdatableValue extends IUpdatable {
 	 * Returns the type of the values that this updatable value can hold. This
 	 * method's return value does not change over time.
 	 * 
-	 * @return
+	 * @return the value type
 	 */
 	public Class getValueType();
 }

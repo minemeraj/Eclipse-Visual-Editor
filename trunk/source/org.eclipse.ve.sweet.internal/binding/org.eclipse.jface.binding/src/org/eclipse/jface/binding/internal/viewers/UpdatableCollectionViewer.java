@@ -15,16 +15,24 @@ import java.util.List;
 
 import org.eclipse.jface.binding.IUpdatableCollection;
 import org.eclipse.jface.binding.Updatable;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.AbstractListViewer;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 
-public class UpdatableCollectionViewer extends Updatable implements IUpdatableCollection {
+/**
+ * @since 3.2
+ *
+ */
+public class UpdatableCollectionViewer extends Updatable implements
+		IUpdatableCollection {
 
 	private final AbstractListViewer viewer;
-	
+
 	private List elements = new ArrayList();
 
-	
-
+	/**
+	 * @param viewer
+	 */
 	// TODO for ComboViewer, sometimes you want to add an "empty element" so
 	// that the user can null the current selection...
 	public UpdatableCollectionViewer(AbstractListViewer viewer) {
@@ -38,7 +46,8 @@ public class UpdatableCollectionViewer extends Updatable implements IUpdatableCo
 			public void dispose() {
 			}
 
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			public void inputChanged(Viewer viewer, Object oldInput,
+					Object newInput) {
 			}
 		});
 		viewer.setInput(this);
@@ -50,10 +59,10 @@ public class UpdatableCollectionViewer extends Updatable implements IUpdatableCo
 
 	public int addElement(Object element, int index) {
 		int position = primAddElement(element, index);
-		if (position==elements.size()-1 || viewer.getSorter()!=null)
-		   viewer.add(element);
+		if (position == elements.size() - 1 || viewer.getSorter() != null)
+			viewer.add(element);
 		else
-		   viewer.refresh();
+			viewer.refresh();
 		return position;
 	}
 
@@ -61,10 +70,9 @@ public class UpdatableCollectionViewer extends Updatable implements IUpdatableCo
 		int position = elements.size();
 		if (index < 0 || index > elements.size()) {
 			position = elements.size();
-			elements.add(element);			
-		}
-		else {
-			elements.add(index, element);			
+			elements.add(element);
+		} else {
+			elements.add(index, element);
 			position = index;
 		}
 		return position;
@@ -78,8 +86,7 @@ public class UpdatableCollectionViewer extends Updatable implements IUpdatableCo
 	public void setElement(int index, Object element) {
 		if (elements.get(index).equals(element)) {
 			viewer.update(element, null);
-		}
-		else {
+		} else {
 			removeElement(index);
 			addElement(element, index);
 		}
@@ -93,6 +100,4 @@ public class UpdatableCollectionViewer extends Updatable implements IUpdatableCo
 		return Object.class;
 	}
 
-
-	
 }

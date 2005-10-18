@@ -17,6 +17,10 @@ import org.eclipse.jface.binding.IChangeListener;
 import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.jface.binding.UpdatableValue;
 
+/**
+ * @since 3.2
+ *
+ */
 public class DerivedUpdatableValue extends UpdatableValue {
 
 	private IChangeListener innerChangeListener = new IChangeListener() {
@@ -34,6 +38,11 @@ public class DerivedUpdatableValue extends UpdatableValue {
 
 	private DatabindingService databindingService;
 
+	/**
+	 * @param databindingService
+	 * @param outerUpdatableValue
+	 * @param feature
+	 */
 	public DerivedUpdatableValue(DatabindingService databindingService,
 			final IUpdatableValue outerUpdatableValue, Object feature) {
 		this.databindingService = databindingService;

@@ -11,41 +11,35 @@
 
 package org.eclipse.jface.binding;
 
-public class IdentityConverter implements IConverter {
+/**
+ * @since 3.2
+ *
+ */
+public class IdentityConverter extends Converter implements IConverter {
 
-	private final Class fromType;
-
-	private final Class toType;
-
+	/**
+	 * @param type
+	 */
 	public IdentityConverter(Class type) {
-		this.fromType = type;
-		this.toType = type;
+		super(type, type);
 	}
 
 	/**
 	 * useful for converting between, e.g., Integer.class and int.class
 	 * 
-	 * @param fromType
-	 * @param toType
+	 * @param targetType
+	 * @param modelType
 	 */
-	public IdentityConverter(Class fromType, Class toType) {
-		this.fromType = fromType;
-		this.toType = toType;
+	public IdentityConverter(Class targetType, Class modelType) {
+		super(targetType, modelType);
 	}
 
-	public Object convertModel(Object object) {
-		return object;
-	}
-	public Object convertTarget(Object object){
+	public Object convertTargetToModel(Object object) {
 		return object;
 	}
 
-	public Class getModelType() {
-		return fromType;
-	}
-
-	public Class getTargetType() {
-		return toType;
+	public Object convertModelToTarget(Object object) {
+		return object;
 	}
 
 }

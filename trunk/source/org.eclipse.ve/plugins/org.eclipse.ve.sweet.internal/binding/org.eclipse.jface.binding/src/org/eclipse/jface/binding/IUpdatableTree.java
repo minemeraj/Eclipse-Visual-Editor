@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jface.binding;
 
+/**
+ * @since 3.2
+ * 
+ */
 public interface IUpdatableTree {
-
+	// TODO IUpdatableTree needs to be fleshed out
 }

@@ -15,14 +15,24 @@ import java.util.List;
 
 import org.eclipse.jface.binding.IUpdatableCollection;
 import org.eclipse.jface.binding.Updatable;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 
-public class TableViewerUpdatableCollection extends Updatable implements IUpdatableCollection {
+/**
+ * @since 3.2
+ *
+ */
+public class TableViewerUpdatableCollection extends Updatable implements
+		IUpdatableCollection {
 
 	private final TableViewer viewer;
-	
+
 	private List elements = new ArrayList();
 
+	/**
+	 * @param viewer
+	 */
 	public TableViewerUpdatableCollection(TableViewer viewer) {
 		this.viewer = viewer;
 		viewer.setContentProvider(new IStructuredContentProvider() {
@@ -34,7 +44,8 @@ public class TableViewerUpdatableCollection extends Updatable implements IUpdata
 			public void dispose() {
 			}
 
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			public void inputChanged(Viewer viewer, Object oldInput,
+					Object newInput) {
 			}
 		});
 	}
@@ -45,10 +56,10 @@ public class TableViewerUpdatableCollection extends Updatable implements IUpdata
 
 	public int addElement(Object element, int index) {
 		int position = primAddElement(element, index);
-		if (position==elements.size()-1 || viewer.getSorter()!=null)
-		   viewer.add(element);
+		if (position == elements.size() - 1 || viewer.getSorter() != null)
+			viewer.add(element);
 		else
-		   viewer.refresh();
+			viewer.refresh();
 		return position;
 	}
 
@@ -56,10 +67,9 @@ public class TableViewerUpdatableCollection extends Updatable implements IUpdata
 		int position = elements.size();
 		if (index < 0 || index > elements.size()) {
 			position = elements.size();
-			elements.add(element);			
-		}
-		else {
-			elements.add(index, element);			
+			elements.add(element);
+		} else {
+			elements.add(index, element);
 			position = index;
 		}
 		return position;
@@ -73,8 +83,7 @@ public class TableViewerUpdatableCollection extends Updatable implements IUpdata
 	public void setElement(int index, Object element) {
 		if (elements.get(index).equals(element)) {
 			viewer.update(element, null);
-		}
-		else {
+		} else {
 			removeElement(index);
 			addElement(element, index);
 		}
@@ -88,6 +97,4 @@ public class TableViewerUpdatableCollection extends Updatable implements IUpdata
 		return Object.class;
 	}
 
-
-	
 }

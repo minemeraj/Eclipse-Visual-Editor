@@ -20,6 +20,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 
+/**
+ * @since 3.2
+ *
+ */
 public class StructuredViewerUpdatableValue extends UpdatableValue {
 
 	public static final String SELECTION = "selection";
@@ -30,6 +34,10 @@ public class StructuredViewerUpdatableValue extends UpdatableValue {
 
 	private boolean updating = false;
 
+	/**
+	 * @param viewer
+	 * @param attribute
+	 */
 	public StructuredViewerUpdatableValue(StructuredViewer viewer,
 			String attribute) {
 		this.viewer = viewer;

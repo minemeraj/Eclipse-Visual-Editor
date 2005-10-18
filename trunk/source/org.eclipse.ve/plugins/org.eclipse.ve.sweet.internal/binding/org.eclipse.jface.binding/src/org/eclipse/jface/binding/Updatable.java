@@ -13,6 +13,10 @@ package org.eclipse.jface.binding;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @since 3.2
+ *
+ */
 abstract public class Updatable implements IUpdatable {
 
 	private List changeListeners = new ArrayList();

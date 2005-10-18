@@ -11,10 +11,17 @@
 
 package org.eclipse.jface.binding;
 
+/**
+ * @since 3.2
+ *
+ */
 public class BindingException extends Exception {
 
 	private static final long serialVersionUID = -4092828452936724217L;
 
+	/**
+	 * @param message
+	 */
 	public BindingException(String message) {
 		super(message);
 	}

@@ -11,37 +11,45 @@
 
 package org.eclipse.jface.binding;
 
+/**
+ * @since 3.2
+ * 
+ */
 public interface IConverter {
 
 	/**
 	 * Returns the class whose instances can be converted by this converter.
+	 * 
 	 * @return the class whose instances can be converted
 	 */
 	public Class getModelType();
 
 	/**
 	 * Returns the class to which this converter can convert.
+	 * 
 	 * @return the class to which this converter can convert
 	 */
 	public Class getTargetType();
 
 	/**
 	 * Returns the result of the conversion of the given object. The given
-	 * object must be an instance of getFromType(), and the result must be an
-	 * instance of getToType().
+	 * object must be an instance of getTargetType(), and the result must be an
+	 * instance of getModelType().
 	 * 
-	 * @param object the object to convert
+	 * @param targetObject
+	 *            the object to convert
 	 * @return the converted object
 	 */
-	public Object convertModel(Object fromObject);
+	public Object convertTargetToModel(Object targetObject);
 
 	/**
 	 * Returns the result of the conversion of the given object. The given
-	 * object must be an instance of getToType(), and the result must be an
-	 * instance of getFromType().
+	 * object must be an instance of getModelType(), and the result must be an
+	 * instance of getTargetType().
 	 * 
-	 * @param object the object to convert
+	 * @param modelObject
+	 *            the object to convert
 	 * @return the converted object
-	 */	
-	public Object convertTarget(Object toObject);
+	 */
+	public Object convertModelToTarget(Object modelObject);
 }

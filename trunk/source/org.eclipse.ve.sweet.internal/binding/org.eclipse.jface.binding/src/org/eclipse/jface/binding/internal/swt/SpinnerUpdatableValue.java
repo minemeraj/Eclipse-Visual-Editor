@@ -19,11 +19,20 @@ import org.eclipse.swt.widgets.Spinner;
 
 public class SpinnerUpdatableValue extends UpdatableValue {
 
-	public static final String SELECTION = "selection";
+	/**
+	 * 
+	 */
+	public static final String SELECTION = "selection"; //$NON-NLS-1$
 
-	public static final String MAX = "max";
+	/**
+	 * 
+	 */
+	public static final String MAX = "max"; //$NON-NLS-1$
 
-	public static final String MIN = "min";
+	/**
+	 * 
+	 */
+	public static final String MIN = "min"; //$NON-NLS-1$
 
 	private final Spinner spinner;
 
@@ -31,6 +40,10 @@ public class SpinnerUpdatableValue extends UpdatableValue {
 
 	private boolean updating = false;
 
+	/**
+	 * @param spinner
+	 * @param attribute
+	 */
 	public SpinnerUpdatableValue(Spinner spinner, String attribute) {
 		this.spinner = spinner;
 		this.attribute = attribute;

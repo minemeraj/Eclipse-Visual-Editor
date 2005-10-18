@@ -1,6 +1,13 @@
-/**
+/*******************************************************************************
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
- */
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.jface.binding.internal;
 
 import org.eclipse.jface.binding.DatabindingService;
@@ -10,31 +17,36 @@ import org.eclipse.jface.binding.IConverter;
 import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.jface.binding.IValidator;
 
+/**
+ * @since 3.2
+ * 
+ */
 public class ValueBinding implements IChangeListener {
-	/**
-	 * 
-	 */
+
 	private final DatabindingService context;
 
 	private final IUpdatableValue target;
 
 	private final IUpdatableValue model;
 
-	private final IConverter modelToTargetConverter;
-
 	private final IValidator validator;
 
-	private final IConverter targetToModelConverter;
+	private final IConverter converter;
 
+	/**
+	 * @param context
+	 * @param target
+	 * @param model
+	 * @param converter
+	 * @param validator
+	 */
 	public ValueBinding(DatabindingService context, IUpdatableValue target,
-			IUpdatableValue model, IConverter targetToModelConverter,
-			IConverter modelToTargetConverter, IValidator validator) {
+			IUpdatableValue model, IConverter converter, IValidator validator) {
 		super();
 		this.context = context;
 		this.target = target;
 		this.model = model;
-		this.targetToModelConverter = targetToModelConverter;
-		this.modelToTargetConverter = modelToTargetConverter;
+		this.converter = converter;
 		this.validator = validator;
 	}
 
@@ -71,7 +83,7 @@ public class ValueBinding implements IChangeListener {
 		String validationError = doValidateTarget(value);
 		if (validationError == null) {
 			try {
-				model.setValue(targetToModelConverter.convertModel(value));
+				model.setValue(converter.convertTargetToModel(value));
 			} catch (Exception ex) {
 				context.updateValidationError(this,
 						"An error occurred while setting the value.");
@@ -79,6 +91,9 @@ public class ValueBinding implements IChangeListener {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public void validateTarget() {
 		Object value = target.getValue();
 		doValidateTarget(value);
@@ -91,7 +106,10 @@ public class ValueBinding implements IChangeListener {
 		return validationError;
 	}
 
+	/**
+	 * 
+	 */
 	public void updateTargetFromModel() {
-		target.setValue(targetToModelConverter.convertTarget(model.getValue()));
+		target.setValue(converter.convertModelToTarget(model.getValue()));
 	}
 }

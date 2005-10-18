@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jface.binding;
 
+/**
+ * @since 3.2
+ *
+ */
 public abstract class UpdatableValue extends Updatable implements
 		IUpdatableValue {
 

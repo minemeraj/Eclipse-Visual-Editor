@@ -11,7 +11,14 @@
 
 package org.eclipse.jface.binding;
 
+/**
+ * @since 3.2
+ *
+ */
 public interface IChangeListener {
-	
+
+	/**
+	 * @param changeEvent
+	 */
 	public void handleChange(IChangeEvent changeEvent);
 }

@@ -17,15 +17,25 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Table;
 
+/**
+ * @since 3.2
+ *
+ */
 public class TableUpdatableValue extends UpdatableValue {
+
+	static public final String SELECTION = "selection"; //$NON-NLS-1$
 
 	private final Table table;
 
 	private boolean updating = false;
 
+	/**
+	 * @param table
+	 * @param attribute
+	 */
 	public TableUpdatableValue(Table table, String attribute) {
 		this.table = table;
-		if (attribute.equals("selection")) {
+		if (attribute.equals(SELECTION)) {
 			table.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
 					if (!updating) {

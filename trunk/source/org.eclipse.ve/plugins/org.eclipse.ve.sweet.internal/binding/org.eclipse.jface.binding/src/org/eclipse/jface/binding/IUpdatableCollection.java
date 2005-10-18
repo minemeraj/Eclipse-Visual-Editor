@@ -10,18 +10,44 @@
  *******************************************************************************/
 package org.eclipse.jface.binding;
 
+/**
+ * @since 3.2
+ * 
+ */
 public interface IUpdatableCollection extends IUpdatable {
 
+	/**
+	 * @return the size
+	 */
 	public int getSize();
 
+	/**
+	 * @param value
+	 * @param index
+	 * @return the index where the element was added
+	 */
 	public int addElement(Object value, int index);
 
+	/**
+	 * @param index
+	 */
 	public void removeElement(int index);
 
-	// TODO this is not needed
-	public void setElement(int row, Object value);
+	// TODO rename to updateElement?
+	/**
+	 * @param index
+	 * @param value
+	 */
+	public void setElement(int index, Object value);
 
-	public Object getElement(int row);
+	/**
+	 * @param index
+	 * @return the element at the given index
+	 */
+	public Object getElement(int index);
 
+	/**
+	 * @return the element type
+	 */
 	public Class getElementType();
 }

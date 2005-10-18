@@ -14,16 +14,23 @@ package org.eclipse.jface.binding.internal.swt;
 import org.eclipse.jface.binding.UpdatableValue;
 import org.eclipse.swt.widgets.Label;
 
+/**
+ * @since 3.2
+ *
+ */
 public class LabelUpdatableValue extends UpdatableValue {
 
 	private final Label label;
 
+	/**
+	 * @param label
+	 */
 	public LabelUpdatableValue(Label label) {
 		this.label = label;
 	}
 
 	public void setValue(Object value) {
-		label.setText(value == null ? "" : value.toString());
+		label.setText(value == null ? "" : value.toString()); //$NON-NLS-1$
 	}
 
 	public Object getValue() {

@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jface.binding;
 
+/**
+ * @since 3.2
+ *
+ */
 public class ChangeEvent implements IChangeEvent {
 
 	private final IUpdatable updatable;
@@ -21,14 +25,27 @@ public class ChangeEvent implements IChangeEvent {
 	private final Object newValue;
 
 	private int position;
-	
+
 	private boolean vetoed = false;
 
+	/**
+	 * @param updatable
+	 * @param changeType
+	 * @param oldValue
+	 * @param newValue
+	 */
 	public ChangeEvent(IUpdatable updatable, int changeType, Object oldValue,
 			Object newValue) {
 		this(updatable, changeType, oldValue, newValue, 0);
 	}
 
+	/**
+	 * @param updatable
+	 * @param changeType
+	 * @param oldValue
+	 * @param newValue
+	 * @param position
+	 */
 	public ChangeEvent(IUpdatable updatable, int changeType, Object oldValue,
 			Object newValue, int position) {
 		this.updatable = updatable;

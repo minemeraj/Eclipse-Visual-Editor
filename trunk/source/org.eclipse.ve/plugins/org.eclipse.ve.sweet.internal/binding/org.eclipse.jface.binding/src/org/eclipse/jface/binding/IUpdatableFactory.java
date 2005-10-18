@@ -12,14 +12,24 @@
  *  Created Oct 14, 2005 by Gili Mendel
  * 
  *  $RCSfile: IUpdatableFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-17 23:06:30 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-18 17:30:52 $ 
  */
- 
-package org.eclipse.jface.binding;
- 
 
+package org.eclipse.jface.binding;
+
+/**
+ * @since 3.2
+ * 
+ */
 public interface IUpdatableFactory {
-	
-		// Factory would determine what type of IUpdatable to created from the attribute.
-		IUpdatable createUpdatable(Object object, Object attribute);
+
+	/**
+	 * Factory would determine what type of IUpdatable to created from the
+	 * attribute.
+	 * 
+	 * @param object
+	 * @param attribute
+	 * @return the updatable
+	 */
+	IUpdatable createUpdatable(Object object, Object attribute);
 }

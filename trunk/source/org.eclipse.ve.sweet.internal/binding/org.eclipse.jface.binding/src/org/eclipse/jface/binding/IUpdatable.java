@@ -30,6 +30,7 @@ public interface IUpdatable {
 	/**
 	 * Removes a change listener from this updatable. Has no effect if an
 	 * identical listener is not registered.
+	 * @param changeListener 
 	 */
 	public void removeChangeListener(IChangeListener changeListener);
 
