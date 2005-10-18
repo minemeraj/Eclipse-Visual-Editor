@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.*;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
+import sun.io.Converters;
+
 /**
  * To run the tests in this class, right-click and select "Run As JUnit Plug-in
  * Test". This will also start an Eclipse instance. To clean up the launch

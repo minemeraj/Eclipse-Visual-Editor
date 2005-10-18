@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBinding.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-18 13:47:39 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -63,9 +63,7 @@ public class TextBinding extends Composite {
 	}
 	private void bind() throws BindingException {
 		dbs = SampleData.getSWTtoEMFDatabindingService(this);
-		AdventureFactory emfFactory = AdventurePackage.eINSTANCE.getAdventureFactory();		
-		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
-		
+
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 		
 		dbs.bind(txtDescription,"text",skiTrip,"description");
