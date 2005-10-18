@@ -12,7 +12,7 @@
  *  Created Oct 12, 2005 by Gili Mendel
  * 
  *  $RCSfile: ReadOnlyComboScenarios.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-18 13:50:44 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-18 14:13:12 $ 
  */
  
 package org.eclipse.jface.tests.binding.scenarios;
@@ -22,9 +22,7 @@ import java.util.*;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-import org.eclipse.jface.binding.*;
-import org.eclipse.jface.examples.binding.emf.*;
+import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -36,8 +34,7 @@ import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 public class ReadOnlyComboScenarios extends ScenariosTestCase {
 	
 	protected ComboViewer cviewer = null;
-	protected Combo       combo = null;
-	protected IConverter  lodgingObjectConverter = new IdentityConverter(Lodging.class, Object.class);
+	protected Combo       combo = null;	
 	ILabelProvider		  lodgingLabelProvider = new LabelProvider() {
 		  public String getText(Object element) {
 		        return ((Lodging)element).getName();
@@ -179,7 +176,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		
 		cviewer.setLabelProvider(lodgingLabelProvider);  //TODO: need to resolve column binding
 		// Bind the ComboViewer's content to the available lodging		
-		getDbs().bind(cviewer, "contents", catalog, "lodgings", lodgingObjectConverter);
+		getDbs().bind(cviewer, "contents", catalog, "lodgings");
 		
 		
 		
