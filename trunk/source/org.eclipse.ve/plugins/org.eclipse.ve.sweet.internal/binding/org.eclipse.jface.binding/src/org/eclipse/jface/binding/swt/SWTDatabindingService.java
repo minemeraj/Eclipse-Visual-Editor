@@ -1,15 +1,29 @@
 package org.eclipse.jface.binding.swt;
 
-import org.eclipse.jface.binding.*;
-import org.eclipse.jface.binding.internal.swt.*;
+import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.IUpdatable;
+import org.eclipse.jface.binding.IUpdatableFactory;
+import org.eclipse.jface.binding.internal.swt.ComboUpdatableValue;
+import org.eclipse.jface.binding.internal.swt.ControlUpdatableValue;
+import org.eclipse.jface.binding.internal.swt.LabelUpdatableValue;
+import org.eclipse.jface.binding.internal.swt.SpinnerUpdatableValue;
+import org.eclipse.jface.binding.internal.swt.TableUpdatableValue;
+import org.eclipse.jface.binding.internal.swt.TextUpdatableValue;
 import org.eclipse.jface.binding.internal.viewers.StructuredViewerUpdatableValue;
+import org.eclipse.jface.binding.internal.viewers.TableViewerUpdatableCollection;
 import org.eclipse.jface.binding.internal.viewers.UpdatableCollectionViewer;
 import org.eclipse.jface.viewers.AbstractListViewer;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Text;
 
 public class SWTDatabindingService extends DatabindingService {
 
@@ -84,6 +98,15 @@ public class SWTDatabindingService extends DatabindingService {
 								(AbstractListViewer) object);
 					}
 				});
+		
+		addUpdatableFactory(TableViewer.class,
+				new IUpdatableFactory() {
+					public IUpdatable createUpdatable(Object object,
+							Object attribute) {
+						return new TableViewerUpdatableCollection(
+								(TableViewer) object);
+					}
+				});		
 
 		addUpdatableFactory(Table.class, new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Object object,

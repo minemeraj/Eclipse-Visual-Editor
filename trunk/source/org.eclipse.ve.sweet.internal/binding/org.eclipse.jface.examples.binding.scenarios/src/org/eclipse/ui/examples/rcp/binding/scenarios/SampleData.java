@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SampleData.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-17 23:06:29 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-18 13:47:39 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -34,6 +34,9 @@ public class SampleData {
 	public static Catalog CATALOG_2005;
 	public static Transportation GREYHOUND_BUS;
 	public static Transportation EXECUTIVE_JET;	
+	public static Account PRESIDENT;
+	public static Account DENTIST;	
+	public static Account SANTA_CLAUS;	
 
 	static{
 		initializeData();
@@ -50,7 +53,7 @@ public class SampleData {
 		WINTER_HOLIDAY.setName("Ski Alps");
 		WINTER_HOLIDAY.setLocation("Chamonix");
 		WINTER_HOLIDAY.setPrice(4000.52d);
-		
+		// Lodgings
 		FIVE_STAR_HOTEL = adventureFactory.createLodging();
 		FIVE_STAR_HOTEL.setDescription("Deluxe palace");
 		FIVE_STAR_HOTEL.setName("Flashy");
@@ -59,21 +62,34 @@ public class SampleData {
 		YOUTH_HOSTEL.setName("Basic");
 		CAMP_GROUND = adventureFactory.createLodging();
 		CAMP_GROUND.setDescription("Camp ground");
-		CAMP_GROUND.setName("WetAndCold");
-		
+		CAMP_GROUND.setName("WetAndCold");		
 		CATALOG_2005.getLodgings().add(FIVE_STAR_HOTEL);
 		CATALOG_2005.getLodgings().add(YOUTH_HOSTEL);
 		CATALOG_2005.getLodgings().add(CAMP_GROUND);
-		
 		WINTER_HOLIDAY.setDefaultLodging(YOUTH_HOSTEL);
-		
+		// Transporation
 		GREYHOUND_BUS = adventureFactory.createTransportation();
 		GREYHOUND_BUS.setArrivalTime("14:30");
-		CATALOG_2005.getTransportations().add(GREYHOUND_BUS);
-		
+		CATALOG_2005.getTransportations().add(GREYHOUND_BUS);		
 		EXECUTIVE_JET = adventureFactory.createTransportation();
 		EXECUTIVE_JET.setArrivalTime("11:10");
 		CATALOG_2005.getTransportations().add(EXECUTIVE_JET);
+		// Accounts
+		PRESIDENT = adventureFactory.createAccount();
+		PRESIDENT.setFirstName("George");
+		PRESIDENT.setLastName("Bush");
+		PRESIDENT.setState("TX");
+		DENTIST = adventureFactory.createAccount();
+		DENTIST.setFirstName("Tooth");
+		DENTIST.setLastName("Fairy");
+		DENTIST.setState("CA");
+		SANTA_CLAUS = adventureFactory.createAccount();
+		SANTA_CLAUS.setFirstName("Chris");
+		SANTA_CLAUS.setLastName("Chringle");
+		SANTA_CLAUS.setState("WI");
+		CATALOG_2005.getAccounts().add(PRESIDENT);
+		CATALOG_2005.getAccounts().add(DENTIST);
+		CATALOG_2005.getAccounts().add(SANTA_CLAUS);		
 		
 	}
 	

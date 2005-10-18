@@ -10,16 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ListBinding.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-17 13:20:06 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-18 13:47:39 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.jface.binding.IdentityConverter;
-import org.eclipse.jface.examples.binding.emf.EMFDerivedUpdatableValue;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -32,7 +29,6 @@ import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
 import org.eclipse.ui.examples.rcp.adventure.Lodging;
-import org.eclipse.swt.widgets.Display;
 
 public class ListBinding extends Composite {
 
@@ -85,27 +81,28 @@ public class ListBinding extends Composite {
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
 		
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
-		Catalog catalog = SampleData.CATALOG_2005;		
+		Catalog catalog = SampleData.CATALOG_2005;	
 		
-		dbs.bindTable(
-				dbs.createUpdatableTable(listViewer,"contents"),
-				new EMFUpdatableTable(catalog,"lodgings",new String[] {"description"})
-		);
+//		dbs.bindTable(
+//				dbs.createUpdatableTable(listViewer,"contents"),
+//				new EMFUpdatableTable(catalog,"lodgings",new String[] {"description"})
+//		);
+		dbs.bind(listViewer,"contents",catalog,"lodgings",new IdentityConverter(Lodging.class,Object.class));		
 		
-		dbs.bindValue(
-				listViewer,"selection",skiTrip,emfPackage.getAdventure_DefaultLodging(),
-				new IdentityConverter(Object.class,Lodging.class));
+//		dbs.bindValue(
+//				listViewer,"selection",skiTrip,emfPackage.getAdventure_DefaultLodging(),
+//				new IdentityConverter(Object.class,Lodging.class));
 		
-		IUpdatableValue defaultLodging = dbs.createUpdatableValue(
-				skiTrip,emfPackage.getAdventure_DefaultLodging());
+//		IUpdatableValue defaultLodging = dbs.createUpdatableValue(
+//				skiTrip,emfPackage.getAdventure_DefaultLodging());
 		
-		IUpdatableValue listViewerSelection = dbs.createUpdatableValue(listViewer,"selection");
+//		IUpdatableValue listViewerSelection = dbs.createUpdatableValue(listViewer,"selection");
 		
-		dbs.bindValue(txtDefaultLodging, "text", listViewerSelection, "description");
+//		dbs.bindValue(txtDefaultLodging, "text", listViewerSelection, "description");
 		
-		dbs.bindValue(txtName, "text" , listViewerSelection , "name" );
+//		dbs.bindValue(txtName, "text" , listViewerSelection , "name" );
 		
-		dbs.bindValue(validationMessage, "text", dbs.getCombinedValidationMessage());
+//		dbs.bindValue(validationMessage, "text", dbs.getCombinedValidationMessage());
 		
 	}
 	/**

@@ -12,7 +12,7 @@
  *  Created Oct 14, 2005 by Gili Mendel
  * 
  *  $RCSfile: EMFUpdatableCollection.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-17 23:06:28 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-18 13:47:37 $ 
  */
  
 package org.eclipse.jface.examples.binding.emf;
@@ -99,6 +99,7 @@ public class EMFUpdatableCollection extends Updatable implements IUpdatableColle
 		if (index<=0||index>list.size())
 			index = list.size();
 		getElements().add(index, value);
+		((EObject)value).eAdapters().add(adapter);
 		return index;
 	}
 
