@@ -12,7 +12,7 @@
  *  Created Oct 12, 2005 by Gili Mendel
  * 
  *  $RCSfile: ReadOnlyComboScenarios.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-17 23:06:29 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-18 13:50:44 $ 
  */
  
 package org.eclipse.jface.tests.binding.scenarios;
@@ -37,25 +37,13 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 	
 	protected ComboViewer cviewer = null;
 	protected Combo       combo = null;
-	protected IConverter  lodgingObjectConverter = new IConverter() {
-	
-		public Object convertTarget(Object toObject) {
-			return toObject;
-		}
-	
-		public Object convertModel(Object fromObject) {
-			return fromObject;
-		}
-	
-		public Class getTargetType() {
-			return Object.class;
-		}
-	
-		public Class getModelType() {
-			return Lodging.class;
-		}
-	
+	protected IConverter  lodgingObjectConverter = new IdentityConverter(Lodging.class, Object.class);
+	ILabelProvider		  lodgingLabelProvider = new LabelProvider() {
+		  public String getText(Object element) {
+		        return ((Lodging)element).getName();
+		    }
 	};
+	
 
 	protected void setUp() throws Exception {
 		super.setUp();	
@@ -63,26 +51,6 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		
 		combo = new Combo (getComposite(), SWT.READ_ONLY|SWT.DROP_DOWN);
 		cviewer = new ComboViewer(combo);
-		
-		IUpdatableFactory emfFactory = new IUpdatableFactory(){		
-			public IUpdatable createUpdatable(Object object, Object attribute) {
-				EObject eObject = (EObject)object;
-				EStructuralFeature attr;
-				if (attribute instanceof EStructuralFeature)
-					attr = (EStructuralFeature)attribute;
-				else
-					attr = eObject.eClass().getEStructuralFeature((String)attribute);
-				if (attr.isMany()) {
-					// TODO: This really needs to be a UpdatableTable
-					return new EMFUpdatableCollection(eObject, attr, !attr.isChangeable());
-				}
-				else
-					return new EMFUpdatableValue(eObject , attr, !attr.isChangeable());
-					
-			}
-		
-		};				
-		getDbs().addUpdatableFactory(EObjectImpl.class, emfFactory);
 		
 		
 		
@@ -205,20 +173,22 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 	 * 
 	 * This test does not deal with the combo's selection.
 	 */
-	public void testScenario03_collectionBindings() throws BindingException {
+	public void test_ROCombo_Scenario03_collectionBindings() throws BindingException {
 
 		Catalog catalog = SampleData.CATALOG_2005;		     // Lodging source
 		
+		cviewer.setLabelProvider(lodgingLabelProvider);  //TODO: need to resolve column binding
 		// Bind the ComboViewer's content to the available lodging		
 		getDbs().bind(cviewer, "contents", catalog, "lodgings", lodgingObjectConverter);
+		
 		
 		
 		
 		// Ensure that cv's content now has the catalog's lodgings
 		assertEquals(catalog.getLodgings(), getViewerContent());
 		
-//		// Ensure that the cv's labels are the same as the lodging descriptions
-//		assertEquals(getColumn(catalog.getLodgings(), "name"), getComboContent());
+		// Ensure that the cv's labels are the same as the lodging descriptions
+		assertEquals(getColumn(catalog.getLodgings(), "name"), getComboContent());
 		
 		EList lodgings = catalog.getLodgings();
 		
@@ -228,29 +198,29 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		lodgings.add(2, lodging);		
 		assertEquals(getViewerContent().get(2), lodging);
 		
-//		// Add a lodging at the end
-//		lodging = AdventureFactory.eINSTANCE.createLodging();
-//		lodging.setName("End Lodging");		
-//		lodgings.add(lodging);
-//		int index = getComboContent().size()-1;
-//		assertEquals(getViewerContent().get(index), lodging);
+		// Add a lodging at the end
+		lodging = AdventureFactory.eINSTANCE.createLodging();
+		lodging.setName("End Lodging");		
+		lodgings.add(lodging);
+		int index = getComboContent().size()-1;
+		assertEquals(getViewerContent().get(index), lodging);
 		
-//		// Delete the first Lodging		
-//		lodgings.remove(lodgings.get(0));				
-//		// Ensure that the cv's labels are the same as the lodging descriptions
-//		assertEquals(getColumn(catalog.getLodgings(), "name"), getComboContent());
-//				
-//		// Delete middle Lodging		
-//		lodgings.remove(lodgings.get(2));				
-//		// Ensure that the cv's labels are the same as the lodging descriptions
-//		assertEquals(getColumn(catalog.getLodgings(), "name"), getComboContent());
-//		
-//		// Change the names of all Lodging
-//		for (Iterator iter = lodgings.iterator(); iter.hasNext();) {
-//			Lodging l = (Lodging)iter.next();
-//			l.setName("Changed: "+l.getName());
-//		}
-//		assertEquals(getColumn(catalog.getLodgings(), "name"), getComboContent());
+		// Delete the first Lodging		
+		lodgings.remove(lodgings.get(0));				
+		// Ensure that the cv's labels are the same as the lodging descriptions
+		assertEquals(getColumn(catalog.getLodgings(), "name"), getComboContent());
+				
+		// Delete middle Lodging		
+		lodgings.remove(lodgings.get(2));				
+		// Ensure that the cv's labels are the same as the lodging descriptions
+		assertEquals(getColumn(catalog.getLodgings(), "name"), getComboContent());
+		
+		// Change the names of all Lodging
+		for (Iterator iter = lodgings.iterator(); iter.hasNext();) {
+			Lodging l = (Lodging)iter.next();
+			l.setName("Changed: "+l.getName());
+		}
+		assertEquals(getColumn(catalog.getLodgings(), "name"), getComboContent());
 		
 		// TODO: set name to null
 		
