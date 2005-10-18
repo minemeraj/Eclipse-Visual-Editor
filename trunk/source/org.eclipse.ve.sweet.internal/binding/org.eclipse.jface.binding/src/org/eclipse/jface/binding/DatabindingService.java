@@ -44,7 +44,7 @@ public class DatabindingService {
 		}
 	}
 
-	public static class CollectionChangeListener implements IChangeListener {
+	protected static class CollectionChangeListener implements IChangeListener {
 
 		IUpdatableCollection source, target;
 
@@ -83,6 +83,8 @@ public class DatabindingService {
 	private SettableValue partialValidationMessage = new SettableValue(String.class);
 
 	private DatabindingService parent;
+	
+	private boolean defaultIdentityConverter = true;
 
 	public DatabindingService(DatabindingService parent) {
 		this.parent = parent;
@@ -98,13 +100,21 @@ public class DatabindingService {
 		updatableFactories.put(clazz, factory);
 	}
 
-	/*
-	 * specialized to bind two IUpdatableCollection
+	/**
+	 * 
+	 * Binds two {@link org.eclipse.jface.binding.IUpdatableCollection}
+	 * 
+	 * @param targetCollection
+	 * @param modelCollection
+	 * @param converter
+	 * @param validator
+	 * @throws BindingException
+	 * 
 	 */
 	public void bind(IUpdatableCollection targetCollection, IUpdatableCollection modelCollection, IConverter converter, final IValidator validator) throws BindingException {
 
 		//TODO use a ValueBindings, and deal with validator
-		
+				
 		// Verify element conversion types
 		Class convertedClass = converter.getTargetType();
 		if (!targetCollection.getElementType().isAssignableFrom(convertedClass)) { throw new BindingException("no converter from "
@@ -142,24 +152,25 @@ public class DatabindingService {
 	 * @param model
 	 *            the model value
 	 */
-	public void bind(final IUpdatable target, final IUpdatable source) throws BindingException {
+	public void bind(final IUpdatable target, final IUpdatable model) throws BindingException {
 		IConverter converter=null;
 		if (target instanceof IUpdatableValue)  
-			if (source instanceof IUpdatableValue) {
-				IUpdatableValue tgt=(IUpdatableValue)target, src=(IUpdatableValue)source;
-				converter = getConverter(tgt.getValueType(), src.getValueType());				
+			if (model instanceof IUpdatableValue) {
+				IUpdatableValue tgt=(IUpdatableValue)target, mdl=(IUpdatableValue)model;
+				converter = getConverter(tgt.getValueType(), mdl.getValueType(), isDefaultIdentityConverter());				
 			}
 			else 
 				throw new BindingException("Incompatible instances of IUpdatable");
 		else if (target instanceof IUpdatableCollection)
-			if (source instanceof IUpdatableCollection) {
-				IUpdatableCollection tgt=(IUpdatableCollection)target, src=(IUpdatableCollection)source;
-				converter = getConverter(tgt.getElementType(), src.getElementType());				
+			if (model instanceof IUpdatableCollection) {
+				IUpdatableCollection tgt=(IUpdatableCollection)target, mdl=(IUpdatableCollection)model;
+				converter = getConverter(tgt.getElementType(), mdl.getElementType(), isDefaultIdentityConverter());				
 			}				
 			else 
 				throw new BindingException("Incompatible instances of IUpdatable");
 		
-		bind(target, source, converter);
+		
+		bind(target, model, converter);
 	}
 
 	/**
@@ -175,9 +186,6 @@ public class DatabindingService {
 	 *            the model value
 	 * @param converter
 	 *            the converter for converting from target values to model
-	 *            values
-	 * @param modelToTargetConverter
-	 *            the converter for converting from model values to target
 	 *            values
 	 * @throws BindingException 
 	 */
@@ -283,9 +291,6 @@ public class DatabindingService {
 	 * @param converter
 	 *            the converter for converting from target values to model
 	 *            values
-	 * @param modelToTargetConverter
-	 *            the converter for converting from model values to target
-	 *            values
 	 */
 	public void bind(Object targetObject, Object targetFeature, Object modelObject, Object modelFeature, final IConverter converter)
 			throws BindingException {
@@ -310,19 +315,11 @@ public class DatabindingService {
 	 * @param converter
 	 *            the converter for converting from target values to model
 	 *            values
-	 * @param targetValidator
-	 *            the validator for validating updated target values
 	 */
 	public void bind(Object targetObject, Object targetFeature, Object modelObject, Object modelFeature, IConverter converter,
 			IValidator validator) throws BindingException {
 		bind(createUpdatable(targetObject, targetFeature), createUpdatable(modelObject, modelFeature), converter,
 				validator);
-	}
-
-	private void checkConverterTypes(final IConverter modelToTargetElementConverter, Class fromType, Class toType) throws BindingException {
-		if (!modelToTargetElementConverter.getModelType().isAssignableFrom(fromType)
-				|| !toType.isAssignableFrom(modelToTargetElementConverter.getTargetType())) { throw new BindingException(
-				"converter from/to types don't match element types"); }
 	}
 
 	/**
@@ -393,13 +390,27 @@ public class DatabindingService {
 		return combinedValidationMessage;
 	}
 
-	public IConverter getConverter(Class fromType, Class toType) throws BindingException {
+	/**
+	 * Get a registered converter between teh fromType and the toType
+	 * 
+	 * @param fromType
+	 * @param toType
+	 * @param createIdentity if set to true, and no registered converter is found, create an Identity one
+	 * @return registered converter, Identity (if create Identity is true)
+	 * @throws BindingException if no converter is found
+	 * 
+	 */
+	public IConverter getConverter(Class fromType, Class toType, boolean createIdentity) throws BindingException {
 		if (fromType == toType) {
 			return new IdentityConverter(fromType, toType);
 		}
 		else {
 			IConverter converter = (IConverter) converters.get(new Pair(fromType, toType));
-			if (converter == null) { throw new BindingException("no converter"); }
+			if (converter == null && createIdentity) 
+				converter = new IdentityConverter(fromType, toType);
+			else
+				throw new BindingException("no converter"); 
+			
 			return converter;
 		}
 	}
@@ -540,6 +551,16 @@ public class DatabindingService {
 			}
 		}
 		return;
+	}
+
+	
+	public boolean isDefaultIdentityConverter() {
+		return defaultIdentityConverter;
+	}
+
+	
+	public void setDefaultIdentityConverter(boolean defaultIdentityConverter) {
+		this.defaultIdentityConverter = defaultIdentityConverter;
 	}
 
 }
