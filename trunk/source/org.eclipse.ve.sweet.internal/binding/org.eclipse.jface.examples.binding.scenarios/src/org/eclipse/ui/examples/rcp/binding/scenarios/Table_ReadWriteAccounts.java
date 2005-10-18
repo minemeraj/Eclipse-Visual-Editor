@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Table_ReadWriteAccounts.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-18 13:47:39 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-18 14:05:34 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -18,13 +18,18 @@ import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingService;
 import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.IdentityConverter;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ComboBoxCellEditor;
+import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.SWT;
@@ -129,7 +134,7 @@ public class Table_ReadWriteAccounts extends Composite {
 				}
 			}
 			public void modify(Object element, String property, Object value) {
-				Account account = (Account)element;
+				Account account = (Account) ((TableItem)element).getData();
 				if ("firstName".equals(property)){
 					account.setFirstName((String) value);
 				} else if ("lastName".equals(property)){
@@ -140,10 +145,13 @@ public class Table_ReadWriteAccounts extends Composite {
 			}			
 		});
 		
-		IUpdatable updatableLHS = dbs.createUpdatable(tableViewer,"contents");
-		IUpdatable updatableRHS = dbs.createUpdatable(catalog,"accounts");
-		
-		dbs.bind(updatableLHS,updatableRHS,new IdentityConverter(Account.class,Object.class));
+		tableViewer.setCellEditors(new CellEditor[]{
+				new TextCellEditor(table), 
+				new TextCellEditor(table), 
+				new TextCellEditor(table)
+		});
+
+		dbs.bind(tableViewer,"contents",catalog,"accounts",new IdentityConverter(Account.class,Object.class));
 		
 	}
 }
