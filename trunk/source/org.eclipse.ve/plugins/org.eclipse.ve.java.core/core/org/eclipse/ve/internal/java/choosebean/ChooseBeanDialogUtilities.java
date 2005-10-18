@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialogUtilities.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-14 17:45:07 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-18 18:11:58 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -38,7 +38,6 @@ import org.eclipse.ve.internal.cdm.Annotation;
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
-import org.eclipse.ve.internal.java.codegen.editorpart.FieldNameValidator;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
  
@@ -116,7 +115,7 @@ public class ChooseBeanDialogUtilities {
 	 * @since 1.2.0
 	 */
 	private static void addContributor(List contributorList, List veContributorList, IConfigurationElement[] configs) {
-		for (int i = 0; i < configs.length; i++) {
+		for (int i = 0; configs!=null && i < configs.length; i++) {
 			try {
 				IChooseBeanContributor contributor = (IChooseBeanContributor) configs[i].createExecutableExtension("class"); //$NON-NLS-1$
 				if (configs[i].getNamespace().equals(JAVA_VE_SYMBOLICNAME))
@@ -170,14 +169,9 @@ public class ChooseBeanDialogUtilities {
 	public static IStatus getClassStatus(Object selected, String packageName, ResourceSet resourceSet, IJavaSearchScope javaSearchScope, String name, EditDomain domain){
 		IStatus status = getClassStatus(selected, packageName, resourceSet, javaSearchScope, domain);
 		if(status.isOK()){
-			String message = FieldNameValidator.isValidName(name);
-			if(message!=null){
-				status = new Status(
-						IStatus.ERROR, 
-						JAVA_VE_SYMBOLICNAME, 
-						IStatus.ERROR, 
-						message, 
-						null);
+			IStatus nameStatus = JavaConventions.validateFieldName(name);
+			if(!nameStatus.isOK()){
+				status = nameStatus;
 			}
 		}
 		return status;
