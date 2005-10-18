@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanFeatureDialogCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-03 19:20:57 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-18 18:19:07 $ 
  */
 
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 
 import org.eclipse.ve.internal.java.common.Common;
-import org.eclipse.ve.internal.java.core.BeanFeatureEditor.IWrappedCellEditor;
+
 /*
  * Dialog Editor for working with Bean Custom Dialogs.
  * This will invoke a property editor on a remote VM
@@ -71,7 +71,7 @@ protected Object openDialogBox(Control cellEditorWindow) {
 }
 
 /**
- * @see IWrappedCellEditor#newValue(String)
+ * @see org.eclipse.ve.internal.java.core.BeanFeatureEditor.IWrappedCellEditor#newValue(String)
  */
 public void newValue(String text) {
 	setValue(text);
