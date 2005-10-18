@@ -10,37 +10,44 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NumberBinding.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
-import org.eclipse.swt.widgets.Spinner;
 
 public class NumberBinding {
 
-	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
+	private Shell sShell = null; // @jve:decl-index=0:visual-constraint="10,10"
+
 	private Label label = null;
+
 	private Text txtPrice = null;
+
 	private DatabindingService dbs;
+
 	private Text lblPrice = null;
+
 	private Label label1 = null;
+
 	private Text txtPrice_2 = null;
+
 	private Label label2 = null;
+
 	/**
 	 * This method initializes sShell
-	 * @throws BindingException 
+	 * 
+	 * @throws BindingException
 	 */
 	private void createSShell() throws BindingException {
 		GridData gridData3 = new org.eclipse.swt.layout.GridData();
@@ -60,7 +67,7 @@ public class NumberBinding {
 		sShell = new Shell();
 		sShell.setText("Shell");
 		sShell.setLayout(gridLayout);
-		sShell.setSize(new org.eclipse.swt.graphics.Point(388,248));
+		sShell.setSize(new org.eclipse.swt.graphics.Point(388, 248));
 		label = new Label(sShell, SWT.NONE);
 		label.setText("Price:");
 		txtPrice = new Text(sShell, SWT.BORDER);
@@ -74,17 +81,19 @@ public class NumberBinding {
 		label2 = new Label(sShell, SWT.NONE);
 		bind();
 	}
-	private void bind() throws BindingException{
+
+	private void bind() throws BindingException {
 		dbs = SampleData.getSWTtoEMFDatabindingService(sShell);
-		AdventureFactory emfFactory = AdventurePackage.eINSTANCE.getAdventureFactory();		
+		AdventureFactory emfFactory = AdventurePackage.eINSTANCE
+				.getAdventureFactory();
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
-		
+
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
-		
-		dbs.bind(txtPrice,"text",skiTrip,emfPackage.getAdventure_Price());		
-		dbs.bind(lblPrice,"text",skiTrip,emfPackage.getAdventure_Price());		
-		dbs.bind(txtPrice_2,"text",skiTrip,emfPackage.getAdventure_Price());		
-		
+
+		dbs.bind(txtPrice, "text", skiTrip, emfPackage.getAdventure_Price());
+		dbs.bind(lblPrice, "text", skiTrip, emfPackage.getAdventure_Price());
+		dbs.bind(txtPrice_2, "text", skiTrip, emfPackage.getAdventure_Price());
+
 	}
 
 }

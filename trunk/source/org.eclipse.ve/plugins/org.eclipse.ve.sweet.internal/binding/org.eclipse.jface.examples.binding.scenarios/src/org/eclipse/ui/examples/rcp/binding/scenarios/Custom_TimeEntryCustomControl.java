@@ -10,11 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Custom_TimeEntryCustomControl.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.*;
+import org.eclipse.jface.binding.BindingException;
+import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.IUpdatable;
+import org.eclipse.jface.binding.IUpdatableFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -26,9 +29,13 @@ import org.eclipse.ui.examples.rcp.adventure.Transportation;
 public class Custom_TimeEntryCustomControl extends Composite {
 
 	private TimeEntry timeEntry = null;
+
 	private Label lbl_time = null;
+
 	private TimeEntry timeEntry1 = null;
-	public Custom_TimeEntryCustomControl(Composite parent, int style) throws BindingException {
+
+	public Custom_TimeEntryCustomControl(Composite parent, int style)
+			throws BindingException {
 		super(parent, style);
 		initialize();
 	}
@@ -45,39 +52,41 @@ public class Custom_TimeEntryCustomControl extends Composite {
 		createTimeEntry1();
 		bind();
 	}
-	private void bind() throws BindingException{
-		
+
+	private void bind() throws BindingException {
+
 		DatabindingService dbs = SampleData.getSWTtoEMFDatabindingService(this);
-		
+
 		Transportation bus = SampleData.GREYHOUND_BUS;
-		
-		dbs.addUpdatableFactory(TimeEntry.class,new IUpdatableFactory() {
+
+		dbs.addUpdatableFactory(TimeEntry.class, new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Object object, Object attribute) {
-				if("time".equals(attribute)){
-					return new TimeEntryUpdatableValue((TimeEntry)object);
+				if ("time".equals(attribute)) {
+					return new TimeEntryUpdatableValue((TimeEntry) object);
 				} else {
-					throw new IllegalArgumentException(attribute + " is unknown feature");
+					throw new IllegalArgumentException(attribute
+							+ " is unknown feature");
 				}
 			}
 		});
 
-		dbs.bind(lbl_time,"text",bus,"arrivalTime");
-		dbs.bind(timeEntry,"time",bus,"arrivalTime");
-		dbs.bind(timeEntry1,"time",bus,"arrivalTime");		
-		
+		dbs.bind(lbl_time, "text", bus, "arrivalTime");
+		dbs.bind(timeEntry, "time", bus, "arrivalTime");
+		dbs.bind(timeEntry1, "time", bus, "arrivalTime");
+
 	}
 
 	/**
-	 * This method initializes timeEntry	
-	 *
+	 * This method initializes timeEntry
+	 * 
 	 */
 	private void createTimeEntry() {
 		timeEntry = new TimeEntry(this, SWT.NONE);
 	}
 
 	/**
-	 * This method initializes timeEntry1	
-	 *
+	 * This method initializes timeEntry1
+	 * 
 	 */
 	private void createTimeEntry1() {
 		timeEntry1 = new TimeEntry(this, SWT.NONE);

@@ -10,34 +10,42 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Custom_PriceTwoSpinners.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-17 23:06:29 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.jface.binding.IConverter;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 
 public class Custom_PriceTwoSpinners extends Composite {
 
 	private Label label = null;
+
 	private Label lblPrice = null;
+
 	private Label label2 = null;
+
 	private Text txtPrice = null;
+
 	private Spinner spin_Dollars = null;
+
 	private Label label4 = null;
+
 	private Label label3 = null;
+
 	private Spinner spin_Cents = null;
-	public Custom_PriceTwoSpinners(Composite parent, int style) throws BindingException {
+
+	public Custom_PriceTwoSpinners(Composite parent, int style)
+			throws BindingException {
 		super(parent, style);
 		initialize();
 	}
@@ -75,17 +83,20 @@ public class Custom_PriceTwoSpinners extends Composite {
 		setSize(new Point(300, 200));
 		bind();
 	}
-	private void bind() throws BindingException{
+
+	private void bind() throws BindingException {
 		DatabindingService dbs = SampleData.getSWTtoEMFDatabindingService(this);
-		
+
 		final Adventure skiTrip = SampleData.WINTER_HOLIDAY;
-		
-		dbs.bind(lblPrice,"text",skiTrip,"price");
-		dbs.bind(txtPrice,"text",skiTrip,"price");
-						
-		dbs.bind(spin_Dollars,"selection",skiTrip, "price",new PriceDollarsConverter());	
-		
-		dbs.bind(spin_Cents,"selection",skiTrip, "price",new PriceCentsConverter());
-							
+
+		dbs.bind(lblPrice, "text", skiTrip, "price");
+		dbs.bind(txtPrice, "text", skiTrip, "price");
+
+		dbs.bind(spin_Dollars, "selection", skiTrip, "price",
+				new PriceDollarsConverter());
+
+		dbs.bind(spin_Cents, "selection", skiTrip, "price",
+				new PriceCentsConverter());
+
 	}
 }

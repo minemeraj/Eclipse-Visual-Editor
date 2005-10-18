@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AggregateUpdatableValue.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-03 21:04:22 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -21,17 +21,21 @@ import org.eclipse.jface.binding.IChangeEvent;
 import org.eclipse.jface.binding.IChangeListener;
 import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.jface.binding.UpdatableValue;
- 
+
 public class AggregateUpdatableValue extends UpdatableValue {
-	
+
 	private IUpdatableValue[] updatableValues;
+
 	private String delimiter;
-	private IChangeListener listener = new IChangeListener(){
+
+	private IChangeListener listener = new IChangeListener() {
 		public void handleChange(IChangeEvent changeEvent) {
 			fireChangeEvent(ChangeEvent.CHANGE, null, null);
-		}};
+		}
+	};
 
-	public AggregateUpdatableValue(IUpdatableValue[] updatableValues, String delimiter){
+	public AggregateUpdatableValue(IUpdatableValue[] updatableValues,
+			String delimiter) {
 		this.updatableValues = updatableValues;
 		this.delimiter = delimiter;
 		for (int i = 0; i < updatableValues.length; i++) {
@@ -40,9 +44,10 @@ public class AggregateUpdatableValue extends UpdatableValue {
 	}
 
 	public void setValue(Object value) {
-		StringTokenizer tokenizer = new StringTokenizer((String)value,delimiter);
+		StringTokenizer tokenizer = new StringTokenizer((String) value,
+				delimiter);
 		for (int i = 0; i < updatableValues.length; i++) {
-			if(tokenizer.hasMoreElements()){
+			if (tokenizer.hasMoreElements()) {
 				updatableValues[i].setValue(tokenizer.nextElement());
 			} else {
 				updatableValues[i].setValue(null);
@@ -53,9 +58,9 @@ public class AggregateUpdatableValue extends UpdatableValue {
 	public Object getValue() {
 		StringBuffer result = new StringBuffer();
 		for (int i = 0; i < updatableValues.length; i++) {
-			if(i > 0 & i < updatableValues.length){
+			if (i > 0 & i < updatableValues.length) {
 				result.append(delimiter);
-			}			
+			}
 			result.append(updatableValues[i].getValue());
 		}
 		return result.toString();
@@ -64,7 +69,7 @@ public class AggregateUpdatableValue extends UpdatableValue {
 	public Class getValueType() {
 		return String.class;
 	}
-	
+
 	public void dispose() {
 		for (int i = 0; i < updatableValues.length; i++) {
 			updatableValues[i].removeChangeListener(listener);

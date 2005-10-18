@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Table_ReadOnlyAccounts.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-18 13:47:39 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -20,13 +20,13 @@ import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.examples.rcp.adventure.Account;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
@@ -34,10 +34,13 @@ import org.eclipse.ui.examples.rcp.adventure.Catalog;
 public class Table_ReadOnlyAccounts extends Composite {
 
 	private Table table = null;
+
 	private DatabindingService dbs;
+
 	private TableViewer tableViewer;
 
-	public Table_ReadOnlyAccounts(Composite parent, int style) throws BindingException {
+	public Table_ReadOnlyAccounts(Composite parent, int style)
+			throws BindingException {
 		super(parent, style);
 		initialize();
 	}
@@ -49,9 +52,10 @@ public class Table_ReadOnlyAccounts extends Composite {
 	}
 
 	/**
-	 * This method initializes table	
-	 * @throws BindingException 
-	 *
+	 * This method initializes table
+	 * 
+	 * @throws BindingException
+	 * 
 	 */
 	private void createTable() throws BindingException {
 		GridData gridData = new org.eclipse.swt.layout.GridData();
@@ -72,24 +76,27 @@ public class Table_ReadOnlyAccounts extends Composite {
 		TableColumn tableColumn2 = new TableColumn(table, SWT.NONE);
 		tableColumn2.setWidth(60);
 		tableColumn2.setText("state");
-		
-		tableViewer = new TableViewer(table);		
-		
+
+		tableViewer = new TableViewer(table);
+
 		bind();
 	}
-	private void bind() throws BindingException{
-		
-		// For a given catalog show its accounts with columns for "firstName, "lastName" and "state"
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);		
-		
+
+	private void bind() throws BindingException {
+
+		// For a given catalog show its accounts with columns for "firstName,
+		// "lastName" and "state"
+		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+
 		Catalog catalog = SampleData.CATALOG_2005;
-		
-		tableViewer.setLabelProvider(new ITableLabelProvider(){
+
+		tableViewer.setLabelProvider(new ITableLabelProvider() {
 			public Image getColumnImage(Object element, int columnIndex) {
 				return null;
 			}
+
 			public String getColumnText(Object element, int columnIndex) {
-				Account account = (Account)element;
+				Account account = (Account) element;
 				switch (columnIndex) {
 				case 0:
 					return account.getFirstName();
@@ -101,15 +108,23 @@ public class Table_ReadOnlyAccounts extends Composite {
 					return null;
 				}
 			}
-			public void addListener(ILabelProviderListener listener){}
-			public void dispose() {}
+
+			public void addListener(ILabelProviderListener listener) {
+			}
+
+			public void dispose() {
+			}
+
 			public boolean isLabelProperty(Object element, String property) {
 				return true;
 			}
-			public void removeListener(ILabelProviderListener listener) {}
+
+			public void removeListener(ILabelProviderListener listener) {
+			}
 		});
-		
-		dbs.bind(tableViewer,"contents",catalog,"accounts",new IdentityConverter(Account.class,Object.class));		
-		
+
+		dbs.bind(tableViewer, "contents", catalog, "accounts",
+				new IdentityConverter(Account.class, Object.class));
+
 	}
 }

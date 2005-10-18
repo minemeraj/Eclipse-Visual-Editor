@@ -10,77 +10,88 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBinding.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.jface.examples.binding.scenarios.pojo;
 
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.jface.binding.swt.SWTDatabindingService;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
-import org.eclipse.swt.widgets.Group;
 
 public class TextBinding extends Composite {
 
 	private DatabindingService dbs;
+
 	private Group group = null;
+
 	private Text txtDescription = null;
+
 	private Label label2 = null;
+
 	private Label label3 = null;
+
 	private Label label5 = null;
+
 	private Text txtName = null;
+
 	private Text txtLocation = null;
+
 	private Text txtDescription_1 = null;
+
 	private Text txtName_1 = null;
+
 	private Text txtLocation_1 = null;
-	
-	public TextBinding(Composite parent, int style) throws BindingException{
-		super(parent,style);
+
+	public TextBinding(Composite parent, int style) throws BindingException {
+		super(parent, style);
 		initialize();
 	}
-	
+
 	/**
 	 * This method initializes sShell
-	 * @throws BindingException 
+	 * 
+	 * @throws BindingException
 	 */
 	private void initialize() throws BindingException {
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		setLayout(gridLayout);
 		createGroup();
-		this.setSize(new org.eclipse.swt.graphics.Point(444,215));
+		this.setSize(new org.eclipse.swt.graphics.Point(444, 215));
 		bind();
 	}
+
 	private void bind() throws BindingException {
 		dbs = PersonSampleData.getSWTtoJavaBeanDatabindingService(this);
-		AdventureFactory emfFactory = AdventurePackage.eINSTANCE.getAdventureFactory();		
+		AdventureFactory emfFactory = AdventurePackage.eINSTANCE
+				.getAdventureFactory();
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
-		
+
 		Adventure skiTrip = PersonSampleData.WINTER_HOLIDAY;
-		
-		dbs.bind(txtDescription,"text",skiTrip,"description");
-		dbs.bind(txtDescription_1,"text",skiTrip,"description");		
-		
-		dbs.bind(txtName,"text",skiTrip,"name");		
-		dbs.bind(txtName_1,"text",skiTrip,"name");
-		
-		dbs.bind(txtLocation,"text",skiTrip,"location");		
-		dbs.bind(txtLocation_1,"text",skiTrip,"location");		
-				
+
+		dbs.bind(txtDescription, "text", skiTrip, "description");
+		dbs.bind(txtDescription_1, "text", skiTrip, "description");
+
+		dbs.bind(txtName, "text", skiTrip, "name");
+		dbs.bind(txtName_1, "text", skiTrip, "name");
+
+		dbs.bind(txtLocation, "text", skiTrip, "location");
+		dbs.bind(txtLocation_1, "text", skiTrip, "location");
+
 	}
+
 	/**
-	 * This method initializes group	
-	 *
+	 * This method initializes group
+	 * 
 	 */
 	private void createGroup() {
 		GridData gridData8 = new org.eclipse.swt.layout.GridData();

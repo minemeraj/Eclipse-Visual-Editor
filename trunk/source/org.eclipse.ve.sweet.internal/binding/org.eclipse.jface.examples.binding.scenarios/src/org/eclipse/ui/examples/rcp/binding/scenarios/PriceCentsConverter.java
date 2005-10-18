@@ -10,29 +10,37 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PriceCentsConverter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-17 13:20:06 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.IConverter;
- 
+
 public class PriceCentsConverter implements IConverter {
-	
+
 	private double dollars;
-	public Class getModelType() { return Integer.TYPE; }
-	public Class getTargetType() { return Double.TYPE; }
-	public Object convertModel(Object object) {
-		// Argument is an Integer representing the cents portion.  
+
+	public Class getModelType() {
+		return Integer.TYPE;
+	}
+
+	public Class getTargetType() {
+		return Double.TYPE;
+	}
+
+	public Object convertTargetToModel(Object object) {
+		// Argument is an Integer representing the cents portion.
 		// Add to dollars to make the new price
-		double newPrice = dollars + ((Integer)object).doubleValue()/100;
+		double newPrice = dollars + ((Integer) object).doubleValue() / 100;
 		return new Double(newPrice);
 	}
-	public Object convertTarget(Object object){
+
+	public Object convertModelToTarget(Object object) {
 		// Return the cents portion only and remember the dollars
-		Double price = (Double)object;
+		Double price = (Double) object;
 		dollars = price.intValue();
-		double cents = price.doubleValue() - price.intValue();	
+		double cents = price.doubleValue() - price.intValue();
 		cents = cents * 100;
-		return new Integer((int)cents);						
+		return new Integer((int) cents);
 	}
 }

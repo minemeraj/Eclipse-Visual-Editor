@@ -4,9 +4,6 @@ import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.ConditionalUpdatableValue;
 import org.eclipse.jface.binding.DatabindingService;
 import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -19,7 +16,6 @@ import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
 import org.eclipse.ui.examples.rcp.adventure.Lodging;
-import org.eclipse.swt.widgets.Label;
 
 public class SimpleTableBinding extends Composite {
 
@@ -60,21 +56,22 @@ public class SimpleTableBinding extends Composite {
 
 		final Catalog catalog = SampleData.CATALOG_2005;
 
-		dbs.bindTable(dbs.createUpdatableTable(tableViewer, "contents"),
-				new EMFUpdatableTable(catalog, "lodgings", new String[] {
-						"name", "description" }));
+		// dbs.bindTable(dbs.createUpdatableTable(tableViewer, "contents"),
+		// new EMFUpdatableTable(catalog, "lodgings", new String[] {
+		// "name", "description" }));
 
-		selectedLodging = dbs.createUpdatableValue(tableViewer, "selection");
+		selectedLodging = (IUpdatableValue) dbs.createUpdatable(tableViewer,
+				"selection");
 
 		addButton
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					public void widgetSelected(
 							org.eclipse.swt.events.SelectionEvent e) {
-						Lodging lodging = AdventureFactory.eINSTANCE.createLodging();
+						Lodging lodging = AdventureFactory.eINSTANCE
+								.createLodging();
 						lodging.setName("new lodging name");
 						lodging.setDescription("new lodging description");
-						catalog.getLodgings().add(
-								lodging);
+						catalog.getLodgings().add(lodging);
 					}
 				});
 
@@ -89,13 +86,13 @@ public class SimpleTableBinding extends Composite {
 					}
 				});
 
-		dbs.bindValue(removeButton, "enabled", new ConditionalUpdatableValue(
+		dbs.bind(removeButton, "enabled", new ConditionalUpdatableValue(
 				selectedLodging) {
 			protected boolean compute(Object currentValue) {
 				return currentValue != null;
 			}
 		});
-}
+	}
 
 	/**
 	 * This method initializes table

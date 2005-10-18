@@ -10,13 +10,18 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios;
 
-import org.eclipse.jface.binding.*;
+import org.eclipse.jface.binding.BindingException;
+import org.eclipse.jface.binding.Converter;
+import org.eclipse.jface.binding.IConverter;
+import org.eclipse.jface.binding.IUpdatableValue;
+import org.eclipse.jface.binding.IValidator;
+import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.examples.rcp.adventure.*;
+import org.eclipse.ui.examples.rcp.adventure.Adventure;
+import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
+import org.eclipse.ui.examples.rcp.adventure.Cart;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
-
-import sun.io.Converters;
 
 /**
  * To run the tests in this class, right-click and select "Run As JUnit Plug-in
@@ -84,11 +89,11 @@ public class PropertyScenarios extends ScenariosTestCase {
 				return Integer.class;
 			}
 
-			public Object convertModel(Object object) {
+			public Object convertTargetToModel(Object object) {
 				return new Integer((String) object);
 			}
 
-			public Object convertTarget(Object object) {
+			public Object convertModelToTarget(Object object) {
 				return object.toString();
 			}
 		});
@@ -112,8 +117,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// be to the new default lodging's description, shouldn't we move this
 		// scenario to the master/detail section? I'm assuming the latter for
 		// now.
-		IUpdatableValue defaultLodging = (IUpdatableValue) getDbs().createUpdatable(
-				adventure, "defaultLodging");
+		IUpdatableValue defaultLodging = (IUpdatableValue) getDbs()
+				.createUpdatable(adventure, "defaultLodging");
 		getDbs().bind(text, "text", defaultLodging, "description");
 
 		// test changing the description
@@ -161,11 +166,11 @@ public class PropertyScenarios extends ScenariosTestCase {
 				return String.class;
 			}
 
-			public Object convertModel(Object fromObject) {
+			public Object convertTargetToModel(Object fromObject) {
 				return ((String) fromObject).toUpperCase();
 			}
 
-			public Object convertTarget(Object toObject) {
+			public Object convertModelToTarget(Object toObject) {
 				String modelValue = (String) toObject;
 				if (modelValue == null || modelValue.equals("")) {
 					return modelValue;
@@ -233,11 +238,11 @@ public class PropertyScenarios extends ScenariosTestCase {
 		getDbs().bind(text, "text", adventure, "name",
 				new Converter(String.class, double.class) {
 
-					public Object convertModel(Object fromObject) {
+					public Object convertTargetToModel(Object fromObject) {
 						return new Double((String) fromObject);
 					}
 
-					public Object convertTarget(Object toObject) {
+					public Object convertModelToTarget(Object toObject) {
 						return ((Double) toObject).toString();
 					}
 				}, new IValidator() {

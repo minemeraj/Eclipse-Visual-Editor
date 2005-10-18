@@ -20,9 +20,10 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * To run this test suite, right-click and select "Run As JUnit Plug-in Test".
- * This will also start an Eclipse instance. To clean up the launch configuration,
- * open up its "Main" tab and select "[No Application] - Headless Mode" as the
- * application to run. You can also run this class as an SWT application.
+ * This will also start an Eclipse instance. To clean up the launch
+ * configuration, open up its "Main" tab and select "[No Application] - Headless
+ * Mode" as the application to run. You can also run this class as an SWT
+ * application.
  */
 
 public class BindingScenariosTestSuite extends TestSuite {
@@ -58,8 +59,8 @@ public class BindingScenariosTestSuite extends TestSuite {
 
 	public BindingScenariosTestSuite() {
 		addTestSuite(PropertyScenarios.class);
-		addTestSuite(CustomScenarios.class);	
-		addTestSuite(CustomConverterScenarios.class);		
+		addTestSuite(CustomScenarios.class);
+		addTestSuite(CustomConverterScenarios.class);
 		addTestSuite(ReadOnlyComboScenarios.class);
 	}
 

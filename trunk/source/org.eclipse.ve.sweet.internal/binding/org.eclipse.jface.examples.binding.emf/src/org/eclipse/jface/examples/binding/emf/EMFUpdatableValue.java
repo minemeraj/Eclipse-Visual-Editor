@@ -26,7 +26,7 @@ public class EMFUpdatableValue extends UpdatableValue {
 	private final EStructuralFeature attribute;
 
 	private AdapterImpl adapter;
-	
+
 	private boolean updating = false;
 
 	public EMFUpdatableValue(EObject object,

@@ -10,81 +10,108 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Custom_DerivedAggregateProperty.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.*;
+import org.eclipse.jface.binding.BindingException;
+import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 
 public class Custom_DerivedAggregateProperty extends Composite {
 
 	private DatabindingService dbs;
+
 	private Group group = null;
+
 	private Label label = null;
+
 	private Text txtCustom = null;
+
 	private Label label1 = null;
+
 	private Text txtDescription = null;
+
 	private Label label6 = null;
+
 	private Text txtName = null;
+
 	private Group group1 = null;
+
 	private Label label5 = null;
+
 	private Text txtCustom_1 = null;
+
 	private Group group2 = null;
+
 	private Label label2 = null;
+
 	private Text txtCustom_multi = null;
-	public Custom_DerivedAggregateProperty(Composite parent, int style) throws BindingException {
+
+	public Custom_DerivedAggregateProperty(Composite parent, int style)
+			throws BindingException {
 		super(parent, style);
 		initialize();
 	}
-	
-	
+
 	private void initialize() throws BindingException {
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
 		setLayout(gridLayout);
-		setSize(new org.eclipse.swt.graphics.Point(392,244));
+		setSize(new org.eclipse.swt.graphics.Point(392, 244));
 		createGroup();
 		createGroup1();
 		createGroup2();
 		bind();
 	}
-	private void bind() throws BindingException{
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);		
-		
+
+	private void bind() throws BindingException {
+		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
-		
-		dbs.bind(txtDescription,"text",skiTrip,"description");
-		dbs.bind(txtName,"text",skiTrip,"name");	
-		
-		AdventureNameAndDescription customUpdatable = new AdventureNameAndDescription(skiTrip);
-		dbs.bind(dbs.createUpdatable(txtCustom,"text"),customUpdatable);
-		
-		IUpdatableValue descriptionUpdatable = (IUpdatableValue) dbs.createUpdatable(skiTrip,"description");
-		IUpdatableValue nameUpdatable = (IUpdatableValue) dbs.createUpdatable(skiTrip,"name");
-		
-		AggregateUpdatableValue customUpdatable_1 = new AggregateUpdatableValue( new IUpdatableValue[] {descriptionUpdatable,nameUpdatable} , ",");
-		dbs.bind(dbs.createUpdatable(txtCustom_1,"text"),customUpdatable_1);
-		
-		AggregateUpdatableValue customUpdatable_2 = new AggregateUpdatableValue( new IUpdatableValue[] {descriptionUpdatable,nameUpdatable} , "\n");
-		dbs.bind(dbs.createUpdatable(txtCustom_multi,"text"),customUpdatable_2);
-		
-//		IUpdatableValue descriptionUpdatable = dbs.createUpdatableValue(skiTrip,emfPackage.getAdventure_Description());
-//		IUpdatableValue nameUpdatable = dbs.createUpdatableValue(skiTrip,emfPackage.getAdventure_Name());		
-//		new AggregateUpdatable(new IUpdatable[] {} des, name,"/n");
-		
-		
-		
+
+		dbs.bind(txtDescription, "text", skiTrip, "description");
+		dbs.bind(txtName, "text", skiTrip, "name");
+
+		AdventureNameAndDescription customUpdatable = new AdventureNameAndDescription(
+				skiTrip);
+		dbs.bind(dbs.createUpdatable(txtCustom, "text"), customUpdatable);
+
+		IUpdatableValue descriptionUpdatable = (IUpdatableValue) dbs
+				.createUpdatable(skiTrip, "description");
+		IUpdatableValue nameUpdatable = (IUpdatableValue) dbs.createUpdatable(
+				skiTrip, "name");
+
+		AggregateUpdatableValue customUpdatable_1 = new AggregateUpdatableValue(
+				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },
+				",");
+		dbs.bind(dbs.createUpdatable(txtCustom_1, "text"), customUpdatable_1);
+
+		AggregateUpdatableValue customUpdatable_2 = new AggregateUpdatableValue(
+				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },
+				"\n");
+		dbs.bind(dbs.createUpdatable(txtCustom_multi, "text"),
+				customUpdatable_2);
+
+		// IUpdatableValue descriptionUpdatable =
+		// dbs.createUpdatableValue(skiTrip,emfPackage.getAdventure_Description());
+		// IUpdatableValue nameUpdatable =
+		// dbs.createUpdatableValue(skiTrip,emfPackage.getAdventure_Name());
+		// new AggregateUpdatable(new IUpdatable[] {} des, name,"/n");
+
 	}
 
-
 	/**
-	 * This method initializes group	
-	 *
+	 * This method initializes group
+	 * 
 	 */
 	private void createGroup() {
 		GridData gridData3 = new org.eclipse.swt.layout.GridData();
@@ -126,10 +153,9 @@ public class Custom_DerivedAggregateProperty extends Composite {
 		txtName.setLayoutData(gridData3);
 	}
 
-
 	/**
-	 * This method initializes group1	
-	 *
+	 * This method initializes group1
+	 * 
 	 */
 	private void createGroup1() {
 		GridData gridData7 = new org.eclipse.swt.layout.GridData();
@@ -153,10 +179,9 @@ public class Custom_DerivedAggregateProperty extends Composite {
 		txtCustom_1.setLayoutData(gridData4);
 	}
 
-
 	/**
-	 * This method initializes group2	
-	 *
+	 * This method initializes group2
+	 * 
 	 */
 	private void createGroup2() {
 		GridData gridData11 = new org.eclipse.swt.layout.GridData();

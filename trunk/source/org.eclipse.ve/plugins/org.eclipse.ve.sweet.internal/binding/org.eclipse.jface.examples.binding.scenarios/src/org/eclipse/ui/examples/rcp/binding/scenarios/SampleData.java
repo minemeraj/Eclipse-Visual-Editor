@@ -10,44 +10,62 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SampleData.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-18 14:29:55 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import org.eclipse.jface.binding.*;
+import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.IUpdatable;
+import org.eclipse.jface.binding.IUpdatableFactory;
 import org.eclipse.jface.binding.swt.SWTDatabindingService;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableCollection;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.examples.rcp.adventure.*;
- 
-public class SampleData {
-	
-	public static Adventure WINTER_HOLIDAY;
-	public static Lodging FIVE_STAR_HOTEL;
-	public static Lodging YOUTH_HOSTEL;
-	public static Lodging CAMP_GROUND; 	
-	public static Catalog CATALOG_2005;
-	public static Transportation GREYHOUND_BUS;
-	public static Transportation EXECUTIVE_JET;	
-	public static Account PRESIDENT;
-	public static Account DENTIST;	
-	public static Account SANTA_CLAUS;	
+import org.eclipse.ui.examples.rcp.adventure.Account;
+import org.eclipse.ui.examples.rcp.adventure.Adventure;
+import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
+import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
+import org.eclipse.ui.examples.rcp.adventure.Catalog;
+import org.eclipse.ui.examples.rcp.adventure.Lodging;
+import org.eclipse.ui.examples.rcp.adventure.Transportation;
 
-	static{
+public class SampleData {
+
+	public static Adventure WINTER_HOLIDAY;
+
+	public static Lodging FIVE_STAR_HOTEL;
+
+	public static Lodging YOUTH_HOSTEL;
+
+	public static Lodging CAMP_GROUND;
+
+	public static Catalog CATALOG_2005;
+
+	public static Transportation GREYHOUND_BUS;
+
+	public static Transportation EXECUTIVE_JET;
+
+	public static Account PRESIDENT;
+
+	public static Account DENTIST;
+
+	public static Account SANTA_CLAUS;
+
+	static {
 		initializeData();
 	}
-	
-	public static void initializeData(){
-	
-		AdventureFactory adventureFactory = AdventurePackage.eINSTANCE.getAdventureFactory();
-		
+
+	public static void initializeData() {
+
+		AdventureFactory adventureFactory = AdventurePackage.eINSTANCE
+				.getAdventureFactory();
+
 		CATALOG_2005 = adventureFactory.createCatalog();
-		
+
 		WINTER_HOLIDAY = adventureFactory.createAdventure();
 		WINTER_HOLIDAY.setDescription("Winter holiday in France");
 		WINTER_HOLIDAY.setName("Ski Alps");
@@ -62,7 +80,7 @@ public class SampleData {
 		YOUTH_HOSTEL.setName("Basic");
 		CAMP_GROUND = adventureFactory.createLodging();
 		CAMP_GROUND.setDescription("Camp ground");
-		CAMP_GROUND.setName("WetAndCold");		
+		CAMP_GROUND.setName("WetAndCold");
 		CATALOG_2005.getLodgings().add(FIVE_STAR_HOTEL);
 		CATALOG_2005.getLodgings().add(YOUTH_HOSTEL);
 		CATALOG_2005.getLodgings().add(CAMP_GROUND);
@@ -70,7 +88,7 @@ public class SampleData {
 		// Transporation
 		GREYHOUND_BUS = adventureFactory.createTransportation();
 		GREYHOUND_BUS.setArrivalTime("14:30");
-		CATALOG_2005.getTransportations().add(GREYHOUND_BUS);		
+		CATALOG_2005.getTransportations().add(GREYHOUND_BUS);
 		EXECUTIVE_JET = adventureFactory.createTransportation();
 		EXECUTIVE_JET.setArrivalTime("11:10");
 		CATALOG_2005.getTransportations().add(EXECUTIVE_JET);
@@ -92,35 +110,39 @@ public class SampleData {
 		SANTA_CLAUS.setPhone("8617429856");
 		CATALOG_2005.getAccounts().add(PRESIDENT);
 		CATALOG_2005.getAccounts().add(DENTIST);
-		CATALOG_2005.getAccounts().add(SANTA_CLAUS);		
-		
-	}
-	
-	public static DatabindingService getSWTtoEMFDatabindingService(Control aControl){
-		
-		DatabindingService dbs = new SWTDatabindingService(aControl, SWT.Modify, SWT.Modify);
+		CATALOG_2005.getAccounts().add(SANTA_CLAUS);
 
-		IUpdatableFactory emfFactory = new IUpdatableFactory(){		
+	}
+
+	public static DatabindingService getSWTtoEMFDatabindingService(
+			Control aControl) {
+
+		DatabindingService dbs = new SWTDatabindingService(aControl,
+				SWT.Modify, SWT.Modify);
+
+		IUpdatableFactory emfFactory = new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Object object, Object attribute) {
-				EObject eObject = (EObject)object;
+				EObject eObject = (EObject) object;
 				EStructuralFeature attr;
 				if (attribute instanceof EStructuralFeature)
-					attr = (EStructuralFeature)attribute;
+					attr = (EStructuralFeature) attribute;
 				else
-					attr = eObject.eClass().getEStructuralFeature((String)attribute);
-				if (attr.isMany()) {					
-					return new EMFUpdatableCollection(eObject, attr, !attr.isChangeable());
-				}
-				else
-					return new EMFUpdatableValue(eObject , attr, !attr.isChangeable());
-					
+					attr = eObject.eClass().getEStructuralFeature(
+							(String) attribute);
+				if (attr.isMany()) {
+					return new EMFUpdatableCollection(eObject, attr, !attr
+							.isChangeable());
+				} else
+					return new EMFUpdatableValue(eObject, attr, !attr
+							.isChangeable());
+
 			}
-		
-		};				
+
+		};
 		dbs.addUpdatableFactory(EObjectImpl.class, emfFactory);
-				
+
 		return dbs;
-		
+
 	}
-	
+
 }

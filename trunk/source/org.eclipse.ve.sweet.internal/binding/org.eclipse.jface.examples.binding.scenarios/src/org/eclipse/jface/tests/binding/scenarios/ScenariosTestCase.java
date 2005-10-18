@@ -6,7 +6,9 @@ import org.eclipse.jface.binding.DatabindingService;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
 /**
@@ -24,7 +26,6 @@ abstract public class ScenariosTestCase extends TestCase {
 	private boolean disposeDisplay = false;
 
 	private Shell shell;
-
 
 	protected Composite getComposite() {
 		return composite;
@@ -46,12 +47,13 @@ abstract public class ScenariosTestCase extends TestCase {
 			shell.setLayout(new FillLayout());
 			result = shell;
 		}
-		result.setText(getName()); // In the case that the shell() becomes visible.
+		result.setText(getName()); // In the case that the shell() becomes
+									// visible.
 		return result;
 	}
 
 	protected void spinEventLoop(int secondsToWaitWithNoEvents) {
-		if(!composite.isVisible()) {
+		if (!composite.isVisible()) {
 			composite.getShell().open();
 		}
 		while (composite.getDisplay().readAndDispatch())
@@ -66,7 +68,8 @@ abstract public class ScenariosTestCase extends TestCase {
 	protected void setUp() throws Exception {
 		composite = new Composite(getShell(), SWT.NONE);
 		composite.setLayout(new GridLayout());
-		SampleData.initializeData();  // test may manipulate the data... let all start from fresh
+		SampleData.initializeData(); // test may manipulate the data... let
+										// all start from fresh
 		dbs = SampleData.getSWTtoEMFDatabindingService(composite);
 	}
 
@@ -75,8 +78,7 @@ abstract public class ScenariosTestCase extends TestCase {
 		composite = null;
 		if (shell != null) {
 			shell.dispose();
-		}
-		else
+		} else
 			dbs.dispose();
 		if (display != null && disposeDisplay) {
 			display.dispose();

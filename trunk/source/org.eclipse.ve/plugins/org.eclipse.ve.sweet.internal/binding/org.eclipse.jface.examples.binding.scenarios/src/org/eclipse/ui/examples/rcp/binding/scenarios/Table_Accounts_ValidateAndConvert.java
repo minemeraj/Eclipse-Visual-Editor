@@ -8,43 +8,39 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*
- *  $RCSfile: Table_Accounts_ValidateAndConvert.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-18 14:29:55 $ 
- */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
-import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.examples.rcp.adventure.Account;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
 
 public class Table_Accounts_ValidateAndConvert extends Composite {
 
 	private Table table = null;
+
 	private DatabindingService dbs;
+
 	private TableViewer tableViewer;
 
-	public Table_Accounts_ValidateAndConvert(Composite parent, int style) throws BindingException {
+	public Table_Accounts_ValidateAndConvert(Composite parent, int style)
+			throws BindingException {
 		super(parent, style);
 		initialize();
 	}
@@ -56,9 +52,10 @@ public class Table_Accounts_ValidateAndConvert extends Composite {
 	}
 
 	/**
-	 * This method initializes table	
-	 * @throws BindingException 
-	 *
+	 * This method initializes table
+	 * 
+	 * @throws BindingException
+	 * 
 	 */
 	private void createTable() throws BindingException {
 		GridData gridData = new org.eclipse.swt.layout.GridData();
@@ -79,24 +76,27 @@ public class Table_Accounts_ValidateAndConvert extends Composite {
 		TableColumn tableColumn2 = new TableColumn(table, SWT.NONE);
 		tableColumn2.setWidth(60);
 		tableColumn2.setText("state");
-		
-		tableViewer = new TableViewer(table);		
-		
+
+		tableViewer = new TableViewer(table);
+
 		bind();
 	}
-	private void bind() throws BindingException{
-		
-		// For a given catalog show its accounts with columns for "firstName, "lastName" and "state"
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);		
-		
+
+	private void bind() throws BindingException {
+
+		// For a given catalog show its accounts with columns for "firstName,
+		// "lastName" and "state"
+		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+
 		Catalog catalog = SampleData.CATALOG_2005;
-				
-		tableViewer.setLabelProvider(new ITableLabelProvider(){
+
+		tableViewer.setLabelProvider(new ITableLabelProvider() {
 			public Image getColumnImage(Object element, int columnIndex) {
 				return null;
 			}
+
 			public String getColumnText(Object element, int columnIndex) {
-				Account account = (Account)element;
+				Account account = (Account) element;
 				switch (columnIndex) {
 				case 0:
 					return account.getFirstName();
@@ -108,50 +108,59 @@ public class Table_Accounts_ValidateAndConvert extends Composite {
 					return null;
 				}
 			}
-			public void addListener(ILabelProviderListener listener){}
-			public void dispose() {}
+
+			public void addListener(ILabelProviderListener listener) {
+			}
+
+			public void dispose() {
+			}
+
 			public boolean isLabelProperty(Object element, String property) {
 				return false;
 			}
-			public void removeListener(ILabelProviderListener listener) {}
+
+			public void removeListener(ILabelProviderListener listener) {
+			}
 		});
-		
-		tableViewer.setColumnProperties(new String[] {"firstName","lastName","state"});
-		tableViewer.setCellModifier(new ICellModifier(){
+
+		tableViewer.setColumnProperties(new String[] { "firstName", "lastName",
+				"state" });
+		tableViewer.setCellModifier(new ICellModifier() {
 			public boolean canModify(Object element, String property) {
 				return true;
 			}
+
 			public Object getValue(Object element, String property) {
-				Account account = (Account)element;
-				if ("firstName".equals(property)){
+				Account account = (Account) element;
+				if ("firstName".equals(property)) {
 					return account.getFirstName();
-				} else if ("lastName".equals(property)){
+				} else if ("lastName".equals(property)) {
 					return account.getLastName();
-				} else if ("state".equals(property)){
+				} else if ("state".equals(property)) {
 					return account.getState();
 				} else {
 					return "UNKNOWN " + property;
 				}
 			}
+
 			public void modify(Object element, String property, Object value) {
-				Account account = (Account) ((TableItem)element).getData();
-				if ("firstName".equals(property)){
+				Account account = (Account) ((TableItem) element).getData();
+				if ("firstName".equals(property)) {
 					account.setFirstName((String) value);
-				} else if ("lastName".equals(property)){
+				} else if ("lastName".equals(property)) {
 					account.setLastName((String) value);
-				} else if ("state".equals(property)){
+				} else if ("state".equals(property)) {
 					account.setState((String) value);
-				}			
-			}			
-		});
-		
-		tableViewer.setCellEditors(new CellEditor[]{
-				new TextCellEditor(table), 
-				new TextCellEditor(table), 
-				new TextCellEditor(table)
+				}
+			}
 		});
 
-		dbs.bind(tableViewer,"contents",catalog,"accounts",new IdentityConverter(Account.class,Object.class));
-		
+		tableViewer.setCellEditors(new CellEditor[] {
+				new TextCellEditor(table), new TextCellEditor(table),
+				new TextCellEditor(table) });
+
+		dbs.bind(tableViewer, "contents", catalog, "accounts",
+				new IdentityConverter(Account.class, Object.class));
+
 	}
 }

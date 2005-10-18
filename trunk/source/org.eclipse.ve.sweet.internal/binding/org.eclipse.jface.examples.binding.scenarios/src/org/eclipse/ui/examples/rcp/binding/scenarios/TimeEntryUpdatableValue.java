@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TimeEntryUpdatableValue.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 14:04:55 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -20,23 +20,24 @@ import java.text.ParseException;
 
 import org.eclipse.jface.binding.IChangeEvent;
 import org.eclipse.jface.binding.UpdatableValue;
- 
+
 public class TimeEntryUpdatableValue extends UpdatableValue {
-	
+
 	private TimeEntry timeEntry;
 
-	public TimeEntryUpdatableValue(TimeEntry aTimeEntry){
+	public TimeEntryUpdatableValue(TimeEntry aTimeEntry) {
 		timeEntry = aTimeEntry;
-		timeEntry.addPropertyChangeListener(new PropertyChangeListener(){
+		timeEntry.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				fireChangeEvent(IChangeEvent.CHANGE, evt.getOldValue(), evt.getNewValue());
-			}			
+				fireChangeEvent(IChangeEvent.CHANGE, evt.getOldValue(), evt
+						.getNewValue());
+			}
 		});
 	}
 
 	public void setValue(Object value) {
 		try {
-			timeEntry.setTime((String)value);
+			timeEntry.setTime((String) value);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
