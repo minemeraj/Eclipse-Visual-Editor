@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SampleData.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-18 13:47:39 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-18 14:29:55 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -79,14 +79,17 @@ public class SampleData {
 		PRESIDENT.setFirstName("George");
 		PRESIDENT.setLastName("Bush");
 		PRESIDENT.setState("TX");
+		PRESIDENT.setPhone("1112223333");
 		DENTIST = adventureFactory.createAccount();
 		DENTIST.setFirstName("Tooth");
 		DENTIST.setLastName("Fairy");
 		DENTIST.setState("CA");
+		DENTIST.setPhone("4543219876");
 		SANTA_CLAUS = adventureFactory.createAccount();
 		SANTA_CLAUS.setFirstName("Chris");
 		SANTA_CLAUS.setLastName("Chringle");
 		SANTA_CLAUS.setState("WI");
+		SANTA_CLAUS.setPhone("8617429856");
 		CATALOG_2005.getAccounts().add(PRESIDENT);
 		CATALOG_2005.getAccounts().add(DENTIST);
 		CATALOG_2005.getAccounts().add(SANTA_CLAUS);		
