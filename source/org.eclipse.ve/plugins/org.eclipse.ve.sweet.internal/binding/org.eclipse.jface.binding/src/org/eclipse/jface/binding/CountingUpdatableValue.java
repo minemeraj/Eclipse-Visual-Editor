@@ -12,12 +12,20 @@ package org.eclipse.jface.binding;
 
 import java.util.List;
 
-
+/**
+ * @since 3.2
+ *
+ */
 public class CountingUpdatableValue extends UpdatableValue {
 
 	private final IUpdatableValue updatableList;
+
 	private final int offset;
 
+	/**
+	 * @param updatableList
+	 * @param offset
+	 */
 	public CountingUpdatableValue(IUpdatableValue updatableList, int offset) {
 		this.updatableList = updatableList;
 		this.offset = offset;
@@ -37,7 +45,7 @@ public class CountingUpdatableValue extends UpdatableValue {
 	}
 
 	public Object getValue() {
-		return new Integer(((List) updatableList.getValue()).size()+offset);
+		return new Integer(((List) updatableList.getValue()).size() + offset);
 	}
 
 	public Class getValueType() {

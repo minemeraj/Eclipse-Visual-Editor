@@ -11,6 +11,15 @@
 
 package org.eclipse.jface.binding;
 
+/**
+ * @since 3.2
+ * 
+ */
 public interface IConverterFactory {
+	/**
+	 * @param fromType
+	 * @param toType
+	 * @return the converter
+	 */
 	IConverter createConverter(Class fromType, Class toType);
 }

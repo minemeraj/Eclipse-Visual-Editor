@@ -20,11 +20,21 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Combo;
 
+/**
+ * @since 3.2
+ *
+ */
 public class ComboUpdatableValue extends UpdatableValue {
 
-	public static final String TEXT = "text";
+	/**
+	 * 
+	 */
+	public static final String TEXT = "text"; //$NON-NLS-1$
 
-	public static final String ITEMS = "items";
+	/**
+	 * 
+	 */
+	public static final String ITEMS = "items"; //$NON-NLS-1$
 
 	private final Combo combo;
 
@@ -32,6 +42,10 @@ public class ComboUpdatableValue extends UpdatableValue {
 
 	private boolean updating = false;
 
+	/**
+	 * @param combo
+	 * @param attribute
+	 */
 	public ComboUpdatableValue(Combo combo, String attribute) {
 		this.combo = combo;
 		this.attribute = attribute;

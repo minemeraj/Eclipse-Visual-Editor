@@ -20,6 +20,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * @since 3.2
+ *
+ */
 public class TextUpdatableValue extends UpdatableValue {
 
 	private final Text text;
@@ -42,6 +46,11 @@ public class TextUpdatableValue extends UpdatableValue {
 		}
 	};
 
+	/**
+	 * @param text
+	 * @param updatePolicy
+	 * @param validatePolicy
+	 */
 	public TextUpdatableValue(Text text, int updatePolicy, int validatePolicy) {
 		this.text = text;
 		if (updatePolicy != SWT.None) {
@@ -66,7 +75,7 @@ public class TextUpdatableValue extends UpdatableValue {
 	public void setValue(Object value) {
 		try {
 			updating = true;
-			text.setText(value == null ? "" : value.toString());
+			text.setText(value == null ? "" : value.toString()); //$NON-NLS-1$
 		} finally {
 			updating = false;
 		}

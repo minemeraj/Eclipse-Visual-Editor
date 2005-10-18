@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jface.binding;
 
+/**
+ * @since 3.2
+ *
+ */
 public interface IChangeEvent {
 
 	/**
@@ -31,27 +35,27 @@ public interface IChangeEvent {
 	 * the removed element before the removal will be returned by getPosition().
 	 */
 	public static final int REMOVE = 3;
-	
+
 	/**
-	 * Change type constant used to inform listeners about a pending change
-	 * that can still be vetoed. The updatable's value has not been changed
-	 * yet, <code>getNewValue()</code> returns the new value that will be
-	 * the updatable's new value if the change is not vetoed by calling
-	 * <code>setVeto(true)</code>. 
+	 * Change type constant used to inform listeners about a pending change that
+	 * can still be vetoed. The updatable's value has not been changed yet,
+	 * <code>getNewValue()</code> returns the new value that will be the
+	 * updatable's new value if the change is not vetoed by calling
+	 * <code>setVeto(true)</code>.
 	 */
 	public static final int VERIFY = 4;
 
 	/**
 	 * Returns the updatable that was changed.
 	 * 
-	 * @return
+	 * @return the updatable
 	 */
 	public IUpdatable getUpdatable();
 
 	/**
 	 * Returns the change type (CHANGE, ADD, or REMOVE).
 	 * 
-	 * @return
+	 * @return the change type
 	 */
 	public int getChangeType();
 
@@ -59,7 +63,7 @@ public interface IChangeEvent {
 	 * Returns the value before the change, if available, or <code>null</code>
 	 * if the change is an addition to a list.
 	 * 
-	 * @return
+	 * @return the old value, or null
 	 */
 	public Object getOldValue();
 
@@ -67,7 +71,7 @@ public interface IChangeEvent {
 	 * Returns the value after the change, if available, or <code>null</code>
 	 * if the change is a removal from a list.
 	 * 
-	 * @return
+	 * @return the new value, or null
 	 */
 	public Object getNewValue();
 
@@ -78,16 +82,18 @@ public interface IChangeEvent {
 	 * @return the position of the changed element
 	 */
 	public int getPosition();
-	
+
 	/**
-	 * If the change event is of type VERIFY, listeners can call this method
-	 * to veto the change.
+	 * If the change event is of type VERIFY, listeners can call this method to
+	 * veto the change.
+	 * @param veto 
 	 */
 	public void setVeto(boolean veto);
-	
+
 	/**
 	 * If the change event is of type VERIFY, this method returns true if this
-	 * event has been vetoed by a listener. 
+	 * event has been vetoed by a listener.
+	 * 
 	 * @return <code>true</code> if the change has been vetoed.
 	 */
 	public boolean getVeto();
