@@ -11,14 +11,13 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: BeanAwtUtilities.java,v $ $Revision: 1.39 $ $Date: 2005-09-22 12:55:58 $
+ * $RCSfile: BeanAwtUtilities.java,v $ $Revision: 1.40 $ $Date: 2005-10-18 16:41:01 $
  */
 
-import java.awt.Component;
 import java.util.List;
 import java.util.logging.Level;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClassifier;
@@ -332,7 +331,7 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.ContainerManager#addComponentBefore(Component, Object, Component) addComponentWithConstraint}
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.ContainerManager#addComponentBefore(java.awt.Component, Object, java.awt.Component) addComponentWithConstraint}
 	 * proxy method.
 	 * 
 	 * @param expression
@@ -589,7 +588,7 @@ public class BeanAwtUtilities {
 
 	/**
 	 * Get the
-	 * {@link org.eclipse.ve.internal.jfc.vm.JTableManager#addColumnBefore(JTable, javax.swing.table.TableColumn, javax.swing.table.TableColumn) addComponentBefore}proxy
+	 * {@link org.eclipse.ve.internal.jfc.vm.JTableManager#addColumnBefore(javax.swing.JTable, javax.swing.table.TableColumn, javax.swing.table.TableColumn) addComponentBefore}proxy
 	 * method.
 	 * 
 	 * @param expression
@@ -612,7 +611,7 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTableManager#initializeTableModel(JTable) initializeTableModel}proxy method.
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTableManager#initializeTableModel(javax.swing.JTable) initializeTableModel}proxy method.
 	 * 
 	 * @param expression
 	 * @return
@@ -634,7 +633,7 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTableManager#removeAllColumns(JTable) removeAllColumns}proxy method.
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTableManager#removeAllColumns(javax.swing.JTable) removeAllColumns}proxy method.
 	 * 
 	 * @param expression
 	 * @return
@@ -683,7 +682,7 @@ public class BeanAwtUtilities {
 	 * @return 5-tuple array (TableColumnProxy, xIntegerProxy, yIntegerProxy, widthIntegerProxy, heightIntegerProxy, ....) or <code>null</code> if
 	 *         no columns.
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.JTableManager#getColumnRects(JTable)
+	 * @see org.eclipse.ve.internal.jfc.vm.JTableManager#getColumnRects(javax.swing.JTable)
 	 * @since 1.1.0
 	 */
 	public static IArrayBeanProxy invoke_JTable_getAllColumnRects(IBeanProxy jtable) {
@@ -807,7 +806,7 @@ public class BeanAwtUtilities {
 	 *            before component, may be a Component or Action, or <code>null</code> for at end
 	 * @param expression
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.JToolBarManager#addComponent(JToolBar, Object, Object)
+	 * @see org.eclipse.ve.internal.jfc.vm.JToolBarManager#addComponent(javax.swing.JToolBar, Object, Object)
 	 * @since 1.1.0
 	 */
 	public static void invoke_JToolBar_addComponent(IProxy jtoolbar, IProxy component, IProxy beforeComponent, IExpression expression) {
@@ -844,7 +843,7 @@ public class BeanAwtUtilities {
 	 * @param component
 	 * @param expression
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.JToolBarManager#removeComponent(JToolBar, Object)
+	 * @see org.eclipse.ve.internal.jfc.vm.JToolBarManager#removeComponent(javax.swing.JToolBar, Object)
 	 * @since 1.1.0
 	 */
 	public static void invoke_JToolBar_removeComponent(IProxy jtoolbar, IProxy component, IExpression expression) {
@@ -1137,7 +1136,7 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#insertTabBefore(JTabbedPane, String, Icon, Component, Component) insertTab}
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#insertTabBefore(javax.swing.JTabbedPane, String, Icon, java.awt.Component, java.awt.Component) insertTab}
 	 * proxy method.
 	 * 
 	 * @param expression
@@ -1179,7 +1178,7 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#insertTabBefore(JTabbedPane, Component, Component) insertTabDefault} proxy
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#insertTabBefore(javax.swing.JTabbedPane, java.awt.Component, java.awt.Component) insertTabDefault} proxy
 	 * method.
 	 * 
 	 * @param expression
@@ -1267,7 +1266,7 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setDefaultTitle(JTabbedPane, Component) setDefaultTitle}proxy method.
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setDefaultTitle(javax.swing.JTabbedPane, java.awt.Component) setDefaultTitle}proxy method.
 	 * 
 	 * @param expression
 	 * @return
@@ -1296,7 +1295,7 @@ public class BeanAwtUtilities {
 	 * @param icon
 	 * @param expression
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setIconAt(JTabbedPane, Component, Icon)
+	 * @see org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setIconAt(javax.swing.JTabbedPane, java.awt.Component, Icon)
 	 * @since 1.1.0
 	 */
 	public static void invoke_JTabbedPane_setIconAt(IProxy jtabbedpane, IProxy component, IProxy icon, IExpression expression) {
@@ -1305,7 +1304,7 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setDefaultTitle(JTabbedPane, Component) setDefaultTitle}proxy method.
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setDefaultTitle(javax.swing.JTabbedPane, java.awt.Component) setDefaultTitle}proxy method.
 	 * 
 	 * @param expression
 	 * @return
@@ -1334,7 +1333,7 @@ public class BeanAwtUtilities {
 	 * @param title
 	 * @param expression
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setTitleAt(JTabbedPane, Component, String)
+	 * @see org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setTitleAt(javax.swing.JTabbedPane, java.awt.Component, String)
 	 * @since 1.1.0
 	 */
 	public static void invoke_JTabbedPane_setTitle(IProxy jtabbedPane, IProxy component, IProxy title, IExpression expression) {
@@ -1343,7 +1342,7 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setDefaultTitle(JTabbedPane, Component) setDefaultTitle}proxy method.
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setDefaultTitle(javax.swing.JTabbedPane, java.awt.Component) setDefaultTitle}proxy method.
 	 * 
 	 * @param expression
 	 * @return
@@ -1371,7 +1370,7 @@ public class BeanAwtUtilities {
 	 * @param component
 	 * @param expression
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setDefaultTitle(JTabbedPane, Component)
+	 * @see org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setDefaultTitle(javax.swing.JTabbedPane, java.awt.Component)
 	 * @since 1.1.0
 	 */
 	public static void invoke_JTabbedPane_setDefaultTitle(IProxy jtabbedPane, IProxy component, IExpression expression) {
