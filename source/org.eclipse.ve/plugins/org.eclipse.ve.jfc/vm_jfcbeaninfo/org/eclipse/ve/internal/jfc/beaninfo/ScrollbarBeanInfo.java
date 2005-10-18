@@ -11,12 +11,12 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: ScrollbarBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-06 15:18:44 $ 
+ *  $Revision: 1.5 $  $Date: 2005-10-18 15:32:23 $ 
  */
 
 import java.beans.*;
 
-import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
+import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
 
 public class ScrollbarBeanInfo extends IvjBeanInfo {
 	private static java.util.ResourceBundle resscrollbar = java.util.ResourceBundle.getBundle("org.eclipse.ve.internal.jfc.beaninfo.scrollbar");  //$NON-NLS-1$

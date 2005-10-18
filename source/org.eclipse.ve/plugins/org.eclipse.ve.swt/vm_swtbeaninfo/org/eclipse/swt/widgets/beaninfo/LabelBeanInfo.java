@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LabelBeanInfo.java,v $
- *  $Revision: 1.9 $  $Date: 2005-10-06 15:18:50 $ 
+ *  $Revision: 1.10 $  $Date: 2005-10-18 15:32:18 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -19,7 +19,7 @@ import java.beans.PropertyDescriptor;
 
 import org.eclipse.swt.SWT;
 
-import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
+import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
  
 /**
  * 

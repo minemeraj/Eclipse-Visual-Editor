@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeAction.java,v $
- *  $Revision: 1.18 $  $Date: 2005-10-06 15:18:33 $ 
+ *  $Revision: 1.19 $  $Date: 2005-10-18 15:32:26 $ 
  */
 
 import java.util.List;
@@ -21,7 +21,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
 
-import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
+import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
 import org.eclipse.jem.internal.beaninfo.BeanDecorator;
 import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.19 $  $Date: 2005-10-06 15:18:51 $ 
+ *  $Revision: 1.20 $  $Date: 2005-10-18 15:32:18 $ 
  */
 import java.util.*;
 
@@ -19,7 +19,7 @@ import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
-import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
+import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;

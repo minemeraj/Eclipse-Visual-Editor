@@ -1,32 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry output="common_bin" kind="src" path="jfccommon">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry output="vm_bin" kind="src" path="vm_jfcvm">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry output="vm_bin" kind="src" path="vm_jfcbeaninfo">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path="jfc">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path="jfccodegen">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
-		<attributes>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
-		<attributes>
-		</attributes>
-	</classpathentry>
+	<classpathentry output="common_bin" kind="src" path="jfccommon"/>
+	<classpathentry output="vm_bin" kind="src" path="vm_jfcvm"/>
+	<classpathentry output="vm_bin" kind="src" path="vm_jfcbeaninfo"/>
+	<classpathentry kind="src" path="jfc"/>
+	<classpathentry kind="src" path="jfccodegen"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/org.eclipse.jem.beaninfo/bin_vm_beaninfovm"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
