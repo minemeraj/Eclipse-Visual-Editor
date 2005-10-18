@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JProgressBarBeanInfo.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-06 15:18:44 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-18 15:32:23 $ 
  */
 
 import java.beans.*;
@@ -19,7 +19,7 @@ import java.beans.*;
 import javax.swing.BoundedRangeModel;
 import javax.swing.plaf.ProgressBarUI;
 
-import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
+import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
 
 public class JProgressBarBeanInfo extends IvjBeanInfo {
 		

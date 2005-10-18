@@ -11,13 +11,13 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JInternalFrameBeanInfo.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-06 15:18:44 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-18 15:32:23 $ 
  */
 
 import java.beans.*;
 
+import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
 import org.eclipse.jem.beaninfo.vm.BaseBeanInfo;
-import org.eclipse.jem.beaninfo.vm.IBaseBeanInfoConstants;
 
 public class JInternalFrameBeanInfo extends IvjBeanInfo {
 		
