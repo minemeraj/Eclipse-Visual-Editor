@@ -12,7 +12,7 @@
  *  Created Oct 12, 2005 by Gili Mendel
  * 
  *  $RCSfile: ReadOnlyComboScenarios.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-18 17:38:36 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-18 19:07:59 $ 
  */
 
 package org.eclipse.jface.tests.binding.scenarios;
@@ -26,17 +26,12 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.binding.swt.SWTDatabindingService;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
-import org.eclipse.ui.examples.rcp.adventure.Catalog;
-import org.eclipse.ui.examples.rcp.adventure.Lodging;
+import org.eclipse.ui.examples.rcp.adventure.*;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
 public class ReadOnlyComboScenarios extends ScenariosTestCase {
@@ -119,56 +114,42 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 	 * property change of content elements, etc.
 	 * 
 	 */
-	// public void testScenario03_original() throws BindingException {
-	//
-	// //TODO: use this baseline to improve the API
-	//		
-	//			
-	//		
-	// Adventure skiAdventure = SampleData.WINTER_HOLIDAY; // selection will
-	// change its defaultLodging
-	// Catalog catalog = SampleData.CATALOG_2005; // Lodging source
-	//		
-	// // need to be disposed
-	// EMFUpdatableTable updatableTable = new EMFUpdatableTable(catalog,
-	// "lodgings", new String[] {"description"});
-	//		
-	// getDbs().bindTable(
-	// getDbs().createUpdatableTable(cviewer, "contents"),
-	// updatableTable
-	// );
-	//		
-	//		
-	//		
-	// // Ensure that cv's content now has the catalog's lodgings
-	// assertEquals(catalog.getLodgings(), getViewerContent());
-	//		
-	// // Ensure that the cv's labels are the same as the lodging descriptions
-	// assertEquals(getColumn(catalog.getLodgings(), "description"),
-	// getComboContent());
-	//		
-	//		
-	// // Bind the ComboViewer's selection to the Adventure's default lodging.
-	// getDbs().bindValue(
-	// cviewer, "selection", skiAdventure ,"defaultLodging",
-	// new IdentityConverter(Object.class,Lodging.class),
-	// new IdentityConverter(Lodging.class,Object.class));
-	//		
-	// // Check to see that the initial selection is the currentDefault Lodging
-	// assertEquals(getViewerSelection(), skiAdventure.getDefaultLodging());
-	//		
-	// // Change the selection of the ComboViewer to all possible lodgings, and
-	// // verify that skiAdventure's default lodging was changed accordingly
-	// for (Iterator iter = catalog.getLodgings().iterator(); iter.hasNext();) {
-	// Object selection = iter.next();
-	// cviewer.setSelection(new StructuredSelection(selection));
-	// assertEquals(selection, skiAdventure.getDefaultLodging());
-	// assertEquals(getViewerSelection(), skiAdventure.getDefaultLodging());
-	// }
-	//		
-	// updatableTable.dispose();
-	//					
-	// }
+	 public void test_ROCombo_Scenario03_vanilla() throws BindingException {
+	
+			
+		 Adventure skiAdventure = SampleData.WINTER_HOLIDAY; // selection will
+		 // change its defaultLodging
+		 Catalog catalog = SampleData.CATALOG_2005; // Lodging source
+				
+				
+		 cviewer.setLabelProvider(lodgingLabelProvider);
+	     // Bind the ComboViewer's content to the available lodging
+	  	 getDbs().bind(cviewer, SWTDatabindingService.JFACE_VIEWER_CONTENT, catalog, "lodgings");
+				
+		 // Ensure that cv's content now has the catalog's lodgings
+		 assertEquals(catalog.getLodgings(), getViewerContent());
+				
+		 // Ensure that the cv's labels are the same as the lodging descriptions
+		 assertEquals(getColumn(catalog.getLodgings(), "name"), getComboContent());
+				
+				
+		 // Bind the ComboViewer's selection to the Adventure's default lodging.
+		 getDbs().bind(cviewer, SWTDatabindingService.JFACE_VIEWER_SELECTION, skiAdventure ,"defaultLodging");
+				
+		 // Check to see that the initial selection is the currentDefault Lodging
+		 assertEquals(getViewerSelection(), skiAdventure.getDefaultLodging());
+				
+		 // Change the selection of the ComboViewer to all possible lodgings, and
+		 // verify that skiAdventure's default lodging was changed accordingly
+		 for (Iterator iter = catalog.getLodgings().iterator(); iter.hasNext();) {
+				Object selection = iter.next();
+				cviewer.setSelection(new StructuredSelection(selection));
+				assertEquals(selection, skiAdventure.getDefaultLodging());
+				assertEquals(getViewerSelection(), skiAdventure.getDefaultLodging());
+		 }
+				 
+						
+	 }
 
 	/**
 	 * This test case deal with the 3rd scenario, and focuses on the collection
@@ -188,7 +169,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		cviewer.setLabelProvider(lodgingLabelProvider); // TODO: need to resolve
 														// column binding
 		// Bind the ComboViewer's content to the available lodging
-		getDbs().bind(cviewer, "contents", catalog, "lodgings");
+		getDbs().bind(cviewer, SWTDatabindingService.JFACE_VIEWER_CONTENT, catalog, "lodgings");
 
 		// Ensure that cv's content now has the catalog's lodgings
 		assertEquals(catalog.getLodgings(), getViewerContent());
