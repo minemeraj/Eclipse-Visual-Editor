@@ -41,6 +41,7 @@ public class UpdatableCollectionViewer extends Updatable implements IUpdatableCo
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		});
+		viewer.setInput(this);
 	}
 
 	public int getSize() {
