@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LabelBinding.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-17 23:06:29 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -19,18 +19,26 @@ import org.eclipse.jface.binding.DatabindingService;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 
 public class LabelBinding extends Composite {
 
 	private Label label = null;
+
 	private Text txtName = null;
+
 	private Label lblName = null;
+
 	private DatabindingService dbs;
+
 	private Label label1 = null;
+
 	private Text txtDescription = null;
+
 	private Label lblDescription = null;
 
 	public LabelBinding(Composite parent, int style) throws BindingException {
@@ -72,21 +80,24 @@ public class LabelBinding extends Composite {
 		lblDescription.setText("");
 		lblDescription.setLayoutData(gridData8);
 		this.setLayout(gridLayout);
-		setSize(new org.eclipse.swt.graphics.Point(367,168));
+		setSize(new org.eclipse.swt.graphics.Point(367, 168));
 		bind();
 	}
-	private void bind() throws BindingException{
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);		
+
+	private void bind() throws BindingException {
+		dbs = SampleData.getSWTtoEMFDatabindingService(this);
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
-		
+
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
-		
-		dbs.bind(txtName,"text",skiTrip,emfPackage.getAdventure_Name());
-		dbs.bind(lblName,"text",skiTrip,emfPackage.getAdventure_Name());
-		
-		dbs.bind(txtDescription,"text",skiTrip,emfPackage.getAdventure_Description());
-		dbs.bind(lblDescription,"text",skiTrip,emfPackage.getAdventure_Description());
-		
+
+		dbs.bind(txtName, "text", skiTrip, emfPackage.getAdventure_Name());
+		dbs.bind(lblName, "text", skiTrip, emfPackage.getAdventure_Name());
+
+		dbs.bind(txtDescription, "text", skiTrip, emfPackage
+				.getAdventure_Description());
+		dbs.bind(lblDescription, "text", skiTrip, emfPackage
+				.getAdventure_Description());
+
 	}
 
-}  //  @jve:decl-index=0:visual-constraint="10,10"
+} // @jve:decl-index=0:visual-constraint="10,10"

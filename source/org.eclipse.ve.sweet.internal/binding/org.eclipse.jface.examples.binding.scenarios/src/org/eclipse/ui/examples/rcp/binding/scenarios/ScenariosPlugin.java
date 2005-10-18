@@ -1,7 +1,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.ui.plugin.*;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -9,9 +9,9 @@ import org.osgi.framework.BundleContext;
  */
 public class ScenariosPlugin extends AbstractUIPlugin {
 
-	//The shared instance.
+	// The shared instance.
 	private static ScenariosPlugin plugin;
-	
+
 	/**
 	 * The constructor.
 	 */
@@ -42,13 +42,15 @@ public class ScenariosPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path.
-	 *
-	 * @param path the path
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path.
+	 * 
+	 * @param path
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.ui.examples.rcp.binding.scenarios", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin(
+				"org.eclipse.ui.examples.rcp.binding.scenarios", path);
 	}
 }

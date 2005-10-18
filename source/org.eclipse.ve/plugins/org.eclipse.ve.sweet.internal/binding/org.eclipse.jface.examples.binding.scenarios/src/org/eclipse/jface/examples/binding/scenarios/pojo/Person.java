@@ -10,40 +10,52 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Person.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-12 12:10:12 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.jface.examples.binding.scenarios.pojo;
 
 import java.util.List;
- 
+
 public class Person {
-	
+
 	private Person spouse;
+
 	private List managers;
+
 	private String firstName;
+
 	private String lastName;
+
 	private int age;
+
 	public int getAge() {
 		return age;
 	}
+
 	public void setAge(int age) {
 		this.age = age;
 	}
+
 	public String getFirstName() {
 		return firstName;
 	}
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+
 	public String getLastName() {
 		return lastName;
 	}
+
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+
 	public Person getSpouse() {
 		return spouse;
 	}
+
 	public void setSpouse(Person spouse) {
 		this.spouse = spouse;
 	}

@@ -9,56 +9,49 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SimpleListBinding.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:13:36 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import java.net.BindException;
-
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.IdentityConverter;
-import org.eclipse.jface.examples.binding.emf.EMFDerivedUpdatableValue;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
-import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.ui.examples.rcp.adventure.Adventure;
-import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
-import org.eclipse.ui.examples.rcp.adventure.Lodging;
-import org.eclipse.swt.custom.CCombo;
 
 public class SimpleListBinding extends Composite {
 
 	private Label label = null;
+
 	private Label label1 = null;
+
 	private List list = null;
+
 	private Text txtDefaultLodging = null;
+
 	private DatabindingService dbs;
+
 	private ListViewer listViewer;
+
 	private Label label2 = null;
+
 	private Text txtName = null;
-	
-	public SimpleListBinding(Composite parent, int style) throws BindingException{
-		super(parent,style);
+
+	public SimpleListBinding(Composite parent, int style)
+			throws BindingException {
+		super(parent, style);
 		initialize();
 	}
-	
+
 	private void initialize() throws BindingException {
-		setLayout(new GridLayout(2,false));
+		setLayout(new GridLayout(2, false));
 		GridData gridData6 = new org.eclipse.swt.layout.GridData();
 		gridData6.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData6.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
@@ -79,33 +72,37 @@ public class SimpleListBinding extends Composite {
 		label2.setText("Name");
 		txtName = new Text(this, SWT.BORDER);
 		txtName.setLayoutData(gridData6);
-			this.setSize(new org.eclipse.swt.graphics.Point(269,133));
+		this.setSize(new org.eclipse.swt.graphics.Point(269, 133));
 		bind();
 	}
-	private void bind() throws BindingException{
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);		
-		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
-		
-		Catalog catalog = SampleData.CATALOG_2005;		
-		
-		dbs.bindTable(
-				dbs.createUpdatableTable(listViewer,"contents"),
-				new EMFUpdatableTable(catalog,"lodgings",new String[] {"description"})
-		);
-		
-		IUpdatableValue selectedLodging = dbs.createUpdatableValue(
-				listViewer,"selection");
-		
-		dbs.bindValue(txtDefaultLodging, "text", new EMFDerivedUpdatableValue(
-				selectedLodging, emfPackage.getLodging_Description()));
 
-		dbs.bindValue(txtName, "text", new EMFDerivedUpdatableValue(
-				selectedLodging, emfPackage.getLodging_Name()));
-		
+	private void bind() throws BindingException {
+		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
+
+		Catalog catalog = SampleData.CATALOG_2005;
+
+		// dbs.bindTable(
+		// dbs.createUpdatableTable(listViewer,"contents"),
+		// new EMFUpdatableTable(catalog,"lodgings",new String[]
+		// {"description"})
+		// );
+		//		
+		// IUpdatableValue selectedLodging = dbs.createUpdatableValue(
+		// listViewer,"selection");
+		//		
+		// dbs.bindValue(txtDefaultLodging, "text", new
+		// EMFDerivedUpdatableValue(
+		// selectedLodging, emfPackage.getLodging_Description()));
+		//
+		// dbs.bindValue(txtName, "text", new EMFDerivedUpdatableValue(
+		// selectedLodging, emfPackage.getLodging_Name()));
+
 	}
+
 	/**
-	 * This method initializes combo	
-	 *
+	 * This method initializes combo
+	 * 
 	 */
 	private void createCombo() {
 		GridData gridData1 = new org.eclipse.swt.layout.GridData();
@@ -117,4 +114,4 @@ public class SimpleListBinding extends Composite {
 		listViewer = new ListViewer(list);
 	}
 
-}  //  @jve:decl-index=0:visual-constraint="10,10"
+} // @jve:decl-index=0:visual-constraint="10,10"

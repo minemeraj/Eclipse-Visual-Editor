@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.ui.examples.rcp.adventurebuilder.model/src"
+    modelPluginID="org.eclipse.ui.examples.rcp.adventurebuilder.model" modelName="Adventure"
+    modelPluginClass="" richClientPlatform="true" importerID="org.eclipse.emf.importer.ecore">
+  <foreignModel>Adventure.ecore</foreignModel>
+  <genPackages prefix="Adventure" basePackage="org.eclipse.ui.examples.rcp" disposableProviderFactory="true"
+      ecorePackage="Adventure.ecore#/">
+    <genDataTypes ecoreDataType="Adventure.ecore#//JavaCalendar"/>
+    <genClasses ecoreClass="Adventure.ecore#//Catalog">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Catalog/lastModified"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Catalog/source"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Catalog/timeToRead"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Adventure.ecore#//Catalog/categories"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Catalog/lodgings"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Adventure.ecore#//Catalog/activities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Adventure.ecore#//Catalog/transportations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Adventure.ecore#//Catalog/signons"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Adventure.ecore#//Catalog/accounts"/>
+      <genOperations ecoreOperation="Adventure.ecore#//Catalog/getActivities">
+        <genParameters ecoreParameter="Adventure.ecore#//Catalog/getActivities/location"/>
+      </genOperations>
+      <genOperations ecoreOperation="Adventure.ecore#//Catalog/getLodgings">
+        <genParameters ecoreParameter="Adventure.ecore#//Catalog/getLodgings/location"/>
+      </genOperations>
+      <genOperations ecoreOperation="Adventure.ecore#//Catalog/getOriginsForDestination">
+        <genParameters ecoreParameter="Adventure.ecore#//Catalog/getOriginsForDestination/destination"/>
+      </genOperations>
+      <genOperations ecoreOperation="Adventure.ecore#//Catalog/getTransportations">
+        <genParameters ecoreParameter="Adventure.ecore#//Catalog/getTransportations/origin"/>
+        <genParameters ecoreParameter="Adventure.ecore#//Catalog/getTransportations/destination"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//Category">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Category/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Category/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Adventure.ecore#//Category/adventures"/>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//Adventure">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Adventure/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Adventure/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Adventure/description"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Adventure/location"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Adventure/price"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Adventure/defaultActivities"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Adventure/category"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Adventure/defaultLodging"/>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//Activity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Activity/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Activity/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Activity/description"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Activity/location"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Activity/price"/>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//Lodging">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Lodging/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Lodging/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Lodging/description"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Lodging/location"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Lodging/price"/>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//Transportation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Transportation/arrivalTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Transportation/carrier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Transportation/departureTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Transportation/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Transportation/destination"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Transportation/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Transportation/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Transportation/origin"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Transportation/price"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Transportation/transportationClass"/>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//Signon">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Signon/userName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Signon/password"/>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//Account">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Account/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Account/address1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Account/address2"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Account/city"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Account/country"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Account/email"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Account/firstName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Account/lastName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Account/phone"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Account/state"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Account/zip"/>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//Cart">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Cart/catalog"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Cart/adventure"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Cart/adventureDays"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Cart/headCount"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Cart/lodging"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Cart/lodgingDays"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Cart/lodgingRoomCount"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Cart/lodgingTotal"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Cart/activities"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Cart/activityTotal"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Cart/departureDate"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Cart/transportationTotal"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Cart/totalPrice"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Cart/departureFlight"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Cart/returnFlight"/>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//CartActivityEntry">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//CartActivityEntry/activity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//CartActivityEntry/numPeople"/>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//GlobalSettings">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//GlobalSettings/disconnectedMode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//GlobalSettings/cacheCatalog"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//GlobalSettings/serverAddressModifiable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//GlobalSettings/clearCache"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

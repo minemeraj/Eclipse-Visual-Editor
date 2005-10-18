@@ -17,66 +17,71 @@ import java.lang.reflect.Method;
 import org.eclipse.jface.binding.IChangeEvent;
 import org.eclipse.jface.binding.UpdatableValue;
 
-
 public class JavaBeanUpdatableValue extends UpdatableValue {
 	private final Object object;
+
 	private String propertyName;
+
 	private Method getMethod;
-	private Method setMethod; 
+
+	private Method setMethod;
 
 	private PropertyChangeListener listener;
-	
+
 	private boolean updating = false;
 
-	public JavaBeanUpdatableValue(final Object object, String propertyName){
+	public JavaBeanUpdatableValue(final Object object, String propertyName) {
 		this.object = object;
 		this.propertyName = propertyName;
 		hookListener();
 	}
-	
+
 	private Method getSetMethod() {
-		if (setMethod != null) return setMethod;
+		if (setMethod != null)
+			return setMethod;
 		try {
-			String setMethodName = setMethodName(propertyName); 
-			setMethod = object.getClass().getMethod(setMethodName,new Class[] {getGetMethod().getReturnType()});
-		} catch (NoSuchMethodException e) {			
+			String setMethodName = setMethodName(propertyName);
+			setMethod = object.getClass().getMethod(setMethodName,
+					new Class[] { getGetMethod().getReturnType() });
+		} catch (NoSuchMethodException e) {
 		}
 		return setMethod;
-	}		
-	
-	private Method getGetMethod(){
-		if(getMethod != null) return getMethod;
-		try{
+	}
+
+	private Method getGetMethod() {
+		if (getMethod != null)
+			return getMethod;
+		try {
 			String getMethodName = getMethodName(propertyName);
-			Method getMethod = object.getClass().getMethod(getMethodName,null);
-		} catch (NoSuchMethodException e){
+			Method getMethod = object.getClass().getMethod(getMethodName, null);
+		} catch (NoSuchMethodException e) {
 		}
 		return getMethod;
 	}
-	
-	public static String getMethodName(String propertyName){
-		//TODO: <gm> need to deal with BeanInfo overrides </gm>
+
+	public static String getMethodName(String propertyName) {
+		// TODO: <gm> need to deal with BeanInfo overrides </gm>
 		StringBuffer getMethodName = new StringBuffer();
 		getMethodName.append("get");
-		getMethodName.append(propertyName.substring(0,1).toUpperCase());
+		getMethodName.append(propertyName.substring(0, 1).toUpperCase());
 		getMethodName.append(propertyName.substring(1));
 		return getMethodName.toString();
 	}
-	
-	public static String setMethodName(String propertyName){
-		//TODO: <gm> need to deal with BeanInfo overrides </gm>
+
+	public static String setMethodName(String propertyName) {
+		// TODO: <gm> need to deal with BeanInfo overrides </gm>
 		StringBuffer getMethodName = new StringBuffer();
 		getMethodName.append("set");
-		getMethodName.append(propertyName.substring(0,1).toUpperCase());
+		getMethodName.append(propertyName.substring(0, 1).toUpperCase());
 		getMethodName.append(propertyName.substring(1));
 		return getMethodName.toString();
-	}	
-	
+	}
 
 	private void hookListener() {
-		listener = new PropertyChangeListener(){
-			public void propertyChange(java.beans.PropertyChangeEvent event){
-				fireChangeEvent(IChangeEvent.CHANGE,event.getOldValue(),event.getNewValue());
+		listener = new PropertyChangeListener() {
+			public void propertyChange(java.beans.PropertyChangeEvent event) {
+				fireChangeEvent(IChangeEvent.CHANGE, event.getOldValue(), event
+						.getNewValue());
 			}
 		};
 		// See if the object implements the API for property change listener
@@ -85,8 +90,8 @@ public class JavaBeanUpdatableValue extends UpdatableValue {
 	public void setValue(Object value) {
 		updating = true;
 		try {
-			getSetMethod().invoke(object,new Object[] {value});
-		} catch (Exception e){
+			getSetMethod().invoke(object, new Object[] { value });
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			updating = false;
@@ -94,11 +99,11 @@ public class JavaBeanUpdatableValue extends UpdatableValue {
 	}
 
 	public Object getValue() {
-		try{
-			return getGetMethod().invoke(object,null);
-		} catch (Exception e){
+		try {
+			return getGetMethod().invoke(object, null);
+		} catch (Exception e) {
 			e.printStackTrace();
-			return null;			
+			return null;
 		}
 	}
 

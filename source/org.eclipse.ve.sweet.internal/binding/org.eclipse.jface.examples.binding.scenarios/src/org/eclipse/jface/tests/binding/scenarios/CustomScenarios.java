@@ -40,40 +40,50 @@ public class CustomScenarios extends ScenariosTestCase {
 	public void testScenario01() throws BindingException {
 		// Binding the name property of an Adventure object to the contents of
 		// Text controls, no conversion, no validation.
-	
+
 		Adventure adventure = SampleData.WINTER_HOLIDAY;
 		Text text = new Text(getComposite(), SWT.BORDER);
 
-		IUpdatableValue descriptionUpdatable = (IUpdatableValue) getDbs().createUpdatable(adventure,"description");
-		IUpdatableValue nameUpdatable = (IUpdatableValue) getDbs().createUpdatable(adventure,"name");
-		
-		AggregateUpdatableValue customUpdatable_comma = new AggregateUpdatableValue( new IUpdatableValue[] {descriptionUpdatable,nameUpdatable} , ",");
-		
-		getDbs().bind(getDbs().createUpdatable(text, "text"),customUpdatable_comma);
+		IUpdatableValue descriptionUpdatable = (IUpdatableValue) getDbs()
+				.createUpdatable(adventure, "description");
+		IUpdatableValue nameUpdatable = (IUpdatableValue) getDbs()
+				.createUpdatable(adventure, "name");
+
+		AggregateUpdatableValue customUpdatable_comma = new AggregateUpdatableValue(
+				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },
+				",");
+
+		getDbs().bind(getDbs().createUpdatable(text, "text"),
+				customUpdatable_comma);
 		// spinEventLoop(1);
 		// Make sure that the description on the model match the widget
-		assertEquals(adventure.getDescription() + "," + adventure.getName(), text.getText());
-		
-		// Change the widget to newDescription,newName and ensure the model is updated
+		assertEquals(adventure.getDescription() + "," + adventure.getName(),
+				text.getText());
+
+		// Change the widget to newDescription,newName and ensure the model is
+		// updated
 		text.setText("newDescription,newName");
 		assertEquals("newDescription", adventure.getDescription());
-		assertEquals("newName", adventure.getName());		
-		
-		// Change the model to newDescription_0 and newName_0 and ensure the GUI is updated
+		assertEquals("newName", adventure.getName());
+
+		// Change the model to newDescription_0 and newName_0 and ensure the GUI
+		// is updated
 		adventure.setDescription("newDescription_0");
 		adventure.setName("newName_0");
-		assertEquals("newDescription_0,newName_0",text.getText());
-		
-		// Change text to newDescription_1 with no comma and ensure the model is updated correctly with no name
+		assertEquals("newDescription_0,newName_0", text.getText());
+
+		// Change text to newDescription_1 with no comma and ensure the model is
+		// updated correctly with no name
 		text.setText("newDescription_1");
 		assertEquals("newDescription_1", adventure.getDescription());
-		assertEquals(null,adventure.getName());
-		
-		// Change text to newName with a preceeding comma and ensure the model is updated correctly with no description
+		assertEquals(null, adventure.getName());
+
+		// Change text to newName with a preceeding comma and ensure the model
+		// is updated correctly with no description
 		text.setText(",newName_1");
-		assertEquals(null,adventure.getDescription());
-		assertEquals("newName_1",adventure.getName());
-		
+		assertEquals(null, adventure.getDescription());
+		assertEquals("newName_1", adventure.getName());
+
 	}
 
 }

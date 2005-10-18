@@ -12,9 +12,9 @@
  *  Created Oct 12, 2005 by Gili Mendel
  * 
  *  $RCSfile: EMFIdentityLabelProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-17 23:06:28 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-18 17:38:37 $ 
  */
- 
+
 package org.eclipse.jface.examples.binding.emf;
 
 import org.eclipse.emf.ecore.EObject;
@@ -23,37 +23,36 @@ import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
- 
+
 /**
- * This class is an IdentityConverted that also implements an 
+ * This class is an IdentityConverted that also implements an
  * {@link  org.eclipse.jface.binding.IColumnConverter} and provide
  * 
- * A single colum is converted for each element, it is a String value
- * for the feature property this converter s constructed with. 
+ * A single colum is converted for each element, it is a String value for the
+ * feature property this converter s constructed with.
  * 
- * e.g., new EMFIdentityLabelProvider(Lodging.class, "name") will use Identity conversion to
- *       the Lodging element, and getConvertedColumn(loging, 0) will convert a Lodging instance 
- *       name property to String.
- *  
+ * e.g., new EMFIdentityLabelProvider(Lodging.class, "name") will use Identity
+ * conversion to the Lodging element, and getConvertedColumn(loging, 0) will
+ * convert a Lodging instance name property to String.
+ * 
  */
-public class EMFIdentityLabelProvider extends IdentityConverter implements ILabelProvider {
+public class EMFIdentityLabelProvider extends IdentityConverter implements
+		ILabelProvider {
 
-	private EStructuralFeature feature=null;
+	private EStructuralFeature feature = null;
+
 	private String featureName;
-	
-	
+
 	public EMFIdentityLabelProvider(Class type, String featureName) {
-		super(type);		
+		super(type);
 		this.featureName = featureName;
 	}
 
 	public EMFIdentityLabelProvider(Class type, EStructuralFeature feature) {
-		super(type);		
+		super(type);
 		this.featureName = feature.getName();
 		this.feature = feature;
 	}
-
-
 
 	public Image getConvertedColumnImage(Object object, int column) {
 		return null;
@@ -65,15 +64,16 @@ public class EMFIdentityLabelProvider extends IdentityConverter implements ILabe
 	}
 
 	public String getText(Object element) {
-		if (feature==null) 
-			feature = ((EObject)element).eClass().getEStructuralFeature(featureName);		
-		return ((EObject)element).eGet(feature).toString();
+		if (feature == null)
+			feature = ((EObject) element).eClass().getEStructuralFeature(
+					featureName);
+		return ((EObject) element).eGet(feature).toString();
 	}
 
-	public void addListener(ILabelProviderListener listener) {	
+	public void addListener(ILabelProviderListener listener) {
 	}
 
-	public void dispose() {		
+	public void dispose() {
 	}
 
 	public boolean isLabelProperty(Object element, String property) {
@@ -82,7 +82,5 @@ public class EMFIdentityLabelProvider extends IdentityConverter implements ILabe
 
 	public void removeListener(ILabelProviderListener listener) {
 	}
-
-	
 
 }

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.jface.tests.binding.util;
 
 import java.lang.reflect.InvocationHandler;
@@ -129,9 +139,8 @@ public class Mocks {
 			Class returnType = method.getReturnType();
 			if (returnType.isPrimitive() && void.class != returnType) {
 				return returnType.newInstance();
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		public void replay() {
@@ -176,10 +185,26 @@ public class Mocks {
 		}
 	}
 
+	/**
+	 * Creates a mock object that neither looks at the order of method calls nor
+	 * at the arguments.
+	 * 
+	 * @param interfaceType
+	 * @return a mock object that checks for the order of method invocations but
+	 *         not for equality of method arguments
+	 */
 	public static Object createRelaxedMock(Class interfaceType) {
 		return createMock(interfaceType, false, indifferentEqualityComparator);
 	}
 
+	/**
+	 * Creates a mock object that does not look at the arguments, but checks
+	 * that the order of calls is as expected.
+	 * 
+	 * @param interfaceType
+	 * @return a mock object that checks for the order of method invocations but
+	 *         not for equality of method arguments
+	 */
 	public static Object createOrderedMock(Class interfaceType) {
 		return createMock(interfaceType, true, indifferentEqualityComparator);
 	}
@@ -188,7 +213,8 @@ public class Mocks {
 	 * creates a fussy mock object
 	 * 
 	 * @param interfaceType
-	 * @return
+	 * @return a mock object that checks for the order of method invocations and
+	 *         for equality of method arguments
 	 */
 	public static Object createMock(Class interfaceType) {
 		return createMock(interfaceType, true, defaultEqualityComparator);
@@ -198,7 +224,8 @@ public class Mocks {
 	 * creates a fussy mock object with a comparator
 	 * 
 	 * @param interfaceType
-	 * @return
+	 * @return a mock object that checks for the order of method invocations and
+	 *         uses the given comparator to compare method arguments
 	 */
 	public static Object createMock(Class interfaceType,
 			EqualityComparator equalityComparator) {

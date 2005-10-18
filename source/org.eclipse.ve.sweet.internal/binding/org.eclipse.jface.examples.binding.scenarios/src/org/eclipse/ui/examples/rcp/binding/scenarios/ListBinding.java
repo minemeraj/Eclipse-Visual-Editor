@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ListBinding.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-18 13:47:39 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
@@ -33,28 +33,38 @@ import org.eclipse.ui.examples.rcp.adventure.Lodging;
 public class ListBinding extends Composite {
 
 	private Label label = null;
+
 	private Label label1 = null;
+
 	private List list = null;
+
 	private Text txtDefaultLodging = null;
+
 	private DatabindingService dbs;
+
 	private ListViewer listViewer;
+
 	private Label label2 = null;
+
 	private Text txtName = null;
+
 	private Label validationMessage = null;
-	public ListBinding(Composite parent, int style) throws BindingException{
-		super(parent,style);
+
+	public ListBinding(Composite parent, int style) throws BindingException {
+		super(parent, style);
 		initialize();
 	}
-	
+
 	private void initialize() throws BindingException {
 		GridData gridData11 = new org.eclipse.swt.layout.GridData();
 		gridData11.horizontalSpan = 2;
 		gridData11.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		gridData11.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		validationMessage = new Label(this, SWT.NONE);
-		validationMessage.setForeground(getDisplay().getSystemColor(SWT.COLOR_RED));
+		validationMessage.setForeground(getDisplay().getSystemColor(
+				SWT.COLOR_RED));
 		validationMessage.setLayoutData(gridData11);
-		setLayout(new GridLayout(2,false));
+		setLayout(new GridLayout(2, false));
 		GridData gridData6 = new org.eclipse.swt.layout.GridData();
 		gridData6.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData6.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
@@ -64,7 +74,7 @@ public class ListBinding extends Composite {
 		gridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		label = new Label(this, SWT.NONE);
 		label.setText("Default Lodging");
-		this.setSize(new org.eclipse.swt.graphics.Point(336,134));
+		this.setSize(new org.eclipse.swt.graphics.Point(336, 134));
 		createCombo();
 		label1 = new Label(this, SWT.NONE);
 		label1.setText("Lodging Description:");
@@ -76,38 +86,45 @@ public class ListBinding extends Composite {
 		txtName.setLayoutData(gridData6);
 		bind();
 	}
-	private void bind() throws BindingException{
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);	
+
+	private void bind() throws BindingException {
+		dbs = SampleData.getSWTtoEMFDatabindingService(this);
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
-		
+
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
-		Catalog catalog = SampleData.CATALOG_2005;	
-		
-//		dbs.bindTable(
-//				dbs.createUpdatableTable(listViewer,"contents"),
-//				new EMFUpdatableTable(catalog,"lodgings",new String[] {"description"})
-//		);
-		dbs.bind(listViewer,"contents",catalog,"lodgings",new IdentityConverter(Lodging.class,Object.class));		
-		
-//		dbs.bindValue(
-//				listViewer,"selection",skiTrip,emfPackage.getAdventure_DefaultLodging(),
-//				new IdentityConverter(Object.class,Lodging.class));
-		
-//		IUpdatableValue defaultLodging = dbs.createUpdatableValue(
-//				skiTrip,emfPackage.getAdventure_DefaultLodging());
-		
-//		IUpdatableValue listViewerSelection = dbs.createUpdatableValue(listViewer,"selection");
-		
-//		dbs.bindValue(txtDefaultLodging, "text", listViewerSelection, "description");
-		
-//		dbs.bindValue(txtName, "text" , listViewerSelection , "name" );
-		
-//		dbs.bindValue(validationMessage, "text", dbs.getCombinedValidationMessage());
-		
+		Catalog catalog = SampleData.CATALOG_2005;
+
+		// dbs.bindTable(
+		// dbs.createUpdatableTable(listViewer,"contents"),
+		// new EMFUpdatableTable(catalog,"lodgings",new String[]
+		// {"description"})
+		// );
+		dbs.bind(listViewer, "contents", catalog, "lodgings",
+				new IdentityConverter(Lodging.class, Object.class));
+
+		// dbs.bindValue(
+		// listViewer,"selection",skiTrip,emfPackage.getAdventure_DefaultLodging(),
+		// new IdentityConverter(Object.class,Lodging.class));
+
+		// IUpdatableValue defaultLodging = dbs.createUpdatableValue(
+		// skiTrip,emfPackage.getAdventure_DefaultLodging());
+
+		// IUpdatableValue listViewerSelection =
+		// dbs.createUpdatableValue(listViewer,"selection");
+
+		// dbs.bindValue(txtDefaultLodging, "text", listViewerSelection,
+		// "description");
+
+		// dbs.bindValue(txtName, "text" , listViewerSelection , "name" );
+
+		// dbs.bindValue(validationMessage, "text",
+		// dbs.getCombinedValidationMessage());
+
 	}
+
 	/**
-	 * This method initializes combo	
-	 *
+	 * This method initializes combo
+	 * 
 	 */
 	private void createCombo() {
 		GridData gridData1 = new org.eclipse.swt.layout.GridData();
@@ -119,4 +136,4 @@ public class ListBinding extends Composite {
 		listViewer = new ListViewer(list);
 	}
 
-}  //  @jve:decl-index=0:visual-constraint="10,10"
+} // @jve:decl-index=0:visual-constraint="10,10"

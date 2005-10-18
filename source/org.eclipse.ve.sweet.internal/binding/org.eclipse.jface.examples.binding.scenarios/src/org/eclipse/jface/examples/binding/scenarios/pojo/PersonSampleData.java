@@ -10,21 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PersonSampleData.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-12 18:06:54 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.jface.examples.binding.scenarios.pojo;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.jface.binding.DatabindingService;
-import org.eclipse.jface.binding.IUpdatableTable;
-import org.eclipse.jface.binding.IUpdatableTableFactory;
-import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.IUpdatableValueFactory;
+import org.eclipse.jface.binding.IUpdatable;
+import org.eclipse.jface.binding.IUpdatableFactory;
 import org.eclipse.jface.binding.swt.SWTDatabindingService;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
 import org.eclipse.jface.examples.binding.javabean.JavaBeanUpdatableValue;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -33,31 +27,36 @@ import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
 import org.eclipse.ui.examples.rcp.adventure.Lodging;
- 
+
 public class PersonSampleData {
-	
+
 	public static Adventure WINTER_HOLIDAY;
+
 	public static Lodging FIVE_STAR_HOTEL;
+
 	public static Lodging YOUTH_HOSTEL;
-	public static Lodging CAMP_GROUND; 	
+
+	public static Lodging CAMP_GROUND;
+
 	public static Catalog CATALOG_2005;
 
-	static{
+	static {
 		initializeData();
 	}
-	
-	private static void initializeData(){
-	
-		AdventureFactory adventureFactory = AdventurePackage.eINSTANCE.getAdventureFactory();
-		
+
+	private static void initializeData() {
+
+		AdventureFactory adventureFactory = AdventurePackage.eINSTANCE
+				.getAdventureFactory();
+
 		CATALOG_2005 = adventureFactory.createCatalog();
-		
+
 		WINTER_HOLIDAY = adventureFactory.createAdventure();
 		WINTER_HOLIDAY.setDescription("Winter holiday in France");
 		WINTER_HOLIDAY.setName("Ski Alps");
 		WINTER_HOLIDAY.setLocation("Chamonix");
 		WINTER_HOLIDAY.setPrice(4000.52d);
-		
+
 		FIVE_STAR_HOTEL = adventureFactory.createLodging();
 		FIVE_STAR_HOTEL.setDescription("Deluxe palace");
 		FIVE_STAR_HOTEL.setName("Flashy");
@@ -67,41 +66,45 @@ public class PersonSampleData {
 		CAMP_GROUND = adventureFactory.createLodging();
 		CAMP_GROUND.setDescription("Camp ground");
 		CAMP_GROUND.setName("WetAndCold");
-		
+
 		CATALOG_2005.getLodgings().add(FIVE_STAR_HOTEL);
 		CATALOG_2005.getLodgings().add(YOUTH_HOSTEL);
 		CATALOG_2005.getLodgings().add(CAMP_GROUND);
-		
-		WINTER_HOLIDAY.setDefaultLodging(YOUTH_HOSTEL);
-		
-	}
-	
-	public static DatabindingService getSWTtoJavaBeanDatabindingService(Control aControl){
-		
-		DatabindingService dbs = new SWTDatabindingService(aControl, SWT.FocusOut, SWT.FocusOut);
 
-		IUpdatableValueFactory emfValueFactory = new IUpdatableValueFactory() {
-			public IUpdatableValue createUpdatableValue(Object object,Object attribute) {
-				return new JavaBeanUpdatableValue(object , (String) attribute); 
+		WINTER_HOLIDAY.setDefaultLodging(YOUTH_HOSTEL);
+
+	}
+
+	public static DatabindingService getSWTtoJavaBeanDatabindingService(
+			Control aControl) {
+
+		DatabindingService dbs = new SWTDatabindingService(aControl,
+				SWT.FocusOut, SWT.FocusOut);
+
+		IUpdatableFactory emfValueFactory = new IUpdatableFactory() {
+			public IUpdatable createUpdatable(Object object, Object attribute) {
+				return new JavaBeanUpdatableValue(object, (String) attribute);
 			}
 		};
-		dbs.addUpdatableValueFactory(EObjectImpl.class, emfValueFactory);
-		
-		IUpdatableTableFactory emfTableFactory = new IUpdatableTableFactory(){
-			public IUpdatableTable createUpdatableTable(Object object, Object attribute) {
-				if(attribute instanceof String){					
-					return new EMFUpdatableTable((EObject)object,(String)attribute,null);
-				} else {
-					EStructuralFeature attr = (EStructuralFeature) attribute;
-					return new EMFUpdatableTable((EObject)object,attr.getName(),null);					
-				}
-			}			
-		};
-		
-		dbs.addUpdatableTableFactory(EObjectImpl.class, emfTableFactory);
-				
+		dbs.addUpdatableFactory(EObjectImpl.class, emfValueFactory);
+
+		// IUpdatableFactory emfTableFactory = new IUpdatableFactory() {
+		// public IUpdatable createUpdatable(Object object, Object attribute) {
+		// if (attribute instanceof String) {
+		// return new EMFUpdatableTable((EObject) object,
+		// (String) attribute, null);
+		// } else {
+		// EStructuralFeature attr = (EStructuralFeature) attribute;
+		// return new EMFUpdatableTable((EObject) object, attr
+		// .getName(), null);
+		// }
+		// }
+		// };
+		//
+		// dbs.addUpdatableTableFactory(EObjectImpl.class, emfTableFactory);
+
 		return dbs;
-		
+
 	}
-	
+
 }

@@ -10,15 +10,21 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBindingWithValidation.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-17 23:06:29 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-18 17:38:36 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.*;
+import org.eclipse.jface.binding.BindingException;
+import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.IValidator;
+import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 
 public class TextBindingWithValidation extends Composite {
@@ -67,21 +73,24 @@ public class TextBindingWithValidation extends Composite {
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
 		IdentityConverter identity = new IdentityConverter(String.class);
-		dbs.bind(txtDescription, "text", skiTrip, "description", identity, new IValidator(){
-			public String isPartiallyValid(Object value) {
-				return isValid(value);
-			}
-			public String isValid(Object value) {
-				if (((String)value).length() > 20) {
-					return "Description cannot be longer than 20 characters.";
-				}
-				return null;
-			}});
+		dbs.bind(txtDescription, "text", skiTrip, "description", identity,
+				new IValidator() {
+					public String isPartiallyValid(Object value) {
+						return isValid(value);
+					}
+
+					public String isValid(Object value) {
+						if (((String) value).length() > 20) {
+							return "Description cannot be longer than 20 characters.";
+						}
+						return null;
+					}
+				});
 
 		dbs.bind(txtName, "text", skiTrip, "name");
 
 		dbs.bind(txtLocation, "text", skiTrip, "location");
-		
+
 		dbs.bind(validationMessage, "text", dbs.getCombinedValidationMessage());
 	}
 
@@ -119,7 +128,8 @@ public class TextBindingWithValidation extends Composite {
 		group.setLayout(gridLayout1);
 		group.setLayoutData(gridData2);
 		validationMessage = new Label(group, SWT.NONE);
-		validationMessage.setForeground(getDisplay().getSystemColor(SWT.COLOR_RED));
+		validationMessage.setForeground(getDisplay().getSystemColor(
+				SWT.COLOR_RED));
 		validationMessage.setLayoutData(gridData);
 		label2 = new Label(group, SWT.NONE);
 		label2.setText("Description:");
