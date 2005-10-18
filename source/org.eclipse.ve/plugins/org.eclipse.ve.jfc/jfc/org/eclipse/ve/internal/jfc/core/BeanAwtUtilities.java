@@ -11,13 +11,11 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: BeanAwtUtilities.java,v $ $Revision: 1.40 $ $Date: 2005-10-18 16:41:01 $
+ * $RCSfile: BeanAwtUtilities.java,v $ $Revision: 1.41 $ $Date: 2005-10-18 18:48:47 $
  */
 
 import java.util.List;
 import java.util.logging.Level;
-
-import javax.swing.Icon;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EClassifier;
@@ -1136,7 +1134,7 @@ public class BeanAwtUtilities {
 	}
 
 	/**
-	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#insertTabBefore(javax.swing.JTabbedPane, String, Icon, java.awt.Component, java.awt.Component) insertTab}
+	 * Get the {@link org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#insertTabBefore(javax.swing.JTabbedPane, String, javax.swing.Icon, java.awt.Component, java.awt.Component) insertTab}
 	 * proxy method.
 	 * 
 	 * @param expression
@@ -1295,7 +1293,7 @@ public class BeanAwtUtilities {
 	 * @param icon
 	 * @param expression
 	 * 
-	 * @see org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setIconAt(javax.swing.JTabbedPane, java.awt.Component, Icon)
+	 * @see org.eclipse.ve.internal.jfc.vm.JTabbedPaneManager#setIconAt(javax.swing.JTabbedPane, java.awt.Component, javax.swing.Icon)
 	 * @since 1.1.0
 	 */
 	public static void invoke_JTabbedPane_setIconAt(IProxy jtabbedpane, IProxy component, IProxy icon, IExpression expression) {
