@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainerProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-26 17:37:30 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-19 15:13:30 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -29,6 +29,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.IExpression;
 import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 import org.eclipse.jem.internal.proxy.initParser.tree.NoExpressionValueException;
+import org.eclipse.jem.internal.proxy.remote.REMConnection;
+import org.eclipse.jem.util.TimerTests;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.ModelChangeController;
@@ -92,6 +94,15 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	private List pendingReleases = new ArrayList();
 	
 	/*
+	 * List of pending initializations. They are queued up until the
+	 * end of the transaction and then handled all at once.
+	 * They are new member settings. We don't init immediately because
+	 * some other part of the current transaction may initialize them.
+	 * So we wait to the end and initialize any that are not yet initialized. 
+	 */
+	private List pendingInits = new ArrayList();
+	
+	/*
 	 * The runnable that is used at transaction end to release.
 	 */
 	private Runnable releaseRunnable = new Runnable() {
@@ -136,7 +147,55 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 			}
 		}
 	};
-	
+
+	/*
+	 * The runnable that is used at transaction end to initialize.
+	 */
+	private Runnable initRunnable = new Runnable() {
+		public void run() {
+			/**
+			 * Only those that are still contained within a member container
+			 * and not yet initialized will then be initialized. This will
+			 * allow other settings to do the actual initialize if needed.
+			 * These then are the straglers that no one else references directly.
+			 * It is assumed that the other initializations have already occurred 
+			 * and are not on a later pending.
+			 */
+			Object[] inits;
+			synchronized (pendingInits) {
+				if (pendingInits.isEmpty())
+					return;
+				inits = pendingInits.toArray();
+				pendingInits.clear();
+			}
+			IExpression expression = proxyDomain.getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
+			try {
+				for (int i = 0; i < inits.length; i++) {
+					try {
+						IJavaInstance o = (IJavaInstance) inits[i];
+						IBeanProxyHost host = BeanProxyUtilities.getBeanProxyHost(o);
+						if (host != null && !host.isBeanProxyInstantiated() && isMemberContainedForInitialization(o) )
+							initSetting(o, expression, false);
+					} catch (ClassCastException e) { 
+					}
+				}
+			} finally {
+				try {
+					if (expression.isValid())
+						expression.invokeExpression();
+					else
+						expression.close();
+				} catch (IllegalStateException e) {
+					JavaVEPlugin.log(e, Level.WARNING);
+				} catch (ThrowableProxy e) {
+					JavaVEPlugin.log(e, Level.WARNING);
+				} catch (NoExpressionValueException e) {
+					JavaVEPlugin.log(e, Level.WARNING);
+				}
+			}
+		}
+	};
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#notifyChanged(org.eclipse.emf.common.notify.Notification)
 	 */
@@ -151,14 +210,25 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 			case Notification.ADD:
 			case Notification.SET:
 				if (!CDEUtilities.isUnset(msg)) {
-					if (isMemberContainmentFeature(msg)) {
-						if (!msg.isTouch() && msg.getOldValue() != null) {
+					if (!msg.isTouch()) {
+						if (msg.getOldValue() != null && isMemberContainmentFeature(msg)) {
 							synchronized (pendingReleases) {
 								pendingReleases.add(msg.getOldValue());
 							}
 							controller.execAtEndOfTransaction(releaseRunnable, releaseRunnable);
 						}
-					} else if (isInnerMemberContainerFeature(msg)) {
+					}
+					if (msg.getNewValue() != null && isMemberContainmentFeatureForInitialization(msg)) {
+						Object newValue = msg.getNewValue();
+						if (newValue instanceof IJavaInstance) {
+							BeanProxyUtilities.getBeanProxyHost((IJavaInstance) newValue);	// Make sure it has a bean proxy host right away, even if not yet instantiated. Many of the editparts expect this.
+							synchronized (pendingInits) {
+								pendingInits.add(newValue);
+							}
+							controller.execAtEndOfTransaction(initRunnable, initRunnable);
+						}
+					}
+					if (isInnerMemberContainerFeature(msg)) {
 						if (!msg.isTouch())
 							removeMemberContainerAdapter((MemberContainer) msg.getOldValue());
 						addMemberContainerAdapter((MemberContainer) msg.getNewValue());	
@@ -184,6 +254,15 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 					Iterator itr = ((List) msg.getNewValue()).iterator();
 					while (itr.hasNext())
 						addMemberContainerAdapter((MemberContainer) itr.next());
+				} else if (isMemberContainmentFeature(msg)) {
+					if (msg.getNewValue() != null) {
+						Iterator itr = ((List) msg.getNewValue()).iterator();
+						synchronized (pendingInits) {
+							while (itr.hasNext()) 
+								pendingInits.add(itr.next());
+						}
+						controller.execAtEndOfTransaction(initRunnable, initRunnable);
+					}
 				}
 				break;
 				
@@ -208,7 +287,7 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	/**
 	 * Answer whether the value is still contained. This is used so that
 	 * if a value was promoted or moved to a different MemberContainer,
-	 * it is still considered contained and we won't release the setting.
+	 * it is still considered contained and we won't release.
 	 * 
 	 * @param value
 	 * @return
@@ -217,19 +296,43 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	 */
 	protected boolean isMemberContained(IJavaInstance value) {
 		EStructuralFeature containerFeature = value.eContainingFeature();
-		return containerFeature == JCMPackage.eINSTANCE.getMemberContainer_Members() || containerFeature == JCMPackage.eINSTANCE.getMemberContainer_Properties();
+		return containerFeature == JCMPackage.eINSTANCE.getMemberContainer_Members() || containerFeature == JCMPackage.eINSTANCE.getMemberContainer_Properties() || containerFeature == JCMPackage.eINSTANCE.getMemberContainer_Implicits();
 	}
 	
 	/**
-	 * Answers whether the feature of the msg is a Member or Properties feature.
+	 * Answer whether it is contained as a member that needs initialization.
+	 * @param value
+	 * @return
+	 * 
+	 * @since 1.2.0
+	 */
+	protected boolean isMemberContainedForInitialization(IJavaInstance value) {
+		return value.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Members();
+	}
+	
+	/**
+	 * Answers whether the feature of the msg is a that is valid for release.
 	 * @param msg
-	 * @return <code>true</code> if either Members or Properties feature.
+	 * @return <code>true</code> if it is a feature that is member valid for release.
 	 * 
 	 * @since 1.1.0
 	 */
 	protected boolean isMemberContainmentFeature(Notification msg) {
-		return msg.getFeatureID(MemberContainer.class) == JCMPackage.MEMBER_CONTAINER__MEMBERS || msg.getFeatureID(MemberContainer.class) == JCMPackage.MEMBER_CONTAINER__PROPERTIES;
+		int featureID = msg.getFeatureID(MemberContainer.class);
+		return featureID == JCMPackage.MEMBER_CONTAINER__MEMBERS || featureID == JCMPackage.MEMBER_CONTAINER__PROPERTIES || featureID == JCMPackage.MEMBER_CONTAINER__IMPLICITS;
 	}
+	
+	/**
+	 * Answers whether the feature of the msg is a member that is valid for initialization.
+	 * @param msg
+	 * @return <code>true</code> if it is a member valid for initialization.
+	 * 
+	 * @since 1.1.0
+	 */
+	protected boolean isMemberContainmentFeatureForInitialization(Notification msg) {
+		return msg.getFeatureID(MemberContainer.class) == JCMPackage.MEMBER_CONTAINER__MEMBERS;
+	}
+
 
 	/**
 	 * Release the given setting.
@@ -301,6 +404,10 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	 */
 	protected void releaseBeanProxy(IExpression expression, boolean remove) {
 		Iterator settings = ((MemberContainer) target).getMembers().iterator(); // Get only the attrs and composite refs.
+		while (settings.hasNext()) {
+			releaseSetting(settings.next(), expression, remove);
+		}
+		settings = ((MemberContainer) target).getImplicits().iterator(); // Get only the attrs and composite refs.
 		while (settings.hasNext()) {
 			releaseSetting(settings.next(), expression, remove);
 		}
@@ -412,4 +519,158 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 	 * @since 1.1.0
 	 */
 	protected abstract void adaptAllMemberContainerAdapters();
+
+
+	/**
+	 * Initialize the setting.
+	 * 
+	 * @param setting
+	 * @param expression
+	 * @param testValidity
+	 *            <code>true</code> if test for instantiation error on bean first, and if error, don't instantiate it. This is needed because if
+	 *            there was an expression creation error (e.g. IllegalStateException) we want to go back and reinstantiate all of the beans that are
+	 *            not yet instantiated AND don't have an error. This flag will be <code>false</code> the first time, which means always instantiate
+	 *            the bean.
+	 * 
+	 * @since 1.1.0
+	 */
+	protected void initSetting(Object setting, IExpression expression, boolean testValidity) {
+		if (setting instanceof IJavaInstance && expression.isValid()) {
+			IBeanProxyHost settingBean = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) setting);
+			// We have proxy host,and we have a valid proxy domain.
+			if (settingBean != null && settingBean.getBeanProxyDomain().getProxyFactoryRegistry().isValid()) {
+				IInternalBeanProxyHost ib = (IInternalBeanProxyHost) settingBean;
+				if (!ib.isBeanProxyInstantiated() && !ib.inInstantiation() && (!testValidity || !ib.hasInstantiationErrors())) {
+					if (ib.isBeanProxyInstantiated())
+						ib.releaseBeanProxy(expression);	// In case not already released. We will always reinstantiate. For most components you don't need to, but some require it, so we will do by default.
+					expression.createTry();
+					ib.instantiateBeanProxy(expression);
+					expression.createTryCatchClause(IInternalBeanProxyHost.BEAN_INSTANTIATION_EXCEPTION, false);
+					expression.createTryEnd();
+				} 
+			}
+		}
+	}
+	
+	/**
+	 * Initialize all of the bean proxies. This is used to start up the member container.
+	 * 
+	 * 
+	 * @since 1.1.0
+	 */
+	public void initBeanProxy() {
+		boolean testValidity = false; // The first time through we don't test the validity. We try to instantiate them all.
+		while (true) {
+			IExpression expression = proxyDomain.getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
+			try {
+				if (!subInitBeanProxy(expression, testValidity)) {
+					testValidity = true;
+					continue;	// Try again, but this time test validity.
+				}
+				// Now go through our still un-initialized members, and initialize those not yet initialized.
+				if (!memberInitBeanProxy(expression, testValidity)) {
+					testValidity = true;
+					continue;
+				}
+				break; // We got through it all.
+			} finally {
+				try {
+					TimerTests.basicTest.startStep("eval"); //$NON-NLS-1$
+					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
+					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
+					if (expression.isValid())
+						expression.invokeExpression();
+					else
+						expression.close();
+					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
+					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_STEP);					
+					TimerTests.basicTest.stopStep("eval");								 //$NON-NLS-1$
+				} catch (IllegalStateException e) {
+					JavaVEPlugin.log(e, Level.WARNING);
+					testValidity = true; // We will try again, but this time don't instantiate those that had an error.
+				} catch (ThrowableProxy e) {
+					JavaVEPlugin.log(e, Level.WARNING);
+					break; // This shouldn't of occured, we already should of processed it, don't try again.
+				} catch (NoExpressionValueException e) {
+					JavaVEPlugin.log(e, Level.WARNING);
+					// This shouldn't occur. The code should never produce this, but if it does, we don't know where, so the entire composition is
+					// bad.
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Called by (@link #initBeanProxy()} when it is time to initialize any non-initialized member of the container. It can also be
+	 * called recursively on a contained MemberContainer.
+	 * @param expression
+	 * @param testValidity
+	 * @return <code>true</code> to continue processing, or <code>false</code> to indicate had an error, try the loop again, this time test validity.
+	 * 
+	 * @since 1.2.0
+	 */
+	protected boolean memberInitBeanProxy(IExpression expression, boolean testValidity) {
+		// Only init members. Properties and implicits are handled by their owners.
+		Iterator settings = ((MemberContainer) target).getMembers().iterator(); 
+		int i = 0;
+		while (settings.hasNext()) {
+			String step = "init#" + i++; //$NON-NLS-1$
+			TimerTests.basicTest.startStep(step);
+			TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
+			TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
+			initSetting(settings.next(), expression, testValidity);
+			TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
+			TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_STEP);
+			TimerTests.basicTest.stopStep(step);
+			if (!expression.isValid()) {
+				return false; // We will try again, but this time don't instantiate those that had an error.
+			}
+		}
+		
+		// Now signal release to all of the inner ones too.
+		List innerFeatures = getInnerMemberContainerFeatures();
+		if (!innerFeatures.isEmpty()) {
+			EObject t = (EObject) getTarget();
+			for (Iterator itr = innerFeatures.iterator(); itr.hasNext();) {
+				EStructuralFeature	feature = (EStructuralFeature) itr.next();
+				if (t.eIsSet(feature)) {
+					if (feature.isMany()) {
+						for (Iterator setItr = ((List) t.eGet(feature)).iterator(); setItr.hasNext();) {
+							MemberContainer mc = (MemberContainer) setItr.next();
+							MemberContainerProxyAdapter mcpa = (MemberContainerProxyAdapter) EcoreUtil.getExistingAdapter(mc, MEMBER_CONTAINER_ADAPTER_TYPE);
+							if (mcpa != null) {
+								if (!mcpa.memberInitBeanProxy(expression, testValidity)) {
+									return false;
+								}
+							}
+						}
+					} else {
+						MemberContainer mc = (MemberContainer) t.eGet(feature);
+						MemberContainerProxyAdapter mcpa = (MemberContainerProxyAdapter) EcoreUtil.getExistingAdapter(mc, MEMBER_CONTAINER_ADAPTER_TYPE);
+						if (mcpa != null) {
+							if (!mcpa.memberInitBeanProxy(expression, testValidity)) {
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}	
+	
+	/**
+	 * Called by {@link #initBeanProxy()} before doing the default member container initialization. It allows subclasses to do
+	 * any initialization they want, and then the member container will then handle initializing any member (non-property) that is
+	 * left over and has not initialized or started initialization.
+	 * @param expression
+	 * @param testValidity
+	 * @return <code>true</code> to continue processing, or <code>false</code> to indicate had an error, try the loop again, this time test validity.
+	 * @since 1.2.0
+	 */
+	protected boolean subInitBeanProxy(IExpression expression, boolean testValidity) {
+		return true;
+	}
 }
+ 
