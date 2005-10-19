@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractMethodTextGenerator.java,v $
- *  $Revision: 1.22 $  $Date: 2005-09-14 23:30:25 $ 
+ *  $Revision: 1.23 $  $Date: 2005-10-19 22:15:17 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -259,6 +259,8 @@ public abstract class AbstractMethodTextGenerator implements IMethodTextGenerato
 							// Check if source was generated already
 							if (a.getSettingAdapters(feature) != null && a.getSettingAdapters(feature).length > 0)
 								return null;
+							if(feature.equals(ConstructorDecoderHelper.getRequiredImplicitFeature((IJavaObjectInstance)fComponent)))
+								return null; // no need to generate expression for implicit feature
 							generateAttribute(feature, bp);
 							return null;
 						} catch (CodeGenException e) {

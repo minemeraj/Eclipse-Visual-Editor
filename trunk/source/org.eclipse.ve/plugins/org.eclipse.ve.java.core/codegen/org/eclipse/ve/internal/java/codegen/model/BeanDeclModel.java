@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.29 $  $Date: 2005-09-27 15:12:09 $ 
+ *  $Revision: 1.30 $  $Date: 2005-10-19 22:14:52 $ 
  */
 
 import java.util.*;
@@ -831,5 +831,12 @@ public void updateBeanNameChange(BeanPart bp) {
 
 	public void setScannerFactory(IScannerFactory scannerFactory) {
 		this.fScannerFactory = scannerFactory;
+	}
+
+	public void createLazyBeans() {
+		Object[] lazyBeans = flazyCreateList.toArray();
+		for (int bc = 0; bc < lazyBeans.length; bc++) {
+			lazyCreateBeanInstance((EObject) lazyBeans[bc]);
+		}
 	}
 }

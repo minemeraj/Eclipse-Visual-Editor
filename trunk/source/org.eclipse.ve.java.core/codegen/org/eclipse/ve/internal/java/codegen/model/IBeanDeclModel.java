@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanDeclModel.java,v $
- *  $Revision: 1.19 $  $Date: 2005-09-27 15:12:09 $ 
+ *  $Revision: 1.20 $  $Date: 2005-10-19 22:14:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -143,6 +143,16 @@ public interface IBeanDeclModel {
 	public BeanPart[] getUnreferencedBeanParts();
 	public IScannerFactory getScannerFactory();
 	public void setScannerFactory(IScannerFactory scannerFactory);
+	
+	/**
+	 * Creates any beans which have been marked to be lazily created, but 
+	 * in reality havent been created yet. Examples would be beans which 
+	 * have no properties/features set on it, but are needed. This method
+	 * should be called at the end of a transaction.
+	 * 
+	 * @since 1.2.0
+	 */
+	public void createLazyBeans();
 }
       
 	
