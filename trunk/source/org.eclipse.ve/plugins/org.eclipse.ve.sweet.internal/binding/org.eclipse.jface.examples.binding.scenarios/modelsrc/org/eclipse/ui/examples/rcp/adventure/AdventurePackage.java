@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: AdventurePackage.java,v 1.1 2005-10-19 18:35:44 sgunturi Exp $
+ * $Id: AdventurePackage.java,v 1.2 2005-10-19 21:47:59 sgunturi Exp $
  */
 package org.eclipse.ui.examples.rcp.adventure;
 
@@ -27,7 +27,7 @@ import org.eclipse.emf.ecore.EReference;
  * @model kind="package"
  * @generated
  */
-public interface AdventurePackage extends EPackage {
+public interface AdventurePackage extends EPackage{
 	/**
 	 * The package name.
 	 * <!-- begin-user-doc -->
@@ -289,13 +289,22 @@ public interface AdventurePackage extends EPackage {
 	int ADVENTURE__DEFAULT_LODGING = 7;
 
 	/**
+	 * The feature id for the '<em><b>Pets Allowed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADVENTURE__PETS_ALLOWED = 8;
+
+	/**
 	 * The number of structural features of the the '<em>Adventure</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADVENTURE_FEATURE_COUNT = 8;
+	int ADVENTURE_FEATURE_COUNT = 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.ui.examples.rcp.adventure.impl.ActivityImpl <em>Activity</em>}' class.
@@ -1287,6 +1296,17 @@ public interface AdventurePackage extends EPackage {
 	 * @generated
 	 */
 	EReference getAdventure_DefaultLodging();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.ui.examples.rcp.adventure.Adventure#isPetsAllowed <em>Pets Allowed</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Pets Allowed</em>'.
+	 * @see org.eclipse.ui.examples.rcp.adventure.Adventure#isPetsAllowed()
+	 * @see #getAdventure()
+	 * @generated
+	 */
+	EAttribute getAdventure_PetsAllowed();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.ui.examples.rcp.adventure.Activity <em>Activity</em>}'.

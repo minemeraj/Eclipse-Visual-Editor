@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Adventure.java,v 1.1 2005-10-19 18:35:44 sgunturi Exp $
+ * $Id: Adventure.java,v 1.2 2005-10-19 21:47:59 sgunturi Exp $
  */
 package org.eclipse.ui.examples.rcp.adventure;
 
@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.ui.examples.rcp.adventure.Adventure#getDefaultActivities <em>Default Activities</em>}</li>
  *   <li>{@link org.eclipse.ui.examples.rcp.adventure.Adventure#getCategory <em>Category</em>}</li>
  *   <li>{@link org.eclipse.ui.examples.rcp.adventure.Adventure#getDefaultLodging <em>Default Lodging</em>}</li>
+ *   <li>{@link org.eclipse.ui.examples.rcp.adventure.Adventure#isPetsAllowed <em>Pets Allowed</em>}</li>
  * </ul>
  * </p>
  *
@@ -33,7 +34,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Adventure extends EObject {
+public interface Adventure extends EObject{
 	/**
 	 * Returns the value of the '<em><b>Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -233,5 +234,31 @@ public interface Adventure extends EObject {
 	 * @generated
 	 */
 	void setDefaultLodging(Lodging value);
+
+	/**
+	 * Returns the value of the '<em><b>Pets Allowed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Pets Allowed</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Pets Allowed</em>' attribute.
+	 * @see #setPetsAllowed(boolean)
+	 * @see org.eclipse.ui.examples.rcp.adventure.AdventurePackage#getAdventure_PetsAllowed()
+	 * @model
+	 * @generated
+	 */
+	boolean isPetsAllowed();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.ui.examples.rcp.adventure.Adventure#isPetsAllowed <em>Pets Allowed</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Pets Allowed</em>' attribute.
+	 * @see #isPetsAllowed()
+	 * @generated
+	 */
+	void setPetsAllowed(boolean value);
 
 } // Adventure

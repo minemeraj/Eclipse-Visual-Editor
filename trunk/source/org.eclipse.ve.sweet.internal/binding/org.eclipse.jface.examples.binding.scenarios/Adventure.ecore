@@ -52,6 +52,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="category" eType="#//Category"
         eOpposite="#//Category/adventures"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="defaultLodging" eType="#//Lodging"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="petsAllowed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Lodging">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"

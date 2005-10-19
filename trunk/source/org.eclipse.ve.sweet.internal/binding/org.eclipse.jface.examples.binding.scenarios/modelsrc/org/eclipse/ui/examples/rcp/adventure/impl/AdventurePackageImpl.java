@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: AdventurePackageImpl.java,v 1.1 2005-10-19 18:35:44 sgunturi Exp $
+ * $Id: AdventurePackageImpl.java,v 1.2 2005-10-19 21:47:59 sgunturi Exp $
  */
 package org.eclipse.ui.examples.rcp.adventure.impl;
 
@@ -411,6 +411,15 @@ public class AdventurePackageImpl extends EPackageImpl implements AdventurePacka
 	 */
 	public EReference getAdventure_DefaultLodging() {
 		return (EReference)adventureEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getAdventure_PetsAllowed() {
+		return (EAttribute)adventureEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -1105,6 +1114,7 @@ public class AdventurePackageImpl extends EPackageImpl implements AdventurePacka
 		createEReference(adventureEClass, ADVENTURE__DEFAULT_ACTIVITIES);
 		createEReference(adventureEClass, ADVENTURE__CATEGORY);
 		createEReference(adventureEClass, ADVENTURE__DEFAULT_LODGING);
+		createEAttribute(adventureEClass, ADVENTURE__PETS_ALLOWED);
 
 		activityEClass = createEClass(ACTIVITY);
 		createEAttribute(activityEClass, ACTIVITY__ID);
@@ -1254,6 +1264,7 @@ public class AdventurePackageImpl extends EPackageImpl implements AdventurePacka
 		initEReference(getAdventure_DefaultActivities(), this.getActivity(), null, "defaultActivities", null, 0, -1, Adventure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAdventure_Category(), this.getCategory(), this.getCategory_Adventures(), "category", null, 0, 1, Adventure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAdventure_DefaultLodging(), this.getLodging(), null, "defaultLodging", null, 0, 1, Adventure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAdventure_PetsAllowed(), ecorePackage.getEBoolean(), "petsAllowed", null, 0, 1, Adventure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(activityEClass, Activity.class, "Activity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getActivity_Id(), ecorePackage.getEString(), "id", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
