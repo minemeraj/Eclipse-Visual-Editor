@@ -8,10 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*
- *  $RCSfile: SampleData.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-18 17:38:36 $ 
- */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.emf.ecore.EObject;

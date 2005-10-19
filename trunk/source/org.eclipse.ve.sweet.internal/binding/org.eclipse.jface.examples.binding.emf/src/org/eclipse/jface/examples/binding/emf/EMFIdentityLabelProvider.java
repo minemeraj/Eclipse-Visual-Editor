@@ -8,13 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*
- *  Created Oct 12, 2005 by Gili Mendel
- * 
- *  $RCSfile: EMFIdentityLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-18 17:38:37 $ 
- */
-
 package org.eclipse.jface.examples.binding.emf;
 
 import org.eclipse.emf.ecore.EObject;
