@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.90 $  $Date: 2005-09-27 15:12:09 $ 
+ *  $Revision: 1.91 $  $Date: 2005-10-19 22:14:52 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -1188,6 +1188,7 @@ public void commit() {
 	
 	// First commit	
 	if (fBeanModel != null && !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) {
+		fBeanModel.createLazyBeans();
 		fBeanModel.deleteDesignatedBeans() ;
 		fBeanModel.docChanged();
 	}
