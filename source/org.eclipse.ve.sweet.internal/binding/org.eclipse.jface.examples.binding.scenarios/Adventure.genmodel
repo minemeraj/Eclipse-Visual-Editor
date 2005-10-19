@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.ui.examples.rcp.adventurebuilder.model/src"
-    modelPluginID="org.eclipse.ui.examples.rcp.adventurebuilder.model" modelName="Adventure"
-    modelPluginClass="" richClientPlatform="true" importerID="org.eclipse.emf.importer.ecore">
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.jface.examples.binding.scenarios/modelsrc"
+    creationCommands="false" creationIcons="false" editDirectory="" editorDirectory=""
+    modelPluginID="org.eclipse.jface.examples.binding.scenarios" modelName="Adventure"
+    modelPluginClass="" editPluginClass="" editorPluginClass="" testsDirectory=""
+    testSuiteClass="" importerID="org.eclipse.emf.importer.ecore">
   <foreignModel>Adventure.ecore</foreignModel>
   <genPackages prefix="Adventure" basePackage="org.eclipse.ui.examples.rcp" disposableProviderFactory="true"
       ecorePackage="Adventure.ecore#/">
@@ -116,6 +118,16 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//GlobalSettings/cacheCatalog"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//GlobalSettings/serverAddressModifiable"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//GlobalSettings/clearCache"/>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//Order">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Order/cart"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//Order/account"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Adventure.ecore#//Order/orderId"/>
+    </genClasses>
+    <genClasses ecoreClass="Adventure.ecore#//AppModel">
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//AppModel/globalSettings"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//AppModel/catalog"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference Adventure.ecore#//AppModel/orders"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
