@@ -12,16 +12,19 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.19 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.20 $  $Date: 2005-10-19 15:13:30 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IExpression;
 import org.eclipse.jem.internal.proxy.core.ThrowableProxy;
 import org.eclipse.jem.internal.proxy.initParser.tree.NoExpressionValueException;
@@ -260,74 +263,59 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 		}
 	}
 	
-	/**
-	 * Initialize all of the bean proxies. This is used to start up the composition.
-	 * 
-	 * 
-	 * @since 1.1.0
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.MemberContainerProxyAdapter#preInitSetting(org.eclipse.ve.internal.java.core.IInternalBeanProxyHost, org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
-	public void initBeanProxy() {		
-		boolean testValidity = false; // The first time through we don't test the validity. We try to instantiate them all.
-		outer: while (true) {
-			IExpression expression = proxyDomain.getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
-			try {
-				if (getTarget() instanceof BeanSubclassComposition) {
-					TimerTests.basicTest.startStep("Init this"); //$NON-NLS-1$
-					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
-					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
-					initSetting(((BeanSubclassComposition) getTarget()).getThisPart(), expression, testValidity);
-					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
-					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_STEP);
-					TimerTests.basicTest.stopStep("Init this"); //$NON-NLS-1$
-					if (!expression.isValid()) {
-						testValidity = true; // We will try again, but this time don't instantiate those that had an error.
-						continue outer;
-					}
-				}
-
-				// Next run the components.
-				List components = ((BeanComposition) getTarget()).getComponents();
-				for (int i = 0; i < components.size(); i++) {
-					String step = "init#" + i; //$NON-NLS-1$
-					TimerTests.basicTest.startStep(step);
-					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
-					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
-					initSetting(components.get(i), expression, testValidity);
-					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
-					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_STEP);
-					TimerTests.basicTest.stopStep(step);
-					if (!expression.isValid()) {
-						testValidity = true; // We will try again, but this time don't instantiate those that had an error.
-						continue outer;
-					}
-				}
-				break; // We got through it all.
-			} finally {
-				try {
-					TimerTests.basicTest.startStep("eval"); //$NON-NLS-1$
-					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
-					TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
-					if (expression.isValid())
-						expression.invokeExpression();
-					else
-						expression.close();
-					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
-					TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_STEP);					
-					TimerTests.basicTest.stopStep("eval");								 //$NON-NLS-1$
-				} catch (IllegalStateException e) {
-					JavaVEPlugin.log(e, Level.WARNING);
-					testValidity = true; // We will try again, but this time don't instantiate those that had an error.
-				} catch (ThrowableProxy e) {
-					JavaVEPlugin.log(e, Level.WARNING);
-					break; // This shouldn't of occured, we already should of processed it, don't try again.
-				} catch (NoExpressionValueException e) {
-					JavaVEPlugin.log(e, Level.WARNING);
-					// This shouldn't occur. The code should never produce this, but if it does, we don't know where, so the entire composition is
-					// bad.
-					break;
-				}
+	protected void preInitSetting(IInternalBeanProxyHost ib, IExpression expression) {
+		EStructuralFeature containingFeature = ((EObject) ib.getTarget()).eContainingFeature();
+		if (containingFeature == JCMPackage.eINSTANCE.getBeanComposition_Components() || containingFeature == JCMPackage.eINSTANCE.getBeanSubclassComposition_ThisPart())
+			ib.addToFreeForm(this);	// It's on freeform.
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.MemberContainerProxyAdapter#subInitBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression, boolean)
+	 */
+	protected boolean subInitBeanProxy(IExpression expression, boolean testValidity) {
+		if (getTarget() instanceof BeanSubclassComposition) {
+			TimerTests.basicTest.startStep("Init this"); //$NON-NLS-1$
+			TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
+			TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
+			IJavaObjectInstance thisPart = ((BeanSubclassComposition) getTarget()).getThisPart();
+			if (thisPart != null) {
+				IInternalBeanProxyHost ib = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(thisPart);
+				ib.addToFreeForm(this);
+				initSetting(thisPart, expression, testValidity);
+			}
+			TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
+			TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_STEP);
+			TimerTests.basicTest.stopStep("Init this"); //$NON-NLS-1$
+			if (!expression.isValid()) {
+				return false; // We will try again, but this time don't instantiate those that had an error.
 			}
 		}
+
+		// Next run the components.
+		List components = ((BeanComposition) getTarget()).getComponents();
+		for (int i = 0; i < components.size(); i++) {
+			String step = "init#" + i; //$NON-NLS-1$
+			TimerTests.basicTest.startStep(step);
+			TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
+			TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
+			Object component = components.get(i);
+			if (component instanceof IJavaInstance) {
+				IInternalBeanProxyHost ib = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) component);
+				ib.addToFreeForm(this);
+				initSetting(component, expression, testValidity);
+			}
+			TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
+			TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_STEP);
+			TimerTests.basicTest.stopStep(step);
+			if (!expression.isValid()) {
+				return false; // We will try again, but this time don't instantiate those that had an error.
+			}
+		}
+		return true; // We got through it all.
 	}
 
 	protected void releaseBeanProxy(IExpression expression, boolean remove) {
@@ -347,39 +335,6 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 		}
 	}
 
-	/**
-	 * Initialize the setting.
-	 * 
-	 * @param setting
-	 * @param expression
-	 * @param testValidity
-	 *            <code>true</code> if test for instantiation error on bean first, and if error, don't instantiate it. This is needed because if
-	 *            there was an expression creation error (e.g. IllegalStateException) we want to go back and reinstantiate all of the beans that are
-	 *            not yet instantiated AND don't have an error. This flag will be <code>false</code> the first time, which means always instantiate
-	 *            the bean.
-	 * 
-	 * @since 1.1.0
-	 */
-	protected void initSetting(Object setting, IExpression expression, boolean testValidity) {
-		if (setting instanceof IJavaInstance && expression.isValid()) {
-			IBeanProxyHost settingBean = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) setting);
-			// We have proxy host,and we have a valid proxy domain.
-			if (settingBean != null && settingBean.getBeanProxyDomain().getProxyFactoryRegistry().isValid()) {
-				IInternalBeanProxyHost ib = (IInternalBeanProxyHost) settingBean;
-				if (!testValidity || !ib.hasInstantiationErrors()) {
-					if (ib.isBeanProxyInstantiated())
-						ib.releaseBeanProxy(expression);	// In case not already released. We will always reinstantiate. For most components you don't need to, but some require it, so we will do by default.
-					ib.addToFreeForm(this);
-					expression.createTry();
-					ib.instantiateBeanProxy(expression);
-					expression.createTryCatchClause(IInternalBeanProxyHost.BEAN_INSTANTIATION_EXCEPTION, false);
-					expression.createTryEnd();
-				} 
-			}
-		}
-	}
-	
-	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.core.MemberContainerProxyAdapter#releaseSetting(java.lang.Object, org.eclipse.jem.internal.proxy.core.IExpression)
 	 */
