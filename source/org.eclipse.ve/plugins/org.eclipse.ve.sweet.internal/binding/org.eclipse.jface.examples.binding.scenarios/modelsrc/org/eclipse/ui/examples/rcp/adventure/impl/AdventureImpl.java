@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: AdventureImpl.java,v 1.1 2005-10-19 18:35:45 sgunturi Exp $
+ * $Id: AdventureImpl.java,v 1.2 2005-10-19 21:47:59 sgunturi Exp $
  */
 package org.eclipse.ui.examples.rcp.adventure.impl;
 
@@ -44,6 +44,7 @@ import org.eclipse.ui.examples.rcp.adventure.Lodging;
  *   <li>{@link org.eclipse.ui.examples.rcp.adventure.impl.AdventureImpl#getDefaultActivities <em>Default Activities</em>}</li>
  *   <li>{@link org.eclipse.ui.examples.rcp.adventure.impl.AdventureImpl#getCategory <em>Category</em>}</li>
  *   <li>{@link org.eclipse.ui.examples.rcp.adventure.impl.AdventureImpl#getDefaultLodging <em>Default Lodging</em>}</li>
+ *   <li>{@link org.eclipse.ui.examples.rcp.adventure.impl.AdventureImpl#isPetsAllowed <em>Pets Allowed</em>}</li>
  * </ul>
  * </p>
  *
@@ -169,6 +170,26 @@ public class AdventureImpl extends EObjectImpl implements Adventure {
 	 * @ordered
 	 */
 	protected Lodging defaultLodging = null;
+
+	/**
+	 * The default value of the '{@link #isPetsAllowed() <em>Pets Allowed</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isPetsAllowed()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean PETS_ALLOWED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isPetsAllowed() <em>Pets Allowed</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isPetsAllowed()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean petsAllowed = PETS_ALLOWED_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -379,6 +400,27 @@ public class AdventureImpl extends EObjectImpl implements Adventure {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isPetsAllowed() {
+		return petsAllowed;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPetsAllowed(boolean newPetsAllowed) {
+		boolean oldPetsAllowed = petsAllowed;
+		petsAllowed = newPetsAllowed;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AdventurePackage.ADVENTURE__PETS_ALLOWED, oldPetsAllowed, petsAllowed));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
 		if (featureID >= 0) {
 			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
@@ -453,6 +495,8 @@ public class AdventureImpl extends EObjectImpl implements Adventure {
 			case AdventurePackage.ADVENTURE__DEFAULT_LODGING:
 				if (resolve) return getDefaultLodging();
 				return basicGetDefaultLodging();
+			case AdventurePackage.ADVENTURE__PETS_ALLOWED:
+				return isPetsAllowed() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -489,6 +533,9 @@ public class AdventureImpl extends EObjectImpl implements Adventure {
 			case AdventurePackage.ADVENTURE__DEFAULT_LODGING:
 				setDefaultLodging((Lodging)newValue);
 				return;
+			case AdventurePackage.ADVENTURE__PETS_ALLOWED:
+				setPetsAllowed(((Boolean)newValue).booleanValue());
+				return;
 		}
 		eDynamicSet(eFeature, newValue);
 	}
@@ -524,6 +571,9 @@ public class AdventureImpl extends EObjectImpl implements Adventure {
 			case AdventurePackage.ADVENTURE__DEFAULT_LODGING:
 				setDefaultLodging((Lodging)null);
 				return;
+			case AdventurePackage.ADVENTURE__PETS_ALLOWED:
+				setPetsAllowed(PETS_ALLOWED_EDEFAULT);
+				return;
 		}
 		eDynamicUnset(eFeature);
 	}
@@ -551,6 +601,8 @@ public class AdventureImpl extends EObjectImpl implements Adventure {
 				return getCategory() != null;
 			case AdventurePackage.ADVENTURE__DEFAULT_LODGING:
 				return defaultLodging != null;
+			case AdventurePackage.ADVENTURE__PETS_ALLOWED:
+				return petsAllowed != PETS_ALLOWED_EDEFAULT;
 		}
 		return eDynamicIsSet(eFeature);
 	}
@@ -574,6 +626,8 @@ public class AdventureImpl extends EObjectImpl implements Adventure {
 		result.append(location);
 		result.append(", price: ");
 		result.append(price);
+		result.append(", petsAllowed: ");
+		result.append(petsAllowed);
 		result.append(')');
 		return result.toString();
 	}

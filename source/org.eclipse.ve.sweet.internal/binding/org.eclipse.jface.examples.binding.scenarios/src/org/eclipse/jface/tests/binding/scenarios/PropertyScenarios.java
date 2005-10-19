@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.Converter;
 import org.eclipse.jface.binding.IConverter;
@@ -17,6 +21,7 @@ import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.jface.binding.IValidator;
 import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
@@ -101,9 +106,10 @@ public class PropertyScenarios extends ScenariosTestCase {
 				.getText());
 		// TODO API extension needed: getChangeable() and setChangeable() on
 		// IUpdatableValue or IUpdatable
-//		assertEquals(
-//				"Needs API extension: getChangeable() and setChangeable() on IUpdatableValue or IUpdatable.",
-//				false, text.getEditable());
+		// assertEquals(
+		// "Needs API extension: getChangeable() and setChangeable() on
+		// IUpdatableValue or IUpdatable.",
+		// false, text.getEditable());
 	}
 
 	public void testScenario04() throws BindingException {
@@ -235,6 +241,9 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// is a double and Text accepts String so conversion will have to occur.
 		// Validation ensure that the value is positive
 		Text text = new Text(getComposite(), SWT.BORDER);
+		adventure.setPrice(5.0);
+		final String cannotBeNegativeMessage = "Price cannot be negative.";
+		final String mustBeCurrencyMessage = "Price must be a currency.";
 		getDbs().bind(text, "text", adventure, "price",
 				new Converter(String.class, double.class) {
 
@@ -253,17 +262,113 @@ public class PropertyScenarios extends ScenariosTestCase {
 					public String isValid(Object value) {
 						String stringValue = (String) value;
 						try {
-							double doubleValue = Double
-									.parseDouble(stringValue);
+							double doubleValue = new Double(
+									stringValue).doubleValue();
 							if (doubleValue < 0.0) {
-								return "Price cannot be negative.";
+								return cannotBeNegativeMessage;
 							} else {
 								return null;
 							}
 						} catch (NumberFormatException ex) {
-							return "Price must be a number.";
+							return mustBeCurrencyMessage;
 						}
 					}
 				});
+		assertEquals("5.0", text.getText());
+		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		text.setText("0.65");
+		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals(0.65, adventure.getPrice(), 0.0001);
+		adventure.setPrice(42.24);
+		assertEquals("42.24", text.getText());
+		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		text.setText("jygt");
+		assertEquals(mustBeCurrencyMessage, getDbs()
+				.getCombinedValidationMessage().getValue());
+		text.setText("-23.9");
+		assertEquals(cannotBeNegativeMessage, getDbs()
+				.getCombinedValidationMessage().getValue());
+		assertEquals(42.24, adventure.getPrice(), 0.0001);
+		adventure.setPrice(0.0);
+		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+	}
+
+	public void testScenario08() throws BindingException {
+		// Binding the price property of an Adventure to a Text control but with
+		// custom conversion – the double will be validated to only have two
+		// decimal places and displayed with a leading currency symbol, and can
+		// be entered with or without the currency symbol.
+		Text text = new Text(getComposite(), SWT.BORDER);
+		adventure.setPrice(5.0);
+		final String cannotBeNegativeMessage = "Price cannot be negative.";
+		final String mustBeCurrencyMessage = "Price must be a currency.";
+		final NumberFormat currencyFormat = NumberFormat
+				.getCurrencyInstance(Locale.CANADA);
+		getDbs().bind(text, "text", adventure, "price",
+				new Converter(String.class, double.class) {
+
+					public Object convertTargetToModel(Object fromObject) {
+						try {
+							return currencyFormat.parse((String) fromObject);
+						} catch (ParseException e) {
+							// TODO throw something like
+							// IllegalConversionException?
+							return new Double(0);
+						}
+					}
+
+					public Object convertModelToTarget(Object toObject) {
+						return currencyFormat.format(((Double) toObject)
+								.doubleValue());
+					}
+				}, new IValidator() {
+					public String isPartiallyValid(Object value) {
+						return null;
+					}
+
+					public String isValid(Object value) {
+						String stringValue = (String) value;
+						try {
+							double doubleValue = currencyFormat.parse(
+									stringValue).doubleValue();
+							if (doubleValue < 0.0) {
+								return cannotBeNegativeMessage;
+							} else {
+								return null;
+							}
+						} catch (ParseException e) {
+							return mustBeCurrencyMessage;
+						}
+					}
+				});
+		assertEquals("$5.00", text.getText());
+		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		text.setText("$0.65");
+		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals(0.65, adventure.getPrice(), 0.0001);
+		adventure.setPrice(42.24);
+		assertEquals("$42.24", text.getText());
+		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		text.setText("jygt");
+		assertEquals(mustBeCurrencyMessage, getDbs()
+				.getCombinedValidationMessage().getValue());
+		text.setText("-$23.9");
+		assertEquals(cannotBeNegativeMessage, getDbs()
+				.getCombinedValidationMessage().getValue());
+		assertEquals(42.24, adventure.getPrice(), 0.0001);
+		adventure.setPrice(0.0);
+		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+	}
+	
+	public void testScenario09() throws BindingException {
+		// Binding a boolean property to a CheckBox. Adventure will have a Boolean property “petsAllowed”
+		Button checkbox = new Button(getComposite(), SWT.CHECK);
+		adventure.setPetsAllowed(true);
+		getDbs().bind(checkbox, "selection", adventure, "petsAllowed");
+		assertEquals(true, checkbox.getSelection());
+		checkbox.setSelection(false);
+//TODO		assertEquals(false, adventure.isPetsAllowed());
+		adventure.setPetsAllowed(true);
+//TODO		assertEquals(true, checkbox.getSelection());
 	}
 }
