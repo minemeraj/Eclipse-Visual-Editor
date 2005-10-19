@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-17 21:55:16 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-19 17:35:03 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -56,7 +56,7 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 		if(editPartContributorFactories != null){
 			fContributionChangeListener = new EditPartContributionChangeListener () {
 				public void contributionChanged(EditPartContributor editpartContributor) {
-					refreshContributors();
+					refreshContributions();
 				}
 			};
 			Iterator iter = editPartContributorFactories.iterator();
@@ -71,7 +71,7 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			addEditPartListener(fActionBarEditPartListener = new ActionBarEditPartListener());
 			getFigure().addFigureListener(this.fHostFigureListener = new ActionBarFigureListener());
 			fActionListener = new ActionBarActionListener();
-			addContributors();
+			addContributions();
 		}
 	}
 	
@@ -281,7 +281,7 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	/*
 	 * From the editpart contributores, add the figure overlays, hover overlays, and action bar children
 	 */
-	private void addContributors() {
+	private void addContributions() {
 		if (fEditPartContributors != null) {
 			Iterator iter = fEditPartContributors.iterator();
 			figureOverlayCache = new ArrayList();
@@ -316,7 +316,7 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	/*
 	 * Clear out the figure overlays, hover overlays, and action bar children
 	 */
-	private void removeContributors() {
+	private void removeContributions() {
 		if (fEditPartContributors != null) {
 			IFigure fig = getFigure();
 			if (figureOverlayCache != null) {
@@ -336,8 +336,8 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 		}
 	}
 	
-	private void refreshContributors() {
-		removeContributors();
-		addContributors();
+	private void refreshContributions() {
+		removeContributions();
+		addContributions();
 	}
 }
