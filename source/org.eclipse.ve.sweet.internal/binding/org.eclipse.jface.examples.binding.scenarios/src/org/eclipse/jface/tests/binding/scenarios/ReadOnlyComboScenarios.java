@@ -10,16 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.swt.SWTDatabindingService;
+import org.eclipse.jface.binding.swt.SWTBindingConstants;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -32,6 +29,8 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 	protected ComboViewer cviewer = null;
 
 	protected Combo combo = null;
+	
+	protected Catalog catalog = null;
 
 	ILabelProvider lodgingLabelProvider = new LabelProvider() {
 		public String getText(Object element) {
@@ -45,6 +44,8 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 
 		combo = new Combo(getComposite(), SWT.READ_ONLY | SWT.DROP_DOWN);
 		cviewer = new ComboViewer(combo);
+		
+		catalog = SampleData.CATALOG_2005; // Lodging source
 
 	}
 
@@ -112,12 +113,10 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 			
 		 Adventure skiAdventure = SampleData.WINTER_HOLIDAY; // selection will
 		 // change its defaultLodging
-		 Catalog catalog = SampleData.CATALOG_2005; // Lodging source
-				
-				
+		 
 		 cviewer.setLabelProvider(lodgingLabelProvider);
 	     // Bind the ComboViewer's content to the available lodging
-	  	 getDbs().bind(cviewer, SWTDatabindingService.JFACE_VIEWER_CONTENT, catalog, "lodgings");
+	  	 getDbs().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
 				
 		 // Ensure that cv's content now has the catalog's lodgings
 		 assertEquals(catalog.getLodgings(), getViewerContent());
@@ -127,7 +126,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				
 				
 		 // Bind the ComboViewer's selection to the Adventure's default lodging.
-		 getDbs().bind(cviewer, SWTDatabindingService.JFACE_VIEWER_SELECTION, skiAdventure ,"defaultLodging");
+		 getDbs().bind(cviewer, SWTBindingConstants.SELECTION, skiAdventure ,"defaultLodging");
 				
 		 // Check to see that the initial selection is the currentDefault Lodging
 		 assertEquals(getViewerSelection(), skiAdventure.getDefaultLodging());
@@ -157,12 +156,12 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 	public void test_ROCombo_Scenario03_collectionBindings()
 			throws BindingException {
 
-		Catalog catalog = SampleData.CATALOG_2005; // Lodging source
+		
 
 		cviewer.setLabelProvider(lodgingLabelProvider); // TODO: need to resolve
 														// column binding
 		// Bind the ComboViewer's content to the available lodging
-		getDbs().bind(cviewer, SWTDatabindingService.JFACE_VIEWER_CONTENT, catalog, "lodgings");
+		getDbs().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
 
 		// Ensure that cv's content now has the catalog's lodgings
 		assertEquals(catalog.getLodgings(), getViewerContent());
@@ -211,5 +210,16 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		// TODO: set to empty list
 
 	}
+	
+	 public void test_ROCombo_Scenario01() throws BindingException {
+		 
+		 combo.setItems (new String[] { "FairyLand", "TuneLand", "NoWereLand", "TinkerLand", "DreamLand" });
+		 Account account = (Account) catalog.getAccounts().get(0);
+		 
+		 getDbs().bind(combo, SWTBindingConstants.SELECTION, account, "country");
+		 
+		 
+		 
+	 }
 
 }
