@@ -8,13 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*
- *  Created Oct 14, 2005 by Gili Mendel
- * 
- *  $RCSfile: EMFUpdatableCollection.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-18 17:38:37 $ 
- */
-
 package org.eclipse.jface.examples.binding.emf;
 
 import java.util.Iterator;

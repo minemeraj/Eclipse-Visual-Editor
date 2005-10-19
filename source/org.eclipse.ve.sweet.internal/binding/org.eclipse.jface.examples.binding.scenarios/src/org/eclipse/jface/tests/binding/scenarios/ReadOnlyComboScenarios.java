@@ -8,13 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*
- *  Created Oct 12, 2005 by Gili Mendel
- * 
- *  $RCSfile: ReadOnlyComboScenarios.java,v $
- *  $Revision: 1.9 $  $Date: 2005-10-18 19:07:59 $ 
- */
-
 package org.eclipse.jface.tests.binding.scenarios;
 
 import java.util.ArrayList;
