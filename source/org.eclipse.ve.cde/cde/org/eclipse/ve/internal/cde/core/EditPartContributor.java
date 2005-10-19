@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EditPartContributor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-17 21:55:16 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-19 17:35:29 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -31,7 +31,7 @@ public interface EditPartContributor {
 
 	/**
 	 * 
-	 * Add a listener that can be notified when the state of the editpart has changed.
+	 * Add a listener that can be notified when the state of the editpart contributor has changed.
 	 * 
 	 * @since 1.2.0
 	 */
