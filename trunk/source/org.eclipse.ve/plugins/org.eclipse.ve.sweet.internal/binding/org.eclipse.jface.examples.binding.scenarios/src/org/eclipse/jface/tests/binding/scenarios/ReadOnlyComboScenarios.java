@@ -211,13 +211,40 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 
 	}
 	
+	/**
+	 * This scenario tests a simple SWT combo with a set item list where the selection is bouded to a 
+	 * String property
+	 */
 	 public void test_ROCombo_Scenario01() throws BindingException {
 		 
-		 combo.setItems (new String[] { "FairyLand", "TuneLand", "NoWereLand", "TinkerLand", "DreamLand" });
+		 
+         //	Read-Only Combo will not change its text property on a call to setText()
+		 		 
+		 String[] items = new String[] { "FairyLand", "TuneLand", "NoWereLand", "TinkerLand", "DreamLand" };
+		 combo.setItems (items);
 		 Account account = (Account) catalog.getAccounts().get(0);
 		 
+		 // simple Combo's selection bound to the Account's country property
 		 getDbs().bind(combo, SWTBindingConstants.SELECTION, account, "country");
 		 
+		 // Drive the combo selection
+		 int index = 3;		 
+		 combo.setText(items[index]); // this should drive the selection 
+		 assertEquals(account.getCountry(), items[index]);
+		 
+		 // Set the country, and ensure selection is set property
+		 index = 1;
+		 account.setCountry(items[index]);
+		 assertEquals(index, combo.getSelectionIndex());
+		 assertEquals(combo.getText(), items[index]);
+		 
+		 index = combo.getSelectionIndex();
+		 String txt = combo.getText();
+		 // Set the country to something that is not in the Combo's list
+		 account.setCountry("FooBar");		 
+		 // Combo's selection will not Change
+		 assertEquals(combo.getSelectionIndex(), index);
+		 assertEquals(combo.getText(), txt);
 		 
 		 
 	 }
