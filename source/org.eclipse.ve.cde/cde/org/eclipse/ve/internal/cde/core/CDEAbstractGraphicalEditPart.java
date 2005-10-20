@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-19 17:35:03 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-20 17:37:49 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -38,6 +38,7 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	private List actionBarChildren = Collections.EMPTY_LIST;
 	private List figureOverlayCache;
 	private List hoverOverlayCache;
+	private IFigure figureOverlayPanel;		// Figure panel to display the figure overlay contributions
 
 	private void addEditPartContributor(GraphicalEditPartContributor anEditPartContributor) {
 		if (fEditPartContributors == null) {
@@ -54,6 +55,10 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 		super.activate();
 		List editPartContributorFactories = getEditDomain().getContributors(this);
 		if(editPartContributorFactories != null){
+			figureOverlayPanel  = new Panel();
+			figureOverlayPanel.setLayoutManager(new FlowLayout());
+			figureOverlayPanel.getBounds().translate(3, 3);
+			((ContentPaneFigure)getFigure()).getContentPane().add(figureOverlayPanel);
 			fContributionChangeListener = new EditPartContributionChangeListener () {
 				public void contributionChanged(EditPartContributor editpartContributor) {
 					refreshContributions();
@@ -279,24 +284,24 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	}
 
 	/*
-	 * From the editpart contributores, add the figure overlays, hover overlays, and action bar children
+	 * From the editpart contributors, add the figure overlays, hover overlays, and action bar children
 	 */
 	private void addContributions() {
 		if (fEditPartContributors != null) {
 			Iterator iter = fEditPartContributors.iterator();
 			figureOverlayCache = new ArrayList();
 			hoverOverlayCache = new ArrayList();
-			IFigure contentPane = getFigure();
 			IFigure toolTipFigure = getFigure().getToolTip();
 			while (iter.hasNext()) {
 				GraphicalEditPartContributor contrib = (GraphicalEditPartContributor) iter.next();
-				// Contribute the figure overlay
+				// Contribute the figure overlays
 				IFigure figOverlay = contrib.getFigureOverLay();
 				if (figOverlay != null) {
-					contentPane.add(figOverlay);
+					figureOverlayPanel.add(figOverlay);
+					figureOverlayPanel.setSize(figureOverlayPanel.getPreferredSize());
 					figureOverlayCache.add(figOverlay);
 				}
-				// Contribute the hover overlay
+				// Contribute the hover overlays
 				IFigure hoverFig = contrib.getHoverOverLay();
 				if (hoverFig != null) {
 					toolTipFigure.add(hoverFig);
@@ -318,15 +323,14 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	 */
 	private void removeContributions() {
 		if (fEditPartContributors != null) {
-			IFigure fig = getFigure();
-			if (figureOverlayCache != null) {
+			if (figureOverlayCache != null && figureOverlayPanel != null) {
 				Iterator iterator = figureOverlayCache.iterator();
 				while (iterator.hasNext())
-					fig.remove((IFigure) iterator.next());
+					figureOverlayPanel.remove((IFigure) iterator.next());
 				figureOverlayCache = null;
 			}
 			if (hoverOverlayCache != null) {
-				fig = getFigure().getToolTip();
+				IFigure fig = getFigure().getToolTip();
 				Iterator iterator = hoverOverlayCache.iterator();
 				while (iterator.hasNext())
 					fig.remove((IFigure) iterator.next());
@@ -336,6 +340,7 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 		}
 	}
 	
+	// The contributions have changed... remove the old and re-add the contributions to pickup any changes
 	private void refreshContributions() {
 		removeContributions();
 		addContributions();

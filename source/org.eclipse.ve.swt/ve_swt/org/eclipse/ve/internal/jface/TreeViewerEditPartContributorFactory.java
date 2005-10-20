@@ -2,6 +2,7 @@ package org.eclipse.ve.internal.jface;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.GraphicalEditPart;
@@ -115,6 +116,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 				}
 			};
 			fig.setSize(new Dimension(bounds.width + 2, bounds.height + 2));
+			fig.setLocation(new Point(-1, -1));
 			fig.setVisible(true);
 			return fig;
 		}
