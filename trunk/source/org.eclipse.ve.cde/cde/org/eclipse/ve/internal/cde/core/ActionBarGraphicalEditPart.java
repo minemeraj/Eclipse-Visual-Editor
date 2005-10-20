@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarGraphicalEditPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-17 21:55:16 $ 
+ *  $Revision: 1.6 $  $Date: 2005-10-20 17:37:48 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -60,14 +60,12 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 
 	public void show(Rectangle hostBounds, int orientation) {
 		Rectangle bounds = actionBarFigure.getBounds();
-		actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width + 12, hostBounds.y - bounds.height - 18));
+		actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width + 10, hostBounds.y - bounds.height - 14));
 
 		// The decorations figure is used to highlight the host figure, action bar figure, and it's connection in green.
 		// It is also used to draw a shadow figure for the action bar.
 		if (decorationsFigure == null) {
 			decorationsFigure = new Polyline() {
-				PointList hostBorderPoints = null;
-				PointList actionBarBorderPoints = null;
 				PointList hostPoints = null;
 				PointList actionBarPoints = null;
 				PointList shadowPoints = null;
@@ -79,24 +77,11 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 						// For OS platforms that don't support Antialias
 					}
 					g.setForegroundColor(ColorConstants.black);
-					if (hostBorderPoints != null) {
-						// g.setForegroundColor(ColorConstants.black);
-						// g.setLineWidth(1);
-						// g.drawPolyline(hostBorderPoints);
-					}
 					// Draw the green border around the host figure
 					if (hostPoints != null) {
-						g.setForegroundColor(ColorConstants.green);
+						g.setForegroundColor(ColorConstants.lightGreen);
 						g.setLineWidth(2);
 						g.drawPolyline(hostPoints);
-					}
-					if (actionBarBorderPoints != null) {
-						// g.setForegroundColor(ColorConstants.black);
-						// g.setLineWidth(1);
-						// Point fp = actionBarBorderPoints.getFirstPoint();
-						// Point lp = actionBarBorderPoints.getPoint(2);
-						// Rectangle rect = new Rectangle(fp.x, fp.y, lp.x - fp.x, lp.y - fp.y);
-						// g.drawRoundRectangle(rect, 8, 8);
 					}
 					// Draw the action bar shadow and the green border around the action bar figure
 					if (actionBarPoints != null) {
@@ -109,7 +94,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 						} catch (SWTException e) {
 							// For OS platforms that don't support alpha
 						}
-						g.fillRoundRectangle(new Rectangle(fp.x, fp.y, lp.x - fp.x - 4, lp.y - fp.y - 4), 10, 10);
+						g.fillRoundRectangle(new Rectangle(fp.x, fp.y, lp.x - fp.x - 4, lp.y - fp.y - 4), 12, 12);
 						try {
 							g.setAlpha(255); // Reset
 						} catch (SWTException e) {
@@ -117,36 +102,24 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 						}
 
 						// now draw the green highlight border around the action bar figure
-						g.setForegroundColor(ColorConstants.green);
+						g.setForegroundColor(ColorConstants.lightGreen);
 						g.setLineWidth(2);
 						fp = actionBarPoints.getFirstPoint();
 						lp = actionBarPoints.getPoint(2);
-						g.drawRoundRectangle(new Rectangle(fp.x, fp.y, lp.x - fp.x, lp.y - fp.y), 8, 8);
+//						g.drawRoundRectangle(new Rectangle(fp.x, fp.y, lp.x - fp.x, lp.y - fp.y), 8, 8);
 					}
-					// Draw the connecting lines
-					g.setForegroundColor(ColorConstants.green);
-					g.setLineWidth(2);
+					// draw the connecting line between the host figure and the action bar figure
+					g.setForegroundColor(ColorConstants.black);
+					g.setLineWidth(1);
+					g.setLineStyle(SWT.LINE_SOLID);
 					PointList anchorLinePoints = new PointList(2);
-					// Point p1 = hostBorderPoints.getPoint(3);
-					// Point p2 = actionBarBorderPoints.getPoint(1);
 					Point p1 = hostPoints.getPoint(3);
 					Point p2 = actionBarPoints.getPoint(1);
 					anchorLinePoints.addPoint(p1);
 					anchorLinePoints.addPoint(p2.x + 2, p2.y - 2);
-					g.drawPolyline(anchorLinePoints); // draw the connecting line between the host figure and the action bar figure
+					g.drawPolyline(anchorLinePoints); 
 
-					g.setForegroundColor(ColorConstants.darkGray);
-					g.setLineWidth(1);
-					anchorLinePoints = new PointList(2);
-					anchorLinePoints.addPoint(p1.x - 2, p1.y - 2);
-					anchorLinePoints.addPoint(p2.x - 2, p2.y - 2);
-					// g.drawPolyline(anchorLinePoints);
-
-					anchorLinePoints = new PointList(2);
-					anchorLinePoints.addPoint(p1.x + 1, p1.y + 2);
-					anchorLinePoints.addPoint(p2.x + 2, p2.y);
-					// g.drawPolyline(anchorLinePoints);
-
+					// draw the very light connecting line between the host figure and the action bar shadow
 					g.setForegroundColor(ColorConstants.darkGray);
 					PointList shadowAnchorPoints = new PointList(2);
 					p1 = hostPoints.getPoint(3);
@@ -159,43 +132,36 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 					} catch (SWTException e) {
 						// For OS platforms that don't support alpha
 					}
-					g.drawPolyline(shadowAnchorPoints); // Draw the connecting line between the host figure and action bar shadow
+					g.drawPolyline(shadowAnchorPoints);
 				}
 
 				/*
-				 * points should contain 15 points... first 5 is the points for the host figure, next 5 is the points for the action bar figure, last
-				 * 5 is the points for the action bar shadow.
+				 * points should contain 15 points... 
+				 *    first 5 is the points for the host figure, 
+				 *    next 5 is the points for the action bar figure, 
+				 *    last 5 is the points for the action bar shadow.
 				 */
 				public void setPoints(PointList points) {
 					super.setPoints(points);
-					hostBorderPoints = null;
 					hostPoints = null;
-					actionBarBorderPoints = null;
 					actionBarPoints = null;
 					shadowPoints = null;
 					if (points.size() == 15) {
-						hostBorderPoints = new PointList(5);
 						hostPoints = new PointList(5);
-						actionBarBorderPoints = new PointList(5);
 						actionBarPoints = new PointList(5);
 						shadowPoints = new PointList(5);
-						for (int i = 0; i < 5; i++) {
-							hostBorderPoints.addPoint(points.getPoint(i));
-						}
-						hostPoints.addPoint(hostBorderPoints.getPoint(0).x + 2, hostBorderPoints.getPoint(0).y + 2);
-						hostPoints.addPoint(hostBorderPoints.getPoint(1).x + 2, hostBorderPoints.getPoint(1).y - 2);
-						hostPoints.addPoint(hostBorderPoints.getPoint(2).x - 2, hostBorderPoints.getPoint(2).y - 2);
-						hostPoints.addPoint(hostBorderPoints.getPoint(3).x - 2, hostBorderPoints.getPoint(3).y + 2);
-						hostPoints.addPoint(hostBorderPoints.getPoint(4).x + 2, hostBorderPoints.getPoint(4).y + 2);
 
-						for (int i = 5; i < 10; i++) {
-							actionBarBorderPoints.addPoint(points.getPoint(i));
-						}
-						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(0).x + 2, actionBarBorderPoints.getPoint(0).y + 2);
-						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(1).x + 2, actionBarBorderPoints.getPoint(1).y - 2);
-						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(2).x - 2, actionBarBorderPoints.getPoint(2).y - 2);
-						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(3).x - 2, actionBarBorderPoints.getPoint(3).y + 2);
-						actionBarPoints.addPoint(actionBarBorderPoints.getPoint(4).x + 2, actionBarBorderPoints.getPoint(4).y + 2);
+						hostPoints.addPoint(points.getPoint(0).x + 2, points.getPoint(0).y + 2);
+						hostPoints.addPoint(points.getPoint(1).x + 2, points.getPoint(1).y - 2);
+						hostPoints.addPoint(points.getPoint(2).x - 2, points.getPoint(2).y - 2);
+						hostPoints.addPoint(points.getPoint(3).x - 2, points.getPoint(3).y + 2);
+						hostPoints.addPoint(points.getPoint(4).x + 2, points.getPoint(4).y + 2);
+
+						actionBarPoints.addPoint(points.getPoint(5).x + 2, points.getPoint(5).y + 2);
+						actionBarPoints.addPoint(points.getPoint(6).x + 2, points.getPoint(6).y - 2);
+						actionBarPoints.addPoint(points.getPoint(7).x - 2, points.getPoint(7).y - 2);
+						actionBarPoints.addPoint(points.getPoint(8).x - 2, points.getPoint(8).y + 2);
+						actionBarPoints.addPoint(points.getPoint(9).x + 2, points.getPoint(9).y + 2);
 
 						for (int i = 10; i < 15; i++) {
 							shadowPoints.addPoint(points.getPoint(i));
@@ -214,10 +180,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 		PointList pl = new PointList();
 		// First five points is the host figure's points
 		Rectangle hb = hostBounds.getCopy();
-		hb.x -= 5;
-		hb.y -= 5;
-		hb.width += 10;
-		hb.height += 10;
+		// Points are added to points list starting from the upper left corner and moving counter-clockwise
 		pl.addPoint(hb.x, hb.y);
 		pl.addPoint(hb.x, hb.y + hb.height);
 		pl.addPoint(hb.x + hb.width, hb.y + hb.height);
@@ -268,7 +231,12 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 			}
 
 			protected void outlineShape(Graphics graphics) {
-				graphics.setForegroundColor(ColorConstants.darkGray);
+				try {
+					graphics.setAntialias(SWT.ON); // This makes the connection line look smooth
+				} catch (SWTException e) {
+					// For OS platforms that don't support Antialias
+				}
+				graphics.setForegroundColor(ColorConstants.black);
 				Rectangle f = Rectangle.SINGLETON;
 				Rectangle r = getBounds();
 				f.x = r.x + lineWidth / 2;
@@ -297,27 +265,21 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 			protected void showLayoutTargetFeedback(Request request) {
 				// Don't do anything... don't want to show insertion line or move around the action bar editparts
 			}
-
 			protected boolean isHorizontal() {
 				return true;
 			}
-
 			protected Command createAddCommand(EditPart child, EditPart after) {
 				return null;
 			}
-
 			protected Command createMoveChildCommand(EditPart child, EditPart after) {
 				return null;
 			}
-
 			protected Command getCreateCommand(CreateRequest request) {
 				return null;
 			}
-
 			protected Command getDeleteDependantCommand(Request request) {
 				return null;
 			}
-
 			protected EditPolicy createChildEditPolicy(EditPart child) {
 				if (child instanceof ActionBarActionEditPart)
 					return new AbstractEditPolicy() {};
