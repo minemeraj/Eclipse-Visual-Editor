@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
@@ -36,7 +36,7 @@ public class ListBinding extends Composite {
 
 	private Text txtDefaultLodging = null;
 
-	private DatabindingService dbs;
+	private DatabindingContext dbc;
 
 	private ListViewer listViewer;
 
@@ -84,37 +84,37 @@ public class ListBinding extends Composite {
 	}
 
 	private void bind() throws BindingException {
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 		Catalog catalog = SampleData.CATALOG_2005;
 
-		// dbs.bindTable(
-		// dbs.createUpdatableTable(listViewer,"contents"),
+		// dbc.bindTable(
+		// dbc.createUpdatableTable(listViewer,"contents"),
 		// new EMFUpdatableTable(catalog,"lodgings",new String[]
 		// {"description"})
 		// );
-		dbs.bind(listViewer, "contents", catalog, "lodgings",
+		dbc.bind(listViewer, "contents", catalog, "lodgings",
 				new IdentityConverter(Lodging.class, Object.class));
 
-		// dbs.bindValue(
+		// dbc.bindValue(
 		// listViewer,"selection",skiTrip,emfPackage.getAdventure_DefaultLodging(),
 		// new IdentityConverter(Object.class,Lodging.class));
 
-		// IUpdatableValue defaultLodging = dbs.createUpdatableValue(
+		// IUpdatableValue defaultLodging = dbc.createUpdatableValue(
 		// skiTrip,emfPackage.getAdventure_DefaultLodging());
 
 		// IUpdatableValue listViewerSelection =
-		// dbs.createUpdatableValue(listViewer,"selection");
+		// dbc.createUpdatableValue(listViewer,"selection");
 
-		// dbs.bindValue(txtDefaultLodging, "text", listViewerSelection,
+		// dbc.bindValue(txtDefaultLodging, "text", listViewerSelection,
 		// "description");
 
-		// dbs.bindValue(txtName, "text" , listViewerSelection , "name" );
+		// dbc.bindValue(txtName, "text" , listViewerSelection , "name" );
 
-		// dbs.bindValue(validationMessage, "text",
-		// dbs.getCombinedValidationMessage());
+		// dbc.bindValue(validationMessage, "text",
+		// dbc.getCombinedValidationMessage());
 
 	}
 

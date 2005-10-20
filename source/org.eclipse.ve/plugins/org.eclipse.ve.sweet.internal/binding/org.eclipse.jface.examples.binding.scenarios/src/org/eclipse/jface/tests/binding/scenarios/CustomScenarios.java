@@ -44,16 +44,16 @@ public class CustomScenarios extends ScenariosTestCase {
 		Adventure adventure = SampleData.WINTER_HOLIDAY;
 		Text text = new Text(getComposite(), SWT.BORDER);
 
-		IUpdatableValue descriptionUpdatable = (IUpdatableValue) getDbs()
+		IUpdatableValue descriptionUpdatable = (IUpdatableValue) getDbc()
 				.createUpdatable(adventure, "description");
-		IUpdatableValue nameUpdatable = (IUpdatableValue) getDbs()
+		IUpdatableValue nameUpdatable = (IUpdatableValue) getDbc()
 				.createUpdatable(adventure, "name");
 
 		AggregateUpdatableValue customUpdatable_comma = new AggregateUpdatableValue(
 				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },
 				",");
 
-		getDbs().bind(getDbs().createUpdatable(text, "text"),
+		getDbc().bind(getDbc().createUpdatable(text, "text"),
 				customUpdatable_comma);
 		// spinEventLoop(1);
 		// Make sure that the description on the model match the widget

@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -81,17 +81,17 @@ public class Custom_PriceTwoSpinners extends Composite {
 	}
 
 	private void bind() throws BindingException {
-		DatabindingService dbs = SampleData.getSWTtoEMFDatabindingService(this);
+		DatabindingContext dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		final Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbs.bind(lblPrice, "text", skiTrip, "price");
-		dbs.bind(txtPrice, "text", skiTrip, "price");
+		dbc.bind(lblPrice, "text", skiTrip, "price");
+		dbc.bind(txtPrice, "text", skiTrip, "price");
 
-		dbs.bind(spin_Dollars, "selection", skiTrip, "price",
+		dbc.bind(spin_Dollars, "selection", skiTrip, "price",
 				new PriceDollarsConverter());
 
-		dbs.bind(spin_Cents, "selection", skiTrip, "price",
+		dbc.bind(spin_Cents, "selection", skiTrip, "price",
 				new PriceCentsConverter());
 
 	}

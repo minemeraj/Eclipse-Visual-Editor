@@ -116,7 +116,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		 
 		 cviewer.setLabelProvider(lodgingLabelProvider);
 	     // Bind the ComboViewer's content to the available lodging
-	  	 getDbs().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
+	  	 getDbc().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
 				
 		 // Ensure that cv's content now has the catalog's lodgings
 		 assertEquals(catalog.getLodgings(), getViewerContent());
@@ -126,7 +126,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				
 				
 		 // Bind the ComboViewer's selection to the Adventure's default lodging.
-		 getDbs().bind(cviewer, SWTBindingConstants.SELECTION, skiAdventure ,"defaultLodging");
+		 getDbc().bind(cviewer, SWTBindingConstants.SELECTION, skiAdventure ,"defaultLodging");
 				
 		 // Check to see that the initial selection is the currentDefault Lodging
 		 assertEquals(getViewerSelection(), skiAdventure.getDefaultLodging());
@@ -161,7 +161,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		cviewer.setLabelProvider(lodgingLabelProvider); // TODO: need to resolve
 														// column binding
 		// Bind the ComboViewer's content to the available lodging
-		getDbs().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
+		getDbc().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
 
 		// Ensure that cv's content now has the catalog's lodgings
 		assertEquals(catalog.getLodgings(), getViewerContent());
@@ -225,7 +225,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		 Account account = (Account) catalog.getAccounts().get(0);
 		 
 		 // simple Combo's selection bound to the Account's country property
-		 getDbs().bind(combo, SWTBindingConstants.SELECTION, account, "country");
+		 getDbc().bind(combo, SWTBindingConstants.SELECTION, account, "country");
 		 
 		 // Drive the combo selection
 		 int index = 3;		 

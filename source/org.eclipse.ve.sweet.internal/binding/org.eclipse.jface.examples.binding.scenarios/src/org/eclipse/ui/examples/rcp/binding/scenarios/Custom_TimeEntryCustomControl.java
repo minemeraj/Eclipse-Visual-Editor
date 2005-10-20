@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.IUpdatableFactory;
 import org.eclipse.swt.SWT;
@@ -51,11 +51,11 @@ public class Custom_TimeEntryCustomControl extends Composite {
 
 	private void bind() throws BindingException {
 
-		DatabindingService dbs = SampleData.getSWTtoEMFDatabindingService(this);
+		DatabindingContext dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Transportation bus = SampleData.GREYHOUND_BUS;
 
-		dbs.addUpdatableFactory(TimeEntry.class, new IUpdatableFactory() {
+		dbc.addUpdatableFactory(TimeEntry.class, new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Object object, Object attribute) {
 				if ("time".equals(attribute)) {
 					return new TimeEntryUpdatableValue((TimeEntry) object);
@@ -66,9 +66,9 @@ public class Custom_TimeEntryCustomControl extends Composite {
 			}
 		});
 
-		dbs.bind(lbl_time, "text", bus, "arrivalTime");
-		dbs.bind(timeEntry, "time", bus, "arrivalTime");
-		dbs.bind(timeEntry1, "time", bus, "arrivalTime");
+		dbc.bind(lbl_time, "text", bus, "arrivalTime");
+		dbc.bind(timeEntry, "time", bus, "arrivalTime");
+		dbc.bind(timeEntry1, "time", bus, "arrivalTime");
 
 	}
 

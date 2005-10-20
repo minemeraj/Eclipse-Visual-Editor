@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.IValidator;
 import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.swt.SWT;
@@ -25,7 +25,7 @@ import org.eclipse.ui.examples.rcp.adventure.Adventure;
 
 public class TextBindingWithValidation extends Composite {
 
-	private DatabindingService dbs;
+	private DatabindingContext dbc;
 
 	private Group group = null;
 
@@ -64,12 +64,12 @@ public class TextBindingWithValidation extends Composite {
 	}
 
 	private void bind() throws BindingException {
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
 		IdentityConverter identity = new IdentityConverter(String.class);
-		dbs.bind(txtDescription, "text", skiTrip, "description", identity,
+		dbc.bind(txtDescription, "text", skiTrip, "description", identity,
 				new IValidator() {
 					public String isPartiallyValid(Object value) {
 						return isValid(value);
@@ -83,11 +83,11 @@ public class TextBindingWithValidation extends Composite {
 					}
 				});
 
-		dbs.bind(txtName, "text", skiTrip, "name");
+		dbc.bind(txtName, "text", skiTrip, "name");
 
-		dbs.bind(txtLocation, "text", skiTrip, "location");
+		dbc.bind(txtLocation, "text", skiTrip, "location");
 
-		dbs.bind(validationMessage, "text", dbs.getCombinedValidationMessage());
+		dbc.bind(validationMessage, "text", dbc.getCombinedValidationMessage());
 	}
 
 	/**

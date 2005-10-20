@@ -52,7 +52,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 
 	public void testScenario01() throws BindingException {
 		Text text = new Text(getComposite(), SWT.BORDER);
-		getDbs().bind(text, "text", adventure, "name");
+		getDbc().bind(text, "text", adventure, "name");
 		// uncomment the following line to see what's happening
 		// happening
 		// spinEventLoop(1);
@@ -72,7 +72,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// Text controls, no conversion, no validation. The Text widget editable
 		// is set to false.by the developer (can not change the name)
 		Text text = new Text(getComposite(), SWT.READ_ONLY);
-		getDbs().bind(text, "text", adventure, "name");
+		getDbc().bind(text, "text", adventure, "name");
 		assertEquals(adventure.getName(), text.getText());
 	}
 
@@ -85,7 +85,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// bind to the lodgingDays feature, which is read-only and always one
 		// less than the number of adventure days.
 		Text text = new Text(getComposite(), SWT.BORDER);
-		getDbs().bind(text, "text", cart, "lodgingDays", new IConverter() {
+		getDbc().bind(text, "text", cart, "lodgingDays", new IConverter() {
 			public Class getModelType() {
 				return String.class;
 			}
@@ -123,9 +123,9 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// be to the new default lodging's description, shouldn't we move this
 		// scenario to the master/detail section? I'm assuming the latter for
 		// now.
-		IUpdatableValue defaultLodging = (IUpdatableValue) getDbs()
+		IUpdatableValue defaultLodging = (IUpdatableValue) getDbc()
 				.createUpdatable(adventure, "defaultLodging");
-		getDbs().bind(text, "text", defaultLodging, "description");
+		getDbc().bind(text, "text", defaultLodging, "description");
 
 		// test changing the description
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
@@ -163,7 +163,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// capitalized.
 		Text text = new Text(getComposite(), SWT.BORDER);
 		adventure.setName("UPPERCASE");
-		getDbs().bind(text, "text", adventure, "name", new IConverter() {
+		getDbc().bind(text, "text", adventure, "name", new IConverter() {
 			public Class getModelType() {
 				return String.class;
 			}
@@ -203,7 +203,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		final String noSpacesMessage = "Name must not contain spaces.";
 		final String max15CharactersMessage = "Maximum length for name is 15 characters.";
 		adventure.setName("ValidValue");
-		getDbs().bind(text, "text", adventure, "name",
+		getDbc().bind(text, "text", adventure, "name",
 				new IdentityConverter(String.class), new IValidator() {
 					public String isPartiallyValid(Object value) {
 						return isValid(value);
@@ -221,17 +221,17 @@ public class PropertyScenarios extends ScenariosTestCase {
 					}
 				});
 		// no validation message
-		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		text.setText("Invalid Value");
-		assertEquals(noSpacesMessage, getDbs().getCombinedValidationMessage()
+		assertEquals(noSpacesMessage, getDbc().getCombinedValidationMessage()
 				.getValue());
 		assertEquals("ValidValue", text.getText());
 		text.setText("InvalidValueBecauseTooLong");
-		assertEquals(max15CharactersMessage, getDbs()
+		assertEquals(max15CharactersMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
 		assertEquals("ValidValue", text.getText());
 		text.setText("anothervalid");
-		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		assertEquals("anothervalid", text.getText());
 		assertEquals("anothervalid", adventure.getName());
 	}
@@ -244,7 +244,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		adventure.setPrice(5.0);
 		final String cannotBeNegativeMessage = "Price cannot be negative.";
 		final String mustBeCurrencyMessage = "Price must be a currency.";
-		getDbs().bind(text, "text", adventure, "price",
+		getDbc().bind(text, "text", adventure, "price",
 				new Converter(String.class, double.class) {
 
 					public Object convertTargetToModel(Object fromObject) {
@@ -275,22 +275,22 @@ public class PropertyScenarios extends ScenariosTestCase {
 					}
 				});
 		assertEquals("5.0", text.getText());
-		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		text.setText("0.65");
-		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		assertEquals(0.65, adventure.getPrice(), 0.0001);
 		adventure.setPrice(42.24);
 		assertEquals("42.24", text.getText());
-		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		text.setText("jygt");
-		assertEquals(mustBeCurrencyMessage, getDbs()
+		assertEquals(mustBeCurrencyMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
 		text.setText("-23.9");
-		assertEquals(cannotBeNegativeMessage, getDbs()
+		assertEquals(cannotBeNegativeMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
 		assertEquals(42.24, adventure.getPrice(), 0.0001);
 		adventure.setPrice(0.0);
-		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 	}
 
 	public void testScenario08() throws BindingException {
@@ -304,7 +304,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		final String mustBeCurrencyMessage = "Price must be a currency.";
 		final NumberFormat currencyFormat = NumberFormat
 				.getCurrencyInstance(Locale.CANADA);
-		getDbs().bind(text, "text", adventure, "price",
+		getDbc().bind(text, "text", adventure, "price",
 				new Converter(String.class, double.class) {
 
 					public Object convertTargetToModel(Object fromObject) {
@@ -342,29 +342,29 @@ public class PropertyScenarios extends ScenariosTestCase {
 					}
 				});
 		assertEquals("$5.00", text.getText());
-		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		text.setText("$0.65");
-		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		assertEquals(0.65, adventure.getPrice(), 0.0001);
 		adventure.setPrice(42.24);
 		assertEquals("$42.24", text.getText());
-		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		text.setText("jygt");
-		assertEquals(mustBeCurrencyMessage, getDbs()
+		assertEquals(mustBeCurrencyMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
 		text.setText("-$23.9");
-		assertEquals(cannotBeNegativeMessage, getDbs()
+		assertEquals(cannotBeNegativeMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
 		assertEquals(42.24, adventure.getPrice(), 0.0001);
 		adventure.setPrice(0.0);
-		assertEquals("", getDbs().getCombinedValidationMessage().getValue());
+		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 	}
 	
 	public void testScenario09() throws BindingException {
 		// Binding a boolean property to a CheckBox. Adventure will have a Boolean property “petsAllowed”
 		Button checkbox = new Button(getComposite(), SWT.CHECK);
 		adventure.setPetsAllowed(true);
-		getDbs().bind(checkbox, "selection", adventure, "petsAllowed");
+		getDbc().bind(checkbox, "selection", adventure, "petsAllowed");
 		assertEquals(true, checkbox.getSelection());
 		checkbox.setSelection(false);
 //TODO		assertEquals(false, adventure.isPetsAllowed());

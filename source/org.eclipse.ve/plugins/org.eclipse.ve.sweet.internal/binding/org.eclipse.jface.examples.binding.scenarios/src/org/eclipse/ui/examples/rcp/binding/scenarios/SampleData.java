@@ -13,10 +13,10 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.IUpdatableFactory;
-import org.eclipse.jface.binding.swt.SWTDatabindingService;
+import org.eclipse.jface.binding.swt.SWTDatabindingContext;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableCollection;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
 import org.eclipse.swt.SWT;
@@ -110,10 +110,10 @@ public class SampleData {
 
 	}
 
-	public static DatabindingService getSWTtoEMFDatabindingService(
+	public static DatabindingContext getSWTtoEMFDatabindingContext(
 			Control aControl) {
 
-		DatabindingService dbs = new SWTDatabindingService(aControl,
+		DatabindingContext dbc = new SWTDatabindingContext(aControl,
 				SWT.Modify, SWT.Modify);
 
 		IUpdatableFactory emfFactory = new IUpdatableFactory() {
@@ -135,9 +135,9 @@ public class SampleData {
 			}
 
 		};
-		dbs.addUpdatableFactory(EObjectImpl.class, emfFactory);
+		dbc.addUpdatableFactory(EObjectImpl.class, emfFactory);
 
-		return dbs;
+		return dbc;
 
 	}
 
