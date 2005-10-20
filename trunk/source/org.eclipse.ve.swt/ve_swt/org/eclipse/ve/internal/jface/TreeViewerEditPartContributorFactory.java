@@ -89,11 +89,12 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 		public void dispose() {
 		}
 
-		public IFigure getHoverOverLay() {
+		public ToolTipProcessor getHoverOverLay() {
+			treeViewer = getTreeViewer((IJavaInstance)tree);
 			if (treeViewer != null)
-				return new Label("I am a Tree with a Viewer");
+				return new ToolTipProcessor.ToolTipLabel("Selection Viewer in action bar to show properties");
 			else
-				return new Label("I am a Tree without a Viewer");
+				return new ToolTipProcessor.ToolTipLabel("Press action in action bar to convert to a Viewer");
 		}
 
 		/*

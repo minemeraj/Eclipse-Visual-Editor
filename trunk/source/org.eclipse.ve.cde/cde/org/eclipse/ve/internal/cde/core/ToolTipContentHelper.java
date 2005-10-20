@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipContentHelper.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-20 19:34:44 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-20 22:30:51 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -88,6 +88,10 @@ public class ToolTipContentHelper extends Panel {
 	}
 	public void addToolTipProcessor(ToolTipProcessor p) {
 		fToolTipProcessors.add(p) ;
+	}
+	public void removeToolTipProcessor(ToolTipProcessor p) {
+		p.deactivate();
+		fToolTipProcessors.remove(p) ;
 	}
 
 }

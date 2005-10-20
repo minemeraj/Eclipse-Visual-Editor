@@ -10,17 +10,22 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipProcessor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-20 19:34:44 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-20 22:30:51 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
-import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.*;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Provides Tool tip information for CDE graphical edit parts
- *
- * Originally an inner class inside ToolTipAssistFactory called TooltipDetails which is part of org.eclipse.ve.java.core. 
- * Moved up to CDE to be used in a general purpose manner.
+ * 
+ * Originally an inner class inside ToolTipAssistFactory called TooltipDetails which is part of org.eclipse.ve.java.core. Moved up to CDE to be used
+ * in a general purpose manner.
  * 
  * @since 1.2.0
  */
@@ -52,4 +57,51 @@ public interface ToolTipProcessor {
 	 * @since 1.2.0
 	 */
 	void deactivate();
+
+	public class ToolTipLabel implements ToolTipProcessor {
+		String text = "";
+		static final Font labelFont = new Font(Display.getDefault(), "Arial", 8, SWT.BOLD);
+
+		public ToolTipLabel(String text) {
+			this.text = text;
+		}
+
+		public IFigure createFigure() {
+			Label l = new Label(text);
+			l.setFont(labelFont);
+			return l;
+		}
+
+		public void activate() {
+		}
+
+		public void deactivate() {
+		}
+
+	}
+
+	public class ToolTipSeparator implements ToolTipProcessor {
+
+		public IFigure createFigure() {
+			return new Figure() {
+
+				public void paint(Graphics graphics) {
+					Rectangle bounds = getBounds();
+					graphics.setForegroundColor(ColorConstants.lightGray);
+					graphics.drawLine(bounds.x, bounds.y + 1, bounds.x + bounds.width, bounds.y + 1);
+				}
+
+				public Dimension getPreferredSize(int wHint, int hHint) {
+					return new Dimension(getParent().getBounds().width, 2);
+				}
+			};
+		}
+
+		public void activate() {
+		}
+
+		public void deactivate() {
+		}
+
+	}
 }

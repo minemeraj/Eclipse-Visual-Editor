@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.9 $  $Date: 2005-10-20 17:37:49 $ 
+ *  $Revision: 1.10 $  $Date: 2005-10-20 22:30:51 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -53,6 +53,12 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	
 	public void activate() {
 		super.activate();
+		// Add tooltip processors for tooltip capability
+		ToolTipProcessor [] processors = createToolTipProcessors();
+		if (processors != null && processors.length > 0) {
+			ToolTipContentHelper contentHelper = new ToolTipContentHelper(processors);
+			getFigure().setToolTip(contentHelper);
+		}
 		List editPartContributorFactories = getEditDomain().getContributors(this);
 		if(editPartContributorFactories != null){
 			figureOverlayPanel  = new Panel();
@@ -77,6 +83,8 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			getFigure().addFigureListener(this.fHostFigureListener = new ActionBarFigureListener());
 			fActionListener = new ActionBarActionListener();
 			addContributions();
+			if (getFigure().getToolTip() != null && getFigure().getToolTip() instanceof ToolTipContentHelper)
+				((ToolTipContentHelper)getFigure().getToolTip()).activate();
 		}
 	}
 	
@@ -93,6 +101,8 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 
 			fEditPartContributors = null;
 		}
+		if (getFigure().getToolTip() != null && getFigure().getToolTip() instanceof ToolTipContentHelper)
+			((ToolTipContentHelper)getFigure().getToolTip()).deactivate();
 		super.deactivate();
 	}
 	/*
@@ -291,7 +301,13 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			Iterator iter = fEditPartContributors.iterator();
 			figureOverlayCache = new ArrayList();
 			hoverOverlayCache = new ArrayList();
+			// For tooltip contributions, add a separator between the main tooltip and the contributions
 			IFigure toolTipFigure = getFigure().getToolTip();
+			if (toolTipFigure instanceof ToolTipContentHelper) {
+				ToolTipProcessor separator = new ToolTipProcessor.ToolTipSeparator();
+				((ToolTipContentHelper)toolTipFigure).addToolTipProcessor(separator);
+				hoverOverlayCache.add(separator);
+			}
 			while (iter.hasNext()) {
 				GraphicalEditPartContributor contrib = (GraphicalEditPartContributor) iter.next();
 				// Contribute the figure overlays
@@ -302,10 +318,10 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 					figureOverlayCache.add(figOverlay);
 				}
 				// Contribute the hover overlays
-				IFigure hoverFig = contrib.getHoverOverLay();
-				if (hoverFig != null) {
-					toolTipFigure.add(hoverFig);
-					hoverOverlayCache.add(hoverFig);
+				ToolTipProcessor processor = contrib.getHoverOverLay();
+				if (processor != null && toolTipFigure instanceof ToolTipContentHelper) {
+					((ToolTipContentHelper)toolTipFigure).addToolTipProcessor(processor);
+					hoverOverlayCache.add(processor);
 				}
 				actionBarChildren = new ArrayList();
 				GraphicalEditPart[] children = contrib.getActionBarChildren();
@@ -329,11 +345,11 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 					figureOverlayPanel.remove((IFigure) iterator.next());
 				figureOverlayCache = null;
 			}
-			if (hoverOverlayCache != null) {
-				IFigure fig = getFigure().getToolTip();
+			if (hoverOverlayCache != null && getFigure().getToolTip() instanceof ToolTipContentHelper) {
+				ToolTipContentHelper contentHelper = (ToolTipContentHelper) getFigure().getToolTip();
 				Iterator iterator = hoverOverlayCache.iterator();
 				while (iterator.hasNext())
-					fig.remove((IFigure) iterator.next());
+					contentHelper.removeToolTipProcessor((ToolTipProcessor) iterator.next());
 				hoverOverlayCache = null;
 			}
 			actionBarChildren = Collections.EMPTY_LIST;
@@ -345,4 +361,10 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 		removeContributions();
 		addContributions();
 	}
+
+	/*
+	 * Return array of tooltip processors to be added to the tooltip content helper in activation
+	 */
+	abstract protected ToolTipProcessor [] createToolTipProcessors ();
+	
 }
