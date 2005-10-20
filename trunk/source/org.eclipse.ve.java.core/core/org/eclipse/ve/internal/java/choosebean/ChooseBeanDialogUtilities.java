@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialogUtilities.java,v $
- *  $Revision: 1.9 $  $Date: 2005-10-18 18:11:58 $ 
+ *  $Revision: 1.10 $  $Date: 2005-10-20 22:02:29 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -218,7 +218,6 @@ public class ChooseBeanDialogUtilities {
 				IType type = ti.resolveType(javaSearchScope);
 				
 				boolean isTypePublic = Flags.isPublic(type.getFlags());
-				boolean isTypeAbstract = Flags.isAbstract(type.getFlags());
 				boolean isInPresentPackage = type.getPackageFragment().getElementName().equals(packageName);
 				boolean isTypeStatic = Flags.isStatic(type.getFlags());
 				boolean isTypeInner = type.getDeclaringType()!=null;
@@ -251,11 +250,6 @@ public class ChooseBeanDialogUtilities {
 						message = message.concat(" : "); //$NON-NLS-1$
 					message = message.concat(ChooseBeanMessages.SelectionAreaHelper_SecondaryMsg_TypeNonPublic); 
 				}
-				if(isTypeAbstract){
-					if(message.length()>0)
-						message = message.concat(" : "); //$NON-NLS-1$
-					message = message.concat(ChooseBeanMessages.ChooseBeanDialog_Message_AbstractType);  
-				}
 				if(isTypeInner && (!isTypeStatic)){
 					if(message.length()>0)
 						message = message.concat(" : "); //$NON-NLS-1$
@@ -266,7 +260,7 @@ public class ChooseBeanDialogUtilities {
 				//		+ Type is public OR type is in present package
 				//		+ Type is not abstract
 				//		+ Enclosing type is not IType OR Enclosing type is IType and this type is static
-				isInstantiable = !constructorError && (isTypePublic || isInPresentPackage) && (!isTypeAbstract) && ((!isTypeInner) || (isTypeInner && isTypeStatic));
+				isInstantiable = !constructorError && (isTypePublic || isInPresentPackage) && ((!isTypeInner) || (isTypeInner && isTypeStatic));
 				if(isInstantiable)
 					message = new String();
 				//TODO setClassName(getFullSelectionName(ti), isInstantiable) ;
