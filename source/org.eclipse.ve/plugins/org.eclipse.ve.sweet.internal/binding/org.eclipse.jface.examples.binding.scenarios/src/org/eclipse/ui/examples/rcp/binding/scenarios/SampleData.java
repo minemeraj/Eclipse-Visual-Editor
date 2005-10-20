@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
@@ -17,8 +19,7 @@ import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.IUpdatableFactory;
 import org.eclipse.jface.binding.swt.SWTDatabindingContext;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableCollection;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
+import org.eclipse.jface.examples.binding.emf.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.examples.rcp.adventure.Account;
@@ -94,16 +95,19 @@ public class SampleData {
 		PRESIDENT.setLastName("Bush");
 		PRESIDENT.setState("TX");
 		PRESIDENT.setPhone("1112223333");
+		PRESIDENT.setCountry("U.S.A");
 		DENTIST = adventureFactory.createAccount();
 		DENTIST.setFirstName("Tooth");
 		DENTIST.setLastName("Fairy");
 		DENTIST.setState("CA");
 		DENTIST.setPhone("4543219876");
+		DENTIST.setCountry("PainLand");
 		SANTA_CLAUS = adventureFactory.createAccount();
 		SANTA_CLAUS.setFirstName("Chris");
 		SANTA_CLAUS.setLastName("Chringle");
 		SANTA_CLAUS.setState("WI");
 		SANTA_CLAUS.setPhone("8617429856");
+		SANTA_CLAUS.setCountry("NorthPole");
 		CATALOG_2005.getAccounts().add(PRESIDENT);
 		CATALOG_2005.getAccounts().add(DENTIST);
 		CATALOG_2005.getAccounts().add(SANTA_CLAUS);
@@ -136,6 +140,14 @@ public class SampleData {
 
 		};
 		dbc.addUpdatableFactory(EObjectImpl.class, emfFactory);
+		
+		emfFactory = new IUpdatableFactory() {
+			public IUpdatable createUpdatable(Object object, Object attribute) {
+				return new EMFUpdatableEList((EList)object, true);
+			}
+
+		};
+		dbc.addUpdatableFactory(BasicEList.class, emfFactory);
 
 		return dbc;
 
