@@ -17,17 +17,20 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.internal.corext.util.TypeInfo;
 import org.eclipse.jdt.internal.corext.util.TypeInfoFilter;
 import org.eclipse.jdt.internal.ui.dialogs.TypeInfoViewer;
+import org.eclipse.jdt.ui.JavaElementImageDescriptor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
@@ -58,6 +61,19 @@ public class BeanViewer extends TypeInfoViewer{
 					imageDescriptor = ImageDescriptor.createFromImage(image);
 					imageToDescriptorMap.put(image, imageDescriptor);
 				}
+			}
+			if (element instanceof TypeInfo && image!=null) {
+				TypeInfo ti = (TypeInfo) element;
+				if(ti.isInterface())
+					imageDescriptor = new JavaElementImageDescriptor(
+							imageDescriptor, 
+							JavaElementImageDescriptor.RUNNABLE, 
+							new Point(image.getBounds().width, image.getBounds().height));
+				else if(Flags.isAbstract(ti.getModifiers()))
+					imageDescriptor = new JavaElementImageDescriptor(
+							imageDescriptor, 
+							JavaElementImageDescriptor.ABSTRACT, 
+							new Point(image.getBounds().width, image.getBounds().height));
 			}
 			return imageDescriptor;
 		}
@@ -175,7 +191,7 @@ public class BeanViewer extends TypeInfoViewer{
 	
 	public BeanViewer(Composite parent, Label progressLabel, IJavaSearchScope scope, 
 								IPackageFragment pkg, ResourceSet resourceSet, EditDomain editDomain) {
-		super(parent, SWT.NONE, progressLabel, scope, IJavaSearchConstants.CLASS, null);
+		super(parent, SWT.NONE, progressLabel, scope, IJavaSearchConstants.CLASS_AND_INTERFACE, null);
 		this.resourceSet = resourceSet;
 		this.scope = scope;
 		this.pkg = pkg;
