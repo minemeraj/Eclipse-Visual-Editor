@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -29,7 +29,7 @@ public class LabelBinding extends Composite {
 
 	private Label lblName = null;
 
-	private DatabindingService dbs;
+	private DatabindingContext dbc;
 
 	private Label label1 = null;
 
@@ -81,17 +81,17 @@ public class LabelBinding extends Composite {
 	}
 
 	private void bind() throws BindingException {
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbs.bind(txtName, "text", skiTrip, emfPackage.getAdventure_Name());
-		dbs.bind(lblName, "text", skiTrip, emfPackage.getAdventure_Name());
+		dbc.bind(txtName, "text", skiTrip, emfPackage.getAdventure_Name());
+		dbc.bind(lblName, "text", skiTrip, emfPackage.getAdventure_Name());
 
-		dbs.bind(txtDescription, "text", skiTrip, emfPackage
+		dbc.bind(txtDescription, "text", skiTrip, emfPackage
 				.getAdventure_Description());
-		dbs.bind(lblDescription, "text", skiTrip, emfPackage
+		dbc.bind(lblDescription, "text", skiTrip, emfPackage
 				.getAdventure_Description());
 
 	}

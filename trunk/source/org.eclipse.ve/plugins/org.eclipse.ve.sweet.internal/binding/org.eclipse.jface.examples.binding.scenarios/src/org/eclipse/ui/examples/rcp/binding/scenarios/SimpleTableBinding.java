@@ -2,7 +2,7 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.ConditionalUpdatableValue;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -25,7 +25,7 @@ public class SimpleTableBinding extends Composite {
 
 	private Button removeButton = null;
 
-	private DatabindingService dbs;
+	private DatabindingContext dbc;
 
 	private TableViewer tableViewer;
 
@@ -51,16 +51,16 @@ public class SimpleTableBinding extends Composite {
 	}
 
 	private void bind() throws BindingException {
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
 
 		final Catalog catalog = SampleData.CATALOG_2005;
 
-		// dbs.bindTable(dbs.createUpdatableTable(tableViewer, "contents"),
+		// dbc.bindTable(dbc.createUpdatableTable(tableViewer, "contents"),
 		// new EMFUpdatableTable(catalog, "lodgings", new String[] {
 		// "name", "description" }));
 
-		selectedLodging = (IUpdatableValue) dbs.createUpdatable(tableViewer,
+		selectedLodging = (IUpdatableValue) dbc.createUpdatable(tableViewer,
 				"selection");
 
 		addButton
@@ -86,7 +86,7 @@ public class SimpleTableBinding extends Composite {
 					}
 				});
 
-		dbs.bind(removeButton, "enabled", new ConditionalUpdatableValue(
+		dbc.bind(removeButton, "enabled", new ConditionalUpdatableValue(
 				selectedLodging) {
 			protected boolean compute(Object currentValue) {
 				return currentValue != null;

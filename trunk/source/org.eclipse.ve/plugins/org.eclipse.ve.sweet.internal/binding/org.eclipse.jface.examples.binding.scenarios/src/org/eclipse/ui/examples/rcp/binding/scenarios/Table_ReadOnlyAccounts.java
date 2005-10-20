@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -31,7 +31,7 @@ public class Table_ReadOnlyAccounts extends Composite {
 
 	private Table table = null;
 
-	private DatabindingService dbs;
+	private DatabindingContext dbc;
 
 	private TableViewer tableViewer;
 
@@ -82,7 +82,7 @@ public class Table_ReadOnlyAccounts extends Composite {
 
 		// For a given catalog show its accounts with columns for "firstName,
 		// "lastName" and "state"
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Catalog catalog = SampleData.CATALOG_2005;
 
@@ -119,7 +119,7 @@ public class Table_ReadOnlyAccounts extends Composite {
 			}
 		});
 
-		dbs.bind(tableViewer, "contents", catalog, "accounts",
+		dbc.bind(tableViewer, "contents", catalog, "accounts",
 				new IdentityConverter(Account.class, Object.class));
 
 	}

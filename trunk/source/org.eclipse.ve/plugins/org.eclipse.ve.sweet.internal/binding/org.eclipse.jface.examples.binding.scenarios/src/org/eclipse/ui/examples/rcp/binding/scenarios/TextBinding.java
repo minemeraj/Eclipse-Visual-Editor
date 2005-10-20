@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,7 +23,7 @@ import org.eclipse.ui.examples.rcp.adventure.Adventure;
 
 public class TextBinding extends Composite {
 
-	private DatabindingService dbs;
+	private DatabindingContext dbc;
 
 	private Group group = null;
 
@@ -65,18 +65,18 @@ public class TextBinding extends Composite {
 	}
 
 	private void bind() throws BindingException {
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbs.bind(txtDescription, "text", skiTrip, "description");
-		dbs.bind(txtDescription_1, "text", skiTrip, "description");
+		dbc.bind(txtDescription, "text", skiTrip, "description");
+		dbc.bind(txtDescription_1, "text", skiTrip, "description");
 
-		dbs.bind(txtName, "text", skiTrip, "name");
-		dbs.bind(txtName_1, "text", skiTrip, "name");
+		dbc.bind(txtName, "text", skiTrip, "name");
+		dbc.bind(txtName_1, "text", skiTrip, "name");
 
-		dbs.bind(txtLocation, "text", skiTrip, "location");
-		dbs.bind(txtLocation_1, "text", skiTrip, "location");
+		dbc.bind(txtLocation, "text", skiTrip, "location");
+		dbc.bind(txtLocation_1, "text", skiTrip, "location");
 
 	}
 

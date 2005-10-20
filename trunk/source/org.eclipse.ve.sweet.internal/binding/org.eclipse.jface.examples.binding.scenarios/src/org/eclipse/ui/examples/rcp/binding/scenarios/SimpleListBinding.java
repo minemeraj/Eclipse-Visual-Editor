@@ -10,7 +10,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -32,7 +32,7 @@ public class SimpleListBinding extends Composite {
 
 	private Text txtDefaultLodging = null;
 
-	private DatabindingService dbs;
+	private DatabindingContext dbc;
 
 	private ListViewer listViewer;
 
@@ -73,25 +73,25 @@ public class SimpleListBinding extends Composite {
 	}
 
 	private void bind() throws BindingException {
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
 
 		Catalog catalog = SampleData.CATALOG_2005;
 
-		// dbs.bindTable(
-		// dbs.createUpdatableTable(listViewer,"contents"),
+		// dbc.bindTable(
+		// dbc.createUpdatableTable(listViewer,"contents"),
 		// new EMFUpdatableTable(catalog,"lodgings",new String[]
 		// {"description"})
 		// );
 		//		
-		// IUpdatableValue selectedLodging = dbs.createUpdatableValue(
+		// IUpdatableValue selectedLodging = dbc.createUpdatableValue(
 		// listViewer,"selection");
 		//		
-		// dbs.bindValue(txtDefaultLodging, "text", new
+		// dbc.bindValue(txtDefaultLodging, "text", new
 		// EMFDerivedUpdatableValue(
 		// selectedLodging, emfPackage.getLodging_Description()));
 		//
-		// dbs.bindValue(txtName, "text", new EMFDerivedUpdatableValue(
+		// dbc.bindValue(txtName, "text", new EMFDerivedUpdatableValue(
 		// selectedLodging, emfPackage.getLodging_Name()));
 
 	}

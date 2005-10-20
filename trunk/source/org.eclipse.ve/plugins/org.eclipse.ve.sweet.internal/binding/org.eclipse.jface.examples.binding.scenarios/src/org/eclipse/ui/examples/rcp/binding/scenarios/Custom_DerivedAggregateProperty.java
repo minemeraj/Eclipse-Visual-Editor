@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -24,7 +24,7 @@ import org.eclipse.ui.examples.rcp.adventure.Adventure;
 
 public class Custom_DerivedAggregateProperty extends Composite {
 
-	private DatabindingService dbs;
+	private DatabindingContext dbc;
 
 	private Group group = null;
 
@@ -70,37 +70,37 @@ public class Custom_DerivedAggregateProperty extends Composite {
 	}
 
 	private void bind() throws BindingException {
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbs.bind(txtDescription, "text", skiTrip, "description");
-		dbs.bind(txtName, "text", skiTrip, "name");
+		dbc.bind(txtDescription, "text", skiTrip, "description");
+		dbc.bind(txtName, "text", skiTrip, "name");
 
 		AdventureNameAndDescription customUpdatable = new AdventureNameAndDescription(
 				skiTrip);
-		dbs.bind(dbs.createUpdatable(txtCustom, "text"), customUpdatable);
+		dbc.bind(dbc.createUpdatable(txtCustom, "text"), customUpdatable);
 
-		IUpdatableValue descriptionUpdatable = (IUpdatableValue) dbs
+		IUpdatableValue descriptionUpdatable = (IUpdatableValue) dbc
 				.createUpdatable(skiTrip, "description");
-		IUpdatableValue nameUpdatable = (IUpdatableValue) dbs.createUpdatable(
+		IUpdatableValue nameUpdatable = (IUpdatableValue) dbc.createUpdatable(
 				skiTrip, "name");
 
 		AggregateUpdatableValue customUpdatable_1 = new AggregateUpdatableValue(
 				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },
 				",");
-		dbs.bind(dbs.createUpdatable(txtCustom_1, "text"), customUpdatable_1);
+		dbc.bind(dbc.createUpdatable(txtCustom_1, "text"), customUpdatable_1);
 
 		AggregateUpdatableValue customUpdatable_2 = new AggregateUpdatableValue(
 				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },
 				"\n");
-		dbs.bind(dbs.createUpdatable(txtCustom_multi, "text"),
+		dbc.bind(dbc.createUpdatable(txtCustom_multi, "text"),
 				customUpdatable_2);
 
 		// IUpdatableValue descriptionUpdatable =
-		// dbs.createUpdatableValue(skiTrip,emfPackage.getAdventure_Description());
+		// dbc.createUpdatableValue(skiTrip,emfPackage.getAdventure_Description());
 		// IUpdatableValue nameUpdatable =
-		// dbs.createUpdatableValue(skiTrip,emfPackage.getAdventure_Name());
+		// dbc.createUpdatableValue(skiTrip,emfPackage.getAdventure_Name());
 		// new AggregateUpdatable(new IUpdatable[] {} des, name,"/n");
 
 	}

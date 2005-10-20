@@ -29,7 +29,7 @@ public class ComboBinding extends Composite {
 
 	private Text txtDefaultLodging = null;
 
-	private DatabindingService dbs;
+	private DatabindingContext dbc;
 
 	private ComboViewer comboViewer;
 	
@@ -72,7 +72,7 @@ public class ComboBinding extends Composite {
 	}
 
 	private void bind() throws BindingException {
-		dbs = SampleData.getSWTtoEMFDatabindingService(this);		
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);		
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 		Catalog catalog = SampleData.CATALOG_2005;
@@ -85,12 +85,12 @@ public class ComboBinding extends Composite {
 			 }
 		};
 		comboViewer.setLabelProvider(lp);
-		dbs.bind(comboViewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
+		dbc.bind(comboViewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
 		
-		dbs.bind(comboViewer,"selection",skiTrip,"defaultLodging");
+		dbc.bind(comboViewer,"selection",skiTrip,"defaultLodging");
 		
-		IUpdatable defLodging = dbs.createUpdatable(skiTrip, "defaultLodging");
-		dbs.bind(txtDefaultLodging, "text", defLodging, "name");
+		IUpdatable defLodging = dbc.createUpdatable(skiTrip, "defaultLodging");
+		dbc.bind(txtDefaultLodging, "text", defLodging, "name");
 		
 		
 		// bind the combo
@@ -98,8 +98,8 @@ public class ComboBinding extends Composite {
 		 pureCombo.setItems (new String[] { "FairyLand", "TuneLand", "NoWereLand", "TinkerLand", "DreamLand" });
 		 Account account = (Account) catalog.getAccounts().get(0);
 		 
-		 dbs.bind(pureCombo, SWTBindingConstants.SELECTION, account, "country");
-		 dbs.bind(pureComboTxt, "text", account, "country");
+		 dbc.bind(pureCombo, SWTBindingConstants.SELECTION, account, "country");
+		 dbc.bind(pureComboTxt, "text", account, "country");
 
 	}
 

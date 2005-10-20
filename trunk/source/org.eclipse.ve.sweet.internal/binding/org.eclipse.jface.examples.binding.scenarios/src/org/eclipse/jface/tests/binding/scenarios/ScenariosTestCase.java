@@ -2,7 +2,7 @@ package org.eclipse.jface.tests.binding.scenarios;
 
 import junit.framework.TestCase;
 
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,7 +19,7 @@ abstract public class ScenariosTestCase extends TestCase {
 
 	private Composite composite;
 
-	private DatabindingService dbs;
+	private DatabindingContext dbc;
 
 	private Display display;
 
@@ -31,8 +31,8 @@ abstract public class ScenariosTestCase extends TestCase {
 		return composite;
 	}
 
-	protected DatabindingService getDbs() {
-		return dbs;
+	protected DatabindingContext getDbc() {
+		return dbc;
 	}
 
 	public Shell getShell() {
@@ -70,7 +70,7 @@ abstract public class ScenariosTestCase extends TestCase {
 		composite.setLayout(new GridLayout());
 		SampleData.initializeData(); // test may manipulate the data... let
 										// all start from fresh
-		dbs = SampleData.getSWTtoEMFDatabindingService(composite);
+		dbc = SampleData.getSWTtoEMFDatabindingContext(composite);
 	}
 
 	protected void tearDown() throws Exception {
@@ -79,7 +79,7 @@ abstract public class ScenariosTestCase extends TestCase {
 		if (shell != null) {
 			shell.dispose();
 		} else
-			dbs.dispose();
+			dbc.dispose();
 		if (display != null && disposeDisplay) {
 			display.dispose();
 		}

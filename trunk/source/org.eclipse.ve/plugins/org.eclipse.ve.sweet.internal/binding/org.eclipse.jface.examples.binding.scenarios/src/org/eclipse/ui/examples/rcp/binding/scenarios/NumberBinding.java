@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingService;
+import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,7 +30,7 @@ public class NumberBinding {
 
 	private Text txtPrice = null;
 
-	private DatabindingService dbs;
+	private DatabindingContext dbc;
 
 	private Text lblPrice = null;
 
@@ -79,16 +79,16 @@ public class NumberBinding {
 	}
 
 	private void bind() throws BindingException {
-		dbs = SampleData.getSWTtoEMFDatabindingService(sShell);
+		dbc = SampleData.getSWTtoEMFDatabindingContext(sShell);
 		AdventureFactory emfFactory = AdventurePackage.eINSTANCE
 				.getAdventureFactory();
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbs.bind(txtPrice, "text", skiTrip, emfPackage.getAdventure_Price());
-		dbs.bind(lblPrice, "text", skiTrip, emfPackage.getAdventure_Price());
-		dbs.bind(txtPrice_2, "text", skiTrip, emfPackage.getAdventure_Price());
+		dbc.bind(txtPrice, "text", skiTrip, emfPackage.getAdventure_Price());
+		dbc.bind(lblPrice, "text", skiTrip, emfPackage.getAdventure_Price());
+		dbc.bind(txtPrice_2, "text", skiTrip, emfPackage.getAdventure_Price());
 
 	}
 
