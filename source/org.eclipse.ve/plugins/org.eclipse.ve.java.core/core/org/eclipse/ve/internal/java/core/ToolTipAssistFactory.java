@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipAssistFactory.java,v $
- *  $Revision: 1.16 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.17 $  $Date: 2005-10-20 19:34:42 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -23,8 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.*;
 
-import org.eclipse.ve.internal.cde.core.IErrorHolder;
-import org.eclipse.ve.internal.cde.core.IErrorNotifier;
+import org.eclipse.ve.internal.cde.core.*;
 
 
 /**
@@ -53,39 +52,6 @@ public class ToolTipAssistFactory {
 		}
 	}
 	
-	/**
-	 * ToolTipDetails are able to create a figure
-	 * @since 1.0.0
-	 */
-	public static interface TooltipDetails{
-		/**
-		 * Return the figure to use. This will be called only once, the first time the assist is used.
-		 * This may not occur for awhile. It will occur on the first hover over the tooltip.
-		 * 
-		 * @return
-		 * 
-		 * @since 1.1.0
-		 */
-		IFigure createFigure();
-		/**
-		 * The details is being activated. This will be called the first time after the figure is created,
-		 * and whenever the details is reactivated at a later time. It should do things like start listening if
-		 * it needs to listen for anything.
-		 * 
-		 * 
-		 * @since 1.1.0
-		 */
-		void activate();
-
-		/**
-		 * The details is being deactivated. It should do things like stop listening if it is listening.
-		 * 
-		 * 
-		 * @since 1.1.0
-		 */
-		void deactivate();
-	}	
-		
 	static  class NullTTAdapter implements IJavaToolTipProposalAdapter {
 		final static Label l = new Label(JavaMessages.ToolTipAssistFactory_ToolTip_not_available_1) ; 
 		final static Label l2 = new Label() ;
@@ -109,7 +75,7 @@ public class ToolTipAssistFactory {
 		return (IJavaToolTipProposalAdapter) EcoreUtil.getExistingAdapter(javaInstance, IJavaToolTipProposalAdapter.JAVA_ToolTip_Proposal_TYPE);		
 	}	
 
-    static class DefaultInstanceProcessor implements ToolTipAssistFactory.TooltipDetails {
+    static class DefaultInstanceProcessor implements ToolTipProcessor {
     	
     	IJavaInstance					javaInstance ;
     	IJavaToolTipProposalAdapter fTTadapter = null ;
@@ -149,7 +115,7 @@ public class ToolTipAssistFactory {
        /** 
      * Create a getter processor that at this time generates a single getter proposal.
      */
-	static class DefaultMethodProcessor implements ToolTipAssistFactory.TooltipDetails {
+	static class DefaultMethodProcessor implements ToolTipProcessor {
     	
 			IJavaInstance javaInstance;
 		    IJavaToolTipProposalAdapter fTTadapter = null ;
@@ -179,7 +145,7 @@ public class ToolTipAssistFactory {
 			}
 		}
 	
-	static class ErrorProcessor implements ToolTipAssistFactory.TooltipDetails {
+	static class ErrorProcessor implements ToolTipProcessor {
 		
 		private Figure figure;
 		private IErrorNotifier errNotifier;
@@ -252,7 +218,7 @@ public class ToolTipAssistFactory {
 	 * Construct with a beanproxy and a get method name
 	 * If the get method throws an exception then show this in a label
 	 */
-	public static class GetMethodErrorProcessor implements ToolTipAssistFactory.TooltipDetails{
+	public static class GetMethodErrorProcessor implements ToolTipProcessor{
 		
 		private IBeanProxy beanProxy;
 		private String methodName;
@@ -296,11 +262,11 @@ public class ToolTipAssistFactory {
 		}
 	}
         
-    public static ToolTipAssistFactory.TooltipDetails[] createToolTipProcessors (IJavaInstance javaInstance, IErrorNotifier errorNotifier) {
-    	ToolTipAssistFactory.TooltipDetails errorProcessor = new ErrorProcessor(errorNotifier);    	
-    	ToolTipAssistFactory.TooltipDetails instanceProcessor = new DefaultInstanceProcessor(javaInstance);
-    	ToolTipAssistFactory.TooltipDetails methodProcessor = new DefaultMethodProcessor(javaInstance);
-		return new ToolTipAssistFactory.TooltipDetails[] { errorProcessor , methodProcessor, instanceProcessor } ;		
+    public static ToolTipProcessor[] createToolTipProcessors (IJavaInstance javaInstance, IErrorNotifier errorNotifier) {
+    	ToolTipProcessor errorProcessor = new ErrorProcessor(errorNotifier);    	
+    	ToolTipProcessor instanceProcessor = new DefaultInstanceProcessor(javaInstance);
+    	ToolTipProcessor methodProcessor = new DefaultMethodProcessor(javaInstance);
+		return new ToolTipProcessor[] { errorProcessor , methodProcessor, instanceProcessor } ;		
     }
 
 

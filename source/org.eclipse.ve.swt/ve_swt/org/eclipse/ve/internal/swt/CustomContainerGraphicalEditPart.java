@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CustomContainerGraphicalEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-20 19:34:43 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -84,7 +84,7 @@ public abstract class CustomContainerGraphicalEditPart extends AbstractGraphical
 		cfig.setContentPane(ifig);
 		fErrorIndicator = new ErrorFigure();
 		cfig.add(fErrorIndicator);
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors((IJavaInstance) getModel(), getErrorNotifier()));
+		IFigure ToolTipFig = new ToolTipContentHelper(ToolTipAssistFactory.createToolTipProcessors((IJavaInstance) getModel(), getErrorNotifier()));
 		cfig.setToolTip(ToolTipFig);
 		return cfig;
 	}
@@ -107,11 +107,11 @@ public abstract class CustomContainerGraphicalEditPart extends AbstractGraphical
 	
 		getErrorNotifier().addErrorListener(fBeanProxyErrorListener);
 	
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
+		((ToolTipContentHelper) getFigure().getToolTip()).activate();
 	}
 
 	public void deactivate() {
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).deactivate();
+		((ToolTipContentHelper) getFigure().getToolTip()).deactivate();
 		
 		if (imageFigureController != null)
 			imageFigureController.deactivate();

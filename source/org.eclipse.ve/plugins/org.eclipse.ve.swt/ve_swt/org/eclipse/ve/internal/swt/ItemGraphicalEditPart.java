@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ItemGraphicalEditPart.java,v $ $Revision: 1.3 $ $Date: 2005-08-24 23:52:56 $
+ * $RCSfile: ItemGraphicalEditPart.java,v $ $Revision: 1.4 $ $Date: 2005-10-20 19:34:43 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -90,7 +90,7 @@ public abstract class ItemGraphicalEditPart extends AbstractGraphicalEditPart im
 		getBeanProxyAdapter().addErrorListener(fBeanProxyErrorListener);
 		getBean().eAdapters().add(adapter);
 		
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
+		((ToolTipContentHelper) getFigure().getToolTip()).activate();
 	}
 	
 	
@@ -98,7 +98,7 @@ public abstract class ItemGraphicalEditPart extends AbstractGraphicalEditPart im
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#deactivate()
 	 */
 	public void deactivate() {
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).deactivate();
+		((ToolTipContentHelper) getFigure().getToolTip()).deactivate();
 		getBeanProxyAdapter().removeErrorListener(fBeanProxyErrorListener);
 		getBean().eAdapters().remove(adapter);
 		super.deactivate();
@@ -199,7 +199,7 @@ public abstract class ItemGraphicalEditPart extends AbstractGraphicalEditPart im
 		cfig.setContentPane(ifig);
 		fErrorIndicator = new ErrorFigure();
 		cfig.add(fErrorIndicator);
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean(), (IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE)));
+		IFigure ToolTipFig = new ToolTipContentHelper(ToolTipAssistFactory.createToolTipProcessors(getBean(), (IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE)));
 		cfig.setToolTip(ToolTipFig);
 		return cfig;
 	}
