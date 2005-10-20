@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.22 $  $Date: 2005-09-22 16:07:04 $ 
+ *  $Revision: 1.23 $  $Date: 2005-10-20 18:20:12 $ 
  */
 
 import java.util.*;
@@ -663,6 +663,9 @@ public Label getReturnMethodDisplayInformation() {
 			l = fpreviousLabel ;
 		}
 	}
+	// To prevent extra line in the tooltip, just return null instead of returning an empty label
+	if (l.getText().length() == 0 )
+		l = null;
 	return l ;		
 }
 
