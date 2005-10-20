@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.38 $ $Date: 2005-10-20 19:34:43 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.39 $ $Date: 2005-10-20 22:30:50 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -42,6 +42,10 @@ import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
 import org.eclipse.ve.internal.java.core.*;
 
+/**
+ * 
+ * @since 1.2.0
+ */
 public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor {
 	
 	protected ImageFigureController imageFigureController;
@@ -97,8 +101,6 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		cfig.setContentPane(ifig);
 		fErrorIndicator = new ErrorFigure();
 		cfig.add(fErrorIndicator);
-		IFigure ToolTipFig = new ToolTipContentHelper(ToolTipAssistFactory.createToolTipProcessors(getBean(), errorNotifier));
-		cfig.setToolTip(ToolTipFig);
 		return cfig;
 	}
 	
@@ -360,5 +362,9 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		} else {
 			super.performRequest(request);
 		}
+	}
+
+	protected ToolTipProcessor[] createToolTipProcessors() {
+		return ToolTipAssistFactory.createToolTipProcessors(getBean(), errorNotifier);
 	}
 }  

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.32 $ $Date: 2005-10-20 19:34:42 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.33 $ $Date: 2005-10-20 22:30:49 $
  */
 import java.util.*;
 
@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractEditPart;
-import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.swt.graphics.RGB;
@@ -55,7 +54,7 @@ import org.eclipse.ve.internal.java.core.*;
  * The initialization data is used to configure whether this edit part should show borders on the figure or not. The default is false. The
  * initialization data can be "true" or "false", case-insensitive. This init data can be placed in the xmi to determine what it should be.
  */
-public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor {
+public class ComponentGraphicalEditPart extends CDEAbstractGraphicalEditPart implements IExecutableExtension, IJavaBeanGraphicalContextMenuContributor {
 
 	protected boolean transparent = false; // Whether there should be an image or not.
 	protected ImageFigureController imageFigureController;
@@ -112,8 +111,6 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		cfig.setContentPane(ifig);
 		fErrorIndicator = new ErrorFigure();
 		cfig.add(fErrorIndicator);
-		IFigure ToolTipFig = new ToolTipContentHelper(ToolTipAssistFactory.createToolTipProcessors(getBean(), errorNotifier));
-		cfig.setToolTip(ToolTipFig);
 		return cfig;
 	}
 
@@ -469,5 +466,9 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	public void setLightenCrossHatch(boolean crossHatch) {
 		if (imageFigureController != null)
 			imageFigureController.setCrossHatch(crossHatch);
+	}
+
+	protected ToolTipProcessor[] createToolTipProcessors() {
+		return ToolTipAssistFactory.createToolTipProcessors(getBean(), errorNotifier);
 	}
 }
