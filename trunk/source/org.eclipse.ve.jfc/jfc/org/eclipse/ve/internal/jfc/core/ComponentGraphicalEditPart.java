@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.31 $ $Date: 2005-09-22 12:55:58 $
+ * $RCSfile: ComponentGraphicalEditPart.java,v $ $Revision: 1.32 $ $Date: 2005-10-20 19:34:42 $
  */
 import java.util.*;
 
@@ -112,7 +112,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		cfig.setContentPane(ifig);
 		fErrorIndicator = new ErrorFigure();
 		cfig.add(fErrorIndicator);
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean(), errorNotifier));
+		IFigure ToolTipFig = new ToolTipContentHelper(ToolTipAssistFactory.createToolTipProcessors(getBean(), errorNotifier));
 		cfig.setToolTip(ToolTipFig);
 		return cfig;
 	}
@@ -297,7 +297,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 		errorNotifier.addErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE));	// This will signal initial severity if not none.
 		errorNotifier.addErrorNotifier(otherNotifier);
 		
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
+		((ToolTipContentHelper) getFigure().getToolTip()).activate();
 	}
 
 	protected void setSeverity(int severity) {
@@ -306,7 +306,7 @@ public class ComponentGraphicalEditPart extends AbstractGraphicalEditPart implem
 	}
 
 	public void deactivate() {
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).deactivate();
+		((ToolTipContentHelper) getFigure().getToolTip()).deactivate();
 		if (imageFigureController != null)
 			imageFigureController.deactivate();
 		if (fBeanProxyErrorListener != null) {

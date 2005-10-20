@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.37 $ $Date: 2005-10-07 15:31:30 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.38 $ $Date: 2005-10-20 19:34:43 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -97,7 +97,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		cfig.setContentPane(ifig);
 		fErrorIndicator = new ErrorFigure();
 		cfig.add(fErrorIndicator);
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(getBean(), errorNotifier));
+		IFigure ToolTipFig = new ToolTipContentHelper(ToolTipAssistFactory.createToolTipProcessors(getBean(), errorNotifier));
 		cfig.setToolTip(ToolTipFig);
 		return cfig;
 	}
@@ -124,7 +124,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		errorNotifier.addErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE));	// This will signal initial severity if not none.
 		errorNotifier.addErrorNotifier(otherNotifier);
 		
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
+		((ToolTipContentHelper) getFigure().getToolTip()).activate();
 	}
 	
 	public void setTransparent(boolean aBool){
@@ -132,7 +132,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 	}
 	
 	public void deactivate() {
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).deactivate();
+		((ToolTipContentHelper) getFigure().getToolTip()).deactivate();
 		
 		if (imageFigureController != null)
 			imageFigureController.deactivate();

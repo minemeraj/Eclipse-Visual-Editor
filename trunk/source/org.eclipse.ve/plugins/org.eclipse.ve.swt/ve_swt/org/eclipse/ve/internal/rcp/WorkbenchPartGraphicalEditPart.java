@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 17:33:41 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-20 19:34:43 $ 
  */
 package org.eclipse.ve.internal.rcp;
 
@@ -96,7 +96,7 @@ public class WorkbenchPartGraphicalEditPart extends AbstractGraphicalEditPart im
 		cfig.setContentPane(ifig);
 		fErrorIndicator = new ErrorFigure();
 		cfig.add(fErrorIndicator);
-		IFigure ToolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors((IJavaInstance) getModel(),
+		IFigure ToolTipFig = new ToolTipContentHelper(ToolTipAssistFactory.createToolTipProcessors((IJavaInstance) getModel(),
 				getErrorNotifier()));
 		cfig.setToolTip(ToolTipFig);
 		return cfig;
@@ -184,7 +184,7 @@ public class WorkbenchPartGraphicalEditPart extends AbstractGraphicalEditPart im
 
 		getErrorNotifier().addErrorListener(fBeanProxyErrorListener);
 
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
+		((ToolTipContentHelper) getFigure().getToolTip()).activate();
 		
 		EditDomain dom = EditDomain.getEditDomain(this);
 		viListener = new WorkBenchPartVIListener(getModel(), dom.getDiagram(this.getRoot().getViewer()), dom);
@@ -195,7 +195,7 @@ public class WorkbenchPartGraphicalEditPart extends AbstractGraphicalEditPart im
 		viListener.removeListening();
 		viListener = null;
 		
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).deactivate();
+		((ToolTipContentHelper) getFigure().getToolTip()).deactivate();
 
 		if (imageFigureController != null)
 			imageFigureController.deactivate();

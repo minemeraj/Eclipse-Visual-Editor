@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.12 $ $Date: 2005-09-14 18:20:07 $
+ * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-10-20 19:34:42 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -76,7 +76,7 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 		setSeverity(errorNotifier.getErrorStatus()); // Set the initial status
 		errorNotifier.addErrorListener(fBeanProxyErrorListener);
 		
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).activate();
+		((ToolTipContentHelper) getFigure().getToolTip()).activate();
 	}
 
 	protected void setSeverity(int severity) {
@@ -84,7 +84,7 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 	}
 
 	public void deactivate() {
-		((ToolTipContentHelper.AssistedToolTipFigure) getFigure().getToolTip()).deactivate();
+		((ToolTipContentHelper) getFigure().getToolTip()).deactivate();
 		if (fBeanProxyErrorListener != null) {
 			getErrorNotifier().removeErrorListener(fBeanProxyErrorListener);
 			fBeanProxyErrorListener = null;
@@ -136,7 +136,7 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 		IFigure fig = super.createFigure();
 		fErrorIndicator = new ErrorFigure();
 		fig.add(fErrorIndicator);
-		ToolTipContentHelper.AssistedToolTipFigure toolTipFig = ToolTipContentHelper.createToolTip(ToolTipAssistFactory.createToolTipProcessors(
+		ToolTipContentHelper toolTipFig = new ToolTipContentHelper(ToolTipAssistFactory.createToolTipProcessors(
 				getBean(), getErrorNotifier()));
 		fig.setToolTip(toolTipFig);
 		return fig;
