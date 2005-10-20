@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.40 $  $Date: 2005-10-14 17:45:07 $ 
+ *  $Revision: 1.41 $  $Date: 2005-10-20 21:04:09 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -492,11 +492,12 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 		if(selectedType==null){
 			pkgName.setImage(null);
 			pkgName.setText("");
+			beanName = "";
 		}else{
 			pkgName.setImage(pkgLabelProvider.getImage(selectedType));
 			pkgName.setText(pkgLabelProvider.getText(selectedType));
+			beanName = getDefaultBeanName(selectedType.getTypeName());
 		}
-		beanName = getDefaultBeanName(selectedType.getTypeName());
 		if(beanNameText!=null && !beanNameText.isDisposed()){
 			beanNameText.setText(beanName);
 		}
