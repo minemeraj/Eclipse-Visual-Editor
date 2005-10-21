@@ -49,12 +49,12 @@ abstract public class ScenariosTestCase extends TestCase {
 			result = shell;
 		}
 		result.setText(getName()); // In the case that the shell() becomes
-									// visible.
+		// visible.
 		return result;
 	}
 
 	protected void spinEventLoop(int secondsToWaitWithNoEvents) {
-		if (!composite.isVisible()) {
+		if (!composite.isVisible() && secondsToWaitWithNoEvents > 0) {
 			composite.getShell().open();
 		}
 		while (composite.getDisplay().readAndDispatch())
@@ -65,20 +65,22 @@ abstract public class ScenariosTestCase extends TestCase {
 			Thread.currentThread().interrupt();
 		}
 	}
-	
+
 	protected void setButtonSelectionWithEvents(Button button, boolean value) {
-		if(button.getSelection()==value) {
+		if (button.getSelection() == value) {
 			return;
 		}
-		if(!getShell().isVisible()) {
-//			getShell().open();
-//			spinEventLoop(1);
+		if (!getShell().isVisible()) {
+			// getShell().open();
+			// spinEventLoop(1);
 		}
 		button.forceFocus();
 		spinEventLoop(0);
-		AutomationUtil.performCharacterEvent(getShell().getDisplay(), SWT.KeyDown, ' ');
+		AutomationUtil.performCharacterEvent(getShell().getDisplay(),
+				SWT.KeyDown, ' ');
 		spinEventLoop(0);
-		AutomationUtil.performCharacterEvent(getShell().getDisplay(), SWT.KeyUp, ' ');
+		AutomationUtil.performCharacterEvent(getShell().getDisplay(),
+				SWT.KeyUp, ' ');
 		spinEventLoop(0);
 	}
 
@@ -86,7 +88,7 @@ abstract public class ScenariosTestCase extends TestCase {
 		composite = new Composite(getShell(), SWT.NONE);
 		composite.setLayout(new GridLayout());
 		SampleData.initializeData(); // test may manipulate the data... let
-										// all start from fresh
+		// all start from fresh
 		dbc = SampleData.getSWTtoEMFDatabindingContext(composite);
 	}
 
