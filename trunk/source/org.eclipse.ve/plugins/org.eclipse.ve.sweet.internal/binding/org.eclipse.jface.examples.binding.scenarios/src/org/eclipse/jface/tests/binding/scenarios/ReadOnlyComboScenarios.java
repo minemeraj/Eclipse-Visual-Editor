@@ -211,11 +211,20 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		}
 		assertEquals(getColumn(catalog.getLodgings(), "name"),
 				getComboContent());
+		
+		// Set to null value
+		Lodging l = (Lodging) catalog.getLodgings().get(0);
+		l.setName(null);
+		assertEquals(combo.getItem(0),"");
+		
+		// set to empty list
+		while (lodgings.size()>0)
+			lodgings.remove(0);
+		assertEquals(getColumn(catalog.getLodgings(), "name"),
+					 getComboContent());
+		
 
-		// TODO: set name to null
-
-		// TODO: set to empty list
-
+		
 	}
 	
 	/**
