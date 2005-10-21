@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.10 $  $Date: 2005-10-20 22:30:51 $ 
+ *  $Revision: 1.11 $  $Date: 2005-10-21 15:10:58 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -331,6 +331,9 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 					}
 				}
 			}
+			// If we have new contributions to the hover help, refresh the tooltip content helper
+			if (hoverOverlayCache != null && toolTipFigure instanceof ToolTipContentHelper)
+				((ToolTipContentHelper)toolTipFigure).refresh();
 		}
 	}
 	
