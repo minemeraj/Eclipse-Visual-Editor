@@ -51,19 +51,19 @@ public class EMFUpdatableCollection extends Updatable implements
 					if (msg.getEventType() == Notification.ADD) {
 						EObject newObject = (EObject) msg.getNewValue();
 						newObject.eAdapters().add(this);
-						fireChangeEvent(IChangeEvent.ADD, null, newObject, msg
+						fireChangeEvent(null, IChangeEvent.ADD, null, newObject, msg
 								.getPosition());
 					} else if (msg.getEventType() == Notification.REMOVE) {
 						EObject oldObject = (EObject) msg.getOldValue();
 						oldObject.eAdapters().remove(this);
-						fireChangeEvent(IChangeEvent.REMOVE, oldObject, null,
+						fireChangeEvent(null, IChangeEvent.REMOVE, oldObject, null,
 								msg.getPosition());
 					}
 				} else {
 					// notifier is one of the objects in the list
 					int position = getElements().indexOf(msg.getNotifier());
 					if (position != -1) {
-						fireChangeEvent(IChangeEvent.CHANGE, msg.getNotifier(),
+						fireChangeEvent(null, IChangeEvent.CHANGE, msg.getNotifier(),
 								msg.getNotifier(), position);
 					}
 				}

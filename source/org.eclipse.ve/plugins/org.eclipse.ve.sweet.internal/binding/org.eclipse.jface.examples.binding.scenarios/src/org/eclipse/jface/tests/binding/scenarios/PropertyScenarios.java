@@ -20,8 +20,10 @@ import org.eclipse.jface.binding.IConverter;
 import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.jface.binding.IValidator;
 import org.eclipse.jface.binding.IdentityConverter;
+import org.eclipse.jface.binding.swt.SWTBindingConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
@@ -262,8 +264,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 					public String isValid(Object value) {
 						String stringValue = (String) value;
 						try {
-							double doubleValue = new Double(
-									stringValue).doubleValue();
+							double doubleValue = new Double(stringValue)
+									.doubleValue();
 							if (doubleValue < 0.0) {
 								return cannotBeNegativeMessage;
 							} else {
@@ -359,16 +361,98 @@ public class PropertyScenarios extends ScenariosTestCase {
 		adventure.setPrice(0.0);
 		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 	}
-	
+
 	public void testScenario09() throws BindingException {
-		// Binding a boolean property to a CheckBox. Adventure will have a Boolean property “petsAllowed”
+		// Binding a boolean property to a CheckBox. Adventure will have a
+		// Boolean property “petsAllowed”
 		Button checkbox = new Button(getComposite(), SWT.CHECK);
+		// checkbox.setText("Pets allowed");
+		// checkbox.setLayoutData(new GridData(SWT.LEFT,SWT.TOP, false,false));
 		adventure.setPetsAllowed(true);
 		getDbc().bind(checkbox, "selection", adventure, "petsAllowed");
 		assertEquals(true, checkbox.getSelection());
-		checkbox.setSelection(false);
-//TODO		assertEquals(false, adventure.isPetsAllowed());
+		setButtonSelectionWithEvents(checkbox, false);
+		assertEquals(false, adventure.isPetsAllowed());
 		adventure.setPetsAllowed(true);
-//TODO		assertEquals(true, checkbox.getSelection());
+		assertEquals(true, checkbox.getSelection());
+	}
+
+	public void testScenario10() throws BindingException {
+		// Binding a Transportation departure time to a Text control that
+		// formats and validates the time to and from a String. There are
+		// property bindings that bind elements of the GUI to elements to GUI
+		// and also elements of the domain to elements of the domain
+//		fail("not implemented");
+	}
+
+	public void testScenario11() throws BindingException {
+		// Binding the max value of a spinner to another spinner.
+		Spinner spinner1 = new Spinner(getComposite(), SWT.NONE);
+		spinner1.setSelection(10);
+		spinner1.setMinimum(1);
+		spinner1.setMaximum(100);
+		Spinner spinner2 = new Spinner(getComposite(), SWT.NONE);
+		spinner2.setMaximum(1);
+		getDbc().bind(spinner1, SWTBindingConstants.SELECTION, spinner2,
+				SWTBindingConstants.MAX);
+		assertEquals(1, spinner1.getSelection());
+		spinner1.setSelection(10);
+		assertEquals(10, spinner2.getMaximum());
+	}
+
+	public void testScenario12() throws BindingException {
+		// Binding the enabled state of several Text controls to a check box.
+		// There will be two check boxes, so as each is enabled/disabled the
+		// other one follows as do the states of the Text controls.
+		Button checkbox1 = new Button(getComposite(), SWT.CHECK);
+		checkbox1.setSelection(false);
+		Button checkbox2 = new Button(getComposite(), SWT.CHECK);
+		checkbox2.setSelection(false);
+		Text text1 = new Text(getComposite(), SWT.NONE);
+		Text text2 = new Text(getComposite(), SWT.NONE);
+		IUpdatableValue checkbox1Selected = (IUpdatableValue) getDbc()
+				.createUpdatable(checkbox1, SWTBindingConstants.SELECTION);
+		IUpdatableValue checkbox2Selected = (IUpdatableValue) getDbc()
+				.createUpdatable(checkbox2, SWTBindingConstants.SELECTION);
+		getDbc().bind(checkbox1Selected, checkbox2Selected, new IConverter() {
+			public Class getModelType() {
+				return Boolean.class;
+			}
+
+			public Class getTargetType() {
+				return Boolean.class;
+			}
+
+			private Boolean negated(Boolean booleanObject) {
+				return new Boolean(!booleanObject.booleanValue());
+			}
+
+			public Object convertTargetToModel(Object targetObject) {
+				return negated((Boolean) targetObject);
+			}
+
+			public Object convertModelToTarget(Object modelObject) {
+				return negated((Boolean) modelObject);
+			}
+		});
+		getDbc().bind(text1, SWTBindingConstants.ENABLED, checkbox1Selected);
+		getDbc().bind(text2, SWTBindingConstants.ENABLED, checkbox2Selected);
+		assertEquals(true, text1.getEnabled());
+		assertEquals(false, text2.getEnabled());
+		assertEquals(true, checkbox1.getSelection());
+		setButtonSelectionWithEvents(checkbox1, false);
+		assertEquals(false, text1.getEnabled());
+		assertEquals(true, text2.getEnabled());
+		assertEquals(true, checkbox2.getSelection());
+		setButtonSelectionWithEvents(checkbox2, false);
+		assertEquals(true, text1.getEnabled());
+		assertEquals(false, text2.getEnabled());
+		assertEquals(true, checkbox1.getSelection());
+	}
+
+	public void testScenario13() throws BindingException {
+		// Changing the update policy to be not automatic, but on explicit
+		// method call (e.g. triggered by a button click).
+//		fail("not implemented");
 	}
 }

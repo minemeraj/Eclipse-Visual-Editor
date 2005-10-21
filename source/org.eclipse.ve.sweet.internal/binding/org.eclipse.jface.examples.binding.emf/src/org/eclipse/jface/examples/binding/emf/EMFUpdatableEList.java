@@ -12,7 +12,7 @@
  *  Created Oct 20, 2005 by Gili Mendel
  * 
  *  $RCSfile: EMFUpdatableEList.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-20 18:15:37 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-21 17:30:35 $ 
  */
 
 package org.eclipse.jface.examples.binding.emf;
@@ -24,10 +24,12 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.binding.*;
+import org.eclipse.jface.binding.IChangeEvent;
+import org.eclipse.jface.binding.IUpdatableCollection;
+import org.eclipse.jface.binding.Updatable;
 
-public class EMFUpdatableEList extends Updatable implements IUpdatableCollection {
-	
+public class EMFUpdatableEList extends Updatable implements
+		IUpdatableCollection {
 
 	private final EList list;
 
@@ -38,7 +40,9 @@ public class EMFUpdatableEList extends Updatable implements IUpdatableCollection
 		public void notifyChanged(Notification msg) {
 			super.notifyChanged(msg);
 			// TODO: need to deal with add many and such
-			if (!updating && msg.getEventType() != Notification.REMOVING_ADAPTER && msg.getEventType() != Notification.REMOVING_ADAPTER) { // A
+			if (!updating
+					&& msg.getEventType() != Notification.REMOVING_ADAPTER
+					&& msg.getEventType() != Notification.REMOVING_ADAPTER) { // A
 				// touch
 				// can
 				// designate
@@ -50,19 +54,20 @@ public class EMFUpdatableEList extends Updatable implements IUpdatableCollection
 					if (msg.getEventType() == Notification.ADD) {
 						EObject newObject = (EObject) msg.getNewValue();
 						newObject.eAdapters().add(this);
-						fireChangeEvent(IChangeEvent.ADD, null, newObject, msg.getPosition());
-					}
-					else if (msg.getEventType() == Notification.REMOVE) {
+						fireChangeEvent(null, IChangeEvent.ADD, null,
+								newObject, msg.getPosition());
+					} else if (msg.getEventType() == Notification.REMOVE) {
 						EObject oldObject = (EObject) msg.getOldValue();
 						oldObject.eAdapters().remove(this);
-						fireChangeEvent(IChangeEvent.REMOVE, oldObject, null, msg.getPosition());
+						fireChangeEvent(null, IChangeEvent.REMOVE, oldObject,
+								null, msg.getPosition());
 					}
-				}
-				else {
+				} else {
 					// notifier is one of the objects in the list
 					int position = list.indexOf(msg.getNotifier());
 					if (position != -1) {
-						fireChangeEvent(IChangeEvent.CHANGE, msg.getNotifier(), msg.getNotifier(), position);
+						fireChangeEvent(null, IChangeEvent.CHANGE, msg
+								.getNotifier(), msg.getNotifier(), position);
 					}
 				}
 			}
@@ -70,52 +75,51 @@ public class EMFUpdatableEList extends Updatable implements IUpdatableCollection
 	};
 
 	public EMFUpdatableEList(EList list, boolean oversensitiveListening) {
-		this.list = list;		
+		this.list = list;
 		for (Iterator itr = list.iterator(); itr.hasNext();) {
 			Object containedObject = itr.next();
-			if (containedObject instanceof EObject) 
-			  ((EObject)containedObject).eAdapters().add(adapter);
-			
+			if (containedObject instanceof EObject)
+				((EObject) containedObject).eAdapters().add(adapter);
+
 		}
 	}
 
 	public void dispose() {
 		super.dispose();
 		for (Iterator it = list.iterator(); it.hasNext();) {
-			Object object =  it.next();
+			Object object = it.next();
 			if (object instanceof EObject)
-			   ((EObject)object).eAdapters().remove(adapter);
-		}		
+				((EObject) object).eAdapters().remove(adapter);
+		}
 	}
-	
 
 	public int getSize() {
 		return list.size();
 	}
 
-	public int addElement(Object value, int index) {		
+	public int addElement(Object value, int index) {
 		if (index <= 0 || index > list.size())
 			index = list.size();
 		list.add(index, value);
 		if (value instanceof EObject)
-		   ((EObject) value).eAdapters().add(adapter);
-		fireChangeEvent(IChangeEvent.ADD, null, value, index);
+			((EObject) value).eAdapters().add(adapter);
+		fireChangeEvent(null, IChangeEvent.ADD, null, value, index);
 		return index;
 	}
 
 	public void removeElement(int index) {
-		Object  old = list.get(index);
+		Object old = list.get(index);
 		list.remove(index);
-		fireChangeEvent(IChangeEvent.REMOVE, old, null, index);
+		fireChangeEvent(null, IChangeEvent.REMOVE, old, null, index);
 		if (old instanceof EObject)
-		  ((EObject)old).eAdapters().remove(adapter);
+			((EObject) old).eAdapters().remove(adapter);
 	}
 
 	public void setElement(int row, Object value) {
 		Object old = getElement(row);
 		list.set(row, value);
 		if (old instanceof EObject)
-			  ((EObject)old).eAdapters().remove(adapter);
+			((EObject) old).eAdapters().remove(adapter);
 	}
 
 	public Object getElement(int row) {
