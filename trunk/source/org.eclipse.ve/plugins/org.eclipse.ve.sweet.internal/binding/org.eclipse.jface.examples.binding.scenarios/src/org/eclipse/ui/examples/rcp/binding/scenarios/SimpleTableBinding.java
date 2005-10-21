@@ -11,10 +11,13 @@ import org.eclipse.jface.binding.TableDescription;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
@@ -136,6 +139,21 @@ public class SimpleTableBinding extends Composite {
 		tableColumn1.setWidth(200);
 		tableColumn1.setText("Description");
 		tableViewer = new TableViewer(table);
+	}
+
+	public static void main(String[] args) throws BindingException {
+		Display d = new Display();
+		Shell s = new Shell(d, SWT.SHELL_TRIM);
+		s.setLayout(new FillLayout());
+		SimpleTableBinding simpleTableBinding = new SimpleTableBinding(s,
+				SWT.NONE);
+		s.pack();
+		s.open();
+		while (!s.isDisposed()) {
+			if (!d.readAndDispatch()) {
+				d.sleep();
+			}
+		}
 	}
 
 }
