@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipContentHelper.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-20 22:30:51 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-21 15:10:58 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -22,14 +22,14 @@ import org.eclipse.draw2d.*;
  * 
  * This class is the GEF ToolTip images that in the future will work more like code assist.
  * 
- * This class originated from an innerclass inside TooTipContentHelper which was in org.eclipse.ve.java.core.
+ * This class originated from an innerclass inside a helper class which was in org.eclipse.ve.java.core.
  * It was moved up to CDE to be used in a general purpose manner.
  * 
  * @since 1.2.0
  */
 public class ToolTipContentHelper extends Panel {
 	ArrayList	fToolTipProcessors = new ArrayList() ;
-	HashMap		fEntries;
+	HashMap		fProcessorFigures;
 			
 	public ToolTipContentHelper(ToolTipProcessor[] toolTipProcessors) {
 		FlowLayout layout = new FlowLayout(false) ;
@@ -42,12 +42,12 @@ public class ToolTipContentHelper extends Panel {
 	}
 	
 	/*
-	 * Activate the tooltip.
+	 * Activate the tooltip helper.
 	 * 
 	 * @since 1.2.0
 	 */
 	public void activate() {
-		if (fEntries != null) {
+		if (fProcessorFigures != null) {
 			Iterator iter = fToolTipProcessors.iterator();
 			while(iter.hasNext()){
 				((ToolTipProcessor)iter.next()).activate();
@@ -56,12 +56,12 @@ public class ToolTipContentHelper extends Panel {
 	}
 	
 	/*
-	 * Deactivate the tooltip.
+	 * Deactivate the tooltip helper.
 	 * 
 	 * @since 1.2.0
 	 */
 	public void deactivate() {
-		if (fEntries != null) {
+		if (fProcessorFigures != null) {
 			Iterator iter = fToolTipProcessors.iterator();
 			while(iter.hasNext()){
 				((ToolTipProcessor)iter.next()).deactivate();
@@ -74,24 +74,48 @@ public class ToolTipContentHelper extends Panel {
 	 */
 	public void addNotify() {
 		super.addNotify();
-		if (fEntries == null){
-			fEntries = new HashMap(fToolTipProcessors.size());
-			// Get the label for each tool tip details
+		if (fProcessorFigures == null) {
+			fProcessorFigures = new HashMap(fToolTipProcessors.size());
+			// Get the figure for each tool tip processor
 			Iterator iter = fToolTipProcessors.iterator();
-			while(iter.hasNext()){
-				IFigure figure = ((ToolTipProcessor)iter.next()).createFigure();
-				if(figure != null){
+			while (iter.hasNext()) {
+				ToolTipProcessor processor = (ToolTipProcessor) iter.next();
+				IFigure figure = processor.createFigure();
+				if (figure != null) {
 					add(figure);
+					fProcessorFigures.put(processor, figure);
 				}
 			}
 		}
 	}
 	public void addToolTipProcessor(ToolTipProcessor p) {
-		fToolTipProcessors.add(p) ;
+		fToolTipProcessors.add(p);
 	}
+	/*
+	 * Deactivate the tooltip processor and remove the processor figure from this helper
+	 */
 	public void removeToolTipProcessor(ToolTipProcessor p) {
 		p.deactivate();
-		fToolTipProcessors.remove(p) ;
+		if (fProcessorFigures != null) {
+			IFigure processorFigure = (IFigure) fProcessorFigures.get(p);
+			if (processorFigure != null) {
+				remove(processorFigure);
+				fProcessorFigures.remove(p);
+			}
+		}
+		fToolTipProcessors.remove(p);
 	}
 
+	/*
+	 * Remove the processor figures from this helper and set the map to null
+	 * so the next time the helper is shown (see addNotify), it will recreate the processor figures.
+	 */
+	public void refresh() {
+		if (fProcessorFigures != null) {
+			Iterator iter = fProcessorFigures.values().iterator();
+			while (iter.hasNext())
+				remove((IFigure) iter.next());
+			fProcessorFigures = null;
+		}
+	}
 }
