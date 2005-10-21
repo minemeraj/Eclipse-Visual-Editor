@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarActionEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-21 15:12:27 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-21 15:51:51 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -68,6 +68,7 @@ public abstract class ActionBarActionEditPart extends AbstractGraphicalEditPart 
 		final Label fig = new Label(fIcon);
 		if (fToolTip != null)
 			fig.setToolTip(new Label(fToolTip));
+		fig.setCursor(Cursors.HAND);
 		fig.addMouseListener(new MouseListener.Stub() {
 			// When mouse is pressed over this edit part, execute run() and notify action listeners
 			public void mousePressed(MouseEvent me) {

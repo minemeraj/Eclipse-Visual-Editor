@@ -133,6 +133,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 						fig.setImage(treeViewerImage);
 						fig.add(fErrorIndicator);
 						fig.setToolTip(label.getToolTip());
+						fig.setCursor(Cursors.HAND);
 						fig.setPreferredSize(fig.getPreferredSize().width + 1, fig.getPreferredSize().height);
 						return fig;
 					}
@@ -144,7 +145,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 			
 			// No Treeviewer... return an action editpart that can be selected to promote this tree to a tree viewer.
 			else
-				return new GraphicalEditPart[] { new ActionBarActionEditPart("Click here to transform to a Viewer") {
+				return new GraphicalEditPart[] { new ActionBarActionEditPart("Press here to convert to a TreeViewer") {
 
 					// Create and execute commands to promote this Tree to a JFace TreeViewer
 					public void run() {
