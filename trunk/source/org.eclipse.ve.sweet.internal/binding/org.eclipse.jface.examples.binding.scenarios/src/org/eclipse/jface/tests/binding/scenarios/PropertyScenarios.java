@@ -414,6 +414,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 				.createUpdatable(checkbox1, SWTBindingConstants.SELECTION);
 		IUpdatableValue checkbox2Selected = (IUpdatableValue) getDbc()
 				.createUpdatable(checkbox2, SWTBindingConstants.SELECTION);
+		// bind the two checkboxes so that if one is checked, the other is not
+		// and vice versa.
 		getDbc().bind(checkbox1Selected, checkbox2Selected, new IConverter() {
 			public Class getModelType() {
 				return Boolean.class;
@@ -435,6 +437,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 				return negated((Boolean) modelObject);
 			}
 		});
+		// bind the enabled state of the two text widgets to one of the
+		// checkboxes each.
 		getDbc().bind(text1, SWTBindingConstants.ENABLED, checkbox1Selected);
 		getDbc().bind(text2, SWTBindingConstants.ENABLED, checkbox2Selected);
 		assertEquals(true, text1.getEnabled());
