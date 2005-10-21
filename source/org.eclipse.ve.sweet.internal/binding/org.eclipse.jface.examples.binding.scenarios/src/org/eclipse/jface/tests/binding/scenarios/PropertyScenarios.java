@@ -382,7 +382,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// formats and validates the time to and from a String. There are
 		// property bindings that bind elements of the GUI to elements to GUI
 		// and also elements of the domain to elements of the domain
-//		fail("not implemented");
+		// TODO fail("not implemented");
 	}
 
 	public void testScenario11() throws BindingException {
@@ -457,6 +457,6 @@ public class PropertyScenarios extends ScenariosTestCase {
 	public void testScenario13() throws BindingException {
 		// Changing the update policy to be not automatic, but on explicit
 		// method call (e.g. triggered by a button click).
-//		fail("not implemented");
+		// TODO fail("not implemented");
 	}
 }
