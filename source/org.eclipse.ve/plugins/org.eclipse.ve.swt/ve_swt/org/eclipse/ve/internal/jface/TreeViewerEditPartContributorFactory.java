@@ -92,9 +92,9 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 		public ToolTipProcessor getHoverOverLay() {
 			treeViewer = getTreeViewer((IJavaInstance)tree);
 			if (treeViewer != null)
-				return new ToolTipProcessor.ToolTipLabel("Selection Viewer in action bar to show properties");
+				return new ToolTipProcessor.ToolTipLabel("Select TreeViewer in action bar to show Viewer properties");
 			else
-				return new ToolTipProcessor.ToolTipLabel("Press action in action bar to convert to a Viewer");
+				return new ToolTipProcessor.ToolTipLabel("Press action in action bar to convert to a TreeViewer");
 		}
 
 		/*
@@ -144,7 +144,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 			
 			// No Treeviewer... return an action editpart that can be selected to promote this tree to a tree viewer.
 			else
-				return new GraphicalEditPart[] { new ActionBarActionEditPart(noTreeViewerImage, "Click here to transform to a Viewer") {
+				return new GraphicalEditPart[] { new ActionBarActionEditPart("Click here to transform to a Viewer") {
 
 					// Create and execute commands to promote this Tree to a JFace TreeViewer
 					public void run() {
