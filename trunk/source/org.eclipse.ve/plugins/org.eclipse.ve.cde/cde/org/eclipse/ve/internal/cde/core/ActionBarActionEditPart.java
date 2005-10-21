@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarActionEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-17 21:55:16 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-21 15:12:27 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -27,7 +27,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public abstract class ActionBarActionEditPart extends AbstractGraphicalEditPart {
 
-	static final Image DEFAULT_IMAGE = CDEPlugin.getImageFromPlugin(CDEPlugin.getPlugin(), "images/somepart.gif");
+	static final Image DEFAULT_IMAGE = CDEPlugin.getImageFromPlugin(CDEPlugin.getPlugin(), "images/action_plus.gif");
 	protected String fToolTip;
 	protected Image fIcon = DEFAULT_IMAGE;
 	protected List fActionListeners = null;
