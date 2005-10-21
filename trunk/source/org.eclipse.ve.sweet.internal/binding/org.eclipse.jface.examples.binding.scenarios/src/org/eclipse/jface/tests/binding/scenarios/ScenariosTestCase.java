@@ -71,8 +71,8 @@ abstract public class ScenariosTestCase extends TestCase {
 			return;
 		}
 		if (!getShell().isVisible()) {
-			// getShell().open();
-			// spinEventLoop(1);
+			getShell().open();
+			spinEventLoop(0);
 		}
 		button.forceFocus();
 		spinEventLoop(0);
