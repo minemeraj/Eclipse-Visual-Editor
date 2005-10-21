@@ -15,6 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 
 import org.eclipse.jface.binding.IChangeEvent;
+import org.eclipse.jface.binding.IChangeListener;
 import org.eclipse.jface.binding.UpdatableValue;
 
 public class TimeEntryUpdatableValue extends UpdatableValue {
@@ -25,18 +26,20 @@ public class TimeEntryUpdatableValue extends UpdatableValue {
 		timeEntry = aTimeEntry;
 		timeEntry.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				fireChangeEvent(IChangeEvent.CHANGE, evt.getOldValue(), evt
+				fireChangeEvent(null, IChangeEvent.CHANGE, evt.getOldValue(), evt
 						.getNewValue());
 			}
 		});
 	}
 
-	public void setValue(Object value) {
+	public void setValue(Object value, IChangeListener listenerToOmit) {
+		Object oldValue = getValue();
 		try {
 			timeEntry.setTime((String) value);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		fireChangeEvent(listenerToOmit, IChangeEvent.CHANGE, oldValue, getValue());
 	}
 
 	public Object getValue() {

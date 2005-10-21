@@ -6,6 +6,7 @@ import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -63,6 +64,22 @@ abstract public class ScenariosTestCase extends TestCase {
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
+	}
+	
+	protected void setButtonSelectionWithEvents(Button button, boolean value) {
+		if(button.getSelection()==value) {
+			return;
+		}
+		if(!getShell().isVisible()) {
+//			getShell().open();
+//			spinEventLoop(1);
+		}
+		button.forceFocus();
+		spinEventLoop(0);
+		AutomationUtil.performCharacterEvent(getShell().getDisplay(), SWT.KeyDown, ' ');
+		spinEventLoop(0);
+		AutomationUtil.performCharacterEvent(getShell().getDisplay(), SWT.KeyUp, ' ');
+		spinEventLoop(0);
 	}
 
 	protected void setUp() throws Exception {

@@ -39,7 +39,7 @@ public class EMFDerivedUpdatableValue extends UpdatableValue {
 				removeListener();
 				currentObject = (EObject) updatableValue.getValue();
 				hookListener();
-				fireChangeEvent(IChangeEvent.CHANGE, oldValue, getValue());
+				fireChangeEvent(null,IChangeEvent.CHANGE, oldValue, getValue());
 			}
 		});
 	}
@@ -48,7 +48,7 @@ public class EMFDerivedUpdatableValue extends UpdatableValue {
 		public void notifyChanged(Notification msg) {
 			if (!msg.isTouch() && !updating) {
 				if (feature.equals(msg.getFeature())) {
-					fireChangeEvent(IChangeEvent.CHANGE, msg.getOldValue(), msg
+					fireChangeEvent(null, IChangeEvent.CHANGE, msg.getOldValue(), msg
 							.getNewValue());
 				}
 			}
@@ -63,10 +63,12 @@ public class EMFDerivedUpdatableValue extends UpdatableValue {
 		}
 	}
 
-	public void setValue(Object value) {
+	public void setValue(Object value, IChangeListener listenerToOmit) {
 		updating = true;
 		try {
+			Object oldValue = getValue();
 			currentObject.eSet(feature, value);
+			fireChangeEvent(listenerToOmit, IChangeEvent.CHANGE, oldValue, getValue());
 		} finally {
 			updating = false;
 		}
