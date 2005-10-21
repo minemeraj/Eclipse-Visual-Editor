@@ -1,9 +1,14 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.ConditionalUpdatableValue;
 import org.eclipse.jface.binding.DatabindingContext;
+import org.eclipse.jface.binding.IUpdatable;
+import org.eclipse.jface.binding.IUpdatableFactory2;
 import org.eclipse.jface.binding.IUpdatableValue;
+import org.eclipse.jface.binding.TableDescription;
+import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -56,9 +61,24 @@ public class SimpleTableBinding extends Composite {
 
 		final Catalog catalog = SampleData.CATALOG_2005;
 
-		// dbc.bindTable(dbc.createUpdatableTable(tableViewer, "contents"),
-		// new EMFUpdatableTable(catalog, "lodgings", new String[] {
-		// "name", "description" }));
+		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
+			public IUpdatable createUpdatable(Object description) {
+				if (description instanceof TableDescription) {
+					TableDescription tableDescription = (TableDescription) description;
+					Object object = tableDescription.getObject();
+					if (object instanceof EObject) {
+						return new EMFUpdatableTable((EObject) object,
+								(String) tableDescription.getPropertyID(),
+								(String[]) tableDescription
+										.getColumnPropertyIDs());
+					}
+				}
+				return null;
+			}
+		});
+
+		dbc.bind2(tableViewer, new TableDescription(catalog, "lodgings",
+				new String[] { "name", "description" }), null);
 
 		selectedLodging = (IUpdatableValue) dbc.createUpdatable(tableViewer,
 				"selection");
