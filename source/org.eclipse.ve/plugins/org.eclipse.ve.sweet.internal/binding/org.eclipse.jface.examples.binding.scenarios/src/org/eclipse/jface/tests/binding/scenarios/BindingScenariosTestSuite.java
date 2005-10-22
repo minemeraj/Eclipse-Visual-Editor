@@ -63,7 +63,8 @@ public class BindingScenariosTestSuite extends TestSuite {
 		addTestSuite(CustomScenarios.class);
 		addTestSuite(CustomConverterScenarios.class);
 		addTestSuite(ReadOnlyComboScenarios.class);
-		addTestSuite(TreeScenarios.class);
+		addTestSuite(TreeScenarios.class);		
+		addTestSuite(TableScenarios.class);		
 	}
 
 	public static Shell getShell() {
