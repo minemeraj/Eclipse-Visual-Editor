@@ -42,7 +42,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 				.getEStructuralFeature("tree"));
 	}
 
-	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer_overlay.gif")
+	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/viewer_overlay.gif")
 			.getImageData();
 
 	private static class TreeViewerTreeEditPartContributor extends AbstractEditPartContributor implements TreeEditPartContributor {
@@ -69,10 +69,8 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 		return null;
 	}
 
-	static Image treeViewerOverlayImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer_overlay.gif");
-	static Image treeOverlayImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/tree_overlay.gif");
+	static Image treeViewerOverlayImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer2_overlay.gif");
 	static Image treeViewerImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer_obj.gif");
-	static Image noTreeViewerImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/no_treeviewer_obj2.gif");
 
 	private static class TreeViewerGraphicalEditPartContributor extends AbstractEditPartContributor implements GraphicalEditPartContributor {
 
