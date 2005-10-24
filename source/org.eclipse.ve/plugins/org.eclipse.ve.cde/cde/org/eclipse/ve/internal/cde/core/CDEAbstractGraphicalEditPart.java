@@ -10,14 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.11 $  $Date: 2005-10-21 15:10:58 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-24 15:21:09 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import java.util.*;
 
 import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.*;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.swt.widgets.Display;
@@ -122,15 +122,14 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			return actionBarEditPart;
 		}
 		public void mouseEntered(MouseEvent me) {
-			if (me.getSource() == actionBarFigure || mouseWithinActionBar(me)) {
+			if (actionBarFigure == me.getSource() || mouseWithinActionBar(me)) {
 				mouseInsideActionBar = true;
-//				System.out.println("mouse entered ActionBarFigure");
 			}
 			if (me.getSource() == getFigure()) {
 				mouseInsideControlFigure = true;
 			}
 			if (mouseInsideActionBar || mouseInsideControlFigure)
-				Display.getCurrent().timerExec(1000, showActionBarRunnable);
+				Display.getCurrent().timerExec(500, showActionBarRunnable);
 		}
 
 		public void mouseExited(MouseEvent me) {
@@ -139,42 +138,73 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			}
 			if (!mouseWithinActionBar(me)) {
 				mouseInsideActionBar = false;
-//				System.out.println("mouse exited ActionBarFigure");
 			}
 			if (!mouseInsideActionBar && !mouseInsideControlFigure  && !actionBarEditpartSelected) {
-				Display.getCurrent().timerExec(1000, hideActionBarRunnable);
+				Display.getCurrent().timerExec(500, hideActionBarRunnable);
 			}
 		}
+		
+		public void mouseMoved(MouseEvent me) {
+			if (mouseWithinActionBar(me)) {
+				highlightActionBarChildren(me);
+			}
+		}
+
+		/*
+		 * Return true if the mouse is moving/hovering in the action bar area
+		 */
 		private boolean mouseWithinActionBar(MouseEvent me) {
 			if (actionBarFigure == null) return false;
 			Rectangle bounds = actionBarFigure.getBounds();
 			return (bounds.x < me.x && bounds.y < me.y && bounds.x + bounds.width > me.x && bounds.y + bounds.height > me.y);
 		}
 
+		/*
+		 * If hovering over one of the action bar action editparts, draw a focus rectangle around the child
+		 * 
+		 * @see org.eclipse.draw2d.MouseMotionListener#mouseHover(org.eclipse.draw2d.MouseEvent)
+		 */
 		private void highlightActionBarChildren(MouseEvent me) {
 			if (actionBarFigure == null) return;
 			List children = actionBarEditPart.getChildren();
 			for (int i = 0; i < children.size(); i++) {
+				if (!(children.get(i) instanceof ActionBarActionEditPart))
+					continue;
 				IFigure child = ((GraphicalEditPart)children.get(i)).getFigure();
 				Rectangle bounds = child.getBounds();
 				if (bounds.x < me.x && bounds.y < me.y && bounds.x + bounds.width > me.x && bounds.y + bounds.height > me.y) {
-					child.setBorder(new LineBorder(ColorConstants.darkGreen));
-					child.repaint();
+					if (child.getBorder() == null) {
+						child.setBorder(new Border() {
+
+							public Insets getInsets(IFigure figure) {
+								return new Insets();
+							}
+
+							public Dimension getPreferredSize(IFigure figure) {
+								return null;
+							}
+
+							public boolean isOpaque() {
+								return false;
+							}
+
+							public void paint(IFigure figure, Graphics graphics, Insets insets) {
+								graphics.setForegroundColor(ColorConstants.black);
+								Rectangle rect = figure.getBounds().getCopy();
+								rect.width -= 1;
+								rect.height -= 1;
+								graphics.drawRectangle(rect);
+
+							}
+
+						});
+						child.repaint();
+					}
 				}
 				else if (child.getBorder() != null) {
 					child.setBorder(null);
 					child.repaint();
 				}
-			}
-		}
-		/*
-		 * If hovering over one of the action bar editparts, draw a focus rectangle around the child
-		 * 
-		 * @see org.eclipse.draw2d.MouseMotionListener#mouseHover(org.eclipse.draw2d.MouseEvent)
-		 */
-		public void mouseMoved(MouseEvent me) {
-			if (mouseWithinActionBar(me)) {
-				highlightActionBarChildren(me);
 			}
 		}
 		
@@ -215,8 +245,8 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 				for (int i = 0; i < actionBarChildren.size(); i++) {
 					((EditPart)actionBarChildren.get(i)).removeEditPartListener(fActionBarEditPartListener);
 				}
-				getActionBarEditPart().hide();
 				actionBarVisible = false;
+				getActionBarEditPart().hide();
 				mouseInsideActionBar = false;
 				getActionBarEditPart().addActionBarChildren((Collections.EMPTY_LIST));
 				getActionBarEditPart().refresh();
@@ -235,21 +265,27 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 
 	/*
 	 * Editpart listener that listens for selection of action bar editparts and adds listeners
-	 * to the editparts depending on whether they action editparts or just selectable editparts.
+	 * to the editparts depending on whether they are action editparts or just selectable editparts.
 	 */
 	class ActionBarEditPartListener extends EditPartListener.Stub {
 
 		public void childAdded(EditPart editpart, int arg1) {
 			if (editpart != null) {
-				if (editpart instanceof ActionBarActionEditPart)
+				if (editpart instanceof ActionBarActionEditPart) {
+					// Listen for when the button is pressed
 					((ActionBarActionEditPart)editpart).addActionListener(fActionListener);
+					// Listen for mouse movement over this action to highlight it
+					((ActionBarActionEditPart)editpart).getFigure().addMouseMotionListener(fActionBarController);
+				}
 				editpart.addEditPartListener(fActionBarEditPartListener);
 			}
 		};
 
 		public void removingChild(EditPart child, int index) {
-			if (child instanceof ActionBarActionEditPart)
+			if (child instanceof ActionBarActionEditPart) {
 				((ActionBarActionEditPart)child).removeActionListener(fActionListener);
+				((ActionBarActionEditPart)child).getFigure().removeMouseMotionListener(fActionBarController);
+			}
 			child.removeEditPartListener(fActionBarEditPartListener);
 		}
 

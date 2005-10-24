@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarActionEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-21 15:51:51 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-24 15:21:09 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -65,7 +65,7 @@ public abstract class ActionBarActionEditPart extends AbstractGraphicalEditPart 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
 	protected IFigure createFigure() {
-		final Label fig = new Label(fIcon);
+		final IFigure fig = new Label(fIcon);
 		if (fToolTip != null)
 			fig.setToolTip(new Label(fToolTip));
 		fig.setCursor(Cursors.HAND);
