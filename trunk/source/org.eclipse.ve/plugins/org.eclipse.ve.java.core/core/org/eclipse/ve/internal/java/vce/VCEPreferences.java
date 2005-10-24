@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferences.java,v $
- *  $Revision: 1.19 $  $Date: 2005-09-08 23:21:29 $ 
+ *  $Revision: 1.20 $  $Date: 2005-10-24 18:00:33 $ 
  */
 
 
@@ -56,6 +56,9 @@ public class VCEPreferences {
 	static{
 		RENAME_INSTANCE_ASK_DEFAULT = !isLinux(); //Do not allow rename prompt if on Linux cause it crashes - bugzilla 103738
 	}
+    
+    public static final String CODEGEN_CARET_SELECT_UI_KEY = "CODEGEN_CARET_SELECT_UI_KEY";  //$NON-NLS-1$
+    public static final boolean CODEGEN_CARET_SELECT_UI_DEFAULT = true;
     
     // The following are run time options
     public static final String DEBUG_CONSOLE_ECHO   = "/debug/logtrace" ; // Dump all logs to console //$NON-NLS-1$
@@ -163,6 +166,7 @@ public static void initializeDefaultPluginPreferences(Preferences aStore) {
 	aStore.setDefault(VCEPreferences.MAX_AWT_COMPONENT_IMAGE_WIDTH, VCEPreferences.DEFAULT_MAX_AWT_COMPONENT_IMAGE_WIDTH);
 	aStore.setDefault(VCEPreferences.MAX_AWT_COMPONENT_IMAGE_HEIGHT, VCEPreferences.DEFAULT_MAX_AWT_COMPONENT_IMAGE_HEIGHT);
 	aStore.setDefault(VCEPreferences.RENAME_INSTANCE_ASK_KEY, VCEPreferences.RENAME_INSTANCE_ASK_DEFAULT);
+	aStore.setDefault(VCEPreferences.CODEGEN_CARET_SELECT_UI_KEY, VCEPreferences.CODEGEN_CARET_SELECT_UI_DEFAULT);
 }
 
 /**
