@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.153 $  $Date: 2005-10-24 18:00:34 $ 
+ *  $Revision: 1.154 $  $Date: 2005-10-24 18:58:19 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -45,8 +45,7 @@ import org.eclipse.gef.ui.parts.*;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.gef.ui.views.palette.PalettePage;
 import org.eclipse.gef.ui.views.palette.PaletteViewerPage;
-import org.eclipse.jdt.core.JavaConventions;
-import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.ui.IContextMenuConstants;
 import org.eclipse.jface.action.*;
@@ -54,6 +53,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.Assert;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.*;
@@ -99,9 +99,9 @@ import org.eclipse.ve.internal.java.codegen.core.IDiagramModelBuilder;
 import org.eclipse.ve.internal.java.codegen.core.JavaSourceTranslator;
 import org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditorReloadActionController.IReloadCallback;
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
+import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.vce.*;
 import org.eclipse.ve.internal.java.vce.rules.JVEStyleRegistry;
@@ -618,31 +618,55 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					if(	modelChangeController.getHoldState()==ModelChangeController.NO_UPDATE_STATE || 
 						modelChangeController.getHoldState()==ModelChangeController.BUSY_STATE)
 						return;
-					
-					String content = getSourceViewer().getTextWidget().getText();
-					int caretLocation = getSourceViewer().getTextWidget().getCaretOffset();
-					int start = caretLocation;
-					int end = caretLocation;
-					while(start > 0 && Character.isJavaIdentifierPart(content.charAt(start-1)))
-						start--;
-					while(end < content.length() && Character.isJavaIdentifierPart(content.charAt(end)))
-						end++;
-					if(start>=0 && end<content.length() && end>=start){
-						String name =  content.substring(start, end);
-						if(JavaConventions.validateIdentifier(name).isOK()){
-							selectBeanNamed(name, getSourceViewer().getTextWidget().getCaretOffset(), JavaVisualEditorPart.this);
+					if(event.getSelection() instanceof ITextSelection){
+						ITextSelection textSelection = (ITextSelection) event.getSelection();
+						String content = getSourceViewer().getDocument().get();
+						int caretLocation = textSelection.getOffset();
+						int start = caretLocation;
+						int end = caretLocation;
+						while(start > 0 && Character.isJavaIdentifierPart(content.charAt(start-1)))
+							start--;
+						while(end < content.length() && Character.isJavaIdentifierPart(content.charAt(end)))
+							end++;
+						if(start>=0 && end<content.length() && end>=start){
+							String name =  content.substring(start, end);
+							if(JavaConventions.validateIdentifier(name).isOK()){
+								selectIdentifierNamed(name, caretLocation, JavaVisualEditorPart.this);
+							}
 						}
 					}
 				}
 				
-				public void selectBeanNamed(String beanName, int offset, JavaVisualEditorPart editorPart){
+				public void selectIdentifierNamed(String beanName, int offset, JavaVisualEditorPart editorPart){
 					Object obj = editorPart.getEditDomain().getData(IDiagramModelBuilder.MODEL_BUILDER_KEY);
 					if (obj instanceof IDiagramModelBuilder) {
 						IDiagramModelBuilder mb = (IDiagramModelBuilder) obj;
 						MemberDecoderAdapter ca = (MemberDecoderAdapter) EcoreUtil.getExistingAdapter(mb.getModelRoot(), ICodeGenAdapter.JVE_MEMBER_ADAPTER);
 						if(ca!=null){
 							IBeanDeclModel bdm = ca.getBeanDeclModel();
-							BeanPart bp = bdm.getABean(beanName);
+							
+							CodeMethodRef methodRef = null;
+							int expOffset = offset;
+							try{
+								IJavaElement inElement = bdm.getCompilationUnit().getElementAt(offset);
+								if (inElement instanceof IMethod) {
+									IMethod method = (IMethod) inElement;
+									methodRef = bdm.getMethod(method.getHandleIdentifier());
+									expOffset -= methodRef.getOffset();
+								}
+							}catch (JavaModelException e) {
+								JavaVEPlugin.log(e, Level.FINE);
+							}
+							BeanPart bp = null;
+							if(methodRef!=null)
+								bp = CodeGenUtil.getBeanPart(bdm, beanName, methodRef, expOffset);
+							else
+								bp = bdm.getABean(beanName);
+							
+							if(bp==null){ // no BeanPart with 'beanName' - check if a method returns anything
+								bp = bdm.getBeanReturned(beanName);
+							}
+							
 							if(bp!=null){
 								Iterator viewerItr = editorPart.getEditDomain().getViewers().iterator();
 								while (viewerItr.hasNext()) {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.35 $  $Date: 2005-10-24 18:00:33 $ 
+ *  $Revision: 1.36 $  $Date: 2005-10-24 18:58:19 $ 
  */
 
 import java.net.URL;
@@ -363,7 +363,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		xyGridSpacingText = createLabelText(appearanceComposite, VCEMessages.VCEPreferencePage_XYGridSpacing, 10, 12);
 
 		renameAskCheckbox = createCheckBox(appearanceComposite, VCEMessages.VCEPreferencePage_Checkbox_PromptNameOnCreation_Text, 15);
-		caretSelectUICheckbox = createCheckBox(appearanceComposite, "Caret location in source selects graphical components", 15);
+		caretSelectUICheckbox = createCheckBox(appearanceComposite, VCEMessages.VCEPreferencePage_CaretSelectUI_Checkbox_Label, 15);
 
 		showWindowCheckBox = createCheckBox(appearanceComposite, VCEMessages.PreferencePage_ShowLiveWindow, 15); 
 		showXMLTextCheckBox = createCheckBox(appearanceComposite, VCEMessages.PreferencePage_ShowXMLText, 15); 
