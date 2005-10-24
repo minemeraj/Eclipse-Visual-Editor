@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: VCEPreferencePage.java,v $
- *  $Revision: 1.34 $  $Date: 2005-08-24 23:30:49 $ 
+ *  $Revision: 1.35 $  $Date: 2005-10-24 18:00:33 $ 
  */
 
 import java.net.URL;
@@ -67,6 +67,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 	protected ArrayList fLookAndFeelClasses = new ArrayList(4);
 	protected Button showGridCheckBox;
 	protected Button renameAskCheckbox;
+	protected Button caretSelectUICheckbox;
 	protected Text xyGridSpacingText;
 	
 	protected Button showWindowCheckBox;
@@ -361,7 +362,8 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		// Create controls for setting the XY grid spacing default
 		xyGridSpacingText = createLabelText(appearanceComposite, VCEMessages.VCEPreferencePage_XYGridSpacing, 10, 12);
 
-		renameAskCheckbox = createCheckBox(appearanceComposite, VCEMessages.VCEPreferencePage_Checkbox_PromptNameOnCreation_Text, 15); 
+		renameAskCheckbox = createCheckBox(appearanceComposite, VCEMessages.VCEPreferencePage_Checkbox_PromptNameOnCreation_Text, 15);
+		caretSelectUICheckbox = createCheckBox(appearanceComposite, "Caret location in source selects graphical components", 15);
 
 		showWindowCheckBox = createCheckBox(appearanceComposite, VCEMessages.PreferencePage_ShowLiveWindow, 15); 
 		showXMLTextCheckBox = createCheckBox(appearanceComposite, VCEMessages.PreferencePage_ShowXMLText, 15); 
@@ -731,6 +733,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		} else {
 			renameAskCheckbox.setSelection(fStore.getBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));			
 		}
+		caretSelectUICheckbox.setSelection(fStore.getBoolean(VCEPreferences.CODEGEN_CARET_SELECT_UI_KEY));
 		showWindowCheckBox.setSelection(fStore.getBoolean(VCEPreferences.SHOW_LIVE_WINDOW));
 		showXMLTextCheckBox.setSelection(CDEPlugin.getPlugin().getPluginPreferences().getBoolean(CDEPlugin.SHOW_XML));
 		showClipboardCheckBox.setSelection(fStore.getBoolean(VCEPreferences.USE_TEXT_FOR_CLIPBOARD));		
@@ -836,6 +839,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 			// must be a number
 		}
 		fStore.setValue(VCEPreferences.RENAME_INSTANCE_ASK_KEY, renameAskCheckbox.getSelection());
+		fStore.setValue(VCEPreferences.CODEGEN_CARET_SELECT_UI_KEY, caretSelectUICheckbox.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_PROPERTIES_VIEW, openPropertiesViewIfRequired.getSelection());
 		fStore.setValue(VCEPreferences.OPEN_JAVABEANS_VIEW, openJavaBeansViewIfRequired.getSelection());
 
@@ -887,6 +891,7 @@ public class VCEPreferencePage extends PreferencePage implements IWorkbenchPrefe
 		} else {
 			renameAskCheckbox.setSelection(fStore.getDefaultBoolean(VCEPreferences.RENAME_INSTANCE_ASK_KEY));
 		}
+		caretSelectUICheckbox.setSelection(fStore.getDefaultBoolean(VCEPreferences.CODEGEN_CARET_SELECT_UI_KEY));
 		// Initialize the tree to just show the DEFAULT and the plugin defined look and feel classes
 		TableItem[] items = lookAndFeelTable.getItems();
 		for (int i = 0; i < items.length; i++) {

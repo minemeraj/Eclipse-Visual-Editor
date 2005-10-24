@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: MemberDecoderAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-10-06 22:01:09 $ 
+ *  $Revision: 1.13 $  $Date: 2005-10-24 18:00:33 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -386,6 +386,10 @@ public String toString() {
 	 */
 	public CodeMethodRef getMethodRef() {
 		return fMethodRef;
+	}
+	
+	public IBeanDeclModel getBeanDeclModel(){
+		return fbeanModel;
 	}
 
 	/**
