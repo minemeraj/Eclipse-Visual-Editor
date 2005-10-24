@@ -70,6 +70,10 @@ abstract public class ScenariosTestCase extends TestCase {
 		if (button.getSelection() == value) {
 			return;
 		}
+		pushButtonWithEvents(button);
+	}
+
+	protected void pushButtonWithEvents(Button button) {
 		if (!getShell().isVisible()) {
 			getShell().open();
 			spinEventLoop(0);
@@ -83,7 +87,7 @@ abstract public class ScenariosTestCase extends TestCase {
 				SWT.KeyUp, ' ');
 		spinEventLoop(0);
 	}
-
+	
 	protected void setUp() throws Exception {
 		composite = new Composite(getShell(), SWT.NONE);
 		composite.setLayout(new GridLayout());
@@ -96,6 +100,7 @@ abstract public class ScenariosTestCase extends TestCase {
 		composite.dispose();
 		composite = null;
 		if (shell != null) {
+			shell.close();
 			shell.dispose();
 		} else
 			dbc.dispose();

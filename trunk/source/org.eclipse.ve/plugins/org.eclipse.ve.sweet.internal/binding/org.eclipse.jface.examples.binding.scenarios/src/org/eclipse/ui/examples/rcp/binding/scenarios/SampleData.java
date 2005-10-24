@@ -19,6 +19,7 @@ import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.IUpdatableFactory;
 import org.eclipse.jface.binding.IUpdatableFactory2;
+import org.eclipse.jface.binding.TableDescription;
 import org.eclipse.jface.binding.TableDescription2;
 import org.eclipse.jface.binding.swt.SWTDatabindingContext;
 import org.eclipse.jface.examples.binding.emf.*;
@@ -29,11 +30,20 @@ import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
+import org.eclipse.ui.examples.rcp.adventure.Category;
 import org.eclipse.ui.examples.rcp.adventure.Lodging;
 import org.eclipse.ui.examples.rcp.adventure.Transportation;
 
 public class SampleData {
 
+	public static Category WINTER_CATEGORY;
+	
+	public static Category SUMMER_CATEGORY;
+	
+	public static Adventure BEACH_HOLIDAY;
+	
+	public static Adventure RAFTING_HOLIDAY;
+	
 	public static Adventure WINTER_HOLIDAY;
 
 	public static Lodging FIVE_STAR_HOTEL;
@@ -65,11 +75,37 @@ public class SampleData {
 
 		CATALOG_2005 = adventureFactory.createCatalog();
 
+		// Categories
+		WINTER_CATEGORY = adventureFactory.createCategory();
+		WINTER_CATEGORY.setName("Freeze Adventures");
+		CATALOG_2005.getCategories().add(WINTER_CATEGORY);
+		
+		SUMMER_CATEGORY = adventureFactory.createCategory();
+		SUMMER_CATEGORY.setName("Hot Adventures");
+		CATALOG_2005.getCategories().add(SUMMER_CATEGORY);
+		
+		// Adventures
 		WINTER_HOLIDAY = adventureFactory.createAdventure();
 		WINTER_HOLIDAY.setDescription("Winter holiday in France");
 		WINTER_HOLIDAY.setName("Ski Alps");
 		WINTER_HOLIDAY.setLocation("Chamonix");
 		WINTER_HOLIDAY.setPrice(4000.52d);
+		WINTER_CATEGORY.getAdventures().add(WINTER_HOLIDAY);
+		
+		BEACH_HOLIDAY = adventureFactory.createAdventure();
+		BEACH_HOLIDAY.setDescription("Beach holiday in Spain");
+		BEACH_HOLIDAY.setName("Playa");
+		BEACH_HOLIDAY.setLocation("Lloret de Mar");
+		BEACH_HOLIDAY.setPrice(2000.52d);
+		SUMMER_CATEGORY.getAdventures().add(BEACH_HOLIDAY);
+		
+		RAFTING_HOLIDAY = adventureFactory.createAdventure();
+		RAFTING_HOLIDAY.setDescription("White water rafting on the Ottawa river");
+		RAFTING_HOLIDAY.setName("Whitewater");
+		RAFTING_HOLIDAY.setLocation("Ottawa");
+		RAFTING_HOLIDAY.setPrice(8000.52d);
+		SUMMER_CATEGORY.getAdventures().add(RAFTING_HOLIDAY);
+		
 		// Lodgings
 		FIVE_STAR_HOTEL = adventureFactory.createLodging();
 		FIVE_STAR_HOTEL.setDescription("Deluxe palace");
@@ -84,6 +120,7 @@ public class SampleData {
 		CATALOG_2005.getLodgings().add(YOUTH_HOSTEL);
 		CATALOG_2005.getLodgings().add(CAMP_GROUND);
 		WINTER_HOLIDAY.setDefaultLodging(YOUTH_HOSTEL);
+		
 		// Transporation
 		GREYHOUND_BUS = adventureFactory.createTransportation();
 		GREYHOUND_BUS.setArrivalTime("14:30");
@@ -91,6 +128,7 @@ public class SampleData {
 		EXECUTIVE_JET = adventureFactory.createTransportation();
 		EXECUTIVE_JET.setArrivalTime("11:10");
 		CATALOG_2005.getTransportations().add(EXECUTIVE_JET);
+		
 		// Accounts
 		PRESIDENT = adventureFactory.createAccount();
 		PRESIDENT.setFirstName("George");
@@ -143,7 +181,7 @@ public class SampleData {
 		};
 		dbc.addUpdatableFactory(EObjectImpl.class, emfFactory);
 		
-		// Add the TableDescription2 factory that handles EMF values
+		// Add the TableDescription2 factory that handles EMF values (Joe)
 		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
 			public IUpdatable createUpdatable(Object description) {
 				if (description instanceof TableDescription2) {
@@ -159,6 +197,27 @@ public class SampleData {
 				return null;
 			}
 		});		
+		// Add the TableDescription factory that handles EMF values (Boris)
+		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
+			public IUpdatable createUpdatable(Object description) {
+				if (description instanceof TableDescription) {
+					TableDescription tableDescription = (TableDescription) description;
+					Object object = tableDescription.getObject();
+					if (object instanceof EObject) {
+						String[] columnPropertyIDs = new String[tableDescription
+								.getColumnPropertyIDs().length];
+						System.arraycopy(tableDescription
+								.getColumnPropertyIDs(), 0, columnPropertyIDs,
+								0, columnPropertyIDs.length);
+						return new EMFUpdatableTable((EObject) object,
+								(String) tableDescription.getPropertyID(),
+								columnPropertyIDs);
+					}
+				}
+				return null;
+			}
+		});
+
 		
 		emfFactory = new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Object object, Object attribute) {
