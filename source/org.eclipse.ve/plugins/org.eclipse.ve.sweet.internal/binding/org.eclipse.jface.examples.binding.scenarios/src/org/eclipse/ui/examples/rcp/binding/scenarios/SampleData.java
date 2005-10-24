@@ -18,6 +18,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.IUpdatableFactory;
+import org.eclipse.jface.binding.IUpdatableFactory2;
+import org.eclipse.jface.binding.TableDescription2;
 import org.eclipse.jface.binding.swt.SWTDatabindingContext;
 import org.eclipse.jface.examples.binding.emf.*;
 import org.eclipse.swt.SWT;
@@ -140,6 +142,23 @@ public class SampleData {
 
 		};
 		dbc.addUpdatableFactory(EObjectImpl.class, emfFactory);
+		
+		// Add the TableDescription2 factory that handles EMF values
+		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
+			public IUpdatable createUpdatable(Object description) {
+				if (description instanceof TableDescription2) {
+					TableDescription2 tableDescription = (TableDescription2) description;
+					Object object = tableDescription.getObject();
+					if (object instanceof EObject) {
+						return new EMFUpdatableTable2((EObject) object,
+								(String) tableDescription.getPropertyID(),
+								(Object[]) tableDescription
+										.getColumnPropertyIDs());
+					}
+				}
+				return null;
+			}
+		});		
 		
 		emfFactory = new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Object object, Object attribute) {
