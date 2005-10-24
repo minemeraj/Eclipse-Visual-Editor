@@ -13,9 +13,12 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingContext;
+import org.eclipse.jface.binding.IConverter;
 import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.IUpdatableFactory2;
+import org.eclipse.jface.binding.IValidator;
 import org.eclipse.jface.binding.IdentityConverter;
+import org.eclipse.jface.binding.TableBindSpec;
 import org.eclipse.jface.binding.TableDescription;
 import org.eclipse.jface.binding.TableDescription2;
 import org.eclipse.jface.examples.binding.emf.EMFColumn;
@@ -36,7 +39,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.examples.rcp.adventure.Account;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
 
-public class Table_ReadOnlyAccounts_2 extends Composite {
+public class Table_ValidateAndConvert_2 extends Composite {
 
 	private Table table = null;
 
@@ -44,16 +47,23 @@ public class Table_ReadOnlyAccounts_2 extends Composite {
 
 	private TableViewer tableViewer;
 
-	public Table_ReadOnlyAccounts_2(Composite parent, int style)
+	private Table table1 = null;
+
+	private TableViewer tableViewer1;
+
+	public Table_ValidateAndConvert_2(Composite parent, int style)
 			throws BindingException {
 		super(parent, style);
 		initialize();
 	}
 
 	private void initialize() throws BindingException {
-		this.setLayout(new GridLayout());
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
 		createTable();
-		setSize(new Point(300, 200));
+		this.setLayout(gridLayout);
+		createTable1();
+		setSize(new org.eclipse.swt.graphics.Point(507,224));
 	}
 
 	/**
@@ -76,10 +86,10 @@ public class Table_ReadOnlyAccounts_2 extends Composite {
 		tableColumn.setWidth(60);
 		tableColumn.setText("firstName");
 		TableColumn tableColumn1 = new TableColumn(table, SWT.NONE);
-		tableColumn1.setWidth(60);
-		tableColumn1.setText("lastName");
+		tableColumn1.setWidth(100);
+		tableColumn1.setText("phone");
 		TableColumn tableColumn2 = new TableColumn(table, SWT.NONE);
-		tableColumn2.setWidth(60);
+		tableColumn2.setWidth(100);
 		tableColumn2.setText("state");
 
 		tableViewer = new TableViewer(table);
@@ -95,25 +105,53 @@ public class Table_ReadOnlyAccounts_2 extends Composite {
 
 		Catalog catalog = SampleData.CATALOG_2005;
 
-		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
-			public IUpdatable createUpdatable(Object description) {
-				if (description instanceof TableDescription2) {
-					TableDescription2 tableDescription = (TableDescription2) description;
-					Object object = tableDescription.getObject();
-					if (object instanceof EObject) {
-						return new EMFUpdatableTable2((EObject) object,
-								(String) tableDescription.getPropertyID(),
-								(Object[]) tableDescription
-										.getColumnPropertyIDs());
-					}
-				}
-				return null;
-			}
-		});
-
 		dbc.bind2(tableViewer, new TableDescription2(catalog, "accounts",
-				new Object[] { "firstName", "lastName", "state"}), null);
-
-		
+				new Object[] { "firstName", "phone", "state"}), 
+				new TableBindSpec(
+						new IConverter[] { null , new PhoneConverter(), new StateConverter()},
+						new IValidator[] { null , new PhoneValidator(), null})
+		);
 	}
-}
+	private void bind1() throws BindingException {
+
+		// For a given catalog show its accounts with columns for "firstName,
+		// "lastName" and "state"
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
+
+		Catalog catalog = SampleData.CATALOG_2005;
+
+		dbc.bind2(tableViewer1, new TableDescription2(catalog, "accounts",
+				new Object[] { "firstName", "phone", "state"}), null);
+		
+	}	
+
+	/**
+	 * This method initializes table1	
+	 * @throws BindingException 
+	 *
+	 */
+	private void createTable1() throws BindingException {
+		GridData gridData1 = new org.eclipse.swt.layout.GridData();
+		gridData1.grabExcessHorizontalSpace = true;
+		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData1.grabExcessVerticalSpace = true;
+		table1 = new Table(this, SWT.NONE);
+		table1.setHeaderVisible(true);
+		table1.setLayoutData(gridData1);
+		table1.setLinesVisible(true);
+		TableColumn tableColumn3 = new TableColumn(table1, SWT.NONE);
+		tableColumn3.setText("firstName");
+		tableColumn3.setWidth(60);
+		TableColumn tableColumn4 = new TableColumn(table1, SWT.NONE);
+		tableColumn4.setText("phone");
+		tableColumn4.setWidth(100);
+		TableColumn tableColumn5 = new TableColumn(table1, SWT.NONE);
+		tableColumn5.setText("state");
+		tableColumn5.setWidth(60);
+		
+		tableViewer1 = new TableViewer(table1);
+		
+		bind1();
+	}
+}  //  @jve:decl-index=0:visual-constraint="10,10"
