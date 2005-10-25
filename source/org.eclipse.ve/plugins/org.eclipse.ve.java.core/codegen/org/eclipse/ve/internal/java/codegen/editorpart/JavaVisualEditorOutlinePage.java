@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.27 $  $Date: 2005-09-15 18:51:53 $ 
+ *  $Revision: 1.28 $  $Date: 2005-10-25 22:40:31 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -52,6 +52,7 @@ import org.eclipse.ve.internal.cde.emf.DefaultTreeEditPartFactory;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.vce.SubclassCompositionComponentsTreeEditPart;
+import org.eclipse.ve.internal.java.vce.VCEPreferences;
  
 /*
  * Java Outline Page (BeansList)
@@ -64,6 +65,8 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	// dbk cache IMG_COLLAPSE_ALL / IMG_COLLAPSE_ALL_DISABLED
 	private static final ImageDescriptor IMG_COLLAPSE_ALL = getUIImageDescriptor("elcl16/collapseall.gif"); //$NON-NLS-1$
 	private static final ImageDescriptor IMG_COLLAPSE_ALL_DISABLED = getUIImageDescriptor("dlcl16/collapseall.gif"); //$NON-NLS-1$
+	private static final ImageDescriptor IMG_SELECTION_SYNC = getUIImageDescriptor("elcl16/synced.gif"); //$NON-NLS-1$
+	private static final ImageDescriptor IMG_SELECTION_SYNC_DISABLED = getUIImageDescriptor("dlcl16/synced.gif"); //$NON-NLS-1$
 	private static final String TITLE = CodegenEditorPartMessages.CollapseAllAction_label;
 	private static final String TOOL_TIP = CodegenEditorPartMessages.CollapseAllAction_toolTip;
 	
@@ -95,6 +98,22 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	static protected ImageDescriptor getUIImageDescriptor(String relativePath) { 
 		URL url = Platform.getBundle(PlatformUI.PLUGIN_ID).getEntry("icons/full/" + relativePath);	//$NON-NLS-1$
 		return url != null ? ImageDescriptor.createFromURL(url) : ImageDescriptor.getMissingImageDescriptor();
+	}
+	
+	private class LinkSourceSelectionAction extends Action{
+		public LinkSourceSelectionAction(){
+			super("Link selection with source editor", IAction.AS_CHECK_BOX);
+			setToolTipText(TOOL_TIP);
+			setImageDescriptor(IMG_SELECTION_SYNC);
+			setDisabledImageDescriptor(IMG_SELECTION_SYNC_DISABLED);			
+		}
+		
+		public void run() {
+			if(isChecked())
+				jve.installCodegenSelectionListener();
+			else
+				jve.uninstallCodegenSelectionListener();
+		}
 	}
 	
 	private class CollapseAllAction extends Action {
@@ -157,6 +176,7 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	private Thumbnail thumbnail;		
 	private ShowOverviewAction showOverviewAction;
 	private CollapseAllAction collapseAllAction;
+	private LinkSourceSelectionAction linkSourceSelectionAction;
 	private DeleteAction deleteAction;
 	private CutJavaBeanAction cutBeanAction;
 	private CopyJavaBeanAction copyBeanAction;
@@ -237,8 +257,11 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 		actionBars.setGlobalActionHandler(CustomizeLayoutWindowAction.ACTION_ID, jve.getEditorSite().getActionBars().getGlobalActionHandler(CustomizeLayoutWindowAction.ACTION_ID));
 
 		IToolBarManager tbm = actionBars.getToolBarManager();
+		linkSourceSelectionAction = new LinkSourceSelectionAction();
+		linkSourceSelectionAction.setChecked(JavaVEPlugin.getPlugin().getPluginPreferences().getBoolean(VCEPreferences.CODEGEN_CARET_SELECT_UI_KEY));
+		tbm.add(linkSourceSelectionAction);
 		collapseAllAction = new CollapseAllAction();
-		tbm.add(collapseAllAction);			
+		tbm.add(collapseAllAction);
 		showOverviewAction = new ShowOverviewAction();
 		tbm.add(showOverviewAction);
 		
