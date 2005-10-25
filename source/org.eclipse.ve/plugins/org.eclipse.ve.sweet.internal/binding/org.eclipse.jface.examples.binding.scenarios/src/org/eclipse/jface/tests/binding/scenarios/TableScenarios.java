@@ -11,36 +11,28 @@
 package org.eclipse.jface.tests.binding.scenarios;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.IConverter;
 import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.IUpdatableFactory2;
-import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.IValidator;
 import org.eclipse.jface.binding.TableBindSpec;
 import org.eclipse.jface.binding.TableDescription2;
-import org.eclipse.jface.examples.binding.emf.EMFColumn;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable2;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Account;
-import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
-import org.eclipse.ui.examples.rcp.binding.scenarios.AggregateUpdatableValue;
 import org.eclipse.ui.examples.rcp.binding.scenarios.PhoneConverter;
-import org.eclipse.ui.examples.rcp.binding.scenarios.PhoneValidator;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 import org.eclipse.ui.examples.rcp.binding.scenarios.StateConverter;
 
@@ -69,7 +61,7 @@ public class TableScenarios extends ScenariosTestCase {
 		
 		catalog = SampleData.CATALOG_2005; // Lodging source	
 		getDbc().addUpdatableFactory2(new IUpdatableFactory2() {
-			public IUpdatable createUpdatable(Object description) {
+			public IUpdatable createUpdatable(Map properties, Object description) {
 				if (description instanceof TableDescription2) {
 					TableDescription2 tableDescription = (TableDescription2) description;
 					Object object = tableDescription.getObject();

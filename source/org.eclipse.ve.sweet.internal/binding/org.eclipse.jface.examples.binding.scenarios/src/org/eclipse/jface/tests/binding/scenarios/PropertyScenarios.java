@@ -21,6 +21,7 @@ import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.jface.binding.IValidator;
 import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.jface.binding.swt.SWTBindingConstants;
+import org.eclipse.jface.binding.swt.SWTDatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Spinner;
@@ -457,6 +458,21 @@ public class PropertyScenarios extends ScenariosTestCase {
 	public void testScenario13() throws BindingException {
 		// Changing the update policy to be not automatic, but on explicit
 		// method call (e.g. triggered by a button click).
-		// TODO fail("not implemented");
+		getDbc().setUpdateTime(SWTDatabindingContext.TIME_LATE);
+		getDbc().setValidationTime(SWTDatabindingContext.TIME_LATE);
+		Text text = new Text(getComposite(), SWT.BORDER);
+		getDbc().bind2(text, "text", adventure, "name", null);
+		// uncomment the following line to see what's happening
+		// happening
+		// spinEventLoop(1);
+		assertEquals(adventure.getName(), text.getText());
+		text.setText("foobar");
+		// uncomment the following line to see what's happening
+		// spinEventLoop(1);
+		assertEquals("foobar", adventure.getName());
+		adventure.setName("barfoo");
+		// uncomment the following line to see what's happening
+		// spinEventLoop(1);
+		assertEquals("barfoo", text.getText());
 	}
 }

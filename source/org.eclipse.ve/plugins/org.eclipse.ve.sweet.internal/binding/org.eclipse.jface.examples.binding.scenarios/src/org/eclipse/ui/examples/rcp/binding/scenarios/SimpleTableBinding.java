@@ -1,5 +1,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.ConditionalUpdatableValue;
@@ -65,7 +67,7 @@ public class SimpleTableBinding extends Composite {
 		final Catalog catalog = SampleData.CATALOG_2005;
 
 		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
-			public IUpdatable createUpdatable(Object description) {
+			public IUpdatable createUpdatable(Map properties, Object description) {
 				if (description instanceof TableDescription) {
 					TableDescription tableDescription = (TableDescription) description;
 					Object object = tableDescription.getObject();

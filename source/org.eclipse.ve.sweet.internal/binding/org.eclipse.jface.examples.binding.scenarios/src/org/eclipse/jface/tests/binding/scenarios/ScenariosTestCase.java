@@ -2,7 +2,7 @@ package org.eclipse.jface.tests.binding.scenarios;
 
 import junit.framework.TestCase;
 
-import org.eclipse.jface.binding.DatabindingContext;
+import org.eclipse.jface.binding.swt.SWTDatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -20,7 +20,7 @@ abstract public class ScenariosTestCase extends TestCase {
 
 	private Composite composite;
 
-	private DatabindingContext dbc;
+	private SWTDatabindingContext dbc;
 
 	private Display display;
 
@@ -32,7 +32,7 @@ abstract public class ScenariosTestCase extends TestCase {
 		return composite;
 	}
 
-	protected DatabindingContext getDbc() {
+	protected SWTDatabindingContext getDbc() {
 		return dbc;
 	}
 
@@ -87,7 +87,7 @@ abstract public class ScenariosTestCase extends TestCase {
 				SWT.KeyUp, ' ');
 		spinEventLoop(0);
 	}
-	
+
 	protected void setUp() throws Exception {
 		composite = new Composite(getShell(), SWT.NONE);
 		composite.setLayout(new GridLayout());
@@ -99,7 +99,7 @@ abstract public class ScenariosTestCase extends TestCase {
 	protected void tearDown() throws Exception {
 		getShell().setVisible(false); // same Shell may be reUsed across tests
 		composite.dispose();
-		composite = null;		
+		composite = null;
 		if (shell != null) {
 			shell.close();
 			shell.dispose();
