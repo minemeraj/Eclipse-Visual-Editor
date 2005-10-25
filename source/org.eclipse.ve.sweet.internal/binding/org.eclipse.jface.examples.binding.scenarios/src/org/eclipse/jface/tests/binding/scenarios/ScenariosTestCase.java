@@ -97,8 +97,9 @@ abstract public class ScenariosTestCase extends TestCase {
 	}
 
 	protected void tearDown() throws Exception {
+		getShell().setVisible(false); // same Shell may be reUsed across tests
 		composite.dispose();
-		composite = null;
+		composite = null;		
 		if (shell != null) {
 			shell.close();
 			shell.dispose();
