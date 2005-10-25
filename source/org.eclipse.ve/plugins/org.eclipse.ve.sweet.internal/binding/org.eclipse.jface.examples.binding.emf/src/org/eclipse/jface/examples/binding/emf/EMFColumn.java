@@ -3,6 +3,7 @@ package org.eclipse.jface.examples.binding.emf;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.binding.IColumn;
  
 public class EMFColumn implements IColumn {
 	
