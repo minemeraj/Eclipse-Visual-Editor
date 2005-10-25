@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- *  $RCSfile: TableViewerEditPartContributorFactory.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-25 19:12:43 $ 
+ *  $RCSfile: ComboViewerEditPartContributorFactory.java,v $
+ *  $Revision: 1.1 $  $Date: 2005-10-25 19:12:43 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -41,21 +41,21 @@ import org.eclipse.ve.internal.java.core.JavaBeanGraphicalEditPart;
 
 import org.eclipse.ve.internal.swt.SwtPlugin;
 
-public class TableViewerEditPartContributorFactory implements AdaptableContributorFactory {
+public class ComboViewerEditPartContributorFactory implements AdaptableContributorFactory {
 
-	public static IJavaInstance getTableViewer(IJavaInstance aTable) {
+	public static IJavaInstance getComboViewer(IJavaInstance aCombo) {
 
 		// See whether this has a TreeViewer pointing to it or not
-		JavaClass tableViewerClass = Utilities.getJavaClass("org.eclipse.jface.viewers.TableViewer", aTable.eResource().getResourceSet());
-		return (IJavaInstance) InverseMaintenanceAdapter.getFirstReferencedBy(aTable, (EReference) tableViewerClass.getEStructuralFeature("table"));
+		JavaClass comboViewerClass = Utilities.getJavaClass("org.eclipse.jface.viewers.ComboViewer", aCombo.eResource().getResourceSet());
+		return (IJavaInstance) InverseMaintenanceAdapter.getFirstReferencedBy(aCombo, (EReference) comboViewerClass.getEStructuralFeature("combo"));
 	}
 
 	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(SwtPlugin.getDefault(),
 			"icons/full/clcl16/viewer_overlay.gif").getImageData();
-	private static Image tableViewerOverlayImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/tableviewer_overlay.gif");
-	private static Image tableViewerImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/tableviewer_obj.gif");
+	private static Image comboViewerOverlayImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/comboviewer_overlay.gif");
+	private static Image comboViewerImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/comboviewer_obj.gif");
 
-	private static class TableViewerTreeEditPartContributor extends AbstractEditPartContributor implements TreeEditPartContributor {
+	private static class ComboViewerTreeEditPartContributor extends AbstractEditPartContributor implements TreeEditPartContributor {
 
 		public void dispose() {
 		}
@@ -65,50 +65,50 @@ public class TableViewerEditPartContributorFactory implements AdaptableContribut
 		}
 
 		public void appendToText(StringBuffer buffer) {
-			buffer.append("with TableViewer");
+			buffer.append("with ComboViewer");
 		}
 	}
 
-	public TreeEditPartContributor getTreeEditPartContributor(TreeEditPart tableEditPart) {
+	public TreeEditPartContributor getTreeEditPartContributor(TreeEditPart comboEditPart) {
 
-		Object tableViewer = getTableViewer((IJavaInstance) tableEditPart.getModel());
-		if (tableViewer != null) {
-			// This Table is pointed to by a table viewer
-			return new TableViewerTreeEditPartContributor();
+		Object comboViewer = getComboViewer((IJavaInstance) comboEditPart.getModel());
+		if (comboViewer != null) {
+			// This Combo is pointed to by a combo viewer
+			return new ComboViewerTreeEditPartContributor();
 		}
 		return null;
 	}
 
-	private static class TableViewerGraphicalEditPartContributor extends AbstractEditPartContributor implements GraphicalEditPartContributor {
-		private Object table;
-		private Object tableViewer;
-		private GraphicalEditPart tableEditPart;
+	private static class ComboViewerGraphicalEditPartContributor extends AbstractEditPartContributor implements GraphicalEditPartContributor {
+		private Object combo;
+		private Object comboViewer;
+		private GraphicalEditPart comboEditPart;
 
-		public TableViewerGraphicalEditPartContributor(GraphicalEditPart tableEditPart, Object tableViewer) {
-			this.tableEditPart = tableEditPart;
-			this.table = tableEditPart.getModel();
-			this.tableViewer = tableViewer;
+		public ComboViewerGraphicalEditPartContributor(GraphicalEditPart comboEditPart, Object comboViewer) {
+			this.comboEditPart = comboEditPart;
+			this.combo = comboEditPart.getModel();
+			this.comboViewer = comboViewer;
 		}
 
 		public void dispose() {
 		}
 
 		public ToolTipProcessor getHoverOverLay() {
-			tableViewer = getTableViewer((IJavaInstance) table);
-			if (tableViewer != null)
-				return new ToolTipProcessor.ToolTipLabel("Select TableViewer in action bar to show Viewer properties");
+			comboViewer = getComboViewer((IJavaInstance) combo);
+			if (comboViewer != null)
+				return new ToolTipProcessor.ToolTipLabel("Select ComboViewer in action bar to show Viewer properties");
 			else
-				return new ToolTipProcessor.ToolTipLabel("Press action in action bar to convert to a TableViewer");
+				return new ToolTipProcessor.ToolTipLabel("Press action in action bar to convert to a ComboViewer");
 		}
 
 		/*
-		 * Return an overlay image for the table viewer only
+		 * Return an overlay image for the combo viewer only
 		 */
 		public IFigure getFigureOverLay() {
-			tableViewer = getTableViewer((IJavaInstance) table);
-			if (tableViewer == null)
+			comboViewer = getComboViewer((IJavaInstance) combo);
+			if (comboViewer == null)
 				return null;
-			final Image image = tableViewerOverlayImage;
+			final Image image = comboViewerOverlayImage;
 			org.eclipse.swt.graphics.Rectangle bounds = image.getBounds();
 			IFigure fig = new Figure() {
 
@@ -127,14 +127,14 @@ public class TableViewerEditPartContributorFactory implements AdaptableContribut
 		}
 
 		public GraphicalEditPart[] getActionBarChildren() {
-			// If this table has an associated TableViewer, return an editpart with the tableviewer as it's model
-			if (tableViewer != null)
-				return new GraphicalEditPart[] { new JavaBeanGraphicalEditPart(tableViewer) {
+			// If this combo has an associated ComboViewer, return an editpart with the comboviewer as it's model
+			if (comboViewer != null)
+				return new GraphicalEditPart[] { new JavaBeanGraphicalEditPart(comboViewer) {
 
 					protected IFigure createFigure() {
 						Label label = (Label) super.createFigure();
 						ImageFigure fig = new ImageFigure();
-						fig.setImage(tableViewerImage);
+						fig.setImage(comboViewerImage);
 						fig.add(fErrorIndicator);
 						fig.setToolTip(label.getToolTip());
 						fig.setCursor(Cursors.HAND);
@@ -147,22 +147,22 @@ public class TableViewerEditPartContributorFactory implements AdaptableContribut
 					}
 				}};
 
-			// No Tableviewer... return an action editpart that can be selected to promote this table to a table viewer.
+			// No Comboviewer... return an action editpart that can be selected to promote this combo to a combo viewer.
 			else
-				return new GraphicalEditPart[] { new ActionBarActionEditPart("Press here to convert to a TableViewer") {
+				return new GraphicalEditPart[] { new ActionBarActionEditPart("Press here to convert to a ComboViewer") {
 
-					// Create and execute commands to promote this Table to a JFace TableViewer
+					// Create and execute commands to promote this Combo to a JFace ComboViewer
 					public void run() {
 						CreateRequest cr = new CreateRequest();
-						cr.setFactory(new EMFCreationFactory(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.viewers.TableViewer",
-								(EObject) table)));
-						Command c = tableEditPart.getCommand(cr);
+						cr.setFactory(new EMFCreationFactory(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.viewers.ComboViewer",
+								(EObject) combo)));
+						Command c = comboEditPart.getCommand(cr);
 						if (c != null) {
-							EditDomain.getEditDomain(tableEditPart).getCommandStack().execute(c);
+							EditDomain.getEditDomain(comboEditPart).getCommandStack().execute(c);
 							Display.getDefault().asyncExec(new Runnable() {
 
 								public void run() {
-									tableViewer = getTableViewer((IJavaInstance) table);
+									comboViewer = getComboViewer((IJavaInstance) combo);
 									notifyListeners();
 								}
 							});
@@ -174,7 +174,8 @@ public class TableViewerEditPartContributorFactory implements AdaptableContribut
 	}
 
 	public GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart) {
-		Object table = graphicalEditPart.getModel();
-		return new TableViewerGraphicalEditPartContributor(graphicalEditPart, getTableViewer((IJavaInstance) table));
+		Object combo = graphicalEditPart.getModel();
+		return new ComboViewerGraphicalEditPartContributor(graphicalEditPart, getComboViewer((IJavaInstance) combo));
 	}
+
 }

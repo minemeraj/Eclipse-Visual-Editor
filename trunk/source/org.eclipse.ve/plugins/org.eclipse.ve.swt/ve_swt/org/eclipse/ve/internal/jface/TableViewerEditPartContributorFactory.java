@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableViewerEditPartContributorFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-24 21:36:04 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-25 19:12:43 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -71,8 +71,8 @@ public class TableViewerEditPartContributorFactory implements AdaptableContribut
 
 	public TreeEditPartContributor getTreeEditPartContributor(TreeEditPart tableEditPart) {
 
-		Object treeViewer = getTableViewer((IJavaInstance) tableEditPart.getModel());
-		if (treeViewer != null) {
+		Object tableViewer = getTableViewer((IJavaInstance) tableEditPart.getModel());
+		if (tableViewer != null) {
 			// This Table is pointed to by a table viewer
 			return new TableViewerTreeEditPartContributor();
 		}
@@ -127,7 +127,7 @@ public class TableViewerEditPartContributorFactory implements AdaptableContribut
 		}
 
 		public GraphicalEditPart[] getActionBarChildren() {
-			// If this tree has an associated TreeViewer, return an editpart with the treeviewer as it's model
+			// If this table has an associated TableViewer, return an editpart with the tableviewer as it's model
 			if (tableViewer != null)
 				return new GraphicalEditPart[] { new JavaBeanGraphicalEditPart(tableViewer) {
 
@@ -147,7 +147,7 @@ public class TableViewerEditPartContributorFactory implements AdaptableContribut
 					}
 				}};
 
-			// No Tableviewer... return an action editpart that can be selected to promote this tree to a table viewer.
+			// No Tableviewer... return an action editpart that can be selected to promote this table to a table viewer.
 			else
 				return new GraphicalEditPart[] { new ActionBarActionEditPart("Press here to convert to a TableViewer") {
 

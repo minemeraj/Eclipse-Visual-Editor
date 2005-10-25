@@ -155,6 +155,12 @@
            value="org.eclipse.swt.widgets.Table">
          </filter>             
       </contributor>   
+     <contributor class="org.eclipse.ve.internal.jface.ComboViewerEditPartContributorFactory">
+         <filter
+           name="BEANTYPE"
+           value="org.eclipse.swt.widgets.Combo">
+         </filter>             
+      </contributor>   
    </extension>
    
    <extension
