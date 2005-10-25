@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableViewerContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-24 21:36:04 $ 
+ *  $Revision: 1.2 $  $Date: 2005-10-25 19:12:43 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -34,7 +34,7 @@ import org.eclipse.ve.internal.swt.WidgetContainmentHandler;
 
 /**
  * TableViewer containment handler. This handles dropping a table viewer onto a Composite or a Table.
- * In case of a composite it creates a TableViewer and an implicit tree. In case of a Table, it
+ * In case of a composite it creates a TableViewer and an implicit table. In case of a Table, it
  * creates a TableViewer with the explicit table as its table setting.
  * 
  * @since 1.2.0
@@ -67,14 +67,14 @@ public class TableViewerContainmentHandler implements IContainmentHandler {
 	/*
 	 * Dropping on a composite.
 	 */
-	private Object dropOnComposite(IJavaObjectInstance parent, IJavaObjectInstance tableViewer, CommandBuilder preCmds, JavaClass treeClass,
+	private Object dropOnComposite(IJavaObjectInstance parent, IJavaObjectInstance tableViewer, CommandBuilder preCmds, JavaClass tableClass,
 			ResourceSet rset) {
 		// Set the allocation to the parent.
 		WidgetContainmentHandler.processAllocation(parent, tableViewer, preCmds);
 		// Create a table with implicit allocation to the table viewer, and set it into the table feature.
 		EStructuralFeature tableFeature = tableViewer.eClass().getEStructuralFeature("table");
 		ImplicitAllocation allocation = InstantiationFactory.eINSTANCE.createImplicitAllocation(tableViewer, tableFeature);
-		IJavaInstance table = BeanUtilities.createJavaObject(treeClass, rset, allocation);
+		IJavaInstance table = BeanUtilities.createJavaObject(tableClass, rset, allocation);
 		preCmds.applyAttributeSetting(tableViewer, tableFeature, table);
 		return table;
 	}
@@ -96,8 +96,8 @@ public class TableViewerContainmentHandler implements IContainmentHandler {
 			preCmds.append(new EnsureCorrectParentCommand(tableViewer, parentTable));
 
 		// Set the new table viewer's "table" feature to the parent table.
-		EStructuralFeature treeFeature = tableViewer.eClass().getEStructuralFeature("table");
-		preCmds.applyAttributeSetting(tableViewer, treeFeature, parentTable);
+		EStructuralFeature tableFeature = tableViewer.eClass().getEStructuralFeature("table");
+		preCmds.applyAttributeSetting(tableViewer, tableFeature, parentTable);
 
 		// Assign membership of the new TableViewer to be relative to the table.
 		RuledCommandBuilder rcb = new RuledCommandBuilder(domain);
