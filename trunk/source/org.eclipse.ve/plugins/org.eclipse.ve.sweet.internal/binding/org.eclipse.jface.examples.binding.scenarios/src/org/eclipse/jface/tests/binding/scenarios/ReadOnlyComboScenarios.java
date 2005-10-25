@@ -71,7 +71,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 	/**
 	 * @return the ComboViewer's domain object list
 	 */
-	protected List getViewerContent() {
+	protected List getViewerContent(ComboViewer cviewer) {
 		Object[] elements = ((IStructuredContentProvider) cviewer
 				.getContentProvider()).getElements(null);
 		if (elements != null)
@@ -126,7 +126,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 	  	 getDbc().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
 				
 		 // Ensure that cv's content now has the catalog's lodgings
-		 assertEquals(catalog.getLodgings(), getViewerContent());
+		 assertEquals(catalog.getLodgings(), getViewerContent(cviewer));
 				
 		 // Ensure that the cv's labels are the same as the lodging descriptions
 		 assertEquals(getColumn(catalog.getLodgings(), "name"), getComboContent());
@@ -171,7 +171,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		getDbc().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
 
 		// Ensure that cv's content now has the catalog's lodgings
-		assertEquals(catalog.getLodgings(), getViewerContent());
+		assertEquals(catalog.getLodgings(), getViewerContent(cviewer));
 
 		// Ensure that the cv's labels are the same as the lodging descriptions
 		assertEquals(getColumn(catalog.getLodgings(), "name"),
@@ -183,14 +183,14 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		Lodging lodging = AdventureFactory.eINSTANCE.createLodging();
 		lodging.setName("Middle Lodging");
 		lodgings.add(2, lodging);
-		assertEquals(getViewerContent().get(2), lodging);
+		assertEquals(getViewerContent(cviewer).get(2), lodging);
 
 		// Add a lodging at the end
 		lodging = AdventureFactory.eINSTANCE.createLodging();
 		lodging.setName("End Lodging");
 		lodgings.add(lodging);
 		int index = getComboContent().size() - 1;
-		assertEquals(getViewerContent().get(index), lodging);
+		assertEquals(getViewerContent(cviewer).get(index), lodging);
 
 		// Delete the first Lodging
 		lodgings.remove(lodgings.get(0));
@@ -310,7 +310,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 			  	 getDbc().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "accounts");
 						
 				 // Ensure that cv's content now has the catalog's accounts
-				 assertEquals(catalog.getAccounts(), getViewerContent());						
+				 assertEquals(catalog.getAccounts(), getViewerContent(cviewer));						
 				 // Ensure that the cv's labels are the same as the account countries
 				 assertEquals(getColumn(catalog.getAccounts(), "country"), getComboContent());
 				 
@@ -327,6 +327,53 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 						assertEquals(selection.getCountry(), account.getCountry());						
 				 }
 						
+			 }
+			 
+			 /**
+			  * This test ensure that multiple combos can be bound to the same deomain model
+			  */
+			 public void test_ROCombo_multipleBindings() throws BindingException {
+				 
+				 Adventure skiAdventure = SampleData.WINTER_HOLIDAY; // for selection 
+				 
+				cviewer.setLabelProvider(lodgingLabelProvider); // TODO: need to resolve
+				// column binding
+				// Bind the ComboViewer's content to the available lodging
+				getDbc().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
+				
+				// Ensure that cv's content now has the catalog's lodgings
+				assertEquals(catalog.getLodgings(), getViewerContent(cviewer));
+				
+				// Ensure that the cv's labels are the same as the lodging descriptions
+				assertEquals(getColumn(catalog.getLodgings(), "name"),
+				getComboContent());
+				
+				
+				 
+								
+				
+				ComboViewer otherViewer = new ComboViewer(getComposite(), SWT.NONE);
+				otherViewer.setLabelProvider(lodgingLabelProvider);
+				getDbc().bind(otherViewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
+				// Ensure that cv's content now has the catalog's lodgings
+				assertEquals(catalog.getLodgings(), getViewerContent(otherViewer));
+				
+				// Bind both selections to the same thing
+				getDbc().bind(cviewer,"selection",skiAdventure,"defaultLodging");
+				getDbc().bind(otherViewer,"selection",skiAdventure,"defaultLodging");
+												
+				
+				Lodging lodging = (Lodging) catalog.getLodgings().get(0);
+				
+				// Ensure that setting the selection is driven forward to the other combo
+				cviewer.setSelection(new StructuredSelection(lodging));
+				assertEquals(((IStructuredSelection)cviewer.getSelection()).getFirstElement(),
+						     ((IStructuredSelection)otherViewer.getSelection()).getFirstElement());
+				
+				// Change the list of one combo, and ensure it updates the other combo
+				catalog.getLodgings().remove(lodging);
+				assertEquals(getViewerContent(cviewer), getViewerContent(otherViewer));								
+				 
 			 }
 	 
 }

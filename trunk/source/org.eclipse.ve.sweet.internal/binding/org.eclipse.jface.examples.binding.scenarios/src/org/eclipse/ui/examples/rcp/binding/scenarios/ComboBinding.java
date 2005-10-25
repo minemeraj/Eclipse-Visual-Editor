@@ -18,6 +18,12 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.examples.rcp.adventure.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Label;
 
 public class ComboBinding extends Composite {
 
@@ -45,6 +51,14 @@ public class ComboBinding extends Composite {
 
 	private Text pureComboTxt = null;
 
+	private Composite twoViewersComposite = null;
+
+	private Combo twoV1 = null;
+
+	private Combo twoV2 = null;
+
+	private Label label3 = null;
+
 	public ComboBinding(Composite parent, int style) throws BindingException {
 		super(parent, style);
 		initialize();
@@ -59,12 +73,16 @@ public class ComboBinding extends Composite {
 		folder = new TabFolder(this, SWT.NONE);
 		createComposite();
 		createComposite2();
+		createComposite3();
 		TabItem tabItem = new TabItem(folder, SWT.NONE);
 		tabItem.setText("ComboViewer");
 		tabItem.setControl(viewerComposite);
 		TabItem tabItem5 = new TabItem(folder, SWT.NONE);
 		tabItem5.setText("Sand Alone Combo");
 		tabItem5.setControl(aloneComposite);
+		TabItem tabItem1 = new TabItem(folder, SWT.NONE);
+		tabItem1.setText("Two Viewers");
+		tabItem1.setControl(twoViewersComposite);
 		
 		
 
@@ -75,6 +93,7 @@ public class ComboBinding extends Composite {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);		
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
+		Adventure sameTrip = SampleData.RAFTING_HOLIDAY;
 		Catalog catalog = SampleData.CATALOG_2005;
 		
 		
@@ -100,6 +119,23 @@ public class ComboBinding extends Composite {
 		 
 		 dbc.bind(pureCombo, SWTBindingConstants.SELECTION, account, "country");
 		 dbc.bind(pureComboTxt, "text", account, "country");
+		 
+		 
+		 // bind the two viewers
+		 ComboViewer cb1 = new ComboViewer(twoV1);
+		 ComboViewer cb2 = new ComboViewer(twoV2);
+		 
+		 cb1.setLabelProvider(lp);
+		 cb2.setLabelProvider(lp);
+		 
+		 dbc.bind(cb1, SWTBindingConstants.CONTENT, catalog, "lodgings");
+		 dbc.bind(cb1,"selection",sameTrip,"defaultLodging");
+		 
+		 dbc.bind(cb2, SWTBindingConstants.CONTENT, catalog, "lodgings");
+		 dbc.bind(cb2,"selection",sameTrip,"defaultLodging");
+		 
+		 
+		 
 
 	}
 
@@ -175,5 +211,44 @@ public class ComboBinding extends Composite {
 		gridData2.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		pureCombo = new Combo(aloneComposite, SWT.NONE);
 		pureCombo.setLayoutData(gridData2);
+	}
+
+	/**
+	 * This method initializes composite	
+	 *
+	 */
+	private void createComposite3() {
+		twoViewersComposite = new Composite(folder, SWT.NONE);
+		twoViewersComposite.setLayout(new GridLayout());
+		label3 = new Label(twoViewersComposite, SWT.NONE);
+		label3.setText("Two Viewers bound to the same list:");
+		createCombo2();
+		createCombo12();
+	}
+
+	/**
+	 * This method initializes combo	
+	 *
+	 */
+	private void createCombo2() {
+		GridData gridData4 = new org.eclipse.swt.layout.GridData();
+		gridData4.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData4.grabExcessHorizontalSpace = true;
+		gridData4.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		twoV1 = new Combo(twoViewersComposite, SWT.NONE);
+		twoV1.setLayoutData(gridData4);
+	}
+
+	/**
+	 * This method initializes combo1	
+	 *
+	 */
+	private void createCombo12() {
+		GridData gridData5 = new org.eclipse.swt.layout.GridData();
+		gridData5.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData5.grabExcessHorizontalSpace = true;
+		gridData5.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
+		twoV2 = new Combo(twoViewersComposite, SWT.NONE);
+		twoV2.setLayoutData(gridData5);
 	}
 }
