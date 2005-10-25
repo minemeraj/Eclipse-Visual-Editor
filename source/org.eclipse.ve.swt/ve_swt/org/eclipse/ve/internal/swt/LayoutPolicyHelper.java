@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2005-10-11 21:23:47 $ 
+ *  $Revision: 1.10 $  $Date: 2005-10-25 19:12:14 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -48,7 +48,7 @@ protected IJavaObjectInstance getContainer() {
 }
 		
 public VisualContainerPolicy.CorelatedResult getCreateChildCommand(Object childComponent, Object constraint, Object position) {
-	return policy.getCreateCommand(childComponent, constraint, position);
+	return policy.getCreateCommand(constraint, childComponent, position);
 }
 
 public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
