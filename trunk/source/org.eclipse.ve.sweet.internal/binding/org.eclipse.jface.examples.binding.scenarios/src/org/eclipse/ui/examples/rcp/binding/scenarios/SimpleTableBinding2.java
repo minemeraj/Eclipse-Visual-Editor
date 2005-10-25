@@ -1,16 +1,11 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import java.util.Map;
-
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.ConditionalUpdatableValue;
 import org.eclipse.jface.binding.DatabindingContext;
-import org.eclipse.jface.binding.IUpdatable;
-import org.eclipse.jface.binding.IUpdatableFactory2;
 import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.TableDescription;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
+import org.eclipse.jface.binding.PropertyDescription;
+import org.eclipse.jface.binding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -23,11 +18,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
-import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
 import org.eclipse.ui.examples.rcp.adventure.Lodging;
 
-public class SimpleTableBinding extends Composite {
+public class SimpleTableBinding2 extends Composite {
 
 	private Table table = null;
 
@@ -41,7 +35,7 @@ public class SimpleTableBinding extends Composite {
 
 	private IUpdatableValue selectedLodging;
 
-	public SimpleTableBinding(Composite parent, int style)
+	public SimpleTableBinding2(Composite parent, int style)
 			throws BindingException {
 		super(parent, style);
 		initialize();
@@ -62,28 +56,15 @@ public class SimpleTableBinding extends Composite {
 
 	private void bind() throws BindingException {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
-		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
 
 		final Catalog catalog = SampleData.CATALOG_2005;
 
-		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
-			public IUpdatable createUpdatable(Map properties, Object description) {
-				if (description instanceof TableDescription) {
-					TableDescription tableDescription = (TableDescription) description;
-					Object object = tableDescription.getObject();
-					if (object instanceof EObject) {
-						return new EMFUpdatableTable((EObject) object,
-								(String) tableDescription.getPropertyID(),
-								(String[]) tableDescription
-										.getColumnPropertyIDs());
-					}
-				}
-				return null;
-			}
-		});
-
-		dbc.bind2(tableViewer, new TableDescription(catalog, "lodgings",
-				new String[] { "name", "description" }), null);
+		TableViewerDescription tableViewerDescription = new TableViewerDescription(
+				tableViewer);
+		tableViewerDescription.addColumn("Name", "name");
+		tableViewerDescription.addColumn("Description", "description");
+		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,
+				"lodgings"), null);
 
 		selectedLodging = (IUpdatableValue) dbc.createUpdatable(tableViewer,
 				"selection");
@@ -147,7 +128,7 @@ public class SimpleTableBinding extends Composite {
 		Display d = new Display();
 		Shell s = new Shell(d, SWT.SHELL_TRIM);
 		s.setLayout(new FillLayout());
-		SimpleTableBinding simpleTableBinding = new SimpleTableBinding(s,
+		SimpleTableBinding2 simpleTableBinding = new SimpleTableBinding2(s,
 				SWT.NONE);
 		s.pack();
 		s.open();

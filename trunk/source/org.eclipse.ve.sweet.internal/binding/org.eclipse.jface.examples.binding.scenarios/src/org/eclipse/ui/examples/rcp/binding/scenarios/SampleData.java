@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
+import java.util.Map;
+
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -23,7 +25,6 @@ import org.eclipse.jface.binding.TableDescription;
 import org.eclipse.jface.binding.TableDescription2;
 import org.eclipse.jface.binding.swt.SWTDatabindingContext;
 import org.eclipse.jface.examples.binding.emf.*;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.examples.rcp.adventure.Account;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
@@ -154,11 +155,10 @@ public class SampleData {
 
 	}
 
-	public static DatabindingContext getSWTtoEMFDatabindingContext(
+	public static SWTDatabindingContext getSWTtoEMFDatabindingContext(
 			Control aControl) {
 
-		DatabindingContext dbc = new SWTDatabindingContext(aControl,
-				SWT.Modify, SWT.Modify);
+		SWTDatabindingContext dbc = new SWTDatabindingContext(aControl);
 
 		IUpdatableFactory emfFactory = new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Object object, Object attribute) {
@@ -183,7 +183,7 @@ public class SampleData {
 		
 		// Add the TableDescription2 factory that handles EMF values (Joe)
 		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
-			public IUpdatable createUpdatable(Object description) {
+			public IUpdatable createUpdatable(Map properties, Object description) {
 				if (description instanceof TableDescription2) {
 					TableDescription2 tableDescription = (TableDescription2) description;
 					Object object = tableDescription.getObject();
@@ -199,7 +199,7 @@ public class SampleData {
 		});		
 		// Add the TableDescription factory that handles EMF values (Boris)
 		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
-			public IUpdatable createUpdatable(Object description) {
+			public IUpdatable createUpdatable(Map properties, Object description) {
 				if (description instanceof TableDescription) {
 					TableDescription tableDescription = (TableDescription) description;
 					Object object = tableDescription.getObject();
