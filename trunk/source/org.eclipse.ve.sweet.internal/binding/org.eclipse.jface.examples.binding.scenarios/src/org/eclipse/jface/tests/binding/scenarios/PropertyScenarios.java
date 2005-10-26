@@ -14,14 +14,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-import org.eclipse.jface.binding.BindSpec;
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.Converter;
-import org.eclipse.jface.binding.IConverter;
-import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.IValidator;
-import org.eclipse.jface.binding.IdentityConverter;
-import org.eclipse.jface.binding.PropertyDescription;
+import org.eclipse.jface.binding.*;
 import org.eclipse.jface.binding.swt.SWTBindingConstants;
 import org.eclipse.jface.binding.swt.SWTDatabindingContext;
 import org.eclipse.swt.SWT;
@@ -504,5 +497,31 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// uncomment the following line to see what's happening
 		// spinEventLoop(1);
 		assertEquals("barfoo", text.getText());
+	}
+	
+	public void testScenario14() throws BindingException {
+		Text t1 = new Text(getComposite(), SWT.BORDER);
+		Text t2 = new Text(getComposite(), SWT.BORDER);
+		
+		getDbc().setUpdateTime(SWTDatabindingContext.TIME_EARLY);
+		getDbc().bind2(t1, "text", adventure, "name", null);
+		getDbc().bind2(t2, "text", adventure, "name", null);
+		
+		final int[] counter = { 0 };
+		IUpdatable uv = getDbc().createUpdatable(adventure, "name");
+		uv.addChangeListener(new IChangeListener() {		
+			public void handleChange(IChangeEvent changeEvent) {
+				// Count how many times adventure has changed
+				counter[0]++;		
+			}		
+		});
+		
+		String name = adventure.getName()+"Foo";
+		t1.setText(name);		
+		assertEquals(name,adventure.getName());
+		assertEquals(name,t2.getText());
+		assertTrue(counter[0]<=1);
+		
+		
 	}
 }

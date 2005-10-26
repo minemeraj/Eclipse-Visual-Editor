@@ -42,7 +42,7 @@ public class EMFUpdatableValue extends UpdatableValue {
 			adapter = new EContentAdapter() {
 				public void notifyChanged(Notification notification) {
 					if (!notification.isTouch() && !updating) {
-						fireChangeEvent(null, IChangeEvent.CHANGE, null, null);
+						fireChangeEvent(IChangeEvent.CHANGE, null, null);
 					}
 					super.notifyChanged(notification);
 				}
@@ -52,7 +52,7 @@ public class EMFUpdatableValue extends UpdatableValue {
 				public void notifyChanged(Notification notification) {
 					if (!notification.isTouch() && !updating) {
 						if (attribute.equals(notification.getFeature())) {
-							fireChangeEvent(null, IChangeEvent.CHANGE, null, null);
+							fireChangeEvent(IChangeEvent.CHANGE, null, null);
 						}
 					}
 					super.notifyChanged(notification);
@@ -62,12 +62,12 @@ public class EMFUpdatableValue extends UpdatableValue {
 		object.eAdapters().add(adapter);
 	}
 
-	public void setValue(Object value, IChangeListener listenerToOmit) {
+	public void setValue(Object value) {
 		updating = true;
 		try {
 			Object oldValue = getValue();
 			object.eSet(attribute, value);
-			fireChangeEvent(listenerToOmit, IChangeEvent.CHANGE, oldValue, getValue());
+			fireChangeEvent(IChangeEvent.CHANGE, oldValue, getValue());
 		} finally {
 			updating = false;
 		}

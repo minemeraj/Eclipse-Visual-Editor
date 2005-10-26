@@ -12,7 +12,7 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import java.util.StringTokenizer;
 
-import org.eclipse.jface.examples.binding.emf.IColumn;
+import org.eclipse.jface.binding.IColumn;
 import org.eclipse.ui.examples.rcp.adventure.Account;
  
 public class FullNameColumn implements IColumn {

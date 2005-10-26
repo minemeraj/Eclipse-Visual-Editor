@@ -15,7 +15,6 @@ import java.util.StringTokenizer;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.jface.binding.IChangeEvent;
-import org.eclipse.jface.binding.IChangeListener;
 import org.eclipse.jface.binding.UpdatableValue;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
@@ -37,7 +36,7 @@ public class AdventureNameAndDescription extends UpdatableValue {
 							.getAdventure_Description()
 							|| notification.getFeature() == AdventurePackage.eINSTANCE
 									.getAdventure_Name()) {
-						AdventureNameAndDescription.this.fireChangeEvent(null, 
+						AdventureNameAndDescription.this.fireChangeEvent( 
 								IChangeEvent.CHANGE, null, null);
 					}
 				}
@@ -47,7 +46,7 @@ public class AdventureNameAndDescription extends UpdatableValue {
 		adventure.eAdapters().add(adapter);
 	}
 
-	public void setValue(Object value, IChangeListener listenerToOmit) {
+	public void setValue(Object value) {
 		Object oldValue = getValue();
 		StringTokenizer tokenizer = new StringTokenizer((String) value, ":");
 		adventure.setDescription(((String) tokenizer.nextElement()).trim());
@@ -56,7 +55,7 @@ public class AdventureNameAndDescription extends UpdatableValue {
 		} else {
 			adventure.setName("");
 		}
-		fireChangeEvent(listenerToOmit, IChangeEvent.CHANGE, oldValue, getValue());
+		fireChangeEvent(IChangeEvent.CHANGE, oldValue, getValue());
 	}
 
 	public Object getValue() {

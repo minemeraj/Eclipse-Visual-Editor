@@ -23,10 +23,13 @@ public class AggregateUpdatableValue extends UpdatableValue {
 	private IUpdatableValue[] updatableValues;
 
 	private String delimiter;
+	
+	private boolean updating = false;
 
 	private IChangeListener listener = new IChangeListener() {
 		public void handleChange(IChangeEvent changeEvent) {
-			fireChangeEvent(null, ChangeEvent.CHANGE, null, null);
+			if (!updating) 
+			   fireChangeEvent(ChangeEvent.CHANGE, null, null);
 		}
 	};
 
@@ -39,18 +42,24 @@ public class AggregateUpdatableValue extends UpdatableValue {
 		}
 	}
 
-	public void setValue(Object value, IChangeListener listenerToOmit) {
+	public void setValue(Object value) {
 		Object oldValue = getValue();
 		StringTokenizer tokenizer = new StringTokenizer((String) value,
 				delimiter);
-		for (int i = 0; i < updatableValues.length; i++) {
-			if (tokenizer.hasMoreElements()) {
-				updatableValues[i].setValue(tokenizer.nextElement(), listener);
-			} else {
-				updatableValues[i].setValue(null, listener);
+		try {
+			updating=true;
+			for (int i = 0; i < updatableValues.length; i++) {
+				if (tokenizer.hasMoreElements()) {
+					updatableValues[i].setValue(tokenizer.nextElement());
+				}
+				else {
+					updatableValues[i].setValue(null);
+				}
 			}
+		} finally {
+			updating = false;
 		}
-		fireChangeEvent(listenerToOmit, IChangeEvent.CHANGE, oldValue, getValue());
+		fireChangeEvent(IChangeEvent.CHANGE, oldValue, getValue());
 	}
 
 	public Object getValue() {

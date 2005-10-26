@@ -10,30 +10,12 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingContext;
-import org.eclipse.jface.binding.IUpdatable;
-import org.eclipse.jface.binding.IUpdatableFactory2;
-import org.eclipse.jface.binding.IdentityConverter;
-import org.eclipse.jface.binding.TableDescription;
-import org.eclipse.jface.binding.TableDescription2;
-import org.eclipse.jface.examples.binding.emf.EMFColumn;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable2;
-import org.eclipse.jface.examples.binding.emf.IColumn;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.binding.*;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.examples.rcp.adventure.Account;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
 
 public class Table_Accounts_CustomColumns_2 extends Composite {
