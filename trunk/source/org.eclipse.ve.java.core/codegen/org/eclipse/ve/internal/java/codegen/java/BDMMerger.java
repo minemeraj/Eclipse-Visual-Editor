@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.70 $  $Date: 2005-10-13 20:31:05 $ 
+ *  $Revision: 1.71 $  $Date: 2005-10-26 17:46:59 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -956,13 +956,13 @@ public class BDMMerger {
 				if(mainModelBP.isDisposed() || mainModelBP.getModel()==null) 
 					continue;
 				updateReturnMethod(mainModelBP, newModelBP);
-				merge = merge && updateCallBackExpressions(new ArrayList(newModelBP.getRefCallBackExpressions()), new ArrayList(mainModelBP.getRefCallBackExpressions()));
-				merge = merge && updateParentExpressions(newModelBP, mainModelBP);
-				merge = merge && processExpressions(new ArrayList(newModelBP.getRefEventExpressions()), new ArrayList(mainModelBP.getRefEventExpressions()));
+				merge = merge && updateCallBackExpressions(new ArrayList(mainModelBP.getRefCallBackExpressions()), new ArrayList(newModelBP.getRefCallBackExpressions()));
+				merge = merge && updateParentExpressions(mainModelBP, newModelBP);
+				merge = merge && processExpressions(new ArrayList(mainModelBP.getRefEventExpressions()), new ArrayList(newModelBP.getRefEventExpressions()));
 			}else{
 				if(newModelBP.getDecleration()!=null && newModelBP.getDecleration().isImplicitDecleration()){
-					merge = merge && updateCallBackExpressions(new ArrayList(newModelBP.getRefCallBackExpressions()), new ArrayList());
-					merge = merge && processExpressions(new ArrayList(newModelBP.getRefEventExpressions()), new ArrayList());
+					merge = merge && updateCallBackExpressions(new ArrayList(), new ArrayList(newModelBP.getRefCallBackExpressions()));
+					merge = merge && processExpressions(new ArrayList(), new ArrayList(newModelBP.getRefEventExpressions()));
 				}else
 					JavaVEPlugin.log("BDM Merger: Unable to find main BDM bean in new BDM at this point", Level.WARNING); //$NON-NLS-1$
 			}
