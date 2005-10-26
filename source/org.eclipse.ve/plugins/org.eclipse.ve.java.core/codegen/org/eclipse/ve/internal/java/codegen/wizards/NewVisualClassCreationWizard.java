@@ -12,10 +12,9 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.38 $  $Date: 2005-10-14 17:45:07 $ 
+ *  $Revision: 1.39 $  $Date: 2005-10-26 22:14:02 $ 
  */
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
@@ -23,6 +22,7 @@ import java.util.logging.Level;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
@@ -82,29 +82,20 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	}
 	
 	private IVisualClassCreationSourceGenerator getGeneratorInstance(URL templateLocation){
-		java.util.List jdtClassPath = TemplateUtil.getPluginAndPreReqJarPath(JavaVEPlugin.getPlugin().getBundle().getSymbolicName());
+		Set jdtClassPath = new LinkedHashSet(TemplateUtil.getPluginAndPreReqJarPath(JavaVEPlugin.getPlugin().getBundle().getSymbolicName()));
 		try {
 			jdtClassPath.addAll(TemplateUtil.getPlatformJREPath());
 		} catch (TemplatesException  e) {
 			JavaVEPlugin.log(e, Level.FINE);
 		}
-		List contributorsPaths = TemplateUtil.getPluginAndPreReqJarPath(contributorBundleName); 
-		for(int i=0;i<contributorsPaths.size();i++)
-			if(!jdtClassPath.contains(contributorsPaths.get(i)))
-				jdtClassPath.add(contributorsPaths.get(i));
-		String[] jdtClassPaths = new String[jdtClassPath.size()];
-		for(int i=0;i<jdtClassPath.size();i++)
-			jdtClassPaths[i] = (String)jdtClassPath.get(i);
-		String templatePath = null;
-		try {
-			templatePath = Platform.asLocalURL(templateLocation).getPath();
-			templatePath = templatePath.substring(0,templatePath.lastIndexOf('/'));
-		} catch (IOException e1) {
-			JavaVEPlugin.log(e1, Level.WARNING);
-		}
+		jdtClassPath.addAll(TemplateUtil.getPluginAndPreReqJarPath(contributorBundleName)); 
+		String[] jdtClassPaths = (String[]) jdtClassPath.toArray(new String[jdtClassPath.size()]);
+		URI templateURI = URI.createURI(templateLocation.toString());
+		String templateFile = templateURI.lastSegment();
+		String templatePath = templateURI.trimSegments(1).toString();
 		String[] templatePaths = {  templatePath };
 		try {
-			return (IVisualClassCreationSourceGenerator) TemplateObjectFactory.getClassInstance(jdtClassPaths, templatePaths, templateLocation.getPath().substring(templateLocation.getPath().lastIndexOf('/')+1), contributor.getClass().getClassLoader(), null, null);
+			return (IVisualClassCreationSourceGenerator) TemplateObjectFactory.getClassInstance(jdtClassPaths, templatePaths, templateFile, contributor.getClass().getClassLoader(), null, null);
 		} catch (TemplatesException e) {
 			JavaVEPlugin.log(e, Level.WARNING);
 		}

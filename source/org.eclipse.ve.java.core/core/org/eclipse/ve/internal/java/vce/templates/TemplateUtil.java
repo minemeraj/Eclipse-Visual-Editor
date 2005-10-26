@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.19 $  $Date: 2005-10-26 18:48:20 $ 
+ *  $Revision: 1.20 $  $Date: 2005-10-26 22:14:02 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -18,16 +18,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.logging.Level;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.launching.*;
-import org.eclipse.osgi.util.ManifestElement;
-import org.osgi.framework.*;
+import org.osgi.framework.Bundle;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 /**
  * @author Gili Mendel
@@ -40,7 +36,6 @@ public class TemplateUtil {
     private final static HashMap fClassPathMap = new HashMap() ;  // cache class path
     private final static HashMap fClassPathPreReqMap = new HashMap() ;  // cache PreReq class path
     private static List fPlatformJRE = null ;
-    private static boolean DEV_MODE = Platform.inDevelopmentMode();    
     private static HashMap fFilePath = new HashMap();
     private static HashMap fClassLoaders = new HashMap();
 	
@@ -81,14 +76,10 @@ public class TemplateUtil {
 		Bundle bundle = Platform.getBundle(plugin);
 		List list = null;
 		if (bundle != null) {
-			list = new ArrayList();
-			getBundleLibraries(bundle, list);
-			// Now handle the fragments.
-			Bundle[] frags = Platform.getFragments(bundle);
-			if (frags != null) {
-				for (int i = 0; i < frags.length; i++) {
-					getBundleLibraries(frags[i], list);
-				}
+			URL[] urls = ProxyPlugin.getPlugin().urlLocalizeBundleAndFragments(bundle);
+			list = new ArrayList(urls.length);
+			for (int i = 0; i < urls.length; i++) {
+				list.add(ProxyPlugin.getFileFromURL(urls[i]));
 			}
 		} else
 			list = Collections.EMPTY_LIST;
@@ -96,53 +87,6 @@ public class TemplateUtil {
 		return list;
 	}
 	
-	private static void getBundleLibraries(Bundle bundle, List list) {
-		// Pick up the Jars
-		try {			
-			URL url = Platform.resolve(bundle.getEntry("/")); //$NON-NLS-1$
-			if (url.getProtocol().equals("jar")) { //$NON-NLS-1$
-				String path =  ProxyPlugin.getFilePath(url).getFile();					 //$NON-NLS-1$
-				list.add(getCorrectPath(path));
-			}
-			else {
-				String requires = (String) bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
-				ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires);
-				if (elements != null) {
-					for (int i = 0; i < elements.length; i++) {
-						String name = ProxyPlugin.getPlugin().localizeFromBundleAndFragments(bundle, elements[i].getValue());
-						if (!name.equals(".")) { //$NON-NLS-1$
-							list.add(getCorrectPath(name));
-						}
-					}
-				}
-				// If in DEV mode, hard-code the bin directory in the plugin. It is assumed to be bin because
-				// getting the actual one is hidden down in OSGi and I don't know how to access it. It is also
-				// assumed that when in dev mode, that the plugins are local, so that when we resolve the URL
-				// from getEntry that it will be a file type url.
-				if (DEV_MODE) {
-					URL bin = bundle.getEntry("bin/"); //$NON-NLS-1$
-					if (bin != null) {
-						try {
-							bin = Platform.resolve(bin);
-							if (bin.getProtocol() == "file") { //$NON-NLS-1$
-								String path = getCorrectPath(bin.getFile());
-								if (!list.contains(path))
-									list.add(bin.getFile());
-							}
-						} catch (IOException e) {
-							// Shouldn't occur. Nor do we care if it does.
-						}
-					}
-				}		
-			}
-		} catch (BundleException e) {
-			JavaVEPlugin.getPlugin().getLogger().log(e, Level.WARNING);
-		}
-	    catch (IOException e) {
-			JavaVEPlugin.log(e);
-	    }
-	}
-
 	/**
 	 * This will return the absolute class path associated with run time jars, and
 	 * dev. time directories associated with a give plugin as well as its preReq
@@ -152,16 +96,19 @@ public class TemplateUtil {
 		List lst = (List) fClassPathPreReqMap.get(plugin) ;
 		if (lst != null) return lst ;
 		Bundle bundle = Platform.getBundle(plugin);
-		List l = null;
+		List classPath;
 		if (bundle != null) {
-			l = getPluginJarPath(bundle.getSymbolicName());
+			classPath = new ArrayList();
+			classPath.addAll(getPluginJarPath(bundle.getSymbolicName()));
 			List allReqs = ProxyPlugin.getAllPrereqs(bundle);
 			for (int i = 0; i < allReqs.size(); i++) {
-				l.addAll(getPluginJarPath(((Bundle) allReqs.get(i)).getSymbolicName()));
+				classPath.addAll(getPluginJarPath(((Bundle) allReqs.get(i)).getSymbolicName()));
 			}
-		}
-		fClassPathPreReqMap.put(plugin,l) ;
-		return l ;
+			((ArrayList) classPath).trimToSize();
+		} else
+			classPath = Collections.EMPTY_LIST;
+		fClassPathPreReqMap.put(plugin,classPath) ;
+		return classPath ;
 	}
 		
 	private static String getCorrectPath(String path) {
