@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.37 $  $Date: 2005-10-26 19:52:38 $
+ *  $Revision: 1.38 $  $Date: 2005-10-26 22:10:55 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -50,14 +50,6 @@ import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
-/**
- * 
- * @since 1.0.0
- */
-/**
- * 
- * @since 1.2.0
- */
 /**
  * 
  * @since 1.2.0
@@ -1450,11 +1442,11 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		try {
 			expression.invokeExpression();
 		} catch (Exception e) {
-			JavaVEPlugin.log(Messages.getString("GridLayoutPolicyHelper.0"), Level.WARNING);	 //$NON-NLS-1$
+			JavaVEPlugin.log("Unable to work out target SWT version for GridLayoutHelper", Level.WARNING); //$NON-NLS-1$	
 			targetVMVersion = 3100;
 		}
 		if(targetVMVersion == -1){
-			JavaVEPlugin.log(Messages.getString("GridLayoutPolicyHelper.1"), Level.WARNING); //$NON-NLS-1$
+			JavaVEPlugin.log("Unable to work out target SWT version for GridLayoutHelper", Level.WARNING); //$NON-NLS-1$
 			targetVMVersion = 3100;			
 		}
 		return targetVMVersion;
