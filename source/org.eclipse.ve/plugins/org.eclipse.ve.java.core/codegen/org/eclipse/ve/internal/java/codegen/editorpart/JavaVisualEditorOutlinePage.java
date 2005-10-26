@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorOutlinePage.java,v $
- *  $Revision: 1.28 $  $Date: 2005-10-25 22:40:31 $ 
+ *  $Revision: 1.29 $  $Date: 2005-10-26 18:45:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -102,7 +102,7 @@ public class JavaVisualEditorOutlinePage extends ContentOutlinePage {
 	
 	private class LinkSourceSelectionAction extends Action{
 		public LinkSourceSelectionAction(){
-			super("Link selection with source editor", IAction.AS_CHECK_BOX);
+			super(CodegenEditorPartMessages.JavaVisualEditorOutlinePage_LinkSelectionSourceEditor_Action_Label, IAction.AS_CHECK_BOX);
 			setToolTipText(TOOL_TIP);
 			setImageDescriptor(IMG_SELECTION_SYNC);
 			setDisabledImageDescriptor(IMG_SELECTION_SYNC_DISABLED);			
