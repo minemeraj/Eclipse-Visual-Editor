@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
 /**
@@ -28,6 +29,8 @@ abstract public class ScenariosTestCase extends TestCase {
 
 	private Shell shell;
 
+	protected Text dummyText;
+
 	protected Composite getComposite() {
 		return composite;
 	}
@@ -37,6 +40,9 @@ abstract public class ScenariosTestCase extends TestCase {
 	}
 
 	public Shell getShell() {
+		if(shell!=null) {
+			return shell;
+		}
 		Shell result = BindingScenariosTestSuite.getShell();
 		if (result == null) {
 			display = Display.getDefault();
@@ -94,6 +100,8 @@ abstract public class ScenariosTestCase extends TestCase {
 		SampleData.initializeData(); // test may manipulate the data... let
 		// all start from fresh
 		dbc = SampleData.getSWTtoEMFDatabindingContext(composite);
+		dummyText = new Text(getComposite(), SWT.NONE);
+		dummyText.setText("dummy");
 	}
 
 	protected void tearDown() throws Exception {
@@ -108,6 +116,19 @@ abstract public class ScenariosTestCase extends TestCase {
 		if (display != null && disposeDisplay) {
 			display.dispose();
 		}
+	}
+
+	protected void enterText(Text text, String string) {
+		if (!getShell().isVisible()) {
+			getShell().open();
+			spinEventLoop(0);
+		}
+		text.forceFocus();
+		spinEventLoop(0);
+		text.setText(string);
+		spinEventLoop(0);
+		dummyText.forceFocus();
+		spinEventLoop(0);
 	}
 
 }

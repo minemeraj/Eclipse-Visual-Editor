@@ -14,15 +14,19 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
+import org.eclipse.jface.binding.BindSpec;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.Converter;
 import org.eclipse.jface.binding.IConverter;
 import org.eclipse.jface.binding.IUpdatableValue;
 import org.eclipse.jface.binding.IValidator;
 import org.eclipse.jface.binding.IdentityConverter;
+import org.eclipse.jface.binding.PropertyDescription;
 import org.eclipse.jface.binding.swt.SWTBindingConstants;
 import org.eclipse.jface.binding.swt.SWTDatabindingContext;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
@@ -53,14 +57,33 @@ public class PropertyScenarios extends ScenariosTestCase {
 		super.tearDown();
 	}
 
+	public void testEnterText() {
+		// just to make sure enterText() generates a FocusOut event.
+		Text text = new Text(getComposite(), SWT.BORDER);
+		final boolean[] focusLostHolder = { false };
+		text.addFocusListener(new FocusListener() {
+
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void focusLost(FocusEvent e) {
+				focusLostHolder[0] = true;
+			}
+		});
+		enterText(text, "hallo");
+		assertTrue(focusLostHolder[0]);
+	}
+
 	public void testScenario01() throws BindingException {
 		Text text = new Text(getComposite(), SWT.BORDER);
-		getDbc().bind(text, "text", adventure, "name");
+		getDbc().bind2(text, new PropertyDescription(adventure, "name"), null);
 		// uncomment the following line to see what's happening
 		// happening
 		// spinEventLoop(1);
 		assertEquals(adventure.getName(), text.getText());
-		text.setText("foobar");
+		enterText(text, "foobar");
 		// uncomment the following line to see what's happening
 		// spinEventLoop(1);
 		assertEquals("foobar", adventure.getName());
@@ -75,7 +98,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// Text controls, no conversion, no validation. The Text widget editable
 		// is set to false.by the developer (can not change the name)
 		Text text = new Text(getComposite(), SWT.READ_ONLY);
-		getDbc().bind(text, "text", adventure, "name");
+		getDbc().bind2(text, new PropertyDescription(adventure, "name"), null);
 		assertEquals(adventure.getName(), text.getText());
 	}
 
@@ -88,23 +111,24 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// bind to the lodgingDays feature, which is read-only and always one
 		// less than the number of adventure days.
 		Text text = new Text(getComposite(), SWT.BORDER);
-		getDbc().bind(text, "text", cart, "lodgingDays", new IConverter() {
-			public Class getModelType() {
-				return String.class;
-			}
+		getDbc().bind2(text, new PropertyDescription(cart, "lodgingDays"),
+				new BindSpec(new IConverter() {
+					public Class getModelType() {
+						return String.class;
+					}
 
-			public Class getTargetType() {
-				return Integer.class;
-			}
+					public Class getTargetType() {
+						return Integer.class;
+					}
 
-			public Object convertTargetToModel(Object object) {
-				return new Integer((String) object);
-			}
+					public Object convertTargetToModel(Object object) {
+						return new Integer((String) object);
+					}
 
-			public Object convertModelToTarget(Object object) {
-				return object.toString();
-			}
-		});
+					public Object convertModelToTarget(Object object) {
+						return object.toString();
+					}
+				}, null));
 		assertEquals(new Integer(cart.getLodgingDays()).toString(), text
 				.getText());
 		// TODO API extension needed: getChangeable() and setChangeable() on
@@ -127,13 +151,14 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// scenario to the master/detail section? I'm assuming the latter for
 		// now.
 		IUpdatableValue defaultLodging = (IUpdatableValue) getDbc()
-				.createUpdatable(adventure, "defaultLodging");
-		getDbc().bind(text, "text", defaultLodging, "description");
+				.createUpdatable2(new PropertyDescription(adventure, "defaultLodging"));
+		getDbc().bind2(text,
+				new PropertyDescription(defaultLodging, "description"), null);
 
 		// test changing the description
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
 				.getText());
-		text.setText("foobar");
+		enterText(text, "foobar");
 		assertEquals("foobar", adventure.getDefaultLodging().getDescription());
 		adventure.getDefaultLodging().setDescription("barfoo");
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
@@ -166,32 +191,34 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// capitalized.
 		Text text = new Text(getComposite(), SWT.BORDER);
 		adventure.setName("UPPERCASE");
-		getDbc().bind(text, "text", adventure, "name", new IConverter() {
-			public Class getModelType() {
-				return String.class;
-			}
+		getDbc().bind2(text, new PropertyDescription(adventure, "name"),
+				new BindSpec(new IConverter() {
+					public Class getModelType() {
+						return String.class;
+					}
 
-			public Class getTargetType() {
-				return String.class;
-			}
+					public Class getTargetType() {
+						return String.class;
+					}
 
-			public Object convertTargetToModel(Object fromObject) {
-				return ((String) fromObject).toUpperCase();
-			}
+					public Object convertTargetToModel(Object fromObject) {
+						return ((String) fromObject).toUpperCase();
+					}
 
-			public Object convertModelToTarget(Object toObject) {
-				String modelValue = (String) toObject;
-				if (modelValue == null || modelValue.equals("")) {
-					return modelValue;
-				}
-				String firstChar = modelValue.substring(0, 1);
-				String remainingChars = modelValue.substring(1);
-				return firstChar.toUpperCase() + remainingChars.toLowerCase();
-			}
-		});
+					public Object convertModelToTarget(Object toObject) {
+						String modelValue = (String) toObject;
+						if (modelValue == null || modelValue.equals("")) {
+							return modelValue;
+						}
+						String firstChar = modelValue.substring(0, 1);
+						String remainingChars = modelValue.substring(1);
+						return firstChar.toUpperCase()
+								+ remainingChars.toLowerCase();
+					}
+				}, null));
 		// spinEventLoop(1);
 		assertEquals("Uppercase", text.getText());
-		text.setText("lowercase");
+		enterText(text, "lowercase");
 		// spinEventLoop(1);
 		// TODO If we wanted to "canonicalize" the value in the text field, how
 		// could we do that?
@@ -206,23 +233,26 @@ public class PropertyScenarios extends ScenariosTestCase {
 		final String noSpacesMessage = "Name must not contain spaces.";
 		final String max15CharactersMessage = "Maximum length for name is 15 characters.";
 		adventure.setName("ValidValue");
-		getDbc().bind(text, "text", adventure, "name",
-				new IdentityConverter(String.class), new IValidator() {
-					public String isPartiallyValid(Object value) {
-						return isValid(value);
-					}
+		getDbc().bind2(
+				text,
+				new PropertyDescription(adventure, "name"),
+				new BindSpec(new IdentityConverter(String.class),
+						new IValidator() {
+							public String isPartiallyValid(Object value) {
+								return isValid(value);
+							}
 
-					public String isValid(Object value) {
-						String stringValue = (String) value;
-						if (stringValue.length() > 15) {
-							return max15CharactersMessage;
-						} else if (stringValue.indexOf(' ') != -1) {
-							return noSpacesMessage;
-						} else {
-							return null;
-						}
-					}
-				});
+							public String isValid(Object value) {
+								String stringValue = (String) value;
+								if (stringValue.length() > 15) {
+									return max15CharactersMessage;
+								} else if (stringValue.indexOf(' ') != -1) {
+									return noSpacesMessage;
+								} else {
+									return null;
+								}
+							}
+						}));
 		// no validation message
 		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		text.setText("Invalid Value");
@@ -233,7 +263,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		assertEquals(max15CharactersMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
 		assertEquals("ValidValue", text.getText());
-		text.setText("anothervalid");
+		enterText(text, "anothervalid");
 		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		assertEquals("anothervalid", text.getText());
 		assertEquals("anothervalid", adventure.getName());
@@ -247,7 +277,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		adventure.setPrice(5.0);
 		final String cannotBeNegativeMessage = "Price cannot be negative.";
 		final String mustBeCurrencyMessage = "Price must be a currency.";
-		getDbc().bind(text, "text", adventure, "price",
+		getDbc().bind2(text, new PropertyDescription(adventure, "price"), new BindSpec(
 				new Converter(String.class, double.class) {
 
 					public Object convertTargetToModel(Object fromObject) {
@@ -276,19 +306,19 @@ public class PropertyScenarios extends ScenariosTestCase {
 							return mustBeCurrencyMessage;
 						}
 					}
-				});
+				}));
 		assertEquals("5.0", text.getText());
 		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
-		text.setText("0.65");
+		enterText(text, "0.65");
 		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		assertEquals(0.65, adventure.getPrice(), 0.0001);
 		adventure.setPrice(42.24);
 		assertEquals("42.24", text.getText());
 		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
-		text.setText("jygt");
+		enterText(text,"jygt");
 		assertEquals(mustBeCurrencyMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
-		text.setText("-23.9");
+		enterText(text, "-23.9");
 		assertEquals(cannotBeNegativeMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
 		assertEquals(42.24, adventure.getPrice(), 0.0001);
@@ -307,7 +337,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		final String mustBeCurrencyMessage = "Price must be a currency.";
 		final NumberFormat currencyFormat = NumberFormat
 				.getCurrencyInstance(Locale.CANADA);
-		getDbc().bind(text, "text", adventure, "price",
+		getDbc().bind2(text, new PropertyDescription(adventure, "price"),new BindSpec(
 				new Converter(String.class, double.class) {
 
 					public Object convertTargetToModel(Object fromObject) {
@@ -343,19 +373,19 @@ public class PropertyScenarios extends ScenariosTestCase {
 							return mustBeCurrencyMessage;
 						}
 					}
-				});
+				}));
 		assertEquals("$5.00", text.getText());
 		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
-		text.setText("$0.65");
+		enterText(text, "$0.65");
 		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
 		assertEquals(0.65, adventure.getPrice(), 0.0001);
 		adventure.setPrice(42.24);
 		assertEquals("$42.24", text.getText());
 		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
-		text.setText("jygt");
+		enterText(text, "jygt");
 		assertEquals(mustBeCurrencyMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
-		text.setText("-$23.9");
+		enterText(text,"-$23.9");
 		assertEquals(cannotBeNegativeMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
 		assertEquals(42.24, adventure.getPrice(), 0.0001);
@@ -370,7 +400,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// checkbox.setText("Pets allowed");
 		// checkbox.setLayoutData(new GridData(SWT.LEFT,SWT.TOP, false,false));
 		adventure.setPetsAllowed(true);
-		getDbc().bind(checkbox, "selection", adventure, "petsAllowed");
+		getDbc().bind2(checkbox, new PropertyDescription(adventure, "petsAllowed"),null);
 		assertEquals(true, checkbox.getSelection());
 		setButtonSelectionWithEvents(checkbox, false);
 		assertEquals(false, adventure.isPetsAllowed());
@@ -394,8 +424,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 		spinner1.setMaximum(100);
 		Spinner spinner2 = new Spinner(getComposite(), SWT.NONE);
 		spinner2.setMaximum(1);
-		getDbc().bind(spinner1, SWTBindingConstants.SELECTION, spinner2,
-				SWTBindingConstants.MAX);
+		getDbc().bind2(spinner1, SWTBindingConstants.SELECTION, spinner2,
+				SWTBindingConstants.MAX,null);
 		assertEquals(1, spinner1.getSelection());
 		spinner1.setSelection(10);
 		assertEquals(10, spinner2.getMaximum());
@@ -412,12 +442,12 @@ public class PropertyScenarios extends ScenariosTestCase {
 		Text text1 = new Text(getComposite(), SWT.NONE);
 		Text text2 = new Text(getComposite(), SWT.NONE);
 		IUpdatableValue checkbox1Selected = (IUpdatableValue) getDbc()
-				.createUpdatable(checkbox1, SWTBindingConstants.SELECTION);
+				.createUpdatable2(new PropertyDescription(checkbox1, SWTBindingConstants.SELECTION));
 		IUpdatableValue checkbox2Selected = (IUpdatableValue) getDbc()
-				.createUpdatable(checkbox2, SWTBindingConstants.SELECTION);
+				.createUpdatable2(new PropertyDescription(checkbox2, SWTBindingConstants.SELECTION));
 		// bind the two checkboxes so that if one is checked, the other is not
 		// and vice versa.
-		getDbc().bind(checkbox1Selected, checkbox2Selected, new IConverter() {
+		getDbc().bind2(checkbox1Selected, checkbox2Selected, new BindSpec(new IConverter() {
 			public Class getModelType() {
 				return Boolean.class;
 			}
@@ -437,11 +467,11 @@ public class PropertyScenarios extends ScenariosTestCase {
 			public Object convertModelToTarget(Object modelObject) {
 				return negated((Boolean) modelObject);
 			}
-		});
+		},null));
 		// bind the enabled state of the two text widgets to one of the
 		// checkboxes each.
-		getDbc().bind(text1, SWTBindingConstants.ENABLED, checkbox1Selected);
-		getDbc().bind(text2, SWTBindingConstants.ENABLED, checkbox2Selected);
+		getDbc().bind2(new PropertyDescription(text1, SWTBindingConstants.ENABLED), checkbox1Selected,null);
+		getDbc().bind2(new PropertyDescription(text2, SWTBindingConstants.ENABLED), checkbox2Selected,null);
 		assertEquals(true, text1.getEnabled());
 		assertEquals(false, text2.getEnabled());
 		assertEquals(true, checkbox1.getSelection());
