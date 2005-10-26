@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.32 $  $Date: 2005-09-19 15:46:11 $ 
+ *  $Revision: 1.33 $  $Date: 2005-10-26 23:10:12 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -56,20 +56,25 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 		String varName = null;
 		int varFirstOffset = -1;
 		int currentVarOffset = -1;
-		IMethod returnIMethod = null;
+		IMethod iMethod = null;
 		
 		SimpleName variableName = null;
-		SimpleName getterMethodName = null;
+		SimpleName variableMethodName = null;
 		
-		public BeanPartNodesFinder(String varName, int varFirstOffset, IMethod returnIMethod){
+		public BeanPartNodesFinder(String varName, int varFirstOffset, IMethod iMethod){
 			this.varName = varName;
 			this.varFirstOffset = varFirstOffset;
 			// we only rename get<varName> type method
-			if(returnIMethod!=null){
-				String methodName = returnIMethod.getElementName().toLowerCase(Locale.getDefault());
-				String expectedName = "get"+varName.toLowerCase(Locale.getDefault());
+			if(iMethod!=null){
+				String methodName = iMethod.getElementName().toLowerCase(Locale.getDefault());
+				String expectedName = "get"+varName.toLowerCase(Locale.getDefault()); //$NON-NLS-1$
 				if(expectedName.equals(methodName)){
-					this.returnIMethod = returnIMethod;
+					this.iMethod = iMethod;
+				}else{
+					expectedName = "create"+varName.toLowerCase(Locale.getDefault()); //$NON-NLS-1$
+					if(expectedName.equals(methodName)){
+						this.iMethod = iMethod;
+					}
 				}
 			}
 		}
@@ -94,26 +99,28 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 			return variableName;
 		}
 		
-		public SimpleName getGetterMethodName(){
-			return getterMethodName;
+		public SimpleName getVariableMethodName(){
+			return variableMethodName;
 		}
 		
 		public boolean visit(MethodDeclaration node) {
-			if(returnIMethod!=null && getterMethodName==null){
-				if(node.getName().getIdentifier().equals(returnIMethod.getElementName())){
+			if(iMethod!=null && variableMethodName==null){
+				if(node.getName().getIdentifier().equals(iMethod.getElementName())){
 					try{
-						String iMethodReturnTypeName = Signature.toString(returnIMethod.getReturnType());
+						String iMethodReturnTypeName = Signature.toString(iMethod.getReturnType());
 						String astMethodReturnTypeName = null;
 						Type astMethodReturnType = node.getReturnType();
 						if(astMethodReturnType.isSimpleType())
 							astMethodReturnTypeName = ((SimpleType)astMethodReturnType).getName().getFullyQualifiedName();
 						else if(astMethodReturnType.isQualifiedType())
 							astMethodReturnTypeName = ((QualifiedType)astMethodReturnType).getName().getFullyQualifiedName();
+						else if(astMethodReturnType.isPrimitiveType())
+							astMethodReturnTypeName = ((PrimitiveType)astMethodReturnType).getPrimitiveTypeCode().toString();
 						if(iMethodReturnTypeName!=null && iMethodReturnTypeName.equals(astMethodReturnTypeName)){
-							if(node.parameters().size()==returnIMethod.getParameterTypes().length){
+							if(node.parameters().size()==iMethod.getParameterTypes().length){
 								boolean allParamsEqual = true;
 								if(node.parameters().size()>0){
-									String[] iMethodParams = returnIMethod.getParameterTypes();
+									String[] iMethodParams = iMethod.getParameterTypes();
 									for (int pc = 0; pc < iMethodParams.length; pc++) {
 										SingleVariableDeclaration svd = (SingleVariableDeclaration) node.parameters().get(pc);
 										String nodeParamType = CodeGenUtil.getTypeName(svd.getType());
@@ -131,7 +138,7 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 									}
 								}
 								if(allParamsEqual)
-									getterMethodName = node.getName();
+									variableMethodName = node.getName();
 							}
 						}
 					}catch (JavaModelException e) {
@@ -302,15 +309,31 @@ protected IField getField(ICompilationUnit cu, BeanPart bp){
 	return field;
 }
 
-protected IMethod getReturnMethod(ICompilationUnit cu, BeanPart bp){
-	IMethod returnMethod = null;
+/**
+ * Returns a method corresponding to the bean. The return method 
+ * is given if it is present, else the init method is returned.
+ * 
+ * @param cu
+ * @param bp
+ * @return
+ * 
+ * @since 1.1.0.1
+ */
+protected IMethod getBeanMethod(ICompilationUnit cu, BeanPart bp){
+	IMethod method = null;
 	if(bp.getReturnedMethod()!=null){
 		IType mainType = CodeGenUtil.getMainType(cu);
 		if(mainType!=null){
-			returnMethod = CodeGenUtil.getMethod(mainType, bp.getReturnedMethod().getMethodHandle());
+			method = CodeGenUtil.getMethod(mainType, bp.getReturnedMethod().getMethodHandle());
 		}
 	}
-	return returnMethod;
+	if(method==null && bp.getInitMethod()!=null){
+		IType mainType = CodeGenUtil.getMainType(cu);
+		if(method==null){
+			method = CodeGenUtil.getMethod(mainType, bp.getInitMethod().getMethodHandle());
+		}
+	}
+	return method;
 }
 
 public static String getNameFromAST(Name name){
@@ -371,7 +394,7 @@ protected Object[] getInitMethodNameAndParamNames(ICompilationUnit cu, BeanPart 
 	return new Object[]{mName, pTypes};
 }
 
-protected void performLocalRename(final ICompilationUnit compilationUnit, BeanPart nameChangedBP, final String newFieldName, final IMethod bpRetMethod){
+protected void performLocalRename(final ICompilationUnit compilationUnit, BeanPart nameChangedBP, final String newFieldName, final IMethod method){
 	// Perform all local renames in one step
 	RenameRequestCollector collector = getRenamecogetRenameCollector(compilationUnit);
 	if(collector==null){
@@ -390,7 +413,7 @@ protected void performLocalRename(final ICompilationUnit compilationUnit, BeanPa
 	final int afterOffset = initExpOffset;
 	final String oldVarName = nameChangedBP.getSimpleName();
 	
-	collector.addRequest(oldVarName, afterOffset, newFieldName, bpRetMethod);
+	collector.addRequest(oldVarName, afterOffset, newFieldName, method);
 }
 
 protected void renameField(Notification msg){
@@ -403,8 +426,8 @@ protected void renameField(Notification msg){
 	}
 	if(nameChangedBP!=null){
 		ICompilationUnit cu = fDecoder.getBeanModel().getCompilationUnit();
-		IMethod bpRetMethod = getReturnMethod(cu, nameChangedBP);
-		performLocalRename(cu, nameChangedBP, newFieldName, bpRetMethod);
+		IMethod method = getBeanMethod(cu, nameChangedBP);
+		performLocalRename(cu, nameChangedBP, newFieldName, method);
 	}
 }
 
