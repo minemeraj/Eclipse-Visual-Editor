@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateUtil.java,v $
- *  $Revision: 1.18 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.19 $  $Date: 2005-10-26 18:48:20 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -101,7 +101,7 @@ public class TemplateUtil {
 		try {			
 			URL url = Platform.resolve(bundle.getEntry("/")); //$NON-NLS-1$
 			if (url.getProtocol().equals("jar")) { //$NON-NLS-1$
-				String path =  new URL(url.getFile().substring(0, url.getFile().indexOf("!/"))).getFile();					 //$NON-NLS-1$
+				String path =  ProxyPlugin.getFilePath(url).getFile();					 //$NON-NLS-1$
 				list.add(getCorrectPath(path));
 			}
 			else {

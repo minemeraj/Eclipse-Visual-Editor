@@ -3,9 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.ve.java.core; singleton:=true
 Bundle-Version: 1.2.0
-Bundle-ClassPath: core.jar,
- codegen.jar,
- common.jar
 Bundle-Activator: org.eclipse.ve.internal.java.core.JavaVEPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

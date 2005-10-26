@@ -3,9 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.ve.jfc; singleton:=true
 Bundle-Version: 1.2.0
-Bundle-ClassPath: jfc.jar,
- jfccommon.jar,
- jfccodegen.jar
 Bundle-Activator: org.eclipse.ve.internal.jfc.core.JFCVisualPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
