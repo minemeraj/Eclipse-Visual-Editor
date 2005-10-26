@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RenameRequestCollector.java,v $
- *  $Revision: 1.3 $  $Date: 2005-09-16 16:25:00 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-26 23:10:12 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -38,12 +38,12 @@ public class RenameRequestCollector implements Runnable {
 		public String currentBeanName = null;
 		public int afterOffset=-1;
 		public String newBeanName=null;
-		public IMethod beanRetMethod=null;
-		public RenameRequest(String currentBeanName, int afterOffset, String newBeanName, IMethod beanRetMethod){
+		public IMethod beanMethod=null;
+		public RenameRequest(String currentBeanName, int afterOffset, String newBeanName, IMethod beanMethod){
 			this.afterOffset = afterOffset;
 			this.currentBeanName = currentBeanName;
 			this.newBeanName = newBeanName;
-			this.beanRetMethod = beanRetMethod;
+			this.beanMethod = beanMethod;
 		}
 	}
 	
@@ -75,7 +75,7 @@ public class RenameRequestCollector implements Runnable {
 							renameRequest.currentBeanName, 
 							renameRequest.afterOffset, 
 							renameRequest.newBeanName, 
-							renameRequest.beanRetMethod, 
+							renameRequest.beanMethod, 
 							rewrite);
 				}
 				
@@ -94,8 +94,8 @@ public class RenameRequestCollector implements Runnable {
 		}
 	}
 	
-	private void processRenameRequest(String currentBeanName, int afterOffset, String newBeanName, IMethod beanRetMethod, ASTRewrite rewrite) {
-		BeanPartNodesFinder visitor = new BeanPartNodesFinder(currentBeanName, afterOffset, beanRetMethod);
+	private void processRenameRequest(String currentBeanName, int afterOffset, String newBeanName, IMethod beanMethod, ASTRewrite rewrite) {
+		BeanPartNodesFinder visitor = new BeanPartNodesFinder(currentBeanName, afterOffset, beanMethod);
 		cuNode.accept(visitor);
 		if(visitor.getVariableName()!=null){
 			// Rename variable
@@ -103,10 +103,11 @@ public class RenameRequestCollector implements Runnable {
 			rename(cuNode, simpleName, newBeanName, rewrite);
 			
 			// Rename getter if available
-			SimpleName getterMethodName = visitor.getGetterMethodName();
-			if(getterMethodName!=null){
+			SimpleName methodName = visitor.getVariableMethodName();
+			if(methodName!=null){
 				String vName = new String(new char[]{Character.toUpperCase(newBeanName.charAt(0))}) + newBeanName.substring(1);
-				rename(cuNode, getterMethodName, "get"+vName, rewrite);
+				String prefix = methodName.getFullyQualifiedName().startsWith("create") ? "create" : "get"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				rename(cuNode, methodName, prefix+vName, rewrite);
 			}
 		}
 	}
@@ -125,9 +126,9 @@ public class RenameRequestCollector implements Runnable {
 		}
 	}
  
-	public void addRequest(String currentBeanName, int afterOffset, String newBeanName, IMethod beanRetMethod) {
+	public void addRequest(String currentBeanName, int afterOffset, String newBeanName, IMethod beanMethod) {
 		if(renameRequests==null)
 			renameRequests = new ArrayList();
-		renameRequests.add(new RenameRequest(currentBeanName, afterOffset, newBeanName, beanRetMethod));
+		renameRequests.add(new RenameRequest(currentBeanName, afterOffset, newBeanName, beanMethod));
 	}
 }
