@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateObjectEmitter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-26 22:14:02 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -58,13 +58,11 @@ public class TemplateObjectEmitter {
 	 * @param template         template's file name
 	 * @param destinationPath  If not existed already, where to create the template's object 
 	 */	
-	TemplateObjectEmitter (String[] templateURIPath, String template, IPath destinationPath) {
+	TemplateObjectEmitter (String[] templateURIPath, String template, long timeStamp, IPath destinationPath) {
 		fTemplateURIPath = templateURIPath ;
 		fTemplate = template ;
 		fDestinationPath = destinationPath ;
-		File t = new File(JETCompiler.find(templateURIPath,template)) ;
-		if (t.canRead())
-		  fTemplateTimeStamp = t.lastModified() ;
+		fTemplateTimeStamp = timeStamp;
 	}
 	/**
 	 * @param templateURIPath  classpath to search the template
@@ -75,8 +73,8 @@ public class TemplateObjectEmitter {
 	 *                          and compiled.
 	 */	
 	
-	TemplateObjectEmitter (String[] templateURIPath, String template, IPath destinationPath, String className) {
-		this (templateURIPath,template, destinationPath) ;
+	TemplateObjectEmitter (String[] templateURIPath, String template, long timeStamp, IPath destinationPath, String className) {
+		this (templateURIPath,template, timeStamp, destinationPath) ;
 		fClassName = className ;
 	}	
 	

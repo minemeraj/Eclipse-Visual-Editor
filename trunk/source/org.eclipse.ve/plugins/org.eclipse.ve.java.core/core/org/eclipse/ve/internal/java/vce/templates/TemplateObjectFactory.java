@@ -10,16 +10,21 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TemplateObjectFactory.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.7 $  $Date: 2005-10-26 22:14:02 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Hashtable;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.emf.codegen.jet.JETCompiler;
 import org.eclipse.emf.codegen.jet.JETException;
+
+import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
@@ -40,35 +45,40 @@ public class TemplateObjectFactory {
 		// only reUse this Emitter if it's time stamp is valid
 		if (e == null || e.getTemplateTimeStamp() < ts) {
 			if (classname != null)
-			   e = new TemplateObjectEmitter(templateURIPath, template, JavaVEPlugin.VE_GENERATED_OBJECTs_DESTINATION,classname);
+			   e = new TemplateObjectEmitter(templateURIPath, template, ts, JavaVEPlugin.VE_GENERATED_OBJECTs_DESTINATION,classname);
 		    else
-		       e = new TemplateObjectEmitter(templateURIPath, template, JavaVEPlugin.VE_GENERATED_OBJECTs_DESTINATION);
+		       e = new TemplateObjectEmitter(templateURIPath, template, ts, JavaVEPlugin.VE_GENERATED_OBJECTs_DESTINATION);
 			fEmitters.put(tPath, e);
 		}
 		return e;
 	}
 
 	/**
-	 * @return File denoting the template if the template is readable.
+	 * @return int denoting the template last modified timestampe if the template is readable. If the template is inside
+	 * a jar, then the file for the jar will be used for the timestamp instead. "-1" if invalid, not a file.
 	 */
-	protected static File getTemplate(String[] templateURIPath, String template) {
+	protected static long getTemplateTimeStamp(String[] templateURIPath, String template) {
 
 		try {
-//// Work around for JET path resolution on unix
-//for (int i = 0; i < templateURIPath.length; i++) {
-//	if (templateURIPath[i].startsWith("/") && !templateURIPath[i].startsWith("//"))	 //$NON-NLS-1$ //$NON-NLS-2$
-//	     templateURIPath[i]="/"+ templateURIPath[i];	 //$NON-NLS-1$
-//}			
 			String templateAbsoluteURI = JETCompiler.find(templateURIPath, template);
-			File tf = new File(templateAbsoluteURI);
-			if (!tf.canRead()) {
-				return null;
+			if (templateAbsoluteURI != null) {
+				URL url;
+				try {
+					url = new URL(templateAbsoluteURI);
+					url = ProxyPlugin.getFilePath(Platform.resolve(url));
+				} catch (MalformedURLException exception) {
+					url = new URL("file:" + templateAbsoluteURI);
+				}
+				if ("file".equals(url.getProtocol())) {
+					File tf = new File(url.getFile());
+					if (tf.canRead())
+						return tf.lastModified();
+				}
 			}
-			return tf;
+		} catch (MalformedURLException e) {
+		} catch (IOException e) {
 		}
-		catch (Exception e) {
-			return null;
-		}
+		return -1;
 	}
 	/**
 	 * Given a template, parse and generate the source, if needed.
@@ -76,11 +86,11 @@ public class TemplateObjectFactory {
 	public static String getClassSource(String[] templateURIPath, String template, String className, IProgressMonitor pm) throws TemplatesException {
 
 		try {
-			File tf = getTemplate(templateURIPath, template);
-			if (tf == null)
+			long ts = getTemplateTimeStamp(templateURIPath, template);
+			if (ts == -1)
 				throw new JETException("Template not found: " + template); //$NON-NLS-1$
 
-			TemplateObjectEmitter e = getEmitter(templateURIPath, template, tf.lastModified(),null);
+			TemplateObjectEmitter e = getEmitter(templateURIPath, template, ts, null);
 			return e.getObjectSource(pm);
 		}
 		catch (JETException e) {
@@ -104,12 +114,12 @@ public class TemplateObjectFactory {
 	public static Object getClassInstance(String[] jdtCompileClassPath, String[] templateURIPath, String template, ClassLoader cl, String className, IProgressMonitor pm) throws TemplatesException {
 
 		try {
-			File tf = getTemplate(templateURIPath, template);
-			if (tf == null)
+			long ts = getTemplateTimeStamp(templateURIPath, template);
+			if (ts == -1)
 				throw new JETException("Template not found: " + template); //$NON-NLS-1$
 
             TemplateObjectEmitter e ;            
-            e = getEmitter(templateURIPath, template, tf.lastModified(),className);
+            e = getEmitter(templateURIPath, template, ts,className);
 
 			return e.getObject(jdtCompileClassPath, e.getClassName(pm), cl, pm);
 		}
