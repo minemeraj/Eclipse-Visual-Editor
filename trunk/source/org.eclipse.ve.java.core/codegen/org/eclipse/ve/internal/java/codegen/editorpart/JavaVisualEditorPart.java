@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.155 $  $Date: 2005-10-26 13:50:50 $ 
+ *  $Revision: 1.156 $  $Date: 2005-10-26 14:14:05 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -615,8 +615,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 				public void selectionChanged(SelectionChangedEvent event) {
 					// dont update if model is busy
 					ModelChangeController modelChangeController = (ModelChangeController)editDomain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
-					if(	modelChangeController.getHoldState()==ModelChangeController.NO_UPDATE_STATE || 
-						modelChangeController.getHoldState()==ModelChangeController.BUSY_STATE)
+					if(	modelChangeController==null || 
+						modelChangeController.getHoldState()!=ModelChangeController.READY_STATE)
 						return;
 					if(event.getSelection() instanceof ITextSelection){
 						ITextSelection textSelection = (ITextSelection) event.getSelection();
