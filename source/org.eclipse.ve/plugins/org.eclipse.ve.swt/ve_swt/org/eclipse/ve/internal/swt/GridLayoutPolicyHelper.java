@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.35 $  $Date: 2005-10-11 21:23:47 $
+ *  $Revision: 1.36 $  $Date: 2005-10-26 19:13:31 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -53,6 +53,14 @@ import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 /**
  * 
  * @since 1.0.0
+ */
+/**
+ * 
+ * @since 1.2.0
+ */
+/**
+ * 
+ * @since 1.2.0
  */
 public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActionFilter {
 
@@ -707,8 +715,28 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		return cb.getCommand();
 	}
 
+	/*
+	 * Create the filler label object used to help keep the positioning of the controls within the composite container
+	 * 
+	 * Note: Since this is a special label with no text (to keep it invisible in the layout), we'll create the 
+	 * 		 allocation here so it will cause the LabelContainmentHandler NOT to set the text property.  
+	 */
 	public IJavaInstance createFillerLabelObject() {
-		return BeanUtilities.createJavaObject("org.eclipse.swt.widgets.Label",rset,(JavaAllocation)null); //$NON-NLS-1$
+		PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation();
+		ic.setType("org.eclipse.swt.widgets.Label");
+
+		// set the arguments
+		PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference();
+		ir.setReference((IJavaInstance) policy.getContainer());
+		PTFieldAccess fa = InstantiationFactory.eINSTANCE.createPTFieldAccess();
+		PTName name = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT"); //$NON-NLS-1$
+		fa.setField("NONE"); //$NON-NLS-1$
+		fa.setReceiver(name);
+		ic.getArguments().add(ir);
+		ic.getArguments().add(fa);
+
+		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
+		return BeanUtilities.createJavaObject("org.eclipse.swt.widgets.Label", rset, alloc); //$NON-NLS-1$
 	}
 	
 	public Command createNumColumnsCommand(int numCols) {
