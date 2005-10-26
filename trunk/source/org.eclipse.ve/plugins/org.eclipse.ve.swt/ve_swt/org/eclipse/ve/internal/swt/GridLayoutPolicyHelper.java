@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.36 $  $Date: 2005-10-26 19:13:31 $
+ *  $Revision: 1.37 $  $Date: 2005-10-26 19:52:38 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -359,7 +359,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 
 	int[] expandableColumns, expandableRows;
-	private static final String TARGET_VM_VERSION_KEY = "TARGET_VM_VERSION";
+	private static final String TARGET_VM_VERSION_KEY = "TARGET_VM_VERSION"; //$NON-NLS-1$
 	private int targetVMVersion = -1;
 	private EditDomain fEditDomain;
 	/**
@@ -379,9 +379,9 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		// computes the values
 		String targetVMHelperTypeName = null;
 		if(getTargetVMSWTVersion() >= 3100){
-			targetVMHelperTypeName = "org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper";
+			targetVMHelperTypeName = "org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper"; //$NON-NLS-1$
 		} else {
-			targetVMHelperTypeName = "org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper_30";		
+			targetVMHelperTypeName = "org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper_30";		 //$NON-NLS-1$
 		}		
 		IBeanTypeProxy gridLayoutHelperType = getLayoutManagerBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(targetVMHelperTypeName); //$NON-NLS-1$
 		IBeanProxy gridLayoutHelperProxy = null;
@@ -723,7 +723,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	 */
 	public IJavaInstance createFillerLabelObject() {
 		PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation();
-		ic.setType("org.eclipse.swt.widgets.Label");
+		ic.setType("org.eclipse.swt.widgets.Label"); //$NON-NLS-1$
 
 		// set the arguments
 		PTInstanceReference ir = InstantiationFactory.eINSTANCE.createPTInstanceReference();
@@ -1414,7 +1414,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) allocationExpression;
 				if (classInstanceCreation.getArguments().size() == 2) {
 					PTExpression secondArg = (PTExpression) classInstanceCreation.getArguments().get(1);
-					if (secondArg instanceof PTFieldAccess && ((PTFieldAccess) secondArg).getField().equals("NONE"))
+					if (secondArg instanceof PTFieldAccess && ((PTFieldAccess) secondArg).getField().equals("NONE")) //$NON-NLS-1$
 						return true;
 				}
 			}
@@ -1434,8 +1434,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		ProxyFactoryRegistry proxyFactoryRegistry = getLayoutManagerBeanProxy().getProxyFactoryRegistry();		
 		IExpression expression = proxyFactoryRegistry.getBeanProxyFactory().createExpression();		
 		// Evaluate the expression "org.eclipse.swt.SWT.getVersion()";
-		IProxyBeanType swtBeanTypeProxy = proxyFactoryRegistry.getBeanTypeProxyFactory().getBeanTypeProxy(expression,"org.eclipse.swt.SWT");
-		IProxyMethod getVersionMethodProxy = swtBeanTypeProxy.getMethodProxy(expression,"getVersion");
+		IProxyBeanType swtBeanTypeProxy = proxyFactoryRegistry.getBeanTypeProxyFactory().getBeanTypeProxy(expression,"org.eclipse.swt.SWT"); //$NON-NLS-1$
+		IProxyMethod getVersionMethodProxy = swtBeanTypeProxy.getMethodProxy(expression,"getVersion"); //$NON-NLS-1$
 		ExpressionProxy proxy = expression.createSimpleMethodInvoke(getVersionMethodProxy,swtBeanTypeProxy,null,true);
 		proxy.addProxyListener(new ProxyListener(){
 			public void proxyResolved(ProxyEvent event) {	
@@ -1450,11 +1450,11 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		try {
 			expression.invokeExpression();
 		} catch (Exception e) {
-			JavaVEPlugin.log("Unable to work out target SWT version for GridLayoutHelper", Level.WARNING);	
+			JavaVEPlugin.log(Messages.getString("GridLayoutPolicyHelper.0"), Level.WARNING);	 //$NON-NLS-1$
 			targetVMVersion = 3100;
 		}
 		if(targetVMVersion == -1){
-			JavaVEPlugin.log("Unable to work out target SWT version for GridLayoutHelper", Level.WARNING);
+			JavaVEPlugin.log(Messages.getString("GridLayoutPolicyHelper.1"), Level.WARNING); //$NON-NLS-1$
 			targetVMVersion = 3100;			
 		}
 		return targetVMVersion;
