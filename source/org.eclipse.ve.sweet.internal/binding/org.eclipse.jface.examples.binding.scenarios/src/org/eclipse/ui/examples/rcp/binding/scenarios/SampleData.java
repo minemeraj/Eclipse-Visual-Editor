@@ -79,10 +79,12 @@ public class SampleData {
 		// Categories
 		WINTER_CATEGORY = adventureFactory.createCategory();
 		WINTER_CATEGORY.setName("Freeze Adventures");
+		WINTER_CATEGORY.setId("100");
 		CATALOG_2005.getCategories().add(WINTER_CATEGORY);
 		
 		SUMMER_CATEGORY = adventureFactory.createCategory();
 		SUMMER_CATEGORY.setName("Hot Adventures");
+		SUMMER_CATEGORY.setId("200");
 		CATALOG_2005.getCategories().add(SUMMER_CATEGORY);
 		
 		// Adventures
@@ -91,6 +93,7 @@ public class SampleData {
 		WINTER_HOLIDAY.setName("Ski Alps");
 		WINTER_HOLIDAY.setLocation("Chamonix");
 		WINTER_HOLIDAY.setPrice(4000.52d);
+		WINTER_HOLIDAY.setId("150");
 		WINTER_CATEGORY.getAdventures().add(WINTER_HOLIDAY);
 		
 		BEACH_HOLIDAY = adventureFactory.createAdventure();
@@ -98,6 +101,7 @@ public class SampleData {
 		BEACH_HOLIDAY.setName("Playa");
 		BEACH_HOLIDAY.setLocation("Lloret de Mar");
 		BEACH_HOLIDAY.setPrice(2000.52d);
+		BEACH_HOLIDAY.setId("250");
 		SUMMER_CATEGORY.getAdventures().add(BEACH_HOLIDAY);
 		
 		RAFTING_HOLIDAY = adventureFactory.createAdventure();
@@ -105,6 +109,7 @@ public class SampleData {
 		RAFTING_HOLIDAY.setName("Whitewater");
 		RAFTING_HOLIDAY.setLocation("Ottawa");
 		RAFTING_HOLIDAY.setPrice(8000.52d);
+		RAFTING_HOLIDAY.setId("270");
 		SUMMER_CATEGORY.getAdventures().add(RAFTING_HOLIDAY);
 		
 		// Lodgings
