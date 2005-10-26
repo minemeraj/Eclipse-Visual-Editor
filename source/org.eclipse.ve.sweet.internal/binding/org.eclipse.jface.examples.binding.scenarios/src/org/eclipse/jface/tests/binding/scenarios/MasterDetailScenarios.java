@@ -13,29 +13,16 @@ package org.eclipse.jface.tests.binding.scenarios;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.ConditionalUpdatableValue;
-import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.ListDescription;
-import org.eclipse.jface.binding.NestedPropertyDescription;
-import org.eclipse.jface.binding.NestedTableDescription;
-import org.eclipse.jface.binding.PropertyDescription;
+import org.eclipse.jface.binding.*;
 import org.eclipse.jface.binding.swt.SWTBindingConstants;
-import org.eclipse.jface.viewers.ContentViewer;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.examples.rcp.adventure.Adventure;
-import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
-import org.eclipse.ui.examples.rcp.adventure.Catalog;
-import org.eclipse.ui.examples.rcp.adventure.Lodging;
+import org.eclipse.ui.examples.rcp.adventure.*;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
 /**
@@ -91,7 +78,7 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 		IUpdatableValue selectedLodging = (IUpdatableValue) getDbc()
 				.createUpdatable(listViewer, SWTBindingConstants.SELECTION);
 
-		selectedLodging.setValue(SampleData.CAMP_GROUND, null);
+		selectedLodging.setValue(SampleData.CAMP_GROUND);
 
 		assertEquals(SampleData.CAMP_GROUND, getViewerSelection(listViewer));
 		Text txtName = new Text(getComposite(), SWT.BORDER);
@@ -130,7 +117,7 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 		final IUpdatableValue selectedLodgingUpdatable = (IUpdatableValue) getDbc()
 				.createUpdatable(listViewer, SWTBindingConstants.SELECTION);
 
-		selectedLodgingUpdatable.setValue(null, null);
+		selectedLodgingUpdatable.setValue(null);
 		assertTrue(listViewer.getSelection().isEmpty());
 
 		ConditionalUpdatableValue selectionExistsUpdatable = new ConditionalUpdatableValue(

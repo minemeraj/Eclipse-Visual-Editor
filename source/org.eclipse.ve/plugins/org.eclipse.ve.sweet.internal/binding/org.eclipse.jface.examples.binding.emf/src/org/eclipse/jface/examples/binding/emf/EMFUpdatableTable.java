@@ -18,9 +18,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.binding.IChangeEvent;
-import org.eclipse.jface.binding.IUpdatableTable;
-import org.eclipse.jface.binding.Updatable;
+import org.eclipse.jface.binding.*;
 
 public class EMFUpdatableTable extends Updatable implements IUpdatableTable {
 
@@ -42,19 +40,19 @@ public class EMFUpdatableTable extends Updatable implements IUpdatableTable {
 					if (msg.getEventType() == Notification.ADD) {
 						EObject newObject = (EObject) msg.getNewValue();
 						newObject.eAdapters().add(this);
-						fireChangeEvent(null, IChangeEvent.ADD, null, newObject, msg
+						fireChangeEvent(IChangeEvent.ADD, null, newObject, msg
 								.getPosition());
 					} else if (msg.getEventType() == Notification.REMOVE) {
 						EObject oldObject = (EObject) msg.getOldValue();
 						oldObject.eAdapters().remove(this);
-						fireChangeEvent(null, IChangeEvent.REMOVE, oldObject, null,
+						fireChangeEvent(IChangeEvent.REMOVE, oldObject, null,
 								msg.getPosition());
 					}
 				} else {
 					// notifier is one of the objects in the list
 					int position = getList().indexOf(msg.getNotifier());
 					if (position != -1) {
-						fireChangeEvent(null, IChangeEvent.CHANGE, msg.getNotifier(),
+						fireChangeEvent(IChangeEvent.CHANGE, msg.getNotifier(),
 								msg.getNotifier(), position);
 					}
 				}

@@ -12,7 +12,7 @@
  *  Created Oct 20, 2005 by Gili Mendel
  * 
  *  $RCSfile: EMFUpdatableEList.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-21 17:30:35 $ 
+ *  $Revision: 1.3 $  $Date: 2005-10-26 22:19:33 $ 
  */
 
 package org.eclipse.jface.examples.binding.emf;
@@ -54,19 +54,19 @@ public class EMFUpdatableEList extends Updatable implements
 					if (msg.getEventType() == Notification.ADD) {
 						EObject newObject = (EObject) msg.getNewValue();
 						newObject.eAdapters().add(this);
-						fireChangeEvent(null, IChangeEvent.ADD, null,
+						fireChangeEvent(IChangeEvent.ADD, null,
 								newObject, msg.getPosition());
 					} else if (msg.getEventType() == Notification.REMOVE) {
 						EObject oldObject = (EObject) msg.getOldValue();
 						oldObject.eAdapters().remove(this);
-						fireChangeEvent(null, IChangeEvent.REMOVE, oldObject,
+						fireChangeEvent(IChangeEvent.REMOVE, oldObject,
 								null, msg.getPosition());
 					}
 				} else {
 					// notifier is one of the objects in the list
 					int position = list.indexOf(msg.getNotifier());
 					if (position != -1) {
-						fireChangeEvent(null, IChangeEvent.CHANGE, msg
+						fireChangeEvent(IChangeEvent.CHANGE, msg
 								.getNotifier(), msg.getNotifier(), position);
 					}
 				}
@@ -103,14 +103,14 @@ public class EMFUpdatableEList extends Updatable implements
 		list.add(index, value);
 		if (value instanceof EObject)
 			((EObject) value).eAdapters().add(adapter);
-		fireChangeEvent(null, IChangeEvent.ADD, null, value, index);
+		fireChangeEvent(IChangeEvent.ADD, null, value, index);
 		return index;
 	}
 
 	public void removeElement(int index) {
 		Object old = list.get(index);
 		list.remove(index);
-		fireChangeEvent(null, IChangeEvent.REMOVE, old, null, index);
+		fireChangeEvent(IChangeEvent.REMOVE, old, null, index);
 		if (old instanceof EObject)
 			((EObject) old).eAdapters().remove(adapter);
 	}
