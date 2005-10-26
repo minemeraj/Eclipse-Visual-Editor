@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.17 $  $Date: 2005-10-18 18:22:42 $ 
+ *  $Revision: 1.18 $  $Date: 2005-10-26 16:11:40 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -23,13 +23,11 @@ import javax.swing.UIManager;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.debug.ui.launcher.JavaLaunchConfigurationTab;
-import org.eclipse.jdt.internal.launching.JavaLaunchConfigurationUtils;
 import org.eclipse.jdt.internal.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
@@ -629,10 +627,8 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		IJavaProject jp = getJavaProject();
 		if (jp != null) {
 			// only verify type exists if Java project is specified
-			try {
-				JavaLaunchConfigurationUtils.getMainType(name, jp);
-			} catch (CoreException e) {
-				setErrorMessage(VCELauncherMessages.BeanTab_badbean_msg_ERROR_); 
+			if (getMainType(name, jp) == null) {
+				setErrorMessage(VCELauncherMessages.BeanTab_badbean_msg_ERROR_);
 				return false;
 			}
 		}	
@@ -725,4 +721,32 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 	public Image getImage() {
 		return JavaVEPlugin.getJavaBeanImage();
 	}		
+	/**
+	 * Return the <code>IType</code> referenced by the specified name and contained in the specified project
+	 * Return null if not found.
+	 * 
+	 * @since 1.2.0
+	 */
+	private IType getMainType(String mainTypeName, IJavaProject javaProject) {
+		if ((mainTypeName == null) || (mainTypeName.trim().length() < 1))
+			return null;
+		IType mainType = null;
+		try {
+			String pathStr = mainTypeName.replace('.', '/') + ".java"; //$NON-NLS-1$
+			IJavaElement javaElement = javaProject.findElement(new Path(pathStr));
+			if (javaElement == null) {
+				return null;
+			} else if (javaElement instanceof IType) {
+				mainType = (IType) javaElement;
+			} else if (javaElement.getElementType() == IJavaElement.COMPILATION_UNIT) {
+				String simpleName = Signature.getSimpleName(mainTypeName);
+				mainType = ((ICompilationUnit) javaElement).getType(simpleName);
+			} else if (javaElement.getElementType() == IJavaElement.CLASS_FILE) {
+				mainType = ((IClassFile) javaElement).getType();
+			}
+		} catch (JavaModelException jme) {
+		}
+		return mainType;
+	}	
+	
 }
