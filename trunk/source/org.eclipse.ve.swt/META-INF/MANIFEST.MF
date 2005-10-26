@@ -3,9 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.ve.swt; singleton:=true
 Bundle-Version: 1.2.0
-Bundle-ClassPath: swtCommon.jar,
- ve_swt.jar,
- swtcodegen.jar
 Bundle-Activator: org.eclipse.ve.internal.swt.SwtPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

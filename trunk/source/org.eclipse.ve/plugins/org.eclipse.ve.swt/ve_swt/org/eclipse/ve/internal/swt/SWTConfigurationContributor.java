@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.34 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.35 $  $Date: 2005-10-26 18:48:21 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -346,7 +346,6 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		}
 		}, null, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
 		
-		// If GTK is the platform, then contribute the native library which does the offscreen screen-scrape
 		if(Platform.WS_GTK.equals(Platform.getWS())){
 			controller.contributeClasspath(Platform.getBundle("org.eclipse.ve.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false); //$NON-NLS-1$ //$NON-NLS-2$
 		}		
@@ -664,7 +663,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 			// .jared fragment
 			URL l = Platform.resolve(bundle.getEntry("/"));	 //$NON-NLS-1$
 			boolean project = l.getProtocol().equals("file"); // This library is inside the workbench... 			 //$NON-NLS-1$
-			location = getFilePath(l).removeTrailingSeparator();
+			location = new Path(ProxyPlugin.getFilePath(l).getFile()).removeTrailingSeparator();
 			// not supporting a worbench project at this time ... .jar only
 			if (location !=null && location.lastSegment().endsWith(".jar")) { //$NON-NLS-1$
 				IPath src = getPlatformSrcLocationFor(bundle, location.lastSegment(), srcPluginID);
