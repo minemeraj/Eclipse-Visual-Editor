@@ -145,20 +145,32 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 			else
 				return new GraphicalEditPart[] { new ActionBarActionEditPart("Press here to convert to a TreeViewer") {
 
-					// Create and execute commands to promote this Tree to a JFace TreeViewer
 					public void run() {
-						CreateRequest cr = new CreateRequest();
-						cr.setFactory(new EMFCreationFactory(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.viewers.TreeViewer",
-								(EObject) tree)));
-						Command c = treeEditPart.getCommand(cr);
-						if (c != null) {
-							EditDomain.getEditDomain(treeEditPart).getCommandStack().execute(c);
+						// If the treeviewer already exists, just the contributions need to be refreshed
+						if ((treeViewer = getTreeViewer((IJavaInstance) tree)) != null) {
 							Display.getDefault().asyncExec(new Runnable() {
+
 								public void run() {
-									treeViewer = getTreeViewer((IJavaInstance) tree);
 									notifyListeners();
 								}
 							});
+							
+						} else {
+							// Create and execute commands to promote this Tree to a JFace TreeViewer
+							CreateRequest cr = new CreateRequest();
+							cr.setFactory(new EMFCreationFactory(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.viewers.TreeViewer",
+									(EObject) tree)));
+							Command c = treeEditPart.getCommand(cr);
+							if (c != null) {
+								EditDomain.getEditDomain(treeEditPart).getCommandStack().execute(c);
+								Display.getDefault().asyncExec(new Runnable() {
+
+									public void run() {
+										treeViewer = getTreeViewer((IJavaInstance) tree);
+										notifyListeners();
+									}
+								});
+							}
 						}
 					}
 				}};
