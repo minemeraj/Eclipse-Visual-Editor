@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.154 $  $Date: 2005-10-24 18:58:19 $ 
+ *  $Revision: 1.155 $  $Date: 2005-10-26 13:50:50 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -652,7 +652,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 								if (inElement instanceof IMethod) {
 									IMethod method = (IMethod) inElement;
 									methodRef = bdm.getMethod(method.getHandleIdentifier());
-									expOffset -= methodRef.getOffset();
+									if(methodRef!=null)
+										expOffset -= methodRef.getOffset();
 								}
 							}catch (JavaModelException e) {
 								JavaVEPlugin.log(e, Level.FINE);
