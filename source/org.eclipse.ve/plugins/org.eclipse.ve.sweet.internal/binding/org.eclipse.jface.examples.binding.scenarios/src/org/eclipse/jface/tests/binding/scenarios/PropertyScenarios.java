@@ -435,9 +435,9 @@ public class PropertyScenarios extends ScenariosTestCase {
 		Text text1 = new Text(getComposite(), SWT.NONE);
 		Text text2 = new Text(getComposite(), SWT.NONE);
 		IUpdatableValue checkbox1Selected = (IUpdatableValue) getDbc()
-				.createUpdatable2(new PropertyDescription(checkbox1, SWTBindingConstants.SELECTION));
+				.createUpdatable2(checkbox1);
 		IUpdatableValue checkbox2Selected = (IUpdatableValue) getDbc()
-				.createUpdatable2(new PropertyDescription(checkbox2, SWTBindingConstants.SELECTION));
+				.createUpdatable2(checkbox2);
 		// bind the two checkboxes so that if one is checked, the other is not
 		// and vice versa.
 		getDbc().bind2(checkbox1Selected, checkbox2Selected, new BindSpec(new IConverter() {
