@@ -3,6 +3,7 @@
 
    <extension point="org.eclipse.help.toc">
       <toc file="ve.xml" primary="true" />
+      <index path="index"/>
       <toc file="ve_toc.xml" />
       <toc file="ve_isv_toc.xml" />
    </extension>
