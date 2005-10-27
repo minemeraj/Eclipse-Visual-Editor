@@ -85,8 +85,13 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 				new GridData(SWT.FILL, SWT.FILL, false, false));
 		Catalog catalog = SampleData.CATALOG_2005;
 
+		listViewer.setLabelProvider(new LabelProvider() {
+			public String getText(Object element) {
+				return ((Lodging)element).getName();
+			}
+		});
 		getDbc().bind2(listViewer,
-				new ListDescription(catalog, "lodgings", "name"), null);
+				new PropertyDescription(catalog, "lodgings"), null);
 
 		assertEquals(catalog.getLodgings(), getViewerContent(listViewer));
 
@@ -126,8 +131,13 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 				new GridData(SWT.FILL, SWT.FILL, false, false));
 		final Catalog catalog = SampleData.CATALOG_2005;
 
+		listViewer.setLabelProvider(new LabelProvider() {
+			public String getText(Object element) {
+				return ((Lodging)element).getName();
+			}
+		});
 		getDbc().bind2(listViewer,
-				new ListDescription(catalog, "lodgings", "name"), null);
+				new PropertyDescription(catalog, "lodgings"), null);
 
 		assertEquals(catalog.getLodgings(), getViewerContent(listViewer));
 

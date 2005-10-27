@@ -13,8 +13,6 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.PropertyDescription;
-import org.eclipse.jface.binding.TableBindSpec;
-import org.eclipse.jface.binding.TableDescription2;
 import org.eclipse.jface.binding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -23,7 +21,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.examples.rcp.adventure.Catalog;
 import org.eclipse.ui.examples.rcp.adventure.Category;
 
 public class Table_Lodgings extends Composite {
@@ -38,8 +35,7 @@ public class Table_Lodgings extends Composite {
 
 	private TableViewer tableViewer1;
 
-	public Table_Lodgings(Composite parent, int style)
-			throws BindingException {
+	public Table_Lodgings(Composite parent, int style) throws BindingException {
 		super(parent, style);
 		initialize();
 	}
@@ -50,7 +46,7 @@ public class Table_Lodgings extends Composite {
 		createTable();
 		this.setLayout(gridLayout);
 		createTable1();
-		setSize(new org.eclipse.swt.graphics.Point(750,241));
+		setSize(new org.eclipse.swt.graphics.Point(750, 241));
 	}
 
 	/**
@@ -91,20 +87,25 @@ public class Table_Lodgings extends Composite {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Category category = SampleData.WINTER_CATEGORY;
-		
+
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
-				viewer);		
+				viewer);
 		tableViewerDescription.addColumn("Description", "description");
-		tableViewerDescription.addColumn("Price", "price",new DoubleTextCellEditor(viewer.getTable()),null,new DoubleConverter());
-		tableViewerDescription.addColumn("DeaultLodging", "defaultLodging",null,new LodgingConverter());	
-		dbc.bind2(tableViewerDescription, new PropertyDescription(category,"adventures"), null);
-		
+		tableViewerDescription.addColumn("Price", "price",
+				new DoubleTextCellEditor(viewer.getTable()), null,
+				new DoubleConverter());
+		tableViewerDescription.addColumn("DeaultLodging", "defaultLodging",
+				null, new LodgingConverter());
+		dbc.bind2(tableViewerDescription, new PropertyDescription(category,
+				"adventures"), null);
+
 	}
 
 	/**
-	 * This method initializes table1	
-	 * @throws BindingException 
-	 *
+	 * This method initializes table1
+	 * 
+	 * @throws BindingException
+	 * 
 	 */
 	private void createTable1() throws BindingException {
 		GridData gridData1 = new org.eclipse.swt.layout.GridData();
@@ -125,8 +126,8 @@ public class Table_Lodgings extends Composite {
 		TableColumn tableColumn5 = new TableColumn(table1, SWT.NONE);
 		tableColumn5.setText("Default Lodging");
 		tableColumn5.setWidth(80);
-		
+
 		tableViewer1 = new TableViewer(table1);
 		bind(tableViewer1);
 	}
-}  //  @jve:decl-index=0:visual-constraint="10,10"
+} // @jve:decl-index=0:visual-constraint="10,10"
