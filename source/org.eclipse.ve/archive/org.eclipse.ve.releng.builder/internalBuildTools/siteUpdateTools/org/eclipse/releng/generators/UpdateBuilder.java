@@ -13,9 +13,8 @@ package org.eclipse.releng.generators;
 
 import java.io.*;
 import java.util.*;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Manifest;
-import java.util.zip.ZipEntry;
+import java.util.jar.*;
+import java.util.zip.*;
 
 import javax.xml.parsers.*;
 
@@ -202,28 +201,161 @@ protected static final String DEFAULT_CATNAME = "...";
 			System.out.println("Could not find plugins.");
 		for (int i = 0; i < plugins.length; i++) {
 			File elementRoot = new File(root, plugins[i]);
-			File bundleElement = new File(elementRoot, File.separator + "META-INF" + File.separator + "MANIFEST.MF");
-			File pluginElement = new File(elementRoot, "plugin.xml");
-			boolean found = (bundleElement.exists() && pluginElement.exists());
-			File element = new File(elementRoot, "plugin.xml");
-			if (element.exists()) {
-				modifyPlugin(element, "plugin", found);
-				found = true;
+			if (elementRoot.isDirectory())
+				modifyPluginFolder(plugins[i], elementRoot);
+			else if (plugins[i].endsWith(".jar")) {
+				modifyPluginJar(plugins[i], elementRoot);
 			}
-			element = new File(elementRoot, File.separator + "META-INF" + File.separator + "MANIFEST.MF");
-			if (element.exists()) {
-				modifyPlugin(element, "bundle", found);
-			}
-			element = new File(elementRoot, "fragment.xml");
-			if (element.exists()) {
-				modifyPlugin(element, "fragment", found);
-				found = true;
-			}
-
-			if (!found)
-				System.out.println("Could not find descriptor for: " + plugins[i]);
 		}
 
+	}
+
+	/*
+	 * Process a plugin that is stored as a folder.
+	 * @param plugins
+	 * @param i
+	 * @param elementRoot
+	 * @throws Exception
+	 * 
+	 * @since 1.2.0
+	 */
+	private void modifyPluginFolder(String pluginName, File elementRoot) throws Exception {
+		File bundleElement = new File(elementRoot, File.separator + "META-INF" + File.separator + "MANIFEST.MF");
+		File pluginElement = new File(elementRoot, "plugin.xml");
+		boolean found = (bundleElement.exists() && pluginElement.exists());
+		File element = new File(elementRoot, "plugin.xml");
+		if (element.exists()) {
+			modifyPlugin(element, "plugin", found);
+			found = true;
+		}
+		element = new File(elementRoot, File.separator + "META-INF" + File.separator + "MANIFEST.MF");
+		if (element.exists()) {
+			modifyPlugin(element, "bundle", found);
+		}
+		element = new File(elementRoot, "fragment.xml");
+		if (element.exists()) {
+			modifyPlugin(element, "fragment", found);
+			found = true;
+		}
+
+		if (!found)
+			System.out.println("Could not find descriptor for: " + pluginName);
+	}
+
+	/*
+	 * Process a plugin that is a jar. It is assumed to be a MANIFEST format only. Won't look at plugin.xml
+	 * @param pluginJarName
+	 * @param jarfile
+	 * @throws Exception
+	 * 
+	 * @since 1.2.0
+	 */
+	private void modifyPluginJar(String pluginJarName, File jarfile) throws Exception {
+		JarFile jzip = null; 
+		try {
+			jzip = new JarFile(jarfile, false);
+			ZipEntry man = jzip.getEntry(JarFile.MANIFEST_NAME);
+			if (man != null) {				
+				String id = pluginJarName.substring(0, pluginJarName.indexOf("_"));
+				String tag = getTag((String) directory.get("bundle@" + id));
+
+				if (tag.equals("none"))
+					tag = buildNumber;
+
+				tag = verifyQualifier(tag);
+				PluginData pdata = (PluginData) plugins.get(id);
+				if (pdata == null) {
+					plugins.put(id, pdata = new PluginData());
+				}
+				
+				// Now fixup the Manifest.
+				// load MANIFEST.MF
+				StringBuffer xml = readInputStream(jzip.getInputStream(man));
+				try {
+					jzip.close();
+				} catch (IOException e) {
+				}
+				jzip = null;
+				
+				boolean changedFile = false;
+				
+				Headers headers = null;
+
+				try {
+					headers = Headers.parseManifest(new ByteArrayInputStream(xml.toString().getBytes()));
+
+				} catch (BundleException e) {
+					e.printStackTrace();
+					return;
+				}
+
+				//String version = descriptor.getName()+";bundle-version=\"["+headers.get("Bundle-version").toString();
+				String version = headers.get("Bundle-version").toString();
+				String vtitle = "Bundle-Version: " + version;
+
+				//	 fix up version
+				int start = scan(xml, 0, vtitle);
+
+				if (this.add4thPart) {
+					String[] va = versionToArray(version);
+					if (va[3].equals("")) {
+						va[3] = tag;
+						version = arrayToVersion(va);
+						int end = start + vtitle.length();
+						xml = xml.replace(start, end, "Bundle-Version: " + version);
+						changedFile = true;
+					}
+				}
+
+				long[] sizes;
+				if (changedFile) {
+					jarfile = renameFile(jarfile, id, version);
+					sizes = writeJar(jarfile, xml.toString(), "plugins");
+					pdata.tag = tag;
+				} else {
+					sizes = new long[2];
+					sizes[DOWNLOAD_SIZE_INDEX] = sizes[INSTALLED_SIZE_INDEX] = jarfile.length();
+					// Now need to copy the file to site build area.
+					BufferedInputStream jarin = null;
+					BufferedOutputStream jarout = null;
+					try {
+						jarin = new BufferedInputStream(new FileInputStream(jarfile));
+						File destinationFolder = new File(siteLocation, "plugins");
+						destinationFolder.mkdirs();
+						jarout = new BufferedOutputStream(new FileOutputStream(new File(destinationFolder, jarfile.getName())));
+						int in;
+						while ((in = jarin.read()) != -1)
+							jarout.write(in);
+					} finally {
+						if (jarin != null) {
+							try {
+								jarin.close();
+							} catch (IOException e) {
+							}
+						}
+						if (jarout != null) {
+							try {
+								jarout.close();
+							} catch (IOException e) {
+							}
+						}						
+					}
+				}
+				System.out.println("Updated manifest for " + jarfile.getAbsolutePath());
+				pdata.installedSize = sizes[DOWNLOAD_SIZE_INDEX];
+				pdata.downloadSize = sizes[INSTALLED_SIZE_INDEX];
+				return;
+				
+			} else
+				System.out.println("Could not find manifest for: " + pluginJarName);
+		} finally {
+			if (jzip != null) {
+				try {
+					jzip.close();
+				} catch (IOException e) {
+				}
+			}
+		}
 	}
 
 	protected String getTag(String value) {
@@ -264,6 +396,21 @@ protected static final String DEFAULT_CATNAME = "...";
 
 	protected File renameFolder(File oldName, String id, String version) {
 		File newName = new File(oldName.getParent(), id + "_" + version);
+		boolean success = oldName.renameTo(newName);
+		String prefix = success ? "Success on  " : "Failed on ";
+		System.out.println(prefix + "renaming " + oldName.getAbsolutePath() + " to " + newName.getAbsolutePath());
+		return newName;
+	}
+	
+	protected File renameFile(File oldName, String id, String version) {
+		String oldFName = oldName.getName();
+		int iext = oldFName.lastIndexOf('.');
+		String newFName;
+		if (iext != -1) {
+			newFName = id + "_" + version + oldFName.substring(iext);
+		} else
+			newFName = id + "_" + version;
+		File newName = new File(oldName.getParent(), newFName);
 		boolean success = oldName.renameTo(newName);
 		String prefix = success ? "Success on  " : "Failed on ";
 		System.out.println(prefix + "renaming " + oldName.getAbsolutePath() + " to " + newName.getAbsolutePath());
@@ -413,8 +560,18 @@ protected static final String DEFAULT_CATNAME = "...";
 	}
 
 	private StringBuffer readFile(File target) throws IOException {
-		FileInputStream fis = new FileInputStream(target);
-		InputStreamReader reader = new InputStreamReader(fis);
+		return readInputStream(new FileInputStream(target));
+	}
+
+	/*
+	 * @param fis
+	 * @return
+	 * @throws IOException
+	 * 
+	 * @since 1.2.0
+	 */
+	private StringBuffer readInputStream(InputStream is) throws IOException {
+		InputStreamReader reader = new InputStreamReader(is);
 		StringBuffer result = new StringBuffer();
 		char[] buf = new char[4096];
 		int count;
@@ -426,7 +583,7 @@ protected static final String DEFAULT_CATNAME = "...";
 			}
 		} finally {
 			try {
-				fis.close();
+				is.close();
 				reader.close();
 			} catch (IOException e) {
 			}
@@ -595,7 +752,6 @@ protected static final String DEFAULT_CATNAME = "...";
 		if (changedFile) {
 			bundleFolder = renameFolder(bundleFolder, id, version);
 		}
-		writeJAR(bundleFolder, "plugins");
 		long[] sizes = writeJAR(bundleFolder, "plugins");
 		pdata.installedSize = sizes[DOWNLOAD_SIZE_INDEX];
 		pdata.downloadSize = sizes[INSTALLED_SIZE_INDEX];
@@ -605,6 +761,46 @@ protected static final String DEFAULT_CATNAME = "...";
 
 	private final static long[] EMPTY_JAR = new long[] {0,0};
 	
+	/*
+	 * Rewrite the jar file, replacing the manifest with the new manifest, into the rootFolder. It will use the same name as the incoming jar.
+	 * Return the size of the jar created. (In this case transfer size and installed size would be the same).
+	 * This is used only for Manifest jars. It is assumed that you will not have a jarred plugin that IS NOT a Manifest jar.
+	 * That is really old style mixing with new style which we don't expect to happen.
+	 */
+	private long[] writeJar(File pluginJar, String replacementManifest, String rootFolder) throws Exception {
+		ZipInputStream jin = null;
+		ZipOutputStream jos = null;
+		File outputjar = null;
+		long[] size = new long[2];
+		try {
+			jin = new ZipInputStream(new FileInputStream(pluginJar));
+			File destinationFolder = new File(siteLocation, rootFolder);
+			destinationFolder.mkdirs();
+			outputjar = new File(destinationFolder, pluginJar.getName());
+			jos = new ZipOutputStream(new FileOutputStream(outputjar));
+			
+			System.out.println("Writing " + outputjar.getAbsolutePath());
+			for(ZipEntry jentry = jin.getNextEntry(); jentry != null; jentry = jin.getNextEntry()) {
+				if (JarFile.MANIFEST_NAME.equals(jentry.getName())) {
+					writeJarEntry(jentry.getName(), new ByteArrayInputStream(replacementManifest.getBytes()), jentry.getTime(), jos);
+				} else
+					writeJarEntry(jentry.getName(), jin, jentry.getTime(), jos);
+			}
+		} finally {
+			try {
+				jin.close();
+			} catch (IOException e) {
+			}
+			if (jos != null) {
+				try {
+					jos.close();
+					size[DOWNLOAD_SIZE_INDEX] = size[INSTALLED_SIZE_INDEX] = outputjar.length(); 
+				} catch (IOException e) {
+				}
+			}
+		}
+		return size;
+	}
 	/*
 	 * Write a jar file from the given folder. Return the original, unzipped size and the final file size.
 	 * of the folder, including subdirectories.
@@ -843,7 +1039,7 @@ protected static final String DEFAULT_CATNAME = "...";
 			size+=list[i].length();
 			FileInputStream is = new FileInputStream(list[i]);
 			try {
-				writeJarEntry(prefix + list[i].getName(), is, jos);
+				writeJarEntry(prefix + list[i].getName(), is, list[i].lastModified(), jos);
 			} finally {
 				if (is != null)
 					try {
@@ -857,9 +1053,10 @@ protected static final String DEFAULT_CATNAME = "...";
 		return size;
 	}
 
-	private void writeJarEntry(String entryName, InputStream is, JarOutputStream jos) throws Exception {
+	private void writeJarEntry(String entryName, InputStream is, long lastModified, ZipOutputStream jos) throws Exception {
 
 		ZipEntry jarEntry = new ZipEntry(entryName);
+		jarEntry.setTime(lastModified);
 		byte[] buf = new byte[4096];
 		int count;
 		jos.putNextEntry(jarEntry);

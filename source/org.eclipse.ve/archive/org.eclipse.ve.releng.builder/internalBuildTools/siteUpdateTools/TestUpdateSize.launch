@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.eclipse.releng.generators.UpdateBuilder"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-root ${UpdateSiteWorkArea}/eclipse -site ${UpdateSiteWorkArea}/site -sitexml ${UpdateSiteWorkArea}/site.xml -build I20051026 -size -cats ${workspace_loc}/siteUpdateTools/cats.properties"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="siteUpdateTools"/>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+</launchConfiguration>
