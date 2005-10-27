@@ -59,11 +59,12 @@
 			<param name="url" value="${eclipseDirectURL}${eclipseWin32ZipURL}"/>
 			<param name="zipname" value="eclipse-SDK.zip"/>
 		</antcall>
-		<!-- Extract doc.zip so we can create links in VE java doc -->
-		<!-- TODO this is broke as of Eclipse 3.2 - this is now a jar file - need to fix
-		<exec dir="${buildDirectory}/plugins/org.eclipse.platform.doc.isv" executable="unzip">
-			<arg line="-o -qq doc.zip" />
-	   	</exec>
+		<!-- TODO We don't need this until we start building java doc ourselves.
+		<!-- Extract the plugin org.eclipse.platform.doc.isv.jar so we can create links in VE java doc -->
+		  <mkdir dir="${buildDirectory}/plugins/org.eclipse.platform.doc.isv"/>
+		  <exec dir="${buildDirectory}/plugins/org.eclipse.platform.doc.isv" executable="unzip">
+		 		 <arg line="-o -qq ../org.eclipse.platform.doc.isv.jar" />
+		  </exec>	   	
 	   	-->
 	</target>
 
