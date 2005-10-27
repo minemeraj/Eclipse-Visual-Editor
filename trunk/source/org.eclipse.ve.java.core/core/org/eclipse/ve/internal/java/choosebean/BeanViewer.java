@@ -67,7 +67,7 @@ public class BeanViewer extends TypeInfoViewer{
 				if(ti.isInterface())
 					imageDescriptor = new JavaElementImageDescriptor(
 							imageDescriptor, 
-							JavaElementImageDescriptor.RUNNABLE, 
+							JavaElementImageDescriptor.OVERRIDES, 
 							new Point(image.getBounds().width, image.getBounds().height));
 				else if(Flags.isAbstract(ti.getModifiers()))
 					imageDescriptor = new JavaElementImageDescriptor(
