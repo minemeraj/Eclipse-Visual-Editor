@@ -10,15 +10,23 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.*;
+import org.eclipse.jface.binding.BindingException;
+import org.eclipse.jface.binding.DatabindingContext;
+import org.eclipse.jface.binding.PropertyDescription;
+import org.eclipse.jface.binding.TableBindSpec;
+import org.eclipse.jface.binding.TableDescription2;
+import org.eclipse.jface.binding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
+import org.eclipse.ui.examples.rcp.adventure.Category;
 
-public class Table_Accounts_CustomColumns_2 extends Composite {
+public class Table_Lodgings extends Composite {
 
 	private Table table = null;
 
@@ -30,7 +38,7 @@ public class Table_Accounts_CustomColumns_2 extends Composite {
 
 	private TableViewer tableViewer1;
 
-	public Table_Accounts_CustomColumns_2(Composite parent, int style)
+	public Table_Lodgings(Composite parent, int style)
 			throws BindingException {
 		super(parent, style);
 		initialize();
@@ -42,7 +50,7 @@ public class Table_Accounts_CustomColumns_2 extends Composite {
 		createTable();
 		this.setLayout(gridLayout);
 		createTable1();
-		setSize(new org.eclipse.swt.graphics.Point(474,241));
+		setSize(new org.eclipse.swt.graphics.Point(750,241));
 	}
 
 	/**
@@ -57,44 +65,41 @@ public class Table_Accounts_CustomColumns_2 extends Composite {
 		gridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData.grabExcessVerticalSpace = true;
-		table = new Table(this, SWT.NONE);
+		table = new Table(this, SWT.FULL_SELECTION | SWT.BORDER);
 		table.setHeaderVisible(true);
 		table.setLayoutData(gridData);
 		table.setLinesVisible(true);
 		TableColumn tableColumn = new TableColumn(table, SWT.NONE);
-		tableColumn.setWidth(120);
-		tableColumn.setText("first,last");
+		tableColumn.setWidth(150);
+		tableColumn.setText("Description");
 		TableColumn tableColumn1 = new TableColumn(table, SWT.NONE);
 		tableColumn1.setWidth(60);
-		tableColumn1.setText("state");		
+		tableColumn1.setText("Price");
+		TableColumn tableColumn2 = new TableColumn(table, SWT.NONE);
+		tableColumn2.setWidth(80);
+		tableColumn2.setText("Default Lodging");
+
 		tableViewer = new TableViewer(table);
 
-		bind();
+		bind(tableViewer);
 	}
 
-	private void bind1() throws BindingException {
+	private void bind(TableViewer viewer) throws BindingException {
 
 		// For a given catalog show its accounts with columns for "firstName,
 		// "lastName" and "state"
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
-		Catalog catalog = SampleData.CATALOG_2005;
 
-		dbc.bind2(tableViewer1, new TableDescription2(catalog, "accounts",
-				new Object[] { "firstName", "lastName", "state"}), null);
-	
+		Category category = SampleData.WINTER_CATEGORY;
+		
+		TableViewerDescription tableViewerDescription = new TableViewerDescription(
+				viewer);		
+		tableViewerDescription.addColumn("Description", "description");
+		tableViewerDescription.addColumn("Price", "price",new DoubleTextCellEditor(viewer.getTable()),null,new DoubleConverter());
+		tableViewerDescription.addColumn("DeaultLodging", "defaultLodging",null,new LodgingConverter());	
+		dbc.bind2(tableViewerDescription, new PropertyDescription(category,"adventures"), null);
+		
 	}
-	
-	private void bind() throws BindingException {
-
-		// For a given catalog show its accounts with columns for "firstName,
-		// "lastName" and "state"
-		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
-		Catalog catalog = SampleData.CATALOG_2005;
-
-		dbc.bind2(tableViewer, new TableDescription2(catalog, "accounts",
-				new Object[] { new FullNameColumn(), "state"}), null);
-	
-	}	
 
 	/**
 	 * This method initializes table1	
@@ -107,21 +112,21 @@ public class Table_Accounts_CustomColumns_2 extends Composite {
 		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData1.grabExcessVerticalSpace = true;
-		table1 = new Table(this, SWT.NONE);
+		table1 = new Table(this, SWT.FULL_SELECTION | SWT.BORDER);
 		table1.setHeaderVisible(true);
 		table1.setLayoutData(gridData1);
 		table1.setLinesVisible(true);
 		TableColumn tableColumn3 = new TableColumn(table1, SWT.NONE);
-		tableColumn3.setText("firstName");
-		tableColumn3.setWidth(60);
+		tableColumn3.setText("Description");
+		tableColumn3.setWidth(160);
 		TableColumn tableColumn4 = new TableColumn(table1, SWT.NONE);
-		tableColumn4.setText("lastName");
+		tableColumn4.setText("Price");
 		tableColumn4.setWidth(60);
 		TableColumn tableColumn5 = new TableColumn(table1, SWT.NONE);
-		tableColumn5.setText("state");
-		tableColumn5.setWidth(60);
+		tableColumn5.setText("Default Lodging");
+		tableColumn5.setWidth(80);
 		
 		tableViewer1 = new TableViewer(table1);
-		bind1();
+		bind(tableViewer1);
 	}
 }  //  @jve:decl-index=0:visual-constraint="10,10"

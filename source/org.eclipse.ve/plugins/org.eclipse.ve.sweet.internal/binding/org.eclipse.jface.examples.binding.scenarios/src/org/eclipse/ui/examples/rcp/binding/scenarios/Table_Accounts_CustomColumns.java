@@ -10,15 +10,25 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.*;
+import java.util.StringTokenizer;
+
+import org.eclipse.jface.binding.BindingException;
+import org.eclipse.jface.binding.DatabindingContext;
+import org.eclipse.jface.binding.DefaultCellModifier;
+import org.eclipse.jface.binding.PropertyDescription;
+import org.eclipse.jface.binding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.examples.rcp.adventure.Account;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
 
-public class Table_Accounts_2 extends Composite {
+public class Table_Accounts_CustomColumns extends Composite {
 
 	private Table table = null;
 
@@ -30,7 +40,7 @@ public class Table_Accounts_2 extends Composite {
 
 	private TableViewer tableViewer1;
 
-	public Table_Accounts_2(Composite parent, int style)
+	public Table_Accounts_CustomColumns(Composite parent, int style)
 			throws BindingException {
 		super(parent, style);
 		initialize();
@@ -62,33 +72,65 @@ public class Table_Accounts_2 extends Composite {
 		table.setLayoutData(gridData);
 		table.setLinesVisible(true);
 		TableColumn tableColumn = new TableColumn(table, SWT.NONE);
-		tableColumn.setWidth(60);
-		tableColumn.setText("firstName");
+		tableColumn.setWidth(120);
+		tableColumn.setText("first,last");
 		TableColumn tableColumn1 = new TableColumn(table, SWT.NONE);
 		tableColumn1.setWidth(60);
-		tableColumn1.setText("lastName");
-		TableColumn tableColumn2 = new TableColumn(table, SWT.NONE);
-		tableColumn2.setWidth(60);
-		tableColumn2.setText("state");
-
+		tableColumn1.setText("state");		
 		tableViewer = new TableViewer(table);
 
-		bind(tableViewer);
+		bind();
 	}
 
-	private void bind(TableViewer viewer) throws BindingException {
+	private void bind1() throws BindingException {
 
 		// For a given catalog show its accounts with columns for "firstName,
 		// "lastName" and "state"
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
-
 		Catalog catalog = SampleData.CATALOG_2005;
 
-		dbc.bind2(viewer, new TableDescription2(catalog, "accounts",
-				new Object[] { "firstName", "lastName", "state"}), null);
-
-		
+		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer1);		
+		tableViewerDescription.addColumn("First Name", "firstName");
+		tableViewerDescription.addColumn("Last Name", "lastName");
+		tableViewerDescription.addColumn("State", "state");		
+		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,
+				"accounts"), null);	
+	
 	}
+	
+	private void bind() throws BindingException {
+
+		// For a given catalog show its accounts with columns for "firstName,
+		// "lastName" and "state"
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
+		Catalog catalog = SampleData.CATALOG_2005;
+		
+		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
+		tableViewerDescription.addColumn("Full Name", "fullName");
+		tableViewerDescription.addColumn("State", "state");
+		tableViewerDescription.setCellModifier(new DefaultCellModifier(tableViewerDescription){
+			public Object getValue(Object element, String property) {
+				if("fullName".equals(property)){
+					return ((Account)element).getFirstName() + "," + ((Account)element).getLastName();
+				} else {
+					return super.getValue(element, property);
+				}
+			}
+			public void modify(Object element, String property, Object value) {
+				if("fullName".equals(property)){
+					Account account = (Account) ((TableItem)element).getData();
+					StringTokenizer tokenizer = new StringTokenizer((String)value,",");
+					account.setFirstName(tokenizer.nextToken().trim());
+					account.setLastName(tokenizer.nextToken().trim());
+				} else {
+					super.modify(element, property, value);
+				}
+			}
+		});
+		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,
+				"accounts"), null);		
+
+	}	
 
 	/**
 	 * This method initializes table1	
@@ -116,6 +158,6 @@ public class Table_Accounts_2 extends Composite {
 		tableColumn5.setWidth(60);
 		
 		tableViewer1 = new TableViewer(table1);
-		bind(tableViewer1);
+		bind1();
 	}
 }  //  @jve:decl-index=0:visual-constraint="10,10"

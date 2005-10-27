@@ -69,14 +69,14 @@ public class TextBinding extends Composite {
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbc.bind(txtDescription, "text", skiTrip, "description");
-		dbc.bind(txtDescription_1, "text", skiTrip, "description");
+		dbc.bind2(txtDescription, "text", skiTrip, "description",null);
+		dbc.bind2(txtDescription_1, "text", skiTrip, "description",null);
 
-		dbc.bind(txtName, "text", skiTrip, "name");
-		dbc.bind(txtName_1, "text", skiTrip, "name");
+		dbc.bind2(txtName, "text", skiTrip, "name",null);
+		dbc.bind2(txtName_1, "text", skiTrip, "name",null);
 
-		dbc.bind(txtLocation, "text", skiTrip, "location");
-		dbc.bind(txtLocation_1, "text", skiTrip, "location");
+		dbc.bind2(txtLocation, "text", skiTrip, "location",null);
+		dbc.bind2(txtLocation_1, "text", skiTrip, "location",null);
 
 	}
 
