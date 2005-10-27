@@ -10,14 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NamedTypeChooseBeanContributor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-27 16:32:48 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-
  
 /**
  * 
@@ -30,7 +27,7 @@ public class NamedTypeChooseBeanContributor extends YesNoListChooseBeanContribut
 	}
 
 	public Image getImage() {
-		return JavaVEPlugin.getJavaBeanImage();
+		return null;
 	}
 	
 }
