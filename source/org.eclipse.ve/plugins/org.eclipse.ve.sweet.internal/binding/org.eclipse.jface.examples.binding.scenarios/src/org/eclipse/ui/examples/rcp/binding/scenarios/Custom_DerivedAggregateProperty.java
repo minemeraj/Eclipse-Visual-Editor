@@ -74,12 +74,12 @@ public class Custom_DerivedAggregateProperty extends Composite {
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbc.bind(txtDescription, "text", skiTrip, "description");
-		dbc.bind(txtName, "text", skiTrip, "name");
+		dbc.bind2(txtDescription, "text", skiTrip, "description",null);
+		dbc.bind2(txtName, "text", skiTrip, "name",null);
 
 		AdventureNameAndDescription customUpdatable = new AdventureNameAndDescription(
 				skiTrip);
-		dbc.bind(dbc.createUpdatable(txtCustom, "text"), customUpdatable);
+		dbc.bind2(dbc.createUpdatable(txtCustom, "text"), customUpdatable,null);
 
 		IUpdatableValue descriptionUpdatable = (IUpdatableValue) dbc
 				.createUpdatable(skiTrip, "description");
@@ -89,20 +89,13 @@ public class Custom_DerivedAggregateProperty extends Composite {
 		AggregateUpdatableValue customUpdatable_1 = new AggregateUpdatableValue(
 				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },
 				",");
-		dbc.bind(dbc.createUpdatable(txtCustom_1, "text"), customUpdatable_1);
+		dbc.bind2(dbc.createUpdatable(txtCustom_1, "text"), customUpdatable_1,null);
 
 		AggregateUpdatableValue customUpdatable_2 = new AggregateUpdatableValue(
 				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },
 				"\n");
-		dbc.bind(dbc.createUpdatable(txtCustom_multi, "text"),
-				customUpdatable_2);
-
-		// IUpdatableValue descriptionUpdatable =
-		// dbc.createUpdatableValue(skiTrip,emfPackage.getAdventure_Description());
-		// IUpdatableValue nameUpdatable =
-		// dbc.createUpdatableValue(skiTrip,emfPackage.getAdventure_Name());
-		// new AggregateUpdatable(new IUpdatable[] {} des, name,"/n");
-
+		dbc.bind2(dbc.createUpdatable(txtCustom_multi, "text"),
+				customUpdatable_2,null);
 	}
 
 	/**

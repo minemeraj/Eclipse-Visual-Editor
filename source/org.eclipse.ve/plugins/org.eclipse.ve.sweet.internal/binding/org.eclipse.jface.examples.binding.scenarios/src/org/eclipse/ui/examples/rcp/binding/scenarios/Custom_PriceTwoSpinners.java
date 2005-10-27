@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
+import org.eclipse.jface.binding.BindSpec;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.swt.SWT;
@@ -85,14 +86,15 @@ public class Custom_PriceTwoSpinners extends Composite {
 
 		final Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbc.bind(lblPrice, "text", skiTrip, "price");
-		dbc.bind(txtPrice, "text", skiTrip, "price");
+		BindSpec doubleBindSpec = new BindSpec(new DoubleConverter(),null);
+		dbc.bind2(lblPrice, "text", skiTrip, "price",doubleBindSpec);
+		dbc.bind2(txtPrice, "text", skiTrip, "price",doubleBindSpec);
 
-		dbc.bind(spin_Dollars, "selection", skiTrip, "price",
-				new PriceDollarsConverter());
+		BindSpec priceDollarsBindSpec = new BindSpec(new PriceDollarsConverter(),null);
+		dbc.bind2(spin_Dollars, "selection", skiTrip, "price",priceDollarsBindSpec);
 
-		dbc.bind(spin_Cents, "selection", skiTrip, "price",
-				new PriceCentsConverter());
+		BindSpec priceCentsBindSpec = new BindSpec(new PriceCentsConverter(),null);
+		dbc.bind2(spin_Cents, "selection", skiTrip, "price",priceCentsBindSpec);
 
 	}
 }
