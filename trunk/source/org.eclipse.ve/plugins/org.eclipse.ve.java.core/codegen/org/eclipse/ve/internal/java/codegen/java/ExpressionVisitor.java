@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.33 $  $Date: 2005-09-28 15:57:18 $ 
+ *  $Revision: 1.34 $  $Date: 2005-10-27 14:56:52 $ 
  */
 
 import java.text.MessageFormat;
@@ -78,16 +78,18 @@ BeanPart  processRefToImplicitSend(MethodInvocation stmt) {
 				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
 					JavaVEPlugin.log("\t[Expression] - postponing: " + stmt, Level.FINE); //$NON-NLS-1$		
 				return null;
-	   }	  
-	  BeanPartDecleration decl = new BeanPartDecleration(beanName);
-	  decl.setImplicitDecleration(true);
-	  decl.setDeclaringMethod(parent.getDecleration().isInstanceVar()?null:parent.getInitMethod());
-	  if (fModel.getModelDecleration(decl)!=null)
-		decl = fModel.getModelDecleration(decl); // reuse the existing mone
-	  bp = new BeanPart(decl) ;  
-	  bp.addInitMethod(fMethod) ;
-	  bp.setImplicitParent(parent, null);
-	  fModel.addBean (bp) ;
+	   }
+	  if(parent!=null){
+		  BeanPartDecleration decl = new BeanPartDecleration(beanName);
+		  decl.setImplicitDecleration(true);
+		  decl.setDeclaringMethod(parent.getDecleration().isInstanceVar()?null:parent.getInitMethod());
+		  if (fModel.getModelDecleration(decl)!=null)
+			decl = fModel.getModelDecleration(decl); // reuse the existing mone
+		  bp = new BeanPart(decl) ;  
+		  bp.addInitMethod(fMethod) ;
+		  bp.setImplicitParent(parent, null);
+		  fModel.addBean (bp) ;
+	  }
 	}
 	return bp;
 }
