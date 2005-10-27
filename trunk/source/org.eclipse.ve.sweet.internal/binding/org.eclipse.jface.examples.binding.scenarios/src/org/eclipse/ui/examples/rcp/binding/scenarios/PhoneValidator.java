@@ -22,7 +22,7 @@ public class PhoneValidator implements IValidator {
 	}
 
 	public String isValid(Object value) {
-		return null;
+		return ((String)value).length() > 10 ? "Phone number too long" : null;
 	}
 
 }

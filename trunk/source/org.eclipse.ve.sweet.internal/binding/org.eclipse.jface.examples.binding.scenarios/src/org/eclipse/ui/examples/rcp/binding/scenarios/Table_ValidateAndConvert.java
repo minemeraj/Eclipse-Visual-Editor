@@ -12,6 +12,7 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingContext;
+import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.PropertyDescription;
 import org.eclipse.jface.binding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
@@ -22,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
+import org.eclipse.swt.widgets.Label;
 
 public class Table_ValidateAndConvert extends Composite {
 
@@ -35,6 +37,8 @@ public class Table_ValidateAndConvert extends Composite {
 
 	private TableViewer tableViewer1;
 
+	private Label lblErrorMessage = null;
+
 	public Table_ValidateAndConvert(Composite parent, int style)
 			throws BindingException {
 		super(parent, style);
@@ -42,12 +46,22 @@ public class Table_ValidateAndConvert extends Composite {
 	}
 
 	private void initialize() throws BindingException {
+		GridData gridData2 = new org.eclipse.swt.layout.GridData();
+		gridData2.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
+		gridData2.horizontalSpan = 2;
+		gridData2.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		createTable();
 		this.setLayout(gridLayout);
 		createTable1();
-		setSize(new org.eclipse.swt.graphics.Point(507, 224));
+		setSize(new org.eclipse.swt.graphics.Point(507,224));
+		lblErrorMessage = new Label(this, SWT.NONE);
+		lblErrorMessage.setText("Label");
+		lblErrorMessage.setLayoutData(gridData2);
+		
+		bind();
+		bind1();
 	}
 
 	/**
@@ -77,8 +91,6 @@ public class Table_ValidateAndConvert extends Composite {
 		tableColumn2.setText("state");
 
 		tableViewer = new TableViewer(table);
-
-		bind();
 	}
 
 	private void bind() throws BindingException {
@@ -88,19 +100,18 @@ public class Table_ValidateAndConvert extends Composite {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Catalog catalog = SampleData.CATALOG_2005;
-
+		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
-				tableViewer);
+				tableViewer);		
 		tableViewerDescription.addColumn("FirstName", "firstName");
-		tableViewerDescription.addColumn("Phone", "phone",
-				new PhoneValidator(), new PhoneConverter());
-		tableViewerDescription.addColumn("State", "state", null, null,
-				new StateConverter());
-		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,
-				"accounts"), null);
-
+		tableViewerDescription.addColumn("Phone", "phone",new PhoneValidator(), new PhoneConverter());
+		tableViewerDescription.addColumn("State", "state", null, null, new StateConverter());	
+		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);
+		
+		IUpdatable errorMsgUpdatable = dbc.createUpdatable(lblErrorMessage,"text");
+		dbc.bind2(errorMsgUpdatable, dbc.getCombinedValidationMessage(),null);		
+		
 	}
-
 	private void bind1() throws BindingException {
 
 		// For a given catalog show its accounts with columns for "firstName,
@@ -108,26 +119,22 @@ public class Table_ValidateAndConvert extends Composite {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Catalog catalog = SampleData.CATALOG_2005;
-
+		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
-				tableViewer1);
+				tableViewer1);		
 		tableViewerDescription.addColumn("FirstName", "firstName");
 		tableViewerDescription.addColumn("Phone", "phone");
-		tableViewerDescription.addColumn("State", "state", new StateCellEditor(
-				table1), null, null);
-		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,
-				"accounts"), null);
+		tableViewerDescription.addColumn("State", "state", new StateCellEditor(table1), null, null);	
+		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);		
 
-		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,
-				"accounts"), null);
-
-	}
+		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"),null);
+		
+	}	
 
 	/**
-	 * This method initializes table1
-	 * 
-	 * @throws BindingException
-	 * 
+	 * This method initializes table1	
+	 * @throws BindingException 
+	 *
 	 */
 	private void createTable1() throws BindingException {
 		GridData gridData1 = new org.eclipse.swt.layout.GridData();
@@ -148,9 +155,8 @@ public class Table_ValidateAndConvert extends Composite {
 		TableColumn tableColumn5 = new TableColumn(table1, SWT.NONE);
 		tableColumn5.setText("state");
 		tableColumn5.setWidth(60);
-
+		
 		tableViewer1 = new TableViewer(table1);
-
-		bind1();
+		
 	}
-} // @jve:decl-index=0:visual-constraint="10,10"
+}  //  @jve:decl-index=0:visual-constraint="10,10"
