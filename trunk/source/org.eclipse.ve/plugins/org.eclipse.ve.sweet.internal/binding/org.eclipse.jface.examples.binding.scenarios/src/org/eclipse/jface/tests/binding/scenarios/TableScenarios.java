@@ -10,24 +10,20 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios;
 
+import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.IConverter;
-import org.eclipse.jface.binding.IUpdatable;
-import org.eclipse.jface.binding.IUpdatableFactory2;
-import org.eclipse.jface.binding.TableBindSpec;
-import org.eclipse.jface.binding.TableDescription2;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableTable2;
+import org.eclipse.jface.binding.PropertyDescription;
+import org.eclipse.jface.binding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Account;
@@ -60,21 +56,6 @@ public class TableScenarios extends ScenariosTestCase {
 		stateColumn = new TableColumn(tableViewer.getTable(),SWT.NONE);		
 		
 		catalog = SampleData.CATALOG_2005; // Lodging source	
-		getDbc().addUpdatableFactory2(new IUpdatableFactory2() {
-			public IUpdatable createUpdatable(Map properties, Object description) {
-				if (description instanceof TableDescription2) {
-					TableDescription2 tableDescription = (TableDescription2) description;
-					Object object = tableDescription.getObject();
-					if (object instanceof EObject) {
-						return new EMFUpdatableTable2((EObject) object,
-								(String) tableDescription.getPropertyID(),
-								(Object[]) tableDescription
-										.getColumnPropertyIDs());
-					}
-				}
-				return null;
-			}
-		});		
 	}
 
 	protected void tearDown() throws Exception {
@@ -90,9 +71,13 @@ public class TableScenarios extends ScenariosTestCase {
 	public void testScenario01() throws BindingException {
 		// Show that a TableViewer with three columns renders the accounts
 		List accounts = catalog.getAccounts();		
-		getDbc().bind2(tableViewer, new TableDescription2(catalog, "accounts",
-				new Object[] { "firstName" , "lastName" , "state"}), null);
 		
+		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
+		tableViewerDescription.addColumn("FirstName", "firstName");
+		tableViewerDescription.addColumn("LastName", "lastName");
+		tableViewerDescription.addColumn("State", "state");	
+		getDbc().bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);
+
 		// Verify the data in the table columns matches the accounts
 		for (int i = 0; i < accounts.size(); i++) {
 			Account account = (Account) catalog.getAccounts().get(i);		
@@ -106,36 +91,42 @@ public class TableScenarios extends ScenariosTestCase {
 		}	
 	}
 	
-	public void testScenario02() throws BindingException {
+	public void testScenario02() throws BindingException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		// Show that a TableViewer with three columns can be used to update columns
-		List accounts = catalog.getAccounts();		
-		getDbc().bind2(tableViewer, new TableDescription2(catalog, "accounts",
-				new Object[] { "firstName" , "lastName" , "state"}), null);
+		List accounts = catalog.getAccounts();	
+		
+		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
+		tableViewerDescription.addColumn("firstName", "firstName");
+		tableViewerDescription.addColumn("lastName", "lastName",null, new PhoneConverter());
+		tableViewerDescription.addColumn("state", "state",null,new StateConverter());	
+		getDbc().bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);			
 		
 		CellEditor[] cellEditors = tableViewer.getCellEditors();
-		// Test firstName.  Select the first row
-		Account account = (Account)accounts.get(0);
-		Event mouseDownEvent = new Event();
-		mouseDownEvent.x = 22;
-		mouseDownEvent.y = 33;
-		tableViewer.getControl().notifyListeners(SWT.MouseDown,mouseDownEvent);		
+		tableViewer.setSelection(new StructuredSelection(tableViewer.getTable().getItem(0)));
+		// To activate the cell editor on the first row we must get a private field which is the TableViewer.tableEditor
+		Field tableEditorField = TableViewer.class.getDeclaredField("tableEditor");
+		tableEditorField.setAccessible(true);
+		TableEditor tableEditor = (TableEditor)tableEditorField.get(tableViewer);
+		// Test firstName
 		TextCellEditor firstNameEditor = (TextCellEditor)cellEditors[0];
+		tableEditor.setEditor(firstNameEditor.getControl(),tableViewer.getTable().getItem(0),0);
+		// Change the firstName and test it goes to the model
 		((Text)firstNameEditor.getControl()).setText("Bill");
 		((Text)((TextCellEditor)cellEditors[0]).getControl()).notifyListeners(SWT.DefaultSelection,null);
+		Account account = (Account)accounts.get(0);		
 //		assertEquals("Bill",account.getFirstName());
 	}	
 	
 	public void testScenario03() throws BindingException {
 		// Show that converters work for table columns
 		List accounts = catalog.getAccounts();	
-		getDbc().bind2(tableViewer, 
-				new TableDescription2(catalog, "accounts",
-						new Object[] { "lastName" , "phone" ,"state"}), 
-				new TableBindSpec(
-						new IConverter[] { null , new PhoneConverter(), new StateConverter()},
-						null)		
-		);	
 		
+		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
+		tableViewerDescription.addColumn("lastName", "lastName");
+		tableViewerDescription.addColumn("phone", "phone",null, new PhoneConverter());
+		tableViewerDescription.addColumn("state", "state",null,new StateConverter());	
+		getDbc().bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);		
+				
 		// Verify that the data in the the table columns matches the expected
 		// What we are looking for is that the phone numbers are converterted to nnn-nnn-nnnn and that
 		// the state letters are converted to state names

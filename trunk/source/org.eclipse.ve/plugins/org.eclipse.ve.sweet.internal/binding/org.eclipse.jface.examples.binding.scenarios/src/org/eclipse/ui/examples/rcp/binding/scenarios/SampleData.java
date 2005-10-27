@@ -46,6 +46,8 @@ public class SampleData {
 	public static Adventure RAFTING_HOLIDAY;
 	
 	public static Adventure WINTER_HOLIDAY;
+	
+	public static Adventure ICE_FISHING;	
 
 	public static Lodging FIVE_STAR_HOTEL;
 
@@ -95,6 +97,13 @@ public class SampleData {
 		WINTER_HOLIDAY.setPrice(4000.52d);
 		WINTER_HOLIDAY.setId("150");
 		WINTER_CATEGORY.getAdventures().add(WINTER_HOLIDAY);
+		
+		ICE_FISHING = adventureFactory.createAdventure();
+		ICE_FISHING.setDescription("Ice Fishing in Helsinki");
+		ICE_FISHING.setName("Ice Fishing");
+		ICE_FISHING.setLocation("Finland");
+		ICE_FISHING.setPrice(375.55d);
+		WINTER_CATEGORY.getAdventures().add(ICE_FISHING);
 		
 		BEACH_HOLIDAY = adventureFactory.createAdventure();
 		BEACH_HOLIDAY.setDescription("Beach holiday in Spain");
@@ -186,22 +195,6 @@ public class SampleData {
 		};
 		dbc.addUpdatableFactory(EObjectImpl.class, emfFactory);
 		
-		// Add the TableDescription2 factory that handles EMF values (Joe)
-		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
-			public IUpdatable createUpdatable(Map properties, Object description) {
-				if (description instanceof TableDescription2) {
-					TableDescription2 tableDescription = (TableDescription2) description;
-					Object object = tableDescription.getObject();
-					if (object instanceof EObject) {
-						return new EMFUpdatableTable2((EObject) object,
-								(String) tableDescription.getPropertyID(),
-								(Object[]) tableDescription
-										.getColumnPropertyIDs());
-					}
-				}
-				return null;
-			}
-		});		
 		// Add the TableDescription factory that handles EMF values (Boris)
 		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
 			public IUpdatable createUpdatable(Map properties, Object description) {

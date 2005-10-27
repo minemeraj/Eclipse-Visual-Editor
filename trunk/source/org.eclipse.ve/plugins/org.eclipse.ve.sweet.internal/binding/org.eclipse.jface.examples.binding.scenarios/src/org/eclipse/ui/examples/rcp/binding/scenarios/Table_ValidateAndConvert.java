@@ -10,15 +10,21 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.*;
+import org.eclipse.jface.binding.BindingException;
+import org.eclipse.jface.binding.DatabindingContext;
+import org.eclipse.jface.binding.PropertyDescription;
+import org.eclipse.jface.binding.TableDescription2;
+import org.eclipse.jface.binding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
 
-public class Table_ValidateAndConvert_2 extends Composite {
+public class Table_ValidateAndConvert extends Composite {
 
 	private Table table = null;
 
@@ -30,7 +36,7 @@ public class Table_ValidateAndConvert_2 extends Composite {
 
 	private TableViewer tableViewer1;
 
-	public Table_ValidateAndConvert_2(Composite parent, int style)
+	public Table_ValidateAndConvert(Composite parent, int style)
 			throws BindingException {
 		super(parent, style);
 		initialize();
@@ -57,7 +63,7 @@ public class Table_ValidateAndConvert_2 extends Composite {
 		gridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData.grabExcessVerticalSpace = true;
-		table = new Table(this, SWT.NONE);
+		table = new Table(this, SWT.BORDER | SWT.FULL_SELECTION);
 		table.setHeaderVisible(true);
 		table.setLayoutData(gridData);
 		table.setLinesVisible(true);
@@ -79,17 +85,18 @@ public class Table_ValidateAndConvert_2 extends Composite {
 	private void bind() throws BindingException {
 
 		// For a given catalog show its accounts with columns for "firstName,
-		// "lastName" and "state"
+		// "phone" and "state"
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Catalog catalog = SampleData.CATALOG_2005;
-
-		dbc.bind2(tableViewer, new TableDescription2(catalog, "accounts",
-				new Object[] { "firstName", "phone", "state"}), 
-				new TableBindSpec(
-						new IConverter[] { null , new PhoneConverter(), new StateConverter()},
-						new IValidator[] { null , new PhoneValidator(), null})
-		);
+		
+		TableViewerDescription tableViewerDescription = new TableViewerDescription(
+				tableViewer);		
+		tableViewerDescription.addColumn("FirstName", "firstName");
+		tableViewerDescription.addColumn("Phone", "phone",new PhoneValidator(), new PhoneConverter());
+		tableViewerDescription.addColumn("State", "state", null, null, new StateConverter());	
+		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);
+		
 	}
 	private void bind1() throws BindingException {
 
@@ -98,9 +105,15 @@ public class Table_ValidateAndConvert_2 extends Composite {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Catalog catalog = SampleData.CATALOG_2005;
+		
+		TableViewerDescription tableViewerDescription = new TableViewerDescription(
+				tableViewer1);		
+		tableViewerDescription.addColumn("FirstName", "firstName");
+		tableViewerDescription.addColumn("Phone", "phone");
+		tableViewerDescription.addColumn("State", "state", new StateCellEditor(table1), null, null);	
+		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);		
 
-		dbc.bind2(tableViewer1, new TableDescription2(catalog, "accounts",
-				new Object[] { "firstName", "phone", "state"}), null);
+		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"),null);
 		
 	}	
 
@@ -115,7 +128,7 @@ public class Table_ValidateAndConvert_2 extends Composite {
 		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData1.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData1.grabExcessVerticalSpace = true;
-		table1 = new Table(this, SWT.NONE);
+		table1 = new Table(this, SWT.BORDER | SWT.FULL_SELECTION);
 		table1.setHeaderVisible(true);
 		table1.setLayoutData(gridData1);
 		table1.setLinesVisible(true);
