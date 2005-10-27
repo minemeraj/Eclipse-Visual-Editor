@@ -277,24 +277,24 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		 public void test_ROCombo_Scenario02_SWTCombo() throws BindingException {
 			 
 			 // Create a list of Strings for the countries
-//		    BasicEList list = new BasicEList();
-//		    for (Iterator iter = catalog.getAccounts().iterator(); iter.hasNext();) 
-//				list.add(((Account)iter.next()).getCountry());				
-//			
-//		    // Bind the combo's content to that of the String based list
-//		    getDbc().bind2(combo, new PropertyDescription(list, null), null);		    
-//		    assertEquals(Arrays.asList(combo.getItems()), list);
-//		    
-//		    Account account = (Account) catalog.getAccounts().get(0);
-//			 
-//		    // simple Combo's selection bound to the Account's country property
-//			 getDbc().bind2(new PropertyDescription(combo, SWTBindingConstants.SELECTION), 
-//					 		new PropertyDescription(account, "country"), null);
-//			 
-//			 // Drive the combo selection
-//			 String selection = (String)list.get(2); 			
-//			 combo.setText(selection); // this should drive the selection 
-//			 assertEquals(account.getCountry(), selection);
+		    BasicEList list = new BasicEList();
+		    for (Iterator iter = catalog.getAccounts().iterator(); iter.hasNext();) 
+				list.add(((Account)iter.next()).getCountry());				
+			
+		    // Bind the combo's content to that of the String based list
+		    getDbc().bind2(combo, new PropertyDescription(list, null), null);		    
+		    assertEquals(Arrays.asList(combo.getItems()), list);
+		    
+		    Account account = (Account) catalog.getAccounts().get(0);
+			 
+		    // simple Combo's selection bound to the Account's country property
+			 getDbc().bind2(new PropertyDescription(combo, SWTBindingConstants.SELECTION), 
+					 		new PropertyDescription(account, "country"), null);
+			 
+			 // Drive the combo selection
+			 String selection = (String)list.get(2); 			
+			 combo.setText(selection); // this should drive the selection 
+			 assertEquals(account.getCountry(), selection);
 	
 			 
 		 }
