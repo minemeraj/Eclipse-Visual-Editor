@@ -13,8 +13,6 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.PropertyDescription;
-import org.eclipse.jface.binding.TableBindSpec;
-import org.eclipse.jface.binding.TableDescription2;
 import org.eclipse.jface.binding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -37,8 +35,7 @@ public class Table_Accounts extends Composite {
 
 	private TableViewer tableViewer1;
 
-	public Table_Accounts(Composite parent, int style)
-			throws BindingException {
+	public Table_Accounts(Composite parent, int style) throws BindingException {
 		super(parent, style);
 		initialize();
 	}
@@ -49,7 +46,7 @@ public class Table_Accounts extends Composite {
 		createTable();
 		this.setLayout(gridLayout);
 		createTable1();
-		setSize(new org.eclipse.swt.graphics.Point(474,241));
+		setSize(new org.eclipse.swt.graphics.Point(474, 241));
 	}
 
 	/**
@@ -90,21 +87,22 @@ public class Table_Accounts extends Composite {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Catalog catalog = SampleData.CATALOG_2005;
-		
+
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
-				viewer);		
+				viewer);
 		tableViewerDescription.addColumn("FirstName", "firstName");
 		tableViewerDescription.addColumn("LastName", "lastName");
-		tableViewerDescription.addColumn("State", "state");		
+		tableViewerDescription.addColumn("State", "state");
 		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,
 				"accounts"), null);
-		
+
 	}
 
 	/**
-	 * This method initializes table1	
-	 * @throws BindingException 
-	 *
+	 * This method initializes table1
+	 * 
+	 * @throws BindingException
+	 * 
 	 */
 	private void createTable1() throws BindingException {
 		GridData gridData1 = new org.eclipse.swt.layout.GridData();
@@ -125,8 +123,8 @@ public class Table_Accounts extends Composite {
 		TableColumn tableColumn5 = new TableColumn(table1, SWT.NONE);
 		tableColumn5.setText("state");
 		tableColumn5.setWidth(60);
-		
+
 		tableViewer1 = new TableViewer(table1);
 		bind(tableViewer1);
 	}
-}  //  @jve:decl-index=0:visual-constraint="10,10"
+} // @jve:decl-index=0:visual-constraint="10,10"

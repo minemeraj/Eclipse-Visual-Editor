@@ -10,21 +10,17 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import java.util.Map;
-
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-import org.eclipse.jface.binding.DatabindingContext;
 import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.IUpdatableFactory;
-import org.eclipse.jface.binding.IUpdatableFactory2;
-import org.eclipse.jface.binding.TableDescription;
-import org.eclipse.jface.binding.TableDescription2;
 import org.eclipse.jface.binding.swt.SWTDatabindingContext;
-import org.eclipse.jface.examples.binding.emf.*;
+import org.eclipse.jface.examples.binding.emf.EMFUpdatableCollection;
+import org.eclipse.jface.examples.binding.emf.EMFUpdatableEList;
+import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.examples.rcp.adventure.Account;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
@@ -194,28 +190,6 @@ public class SampleData {
 
 		};
 		dbc.addUpdatableFactory(EObjectImpl.class, emfFactory);
-		
-		// Add the TableDescription factory that handles EMF values (Boris)
-		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
-			public IUpdatable createUpdatable(Map properties, Object description) {
-				if (description instanceof TableDescription) {
-					TableDescription tableDescription = (TableDescription) description;
-					Object object = tableDescription.getObject();
-					if (object instanceof EObject) {
-						String[] columnPropertyIDs = new String[tableDescription
-								.getColumnPropertyIDs().length];
-						System.arraycopy(tableDescription
-								.getColumnPropertyIDs(), 0, columnPropertyIDs,
-								0, columnPropertyIDs.length);
-						return new EMFUpdatableTable((EObject) object,
-								(String) tableDescription.getPropertyID(),
-								columnPropertyIDs);
-					}
-				}
-				return null;
-			}
-		});
-
 		
 		emfFactory = new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Object object, Object attribute) {

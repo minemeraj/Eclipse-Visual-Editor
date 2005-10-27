@@ -31,7 +31,7 @@ public class Showcase extends Composite {
 		createGroup(ListBinding.class);
 		// TODO createGroup(NumberBinding.class);
 		createGroup(SimpleListBinding.class);
-		createGroup(SimpleTableBinding.class);
+		createGroup(SimpleTableBinding2.class);
 		createGroup(TextBinding.class);
 		createGroup(Custom_DerivedAggregateProperty.class);
 	}
