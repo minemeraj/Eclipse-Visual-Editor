@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
+import org.eclipse.jface.binding.BindSpec;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.DatabindingContext;
+import org.eclipse.jface.binding.IConverter;
+import org.eclipse.jface.binding.IUpdatable;
 import org.eclipse.jface.binding.IValidator;
 import org.eclipse.jface.binding.IdentityConverter;
 import org.eclipse.swt.SWT;
@@ -68,26 +71,27 @@ public class TextBindingWithValidation extends Composite {
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		IdentityConverter identity = new IdentityConverter(String.class);
-		dbc.bind(txtDescription, "text", skiTrip, "description", identity,
-				new IValidator() {
-					public String isPartiallyValid(Object value) {
-						return isValid(value);
-					}
+		IConverter converter = new IdentityConverter(String.class);
+		IValidator validator = new IValidator() {
+			public String isPartiallyValid(Object value) {
+				return isValid(value);
+			}
+			public String isValid(Object value) {
+				if (((String) value).length() > 20) {
+					return "Description cannot be longer than 20 characters.";
+				}
+				return null;
+			}
+		};
+		BindSpec bindSpec = new BindSpec(converter,validator);		
+		dbc.bind2(txtDescription, "text", skiTrip, "description", bindSpec);
 
-					public String isValid(Object value) {
-						if (((String) value).length() > 20) {
-							return "Description cannot be longer than 20 characters.";
-						}
-						return null;
-					}
-				});
+		dbc.bind2(txtName, "text", skiTrip, "name",null);
 
-		dbc.bind(txtName, "text", skiTrip, "name");
+		dbc.bind2(txtLocation, "text", skiTrip, "location",null);
 
-		dbc.bind(txtLocation, "text", skiTrip, "location");
-
-		dbc.bind(validationMessage, "text", dbc.getCombinedValidationMessage());
+		IUpdatable errorMsgUpdatable = dbc.createUpdatable(validationMessage,"text");
+		dbc.bind2(errorMsgUpdatable, dbc.getCombinedValidationMessage(),null);
 	}
 
 	/**
