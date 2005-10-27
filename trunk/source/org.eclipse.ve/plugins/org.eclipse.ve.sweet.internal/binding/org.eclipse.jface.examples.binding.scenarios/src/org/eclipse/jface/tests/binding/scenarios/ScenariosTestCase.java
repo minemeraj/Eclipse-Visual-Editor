@@ -76,22 +76,12 @@ abstract public class ScenariosTestCase extends TestCase {
 		if (button.getSelection() == value) {
 			return;
 		}
+		button.setSelection(value);
 		pushButtonWithEvents(button);
 	}
 
 	protected void pushButtonWithEvents(Button button) {
-		if (!getShell().isVisible()) {
-			getShell().open();
-			spinEventLoop(0);
-		}
-		button.forceFocus();
-		spinEventLoop(0);
-		AutomationUtil.performCharacterEvent(getShell().getDisplay(),
-				SWT.KeyDown, ' ');
-		spinEventLoop(0);
-		AutomationUtil.performCharacterEvent(getShell().getDisplay(),
-				SWT.KeyUp, ' ');
-		spinEventLoop(0);
+		button.notifyListeners(SWT.Selection, null);
 	}
 
 	protected void setUp() throws Exception {
@@ -119,16 +109,9 @@ abstract public class ScenariosTestCase extends TestCase {
 	}
 
 	protected void enterText(Text text, String string) {
-		if (!getShell().isVisible()) {
-			getShell().open();
-			spinEventLoop(0);
-		}
-		text.forceFocus();
-		spinEventLoop(0);
+		text.notifyListeners(SWT.FocusIn, null);
 		text.setText(string);
-		spinEventLoop(0);
-		dummyText.forceFocus();
-		spinEventLoop(0);
+		text.notifyListeners(SWT.FocusOut, null);
 	}
 
 }
