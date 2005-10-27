@@ -508,7 +508,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		getDbc().bind2(t2, "text", adventure, "name", null);
 		
 		final int[] counter = { 0 };
-		IUpdatable uv = getDbc().createUpdatable(adventure, "name");
+		IUpdatableValue uv = (IUpdatableValue) getDbc().createUpdatable(adventure, "name");
 		uv.addChangeListener(new IChangeListener() {		
 			public void handleChange(IChangeEvent changeEvent) {
 				// Count how many times adventure has changed
@@ -520,7 +520,12 @@ public class PropertyScenarios extends ScenariosTestCase {
 		t1.setText(name);		
 		assertEquals(name,adventure.getName());
 		assertEquals(name,t2.getText());
-		assertTrue(counter[0]<=1);
+		assertTrue(counter[0]==1);
+		
+		name = name+"Bar";
+		uv.setValue(name);
+		assertEquals(t1.getText(),adventure.getName());
+		assertTrue(counter[0]==2);
 		
 		
 	}
