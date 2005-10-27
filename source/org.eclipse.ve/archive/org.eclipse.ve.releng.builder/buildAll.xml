@@ -262,7 +262,7 @@
 		
 		<!-- Now build the update program. -->
 	    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-		<property name="eclipse.version" value="3.1.0"/>
+		<property name="eclipse.version" value="3.2.0"/>
 		<available file="${eclipse.home}/plugins/org.eclipse.osgi_${eclipse.version}.jar" property="versionFound"/>
 		<fail unless="versionFound" message="Failed due to ${eclipse.version} Eclipse not being used. If upgraded, need to upgrade this buildAll.xml too."/>
 		<mkdir dir="${updateLocalDirectory}/bin"/>
