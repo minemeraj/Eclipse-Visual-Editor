@@ -66,9 +66,9 @@ public class Custom_TimeEntryCustomControl extends Composite {
 			}
 		});
 
-		dbc.bind(lbl_time, "text", bus, "arrivalTime");
-		dbc.bind(timeEntry, "time", bus, "arrivalTime");
-		dbc.bind(timeEntry1, "time", bus, "arrivalTime");
+		dbc.bind2(lbl_time, "text", bus, "arrivalTime",null);
+		dbc.bind2(timeEntry, "time", bus, "arrivalTime",null);
+		dbc.bind2(timeEntry1, "time", bus, "arrivalTime",null);
 
 	}
 
