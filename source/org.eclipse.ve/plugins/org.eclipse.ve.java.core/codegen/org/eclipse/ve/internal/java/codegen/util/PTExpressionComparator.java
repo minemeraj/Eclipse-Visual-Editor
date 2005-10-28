@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PTExpressionComparator.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-03 19:20:57 $ 
+ *  $Revision: 1.8 $  $Date: 2005-10-28 22:56:43 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -92,6 +92,20 @@ public class PTExpressionComparator extends ParseVisitor {
 	
 	protected Object pop(){
 		return otherPTExpressionStack.pop();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jem.internal.instantiation.ParseVisitor#visit(org.eclipse.jem.internal.instantiation.PTAnonymousClassDeclaration)
+	 */
+	public boolean visit(PTAnonymousClassDeclaration node) {
+		Object ast = pop();
+		if(ast instanceof PTAnonymousClassDeclaration){
+			PTAnonymousClassDeclaration otherAnonymousClassDeclaration = (PTAnonymousClassDeclaration) ast;
+			if(node.getDeclaration().equals(otherAnonymousClassDeclaration.getDeclaration()))
+				return false;
+		}
+		notEqual();
+		return false;
 	}
 	
 	public boolean visit(PTArrayAccess node) {

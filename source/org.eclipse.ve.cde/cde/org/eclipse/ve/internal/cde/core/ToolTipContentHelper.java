@@ -10,13 +10,16 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipContentHelper.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-21 15:10:58 $ 
+ *  $Revision: 1.4 $  $Date: 2005-10-28 22:56:42 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import java.util.*;
 
 import org.eclipse.draw2d.*;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
  
 /**
  * 
@@ -32,7 +35,25 @@ public class ToolTipContentHelper extends Panel {
 	HashMap		fProcessorFigures;
 			
 	public ToolTipContentHelper(ToolTipProcessor[] toolTipProcessors) {
-		FlowLayout layout = new FlowLayout(false) ;
+		FlowLayout layout = new FlowLayout(false) {
+			/* (non-Javadoc)
+			 * @see org.eclipse.draw2d.FlowLayout#calculatePreferredSize(org.eclipse.draw2d.IFigure, int, int)
+			 */
+			protected Dimension calculatePreferredSize(IFigure container, int wHint, int hHint) {
+				// Since this is hovering over and is a separate window, we don't want a width, height that
+				// would make it larger than the display. It would get clipped then. Tell it we don't
+				// want to be bigger than this. However, flow can ignore the hint, so we will inforce the bounds
+				// afterwards.
+				Rectangle bounds = Display.getCurrent().getClientArea();
+				// Shrink by 100 pixels so that it is not so blatently big.
+				bounds.width -= 100;
+				bounds.height -= 100;
+				Dimension prefSize = super.calculatePreferredSize(container, wHint == -1 ? bounds.width : Math.min(wHint, bounds.width), hHint == -1 ? bounds.height : Math.min(hHint, bounds.height));
+				prefSize.width = Math.min(prefSize.width, bounds.width);
+				prefSize.height = Math.min(prefSize.height, bounds.height);
+				return prefSize;
+			}
+		};
 		layout.setMajorSpacing(0);
 		layout.setMinorSpacing(0);
 		setLayoutManager(layout);			
