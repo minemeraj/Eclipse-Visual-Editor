@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.rules;
 /*
  *  $RCSfile: RuledCommandBuilder.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-04 15:41:48 $ 
+ *  $Revision: 1.9 $  $Date: 2005-10-28 21:36:44 $ 
  */
 
 import java.util.*;
@@ -564,6 +564,24 @@ public class RuledCommandBuilder extends CommandBuilder {
 				return;
 			else {
 				internalAppend(buildUp.unwrap());
+			}
+		}		
+	}
+	
+	/**
+	 * This is used to cancel membership of values that aren't being referenced directly but
+	 * need to be deleted. For example a visual controller that returns a visual and the visual
+	 * is what is hooked into the model as a child of some other visual. In this case the controller
+	 * would not be child of something and it would not be on the freeform, so it would not normally
+	 * be dragged in via standard settings. This method will cancel the membership through a command.
+	 * @param target
+	 * 
+	 * @since 1.2.0
+	 */
+	public void cancelMembership(EObject target) {
+		if (!isDead()) {
+			if (applyRules) {
+				appendPost(createPost(target));
 			}
 		}		
 	}
