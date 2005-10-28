@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.17 $  $Date: 2005-10-11 21:23:48 $ 
+ *  $Revision: 1.18 $  $Date: 2005-10-28 17:27:35 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -19,8 +19,6 @@ import java.util.*;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
@@ -36,12 +34,10 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaHelpers;
 
-import org.eclipse.ve.internal.cde.core.ContainerPolicy;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
 
 import org.eclipse.ve.internal.jcm.BeanComposition;
-import org.eclipse.ve.internal.jcm.JCMFactory;
 
 import org.eclipse.ve.internal.java.choosebean.*;
 
@@ -84,26 +80,7 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 		chooseBean.setFilter("**"); //$NON-NLS-1$
 		if(chooseBean.open()==Window.OK){
 			Object[] results = chooseBean.getResult();
-			IJavaObjectInstance newJavaInstance = (IJavaObjectInstance)results[0];
-			// Use the JavaContainer policy to get all the right command generated
-			BaseJavaContainerPolicy editPolicy = new BaseJavaContainerPolicy(
-					JCMFactory.eINSTANCE.getJCMPackage().getBeanComposition_Components(),
-					editDomain);
-			editPolicy.setContainer(beanComposition);
-			
-			CompoundCommand createAndSetVisualCommand = new CompoundCommand("Create instance and set visual command"); //$NON-NLS-1$
-			
-			ContainerPolicy.Result result = editPolicy.getCreateCommand(newJavaInstance, null);
-			createAndSetVisualCommand.add(result.getCommand());
-			
-			if (!result.getChildren().isEmpty()) {
-				Command visualInfoCommand = BeanUtilities.getSetEmptyVisualContraintsCommand((IJavaInstance) result.getChildren().get(0), false, editDomain);
-				createAndSetVisualCommand.add(visualInfoCommand);
-			}
-			
-			editDomain.getCommandStack().execute(createAndSetVisualCommand);
-			
-			return newJavaInstance;
+			return (IJavaObjectInstance)results[0];
 		}
 		return null;
 	}
