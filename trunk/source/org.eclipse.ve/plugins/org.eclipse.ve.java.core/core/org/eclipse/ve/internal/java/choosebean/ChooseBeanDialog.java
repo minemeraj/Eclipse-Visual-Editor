@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.41 $  $Date: 2005-10-20 21:04:09 $ 
+ *  $Revision: 1.42 $  $Date: 2005-10-28 22:56:43 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -21,7 +21,6 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.*;
@@ -47,12 +46,15 @@ import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
+import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.core.CDEUtilities;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
+import org.eclipse.ve.internal.java.core.ASTMethodUtil;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
  
@@ -332,12 +334,19 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 					IType type = (IType) results[i];
 					String realFQN = type.getFullyQualifiedName('$');
 					JavaClass javaClass = Utilities.getJavaClass(realFQN, resourceSet);					
-					EObject eObject = javaClass.getEPackage().getEFactoryInstance().create(javaClass);
-					if(beanName==null || beanName.trim().length()<1){
-						beanName = getDefaultBeanName(((IJavaObjectInstance) eObject).getJavaType().getJavaName());
+					IJavaInstance javaInstance = (IJavaInstance) javaClass.getEPackage().getEFactoryInstance().create(javaClass);
+					if (javaClass.isInterface() || javaClass.isAbstract()) {
+						PTAnonymousClassDeclaration anon = ASTMethodUtil.createAnonymousDeclaration(javaClass, type.getJavaProject());
+						if (anon != null) {
+							// Create an anonymous allocation.
+							javaInstance.setAllocation(InstantiationFactory.eINSTANCE.createParseTreeAllocation(anon));
+						}
 					}
-					ChooseBeanDialogUtilities.setBeanName(eObject, beanName, editDomain);
-					newResults[(i*2)] = eObject;
+					if(beanName==null || beanName.trim().length()<1){
+						beanName = getDefaultBeanName(((IJavaObjectInstance) javaInstance).getJavaType().getJavaName());
+					}
+					ChooseBeanDialogUtilities.setBeanName(javaInstance, beanName, editDomain);
+					newResults[(i*2)] = javaInstance;
 					newResults[(i*2)+1] = javaClass;
 				}
 			}

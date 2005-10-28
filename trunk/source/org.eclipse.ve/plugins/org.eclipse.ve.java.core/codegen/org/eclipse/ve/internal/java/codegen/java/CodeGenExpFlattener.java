@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenExpFlattener.java,v $
- *  $Revision: 1.11 $  $Date: 2005-10-03 19:20:56 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-28 22:56:43 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -60,6 +59,21 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 			fimportList = importList;
 			frefList = refList;			
 		} 
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener#visit(org.eclipse.jem.internal.instantiation.PTAnonymousClassDeclaration)
+		 */
+		public boolean visit(PTAnonymousClassDeclaration node) {
+			if (fimportList != null) {
+				List imports = node.getImports();
+				for (Iterator importItr = imports.iterator(); importItr.hasNext();) {
+					String aimport = (String) importItr.next();
+					if (!fimportList.contains(aimport))
+						fimportList.add(aimport);					
+				}
+			}
+			return super.visit(node);
+		}
 
 		/* (non-Javadoc)
 		 * @see org.eclipse.jem.internal.instantiation.ParseVisitor#visit(org.eclipse.jem.internal.instantiation.PTTypeLiteral)
