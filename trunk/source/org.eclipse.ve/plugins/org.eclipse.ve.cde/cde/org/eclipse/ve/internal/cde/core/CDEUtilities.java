@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEUtilities.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.15 $  $Date: 2005-10-28 17:27:35 $ 
  */
 
 
@@ -333,7 +333,7 @@ public class CDEUtilities {
 		AnnotationLinkagePolicy policy = domain.getAnnotationLinkagePolicy();
 		List path = new ArrayList();
 		EditPart top = ep.getRoot().getContents();
-		for (; ep != top; ep = ep.getParent()) {
+		for (; ep != null && ep != top; ep = ep.getParent()) {
 			Annotation a = policy.getAnnotation(ep.getModel());
 			if (a != null) {
 				String name = (String) a.getKeyedValues().get(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
@@ -343,12 +343,14 @@ public class CDEUtilities {
 				}
 			}
 			// No name set, or no annotation, use index into parent.			
-			EditPart parent = ep.getParent();			
+			EditPart parent = ep.getParent();
+			if (parent == null)
+				return null;	// Not a child, or grandkid of the top. (ActionBarEditPart is an example of this).
 			path.add('{'+String.valueOf(parent.getChildren().indexOf(ep))+'}');
 		}
 		
-		if (path.isEmpty())
-			return null;	// It is the top editpart.
+		if (ep == null || path.isEmpty())
+			return null;	// It is the top editpart. Or it was not a child/grandkid of the top editpart.
 		
 		EditPartNamePath result = new EditPartNamePath();
 		result.namePath = new String[path.size()];
