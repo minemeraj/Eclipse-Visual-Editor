@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.55 $  $Date: 2005-10-28 22:56:43 $ 
+ *  $Revision: 1.56 $  $Date: 2005-10-31 16:40:02 $ 
  */
 
 
@@ -1014,12 +1014,12 @@ public static Collection getReferences(Object o, boolean includeO) {
 }
 
 	/**
-	 * Adds the bean part to the model. The added bean part is put on the freeform only if it is
+	 * Adds the bean part to the model. The added bean part is put on the freeform only if it is either
 	 * <ol>
 	 * <li> <code>THIS</code>
-	 * <li> <code>Modelled</code> and has no container <code>EObject</code>
-	 * <li> Not <code>Modelled</code>, but referenced by 2. and has <code>visual-constraint</code> in the codegen annotation
 	 * <li> Simple name starts with <code>ivj</code>
+	 * <li> <code>Modelled</code>, has no container <code>EObject</code>, and has <code>visual-constraint</code> in the codegen annotation
+	 * <li> Not <code>Modelled</code>, but referenced by 3. and has <code>visual-constraint</code> in the codegen annotation
 	 * </ol>
 	 * 
 	 * @param bp
@@ -1060,9 +1060,7 @@ public static Collection getReferences(Object o, boolean includeO) {
 			}else if (InstanceVariableCreationRule.isModelled(bp.getEObject().eClass(), bp.getModel().getCompositionModel().getModelResourceSet())) {
 				// Is modelled
 				if (bp.getContainer() == null){
-					if(bp.getDecleration().isInstanceVar())
-						shouldBeOnFreeform = true;
-					else if(bp.getFFDecoder().isVisualOnFreeform())
+					if(bp.getFFDecoder().isVisualOnFreeform())
 						shouldBeOnFreeform = true;
 				}
 			} else {
