@@ -21,6 +21,7 @@ import org.eclipse.jface.binding.PropertyDescription;
 import org.eclipse.jface.binding.swt.SWTBindingConstants;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.ui.examples.rcp.adventure.*;
@@ -379,5 +380,73 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				assertEquals(getViewerContent(cviewer), getViewerContent(otherViewer));								
 				 
 			 }
+			 
+			 
+				/**
+				 * This scenario tests a simple SWT CCombo that is bound to a list of 
+				 * Country objects. The Country object's name property is listed in the Combo.
+				 * 
+				 * The Combo's selection is bounded to the Country property of an Account.
+				 */
+				 public void test_ROCombo_SWTCCombo() throws BindingException {
+					 
+					 // Create a list of Strings for the countries
+				    BasicEList list = new BasicEList();
+				    for (Iterator iter = catalog.getAccounts().iterator(); iter.hasNext();) 
+						list.add(((Account)iter.next()).getCountry());
+				    
+				    CCombo ccombo = new CCombo(getComposite(), SWT.READ_ONLY | SWT.DROP_DOWN);
+					
+				    // Bind the combo's content to that of the String based list
+				    getDbc().bind2(ccombo, new PropertyDescription(list, null), null);		    
+				    assertEquals(Arrays.asList(ccombo.getItems()), list);
+				    
+				    Account account = (Account) catalog.getAccounts().get(0);
+					 
+				    // simple Combo's selection bound to the Account's country property
+					 getDbc().bind2(new PropertyDescription(ccombo, SWTBindingConstants.SELECTION), 
+							 		new PropertyDescription(account, "country"), null);
+					 
+					 // Drive the combo selection
+					 String selection = (String)list.get(2); 			
+					 ccombo.setText(selection); // this should drive the selection 
+					 assertEquals(account.getCountry(), selection);
+			
+					 
+				 }
+				 
+					/**
+					 * This scenario tests a simple SWT CCombo that is bound to a list of 
+					 * Country objects. The Country object's name property is listed in the Combo.
+					 * 
+					 * The Combo's selection is bounded to the Country property of an Account.
+					 */
+					 public void test_ROCombo_SWTList() throws BindingException {
+						 
+						 // Create a list of Strings for the countries
+					    BasicEList list = new BasicEList();
+					    for (Iterator iter = catalog.getAccounts().iterator(); iter.hasNext();) 
+							list.add(((Account)iter.next()).getCountry());
+					    
+					    org.eclipse.swt.widgets.List swtlist = new org.eclipse.swt.widgets.List(getComposite(), SWT.READ_ONLY | SWT.SINGLE);
+						
+					    // Bind the combo's content to that of the String based list
+					    getDbc().bind2(swtlist, new PropertyDescription(list, null), null);		    
+					    assertEquals(Arrays.asList(swtlist.getItems()), list);
+					    
+					    Account account = (Account) catalog.getAccounts().get(0);
+						 
+					    // simple Combo's selection bound to the Account's country property
+						 getDbc().bind2(new PropertyDescription(swtlist, SWTBindingConstants.SELECTION), 
+								 		new PropertyDescription(account, "country"), null);
+						 	
+						
+						 String selection = (String)list.get(2); 			
+						 swtlist.select(2); // this should drive the selection
+						 swtlist.notifyListeners(SWT.Selection, null);  // Force notification
+						 assertEquals(account.getCountry(), selection);
+				
+						 
+					 }				 
 	 
 }
