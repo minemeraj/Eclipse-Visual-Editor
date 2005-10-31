@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.12 $  $Date: 2005-10-31 12:41:20 $ 
+ *  $Revision: 1.13 $  $Date: 2005-10-31 15:03:24 $ 
  */
 
 import java.util.*;
@@ -112,12 +112,41 @@ public void replaceComments(String comment) {
 }
 
 public void replaceFiller (String filler) {
-	int delta = filler.length() - getFillerLen() ;
-	StringBuffer st = new StringBuffer (fSource) ;
-	st.replace(getFillerOff(),getFillerOff()+getFillerLen(),filler) ;	
-	fSource = st.toString() ;
-	fSourceOff+= delta ;
+	String currentFiller = ""; //$NON-NLS-1$
+	if(getFillerOff()>-1 && getFillerLen()>-1)
+		currentFiller = fSource.substring(getFillerOff(), getFillerLen());
+	if(filler==null)
+		filler=""; //$NON-NLS-1$
+	primReplaceFiller(currentFiller, filler, getFillerOff());
     clear() ;
+}
+
+protected void primReplaceFiller(String oldFiller, String newFiller, int fillerOffset){
+	StringBuffer filledSource = new StringBuffer(fSource);
+	filledSource.replace(fillerOffset, oldFiller.length(), newFiller);
+	try {
+		IScanner scanner = fScannerFactory.getScanner(false, true, true);
+		scanner.setSource(filledSource.toString().toCharArray());
+		while(scanner.getNextToken()!=ITerminalSymbols.TokenNameEOF && scanner.getCurrentTokenEndPosition()<filledSource.toString().length()){} // determine all line ends
+		int[] lineEnds = scanner.getLineEnds();
+		if(lineEnds!=null){
+			int delta = 0;
+			for (int lec = 0; lec < lineEnds.length; lec++) {
+				int offset = lineEnds[lec]+1+delta;
+				if(filledSource.indexOf(oldFiller, offset)==offset){
+					filledSource.replace(offset, offset+oldFiller.length(), newFiller);
+					delta+=(newFiller.length()-oldFiller.length());
+				}else{
+					filledSource.insert(offset, newFiller);
+					delta+=newFiller.length();
+				}
+			}
+		}
+	} catch (InvalidInputException e) {
+		JavaVEPlugin.log(e, Level.FINE);
+	}
+	fSource = filledSource.toString();
+	fSourceOff += (newFiller.length() - oldFiller.length());
 }
 
 /**
