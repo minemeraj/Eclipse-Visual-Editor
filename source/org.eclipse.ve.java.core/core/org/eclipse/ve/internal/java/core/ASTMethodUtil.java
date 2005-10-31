@@ -3,11 +3,19 @@ package org.eclipse.ve.internal.java.core;
 import java.util.*;
 import java.util.logging.Level;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
+import org.eclipse.jdt.core.dom.rewrite.*;
+import org.eclipse.jdt.ui.CodeGeneration;
+import org.eclipse.jdt.ui.PreferenceConstants;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.util.Assert;
+import org.eclipse.text.edits.MalformedTreeException;
+import org.eclipse.text.edits.TextEdit;
 
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.PTAnonymousClassDeclaration;
@@ -21,51 +29,64 @@ import org.eclipse.jem.java.JavaHelpers;
  */
 public class ASTMethodUtil{
 	
-	public static PTAnonymousClassDeclaration createAnonymousDeclaration(JavaHelpers jc, IJavaProject javaproject) {
+	public static PTAnonymousClassDeclaration createAnonymousDeclaration(JavaHelpers jc, ICompilationUnit icu) {
 
-		// TODO Should use ASTRewrite and CodeGeneration.getMethodBodyContent() so that we can get the format of the unimplemented
-		// methods using the templates of the java eclipse. Also the rewrite will give us a nice output instead of what
-		// toString does (toString on an MethodDeclaration puts spaces where they shouldn't).
+		// Create a dummy ICompilationUnit in the same place the incoming is in. We don't want to actually parse the
+		// incoming icu. Too expensive for what we want.
+		IResource cures;
+		try {
+			cures = icu.getCorrespondingResource();
+		} catch (JavaModelException e) {
+			return null;
+		}
+		IFile newcuFile = cures.getParent().getFile(new Path("Tmp.java"));
+		ICompilationUnit dummyicu = JavaCore.createCompilationUnitFrom(newcuFile);
 		
-		String classSource = "import " + jc.getQualifiedName() + ";"+
+		IDocument tmpDoc = new Document("import " + jc.getQualifiedName() + ";"+
 					"public class Tmp{" +
 					"public void main(){" +
 						"new "+ jc.getName() + "(){};" +
 					"}" +
-				"}";
+				"}");
 		
 		ASTParser parser = ASTParser.newParser(AST.JLS3);
-		parser.setUnitName(jc.getName());
+		parser.setUnitName("Tmp");
 		parser.setCompilerOptions(null);
-		parser.setProject(javaproject);
+		parser.setProject(dummyicu.getJavaProject());
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setResolveBindings(true);
-		parser.setSource(classSource.toCharArray());
-		ASTNode node = parser.createAST(new NullProgressMonitor());
+		parser.setSource(tmpDoc.get().toCharArray());
+		ASTNode node = parser.createAST(null);
 		
-		if (node instanceof CompilationUnit) {
-			PTAnonymousClassDeclaration anonDecl = InstantiationFactory.eINSTANCE.createPTAnonymousClassDeclaration();
-			List importList = anonDecl.getImports();
-			importList.add(jc.getJavaName());
-			CompilationUnit cu = (CompilationUnit) node;
-			AbstractTypeDeclaration atd = (AbstractTypeDeclaration) cu.types().get(0);
-			MethodDeclaration mtd = (MethodDeclaration) atd.bodyDeclarations().get(0);
-			ExpressionStatement stmt = (ExpressionStatement) mtd.getBody().statements().get(0);
-			ClassInstanceCreation cic = (ClassInstanceCreation) stmt.getExpression();
-			ITypeBinding typeBinding = cic.resolveTypeBinding();
-			if(typeBinding!=null){
-				IMethodBinding[] unimplementedMethods = ASTMethodUtil.getUnimplementedMethods(typeBinding);
-				if(unimplementedMethods!=null){
-					for (int uic = 0; uic < unimplementedMethods.length; uic++) {
-						MethodDeclaration md = ASTMethodUtil.createMethodDeclaration(unimplementedMethods[uic], cic.getAST(), importList);
-						cic.getAnonymousClassDeclaration().bodyDeclarations().add(md);
-					}
+		ASTRewrite rewriter = ASTRewrite.create(node.getAST());
+		CompilationUnit cu = (CompilationUnit) node;
+		AbstractTypeDeclaration atd = (AbstractTypeDeclaration) cu.types().get(0);
+		MethodDeclaration mtd = (MethodDeclaration) atd.bodyDeclarations().get(0);
+		ExpressionStatement stmt = (ExpressionStatement) mtd.getBody().statements().get(0);
+		ClassInstanceCreation cic = (ClassInstanceCreation) stmt.getExpression();
+		ITrackedNodePosition cicLocation = rewriter.track(cic);
+		ITypeBinding typeBinding = cic.resolveTypeBinding();
+		PTAnonymousClassDeclaration anonDecl = InstantiationFactory.eINSTANCE.createPTAnonymousClassDeclaration();
+		List importList = anonDecl.getImports();
+		importList.add(jc.getJavaName());
+		if(typeBinding!=null){
+			IMethodBinding[] unimplementedMethods = ASTMethodUtil.getUnimplementedMethods(typeBinding);
+			if(unimplementedMethods!=null){
+				ListRewrite anonBodyDecls = rewriter.getListRewrite(cic.getAnonymousClassDeclaration(), AnonymousClassDeclaration.BODY_DECLARATIONS_PROPERTY);
+				for (int uic = 0; uic < unimplementedMethods.length; uic++) {
+					MethodDeclaration md = ASTMethodUtil.createMethodDeclaration(unimplementedMethods[uic], dummyicu, jc.getName(), rewriter, importList);
+					anonBodyDecls.insertLast(md, null);
 				}
 			}
-			anonDecl.setDeclaration(cic.toString());
-			return anonDecl;
-		} else
-			return null;
+		}
+		TextEdit edits = rewriter.rewriteAST(tmpDoc, icu.getJavaProject().getOptions(true));
+		try {
+			edits.apply(tmpDoc);
+			anonDecl.setDeclaration(tmpDoc.get(cicLocation.getStartPosition(), cicLocation.getLength()));
+		} catch (MalformedTreeException e) {
+		} catch (BadLocationException e) {
+		}
+		return anonDecl;
 		
 	}
 
@@ -227,20 +248,21 @@ public class ASTMethodUtil{
 		return k1.equals(k2);
 	}
 	
-	public static MethodDeclaration createMethodDeclaration(IMethodBinding binding, AST ast, List importList){
+	public static MethodDeclaration createMethodDeclaration(IMethodBinding binding, ICompilationUnit icu, String declaringTypename, ASTRewrite rewriter, List importList) {
+		AST ast = rewriter.getAST();
 		MethodDeclaration md = ast.newMethodDeclaration();
-		
+
 		md.setName(ast.newSimpleName(binding.getName()));
-		
+
 		md.setReturnType2(createTypeFromBinding(binding.getReturnType(), ast, importList));
-		
+
 		md.setBody(ast.newBlock());
-		
-		if(Modifier.isProtected(binding.getModifiers()))
+
+		if (Modifier.isProtected(binding.getModifiers()))
 			md.modifiers().add(ast.newModifier(ModifierKeyword.PROTECTED_KEYWORD));
 		else
 			md.modifiers().add(ast.newModifier(ModifierKeyword.PUBLIC_KEYWORD));
-		
+
 		ITypeBinding[] bindingParams = binding.getParameterTypes();
 		String[] names = suggestParameterNames(binding);
 		for (int bpc = 0; bpc < bindingParams.length; bpc++) {
@@ -250,24 +272,47 @@ public class ASTMethodUtil{
 			svd.setType(createTypeFromBinding(bindingParams[bpc], ast, importList));
 			md.parameters().add(svd);
 		}
-		
-		if(md.getReturnType2().isPrimitiveType()){
-			if(PrimitiveType.VOID.equals(((PrimitiveType)md.getReturnType2()).getPrimitiveTypeCode())){
+
+		Statement body = null;
+		if (md.getReturnType2().isPrimitiveType()) {
+			if (PrimitiveType.VOID.equals(((PrimitiveType) md.getReturnType2()).getPrimitiveTypeCode())) {
 				// void return type - no need to put any return
-			}else if(PrimitiveType.BOOLEAN.equals(((PrimitiveType)md.getReturnType2()).getPrimitiveTypeCode())){
+			} else if (PrimitiveType.BOOLEAN.equals(((PrimitiveType) md.getReturnType2()).getPrimitiveTypeCode())) {
 				// boolean return - put in a return statement of false;
 				ReturnStatement rs = ast.newReturnStatement();
 				rs.setExpression(ast.newBooleanLiteral(false));
-				md.getBody().statements().add(rs);
-			}else{
+				body = rs;
+			} else {
 				ReturnStatement rs = ast.newReturnStatement();
 				rs.setExpression(ast.newNumberLiteral("-1"));
-				md.getBody().statements().add(rs);
+				body = rs;
 			}
-		}else{
+		} else {
 			ReturnStatement rs = ast.newReturnStatement();
 			rs.setExpression(ast.newNullLiteral());
-			md.getBody().statements().add(rs);
+			body = rs;
+		}
+
+		if (body != null) {
+			try {
+				String bodyContent = CodeGeneration.getMethodBodyContent(icu, declaringTypename, md.getName().getIdentifier(), false, body.toString(), "\n");
+				if (bodyContent != null) {
+					ASTNode todoNode= rewriter.createStringPlaceholder(bodyContent, ASTNode.RETURN_STATEMENT);
+					md.getBody().statements().add(todoNode);
+				}
+			} catch (CoreException e) {
+			}
+		}
+		
+		if (Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, icu.getJavaProject())).booleanValue()) {
+			try {
+				String methodComment = CodeGeneration.getMethodComment(icu, declaringTypename, md, binding, "\n");
+				if (methodComment != null) {
+					Javadoc javadoc= (Javadoc) rewriter.createStringPlaceholder(methodComment, ASTNode.JAVADOC);
+					md.setJavadoc(javadoc);
+				}
+			} catch (CoreException e) {
+			}
 		}
 		return md;
 	}

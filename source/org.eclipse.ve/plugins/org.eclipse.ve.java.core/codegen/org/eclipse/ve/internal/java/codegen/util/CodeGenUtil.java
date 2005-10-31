@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.56 $  $Date: 2005-10-31 16:40:02 $ 
+ *  $Revision: 1.57 $  $Date: 2005-10-31 21:29:26 $ 
  */
 
 
@@ -567,7 +567,7 @@ public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel mo
 	} else {
 		JavaHelpers jc = javaInstance.getJavaType();
 		if(jc.isInterface() || jc.isAbstract()){
-			PTAnonymousClassDeclaration anon = ASTMethodUtil.createAnonymousDeclaration(jc, model.getCompilationUnit().getJavaProject());
+			PTAnonymousClassDeclaration anon = ASTMethodUtil.createAnonymousDeclaration(jc, model.getCompilationUnit());
 			if (anon != null) {
 				importList.addAll(anon.getImports());
 				return anon.getDeclaration();
