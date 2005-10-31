@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.11 $  $Date: 2005-09-14 21:22:55 $ 
+ *  $Revision: 1.12 $  $Date: 2005-10-31 12:41:20 $ 
  */
 
 import java.util.*;
@@ -228,8 +228,10 @@ protected int skipSemiColonifNeeded(int right) {
 			for(int i=0;i<targetSrc.length();i++){
 				if(token==ITerminalSymbols.TokenNameEOF)
 					break;
-				if(token==ITerminalSymbols.TokenNameSEMICOLON)
-					return right ;
+				if(token==ITerminalSymbols.TokenNameSEMICOLON){
+					if(targetSrc.indexOf('}', scanner.getCurrentTokenEndPosition())<0) // we could have content with semicolons -inner classes etc.
+						return right ;
+				}
 				token = scanner.getNextToken();
 			}
 		}
