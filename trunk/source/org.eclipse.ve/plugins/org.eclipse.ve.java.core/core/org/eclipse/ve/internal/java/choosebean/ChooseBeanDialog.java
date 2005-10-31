@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.42 $  $Date: 2005-10-28 22:56:43 $ 
+ *  $Revision: 1.43 $  $Date: 2005-10-31 21:29:26 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -41,12 +41,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.PTAnonymousClassDeclaration;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaClass;
@@ -336,7 +338,8 @@ public class ChooseBeanDialog extends SelectionStatusDialog implements Selection
 					JavaClass javaClass = Utilities.getJavaClass(realFQN, resourceSet);					
 					IJavaInstance javaInstance = (IJavaInstance) javaClass.getEPackage().getEFactoryInstance().create(javaClass);
 					if (javaClass.isInterface() || javaClass.isAbstract()) {
-						PTAnonymousClassDeclaration anon = ASTMethodUtil.createAnonymousDeclaration(javaClass, type.getJavaProject());
+						ICompilationUnit icu = JavaCore.createCompilationUnitFrom(((IFileEditorInput) editDomain.getEditorPart().getEditorInput()).getFile()); 
+						PTAnonymousClassDeclaration anon = ASTMethodUtil.createAnonymousDeclaration(javaClass, icu);
 						if (anon != null) {
 							// Create an anonymous allocation.
 							javaInstance.setAllocation(InstantiationFactory.eINSTANCE.createParseTreeAllocation(anon));
