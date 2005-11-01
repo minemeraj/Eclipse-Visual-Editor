@@ -12,7 +12,7 @@
  *  Created Oct 5, 2005 by Gili Mendel
  * 
  *  $RCSfile: ViewerConstructorDecoderHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-13 20:31:02 $ 
+ *  $Revision: 1.5 $  $Date: 2005-11-01 20:15:16 $ 
  */
  
 package org.eclipse.ve.internal.jface.codegen;
@@ -53,7 +53,7 @@ public class ViewerConstructorDecoderHelper extends ConstructorDecoderHelper {
 	protected void setImplicitFeature() throws CodeGenException {
 		EStructuralFeature sf = getImplicitFeature();
 		EObject implicit = getImplicitChild();
-		BeanPart implicitBean = fbeanPart.getModel().getABean(implicit);
+		// BeanPart implicitBean = fbeanPart.getModel().getABean(implicit);
 		EObject parent = fbeanPart.getEObject();
 		
 		// Check to see if there is already an existing tree
@@ -74,9 +74,14 @@ public class ViewerConstructorDecoderHelper extends ConstructorDecoderHelper {
 		// create a NOSRC expression in the BDM
 		eGen.createFromJVEModelWithNoSrc(new Object[] { implicit } );
 
-		CodeExpressionRef init = implicitBean.getInitExpression();
-		// Add reference to the visual parent, If the tv is not referenced, it will be deactivated.
-		init.getReferences().add(fbeanPart.getEObject());			
+		// 114155 - no need to do it here. 
+		// If Treeviewer references Tree, and Tree is included, 
+		// then even TreeViewer is included in the model. No need
+		// to go to the Tree and add the reference - unclean.
+		// 
+		// CodeExpressionRef init = implicitBean.getInitExpression();
+		//	// Add reference to the visual parent, If the tv is not referenced, it will be deactivated.
+		// init.getReferences().add(fbeanPart.getEObject());			
 	}
 	
 	protected void unSetImplicitFeature() {

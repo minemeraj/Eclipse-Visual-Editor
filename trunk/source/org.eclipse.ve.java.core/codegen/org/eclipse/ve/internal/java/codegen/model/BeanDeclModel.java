@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanDeclModel.java,v $
- *  $Revision: 1.30 $  $Date: 2005-10-19 22:14:52 $ 
+ *  $Revision: 1.31 $  $Date: 2005-11-01 20:15:18 $ 
  */
 
 import java.util.*;
@@ -757,12 +757,21 @@ public void updateBeanNameChange(BeanPart bp) {
 						EObject ref = (EObject) iter.next();
 						BeanPart refBP = getABean(ref);
 						if(refBP!=null){
+							// add link 'bp TO refBP'
 							List bpList = (List) beanDependentsMap.get(bp);
 							if(bpList==null){
 								bpList = new ArrayList();
 								beanDependentsMap.put(bp, bpList);
 							}
 							bpList.add(refBP);
+							
+							// add link 'refBP TO bp'
+							List refBPList = (List) beanDependentsMap.get(refBP);
+							if(refBPList==null){
+								refBPList = new ArrayList();
+								beanDependentsMap.put(refBP, refBPList);
+							}
+							refBPList.add(bp);
 						}
 					}
 				}
