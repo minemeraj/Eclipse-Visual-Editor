@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.23 $  $Date: 2005-07-20 18:49:04 $ 
+ *  $Revision: 1.24 $  $Date: 2005-11-01 20:41:23 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -557,7 +557,7 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 		for (int i=position; i<components.size(); i++) {
 			EObject componentConstraint = (EObject) components.get(i);
 			IInternalBeanProxyHost componentProxyHost = getSettingBeanProxyHost((IJavaInstance) componentConstraint.eGet(sfConstraintComponent));
-			if (componentProxyHost.isBeanProxyInstantiated() || componentProxyHost.inInstantiation())
+			if (componentProxyHost != null && (componentProxyHost.isBeanProxyInstantiated() || componentProxyHost.inInstantiation()))
 				return componentProxyHost.getProxy();
 		}
 		
