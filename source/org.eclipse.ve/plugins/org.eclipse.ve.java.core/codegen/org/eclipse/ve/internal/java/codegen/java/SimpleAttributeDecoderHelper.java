@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: SimpleAttributeDecoderHelper.java,v $
- *  $Revision: 1.42 $  $Date: 2005-10-03 19:20:56 $ 
+ *  $Revision: 1.43 $  $Date: 2005-11-01 20:40:45 $ 
  */
 
 import java.util.List;
@@ -153,17 +153,20 @@ public class SimpleAttributeDecoderHelper extends ExpressionDecoderHelper {
 					changed = false;
 			}else{
 				JavaAllocation currentAlloc = ((IJavaInstance)currentValue).getAllocation();
-				if (currentAlloc instanceof InitStringAllocation) {
-					InitStringAllocation currentInitStrAlloc = (InitStringAllocation) currentAlloc;
-					String currentInitString = currentInitStrAlloc.getInitString();
-					if(currentInitString.trim().equals(newInitString.trim()))
-						changed = false;
-				}else if(currentAlloc.isParseTree()){
-					ParseTreeAllocation currentPTAlloc = (ParseTreeAllocation) currentAlloc;
-					PTExpression currentPTExpression = currentPTAlloc.getExpression();
-					CodeExpressionRef exp = fOwner.getExprRef();
-					PTExpression newInitPTExpression = ConstructorDecoderHelper.getParsedTree(newInitASTExpression, exp.getMethod(), exp.getOffset(), fbeanPart.getModel(),  getExpressionReferences());
-					changed = !CodeGenUtil.areParseTreesEqual(currentPTExpression, newInitPTExpression);
+				if (currentAlloc != null) {
+					if (currentAlloc instanceof InitStringAllocation) {
+						InitStringAllocation currentInitStrAlloc = (InitStringAllocation) currentAlloc;
+						String currentInitString = currentInitStrAlloc.getInitString();
+						if (currentInitString.trim().equals(newInitString.trim()))
+							changed = false;
+					} else if (currentAlloc.isParseTree()) {
+						ParseTreeAllocation currentPTAlloc = (ParseTreeAllocation) currentAlloc;
+						PTExpression currentPTExpression = currentPTAlloc.getExpression();
+						CodeExpressionRef exp = fOwner.getExprRef();
+						PTExpression newInitPTExpression = ConstructorDecoderHelper.getParsedTree(newInitASTExpression, exp.getMethod(), exp
+								.getOffset(), fbeanPart.getModel(), getExpressionReferences());
+						changed = !CodeGenUtil.areParseTreesEqual(currentPTExpression, newInitPTExpression);
+					}
 				}
 			}
 			if(!changed) 
