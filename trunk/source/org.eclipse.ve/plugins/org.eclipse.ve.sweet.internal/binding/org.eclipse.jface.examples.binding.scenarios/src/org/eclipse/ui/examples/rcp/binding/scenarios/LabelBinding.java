@@ -10,14 +10,11 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingContext;
+import org.eclipse.jface.binding.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 
@@ -86,13 +83,13 @@ public class LabelBinding extends Composite {
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbc.bind(txtName, "text", skiTrip, emfPackage.getAdventure_Name());
-		dbc.bind(lblName, "text", skiTrip, emfPackage.getAdventure_Name());
+		dbc.bind2(txtName, new PropertyDescription(skiTrip, emfPackage.getAdventure_Name()), null);
+		dbc.bind2(new PropertyDescription(lblName, "text"), new PropertyDescription(skiTrip, emfPackage.getAdventure_Name()), null);
 
-		dbc.bind(txtDescription, "text", skiTrip, emfPackage
-				.getAdventure_Description());
-		dbc.bind(lblDescription, "text", skiTrip, emfPackage
-				.getAdventure_Description());
+		dbc.bind2(txtDescription, new PropertyDescription(skiTrip, emfPackage
+				.getAdventure_Description()), null);
+		dbc.bind2(new PropertyDescription(lblDescription, "text"), new PropertyDescription(skiTrip, emfPackage
+				.getAdventure_Description()), null);
 
 	}
 

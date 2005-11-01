@@ -10,8 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.IUpdatableValue;
+import org.eclipse.jface.binding.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
@@ -45,16 +44,16 @@ public class CustomScenarios extends ScenariosTestCase {
 		Text text = new Text(getComposite(), SWT.BORDER);
 
 		IUpdatableValue descriptionUpdatable = (IUpdatableValue) getDbc()
-				.createUpdatable(adventure, "description");
+				.createUpdatable2(new PropertyDescription(adventure, "description"));
 		IUpdatableValue nameUpdatable = (IUpdatableValue) getDbc()
-				.createUpdatable(adventure, "name");
+				.createUpdatable2(new PropertyDescription(adventure, "name"));
 
 		AggregateUpdatableValue customUpdatable_comma = new AggregateUpdatableValue(
 				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },
 				",");
 
-		getDbc().bind(getDbc().createUpdatable(text, "text"),
-				customUpdatable_comma);
+		getDbc().bind2(getDbc().createUpdatable2(new PropertyDescription(text, "text")),
+								customUpdatable_comma, null);
 		// spinEventLoop(1);
 		// Make sure that the description on the model match the widget
 		assertEquals(adventure.getDescription() + "," + adventure.getName(),

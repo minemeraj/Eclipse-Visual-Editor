@@ -10,17 +10,12 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingContext;
+import org.eclipse.jface.binding.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.examples.rcp.adventure.Adventure;
-import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
-import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.examples.rcp.adventure.*;
 
 public class NumberBinding {
 
@@ -86,9 +81,9 @@ public class NumberBinding {
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbc.bind(txtPrice, "text", skiTrip, emfPackage.getAdventure_Price());
-		dbc.bind(lblPrice, "text", skiTrip, emfPackage.getAdventure_Price());
-		dbc.bind(txtPrice_2, "text", skiTrip, emfPackage.getAdventure_Price());
+		dbc.bind2(txtPrice,new PropertyDescription(skiTrip, emfPackage.getAdventure_Price()), new BindSpec(new DoubleConverter(), null));
+		dbc.bind2(new PropertyDescription(lblPrice, "text"), new PropertyDescription(skiTrip, emfPackage.getAdventure_Price()), new BindSpec(new DoubleConverter(), null));
+		dbc.bind2(txtPrice_2, new PropertyDescription(skiTrip, emfPackage.getAdventure_Price()), new BindSpec(new DoubleConverter(), null));
 
 	}
 

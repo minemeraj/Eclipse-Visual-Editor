@@ -10,20 +10,14 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingContext;
-import org.eclipse.jface.binding.IUpdatable;
-import org.eclipse.jface.binding.PropertyDescription;
+import org.eclipse.jface.binding.*;
 import org.eclipse.jface.binding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
-import org.eclipse.swt.widgets.Label;
 
 public class Table_ValidateAndConvert extends Composite {
 
@@ -108,7 +102,7 @@ public class Table_ValidateAndConvert extends Composite {
 		tableViewerDescription.addColumn("State", "state", null, null, new StateConverter());	
 		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);
 		
-		IUpdatable errorMsgUpdatable = dbc.createUpdatable(lblErrorMessage,"text");
+		IUpdatable errorMsgUpdatable = dbc.createUpdatable2(new PropertyDescription(lblErrorMessage,"text"));
 		dbc.bind2(errorMsgUpdatable, dbc.getCombinedValidationMessage(),null);		
 		
 	}

@@ -10,16 +10,11 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingContext;
-import org.eclipse.jface.binding.IUpdatableValue;
+import org.eclipse.jface.binding.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 
 public class Custom_DerivedAggregateProperty extends Composite {
@@ -79,22 +74,22 @@ public class Custom_DerivedAggregateProperty extends Composite {
 
 		AdventureNameAndDescription customUpdatable = new AdventureNameAndDescription(
 				skiTrip);
-		dbc.bind2(dbc.createUpdatable(txtCustom, "text"), customUpdatable,null);
+		dbc.bind2(dbc.createUpdatable2(new PropertyDescription(txtCustom, "text")), customUpdatable,null);
 
 		IUpdatableValue descriptionUpdatable = (IUpdatableValue) dbc
-				.createUpdatable(skiTrip, "description");
-		IUpdatableValue nameUpdatable = (IUpdatableValue) dbc.createUpdatable(
-				skiTrip, "name");
+				.createUpdatable2(new PropertyDescription(skiTrip, "description"));
+		IUpdatableValue nameUpdatable = (IUpdatableValue) dbc.createUpdatable2(
+				new PropertyDescription(skiTrip, "name"));
 
 		AggregateUpdatableValue customUpdatable_1 = new AggregateUpdatableValue(
 				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },
 				",");
-		dbc.bind2(dbc.createUpdatable(txtCustom_1, "text"), customUpdatable_1,null);
+		dbc.bind2(dbc.createUpdatable2(txtCustom_1), customUpdatable_1,null);
 
 		AggregateUpdatableValue customUpdatable_2 = new AggregateUpdatableValue(
 				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },
 				"\n");
-		dbc.bind2(dbc.createUpdatable(txtCustom_multi, "text"),
+		dbc.bind2(dbc.createUpdatable2(txtCustom_multi),
 				customUpdatable_2,null);
 	}
 
