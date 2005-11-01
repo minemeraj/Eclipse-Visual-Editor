@@ -11,12 +11,13 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.18 $  $Date: 2005-10-11 21:23:48 $ 
+ *  $Revision: 1.19 $  $Date: 2005-11-01 20:45:50 $ 
  */
 
 import java.util.*;
 
 import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
@@ -87,7 +88,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 		if (target.eResource() == null)
 			command = NoOpCommand.INSTANCE;
 		else {
-			CommandBuilder cbld = new CommandBuilder();
+			final CommandBuilder cbld = new CommandBuilder();
 			cbld.setExecuteAndAppend(true);	// So that changes are seen immediately as we process.
 			
 			// First thing we need to do is to get the target promoted if necessary.
@@ -108,12 +109,28 @@ public class VCEPreSetCommand extends CommandWrapper {
 				cbld.applyAttributeSetting(target, JCMPackage.eINSTANCE.getJCMMethod_Initializes(), newValue);
 				m = (JCMMethod) target;
 			} else {
-				// Pass member bldr same bldr as command bldr because we need target completely built before we go on				
-				// This is because codegen uses assignment of membership to determine when to walk tree of the target to
-				// handle all of its settings too. Since at this point the entire tree for the target has already been
-				// built and assigned if there are any (since this would of been done in a previous command) or if there
-				// were no settings, it is ok to apply the target to member right away.
-				m = getMethod(cbld, cbld, target, null, m);
+				EStructuralFeature targetContainment = target.eContainmentFeature();
+				m = getMethod(cbld, target, null, m);
+				if (targetContainment != target.eContainmentFeature()) {
+					// Containment has changed. This would be due to promotion. Because this occured outside the
+					// setting of a property, we need to touch all references to the target so that codegen
+					// knows its membership has changed. Codegen listens for property settings before processing,
+					// not on membership changes.
+					// We only need to do this on target. Membership changes of any property setting of the value
+					// being set in this preset command will be handled correctly since they are property settings
+					// and will be heard by codegen.
+					InverseMaintenanceAdapter ai = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(target, InverseMaintenanceAdapter.ADAPTER_KEY);
+					ai.visitAllReferences(new InverseMaintenanceAdapter.Visitor() {
+					
+						public Object visit(EStructuralFeature feature, EObject reference) {
+							// Setting of member containers features are not of interest to codegen, so don't bother touching those.
+							if (!(reference instanceof MemberContainer))
+								cbld.applyAttributeSetting(reference, feature, target);
+							return null;
+						}
+					
+					});
+				}
 			}
 			
 			if (newValue != null)
@@ -127,20 +144,20 @@ public class VCEPreSetCommand extends CommandWrapper {
 		}
 	}
 
-	protected JCMMethod getMethod(CommandBuilder cbld, CommandBuilder memberBldr, EObject value, EStructuralFeature feature, JCMMethod m) {
+	protected JCMMethod getMethod(CommandBuilder cbld, EObject value, EStructuralFeature feature, JCMMethod m) {
 		if (value.eContainer() == null) {
 			// We are not contained, we need to be in a method.
 			// Need to promote this appropriately. If we don't have a method
 			// to go into, then we need to go to global.
 			// At this point, even if setting type is Property, we must go local because we are trying to create a method for it.			
-			handleAnnotation(value, memberBldr);	// Need to handle annotation first.
+			handleAnnotation(value, cbld);	// Need to handle annotation first.
 			InstanceLocation settingType = settingType(value, feature);			
 			if (m == null || settingType == InstanceLocation.GLOBAL_GLOBAL_LITERAL) {
-				m = promoteGlobal(cbld, memberBldr, value);
+				m = promoteGlobal(cbld, value);
 			} else if(settingType == InstanceLocation.GLOBAL_LOCAL_LITERAL){
-				m = promoteGlobalLocal(cbld,memberBldr,value,m);
+				m = promoteGlobalLocal(cbld,value,m);
 			} else {
-				m = promoteLocal(cbld, memberBldr, value, m);
+				m = promoteLocal(cbld, value, m);
 			}	
 		} else if (value.eContainmentFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties()) {
 			// We are contained by a properties, we need to be in a method.
@@ -148,9 +165,9 @@ public class VCEPreSetCommand extends CommandWrapper {
 			// At this point, even if setting type is Property, we must go local because we are trying to create a method for it.
 			InstanceLocation settingType = settingType(value, feature);			
 			if (settingType == InstanceLocation.GLOBAL_GLOBAL_LITERAL)
-				m = promoteGlobal(cbld, memberBldr, value);
+				m = promoteGlobal(cbld, value);
 			else
-				m = promoteLocal(cbld, memberBldr, value, (JCMMethod) value.eContainer());
+				m = promoteLocal(cbld, value, (JCMMethod) value.eContainer());
 		} else {
 			// Find the method that eventually initializes top value (i.e. Keep going until we find one that does an initializes).
 			// Walk up containment until we find a method, or we get to the top, but don't go beyond <members> containment. The
@@ -194,9 +211,9 @@ public class VCEPreSetCommand extends CommandWrapper {
 	 * Promote to global, assumption is that not already contained by a non-<properties> relationship AND not already
 	 * have initializes and return set for it.
 	 */
-	protected JCMMethod promoteGlobal(CommandBuilder cbld, CommandBuilder memberBldr, EObject member) {
+	protected JCMMethod promoteGlobal(CommandBuilder cbld, EObject member) {
 		JCMMethod m = createInitMethod(cbld, member);
-		memberBldr.applyAttributeSetting(getComposition(), JCMPackage.eINSTANCE.getMemberContainer_Members(), member);		
+		cbld.applyAttributeSetting(getComposition(), JCMPackage.eINSTANCE.getMemberContainer_Members(), member);		
 		return m;
 	}
 
@@ -204,9 +221,9 @@ public class VCEPreSetCommand extends CommandWrapper {
 	 * Promote to local, assumption is that not already contained by a non-<properties> relationship AND not already
 	 * have initializes and return set for it.
 	 */	
-	protected JCMMethod promoteLocal(CommandBuilder cbld, CommandBuilder memberBldr, EObject member, JCMMethod method) {
+	protected JCMMethod promoteLocal(CommandBuilder cbld, EObject member, JCMMethod method) {
 		cbld.applyAttributeSetting(method, JCMPackage.eINSTANCE.getJCMMethod_Initializes(), member);
-		memberBldr.applyAttributeSetting(method, JCMPackage.eINSTANCE.getMemberContainer_Members(), member);
+		cbld.applyAttributeSetting(method, JCMPackage.eINSTANCE.getMemberContainer_Members(), member);
 		return method;
 	}
 
@@ -214,11 +231,11 @@ public class VCEPreSetCommand extends CommandWrapper {
 	 * Promote to local, assumption is that not already contained by a non-<properties> relationship AND not already
 	 * have initializes and return set for it.
 	 */	
-	protected JCMMethod promoteGlobalLocal(CommandBuilder cbld, CommandBuilder memberBldr, EObject member, JCMMethod method) {
+	protected JCMMethod promoteGlobalLocal(CommandBuilder cbld, EObject member, JCMMethod method) {
 		// The initializes method is from the argument
 		cbld.applyAttributeSetting(method, JCMPackage.eINSTANCE.getJCMMethod_Initializes(), member);
 		// The member is added to the composition
-		memberBldr.applyAttributeSetting(getComposition(), JCMPackage.eINSTANCE.getMemberContainer_Members(), member);
+		cbld.applyAttributeSetting(getComposition(), JCMPackage.eINSTANCE.getMemberContainer_Members(), member);
 		return method;
 	}
 
@@ -327,7 +344,6 @@ public class VCEPreSetCommand extends CommandWrapper {
 		
 		class FeatureVisitor implements FeatureValueProvider.Visitor {
 			public boolean hadChildren;		// During walking children, did it have children.
-			public CommandBuilder mBldr;
 			public JCMMethod visitMethod = incomingMethod;
 			
 			public Object isSet(EStructuralFeature feature, Object featureValue) {
@@ -341,13 +357,11 @@ public class VCEPreSetCommand extends CommandWrapper {
 								if (!hadChildren) {
 									if (!containment) {
 										if (!isImplicit) {
-											mBldr = new CommandBuilder();
-											visitMethod = getMethod(cbld, mBldr, value, ref, visitMethod);
+											visitMethod = getMethod(cbld, value, ref, visitMethod);
 										} else {
 											// TODO For now implicits will always be in implicit. Future we could have a settting that says over "n" properties means
 											// move from implicit to membership.
-											mBldr = new CommandBuilder();
-											mBldr.applyAttributeSetting(getMethod(cbld, mBldr, finalImplicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);											
+											cbld.applyAttributeSetting(getMethod(cbld, finalImplicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);											
 										}
 									}
 									hadChildren = true;
@@ -363,13 +377,11 @@ public class VCEPreSetCommand extends CommandWrapper {
 								if (!hadChildren) {
 									if (!containment) {
 										if (!isImplicit) {
-											mBldr = new CommandBuilder();
-											visitMethod = getMethod(cbld, mBldr, value, ref, visitMethod);
+											visitMethod = getMethod(cbld, value, ref, visitMethod);
 										} else {
 											// TODO For now implicits will always be in implicit. Future we could have a settting that says over "n" properties means
 											// move from implicit to membership.
-											mBldr = new CommandBuilder();
-											mBldr.applyAttributeSetting(getMethod(cbld, mBldr, finalImplicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);																						
+											cbld.applyAttributeSetting(getMethod(cbld, finalImplicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);																						
 										}
 									}
 									hadChildren = true;
@@ -391,17 +403,17 @@ public class VCEPreSetCommand extends CommandWrapper {
 		if (!visitor.hadChildren && !containment && value.eContainer() == null) {
 			if (!isImplicit) {
 				InstanceLocation promoteType = incomingMethod != null ? settingType(value, feature) : InstanceLocation.GLOBAL_GLOBAL_LITERAL; // no current JCMMethod, then can only be global. 
-				// If here, then we don't have any settings, so we can use the same builder for both promotion and membership.
+				// If here, then we don't have any settings.
 				handleAnnotation(value, cbld); // Need to handle annotation first.			
 				switch (promoteType.getValue()) {
 					case InstanceLocation.GLOBAL_GLOBAL:
-						promoteGlobal(cbld, cbld, value);
+						promoteGlobal(cbld, value);
 						break;
 					case InstanceLocation.LOCAL:
-						promoteLocal(cbld, cbld, value, incomingMethod);
+						promoteLocal(cbld, value, incomingMethod);
 						break;
 					case InstanceLocation.GLOBAL_LOCAL:
-						promoteGlobalLocal(cbld, cbld, value, incomingMethod);
+						promoteGlobalLocal(cbld, value, incomingMethod);
 						break;
 					case InstanceLocation.PROPERTY:
 						// Make sure it is a <properties> of the requested member container.
@@ -410,12 +422,10 @@ public class VCEPreSetCommand extends CommandWrapper {
 				} 
 			} else {
 				// Implicit with no children (properties) will be implicit in the method of the implicit parent.
-				cbld.applyAttributeSetting(getMethod(cbld, null, implicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);
+				cbld.applyAttributeSetting(getMethod(cbld, implicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);
 			}
 		} else if (containment)
 			handleAnnotation(value, cbld);	// Need to handle annotation before actual setting is done.
-		else if (visitor.mBldr != null)
-			cbld.append(visitor.mBldr.getCommand());	// We had an mbldr created, append the command, if any so now we can assign membership.
 	}
 	
 	/*
