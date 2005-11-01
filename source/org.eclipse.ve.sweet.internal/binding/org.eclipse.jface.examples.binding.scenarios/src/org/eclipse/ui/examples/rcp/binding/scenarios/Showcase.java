@@ -26,7 +26,7 @@ public class Showcase extends Composite {
 		gridLayout.verticalSpacing = 20;
 		this.setLayout(gridLayout);
 
-		createGroup(ComboBinding.class);
+//		createGroup(ComboBinding.class);
 		createGroup(LabelBinding.class);
 		createGroup(ListBinding.class);
 		// TODO createGroup(NumberBinding.class);

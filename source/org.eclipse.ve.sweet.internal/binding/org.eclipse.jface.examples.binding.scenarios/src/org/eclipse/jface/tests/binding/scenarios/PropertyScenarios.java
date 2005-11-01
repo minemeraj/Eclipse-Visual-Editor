@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios;
 
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -20,12 +21,8 @@ import org.eclipse.jface.binding.swt.SWTDatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.examples.rcp.adventure.Adventure;
-import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
-import org.eclipse.ui.examples.rcp.adventure.Cart;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.examples.rcp.adventure.*;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
 /**
@@ -508,7 +505,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		getDbc().bind2(t2, "text", adventure, "name", null);
 		
 		final int[] counter = { 0 };
-		IUpdatableValue uv = (IUpdatableValue) getDbc().createUpdatable(adventure, "name");
+		IUpdatableValue uv = (IUpdatableValue) getDbc().createUpdatable2(new PropertyDescription(adventure, "name"));
 		uv.addChangeListener(new IChangeListener() {		
 			public void handleChange(IChangeEvent changeEvent) {
 				// Count how many times adventure has changed

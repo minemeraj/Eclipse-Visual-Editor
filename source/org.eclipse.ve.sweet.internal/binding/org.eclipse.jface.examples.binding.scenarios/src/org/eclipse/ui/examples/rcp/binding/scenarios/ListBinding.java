@@ -10,21 +10,13 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingContext;
-import org.eclipse.jface.binding.IdentityConverter;
+import org.eclipse.jface.binding.*;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.examples.rcp.adventure.Adventure;
-import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
-import org.eclipse.ui.examples.rcp.adventure.Catalog;
-import org.eclipse.ui.examples.rcp.adventure.Lodging;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.examples.rcp.adventure.*;
 
 public class ListBinding extends Composite {
 
@@ -95,8 +87,8 @@ public class ListBinding extends Composite {
 		// new EMFUpdatableTable(catalog,"lodgings",new String[]
 		// {"description"})
 		// );
-		dbc.bind(listViewer, "contents", catalog, "lodgings",
-				new IdentityConverter(Lodging.class, Object.class));
+		dbc.bind2(listViewer, new PropertyDescription(catalog, "lodgings"),
+				new BindSpec(new IdentityConverter(Lodging.class, Object.class), null));
 
 		// dbc.bindValue(
 		// listViewer,"selection",skiTrip,emfPackage.getAdventure_DefaultLodging(),

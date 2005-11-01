@@ -312,7 +312,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				 // Account label provider will fill the combo with the country
 				 cviewer.setLabelProvider(accountLabelProvider);
 			     // Bind the ComboViewer's content to the available accounts
-			  	 getDbc().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "accounts");
+			  	 getDbc().bind2(cviewer, new PropertyDescription(catalog, "accounts"), null);
 						
 				 // Ensure that cv's content now has the catalog's accounts
 				 assertEquals(catalog.getAccounts(), getViewerContent(cviewer));						
@@ -322,7 +322,8 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				 Account account = AdventureFactory.eINSTANCE.createAccount();				 
 				 
 				 // Use the Viewers visual Combo (Strings) to set the account's country
-				 getDbc().bind(combo, SWTBindingConstants.SELECTION, account, "country");
+				 getDbc().bind2(new PropertyDescription(combo, SWTBindingConstants.SELECTION), 
+						       new PropertyDescription(account, "country"), null);
 				 
 				 // Change the selection of the ComboViewer to all possible accounts, and
 				 // verify that the account's Country is being changed correctly.
@@ -344,7 +345,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				cviewer.setLabelProvider(lodgingLabelProvider); // TODO: need to resolve
 				// column binding
 				// Bind the ComboViewer's content to the available lodging
-				getDbc().bind(cviewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
+				getDbc().bind2(cviewer, new PropertyDescription(catalog, "lodgings"), null);
 				
 				// Ensure that cv's content now has the catalog's lodgings
 				assertEquals(catalog.getLodgings(), getViewerContent(cviewer));
@@ -359,13 +360,15 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				
 				ComboViewer otherViewer = new ComboViewer(getComposite(), SWT.NONE);
 				otherViewer.setLabelProvider(lodgingLabelProvider);
-				getDbc().bind(otherViewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
+				getDbc().bind2(otherViewer, new PropertyDescription(catalog, "lodgings"), null);
 				// Ensure that cv's content now has the catalog's lodgings
 				assertEquals(catalog.getLodgings(), getViewerContent(otherViewer));
 				
 				// Bind both selections to the same thing
-				getDbc().bind(cviewer,"selection",skiAdventure,"defaultLodging");
-				getDbc().bind(otherViewer,"selection",skiAdventure,"defaultLodging");
+				getDbc().bind2(new PropertyDescription(cviewer,SWTBindingConstants.SELECTION),
+						       new PropertyDescription(skiAdventure,"defaultLodging"), null);
+				getDbc().bind2(new PropertyDescription(otherViewer,SWTBindingConstants.SELECTION),
+							   new PropertyDescription(skiAdventure,"defaultLodging"), null);
 												
 				
 				Lodging lodging = (Lodging) catalog.getLodgings().get(0);

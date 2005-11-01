@@ -10,20 +10,11 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.BindSpec;
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingContext;
-import org.eclipse.jface.binding.IConverter;
-import org.eclipse.jface.binding.IUpdatable;
-import org.eclipse.jface.binding.IValidator;
-import org.eclipse.jface.binding.IdentityConverter;
+import org.eclipse.jface.binding.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 
 public class TextBindingWithValidation extends Composite {
@@ -90,7 +81,7 @@ public class TextBindingWithValidation extends Composite {
 
 		dbc.bind2(txtLocation, "text", skiTrip, "location",null);
 
-		IUpdatable errorMsgUpdatable = dbc.createUpdatable(validationMessage,"text");
+		IUpdatable errorMsgUpdatable = dbc.createUpdatable2(new PropertyDescription(validationMessage,"text"));
 		dbc.bind2(errorMsgUpdatable, dbc.getCombinedValidationMessage(),null);
 	}
 

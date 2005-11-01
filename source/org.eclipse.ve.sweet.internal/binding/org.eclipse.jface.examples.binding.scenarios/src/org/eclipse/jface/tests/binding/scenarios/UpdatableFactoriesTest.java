@@ -12,7 +12,7 @@
  *  Created Oct 21, 2005 by Gili Mendel
  * 
  *  $RCSfile: UpdatableFactoriesTest.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-21 19:35:15 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-01 18:39:49 $ 
  */
  
 package org.eclipse.jface.tests.binding.scenarios;
@@ -57,7 +57,7 @@ public class UpdatableFactoriesTest extends ScenariosTestCase {
 	
 			
 	protected Class getFactoryType(Object src) throws BindingException {
-		TestIUpdatable u = (TestIUpdatable) getDbc().createUpdatable(src, "n/a");
+		TestIUpdatable u = (TestIUpdatable) getDbc().createUpdatable2(new PropertyDescription(src, "n/a"));
 		return u.getType();
 	}
 	

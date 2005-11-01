@@ -1,25 +1,12 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.ConditionalUpdatableValue;
-import org.eclipse.jface.binding.DatabindingContext;
-import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.PropertyDescription;
+import org.eclipse.jface.binding.*;
 import org.eclipse.jface.binding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
-import org.eclipse.ui.examples.rcp.adventure.Catalog;
-import org.eclipse.ui.examples.rcp.adventure.Lodging;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.examples.rcp.adventure.*;
 
 public class SimpleTableBinding2 extends Composite {
 
@@ -66,8 +53,8 @@ public class SimpleTableBinding2 extends Composite {
 		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,
 				"lodgings"), null);
 
-		selectedLodging = (IUpdatableValue) dbc.createUpdatable(tableViewer,
-				"selection");
+		selectedLodging = (IUpdatableValue) dbc.createUpdatable2(new PropertyDescription(tableViewer,
+				"selection"));
 
 		addButton
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
@@ -92,12 +79,13 @@ public class SimpleTableBinding2 extends Composite {
 					}
 				});
 
-		dbc.bind(removeButton, "enabled", new ConditionalUpdatableValue(
+		dbc.bind2(dbc.createUpdatable2(new PropertyDescription(removeButton, "enabled")), 
+				new ConditionalUpdatableValue(
 				selectedLodging) {
 			protected boolean compute(Object currentValue) {
 				return currentValue != null;
 			}
-		});
+		}, null);
 	}
 
 	/**
