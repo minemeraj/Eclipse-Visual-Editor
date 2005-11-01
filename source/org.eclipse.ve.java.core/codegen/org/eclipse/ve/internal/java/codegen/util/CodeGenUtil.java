@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.57 $  $Date: 2005-10-31 21:29:26 $ 
+ *  $Revision: 1.58 $  $Date: 2005-11-01 17:11:29 $ 
  */
 
 
@@ -19,7 +19,7 @@ package org.eclipse.ve.internal.java.codegen.util;
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -1018,12 +1018,12 @@ public static Collection getReferences(Object o, boolean includeO) {
 	 * <ol>
 	 * <li> <code>THIS</code>
 	 * <li> Simple name starts with <code>ivj</code>
-	 * <li> <code>Modelled</code>, has no container <code>EObject</code>, and has <code>visual-constraint</code> in the codegen annotation
-	 * <li> Not <code>Modelled</code>, but referenced by 3. and has <code>visual-constraint</code> in the codegen annotation
+	 * <li> <code>Modelled</code>, has no container <code>EObject</code>, and EITHER has no codegen annotation OR has <code>visual-constraint</code> in the codegen annotation
+	 * <li> Not <code>Modelled</code>, has no container <code>EObject</code>, and has <code>visual-constraint</code> in the codegen annotation
 	 * </ol>
 	 * 
-	 * @param bp
-	 * @param bsc
+	 * @param bp Bean to be added.
+	 * @param bsc  Freeform to where it should be added.
 	 * @param checkForExisting  When true checks for existence of the objects in model before adding
 	 * @throws CodeGenException
 	 * 
@@ -1060,14 +1060,17 @@ public static Collection getReferences(Object o, boolean includeO) {
 			}else if (InstanceVariableCreationRule.isModelled(bp.getEObject().eClass(), bp.getModel().getCompositionModel().getModelResourceSet())) {
 				// Is modelled
 				if (bp.getContainer() == null){
-					if(bp.getFFDecoder().isVisualOnFreeform())
+					if(bp.getFFDecoder().getAnnotationComment()==null || bp.getFFDecoder().isVisualOnFreeform())
 						shouldBeOnFreeform = true;
 				}
 			} else {
 				// Not modelled
 				// does it have visual-constraint="x,y" annotation?
-				if (bp.getContainer()==null && bp.getFFDecoder().isVisualOnFreeform())
+				if (bp.getContainer()==null){
+					if(bp.getFFDecoder().isVisualOnFreeform()){
 						shouldBeOnFreeform = true;
+					}
+				}
 			}
 			if (shouldBeOnFreeform) {
 				if (!bsc.getComponents().contains(bp.getEObject()))

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.28 $  $Date: 2005-10-05 15:25:09 $ 
+ *  $Revision: 1.29 $  $Date: 2005-11-01 17:11:29 $ 
  */
 import java.util.logging.Level;
 
@@ -21,7 +21,8 @@ import org.eclipse.jdt.core.IField;
 import org.eclipse.ve.internal.cdm.CDMFactory;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.impl.KeyedConstraintImpl;
-import org.eclipse.ve.internal.cdm.model.*;
+import org.eclipse.ve.internal.cdm.model.CDMModelConstants;
+import org.eclipse.ve.internal.cdm.model.Rectangle;
 
 import org.eclipse.ve.internal.cde.core.XYLayoutUtility;
 
@@ -56,9 +57,16 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
         
     }
     
-    public boolean isVisualOnFreeform(){
+    /**
+     * Returns the comment which generally contains the VE codegen annotation.
+     * The VE codegen annotation is of the form <code>//@jve:decl-index=0:visual-constraint="x,y"</code>
+     * 
+     * @return Comment generally containing the VE codegen annotation
+     * 
+     * @since 1.2.0
+     */
+    public String getAnnotationComment(){
 		String comment = null;
-
 		IField f = CodeGenUtil.getFieldByName(fBeanpart.getSimpleName(), fBeanpart.getModel().getCompilationUnit()) ;
 		if (f != null){
 	        ExpressionParser p = new ExpressionParser(f, fBeanpart.getModel().getScannerFactory());
@@ -70,8 +78,21 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 				comment = exp.getCommentsContent();
 			}
 		}
-		
-        return AnnotationDecoderAdapter.isBeanVisible(comment);          
+		return comment;
+    }
+    
+    /**
+     * Returns if the annotation comment returned by getAnnotationComment()
+     * contains the <code>visual-constraint</code> pattern in the VE annotation. 
+     * The VE annotation looks lie <code>//@jve:decl-index=0:visual-constraint="x,y"</code>
+     * 
+     * @return  Whether "visual-constraint" is contained in the codegen annotation.
+     * @see #getAnnotationComment()
+     * @see AnnotationDecoderAdapter#isBeanVisible(String)
+     * @since 1.1.0
+     */
+    public boolean isVisualOnFreeform(){
+        return AnnotationDecoderAdapter.isBeanVisible(getAnnotationComment());          
     }
     
     public String generate(EStructuralFeature sf, Object[] args) throws CodeGenException {
