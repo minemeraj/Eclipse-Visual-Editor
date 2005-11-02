@@ -14,8 +14,8 @@ import java.util.StringTokenizer;
 
 import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.DatabindingContext;
-import org.eclipse.jface.databinding.DefaultCellModifier;
 import org.eclipse.jface.databinding.PropertyDescription;
+import org.eclipse.jface.databinding.swt.DefaultCellModifier;
 import org.eclipse.jface.databinding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;

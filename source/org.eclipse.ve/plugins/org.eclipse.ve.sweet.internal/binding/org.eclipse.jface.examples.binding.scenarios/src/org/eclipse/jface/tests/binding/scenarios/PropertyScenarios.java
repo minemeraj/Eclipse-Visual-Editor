@@ -10,19 +10,32 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios;
 
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.BindSpec;
+import org.eclipse.jface.databinding.BindingException;
+import org.eclipse.jface.databinding.Converter;
+import org.eclipse.jface.databinding.IChangeEvent;
+import org.eclipse.jface.databinding.IChangeListener;
+import org.eclipse.jface.databinding.IConverter;
+import org.eclipse.jface.databinding.IUpdatableValue;
+import org.eclipse.jface.databinding.IValidator;
+import org.eclipse.jface.databinding.IdentityConverter;
+import org.eclipse.jface.databinding.NestedPropertyDescription;
+import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.jface.databinding.swt.SWTBindingConstants;
 import org.eclipse.jface.databinding.swt.SWTDatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.examples.rcp.adventure.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.examples.rcp.adventure.Adventure;
+import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
+import org.eclipse.ui.examples.rcp.adventure.Cart;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
 /**
@@ -141,9 +154,12 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// scenario to the master/detail section? I'm assuming the latter for
 		// now.
 		IUpdatableValue defaultLodging = (IUpdatableValue) getDbc()
-				.createUpdatable2(new PropertyDescription(adventure, "defaultLodging"));
-		getDbc().bind2(text,
-				new PropertyDescription(defaultLodging, "description"), null);
+				.createUpdatable2(
+						new PropertyDescription(adventure, "defaultLodging"));
+		getDbc().bind2(
+				text,
+				new NestedPropertyDescription(defaultLodging, "description",
+						String.class), null);
 
 		// test changing the description
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
@@ -267,8 +283,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 		adventure.setPrice(5.0);
 		final String cannotBeNegativeMessage = "Price cannot be negative.";
 		final String mustBeCurrencyMessage = "Price must be a currency.";
-		getDbc().bind2(text, new PropertyDescription(adventure, "price"), new BindSpec(
-				new Converter(String.class, double.class) {
+		getDbc().bind2(text, new PropertyDescription(adventure, "price"),
+				new BindSpec(new Converter(String.class, double.class) {
 
 					public Object convertTargetToModel(Object fromObject) {
 						return new Double((String) fromObject);
@@ -305,7 +321,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		adventure.setPrice(42.24);
 		assertEquals("42.24", text.getText());
 		assertEquals("", getDbc().getCombinedValidationMessage().getValue());
-		enterText(text,"jygt");
+		enterText(text, "jygt");
 		assertEquals(mustBeCurrencyMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
 		enterText(text, "-23.9");
@@ -327,8 +343,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 		final String mustBeCurrencyMessage = "Price must be a currency.";
 		final NumberFormat currencyFormat = NumberFormat
 				.getCurrencyInstance(Locale.CANADA);
-		getDbc().bind2(text, new PropertyDescription(adventure, "price"),new BindSpec(
-				new Converter(String.class, double.class) {
+		getDbc().bind2(text, new PropertyDescription(adventure, "price"),
+				new BindSpec(new Converter(String.class, double.class) {
 
 					public Object convertTargetToModel(Object fromObject) {
 						try {
@@ -375,7 +391,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		enterText(text, "jygt");
 		assertEquals(mustBeCurrencyMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
-		enterText(text,"-$23.9");
+		enterText(text, "-$23.9");
 		assertEquals(cannotBeNegativeMessage, getDbc()
 				.getCombinedValidationMessage().getValue());
 		assertEquals(42.24, adventure.getPrice(), 0.0001);
@@ -390,7 +406,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// checkbox.setText("Pets allowed");
 		// checkbox.setLayoutData(new GridData(SWT.LEFT,SWT.TOP, false,false));
 		adventure.setPetsAllowed(true);
-		getDbc().bind2(checkbox, new PropertyDescription(adventure, "petsAllowed"),null);
+		getDbc().bind2(checkbox,
+				new PropertyDescription(adventure, "petsAllowed"), null);
 		assertEquals(true, checkbox.getSelection());
 		setButtonSelectionWithEvents(checkbox, false);
 		assertEquals(false, adventure.isPetsAllowed());
@@ -415,7 +432,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		Spinner spinner2 = new Spinner(getComposite(), SWT.NONE);
 		spinner2.setMaximum(1);
 		getDbc().bind2(spinner1, SWTBindingConstants.SELECTION, spinner2,
-				SWTBindingConstants.MAX,null);
+				SWTBindingConstants.MAX, null);
 		assertEquals(1, spinner1.getSelection());
 		spinner1.setSelection(10);
 		assertEquals(10, spinner2.getMaximum());
@@ -437,31 +454,36 @@ public class PropertyScenarios extends ScenariosTestCase {
 				.createUpdatable2(checkbox2);
 		// bind the two checkboxes so that if one is checked, the other is not
 		// and vice versa.
-		getDbc().bind2(checkbox1Selected, checkbox2Selected, new BindSpec(new IConverter() {
-			public Class getModelType() {
-				return Boolean.class;
-			}
+		getDbc().bind2(checkbox1Selected, checkbox2Selected,
+				new BindSpec(new IConverter() {
+					public Class getModelType() {
+						return Boolean.class;
+					}
 
-			public Class getTargetType() {
-				return Boolean.class;
-			}
+					public Class getTargetType() {
+						return Boolean.class;
+					}
 
-			private Boolean negated(Boolean booleanObject) {
-				return new Boolean(!booleanObject.booleanValue());
-			}
+					private Boolean negated(Boolean booleanObject) {
+						return new Boolean(!booleanObject.booleanValue());
+					}
 
-			public Object convertTargetToModel(Object targetObject) {
-				return negated((Boolean) targetObject);
-			}
+					public Object convertTargetToModel(Object targetObject) {
+						return negated((Boolean) targetObject);
+					}
 
-			public Object convertModelToTarget(Object modelObject) {
-				return negated((Boolean) modelObject);
-			}
-		},null));
+					public Object convertModelToTarget(Object modelObject) {
+						return negated((Boolean) modelObject);
+					}
+				}, null));
 		// bind the enabled state of the two text widgets to one of the
 		// checkboxes each.
-		getDbc().bind2(new PropertyDescription(text1, SWTBindingConstants.ENABLED), checkbox1Selected,null);
-		getDbc().bind2(new PropertyDescription(text2, SWTBindingConstants.ENABLED), checkbox2Selected,null);
+		getDbc().bind2(
+				new PropertyDescription(text1, SWTBindingConstants.ENABLED),
+				checkbox1Selected, null);
+		getDbc().bind2(
+				new PropertyDescription(text2, SWTBindingConstants.ENABLED),
+				checkbox2Selected, null);
 		assertEquals(true, text1.getEnabled());
 		assertEquals(false, text2.getEnabled());
 		assertEquals(true, checkbox1.getSelection());
@@ -495,35 +517,35 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// spinEventLoop(1);
 		assertEquals("barfoo", text.getText());
 	}
-	
+
 	public void testScenario14() throws BindingException {
 		Text t1 = new Text(getComposite(), SWT.BORDER);
 		Text t2 = new Text(getComposite(), SWT.BORDER);
-		
+
 		getDbc().setUpdateTime(SWTDatabindingContext.TIME_EARLY);
 		getDbc().bind2(t1, "text", adventure, "name", null);
 		getDbc().bind2(t2, "text", adventure, "name", null);
-		
+
 		final int[] counter = { 0 };
-		IUpdatableValue uv = (IUpdatableValue) getDbc().createUpdatable2(new PropertyDescription(adventure, "name"));
-		uv.addChangeListener(new IChangeListener() {		
+		IUpdatableValue uv = (IUpdatableValue) getDbc().createUpdatable2(
+				new PropertyDescription(adventure, "name"));
+		uv.addChangeListener(new IChangeListener() {
 			public void handleChange(IChangeEvent changeEvent) {
 				// Count how many times adventure has changed
-				counter[0]++;		
-			}		
+				counter[0]++;
+			}
 		});
-		
-		String name = adventure.getName()+"Foo";
-		t1.setText(name);		
-		assertEquals(name,adventure.getName());
-		assertEquals(name,t2.getText());
-		assertTrue(counter[0]==1);
-		
-		name = name+"Bar";
+
+		String name = adventure.getName() + "Foo";
+		t1.setText(name);
+		assertEquals(name, adventure.getName());
+		assertEquals(name, t2.getText());
+		assertTrue(counter[0] == 1);
+
+		name = name + "Bar";
 		uv.setValue(name);
-		assertEquals(t1.getText(),adventure.getName());
-		assertTrue(counter[0]==2);
-		
-		
+		assertEquals(t1.getText(), adventure.getName());
+		assertTrue(counter[0] == 2);
+
 	}
 }

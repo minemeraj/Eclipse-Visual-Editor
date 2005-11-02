@@ -12,10 +12,12 @@
  *  Created Oct 21, 2005 by Gili Mendel
  * 
  *  $RCSfile: UpdatableFactoriesTest.java,v $
- *  $Revision: 1.3 $  $Date: 2005-11-02 19:44:33 $ 
+ *  $Revision: 1.4 $  $Date: 2005-11-02 22:20:54 $ 
  */
  
 package org.eclipse.jface.tests.binding.scenarios;
+
+import java.util.Map;
 
 import org.eclipse.jface.databinding.*;
  
@@ -38,12 +40,12 @@ public class UpdatableFactoriesTest extends ScenariosTestCase {
     	public Class getType();
     }
 	
-	class Factory implements IUpdatableFactory{
+	class Factory implements IUpdatableFactory2{
 		Class c;
 		public Factory (Class c) {
 			this.c = c;
 		}
-		public IUpdatable createUpdatable(Object object, Object attribute) {			
+		public IUpdatable createUpdatable(Map properties, Object description, IValidationContext validationContext) {			
 			return new TestIUpdatable(){
 				public void dispose() {}			
 				public void removeChangeListener(IChangeListener changeListener) {}			
@@ -53,7 +55,7 @@ public class UpdatableFactoriesTest extends ScenariosTestCase {
 		}	
 	}
 	
-	IUpdatableFactory root = new Factory(Root.class), middle = new Factory(Middle.class), sa = new Factory(StandAlone.class), factory = new Factory(Object.class);
+	IUpdatableFactory2 root = new Factory(Root.class), middle = new Factory(Middle.class), sa = new Factory(StandAlone.class), factory = new Factory(Object.class);
 	
 			
 	protected Class getFactoryType(Object src) throws BindingException {
@@ -63,8 +65,8 @@ public class UpdatableFactoriesTest extends ScenariosTestCase {
 	
 	 public void test_factoryRegistration() throws BindingException {
 		 
-		 getDbc().addUpdatableFactory(Root.class, root);
-		 getDbc().addUpdatableFactory(Middle.class, middle);
+		 getDbc().addUpdatableFactory2(root);
+		 getDbc().addUpdatableFactory2(middle);
 		 
 		 // Direct mapping
 		 assertEquals(getFactoryType(new RootClass()), Root.class);
@@ -80,11 +82,11 @@ public class UpdatableFactoriesTest extends ScenariosTestCase {
 		 assertEquals(getFactoryType(new MiddleChild()), Middle.class);
 		 
 		 // Direct, first interface
-		 getDbc().addUpdatableFactory(StandAlone.class, sa);
+		 getDbc().addUpdatableFactory2(sa);
 		 assertEquals(getFactoryType(new AllClass()), StandAlone.class);
 		 
 		 // Class based contribution.
-		 getDbc().addUpdatableFactory(AllClass.class, factory);
+		 getDbc().addUpdatableFactory2(factory);
 		 assertEquals(getFactoryType(new AllClass()), Object.class);
 		 
 		 

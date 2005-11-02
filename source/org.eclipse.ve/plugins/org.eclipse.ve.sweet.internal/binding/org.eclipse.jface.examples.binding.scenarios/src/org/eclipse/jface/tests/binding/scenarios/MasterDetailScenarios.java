@@ -86,7 +86,7 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 
 		listViewer.setLabelProvider(new LabelProvider() {
 			public String getText(Object element) {
-				return ((Lodging)element).getName();
+				return ((Lodging) element).getName();
 			}
 		});
 		getDbc().bind2(listViewer,
@@ -104,8 +104,10 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 		assertEquals(SampleData.CAMP_GROUND, getViewerSelection(listViewer));
 		Text txtName = new Text(getComposite(), SWT.BORDER);
 
-		getDbc().bind2(txtName,
-				new PropertyDescription(selectedLodging, "name"), null);
+		getDbc().bind2(
+				txtName,
+				new NestedPropertyDescription(selectedLodging, "name",
+						String.class), null);
 
 		assertEquals(txtName.getText(), SampleData.CAMP_GROUND.getName());
 		enterText(txtName, "foobar");
@@ -132,7 +134,7 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 
 		listViewer.setLabelProvider(new LabelProvider() {
 			public String getText(Object element) {
-				return ((Lodging)element).getName();
+				return ((Lodging) element).getName();
 			}
 		});
 		getDbc().bind2(listViewer,
