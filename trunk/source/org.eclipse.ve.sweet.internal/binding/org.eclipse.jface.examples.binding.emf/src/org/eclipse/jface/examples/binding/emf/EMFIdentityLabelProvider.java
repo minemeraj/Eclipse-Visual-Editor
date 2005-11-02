@@ -12,14 +12,14 @@ package org.eclipse.jface.examples.binding.emf;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.binding.IdentityConverter;
+import org.eclipse.jface.databinding.IdentityConverter;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * This class is an IdentityConverted that also implements an
- * {@link  org.eclipse.jface.binding.IColumnConverter} and provide
+ * {@link  org.eclipse.jface.databinding.IColumnConverter} and provide
  * 
  * A single colum is converted for each element, it is a String value for the
  * feature property this converter s constructed with.

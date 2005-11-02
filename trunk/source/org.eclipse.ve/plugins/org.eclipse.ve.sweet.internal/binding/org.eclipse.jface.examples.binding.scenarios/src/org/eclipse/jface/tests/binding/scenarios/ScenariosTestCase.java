@@ -2,7 +2,7 @@ package org.eclipse.jface.tests.binding.scenarios;
 
 import junit.framework.TestCase;
 
-import org.eclipse.jface.binding.swt.SWTDatabindingContext;
+import org.eclipse.jface.databinding.swt.SWTDatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;

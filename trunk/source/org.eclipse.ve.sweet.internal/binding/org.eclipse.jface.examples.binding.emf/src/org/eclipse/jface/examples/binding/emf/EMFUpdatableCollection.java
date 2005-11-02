@@ -18,7 +18,7 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.binding.*;
+import org.eclipse.jface.databinding.*;
 
 public class EMFUpdatableCollection extends Updatable implements
 		IUpdatableCollection {

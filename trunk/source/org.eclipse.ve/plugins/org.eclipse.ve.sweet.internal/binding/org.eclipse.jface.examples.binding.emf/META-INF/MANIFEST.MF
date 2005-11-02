@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.jface.examples.binding.emf
 Bundle-Version: 3.2.0
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.jface.binding,
+Require-Bundle: org.eclipse.jface.databinding,
  org.eclipse.emf.ecore,
  org.eclipse.jface
 Export-Package: org.eclipse.jface.examples.binding.emf

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios;
 
-import org.eclipse.jface.binding.*;
-import org.eclipse.jface.binding.swt.SWTBindingConstants;
+import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.swt.SWTBindingConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;

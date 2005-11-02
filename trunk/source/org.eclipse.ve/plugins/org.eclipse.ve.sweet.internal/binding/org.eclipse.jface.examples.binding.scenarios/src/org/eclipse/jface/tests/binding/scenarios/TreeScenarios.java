@@ -12,7 +12,7 @@
  
 package org.eclipse.jface.tests.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
+import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;

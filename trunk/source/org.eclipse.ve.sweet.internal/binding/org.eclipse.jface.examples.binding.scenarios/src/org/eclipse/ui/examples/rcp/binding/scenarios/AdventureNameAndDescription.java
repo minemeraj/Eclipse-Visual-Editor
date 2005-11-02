@@ -14,8 +14,8 @@ import java.util.StringTokenizer;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.jface.binding.IChangeEvent;
-import org.eclipse.jface.binding.UpdatableValue;
+import org.eclipse.jface.databinding.IChangeEvent;
+import org.eclipse.jface.databinding.UpdatableValue;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
 

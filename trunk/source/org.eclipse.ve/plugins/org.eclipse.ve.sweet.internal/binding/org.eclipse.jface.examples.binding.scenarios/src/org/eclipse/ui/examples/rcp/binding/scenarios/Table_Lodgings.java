@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingContext;
-import org.eclipse.jface.binding.PropertyDescription;
-import org.eclipse.jface.binding.swt.TableViewerDescription;
+import org.eclipse.jface.databinding.BindingException;
+import org.eclipse.jface.databinding.DatabindingContext;
+import org.eclipse.jface.databinding.PropertyDescription;
+import org.eclipse.jface.databinding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

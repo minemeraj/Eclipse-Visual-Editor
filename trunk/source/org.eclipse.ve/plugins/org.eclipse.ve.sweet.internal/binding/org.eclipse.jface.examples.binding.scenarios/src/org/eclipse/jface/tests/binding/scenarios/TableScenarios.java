@@ -13,9 +13,9 @@ package org.eclipse.jface.tests.binding.scenarios;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.PropertyDescription;
-import org.eclipse.jface.binding.swt.TableViewerDescription;
+import org.eclipse.jface.databinding.BindingException;
+import org.eclipse.jface.databinding.PropertyDescription;
+import org.eclipse.jface.databinding.swt.TableViewerDescription;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;

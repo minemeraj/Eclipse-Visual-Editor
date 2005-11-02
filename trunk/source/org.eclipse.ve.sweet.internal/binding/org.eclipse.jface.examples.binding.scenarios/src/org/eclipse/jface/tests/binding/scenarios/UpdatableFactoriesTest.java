@@ -12,12 +12,12 @@
  *  Created Oct 21, 2005 by Gili Mendel
  * 
  *  $RCSfile: UpdatableFactoriesTest.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-01 18:39:49 $ 
+ *  $Revision: 1.3 $  $Date: 2005-11-02 19:44:33 $ 
  */
  
 package org.eclipse.jface.tests.binding.scenarios;
 
-import org.eclipse.jface.binding.*;
+import org.eclipse.jface.databinding.*;
  
 
 public class UpdatableFactoriesTest extends ScenariosTestCase {

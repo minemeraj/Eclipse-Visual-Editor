@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.binding.BindingException;
-import org.eclipse.jface.binding.DatabindingContext;
-import org.eclipse.jface.binding.IUpdatable;
-import org.eclipse.jface.binding.IUpdatableFactory;
+import org.eclipse.jface.databinding.BindingException;
+import org.eclipse.jface.databinding.DatabindingContext;
+import org.eclipse.jface.databinding.IUpdatable;
+import org.eclipse.jface.databinding.IUpdatableFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
