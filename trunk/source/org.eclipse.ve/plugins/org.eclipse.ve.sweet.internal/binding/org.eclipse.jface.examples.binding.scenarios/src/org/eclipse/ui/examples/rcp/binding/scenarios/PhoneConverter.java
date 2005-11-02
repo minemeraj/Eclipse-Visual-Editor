@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import java.util.StringTokenizer;
-
 import org.eclipse.jface.binding.IConverter;
  
 public class PhoneConverter implements IConverter {
