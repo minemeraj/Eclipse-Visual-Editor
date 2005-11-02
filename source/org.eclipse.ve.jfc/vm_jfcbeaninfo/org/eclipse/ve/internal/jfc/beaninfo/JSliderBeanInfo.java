@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: JSliderBeanInfo.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-18 15:32:23 $ 
+ *  $Revision: 1.9 $  $Date: 2005-11-02 21:08:06 $ 
  */
 
 import java.beans.*;
@@ -626,14 +626,18 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	    		}
 	    	),
 	    	// labelTable
-			super.createPropertyDescriptor(getBeanClass(),"labelTable", new Object[] { //$NON-NLS-1$
-	      		DISPLAYNAME, JSliderMessages.getString("labelTable.Name"), //$NON-NLS-1$
-	      		SHORTDESCRIPTION, JSliderMessages.getString("labelTable.Desc"), //$NON-NLS-1$
-	      		BOUND, Boolean.TRUE,
-	      		//DESIGNTIMEPROPERTY, Boolean.FALSE
-				EXPERT, Boolean.TRUE
-	    		}
-	    	),
+	    	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=111745
+	    	// We can'handle a filled in label table (uses a Map, and we don't parse these for
+	    	// allowing additions). So for now, we ignore it as a property. If we could
+	    	// parse maps too, then we could turn this back on. 
+//			super.createPropertyDescriptor(getBeanClass(),"labelTable", new Object[] { //$NON-NLS-1$
+//	      		DISPLAYNAME, JSliderMessages.getString("labelTable.Name"), //$NON-NLS-1$
+//	      		SHORTDESCRIPTION, JSliderMessages.getString("labelTable.Desc"), //$NON-NLS-1$
+//	      		BOUND, Boolean.TRUE,
+//	      		//DESIGNTIMEPROPERTY, Boolean.FALSE
+//				EXPERT, Boolean.TRUE
+//	    		}
+//	    	),
 	    	// ui
 			super.createPropertyDescriptor(getBeanClass(),"UI", new Object[] { //$NON-NLS-1$
 	      		DISPLAYNAME, JSliderMessages.getString("ui.Name"), //$NON-NLS-1$
