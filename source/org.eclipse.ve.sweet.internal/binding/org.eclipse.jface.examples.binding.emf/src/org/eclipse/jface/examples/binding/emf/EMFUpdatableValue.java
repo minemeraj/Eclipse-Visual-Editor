@@ -17,8 +17,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EContentAdapter;
-import org.eclipse.jface.binding.IChangeEvent;
-import org.eclipse.jface.binding.UpdatableValue;
+import org.eclipse.jface.databinding.IChangeEvent;
+import org.eclipse.jface.databinding.UpdatableValue;
 
 public class EMFUpdatableValue extends UpdatableValue {
 	private final EObject object;

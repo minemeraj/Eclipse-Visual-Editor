@@ -3,7 +3,7 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.jface.binding.BindingException;
+import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;

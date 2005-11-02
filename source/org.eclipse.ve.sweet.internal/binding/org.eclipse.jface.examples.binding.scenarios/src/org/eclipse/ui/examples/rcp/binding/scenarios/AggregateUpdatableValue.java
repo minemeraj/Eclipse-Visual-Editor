@@ -12,11 +12,11 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import java.util.StringTokenizer;
 
-import org.eclipse.jface.binding.ChangeEvent;
-import org.eclipse.jface.binding.IChangeEvent;
-import org.eclipse.jface.binding.IChangeListener;
-import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.UpdatableValue;
+import org.eclipse.jface.databinding.ChangeEvent;
+import org.eclipse.jface.databinding.IChangeEvent;
+import org.eclipse.jface.databinding.IChangeListener;
+import org.eclipse.jface.databinding.IUpdatableValue;
+import org.eclipse.jface.databinding.UpdatableValue;
 
 public class AggregateUpdatableValue extends UpdatableValue {
 

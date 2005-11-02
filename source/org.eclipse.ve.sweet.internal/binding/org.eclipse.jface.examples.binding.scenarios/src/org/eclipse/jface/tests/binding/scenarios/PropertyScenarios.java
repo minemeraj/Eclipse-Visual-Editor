@@ -15,9 +15,9 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-import org.eclipse.jface.binding.*;
-import org.eclipse.jface.binding.swt.SWTBindingConstants;
-import org.eclipse.jface.binding.swt.SWTDatabindingContext;
+import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.swt.SWTBindingConstants;
+import org.eclipse.jface.databinding.swt.SWTDatabindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;

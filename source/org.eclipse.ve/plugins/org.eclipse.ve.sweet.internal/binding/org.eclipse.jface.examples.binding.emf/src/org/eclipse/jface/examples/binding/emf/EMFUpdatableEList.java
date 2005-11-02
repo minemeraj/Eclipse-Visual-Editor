@@ -12,7 +12,7 @@
  *  Created Oct 20, 2005 by Gili Mendel
  * 
  *  $RCSfile: EMFUpdatableEList.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-26 22:19:33 $ 
+ *  $Revision: 1.4 $  $Date: 2005-11-02 19:44:33 $ 
  */
 
 package org.eclipse.jface.examples.binding.emf;
@@ -24,9 +24,9 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.binding.IChangeEvent;
-import org.eclipse.jface.binding.IUpdatableCollection;
-import org.eclipse.jface.binding.Updatable;
+import org.eclipse.jface.databinding.IChangeEvent;
+import org.eclipse.jface.databinding.IUpdatableCollection;
+import org.eclipse.jface.databinding.Updatable;
 
 public class EMFUpdatableEList extends Updatable implements
 		IUpdatableCollection {

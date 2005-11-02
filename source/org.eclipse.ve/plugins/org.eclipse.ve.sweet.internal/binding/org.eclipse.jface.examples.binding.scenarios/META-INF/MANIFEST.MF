@@ -7,7 +7,7 @@ Bundle-Activator: org.eclipse.ui.examples.rcp.binding.scenarios.ScenariosPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.jface.binding,
+ org.eclipse.jface.databinding,
  org.eclipse.jface.examples.binding.emf,
  org.junit,
  org.eclipse.emf.ecore,

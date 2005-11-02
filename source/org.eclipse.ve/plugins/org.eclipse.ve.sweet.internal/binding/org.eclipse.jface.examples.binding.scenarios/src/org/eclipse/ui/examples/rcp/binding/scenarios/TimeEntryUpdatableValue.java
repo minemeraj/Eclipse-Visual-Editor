@@ -14,8 +14,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 
-import org.eclipse.jface.binding.IChangeEvent;
-import org.eclipse.jface.binding.UpdatableValue;
+import org.eclipse.jface.databinding.IChangeEvent;
+import org.eclipse.jface.databinding.UpdatableValue;
 
 public class TimeEntryUpdatableValue extends UpdatableValue {
 
