@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.core;
 
 /*
  *  $RCSfile: CompositionProxyAdapter.java,v $
- *  $Revision: 1.21 $  $Date: 2005-10-25 16:19:38 $ 
+ *  $Revision: 1.22 $  $Date: 2005-11-02 20:32:33 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -111,8 +111,11 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 						IExpression expression = proxyDomain.getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
 						try {
 							if (!msg.isTouch() && msg.getOldValue() != null)
-								releaseSetting(msg.getOldValue(), expression, false);									
-							initSetting(msg.getNewValue(), expression, false);
+								releaseSetting(msg.getOldValue(), expression, false);
+							Object newSetting = msg.getNewValue();
+							IInternalBeanProxyHost ib = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) newSetting);
+							ib.addToFreeForm(this);							
+							initSetting(newSetting, expression, false);
 						} catch (IllegalStateException e) {
 							JavaVEPlugin.log(e, Level.WARNING);
 						} finally {
@@ -167,7 +170,10 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 						while (itr.hasNext()) {
 							int mark = expression.mark();
 							try {
-								initSetting(itr.next(), expression, false);
+								Object newSetting = itr.next();
+								IInternalBeanProxyHost ib = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) newSetting);
+								ib.addToFreeForm(this);															
+								initSetting(newSetting, expression, false);
 							} finally {
 								expression.endMark(mark);
 							}
@@ -267,6 +273,21 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 	 * @see org.eclipse.ve.internal.java.core.MemberContainerProxyAdapter#subInitBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression, boolean)
 	 */
 	protected boolean subInitBeanProxy(IExpression expression, boolean testValidity) {
+
+
+		// Next run the thispart and components. First set the addToFreeForm before instantiating so that if there is
+		// a indirect reference from one component to a later component, the later component will already
+		// have the addToFreeForm done so that it can be indirectly instantiated correctly.
+		
+		List components = ((BeanComposition) getTarget()).getComponents();
+		for (int i = 0; i < components.size(); i++) {
+			Object component = components.get(i);
+			if (component instanceof IJavaInstance) {
+				IInternalBeanProxyHost ib = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) component);
+				ib.addToFreeForm(this);
+			}
+		}
+
 		if (getTarget() instanceof BeanSubclassComposition) {
 			TimerTests.basicTest.startStep("Init this"); //$NON-NLS-1$
 			TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
@@ -275,6 +296,22 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 			if (thisPart != null) {
 				IInternalBeanProxyHost ib = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(thisPart);
 				ib.addToFreeForm(this);
+			}
+			TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
+			TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_STEP);
+			TimerTests.basicTest.stopStep("Init this"); //$NON-NLS-1$
+			if (!expression.isValid()) {
+				return false; // We will try again, but this time don't instantiate those that had an error.
+			}
+		}
+		
+		// Now do the instantiations.
+		if (getTarget() instanceof BeanSubclassComposition) {
+			TimerTests.basicTest.startStep("Init this"); //$NON-NLS-1$
+			TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_STEP);
+			TimerTests.basicTest.startAccumulating(REMConnection.INVOKE_METHOD_STEP);
+			IJavaObjectInstance thisPart = ((BeanSubclassComposition) getTarget()).getThisPart();
+			if (thisPart != null) {
 				initSetting(thisPart, expression, testValidity);
 			}
 			TimerTests.basicTest.stopAccumulating(REMConnection.INVOKE_METHOD_STEP);
@@ -284,18 +321,7 @@ public class CompositionProxyAdapter extends MemberContainerProxyAdapter {
 				return false; // We will try again, but this time don't instantiate those that had an error.
 			}
 		}
-
-		// Next run the components. First set the addToFreeForm before instantiating so that if there is
-		// a indirect reference from one component to a later component, the later component will already
-		// have the addToFreeForm done so that it can be indirectly instantiated correctly.
-		List components = ((BeanComposition) getTarget()).getComponents();
-		for (int i = 0; i < components.size(); i++) {
-			Object component = components.get(i);
-			if (component instanceof IJavaInstance) {
-				IInternalBeanProxyHost ib = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost((IJavaInstance) component);
-				ib.addToFreeForm(this);
-			}
-		}		
+		
 		for (int i = 0; i < components.size(); i++) {
 			String step = "init#" + i; //$NON-NLS-1$
 			TimerTests.basicTest.startStep(step);

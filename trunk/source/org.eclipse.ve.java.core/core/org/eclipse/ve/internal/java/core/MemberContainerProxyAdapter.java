@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainerProxyAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-19 15:13:30 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-02 20:32:33 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -540,7 +540,7 @@ public abstract class MemberContainerProxyAdapter extends AdapterImpl {
 			// We have proxy host,and we have a valid proxy domain.
 			if (settingBean != null && settingBean.getBeanProxyDomain().getProxyFactoryRegistry().isValid()) {
 				IInternalBeanProxyHost ib = (IInternalBeanProxyHost) settingBean;
-				if (!ib.isBeanProxyInstantiated() && !ib.inInstantiation() && (!testValidity || !ib.hasInstantiationErrors())) {
+				if (ib.isBeanProxyInstantiated() || (!ib.inInstantiation() && (!testValidity || !ib.hasInstantiationErrors()))) {
 					if (ib.isBeanProxyInstantiated())
 						ib.releaseBeanProxy(expression);	// In case not already released. We will always reinstantiate. For most components you don't need to, but some require it, so we will do by default.
 					expression.createTry();
