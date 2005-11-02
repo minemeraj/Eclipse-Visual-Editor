@@ -12,30 +12,35 @@
  *  Created Oct 25, 2005 by Gili Mendel
  * 
  *  $RCSfile: SimpleTree.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-26 14:23:29 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-02 16:49:21 $ 
  */
 
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.examples.rcp.adventure.Catalog;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.ui.examples.rcp.adventure.*;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.examples.rcp.adventure.Adventure;
+import org.eclipse.ui.examples.rcp.adventure.Catalog;
+import org.eclipse.ui.examples.rcp.adventure.Category;
 
 
 public class SimpleTree extends Composite {

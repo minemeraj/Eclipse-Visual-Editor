@@ -16,7 +16,6 @@ import java.util.List;
 import org.eclipse.jface.binding.BindingException;
 import org.eclipse.jface.binding.ConditionalUpdatableValue;
 import org.eclipse.jface.binding.IUpdatableValue;
-import org.eclipse.jface.binding.ListDescription;
 import org.eclipse.jface.binding.NestedCollectionDescription;
 import org.eclipse.jface.binding.NestedPropertyDescription;
 import org.eclipse.jface.binding.PropertyDescription;
