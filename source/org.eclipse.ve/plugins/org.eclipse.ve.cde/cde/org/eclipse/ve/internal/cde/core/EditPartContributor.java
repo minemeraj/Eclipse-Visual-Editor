@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EditPartContributor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-19 17:35:29 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-02 18:48:26 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -44,4 +44,13 @@ public interface EditPartContributor {
 	 * @since 1.2.0
 	 */
 	public void removeContributionChangeListener(EditPartContributionChangeListener listener);
+	
+	/**
+	 * 
+	 * Notify contribution change listeners.
+	 * 
+	 * @since 1.2.0
+	 */
+	public void notifyContributionChanged();
+
 }

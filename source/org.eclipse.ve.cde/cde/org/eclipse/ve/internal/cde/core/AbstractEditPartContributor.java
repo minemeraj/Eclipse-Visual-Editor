@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractEditPartContributor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-17 21:55:16 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-02 18:48:26 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -42,7 +42,7 @@ public abstract class AbstractEditPartContributor implements EditPartContributor
 	/*
 	 * Helper method to notify contribution change listeners.
 	 */
-	protected void notifyListeners() {
+	public void notifyContributionChanged() {
 		Iterator iterator = getContributionChangeListeners().iterator();
 		while (iterator.hasNext()) {
 			((EditPartContributionChangeListener) iterator.next()).contributionChanged(this);
