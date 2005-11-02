@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.emf.common.util.BasicEList;
+import java.util.Map;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.IUpdatable;
-import org.eclipse.jface.databinding.IUpdatableFactory;
+import org.eclipse.jface.databinding.IUpdatableFactory2;
+import org.eclipse.jface.databinding.IValidationContext;
+import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.jface.databinding.swt.SWTDatabindingContext;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableCollection;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableEList;
@@ -34,16 +37,16 @@ import org.eclipse.ui.examples.rcp.adventure.Transportation;
 public class SampleData {
 
 	public static Category WINTER_CATEGORY;
-	
+
 	public static Category SUMMER_CATEGORY;
-	
+
 	public static Adventure BEACH_HOLIDAY;
-	
+
 	public static Adventure RAFTING_HOLIDAY;
-	
+
 	public static Adventure WINTER_HOLIDAY;
-	
-	public static Adventure ICE_FISHING;	
+
+	public static Adventure ICE_FISHING;
 
 	public static Lodging FIVE_STAR_HOTEL;
 
@@ -79,12 +82,12 @@ public class SampleData {
 		WINTER_CATEGORY.setName("Freeze Adventures");
 		WINTER_CATEGORY.setId("100");
 		CATALOG_2005.getCategories().add(WINTER_CATEGORY);
-		
+
 		SUMMER_CATEGORY = adventureFactory.createCategory();
 		SUMMER_CATEGORY.setName("Hot Adventures");
 		SUMMER_CATEGORY.setId("200");
 		CATALOG_2005.getCategories().add(SUMMER_CATEGORY);
-		
+
 		// Adventures
 		WINTER_HOLIDAY = adventureFactory.createAdventure();
 		WINTER_HOLIDAY.setDescription("Winter holiday in France");
@@ -93,14 +96,14 @@ public class SampleData {
 		WINTER_HOLIDAY.setPrice(4000.52d);
 		WINTER_HOLIDAY.setId("150");
 		WINTER_CATEGORY.getAdventures().add(WINTER_HOLIDAY);
-		
+
 		ICE_FISHING = adventureFactory.createAdventure();
 		ICE_FISHING.setDescription("Ice Fishing in Helsinki");
 		ICE_FISHING.setName("Ice Fishing");
 		ICE_FISHING.setLocation("Finland");
 		ICE_FISHING.setPrice(375.55d);
 		WINTER_CATEGORY.getAdventures().add(ICE_FISHING);
-		
+
 		BEACH_HOLIDAY = adventureFactory.createAdventure();
 		BEACH_HOLIDAY.setDescription("Beach holiday in Spain");
 		BEACH_HOLIDAY.setName("Playa");
@@ -108,15 +111,16 @@ public class SampleData {
 		BEACH_HOLIDAY.setPrice(2000.52d);
 		BEACH_HOLIDAY.setId("250");
 		SUMMER_CATEGORY.getAdventures().add(BEACH_HOLIDAY);
-		
+
 		RAFTING_HOLIDAY = adventureFactory.createAdventure();
-		RAFTING_HOLIDAY.setDescription("White water rafting on the Ottawa river");
+		RAFTING_HOLIDAY
+				.setDescription("White water rafting on the Ottawa river");
 		RAFTING_HOLIDAY.setName("Whitewater");
 		RAFTING_HOLIDAY.setLocation("Ottawa");
 		RAFTING_HOLIDAY.setPrice(8000.52d);
 		RAFTING_HOLIDAY.setId("270");
 		SUMMER_CATEGORY.getAdventures().add(RAFTING_HOLIDAY);
-		
+
 		// Lodgings
 		FIVE_STAR_HOTEL = adventureFactory.createLodging();
 		FIVE_STAR_HOTEL.setDescription("Deluxe palace");
@@ -131,7 +135,7 @@ public class SampleData {
 		CATALOG_2005.getLodgings().add(YOUTH_HOSTEL);
 		CATALOG_2005.getLodgings().add(CAMP_GROUND);
 		WINTER_HOLIDAY.setDefaultLodging(YOUTH_HOSTEL);
-		
+
 		// Transporation
 		GREYHOUND_BUS = adventureFactory.createTransportation();
 		GREYHOUND_BUS.setArrivalTime("14:30");
@@ -139,7 +143,7 @@ public class SampleData {
 		EXECUTIVE_JET = adventureFactory.createTransportation();
 		EXECUTIVE_JET.setArrivalTime("11:10");
 		CATALOG_2005.getTransportations().add(EXECUTIVE_JET);
-		
+
 		// Accounts
 		PRESIDENT = adventureFactory.createAccount();
 		PRESIDENT.setFirstName("George");
@@ -170,34 +174,40 @@ public class SampleData {
 
 		SWTDatabindingContext dbc = new SWTDatabindingContext(aControl);
 
-		IUpdatableFactory emfFactory = new IUpdatableFactory() {
-			public IUpdatable createUpdatable(Object object, Object attribute) {
-				EObject eObject = (EObject) object;
-				EStructuralFeature attr;
-				if (attribute instanceof EStructuralFeature)
-					attr = (EStructuralFeature) attribute;
-				else
-					attr = eObject.eClass().getEStructuralFeature(
-							(String) attribute);
-				if (attr.isMany()) {
-					return new EMFUpdatableCollection(eObject, attr, !attr
-							.isChangeable());
-				} else
-					return new EMFUpdatableValue(eObject, attr, !attr
-							.isChangeable());
-
+		IUpdatableFactory2 emfFactory = new IUpdatableFactory2() {
+			public IUpdatable createUpdatable(Map properties,
+					Object description, IValidationContext validationContext)
+					throws BindingException {
+				if (description instanceof PropertyDescription) {
+					PropertyDescription propertyDescription = (PropertyDescription) description;
+					if (propertyDescription.getObject() instanceof EObject) {
+						EObject eObject = (EObject) propertyDescription
+								.getObject();
+						EStructuralFeature attr;
+						if (propertyDescription.getPropertyID() instanceof EStructuralFeature)
+							attr = (EStructuralFeature) propertyDescription
+									.getPropertyID();
+						else
+							attr = eObject.eClass().getEStructuralFeature(
+									(String) propertyDescription
+											.getPropertyID());
+						if (attr.isMany()) {
+							return new EMFUpdatableCollection(eObject, attr,
+									!attr.isChangeable());
+						} else
+							return new EMFUpdatableValue(eObject, attr, !attr
+									.isChangeable());
+					}
+					if (propertyDescription.getObject() instanceof EList) {
+						return new EMFUpdatableEList(
+								(EList) propertyDescription.getObject(), true);
+					}
+				}
+				return null;
 			}
 
 		};
-		dbc.addUpdatableFactory(EObjectImpl.class, emfFactory);
-		
-		emfFactory = new IUpdatableFactory() {
-			public IUpdatable createUpdatable(Object object, Object attribute) {
-				return new EMFUpdatableEList((EList)object, true);
-			}
-
-		};
-		dbc.addUpdatableFactory(BasicEList.class, emfFactory);
+		dbc.addUpdatableFactory2(emfFactory);
 
 		return dbc;
 

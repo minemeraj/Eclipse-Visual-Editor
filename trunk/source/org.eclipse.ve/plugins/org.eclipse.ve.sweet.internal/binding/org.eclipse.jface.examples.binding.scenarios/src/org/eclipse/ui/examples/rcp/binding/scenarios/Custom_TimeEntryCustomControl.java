@@ -10,10 +10,14 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
+import java.util.Map;
+
 import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.DatabindingContext;
 import org.eclipse.jface.databinding.IUpdatable;
-import org.eclipse.jface.databinding.IUpdatableFactory;
+import org.eclipse.jface.databinding.IUpdatableFactory2;
+import org.eclipse.jface.databinding.IValidationContext;
+import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -55,20 +59,30 @@ public class Custom_TimeEntryCustomControl extends Composite {
 
 		Transportation bus = SampleData.GREYHOUND_BUS;
 
-		dbc.addUpdatableFactory(TimeEntry.class, new IUpdatableFactory() {
-			public IUpdatable createUpdatable(Object object, Object attribute) {
-				if ("time".equals(attribute)) {
-					return new TimeEntryUpdatableValue((TimeEntry) object);
-				} else {
-					throw new IllegalArgumentException(attribute
-							+ " is unknown feature");
+		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
+			public IUpdatable createUpdatable(Map properties,
+					Object description, IValidationContext validationContext)
+					throws BindingException {
+				if (description instanceof PropertyDescription) {
+					PropertyDescription propertyDescription = (PropertyDescription) description;
+					if (propertyDescription.getObject() instanceof TimeEntry) {
+						if ("time".equals(propertyDescription.getPropertyID())) {
+							return new TimeEntryUpdatableValue(
+									(TimeEntry) propertyDescription.getObject());
+						} else {
+							throw new IllegalArgumentException(
+									propertyDescription.getPropertyID()
+											+ " is unknown feature");
+						}
+					}
 				}
+				return null;
 			}
 		});
 
-		dbc.bind2(lbl_time, "text", bus, "arrivalTime",null);
-		dbc.bind2(timeEntry, "time", bus, "arrivalTime",null);
-		dbc.bind2(timeEntry1, "time", bus, "arrivalTime",null);
+		dbc.bind2(lbl_time, "text", bus, "arrivalTime", null);
+		dbc.bind2(timeEntry, "time", bus, "arrivalTime", null);
+		dbc.bind2(timeEntry1, "time", bus, "arrivalTime", null);
 
 	}
 
