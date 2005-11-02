@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.12 $  $Date: 2005-10-24 15:21:09 $ 
+ *  $Revision: 1.13 $  $Date: 2005-11-02 18:48:26 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -208,8 +208,16 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			}
 		}
 		
+		/*
+		 * Populate and show the action bar with it's contribution children editparts.
+		 * 
+		 * If the action bar edit part already has children, it's being displayed over
+		 * another host edit part and hasn't been dismissed... probably because one
+		 * of the children are selected. In this case we can't show the action bar editpart
+		 * it over this host editpart.
+		 */
 		public void showActionBar() {
-			if (actionBarFigure == null) {
+			if (actionBarFigure == null && getActionBarEditPart().getChildren().isEmpty()) {
 				actionBarFigure = getActionBarEditPart().getFigure();
 				populateActionBar();
 				if (actionBarChildren != null && !actionBarChildren.isEmpty()) {
@@ -397,6 +405,8 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	
 	// The contributions have changed... remove the old and re-add the contributions to pickup any changes
 	private void refreshContributions() {
+		fActionBarController.hideActionBar();
+		actionBarEditpartSelected = false;
 		removeContributions();
 		addContributions();
 	}

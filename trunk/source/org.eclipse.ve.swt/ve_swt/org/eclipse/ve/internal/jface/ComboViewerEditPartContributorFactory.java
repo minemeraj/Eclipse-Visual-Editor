@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComboViewerEditPartContributorFactory.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-25 19:12:43 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-02 18:48:27 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -19,13 +19,11 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.TreeEditPart;
+import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -33,6 +31,7 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.ImageFigure;
 import org.eclipse.ve.internal.cde.emf.EMFCreationFactory;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
@@ -142,6 +141,11 @@ public class ComboViewerEditPartContributorFactory implements AdaptableContribut
 						return fig;
 					}
 
+					protected void createEditPolicies() {
+						super.createEditPolicies();
+						installEditPolicy(EditPolicy.COMPONENT_ROLE, new ActionBarChildComponentPolicy(ComboViewerEditPartContributorFactory.ComboViewerGraphicalEditPartContributor.this, (IJavaInstance) combo));
+					}
+
 					protected void setupLabelProvider() {
 						// don't do anything here, we'll provide our own image.
 					}
@@ -151,21 +155,22 @@ public class ComboViewerEditPartContributorFactory implements AdaptableContribut
 			else
 				return new GraphicalEditPart[] { new ActionBarActionEditPart("Press here to convert to a ComboViewer") {
 
-					// Create and execute commands to promote this Combo to a JFace ComboViewer
 					public void run() {
-						CreateRequest cr = new CreateRequest();
-						cr.setFactory(new EMFCreationFactory(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.viewers.ComboViewer",
-								(EObject) combo)));
-						Command c = comboEditPart.getCommand(cr);
-						if (c != null) {
-							EditDomain.getEditDomain(comboEditPart).getCommandStack().execute(c);
-							Display.getDefault().asyncExec(new Runnable() {
+						// If the combo viewer already exists, just the contributions need to be refreshed
+						if ((comboViewer = getComboViewer((IJavaInstance) combo)) != null) {
+							notifyContributionChanged();
 
-								public void run() {
-									comboViewer = getComboViewer((IJavaInstance) combo);
-									notifyListeners();
-								}
-							});
+						} else {
+							// Create and execute commands to promote this Combo to a JFace ComboViewer
+							CreateRequest cr = new CreateRequest();
+							cr.setFactory(new EMFCreationFactory(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.viewers.ComboViewer",
+									(EObject) combo)));
+							Command c = comboEditPart.getCommand(cr);
+							if (c != null) {
+								EditDomain.getEditDomain(comboEditPart).getCommandStack().execute(c);
+								comboViewer = getComboViewer((IJavaInstance) combo);
+								notifyContributionChanged();
+							}
 						}
 					}
 				}};

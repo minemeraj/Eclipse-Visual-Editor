@@ -5,13 +5,11 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.TreeEditPart;
+import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -19,6 +17,7 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.ImageFigure;
 import org.eclipse.ve.internal.cde.emf.EMFCreationFactory;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
@@ -75,7 +74,9 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 	private static class TreeViewerGraphicalEditPartContributor extends AbstractEditPartContributor implements GraphicalEditPartContributor {
 
 		private Object tree;
+
 		private Object treeViewer;
+
 		private GraphicalEditPart treeEditPart;
 
 		public TreeViewerGraphicalEditPartContributor(GraphicalEditPart treeEditPart, Object treeViewer) {
@@ -88,7 +89,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 		}
 
 		public ToolTipProcessor getHoverOverLay() {
-			treeViewer = getTreeViewer((IJavaInstance)tree);
+			treeViewer = getTreeViewer((IJavaInstance) tree);
 			if (treeViewer != null)
 				return new ToolTipProcessor.ToolTipLabel("Select TreeViewer in action bar to show Viewer properties");
 			else
@@ -99,7 +100,7 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 		 * Return an overlay image for the tree viewer only
 		 */
 		public IFigure getFigureOverLay() {
-			treeViewer = getTreeViewer((IJavaInstance)tree);
+			treeViewer = getTreeViewer((IJavaInstance) tree);
 			if (treeViewer == null)
 				return null;
 			final Image image = treeViewerOverlayImage;
@@ -136,25 +137,25 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 						return fig;
 					}
 
+					protected void createEditPolicies() {
+						super.createEditPolicies();
+						installEditPolicy(EditPolicy.COMPONENT_ROLE, new ActionBarChildComponentPolicy(TreeViewerEditPartContributorFactory.TreeViewerGraphicalEditPartContributor.this, (IJavaInstance) tree));
+					}
+					
 					protected void setupLabelProvider() {
 						// don't do anything here, we'll provide our own image.
 					}
 				}};
-			
+
 			// No Treeviewer... return an action editpart that can be selected to promote this tree to a tree viewer.
 			else
 				return new GraphicalEditPart[] { new ActionBarActionEditPart("Press here to convert to a TreeViewer") {
 
 					public void run() {
-						// If the treeviewer already exists, just the contributions need to be refreshed
+						// If the tree viewer already exists, just the contributions need to be refreshed
 						if ((treeViewer = getTreeViewer((IJavaInstance) tree)) != null) {
-							Display.getDefault().asyncExec(new Runnable() {
+							notifyContributionChanged();
 
-								public void run() {
-									notifyListeners();
-								}
-							});
-							
 						} else {
 							// Create and execute commands to promote this Tree to a JFace TreeViewer
 							CreateRequest cr = new CreateRequest();
@@ -163,19 +164,13 @@ public class TreeViewerEditPartContributorFactory implements AdaptableContributo
 							Command c = treeEditPart.getCommand(cr);
 							if (c != null) {
 								EditDomain.getEditDomain(treeEditPart).getCommandStack().execute(c);
-								Display.getDefault().asyncExec(new Runnable() {
-
-									public void run() {
-										treeViewer = getTreeViewer((IJavaInstance) tree);
-										notifyListeners();
-									}
-								});
+								treeViewer = getTreeViewer((IJavaInstance) tree);
+								notifyContributionChanged();
 							}
 						}
 					}
 				}};
 		}
-
 	}
 
 	public GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart) {
