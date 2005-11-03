@@ -23,7 +23,6 @@ import org.eclipse.jface.databinding.IConverter;
 import org.eclipse.jface.databinding.IUpdatableValue;
 import org.eclipse.jface.databinding.IValidator;
 import org.eclipse.jface.databinding.IdentityConverter;
-import org.eclipse.jface.databinding.NestedPropertyDescription;
 import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.jface.databinding.swt.SWTBindingConstants;
 import org.eclipse.jface.databinding.swt.SWTDatabindingContext;
@@ -158,8 +157,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 						new PropertyDescription(adventure, "defaultLodging"));
 		getDbc().bind2(
 				text,
-				new NestedPropertyDescription(defaultLodging, "description",
-						String.class), null);
+				new PropertyDescription(defaultLodging, "description",
+						String.class, Boolean.FALSE), null);
 
 		// test changing the description
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
