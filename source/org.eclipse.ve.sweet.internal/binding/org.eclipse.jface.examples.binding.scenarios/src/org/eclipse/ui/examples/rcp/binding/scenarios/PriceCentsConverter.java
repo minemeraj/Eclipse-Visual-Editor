@@ -16,11 +16,11 @@ public class PriceCentsConverter implements IConverter {
 
 	private double dollars;
 
-	public Class getModelType() {
-		return Integer.TYPE;
+	public Class getTargetType() {
+		return Integer.class;
 	}
 
-	public Class getTargetType() {
+	public Class getModelType() {
 		return Double.TYPE;
 	}
 

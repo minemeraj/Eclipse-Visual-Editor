@@ -116,11 +116,11 @@ public class PropertyScenarios extends ScenariosTestCase {
 		getDbc().bind2(text, new PropertyDescription(cart, "lodgingDays"),
 				new BindSpec(new IConverter() {
 					public Class getModelType() {
-						return String.class;
+						return int.class;
 					}
 
 					public Class getTargetType() {
-						return Integer.class;
+						return String.class;
 					}
 
 					public Object convertTargetToModel(Object object) {
@@ -191,7 +191,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 
 	public void testScenario05() throws BindingException {
 		// Binding the name property of an Adventure object to the contents of
-		// Text controls where conversion occurs – the model data is held all in
+		// Text controls where conversion occurs ï¿½ the model data is held all in
 		// uppercase and displayed in lowercase with the first letter
 		// capitalized.
 		Text text = new Text(getComposite(), SWT.BORDER);
@@ -333,7 +333,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 
 	public void testScenario08() throws BindingException {
 		// Binding the price property of an Adventure to a Text control but with
-		// custom conversion – the double will be validated to only have two
+		// custom conversion ï¿½ the double will be validated to only have two
 		// decimal places and displayed with a leading currency symbol, and can
 		// be entered with or without the currency symbol.
 		Text text = new Text(getComposite(), SWT.BORDER);
@@ -400,7 +400,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 
 	public void testScenario09() throws BindingException {
 		// Binding a boolean property to a CheckBox. Adventure will have a
-		// Boolean property “petsAllowed”
+		// Boolean property ï¿½petsAllowedï¿½
 		Button checkbox = new Button(getComposite(), SWT.CHECK);
 		// checkbox.setText("Pets allowed");
 		// checkbox.setLayoutData(new GridData(SWT.LEFT,SWT.TOP, false,false));
@@ -456,11 +456,11 @@ public class PropertyScenarios extends ScenariosTestCase {
 		getDbc().bind2(checkbox1Selected, checkbox2Selected,
 				new BindSpec(new IConverter() {
 					public Class getModelType() {
-						return Boolean.class;
+						return boolean.class;
 					}
 
 					public Class getTargetType() {
-						return Boolean.class;
+						return boolean.class;
 					}
 
 					private Boolean negated(Boolean booleanObject) {
