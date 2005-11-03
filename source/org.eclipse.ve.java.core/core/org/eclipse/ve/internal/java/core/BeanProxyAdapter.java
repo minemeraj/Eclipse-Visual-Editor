@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.57 $  $Date: 2005-09-08 23:21:29 $ 
+ *  $Revision: 1.58 $  $Date: 2005-11-03 17:05:45 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -25,8 +25,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.internal.instantiation.InstantiationFactory;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
@@ -1234,7 +1233,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		if (!isThisPart()) {
 			return primInstantiateDroppedPart(expression);
 		} else {
-			ownsProxy = true; // Since we created it, obviously we own it
+			ownsProxy = true; // Since we created it and we are a "this", obviously we own it
 			IProxyBeanType targetClass = getValidSuperClass(expression);
 			return primInstantiateThisPart(targetClass, expression);
 		}
@@ -1252,13 +1251,13 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	protected IProxy primInstantiateDroppedPart(IExpression expression) throws AllocationException {
 		if (getJavaObject().isSetAllocation()) {
 			JavaAllocation allocation = getJavaObject().getAllocation();
-			ownsProxy = true;
+			ownsProxy = !allocation.isImplicit();	// Implicit allocations are never owned.
 			return getBeanProxyDomain().getAllocationProcesser().allocate(allocation, expression);
 		}
 		// otherwise just create it using the default ctor.
 		String qualifiedClassName = getJavaObject().getJavaType().getQualifiedNameForReflection();
 		IProxyBeanType targetClass = getBeanTypeProxy(qualifiedClassName, expression);
-		ownsProxy = true; // Since we created it, obviously we own it.
+		ownsProxy = true; // Since we created it and we aren't implict, obviously we own it.
 		return BasicAllocationProcesser.instantiateWithString(null, targetClass, expression);
 	}
 	
@@ -1349,7 +1348,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 					r.append("Release request: ");
 					printObject(getJavaObject(), r);
 					JavaVEPlugin.log(r.toString(), Level.WARNING);
-				}				
+				}
 				ReinstantiateBeanProxyNotification notification = new ReinstantiateBeanProxyNotification(expression);
 				notification.setPrerelease(true);
 				// Now walk through all references and tell of pre-release.
@@ -1374,7 +1373,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	 * 
 	 * @since 1.1.0
 	 */
-	protected void primReleaseBeanProxy(final IExpression expression) {
+	protected void primReleaseBeanProxy(IExpression expression) {
 		overrideSettings = null;
 		origSettingProxies = null;
 		notInstantiatedClasses = null;
@@ -1382,23 +1381,11 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 			// Either we have a bean proxy, or there was an instantiation error, but in that case we may of had some instantiated settings that
 			// need to be released.
 
-			// Default is to release any settings that are contained as "property" settings, since these are not set in anybody else,
+			// Default is to release any settings that are contained as "property/implicit" settings, since these are not set in anybody else,
 			// and throw the bean proxy away. 
 			// Other subclasses may actually do something else first.
-			getJavaObject().visitSetFeatures(new FeatureValueProvider.Visitor() {
-
-				public Object isSet(EStructuralFeature feature, Object value) {
-					if (value instanceof List) {
-						Iterator i = ((List) value).iterator();
-						while (i.hasNext()) {
-							releaseSetting(i.next(), expression);
-						}
-					} else
-						releaseSetting(value, expression);
-					return null;
-				}
-			});
-
+			releasingBeanSettings(expression);
+			
 			if (ownsProxy && isBeanProxyInstantiated()) {
 				ProxyFactoryRegistry registry = getBeanProxy().getProxyFactoryRegistry();
 				// Check if valid, this could of occured due to finalizer after registry has been stopped.
@@ -1411,6 +1398,52 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		ownsProxy = false;
 	}
 
+
+	/**
+	 * This is called from {@link #primReleaseBeanProxy(IExpression)} to release all of the settings
+	 * on the bean proxy. It should only be used in this case.
+	 * 
+	 * @param expression
+	 * @since 1.2.0
+	 */
+	protected void releasingBeanSettings(final IExpression expression) {
+		getJavaObject().visitSetFeatures(new FeatureValueProvider.Visitor() {
+
+			public Object isSet(EStructuralFeature feature, Object value) {
+				if (value instanceof List) {
+					Iterator i = ((List) value).iterator();
+					while (i.hasNext()) {
+						Object setting = i.next();
+						releaseBeanSetting(expression, feature, setting);
+					}
+				} else
+					releaseBeanSetting(expression, feature, value);
+				return null;
+			}
+
+			/*
+			 * @param expression
+			 * @param feature
+			 * @param setting
+			 * 
+			 * @since 1.2.0
+			 */
+			private void releaseBeanSetting(final IExpression expression, EStructuralFeature feature, Object setting) {
+				if (setting instanceof IJavaInstance && ((IJavaInstance) setting).isImplicitAllocation()) {
+					// Need to fake out the release so that it will work. Currently these beans are set as not owns
+					// proxy so that they can't be accidentally released prematurely. We will fake it out by
+					// setting this if an implicit of this feature.
+					IBeanProxyHost settingBean =  (IBeanProxyHost) EcoreUtil.getExistingAdapter((EObject) setting, IBeanProxyHost.BEAN_PROXY_TYPE);
+					if (settingBean != null) {
+						ImplicitAllocation implicit = (ImplicitAllocation) ((IJavaInstance) setting).getAllocation();
+						if (implicit.getParent() == getTarget() && implicit.getFeature() == feature)
+							((IInternalBeanProxyHost) settingBean).setOwnsProxy(true);	// Fake it out so that it can be released.
+					}
+				}
+				releaseSetting(setting, expression);
+			}
+		});		
+	}
 
 	/*
 	 *  (non-Javadoc)
@@ -2234,8 +2267,8 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		// No need to do mark/endmark to ensure validity of expression because releaseBeanProxy guarentees it for us.
 		if (value instanceof IJavaInstance) {
 			IJavaInstance j = (IJavaInstance) value;
-			if (j.eContainer() == null || j.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties()) {
-				// It is not contained, or it is a property, i.e. it is not referenced by anyone else. These should be released too.
+			if (j.eContainer() == null || j.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties() || j.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Implicits()) {
+				// It is not contained, or it is a property or implicit, i.e. it is not referenced by anyone else. These should be released too.
 				IBeanProxyHost settingBean =  (IBeanProxyHost) EcoreUtil.getExistingAdapter((EObject) value, IBeanProxyHost.BEAN_PROXY_TYPE);
 				if (settingBean != null)
 					settingBean.releaseBeanProxy(expression);
