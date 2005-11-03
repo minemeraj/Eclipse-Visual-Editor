@@ -60,7 +60,7 @@
 			<param name="zipname" value="eclipse-SDK.zip"/>
 		</antcall>
 		<!-- TODO We don't need this until we start building java doc ourselves.
-		<!-- Extract the plugin org.eclipse.platform.doc.isv.jar so we can create links in VE java doc -->
+		   Extract the plugin org.eclipse.platform.doc.isv.jar so we can create links in VE java doc
 		  <mkdir dir="${buildDirectory}/plugins/org.eclipse.platform.doc.isv"/>
 		  <exec dir="${buildDirectory}/plugins/org.eclipse.platform.doc.isv" executable="unzip">
 		 		 <arg line="-o -qq ../org.eclipse.platform.doc.isv.jar" />
