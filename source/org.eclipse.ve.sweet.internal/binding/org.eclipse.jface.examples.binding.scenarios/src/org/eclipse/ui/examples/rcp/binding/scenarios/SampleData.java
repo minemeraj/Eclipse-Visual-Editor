@@ -172,7 +172,7 @@ public class SampleData {
 	public static SWTDatabindingContext getSWTtoEMFDatabindingContext(
 			Control aControl) {
 
-		SWTDatabindingContext dbc = new SWTDatabindingContext(aControl);
+		SWTDatabindingContext dbc = new SWTDatabindingContext(null, aControl);
 
 		IUpdatableFactory2 emfFactory = new IUpdatableFactory2() {
 			public IUpdatable createUpdatable(Map properties,
