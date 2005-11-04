@@ -34,8 +34,7 @@ import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 import org.eclipse.jem.java.JavaClass;
 
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.LayoutList;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.JCMMethod;
@@ -89,8 +88,8 @@ public class BeanSWTUtilities {
 		MANAGER_APPLY_LAYOUTDATA = COMPOSITE_MANAGER_LAYOUT_VERIFY+1,
 		SHELL_MANAGER_APPLYTITLE = MANAGER_APPLY_LAYOUTDATA + 1,
 		SHELL_MANAGER_PACKONCHANGE = SHELL_MANAGER_APPLYTITLE + 1,
-		MANAGER_DISPOSE = SHELL_MANAGER_PACKONCHANGE + 1,
-		MAX_METHODS = MANAGER_DISPOSE + 1;
+		FEEDBACKMANAGER_DISPOSE = SHELL_MANAGER_PACKONCHANGE + 1,
+		MAX_METHODS = FEEDBACKMANAGER_DISPOSE + 1;
 	
 
 	private IProxyMethod[] methods = new IProxyMethod[MAX_METHODS];
@@ -513,36 +512,38 @@ public class BeanSWTUtilities {
 	}
 	
 	/**
-	 * Get the {@link org.eclipse.ve.internal.swt.targetvm.ControlManager#disposeWidget(org.eclipse.swt.widgets.Widget)}proxy method.
+	 * Get the {@link org.eclipse.ve.internal.swt.targetvm.ControlManager.ControlManagerFeedbackController#disposeWidget(org.eclipse.swt.widgets.Widget)}proxy method.
 	 * @param expression
 	 * @return
 	 * 
 	 * @since 1.1.0
 	 */
-	private static IProxyMethod getManagerDispose(IExpression expression) {
+	private static IProxyMethod getFeedbackManagerDispose(IExpression expression) {
 		BeanSWTUtilities constants = getConstants(expression.getRegistry());
 
-		IProxyMethod method = constants.methods[MANAGER_DISPOSE];
+		IProxyMethod method = constants.methods[FEEDBACKMANAGER_DISPOSE];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, CONTROLMANAGER_CLASSNAME).getMethodProxy(
+					.getBeanTypeProxy(expression, CONTROLMANAGERFEEDBACK_CLASSNAME).getMethodProxy(
 							expression, "disposeWidget", //$NON-NLS-1$
 							new String[] { "org.eclipse.swt.widgets.Widget"}); //$NON-NLS-1$
-			processExpressionProxy(method, constants.methods, MANAGER_DISPOSE);
+			processExpressionProxy(method, constants.methods, FEEDBACKMANAGER_DISPOSE);
 		}
 		return method;
 	}
 
 	/**
-	 * Invoke the widget dispose method.
+	 * Invoke the widget dispose method. This must be on a UI thread callback.
 	 * @param widget
 	 * @param expression
 	 * 
 	 * @since 1.1.0
 	 */
-	public static void invoke_WidgetDispose(IProxy widget, IExpression expression) {
-		IProxyMethod dispose = getManagerDispose(expression);
-		expression.createSimpleMethodInvoke(dispose, null, new IProxy[] {widget}, false);
+	public static void invoke_WidgetDispose(IProxy widget, IExpression expression, ModelChangeController controller) {
+		IProxyMethod dispose = getFeedbackManagerDispose(expression);
+		FeedbackController feedbackController = BeanSWTUtilities.getFeedbackController(expression, DisplayManager.getCurrentDisplay(expression.getRegistry()));
+		feedbackController.invalidate(controller);
+		expression.createSimpleMethodInvoke(dispose, feedbackController.getProxy(), new IProxy[] {widget}, false);
 	}
 
 	/**

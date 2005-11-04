@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.20 $ $Date: 2005-08-24 23:52:55 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.21 $ $Date: 2005-11-04 00:11:04 $
  */
 
 import java.io.InputStream;
@@ -1263,6 +1263,21 @@ public class ControlManager implements ControlManagerFeedbackControllerNotifier,
 		 */
 		void queueInvalidate(ControlManager manager, ModelChangeController controller) {
 			pendingInvalidates.add(manager);
+			invalidate(controller);
+		}
+		
+		/**
+		 * Call this to indicate there may be side-effect invalidates that will occur. Ones
+		 * that are directly controlled. This will just queue up that at end of transaction
+		 * any invalid images should be sent back. The remote vm will handle which images
+		 * are invalid. This most likely occurs because a widget was deleted that was
+		 * not under direct control of a component manager.
+		 * 
+		 * @param controller
+		 * 
+		 * @since 1.2.0
+		 */
+		public void invalidate(ModelChangeController controller) {
 			controller.execAtEndOfTransaction(invalidateRunnable, invalidateRunnable);
 		}
 

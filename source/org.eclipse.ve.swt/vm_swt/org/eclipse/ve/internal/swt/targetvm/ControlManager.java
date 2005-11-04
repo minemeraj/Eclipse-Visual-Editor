@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.23 $ $Date: 2005-08-24 22:19:39 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.24 $ $Date: 2005-11-04 00:11:05 $
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -75,21 +75,6 @@ public class ControlManager {
 
 	protected ControlManagerExtension[] extensions;
 	
-	/**
-	 * Dispose the widget. Used by the client to dispose the widget. Normally would call dispose on
-	 * the widget directly, but sometimes the widget has already been disposed and the client
-	 * doesn't know it, so this tests for this and handles it without error.
-	 * <p>
-	 * <b>Note:</b> Must be called on UI thread.
-	 * @param widget
-	 * 
-	 * @since 1.1.0
-	 */
-	public static void disposeWidget(Widget widget) {
-		if (!widget.isDisposed())
-			widget.dispose();
-	}
-
 	/**
 	 * All control manager extensions must be a subclass of this. They will be told of significant events and can contribute to them.
 	 * 
@@ -745,6 +730,32 @@ public class ControlManager {
 				control.addDisposeListener(disposeListener);
 				controlListening.add(control);
 				control = control.getParent();
+			}
+		}
+
+		/**
+		 * Dispose the widget. Used by the client to dispose the widget. Normally would call dispose on
+		 * the widget directly, but sometimes the widget has already been disposed and the client
+		 * doesn't know it, so this tests for this and handles it without error.
+		 * <p>
+		 * This will also see if any parent of this is being monitored, and if so, queue up an invalid image.
+		 * <b>Note:</b> Must be called on UI thread.
+		 * @param widget
+		 * 
+		 * @since 1.1.0
+		 */
+		public void disposeWidget(Widget widget) {
+			if (!widget.isDisposed()) {
+				if (widget instanceof Control) {
+					for (Control c = (Control) widget; c != null; c = c.getParent()) {
+						ControlManager cm = getControlManager(c);
+						if (cm != null) {
+							cm.invalidate();
+							break;	// Don't need to go any further, first parent that is controlled will take care of everything.
+						}
+					}
+				}
+				widget.dispose();
 			}
 		}
 	}

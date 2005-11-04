@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 17:33:41 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-04 00:11:05 $ 
  */
 package org.eclipse.ve.internal.rcp;
 
@@ -285,7 +285,7 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 	protected void primPrimReleaseBeanProxy(IExpression expression) {		
 		if (isOwnsProxy() && isBeanProxyInstantiated()) {
 			if (workbenchHost != null)
-				BeanSWTUtilities.invoke_WidgetDispose(workbenchHost, expression);
+				BeanSWTUtilities.invoke_WidgetDispose(workbenchHost, expression, getModelChangeController());
 			
 			// Don't need to do workbenchparent because that will automatically be disposed too by disposing host.
 			workbenchHost = workbenchParent = null;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: UIThreadOnlyProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-22 21:05:27 $ 
+ *  $Revision: 1.3 $  $Date: 2005-11-04 00:11:05 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -354,7 +354,7 @@ public abstract class UIThreadOnlyProxyAdapter extends BeanProxyAdapter {
 	}
 
 	protected final void primReleaseBeanProxy(IExpression expression) {
-		if (isBeanProxyInstantiated() && isOwnsProxy() && !onUIThread()) {
+		if (isBeanProxyInstantiated() && !onUIThread()) {
 			invokeSyncExecCatchThrowable(new DisplayManager.ExpressionDisplayRunnable(expression) {
 	
 				protected Object doRun(IBeanProxy displayProxy) throws ThrowableProxy {
@@ -370,7 +370,7 @@ public abstract class UIThreadOnlyProxyAdapter extends BeanProxyAdapter {
 	}
 
 	/**
-	 * Process release. It is not guarenteed to be on UI thread. If the bean proxy is owned and is instantiated it will be on UI thread. Otherwise it
+	 * Process release. It is not guarenteed to be on UI thread. If the bean proxy is instantiated it will be on UI thread. Otherwise it
 	 * will not. Overrides should go to the UI thread if they need to.
 	 * 
 	 * @param expression
