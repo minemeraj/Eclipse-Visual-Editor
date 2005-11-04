@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ContainerProxyAdapter.java,v $
- *  $Revision: 1.24 $  $Date: 2005-11-01 20:41:23 $ 
+ *  $Revision: 1.25 $  $Date: 2005-11-04 14:54:06 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -101,8 +101,6 @@ public class ContainerProxyAdapter extends ComponentProxyAdapter {
 							// TODO See if we can actually group the expression up to all notifications for this transaction instead of just this one notification.
 							IExpression expression = getBeanProxyFactory().createExpression();
 							try {
-								if (!msg.isTouch() && msg.getOldValue() != null)
-									releaseSetting(msg.getOldValue(), expression);
 								layoutChanged(expression);	// This could be coming in from snippet parsing and so we may have incomplete state, so farm off to the end of transaction.
 							} finally {
 								try {
