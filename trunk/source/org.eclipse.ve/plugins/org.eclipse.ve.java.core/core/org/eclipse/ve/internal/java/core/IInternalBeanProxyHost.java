@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IInternalBeanProxyHost.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-22 21:05:23 $ 
+ *  $Revision: 1.3 $  $Date: 2005-11-04 00:08:57 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -144,7 +144,7 @@ public interface IInternalBeanProxyHost extends IBeanProxyHost {
 
 	/**
 	 * Get the property value as a expression proxy. It is here only for implicit allocations. It needs to get the value at instantiation through
-	 * an expression.
+	 * an expression. This will bypass the current setting and return original setting or retrieve from live value.
 	 * @param aBeanPropertyFeature
 	 * @param expression
 	 * @param forExpression

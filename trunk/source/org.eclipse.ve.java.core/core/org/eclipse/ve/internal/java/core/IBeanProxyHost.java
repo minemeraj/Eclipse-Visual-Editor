@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IBeanProxyHost.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-04 00:08:57 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -45,7 +45,8 @@ public interface IBeanProxyHost extends Adapter, IErrorNotifier {
 	void releaseBeanProxy();
 
 	/**
-	 * Get the attribute value from the bean. The value returned WILL NOT be contained in any EMF document,
+	 * Get the attribute value from the bean. The value returned WILL NOT be contained in any EMF document. This should not be called
+	 * if the feature is set. It will not return the setting, it will instead return the original setting.
 	 * <p>
 	 * NOTE: Any implementers of this method must have an ImplicitAllocation. This is a required function for the VCE to work correctly.
 	 * 
@@ -57,7 +58,8 @@ public interface IBeanProxyHost extends Adapter, IErrorNotifier {
 	public IJavaInstance getBeanPropertyValue(EStructuralFeature aBeanPropertyFeature);
 
 	/**
-	 * Get the property value as a bean proxy.
+	 * Get the property value as a bean proxy. This should not be called
+	 * if the feature is set. It will not return the setting, it will instead return the original setting.
 	 * 
 	 * @param aBeanPropertyFeature
 	 * @return
