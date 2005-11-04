@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenExpFlattener.java,v $
- *  $Revision: 1.12 $  $Date: 2005-10-28 22:56:43 $ 
+ *  $Revision: 1.13 $  $Date: 2005-11-04 17:30:46 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -19,8 +19,7 @@ import java.util.*;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.JavaRefFactory;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
@@ -119,9 +118,13 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 				// Use short names instead of full quallified names
 				JavaHelpers clazz = JavaRefFactory.eINSTANCE.reflectType(qName, fmodel.getCompositionModel().getModelRoot());
 				// mark a dependency on an import
-				if (!fimportList.contains(clazz.getJavaName()))
-					fimportList.add(clazz.getJavaName());
-				return clazz.getName();
+				if (clazz != null) {
+					// Add as an import if not primitive and it is not undefined, and not already in list.
+					if (!clazz.isPrimitive() && ((JavaClass) clazz).getKind() != TypeKind.UNDEFINED_LITERAL && !fimportList.contains(clazz.getJavaName()))
+						fimportList.add(clazz.getJavaName());
+					return clazz.getName();
+				} else
+					return qName;
 			}
 			else
 				return qName;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CBannerContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-22 20:09:16 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-04 17:30:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -20,7 +20,6 @@ import java.util.List;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 
@@ -88,10 +87,10 @@ public class CBannerContainerPolicy extends CompositeContainerPolicy {
 		return super.getDeleteDependentCommand(child, containmentSF);
 	}
 
-	protected Command getOrphanTheChildrenCommand(List children) {
-		Command orphanCmd = super.getOrphanTheChildrenCommand(children);
-		if (orphanCmd == null || !orphanCmd.canExecute())
-			return UnexecutableCommand.INSTANCE;
+	protected void getOrphanTheChildrenCommand(List children, CommandBuilder cbldr) {
+		super.getOrphanTheChildrenCommand(children, cbldr);
+		if (cbldr.isDead())
+			return;
 		
 		IJavaObjectInstance cBannerBean = (IJavaObjectInstance) getContainer();
 		IJavaInstance left = (IJavaInstance) cBannerBean.eGet(sfLeftControl);
@@ -99,7 +98,7 @@ public class CBannerContainerPolicy extends CompositeContainerPolicy {
 		IJavaInstance bottom = (IJavaInstance) cBannerBean.eGet(sfBottomControl);
 		
 		EObject parent = (EObject)getContainer();
-		CommandBuilder cBld = new CommandBuilder(""); //$NON-NLS-1$
+		CommandBuilder cBld = new CommandBuilder();
 		
 		for (Iterator itr = children.iterator(); itr.hasNext();) {
 			Object child = itr.next();
@@ -112,9 +111,7 @@ public class CBannerContainerPolicy extends CompositeContainerPolicy {
 		}
 		
 		if(!cBld.isEmpty()) {
-			cBld.append(orphanCmd);
-			return cBld.getCommand();
-		} else
-			return orphanCmd;
+			cbldr.append(cbldr.getCommand());
+		} 
 	}
 }

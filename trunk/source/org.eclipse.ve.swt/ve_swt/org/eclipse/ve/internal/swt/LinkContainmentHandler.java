@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LinkContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -37,7 +37,7 @@ public class LinkContainmentHandler extends WidgetContainmentHandler {
 		super(model);
 	}
 	
-	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		if (creation && child instanceof IJavaObjectInstance) {
 			IJavaObjectInstance jo = (IJavaObjectInstance) child;
 			preCmds.append(new LabelCreationCommand(jo, "text", SWTMessages.LinkPolicy_text_Link, domain));

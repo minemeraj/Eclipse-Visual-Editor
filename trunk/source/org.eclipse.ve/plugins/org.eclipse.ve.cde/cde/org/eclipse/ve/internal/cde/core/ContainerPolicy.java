@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: ContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-11 21:26:00 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-04 17:30:49 $ 
  */
 
 import java.util.*;
@@ -234,7 +234,18 @@ public abstract Result getCreateCommand(List children, Object positionBeforeChil
 
 
 /**
- * Return the command to delete the child in the request. Delete means the child is
+ * A convenience method for delete of one child.
+ * @param child
+ * @return
+ * 
+ * @since 1.2.0
+ */
+public Result getDeleteDependentCommand(Object child) {
+	return getDeleteDependentCommand(Collections.singletonList(child));
+}
+
+/**
+ * Return the command to delete the children in the request. Delete means the child is
  * being removed entirely from the model. (In some cases, the relationship may be
  * a shared relationship (see "add" above) and is only being deleted from this relationship, in that
  * case the delete request should be treated as an orphan request. Only the implementer
@@ -256,7 +267,7 @@ public abstract Result getCreateCommand(List children, Object positionBeforeChil
  * the returned command. It will detect the annotations through the standard linkage
  * by AnnotationLinkagePolicy.
  */
-public abstract Command getDeleteDependentCommand(Object child);
+public abstract Result getDeleteDependentCommand(List children);
 
 /**
  * Return the command to orphan the child in the request. Orphan means the children
@@ -274,7 +285,7 @@ public abstract Command getDeleteDependentCommand(Object child);
  * Note: Annotations need not be handled in this case because the model object is
  * not being permanently removed from the model, so the annotations will stay.
  */
-protected abstract Command getOrphanTheChildrenCommand(List children);
+protected abstract Result getOrphanTheChildrenCommand(List children);
 
 
 /**
@@ -300,8 +311,9 @@ protected abstract Command getOrphanTheChildrenCommand(List children);
  * 
  * @since 1.1.0
  */
-public final Command getOrphanChildrenCommand(List children) {
-	Command cmd = getOrphanTheChildrenCommand(children);
+public final Result getOrphanChildrenCommand(List children) {
+	Result result = getOrphanTheChildrenCommand(children);
+	Command cmd = result.getCommand();
 	if (cmd.canExecute()) {
 		Iterator childrenItr = children.iterator();
 		while (childrenItr.hasNext()) {
@@ -322,9 +334,10 @@ public final Command getOrphanChildrenCommand(List children) {
 			if (constraintHandler != null) {
 				cmd = cmd.chain(constraintHandler.contributeOrphanChildCommand());
 			}
-		}		
+		}
+		result.setCommand(cmd);
 	}
-	return cmd;
+	return result;
 }
 
 protected IConstraintHandler getChildConstraintHandler(Object child) {
@@ -373,7 +386,7 @@ public Command getCommand(Request request){
 		return null;
 		
 	if (RequestConstants.REQ_DELETE_DEPENDANT.equals(request.getType())) {
-		return getDeleteDependentCommand(((ForwardedRequest) request).getSender().getModel());
+		return getDeleteDependentCommand(((ForwardedRequest) request).getSender().getModel()).getCommand();
 	}
 	
 	if (RequestConstants.REQ_CREATE.equals(request.getType())) {
@@ -385,7 +398,7 @@ public Command getCommand(Request request){
 	}
 			
 	if (RequestConstants.REQ_ORPHAN_CHILDREN.equals(request.getType()))
-		return getOrphanChildrenCommand(getChildren((GroupRequest) request));
+		return getOrphanChildrenCommand(getChildren((GroupRequest) request)).getCommand();
 		
 	return null;
 }

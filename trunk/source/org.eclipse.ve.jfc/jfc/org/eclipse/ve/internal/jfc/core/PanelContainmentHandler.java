@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PanelContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:48 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -20,7 +20,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IContainmentHandler;
  
 
 /**
@@ -36,7 +35,7 @@ import org.eclipse.ve.internal.cde.core.IContainmentHandler;
  * the {@link org.eclipse.ve.internal.jfc.core.DefaultJFCLayoutPolicy} on their own.
  * @since 1.2.0
  */
-public class PanelContainmentHandler extends ComponentModelAdapter implements IContainmentHandler, IExecutableExtension {
+public class PanelContainmentHandler extends AbstractComponentModelContainmentHandler implements IExecutableExtension {
 
 	private String typeForLayoutHandling;
 	
@@ -49,7 +48,7 @@ public class PanelContainmentHandler extends ComponentModelAdapter implements IC
 		super(component);
 	}
 	
-	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		// Only for creation do we do layout modification. Add assumes layout already handled.
 		if (creation && child instanceof IJavaObjectInstance) {
 			IJavaObjectInstance jo = (IJavaObjectInstance) child;

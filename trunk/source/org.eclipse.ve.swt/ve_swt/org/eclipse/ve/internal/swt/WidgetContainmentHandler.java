@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -31,10 +31,19 @@ public class WidgetContainmentHandler extends NoFFModelAdapter {
 		super(model);
 	}
 
-	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		child = super.contributeToDropRequest(parent, child, preCmds, postCmds, creation, domain);	// Let super handle is not on FF.
 		processAllocation(parent, child, preCmds);
 		return child;		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.swt.NoFFModelAdapter#contributeToRemoveRequest(java.lang.Object, java.lang.Object, org.eclipse.ve.internal.cde.commands.CommandBuilder, org.eclipse.ve.internal.cde.commands.CommandBuilder, boolean, org.eclipse.ve.internal.cde.core.EditDomain)
+	 */
+	public Object contributeToRemoveRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean orphan, EditDomain domain) throws StopRequestException {
+		if (orphan)
+			postCmds.append(new EnsureOrphanFromParentCommand((IJavaObjectInstance) child, (IJavaObjectInstance) parent));
+		return super.contributeToRemoveRequest(parent, child, preCmds, postCmds, orphan, domain);
 	}
 
 	/**

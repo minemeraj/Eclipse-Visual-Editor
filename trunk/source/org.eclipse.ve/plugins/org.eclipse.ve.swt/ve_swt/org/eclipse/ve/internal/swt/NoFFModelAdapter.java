@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoFFModelAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-04 17:30:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -22,10 +22,9 @@ import org.eclipse.ve.internal.cde.core.IContainmentHandler;
  
 
 /**
+ * For controls that can't be on the freeform.
  * @author pwalker
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class NoFFModelAdapter extends ControlModelAdapter implements IContainmentHandler {
 
@@ -36,10 +35,17 @@ public class NoFFModelAdapter extends ControlModelAdapter implements IContainmen
 		super(aControl);
 	}
 
-	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		// return child only for parents that are the freeform surface
 		if (parent instanceof DiagramData)
-			throw new NoAddException("Parent is invalid for this child.");
+			throw new StopRequestException("Parent is invalid for this child.");
+		return child;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.IContainmentHandler#contributeToRemoveRequest(java.lang.Object, java.lang.Object, org.eclipse.ve.internal.cde.commands.CommandBuilder, org.eclipse.ve.internal.cde.commands.CommandBuilder, boolean, org.eclipse.ve.internal.cde.core.EditDomain)
+	 */
+	public Object contributeToRemoveRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean orphan, EditDomain domain) throws StopRequestException {
 		return child;
 	}
 

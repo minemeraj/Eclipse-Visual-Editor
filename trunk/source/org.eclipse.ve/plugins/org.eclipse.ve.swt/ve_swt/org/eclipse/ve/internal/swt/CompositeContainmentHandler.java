@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -48,7 +48,7 @@ public class CompositeContainmentHandler extends WidgetContainmentHandler implem
 		super(model);
 	}
 	
-	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		child = super.contributeToDropRequest(parent, child, preCmds, postCmds, creation, domain);
 		// Only for creation do we do layout modification. Add assumes layout already handled.
 		if (creation && child instanceof IJavaObjectInstance) {

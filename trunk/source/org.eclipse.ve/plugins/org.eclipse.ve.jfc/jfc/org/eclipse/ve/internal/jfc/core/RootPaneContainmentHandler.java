@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: RootPaneContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:48 $ 
  */
 
 import org.eclipse.core.runtime.*;
@@ -27,7 +27,8 @@ import org.eclipse.jem.java.JavaPackage;
 import org.eclipse.ve.internal.cdm.DiagramData;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
-import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.AnnotationPolicy;
+import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
@@ -47,7 +48,7 @@ import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
  * 
  * @since 1.2.0
  */
-public class RootPaneContainmentHandler extends ComponentModelAdapter implements IExecutableExtension, IContainmentHandler {
+public class RootPaneContainmentHandler extends AbstractComponentModelContainmentHandler implements IExecutableExtension {
 
 	private boolean ffOnly = true;
 	
@@ -55,11 +56,11 @@ public class RootPaneContainmentHandler extends ComponentModelAdapter implements
 		super(model);
 	}
 
-	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		if (ffOnly) {
 			// Verify if on Freeform
 			if (!(parent instanceof DiagramData))
-				throw new NoAddException("This object can only be on the free form surface.");			
+				throw new StopRequestException("This object can only be on the free form surface.");			
 		}
 		if (creation && child instanceof IJavaObjectInstance) {
 			IJavaObjectInstance jo = (IJavaObjectInstance) child;

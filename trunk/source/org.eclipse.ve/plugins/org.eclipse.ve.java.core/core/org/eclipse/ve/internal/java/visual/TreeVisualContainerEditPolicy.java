@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: TreeVisualContainerEditPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-11 21:23:48 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-04 17:30:45 $ 
  */
 
 import java.util.*;
@@ -47,7 +47,7 @@ public class TreeVisualContainerEditPolicy extends TreeContainerEditPolicy imple
 	
 	public Command getCommand(Request req){
 		if (req.getType().equals(RequestConstants.REQ_ORPHAN_CHILDREN))
-			return helper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) req));
+			return helper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) req)).getCommand();
 		return super.getCommand(req);
 	}
 	

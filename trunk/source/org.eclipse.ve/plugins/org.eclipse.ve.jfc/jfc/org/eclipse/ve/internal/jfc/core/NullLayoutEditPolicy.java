@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NullLayoutEditPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-11 21:23:50 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-04 17:30:48 $ 
  */
 import java.util.Collections;
 
@@ -97,7 +97,7 @@ protected Command getDeleteDependantCommand(Request aRequest) {
  * the new position. We need to use the Helper for this.
  */
 protected Command getOrphanChildrenCommand(Request aRequest) {
-	return helper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) aRequest));
+	return helper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) aRequest)).getCommand();
 }
 
 protected Command createChangeConstraintCommand(EditPart childEditPart, Object constraint, boolean moved, boolean resize) {

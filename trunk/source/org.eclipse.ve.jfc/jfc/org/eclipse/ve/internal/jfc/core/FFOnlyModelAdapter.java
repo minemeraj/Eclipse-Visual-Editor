@@ -11,25 +11,24 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: FFOnlyModelAdapter.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-04 17:30:48 $ 
  */
 
 import org.eclipse.ve.internal.cdm.DiagramData;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IContainmentHandler;
 
-public class FFOnlyModelAdapter extends ComponentModelAdapter implements IContainmentHandler {
+public class FFOnlyModelAdapter extends AbstractComponentModelContainmentHandler {
 	
 	public FFOnlyModelAdapter(Object model) {
 		super(model);
 	}
 
-	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		// return child only for parents that are the freeform surface
 		if (!(parent instanceof DiagramData))
-				throw new NoAddException("Parent is invalid for this child.");
+				throw new StopRequestException("Parent is invalid for this child.");
 		return child;
 	}
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: AbstractEMFContainerPolicy.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-11 21:26:01 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-04 17:30:49 $ 
  */
 
 import java.util.*;
@@ -20,9 +20,9 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 
-import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.IContainmentHandler.NoAddException;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.core.*;
+import org.eclipse.ve.internal.cde.core.IContainmentHandler.StopRequestException;
 /**
  * Container Policy for EMF (MOF) containment relationship.
  * The structural feature is to be passed in from subclasses.
@@ -55,7 +55,7 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 		setContainerFeature(feature);
 	}
 	
-	protected static final int 
+	public static final int 
 		ADD_REQ = 0,	// The request for the containment feature is an add request. Children are currently not contained in this container.
 		CREATE_REQ = 1,	// The request for the containment feature is a create request. Child is currently not contained in this container.		
 		MOVE_REQ = 2,	// The request for the containment feature is a move request. Children are currently contained in this container.
@@ -221,21 +221,35 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 	/**
 	 * Return the adjusted true child if {@link IContainmentHandler} decides for a different one.
 	 * @param child child to send in
-	 * @param creation <code>true</code> if this is for a creation, <code>false</code> if this for an add.
+	 * @param reqType request type. {@link #ADD_REQ}, etc.
 	 * @param preCmds CommandBuilder for commands to be executed before the adds
 	 * @param postCmds CommandBuilder for commands to be executed after the adds
 	 * @return the child to add  (maybe different than the one sent it) or <code>null</code> if handler handled child
-	 * @throws NoAddException thrown if the handler determines that the parent is not valid for this child.
+	 * @throws StopRequestException thrown if the handler determines that the parent is not valid for this child.
 	 * 
 	 * @since 1.2.0
 	 */
-	protected Object getTrueChild(Object child, boolean creation, CommandBuilder preCmds, CommandBuilder postCmds) throws NoAddException {
+	protected Object getTrueChild(Object child, int reqType, CommandBuilder preCmds, CommandBuilder postCmds) throws StopRequestException {
 		// Go to the IContainmentHandler to decide what to do with the child.
 		IModelAdapterFactory fact = getModelAdapterFactory();
 		if (fact != null) {
 			IContainmentHandler handler = (IContainmentHandler) fact.getAdapter(child, IContainmentHandler.class);
 			if (handler != null) {
-				child = handler.contributeToDropRequest(container, child, preCmds, postCmds, creation, getEditDomain());
+				switch (reqType) {
+					case ADD_REQ:
+						child = handler.contributeToDropRequest(container, child, preCmds, postCmds, false, getEditDomain());
+						break;
+					case CREATE_REQ:
+						child = handler.contributeToDropRequest(container, child, preCmds, postCmds, true, getEditDomain());
+						break;
+					case ORPHAN_REQ:
+						child = handler.contributeToRemoveRequest(container, child, preCmds, postCmds, true, getEditDomain());
+						break;
+					case DELETE_REQ:
+						child = handler.contributeToRemoveRequest(container, child, preCmds, postCmds, false, getEditDomain());
+						break;
+				}
+				
 			}
 		}
 		return child;
@@ -253,21 +267,21 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 	 *
 	 * @param corelatedResult incoming result containing the children and the corelated list, if any. If no corelated list is <code>null</code>, then
 	 * corelated objects checking will be done.
-	 * @param creation
+	 * @param reqType request type. {@link #ADD_REQ}, etc.
 	 * @param preCmds
 	 * @param postCmds
-	 * @throws NoAddException
+	 * @throws StopRequestException
 	 * 
 	 * @since 1.2.0
 	 */
-	public void getTrueChildren(CorelatedResult corelatedResult, boolean creation, CommandBuilder preCmds, CommandBuilder postCmds) throws NoAddException {
+	public void getTrueChildren(CorelatedResult corelatedResult, int reqType, CommandBuilder preCmds, CommandBuilder postCmds) throws StopRequestException {
 		ListIterator corelatedItr = null;
 		boolean changedChildrenList = false;
 		for (ListIterator childrenItr = corelatedResult.getChildren().listIterator(); childrenItr.hasNext();) {
 			Object child = childrenItr.next();
 			if (corelatedItr != null)
 				corelatedItr.next();
-			Object newChild = getTrueChild(child, creation, preCmds, postCmds);
+			Object newChild = getTrueChild(child, reqType, preCmds, postCmds);
 			if (newChild != child) {
 				if (!changedChildrenList) {
 					// We will be modifying, so make a copy of the list, and create an iterator starting at where we currently are.
@@ -300,8 +314,8 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 		CommandBuilder preCmds = createCommandBuilder(true), postCmds = createCommandBuilder(true);
 		int origSize = children.size();
 		try {
-			getTrueChildren(result, true, preCmds, postCmds);
-		} catch (NoAddException e) {
+			getTrueChildren(result, CREATE_REQ, preCmds, postCmds);
+		} catch (StopRequestException e) {
 			preCmds.markDead();
 		}
 		
@@ -409,8 +423,8 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 		CommandBuilder preCmds = createCommandBuilder(true), postCmds = createCommandBuilder(true);
 		int origSize = children.size();
 		try {
-			getTrueChildren(result, false, preCmds, postCmds);
-		} catch (NoAddException e) {
+			getTrueChildren(result, ADD_REQ, preCmds, postCmds);
+		} catch (StopRequestException e) {
 			preCmds.markDead();
 		}
 		
@@ -500,11 +514,68 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 	}
 	
 	
-	public Command getDeleteDependentCommand(Object child) {
+	public final Result getDeleteDependentCommand(List children) {
+
+		CorelatedResult result = new CorelatedResult(children);
+		CommandBuilder preCmds = createCommandBuilder(true), postCmds = createCommandBuilder(true);
+		int origSize = children.size();
+		try {
+			getTrueChildren(result, DELETE_REQ, preCmds, postCmds);
+		} catch (StopRequestException e) {
+			preCmds.markDead();
+		}
+		
+		if (preCmds.isDead() || postCmds.isDead()) {
+			result.setCommand(UnexecutableCommand.INSTANCE);
+			return result;
+		}
+		
+		if (!result.getChildren().isEmpty() || origSize == 0) {
+			// Either there are children.
+			// Or it  could be that the handlers simply removed them all. If they did, then this is valid and we shouldn't go on to getAddCommand.
+			// This is because if we sent an empty list into getAddCommand some subclasses treat this as invalid. But the handlers have determined
+			// that it is valid. If children is empty and original is empty then the handlers didn't do it, so let normal processing handle it.
+			getDeleteDependentCommand(result.getChildren(), preCmds);
+		}
+
+		preCmds.append(postCmds.getCommand());
+		if (preCmds.isEmpty() || preCmds.isDead())
+			result.setCommand(UnexecutableCommand.INSTANCE);
+		else
+			result.setCommand(preCmds.getCommand());
+		return result;
+	}
+	
+	/**
+	 * Process the finalized list of children for delete.
+	 * <p>
+	 * By default this just calls {@link #getDeleteDependentCommand(Object, CommandBuilder)}
+	 * for each child. Subclasses can override if they want to handle the list all at once.
+	 * @param children
+	 * @param positionBeforeChild
+	 * @param cbldr
+	 * 
+	 * @since 1.2.0
+	 */
+	protected void getDeleteDependentCommand(List children, CommandBuilder cbldr) {
+		for (Iterator itr = children.iterator(); itr.hasNext();) {
+			getDeleteDependentCommand(itr.next(), cbldr);
+		}
+	}
+	
+	/**
+	 * Delete an individual child.
+	 * @param child
+	 * @param cbldr
+	 * 
+	 * @since 1.2.0
+	 */
+	protected void getDeleteDependentCommand(Object child, CommandBuilder cbldr) {
 		EStructuralFeature containmentSF = getContainmentSF(child, null, DELETE_REQ);
 		if (containmentSF == null)
-			return UnexecutableCommand.INSTANCE;		
-		return getDeleteDependentCommand(child, containmentSF);
+			cbldr.markDead();
+		else
+			cbldr.append(getDeleteDependentCommand(child, containmentSF));
 	}
 	
 	public Command getMoveChildrenCommand(List children, Object positionBeforeChild) {
@@ -514,11 +585,12 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 		return getMoveChildrenCommand(children, positionBeforeChild, containmentSF);
 	}
 	
-	protected Command getOrphanTheChildrenCommand(List children) {
+	protected void getOrphanTheChildrenCommand(List children, CommandBuilder cbldr) {
 		EStructuralFeature containmentSF = getContainmentSF(children, null, ORPHAN_REQ);
 		if (containmentSF == null)
-			return UnexecutableCommand.INSTANCE;		
-		return getOrphanChildrenCommand(children, containmentSF);
+			cbldr.markDead();
+		else
+			cbldr.append(getOrphanChildrenCommand(children, containmentSF));
 	}
 	
 
@@ -544,6 +616,42 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 		return cBld.getCommand(); // No annotations if not composite because the child is owned by someone else and is not going away.
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.ContainerPolicy#getOrphanTheChildrenCommand(java.util.List)
+	 */
+	protected final Result getOrphanTheChildrenCommand(List children) {
+
+		CorelatedResult result = new CorelatedResult(children);
+		CommandBuilder preCmds = createCommandBuilder(true), postCmds = createCommandBuilder(true);
+		int origSize = children.size();
+		try {
+			getTrueChildren(result, ORPHAN_REQ, preCmds, postCmds);
+		} catch (StopRequestException e) {
+			preCmds.markDead();
+		}
+		
+		if (preCmds.isDead() || postCmds.isDead()) {
+			result.setCommand(UnexecutableCommand.INSTANCE);
+			return result;
+		}
+				
+		if (!result.getChildren().isEmpty() || origSize == 0) {
+			// Either there are children.
+			// Or it  could be that the handlers simply removed them all. If they did, then this is valid and we shouldn't go on to getAddCommand.
+			// This is because if we sent an empty list into getAddCommand some subclasses treat this as invalid. But the handlers have determined
+			// that it is valid. If children is empty and original is empty then the handlers didn't do it, so let normal processing handle it.
+			getOrphanTheChildrenCommand(result.getChildren(), preCmds);
+		}
+		
+		preCmds.append(postCmds.getCommand());
+		if (preCmds.isEmpty() || preCmds.isDead())
+			result.setCommand(UnexecutableCommand.INSTANCE);
+		else
+			result.setCommand(preCmds.getCommand());
+		return result;
+		
+	}
+	
 	/**
 	 * Orphan children.
 	 * @param children

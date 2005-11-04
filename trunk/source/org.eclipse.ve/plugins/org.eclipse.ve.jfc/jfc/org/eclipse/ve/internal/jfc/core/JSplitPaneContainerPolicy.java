@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneContainerPolicy.java,v $
- *  $Revision: 1.12 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.13 $  $Date: 2005-11-04 17:30:48 $ 
  */
 
 import java.util.*;
@@ -255,17 +255,18 @@ public class JSplitPaneContainerPolicy extends BaseJavaContainerPolicy {
 	/**
 	 * Delete the dependent. The child could be the component or the constraintComponent.
 	 */
-	public Command getDeleteDependentCommand(Object child) {
+	protected void getDeleteDependentCommand(Object child, CommandBuilder cbldr) {
 		// Need to handle the possibility that the child was added with a constraint (i.e. add(thisComponent, "left"))
 		EObject constraintComponent = InverseMaintenanceAdapter.getIntermediateReference((EObject) container, sf_containerComponents, sf_constraintComponent, (EObject) child);
-		if (constraintComponent != null)
-			return super.getDeleteDependentCommand(constraintComponent, sf_containerComponents);
-			
-		EReference delReference = containmentSF((EObject) child);
-		if (delReference != null)	
-			return super.getDeleteDependentCommand(child, delReference);
-			
-		return UnexecutableCommand.INSTANCE;
+		if (constraintComponent != null) {
+			cbldr.append(super.getDeleteDependentCommand(constraintComponent, sf_containerComponents));
+		} else {
+			EReference delReference = containmentSF((EObject) child);
+			if (delReference != null) {	
+				cbldr.append(super.getDeleteDependentCommand(child, delReference));
+			} else			
+				cbldr.markDead();
+		}
 	}
 
 	/*
@@ -355,7 +356,7 @@ public class JSplitPaneContainerPolicy extends BaseJavaContainerPolicy {
 	 * The children could be a mix which may have constraints (i.e. add(aComponent, "left")
 	 * or may have been added using JSplitPane setters (i.e. setLeftComponent(Component)).
 	 */
-	protected Command getOrphanTheChildrenCommand(List children) {
+	protected void getOrphanTheChildrenCommand(List children, CommandBuilder cbldr) {
 		// We need to unset the components from the constraints after
 		// orphaning the constraints so that they are free of any
 		// containment when they are added to their new parent. If we
@@ -391,8 +392,9 @@ public class JSplitPaneContainerPolicy extends BaseJavaContainerPolicy {
 			compBldr.setApplyRules(false);
 			compBldr.cancelGroupAttributeSetting(constraints, sf_constraintComponent);	// Cancel out all of the component settings not under rule control since we are keeping them.
 		}
-		return compBldr.getCommand();
+		cbldr.append(compBldr.getCommand());
 	}
+	
 	protected boolean isValidChild(Object child, EStructuralFeature containmentSF) {
 		return (
 			classComponent.isInstance(child)

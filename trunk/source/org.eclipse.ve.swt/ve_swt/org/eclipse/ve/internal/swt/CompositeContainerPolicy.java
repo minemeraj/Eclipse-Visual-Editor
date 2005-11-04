@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.23 $$  $$Date: 2005-10-11 21:23:47 $$ 
+ *  $$Revision: 1.24 $$  $$Date: 2005-11-04 17:30:52 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -18,7 +18,6 @@ import java.util.*;
 
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.gef.commands.Command;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 
@@ -44,13 +43,12 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 		sfLayoutData = JavaInstantiation.getReference(rset, SWTConstants.SF_CONTROL_LAYOUTDATA);
 	}
 	
-	protected Command getOrphanTheChildrenCommand(List children) {
-		Command orphanChildrenCommand = super.getOrphanTheChildrenCommand(children);
+	protected void getOrphanTheChildrenCommand(List children, CommandBuilder cbldr) {
+		super.getOrphanTheChildrenCommand(children, cbldr);
 		// Need to cancel the childrens' layout data because we don't what it will be where we are going.
 		RuledCommandBuilder cbld = new RuledCommandBuilder(getEditDomain());
 		cbld.cancelGroupAttributeSetting(children, sfLayoutData);
-		cbld.append(orphanChildrenCommand);
-		return cbld.getCommand();
+		cbldr.append(cbld.getCommand());
 	}
 	
 	protected boolean isValidBeanLocation(Object child) {

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: VisualContainerPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-11 21:23:48 $ 
+ *  $Revision: 1.9 $  $Date: 2005-11-04 17:30:45 $ 
  */
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +21,7 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IContainmentHandler.NoAddException;
+import org.eclipse.ve.internal.cde.core.IContainmentHandler.StopRequestException;
 
 import org.eclipse.ve.internal.java.core.BaseJavaContainerPolicy;
 
@@ -168,8 +168,8 @@ public abstract class VisualContainerPolicy extends BaseJavaContainerPolicy {
 
 		int origSize = children.size();
 		try {
-			getTrueChildren(result, true, preCmds, postCmds);
-		} catch (NoAddException e) {
+			getTrueChildren(result, CREATE_REQ, preCmds, postCmds);
+		} catch (StopRequestException e) {
 			preCmds.markDead();
 		}
 		
@@ -241,8 +241,8 @@ public abstract class VisualContainerPolicy extends BaseJavaContainerPolicy {
 
 		int origSize = children.size();
 		try {
-			getTrueChildren(result , false, preCmds, postCmds);
-		} catch (NoAddException e) {
+			getTrueChildren(result , ADD_REQ, preCmds, postCmds);
+		} catch (StopRequestException e) {
 			preCmds.markDead();
 		}
 		

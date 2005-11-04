@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LabelContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:48 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -18,7 +18,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IContainmentHandler;
 
 import org.eclipse.ve.internal.java.core.JavaMessages;
 import org.eclipse.ve.internal.java.core.LabelCreationCommand;
@@ -28,7 +27,7 @@ import org.eclipse.ve.internal.java.core.LabelCreationCommand;
  * Containment handler for Label/JLabel. It handles the setting of the text if not set.
  * @since 1.2.0
  */
-public class LabelContainmentHandler extends ComponentModelAdapter implements IContainmentHandler {
+public class LabelContainmentHandler extends AbstractComponentModelContainmentHandler {
 
 	/**
 	 * @param component
@@ -39,7 +38,7 @@ public class LabelContainmentHandler extends ComponentModelAdapter implements IC
 		super(component);
 	}
 	
-	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		if (creation && child instanceof IJavaObjectInstance) {
 			IJavaObjectInstance jo = (IJavaObjectInstance) child;
 			// Only if exactly Label or JLabel. Subclasses would assume to have their text already set.

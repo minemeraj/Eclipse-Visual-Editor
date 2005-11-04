@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutSwitcher.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-11 21:23:50 $ 
+ *  $Revision: 1.9 $  $Date: 2005-11-04 17:30:48 $ 
  */
 
 import java.util.*;
@@ -123,7 +123,7 @@ private Command removeComponents(List comps) {
 	//Anonymous....Adapter.getFirstReferencedBy(javainstance, VCEPackage.eInstance.getMethod_Return());			
 	
 	CompoundCommand cc = new CompoundCommand("Move the extra components from the BorderLayout container to the free form"); //$NON-NLS-1$
-	cc.add(policy.getOrphanChildrenCommand(comps));
+	cc.add(policy.getOrphanChildrenCommand(comps).getCommand());
 	// Having orphansed the components from the container, add them to the free form
 	// Some of the components might not be returned by methods ( so they are therefore not referencable by the free form
 	// so this will need more thought - JRW

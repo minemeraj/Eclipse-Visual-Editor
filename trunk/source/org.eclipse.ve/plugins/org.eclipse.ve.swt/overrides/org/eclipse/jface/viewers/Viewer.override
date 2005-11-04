@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.jem.internal.beaninfo.beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore" xmlns:org.eclipse.jem.java="java.xmi" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+   <objectChanges key="X:ROOT#//@root">
+      <value featureName="eAnnotations">
+         <listChanges referenceValues="_eAnnotations _eAnnotations1 _eAnnotations2 _eAnnotations3"/>
+      </value>
+      <value featureName="eStructuralFeatures">
+         <!-- Define a relationship between the ListViewer and the List -->
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>
+   </objectChanges>
+   <objectsToAttach beanLocation="GLOBAL_LOCAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.ViewerProxyAdapter" beanReturn="false" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+        modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.ViewerContainmentHandler" xmi:id="_eAnnotations1"/>
+
+  <!-- Add the "control" property as a required Implicit property to the beaninfo. This would normally be done in the BeanInfo class
+       but we currently don't have a beaninfo for Viewer, so we do it here." -->
+  <objectsToAttach  xmi:id="_eAnnotations2"
+      xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:BeanDecorator" source="org.eclipse.jem.internal.beaninfo.BeanDecorator">
+    <attributes key="requiredImplicitProperties" value="&quot;control&quot;"/>
+  </objectsToAttach>
+  <objectsToAttach expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.jface.codegen.ViewerDecoder" 
+                    source="codegen.CodeGenHelperClass" 
+                    xmi:id="_eAnnotations3" 
+                    xsi:type="codeGenHelpers:CodeGenHelperClass"/>
+   
+   <objectsToAttach containment="false" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#Control" name="control" upperBound="1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations hidden="true" xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator"/>
+      <eAnnotations linkType="DEPENDENCY" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
+    </objectsToAttach>
+</change:ChangeDescription>

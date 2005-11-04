@@ -11,7 +11,7 @@
 package org.eclipse.ve.examples.cdm.dept.ui;
 /*
  *  $RCSfile: CompanyContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-11 21:23:51 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-04 17:30:47 $ 
  */
 
 import java.util.*;
@@ -79,46 +79,56 @@ public class CompanyContainerPolicy extends ContainerPolicy {
 	/**
 	 * Delete a  child.
 	 */
-	public Command getDeleteDependentCommand(Object child) {
-		if (!(child instanceof Department))
-			return UnexecutableCommand.INSTANCE;
+	public Result getDeleteDependentCommand(List children) {
+		Result result = new Result(children);
+		for (Iterator itr=children.iterator(); itr.hasNext(); ) {
+			if (!(itr.next() instanceof Department)) {
+				result.setCommand(UnexecutableCommand.INSTANCE);
+				return result;
+			}
+		}
 
-		List annotations = AnnotationPolicy.getAllAnnotations(new ArrayList(), child, domain.getAnnotationLinkagePolicy());
+		List annotations = AnnotationPolicy.getAllAnnotations(new ArrayList(), children, domain.getAnnotationLinkagePolicy());
 				
 		CompoundCommand cmd = new CompoundCommand();	
 		Company parent = (Company) container;
-		List list = Collections.singletonList(child);
-		cmd.append(new RemoveDepartmentsCommand(parent, list));
-		if (((Department) child).getManager() != null) {
-			// Need to cancel out the manager selection so that the manager doesn't point to a non-existent department.
-			RestoreDefaultPropertyValueCommand reset = new RestoreDefaultPropertyValueCommand();
-			reset.setTarget(PropertySupport.getPropertySource(child));
-			reset.setPropertyId(Department.MANAGER);
-			cmd.append(reset);
-		}
-		
-		// Also, any employees of this department that are managers need to be unset also.
-		Iterator itr = ((Department) child).getEmployees().iterator();
-		while (itr.hasNext()) {
-			Employee emp = (Employee) itr.next();
-			if (emp.getManages() != null) {
-				// Need to cancel out the manager selection so that the manager doesn't point to a non-existent employee.
+		cmd.append(new RemoveDepartmentsCommand(parent, children));
+		for (Iterator itr = children.iterator(); itr.hasNext();) {
+			Department child = (Department) itr.next();
+			if (child.getManager() != null) {
+				// Need to cancel out the manager selection so that the manager doesn't point to a non-existent department.
 				RestoreDefaultPropertyValueCommand reset = new RestoreDefaultPropertyValueCommand();
-				reset.setTarget(PropertySupport.getPropertySource(emp.getManages()));
+				reset.setTarget(PropertySupport.getPropertySource(child));
 				reset.setPropertyId(Department.MANAGER);
 				cmd.append(reset);
-				Annotation mgrConn = domain.getAnnotationLinkagePolicy().getAnnotation(new CompanyAnnotationLinkagePolicy.ManagedConnection(emp.getManages()));
-				if (mgrConn != null)
-					annotations.add(mgrConn);
 			}
+			
+			// Also, any employees of this department that are managers need to be unset also.
+			Iterator itrEmployees = child.getEmployees().iterator();
+			while (itrEmployees.hasNext()) {
+				Employee emp = (Employee) itrEmployees.next();
+				if (emp.getManages() != null) {
+					// Need to cancel out the manager selection so that the manager doesn't point to a non-existent employee.
+					RestoreDefaultPropertyValueCommand reset = new RestoreDefaultPropertyValueCommand();
+					reset.setTarget(PropertySupport.getPropertySource(emp.getManages()));
+					reset.setPropertyId(Department.MANAGER);
+					cmd.append(reset);
+					Annotation mgrConn = domain.getAnnotationLinkagePolicy().getAnnotation(new CompanyAnnotationLinkagePolicy.ManagedConnection(emp.getManages()));
+					if (mgrConn != null)
+						annotations.add(mgrConn);
+				}
+			}
+
+			// Also need to delete any annotations associated with the manager connection.
+			Annotation mgrConn = domain.getAnnotationLinkagePolicy().getAnnotation(new CompanyAnnotationLinkagePolicy.ManagedConnection(child));
+			if (mgrConn != null)
+				annotations.add(mgrConn);
 		}
 		
-		// Also need to delete any annotations associated with the manager connection.
-		Annotation mgrConn = domain.getAnnotationLinkagePolicy().getAnnotation(new CompanyAnnotationLinkagePolicy.ManagedConnection((Department) child));
-		if (mgrConn != null)
-			annotations.add(mgrConn);
+		
 
-		return AnnotationPolicy.getDeleteDependentCommand(annotations, cmd.unwrap(), domain.getDiagramData());
+		result.setCommand(AnnotationPolicy.getDeleteDependentCommand(annotations, cmd.unwrap(), domain.getDiagramData()));
+		return result;
 	}
 	
 	/**
@@ -145,13 +155,17 @@ public class CompanyContainerPolicy extends ContainerPolicy {
 	/**
 	 * Orphan  children.
 	 */
-	protected Command getOrphanTheChildrenCommand(List children) {
+	protected Result getOrphanTheChildrenCommand(List children) {
+		Result result = new Result(children);
 		Iterator itr = children.iterator();
 		while (itr.hasNext()) {
 			Object child = itr.next();
-			if (!(child instanceof Department))
-				return UnexecutableCommand.INSTANCE;
+			if (!(child instanceof Department)) {
+				result.setCommand(UnexecutableCommand.INSTANCE);
+				return result;
+			}
 		}
-		return new RemoveDepartmentsCommand((Company) container, children);
+		result.setCommand(new RemoveDepartmentsCommand((Company) container, children));
+		return result;
 	}	
 }

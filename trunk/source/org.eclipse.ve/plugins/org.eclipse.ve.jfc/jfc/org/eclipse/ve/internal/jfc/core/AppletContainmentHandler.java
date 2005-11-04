@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AppletContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:48 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -35,7 +35,7 @@ public class AppletContainmentHandler extends FFOnlyModelAdapter {
 		super(model);
 	}
 	
-	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		child = super.contributeToDropRequest(parent, child, preCmds, postCmds, creation, domain);
 		// Only for creation do we do layout modification. Add assumes layout already handled.
 		if (creation && child instanceof IJavaObjectInstance) {

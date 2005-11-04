@@ -11,7 +11,7 @@
 package org.eclipse.ve.examples.cdm.dept.ui;
 /*
  *  $RCSfile: DepartmentContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-11 21:23:51 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-04 17:30:46 $ 
  */
 
 import java.util.*;
@@ -83,27 +83,36 @@ public class DepartmentContainerPolicy extends ContainerPolicy {
 	/**
 	 * Delete a  child.
 	 */
-	public Command getDeleteDependentCommand(Object child) {
-		if (!(child instanceof Employee))
-			return UnexecutableCommand.INSTANCE;
+	public Result getDeleteDependentCommand(List children) {
+		Result result = new Result(children);
+		for (Iterator itr=children.iterator(); itr.hasNext(); ) {
+			if (!(itr.next() instanceof Employee)) {
+				result.setCommand(UnexecutableCommand.INSTANCE);
+				return result;
+			}
+		}
 		
 		Department parent = (Department) container;
-		List list = Collections.singletonList(child);
-		List annotations = AnnotationPolicy.getAllAnnotations(new ArrayList(), child, domain.getAnnotationLinkagePolicy());
-		Command cmd = new RemoveEmployeesCommand(parent, list);
-		if (((Employee) child).getManages() != null) {
-			// Need to unmanage it too.
-			RestoreDefaultPropertyValueCommand umCmd = new RestoreDefaultPropertyValueCommand();
-			umCmd.setTarget(PropertySupport.getPropertySource(((Employee) child).getManages()));
-			umCmd.setPropertyId(Department.MANAGER);
-			cmd = umCmd.chain(cmd);	// Remove as manager, then remove employee.
-			// Remove any annotation associated with the manager connection
-			Annotation mgrConn = domain.getAnnotationLinkagePolicy().getAnnotation(new CompanyAnnotationLinkagePolicy.ManagedConnection(((Employee) child).getManages()));
-			if (mgrConn != null)
-				annotations.add(mgrConn);
+		List annotations = AnnotationPolicy.getAllAnnotations(new ArrayList(), children, domain.getAnnotationLinkagePolicy());
+		Command cmd = new RemoveEmployeesCommand(parent, children);
+		for (Iterator itr = children.iterator(); itr.hasNext();) {
+			Employee child = (Employee) itr.next();
+			if (child.getManages() != null) {
+				// Need to unmanage it too.
+				RestoreDefaultPropertyValueCommand umCmd = new RestoreDefaultPropertyValueCommand();
+				umCmd.setTarget(PropertySupport.getPropertySource(child.getManages()));
+				umCmd.setPropertyId(Department.MANAGER);
+				cmd = umCmd.chain(cmd); // Remove as manager, then remove employee.
+				// Remove any annotation associated with the manager connection
+				Annotation mgrConn = domain.getAnnotationLinkagePolicy().getAnnotation(
+						new CompanyAnnotationLinkagePolicy.ManagedConnection(child.getManages()));
+				if (mgrConn != null)
+					annotations.add(mgrConn);
 
+			}
 		}
-		return AnnotationPolicy.getDeleteDependentCommand(annotations, cmd, domain.getDiagramData());
+		result.setCommand(AnnotationPolicy.getDeleteDependentCommand(annotations, cmd, domain.getDiagramData()));
+		return result;
 	}
 	
 	/**
@@ -130,13 +139,17 @@ public class DepartmentContainerPolicy extends ContainerPolicy {
 	/**
 	 * Orphan  children.
 	 */
-	protected Command getOrphanTheChildrenCommand(List children) {
+	protected Result getOrphanTheChildrenCommand(List children) {
+		Result result = new Result(children);
 		Iterator itr = children.iterator();
 		while (itr.hasNext()) {
 			Object child = itr.next();
-			if (!(child instanceof Employee))
-				return UnexecutableCommand.INSTANCE;
+			if (!(child instanceof Employee)) {
+				result.setCommand(UnexecutableCommand.INSTANCE);
+				return result;
+			}
 		}
-		return new RemoveEmployeesCommand((Department) container, children);
+		result.setCommand(new RemoveEmployeesCommand((Department) container, children));
+		return result;
 	}	
 }

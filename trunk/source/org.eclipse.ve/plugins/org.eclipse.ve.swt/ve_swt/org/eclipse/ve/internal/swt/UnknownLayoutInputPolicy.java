@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: UnknownLayoutInputPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-11 21:23:47 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-04 17:30:52 $ 
  */
 
 import java.util.*;
@@ -97,7 +97,7 @@ protected Command getMoveChildrenCommand(Request request) {
  * else. So the subpart stays.
  */
 protected Command getOrphanChildrenCommand(Request request) {
-	return fLayoutPolicyHelper.getOrphanChildrenCommand(VisualContainerPolicy.getChildren((GroupRequest) request));
+	return fLayoutPolicyHelper.getOrphanChildrenCommand(VisualContainerPolicy.getChildren((GroupRequest) request)).getCommand();
 }
 
 }

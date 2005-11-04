@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -45,7 +45,7 @@ public class TableContainmentHandler extends WidgetContainmentHandler {
 	}
 
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation,
-			final EditDomain domain) throws NoAddException {
+			final EditDomain domain) throws StopRequestException {
 		child = super.contributeToDropRequest(parent, child, preCmds, postCmds, creation, domain);
 		if (creation && child instanceof IJavaObjectInstance) {
 			final IJavaObjectInstance jo = (IJavaObjectInstance) child;

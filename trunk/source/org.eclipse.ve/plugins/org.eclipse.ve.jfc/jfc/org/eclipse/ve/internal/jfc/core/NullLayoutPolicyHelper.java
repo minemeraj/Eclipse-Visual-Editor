@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NullLayoutPolicyHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2005-10-11 21:23:50 $ 
+ *  $Revision: 1.10 $  $Date: 2005-11-04 17:30:48 $ 
  */
 
 import java.util.*;
@@ -20,7 +20,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -29,6 +28,7 @@ import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.core.XYLayoutUtility;
+import org.eclipse.ve.internal.cde.core.ContainerPolicy.Result;
 
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
@@ -120,17 +120,15 @@ public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List children
 	return result;
 }
 
-public Command getOrphanChildrenCommand(List children) {
+public Result getOrphanChildrenCommand(List children) {
 	
 	// Now get the orphan command for the children.
-	Command orphanContributionCmd = policy.getOrphanChildrenCommand(children);
-	if (orphanContributionCmd == null || !orphanContributionCmd.canExecute())
-		return UnexecutableCommand.INSTANCE;	// It can't be orphaned		
-
+	Result orphanContribution = policy.getOrphanChildrenCommand(children);
 	RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain());
-	cb.append(orphanContributionCmd);	
+	cb.append(orphanContribution.getCommand());	
 	cancelConstraints(cb, children);
-	return cb.getCommand();
+	orphanContribution.setCommand(cb.getCommand());
+	return orphanContribution;
 
 }
 

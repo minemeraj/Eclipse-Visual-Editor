@@ -51,6 +51,17 @@ public class NullLayoutPolicyHelper extends LayoutPolicyHelper {
 			this.resized = resized;
 		}
 	}
+	
+	private static class NullConstraintWrapper extends VisualContainerPolicy.ConstraintWrapper {
+
+		public final NullConstraint nullConstraint;
+
+		public NullConstraintWrapper(NullConstraint nullConstraint) {
+			super(null);	// For SWT null layout the swt layout data (i.e. constraint) is always null.
+			this.nullConstraint = nullConstraint;
+		}
+		
+	}
 
 	public NullLayoutPolicyHelper(VisualContainerPolicy ep) {
 		super(ep);
@@ -91,6 +102,20 @@ public class NullLayoutPolicyHelper extends LayoutPolicyHelper {
 		}
 		return result;
 	}
+	
+	public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List childrenComponents, List constraints, Object position) {
+		ArrayList wrapperedConstraints = new ArrayList(constraints.size());
+		for (int i=0; i<constraints.size(); i++) {
+			wrapperedConstraints.add(new NullConstraintWrapper((NullConstraint) constraints.get(i)));
+		}
+		
+		VisualContainerPolicy.CorelatedResult result = policy.getAddCommand(wrapperedConstraints, childrenComponents, position);		
+		CompoundCommand command = new CompoundCommand();
+		command.append(getChangeConstraintCommand(result.getChildren(), result.getCorelatedList()));
+		command.append(result.getCommand());
+		result.setCommand(command.unwrap());
+		return result;
+	}
 
 	protected void cancelConstraints(CommandBuilder cb, List children) {
 		IJavaObjectInstance parent = (IJavaObjectInstance) policy.getContainer();
@@ -124,7 +149,10 @@ public class NullLayoutPolicyHelper extends LayoutPolicyHelper {
 		Iterator conItr = constraints.iterator();
 		CompoundCommand cmd = new CompoundCommand();
 		while (childItr.hasNext()) {
-			cmd.append(createChangeConstraintCommand((IJavaObjectInstance) childItr.next(), (NullConstraint) conItr.next()));
+			Object constraint = conItr.next();
+			if (constraint instanceof NullConstraintWrapper)
+				constraint = ((NullConstraintWrapper) constraint).nullConstraint;
+			cmd.append(createChangeConstraintCommand((IJavaObjectInstance) childItr.next(), (NullConstraint) constraint));
 		}
 
 		return !cmd.isEmpty() ? cmd.unwrap() : null;
