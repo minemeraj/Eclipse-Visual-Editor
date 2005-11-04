@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: JTabbedPaneProxyAdapter.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.13 $  $Date: 2005-11-04 15:15:01 $ 
  */
 
 import java.util.Iterator;
@@ -564,8 +564,6 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 								// one notification.
 								IExpression expression = getBeanProxyFactory().createExpression();
 								try {
-									if (msg.getOldValue() != null)
-										releaseSetting(msg.getOldValue(), expression);
 									if (feature == sfIcon)
 										setIconAt(getComponentProxy(), (IJavaObjectInstance) msg.getNewValue(), (EObject) getTarget(), expression);
 									else if (feature == sfTitle)
@@ -599,8 +597,6 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 						// notification.
 						IExpression expression = getBeanProxyFactory().createExpression();
 						try {
-							if (msg.getOldValue() != null)
-								releaseSetting(msg.getOldValue(), expression);
 							if (feature == sfIcon)
 								setIconAt(getComponentProxy(), null, (EObject) getTarget(), expression);
 							else if (feature == sfTitle)
