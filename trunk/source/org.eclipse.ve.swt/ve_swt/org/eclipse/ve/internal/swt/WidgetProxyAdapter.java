@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.22 $ $Date: 2005-08-18 21:55:55 $
+ * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.23 $ $Date: 2005-11-04 00:11:04 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -113,7 +113,7 @@ public class WidgetProxyAdapter extends UIThreadOnlyProxyAdapter implements IExe
 		boolean wasInstantiated = isBeanProxyInstantiated();
 		style = NO_STYLE; // Uncache the style bit
 		if (isOwnsProxy() && isBeanProxyInstantiated()) {
-			BeanSWTUtilities.invoke_WidgetDispose(getProxy(), expression);
+			BeanSWTUtilities.invoke_WidgetDispose(getProxy(), expression, getModelChangeController());
 		}
 		if (wasInstantiated) {
 			// Need to release all of the items. This is because they where implicitly disposed anyway when the

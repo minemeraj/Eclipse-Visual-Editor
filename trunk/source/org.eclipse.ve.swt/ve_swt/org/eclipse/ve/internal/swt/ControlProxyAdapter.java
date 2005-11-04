@@ -366,7 +366,7 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 		if (controlManager != null) {
 			// Be on the safe so no spurious last minute notifications are sent out.
-			if (expression != null) {
+			if (expression != null && isBeanProxyInstantiated()) {
 				expression.createTry();
 				controlManager.dispose(expression);
 				expression.createTryCatchClause("java.lang.RuntimeException", false);	//$NON-NLS-1$
