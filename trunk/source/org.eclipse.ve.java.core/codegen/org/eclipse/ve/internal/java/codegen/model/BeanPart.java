@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.54 $  $Date: 2005-10-06 21:52:09 $ 
+ *  $Revision: 1.55 $  $Date: 2005-11-04 15:42:39 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -679,7 +679,7 @@ public  void dispose() {
 	fDecleration = null;
 	fEObject = null ;	
 	
-	if (implicitParent!=null) {
+	if (implicitParent!=null && !implicitParent.isDisposed()) {
 		// Drive the implicit/implicit decoding again
 		ConstructorDecoderHelper.primCreateImplicitInstanceIfNeeded(implicitParent, implicitFeature);
 	}
