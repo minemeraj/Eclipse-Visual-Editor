@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.58 $  $Date: 2005-11-03 17:05:45 $ 
+ *  $Revision: 1.59 $  $Date: 2005-11-04 00:08:57 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -569,9 +569,6 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	 * This is called when a notification arrives for a SET and there was an old value (and was not a TOUCH). Subclasses may of added listeners
 	 * to the old value that now needs to be removed. This is the notification of the old value. Apply of the new value will be called 
 	 * after this. This will not be called for UNSET or REMOVE since there is no new value and canceled will be called instead for these values.
-	 * <p>
-	 * The default is to release the setting if no longer contained, or if it was a property (versus a member) since
-	 * these are no longer of any use. Subclasses may override to do what they need, but they should call super at the end of their override.
 	 * 
 	 * @param feature
 	 * @param oldValue
@@ -581,7 +578,6 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	 * @since 1.1.0
 	 */
 	protected void removeOldValue(final EStructuralFeature feature, final Object oldValue, final int index, IExpression expression) {
-		releaseSetting(oldValue, expression);
 	}
 	
 	
@@ -1373,7 +1369,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	 * 
 	 * @since 1.1.0
 	 */
-	protected void primReleaseBeanProxy(IExpression expression) {
+	protected void primReleaseBeanProxy(final IExpression expression) {
 		overrideSettings = null;
 		origSettingProxies = null;
 		notInstantiatedClasses = null;
@@ -1384,7 +1380,49 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 			// Default is to release any settings that are contained as "property/implicit" settings, since these are not set in anybody else,
 			// and throw the bean proxy away. 
 			// Other subclasses may actually do something else first.
-			releasingBeanSettings(expression);
+			getJavaObject().visitSetFeatures(new FeatureValueProvider.Visitor() {
+			
+				public Object isSet(EStructuralFeature feature, Object value) {
+					if (value instanceof List) {
+						Iterator i = ((List) value).iterator();
+						while (i.hasNext()) {
+							Object setting = i.next();
+							releaseSetting(setting, feature, expression);
+						}
+					} else
+						releaseSetting(value, feature, expression);
+					return null;
+				}
+				
+				/*
+				 * Since we are releasing the parent bean, release the settings for it. Release only those that are not contained,
+				 * properties, or implicit settings that are for this feature and bean because these are
+				 * owned by this bean. Non-implicit members will not be released because someone else may own them.
+				 * <p>
+				 * Final control of release is done by the MemberContainer. It will release any beans when their
+				 * containment is removed. That way any missed here will get released eventually.
+				 * 
+				 * @param value
+				 * @param expression The expression will be valid on return.
+				 * @since 1.1.0
+				 */
+				private final void releaseSetting(Object value, EStructuralFeature feature, IExpression expression) {
+					if (value instanceof IJavaInstance) {
+						IJavaInstance j = (IJavaInstance) value;
+						JavaAllocation alloc = j.getAllocation();
+						boolean ownedImplict = false;
+						if (alloc != null && alloc.isImplicit()) {
+							ImplicitAllocation impAlloc = (ImplicitAllocation) alloc;
+							ownedImplict = impAlloc.getParent() == getTarget() && impAlloc.getFeature() == feature;
+						}
+						if (ownedImplict || j.eContainer() == null || j.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties()) {
+							IBeanProxyHost settingBean =  (IBeanProxyHost) EcoreUtil.getExistingAdapter((EObject) value, IBeanProxyHost.BEAN_PROXY_TYPE);
+							if (settingBean != null)
+								settingBean.releaseBeanProxy(expression);
+						}
+					}
+				}
+			});
 			
 			if (ownsProxy && isBeanProxyInstantiated()) {
 				ProxyFactoryRegistry registry = getBeanProxy().getProxyFactoryRegistry();
@@ -1398,52 +1436,6 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		ownsProxy = false;
 	}
 
-
-	/**
-	 * This is called from {@link #primReleaseBeanProxy(IExpression)} to release all of the settings
-	 * on the bean proxy. It should only be used in this case.
-	 * 
-	 * @param expression
-	 * @since 1.2.0
-	 */
-	protected void releasingBeanSettings(final IExpression expression) {
-		getJavaObject().visitSetFeatures(new FeatureValueProvider.Visitor() {
-
-			public Object isSet(EStructuralFeature feature, Object value) {
-				if (value instanceof List) {
-					Iterator i = ((List) value).iterator();
-					while (i.hasNext()) {
-						Object setting = i.next();
-						releaseBeanSetting(expression, feature, setting);
-					}
-				} else
-					releaseBeanSetting(expression, feature, value);
-				return null;
-			}
-
-			/*
-			 * @param expression
-			 * @param feature
-			 * @param setting
-			 * 
-			 * @since 1.2.0
-			 */
-			private void releaseBeanSetting(final IExpression expression, EStructuralFeature feature, Object setting) {
-				if (setting instanceof IJavaInstance && ((IJavaInstance) setting).isImplicitAllocation()) {
-					// Need to fake out the release so that it will work. Currently these beans are set as not owns
-					// proxy so that they can't be accidentally released prematurely. We will fake it out by
-					// setting this if an implicit of this feature.
-					IBeanProxyHost settingBean =  (IBeanProxyHost) EcoreUtil.getExistingAdapter((EObject) setting, IBeanProxyHost.BEAN_PROXY_TYPE);
-					if (settingBean != null) {
-						ImplicitAllocation implicit = (ImplicitAllocation) ((IJavaInstance) setting).getAllocation();
-						if (implicit.getParent() == getTarget() && implicit.getFeature() == feature)
-							((IInternalBeanProxyHost) settingBean).setOwnsProxy(true);	// Fake it out so that it can be released.
-					}
-				}
-				releaseSetting(setting, expression);
-			}
-		});		
-	}
 
 	/*
 	 *  (non-Javadoc)
@@ -2252,28 +2244,6 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 			}
 		} 
 		return null;
-	}
-
-
-	/**
-	 * Release a setting. It will release it if the setting is a java instance that is a property instead of a member.
-	 * <p>
-	 * Subclasses may override, but they should call super.
-	 * @param value
-	 * @param expression The expression will be valid on return.
-	 * @since 1.1.0
-	 */
-	protected final void releaseSetting(Object value, IExpression expression) {
-		// No need to do mark/endmark to ensure validity of expression because releaseBeanProxy guarentees it for us.
-		if (value instanceof IJavaInstance) {
-			IJavaInstance j = (IJavaInstance) value;
-			if (j.eContainer() == null || j.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Properties() || j.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Implicits()) {
-				// It is not contained, or it is a property or implicit, i.e. it is not referenced by anyone else. These should be released too.
-				IBeanProxyHost settingBean =  (IBeanProxyHost) EcoreUtil.getExistingAdapter((EObject) value, IBeanProxyHost.BEAN_PROXY_TYPE);
-				if (settingBean != null)
-					settingBean.releaseBeanProxy(expression);
-			}
-		}
 	}
 
 	/**
