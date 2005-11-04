@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WindowContainmentHandler.java,v $ $Revision: 1.2 $ $Date: 2005-10-12 15:45:14 $
+ * $RCSfile: WindowContainmentHandler.java,v $ $Revision: 1.3 $ $Date: 2005-11-04 17:30:48 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -30,7 +30,6 @@ import org.eclipse.ve.internal.cdm.DiagramData;
 import org.eclipse.ve.internal.cde.commands.ApplyAttributeSettingCommand;
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IContainmentHandler;
 
 import org.eclipse.ve.internal.jcm.*;
 
@@ -49,14 +48,14 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
  * 
  * @since 1.2.0
  */
-public class WindowContainmentHandler extends ComponentModelAdapter implements IContainmentHandler {
+public class WindowContainmentHandler extends AbstractComponentModelContainmentHandler {
 
 	public WindowContainmentHandler(Object component) {
 		super(component);
 	}
 
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation,
-			final EditDomain domain) throws NoAddException {
+			final EditDomain domain) throws StopRequestException {
 		if (child instanceof IJavaObjectInstance) {
 			IJavaObjectInstance jo = (IJavaObjectInstance) child;
 			child = dropWindow(parent, jo, domain, preCmds);
@@ -96,11 +95,11 @@ public class WindowContainmentHandler extends ComponentModelAdapter implements I
 	 * @param domain
 	 * @param preCmds
 	 * @return
-	 * @throws NoAddException 
+	 * @throws StopRequestException 
 	 * 
 	 * @since 1.2.0
 	 */
-	public static Object dropWindow(Object parent, final IJavaObjectInstance jo, final EditDomain domain, CommandBuilder preCmds) throws NoAddException {
+	public static Object dropWindow(Object parent, final IJavaObjectInstance jo, final EditDomain domain, CommandBuilder preCmds) throws StopRequestException {
 		Object childToDrop = jo;
 		DiagramData freeform = domain.getDiagramData();
 		if (!jo.isSetAllocation()) {
@@ -156,7 +155,7 @@ public class WindowContainmentHandler extends ComponentModelAdapter implements I
 							}
 						}
 					} else
-						throw new NoAddException("Child can only be dropped on free form surface or a valid parent.");
+						throw new StopRequestException("Child can only be dropped on free form surface or a valid parent.");
 				} else {
 					// Parent is a frame or window or dialog and we have a good constructor for it, so we choose just it.
 					validParents.add(parent);
@@ -202,17 +201,17 @@ public class WindowContainmentHandler extends ComponentModelAdapter implements I
 				} else if (hasNullConstructor) {
 					// Null ctor and on free form is just do as is.
 					if (parent != freeform)
-						throw new NoAddException("Child can only be dropped on free form surface or a valid parent.");
+						throw new StopRequestException("Child can only be dropped on free form surface or a valid parent.");
 				} else
-					throw new NoAddException("Child has no valid parents and no null constructor. Cannot be dropped.");
+					throw new StopRequestException("Child has no valid parents and no null constructor. Cannot be dropped.");
 			} else if (hasNullConstructor) {
 				// Null ctor and on free form is just do as is.
 				if (parent != freeform)
-					throw new NoAddException("Child can only be dropped on free form surface or a valid parent.");
+					throw new StopRequestException("Child can only be dropped on free form surface or a valid parent.");
 			} else
-				throw new NoAddException("Child has no valid parents and no null constructor. Cannot be dropped.");
+				throw new StopRequestException("Child has no valid parents and no null constructor. Cannot be dropped.");
 		} else if (parent != freeform)
-			throw new NoAddException("Child can only be dropped on free form surface.");	// It has an allocation. In which case we can't look into and change it at this time.
+			throw new StopRequestException("Child can only be dropped on free form surface.");	// It has an allocation. In which case we can't look into and change it at this time.
 		return childToDrop;
 	}
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CTabFolderContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-11 21:23:47 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-04 17:30:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -19,12 +19,12 @@ import java.util.List;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
@@ -105,9 +105,11 @@ public class CTabFolderContainerPolicy extends CompositeContainerPolicy {
 	/**
 	 * Delete the dependent. The child is the component, not the CTabItem.
 	 */
-	public Command getDeleteDependentCommand(Object child) {
-		return getDeleteCTabItemCommand(child).chain(super.getDeleteDependentCommand(child));
+	protected void getDeleteDependentCommand(Object child, CommandBuilder cbldr) {
+		cbldr.append(getDeleteCTabItemCommand(child));
+		super.getDeleteDependentCommand(child, cbldr);
 	}
+	
 	/**
 	 * 
 	 * @param child
@@ -135,11 +137,9 @@ public class CTabFolderContainerPolicy extends CompositeContainerPolicy {
 		return deleteCTabItemCommand;
 	}
 
-	protected Command getOrphanTheChildrenCommand(List children) {
-		Command orphanCmd = super.getOrphanTheChildrenCommand(children);
-		if (orphanCmd == null || !orphanCmd.canExecute())
-			return UnexecutableCommand.INSTANCE;
-		return getOrphanCTabItemCommand(children).chain(orphanCmd);
+	protected void getOrphanTheChildrenCommand(List children, CommandBuilder cbldr) {
+		cbldr.append(getOrphanCTabItemCommand(children));
+		super.getOrphanTheChildrenCommand(children, cbldr);		
 	}
 
 	private Command getOrphanCTabItemCommand(final List children) {

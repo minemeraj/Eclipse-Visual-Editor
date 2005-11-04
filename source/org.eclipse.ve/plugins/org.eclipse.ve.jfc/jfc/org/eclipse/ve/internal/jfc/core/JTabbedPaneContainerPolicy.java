@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTabbedPaneContainerPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.10 $  $Date: 2005-11-04 17:30:48 $ 
  */
 
 import java.util.*;
@@ -73,8 +73,8 @@ public class JTabbedPaneContainerPolicy extends BaseJavaContainerPolicy {
 	/**
 	 * Delete the dependent. The child is the component, not the JTabComponent.
 	 */
-	public Command getDeleteDependentCommand(Object child) {
-		return super.getDeleteDependentCommand(InverseMaintenanceAdapter.getIntermediateReference((EObject) container, (EReference) containmentSF, sfComponent, (EObject) child));
+	protected void getDeleteDependentCommand(Object child, CommandBuilder cbldr) {
+		super.getDeleteDependentCommand(InverseMaintenanceAdapter.getIntermediateReference((EObject) container, (EReference) containmentSF, sfComponent, (EObject) child), cbldr);
 	}
 	/**
 	 * Get the move children command for the list. The children
@@ -93,7 +93,7 @@ public class JTabbedPaneContainerPolicy extends BaseJavaContainerPolicy {
 	 * Get the orphan command for the list. The children
 	 * are the components, not the JTabComponents.
 	 */
-	protected Command getOrphanTheChildrenCommand(List children) {
+	protected void getOrphanTheChildrenCommand(List children, CommandBuilder cbldr) {
 		// We need to unset the components from the JTabComponent after
 		// orphaning the JTabComponents so that they are free of any
 		// containment when they are added to their new parent. If we
@@ -120,7 +120,7 @@ public class JTabbedPaneContainerPolicy extends BaseJavaContainerPolicy {
 		cb.cancelAttributeSettings((EObject) container, containmentSF, jtabComponents); // Delete the jtabcompoents under rule control so that they will go away.
 		cb.setApplyRules(false);
 		cb.cancelGroupAttributeSetting(jtabComponents, sfComponent);	// Cancel out all of the component settings not under rule control since we are keeping them.
-		return cb.getCommand();
+		cbldr.append(cb.getCommand());
 	}
 		
 	/**

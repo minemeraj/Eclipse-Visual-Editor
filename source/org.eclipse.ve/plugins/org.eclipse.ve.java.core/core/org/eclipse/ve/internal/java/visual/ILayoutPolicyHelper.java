@@ -11,11 +11,13 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: ILayoutPolicyHelper.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-11 21:23:48 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-04 17:30:45 $ 
  */
 
 import java.util.List;
 import org.eclipse.gef.commands.Command;
+
+import org.eclipse.ve.internal.cde.core.ContainerPolicy.Result;
 
 /**
  * This is for Visual Containers with layouts. It supplies the
@@ -83,7 +85,7 @@ public Command getChangeConstraintCommand(List children, List constraints);
  * within their appropriate ConstraintComponent (it will look for these
  * so that they can be changed).
  */
-public Command getOrphanChildrenCommand(List children);
+public Result getOrphanChildrenCommand(List children);
 
 /**
  * Orphan the constraints. This is used for pre-switch of constraints.

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.38 $  $Date: 2005-10-26 22:10:55 $
+ *  $Revision: 1.39 $  $Date: 2005-11-04 17:30:52 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -1251,7 +1251,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		if (empty) {
 			for (int i = 0; i < table.length; i++) {
 				if (isFillerLabel(table[i][atRow]))
-					cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[i][atRow]).realObject));
+					cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[i][atRow]).realObject).getCommand());
 			}
 			return cb.getCommand();
 		}
@@ -1274,7 +1274,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			// Remove the columns and reduce the numColumns by 1
 			for (int i = 0; i < table[0].length; i++) {
 				if (isFillerLabel(table[atColumn][i]))
-					cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[atColumn][i]).realObject));
+					cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[atColumn][i]).realObject).getCommand());
 			}
 			if (projectNumColumns != 1)
 				cb.append(createNumColumnsCommand(projectNumColumns - 1));
@@ -1295,7 +1295,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				if (isHorizontalSpaceAvailable(i, atRow, atRow + childHeight - 1)) {
 					for (int j = atRow; j < atRow + childHeight; j++) {
 						if (isFillerLabel(table[i][j]))
-							cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[i][j]).realObject));
+							cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[i][j]).realObject).getCommand());
 					}
 					numColsIncrement--;
 				}
@@ -1316,7 +1316,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				if (isVerticalSpaceAvailable(i, atColumn, atColumn + childWidth - 1)) {
 					for (int j = atColumn; j < atColumn + childWidth; j++) {
 						if (isFillerLabel(table[j][i]))
-							cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[j][i]).realObject));
+							cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[j][i]).realObject).getCommand());
 					}
 					numRowsIncrement--;
 				}

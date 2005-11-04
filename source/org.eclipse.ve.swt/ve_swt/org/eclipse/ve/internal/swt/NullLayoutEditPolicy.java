@@ -98,7 +98,7 @@ protected Command getDeleteDependantCommand(Request aRequest) {
  * the new position. We need to use the Helper for this.
  */
 protected Command getOrphanChildrenCommand(Request aRequest) {
-	return helper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) aRequest));
+	return helper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) aRequest)).getCommand();
 }
 
 protected Command createChangeConstraintCommand(EditPart childEditPart, Object constraint, boolean moved, boolean resize) {

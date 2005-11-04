@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableTreeColumnContainmentHandler.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-05 18:18:09 $ 
+ *  $Revision: 1.4 $  $Date: 2005-11-04 17:30:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -50,7 +50,7 @@ public class TableTreeColumnContainmentHandler extends WidgetContainmentHandler 
 	}
 
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation,
-			final EditDomain domain) throws NoAddException {
+			final EditDomain domain) throws StopRequestException {
 		if (creation && child instanceof IJavaObjectInstance && parent instanceof IJavaObjectInstance) {
 			IJavaObjectInstance tjo = (IJavaObjectInstance) child;
 			if (!tjo.isSetAllocation() && !tjo.isAnyFeatureSet()) {

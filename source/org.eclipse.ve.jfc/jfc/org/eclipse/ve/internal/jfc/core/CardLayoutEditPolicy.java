@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: CardLayoutEditPolicy.java,v $
- *  $Revision: 1.10 $  $Date: 2005-10-11 21:23:50 $ 
+ *  $Revision: 1.11 $  $Date: 2005-11-04 17:30:48 $ 
  */
 import java.util.*;
 
@@ -286,7 +286,7 @@ public class CardLayoutEditPolicy extends ConstrainedLayoutEditPolicy {
 		return deleteContributionCmd;		
 	}
 	protected Command getOrphanChildrenCommand(Request aRequest) {
-		return helper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) aRequest));
+		return helper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) aRequest)).getCommand();
 	} 
 	/* Add a listener to the visual component, the visual component is retrieved through the 
 	 * getAdapter interface from the editpart. Refresh the editpart when the card

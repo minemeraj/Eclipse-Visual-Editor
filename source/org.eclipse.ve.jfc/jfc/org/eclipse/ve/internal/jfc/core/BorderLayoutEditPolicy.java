@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutEditPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-11 21:23:50 $ 
+ *  $Revision: 1.9 $  $Date: 2005-11-04 17:30:48 $ 
  */
 
 import java.util.*;
@@ -300,7 +300,7 @@ protected Command getMoveChildrenCommand(Request generic) {
 	return cmpCmd;
 }
 protected Command getOrphanChildrenCommand(Request aRequest) {
-	return fLayoutPolicyHelper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) aRequest));
+	return fLayoutPolicyHelper.getOrphanChildrenCommand(ContainerPolicy.getChildren((GroupRequest) aRequest)).getCommand();
 }
 protected void showLayoutTargetFeedback(Request request) {
 	getBorderLayoutFeedback(request);

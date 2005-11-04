@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  * $RCSfile: GridLayoutEditPolicy.java,v $ 
- * $Revision: 1.41 $ $Date: 2005-10-11 21:23:47 $
+ * $Revision: 1.42 $ $Date: 2005-11-04 17:30:52 $
  */
 import java.util.*;
 
@@ -637,7 +637,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		if (gridReq.type == REPLACE_FILLER) {
 			// Just replace a filler label with the new control
 			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart.getModel()).getCommand());
-			cb.append(containerPolicy.getDeleteDependentCommand(editPart.getModel()));
+			cb.append(containerPolicy.getDeleteDependentCommand(editPart.getModel()).getCommand());
 
 		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
 			cb.append(helper.createNumColumnsCommand(helper.getNumColumns() + 1)); // First add another column to the grid
@@ -789,7 +789,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		// Replace a filler label with the moved control
 		if (gridReq.type == REPLACE_FILLER) {
 			cb.append(containerPolicy.getMoveChildrenCommand(Collections.singletonList(child), beforeEP.getModel()));
-			cb.append(containerPolicy.getDeleteDependentCommand(beforeEP.getModel()));
+			cb.append(containerPolicy.getDeleteDependentCommand(beforeEP.getModel()).getCommand());
 	
 		// Insert the child within the row, adding one column
 		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {

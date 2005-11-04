@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-11 21:23:50 $ 
+ *  $Revision: 1.9 $  $Date: 2005-11-04 17:30:48 $ 
  */
 
 
@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 
+import org.eclipse.ve.internal.cde.core.ContainerPolicy.Result;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
@@ -86,7 +87,7 @@ public abstract class LayoutPolicyHelper implements ILayoutPolicyHelper {
 		return policy.getAddCommand(componentConstraints, childrenComponents, position);
 	}
 	
-	public Command getOrphanChildrenCommand(List children) {	
+	public Result getOrphanChildrenCommand(List children) {	
 		// Now get the orphan command for the children.
 		return policy.getOrphanChildrenCommand(children);
 	}

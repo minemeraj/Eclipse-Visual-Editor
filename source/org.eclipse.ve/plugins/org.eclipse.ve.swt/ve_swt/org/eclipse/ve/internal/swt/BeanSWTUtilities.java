@@ -175,8 +175,9 @@ public class BeanSWTUtilities {
 		ControlManager.FeedbackController feedbackController;
 		if ((feedbackController = (FeedbackController) constants.controlManagerFeedbackController.get(displayProxy)) == null) {
 			ExpressionProxy feedbackProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
-			expression.createMethodInvocation(ForExpression.ASSIGNMENT_RIGHT, "createFeedbackController", true, 1);
-			expression.createTypeReceiver(BeanSWTUtilities.CONTROLMANAGERFEEDBACK_CLASSNAME);
+			IProxyBeanType feedbackControllerTypeProxy = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, BeanSWTUtilities.CONTROLMANAGERFEEDBACK_CLASSNAME);
+			expression.createMethodInvocation(ForExpression.ASSIGNMENT_RIGHT, feedbackControllerTypeProxy.getMethodProxy(expression, "createFeedbackController", new IProxyBeanType[] {displayProxy.getTypeProxy()}), true, 1);
+			expression.createTypeReceiver(feedbackControllerTypeProxy);
 			expression.createProxyExpression(ForExpression.METHOD_ARGUMENT, displayProxy);
 			constants.controlManagerFeedbackController.put(displayProxy, feedbackController = new ControlManager.FeedbackController(feedbackProxy));
 			expression.getRegistry().getCallbackRegistry().registerCallback(feedbackProxy, feedbackController, expression);

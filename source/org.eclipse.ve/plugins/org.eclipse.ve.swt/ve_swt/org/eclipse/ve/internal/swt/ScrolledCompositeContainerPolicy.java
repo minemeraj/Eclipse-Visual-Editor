@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ScrolledCompositeContainerPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-11 21:23:47 $ 
+ *  $Revision: 1.4 $  $Date: 2005-11-04 17:30:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -71,13 +71,11 @@ public class ScrolledCompositeContainerPolicy extends CompositeContainerPolicy {
 		return cBld.getCommand();
 	}
 	
-	protected Command getOrphanTheChildrenCommand(List children) {
+	protected void getOrphanTheChildrenCommand(List children, CommandBuilder cbldr) {
 		EObject parent = (EObject)getContainer();
 		// Need to cancel the content because it won't be the content when the chilren are moved. (Technically there is only one child!).
-		CommandBuilder cbld = new CommandBuilder();
-		cbld.cancelAttributeSetting(parent, sfContent);
-		cbld.append(super.getOrphanTheChildrenCommand(children));
-		return cbld.getCommand();
+		cbldr.cancelAttributeSetting(parent, sfContent);
+		super.getOrphanTheChildrenCommand(children, cbldr);
 	}
 	
 }

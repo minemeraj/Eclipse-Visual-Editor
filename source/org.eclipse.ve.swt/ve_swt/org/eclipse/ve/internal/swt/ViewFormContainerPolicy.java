@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewFormContainerPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-22 20:09:16 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-04 17:30:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -20,7 +20,6 @@ import java.util.List;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 
@@ -93,11 +92,7 @@ public class ViewFormContainerPolicy extends CompositeContainerPolicy {
 	}
 
 	
-	protected Command getOrphanTheChildrenCommand(List children) {
-		Command orphanCmd = super.getOrphanTheChildrenCommand(children);
-		if (orphanCmd == null || !orphanCmd.canExecute())
-			return UnexecutableCommand.INSTANCE;
-		
+	protected void getOrphanTheChildrenCommand(List children, CommandBuilder cbldr) {		
 		IJavaObjectInstance viewFormBean = (IJavaObjectInstance) getContainer();
 		IJavaInstance left = (IJavaInstance) viewFormBean.eGet(sfLeftControl);
 		IJavaInstance right = (IJavaInstance) viewFormBean.eGet(sfRightControl);
@@ -121,9 +116,8 @@ public class ViewFormContainerPolicy extends CompositeContainerPolicy {
 		
 		
 		if(!cBld.isEmpty()) {
-			cBld.append(orphanCmd);
-			return cBld.getCommand();
-		} else
-			return orphanCmd;
+			cbldr.append(cBld.getCommand());
+		}
+		super.getOrphanTheChildrenCommand(children);
 	}
 }

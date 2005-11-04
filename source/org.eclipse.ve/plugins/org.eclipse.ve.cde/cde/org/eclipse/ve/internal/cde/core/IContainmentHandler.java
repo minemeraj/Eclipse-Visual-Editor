@@ -15,7 +15,7 @@ import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 
 /*
  *  $RCSfile: IContainmentHandler.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-11 21:26:01 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-04 17:30:49 $ 
  */
 
 /**
@@ -31,15 +31,18 @@ import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 public interface IContainmentHandler extends IModelAdapter {
 
 	/**
-	 * No Add permitted exception.
+	 * No request permitted exception.
 	 * <p>
-	 * This is thrown by {@link IContainmentHandler#contributeToRequest(Object, Object, CommandBuilder, CommandBuilder)}
+	 * This is thrown by {@link IContainmentHandler#contributeToDropRequest(Object, Object, CommandBuilder, CommandBuilder, boolean, EditDomain)}
 	 * if the handler determines that the add/create should not occur. The message in the exception may be displayed to the
 	 * user sometime in the future when such display capability is implemeted.
-	 * 
+	 * <p>
+	 * This is thrown by {@link IContainmentHandler#contributeToRemoveRequest(Object, Object, CommandBuilder, CommandBuilder, boolean, EditDomain)}
+	 * if the handler determines that the remove/delete should not occur. The message in the exception may be displayed to the
+	 * user sometime in the future when such display capability is implemeted.	 
 	 * @since 1.2.0
 	 */
-	public static class NoAddException extends Exception {
+	public static class StopRequestException extends Exception {
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -50,7 +53,7 @@ public interface IContainmentHandler extends IModelAdapter {
 		 * 
 		 * @since 1.2.0
 		 */
-		public NoAddException(String msg) {
+		public StopRequestException(String msg) {
 			super(msg);
 		}
 	}
@@ -62,7 +65,7 @@ public interface IContainmentHandler extends IModelAdapter {
 	 * <ol>
 	 * <li><b>Nothing:</b> In which case it should just return the child as entered. This means it had nothing to contribute.</li>
 	 * <li><b>Handle everything:</b> In which case it should return <code>null</code> and use the pre/post Cmd Builders to do it.</li>
-	 * <li><b>Reject parent or some other error:</b> In which case it should throw the {@link NoAddException}. This is for when the parent is not valid for this child, or for some
+	 * <li><b>Reject parent or some other error:</b> In which case it should throw the {@link StopRequestException}. This is for when the parent is not valid for this child, or for some
 	 * other reason the child could not be added as determined by this handler.</li>
 	 * <li><b>Add to the request:</b> In which case it should return the child as entered. And use the pre/post Cmd builders to do the additions.</li>
 	 * <li><b>Replace the request:</b> In which case it should return a different child. This different child is the one that will be added instead. In
@@ -85,11 +88,38 @@ public interface IContainmentHandler extends IModelAdapter {
 	 * 	child is fine and can be added. (The only check that will be done is if the child is a valid type for parent). Implementers must
 	 *  handle if they changed the child for a non-creation required, they must decide if the child should be deleted because it should no longer
 	 *  be in the model. If they decide that they must put in postCmd code to delete it. 
-	 * @throws NoAddException if the handler determines that the child should not be added to the parent.
+	 * @throws StopRequestException if the handler determines that the child should not be added to the parent.
 	 * 
 	 * @since 1.2.0
 	 */
-	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException;
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException;
 	
-	
+	/**
+	 * Handle contribution to orphan/delete request.
+	 * <p>
+	 * The handler can do:
+	 * <ol>
+	 * <li><b>Nothing:</b> In which case it should just return the child as entered. This means it had nothing to contribute.</li>
+	 * <li><b>Handle everything:</b> In which case it should return <code>null</code> and use the pre/post Cmd Builders to do it.</li>
+	 * <li><b>Reject removal or some other error:</b> In which case it should throw the {@link NoRemoveException}. This is for some
+	 * reason the child could not be added as determined by this handler.</li>
+	 * <li><b>Add to the request:</b> In which case it should return the child as entered. And use the pre/post Cmd builders to do the additions.</li>
+	 * <li><b>Replace the request:</b> In which case it should return a different child. This different child is the one that will be removed/deleted instead. In
+	 * this case this different child <b>WILL NOT</b> have its IContainmentAdapter called on it. It will be assumed to be good and will be removed/deleted. It 
+	 * must be a valid child or the parent so that the parent ContainerPolicy can remove it.
+	 * <li><b>Combination of Add to request and replace the request:</b> In which case it would use the pre/post Cmd builders and return a different child.</li>
+	 * </ol>
+
+	 * @param parent
+	 * @param child
+	 * @param preCmds
+	 * @param postCmds
+	 * @param orphan <code>true</code> if orphan, <code>false</code> if delete.
+	 * @param domain
+	 * @return
+	 * @throws NoRemoveException
+	 * 
+	 * @since 1.2.0
+	 */
+	public Object contributeToRemoveRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean orphan, EditDomain domain) throws StopRequestException;
 }

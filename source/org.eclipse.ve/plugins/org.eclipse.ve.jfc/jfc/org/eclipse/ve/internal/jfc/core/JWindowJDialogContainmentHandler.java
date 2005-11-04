@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JWindowJDialogContainmentHandler.java,v $ $Revision: 1.1 $ $Date: 2005-10-03 19:21:01 $
+ * $RCSfile: JWindowJDialogContainmentHandler.java,v $ $Revision: 1.2 $ $Date: 2005-11-04 17:30:48 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -17,7 +17,6 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.IContainmentHandler;
 
 /**
  * JWindow/JDialog containment handler.
@@ -30,14 +29,14 @@ import org.eclipse.ve.internal.cde.core.IContainmentHandler;
  * 
  * @since 1.2.0
  */
-public class JWindowJDialogContainmentHandler extends ComponentModelAdapter implements IContainmentHandler {
+public class JWindowJDialogContainmentHandler extends AbstractComponentModelContainmentHandler {
 
 	public JWindowJDialogContainmentHandler(Object component) {
 		super(component);
 	}
 
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation,
-			final EditDomain domain) throws NoAddException {
+			final EditDomain domain) throws StopRequestException {
 		if (child instanceof IJavaObjectInstance) {
 			IJavaObjectInstance jo = (IJavaObjectInstance) child;
 			if (creation) {

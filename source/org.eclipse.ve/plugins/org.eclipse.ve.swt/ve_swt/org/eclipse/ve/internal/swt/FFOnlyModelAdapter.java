@@ -35,10 +35,17 @@ public class FFOnlyModelAdapter extends ControlModelAdapter implements IContainm
 		super(model);
 	}
 	
-	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws NoAddException {
+	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		// return child only for parents that are the freeform surface
 		if (!(parent instanceof DiagramData))
-				throw new NoAddException("Parent is invalid for this child.");
+				throw new StopRequestException("Parent is invalid for this child.");
+		return child;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.IContainmentHandler#contributeToRemoveRequest(java.lang.Object, java.lang.Object, org.eclipse.ve.internal.cde.commands.CommandBuilder, org.eclipse.ve.internal.cde.commands.CommandBuilder, boolean, org.eclipse.ve.internal.cde.core.EditDomain)
+	 */
+	public Object contributeToRemoveRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean orphan, EditDomain domain) throws StopRequestException {
 		return child;
 	}
 

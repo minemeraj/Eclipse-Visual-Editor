@@ -11,16 +11,17 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: SubclassCompositionContainerPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:49 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-04 17:30:45 $ 
  */
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IContainmentHandler.StopRequestException;
 
 import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 import org.eclipse.ve.internal.jcm.JCMPackage;
@@ -40,11 +41,14 @@ public class SubclassCompositionContainerPolicy extends CompositionContainerPoli
 		return (BeanSubclassComposition) container;
 	}
 	
-	protected Command getDeleteDependentCommand(Object child, EStructuralFeature containmentSF) {
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy#getTrueChild(java.lang.Object, int, org.eclipse.ve.internal.cde.commands.CommandBuilder, org.eclipse.ve.internal.cde.commands.CommandBuilder)
+	 */
+	protected Object getTrueChild(Object child, int reqType, CommandBuilder preCmds, CommandBuilder postCmds) throws StopRequestException {
+		child = super.getTrueChild(child, reqType, preCmds, postCmds);
 		if (child == getComposition().getThisPart())
-			return UnexecutableCommand.INSTANCE;	// Can't delete the this part.
-		// The superclass will create a command that will delete the annotation
-		return super.getDeleteDependentCommand(child,containmentSF);	
+			throw new StopRequestException("The this part is not a valid child to be added/removed.");
+		return child;
 	}
 	
 	public Command getMoveChildrenCommand(List children, Object position) {
@@ -55,16 +59,7 @@ public class SubclassCompositionContainerPolicy extends CompositionContainerPoli
 		}
 		return super.getMoveChildrenCommand(children, position);
 	}
-	
-	protected Command getOrphanTheChildrenCommand(List children) {	
-		Object thisPart = getComposition().getThisPart();
-		if (thisPart != null) {
-			if (children.contains(thisPart))
-				return UnexecutableCommand.INSTANCE;	// Can't orphan the this part.
-		}
-		return super.getOrphanTheChildrenCommand(children);
-	}
-	
+		
 	protected boolean isValidBeanLocation(Object child) {
 		return child instanceof EObject && BeanUtilities.isValidBeanLocation(domain, (EObject)child);
 	}

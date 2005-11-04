@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-10-25 19:12:14 $ 
+ *  $Revision: 1.11 $  $Date: 2005-11-04 17:30:52 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -18,13 +18,13 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
+import org.eclipse.ve.internal.cde.core.ContainerPolicy.Result;
 
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper;
@@ -55,19 +55,18 @@ public VisualContainerPolicy.CorelatedResult getAddChildrenCommand(List children
 	return policy.getAddCommand(constraints, childrenComponents, position);
 }
 
-public Command getOrphanChildrenCommand(List children) {
+public Result getOrphanChildrenCommand(List children) {
 	
 	// Now get the orphan command for the children.
-	Command orphanContributionCmd = policy.getOrphanChildrenCommand(children);
-	if (orphanContributionCmd == null || !orphanContributionCmd.canExecute())
-		return UnexecutableCommand.INSTANCE;	// It can't be orphaned		
+	Result orphanContributionCmd = policy.getOrphanChildrenCommand(children);
 
 	RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain());
-	cb.append(orphanContributionCmd);	
+	cb.append(orphanContributionCmd.getCommand());	
 	cancelConstraints(cb, children);
-	return cb.getCommand();
-
+	orphanContributionCmd.setCommand(cb.getCommand());
+	return orphanContributionCmd;
 }
+
 protected abstract void cancelConstraints(CommandBuilder commandBuilder, List children);
 
 /*
