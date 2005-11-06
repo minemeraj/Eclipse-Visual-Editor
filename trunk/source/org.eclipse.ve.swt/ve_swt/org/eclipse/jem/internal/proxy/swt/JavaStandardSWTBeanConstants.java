@@ -83,6 +83,8 @@ public JavaStandardSWTBeanConstants(ProxyFactoryRegistry registry, boolean isReg
 		envTypeName = "org.eclipse.ve.internal.swt.targetvm.win32.Environment"; //$NON-NLS-1$
 	else if (Platform.WS_GTK.equals(Platform.getWS()))
 		envTypeName = "org.eclipse.ve.internal.swt.targetvm.unix.Environment"; //$NON-NLS-1$
+	else if (Platform.OS_MACOSX.equals(Platform.getOS()))
+		envTypeName = "org.eclipse.ve.internal.swt.targetvm.macosx.Environment"; //$NON-NLS-1$
 	else
 		return;	// We don't have one.
 
