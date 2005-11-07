@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.35 $  $Date: 2005-10-26 18:48:21 $ 
+ *  $Revision: 1.36 $  $Date: 2005-11-07 14:58:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.framework.adaptor.core.AbstractFrameworkAdaptor;
 import org.eclipse.osgi.service.environment.Constants;
@@ -408,6 +409,14 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 				map = new HashMap(1);
 			map.put("DISPLAY", "DISPLAY:0:0");				 //$NON-NLS-1$ //$NON-NLS-2$
 			config.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, map);
+		}
+		
+		if (Platform.OS_MACOSX.equals(Platform.getOS()))
+		{
+			// Need to add the -Djava.awt.headless=true vm arg if running on OS X
+			StringBuffer vmArgs = new StringBuffer(config.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, ""));  //$NON-NLS-1$
+			vmArgs.append(" -Djava.awt.headless=true");  //$NON-NLS-1$
+			config.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, vmArgs.toString());
 		}
 	}
 
