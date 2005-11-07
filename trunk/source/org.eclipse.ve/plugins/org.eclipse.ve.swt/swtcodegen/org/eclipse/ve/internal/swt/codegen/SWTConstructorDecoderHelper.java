@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.28 $  $Date: 2005-09-27 15:12:06 $ 
+ *  $Revision: 1.29 $  $Date: 2005-11-07 19:48:25 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -310,18 +310,22 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		
 		if (getParent()!=null) {
 			EObject parent = getParent().getEObject();
-			BeanDecoderAdapter pAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(parent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
-	
-			// find all the other "control" expressions
-			ICodeGenAdapter controls[] = pAdapter.getSettingAdapters(getIndexSF());
-			for (int i = 0; i < controls.length; i++) 
-				if (controls[i] instanceof ExpressionDecoderAdapter) {
-					ExpressionDecoderAdapter a = (ExpressionDecoderAdapter)controls[i];
-			         if (a.getDecoder().getAddedInstance()[0]==fbeanPart.getEObject()) {
-						 masterExpression = a.getDecoder().getExprRef();
-						 break;
-			         }
-				}
+			if(parent==null && getParent().isDisposed()){
+				// parent beanpart got disposed before this beanpart - no master expression
+			}else{
+				BeanDecoderAdapter pAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(parent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
+		
+				// find all the other "control" expressions
+				ICodeGenAdapter controls[] = pAdapter.getSettingAdapters(getIndexSF());
+				for (int i = 0; i < controls.length; i++) 
+					if (controls[i] instanceof ExpressionDecoderAdapter) {
+						ExpressionDecoderAdapter a = (ExpressionDecoderAdapter)controls[i];
+				         if (a.getDecoder().getAddedInstance()[0]==fbeanPart.getEObject()) {
+							 masterExpression = a.getDecoder().getExprRef();
+							 break;
+				         }
+					}
+			}
 		}
 		return masterExpression;
 	}
