@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: GridFigure.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-08 22:33:27 $ 
  */
 
 
@@ -54,10 +54,10 @@ public class GridFigure extends Figure {
 	 * zoom, if any.
 	 */
 	public static class GridData {
-		Rectangle gridBorder;	// This is the grid border in terms of the content pane (it includes the content pane margin AND the grid margin).
-		double gridWidth, gridHeight;	// Real ones with full precision
-		int gridMargin;
-		GridController gridController;	// The controller this data was created from.
+		public Rectangle gridBorder;	// This is the grid border in terms of the content pane (it includes the content pane margin AND the grid margin).
+		public double gridWidth, gridHeight;	// Real ones with full precision
+		public int gridMargin;
+		public GridController gridController;	// The controller this data was created from.
 	}
 
 	
@@ -193,9 +193,18 @@ public class GridFigure extends Figure {
 			gd.gridMargin = zoomController.zoomCoordinate(gd.gridMargin);
 		}
 		// set the initial values for the loops
-		gd.gridBorder = getParent().getClientArea();
+		gd.gridBorder = getGridClientArea();
 		gd.gridBorder.shrink(gd.gridMargin, gd.gridMargin);	// Inset it by the margin.
 		gd.gridController = gridController;		
+	}
+	
+	/**
+	 * Returns the client area. This is the area that it will draw the grid within.
+	 * This may be overridden to restrict the client area if further.
+	 * @return the grid client area
+	 */
+	protected Rectangle getGridClientArea() {
+		return getParent().getClientArea();
 	}
 
 	/* (non-Javadoc)

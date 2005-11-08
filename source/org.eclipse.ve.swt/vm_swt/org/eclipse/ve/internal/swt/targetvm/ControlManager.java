@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.24 $ $Date: 2005-11-04 00:11:05 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.25 $ $Date: 2005-11-08 22:33:17 $
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -165,6 +165,22 @@ public class ControlManager {
 		 */
 		protected void aboutToValidate() {
 
+		}
+		
+		/**
+		 * Notification the the control has been validated.
+		 * <p>
+		 * This is called by the Feedback controller after it has re-layedout all of the queued up windows. This will only be called for invalidations
+		 * done through the client call to {@link ControlManager#invalidate() invalidate} and to any parents of those controls. It will not be called
+		 * for any control that was invalidated through some other means.
+		 * <p>
+		 * The default is to do nothing. Subclasses may do other things.
+		 * 
+		 * 
+		 * @since 1.2.0
+		 */
+		protected void hasBeenValidated() {
+			
 		}
 
 		/**
@@ -428,7 +444,7 @@ public class ControlManager {
 		 * invalid controls). 
 		 * <p>
 		 * <b>Note:</b> It is required that the implementation must call {@link ControlManagerFeedbackController#sendAboutToValidateToManager(Control)}
-		 * to let the manager know that it is about to be validated.
+		 * to all controls that have been invalidated, and to their parents, to let the manager(s) know that it is about to be validated.
 		 * <p>
 		 * <b>Note:</b> Also, because of probably exceptions being thrown during a layout, the implementation should surround each shell validate
 		 * with a try/catch(RuntimeException) so that if an error does occur it won't prevent the other shells from being validated.
@@ -465,7 +481,7 @@ public class ControlManager {
 		 * 
 		 * @since 1.1.0
 		 */
-		protected ControlManager getControlManager(Control control) {
+		public ControlManager getControlManager(Control control) {
 			return (ControlManager) controlToControlManagers.get(control);
 		}
 
@@ -491,12 +507,13 @@ public class ControlManager {
 
 					Collection invalidControls = validateControls(invalidShells);
 
-					// Now send the client component manager invalid images transactions.
+					// Now send the client control manager invalid images transactions. Also tell the local control manager that the control is now valid.
 					synchronized (transactions) {
 						for (Iterator itr = invalidControls.iterator(); itr.hasNext();) {
 							Control component = (Control) itr.next();
 							ControlManager cmanager = getControlManager(component);
 							if (cmanager != null) {
+								cmanager.hasBeenValidated();
 								appendTransaction(cmanager, Common.CL_IMAGEINVALID, null, true);
 							}
 						}
@@ -905,9 +922,9 @@ public class ControlManager {
 	}
 
 	/**
-	 * Notification that the component is invalid.
+	 * Notification that the control is invalid.
 	 * <p>
-	 * This is called by the Feedback controller after it validated all of the queued up windows. This will only be called for invalidations
+	 * This is called by the Feedback controller before it validates all of the queued up windows. This will only be called for invalidations
 	 * done through the client call to {@link ControlManager#invalidate() invalidate} and to any parents of those components. It will not be called
 	 * for any component that was invalidated through some other means.
 	 * <p>
@@ -920,6 +937,26 @@ public class ControlManager {
 			ControlManagerExtension[] lcl = extensions; // In case it changes to a new array while we are walking it.
 			for (int i = 0; i < lcl.length; i++) {
 				lcl[i].aboutToValidate();
+			}
+		}
+	}
+	
+	/**
+	 * Notification that the control is now valid (i.e. it has been layed out).
+	 * <p>
+	 * This is called by the Feedback controller after it has validated all of the queued up windows. This will only be called for invalidations
+	 * done through the client call to {@link ControlManager#invalidate() invalidate} and to any parents of those components. It will not be called
+	 * for any component that was invalidated through some other means.
+	 * <p>
+	 * The extensions will be notified.
+	 * 
+	 * @since 1.2.0
+	 */
+	protected void hasBeenValidated() {
+		if (extensions != null) {
+			ControlManagerExtension[] lcl = extensions; // In case it changes to a new array while we are walking it.
+			for (int i = 0; i < lcl.length; i++) {
+				lcl[i].hasBeenValidated();
 			}
 		}
 	}
@@ -958,27 +995,11 @@ public class ControlManager {
 	 */
 	public Object[] getLocation() {
 		if (isValidControl(fControl)) {
-			// We may not be in UI thread, but we must.
-			if (!(fControl instanceof Shell)) {
-				final Object[] result = new Object[2];
-				feedbackController.getDisplay().syncExec(new Runnable() {
-
-					public void run() {
-						// Map this controls upper left to coordinate relative to upper left corner of shell. Can't
-						// use coordinates because of client area of shell and/or control. It returns (0,0) when mapping something at
-						// the upper-left of the client area, not the true offset from the upper corner.
-						Point s = fControl.getShell().getLocation();
-						// The control location in parent is true upper-left, not the control's (0,0) coordinate, because of client area. 
-						Point c = fControl.getParent().toDisplay(fControl.getLocation());
-						result[0] = new Integer(c.x - s.x);
-						result[1] = new Integer(c.y - s.y);
-					}
-				});
-				return result;
-			} else 
-				return SHELL_LOCATION;
-		} else
-			return null;
+			Object[] bounds = getBounds();
+			if (bounds != null)
+				return new Object[] {bounds[0], bounds[1]};
+		} 
+		return null;
 	}
 
 	/**
@@ -993,19 +1014,32 @@ public class ControlManager {
 
 		final Object[] result = new Object[4];
 		if (isValidControl(fControl)) {
-			feedbackController.getDisplay().syncExec(new Runnable() {
+			final Display display = feedbackController.getDisplay();
+			display.syncExec(new Runnable() {
 
 				public void run() {
-					Object[] location = getLocation();
-					Point size = fControl.getSize();
-					result[0] = location[0];
-					result[1] = location[1];
-					result[2] = new Integer(size.x);
-					result[3] = new Integer(size.y);
+					if (!(fControl instanceof Shell)) {
+						// Map this control's bounds to display coor. Then get the shells bounds, and subtract the two to get
+						// the true bounds. This is because client origins can affect the bounds, plus right to left settings.
+						// Using display bounds removes this from the equation.
+						Rectangle c = display.map(fControl.getParent(), null, fControl.getBounds());
+						Rectangle s = fControl.getShell().getBounds();
+						result[0] = new Integer(c.x - s.x);
+						result[1] = new Integer(c.y - s.y);
+						result[2] = new Integer(c.width);
+						result[3] = new Integer(c.height);
+					} else {
+						Point size = fControl.getSize();
+						result[0] = SHELL_LOCATION[0];
+						result[1] = SHELL_LOCATION[1];
+						result[2] = new Integer(size.x);
+						result[3] = new Integer(size.y);
+					}
 				}
 
 			});
-		}
+		} else
+			return null;
 		return result; 
 	}
 
@@ -1303,7 +1337,13 @@ public class ControlManager {
 	 * Get the offset between the upper-left corner of the control and the origin (0,0) of the control.
 	 * For most controls this is (0,0). But for Shell it is not, because (0,0) on the shell actually puts
 	 * you down and to the right. Need to know this offset to make appropriate coordinate calculations on
-	 * the GraphViewer.
+	 * the GraphViewer. The offset will be in the orientation of the control. For example if Right-to-Left,
+	 * then visually it is from the upper right, but logically it is still upper-left.
+	 * <p>
+	 * This shouldn't change once we computed it. That is because this offset
+	 * will not change if control is resize or even if orientation changes. If we used absolute (display) coordinates as the offset 
+	 * (i.e. the origin offset from the true upper-left (display coor), then as control resizes this
+	 * offset would change if we tried to use absolute).
 	 * @return
 	 * 
 	 * @since 1.1.0
@@ -1313,12 +1353,9 @@ public class ControlManager {
 		if (isValidControl(fControl)) {
 			feedbackController.getDisplay().syncExec(new Runnable() {
 				public void run() {
-					Point controlOrigin = fControl.toDisplay(0,0);	// Display coor of where the control's (0,0) is.
 					Composite parent = fControl.getParent();
-					Point controlCorner = parent != null ? parent.toDisplay(fControl.getLocation()) : fControl.getLocation();	// Display coor of control's upper-left.
-					controlOrigin.x-=controlCorner.x;
-					controlOrigin.y-=controlCorner.y;
-					originOffset[0] = controlOrigin;
+					Rectangle controlBounds = parent != null ? feedbackController.getDisplay().map(parent, fControl, fControl.getBounds()) : fControl.getBounds();
+					originOffset[0] = new Point(-controlBounds.x, -controlBounds.y);	// Flip from corner-offset-from-origin to origin-offset-from-corner by negating.
 				}
 			});
 		}

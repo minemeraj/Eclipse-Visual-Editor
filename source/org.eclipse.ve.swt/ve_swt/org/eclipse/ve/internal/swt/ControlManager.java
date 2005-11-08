@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.21 $ $Date: 2005-11-04 00:11:04 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.22 $ $Date: 2005-11-08 22:33:17 $
  */
 
 import java.io.InputStream;
@@ -630,24 +630,7 @@ public class ControlManager implements ControlManagerFeedbackControllerNotifier,
 		else
 			return new Dimension();
 	}
-	
-	/**
-	 * Get the origin offset.
-	 * @return
-	 * 
-	 * @since 1.1.0
-	 */
-	public Point getOriginOffset() {
-		if (controlManagerProxy != null && controlBeanProxy != null && controlManagerProxy.isBeanProxy()) {
-			IBeanProxy controlManager = (IBeanProxy) controlManagerProxy;
-			IMethodProxy getOffsetMethod = controlManager.getTypeProxy().getMethodProxy("getOriginOffset");
-			IPointBeanProxy offset = (IPointBeanProxy) getOffsetMethod.invokeCatchThrowableExceptions(controlManager);
-			if (offset != null) {
-				return new Point(offset.getX(), offset.getY());
-			}
-		}
-		return new Point();
-	}
+
 
 	/**
 	 * Layout data needs to be applied specially so that composite manager can handle an invalid layout data setting.

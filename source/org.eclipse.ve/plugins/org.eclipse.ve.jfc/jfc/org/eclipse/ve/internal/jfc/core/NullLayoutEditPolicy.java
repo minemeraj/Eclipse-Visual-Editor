@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NullLayoutEditPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-11-04 17:30:48 $ 
+ *  $Revision: 1.9 $  $Date: 2005-11-08 22:33:24 $ 
  */
 import java.util.Collections;
 
@@ -151,6 +151,13 @@ protected Command createChangeConstraintCommand(Object child, Object constraint,
  */
 protected Object translateToModelConstraint(Object figureConstraint) {
 	return figureConstraint;
+}
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.cde.core.XYLayoutEditPolicy#convertModelToDraw2D(java.lang.Object)
+ */
+protected Object convertModelToDraw2D(Object modelconstraint) {
+	return modelconstraint;
 }
 
 protected Object modelToFigureConstraint(Object modelConstraint) {

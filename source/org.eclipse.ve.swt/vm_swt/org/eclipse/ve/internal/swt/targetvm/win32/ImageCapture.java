@@ -26,11 +26,20 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 
 	protected Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren) {
 		Image myImage = getImage(control, maxWidth, maxHeight);
+		// We need to be able to handle right-to-left coordinates too. In that case the bounds rectangle will be reversed from what we
+		// think. We think the origin is upper-left, but the origin is really upper-right. To get out of this thinking we will
+		// instead convert all bounds to display bounds so that they will all be left-to-right.
 		if (myImage != null) {
 			// Get the images of all of the children
 			if (includeChildren && control instanceof Composite) {
-				Rectangle parentBounds = myImage.getBounds();
-				Point clientOrigin = getClientOrigin(control);
+				Display display = control.getDisplay();
+				Rectangle parentBounds = control.getParent() == null ? control.getBounds() : display.map(control.getParent(), null, control.getBounds());
+				// Need to clip the bounds to the size of the image so we get just what we need.
+				Rectangle imgBounds = myImage.getBounds();
+				parentBounds.width = imgBounds.width;
+				parentBounds.height = imgBounds.height;
+				int parentRight = parentBounds.width+parentBounds.x;
+				int parentBottom = parentBounds.height+parentBounds.y;
 				Control[] children = ((Composite) control).getChildren();
 				GC myImageGC = new GC(myImage);
 				try {
@@ -42,18 +51,16 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 						// for each page are children of the TabFolder, but only the visible one is being shown on the active page
 						if (!child.isVisible())
 							continue;
-						Rectangle childBounds = child.getBounds();
-						childBounds.x += clientOrigin.x; // Adjust to true loc within the parent.
-						childBounds.y += clientOrigin.y;
+						Rectangle childBounds = display.map(control, null, child.getBounds());
 						if (!parentBounds.intersects(childBounds))
 							continue; // Child is completely outside parent.
-						Image childImage = getImage(child, parentBounds.width - childBounds.x, parentBounds.height - childBounds.y, true);
+						Image childImage = getImage(child, parentRight - childBounds.x, parentBottom - childBounds.y, true);
 						if (childImage != null) {
 							try {
 								// Paint the child image on top of our one
-								// Its location is within our client area origin, so if it is at 10,10 and our client origin
-								// is at 5,5 then we draw at 15,15 on our image
-								myImageGC.drawImage(childImage, childBounds.x, childBounds.y);
+								// Since the child bounds and parent bounds are both in display coors, the difference between
+								// the two is the offset of the child from the parent.
+								myImageGC.drawImage(childImage, childBounds.x-parentBounds.x, childBounds.y-parentBounds.y);
 							} finally {
 								childImage.dispose();
 							}
@@ -125,24 +132,4 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		gc.dispose();
 		return image;
 	}
-
-	/**
-	 * Return the location of the controls origin (its (0,0)) wrt/its upper left corner. On most this will be (0,0), but on shell it isn't since (0,0)
-	 * on shell actually puts it down and to the left.
-	 * 
-	 * @param control
-	 * @return
-	 * 
-	 * @since 1.1.0
-	 */
-	private static Point getClientOrigin(Control control) {
-		Point controlOrigin = control.toDisplay(0, 0); // Display coor of where the control's (0,0) is.
-		Composite parent = control.getParent();
-		Point controlCorner = parent != null ? parent.toDisplay(control.getLocation()) : control.getLocation(); // Display coor of control's
-																												// upper-left.
-		controlOrigin.x -= controlCorner.x;
-		controlOrigin.y -= controlCorner.y;
-		return controlOrigin;
-	}
-
 }

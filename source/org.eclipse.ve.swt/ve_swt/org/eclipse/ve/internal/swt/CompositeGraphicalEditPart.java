@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.30 $ $Date: 2005-09-21 10:39:14 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.31 $ $Date: 2005-11-08 22:33:17 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -113,7 +113,7 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 		IBeanProxy layoutBeanProxy = BeanSWTUtilities.invoke_getLayout(compositeBeanProxyAdapter.getBeanProxy());
 		// If the layoutBeanProxy is null then we use the null layout edit policy
 		if (layoutBeanProxy == null) {
-			layoutPolicy = new NullLayoutEditPolicy(getContainerPolicy(), compositeBeanProxyAdapter.getOriginOffset());
+			layoutPolicy = new NullLayoutEditPolicy(getContainerPolicy(), compositeBeanProxyAdapter);
 		} else {
 			// Get the layoutPolicyFactory
 			ILayoutPolicyFactory layoutPolicyFactory = BeanSWTUtilities.getLayoutPolicyFactory(compositeBeanProxyAdapter.getBeanProxy(), EditDomain

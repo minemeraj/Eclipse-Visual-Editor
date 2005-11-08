@@ -89,7 +89,8 @@ public class BeanSWTUtilities {
 		SHELL_MANAGER_APPLYTITLE = MANAGER_APPLY_LAYOUTDATA + 1,
 		SHELL_MANAGER_PACKONCHANGE = SHELL_MANAGER_APPLYTITLE + 1,
 		FEEDBACKMANAGER_DISPOSE = SHELL_MANAGER_PACKONCHANGE + 1,
-		MAX_METHODS = FEEDBACKMANAGER_DISPOSE + 1;
+		WIDGET_GETSTYLE = FEEDBACKMANAGER_DISPOSE + 1,
+		MAX_METHODS = WIDGET_GETSTYLE + 1;
 	
 
 	private IProxyMethod[] methods = new IProxyMethod[MAX_METHODS];
@@ -532,6 +533,27 @@ public class BeanSWTUtilities {
 		}
 		return method;
 	}
+	
+	/**
+	 * Get the {@link org.eclipse.swt.widgets.Widget#getStyle()}proxy method.
+	 * @param expression
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	private static IProxyMethod getWidgetGetStyle(IExpression expression) {
+		BeanSWTUtilities constants = getConstants(expression.getRegistry());
+
+		IProxyMethod method = constants.methods[WIDGET_GETSTYLE];
+		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
+			method = expression.getRegistry().getBeanTypeProxyFactory()
+					.getBeanTypeProxy(expression, "org.eclipse.swt.widgets.Widget").getMethodProxy(
+							expression, "getStyle", //$NON-NLS-1$
+							(IProxyBeanType[]) null);
+			processExpressionProxy(method, constants.methods, WIDGET_GETSTYLE);
+		}
+		return method;
+	}
 
 	/**
 	 * Invoke the widget dispose method. This must be on a UI thread callback.
@@ -545,6 +567,18 @@ public class BeanSWTUtilities {
 		FeedbackController feedbackController = BeanSWTUtilities.getFeedbackController(expression, DisplayManager.getCurrentDisplay(expression.getRegistry()));
 		feedbackController.invalidate(controller);
 		expression.createSimpleMethodInvoke(dispose, feedbackController.getProxy(), new IProxy[] {widget}, false);
+	}
+	
+	/**
+	 * Invoke the Widget getStyle method
+	 * @param widget
+	 * @param expression
+	 * @return the ExpressionProxy for the style.
+	 * 
+	 * @since 1.2.0
+	 */
+	public static ExpressionProxy invoke_WidgetGetStyle(IProxy widget, IExpression expression) {
+		return expression.createSimpleMethodInvoke(getWidgetGetStyle(expression), widget, null, true);
 	}
 
 	/**

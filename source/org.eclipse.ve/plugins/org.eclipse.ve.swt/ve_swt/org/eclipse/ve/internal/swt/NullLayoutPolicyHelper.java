@@ -126,12 +126,14 @@ public class NullLayoutPolicyHelper extends LayoutPolicyHelper {
 		Iterator childrenItr = children.iterator();
 		while (childrenItr.hasNext()) {
 			EObject child = (EObject) childrenItr.next();
-			if (child.eIsSet(sfComponentBounds))
-				cb.cancelAttributeSetting(child, sfComponentBounds);
-			if (child.eIsSet(sfComponentSize))
-				cb.cancelAttributeSetting(child, sfComponentSize);
-			if (child.eIsSet(sfComponentLocation))
-				cb.cancelAttributeSetting(child, sfComponentLocation);
+			if (sfComponentBounds.getEContainingClass().isInstance(child)) {
+				if (child.eIsSet(sfComponentBounds))
+					cb.cancelAttributeSetting(child, sfComponentBounds);
+				if (child.eIsSet(sfComponentSize))
+					cb.cancelAttributeSetting(child, sfComponentSize);
+				if (child.eIsSet(sfComponentLocation))
+					cb.cancelAttributeSetting(child, sfComponentLocation);
+			}
 
 		}
 	}

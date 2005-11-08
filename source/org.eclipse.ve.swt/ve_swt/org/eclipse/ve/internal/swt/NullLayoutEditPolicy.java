@@ -9,9 +9,9 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
-import java.util.ArrayList;
 import java.util.Collections;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
@@ -24,8 +24,7 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
-import org.eclipse.ve.internal.cde.core.ContainerPolicy;
-import org.eclipse.ve.internal.cde.core.XYLayoutEditPolicy;
+import org.eclipse.ve.internal.cde.core.*;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -38,17 +37,35 @@ import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 public class NullLayoutEditPolicy extends XYLayoutEditPolicy {
 	protected ContainerPolicy containerPolicy;		// Handles the containment functions
 	protected NullLayoutPolicyHelper helper;	
-	protected Point originOffset;
+	protected CompositeProxyAdapter compositeProxyAdapter;
 
 /**
  * Create with the container policy for handling DiagramFigures.
  */
-public NullLayoutEditPolicy(VisualContainerPolicy containerPolicy, Point originOffset) {
+public NullLayoutEditPolicy(VisualContainerPolicy containerPolicy, CompositeProxyAdapter compositeProxyAdapter) {
 	this.containerPolicy = containerPolicy;
 	helper = new NullLayoutPolicyHelper(containerPolicy);	
-	this.originOffset = originOffset;
+	this.compositeProxyAdapter = compositeProxyAdapter;
 }
 
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.cde.core.XYLayoutEditPolicy#createGridFigure()
+ */
+protected GridFigure createGridFigure() {
+	return new GridFigure(getGridController(), getZoomController()) {
+		protected Rectangle getGridClientArea() {
+			// We want to modify the border so that it is down to the client area. Don't want the grid drawing outside of this.
+			Rectangle clientArea = compositeProxyAdapter.getClientArea();
+			clientArea = (Rectangle) NullLayoutEditPolicy.this.modelToFigureConstraint(clientArea);
+			IFigure hostFigure = getHostFigure();
+			if (!hostFigure.isCoordinateSystem()) {
+				// It expects absolute. Don't ask why this works! I don't know.
+				clientArea.translate(hostFigure.getBounds().getTopLeft());
+			}
+			return clientArea;
+		};	
+	};
+}
 public void activate() {
 	super.activate();
 	containerPolicy.setContainer(getHost().getModel());
@@ -140,27 +157,36 @@ protected Object getChildConstraint(EditPart child) {
  * update.
  */
 protected Command createChangeConstraintCommand(Object child, Object constraint, boolean moved, boolean resize) {
+	// Need to handle right to left. It can cause resizes to actually be a move and resize, or a move and resize to actually be a move.
+	if (compositeProxyAdapter.isRightToLeft()) {
+		// Just moved with no resize is ok. It is a move. It moved the entire rect, but didn't change its size.
+		if (moved && resize) {
+			// To get a move and resize means the left-hand side was moved. This would cause both a move (to move the upper-left to new
+			// location) and a resize because the right-hand side is still where it was. In RTL land this is just a resize because
+			// we only changed its size (since in RTL the origin is the upper-right, not the upper-left).
+			moved = false;
+		} else if (resize) {
+			// To get resize without move means the right-hand side was moved. In RTL land this means move and resize because it means
+			// the upper-right corner was changed.
+			moved = true;
+		}
+	}
 	NullLayoutPolicyHelper.NullConstraint nullConstraint = new NullLayoutPolicyHelper.NullConstraint((Rectangle) constraint, moved, resize);
 	return helper.getChangeConstraintCommand(Collections.singletonList(child), Collections.singletonList(nullConstraint));
 }
 
-/**
- * Convert layout constraint (container child positioning data)
- * to a model constraint. We're using Rectangle as the model constraint
- * too here. It will be converted to the correct type when the command
- * itself is executed.
- * The figure constraint is relative to the bounds of the composite, however the model constraint is relative to the origin of the
- * client area.  Therefore we need to subtract from the corner the origin of the client area 
- */
+
 protected Object translateToModelConstraint(Object aFigureConstraint) {
-	
-	Rectangle figureConstraint = (Rectangle)aFigureConstraint;
-	Rectangle result = new Rectangle(
-		figureConstraint.x - originOffset.x,
-		figureConstraint.y - originOffset.y,
-		figureConstraint.width,
-		figureConstraint.height);
-	return result;
+	return aFigureConstraint instanceof Rectangle ? 
+			(Object) LayoutPolicyHelper.mapFigureToModel(compositeProxyAdapter, getHostFigure(), ((Rectangle)aFigureConstraint).getCopy()) :
+			LayoutPolicyHelper.mapFigureToModel(compositeProxyAdapter, getHostFigure(), ((Point)aFigureConstraint).getCopy());
+}
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.cde.core.XYLayoutEditPolicy#convertModelToDraw2D(java.lang.Object)
+ */
+protected Object convertModelToDraw2D(Object modelconstraint) {
+	return modelconstraint;	// We use draw2d as the model too.
 }
 
 protected Object modelToFigureConstraint(Object modelConstraint) {
@@ -168,8 +194,10 @@ protected Object modelToFigureConstraint(Object modelConstraint) {
 		IBeanProxy proxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) modelConstraint);
 		if (proxy instanceof IRectangleBeanProxy) {
 			IRectangleBeanProxy rect = (IRectangleBeanProxy) modelConstraint;
-			return new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+			return LayoutPolicyHelper.mapModelToFigure(compositeProxyAdapter, getHostFigure(), new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()));
 		}
+	} else if (modelConstraint instanceof Rectangle) {
+		return LayoutPolicyHelper.mapModelToFigure(compositeProxyAdapter, getHostFigure(), ((Rectangle) modelConstraint).getCopy());
 	}
 	
 	// Don't know what it is, so what do we do. Returning null just makes it not participate.
@@ -237,116 +265,6 @@ protected final IMethodProxy getGetFieldMethodProxy(ProxyFactoryRegistry aProxyF
 		getFieldMethodProxy = getEnvironmentBeanTypeProxy(aProxyFactoryRegistry).getMethodProxy("java.lang.reflect.field","java.lang.Object");		 //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	return getFieldMethodProxy;
-}
-
-public static boolean adjustForPreferredSizeAndPosition(IBeanProxy childProxy, IJavaObjectInstance parentComposite, Rectangle bounds, int marginWidth, int marginHeight, IBeanProxy defaultX, IBeanProxy defaultY) {
-	boolean changedit = false;
-	// If either the width or height are -1 we need to make them the current preferred size of the live component
-	// This would be the state after a drop on the graph viewer with just a point and no drag rectangle,
-	// or else a drop onto a tree
-	if (bounds.width == -1 || bounds.height == -1) {
-		changedit = true;
-		IPointBeanProxy preferredSize = BeanSWTUtilities.invoke_computeSize(childProxy,defaultX,defaultY);
-		if (bounds.width == -1)
-			bounds.width = Math.max(preferredSize.getX(), marginWidth);
-		if (bounds.height == -1)
-			bounds.height = Math.max(preferredSize.getY(), marginHeight);
-	}	
-	if (bounds.x == Integer.MIN_VALUE && bounds.y == Integer.MIN_VALUE) {
-		changedit = true;
-		//IPointBeanProxy point = BeanSWTUtilities.invoke_getLocation(childProxy);
-		
-		//IBeanProxy containerBeanProxy = BeanAwtUtilities.invoke_getParent(childProxy);
-		Point position = findNextAvailablePosition(bounds , parentComposite , marginWidth, marginHeight);
-		bounds.x = position.x;
-		bounds.y = position.y;
-	}
-	return changedit;
-}
-protected static Point findNextAvailablePosition(Rectangle bounds, IJavaObjectInstance parentComposite, int marginWidth, int marginHeight) {
-	int requestedWidth = bounds.width + 2 * marginWidth; // Increase by double margin width (one on each side)
-	int requestedHeight = bounds.height + 2 * marginHeight;
-	IBeanProxy compositeBeanProxy = BeanProxyUtilities.getBeanProxy(parentComposite);
-	IRectangleBeanProxy boundingRect = BeanSWTUtilities.invoke_getBounds(compositeBeanProxy);
-	// Gather the bounds for all the children in the container
-	
-	IArrayBeanProxy children = BeanSWTUtilities.invoke_getChildren(compositeBeanProxy);
-	// Collect all rectangles that have non zero widths and height
-	ArrayList rects = new ArrayList(children.getLength());
-	for (int i = 0; i < children.getLength(); i++) {
-		try {
-			IRectangleBeanProxy cBounds = BeanSWTUtilities.invoke_getBounds(children.get(i));
-			// Exclude the children being added which are unadjusted 
-			if (cBounds.getWidth() != -1 && cBounds.getHeight() != -1){
-				// Convert the IRectangleBeanProxy to a 2d rectangle that we can work with
-				Rectangle lBounds = new Rectangle(cBounds.getX(),cBounds.getY(),cBounds.getWidth(),cBounds.getHeight());
-				rects.add(lBounds);
-			}
-		} catch ( ThrowableProxy exc ) {
-			exc.printProxyStackTrace();
-		}
-	}
-	if (requestedWidth < boundingRect.getWidth()) {
-		// The requested size is less than the bounding rectangle, see where on the right
-		// it can fit, moving down as needed.
-
-		int highestBottom = 0; // How high up to do search. Start at the the top.
-		// Perform search by width, then by height. Start at upper left and see if any intersections.
-		// If there aren't any, good, we found a spot. If there are, move right beyond all of the
-		// intersections and try again. If we get all of the way over, then move back to the highest
-		// bottom we found among all of the intersections and to the far left and try again, moving
-		// down the page until we find something.
-		while (true) {
-			int x = 0;
-			int y = highestBottom;
-			highestBottom = Integer.MAX_VALUE;
-			while (x + requestedWidth < boundingRect.getWidth()) {
-				boolean intersects = false;
-				Rectangle tryRect = new Rectangle(x, y, requestedWidth, requestedHeight);
-				for (int i = 0; i < rects.size(); i++) {
-					Rectangle rect = (Rectangle) rects.get(i);
-					if (rect.intersects(tryRect)) {
-						intersects = true;
-						x = Math.max(x, rect.x + rect.width);
-						highestBottom = Math.min(highestBottom, rect.y + rect.height);
-					}
-				}
-				if (!intersects) {
-					// We got a space for it.
-					// Move right and down by margin amount.
-					Point position = new Point(tryRect.x + marginWidth, tryRect.y + marginHeight);
-					return position;
-				}
-				// There was an intersection, x is now just right of the rightmost intersection.
-				// Loop will try searching here now.
-			}
-			// We gone all of the way to the right and couldn't find anything. Now move down
-			// to just below the height intersect bottom. Loop will try searching here.
-		}
-	} else {
-		// The requested width is larger than the bounding area, so go down and find first
-		// y that we can use that doesn't intersect anything.
-		int y = 0;
-		while (true) {
-			boolean intersects = false;
-			Rectangle tryRect = new Rectangle(0, y, requestedWidth, requestedHeight);
-			for (int i = 0; i < rects.size(); i++) {
-				Rectangle rect = (Rectangle) rects.get(i);
-				if (rect.intersects(tryRect)) {
-					intersects = true;
-					y = Math.max(y, rect.y + rect.height);
-				}
-				if (!intersects) {
-					// We got a space for it.
-					// Move right and down by margin amount.
-					Point position = new Point(tryRect.x + marginWidth, tryRect.y + marginHeight);
-					return position;
-				}
-				// It intersects something in this row, move below the lowest of the intersections
-				// Loop will try again.
-			}
-		}
-	}
 }
 
 }

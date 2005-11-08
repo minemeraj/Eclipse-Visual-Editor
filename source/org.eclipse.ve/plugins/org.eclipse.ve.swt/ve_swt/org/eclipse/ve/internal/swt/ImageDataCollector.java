@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-15 03:12:38 $ 
+ *  $Revision: 1.4 $  $Date: 2005-11-08 22:33:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -313,9 +313,12 @@ public class ImageDataCollector implements ICallback {
 								fDataCollectedRunnable = null;
 								break;
 							default:
-								// It was not good.
-								fDataCollectedRunnable.imageNotCollected(status);
-								fDataCollectedRunnable = null;
+								// Could be called twice.
+								if (fDataCollectedRunnable != null) {
+									// It was not good.
+									fDataCollectedRunnable.imageNotCollected(status);
+									fDataCollectedRunnable = null;
+								}
 								break;
 						}
 						return; // We're done, leave the loop and return the stream.
