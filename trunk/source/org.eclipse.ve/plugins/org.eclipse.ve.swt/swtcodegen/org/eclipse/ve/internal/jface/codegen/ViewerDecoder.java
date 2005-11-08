@@ -12,13 +12,22 @@
  *  Created Oct 5, 2005 by Gili Mendel
  * 
  *  $RCSfile: ViewerDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-06 19:57:25 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-08 18:31:09 $ 
  */
  
 package org.eclipse.ve.internal.jface.codegen;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.java.codegen.java.*;
 import org.eclipse.ve.internal.java.codegen.java.AllocationFeatureMapper;
 import org.eclipse.ve.internal.java.codegen.java.ObjectDecoder;
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
+import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
  
 /**
  * This decoder deal with the fact that Viewers may have
@@ -35,6 +44,24 @@ public class ViewerDecoder extends ObjectDecoder {
 		}
 		else		
 		   super.initialDecoderHelper();
+	}
+
+	public VEexpressionPriority determinePriority() {
+		fPriority = super.determinePriority();
+		if (getExprRef().isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+			EStructuralFeature ifeature = ConstructorDecoderHelper.getRequiredImplicitFeature((IJavaObjectInstance)fbeanPart.getEObject());
+			if (ifeature!=null && fPriority.getProiorityIndex()==null) {
+				// We may need to get the index priority of our visual
+				EObject implicit = (EObject) fbeanPart.getEObject().eGet(ifeature);
+				BeanPart ibp = fBeanModel.getABean(implicit);
+				if (ibp!=null && ibp.isImplicit()) {
+					CodeExpressionRef initExpr = ibp.getInitExpression();
+					VEexpressionPriority impPriority = initExpr.getPriority();
+					fPriority = new IJavaFeatureMapper.VEexpressionPriority(fPriority.getProiority(), impPriority.getProiorityIndex()); 						
+				}				
+			}
+		}		
+		return fPriority;
 	}
 
 }
