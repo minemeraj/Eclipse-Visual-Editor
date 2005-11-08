@@ -10,11 +10,20 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeDecoder.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-04 15:41:48 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-08 16:51:45 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.java.codegen.java.ConstructorDecoderHelper;
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper;
+import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
+import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
 
 import org.eclipse.ve.internal.swt.SWTConstants;
 
@@ -45,5 +54,23 @@ public class TreeDecoder extends CompositeDecoder {
 		 if (structuralFeature.equals(ADD_METHOD_SF_NAME) || structuralFeature.equals(ADD_TREEITEMS_METHOD_SF_NAME))
 		    return new CompositeFeatureMapper();
 		return super.getAppropriateFeatureMapper(structuralFeature);
+	}
+	
+	public VEexpressionPriority determinePriority() {
+		fPriority = super.determinePriority();
+		if (getExprRef().isStateSet(CodeExpressionRef.STATE_INIT_EXPR)) {
+			EStructuralFeature ifeature = ConstructorDecoderHelper.getRequiredImplicitFeature((IJavaObjectInstance)fbeanPart.getEObject());
+			if (ifeature!=null && fPriority.getProiorityIndex()==null) {
+				// We may need to get the index priority of our visual
+				EObject implicit = (EObject) fbeanPart.getEObject().eGet(ifeature);
+				BeanPart ibp = fBeanModel.getABean(implicit);
+				if (ibp!=null && ibp.isImplicit()) {
+					CodeExpressionRef initExpr = ibp.getInitExpression();
+					VEexpressionPriority impPriority = initExpr.getPriority();
+					fPriority = new IJavaFeatureMapper.VEexpressionPriority(fPriority.getProiority(), impPriority.getProiorityIndex()); 						
+				}				
+			}
+		}		
+		return fPriority;
 	}
 }
