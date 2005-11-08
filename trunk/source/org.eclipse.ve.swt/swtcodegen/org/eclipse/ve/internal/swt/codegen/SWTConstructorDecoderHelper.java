@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.29 $  $Date: 2005-11-07 19:48:25 $ 
+ *  $Revision: 1.30 $  $Date: 2005-11-08 17:20:34 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -142,7 +142,15 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 			}
 						
 			EList controlList = (EList)parent.eGet(sf);
-
+			
+			int expOffset = exp.getOffset();
+			// if declaration is implicit, the offset is the parent's 
+			// init expression offset.
+			if(exp.getBean().isImplicit() && exp.getBean().getImplicitParent()!=null){
+				BeanPart parentBP = exp.getBean().getImplicitParent();
+				if(parentBP.getInitExpression()!=null)
+					expOffset = parentBP.getInitExpression().getOffset();
+			}
 			
 			// determine z order
 			int index = 0;
@@ -151,7 +159,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 				CodeExpressionRef cExpr = (CodeExpressionRef) map.get(controlList.get(i));
 				if (cExpr.getMasteredExpression()==fOwner.getExprRef()) 
 					curIndex=i;
-				else if (cExpr != null && cExpr.getOffset()<exp.getOffset()){
+				else if (cExpr != null && cExpr.getOffset()<expOffset){
 					index=i+1;
 				}			
 			}
