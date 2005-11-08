@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeManagerExtension.java,v $
- *  $Revision: 1.3 $  $Date: 2005-07-21 19:54:35 $ 
+ *  $Revision: 1.4 $  $Date: 2005-11-08 22:33:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -18,6 +18,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -203,6 +205,11 @@ nextChild:		for (int i = 0; i < children.size(); i++) {
 					}
 					
 				}
+				break;
+				
+			case Common.CMPL_CLIENTAREA_CHANGED:
+				composite.setOriginOffset(new Point(((IIntegerBeanProxy) parms[0]).intValue(), ((IIntegerBeanProxy) parms[1]).intValue()));
+				composite.setClientArea(new Rectangle(((IIntegerBeanProxy) parms[2]).intValue(), ((IIntegerBeanProxy) parms[3]).intValue(), ((IIntegerBeanProxy) parms[4]).intValue(), ((IIntegerBeanProxy) parms[5]).intValue()));
 				break;
 		}
 	}

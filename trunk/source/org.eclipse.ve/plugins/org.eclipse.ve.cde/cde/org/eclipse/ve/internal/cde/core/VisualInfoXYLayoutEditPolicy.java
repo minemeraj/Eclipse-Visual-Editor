@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: VisualInfoXYLayoutEditPolicy.java,v $
- *  $Revision: 1.13 $  $Date: 2005-10-05 15:25:08 $ 
+ *  $Revision: 1.14 $  $Date: 2005-11-08 22:33:27 $ 
  */
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -264,9 +264,28 @@ public class VisualInfoXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	 * Translate from the figure constraint (it is assumed that zoom/grid already taken out of the picture).
 	 */
 	protected Object translateToModelConstraint(Object figureConstraint) {
-		org.eclipse.draw2d.geometry.Rectangle r = (org.eclipse.draw2d.geometry.Rectangle) figureConstraint;
-		return new Rectangle(r.x, r.y, r.width, r.height);
+		if (figureConstraint instanceof org.eclipse.draw2d.geometry.Rectangle) {
+			org.eclipse.draw2d.geometry.Rectangle rect = (org.eclipse.draw2d.geometry.Rectangle) figureConstraint;
+			return new Rectangle(rect.x, rect.y, rect.width, rect.height);	// Convert to CDM rect.
+		} else if (figureConstraint instanceof org.eclipse.draw2d.geometry.Point) {
+			org.eclipse.draw2d.geometry.Point point = (org.eclipse.draw2d.geometry.Point) figureConstraint;
+			return new Point(point.x, point.y);	// Convert to CDM point.
+		} else
+			return figureConstraint;
 	}
+	
+	protected Object convertModelToDraw2D(Object modelconstraint) {
+
+		if (modelconstraint instanceof Rectangle) {
+			Rectangle rect = (Rectangle) modelconstraint;
+			return new org.eclipse.draw2d.geometry.Rectangle(rect.x, rect.y, rect.width, rect.height);	// Convert to CDM rect.
+		} else if (modelconstraint instanceof Point) {
+			Point point = (Point) modelconstraint;
+			return new org.eclipse.draw2d.geometry.Point(point.x, point.y);	// Convert to CDM point.
+		} else
+			return modelconstraint;
+	
+	}	
 
 	/**
 	 * Translate to figure constraint, need to take zoom into account.

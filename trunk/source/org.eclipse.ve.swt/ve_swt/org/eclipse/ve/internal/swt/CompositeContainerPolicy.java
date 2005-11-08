@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.24 $$  $$Date: 2005-11-04 17:30:52 $$ 
+ *  $$Revision: 1.25 $$  $$Date: 2005-11-08 22:33:17 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -23,6 +23,7 @@ import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
@@ -46,8 +47,17 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 	protected void getOrphanTheChildrenCommand(List children, CommandBuilder cbldr) {
 		super.getOrphanTheChildrenCommand(children, cbldr);
 		// Need to cancel the childrens' layout data because we don't what it will be where we are going.
+		// Can only do this for those that are in the controls feature. (Some subclasses may have other
+		// children and we don't want to cancel the layout data on them.
 		RuledCommandBuilder cbld = new RuledCommandBuilder(getEditDomain());
-		cbld.cancelGroupAttributeSetting(children, sfLayoutData);
+		for (Iterator cItr = children.iterator(); cItr.hasNext();) {
+			Object child = cItr.next();
+			if (child instanceof EObject) {
+				EObject childObject = (EObject) child;
+				if (InverseMaintenanceAdapter.isReferencedFrom(childObject, (EObject) getContainer(), (EReference) containmentSF))
+					cbld.cancelAttributeSetting(childObject, sfLayoutData);
+			}
+		}
 		cbldr.append(cbld.getCommand());
 	}
 	

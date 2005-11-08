@@ -9,13 +9,14 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.23 $ $Date: 2005-11-04 00:11:04 $
+ * $RCSfile: WidgetProxyAdapter.java,v $ $Revision: 1.24 $ $Date: 2005-11-08 22:33:17 $
  */
 package org.eclipse.ve.internal.swt;
 
 
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.emf.common.notify.Notifier;
@@ -24,11 +25,13 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
 import org.eclipse.ve.internal.java.core.*;
+import org.eclipse.ve.internal.java.core.IAllocationProcesser.AllocationException;
 
 /**
  * Proxy adapter for SWT Widgets.
@@ -152,19 +155,25 @@ public class WidgetProxyAdapter extends UIThreadOnlyProxyAdapter implements IExe
 	 * @since 1.0.0
 	 */
 	public int getStyle() {
-		if (style == NO_STYLE && isBeanProxyInstantiated()) {
-			invokeSyncExecCatchThrowable(new DisplayManager.DisplayRunnable() {
-
-				public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-					IBeanProxy widgetBeanProxy = getBeanProxy();
-					IMethodProxy getStyleMethodProxy = widgetBeanProxy.getTypeProxy().getMethodProxy("getStyle"); //$NON-NLS-1$
-					IIntegerBeanProxy styleBeanProxy = (IIntegerBeanProxy) getStyleMethodProxy.invoke(widgetBeanProxy);
+		return style;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.BeanProxyAdapter#primInstantiateBeanProxy(org.eclipse.jem.internal.proxy.core.IExpression)
+	 */
+	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
+		IProxy newBean = super.primInstantiateBeanProxy(expression);
+		if (newBean != null) {
+			// Now we want to queue up a get style expression.
+			ExpressionProxy styleProxy = BeanSWTUtilities.invoke_WidgetGetStyle(newBean, expression);
+			styleProxy.addProxyListener(new ExpressionProxy.ProxyAdapter() {
+				public void proxyResolved(ProxyEvent event) {
+					IIntegerBeanProxy styleBeanProxy = (IIntegerBeanProxy) event.getProxy();
 					style = styleBeanProxy.intValue();
-					return null;
 				}
 			});
 		}
-		return style;
+		return newBean;
 	}
 
 	/**

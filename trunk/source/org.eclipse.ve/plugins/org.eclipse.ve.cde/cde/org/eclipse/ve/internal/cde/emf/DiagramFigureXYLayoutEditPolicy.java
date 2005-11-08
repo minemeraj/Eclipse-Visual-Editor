@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DiagramFigureXYLayoutEditPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-08 22:33:27 $ 
  */
 
 import java.util.Iterator;
@@ -35,6 +35,7 @@ import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cdm.DiagramFigure;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
 import org.eclipse.ve.internal.cdm.model.*;
+
 import org.eclipse.ve.internal.propertysheet.common.commands.CompoundCommand;
 /**
  * XYLayoutEditPolicy for DiagramFigures. The constraint info is stored
@@ -222,8 +223,30 @@ public class DiagramFigureXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	 * Translate from the figure constraint (it is assumed that zoom/grid already taken out of the picture).
 	 */
 	protected Object translateToModelConstraint(Object figureConstraint) {
-		org.eclipse.draw2d.geometry.Rectangle r = (org.eclipse.draw2d.geometry.Rectangle) figureConstraint;
-		return new Rectangle(r.x, r.y, r.width, r.height);
+		if (figureConstraint instanceof org.eclipse.draw2d.geometry.Rectangle) {
+			org.eclipse.draw2d.geometry.Rectangle rect = (org.eclipse.draw2d.geometry.Rectangle) figureConstraint;
+			return new Rectangle(rect.x, rect.y, rect.width, rect.height);	// Convert to CDM rect.
+		} else if (figureConstraint instanceof org.eclipse.draw2d.geometry.Point) {
+			org.eclipse.draw2d.geometry.Point point = (org.eclipse.draw2d.geometry.Point) figureConstraint;
+			return new Point(point.x, point.y);	// Convert to CDM point.
+		} else
+			return figureConstraint;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.XYLayoutEditPolicy#convertModelToDraw2D(java.lang.Object)
+	 */
+	protected Object convertModelToDraw2D(Object modelconstraint) {
+
+		if (modelconstraint instanceof Rectangle) {
+			Rectangle rect = (Rectangle) modelconstraint;
+			return new org.eclipse.draw2d.geometry.Rectangle(rect.x, rect.y, rect.width, rect.height);	// Convert to CDM rect.
+		} else if (modelconstraint instanceof Point) {
+			Point point = (Point) modelconstraint;
+			return new org.eclipse.draw2d.geometry.Point(point.x, point.y);	// Convert to CDM point.
+		} else
+			return modelconstraint;
+	
 	}
 
 	/**

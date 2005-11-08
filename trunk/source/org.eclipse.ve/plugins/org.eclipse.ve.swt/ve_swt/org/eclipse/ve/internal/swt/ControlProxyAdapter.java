@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.ImageData;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
@@ -131,6 +132,16 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		if (controlManager == null)
 			controlManager = createControlManager();
 		return controlManager;
+	}
+	
+	/**
+	 * Is this control in right to left orientation?
+	 * @return
+	 * 
+	 * @since 1.2.0
+	 */
+	public boolean isRightToLeft() {
+		return (getStyle() & SWT.RIGHT_TO_LEFT) != 0;	// We can ref. SWT directly because since this is API they are not going to change the value of the constant in future.
 	}
 
 	protected IProxy primInstantiateBeanProxy(IExpression expression) throws AllocationException {
@@ -422,20 +433,6 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		}
 	}
 
-	/**
-	 * Get the origin offset. This is the offset from the upper-left corner of the control to where (0,0) is in the control. Most
-	 * controls will return (0,0) as the offset, but shell is different. With shell when you set something at (0,0), it will actually be
-	 * at some other value relative to the upper-left corner. This is that offset.
-	 * @return
-	 * 
-	 * @since 1.1.0
-	 */
-	public Point getOriginOffset() {
-		if (controlManager != null)
-			return controlManager.getOriginOffset();
-		else
-			return new Point();
-	}
 
 	public Point getLocation() {
 		if (controlManager != null) {

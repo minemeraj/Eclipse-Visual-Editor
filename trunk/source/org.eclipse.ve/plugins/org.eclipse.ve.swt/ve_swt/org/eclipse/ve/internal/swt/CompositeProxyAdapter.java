@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.40 $ $Date: 2005-10-11 21:23:47 $
+ * $RCSfile: CompositeProxyAdapter.java,v $ $Revision: 1.41 $ $Date: 2005-11-08 22:33:17 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -246,6 +248,62 @@ public class CompositeProxyAdapter extends ControlProxyAdapter {
 		compositeManager.setVerifyLayoutData(expression);
 	}
 
+	// It is sent from the remote vm whenever it changes.
+	protected Point originOffset = new Point();
+	protected Rectangle clientArea = new Rectangle();
+	
+	/**
+	 * Get the client area of the control in model coor (i.e. not in IFigureConstraints).
+	 * <p>
+	 * For most controls this is (0,0,width,height). But for Group it is not, for group there is an inset. 
+	 * Things can still be placed outside of the clientarea but the layouts work with the clientarea. Such
+	 * as FillLayout with one child will position the child to be the same as the client area.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public Rectangle getClientArea() {
+		return clientArea;
+	}
+	
+	/*
+	 * Set client area.
+	 * <p>
+	 * <package>-protected so that only the CompositeManagerExtension can do this. 
+	 * @param offset
+	 * 
+	 * @since 1.2.0
+	 */
+	void setClientArea(Rectangle clientArea) {
+		this.clientArea = clientArea;
+	}
+
+	/**
+	 * Get the offset between the upper-left corner of the control and the origin (0,0) of the control.
+	 * <p>
+	 * For most controls this is (0,0). But for Shell it is not, because (0,0) on the shell actually puts
+	 * you down and to the right. Need to know this offset to make appropriate coordinate calculations on
+	 * the GraphViewer. The offset will be in the orientation of the control. For example if Right-to-Left,
+	 * then visually it is from the upper right, but logically it is still upper-left.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public Point getOriginOffset() {
+		return originOffset;
+	}
+	
+	/*
+	 * Set origin offset.
+	 * <p>
+	 * <package>-protected so that only the CompositeManagerExtension can do this. 
+	 * @param offset
+	 * 
+	 * @since 1.2.0
+	 */
+	void setOriginOffset(Point offset) {
+		originOffset = offset;
+	}
 	
 	/**
 	 * This is an adapter on the Control children that listen for "layoutData" changes.

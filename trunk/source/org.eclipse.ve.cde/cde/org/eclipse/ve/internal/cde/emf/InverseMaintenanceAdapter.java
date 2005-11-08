@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.15 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.16 $  $Date: 2005-11-08 22:33:27 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -279,6 +279,43 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 		} 
 		
 		return EMPTY_FEATURES;
+	}
+	
+	/**
+	 * Static to helper to answer if the notifier is referenced from the source by the given reference.
+	 * 
+	 * @param target target to get the references to 
+	 * @param source source pointing to the target
+	 * @param reference reference of interest
+	 * @return <code>true</code> if the source points to the target through the given reference.
+	 * 
+	 * @since 1.2.0
+	 */
+	public static boolean isReferencedFrom(Notifier target, EObject source, EReference reference) {
+		InverseMaintenanceAdapter ai = (InverseMaintenanceAdapter) EcoreUtil.getExistingAdapter(target, InverseMaintenanceAdapter.ADAPTER_KEY);
+		if (ai != null) {
+			if (ai.backRefs != null && !ai.backRefs.isEmpty()) {
+				Iterator itr = ai.backRefs.entrySet().iterator();
+				while (itr.hasNext()) {
+					Map.Entry entry = (Map.Entry) itr.next();
+					if (entry.getKey() == reference) {
+						Object value = entry.getValue();
+						if (value instanceof List) {
+							List l = (List) value;
+							for (int i = 0; i < l.size(); i++) {
+								WeakReference wr = (WeakReference) l.get(i);
+								if (wr != null && wr.get() == source) {
+									return true;
+								}
+							}
+						} else if (value != null && ((WeakReference) value).get() == source)
+							return true;
+					}
+				}
+			}
+		} 
+		
+		return false;
 	}
 
 	private static final EObject[] EMPTY_EOBJECTS = new EObject[0];

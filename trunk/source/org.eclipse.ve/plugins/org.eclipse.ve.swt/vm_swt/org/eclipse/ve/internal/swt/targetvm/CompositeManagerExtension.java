@@ -10,19 +10,22 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeManagerExtension.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-12 15:59:40 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-08 22:33:17 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
 import java.util.*;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
 
 import org.eclipse.jem.internal.proxy.common.*;
 
 import org.eclipse.ve.internal.swt.common.Common;
 import org.eclipse.ve.internal.swt.targetvm.ControlManager.ControlManagerExtension;
+import org.eclipse.ve.internal.swt.targetvm.ControlManager.ControlManagerFeedbackController;
  
 
 /**
@@ -147,5 +150,77 @@ public class CompositeManagerExtension extends ControlManagerExtension {
 			}
 		}
 		super.aboutToValidate();
+	}
+	
+	protected Integer[] clientAreaInfo;
+	
+	/**
+	 * This will handle seeing if origin offset has changed. If it has it will send back new offset and firemoved to all of the children
+	 * to indicate they have moved their absolute location. If fireMoved is true on entry, then whether the offset has changed or not
+	 * the children will all be told they were moved. This is so that offset can be handled if move is still required.
+	 * 
+	 * @param fireMoved
+	 * 
+	 * @since 1.2.0
+	 */
+	protected void handleOriginOffset(boolean fireMoved) {
+		// Get the offset between the upper-left corner of the control and the origin (0,0) of the control.
+		// For most controls this is (0,0). But for Shell it is not, because (0,0) on the shell actually puts
+		// you down and to the right. Need to know this offset to make appropriate coordinate calculations on
+		// the GraphViewer. The offset will be in the orientation of the control. For example if Right-to-Left,
+		// then visually it is from the upper right, but logically it is still upper-left.
+
+		Composite parent = getControl().getParent();
+		Control control = getControl();
+		ControlManagerFeedbackController feedbackController = getControlManager().getFeedbackController();
+		Rectangle controlBounds = feedbackController.getDisplay().map(parent, control, control.getBounds());
+		// Flip from corner-offset-from-origin to origin-offset-from-corner by negating.
+		controlBounds.x = -controlBounds.x;
+		controlBounds.y = -controlBounds.y;	
+		Rectangle clientArea = ((Scrollable) control).getClientArea();
+		if (clientAreaInfo == null || clientAreaInfo[0].intValue() != controlBounds.x || clientAreaInfo[1].intValue() != controlBounds.y ||
+				clientAreaInfo[2].intValue() != clientArea.x || clientAreaInfo[3].intValue() != clientArea.y || clientAreaInfo[4].intValue() != clientArea.width || clientAreaInfo[5].intValue() != clientArea.height) {
+			fireMoved = true;	// We will fire no matter what.
+			if (clientAreaInfo == null)
+				clientAreaInfo = new Integer[6];
+			clientAreaInfo[0] = new Integer(controlBounds.x);
+			clientAreaInfo[1] = new Integer(controlBounds.y);
+			clientAreaInfo[2] = new Integer(clientArea.x);
+			clientAreaInfo[3] = new Integer(clientArea.y);
+			clientAreaInfo[4] = new Integer(clientArea.width);
+			clientAreaInfo[5] = new Integer(clientArea.height);
+			feedbackController.addTransaction(this, Common.CMPL_CLIENTAREA_CHANGED, clientAreaInfo, true);
+		}
+		
+		if (fireMoved) {
+			// Fire moved on all children managers.
+			Control[] children = ((Composite) control).getChildren();
+			for (int i = 0; i < children.length; i++) {
+				ControlManager cm = feedbackController.getControlManager(children[i]);
+				if (cm != null)
+					cm.fireMoved();	// This is necessary because if the origin offset changed, the absolute location of the children will be different.
+			}
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.swt.targetvm.ControlManager.ControlManagerExtension#hasBeenValidated()
+	 */
+	protected void hasBeenValidated() {
+		super.hasBeenValidated();
+		handleOriginOffset(false);	// Handle the offset, but only fire moved if it changed.
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.swt.targetvm.ControlManager.ControlManagerExtension#controlResized()
+	 */
+	protected void controlResized() {
+		super.controlResized();
+		int style = getControl().getStyle();
+		// Handle the origin offset. It may change due to a resize (such as a shell with a menubar and it was made smaller. This would cause the
+		// menubar to flow to a new line and that would change the origin offset).
+		// However, if the style right to left, no matter whether the origin offset changed or not, we still need to fire move to all children
+		// because a resize of the parent will cause them to be at a different absolute location, even though they still have the same bounds.
+		handleOriginOffset((style & SWT.RIGHT_TO_LEFT) != 0);
 	}
 }

@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.swt.common;
  *******************************************************************************/
 /*
  *  $RCSfile: Common.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-08 22:33:17 $ 
  */
 
 /**
@@ -45,9 +45,11 @@ public interface Common {
 	 * callback will be:
 	 * <pre>
 	 *   invalid layout: IBeanProxy[n] controls_with_invalid_data
+	 *   client area changed: int[6] {originOffset.x, originOffset.y, clientArea.x, clientArea.y, clientArea.width, clientArea.height}
 	 * </pre>
 	 */
 	public static final int
-		CMPL_INVALID_LAYOUT = 1;
+		CMPL_INVALID_LAYOUT = 1,
+		CMPL_CLIENTAREA_CHANGED = 2;
 		
 }
