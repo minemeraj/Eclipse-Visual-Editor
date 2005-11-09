@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.25 $ $Date: 2005-11-08 22:33:17 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.26 $ $Date: 2005-11-09 16:22:35 $
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -1003,9 +1003,15 @@ public class ControlManager {
 	}
 
 	/**
-	 * This will return the bounds relative to the relative parent. The result is a four element array that is broken down into x,y,width and height.
+	 * This will return the bounds relative to "swt.Shell" parent (This is the "absolute" location for controls). If this is an swt.Shell, then the
+	 * absolute location will be (0,0).
 	 * <p>
-	 * The location has the same definition of (x,y) as getLocation().
+	 * This is necessary because sometimes the parent that we add to in the model is not the the real SWT parent. We expect the location to be
+	 * relative to that model parent and not the real SWT parent, which we don't know about. So instead we are reporting location relative to the
+	 * constant of the top parent. The other side will then use that and the appropriate parent windows location relative to top parent to place this
+	 * child window relative to it.
+	 * <p>
+	 * These coordinates can be compared only if they are from the root window. They don't make sense relative to each other otherwise.
 	 * 
 	 * @see ControlManager#getLocation()
 	 * @since 1.0.0
@@ -1024,6 +1030,7 @@ public class ControlManager {
 						// Using display bounds removes this from the equation.
 						Rectangle c = display.map(fControl.getParent(), null, fControl.getBounds());
 						Rectangle s = fControl.getShell().getBounds();
+System.err.println("control "+fControl.getClass().getName()+" bounds: "+fControl.getBounds()+" mapped bounds: "+c+" shell bounds: "+s);						
 						result[0] = new Integer(c.x - s.x);
 						result[1] = new Integer(c.y - s.y);
 						result[2] = new Integer(c.width);
@@ -1077,7 +1084,24 @@ public class ControlManager {
 	 * @since 1.1.0
 	 */
 	protected void fireMoved() {
-		feedbackController.addTransaction(this, Common.CL_MOVED, getLocation(), true);
+		// We need to have all moves notified, not just the last
+		// move in a transaction. The earlier move will determine the location of a child relative to
+		// this control if the child moves after this. If another move occurs later in the transaction,
+		// we need to still know this first one so that the child can be positioned correctly relative
+		// to this one.
+		// For example:
+		//	Composite moves to (0,0)
+		// 	Composite moves to (10,10)
+		//		Button moves to (20,20) - now it is (10,10) relative to composite
+		//	Composite moves to (30,30)
+		//		Button didn't move, but it is still (10,10) relative to composite, so it will be moved on the IDE.
+		// If we dropped the first move, then we would get this:
+		//	Composite moves to (0,0)
+		// ***	Composite moves to (10,10) - we drop this one.
+		//		Button moves to (20,20) - now it is computed to be (20,20) relative to composite, but it isn't.
+		//	Composite moves to (30,30)
+		//		Button didn't move, but it is still (20,20) relative to composite, so it will be moved on the IDE but at wrong position.		
+		feedbackController.addTransaction(this, Common.CL_MOVED, getLocation(), false);
 		if (extensions != null) {
 			ControlManagerExtension[] lcl = extensions; // In case it changes to a new array while we are walking it.
 			for (int i = 0; i < lcl.length; i++) {
