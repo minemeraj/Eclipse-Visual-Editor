@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.14 $  $Date: 2005-11-09 22:42:49 $ 
+ *  $Revision: 1.15 $  $Date: 2005-11-09 22:50:40 $ 
  */
 
 import java.text.CharacterIterator;
@@ -124,8 +124,6 @@ public void replaceFiller (String filler) {
 }
 
 protected void primReplaceFiller(String oldFiller, String newFiller, int fillerOffset){
-	if(oldFiller!=null && newFiller!=null && newFiller.equals(oldFiller))
-		return;
 	StringBuffer filledSource = new StringBuffer(fSource);
 	filledSource.replace(fillerOffset, oldFiller.length(), newFiller);
 	try {
