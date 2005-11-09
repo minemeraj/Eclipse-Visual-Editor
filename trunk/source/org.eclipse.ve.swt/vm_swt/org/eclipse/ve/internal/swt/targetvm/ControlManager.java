@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.26 $ $Date: 2005-11-09 16:22:35 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.27 $ $Date: 2005-11-09 16:25:22 $
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -1030,7 +1030,7 @@ public class ControlManager {
 						// Using display bounds removes this from the equation.
 						Rectangle c = display.map(fControl.getParent(), null, fControl.getBounds());
 						Rectangle s = fControl.getShell().getBounds();
-System.err.println("control "+fControl.getClass().getName()+" bounds: "+fControl.getBounds()+" mapped bounds: "+c+" shell bounds: "+s);						
+//System.err.println("control "+fControl.getClass().getName()+" bounds: "+fControl.getBounds()+" mapped bounds: "+c+" shell bounds: "+s);						
 						result[0] = new Integer(c.x - s.x);
 						result[1] = new Integer(c.y - s.y);
 						result[2] = new Integer(c.width);
