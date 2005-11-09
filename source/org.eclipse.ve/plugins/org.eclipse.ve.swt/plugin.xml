@@ -125,6 +125,7 @@
       </palette>
    </extension>
    
+ <!-- removed forms and jface palette drawers - 11.09.05 paw
    <extension
          point="org.eclipse.ve.java.core.contributors">
       <palette
@@ -141,6 +142,7 @@
             plugin="org.eclipse.jface">
       </palette>
    </extension>    
+ -->
    
    <extension point="org.eclipse.ve.cde.contributor"> 
      <contributor class="org.eclipse.ve.internal.jface.TreeViewerEditPartContributorFactory">
