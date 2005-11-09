@@ -11,9 +11,11 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.13 $  $Date: 2005-10-31 15:03:24 $ 
+ *  $Revision: 1.14 $  $Date: 2005-11-09 22:42:49 $ 
  */
 
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -122,6 +124,8 @@ public void replaceFiller (String filler) {
 }
 
 protected void primReplaceFiller(String oldFiller, String newFiller, int fillerOffset){
+	if(oldFiller!=null && newFiller!=null && newFiller.equals(oldFiller))
+		return;
 	StringBuffer filledSource = new StringBuffer(fSource);
 	filledSource.replace(fillerOffset, oldFiller.length(), newFiller);
 	try {
@@ -137,8 +141,20 @@ protected void primReplaceFiller(String oldFiller, String newFiller, int fillerO
 					filledSource.replace(offset, offset+oldFiller.length(), newFiller);
 					delta+=(newFiller.length()-oldFiller.length());
 				}else{
-					filledSource.insert(offset, newFiller);
-					delta+=newFiller.length();
+					// Insert filler - but only if it is not end of expression
+					// we dont want to insert '\t\tfoo.bar();\n'<--here
+					boolean isEOL = true;
+					StringCharacterIterator charItr = new StringCharacterIterator(filledSource.substring(offset));
+					for(char c = charItr.first(); c!=CharacterIterator.DONE; c = charItr.next()){
+						if(!Character.isWhitespace(c)){
+							isEOL = false;
+							break;
+						}
+					}
+					if(!isEOL){
+						filledSource.insert(offset, newFiller);
+						delta+=newFiller.length();
+					}
 				}
 			}
 		}
@@ -361,7 +377,7 @@ protected void primParseExpression() {
 	 	   overide = advanceLineSeperator(overide) ;
 	 }	 
 	 
-	 if (scanner.getLineEnds().length > 0 && scanner.getLineEnd(1)>0) { 
+	 if (scanner.getLineEnds().length > 0 && scanner.getLineEnd(1)>=0) { 
 	 	// We advanced to the next line/s
 	   right += scanner.getLineEnd(1) ;
 	   right = advanceLineSeperator(right) ;
@@ -663,7 +679,3 @@ public static List getExpressionsOnSameLine(CodeExpressionRef expRef, CodeMethod
 }
 
 }
-
-
-	
-
