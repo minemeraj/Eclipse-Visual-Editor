@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.15 $  $Date: 2005-11-09 22:50:40 $ 
+ *  $Revision: 1.16 $  $Date: 2005-11-09 23:23:45 $ 
  */
 
 import java.text.CharacterIterator;
@@ -126,18 +126,18 @@ public void replaceFiller (String filler) {
 protected void primReplaceFiller(String oldFiller, String newFiller, int fillerOffset){
 	StringBuffer filledSource = new StringBuffer(fSource);
 	filledSource.replace(fillerOffset, oldFiller.length(), newFiller);
+	int lengthDelta = 0;
 	try {
 		IScanner scanner = fScannerFactory.getScanner(false, true, true);
 		scanner.setSource(filledSource.toString().toCharArray());
 		while(scanner.getNextToken()!=ITerminalSymbols.TokenNameEOF && scanner.getCurrentTokenEndPosition()<filledSource.toString().length()){} // determine all line ends
 		int[] lineEnds = scanner.getLineEnds();
 		if(lineEnds!=null){
-			int delta = 0;
 			for (int lec = 0; lec < lineEnds.length; lec++) {
-				int offset = lineEnds[lec]+1+delta;
+				int offset = lineEnds[lec]+1+lengthDelta;
 				if(filledSource.indexOf(oldFiller, offset)==offset){
 					filledSource.replace(offset, offset+oldFiller.length(), newFiller);
-					delta+=(newFiller.length()-oldFiller.length());
+					lengthDelta+=(newFiller.length()-oldFiller.length());
 				}else{
 					// Insert filler - but only if it is not end of expression
 					// we dont want to insert '\t\tfoo.bar();\n'<--here
@@ -151,7 +151,7 @@ protected void primReplaceFiller(String oldFiller, String newFiller, int fillerO
 					}
 					if(!isEOL){
 						filledSource.insert(offset, newFiller);
-						delta+=newFiller.length();
+						lengthDelta+=newFiller.length();
 					}
 				}
 			}
@@ -161,6 +161,8 @@ protected void primReplaceFiller(String oldFiller, String newFiller, int fillerO
 	}
 	fSource = filledSource.toString();
 	fSourceOff += (newFiller.length() - oldFiller.length());
+	fSourceLen += lengthDelta;
+	
 }
 
 /**
