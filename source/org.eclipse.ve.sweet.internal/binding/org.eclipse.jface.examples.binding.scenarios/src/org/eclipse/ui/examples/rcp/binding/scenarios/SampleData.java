@@ -173,7 +173,7 @@ public class SampleData {
 	public static IDataBindingContext getSWTtoEMFDatabindingContext(
 			Control aControl) {
 
-		IDataBindingContext dbc = DataBinding.createContext(null, aControl);
+		IDataBindingContext dbc = DataBinding.createContext(aControl);
 
 		IUpdatableFactory emfFactory = new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Map properties,
