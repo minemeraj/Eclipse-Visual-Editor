@@ -10,12 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JFaceConfigurationContributor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-10 16:07:01 $ 
  */
 
 package org.eclipse.ve.internal.jface;
 
 import java.util.logging.Level;
+
+import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.initParser.tree.NoExpressionValueException;
@@ -27,19 +29,34 @@ public class JFaceConfigurationContributor extends ConfigurationContributorAdapt
 	/* (non-Javadoc)
 	 * @see org.eclipse.jem.internal.proxy.core.ConfigurationContributorAdapter#contributeToRegistry(org.eclipse.jem.internal.proxy.core.ProxyFactoryRegistry)
 	 */
-	public void contributeToRegistry(ProxyFactoryRegistry registry) {
-		IExpression expression = registry.getBeanProxyFactory().createExpression();
-		try {
-			JFaceColorProxyRegistration.initialize(expression);	// Prime the JFace ColorRegistry in the remote VM
-			JFaceFontProxyRegistration.initialize(expression);	// Prime the JFace FontRegistry in the remote VM
-			expression.invokeExpression();
-		} catch (IllegalStateException e) {
-			JavaVEPlugin.log(e, Level.WARNING);
-		} catch (ThrowableProxy e) {
-			JavaVEPlugin.log(e, Level.WARNING);
-		} catch (NoExpressionValueException e) {
-			JavaVEPlugin.log(e, Level.WARNING);
-		}
+	public void contributeToRegistry(final ProxyFactoryRegistry registry) {
+		// These must run on the UI thread. But we can't do syncExec because we may have a lock that
+		// the UI thread requires. The only problem is that this may not execute soon enough for 
+		// when they are needed later. So a race condition could occur.
+		Runnable jfaceInit = new Runnable() {
+
+			public void run() {
+				if (registry.isValid()) {
+					IExpression expression = registry.getBeanProxyFactory().createExpression();
+					try {
+						JFaceColorProxyRegistration.initialize(expression); // Prime the JFace ColorRegistry in the remote VM
+						JFaceFontProxyRegistration.initialize(expression); // Prime the JFace FontRegistry in the remote VM
+						expression.invokeExpression();
+					} catch (IllegalStateException e) {
+						JavaVEPlugin.log(e, Level.WARNING);
+					} catch (ThrowableProxy e) {
+						JavaVEPlugin.log(e, Level.WARNING);
+					} catch (NoExpressionValueException e) {
+						JavaVEPlugin.log(e, Level.WARNING);
+					}
+				}
+			}
+		};
+		Display display = Display.getCurrent();
+		if (display != null)
+			jfaceInit.run();	// Go ahead and run it, we are the UI thread.
+		else
+			Display.getDefault().asyncExec(jfaceInit);
 	}
 
 }
