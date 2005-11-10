@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.66 $  $Date: 2005-10-18 15:32:26 $ 
+ *  $Revision: 1.67 $  $Date: 2005-11-10 19:47:55 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -469,15 +469,32 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 							parent = fbeanPart.getModel().getABean(parentName);
 						if (parent!=null) {							
 							return createImplicitAllocation (parent.getEObject(), ast);
-					    	
-					}
+					    }
 					}
 					else if (receiver instanceof MethodInvocation) {
-						return createAllocation (receiver, expOfMethod);
+						MethodInvocation lastMi = (MethodInvocation) receiver;;
+						while(lastMi.getExpression() instanceof MethodInvocation)
+							lastMi = (MethodInvocation) lastMi.getExpression();
+						if (lastMi.getExpression() instanceof SimpleName) {
+							SimpleName sn = (SimpleName) lastMi.getExpression();
+							String beanName = sn.getIdentifier();
+							BeanPart bean = CodeGenUtil.getBeanPart(
+									fbeanPart.getModel(), 
+									beanName, 
+									fOwner.getExprRef().getMethod(), 
+									fOwner.getExprRef().getOffset());
+							if(bean==null)
+								bean = fbeanPart.getModel().getABean(beanName);
+							if(bean!=null){
+								// ultimately there is a bean getting called - 
+								// so it could be an implicit allocation
+								return createAllocation (receiver, expOfMethod);
+							}
+						}else{
+							return createAllocation (receiver, expOfMethod);
+						}
 					}
 				}
-				
-				
 			}		
 			return createParseTreeAllocation(ast, expOfMethod);
 		}
