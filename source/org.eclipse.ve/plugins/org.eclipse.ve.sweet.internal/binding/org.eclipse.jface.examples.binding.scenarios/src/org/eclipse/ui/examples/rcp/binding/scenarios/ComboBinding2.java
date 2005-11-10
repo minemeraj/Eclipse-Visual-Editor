@@ -11,7 +11,6 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.*;
-import org.eclipse.jface.databinding.swt.SWTBindingConstants;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -35,7 +34,7 @@ public class ComboBinding2 extends Composite {
 
 	private Text txtDefaultLodging = null;
 
-	private DatabindingContext dbc;  //  @jve:decl-index=0:
+	private IDataBindingContext dbc;  //  @jve:decl-index=0:
 
 	private ComboViewer comboViewer;
 	
@@ -121,7 +120,7 @@ public class ComboBinding2 extends Composite {
 		 Account account = (Account) catalog.getAccounts().get(0);
 		 
 //		 dbc.bind(pureCombo, SWTBindingConstants.SELECTION, account, "country");
-		 dbc.bind(new PropertyDescription(pureCombo, SWTBindingConstants.SELECTION), new PropertyDescription(account, "country"), null);
+		 dbc.bind(new PropertyDescription(pureCombo, DataBinding.SELECTION), new PropertyDescription(account, "country"), null);
 //		 dbc.bind(pureComboTxt, "text", account, "country");
 		 dbc.bind(pureComboTxt, new PropertyDescription(account, "country"), null);
 		 
@@ -136,12 +135,12 @@ public class ComboBinding2 extends Composite {
 //		 dbc.bind(cb1, SWTBindingConstants.CONTENT, catalog, "lodgings");
 		 dbc.bind(cb1, new PropertyDescription(catalog, "lodgings"),null);
 //		 dbc.bind(cb1,"selection",sameTrip,"defaultLodging");
-		 dbc.bind(new PropertyDescription(cb1,SWTBindingConstants.SELECTION), new PropertyDescription(sameTrip,"defaultLodging"), null);
+		 dbc.bind(new PropertyDescription(cb1,DataBinding.SELECTION), new PropertyDescription(sameTrip,"defaultLodging"), null);
 		 
 //		 dbc.bind(cb2, SWTBindingConstants.CONTENT, catalog, "lodgings");
 		 dbc.bind(cb2, new PropertyDescription(catalog, "lodgings"), null);
 //		 dbc.bind(cb2,"selection",sameTrip,"defaultLodging");
-		 dbc.bind(new PropertyDescription(cb2,SWTBindingConstants.SELECTION), new PropertyDescription(sameTrip,"defaultLodging"), null);
+		 dbc.bind(new PropertyDescription(cb2,DataBinding.SELECTION), new PropertyDescription(sameTrip,"defaultLodging"), null);
 		 
 		 
 		 

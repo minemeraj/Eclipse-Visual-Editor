@@ -26,7 +26,7 @@ public class LabelBinding extends Composite {
 
 	private Label lblName = null;
 
-	private DatabindingContext dbc;
+	private IDataBindingContext dbc;
 
 	private Label label1 = null;
 

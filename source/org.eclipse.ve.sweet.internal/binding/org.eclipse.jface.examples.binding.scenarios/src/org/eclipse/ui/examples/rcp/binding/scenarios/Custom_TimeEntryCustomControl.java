@@ -13,7 +13,7 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 import java.util.Map;
 
 import org.eclipse.jface.databinding.BindingException;
-import org.eclipse.jface.databinding.DatabindingContext;
+import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatable;
 import org.eclipse.jface.databinding.IUpdatableFactory;
 import org.eclipse.jface.databinding.IValidationContext;
@@ -55,7 +55,7 @@ public class Custom_TimeEntryCustomControl extends Composite {
 
 	private void bind() throws BindingException {
 
-		DatabindingContext dbc = SampleData.getSWTtoEMFDatabindingContext(this);
+		IDataBindingContext dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Transportation bus = SampleData.GREYHOUND_BUS;
 

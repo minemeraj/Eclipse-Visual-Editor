@@ -28,7 +28,7 @@ public class ListBinding extends Composite {
 
 	private Text txtDefaultLodging = null;
 
-	private DatabindingContext dbc;
+	private IDataBindingContext dbc;
 
 	private ListViewer listViewer;
 

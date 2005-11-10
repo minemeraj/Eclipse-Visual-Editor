@@ -19,7 +19,7 @@ import org.eclipse.ui.examples.rcp.adventure.Adventure;
 
 public class TextBindingWithValidation extends Composite {
 
-	private DatabindingContext dbc;
+	private IDataBindingContext dbc;
 
 	private Group group = null;
 
