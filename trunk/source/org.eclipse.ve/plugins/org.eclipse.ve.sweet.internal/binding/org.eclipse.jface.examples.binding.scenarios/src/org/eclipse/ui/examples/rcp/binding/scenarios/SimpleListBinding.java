@@ -10,7 +10,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.BindingException;
-import org.eclipse.jface.databinding.DatabindingContext;
+import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -32,7 +32,7 @@ public class SimpleListBinding extends Composite {
 
 	private Text txtDefaultLodging = null;
 
-	private DatabindingContext dbc;
+	private IDataBindingContext dbc;
 
 	private ListViewer listViewer;
 

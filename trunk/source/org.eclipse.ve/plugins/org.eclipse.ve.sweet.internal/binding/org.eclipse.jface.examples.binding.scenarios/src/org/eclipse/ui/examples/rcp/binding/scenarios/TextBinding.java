@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.BindingException;
-import org.eclipse.jface.databinding.DatabindingContext;
+import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,7 +23,7 @@ import org.eclipse.ui.examples.rcp.adventure.Adventure;
 
 public class TextBinding extends Composite {
 
-	private DatabindingContext dbc;
+	private IDataBindingContext dbc;
 
 	private Group group = null;
 

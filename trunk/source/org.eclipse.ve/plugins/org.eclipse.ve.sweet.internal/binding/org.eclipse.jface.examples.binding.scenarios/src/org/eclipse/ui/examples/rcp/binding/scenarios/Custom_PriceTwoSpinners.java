@@ -12,7 +12,7 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.BindSpec;
 import org.eclipse.jface.databinding.BindingException;
-import org.eclipse.jface.databinding.DatabindingContext;
+import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -82,7 +82,7 @@ public class Custom_PriceTwoSpinners extends Composite {
 	}
 
 	private void bind() throws BindingException {
-		DatabindingContext dbc = SampleData.getSWTtoEMFDatabindingContext(this);
+		IDataBindingContext dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		final Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 

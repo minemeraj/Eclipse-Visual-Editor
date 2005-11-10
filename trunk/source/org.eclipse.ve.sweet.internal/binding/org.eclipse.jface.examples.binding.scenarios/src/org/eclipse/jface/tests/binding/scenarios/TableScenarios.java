@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.PropertyDescription;
-import org.eclipse.jface.databinding.swt.TableViewerDescription;
+import org.eclipse.jface.databinding.TableViewerDescription;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;

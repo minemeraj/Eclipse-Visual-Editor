@@ -17,8 +17,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.BindingException;
+import org.eclipse.jface.databinding.DataBinding;
 import org.eclipse.jface.databinding.PropertyDescription;
-import org.eclipse.jface.databinding.swt.SWTBindingConstants;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -135,7 +135,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				
 				
 		 // Bind the ComboViewer's selection to the Adventure's default lodging.
-		 getDbc().bind(new PropertyDescription(cviewer, SWTBindingConstants.SELECTION), 
+		 getDbc().bind(new PropertyDescription(cviewer, DataBinding.SELECTION), 
 				       new PropertyDescription(skiAdventure ,"defaultLodging"), null);
 				
 		 // Check to see that the initial selection is the currentDefault Lodging
@@ -244,7 +244,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		 Account account = (Account) catalog.getAccounts().get(0);
 		 
 		 // simple Combo's selection bound to the Account's country property
-		 getDbc().bind(new PropertyDescription(combo, SWTBindingConstants.SELECTION), 
+		 getDbc().bind(new PropertyDescription(combo, DataBinding.SELECTION), 
 				        new PropertyDescription(account, "country"), null);
 		 
 		 // Drive the combo selection
@@ -289,7 +289,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		    Account account = (Account) catalog.getAccounts().get(0);
 			 
 		    // simple Combo's selection bound to the Account's country property
-			 getDbc().bind(new PropertyDescription(combo, SWTBindingConstants.SELECTION), 
+			 getDbc().bind(new PropertyDescription(combo, DataBinding.SELECTION), 
 					 		new PropertyDescription(account, "country"), null);
 			 
 			 // Drive the combo selection
@@ -322,7 +322,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				 Account account = AdventureFactory.eINSTANCE.createAccount();				 
 				 
 				 // Use the Viewers visual Combo (Strings) to set the account's country
-				 getDbc().bind(new PropertyDescription(combo, SWTBindingConstants.SELECTION), 
+				 getDbc().bind(new PropertyDescription(combo, DataBinding.SELECTION), 
 						       new PropertyDescription(account, "country"), null);
 				 
 				 // Change the selection of the ComboViewer to all possible accounts, and
@@ -365,9 +365,9 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				assertEquals(catalog.getLodgings(), getViewerContent(otherViewer));
 				
 				// Bind both selections to the same thing
-				getDbc().bind(new PropertyDescription(cviewer,SWTBindingConstants.SELECTION),
+				getDbc().bind(new PropertyDescription(cviewer,DataBinding.SELECTION),
 						       new PropertyDescription(skiAdventure,"defaultLodging"), null);
-				getDbc().bind(new PropertyDescription(otherViewer,SWTBindingConstants.SELECTION),
+				getDbc().bind(new PropertyDescription(otherViewer,DataBinding.SELECTION),
 							   new PropertyDescription(skiAdventure,"defaultLodging"), null);
 												
 				
@@ -407,7 +407,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				    Account account = (Account) catalog.getAccounts().get(0);
 					 
 				    // simple Combo's selection bound to the Account's country property
-					 getDbc().bind(new PropertyDescription(ccombo, SWTBindingConstants.SELECTION), 
+					 getDbc().bind(new PropertyDescription(ccombo, DataBinding.SELECTION), 
 							 		new PropertyDescription(account, "country"), null);
 					 
 					 // Drive the combo selection
@@ -440,7 +440,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 					    Account account = (Account) catalog.getAccounts().get(0);
 						 
 					    // simple Combo's selection bound to the Account's country property
-						 getDbc().bind(new PropertyDescription(swtlist, SWTBindingConstants.SELECTION), 
+						 getDbc().bind(new PropertyDescription(swtlist, DataBinding.SELECTION), 
 								 		new PropertyDescription(account, "country"), null);
 						 	
 						

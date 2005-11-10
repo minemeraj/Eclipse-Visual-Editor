@@ -16,11 +16,12 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.BindingException;
+import org.eclipse.jface.databinding.DataBinding;
+import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatable;
 import org.eclipse.jface.databinding.IUpdatableFactory;
 import org.eclipse.jface.databinding.IValidationContext;
 import org.eclipse.jface.databinding.PropertyDescription;
-import org.eclipse.jface.databinding.swt.SWTDatabindingContext;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableCollection;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableEList;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
@@ -169,10 +170,10 @@ public class SampleData {
 
 	}
 
-	public static SWTDatabindingContext getSWTtoEMFDatabindingContext(
+	public static IDataBindingContext getSWTtoEMFDatabindingContext(
 			Control aControl) {
 
-		SWTDatabindingContext dbc = new SWTDatabindingContext(null, aControl);
+		IDataBindingContext dbc = DataBinding.createContext(null, aControl);
 
 		IUpdatableFactory emfFactory = new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Map properties,

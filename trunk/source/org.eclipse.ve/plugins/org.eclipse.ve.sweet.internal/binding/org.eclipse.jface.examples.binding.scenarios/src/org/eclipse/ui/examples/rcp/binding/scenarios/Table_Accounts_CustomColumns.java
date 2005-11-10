@@ -13,10 +13,10 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.databinding.BindingException;
-import org.eclipse.jface.databinding.DatabindingContext;
+import org.eclipse.jface.databinding.DefaultCellModifier;
+import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.PropertyDescription;
-import org.eclipse.jface.databinding.swt.DefaultCellModifier;
-import org.eclipse.jface.databinding.swt.TableViewerDescription;
+import org.eclipse.jface.databinding.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -32,7 +32,7 @@ public class Table_Accounts_CustomColumns extends Composite {
 
 	private Table table = null;
 
-	private DatabindingContext dbc;
+	private IDataBindingContext dbc;
 
 	private TableViewer tableViewer;
 

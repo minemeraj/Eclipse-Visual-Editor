@@ -25,7 +25,7 @@ public class NumberBinding {
 
 	private Text txtPrice = null;
 
-	private DatabindingContext dbc;
+	private IDataBindingContext dbc;
 
 	private Text lblPrice = null;
 
