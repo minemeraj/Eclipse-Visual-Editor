@@ -12,7 +12,7 @@
  *  Created Oct 5, 2005 by Gili Mendel
  * 
  *  $RCSfile: ViewerDecoder.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-08 18:31:09 $ 
+ *  $Revision: 1.3 $  $Date: 2005-11-10 20:48:26 $ 
  */
  
 package org.eclipse.ve.internal.jface.codegen;
@@ -56,8 +56,10 @@ public class ViewerDecoder extends ObjectDecoder {
 				BeanPart ibp = fBeanModel.getABean(implicit);
 				if (ibp!=null && ibp.isImplicit()) {
 					CodeExpressionRef initExpr = ibp.getInitExpression();
-					VEexpressionPriority impPriority = initExpr.getPriority();
-					fPriority = new IJavaFeatureMapper.VEexpressionPriority(fPriority.getProiority(), impPriority.getProiorityIndex()); 						
+					if (initExpr!=null) {
+						VEexpressionPriority impPriority = initExpr.getPriority();
+						fPriority = new IJavaFeatureMapper.VEexpressionPriority(fPriority.getProiority(), impPriority.getProiorityIndex());
+					}
 				}				
 			}
 		}		
