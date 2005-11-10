@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.59 $  $Date: 2005-10-13 20:31:05 $ 
+ *  $Revision: 1.60 $  $Date: 2005-11-10 20:48:15 $ 
  */
 
 import java.util.*;
@@ -932,9 +932,14 @@ public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf) 
 public void removeImplicitBeanPart (BeanPart parent, EStructuralFeature sf) {
 	BeanPart implicitBean = null;
 	IJavaObjectInstance implicit = (IJavaObjectInstance)parent.getEObject().eGet(sf);
-	implicitBean = parent.getModel().getABean(implicit);
-	unSetBeanPartAsImplicit(implicitBean, parent, sf);	
-	implicitBean.dispose();	
+	// In the case of explicit-explicit source pattern, 
+	// the 'sf' value might be removed before the parent.
+	// Hence a check for implicit!=null
+	if(implicit!=null){
+		implicitBean = parent.getModel().getABean(implicit);
+		unSetBeanPartAsImplicit(implicitBean, parent, sf);	
+		implicitBean.dispose();
+	}
 }
 
 public BeanPart restoreImplicitBeanPart (BeanPart parent, EStructuralFeature sf, boolean createImplicitInitExpression) {
