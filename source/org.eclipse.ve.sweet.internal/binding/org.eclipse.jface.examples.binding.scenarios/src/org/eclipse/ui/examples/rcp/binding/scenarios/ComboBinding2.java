@@ -105,14 +105,14 @@ public class ComboBinding2 extends Composite {
 		};
 		comboViewer.setLabelProvider(lp);
 //		dbc.bind(comboViewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
-		dbc.bind2(comboViewer , new PropertyDescription(catalog, "lodgings"), null);
+		dbc.bind(comboViewer , new PropertyDescription(catalog, "lodgings"), null);
 		
 //		dbc.bind(comboViewer,"selection",skiTrip,"defaultLodging");
-		dbc.bind2(new PropertyDescription(comboViewer,"selection"), new PropertyDescription(skiTrip,"defaultLodging"), null);
+		dbc.bind(new PropertyDescription(comboViewer,"selection"), new PropertyDescription(skiTrip,"defaultLodging"), null);
 //		IUpdatable defLodging = dbc.createUpdatable(skiTrip, "defaultLodging");
-		IUpdatable defLodging = dbc.createUpdatable2(new PropertyDescription(skiTrip, "defaultLodging"));
+		IUpdatable defLodging = dbc.createUpdatable(new PropertyDescription(skiTrip, "defaultLodging"));
 //		dbc.bind(txtDefaultLodging, "text", defLodging, "name");
-		dbc.bind2(txtDefaultLodging, new PropertyDescription(defLodging, "name"), null);
+		dbc.bind(txtDefaultLodging, new PropertyDescription(defLodging, "name"), null);
 		
 		
 		// bind the combo
@@ -121,9 +121,9 @@ public class ComboBinding2 extends Composite {
 		 Account account = (Account) catalog.getAccounts().get(0);
 		 
 //		 dbc.bind(pureCombo, SWTBindingConstants.SELECTION, account, "country");
-		 dbc.bind2(new PropertyDescription(pureCombo, SWTBindingConstants.SELECTION), new PropertyDescription(account, "country"), null);
+		 dbc.bind(new PropertyDescription(pureCombo, SWTBindingConstants.SELECTION), new PropertyDescription(account, "country"), null);
 //		 dbc.bind(pureComboTxt, "text", account, "country");
-		 dbc.bind2(pureComboTxt, new PropertyDescription(account, "country"), null);
+		 dbc.bind(pureComboTxt, new PropertyDescription(account, "country"), null);
 		 
 		 
 		 // bind the two viewers
@@ -134,14 +134,14 @@ public class ComboBinding2 extends Composite {
 		 cb2.setLabelProvider(lp);
 		 		 
 //		 dbc.bind(cb1, SWTBindingConstants.CONTENT, catalog, "lodgings");
-		 dbc.bind2(cb1, new PropertyDescription(catalog, "lodgings"),null);
+		 dbc.bind(cb1, new PropertyDescription(catalog, "lodgings"),null);
 //		 dbc.bind(cb1,"selection",sameTrip,"defaultLodging");
-		 dbc.bind2(new PropertyDescription(cb1,SWTBindingConstants.SELECTION), new PropertyDescription(sameTrip,"defaultLodging"), null);
+		 dbc.bind(new PropertyDescription(cb1,SWTBindingConstants.SELECTION), new PropertyDescription(sameTrip,"defaultLodging"), null);
 		 
 //		 dbc.bind(cb2, SWTBindingConstants.CONTENT, catalog, "lodgings");
-		 dbc.bind2(cb2, new PropertyDescription(catalog, "lodgings"), null);
+		 dbc.bind(cb2, new PropertyDescription(catalog, "lodgings"), null);
 //		 dbc.bind(cb2,"selection",sameTrip,"defaultLodging");
-		 dbc.bind2(new PropertyDescription(cb2,SWTBindingConstants.SELECTION), new PropertyDescription(sameTrip,"defaultLodging"), null);
+		 dbc.bind(new PropertyDescription(cb2,SWTBindingConstants.SELECTION), new PropertyDescription(sameTrip,"defaultLodging"), null);
 		 
 		 
 		 

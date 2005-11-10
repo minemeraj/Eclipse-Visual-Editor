@@ -15,7 +15,7 @@ import java.util.Map;
 import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.DatabindingContext;
 import org.eclipse.jface.databinding.IUpdatable;
-import org.eclipse.jface.databinding.IUpdatableFactory2;
+import org.eclipse.jface.databinding.IUpdatableFactory;
 import org.eclipse.jface.databinding.IValidationContext;
 import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.swt.SWT;
@@ -59,7 +59,7 @@ public class Custom_TimeEntryCustomControl extends Composite {
 
 		Transportation bus = SampleData.GREYHOUND_BUS;
 
-		dbc.addUpdatableFactory2(new IUpdatableFactory2() {
+		dbc.addUpdatableFactory(new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Map properties,
 					Object description, IValidationContext validationContext)
 					throws BindingException {
@@ -80,9 +80,9 @@ public class Custom_TimeEntryCustomControl extends Composite {
 			}
 		});
 
-		dbc.bind2(lbl_time, "text", bus, "arrivalTime", null);
-		dbc.bind2(timeEntry, "time", bus, "arrivalTime", null);
-		dbc.bind2(timeEntry1, "time", bus, "arrivalTime", null);
+		dbc.bind(lbl_time, "text", bus, "arrivalTime", null);
+		dbc.bind(timeEntry, "time", bus, "arrivalTime", null);
+		dbc.bind(timeEntry1, "time", bus, "arrivalTime", null);
 
 	}
 

@@ -93,7 +93,7 @@ public class Table_Accounts_CustomColumns extends Composite {
 		tableViewerDescription.addColumn("First Name", "firstName");
 		tableViewerDescription.addColumn("Last Name", "lastName");
 		tableViewerDescription.addColumn("State", "state");		
-		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,
+		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,
 				"accounts"), null);	
 	
 	}
@@ -127,7 +127,7 @@ public class Table_Accounts_CustomColumns extends Composite {
 				}
 			}
 		});
-		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,
+		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,
 				"accounts"), null);		
 
 	}	

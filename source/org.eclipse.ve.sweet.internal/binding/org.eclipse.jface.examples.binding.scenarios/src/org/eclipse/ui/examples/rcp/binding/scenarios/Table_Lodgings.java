@@ -96,7 +96,7 @@ public class Table_Lodgings extends Composite {
 				new DoubleConverter());
 		tableViewerDescription.addColumn("DeaultLodging", "defaultLodging",
 				null, new LodgingConverter());
-		dbc.bind2(tableViewerDescription, new PropertyDescription(category,
+		dbc.bind(tableViewerDescription, new PropertyDescription(category,
 				"adventures"), null);
 
 	}

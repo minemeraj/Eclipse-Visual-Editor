@@ -100,10 +100,10 @@ public class Table_ValidateAndConvert extends Composite {
 		tableViewerDescription.addColumn("FirstName", "firstName");
 		tableViewerDescription.addColumn("Phone", "phone",new PhoneValidator(), new PhoneConverter());
 		tableViewerDescription.addColumn("State", "state", null, null, new StateConverter());	
-		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);
+		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);
 		
-		IUpdatable errorMsgUpdatable = dbc.createUpdatable2(new PropertyDescription(lblErrorMessage,"text"));
-		dbc.bind2(errorMsgUpdatable, dbc.getCombinedValidationMessage(),null);		
+		IUpdatable errorMsgUpdatable = dbc.createUpdatable(new PropertyDescription(lblErrorMessage,"text"));
+		dbc.bind(errorMsgUpdatable, dbc.getCombinedValidationMessage(),null);		
 		
 	}
 	private void bind1() throws BindingException {
@@ -119,9 +119,9 @@ public class Table_ValidateAndConvert extends Composite {
 		tableViewerDescription.addColumn("FirstName", "firstName");
 		tableViewerDescription.addColumn("Phone", "phone");
 		tableViewerDescription.addColumn("State", "state", new StateCellEditor(table1), null, null);	
-		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);		
+		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);		
 
-		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"),null);
+		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"),null);
 		
 	}	
 

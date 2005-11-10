@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.IUpdatable;
-import org.eclipse.jface.databinding.IUpdatableFactory2;
+import org.eclipse.jface.databinding.IUpdatableFactory;
 import org.eclipse.jface.databinding.IValidationContext;
 import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.jface.databinding.swt.SWTDatabindingContext;
@@ -174,7 +174,7 @@ public class SampleData {
 
 		SWTDatabindingContext dbc = new SWTDatabindingContext(null, aControl);
 
-		IUpdatableFactory2 emfFactory = new IUpdatableFactory2() {
+		IUpdatableFactory emfFactory = new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Map properties,
 					Object description, IValidationContext validationContext)
 					throws BindingException {
@@ -207,7 +207,7 @@ public class SampleData {
 			}
 
 		};
-		dbc.addUpdatableFactory2(emfFactory);
+		dbc.addUpdatableFactory(emfFactory);
 
 		return dbc;
 
