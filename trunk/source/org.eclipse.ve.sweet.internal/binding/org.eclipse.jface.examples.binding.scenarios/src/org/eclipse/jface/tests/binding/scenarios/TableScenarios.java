@@ -76,7 +76,7 @@ public class TableScenarios extends ScenariosTestCase {
 		tableViewerDescription.addColumn("FirstName", "firstName");
 		tableViewerDescription.addColumn("LastName", "lastName");
 		tableViewerDescription.addColumn("State", "state");	
-		getDbc().bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);
+		getDbc().bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);
 
 		// Verify the data in the table columns matches the accounts
 		for (int i = 0; i < accounts.size(); i++) {
@@ -99,7 +99,7 @@ public class TableScenarios extends ScenariosTestCase {
 		tableViewerDescription.addColumn("firstName", "firstName");
 		tableViewerDescription.addColumn("lastName", "lastName",null, new PhoneConverter());
 		tableViewerDescription.addColumn("state", "state",null,new StateConverter());	
-		getDbc().bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);			
+		getDbc().bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);			
 		
 		CellEditor[] cellEditors = tableViewer.getCellEditors();
 		tableViewer.setSelection(new StructuredSelection(tableViewer.getTable().getItem(0)));
@@ -125,7 +125,7 @@ public class TableScenarios extends ScenariosTestCase {
 		tableViewerDescription.addColumn("lastName", "lastName");
 		tableViewerDescription.addColumn("phone", "phone",null, new PhoneConverter());
 		tableViewerDescription.addColumn("state", "state",null,new StateConverter());	
-		getDbc().bind2(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);		
+		getDbc().bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);		
 				
 		// Verify that the data in the the table columns matches the expected
 		// What we are looking for is that the phone numbers are converterted to nnn-nnn-nnnn and that

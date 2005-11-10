@@ -87,14 +87,14 @@ public class Custom_PriceTwoSpinners extends Composite {
 		final Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
 		BindSpec doubleBindSpec = new BindSpec(new DoubleConverter(),null);
-		dbc.bind2(lblPrice, "text", skiTrip, "price",doubleBindSpec);
-		dbc.bind2(txtPrice, "text", skiTrip, "price",doubleBindSpec);
+		dbc.bind(lblPrice, "text", skiTrip, "price",doubleBindSpec);
+		dbc.bind(txtPrice, "text", skiTrip, "price",doubleBindSpec);
 
 		BindSpec priceDollarsBindSpec = new BindSpec(new PriceDollarsConverter(),null);
-		dbc.bind2(spin_Dollars, "selection", skiTrip, "price",priceDollarsBindSpec);
+		dbc.bind(spin_Dollars, "selection", skiTrip, "price",priceDollarsBindSpec);
 
 		BindSpec priceCentsBindSpec = new BindSpec(new PriceCentsConverter(),null);
-		dbc.bind2(spin_Cents, "selection", skiTrip, "price",priceCentsBindSpec);
+		dbc.bind(spin_Cents, "selection", skiTrip, "price",priceCentsBindSpec);
 
 	}
 }

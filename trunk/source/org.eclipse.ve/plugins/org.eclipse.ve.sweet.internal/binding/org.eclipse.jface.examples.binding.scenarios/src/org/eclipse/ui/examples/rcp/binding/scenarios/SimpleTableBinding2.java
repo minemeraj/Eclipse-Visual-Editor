@@ -50,10 +50,10 @@ public class SimpleTableBinding2 extends Composite {
 				tableViewer);
 		tableViewerDescription.addColumn("Name", "name");
 		tableViewerDescription.addColumn("Description", "description");
-		dbc.bind2(tableViewerDescription, new PropertyDescription(catalog,
+		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,
 				"lodgings"), null);
 
-		selectedLodging = (IUpdatableValue) dbc.createUpdatable2(new PropertyDescription(tableViewer,
+		selectedLodging = (IUpdatableValue) dbc.createUpdatable(new PropertyDescription(tableViewer,
 				"selection"));
 
 		addButton
@@ -79,7 +79,7 @@ public class SimpleTableBinding2 extends Composite {
 					}
 				});
 
-		dbc.bind2(dbc.createUpdatable2(new PropertyDescription(removeButton, "enabled")), 
+		dbc.bind(dbc.createUpdatable(new PropertyDescription(removeButton, "enabled")), 
 				new ConditionalUpdatableValue(
 				selectedLodging) {
 			protected boolean compute(Object currentValue) {
