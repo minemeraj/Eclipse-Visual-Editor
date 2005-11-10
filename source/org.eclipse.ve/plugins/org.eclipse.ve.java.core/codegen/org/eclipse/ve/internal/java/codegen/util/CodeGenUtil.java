@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.58 $  $Date: 2005-11-01 17:11:29 $ 
+ *  $Revision: 1.59 $  $Date: 2005-11-10 16:49:41 $ 
  */
 
 
@@ -1018,7 +1018,7 @@ public static Collection getReferences(Object o, boolean includeO) {
 	 * <ol>
 	 * <li> <code>THIS</code>
 	 * <li> Simple name starts with <code>ivj</code>
-	 * <li> <code>Modelled</code>, has no container <code>EObject</code>, and EITHER has no codegen annotation OR has <code>visual-constraint</code> in the codegen annotation
+	 * <li> <code>Modelled</code>, has no container <code>EObject</code>, EITHER has no codegen annotation OR has <code>visual-constraint</code> in the codegen annotation, AND doesnt have implicit-allocation.
 	 * <li> Not <code>Modelled</code>, has no container <code>EObject</code>, and has <code>visual-constraint</code> in the codegen annotation
 	 * </ol>
 	 * 
@@ -1061,7 +1061,11 @@ public static Collection getReferences(Object o, boolean includeO) {
 				// Is modelled
 				if (bp.getContainer() == null){
 					if(bp.getFFDecoder().getAnnotationComment()==null || bp.getFFDecoder().isVisualOnFreeform())
-						shouldBeOnFreeform = true;
+						if (bp.getEObject() instanceof IJavaObjectInstance) {
+							IJavaObjectInstance bpInstance = (IJavaObjectInstance) bp.getEObject();
+							shouldBeOnFreeform = !bpInstance.isImplicitAllocation();
+						}else
+							shouldBeOnFreeform = true;
 				}
 			} else {
 				// Not modelled
