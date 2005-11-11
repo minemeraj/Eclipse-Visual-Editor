@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.71 $  $Date: 2005-10-26 17:46:59 $ 
+ *  $Revision: 1.72 $  $Date: 2005-11-11 19:19:46 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -155,7 +155,8 @@ public class BDMMerger {
 			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) return true ;
 			BeanPart mainBean = (BeanPart) mainBeansItr.next();
 			if(mainBean!=null && !mainBean.isActive())
-				mainBean.activate();
+				if(!mainBean.getDecleration().isImplicitDecleration()) // implicit-implicits shouldnt be activated by snippet
+					mainBean.activate();
 		}
 		return true;
 	}
