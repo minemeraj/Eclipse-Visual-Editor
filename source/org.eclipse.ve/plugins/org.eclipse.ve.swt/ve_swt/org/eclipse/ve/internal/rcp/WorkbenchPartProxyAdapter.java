@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-04 00:11:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-11-11 23:37:38 $ 
  */
 package org.eclipse.ve.internal.rcp;
 
@@ -265,10 +265,10 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 						IStandardBeanProxyFactory factory = workbenchParent.getProxyFactoryRegistry().getBeanProxyFactory();
 						setWorkSizeMethod.invoke(null, new IBeanProxy[] { (IBeanProxy) workbenchParent,
 								factory.createBeanProxyWith(setMinWidth), factory.createBeanProxyWith(setMinHeight)});
+						revalidateBeanProxy();						
 						return null;
 					}
 				});
-				revalidateBeanProxy();
 			} catch (ThrowableProxy e) {
 				JavaVEPlugin.log(e, Level.WARNING);
 			}
