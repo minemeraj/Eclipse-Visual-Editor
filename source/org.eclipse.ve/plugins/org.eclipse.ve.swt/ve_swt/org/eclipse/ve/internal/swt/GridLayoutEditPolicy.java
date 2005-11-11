@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 
 /*
- * $RCSfile: GridLayoutEditPolicy.java,v $ $Revision: 1.43 $ $Date: 2005-11-11 15:57:16 $
+ * $RCSfile: GridLayoutEditPolicy.java,v $ $Revision: 1.44 $ $Date: 2005-11-11 23:20:56 $
  */
 import java.util.*;
 
@@ -801,7 +801,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		Point cell = new Point(gridReq.column, gridReq.row);
 
 		int numColumns = helper.getNumColumns();
-		EditPart childEP = (EditPart) editparts.iterator().next(), beforeEP = null;
+		EditPart childEP = (EditPart) editparts.get(0), beforeEP = null;
 		int childIndex = children.indexOf(childEP);
 		int epIndex = helper.getChildIndexAtCell(cell);
 		if (epIndex != -1)
@@ -809,7 +809,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		CommandBuilder cb = new CommandBuilder();
 
 		// No change if selected editpart and the target editpart are the same.
-		if (childEP == beforeEP)
+		if (childEP == beforeEP && gridReq.type == ADD)
 			return UnexecutableCommand.INSTANCE;
 		EObject child = (EObject) childEP.getModel();
 
@@ -895,10 +895,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			}
 			// If no rows or colums to remove, add a filler label to fill the cell of the moved control.
 			if (rowCmds == null && columnCmds == null) {
-				if (beforeEP != null)
-					cb.append(helper.createFillerLabelsForMovedControlCommands(child, (EObject) beforeEP.getModel()));
-				else
-					cb.append(containerPolicy.getCreateCommand(helper.createFillerLabelObject(), null).getCommand());
+				cb.append(helper.createFillerLabelsForMovedControlCommands(child, beforeEP != null ? (EObject) beforeEP.getModel() : null));
 			}
 		}
 		if (cb.isEmpty())

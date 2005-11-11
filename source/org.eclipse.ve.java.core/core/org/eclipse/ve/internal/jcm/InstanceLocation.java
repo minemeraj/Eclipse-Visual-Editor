@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: InstanceLocation.java,v 1.3 2005-09-15 21:33:50 rkulp Exp $
+ * $Id: InstanceLocation.java,v 1.4 2005-11-11 23:20:55 rkulp Exp $
  */
 package org.eclipse.ve.internal.jcm;
 /*******************************************************************************
@@ -26,6 +26,8 @@ import org.eclipse.emf.common.util.AbstractEnumerator;
  * <!-- begin-user-doc -->
  * A representation of the literals of the enumeration '<em><b>Instance Location</b></em>',
  * and utility methods for working with them.
+ * <p>
+ * To use in an annotation for bean, use an {@link org.eclipse.ve.internal.jcm.impl.KeyedInstanceLocationImpl} for the key/value pair.
  * <!-- end-user-doc -->
  * <!-- begin-model-doc -->
  * Enumeration for the location of where the instance variable and initialization will be located.

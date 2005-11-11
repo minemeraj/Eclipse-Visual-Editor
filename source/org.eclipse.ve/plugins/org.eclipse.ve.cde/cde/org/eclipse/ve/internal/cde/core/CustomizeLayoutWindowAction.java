@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.15 $  $Date: 2005-09-22 12:55:53 $ 
+ *  $Revision: 1.16 $  $Date: 2005-11-11 23:20:54 $ 
  */
 
 import java.util.ArrayList;
@@ -193,6 +193,9 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 	
 	public CustomizeLayoutWindowAction(IWorkbenchWindow workbenchWindow, IEditorActionBarContributor contributor) {
 		super(CDEMessages.CustomizeLayoutWindowAction_label, IAction.AS_PUSH_BUTTON); 
+		this.workbenchWindow = workbenchWindow;
+		this.contributor = contributor;
+		
 		setId(ACTION_ID);
 		setImageDescriptor(
 			CDEPlugin.getImageDescriptorFromPlugin(CDEPlugin.getPlugin(), "icons/full/elcl16/aligndialog_obj.gif")); //$NON-NLS-1$
@@ -207,8 +210,6 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 			}
 		});	
 		setTooltip();		
-		this.workbenchWindow = workbenchWindow;
-		this.contributor = contributor;
 		workbenchWindow.getSelectionService().addSelectionListener(selListener);
 		workbenchWindow.getPartService().addPartListener(alignmentWindowPartListener);
 	}

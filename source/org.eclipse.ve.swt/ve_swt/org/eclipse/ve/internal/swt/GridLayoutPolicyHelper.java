@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.40 $  $Date: 2005-11-11 15:57:16 $
+ *  $Revision: 1.41 $  $Date: 2005-11-11 23:20:56 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -22,6 +22,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.Command;
@@ -39,15 +40,24 @@ import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider.Visitor;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyListener;
-import org.eclipse.jem.internal.proxy.swt.*;
+import org.eclipse.jem.internal.proxy.swt.DisplayManager;
+import org.eclipse.jem.internal.proxy.swt.JavaStandardSWTBeanConstants;
 import org.eclipse.jem.internal.proxy.swt.DisplayManager.DisplayRunnable.RunnableException;
 import org.eclipse.jem.java.JavaClass;
 
+import org.eclipse.ve.internal.cdm.Annotation;
+
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
+import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
+
+import org.eclipse.ve.internal.jcm.*;
+import org.eclipse.ve.internal.jcm.impl.KeyedInstanceLocationImpl;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
+import org.eclipse.ve.internal.java.vce.rules.VCEPreSetCommand;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /**
@@ -723,9 +733,24 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		fa.setReceiver(name);
 		ic.getArguments().add(ir);
 		ic.getArguments().add(fa);
-
+		
 		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
-		return BeanUtilities.createJavaObject("org.eclipse.swt.widgets.Label", rset, alloc); //$NON-NLS-1$
+		IJavaInstance filler = BeanUtilities.createJavaObject("org.eclipse.swt.widgets.Label", rset, alloc); //$NON-NLS-1$
+		AnnotationLinkagePolicy policy = fEditDomain.getAnnotationLinkagePolicy();
+		Annotation annotation = AnnotationPolicy.createAnnotation(filler);
+		
+		KeyedInstanceLocationImpl instLoc = (KeyedInstanceLocationImpl) JCMFactory.eINSTANCE.create(JCMPackage.eINSTANCE.getKeyedInstanceLocation());
+		instLoc.setKey(VCEPreSetCommand.BEAN_LOCATION_KEY);
+		instLoc.setValue(InstanceLocation.LOCAL_LITERAL);
+		annotation.getKeyedValues().add(instLoc);
+		
+		EStringToStringMapEntryImpl nameEntry = (EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
+		nameEntry.setKey(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
+		nameEntry.setValue(NameInMemberPropertyDescriptor.FORCE_NAME_IN_COMPOSITION_PREFIX+"filler");
+		annotation.getKeyedValues().add(nameEntry);
+		
+		policy.setModelOnAnnotation(filler, annotation);
+		return filler;
 	}
 
 	public Command createNumColumnsCommand(int numCols) {
@@ -787,11 +812,14 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		EObject beforeObject = findNextValidObject(0, atRow);
 		// Add the row by adding filler labels and inserting the control at the specific column position.
 		// If any of the controls spans vertically, don't add filler, just expand it one more row.
+		boolean lastRow = atRow >= table[0].length;	// This is the last row, so we can stop adding fillers when we hit our child.
 		for (int i = 0; i < numColumns; i++) {
 			boolean addFiller = true;
 			if (i == atColumn) {
 				// This is the column where the new control is put
 				cb.append(getCommandForAddCreateMoveChild(request, addedControl, beforeObject));
+				if (lastRow)
+					break;	// No need to add any more fillers.
 				addFiller = false;
 			} else if (atRow < table[0].length) {
 				EObject child = table[i][atRow];

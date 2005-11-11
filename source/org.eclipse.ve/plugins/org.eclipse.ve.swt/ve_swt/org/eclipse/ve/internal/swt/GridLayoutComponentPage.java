@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.18 $  $Date: 2005-08-25 20:36:05 $ 
+ *  $Revision: 1.19 $  $Date: 2005-11-11 23:24:42 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -731,7 +731,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		if (!editparts.isEmpty()) {
 			Command cmd = createRestoreDefaultsCommand(editparts);
 			if (cmd != UnexecutableCommand.INSTANCE) {
-				execute(createRestoreDefaultsCommand(editparts));
+				execute(cmd);
 				refreshAllValues(editparts);
 				restoreAllButton.setEnabled(false);
 			}

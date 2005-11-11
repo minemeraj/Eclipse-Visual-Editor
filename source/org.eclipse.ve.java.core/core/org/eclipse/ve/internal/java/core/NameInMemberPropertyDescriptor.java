@@ -10,11 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NameInMemberPropertyDescriptor.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.10 $  $Date: 2005-11-11 23:20:55 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.util.*;
+import java.util.List;
 
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.ecore.EObject;
@@ -40,6 +41,14 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
  * @since 1.0.0
  */
 public class NameInMemberPropertyDescriptor extends NameInCompositionPropertyDescriptor {
+	
+	/**
+	 * Prefix used on a name to mean it should not go through rename dialog. It should be sent on as is, other than to make it unique.
+	 * 
+	 * TODO This should be moved to CDE when rename dialog is moved.
+	 * @since 1.2.0
+	 */
+	public static final String FORCE_NAME_IN_COMPOSITION_PREFIX = "{org.eclipse.cde.forcename}"; // //$NON-NLS-1$
 
 	/**
 	 * Dialog class to name beans when they are being added from the UI (Palette, ChooseBean, etc.)
@@ -245,20 +254,41 @@ public class NameInMemberPropertyDescriptor extends NameInCompositionPropertyDes
 	 * @since 1.1
 	 */
 	public String[] getUniqueNamesInComposition(EditDomain domain, String[] names, Annotation[] annotations) {
-		String[] uniques = super.getUniqueNamesInComposition(domain, names, annotations);
-		if(VCEPreferences.askForRename()){
-			EObject[] annotates = new EObject[annotations.length];
-			for (int i = 0; i < annotations.length; i++) {
-				if (annotations[i] instanceof AnnotationEMF) {
+		boolean askForRename = VCEPreferences.askForRename();
+		// Handle any forced names.
+		List nonForcedIndexes = askForRename ? new ArrayList(annotations.length) : null;
+		String[] uniques = new String[names.length];
+		System.arraycopy(names, 0, uniques, 0, names.length);
+		for (int i = 0; i < uniques.length; i++) {
+			if (uniques[i] != null && uniques[i].startsWith(FORCE_NAME_IN_COMPOSITION_PREFIX)) {
+				uniques[i] = uniques[i].substring(FORCE_NAME_IN_COMPOSITION_PREFIX.length());
+			} else if (askForRename){
+				nonForcedIndexes.add(new Integer(i));
+			}
+		}
+		
+		uniques = super.getUniqueNamesInComposition(domain, uniques, annotations);
+		if(askForRename && !nonForcedIndexes.isEmpty()){
+			String[] renameNames = new String[nonForcedIndexes.size()];
+			Annotation[] renameAnnotations = new Annotation[nonForcedIndexes.size()];
+			EObject[] annotates = new EObject[renameAnnotations.length];
+			for (int i = 0; i < renameAnnotations.length; i++) {
+				renameNames[i] = uniques[((Integer) nonForcedIndexes.get(i)).intValue()];
+				renameAnnotations[i] = annotations[((Integer) nonForcedIndexes.get(i)).intValue()];
+				if (renameAnnotations[i] instanceof AnnotationEMF) {
 					AnnotationEMF annotationEMF = (AnnotationEMF) annotations[i];
 					annotates[i] = annotationEMF.getAnnotates();
 				}else{
 					annotates[i] = null;
 				}
 			}
-			NameChangeDialog dialog = new NameChangeDialog(domain.getEditorPart().getSite().getShell(), uniques, annotates, domain, false, true);
+			NameChangeDialog dialog = new NameChangeDialog(domain.getEditorPart().getSite().getShell(), renameNames, renameAnnotations, domain, false, true);
 			if(dialog.open()==Dialog.OK){
-				uniques = dialog.getFinalNames();
+				renameNames = dialog.getFinalNames();
+				// Now copy over the names from the dialog to the appropriate place in the list.
+				for (int i = 0; i < renameNames.length; i++) {
+					uniques[((Integer) nonForcedIndexes.get(i)).intValue()] = renameNames[i];
+				}
 			}
 		}
 		return uniques;
