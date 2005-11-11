@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.16 $  $Date: 2005-11-09 23:23:45 $ 
+ *  $Revision: 1.17 $  $Date: 2005-11-11 17:19:23 $ 
  */
 
 import java.text.CharacterIterator;
@@ -116,7 +116,7 @@ public void replaceComments(String comment) {
 public void replaceFiller (String filler) {
 	String currentFiller = ""; //$NON-NLS-1$
 	if(getFillerOff()>-1 && getFillerLen()>-1)
-		currentFiller = fSource.substring(getFillerOff(), getFillerLen());
+		currentFiller = fSource.substring(getFillerOff(), getFillerOff()+getFillerLen());
 	if(filler==null)
 		filler=""; //$NON-NLS-1$
 	primReplaceFiller(currentFiller, filler, getFillerOff());
@@ -125,7 +125,7 @@ public void replaceFiller (String filler) {
 
 protected void primReplaceFiller(String oldFiller, String newFiller, int fillerOffset){
 	StringBuffer filledSource = new StringBuffer(fSource);
-	filledSource.replace(fillerOffset, oldFiller.length(), newFiller);
+	filledSource.replace(fillerOffset, fillerOffset+oldFiller.length(), newFiller);
 	int lengthDelta = 0;
 	try {
 		IScanner scanner = fScannerFactory.getScanner(false, true, true);
