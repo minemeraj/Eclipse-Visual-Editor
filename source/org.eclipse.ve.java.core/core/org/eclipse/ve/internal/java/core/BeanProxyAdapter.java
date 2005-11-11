@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.59 $  $Date: 2005-11-04 00:08:57 $ 
+ *  $Revision: 1.60 $  $Date: 2005-11-11 15:50:22 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -1980,8 +1980,8 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 											.getPosition(), expression);								
 								applied((EStructuralFeature) notification.getFeature(), notification.getNewValue(), notification.getPosition(),
 										notification.isTouch(), expression, false);
-							} else if (notification.getOldValue() != null && isBeanProxyInstantiated()) {
-								// Reinstantiation needed because we had an old allocation and we were instantiated. If we didnt' have an old one then we don't reinstantiate.
+							} else if (notification.getOldValue() != null && (isBeanProxyInstantiated() || hasInstantiationErrors())) {
+								// Reinstantiation needed because we had an old allocation and we were instantiated or had instantiation errors. If we didn't have an old one then we don't reinstantiate.
 								reinstantiate(expression);
 							}
 						} finally {
