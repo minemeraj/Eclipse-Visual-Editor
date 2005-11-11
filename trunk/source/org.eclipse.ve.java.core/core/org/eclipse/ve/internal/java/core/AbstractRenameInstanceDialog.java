@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractRenameInstanceDialog.java,v $
- *  $Revision: 1.8 $  $Date: 2005-09-22 16:40:49 $ 
+ *  $Revision: 1.9 $  $Date: 2005-11-11 23:20:55 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -46,6 +46,8 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
  * @since 1.1
  */
 public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
+	
+	// TODO The rename dialog and the usage of it should be moved into CDE.
 
 	protected String[] originalNames = null;
 	protected String[] newNames = null;
