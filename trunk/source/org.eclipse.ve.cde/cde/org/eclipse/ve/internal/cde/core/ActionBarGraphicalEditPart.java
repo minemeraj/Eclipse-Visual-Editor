@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarGraphicalEditPart.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-20 17:37:48 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-11 23:41:30 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.*;
@@ -28,21 +27,25 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 
 /*
  * Special editpart for the action bar to host the editpart contributors
  */
 public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 
-	IFigure actionBarFigure = null;			// Action bar that contains the editpart contributor figures
-	Polyline decorationsFigure = null;		// Figure for highlighting the host & action bar figure
+	IFigure actionBarFigure = null;					// Action bar that contains the editpart contributor figures
+	ActionBarDecorationsFigure decorationsFigure = null; // Figure for highlighting the host & action bar figure
 	List actionBarChildren = null;
+	boolean actionBarOpen = false;					// toggle for flyout capability
+	Rectangle dividerGradientArea = null;	// Area for left arrow when action bar is open
 
 	static final Color ACTIONBAR_BACKGROUND_COLOR = new Color(null, 255, 255, 220); // very light yellow
-	static final int ACTIONBAR_FIGURE_MARGIN = 5;
+	static final int ACTIONBAR_CHILD_FIGURE_MARGIN = 5;
 
 	public void activate() {
 		super.activate();
+		getFigure().addMouseListener(new ActionBarMouseListener());
 		getLayer(LayerConstants.HANDLE_LAYER).add(getFigure());
 	}
 
@@ -59,152 +62,19 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 	}
 
 	public void show(Rectangle hostBounds, int orientation) {
-		Rectangle bounds = actionBarFigure.getBounds();
-		actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width + 10, hostBounds.y - bounds.height - 14));
+		actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width - 7, hostBounds.y + 1));
 
-		// The decorations figure is used to highlight the host figure, action bar figure, and it's connection in green.
-		// It is also used to draw a shadow figure for the action bar.
+		// The decorations figure is used to highlight the host figure, action bar figure,
+		// and used to draw a shadow figure for the action bar.
 		if (decorationsFigure == null) {
-			decorationsFigure = new Polyline() {
-				PointList hostPoints = null;
-				PointList actionBarPoints = null;
-				PointList shadowPoints = null;
-
-				protected void outlineShape(Graphics g) {
-					try {
-						g.setAntialias(SWT.ON); // This makes the connection line look smooth
-					} catch (SWTException e) {
-						// For OS platforms that don't support Antialias
-					}
-					g.setForegroundColor(ColorConstants.black);
-					// Draw the green border around the host figure
-					if (hostPoints != null) {
-						g.setForegroundColor(ColorConstants.lightGreen);
-						g.setLineWidth(2);
-						g.drawPolyline(hostPoints);
-					}
-					// Draw the action bar shadow and the green border around the action bar figure
-					if (actionBarPoints != null) {
-						// draw the action figure shadow
-						g.setBackgroundColor(ColorConstants.darkGray);
-						Point fp = shadowPoints.getFirstPoint();
-						Point lp = shadowPoints.getPoint(2);
-						try {
-							g.setAlpha(110); // This is for the shadow figure to allow some transparency
-						} catch (SWTException e) {
-							// For OS platforms that don't support alpha
-						}
-						g.fillRoundRectangle(new Rectangle(fp.x, fp.y, lp.x - fp.x - 4, lp.y - fp.y - 4), 12, 12);
-						try {
-							g.setAlpha(255); // Reset
-						} catch (SWTException e) {
-							// For OS platforms that don't support alpha
-						}
-
-						// now draw the green highlight border around the action bar figure
-						g.setForegroundColor(ColorConstants.lightGreen);
-						g.setLineWidth(2);
-						fp = actionBarPoints.getFirstPoint();
-						lp = actionBarPoints.getPoint(2);
-//						g.drawRoundRectangle(new Rectangle(fp.x, fp.y, lp.x - fp.x, lp.y - fp.y), 8, 8);
-					}
-					// draw the connecting line between the host figure and the action bar figure
-					g.setForegroundColor(ColorConstants.black);
-					g.setLineWidth(1);
-					g.setLineStyle(SWT.LINE_SOLID);
-					PointList anchorLinePoints = new PointList(2);
-					Point p1 = hostPoints.getPoint(3);
-					Point p2 = actionBarPoints.getPoint(1);
-					anchorLinePoints.addPoint(p1);
-					anchorLinePoints.addPoint(p2.x + 2, p2.y - 2);
-					g.drawPolyline(anchorLinePoints); 
-
-					// draw the very light connecting line between the host figure and the action bar shadow
-					g.setForegroundColor(ColorConstants.darkGray);
-					PointList shadowAnchorPoints = new PointList(2);
-					p1 = hostPoints.getPoint(3);
-					p2 = shadowPoints.getPoint(1);
-					shadowAnchorPoints.addPoint(p1.x + 2, p1.y + 6);
-					shadowAnchorPoints.addPoint(p2.x + 2, p2.y - 8);
-					g.setLineWidth(1);
-					try {
-						g.setAlpha(40); // Very light, almost transparent connecting line
-					} catch (SWTException e) {
-						// For OS platforms that don't support alpha
-					}
-					g.drawPolyline(shadowAnchorPoints);
-				}
-
-				/*
-				 * points should contain 15 points... 
-				 *    first 5 is the points for the host figure, 
-				 *    next 5 is the points for the action bar figure, 
-				 *    last 5 is the points for the action bar shadow.
-				 */
-				public void setPoints(PointList points) {
-					super.setPoints(points);
-					hostPoints = null;
-					actionBarPoints = null;
-					shadowPoints = null;
-					if (points.size() == 15) {
-						hostPoints = new PointList(5);
-						actionBarPoints = new PointList(5);
-						shadowPoints = new PointList(5);
-
-						hostPoints.addPoint(points.getPoint(0).x + 2, points.getPoint(0).y + 2);
-						hostPoints.addPoint(points.getPoint(1).x + 2, points.getPoint(1).y - 2);
-						hostPoints.addPoint(points.getPoint(2).x - 2, points.getPoint(2).y - 2);
-						hostPoints.addPoint(points.getPoint(3).x - 2, points.getPoint(3).y + 2);
-						hostPoints.addPoint(points.getPoint(4).x + 2, points.getPoint(4).y + 2);
-
-						actionBarPoints.addPoint(points.getPoint(5).x + 2, points.getPoint(5).y + 2);
-						actionBarPoints.addPoint(points.getPoint(6).x + 2, points.getPoint(6).y - 2);
-						actionBarPoints.addPoint(points.getPoint(7).x - 2, points.getPoint(7).y - 2);
-						actionBarPoints.addPoint(points.getPoint(8).x - 2, points.getPoint(8).y + 2);
-						actionBarPoints.addPoint(points.getPoint(9).x + 2, points.getPoint(9).y + 2);
-
-						for (int i = 10; i < 15; i++) {
-							shadowPoints.addPoint(points.getPoint(i));
-						}
-					}
-				};
-			};
+			decorationsFigure = new ActionBarDecorationsFigure();
 			// Note: decorations figure must be added first so that action bar figure is drawn
 			// over the shadow figure (part of the decorations figure)
 			getLayer(LayerConstants.HANDLE_LAYER).remove(actionBarFigure);
 			getLayer(LayerConstants.HANDLE_LAYER).add(decorationsFigure);
 			getLayer(LayerConstants.HANDLE_LAYER).add(actionBarFigure);
 		}
-		// Set the points list that is used for drawing the green border around the host figure, action figure,
-		// connection line, and for drawing the shadow figure.
-		PointList pl = new PointList();
-		// First five points is the host figure's points
-		Rectangle hb = hostBounds.getCopy();
-		// Points are added to points list starting from the upper left corner and moving counter-clockwise
-		pl.addPoint(hb.x, hb.y);
-		pl.addPoint(hb.x, hb.y + hb.height);
-		pl.addPoint(hb.x + hb.width, hb.y + hb.height);
-		pl.addPoint(hb.x + hb.width, hb.y);
-		pl.addPoint(hb.x, hb.y);
-		
-		// Second set of five points is the action figure's points
-		Rectangle afBounds = actionBarFigure.getBounds().getCopy();
-		afBounds.x -= 3;
-		afBounds.y -= 3;
-		afBounds.width += 6;
-		afBounds.height += 6;
-		PointList actionFigurePoints = new PointList(5);
-		actionFigurePoints.addPoint(afBounds.x, afBounds.y);
-		actionFigurePoints.addPoint(afBounds.x, afBounds.y + afBounds.height);
-		actionFigurePoints.addPoint(afBounds.x + afBounds.width, afBounds.y + afBounds.height);
-		actionFigurePoints.addPoint(afBounds.x + afBounds.width, afBounds.y);
-		actionFigurePoints.addPoint(afBounds.x, afBounds.y);
-		pl.addAll(actionFigurePoints);
-		
-		// Last five points is the action figure's shadow points which is offset by the following translate statement:
-		actionFigurePoints.translate(17, 14); // Create points for action figure shadow
-		pl.addAll(actionFigurePoints);
-		decorationsFigure.setPoints(pl);
+		decorationsFigure.setHostBounds(hostBounds.getCopy());
 
 		// Keep action bar on top to avoid obscurring by selection handles from other editparts
 		if (getLayer(LayerConstants.HANDLE_LAYER).getChildren().size() > 2) {
@@ -218,41 +88,131 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 	}
 
 	public void hide() {
+		actionBarOpen = false;
 		actionBarFigure.setVisible(false);
 		decorationsFigure.setVisible(false);
 	}
 
+	/*
+	 * The figure for the action bar.
+	 * This is constructed as a RoundedRectangle but the paintFigure is overriden to draw
+	 * lots of other little figures depending on whether the action bar is opened or closed
+	 * to simulate a fly-out capability.
+	 * 
+	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
+	 */
 	protected IFigure createFigure() {
 		actionBarFigure = new RoundedRectangle() {
+			PointList actionBarStub = null;
+			PointList rightArrow = null;
+			PointList leftArrow = null;
+			PointList divider = null;
 
-			protected void fillShape(Graphics graphics) {
-				Rectangle rect = getBounds().getCopy().expand(-1, -1);
-				graphics.fillGradient(rect, false);
+			/*
+			 * Set the bounds. 
+			 * Setup the point lists for the various drawing figures within this figure
+			 * so we don't have to recreate point lists every time we paint.
+			 * - right and left arrows
+			 * - action divider for when the action bar is open.
+			 * - action bar stub for when the action bar is closed.
+			 * - gradient area where the arrows will be displayed so it looks like a 3d button
+			 * 
+			 * @see org.eclipse.draw2d.IFigure#setBounds(org.eclipse.draw2d.geometry.Rectangle)
+			 */
+			public void setBounds(Rectangle rect) {
+				super.setBounds(rect);
+				// Setup the action bar stub and arrow to show when action bar is closed
+				actionBarStub = new PointList(6);
+				actionBarStub.addPoint(bounds.x + 5, bounds.y + 1);
+				actionBarStub.addPoint(bounds.x + bounds.width - 4, bounds.y + 1);
+				actionBarStub.addPoint(bounds.x + bounds.width - 1, bounds.y + 4);
+				actionBarStub.addPoint(bounds.x + bounds.width -1, bounds.y + bounds.height - 4);
+				actionBarStub.addPoint(bounds.x + bounds.width - 4, bounds.y + bounds.height - 1);
+				actionBarStub.addPoint(bounds.x + 5, bounds.y + bounds.height - 1);
+				rightArrow = new PointList(3);
+				rightArrow.addPoint(bounds.x + bounds.width - 7, bounds.y + bounds.height / 2 - 3);
+				rightArrow.addPoint(bounds.x + bounds.width - 4, bounds.y + bounds.height / 2);
+				rightArrow.addPoint(bounds.x + bounds.width - 7, bounds.y + bounds.height / 2 + 3);
+
+				// Setup the left arrow and action divider to show when the action bar is opened
+				leftArrow = new PointList(3);
+				leftArrow.addPoint(bounds.x + bounds.width - 5, bounds.y + bounds.height / 2 - 3);
+				leftArrow.addPoint(bounds.x + bounds.width - 8, bounds.y + bounds.height / 2);
+				leftArrow.addPoint(bounds.x + bounds.width - 5, bounds.y + bounds.height / 2 + 3);
+				divider = new PointList(4);
+				divider.addPoint(bounds.x + bounds.width - 10, bounds.y + 1);
+				divider.addPoint(bounds.x + bounds.width - 12, bounds.y + 3);
+				divider.addPoint(bounds.x + bounds.width - 12, bounds.y + bounds.height - 3);
+				divider.addPoint(bounds.x + bounds.width - 10, bounds.y + bounds.height - 1);
+				
+				// Setup the bounds for the divider gradient area where the arrows reside
+				dividerGradientArea = bounds.getCopy();
+				dividerGradientArea.x = bounds.x + bounds.width - 12;
+				dividerGradientArea.width = bounds.x + bounds.width - dividerGradientArea.x;
+				dividerGradientArea.expand(-1,-1);
 			}
-
-			protected void outlineShape(Graphics graphics) {
+			
+			public void paintFigure(Graphics graphics) {
 				try {
-					graphics.setAntialias(SWT.ON); // This makes the connection line look smooth
+					graphics.setAntialias(SWT.ON); // This makes the lines look smooth
 				} catch (SWTException e) {
 					// For OS platforms that don't support Antialias
 				}
-				graphics.setForegroundColor(ColorConstants.black);
-				Rectangle f = Rectangle.SINGLETON;
-				Rectangle r = getBounds();
-				f.x = r.x + lineWidth / 2;
-				f.y = r.y + lineWidth / 2;
-				f.width = r.width - lineWidth;
-				f.height = r.height - lineWidth;
-				graphics.drawRoundRectangle(f, corner.width, corner.height);
+				if (actionBarOpen) {
+					// Action bar is open. Show left arrow and action divider
+					super.paintFigure(graphics);
+					// Draw the gradient area where the left arrow button is located
+					graphics.setForegroundColor(ColorConstants.white);
+					graphics.setBackgroundColor(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+					graphics.fillGradient(dividerGradientArea, false);
+					// Draw the left arrow
+					graphics.setLineWidth(2);
+					graphics.setForegroundColor(ColorConstants.black);
+					graphics.drawPolyline(leftArrow);
+					// draw the divider
+//					graphics.setLineWidth(1);
+					graphics.setForegroundColor(ColorConstants.gray);
+					graphics.drawPolyline(divider);
+					graphics.setLineWidth(1);
+					graphics.setForegroundColor(ColorConstants.black);
+					outlineShape(graphics);
+				} else {
+					// Action bar is closed. Show action bar stub and right arrow
+					graphics.setBackgroundColor(ColorConstants.white);
+					// Draw the filler for action bar stub
+					graphics.fillPolygon(actionBarStub);
+					// Draw the gradient area where the right arrow button is located
+					graphics.setForegroundColor(ColorConstants.white);
+					graphics.setBackgroundColor(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+					graphics.fillGradient(dividerGradientArea, false);
+					// Draw the border around the stub to match the host figure's border
+					graphics.setLineWidth(2);
+					graphics.setForegroundColor(ColorConstants.orange);
+					graphics.drawPolyline(actionBarStub);
+					// Draw the left arrow
+					graphics.setForegroundColor(ColorConstants.black);
+					graphics.drawPolyline(rightArrow);
+				}
 			}
+
+			/*
+			 * Use a gradient on the action bar and go left to right and 
+			 * from white to very light yellow to show depth.
+			 * 
+			 * @see org.eclipse.draw2d.Shape#fillShape(org.eclipse.draw2d.Graphics)
+			 */
+			protected void fillShape(Graphics graphics) {
+				graphics.setForegroundColor(ColorConstants.white);
+				graphics.setBackgroundColor(ColorConstants.tooltipBackground);
+				Rectangle rect = getBounds().getCopy().expand(-1, -1);
+				rect.width -= dividerGradientArea.width;
+				graphics.fillGradient(rect, false);
+			}
+
 		};
 		// Use XY positioning
 		XYLayout xylayout = new XYLayout();
 		actionBarFigure.setLayoutManager(xylayout);
-
-		// For the fill gradient, left to right go from white to very light yellow to show depth
-		actionBarFigure.setForegroundColor(ColorConstants.buttonLightest);
-		actionBarFigure.setBackgroundColor(ACTIONBAR_BACKGROUND_COLOR);
 
 		actionBarFigure.setVisible(false);
 		return actionBarFigure;
@@ -290,6 +250,23 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 
 	protected void refreshChildren() {
 		super.refreshChildren();
+		refreshFigures();
+	}
+
+	/*
+	 * Show/hide children based on whether the action bar is open of closed
+	 * Set the children constraints used in the layout on the action bar
+	 * Set the overall action bar size based on the children preferred sizes
+	 */
+	protected void refreshFigures() {
+		// Show or hide the children based on whether the action bar is open or closed.
+		Iterator iter = actionBarFigure.getChildren().iterator();
+		while (iter.hasNext()) {
+			IFigure child = (IFigure) iter.next();
+			if (child.isVisible() != actionBarOpen)
+				child.setVisible(actionBarOpen);
+		}
+		
 		setChildrenConstraints();
 		calculateFigureSize();
 	}
@@ -300,28 +277,32 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 	private void calculateFigureSize() {
 		List children = getFigure().getChildren();
 		if (children.isEmpty()) { return; }
-		int abWidth = ACTIONBAR_FIGURE_MARGIN;
+		int abWidth = ACTIONBAR_CHILD_FIGURE_MARGIN;
 		int abHeight = 0;
 		for (int i = 0; i < children.size(); i++) {
 			Dimension size = ((IFigure) children.get(i)).getPreferredSize();
-			abWidth += size.width + ACTIONBAR_FIGURE_MARGIN;
+			abWidth += size.width + ACTIONBAR_CHILD_FIGURE_MARGIN;
 			if (size.height > abHeight)
 				abHeight = size.height;
 		}
-		getFigure().setSize(abWidth + 25, abHeight + ACTIONBAR_FIGURE_MARGIN * 2);
+		if (actionBarOpen)
+			abWidth += 30;
+		else
+			abWidth = 15;
+		getFigure().setSize(abWidth, abHeight + ACTIONBAR_CHILD_FIGURE_MARGIN * 2);
 	}
 
 	private void setChildrenConstraints() {
 		List children = getFigure().getChildren();
 		LayoutManager lm = getFigure().getLayoutManager();
 		if (children.isEmpty() || lm == null) { return; }
-		int abWidth = ACTIONBAR_FIGURE_MARGIN;
+		int abWidth = ACTIONBAR_CHILD_FIGURE_MARGIN;
 		for (int i = 0; i < children.size(); i++) {
 			IFigure childFigure = (IFigure) children.get(i);
 			if (lm.getConstraint(childFigure) == null)
 				getFigure().setConstraint(childFigure,
-						new Rectangle(abWidth, ACTIONBAR_FIGURE_MARGIN, childFigure.getPreferredSize().width, childFigure.getPreferredSize().height));
-			abWidth += childFigure.getPreferredSize().width + ACTIONBAR_FIGURE_MARGIN;
+						new Rectangle(abWidth, ACTIONBAR_CHILD_FIGURE_MARGIN, childFigure.getPreferredSize().width, childFigure.getPreferredSize().height));
+			abWidth += childFigure.getPreferredSize().width + ACTIONBAR_CHILD_FIGURE_MARGIN;
 		}
 	}
 
@@ -333,4 +314,86 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 		return actionBarChildren == null ? Collections.EMPTY_LIST : actionBarChildren;
 	}
 
+	/*
+	 * Mouse listener for the ActionBar figure.
+	 * Open/close the action bar when the mouse is pressed within the small arrow
+	 */
+	private class ActionBarMouseListener extends MouseListener.Stub {
+		public void mousePressed(MouseEvent me) {
+			if (me.getSource() == actionBarFigure && dividerGradientArea != null && dividerGradientArea.contains(me.getLocation())) {
+				actionBarOpen = !actionBarOpen;
+				refreshFigures();
+				actionBarFigure.repaint();
+			}
+		}
+	}
+	/*
+	 * Figure used to decorate the border on the host figure and show a shadow under the 
+	 * action bar when it is shown in an open state.
+	 */
+	private class ActionBarDecorationsFigure extends Figure {
+		PointList hostBorderPoints = null;
+		private Rectangle hostBounds;
+
+		public void paint(Graphics graphics) {
+			try {
+				graphics.setAntialias(SWT.ON); // This makes the connection line look smooth
+			} catch (SWTException e) {
+				// For OS platforms that don't support Antialias
+			}
+			// Draw the border on the host figure
+			if (hostBorderPoints != null) {
+				graphics.setForegroundColor(ColorConstants.orange);
+				graphics.setLineWidth(2);
+				graphics.drawPolyline(hostBorderPoints);
+			}
+			// Draw the action bar shadow if the action bar is open
+			if (actionBarOpen) {
+				graphics.setBackgroundColor(ColorConstants.darkGray);
+				try {
+					graphics.setAlpha(110); // This is for the shadow figure to allow some transparency
+				} catch (SWTException e) {
+					// For OS platforms that don't support alpha
+				}
+				Rectangle shadowRect = actionBarFigure.getBounds().getCopy().translate(13, 10);
+				graphics.fillRoundRectangle(shadowRect, 12, 12);
+			}
+		}
+
+		/*
+		 * Set the host bounds. Calculate the points list for the border highlight on the hostfigure. 
+		 * Set the bounds of this figure based on the union of the host bounds and action bar figure bounds.
+		 */
+		public void setHostBounds(Rectangle bounds) {
+			hostBounds = bounds;
+			// Points are added to host points list starting from the upper right corner and
+			// moving counter-clockwise... leaving a gap for the action bar figure.
+			Rectangle afBounds = actionBarFigure.getBounds().getCopy();
+			hostBorderPoints = new PointList(5);
+			hostBorderPoints.addPoint(hostBounds.x + hostBounds.width - 2, hostBounds.y + 2);
+			hostBorderPoints.addPoint(hostBounds.x + 2, hostBounds.y + 2);
+			hostBorderPoints.addPoint(hostBounds.x + 2, hostBounds.y + hostBounds.height - 2);
+			hostBorderPoints.addPoint(hostBounds.x + hostBounds.width - 2, hostBounds.y + hostBounds.height - 2);
+			hostBorderPoints.addPoint(hostBounds.x + hostBounds.width - 2, hostBounds.y + afBounds.height);
+		}
+
+		/*
+		 *  Return the bounds for this figure.
+		 *  The bounds for this drawing is the combination of both the host figure and action bar figure.
+		 */
+		public Rectangle getBounds() {
+			if (hostBounds != null) {
+				Rectangle afBounds = actionBarFigure.getBounds().getCopy();
+				return hostBounds.getCopy().union(afBounds.translate(13, 10));
+			}
+			return Rectangle.SINGLETON;
+		}
+
+		public boolean isOpaque() {
+			return false;
+		}
+		public boolean containsPoint(int x, int y) {
+			return (actionBarFigure != null && actionBarFigure.getBounds().contains(x, y));
+		}
+	}
 }
