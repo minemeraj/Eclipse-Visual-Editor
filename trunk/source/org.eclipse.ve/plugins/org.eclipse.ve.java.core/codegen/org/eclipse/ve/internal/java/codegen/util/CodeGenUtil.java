@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.59 $  $Date: 2005-11-10 16:49:41 $ 
+ *  $Revision: 1.60 $  $Date: 2005-11-11 13:54:57 $ 
  */
 
 
@@ -1065,7 +1065,7 @@ public static Collection getReferences(Object o, boolean includeO) {
 							IJavaObjectInstance bpInstance = (IJavaObjectInstance) bp.getEObject();
 							shouldBeOnFreeform = !bpInstance.isImplicitAllocation();
 						}else
-							shouldBeOnFreeform = true;
+						shouldBeOnFreeform = true;
 				}
 			} else {
 				// Not modelled
@@ -1144,6 +1144,8 @@ public static Collection getReferences(Object o, boolean includeO) {
 	 * @since 1.1.0.1
 	 */
 	public static void markSameLineExpressions(IBeanDeclModel bdm){
+		if (bdm==null) 
+			return;
 		Iterator methodItr = bdm.getAllMethods();
 		while (methodItr.hasNext()) {
 			CodeMethodRef method = (CodeMethodRef) methodItr.next();
