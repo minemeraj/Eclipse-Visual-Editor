@@ -16,7 +16,7 @@ package org.eclipse.ve.internal.swt;
 
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Rectangle;
- 
+
 /**
  * Used for spanning, adds in a little extra dashed line so we can see the column/row going to.
  * 
@@ -25,6 +25,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 public class GridLayoutSpanFeedbackFigure extends Figure {
 
 	private final int spanDirection;
+
 	private GridLayoutFeedbackFigure layoutFeedbackFigure;
 
 	public GridLayoutSpanFeedbackFigure(int spanDirection) {
@@ -32,28 +33,36 @@ public class GridLayoutSpanFeedbackFigure extends Figure {
 		this.spanDirection = spanDirection;
 		add(layoutFeedbackFigure = new GridLayoutFeedbackFigure());
 	}
-	
+
 	public void setLayoutFigureBounds(Rectangle bounds) {
 		layoutFeedbackFigure.setBounds(bounds);
 		// Now increase this slight for our bounds and the line we want to draw.
 		// The"8" makes the end line 8 pixels out on each side. The "1" is necessary because we want to be over
 		// the next cell border and our bounds are just inside the cell border.
-		bounds = spanDirection == PositionConstants.EAST ? bounds.getExpanded(1, 8) : bounds.getExpanded(8, 1);
+		bounds = spanDirection == PositionConstants.EAST || spanDirection == PositionConstants.WEST ? bounds.getExpanded(1, 8) : bounds.getExpanded(
+				8, 1);
 		setBounds(bounds);
 	}
-	
+
 	protected void paintClientArea(Graphics graphics) {
 		super.paintClientArea(graphics);
-		
+
 		// Paint span line.
 		graphics.setForegroundColor(ColorConstants.darkGray);
 		Rectangle bounds = getBounds();
-		if (spanDirection == PositionConstants.EAST) {
-			int x = bounds.x+bounds.width-1;
-			graphics.drawLine(x, bounds.y, x, bounds.y+bounds.height-1);
-		} else {
-			int y = bounds.y+bounds.height-1;
-			graphics.drawLine(bounds.x, y, bounds.x+bounds.width-1, y);			
+		switch (spanDirection) {
+			case PositionConstants.EAST:
+				int x = bounds.x + bounds.width - 1;
+				graphics.drawLine(x, bounds.y, x, bounds.y + bounds.height - 1);
+				break;
+			case PositionConstants.WEST:
+				x = bounds.x;
+				graphics.drawLine(x, bounds.y, x, bounds.y + bounds.height - 1);
+				break;
+			case PositionConstants.SOUTH:
+				int y = bounds.y + bounds.height - 1;
+				graphics.drawLine(bounds.x, y, bounds.x + bounds.width - 1, y);
+				break;
 		}
 	}
 
