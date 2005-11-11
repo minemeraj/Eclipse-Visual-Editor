@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java; 
 /*
  *  $RCSfile: JavaBeanModelBuilder.java,v $
- *  $Revision: 1.35 $  $Date: 2005-09-27 15:12:09 $ 
+ *  $Revision: 1.36 $  $Date: 2005-11-11 22:30:50 $ 
  */
 
 import java.util.*;
@@ -248,15 +248,30 @@ protected void cleanModel () {
 	Iterator itr = fModel.getBeans(false).iterator() ;
 	ArrayList err = new ArrayList() ;
 	
+	CodeMethodRef orphanFieldBPInitMethod = null;
 	while (itr.hasNext()) {
 		BeanPart bean = (BeanPart) itr.next();
 		boolean removeFlag = false;
 
 		if (!bean.getSimpleName().equals(BeanPart.THIS_NAME)) {
-			if (bean.getInitExpression() == null && !bean.isInstanceInstantiation() && !bean.isImplicit()){
-				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
-					JavaVEPlugin.log("*Discarting a beanPart " + bean, Level.FINE); //$NON-NLS-1$
-				removeFlag = true;
+			if (bean.getInitExpression() == null && !bean.isInstanceInstantiation() && !bean.isImplicit()){				
+				if(orphanFieldBPInitMethod==null)
+					orphanFieldBPInitMethod = getDefaultOrphanFieldInitMethod();
+				if (orphanFieldBPInitMethod!=null && bean.getDecleration().isInstanceVar()){
+					// The initialization might be done in the field itself - give it the 
+					// default init method and see if an init expression would turn up.
+					bean.addInitMethod(orphanFieldBPInitMethod);
+					TypeVisitor.createFieldInitExpression(fModel.getTypeRef(), bean);
+					if(bean.getInitExpression()==null){
+						if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+							JavaVEPlugin.log("*Discarting a beanPart " + bean, Level.FINE); //$NON-NLS-1$
+						removeFlag = true;
+					}
+				}else{
+					if (JavaVEPlugin.isLoggingLevel(Level.FINE))
+						JavaVEPlugin.log("*Discarting a beanPart " + bean, Level.FINE); //$NON-NLS-1$
+					removeFlag = true;
+				}
 			}
 		}
 
@@ -272,6 +287,16 @@ protected void cleanModel () {
 	for (int i = 0; i < err.size(); i++) {
 		((BeanPart) err.get(i)).dispose();
 	}
+}
+
+private CodeMethodRef getDefaultOrphanFieldInitMethod() {
+	List rootBeans = fModel.getRootBeans();
+	for (Iterator rootItr = rootBeans.iterator(); rootItr.hasNext();) {
+		BeanPart rootBP = (BeanPart) rootItr.next();
+		if(rootBP.getInitMethod()!=null)
+			return rootBP.getInitMethod();
+	}
+	return null;
 }
 
 private String getSharedHandlerName(CodeEventRef eRef) {
