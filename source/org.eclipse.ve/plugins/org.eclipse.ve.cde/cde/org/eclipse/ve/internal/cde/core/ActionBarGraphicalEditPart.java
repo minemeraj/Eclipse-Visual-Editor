@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarGraphicalEditPart.java,v $
- *  $Revision: 1.7 $  $Date: 2005-11-11 23:41:30 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-11 23:47:14 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -356,7 +356,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 					// For OS platforms that don't support alpha
 				}
 				Rectangle shadowRect = actionBarFigure.getBounds().getCopy().translate(13, 10);
-				graphics.fillRoundRectangle(shadowRect, 12, 12);
+				graphics.fillRoundRectangle(shadowRect, 8, 8);
 			}
 		}
 
