@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.20 $  $Date: 2005-08-24 23:30:44 $ 
+ *  $Revision: 1.21 $  $Date: 2005-11-11 22:30:50 $ 
  */
 
 import java.util.*;
@@ -152,24 +152,38 @@ protected void visitAMethod(MethodDeclaration method, IBeanDeclModel model,List 
 			BeanPart bp = (BeanPart)itr.next();
 			if(bp.getInitExpression()==null && bp.isInstanceInstantiation() && bp.getInitMethod()!=null){
 				// no init expression and is in the field map
-				BeanPartDecleration bpDecl = bp.getDecleration();
-				if (bpDecl.getFieldDecl() instanceof FieldDeclaration) {
-					FieldDeclaration fd = (FieldDeclaration) bpDecl.getFieldDecl();
-					if(fd.fragments()!=null && fd.fragments().size()>0){
-						VariableDeclarationFragment f = (VariableDeclarationFragment) fd.fragments().get(0);
-						if(f!=null && f.getInitializer()!=null && !(f.getInitializer() instanceof NullLiteral)){
-							String typeSource = (String) typeRef.getTypeDecl().getProperty(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY);
-							AST ast = fd.getAST();
-							VariableDeclarationStatement vds = ast.newVariableDeclarationStatement((VariableDeclarationFragment) ASTNode.copySubtree(ast, f));
-							vds.setType((Type) ASTNode.copySubtree(ast, fd.getType()));
-							vds.setModifiers(fd.getModifiers());
-							vds.setSourceRange(fd.getStartPosition(), fd.getLength());
-							CodeExpressionRef exp = new CodeExpressionRef(vds, typeSource, bp);
-							exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
-							exp.setState(CodeExpressionRef.STATE_FIELD_EXP, true);
-						}
-					}
-				}
+				createFieldInitExpression(typeRef, bp);
+			}
+		}
+	}
+}
+
+/**
+ * Some beanparts are initialized as fields and hence dont have an init expression.
+ * Once the init method for the beanpart is known, this method is called so that 
+ * the init expression is created.
+ * 
+ * @param typeRef
+ * @param bp
+ * 
+ * @since 1.2.0
+ */
+public static void createFieldInitExpression(CodeTypeRef typeRef, BeanPart bp) {
+	BeanPartDecleration bpDecl = bp.getDecleration();
+	if (bpDecl.getFieldDecl() instanceof FieldDeclaration) {
+		FieldDeclaration fd = (FieldDeclaration) bpDecl.getFieldDecl();
+		if(fd.fragments()!=null && fd.fragments().size()>0){
+			VariableDeclarationFragment f = (VariableDeclarationFragment) fd.fragments().get(0);
+			if(f!=null && f.getInitializer()!=null && !(f.getInitializer() instanceof NullLiteral)){
+				String typeSource = (String) typeRef.getTypeDecl().getProperty(JavaBeanModelBuilder.ASTNODE_SOURCE_PROPERTY);
+				AST ast = fd.getAST();
+				VariableDeclarationStatement vds = ast.newVariableDeclarationStatement((VariableDeclarationFragment) ASTNode.copySubtree(ast, f));
+				vds.setType((Type) ASTNode.copySubtree(ast, fd.getType()));
+				vds.setModifiers(fd.getModifiers());
+				vds.setSourceRange(fd.getStartPosition(), fd.getLength());
+				CodeExpressionRef exp = new CodeExpressionRef(vds, typeSource, bp);
+				exp.setState(CodeExpressionRef.STATE_INIT_EXPR, true);
+				exp.setState(CodeExpressionRef.STATE_FIELD_EXP, true);
 			}
 		}
 	}
