@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.39 $  $Date: 2005-11-04 17:30:52 $
+ *  $Revision: 1.40 $  $Date: 2005-11-11 15:57:16 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -51,29 +51,40 @@ import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
 
 /**
+ * Layout policy helper for SWT Grid Layout.
  * 
  * @since 1.2.0
  */
 public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActionFilter {
 
 	protected ResourceSet rset;
+
 	protected EReference sfLayoutData, sfCompositeControls;
+
 	protected EStructuralFeature sfHorizontalSpan, sfVerticalSpan, sfNumColumns, sfCompositeLayout, sfLabelText;
+
 	protected int defaultHorizontalSpan, defaultVerticalSpan;
+
 	protected EObject[][] layoutTable = null;
+
 	protected Rectangle[] childrenDimensions = null;
+
 	protected int numColumns = -1;
+
 	private IBeanProxy fContainerBeanProxy = null;
+
+	private CompositeProxyAdapter containerProxyAdapter;
+
 	private IBeanProxy fLayoutManagerBeanProxy = null;
+
 	protected JavaClass classLabel = null;
-	
+
 	/*
-	 * Wrapper class for the filler label.
-	 * This is put in the layoutTable at the specific cell location and created when the layoutTable
-	 * is first created. That way we only have to go throught the elaborate checks up front and not
-	 * every time we want to check if it's a filler label.
+	 * Wrapper class for the filler label. This is put in the layoutTable at the specific cell location and created when the layoutTable is first
+	 * created. That way we only have to go throught the elaborate checks up front and not every time we want to check if it's a filler label.
 	 */
 	static class FillerLabel extends EObjectImpl {
+
 		EObject realObject;
 
 		public FillerLabel(EObject realObject) {
@@ -86,6 +97,17 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			fContainerBeanProxy = BeanProxyUtilities.getBeanProxy(getContainer());
 		}
 		return fContainerBeanProxy;
+	}
+
+	protected CompositeProxyAdapter getContainerProxyAdapter() {
+		if (containerProxyAdapter == null) {
+			try {
+				containerProxyAdapter = (CompositeProxyAdapter) BeanProxyUtilities.getBeanProxyHost(getContainer());
+			} catch (ClassCastException e) {
+				// Ignore this. Means it was wrong.
+			}
+		}
+		return containerProxyAdapter;
 	}
 
 	protected IBeanProxy getLayoutManagerBeanProxy() {
@@ -139,6 +161,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	public List getDefaultConstraint(List children) {
 		return Collections.nCopies(children.size(), null);
 	}
+
 	public static final EObject EMPTY = EcoreFactory.eINSTANCE.createEObject();
 
 	private static class AnyFeatureSetVisitor implements Visitor {
@@ -146,12 +169,14 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		public Object isSet(EStructuralFeature feature, Object value) {
 			if (feature.getName().equals(JavaInstantiation.ALLOCATION))
 				return null;
-			else if (feature.isMany() && ((List)value).isEmpty())
+			else if (feature.isMany() && ((List) value).isEmpty())
 				return null;
 			return Boolean.TRUE;
 		}
 	}
+
 	private static final AnyFeatureSetVisitor anyFeatureSetVisitor = new AnyFeatureSetVisitor();
+
 	/**
 	 * Get a representation of the grid. The grid is indexed by [column][row]. The value at each position is the child located at that position. Empty
 	 * cells will have null values.
@@ -163,6 +188,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	public EObject[][] getLayoutTable() {
 		if (layoutTable == null) {
 			int[][] dimensions = getContainerLayoutDimensions();
+			if (dimensions == null)
+				return null;
 			layoutTable = new EObject[dimensions[0].length][dimensions[1].length];
 			numColumns = dimensions[0].length;
 			// If empty container, don't continue.
@@ -178,7 +205,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 
 			int childNum = 0;
 			List children = (List) getContainer().eGet(sfCompositeControls);
-			childrenDimensions = new Rectangle[children.size()];						
+			childrenDimensions = new Rectangle[children.size()];
 			Iterator itr = children.iterator();
 
 			while (itr.hasNext()) {
@@ -219,7 +246,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				// Add the child to the table in all spanned cells
 				for (int i = 0; i < horizontalSpan; i++) {
 					for (int j = 0; j < verticalSpan; j++) {
-						if (classLabel.isInstance(child) && (FeatureValueProviderHelper.visitSetFeatures(child, anyFeatureSetVisitor) == null) && isNoStyleSet(child))
+						if (classLabel.isInstance(child) && (FeatureValueProviderHelper.visitSetFeatures(child, anyFeatureSetVisitor) == null)
+								&& isNoStyleSet(child))
 							layoutTable[col + i][row + j] = new FillerLabel(child);
 						else
 							layoutTable[col + i][row + j] = child;
@@ -264,13 +292,10 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 
 	/**
-	 * Get the dimensions of all the children of this container.  The array is indexed by the Z-order 
-	 * of the children.  The dimensions are packed into a Rectangle according to the following rules:
+	 * Get the dimensions of all the children of this container. The array is indexed by the Z-order of the children. The dimensions are packed into a
+	 * Rectangle according to the following rules:
 	 * 
-	 * rect.x = column position
-	 * rect.y = row position
-	 * rect.width = horizontal span
-	 * rect.height = vertical span
+	 * rect.x = column position rect.y = row position rect.width = horizontal span rect.height = vertical span
 	 * 
 	 * @return array of children dimensions.
 	 * 
@@ -285,6 +310,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 
 	/**
 	 * Get the number of columns in the container's grid layout.
+	 * 
 	 * @return number of columns
 	 * 
 	 * @since 1.0.0
@@ -306,9 +332,12 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			return table[cell.x][cell.y] instanceof FillerLabel;
 		return false;
 	}
+
 	/**
 	 * Get the index of the child occupying the given cell.
-	 * @param cell Cell location to check
+	 * 
+	 * @param cell
+	 *            Cell location to check
 	 * @return the index of the child, or -1 if cell is unoccupied, or an invalid position.
 	 * 
 	 * @since 1.0.0
@@ -338,7 +367,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 
 		if (isFillerLabel(childAtCell))
-			childAtCell = ((FillerLabel)childAtCell).realObject;
+			childAtCell = ((FillerLabel) childAtCell).realObject;
 		List children = (List) getContainer().eGet(sfCompositeControls);
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i).equals(childAtCell)) {
@@ -351,13 +380,16 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 
 	int[] expandableColumns, expandableRows;
+
 	private static final String TARGET_VM_VERSION_KEY = "TARGET_VM_VERSION"; //$NON-NLS-1$
+
 	private int targetVMVersion = -1;
+
 	private EditDomain fEditDomain;
+
 	/**
-	 * Return the GridLayout dimensions which is 2 dimensional array that contains 2 arrays:
-	 *  1. an int array of all the column widths
-	 *  2. an int array of all the row heights
+	 * Return the GridLayout dimensions which is 2 dimensional array that contains 2 arrays: 1. an int array of all the column widths 2. an int array
+	 * of all the row heights
 	 */
 	public int[][] getContainerLayoutDimensions() {
 		int[] columnWidths = null, rowHeights = null;
@@ -365,17 +397,21 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		result[0] = new int[0];
 		result[1] = new int[0];
 
+		if (isContainerBeanInvalid())
+			return null;
+
 		// Hack to grab the column/row information from the private fields of a GridLayout
 		// The helper class org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper is used to calculate the column widths and row heights
 		// Prior to 3.1 these were in package protected fields on GridLayout but these are no longer available so the helper class
 		// computes the values
 		String targetVMHelperTypeName = null;
-		if(getTargetVMSWTVersion() >= 3100){
+		if (getTargetVMSWTVersion() >= 3100) {
 			targetVMHelperTypeName = "org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper"; //$NON-NLS-1$
 		} else {
-			targetVMHelperTypeName = "org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper_30";		 //$NON-NLS-1$
-		}		
-		IBeanTypeProxy gridLayoutHelperType = getLayoutManagerBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(targetVMHelperTypeName); //$NON-NLS-1$
+			targetVMHelperTypeName = "org.eclipse.ve.internal.swt.targetvm.GridLayoutHelper_30"; //$NON-NLS-1$
+		}
+		IBeanTypeProxy gridLayoutHelperType = getLayoutManagerBeanProxy().getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
+				targetVMHelperTypeName); //$NON-NLS-1$
 		IBeanProxy gridLayoutHelperProxy = null;
 		try {
 			gridLayoutHelperProxy = gridLayoutHelperType.newInstance();
@@ -418,24 +454,33 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		} catch (ThrowableProxy exc) {
 			return null;
 		}
-		
+
 		return result;
 	}
 
 	/**
-	 * Return the spacing information for the GridLayout.  
-	 * This information is packed into a Rectangle object, as follows:
+	 * @return
 	 * 
-	 * Rectangle.x = RowLayout.marginWidth
-	 * Recatngle.y = RowLayout.marginHeight
-	 * Recatngle.width = RowLayout.horizontalSpacing
-	 * Recatngle.height = RowLayout.verticalSpacing
+	 * @since 1.2.0
+	 */
+	protected boolean isContainerBeanInvalid() {
+		return getContainerBeanProxy() == null || !getContainerBeanProxy().isValid();
+	}
+
+	/**
+	 * Return the spacing information for the GridLayout. This information is packed into a Rectangle object, as follows:
+	 * 
+	 * Rectangle.x = RowLayout.marginWidth Recatngle.y = RowLayout.marginHeight Recatngle.width = RowLayout.horizontalSpacing Recatngle.height =
+	 * RowLayout.verticalSpacing
 	 * 
 	 * @return Rectangle representing the GridLayout's spacing
 	 * 
 	 * @since 1.0.0
 	 */
 	public Rectangle getContainerLayoutSpacing() {
+
+		if (isContainerBeanInvalid())
+			return null;
 		Rectangle result = null;
 
 		// Grab the spacing information from the fields of a GridLayout
@@ -471,62 +516,14 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	 * Return the GridLayout origin
 	 */
 	public Rectangle getContainerClientArea() {
-		if (getContainerBeanProxy() != null) {
-			try {
-				// This needs to be done in a syncExec because it needs to access the SWT display thread
-				IRectangleBeanProxy result = (IRectangleBeanProxy) JavaStandardSWTBeanConstants.invokeSyncExec(getContainerBeanProxy()
-						.getProxyFactoryRegistry(), new DisplayManager.DisplayRunnable() {
-
-					public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
-						IBeanProxy aContainerBeanProxy = BeanProxyUtilities.getBeanProxy(getContainer());
-						IMethodProxy getContainerClientArea = aContainerBeanProxy.getProxyFactoryRegistry().getMethodProxyFactory().getMethodProxy(
-								aContainerBeanProxy.getTypeProxy().getTypeName(), "getClientArea", null); //$NON-NLS-1$
-						if (getContainerClientArea != null) {
-							IRectangleBeanProxy rectangleProxy = (IRectangleBeanProxy) getContainerClientArea
-									.invokeCatchThrowableExceptions(aContainerBeanProxy);
-
-							// Check to see if this is a container that extends Decorations (Shell, Dialog, etc)
-							IBeanTypeProxy decorationsType = displayProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy("org.eclipse.swt.widgets.Decorations"); //$NON-NLS-1$
-							if (aContainerBeanProxy.getTypeProxy().isKindOf(decorationsType)) {
-								IMethodProxy getDecorationsComputeTrim = aContainerBeanProxy.getProxyFactoryRegistry().getMethodProxyFactory().getMethodProxy(aContainerBeanProxy.getTypeProxy().getTypeName(), "computeTrim", new String[] { "int", "int", "int", "int" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-								if (getDecorationsComputeTrim != null) {
-									// Create the parameters for the computeTrim method
-									IStandardBeanProxyFactory fac = aContainerBeanProxy.getProxyFactoryRegistry().getBeanProxyFactory();
-									IIntegerBeanProxy xProxy = fac.createBeanProxyWith(rectangleProxy.getX());
-									IIntegerBeanProxy yProxy = fac.createBeanProxyWith(rectangleProxy.getY());
-									IIntegerBeanProxy widthProxy = fac.createBeanProxyWith(rectangleProxy.getWidth());
-									IIntegerBeanProxy heightProxy = fac.createBeanProxyWith(rectangleProxy.getHeight());
-
-									IRectangleBeanProxy trimProxy = (IRectangleBeanProxy) getDecorationsComputeTrim.invoke(aContainerBeanProxy,
-											new IBeanProxy[] { xProxy, yProxy, widthProxy, heightProxy});
-									if (trimProxy != null) {
-										IStandardSWTBeanProxyFactory fac2 = (IStandardSWTBeanProxyFactory) aContainerBeanProxy
-												.getProxyFactoryRegistry().getBeanProxyFactoryExtension(IStandardSWTBeanProxyFactory.REGISTRY_KEY);
-										IRectangleBeanProxy newRectProxy = fac2.createBeanProxyWith(trimProxy.getX() * -1, trimProxy.getY() * -1,
-												rectangleProxy.getWidth(), rectangleProxy.getHeight());
-										return newRectProxy;
-									}
-								}
-							}
-							return rectangleProxy;
-						} else {
-							return null;
-						}
-					}
-				});
-				if (result != null) { return new Rectangle(result.getX(), result.getY(), result.getWidth(), result.getHeight()); }
-			} catch (ThrowableProxy e) {
-			} catch (RunnableException e) {
-			}
-		}
+		if (getContainerProxyAdapter() != null) { return getContainerProxyAdapter().getClientArea().getCopy(); }
 		return null;
 	}
 
 	/*
-	 * Return true if the container has no children, false if it does.
-	 * Since Swing's GridBagLayout doesn't refresh it's layout information if all the components 
-	 * have been removed, we can't rely on the getLayoutDimensions() call to return the correct information. 
-	 * Instead we need to first query the parent container to see if it has any children.
+	 * Return true if the container has no children, false if it does. Since Swing's GridBagLayout doesn't refresh it's layout information if all the
+	 * components have been removed, we can't rely on the getLayoutDimensions() call to return the correct information. Instead we need to first query
+	 * the parent container to see if it has any children.
 	 */
 	public boolean isContainerEmpty() {
 		if (getContainerBeanProxy() != null) {
@@ -606,7 +603,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 					int index = children.indexOf(control);
 					Rectangle rect = getChildrenDimensions()[index];
 					RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(childEditPart), null, false);
-					if (spanDirection == PositionConstants.EAST) {
+					if (spanDirection == PositionConstants.EAST || spanDirection == PositionConstants.WEST) {
 						int newgridDataWidth = endCellLocation.x - childCellLocation.x + 1;
 						if (newgridDataWidth != rect.width) {
 							Object widthObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(newgridDataWidth)); //$NON-NLS-1$
@@ -668,7 +665,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 									for (int i = 0; i < rect.width; i++) {
 										childCols.add(new Integer(rect.x + i));
 									}
-									// For adding a row, add filler labels in cells where the child is not occupied 
+									// For adding a row, add filler labels in cells where the child is not occupied
 									for (int i = 0; i < numRowsIncrement; i++) {
 										componentCB.append(createFillerLabelsForSpannedRowCommand(rect.y + rect.height, childCols));
 									}
@@ -700,7 +697,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 					cb.append(componentCB.getCommand());
 				}
 			} catch (Exception e) {
-				return UnexecutableCommand.INSTANCE;	// A feature was not valid for the given data. Usually due to child data not being a Griddata.
+				return UnexecutableCommand.INSTANCE; // A feature was not valid for the given data. Usually due to child data not being a Griddata.
 			}
 		}
 		if (cb.isEmpty()) { return UnexecutableCommand.INSTANCE; }
@@ -710,8 +707,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	/*
 	 * Create the filler label object used to help keep the positioning of the controls within the composite container
 	 * 
-	 * Note: Since this is a special label with no text (to keep it invisible in the layout), we'll create the 
-	 * 		 allocation here so it will cause the LabelContainmentHandler NOT to set the text property.  
+	 * Note: Since this is a special label with no text (to keep it invisible in the layout), we'll create the allocation here so it will cause the
+	 * LabelContainmentHandler NOT to set the text property.
 	 */
 	public IJavaInstance createFillerLabelObject() {
 		PTClassInstanceCreation ic = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation();
@@ -730,7 +727,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		JavaAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(ic);
 		return BeanUtilities.createJavaObject("org.eclipse.swt.widgets.Label", rset, alloc); //$NON-NLS-1$
 	}
-	
+
 	public Command createNumColumnsCommand(int numCols) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject parent = (EObject) policy.getContainer();
@@ -751,12 +748,12 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			return UnexecutableCommand.INSTANCE;
 		}
 	}
-	
+
 	/*
-	 * To add a row, we must add the filler labels and the requested control prior to the control
-	 * in the first column on the row after the insertion point. Add filler except at the column position.
+	 * To add a row, we must add the filler labels and the requested control prior to the control in the first column on the row after the insertion
+	 * point. Add filler except at the column position.
 	 */
-	public Command createFillerLabelsForNewRowCommand (Object addedControl, int atRow, int atColumn, Request request) {
+	public Command createFillerLabelsForNewRowCommand(Object addedControl, int atRow, int atColumn, Request request) {
 		EObject[][] table = getLayoutTable();
 		if (table[0].length < 1)
 			return null;
@@ -766,7 +763,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 
 		if (atColumn == -1)
 			atColumn = numColumns - 1;
-		
+
 		// Do not allow adding the row if inserting through a control that spans vertically
 		if (atRow < table[0].length - 1) {
 			EObject child = table[atColumn][atRow];
@@ -776,17 +773,17 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 					return UnexecutableCommand.INSTANCE;
 			}
 		}
-		
+
 		CommandBuilder cb = new CommandBuilder();
 		// if this the last row, we must check to see if any cells are empty and replace them
 		// with filler labels so the new object falls into the correct cell location in the new row.
 		if (atRow >= table[0].length) {
 			for (int i = 0; i < table.length; i++) {
-				if (table[i][table[0].length-1] == EMPTY)
+				if (table[i][table[0].length - 1] == EMPTY)
 					cb.append(policy.getCreateCommand(createFillerLabelObject(), null).getCommand());
 			}
 		}
-		
+
 		EObject beforeObject = findNextValidObject(0, atRow);
 		// Add the row by adding filler labels and inserting the control at the specific column position.
 		// If any of the controls spans vertically, don't add filler, just expand it one more row.
@@ -816,10 +813,9 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 
 	/*
-	 * To add a row, we must add the filler labels before the first object on the next row
-	 * except for the column the spanned control is spanning into.
+	 * To add a row, we must add the filler labels before the first object on the next row except for the column the spanned control is spanning into.
 	 */
-	private Command createFillerLabelsForSpannedRowCommand (int atRow, List atColumns) {
+	private Command createFillerLabelsForSpannedRowCommand(int atRow, List atColumns) {
 		EObject[][] table = getLayoutTable();
 		if (table[0].length < 1)
 			return null;
@@ -855,16 +851,16 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 
 	/*
-	 * Put a new control into a cell that is EMPTY. 
+	 * Put a new control into a cell that is EMPTY.
 	 */
-	public Command createAddToEmptyCellCommand (Object addedControl, Point cell, Request request) {
+	public Command createAddToEmptyCellCommand(Object addedControl, Point cell, Request request) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject[][] table = getLayoutTable();
 		// If there is only one row (or none), no need to add empty labels.
 		if (table.length == 0 || table[0].length == 0 || cell.x >= table.length || cell.y >= table[0].length)
 			return null;
 
-		// Find the next occupied cell to be used as the before object. 
+		// Find the next occupied cell to be used as the before object.
 		EObject beforeObject = findNextValidObject(cell.x, cell.y);
 
 		// Now go through the row and replace the empty cell with the new object... also
@@ -883,7 +879,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	/*
 	 * Insert filler labels at the end of each row except the one the control was added to.
 	 */
-	public Command createInsertColumnWithinRowCommands (int atColumn, int atRow, Object addedControl, Request request) {
+	public Command createInsertColumnWithinRowCommands(int atColumn, int atRow, Object addedControl, Request request) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject[][] table = getLayoutTable();
 		// If there is only one row (or none), no need to add empty labels.
@@ -892,17 +888,17 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		List children = (List) getContainer().eGet(sfCompositeControls);
 		if (children.isEmpty())
 			return null;
-		// Add a filler label prior to each object that is in the first position of each row. 
+		// Add a filler label prior to each object that is in the first position of each row.
 		// This will in effect add a label to end of the previous row.
 		// This must be done for each row except the row where the actual control has been added.
 		// Also have to handle the case in which the before control spans vertically.
 		EObject beforeObject = table[atColumn][atRow];
 		if (isFillerLabel(beforeObject))
-			beforeObject = ((FillerLabel)beforeObject).realObject;
+			beforeObject = ((FillerLabel) beforeObject).realObject;
 		for (int i = 0; i < table[0].length; i++) {
 			EObject child = table[atColumn][i];
 			if (isFillerLabel(child))
-				child = ((FillerLabel)child).realObject;
+				child = ((FillerLabel) child).realObject;
 			int index = children.indexOf(child);
 
 			// This is the row where the new control is put
@@ -933,11 +929,11 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 						else
 							child = null;
 					}
-				} else if (i + 1 < table[0].length && table[0][i+1] != EMPTY) {
-					child = table[0][i+1];
+				} else if (i + 1 < table[0].length && table[0][i + 1] != EMPTY) {
+					child = table[0][i + 1];
 					if (isFillerLabel(child))
-						child = ((FillerLabel)child).realObject;
-				} else 
+						child = ((FillerLabel) child).realObject;
+				} else
 					child = null;
 				cb.append(policy.getCreateCommand(createFillerLabelObject(), child).getCommand());
 			}
@@ -946,16 +942,16 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 
 	/*
-	 * Insert filler labels in each row at a specific column position in order to move the controls
-	 * over one column yet maintain all other row/column positions before that column.
+	 * Insert filler labels in each row at a specific column position in order to move the controls over one column yet maintain all other row/column
+	 * positions before that column.
 	 */
-	public Command createInsertColumnCommands (Object addedControl, Request request, int atColumn, int atRow, boolean isLastColumn) {
+	public Command createInsertColumnCommands(Object addedControl, Request request, int atColumn, int atRow, boolean isLastColumn) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject[][] table = getLayoutTable();
 		List children = (List) getContainer().eGet(sfCompositeControls);
 		if (children.isEmpty())
 			return null;
-		// Add a filler label prior to each object that is in the atColumn of each row. 
+		// Add a filler label prior to each object that is in the atColumn of each row.
 		// This must be done for each row except the row where the actual control has been added.
 		for (int i = 0; i < table[0].length; i++) {
 			if (isLastColumn && i == 0)
@@ -971,15 +967,15 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			if (table[atColumn][i] != EMPTY) {
 				EObject child = table[atColumn][i];
 				if (isFillerLabel(child))
-					child = ((FillerLabel)child).realObject;
+					child = ((FillerLabel) child).realObject;
 				if (i == atRow) {
 					// This is the row where the new control is put
 					int index = children.indexOf(child);
 					if (index != -1) {
 						Rectangle rect = childrenDimensions[index];
-						//Handle case where the before child is spanned vertically and the starting
+						// Handle case where the before child is spanned vertically and the starting
 						// row is not this row. Need to get the next valid child.
-						if (rect.height != defaultVerticalSpan && rect.y != i){
+						if (rect.height != defaultVerticalSpan && rect.y != i) {
 							if (atColumn + 1 < numColumns)
 								child = findNextValidObject(atColumn + 1, i);
 							else if (i + 1 < table[0].length)
@@ -1033,6 +1029,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			cb.append(getCommandForAddCreateMoveChild(request, addedControl, null));
 		return cb.getCommand();
 	}
+
 	public Command getFillerLabelsForDeletedControlCommands(EObject deletedChild) {
 		List children = (List) getContainer().eGet(sfCompositeControls);
 		if (children.isEmpty())
@@ -1062,7 +1059,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		return cb.getCommand();
 
 	}
-	private Command createFillerLabelsForDeletedControlCommands (EObject deletedChild) {
+
+	private Command createFillerLabelsForDeletedControlCommands(EObject deletedChild) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject[][] table = getLayoutTable();
 		// If there is only one row (or none), no need to add empty labels.
@@ -1093,7 +1091,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		return cb.getCommand();
 	}
 
-	public Command createFillerLabelsForMovedControlCommands (EObject movedChild, EObject beforeChild) {
+	public Command createFillerLabelsForMovedControlCommands(EObject movedChild, EObject beforeChild) {
 		CommandBuilder cb = new CommandBuilder();
 		EObject[][] table = getLayoutTable();
 		// If there is only one row (or none), no need to add empty labels.
@@ -1148,13 +1146,13 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return cb.getCommand();
 	}
+
 	/*
 	 * Create the command to set the horizontalSpan value to the default value.
 	 */
 	public Command createHorizontalSpanDefaultCommand(EObject control) {
 		return createHorizontalSpanCommand(control, defaultHorizontalSpan);
 	}
-
 
 	/*
 	 * Create the command to set the verticalSpan value of the GridData for a child control.
@@ -1210,10 +1208,11 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
-	 * Enable the Show/Hide Grid action on the Beans viewer depending on the layout EditPolicy
-	 * on the graphical viewer side.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String) Enable the Show/Hide Grid action on the
+	 *      Beans viewer depending on the layout EditPolicy on the graphical viewer side.
 	 */
 	public boolean testAttribute(Object target, String name, String value) {
 		if (target instanceof EditPart) {
@@ -1227,18 +1226,19 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return false;
 	}
+
 	/*
-	 * Return true if the object is a filler label.
-	 * This helper class should only be used when the object passed in (i.e. control) is an object of 
-	 * the internal layoutTable. 
+	 * Return true if the object is a filler label. This helper class should only be used when the object passed in (i.e. control) is an object of the
+	 * internal layoutTable.
 	 */
 	private boolean isFillerLabel(Object control) {
 		return control instanceof FillerLabel;
 	}
+
 	/*
-	 * If the objects in a row are all filler labels, except the ignoreObject, remove them 
+	 * If the objects in a row are all filler labels, except the ignoreObject, remove them
 	 */
-	public Command createRemoveRowCommand (int atRow, EObject ignoreObject) {
+	public Command createRemoveRowCommand(int atRow, EObject ignoreObject) {
 		EObject[][] table = getLayoutTable();
 		CommandBuilder cb = new CommandBuilder();
 		boolean empty = true;
@@ -1251,16 +1251,17 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		if (empty) {
 			for (int i = 0; i < table.length; i++) {
 				if (isFillerLabel(table[i][atRow]))
-					cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[i][atRow]).realObject).getCommand());
+					cb.append(policy.getDeleteDependentCommand(((FillerLabel) table[i][atRow]).realObject).getCommand());
 			}
 			return cb.getCommand();
 		}
 		return null;
 	}
+
 	/*
-	 * If the objects in a column are all filler labels, except the ignoreObject, remove them 
+	 * If the objects in a column are all filler labels, except the ignoreObject, remove them
 	 */
-	public Command createRemoveColumnCommand (int atColumn, EObject ignoreObject, int projectNumColumns) {
+	public Command createRemoveColumnCommand(int atColumn, EObject ignoreObject, int projectNumColumns) {
 		EObject[][] table = getLayoutTable();
 		CommandBuilder cb = new CommandBuilder();
 		boolean empty = true;
@@ -1274,7 +1275,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			// Remove the columns and reduce the numColumns by 1
 			for (int i = 0; i < table[0].length; i++) {
 				if (isFillerLabel(table[atColumn][i]))
-					cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[atColumn][i]).realObject).getCommand());
+					cb.append(policy.getDeleteDependentCommand(((FillerLabel) table[atColumn][i]).realObject).getCommand());
 			}
 			if (projectNumColumns != 1)
 				cb.append(createNumColumnsCommand(projectNumColumns - 1));
@@ -1282,11 +1283,10 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return null;
 	}
-	
+
 	/*
-	 * For spanning horizontally, walk through the row starting atColumn and delete empty or 
-	 * filler labels so we can expand into the empty columns. If no empty cells, numColIncrement
-	 * is returned so the number of columns can be incremented on the overall grid.
+	 * For spanning horizontally, walk through the row starting atColumn and delete empty or filler labels so we can expand into the empty columns. If
+	 * no empty cells, numColIncrement is returned so the number of columns can be incremented on the overall grid.
 	 */
 	private int createHorizontalSpanWithEmptyColumnCommands(CommandBuilder cb, int atRow, int atColumn, int childHeight, int numColsIncrement) {
 		EObject[][] table = getLayoutTable();
@@ -1295,7 +1295,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				if (isHorizontalSpaceAvailable(i, atRow, atRow + childHeight - 1)) {
 					for (int j = atRow; j < atRow + childHeight; j++) {
 						if (isFillerLabel(table[i][j]))
-							cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[i][j]).realObject).getCommand());
+							cb.append(policy.getDeleteDependentCommand(((FillerLabel) table[i][j]).realObject).getCommand());
 					}
 					numColsIncrement--;
 				}
@@ -1303,11 +1303,11 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return numColsIncrement;
 	}
+
 	/*
-	 * For spanning vertically, walk through the rows starting atRow and atColumn and delete empty or 
-	 * filler labels so we can expand into the empty rows. If no empty cells, numRowIncrement
-	 * is returned so the number of rows can be incremented on the overall grid by creating additional
-	 * filler labels for the additional rows.
+	 * For spanning vertically, walk through the rows starting atRow and atColumn and delete empty or filler labels so we can expand into the empty
+	 * rows. If no empty cells, numRowIncrement is returned so the number of rows can be incremented on the overall grid by creating additional filler
+	 * labels for the additional rows.
 	 */
 	private int createVerticalSpanWithEmptyRowCommands(CommandBuilder cb, int atRow, int atColumn, int childWidth, int numRowsIncrement) {
 		EObject[][] table = getLayoutTable();
@@ -1316,7 +1316,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				if (isVerticalSpaceAvailable(i, atColumn, atColumn + childWidth - 1)) {
 					for (int j = atColumn; j < atColumn + childWidth; j++) {
 						if (isFillerLabel(table[j][i]))
-							cb.append(policy.getDeleteDependentCommand(((FillerLabel)table[j][i]).realObject).getCommand());
+							cb.append(policy.getDeleteDependentCommand(((FillerLabel) table[j][i]).realObject).getCommand());
 					}
 					numRowsIncrement--;
 				}
@@ -1326,10 +1326,9 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 
 	/*
-	 * Find next object in the table that is not EMPTY and doesn't vertically span more than one row.
-	 * Note: filler labels are valid
+	 * Find next object in the table that is not EMPTY and doesn't vertically span more than one row. Note: filler labels are valid
 	 */
-	private EObject findNextValidObject (int columnStart, int rowStart) {
+	private EObject findNextValidObject(int columnStart, int rowStart) {
 		EObject[][] table = getLayoutTable();
 		if (table.length == 0 || table[0].length == 0)
 			return null;
@@ -1337,7 +1336,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		if (children.isEmpty())
 			return null;
 
-		// Find the next occupied cell to be used as the before object. 
+		// Find the next occupied cell to be used as the before object.
 		EObject foundObject = null;
 		int col = columnStart, row = rowStart;
 		boolean firstpass = true;
@@ -1346,7 +1345,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				if (table[j][i] != EMPTY) {
 					EObject child = table[j][i];
 					if (isFillerLabel(child))
-						child = ((FillerLabel)child).realObject;
+						child = ((FillerLabel) child).realObject;
 					int index = children.indexOf(child);
 					// If the row is going through a control that is spanning vertically more than one
 					// row, skip it. This is checked by comparing this control's starting y (row) value
@@ -1362,6 +1361,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return foundObject;
 	}
+
 	/*
 	 * Return true if the cells atRow from columnStart to columnEnd have either an EMPTY object or is a filler label.
 	 */
@@ -1378,6 +1378,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return result;
 	}
+
 	/*
 	 * Return true if the cells atCol from rowStart to rowEnd have either an EMPTY object or is a filler label.
 	 */
@@ -1394,9 +1395,9 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return result;
 	}
+
 	/*
-	 * Helper method to determine if there are any styles set for this label.
-	 * Look for SWT.NONE as the second argument.
+	 * Helper method to determine if there are any styles set for this label. Look for SWT.NONE as the second argument.
 	 */
 	private boolean isNoStyleSet(IJavaObjectInstance child) {
 		if (child != null && child.isParseTreeAllocation()) {
@@ -1413,41 +1414,46 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 		return false;
 	}
-	private int getTargetVMSWTVersion(){
-		
-		if(targetVMVersion != -1) return targetVMVersion;
+
+	private int getTargetVMSWTVersion() {
+
+		if (targetVMVersion != -1)
+			return targetVMVersion;
 		// This is cache'd on the edit domain for performance
 		Integer editDomainTargetVMVersion = (Integer) fEditDomain.getData(TARGET_VM_VERSION_KEY);
-		if(editDomainTargetVMVersion != null){
+		if (editDomainTargetVMVersion != null) {
 			targetVMVersion = editDomainTargetVMVersion.intValue();
 			return targetVMVersion;
 		}
-		// Get the target VM version for the first time for the edit domain from the target VM itself 
-		ProxyFactoryRegistry proxyFactoryRegistry = getLayoutManagerBeanProxy().getProxyFactoryRegistry();		
-		IExpression expression = proxyFactoryRegistry.getBeanProxyFactory().createExpression();		
+		// Get the target VM version for the first time for the edit domain from the target VM itself
+		ProxyFactoryRegistry proxyFactoryRegistry = getLayoutManagerBeanProxy().getProxyFactoryRegistry();
+		IExpression expression = proxyFactoryRegistry.getBeanProxyFactory().createExpression();
 		// Evaluate the expression "org.eclipse.swt.SWT.getVersion()";
-		IProxyBeanType swtBeanTypeProxy = proxyFactoryRegistry.getBeanTypeProxyFactory().getBeanTypeProxy(expression,"org.eclipse.swt.SWT"); //$NON-NLS-1$
-		IProxyMethod getVersionMethodProxy = swtBeanTypeProxy.getMethodProxy(expression,"getVersion"); //$NON-NLS-1$
-		ExpressionProxy proxy = expression.createSimpleMethodInvoke(getVersionMethodProxy,swtBeanTypeProxy,null,true);
-		proxy.addProxyListener(new ProxyListener(){
-			public void proxyResolved(ProxyEvent event) {	
-				targetVMVersion = ((IIntegerBeanProxy)event.getProxy()).intValue();
-				fEditDomain.setData(TARGET_VM_VERSION_KEY,new Integer(targetVMVersion));
+		IProxyBeanType swtBeanTypeProxy = proxyFactoryRegistry.getBeanTypeProxyFactory().getBeanTypeProxy(expression, "org.eclipse.swt.SWT"); //$NON-NLS-1$
+		IProxyMethod getVersionMethodProxy = swtBeanTypeProxy.getMethodProxy(expression, "getVersion"); //$NON-NLS-1$
+		ExpressionProxy proxy = expression.createSimpleMethodInvoke(getVersionMethodProxy, swtBeanTypeProxy, null, true);
+		proxy.addProxyListener(new ProxyListener() {
+
+			public void proxyResolved(ProxyEvent event) {
+				targetVMVersion = ((IIntegerBeanProxy) event.getProxy()).intValue();
+				fEditDomain.setData(TARGET_VM_VERSION_KEY, new Integer(targetVMVersion));
 			}
-			public void proxyNotResolved(ProxyEvent event) {				
+
+			public void proxyNotResolved(ProxyEvent event) {
 			}
-			public void proxyVoid(ProxyEvent event) {				
+
+			public void proxyVoid(ProxyEvent event) {
 			}
-		});	
+		});
 		try {
 			expression.invokeExpression();
 		} catch (Exception e) {
 			JavaVEPlugin.log("Unable to work out target SWT version for GridLayoutHelper", Level.WARNING); //$NON-NLS-1$	
 			targetVMVersion = 3100;
 		}
-		if(targetVMVersion == -1){
+		if (targetVMVersion == -1) {
 			JavaVEPlugin.log("Unable to work out target SWT version for GridLayoutHelper", Level.WARNING); //$NON-NLS-1$
-			targetVMVersion = 3100;			
+			targetVMVersion = 3100;
 		}
 		return targetVMVersion;
 	}
@@ -1456,12 +1462,10 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		fEditDomain = editDomain;
 	}
 
-	
 	public int getDefaultHorizontalSpan() {
 		return defaultHorizontalSpan;
 	}
 
-	
 	public int getDefaultVerticalSpan() {
 		return defaultVerticalSpan;
 	}
@@ -1478,7 +1482,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				cb.append(policy.getAddCommand(Collections.singletonList(child), beforeObject).getCommand());
 			else
 				cb.append(policy.getMoveChildrenCommand(Collections.singletonList(child), beforeObject));
-			
+
 		}
 		return cb.getCommand();
 	}
