@@ -11,11 +11,12 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.16 $  $Date: 2005-11-11 23:20:54 $ 
+ *  $Revision: 1.17 $  $Date: 2005-11-12 00:04:03 $ 
  */
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.gef.EditPart;
@@ -305,6 +306,8 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 	 */
 	public void dispose() {
 		if(workbenchWindow != null){
+			// TODO - temporary to find out who is disposing this when they shouldn't... causing exceptions on the customize layout window
+			CDEPlugin.getPlugin().getLogger().log(new RuntimeException(), Level.WARNING);
 			workbenchWindow.getSelectionService().removeSelectionListener(selListener);
 			workbenchWindow.getPartService().removePartListener(alignmentWindowPartListener);
 		}
