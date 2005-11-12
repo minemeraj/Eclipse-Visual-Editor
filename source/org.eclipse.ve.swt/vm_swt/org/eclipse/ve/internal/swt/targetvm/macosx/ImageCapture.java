@@ -10,12 +10,18 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-15 03:12:38 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-12 14:32:19 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.macosx;
 
+import java.lang.reflect.*;
+
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.internal.carbon.CGRect;
+import org.eclipse.swt.internal.carbon.OS;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * Image Capture for Mac OS X platforms.
@@ -24,6 +30,18 @@ import org.eclipse.swt.widgets.Control;
  */
 
 public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapture {
+	
+	private static Field shellHandleField = null;
+	
+	static {
+		
+		try {
+			shellHandleField = Shell.class.getDeclaredField("shellHandle");
+			shellHandleField.setAccessible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	protected Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren) {
 		
@@ -31,13 +49,64 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		if (rect.width <= 0 || rect.height <= 0)
 			return null;
 		
-		Image image = new Image(control.getDisplay(), Math.min(rect.width, maxWidth), Math.min(rect.height, maxHeight));
+		// int width = Math.min(rect.width, maxWidth);
+		// int height = Math.min(rect.height, maxHeight);
+				
+		int controlHandle = -1;
+		int shellHandle = -1;
 		
-		GC gc = new GC(control);
-		gc.copyArea(image, 0, 0);
-		gc.dispose();
+		if (control instanceof Shell)
+		{
+			try {
+				shellHandle = shellHandleField.getInt(control);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (shellHandle != -1)
+			{
+				controlHandle = OS.HIViewGetRoot(shellHandle);
+			}
+		}
+		else
+		{
+			controlHandle = control.handle;
+			try {
+				shellHandle = shellHandleField.getInt(control.getShell());
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
-		return image;
+		// Get the current active window
+		int activeWindow = OS.ActiveNonFloatingWindow();
+		
+		
+		// Activate the shell
+		OS.ShowWindow(shellHandle);
+				
+		CGRect bounds = new CGRect();
+		int[] imageHandle = new int[1];
+		OS.HIViewCreateOffscreenImage(controlHandle, 0, bounds, imageHandle);
+		control.redraw();
+	
+		// Restore the active window
+		OS.ShowWindow(activeWindow);
+		
+		Image resultImage = null;
+		if (imageHandle[0] > 0)
+		{
+			resultImage = Image.carbon_new(control.getDisplay(), SWT.BITMAP, imageHandle[0], 0);
+		}
+		
+		return resultImage;
 	}
 
 }
