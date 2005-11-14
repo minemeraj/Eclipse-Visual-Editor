@@ -19,12 +19,12 @@ import org.eclipse.jface.databinding.Converter;
 import org.eclipse.jface.databinding.IChangeEvent;
 import org.eclipse.jface.databinding.IChangeListener;
 import org.eclipse.jface.databinding.IConverter;
-import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatableValue;
 import org.eclipse.jface.databinding.IValidator;
 import org.eclipse.jface.databinding.IdentityConverter;
 import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.jface.databinding.SWTProperties;
+import org.eclipse.jface.databinding.SWTUpdatableFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -486,8 +486,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 	public void testScenario13() throws BindingException {
 		// Changing the update policy to be not automatic, but on explicit
 		// method call (e.g. triggered by a button click).
-		getDbc().setUpdateTime(IDataBindingContext.TIME_LATE);
-		getDbc().setValidationTime(IDataBindingContext.TIME_LATE);
+		getSWTUpdatableFactory().setUpdateTime(SWTUpdatableFactory.TIME_LATE);
+		getSWTUpdatableFactory().setValidationTime(SWTUpdatableFactory.TIME_LATE);
 		Text text = new Text(getComposite(), SWT.BORDER);
 		getDbc().bind(text, new PropertyDescription(adventure, "name"), null);
 		// uncomment the following line to see what's happening
@@ -507,7 +507,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 	public void testScenario14() throws BindingException {
 		Text t1 = new Text(getComposite(), SWT.BORDER);
 		Text t2 = new Text(getComposite(), SWT.BORDER);
-		getDbc().setUpdateTime(IDataBindingContext.TIME_EARLY);
+		getSWTUpdatableFactory().setUpdateTime(SWTUpdatableFactory.TIME_EARLY);
 		getDbc().bind(t1, new PropertyDescription(adventure, "name"), null);
 		getDbc().bind(t2, new PropertyDescription(adventure, "name"), null);
 		final int[] counter = { 0 };
