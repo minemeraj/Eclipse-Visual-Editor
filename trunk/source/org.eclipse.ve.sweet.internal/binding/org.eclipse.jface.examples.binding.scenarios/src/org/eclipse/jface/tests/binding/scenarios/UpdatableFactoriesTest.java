@@ -12,18 +12,14 @@
  *  Created Oct 21, 2005 by Gili Mendel
  * 
  *  $RCSfile: UpdatableFactoriesTest.java,v $
- *  $Revision: 1.6 $  $Date: 2005-11-10 05:21:12 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-14 23:31:40 $ 
  */
 
 package org.eclipse.jface.tests.binding.scenarios;
 
 import java.util.Map;
 
-import org.eclipse.jface.databinding.BindingException;
-import org.eclipse.jface.databinding.IChangeListener;
-import org.eclipse.jface.databinding.IUpdatable;
-import org.eclipse.jface.databinding.IUpdatableFactory;
-import org.eclipse.jface.databinding.IValidationContext;
+import org.eclipse.jface.databinding.*;
 
 public class UpdatableFactoriesTest extends ScenariosTestCase {
 
@@ -66,7 +62,7 @@ public class UpdatableFactoriesTest extends ScenariosTestCase {
 		}
 
 		public IUpdatable createUpdatable(Map properties, Object description,
-				IValidationContext validationContext) {
+				IDataBindingContext bindingContext, IValidationContext validationContext) {
 			if (c.isInstance(description)) {
 				return new TestIUpdatable() {
 					public void dispose() {
