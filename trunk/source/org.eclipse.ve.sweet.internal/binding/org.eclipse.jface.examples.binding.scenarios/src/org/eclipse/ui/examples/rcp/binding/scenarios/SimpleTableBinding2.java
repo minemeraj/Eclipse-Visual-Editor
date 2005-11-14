@@ -53,7 +53,7 @@ public class SimpleTableBinding2 extends Composite {
 				"lodgings"), null);
 
 		selectedLodging = (IUpdatableValue) dbc.createUpdatable(new PropertyDescription(tableViewer,
-				"selection"));
+				ViewersProperties.SINGLE_SELECTION));
 
 		addButton
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {

@@ -16,7 +16,6 @@ import java.util.Locale;
 import org.eclipse.jface.databinding.BindSpec;
 import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.Converter;
-import org.eclipse.jface.databinding.DataBinding;
 import org.eclipse.jface.databinding.IChangeEvent;
 import org.eclipse.jface.databinding.IChangeListener;
 import org.eclipse.jface.databinding.IConverter;
@@ -25,6 +24,7 @@ import org.eclipse.jface.databinding.IUpdatableValue;
 import org.eclipse.jface.databinding.IValidator;
 import org.eclipse.jface.databinding.IdentityConverter;
 import org.eclipse.jface.databinding.PropertyDescription;
+import org.eclipse.jface.databinding.SWTProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -420,7 +420,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		Spinner spinner2 = new Spinner(getComposite(), SWT.NONE);
 		spinner2.setMaximum(1);
 		getDbc().bind(spinner1,
-				new PropertyDescription(spinner2, DataBinding.MAX), null);
+				new PropertyDescription(spinner2, SWTProperties.MAX), null);
 		assertEquals(1, spinner1.getSelection());
 		spinner1.setSelection(10);
 		assertEquals(10, spinner2.getMaximum());
@@ -466,9 +466,9 @@ public class PropertyScenarios extends ScenariosTestCase {
 				}, null));
 		// bind the enabled state of the two text widgets to one of the
 		// checkboxes each.
-		getDbc().bind(new PropertyDescription(text1, DataBinding.ENABLED),
+		getDbc().bind(new PropertyDescription(text1, SWTProperties.ENABLED),
 				checkbox1Selected, null);
-		getDbc().bind(new PropertyDescription(text2, DataBinding.ENABLED),
+		getDbc().bind(new PropertyDescription(text2, SWTProperties.ENABLED),
 				checkbox2Selected, null);
 		assertEquals(true, text1.getEnabled());
 		assertEquals(false, text2.getEnabled());

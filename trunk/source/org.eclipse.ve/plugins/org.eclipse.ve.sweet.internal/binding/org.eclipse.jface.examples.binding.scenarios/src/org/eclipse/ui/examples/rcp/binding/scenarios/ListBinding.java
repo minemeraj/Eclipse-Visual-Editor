@@ -91,14 +91,14 @@ public class ListBinding extends Composite {
 				new BindSpec(new IdentityConverter(Lodging.class, Object.class), null));
 
 		// dbc.bindValue(
-		// listViewer,"selection",skiTrip,emfPackage.getAdventure_DefaultLodging(),
+		// listViewer,ViewersProperties.SELECTION,skiTrip,emfPackage.getAdventure_DefaultLodging(),
 		// new IdentityConverter(Object.class,Lodging.class));
 
 		// IUpdatableValue defaultLodging = dbc.createUpdatableValue(
 		// skiTrip,emfPackage.getAdventure_DefaultLodging());
 
 		// IUpdatableValue listViewerSelection =
-		// dbc.createUpdatableValue(listViewer,"selection");
+		// dbc.createUpdatableValue(listViewer,ViewersProperties.SELECTION);
 
 		// dbc.bindValue(txtDefaultLodging, "text", listViewerSelection,
 		// "description");

@@ -10,21 +10,33 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.BindingException;
-import org.eclipse.jface.databinding.DataBinding;
 import org.eclipse.jface.databinding.PropertyDescription;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.databinding.SWTProperties;
+import org.eclipse.jface.databinding.ViewersProperties;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.ui.examples.rcp.adventure.*;
+import org.eclipse.ui.examples.rcp.adventure.Account;
+import org.eclipse.ui.examples.rcp.adventure.Adventure;
+import org.eclipse.ui.examples.rcp.adventure.AdventureFactory;
+import org.eclipse.ui.examples.rcp.adventure.Catalog;
+import org.eclipse.ui.examples.rcp.adventure.Lodging;
 import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
 
 public class ReadOnlyComboScenarios extends ScenariosTestCase {
@@ -135,7 +147,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				
 				
 		 // Bind the ComboViewer's selection to the Adventure's default lodging.
-		 getDbc().bind(new PropertyDescription(cviewer, DataBinding.SELECTION), 
+		 getDbc().bind(new PropertyDescription(cviewer, ViewersProperties.SINGLE_SELECTION), 
 				       new PropertyDescription(skiAdventure ,"defaultLodging"), null);
 				
 		 // Check to see that the initial selection is the currentDefault Lodging
@@ -244,7 +256,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		 Account account = (Account) catalog.getAccounts().get(0);
 		 
 		 // simple Combo's selection bound to the Account's country property
-		 getDbc().bind(new PropertyDescription(combo, DataBinding.SELECTION), 
+		 getDbc().bind(new PropertyDescription(combo, SWTProperties.SELECTION), 
 				        new PropertyDescription(account, "country"), null);
 		 
 		 // Drive the combo selection
@@ -289,7 +301,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		    Account account = (Account) catalog.getAccounts().get(0);
 			 
 		    // simple Combo's selection bound to the Account's country property
-			 getDbc().bind(new PropertyDescription(combo, DataBinding.SELECTION), 
+			 getDbc().bind(new PropertyDescription(combo, SWTProperties.SELECTION), 
 					 		new PropertyDescription(account, "country"), null);
 			 
 			 // Drive the combo selection
@@ -322,7 +334,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				 Account account = AdventureFactory.eINSTANCE.createAccount();				 
 				 
 				 // Use the Viewers visual Combo (Strings) to set the account's country
-				 getDbc().bind(new PropertyDescription(combo, DataBinding.SELECTION), 
+				 getDbc().bind(new PropertyDescription(combo, SWTProperties.SELECTION), 
 						       new PropertyDescription(account, "country"), null);
 				 
 				 // Change the selection of the ComboViewer to all possible accounts, and
@@ -365,9 +377,9 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				assertEquals(catalog.getLodgings(), getViewerContent(otherViewer));
 				
 				// Bind both selections to the same thing
-				getDbc().bind(new PropertyDescription(cviewer,DataBinding.SELECTION),
+				getDbc().bind(new PropertyDescription(cviewer,ViewersProperties.SINGLE_SELECTION),
 						       new PropertyDescription(skiAdventure,"defaultLodging"), null);
-				getDbc().bind(new PropertyDescription(otherViewer,DataBinding.SELECTION),
+				getDbc().bind(new PropertyDescription(otherViewer,ViewersProperties.SINGLE_SELECTION),
 							   new PropertyDescription(skiAdventure,"defaultLodging"), null);
 												
 				
@@ -407,7 +419,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				    Account account = (Account) catalog.getAccounts().get(0);
 					 
 				    // simple Combo's selection bound to the Account's country property
-					 getDbc().bind(new PropertyDescription(ccombo, DataBinding.SELECTION), 
+					 getDbc().bind(new PropertyDescription(ccombo, SWTProperties.SELECTION), 
 							 		new PropertyDescription(account, "country"), null);
 					 
 					 // Drive the combo selection
@@ -440,7 +452,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 					    Account account = (Account) catalog.getAccounts().get(0);
 						 
 					    // simple Combo's selection bound to the Account's country property
-						 getDbc().bind(new PropertyDescription(swtlist, DataBinding.SELECTION), 
+						 getDbc().bind(new PropertyDescription(swtlist, SWTProperties.SELECTION), 
 								 		new PropertyDescription(account, "country"), null);
 						 	
 						
