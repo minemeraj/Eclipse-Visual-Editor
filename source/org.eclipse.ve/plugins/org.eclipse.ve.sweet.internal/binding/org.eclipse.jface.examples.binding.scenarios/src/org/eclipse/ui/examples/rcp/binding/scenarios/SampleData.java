@@ -15,6 +15,7 @@ import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.databinding.BeanUpdatableFactory;
 import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.DataBinding;
 import org.eclipse.jface.databinding.IDataBindingContext;
@@ -22,6 +23,8 @@ import org.eclipse.jface.databinding.IUpdatable;
 import org.eclipse.jface.databinding.IUpdatableFactory;
 import org.eclipse.jface.databinding.IValidationContext;
 import org.eclipse.jface.databinding.PropertyDescription;
+import org.eclipse.jface.databinding.SWTUpdatableFactory;
+import org.eclipse.jface.databinding.ViewersUpdatableFactory;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableCollection;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableEList;
 import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
@@ -66,6 +69,8 @@ public class SampleData {
 	public static Account DENTIST;
 
 	public static Account SANTA_CLAUS;
+
+	private static SWTUpdatableFactory swtUpdatableFactory;
 
 	static {
 		initializeData();
@@ -173,7 +178,8 @@ public class SampleData {
 	public static IDataBindingContext getSWTtoEMFDatabindingContext(
 			Control aControl) {
 
-		IDataBindingContext dbc = DataBinding.createContext(aControl);
+		swtUpdatableFactory = new SWTUpdatableFactory();
+		IDataBindingContext dbc = DataBinding.createContext(aControl, new IUpdatableFactory[] {swtUpdatableFactory, new ViewersUpdatableFactory()});
 
 		IUpdatableFactory emfFactory = new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Map properties,
@@ -212,6 +218,10 @@ public class SampleData {
 
 		return dbc;
 
+	}
+
+	public static SWTUpdatableFactory getSwtUpdatableFactory() {
+		return swtUpdatableFactory;
 	}
 
 }
