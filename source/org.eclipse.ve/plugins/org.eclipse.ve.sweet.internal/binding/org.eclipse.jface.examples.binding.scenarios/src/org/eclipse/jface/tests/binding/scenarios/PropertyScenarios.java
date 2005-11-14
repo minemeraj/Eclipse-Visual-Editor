@@ -13,7 +13,6 @@ package org.eclipse.jface.tests.binding.scenarios;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
-
 import org.eclipse.jface.databinding.BindSpec;
 import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.Converter;
@@ -43,9 +42,7 @@ import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
  * configuration, open up its "Main" tab and select "[No Application] - Headless
  * Mode" as the application to run.
  */
-
 public class PropertyScenarios extends ScenariosTestCase {
-
 	private Adventure adventure;
 
 	protected void setUp() throws Exception {
@@ -64,10 +61,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 		Text text = new Text(getComposite(), SWT.BORDER);
 		final boolean[] focusLostHolder = { false };
 		text.addFocusListener(new FocusListener() {
-
 			public void focusGained(FocusEvent e) {
 				// TODO Auto-generated method stub
-
 			}
 
 			public void focusLost(FocusEvent e) {
@@ -159,7 +154,6 @@ public class PropertyScenarios extends ScenariosTestCase {
 				text,
 				new PropertyDescription(defaultLodging, "description",
 						String.class, Boolean.FALSE), null);
-
 		// test changing the description
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
 				.getText());
@@ -168,7 +162,6 @@ public class PropertyScenarios extends ScenariosTestCase {
 		adventure.getDefaultLodging().setDescription("barfoo");
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
 				.getText());
-
 		// test changing the default lodging
 		adventure.setDefaultLodging(SampleData.CAMP_GROUND);
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
@@ -176,22 +169,20 @@ public class PropertyScenarios extends ScenariosTestCase {
 		adventure.getDefaultLodging().setDescription("barfo");
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
 				.getText());
-
 		adventure.setDefaultLodging(null);
 		assertEquals("", text.getText());
-
 		adventure.setDefaultLodging(SampleData.FIVE_STAR_HOTEL);
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
 				.getText());
 		adventure.getDefaultLodging().setDescription("barf");
 		assertEquals(adventure.getDefaultLodging().getDescription(), text
 				.getText());
-
 	}
 
 	public void testScenario05() throws BindingException {
 		// Binding the name property of an Adventure object to the contents of
-		// Text controls where conversion occurs � the model data is held all in
+		// Text controls where conversion occurs � the model data is held all
+		// in
 		// uppercase and displayed in lowercase with the first letter
 		// capitalized.
 		Text text = new Text(getComposite(), SWT.BORDER);
@@ -284,7 +275,6 @@ public class PropertyScenarios extends ScenariosTestCase {
 		final String mustBeCurrencyMessage = "Price must be a currency.";
 		getDbc().bind(text, new PropertyDescription(adventure, "price"),
 				new BindSpec(new Converter(String.class, double.class) {
-
 					public Object convertTargetToModel(Object fromObject) {
 						return new Double((String) fromObject);
 					}
@@ -344,7 +334,6 @@ public class PropertyScenarios extends ScenariosTestCase {
 				.getCurrencyInstance(Locale.CANADA);
 		getDbc().bind(text, new PropertyDescription(adventure, "price"),
 				new BindSpec(new Converter(String.class, double.class) {
-
 					public Object convertTargetToModel(Object fromObject) {
 						try {
 							return currencyFormat.parse((String) fromObject);
@@ -430,8 +419,8 @@ public class PropertyScenarios extends ScenariosTestCase {
 		spinner1.setMaximum(100);
 		Spinner spinner2 = new Spinner(getComposite(), SWT.NONE);
 		spinner2.setMaximum(1);
-		getDbc().bind(spinner1, DataBinding.SELECTION, spinner2,
-				DataBinding.MAX, null);
+		getDbc().bind(spinner1,
+				new PropertyDescription(spinner2, DataBinding.MAX), null);
 		assertEquals(1, spinner1.getSelection());
 		spinner1.setSelection(10);
 		assertEquals(10, spinner2.getMaximum());
@@ -477,11 +466,9 @@ public class PropertyScenarios extends ScenariosTestCase {
 				}, null));
 		// bind the enabled state of the two text widgets to one of the
 		// checkboxes each.
-		getDbc().bind(
-				new PropertyDescription(text1, DataBinding.ENABLED),
+		getDbc().bind(new PropertyDescription(text1, DataBinding.ENABLED),
 				checkbox1Selected, null);
-		getDbc().bind(
-				new PropertyDescription(text2, DataBinding.ENABLED),
+		getDbc().bind(new PropertyDescription(text2, DataBinding.ENABLED),
 				checkbox2Selected, null);
 		assertEquals(true, text1.getEnabled());
 		assertEquals(false, text2.getEnabled());
@@ -502,7 +489,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 		getDbc().setUpdateTime(IDataBindingContext.TIME_LATE);
 		getDbc().setValidationTime(IDataBindingContext.TIME_LATE);
 		Text text = new Text(getComposite(), SWT.BORDER);
-		getDbc().bind(text, "text", adventure, "name", null);
+		getDbc().bind(text, new PropertyDescription(adventure, "name"), null);
 		// uncomment the following line to see what's happening
 		// happening
 		// spinEventLoop(1);
@@ -520,11 +507,9 @@ public class PropertyScenarios extends ScenariosTestCase {
 	public void testScenario14() throws BindingException {
 		Text t1 = new Text(getComposite(), SWT.BORDER);
 		Text t2 = new Text(getComposite(), SWT.BORDER);
-
 		getDbc().setUpdateTime(IDataBindingContext.TIME_EARLY);
-		getDbc().bind(t1, "text", adventure, "name", null);
-		getDbc().bind(t2, "text", adventure, "name", null);
-
+		getDbc().bind(t1, new PropertyDescription(adventure, "name"), null);
+		getDbc().bind(t2, new PropertyDescription(adventure, "name"), null);
 		final int[] counter = { 0 };
 		IUpdatableValue uv = (IUpdatableValue) getDbc().createUpdatable(
 				new PropertyDescription(adventure, "name"));
@@ -534,17 +519,14 @@ public class PropertyScenarios extends ScenariosTestCase {
 				counter[0]++;
 			}
 		});
-
 		String name = adventure.getName() + "Foo";
 		t1.setText(name);
 		assertEquals(name, adventure.getName());
 		assertEquals(name, t2.getText());
 		assertTrue(counter[0] == 1);
-
 		name = name + "Bar";
 		uv.setValue(name);
 		assertEquals(t1.getText(), adventure.getName());
 		assertTrue(counter[0] == 2);
-
 	}
 }
