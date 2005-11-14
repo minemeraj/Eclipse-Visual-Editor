@@ -17,7 +17,10 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.ChangeEvent;
+import org.eclipse.jface.databinding.IChangeListener;
+import org.eclipse.jface.databinding.IUpdatableValue;
+import org.eclipse.jface.databinding.UpdatableValue;
 
 public class EMFDerivedUpdatableValue extends UpdatableValue {
 
@@ -31,12 +34,12 @@ public class EMFDerivedUpdatableValue extends UpdatableValue {
 		this.feature = feature;
 		hookListener();
 		updatableValue.addChangeListener(new IChangeListener() {
-			public void handleChange(IChangeEvent changeEvent) {
+			public void handleChange(ChangeEvent changeEvent) {
 				Object oldValue = getValue();
 				removeListener();
 				currentObject = (EObject) updatableValue.getValue();
 				hookListener();
-				fireChangeEvent(IChangeEvent.CHANGE, oldValue, getValue());
+				fireChangeEvent(ChangeEvent.CHANGE, oldValue, getValue());
 			}
 		});
 	}
@@ -45,7 +48,7 @@ public class EMFDerivedUpdatableValue extends UpdatableValue {
 		public void notifyChanged(Notification msg) {
 			if (!msg.isTouch() && !updating) {
 				if (feature.equals(msg.getFeature())) {
-					fireChangeEvent(IChangeEvent.CHANGE, msg.getOldValue(), msg
+					fireChangeEvent(ChangeEvent.CHANGE, msg.getOldValue(), msg
 							.getNewValue());
 				}
 			}
@@ -65,7 +68,7 @@ public class EMFDerivedUpdatableValue extends UpdatableValue {
 		try {
 			Object oldValue = getValue();
 			currentObject.eSet(feature, value);
-			fireChangeEvent(IChangeEvent.CHANGE, oldValue, getValue());
+			fireChangeEvent(ChangeEvent.CHANGE, oldValue, getValue());
 		} finally {
 			updating = false;
 		}
