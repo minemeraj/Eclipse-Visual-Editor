@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarGraphicalEditPart.java,v $
- *  $Revision: 1.8 $  $Date: 2005-11-11 23:47:14 $ 
+ *  $Revision: 1.9 $  $Date: 2005-11-14 22:56:24 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -34,11 +34,12 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 
-	IFigure actionBarFigure = null;					// Action bar that contains the editpart contributor figures
+	IFigure actionBarFigure = null; // Action bar that contains the editpart contributor figures
 	ActionBarDecorationsFigure decorationsFigure = null; // Figure for highlighting the host & action bar figure
 	List actionBarChildren = null;
-	boolean actionBarOpen = false;					// toggle for flyout capability
-	Rectangle dividerGradientArea = null;	// Area for left arrow when action bar is open
+	boolean actionBarOpen = false; // toggle for flyout capability
+	Rectangle dividerGradientArea = null; // Area for left arrow when action bar is open
+	private Rectangle hostBounds = null;
 
 	static final Color ACTIONBAR_BACKGROUND_COLOR = new Color(null, 255, 255, 220); // very light yellow
 	static final int ACTIONBAR_CHILD_FIGURE_MARGIN = 5;
@@ -62,7 +63,8 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 	}
 
 	public void show(Rectangle hostBounds, int orientation) {
-		actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width - 7, hostBounds.y + 1));
+		this.hostBounds = hostBounds;  
+		actionBarFigure.setLocation(new Point(hostBounds.x + hostBounds.width - 8, hostBounds.y + 1));
 
 		// The decorations figure is used to highlight the host figure, action bar figure,
 		// and used to draw a shadow figure for the action bar.
@@ -77,14 +79,14 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 		decorationsFigure.setHostBounds(hostBounds.getCopy());
 
 		// Keep action bar on top to avoid obscurring by selection handles from other editparts
-		if (getLayer(LayerConstants.HANDLE_LAYER).getChildren().size() > 2) {
-			getLayer(LayerConstants.HANDLE_LAYER).remove(decorationsFigure);
-			getLayer(LayerConstants.HANDLE_LAYER).remove(actionBarFigure);
-			getLayer(LayerConstants.HANDLE_LAYER).add(decorationsFigure);
-			getLayer(LayerConstants.HANDLE_LAYER).add(actionBarFigure);
-		}
-		actionBarFigure.setVisible(true);
+		// if (getLayer(LayerConstants.HANDLE_LAYER).getChildren().size() > 2) {
+		getLayer(LayerConstants.HANDLE_LAYER).remove(decorationsFigure);
+		getLayer(LayerConstants.HANDLE_LAYER).remove(actionBarFigure);
+		getLayer(LayerConstants.HANDLE_LAYER).add(decorationsFigure);
+		getLayer(LayerConstants.HANDLE_LAYER).add(actionBarFigure);
+		// }
 		decorationsFigure.setVisible(true);
+		actionBarFigure.setVisible(true);
 	}
 
 	public void hide() {
@@ -94,10 +96,8 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 	}
 
 	/*
-	 * The figure for the action bar.
-	 * This is constructed as a RoundedRectangle but the paintFigure is overriden to draw
-	 * lots of other little figures depending on whether the action bar is opened or closed
-	 * to simulate a fly-out capability.
+	 * The figure for the action bar. This is constructed as a RoundedRectangle but the paintFigure is overriden to draw lots of other little figures
+	 * depending on whether the action bar is opened or closed to simulate a fly-out capability.
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
@@ -110,11 +110,11 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 
 			/*
 			 * Set the bounds. 
-			 * Setup the point lists for the various drawing figures within this figure
-			 * so we don't have to recreate point lists every time we paint.
-			 * - right and left arrows
-			 * - action divider for when the action bar is open.
-			 * - action bar stub for when the action bar is closed.
+			 * Setup the point lists for the various drawing figures within this figure 
+			 * so we don't have to recreate point lists every time we paint. 
+			 * - right and left arrows 
+			 * - action divider for when the action bar is open. 
+			 * - action bar stub for when the action bar is closed. 
 			 * - gradient area where the arrows will be displayed so it looks like a 3d button
 			 * 
 			 * @see org.eclipse.draw2d.IFigure#setBounds(org.eclipse.draw2d.geometry.Rectangle)
@@ -126,7 +126,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 				actionBarStub.addPoint(bounds.x + 5, bounds.y + 1);
 				actionBarStub.addPoint(bounds.x + bounds.width - 4, bounds.y + 1);
 				actionBarStub.addPoint(bounds.x + bounds.width - 1, bounds.y + 4);
-				actionBarStub.addPoint(bounds.x + bounds.width -1, bounds.y + bounds.height - 4);
+				actionBarStub.addPoint(bounds.x + bounds.width - 1, bounds.y + bounds.height - 4);
 				actionBarStub.addPoint(bounds.x + bounds.width - 4, bounds.y + bounds.height - 1);
 				actionBarStub.addPoint(bounds.x + 5, bounds.y + bounds.height - 1);
 				rightArrow = new PointList(3);
@@ -144,14 +144,14 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 				divider.addPoint(bounds.x + bounds.width - 12, bounds.y + 3);
 				divider.addPoint(bounds.x + bounds.width - 12, bounds.y + bounds.height - 3);
 				divider.addPoint(bounds.x + bounds.width - 10, bounds.y + bounds.height - 1);
-				
+
 				// Setup the bounds for the divider gradient area where the arrows reside
 				dividerGradientArea = bounds.getCopy();
 				dividerGradientArea.x = bounds.x + bounds.width - 12;
 				dividerGradientArea.width = bounds.x + bounds.width - dividerGradientArea.x;
-				dividerGradientArea.expand(-1,-1);
+				dividerGradientArea.expand(-1, -1);
 			}
-			
+
 			public void paintFigure(Graphics graphics) {
 				try {
 					graphics.setAntialias(SWT.ON); // This makes the lines look smooth
@@ -170,7 +170,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 					graphics.setForegroundColor(ColorConstants.black);
 					graphics.drawPolyline(leftArrow);
 					// draw the divider
-//					graphics.setLineWidth(1);
+					// graphics.setLineWidth(1);
 					graphics.setForegroundColor(ColorConstants.gray);
 					graphics.drawPolyline(divider);
 					graphics.setLineWidth(1);
@@ -196,8 +196,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 			}
 
 			/*
-			 * Use a gradient on the action bar and go left to right and 
-			 * from white to very light yellow to show depth.
+			 * Use a gradient on the action bar and go left to right and from white to very light yellow to show depth.
 			 * 
 			 * @see org.eclipse.draw2d.Shape#fillShape(org.eclipse.draw2d.Graphics)
 			 */
@@ -225,24 +224,31 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 			protected void showLayoutTargetFeedback(Request request) {
 				// Don't do anything... don't want to show insertion line or move around the action bar editparts
 			}
+
 			protected boolean isHorizontal() {
 				return true;
 			}
+
 			protected Command createAddCommand(EditPart child, EditPart after) {
 				return null;
 			}
+
 			protected Command createMoveChildCommand(EditPart child, EditPart after) {
 				return null;
 			}
+
 			protected Command getCreateCommand(CreateRequest request) {
 				return null;
 			}
+
 			protected Command getDeleteDependantCommand(Request request) {
 				return null;
 			}
+
 			protected EditPolicy createChildEditPolicy(EditPart child) {
 				if (child instanceof ActionBarActionEditPart)
-					return new AbstractEditPolicy() {};
+					return new AbstractEditPolicy() {
+					};
 				return super.createChildEditPolicy(child);
 			}
 		});
@@ -254,8 +260,8 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 	}
 
 	/*
-	 * Show/hide children based on whether the action bar is open of closed
-	 * Set the children constraints used in the layout on the action bar
+	 * Show/hide children based on whether the action bar is open or closed. 
+	 * Set the children constraints used in the layout on the action bar.
 	 * Set the overall action bar size based on the children preferred sizes
 	 */
 	protected void refreshFigures() {
@@ -266,7 +272,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 			if (child.isVisible() != actionBarOpen)
 				child.setVisible(actionBarOpen);
 		}
-		
+
 		setChildrenConstraints();
 		calculateFigureSize();
 	}
@@ -290,6 +296,11 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 		else
 			abWidth = 15;
 		getFigure().setSize(abWidth, abHeight + ACTIONBAR_CHILD_FIGURE_MARGIN * 2);
+		
+		// Reset the host bounds for the decorations figure so it will show the shadowing correctly
+		if (decorationsFigure != null && hostBounds != null) {
+			decorationsFigure.setHostBounds(hostBounds.getCopy());
+		}
 	}
 
 	private void setChildrenConstraints() {
@@ -300,8 +311,10 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 		for (int i = 0; i < children.size(); i++) {
 			IFigure childFigure = (IFigure) children.get(i);
 			if (lm.getConstraint(childFigure) == null)
-				getFigure().setConstraint(childFigure,
-						new Rectangle(abWidth, ACTIONBAR_CHILD_FIGURE_MARGIN, childFigure.getPreferredSize().width, childFigure.getPreferredSize().height));
+				getFigure().setConstraint(
+						childFigure,
+						new Rectangle(abWidth, ACTIONBAR_CHILD_FIGURE_MARGIN, childFigure.getPreferredSize().width,
+								childFigure.getPreferredSize().height));
 			abWidth += childFigure.getPreferredSize().width + ACTIONBAR_CHILD_FIGURE_MARGIN;
 		}
 	}
@@ -315,21 +328,20 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 	}
 
 	/*
-	 * Mouse listener for the ActionBar figure.
-	 * Open/close the action bar when the mouse is pressed within the small arrow
+	 * Mouse listener for the ActionBar figure. Open/close the action bar when the mouse is pressed within the small arrow
 	 */
 	private class ActionBarMouseListener extends MouseListener.Stub {
+
 		public void mousePressed(MouseEvent me) {
 			if (me.getSource() == actionBarFigure && dividerGradientArea != null && dividerGradientArea.contains(me.getLocation())) {
 				actionBarOpen = !actionBarOpen;
 				refreshFigures();
-				actionBarFigure.repaint();
 			}
 		}
 	}
+
 	/*
-	 * Figure used to decorate the border on the host figure and show a shadow under the 
-	 * action bar when it is shown in an open state.
+	 * Figure used to decorate the border on the host figure and show a shadow under the action bar when it is shown in an open state.
 	 */
 	private class ActionBarDecorationsFigure extends Figure {
 		PointList hostBorderPoints = null;
@@ -367,7 +379,7 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 		public void setHostBounds(Rectangle bounds) {
 			hostBounds = bounds;
 			// Points are added to host points list starting from the upper right corner and
-			// moving counter-clockwise... leaving a gap for the action bar figure.
+			// moving counter-clockwise... leaving a gap for the action bar figure on the right.
 			Rectangle afBounds = actionBarFigure.getBounds().getCopy();
 			hostBorderPoints = new PointList(5);
 			hostBorderPoints.addPoint(hostBounds.x + hostBounds.width - 2, hostBounds.y + 2);
@@ -375,23 +387,13 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 			hostBorderPoints.addPoint(hostBounds.x + 2, hostBounds.y + hostBounds.height - 2);
 			hostBorderPoints.addPoint(hostBounds.x + hostBounds.width - 2, hostBounds.y + hostBounds.height - 2);
 			hostBorderPoints.addPoint(hostBounds.x + hostBounds.width - 2, hostBounds.y + afBounds.height);
-		}
-
-		/*
-		 *  Return the bounds for this figure.
-		 *  The bounds for this drawing is the combination of both the host figure and action bar figure.
-		 */
-		public Rectangle getBounds() {
-			if (hostBounds != null) {
-				Rectangle afBounds = actionBarFigure.getBounds().getCopy();
-				return hostBounds.getCopy().union(afBounds.translate(13, 10));
-			}
-			return Rectangle.SINGLETON;
+			setBounds(hostBounds.getCopy().union(afBounds.translate(13,10)));
 		}
 
 		public boolean isOpaque() {
 			return false;
 		}
+		// Return true only if within the action bar
 		public boolean containsPoint(int x, int y) {
 			return (actionBarFigure != null && actionBarFigure.getBounds().contains(x, y));
 		}
