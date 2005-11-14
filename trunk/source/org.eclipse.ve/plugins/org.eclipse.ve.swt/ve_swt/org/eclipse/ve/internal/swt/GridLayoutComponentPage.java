@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.19 $  $Date: 2005-11-11 23:24:42 $ 
+ *  $Revision: 1.20 $  $Date: 2005-11-14 17:03:33 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -21,6 +21,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.*;
 import org.eclipse.gef.editparts.AbstractEditPart;
@@ -38,6 +39,7 @@ import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBooleanBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
@@ -104,12 +106,19 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	};
 	
 	public final static int BEGINNING = 0, CENTER = 1, END = 2, FILL = 3;
-	protected static String[] alignmentInitStrings = new String[] {
-			"org.eclipse.swt.layout.GridData.BEGINNING", //$NON-NLS-1$
-			"org.eclipse.swt.layout.GridData.CENTER", //$NON-NLS-1$
-			"org.eclipse.swt.layout.GridData.END", //$NON-NLS-1$
-			"org.eclipse.swt.layout.GridData.FILL", //$NON-NLS-1$
-	};
+	protected final static ParseTreeAllocation[] alignmentAllocations;
+	static {
+		alignmentAllocations = new ParseTreeAllocation[4];
+		alignmentAllocations[BEGINNING] = createAlignmentAllocation("org.eclipse.swt.layout.GridData", "BEGINNING"); //$NON-NLS-1$ //$NON-NLS-2$
+		alignmentAllocations[CENTER] = createAlignmentAllocation("org.eclipse.swt.layout.GridData", "CENTER"); //$NON-NLS-1$ //$NON-NLS-2$
+		alignmentAllocations[END] = createAlignmentAllocation("org.eclipse.swt.layout.GridData", "END"); //$NON-NLS-1$ //$NON-NLS-2$
+		alignmentAllocations[FILL] = createAlignmentAllocation("org.eclipse.swt.layout.GridData", "FILL"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+	
+	private static ParseTreeAllocation createAlignmentAllocation(String classname, String fieldName) {
+		PTExpression fieldAccess = InstantiationFactory.eINSTANCE.createPTFieldAccess(InstantiationFactory.eINSTANCE.createPTName(classname), fieldName);
+		return InstantiationFactory.eINSTANCE.createParseTreeAllocation(fieldAccess);
+	}
 	
 	protected static int[] alignmentSWTValues = new int[] {
 			GridData.BEGINNING,
@@ -482,27 +491,27 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 					IJavaInstance gridData = (IJavaInstance) control.eGet(sfControlLayoutData);
 					if (gridData == null) {
 						// Create a new grid data if one doesn't already exist.
-						gridData = BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+						gridData = BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, (String) null); //$NON-NLS-1$
 					}
 					if (gridData != null) {
 						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
 						
-						String init;
+						JavaAllocation initAlloc;
 						// Apply horizontal alignment
 						if (fillHorizontal) {
-							init = alignmentInitStrings[FILL];
+							initAlloc = (JavaAllocation) EcoreUtil.copy(alignmentAllocations[FILL]);
 						} else {
-							init = alignmentInitStrings[horizontalAlign];
+							initAlloc = (JavaAllocation) EcoreUtil.copy(alignmentAllocations[horizontalAlign]);
 						}
-						Object alignObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
+						Object alignObject = BeanUtilities.createJavaObject("int", rset, initAlloc); //$NON-NLS-1$
 						componentCB.applyAttributeSetting(gridData, sfHorizontalAlignment, alignObject);
 
 						if (fillVertical) {
-							init = alignmentInitStrings[FILL]; 
+							initAlloc = (JavaAllocation) EcoreUtil.copy(alignmentAllocations[FILL]);
 						} else {
-							init = alignmentInitStrings[verticalAlign];
+							initAlloc = (JavaAllocation) EcoreUtil.copy(alignmentAllocations[verticalAlign]);
 						}
-						alignObject = BeanUtilities.createJavaObject("int", rset, init); //$NON-NLS-1$
+						alignObject = BeanUtilities.createJavaObject("int", rset, initAlloc); //$NON-NLS-1$
 						componentCB.applyAttributeSetting(gridData, sfVerticalAlignment, alignObject);
 
 						componentCB.applyAttributeSetting(control, sfControlLayoutData, gridData);
@@ -531,7 +540,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 					IJavaInstance gridData = (IJavaInstance) control.eGet(sfControlLayoutData);
 					if (gridData == null) {
 						// Create a new grid data if one doesn't already exist.
-						gridData = BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+						gridData = BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, (String) null); //$NON-NLS-1$ 
 					}
 					if (gridData != null) {
 						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
@@ -564,7 +573,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 					IJavaInstance gridData = (IJavaInstance) control.eGet(sfControlLayoutData);
 					if (gridData == null) {
 						// Create a new grid data if one doesn't already exist.
-						gridData = BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+						gridData = BeanUtilities.createJavaObject("org.eclipse.swt.layout.GridData", rset, (String) null); //$NON-NLS-1$
 					}
 					if (gridData != null) {
 						try {

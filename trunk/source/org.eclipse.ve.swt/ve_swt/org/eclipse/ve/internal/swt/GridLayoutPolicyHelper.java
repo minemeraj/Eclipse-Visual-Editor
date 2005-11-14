@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.41 $  $Date: 2005-11-11 23:20:56 $
+ *  $Revision: 1.42 $  $Date: 2005-11-14 17:03:33 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -605,7 +605,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			if (gridData == null) {
 				// Create a new grid data if one doesn't already exist.
 				gridData = (IJavaObjectInstance) BeanUtilities.createJavaObject(
-						"org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+						"org.eclipse.swt.layout.GridData", rset, (String) null); //$NON-NLS-1$
 			}
 			try {
 				if (gridData != null) {
@@ -1162,7 +1162,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			if (gridData == null) {
 				// Create a new grid data if one doesn't already exist.
 				gridData = (IJavaObjectInstance) BeanUtilities.createJavaObject(
-						"org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+						"org.eclipse.swt.layout.GridData", rset, (String) null); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (gridData != null) {
 				RuledCommandBuilder componentCB = new RuledCommandBuilder(policy.getEditDomain(), null, false);
@@ -1192,7 +1192,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			if (gridData == null) {
 				// Create a new grid data if one doesn't already exist.
 				gridData = (IJavaObjectInstance) BeanUtilities.createJavaObject(
-						"org.eclipse.swt.layout.GridData", rset, "new org.eclipse.swt.layout.GridData()"); //$NON-NLS-1$ //$NON-NLS-2$
+						"org.eclipse.swt.layout.GridData", rset, (String) null); //$NON-NLS-1$
 			}
 			if (gridData != null) {
 				RuledCommandBuilder componentCB = new RuledCommandBuilder(policy.getEditDomain(), null, false);
