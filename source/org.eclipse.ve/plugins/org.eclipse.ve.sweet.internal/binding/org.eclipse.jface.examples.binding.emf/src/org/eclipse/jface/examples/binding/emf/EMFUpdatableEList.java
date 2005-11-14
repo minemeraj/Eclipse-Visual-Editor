@@ -12,7 +12,7 @@
  *  Created Oct 20, 2005 by Gili Mendel
  * 
  *  $RCSfile: EMFUpdatableEList.java,v $
- *  $Revision: 1.4 $  $Date: 2005-11-02 19:44:33 $ 
+ *  $Revision: 1.5 $  $Date: 2005-11-14 22:26:29 $ 
  */
 
 package org.eclipse.jface.examples.binding.emf;
@@ -24,7 +24,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.IChangeEvent;
+import org.eclipse.jface.databinding.ChangeEvent;
 import org.eclipse.jface.databinding.IUpdatableCollection;
 import org.eclipse.jface.databinding.Updatable;
 
@@ -54,19 +54,19 @@ public class EMFUpdatableEList extends Updatable implements
 					if (msg.getEventType() == Notification.ADD) {
 						EObject newObject = (EObject) msg.getNewValue();
 						newObject.eAdapters().add(this);
-						fireChangeEvent(IChangeEvent.ADD, null,
+						fireChangeEvent(ChangeEvent.ADD, null,
 								newObject, msg.getPosition());
 					} else if (msg.getEventType() == Notification.REMOVE) {
 						EObject oldObject = (EObject) msg.getOldValue();
 						oldObject.eAdapters().remove(this);
-						fireChangeEvent(IChangeEvent.REMOVE, oldObject,
+						fireChangeEvent(ChangeEvent.REMOVE, oldObject,
 								null, msg.getPosition());
 					}
 				} else {
 					// notifier is one of the objects in the list
 					int position = list.indexOf(msg.getNotifier());
 					if (position != -1) {
-						fireChangeEvent(IChangeEvent.CHANGE, msg
+						fireChangeEvent(ChangeEvent.CHANGE, msg
 								.getNotifier(), msg.getNotifier(), position);
 					}
 				}
@@ -103,14 +103,14 @@ public class EMFUpdatableEList extends Updatable implements
 		list.add(index, value);
 		if (value instanceof EObject)
 			((EObject) value).eAdapters().add(adapter);
-		fireChangeEvent(IChangeEvent.ADD, null, value, index);
+		fireChangeEvent(ChangeEvent.ADD, null, value, index);
 		return index;
 	}
 
 	public void removeElement(int index) {
 		Object old = list.get(index);
 		list.remove(index);
-		fireChangeEvent(IChangeEvent.REMOVE, old, null, index);
+		fireChangeEvent(ChangeEvent.REMOVE, old, null, index);
 		if (old instanceof EObject)
 			((EObject) old).eAdapters().remove(adapter);
 	}

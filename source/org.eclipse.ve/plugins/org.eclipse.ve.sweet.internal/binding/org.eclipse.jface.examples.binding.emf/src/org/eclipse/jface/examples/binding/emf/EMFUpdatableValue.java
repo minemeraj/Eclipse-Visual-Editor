@@ -17,7 +17,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EContentAdapter;
-import org.eclipse.jface.databinding.IChangeEvent;
+import org.eclipse.jface.databinding.ChangeEvent;
 import org.eclipse.jface.databinding.UpdatableValue;
 
 public class EMFUpdatableValue extends UpdatableValue {
@@ -41,7 +41,7 @@ public class EMFUpdatableValue extends UpdatableValue {
 			adapter = new EContentAdapter() {
 				public void notifyChanged(Notification notification) {
 					if (!notification.isTouch() && !updating) {
-						fireChangeEvent(IChangeEvent.CHANGE, null, null);
+						fireChangeEvent(ChangeEvent.CHANGE, null, null);
 					}
 					super.notifyChanged(notification);
 				}
@@ -51,7 +51,7 @@ public class EMFUpdatableValue extends UpdatableValue {
 				public void notifyChanged(Notification notification) {
 					if (!notification.isTouch() && !updating) {
 						if (attribute.equals(notification.getFeature())) {
-							fireChangeEvent(IChangeEvent.CHANGE, null, null);
+							fireChangeEvent(ChangeEvent.CHANGE, null, null);
 						}
 					}
 					super.notifyChanged(notification);
@@ -66,7 +66,7 @@ public class EMFUpdatableValue extends UpdatableValue {
 		try {
 			Object oldValue = getValue();
 			object.eSet(attribute, value);
-			fireChangeEvent(IChangeEvent.CHANGE, oldValue, getValue());
+			fireChangeEvent(ChangeEvent.CHANGE, oldValue, getValue());
 		} finally {
 			updating = false;
 		}

@@ -13,8 +13,7 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.ParseException;
-
-import org.eclipse.jface.databinding.IChangeEvent;
+import org.eclipse.jface.databinding.ChangeEvent;
 import org.eclipse.jface.databinding.UpdatableValue;
 
 public class TimeEntryUpdatableValue extends UpdatableValue {
@@ -25,7 +24,7 @@ public class TimeEntryUpdatableValue extends UpdatableValue {
 		timeEntry = aTimeEntry;
 		timeEntry.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				fireChangeEvent(IChangeEvent.CHANGE, evt.getOldValue(), evt
+				fireChangeEvent(ChangeEvent.CHANGE, evt.getOldValue(), evt
 						.getNewValue());
 			}
 		});
@@ -38,7 +37,7 @@ public class TimeEntryUpdatableValue extends UpdatableValue {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		fireChangeEvent(IChangeEvent.CHANGE, oldValue, getValue());
+		fireChangeEvent(ChangeEvent.CHANGE, oldValue, getValue());
 	}
 
 	public Object getValue() {

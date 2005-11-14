@@ -11,10 +11,9 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import java.util.StringTokenizer;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.jface.databinding.IChangeEvent;
+import org.eclipse.jface.databinding.ChangeEvent;
 import org.eclipse.jface.databinding.UpdatableValue;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
 import org.eclipse.ui.examples.rcp.adventure.AdventurePackage;
@@ -37,7 +36,7 @@ public class AdventureNameAndDescription extends UpdatableValue {
 							|| notification.getFeature() == AdventurePackage.eINSTANCE
 									.getAdventure_Name()) {
 						AdventureNameAndDescription.this.fireChangeEvent( 
-								IChangeEvent.CHANGE, null, null);
+								ChangeEvent.CHANGE, null, null);
 					}
 				}
 				super.notifyChanged(notification);
@@ -55,7 +54,7 @@ public class AdventureNameAndDescription extends UpdatableValue {
 		} else {
 			adventure.setName("");
 		}
-		fireChangeEvent(IChangeEvent.CHANGE, oldValue, getValue());
+		fireChangeEvent(ChangeEvent.CHANGE, oldValue, getValue());
 	}
 
 	public Object getValue() {
