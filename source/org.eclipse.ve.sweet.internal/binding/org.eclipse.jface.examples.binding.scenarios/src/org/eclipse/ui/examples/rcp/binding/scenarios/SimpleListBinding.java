@@ -85,7 +85,7 @@ public class SimpleListBinding extends Composite {
 		// );
 		//		
 		// IUpdatableValue selectedLodging = dbc.createUpdatableValue(
-		// listViewer,"selection");
+		// listViewer,ViewersProperties.SELECTION);
 		//		
 		// dbc.bindValue(txtDefaultLodging, "text", new
 		// EMFDerivedUpdatableValue(
