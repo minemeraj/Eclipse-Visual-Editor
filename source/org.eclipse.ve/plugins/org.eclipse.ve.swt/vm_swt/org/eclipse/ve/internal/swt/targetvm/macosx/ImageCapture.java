@@ -10,16 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-12 14:32:19 $ 
+ *  $Revision: 1.3 $  $Date: 2005-11-14 04:04:54 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.macosx;
 
 import java.lang.reflect.*;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.internal.carbon.CGRect;
-import org.eclipse.swt.internal.carbon.OS;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
@@ -32,16 +31,25 @@ import org.eclipse.swt.widgets.Shell;
 public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapture {
 	
 	private static Field shellHandleField = null;
+	private static Method HIViewGetRootMethod = null;
 	
 	static {
+		
+		System.loadLibrary("swt-carbon-print");
 		
 		try {
 			shellHandleField = Shell.class.getDeclaredField("shellHandle");
 			shellHandleField.setAccessible(true);
+			
+			Class osClass = Class.forName("org.eclipse.swt.internal.carbon.OS"); //$NON-NLS-1$
+			HIViewGetRootMethod = osClass.getMethod("HIViewGetRoot", new Class[]{int.class}); //$NON-NLS-1$
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	private native int captureImage(int controlHandle, int shellHandle);
 
 	protected Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren) {
 		
@@ -49,32 +57,43 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		if (rect.width <= 0 || rect.height <= 0)
 			return null;
 		
-		// int width = Math.min(rect.width, maxWidth);
-		// int height = Math.min(rect.height, maxHeight);
-				
+//		int width = Math.min(rect.width, maxWidth);
+//		int height = Math.min(rect.height, maxHeight);
+		
+		Image image = null;
+		
 		int controlHandle = -1;
 		int shellHandle = -1;
+		
 		
 		if (control instanceof Shell)
 		{
 			try {
 				shellHandle = shellHandleField.getInt(control);
+				if (shellHandle != -1)
+				{
+					Integer result = (Integer)HIViewGetRootMethod.invoke(null, new Object[] { new Integer(shellHandle) }); 
+					if (result != null)
+					{
+						controlHandle = result.intValue();
+					}
+				}
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (shellHandle != -1)
-			{
-				controlHandle = OS.HIViewGetRoot(shellHandle);
-			}
+			
 		}
 		else
 		{
 			controlHandle = control.handle;
-			try {
+ /*			try {
 				shellHandle = shellHandleField.getInt(control.getShell());
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
@@ -82,31 +101,16 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 		}
 		
-		// Get the current active window
-		int activeWindow = OS.ActiveNonFloatingWindow();
+		int imageHandle = captureImage(controlHandle, shellHandle);
 		
-		
-		// Activate the shell
-		OS.ShowWindow(shellHandle);
-				
-		CGRect bounds = new CGRect();
-		int[] imageHandle = new int[1];
-		OS.HIViewCreateOffscreenImage(controlHandle, 0, bounds, imageHandle);
-		control.redraw();
-	
-		// Restore the active window
-		OS.ShowWindow(activeWindow);
-		
-		Image resultImage = null;
-		if (imageHandle[0] > 0)
+		if (imageHandle != 0)
 		{
-			resultImage = Image.carbon_new(control.getDisplay(), SWT.BITMAP, imageHandle[0], 0);
+			image = Image.carbon_new(control.getDisplay(), SWT.BITMAP, imageHandle, 0);
 		}
-		
-		return resultImage;
+				
+		return image;
 	}
-
 }
