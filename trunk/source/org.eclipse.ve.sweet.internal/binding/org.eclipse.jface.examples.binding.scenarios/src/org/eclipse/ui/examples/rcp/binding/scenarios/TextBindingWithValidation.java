@@ -75,11 +75,11 @@ public class TextBindingWithValidation extends Composite {
 			}
 		};
 		BindSpec bindSpec = new BindSpec(converter,validator);		
-		dbc.bind(txtDescription, "text", skiTrip, "description", bindSpec);
+		dbc.bind(txtDescription, new PropertyDescription(skiTrip, "description"), bindSpec);
 
-		dbc.bind(txtName, "text", skiTrip, "name",null);
+		dbc.bind(txtName, new PropertyDescription(skiTrip, "name"),null);
 
-		dbc.bind(txtLocation, "text", skiTrip, "location",null);
+		dbc.bind(txtLocation, new PropertyDescription(skiTrip, "location"),null);
 
 		IUpdatable errorMsgUpdatable = dbc.createUpdatable(new PropertyDescription(validationMessage,"text"));
 		dbc.bind(errorMsgUpdatable, dbc.getCombinedValidationMessage(),null);

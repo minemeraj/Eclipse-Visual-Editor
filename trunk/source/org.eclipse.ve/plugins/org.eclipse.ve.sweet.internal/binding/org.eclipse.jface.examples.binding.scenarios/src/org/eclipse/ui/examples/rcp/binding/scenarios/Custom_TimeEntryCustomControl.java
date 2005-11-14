@@ -80,9 +80,9 @@ public class Custom_TimeEntryCustomControl extends Composite {
 			}
 		});
 
-		dbc.bind(lbl_time, "text", bus, "arrivalTime", null);
-		dbc.bind(timeEntry, "time", bus, "arrivalTime", null);
-		dbc.bind(timeEntry1, "time", bus, "arrivalTime", null);
+		dbc.bind(lbl_time, new PropertyDescription(bus, "arrivalTime"), null);
+		dbc.bind(new PropertyDescription(timeEntry, "time"), new PropertyDescription(bus, "arrivalTime"), null);
+		dbc.bind(new PropertyDescription(timeEntry1, "time"), new PropertyDescription(bus, "arrivalTime"), null);
 
 	}
 
