@@ -47,8 +47,8 @@ public class SimpleTableBinding2 extends Composite {
 
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
 				tableViewer);
-		tableViewerDescription.addColumn("Name", "name");
-		tableViewerDescription.addColumn("Description", "description");
+		tableViewerDescription.addColumn("name");
+		tableViewerDescription.addColumn("description");
 		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,
 				"lodgings"), null);
 

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ui.examples.rcp.binding.scenarios;
+package org.eclipse.jface.tests.binding.scenarios.pojo;
 
 import org.eclipse.jface.databinding.IConverter;
  
@@ -35,7 +35,7 @@ public class PhoneConverter implements IConverter {
 	}
 	public Object convertModelToTarget(Object modelObject) {
 		String unformattedPhone = (String)modelObject;
-       		if(unformattedPhone == null || unformattedPhone.length() != 10){
+		if(unformattedPhone == null || unformattedPhone.length() != 10){
 			return unformattedPhone;
 		} else {
 			StringBuffer sb = new StringBuffer(13);

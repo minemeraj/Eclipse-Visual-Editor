@@ -90,9 +90,9 @@ public class Table_Accounts extends Composite {
 
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
 				viewer);
-		tableViewerDescription.addColumn("FirstName", "firstName");
-		tableViewerDescription.addColumn("LastName", "lastName");
-		tableViewerDescription.addColumn("State", "state");
+		tableViewerDescription.addColumn("firstName");
+		tableViewerDescription.addColumn("lastName");
+		tableViewerDescription.addColumn("state");
 		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,
 				"accounts"), null);
 

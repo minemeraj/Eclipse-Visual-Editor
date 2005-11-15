@@ -35,7 +35,7 @@ public class PhoneConverter implements IConverter {
 	}
 	public Object convertModelToTarget(Object modelObject) {
 		String unformattedPhone = (String)modelObject;
-		if(unformattedPhone == null || unformattedPhone.length() != 10){
+       		if(unformattedPhone == null || unformattedPhone.length() != 10){
 			return unformattedPhone;
 		} else {
 			StringBuffer sb = new StringBuffer(13);

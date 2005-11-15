@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ui.examples.rcp.binding.scenarios;
+package org.eclipse.ui.examples.pojo.binding.scenarios;
 
 import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.IDataBindingContext;
@@ -21,7 +21,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.examples.rcp.adventure.Catalog;
+import org.eclipse.jface.tests.binding.scenarios.pojo.*;
 
 public class Table_Accounts extends Composite {
 
@@ -84,7 +84,7 @@ public class Table_Accounts extends Composite {
 
 		// For a given catalog show its accounts with columns for "firstName,
 		// "lastName" and "state"
-		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
+		dbc = SampleData.getDatabindingContext(this);
 
 		Catalog catalog = SampleData.CATALOG_2005;
 
