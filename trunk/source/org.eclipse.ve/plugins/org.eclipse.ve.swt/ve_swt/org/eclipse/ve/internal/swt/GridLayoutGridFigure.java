@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: GridLayoutGridFigure.java,v $
- *  $Revision: 1.14 $  $Date: 2005-11-11 15:57:16 $ 
+ *  $Revision: 1.15 $  $Date: 2005-11-15 17:19:51 $ 
  */
 
 import org.eclipse.draw2d.*;
@@ -766,7 +766,6 @@ public int getNearestColumn(int x) {
 		return 0;
 
 	int column = 0;
-	x = mapFigureToModel(x,0).x;
 	int value = Math.abs(x);
 	for (int i = 0; i < columnModelPositions.length; i++) {
 		int diff = Math.abs(columnModelPositions[i] - x);
