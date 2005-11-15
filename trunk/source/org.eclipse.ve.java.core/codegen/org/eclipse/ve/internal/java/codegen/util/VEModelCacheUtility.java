@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: VEModelCacheUtility.java,v $
- *  $Revision: 1.19 $  $Date: 2005-09-27 15:12:09 $ 
+ *  $Revision: 1.20 $  $Date: 2005-11-15 16:43:01 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -146,7 +146,7 @@ public class VEModelCacheUtility {
 	public static void doSaveCache (IBeanDeclModel bdm, IProgressMonitor monitor) {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();		
-		monitor.beginTask(Messages.VEModelCacheUtility_3,3); 
+		monitor.beginTask(Messages.VEModelCacheUtility_3,4); 
 		monitor.worked(1);		
 		if (bdm!=null && bdm.getCompositionModel()!=null) {
 			IVEModelInstance model = bdm.getCompositionModel();
