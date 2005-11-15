@@ -90,11 +90,11 @@ public class Table_Lodgings extends Composite {
 
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
 				viewer);
-		tableViewerDescription.addColumn("Description", "description");
-		tableViewerDescription.addColumn("Price", "price",
+		tableViewerDescription.addColumn("description");
+		tableViewerDescription.addColumn("price",
 				new DoubleTextCellEditor(viewer.getTable()), null,
 				new DoubleConverter());
-		tableViewerDescription.addColumn("DeaultLodging", "defaultLodging",
+		tableViewerDescription.addColumn("defaultLodging",
 				null, new LodgingConverter());
 		dbc.bind(tableViewerDescription, new PropertyDescription(category,
 				"adventures"), null);

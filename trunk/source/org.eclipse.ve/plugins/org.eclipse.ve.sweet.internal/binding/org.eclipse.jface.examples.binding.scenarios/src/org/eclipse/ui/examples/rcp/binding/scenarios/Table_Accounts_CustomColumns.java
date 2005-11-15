@@ -90,9 +90,9 @@ public class Table_Accounts_CustomColumns extends Composite {
 		Catalog catalog = SampleData.CATALOG_2005;
 
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer1);		
-		tableViewerDescription.addColumn("First Name", "firstName");
-		tableViewerDescription.addColumn("Last Name", "lastName");
-		tableViewerDescription.addColumn("State", "state");		
+		tableViewerDescription.addColumn(1,"firstName");
+		tableViewerDescription.addColumn(2,"state");		
+		tableViewerDescription.addColumn(3,"lastName");		
 		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,
 				"accounts"), null);	
 	
@@ -106,8 +106,8 @@ public class Table_Accounts_CustomColumns extends Composite {
 		Catalog catalog = SampleData.CATALOG_2005;
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
-		tableViewerDescription.addColumn("Full Name", "fullName");
-		tableViewerDescription.addColumn("State", "state");
+		tableViewerDescription.addColumn("fullName");
+		tableViewerDescription.addColumn("state");
 		tableViewerDescription.setCellModifier(new DefaultCellModifier(tableViewerDescription){
 			public Object getValue(Object element, String property) {
 				if("fullName".equals(property)){
