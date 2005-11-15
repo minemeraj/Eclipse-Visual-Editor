@@ -50,7 +50,7 @@ abstract public class ScenariosTestCase extends TestCase {
 		if(shell!=null) {
 			return shell;
 		}
-		Shell result = new Shell(); // TODO - Unsure of this
+		Shell result = BindingScenariosTestSuite.getShell();
 		if (result == null) {
 			display = Display.getDefault();
 			if (Display.getDefault() == null) {
