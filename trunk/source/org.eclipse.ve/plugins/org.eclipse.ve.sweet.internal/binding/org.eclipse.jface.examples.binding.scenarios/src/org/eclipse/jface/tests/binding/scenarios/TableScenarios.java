@@ -73,9 +73,9 @@ public class TableScenarios extends ScenariosTestCase {
 		List accounts = catalog.getAccounts();		
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
-		tableViewerDescription.addColumn(1, "firstName");
-		tableViewerDescription.addColumn(2, "lastName");
-		tableViewerDescription.addColumn(3, "state");	
+		tableViewerDescription.addColumn("firstName");
+		tableViewerDescription.addColumn("lastName");
+		tableViewerDescription.addColumn("state");	
 		getDbc().bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);
 
 		// Verify the data in the table columns matches the accounts
@@ -96,9 +96,9 @@ public class TableScenarios extends ScenariosTestCase {
 		List accounts = catalog.getAccounts();	
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
-		tableViewerDescription.addColumn(1, "firstName");
-		tableViewerDescription.addColumn(2, "lastName",null, new PhoneConverter());
-		tableViewerDescription.addColumn(3, "state",null,new StateConverter());	
+		tableViewerDescription.addColumn("firstName");
+		tableViewerDescription.addColumn("lastName",null, new PhoneConverter());
+		tableViewerDescription.addColumn("state",null,new StateConverter());	
 		getDbc().bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);			
 		
 		CellEditor[] cellEditors = tableViewer.getCellEditors();
@@ -122,9 +122,9 @@ public class TableScenarios extends ScenariosTestCase {
 		List accounts = catalog.getAccounts();	
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
-		tableViewerDescription.addColumn(1, "lastName");
-		tableViewerDescription.addColumn(2, "phone",null, new PhoneConverter());
-		tableViewerDescription.addColumn(3, "state",null,new StateConverter());	
+		tableViewerDescription.addColumn("lastName");
+		tableViewerDescription.addColumn("phone",null, new PhoneConverter());
+		tableViewerDescription.addColumn("state",null,new StateConverter());	
 		getDbc().bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);		
 				
 		// Verify that the data in the the table columns matches the expected
