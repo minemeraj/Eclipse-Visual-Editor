@@ -10,18 +10,22 @@
  *******************************************************************************/
 /*
  *  $RCSfile: XMLViewPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-04 18:08:42 $ 
+ *  $Revision: 1.5 $  $Date: 2005-11-15 23:11:23 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
 import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.*;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
@@ -46,6 +50,40 @@ public class XMLViewPart extends ContentOutline {
 
 		protected EditDomain domain;
 
+		protected Job refreshJob = new Job("Refresh Visual Editor XMLView") {
+		
+			{
+				this.setSystem(true);
+				this.setPriority(Job.SHORT);
+			}
+			
+			protected IStatus run(IProgressMonitor monitor) {
+				Control c = XMLViewTextPage.this.getControl();
+				if (!monitor.isCanceled() && c != null && !c.isDisposed() && domain.getDiagramData() != null) {
+					Resource resource = domain.getDiagramData().eResource();
+					final ByteArrayOutputStream os = new ByteArrayOutputStream();
+					try {
+						resource.save(os, XML_SAVE_CACHE_OPTIONS);
+					} catch (Exception e) {
+						os.reset();
+						PrintWriter w = new PrintWriter(os);
+						e.printStackTrace(w);
+						w.close();
+					}
+					if (!monitor.isCanceled()) {
+						c.getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								setText(os.toString());
+							}
+						
+						});
+					}
+				}
+				return Status.OK_STATUS;
+			}
+		
+		};
+		
 		protected ModelChangeController.ModelChangeListener changeListener = new ModelChangeController.ModelChangeListener() {
 
 			public void transactionEvent(ModelChangeEvent event) {
@@ -64,20 +102,13 @@ public class XMLViewPart extends ContentOutline {
 
 		public void dispose() {
 			((ModelChangeController) domain.getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY)).removeModelChangeListener(changeListener);
+			refreshJob.cancel();
 			super.dispose();
 		}
 
 		public void refresh() {
-			if (domain.getDiagramData() != null) {
-				Resource resource = domain.getDiagramData().eResource();
-				ByteArrayOutputStream os = new ByteArrayOutputStream();
-				try {
-					resource.save(os, XML_SAVE_CACHE_OPTIONS);
-					setText(os.toString());
-				} catch (Exception e) {
-					setText(""); //$NON-NLS-1$
-				}
-			}
+			refreshJob.cancel();
+			refreshJob.schedule(500);
 		}
 
 		public void addSelectionChangedListener(ISelectionChangedListener listener) {
