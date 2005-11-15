@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NameInMemberPropertyDescriptor.java,v $
- *  $Revision: 1.10 $  $Date: 2005-11-11 23:20:55 $ 
+ *  $Revision: 1.11 $  $Date: 2005-11-15 23:18:32 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -282,7 +282,7 @@ public class NameInMemberPropertyDescriptor extends NameInCompositionPropertyDes
 					annotates[i] = null;
 				}
 			}
-			NameChangeDialog dialog = new NameChangeDialog(domain.getEditorPart().getSite().getShell(), renameNames, renameAnnotations, domain, false, true);
+			NameChangeDialog dialog = new NameChangeDialog(domain.getEditorPart().getSite().getShell(), renameNames, annotates, domain, false, true);
 			if(dialog.open()==Dialog.OK){
 				renameNames = dialog.getFinalNames();
 				// Now copy over the names from the dialog to the appropriate place in the list.
