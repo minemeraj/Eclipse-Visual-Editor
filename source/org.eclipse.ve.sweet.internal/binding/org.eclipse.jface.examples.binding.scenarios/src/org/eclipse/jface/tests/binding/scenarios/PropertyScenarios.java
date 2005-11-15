@@ -494,11 +494,14 @@ public class PropertyScenarios extends ScenariosTestCase {
 		// happening
 		// spinEventLoop(1);
 		assertEquals(adventure.getName(), text.getText());
+		text.notifyListeners(SWT.FocusIn, null);
 		text.setText("foobar");
+		text.notifyListeners(SWT.FocusOut, null);
 		// uncomment the following line to see what's happening
 		// spinEventLoop(1);
-		assertEquals("foobar", adventure.getName());
+		assertEquals("foobar", adventure.getName());		
 		adventure.setName("barfoo");
+		
 		// uncomment the following line to see what's happening
 		// spinEventLoop(1);
 		assertEquals("barfoo", text.getText());
