@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.92 $  $Date: 2005-11-15 16:43:01 $ 
+ *  $Revision: 1.93 $  $Date: 2005-11-15 18:23:38 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -19,6 +19,7 @@ import java.util.logging.Level;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -1383,7 +1384,22 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 					primDoSave(monitor);
 					return Status.OK_STATUS;
 				}
-			};    		  
+			};    	
+			// One at the time
+			job.setRule(new ISchedulingRule() {			
+				public boolean isConflicting(ISchedulingRule rule) {
+					if (rule.getClass() == this.getClass()) 
+						return true;
+					return false;
+				}
+			
+				public boolean contains(ISchedulingRule rule) {
+					if (rule.getClass() == this.getClass()) 
+						return true;
+					return false;   
+				}
+			
+			});
 			job.schedule();			
 			monitor.done();
 		}
