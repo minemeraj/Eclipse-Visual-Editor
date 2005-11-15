@@ -11,12 +11,11 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.17 $  $Date: 2005-11-12 00:04:03 $ 
+ *  $Revision: 1.18 $  $Date: 2005-11-15 21:48:48 $ 
  */
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.gef.EditPart;
@@ -213,6 +212,17 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 		setTooltip();		
 		workbenchWindow.getSelectionService().addSelectionListener(selListener);
 		workbenchWindow.getPartService().addPartListener(alignmentWindowPartListener);
+		
+		toolbarMenuManager = new MenuManager();
+		toolbarMenuManager.setRemoveAllWhenShown(true);
+		toolbarMenuManager.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				if(fLayoutList != null){
+					fLayoutList.fillMenuManager(toolbarMenuManager);
+				}
+			}
+		
+		});
 	}
 	
 	private void setTooltip() {
@@ -300,17 +310,25 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 		return selectionProvider;
 	}
 	
-	/**
-	 * When action is going away, it is important that this
-	 * dispose method is called so that it can clean up.
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IMenuCreator#dispose()
 	 */
 	public void dispose() {
-		if(workbenchWindow != null){
-			// TODO - temporary to find out who is disposing this when they shouldn't... causing exceptions on the customize layout window
-			CDEPlugin.getPlugin().getLogger().log(new RuntimeException(), Level.WARNING);
-			workbenchWindow.getSelectionService().removeSelectionListener(selListener);
-			workbenchWindow.getPartService().removePartListener(alignmentWindowPartListener);
-		}
+		toolbarMenuManager.dispose();
+	}
+	
+	/**
+	 * When action is going away, it is important that this
+	 * dispose method is called so that it can clean up. 
+	 * <p>
+	 * <b>NOTE:</b> This is different than the {@link #dispose()} method. The dispose
+	 * is called often, everytime the menu dropdown is called. It is for cleaning up
+	 * the menu. This method is called when the action itself is no longer needed, from
+	 * the editor action contributor class.
+	 */
+	public void disposeAction() {
+		workbenchWindow.getSelectionService().removeSelectionListener(selListener);
+		workbenchWindow.getPartService().removePartListener(alignmentWindowPartListener);
 		editorPart = null;
 		contributor = null;
 		workbenchWindow = null;
@@ -380,29 +398,11 @@ protected void persistPreferences() {
 	}
 
 	public Menu getMenu(Control parent) {
-		initializeToolbarMenuManager();
 		return  toolbarMenuManager.createContextMenu(parent);
 	}
 
 	public Menu getMenu(Menu parent) {
-		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	private void initializeToolbarMenuManager(){
-		if (toolbarMenuManager == null)
-			toolbarMenuManager = new MenuManager();
-		else
-			toolbarMenuManager.removeAll();	// Clear it out so we can refill it.
-		
-		if(fLayoutList != null){
-			fLayoutList.fillMenuManager(toolbarMenuManager);
-		}		
-	}
-
-	public void fillMenuManager(MenuManager aMenuManager) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
