@@ -72,4 +72,6 @@ public final class CodegenEditorPartMessages extends NLS {
 	public static String JavaVisualEditorReloadActionController_PARSE_ERROR;
 	public static String JavaVisualEditorReloadActionController_PAUSED;
 	public static String JavaVisualEditorOutlinePage_LinkSelectionSourceEditor_Action_Label;
+	public static String JavaSourceTranslator_17;
+	public static String JavaSourceTranslator_18;
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.91 $  $Date: 2005-10-19 22:14:52 $ 
+ *  $Revision: 1.92 $  $Date: 2005-11-15 16:43:01 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -768,7 +768,7 @@ protected boolean	buildCompositionModel(IProgressMonitor pm) throws CodeGenExcep
 		   fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, false) ;
 		   fBeanModel.setState(IBeanDeclModel.BDM_STATE_UP_AND_RUNNING,true) ;
 		   
-		   pm.subTask("Adding bean "+bean.getSimpleName()+CodegenMessages.JavaSourceTranslator_4); 
+		   pm.subTask(CodegenEditorPartMessages.JavaSourceTranslator_17+bean.getSimpleName()+CodegenMessages.JavaSourceTranslator_4); 
 		   if (!fVEModel.isFromCache())
 		     CodeGenUtil.addBeanToBSC(bean,fVEModel.getModelRoot(), false) ;
 
@@ -1356,9 +1356,10 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 		return type.getFullyQualifiedName();
 		  
 	}
-	public void doSave(IProgressMonitor monitor) {
+	
+	private void primDoSave(IProgressMonitor monitor) {
 		if (fBeanModel != null && !fBeanModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN) && 
-			!fparseError && !fdisconnected) {
+				!fparseError && !fdisconnected) {
 		  VEModelCacheUtility.doSaveCache(fBeanModel, monitor);
 		  // We may have stopped processing bottom up so that the model will not change.
 		  if (fSrcSync!=null)
@@ -1369,6 +1370,22 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 		else {
 			// File is being saved, but our model is not in sync... remove the old cache
 			VEModelCacheUtility.removeCache(fFile);
+		}		
+	}
+	public void doSave(IProgressMonitor monitor) {		
+		if (Display.getCurrent()==null)
+			primDoSave(monitor);
+		else {
+			monitor.beginTask(CodegenEditorPartMessages.JavaSourceTranslator_18,1);
+			//TODO this may cause a window where the cache will not match the model at the time of save
+			Job job = new ReverseParserJob(fFile, CodegenEditorPartMessages.JavaSourceTranslator_18) {
+				protected IStatus doRun(IProgressMonitor monitor) {
+					primDoSave(monitor);
+					return Status.OK_STATUS;
+				}
+			};    		  
+			job.schedule();			
+			monitor.done();
 		}
 	}
 
