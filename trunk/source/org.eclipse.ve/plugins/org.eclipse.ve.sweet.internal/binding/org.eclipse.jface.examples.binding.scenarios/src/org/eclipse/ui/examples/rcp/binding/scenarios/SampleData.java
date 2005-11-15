@@ -21,7 +21,6 @@ import org.eclipse.jface.databinding.DataBinding;
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatable;
 import org.eclipse.jface.databinding.IUpdatableFactory;
-import org.eclipse.jface.databinding.IValidationContext;
 import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.jface.databinding.SWTUpdatableFactory;
 import org.eclipse.jface.databinding.ViewersUpdatableFactory;
@@ -183,7 +182,7 @@ public class SampleData {
 
 		IUpdatableFactory emfFactory = new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Map properties,
-					Object description, IDataBindingContext bindingContext, IValidationContext validationContext)
+					Object description, IDataBindingContext bindingContext)
 					throws BindingException {
 				if (description instanceof PropertyDescription) {
 					PropertyDescription propertyDescription = (PropertyDescription) description;

@@ -12,7 +12,7 @@
  *  Created Oct 21, 2005 by Gili Mendel
  * 
  *  $RCSfile: UpdatableFactoriesTest.java,v $
- *  $Revision: 1.7 $  $Date: 2005-11-14 23:31:40 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-15 19:11:43 $ 
  */
 
 package org.eclipse.jface.tests.binding.scenarios;
@@ -62,7 +62,7 @@ public class UpdatableFactoriesTest extends ScenariosTestCase {
 		}
 
 		public IUpdatable createUpdatable(Map properties, Object description,
-				IDataBindingContext bindingContext, IValidationContext validationContext) {
+				IDataBindingContext bindingContext) {
 			if (c.isInstance(description)) {
 				return new TestIUpdatable() {
 					public void dispose() {

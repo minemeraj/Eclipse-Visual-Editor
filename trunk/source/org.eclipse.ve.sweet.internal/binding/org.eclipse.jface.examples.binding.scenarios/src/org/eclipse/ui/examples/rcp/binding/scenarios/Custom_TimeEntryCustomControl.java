@@ -16,7 +16,6 @@ import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatable;
 import org.eclipse.jface.databinding.IUpdatableFactory;
-import org.eclipse.jface.databinding.IValidationContext;
 import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -61,7 +60,7 @@ public class Custom_TimeEntryCustomControl extends Composite {
 
 		dbc.addUpdatableFactory(new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Map properties,
-					Object description, IDataBindingContext bindingContext, IValidationContext validationContext)
+					Object description, IDataBindingContext bindingContext)
 					throws BindingException {
 				if (description instanceof PropertyDescription) {
 					PropertyDescription propertyDescription = (PropertyDescription) description;
