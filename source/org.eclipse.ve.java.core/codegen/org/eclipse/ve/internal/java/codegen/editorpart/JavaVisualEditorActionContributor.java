@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorActionContributor.java,v $
- *  $Revision: 1.14 $  $Date: 2005-09-08 23:21:29 $ 
+ *  $Revision: 1.15 $  $Date: 2005-11-15 21:48:50 $ 
  */
 
 import org.eclipse.gef.ui.actions.*;
@@ -177,7 +177,7 @@ public class JavaVisualEditorActionContributor extends CompilationUnitEditorActi
 	 */
 	public void dispose() {
 		if (alignmentWindowAction != null) {
-			alignmentWindowAction.dispose();
+			alignmentWindowAction.disposeAction();
 			alignmentWindowAction = null;
 		}
 		super.dispose();
