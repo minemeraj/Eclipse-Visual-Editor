@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: LayoutCellEditor.java,v $
- *  $Revision: 1.11 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.12 $  $Date: 2005-11-15 18:53:27 $ 
  */
 
 import java.util.ArrayList;
@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Composite;
 
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.*;
 
@@ -35,7 +37,7 @@ import org.eclipse.ve.internal.propertysheet.ObjectComboBoxCellEditor;
  * The method createItems shows a list of available layout manager classes from which the 
  * user can pick one.
  */
-public class LayoutCellEditor extends ObjectComboBoxCellEditor implements IJavaCellEditor, INeedData {
+public class LayoutCellEditor extends ObjectComboBoxCellEditor implements IJavaCellEditor2, INeedData {
 	public static final String EDITDOMAINKEY_ITEMS_LIST = "org.eclipse.ve.internal.swt.LayoutCellEditor"; //$NON-NLS-1$
 	public static final int CLASSNAMES_INDEX = 0;
 	public static final int DISPLAYNAMES_INDEX = 1;
@@ -50,7 +52,7 @@ public LayoutCellEditor(Composite aComposite){
 	super(aComposite);
 }
 /**
- * Return an EMF class that represents the constraint bean
+ * Return an EMF class that represents the manager bean
  */
 protected Object doGetObject(int index) {
 	if (index == NO_SELECTION || index == 0)
@@ -79,15 +81,16 @@ protected int doGetIndex(Object anObject){
 	return NO_SELECTION;
 }
 
-public String getJavaInitializationString() {
+public JavaAllocation getJavaAllocation() {
 	Object v = doGetValue();
-	if (v == null)
-		return "null"; //$NON-NLS-1$
-	else {
+	if (v == null) {
+		return InstantiationFactory.eINSTANCE.createParseTreeAllocation(InstantiationFactory.eINSTANCE.createPTNullLiteral());
+	} else {
 		IJavaObjectInstance jv = (IJavaObjectInstance) v;
-		return "new " + jv.getJavaType().getQualifiedName() + "()"; //$NON-NLS-1$ //$NON-NLS-2$
+		return InstantiationFactory.eINSTANCE.createParseTreeAllocation(InstantiationFactory.eINSTANCE.createPTClassInstanceCreation(jv.getJavaType().getQualifiedName(), null));
 	}
 }
+
 public static String getDisplayName(EditDomain editDomain, String className){
 	String dispName = null;
 	String [] [] layoutinfo = getLayoutItems(editDomain);

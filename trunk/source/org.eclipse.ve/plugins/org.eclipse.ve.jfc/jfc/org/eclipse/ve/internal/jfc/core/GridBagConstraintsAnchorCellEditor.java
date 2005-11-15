@@ -11,12 +11,14 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagConstraintsAnchorCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-15 18:53:31 $ 
  */
 
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.java.core.*;
@@ -27,6 +29,7 @@ import org.eclipse.jem.internal.proxy.core.IIntegerBeanProxy;
 
 public class GridBagConstraintsAnchorCellEditor extends ObjectComboBoxCellEditor implements INeedData {
 	protected EditDomain fEditDomain;
+
 	public static int[] ANCHOR_VALUES = new int [] {
 		GridBagConstraint.CENTER,
 		GridBagConstraint.NORTH,
@@ -38,19 +41,11 @@ public class GridBagConstraintsAnchorCellEditor extends ObjectComboBoxCellEditor
 		GridBagConstraint.WEST,
 		GridBagConstraint.NORTHWEST
 	};
-	
-	public static String[] ANCHOR_INITSTRINGS = new String[] {
-		"java.awt.GridBagConstraints.CENTER", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.NORTH", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.NORTHEAST", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.EAST", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.SOUTHEAST", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.SOUTH", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.SOUTHWEST", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.WEST", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.NORTHWEST" //$NON-NLS-1$
-	};	
-	
+
+	public static int[] ANCHORINDEX_TO_MAINANCHORINDEX = new int[] {GridBagComponentPage.ANCHOR_CENTER, GridBagComponentPage.ANCHOR_NORTH,
+		GridBagComponentPage.ANCHOR_NORTHEAST, GridBagComponentPage.ANCHOR_EAST, GridBagComponentPage.ANCHOR_SOUTHEAST, GridBagComponentPage.ANCHOR_SOUTH,
+		GridBagComponentPage.ANCHOR_SOUTHWEST, GridBagComponentPage.ANCHOR_WEST, GridBagComponentPage.ANCHOR_NORTHWEST};
+		
 public GridBagConstraintsAnchorCellEditor(Composite aComposite){
 	// Create the combo editor with the list of possible anchor values
 	super(aComposite, GridBagConstraintsAnchorLabelProvider.ANCHOR_VALUES);
@@ -59,16 +54,16 @@ public GridBagConstraintsAnchorCellEditor(Composite aComposite){
  * Return a MOF class that represents the constraint bean
  */
 protected Object doGetObject(int index){
-	String initString = ""; //$NON-NLS-1$
-	if (index < ANCHOR_INITSTRINGS.length)
-		initString = ANCHOR_INITSTRINGS[index];
+	JavaAllocation alloc;
+	if (index < ANCHORINDEX_TO_MAINANCHORINDEX.length)
+		alloc = GridBagComponentPage.createAnchorAllocation(ANCHORINDEX_TO_MAINANCHORINDEX[index]);
 	else
-		initString = ANCHOR_INITSTRINGS[0];
+		alloc = GridBagComponentPage.createAnchorAllocation(ANCHORINDEX_TO_MAINANCHORINDEX[0]);
 
 	return BeanUtilities.createJavaObject(
 		"int", //$NON-NLS-1$
 		JavaEditDomainHelper.getResourceSet(fEditDomain),
-		initString
+		alloc
 		);
 }
 protected int doGetIndex(Object anObject){

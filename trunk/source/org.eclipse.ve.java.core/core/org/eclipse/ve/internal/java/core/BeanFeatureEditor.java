@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanFeatureEditor.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.10 $  $Date: 2005-11-15 18:53:28 $ 
  */
 
 import java.text.MessageFormat;
@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -65,7 +66,7 @@ import org.eclipse.ve.internal.propertysheet.ISourced;
  */
 public class BeanFeatureEditor
 	extends CellEditor
-	implements ISourced, IExecutableExtension, INeedData, IJavaCellEditor {
+	implements ISourced, IExecutableExtension, INeedData, IJavaCellEditor, IJavaCellEditor2 {
 	
 	/**
 	 * Interface that the actual cell editor must implement.
@@ -414,6 +415,13 @@ public class BeanFeatureEditor
 
 		return isValueValid() ? fPropertyEditorWrapperProxy.getJavaInitializationString() : null;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IJavaCellEditor2#getJavaAllocation()
+	 */
+	public JavaAllocation getJavaAllocation() {
+		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
+	}
 
 	/**
 	 * getValue method comment.
@@ -456,18 +464,18 @@ public class BeanFeatureEditor
 			IJavaInstance bean = null;
 			if (getFeatureType().isPrimitive()) {
 				bean =
-					BeanProxyUtilities.wrapperBeanProxyAsPrimitiveType(
+					BeanProxyUtilities.wrapperBeanProxyAsPrimitive(
 						newProxy,
 						(JavaDataType) getFeatureType(),
 						JavaEditDomainHelper.getResourceSet(fEditDomain),
-						fPropertyEditorWrapperProxy.getJavaInitializationString());
+						BeanPropertyDescriptorAdapter.createAllocation(fPropertyEditorWrapperProxy.getJavaInitializationString()));
 			} else {
 				bean =
 					BeanProxyUtilities.wrapperBeanProxy(
 						newProxy,
 						JavaEditDomainHelper.getResourceSet(fEditDomain),
-						fPropertyEditorWrapperProxy.getJavaInitializationString(),
-						true);
+						true,
+						BeanPropertyDescriptorAdapter.createAllocation(fPropertyEditorWrapperProxy.getJavaInitializationString()));
 			}
 			fValue = bean;
 			fLastKnownBeanProxy = newProxy;

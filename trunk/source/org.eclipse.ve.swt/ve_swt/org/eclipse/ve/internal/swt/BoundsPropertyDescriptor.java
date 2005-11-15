@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: BoundsPropertyDescriptor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-15 18:53:27 $ 
  */
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EReference;
@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IRectangleBeanProxy;
@@ -54,7 +55,8 @@ public class BoundsPropertyDescriptor extends BeanPropertyDescriptorAdapter impl
 			cb.cancelAttributeSetting(comp, sfControlLocation);
 		
 		// If there are any "preferred" settings on the bounds, we need to use ApplyNullLayoutConstraintCommand instead to handle these.
-		IBeanProxyHost sh = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) setValue);
+		IJavaInstance setJavaInstanceValue = (IJavaInstance) setValue;
+		IBeanProxyHost sh = BeanProxyUtilities.getBeanProxyHost(setJavaInstanceValue);
 		IBeanProxy rect = sh.instantiateBeanProxy();
 		if (rect instanceof IRectangleBeanProxy) {
 			IRectangleBeanProxy rectProxy = (IRectangleBeanProxy) rect;
@@ -72,7 +74,10 @@ public class BoundsPropertyDescriptor extends BeanPropertyDescriptorAdapter impl
 			}
 		}
 		
-		cb.applyAttributeSetting(comp, (EStructuralFeature) getTarget(), setValue);
+		ParseTreeAllocation alloc = changeToParseTreeAllocation(setJavaInstanceValue);
+		if (alloc != null)
+			cb.applyAttributeSetting(setJavaInstanceValue, JavaInstantiation.getAllocationFeature(setJavaInstanceValue), alloc);
+		cb.applyAttributeSetting(comp, (EStructuralFeature) getTarget(), setJavaInstanceValue);
 		return cb.getCommand();
 	}
 	

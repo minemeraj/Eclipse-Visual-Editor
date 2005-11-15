@@ -11,16 +11,16 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: RectangleJavaClassCellEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-15 18:53:28 $ 
  */
 
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaRefFactory;
 
@@ -28,7 +28,7 @@ import org.eclipse.ve.internal.java.core.*;
 /**
  * Cell Editor for Rectangle Beans.
  */
-public class RectangleJavaClassCellEditor extends DefaultJavaClassCellEditor implements IExecutableExtension {
+public class RectangleJavaClassCellEditor extends DefaultJavaClassCellEditor implements IExecutableExtension, IJavaCellEditor2 {
 	
 	private String rectangleClassName;
 	
@@ -62,6 +62,20 @@ protected String getJavaInitializationString(String rectString) {
 	return (sb.toString());
 }
 
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.core.DefaultJavaClassCellEditor#getJavaAllocation(java.lang.String)
+ */
+protected JavaAllocation getJavaAllocation(String value) {
+	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(value));
+}
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.core.IJavaCellEditor2#getJavaAllocation()
+ */
+public JavaAllocation getJavaAllocation() {
+	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
+}
+
 /**
  * Parse the text string to see if it is a valid rectangle, e.g. x,y,width,height
  */
@@ -89,13 +103,6 @@ public void setData(Object data) {
 }
 
 /**
- * Helper to return a well formed Java Initialization string for an Rectangle.
- */
-public static String getJavaInitializationString(Rectangle rect,String aRectangleClassName) {
-	return getJavaInitializationString(rect.x, rect.y, rect.width, rect.height,aRectangleClassName);
-}
-
-/**
  * Helper to return a well formed Java Initialization string for an x, y, width, and height.
  */
 public static String getJavaInitializationString(int x, int y, int width, int height,String aRectangleClassName){
@@ -112,6 +119,26 @@ public static String getJavaInitializationString(int x, int y, int width, int he
 	buffer.append(String.valueOf(height));
 	buffer.append(')');
 	return buffer.toString();
+}
+
+/**
+ * Return initialization as a parse tree allocation.
+ * @param x
+ * @param y
+ * @param width
+ * @param height
+ * @param aRectangleClassName
+ * @return
+ * 
+ * @since 1.2.0
+ */
+public static ParseTreeAllocation getJavaAllocation(int x, int y, int width, int height,String aRectangleClassName) {
+	PTClassInstanceCreation newclass = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation(aRectangleClassName, null);
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(x)));
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(y)));
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(width)));
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(height)));
+	return InstantiationFactory.eINSTANCE.createParseTreeAllocation(newclass);	
 }
 /**
  * The rectangle class name is a contained in the initialization data to allow this class to be configurable

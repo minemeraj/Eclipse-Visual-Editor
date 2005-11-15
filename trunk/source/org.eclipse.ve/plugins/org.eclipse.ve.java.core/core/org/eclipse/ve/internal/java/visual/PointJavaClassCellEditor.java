@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: PointJavaClassCellEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-15 18:53:28 $ 
  */
 
 
@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.swt.widgets.Composite;
 
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaRefFactory;
 
@@ -30,7 +31,7 @@ import org.eclipse.ve.internal.java.core.*;
  * The actual point class itself is provided as an initialization string so the same class can be used for 
  * different toolkits, i.e. AWT or SWT
  */
-public class PointJavaClassCellEditor extends DefaultJavaClassCellEditor implements IExecutableExtension {
+public class PointJavaClassCellEditor extends DefaultJavaClassCellEditor implements IExecutableExtension, IJavaCellEditor2 {
 	
 	private String pointClassName;
 	
@@ -62,6 +63,20 @@ protected String getJavaInitializationString(String dimString) {
 	}
 	sb.append(')');
 	return (sb.toString());
+}
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.core.DefaultJavaClassCellEditor#getJavaAllocation(java.lang.String)
+ */
+protected JavaAllocation getJavaAllocation(String value) {
+	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(value));
+}
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.core.IJavaCellEditor2#getJavaAllocation()
+ */
+public JavaAllocation getJavaAllocation() {
+	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
 }
 
 /**
@@ -103,6 +118,23 @@ public static String getJavaInitializationString(int x, int y, String aPointClas
 	buffer.append(')');
 	return buffer.toString();
 }
+
+/**
+ * Return initialization as a parse tree allocation.
+ * @param x
+ * @param y
+ * @param aPointClassName
+ * @return
+ * 
+ * @since 1.2.0
+ */
+public static ParseTreeAllocation getJavaAllocation(int x, int y, String aPointClassName) {
+	PTClassInstanceCreation newclass = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation(aPointClassName, null);
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(x)));
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(y)));
+	return InstantiationFactory.eINSTANCE.createParseTreeAllocation(newclass);
+}
+
 /**
  * The point class name is a contained in the initialization data to allow this class to be configurable
  */

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.19 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.20 $  $Date: 2005-11-15 18:53:28 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -283,11 +283,15 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 			((INeedData) cellEditor).setData(fEditDomain);
 			// We must call doSetValue(...) with the new bean
 			cellEditor.setValue(newBean);
-			String initString = "UNABLE TO DETERMINE INITIALIZATION STRING";
-			if(cellEditor instanceof IJavaCellEditor){
-				initString = ((IJavaCellEditor) cellEditor).getJavaInitializationString();
+			if (cellEditor instanceof IJavaCellEditor2) {
+				newBean.setAllocation(((IJavaCellEditor2) cellEditor).getJavaAllocation());
+			} else if(cellEditor instanceof IJavaCellEditor){
+				// Can't convert init strings because they may contain static field accesses, and these cannot be succesfully converted.
+				String initString = ((IJavaCellEditor) cellEditor).getJavaInitializationString();
+				newBean.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(initString));
+			} else {
+				newBean.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation("UNABLE TO DETERMINE INITIALIZATION STRING"));
 			}
-			newBean.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(initString));
 		}
 		// Now we have a newBean to set
 		// If the oldBean exists and there is an explicit setting

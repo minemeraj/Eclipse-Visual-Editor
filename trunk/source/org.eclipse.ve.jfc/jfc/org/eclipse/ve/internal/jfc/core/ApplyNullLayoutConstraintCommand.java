@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ApplyNullLayoutConstraintCommand.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-15 18:53:31 $ 
  */
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class ApplyNullLayoutConstraintCommand extends NullLayoutConstraintComman
 		return BeanUtilities.createJavaObject(
 			JFCConstants.POINT_CLASS_NAME,
 			rset,
-			PointJavaClassCellEditor.getJavaInitializationString(x, y, JFCConstants.POINT_CLASS_NAME));
+			PointJavaClassCellEditor.getJavaAllocation(x, y, JFCConstants.POINT_CLASS_NAME));
 	}	
 	/**
 	 * Return the size for java.awt.Dimension
@@ -55,7 +55,7 @@ public class ApplyNullLayoutConstraintCommand extends NullLayoutConstraintComman
 		return BeanUtilities.createJavaObject(
 			JFCConstants.DIMENSION_CLASS_NAME,
 			rset,
-			DimensionJavaClassCellEditor.getJavaInitializationString(width, height, JFCConstants.DIMENSION_CLASS_NAME));						
+			DimensionJavaClassCellEditor.getJavaAllocation(width, height, JFCConstants.DIMENSION_CLASS_NAME));						
 	}
 	/**
 	 * Return the bounds for java.awt.Rectangle
@@ -64,7 +64,7 @@ public class ApplyNullLayoutConstraintCommand extends NullLayoutConstraintComman
 		return BeanUtilities.createJavaObject(
 			JFCConstants.RECTANGLE_CLASS_NAME,
 			rset,
-			RectangleJavaClassCellEditor.getJavaInitializationString(x, y, width, height,JFCConstants.RECTANGLE_CLASS_NAME));		
+			RectangleJavaClassCellEditor.getJavaAllocation(x, y, width, height,JFCConstants.RECTANGLE_CLASS_NAME));		
 	}	
 	/**
 	 * Return the structural feature URI for AWT component bounds

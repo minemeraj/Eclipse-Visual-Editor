@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: ImageCellEditor.java,v $
- *  $Revision: 1.10 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.11 $  $Date: 2005-11-15 18:53:31 $ 
  */
 import java.util.StringTokenizer;
 
@@ -40,7 +40,7 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
  * @version 1.0
  * @author
  */
-public class ImageCellEditor extends DialogCellEditor implements IJavaCellEditor, INeedData {
+public class ImageCellEditor extends DialogCellEditor implements IJavaCellEditor2, INeedData {
 
 	protected EditDomain fEditDomain;
 	private String path = ""; //$NON-NLS-1$

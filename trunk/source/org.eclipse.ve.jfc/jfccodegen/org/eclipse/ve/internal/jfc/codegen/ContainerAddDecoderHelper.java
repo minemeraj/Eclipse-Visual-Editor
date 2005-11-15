@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: ContainerAddDecoderHelper.java,v $
- *  $Revision: 1.30 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.31 $  $Date: 2005-11-15 18:53:31 $ 
  */
 
 import java.util.*;
@@ -39,6 +39,7 @@ public class ContainerAddDecoderHelper extends AbstractIndexedChildrenDecoderHel
 
 	private static final URI ConstraintComponentURI = URI.createURI("platform:/plugin/org.eclipse.ve.jfc/overrides/java/awt/containerVisuals.ecore#ConstraintComponent"); //$NON-NLS-1$
 
+	// TODO This needs to be changed to parse and store parse trees and not init strings for the constraints.
 	BeanPart fAddedPart = null;
 	IJavaObjectInstance fAddedInstance = null;
 	EObject fCC = null;

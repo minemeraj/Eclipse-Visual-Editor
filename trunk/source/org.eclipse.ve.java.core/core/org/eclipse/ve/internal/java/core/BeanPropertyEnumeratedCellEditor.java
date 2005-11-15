@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanPropertyEnumeratedCellEditor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-15 18:53:28 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -74,18 +74,18 @@ protected Object doGetObject(int index){
 
 	Object bean = null;
 	if ( fFeatureType.isPrimitive() ) {
-		bean = BeanProxyUtilities.wrapperBeanProxyAsPrimitiveType(
+		bean = BeanProxyUtilities.wrapperBeanProxyAsPrimitive(
 			fBeanProxies[index],
 			(JavaDataType)fFeatureType,
 			JavaEditDomainHelper.getResourceSet(fEditDomain),
-			fInitStrings[index]
+			BeanPropertyDescriptorAdapter.createAllocation(fInitStrings[index])
 		);
 	} else {		
 		bean = (IJavaObjectInstance)BeanProxyUtilities.wrapperBeanProxy(
 			fBeanProxies[index],
 			JavaEditDomainHelper.getResourceSet(fEditDomain),
-			fInitStrings[index],
-			true);	// Since we are getting a new value, we own it. (By definition, editors are supposed to return new instances).
+			true,	// Since we are getting a new value, we own it. (By definition, editors are supposed to return new instances).
+			BeanPropertyDescriptorAdapter.createAllocation(fInitStrings[index]));
 	}
 	return bean;	
 	

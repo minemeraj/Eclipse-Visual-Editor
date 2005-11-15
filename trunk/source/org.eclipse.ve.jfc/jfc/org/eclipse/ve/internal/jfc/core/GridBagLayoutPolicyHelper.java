@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.15 $  $Date: 2005-10-11 21:23:50 $ 
+ *  $Revision: 1.16 $  $Date: 2005-11-15 18:53:31 $ 
  */
 
 import java.util.*;
@@ -63,12 +63,6 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 	private JavaHelpers primInt, primDouble, gridBagConstraints;
 
 	private EObject layoutTable[][];
-
-	protected static String[] fillInitStrings = new String[] { "java.awt.GridBagConstraints.NONE", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.BOTH", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.HORIZONTAL", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.VERTICAL" //$NON-NLS-1$
-	};
 
 	public GridBagLayoutPolicyHelper(VisualContainerPolicy ep) {
 		super(ep);
@@ -131,13 +125,13 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 			javaGridBagConstraint.eSet(sfWeightY, weighty);
 		}
 		if (gridBagConstraint.fill != defaultConstraint.fill) {
-			Object fill = BeanUtilities.createJavaObject(primInt, rset, fillInitStrings[gridBagConstraint.fill]);
+			Object fill = BeanUtilities.createJavaObject(primInt, rset, GridBagComponentPage.createFillAllocation(GridBagConstraintsFillCellEditor.getFillIndexFromConstraint(gridBagConstraint.fill))); 
 			javaGridBagConstraint.eSet(sfFill, fill);
 		}
 		// The insets value is a class, not a primitive.
 		if (!gridBagConstraint.insets.equals(defaultConstraint.insets)) {
 			Insets insets = gridBagConstraint.insets;
-			IJavaObjectInstance insetsBean = (IJavaObjectInstance) BeanUtilities.createJavaObject("java.awt.Insets", rset, InsetsJavaClassCellEditor.getJavaInitializationString(insets)); //$NON-NLS-1$ 
+			IJavaObjectInstance insetsBean = (IJavaObjectInstance) BeanUtilities.createJavaObject("java.awt.Insets", rset, InsetsJavaClassCellEditor.getJavaAllocation(insets.top, insets.left, insets.bottom, insets.right)); //$NON-NLS-1$ 
 			javaGridBagConstraint.eSet(sfInsets, insetsBean);
 		}
 		if (gridBagConstraint.ipadx != defaultConstraint.ipadx) {

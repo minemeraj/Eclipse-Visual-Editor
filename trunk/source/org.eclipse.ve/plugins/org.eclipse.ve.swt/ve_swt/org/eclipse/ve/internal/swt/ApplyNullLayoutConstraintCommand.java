@@ -38,7 +38,7 @@ public class ApplyNullLayoutConstraintCommand extends NullLayoutConstraintComman
 		return BeanUtilities.createJavaObject(
 			SWTConstants.POINT_CLASS_NAME, 
 			rset,
-			PointJavaClassCellEditor.getJavaInitializationString(x, y,SWTConstants.POINT_CLASS_NAME));
+			PointJavaClassCellEditor.getJavaAllocation(x, y,SWTConstants.POINT_CLASS_NAME));
 	}	
 	/**
 	 * Return the size for SWT.  This is an org.eclipse.swt.graphics.Point
@@ -47,7 +47,7 @@ public class ApplyNullLayoutConstraintCommand extends NullLayoutConstraintComman
 		return BeanUtilities.createJavaObject(
 			SWTConstants.POINT_CLASS_NAME, 
 			rset,
-			PointJavaClassCellEditor.getJavaInitializationString(width, height,SWTConstants.POINT_CLASS_NAME));						
+			PointJavaClassCellEditor.getJavaAllocation(width, height,SWTConstants.POINT_CLASS_NAME));						
 	}
 	/**
 	 * Return the bounds for org.eclipse.swt.graphics.Rectangle
@@ -56,7 +56,7 @@ public class ApplyNullLayoutConstraintCommand extends NullLayoutConstraintComman
 		return BeanUtilities.createJavaObject(
 			SWTConstants.RECTANGLE_CLASS_NAME, 
 			rset,
-			RectangleJavaClassCellEditor.getJavaInitializationString(x, y, width, height,SWTConstants.RECTANGLE_CLASS_NAME));		
+			RectangleJavaClassCellEditor.getJavaAllocation(x, y, width, height,SWTConstants.RECTANGLE_CLASS_NAME));		
 	}	
 	/**
 	 * Return the structural feature URI for SWT control bounds

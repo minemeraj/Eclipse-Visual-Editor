@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: LocationPropertyDescriptor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-15 18:53:27 $ 
  */
 
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
@@ -27,7 +28,7 @@ import org.eclipse.ve.internal.cde.core.XYLayoutUtility;
 
 import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
-import org.eclipse.ve.internal.java.visual.DimensionJavaClassCellEditor;
+import org.eclipse.ve.internal.java.visual.PointJavaClassCellEditor;
 
 import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
 /**
@@ -57,13 +58,14 @@ public class LocationPropertyDescriptor extends BeanPropertyDescriptorAdapter im
 				IRectangleBeanProxy bounds = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy(boundsObject);
 				Object newSize = BeanUtilities.createJavaObject(SWTConstants.POINT_CLASS_NAME,
 					comp.eResource().getResourceSet(),
-					DimensionJavaClassCellEditor.getJavaInitializationString(bounds.getWidth(), bounds.getHeight(), SWTConstants.POINT_CLASS_NAME));
+					PointJavaClassCellEditor.getJavaAllocation(bounds.getWidth(), bounds.getHeight(), SWTConstants.POINT_CLASS_NAME));
 				cb.applyAttributeSetting(comp, sfControlSize, newSize);
 			}
 		}
 			
 		// If there are any "preferred" settings on the bounds, we need to use ApplyNullLauoutConstraintCommand instead to handle these.
-		IBeanProxyHost sh = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) setValue);
+		IJavaInstance setJavaInstanceValue = (IJavaInstance) setValue;
+		IBeanProxyHost sh = BeanProxyUtilities.getBeanProxyHost(setJavaInstanceValue);
 		IBeanProxy point = sh.instantiateBeanProxy();
 		if (point instanceof IPointBeanProxy) {
 			IPointBeanProxy pointProxy = (IPointBeanProxy) point;
@@ -79,7 +81,10 @@ public class LocationPropertyDescriptor extends BeanPropertyDescriptorAdapter im
 			}
 		}
 		
-		cb.applyAttributeSetting(comp, (EStructuralFeature) getTarget(), setValue);
+		ParseTreeAllocation alloc = changeToParseTreeAllocation(setJavaInstanceValue);
+		if (alloc != null)
+			cb.applyAttributeSetting(setJavaInstanceValue, JavaInstantiation.getAllocationFeature(setJavaInstanceValue), alloc);
+		cb.applyAttributeSetting(comp, (EStructuralFeature) getTarget(), setJavaInstanceValue);
 		return cb.getCommand();
 	}
 	

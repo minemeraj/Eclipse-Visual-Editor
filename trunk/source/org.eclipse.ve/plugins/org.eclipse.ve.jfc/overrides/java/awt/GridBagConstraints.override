@@ -3,9 +3,7 @@
    <objectChanges key="X:ROOT#//@root">
       <value featureName="eStructuralFeatures">
          <listChanges referenceValues="_eStructuralFeatures"/>
-         <listChanges referenceValues="_eStructuralFeatures1"/>
-      </value>
-      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures1"/>      
          <listChanges referenceValues="_eStructuralFeatures2"/>
       </value>
    </objectChanges>

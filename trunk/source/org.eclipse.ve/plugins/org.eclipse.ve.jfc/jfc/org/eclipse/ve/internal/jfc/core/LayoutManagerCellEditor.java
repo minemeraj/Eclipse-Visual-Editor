@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutManagerCellEditor.java,v $
- *  $Revision: 1.17 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.18 $  $Date: 2005-11-15 18:53:31 $ 
  */
 
 import java.util.ArrayList;
@@ -24,13 +24,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
-import org.eclipse.ve.internal.java.core.IJavaCellEditor;
+import org.eclipse.ve.internal.java.core.IJavaCellEditor2;
 import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
 import org.eclipse.ve.internal.java.visual.ILayoutPolicyFactory;
 
@@ -39,7 +41,7 @@ import org.eclipse.ve.internal.propertysheet.*;
  * The method createItems shows a list of available layout manager classes from which the 
  * user can pick one.
  */
-public class LayoutManagerCellEditor extends ObjectComboBoxCellEditor implements IJavaCellEditor, INeedData , ISourced {
+public class LayoutManagerCellEditor extends ObjectComboBoxCellEditor implements IJavaCellEditor2, INeedData , ISourced {
 	public static final String EDITDOMAINKEY_ITEMS_LIST = "org.eclipse.ve.internal.jfc.core.LayoutManagerCellEditor"; //$NON-NLS-1$
 	public static final int CLASSNAMES_INDEX = 0;
 	public static final int DISPLAYNAMES_INDEX = 1;
@@ -86,15 +88,15 @@ protected int doGetIndex(Object anObject){
 	return NO_SELECTION;
 }
 
-public String getJavaInitializationString() {
+public JavaAllocation getJavaAllocation() {
 	// TODO Are there some managers that aren't default ctor'd. If so, we need a different way 
-							// of getting the initialization string. This is only used for the customizer stuff.
+	// of getting the initialization string. This is only used for the customizer stuff.
 	Object v = doGetValue();
-	if (v == null)
-		return "null"; //$NON-NLS-1$
-	else {
+	if (v == null) {
+		return InstantiationFactory.eINSTANCE.createParseTreeAllocation(InstantiationFactory.eINSTANCE.createPTNullLiteral());
+	} else {
 		IJavaObjectInstance jv = (IJavaObjectInstance) v;
-		return "new " + jv.getJavaType().getQualifiedName() + "()"; //$NON-NLS-1$ //$NON-NLS-2$
+		return InstantiationFactory.eINSTANCE.createParseTreeAllocation(InstantiationFactory.eINSTANCE.createPTClassInstanceCreation(jv.getJavaType().getQualifiedName(), null));
 	}
 }
 public static String getDisplayName(EditDomain editDomain, String className){
