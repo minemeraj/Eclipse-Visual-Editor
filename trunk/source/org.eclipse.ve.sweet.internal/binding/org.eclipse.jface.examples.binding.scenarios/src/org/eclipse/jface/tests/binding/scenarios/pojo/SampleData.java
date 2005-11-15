@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios.pojo;
 
+import org.eclipse.jface.databinding.BeanUpdatableFactory;
 import org.eclipse.jface.databinding.DataBinding;
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatableFactory;
+import org.eclipse.jface.databinding.SWTUpdatableFactory;
+import org.eclipse.jface.databinding.ViewersUpdatableFactory;
 import org.eclipse.swt.widgets.Control;
 
 public class SampleData {
@@ -50,6 +53,8 @@ public class SampleData {
 	public static Cart CART;
 
 	public static AdventureFactory FACTORY;
+
+	private static SWTUpdatableFactory swtUpdatableFactory = new SWTUpdatableFactory();
 
 	static {
 		initializeData();
@@ -156,9 +161,13 @@ public class SampleData {
 
 	public static IDataBindingContext getDatabindingContext(Control aControl) {
 		IDataBindingContext result = DataBinding.createContext(aControl,
-				new IUpdatableFactory[] { DataBinding.javaBeanFactory, DataBinding.swtFactory,
-					                      DataBinding.jFaceFactory });
+				new IUpdatableFactory[] { new BeanUpdatableFactory(),
+						swtUpdatableFactory, new ViewersUpdatableFactory() });
 		return result;
+	}
+
+	public static SWTUpdatableFactory getSWTUpdatableFactory() {
+		return swtUpdatableFactory;
 	}
 
 }
