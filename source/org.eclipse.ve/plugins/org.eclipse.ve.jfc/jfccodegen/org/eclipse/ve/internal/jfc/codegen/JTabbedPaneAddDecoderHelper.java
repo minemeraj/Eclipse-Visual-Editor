@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.codegen;
 /*
  *  $RCSfile: JTabbedPaneAddDecoderHelper.java,v $
- *  $Revision: 1.22 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.23 $  $Date: 2005-11-15 18:53:31 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -27,7 +27,8 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.java.codegen.core.IVEModelInstance;
 import org.eclipse.ve.internal.java.codegen.java.*;
-import org.eclipse.ve.internal.java.codegen.model.*;
+import org.eclipse.ve.internal.java.codegen.model.BeanPart;
+import org.eclipse.ve.internal.java.codegen.model.CodeMethodRef;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -499,19 +500,6 @@ public class JTabbedPaneAddDecoderHelper extends AbstractContainerAddDecoderHelp
 	protected String generateSrc() throws CodeGenException {
 		ExpressionTemplate exp = getExpressionTemplate();
 		return exp.toString();
-	}
-
-	protected String calculateInitString(Expression e){
-		String initString = null;
-		if (e instanceof StringLiteral) {
-			StringLiteral string = (StringLiteral) e;
-			initString = "\""+string.getLiteralValue()+"\""; //$NON-NLS-1$ //$NON-NLS-2$
-		}else if(e instanceof NullLiteral) {
-			initString = null;
-		}else if(e!=null){
-			initString = e.toString(); 
-		}
-		return initString;
 	}
 	
 	/* (non-Javadoc)

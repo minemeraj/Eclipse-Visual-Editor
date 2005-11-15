@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.42 $  $Date: 2005-11-14 17:03:33 $
+ *  $Revision: 1.43 $  $Date: 2005-11-15 18:53:27 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -762,6 +762,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 				RuledCommandBuilder componentCB = new RuledCommandBuilder(policy.getEditDomain(), null, false);
 				Object intObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(numCols)); //$NON-NLS-1$
 				componentCB.applyAttributeSetting(gridLayout, sfNumColumns, intObject);
+				// Need to touch gridLayout on composite so that composite knows it has a changed grid layout.
 				componentCB.applyAttributeSetting(parent, sfCompositeLayout, gridLayout);
 				cb.append(componentCB.getCommand());
 			} else {

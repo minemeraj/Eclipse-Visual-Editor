@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: DimensionJavaClassCellEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-15 18:53:28 $ 
  */
 
 import java.util.StringTokenizer;
@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.swt.widgets.Composite;
 
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaRefFactory;
 
@@ -27,7 +28,7 @@ import org.eclipse.ve.internal.java.core.*;
 /**
  * Cell Editor for Dimension Beans.
  */
-public class DimensionJavaClassCellEditor extends DefaultJavaClassCellEditor implements IExecutableExtension {
+public class DimensionJavaClassCellEditor extends DefaultJavaClassCellEditor implements IExecutableExtension, IJavaCellEditor2 {
 	
 	private String dimensionClassName;
 	
@@ -59,6 +60,20 @@ protected String getJavaInitializationString(String dimString) {
 	}
 	sb.append(')');
 	return (sb.toString());
+}
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.core.DefaultJavaClassCellEditor#getJavaAllocation(java.lang.String)
+ */
+protected JavaAllocation getJavaAllocation(String value) {
+	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(value));
+}
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.core.IJavaCellEditor2#getJavaAllocation()
+ */
+public JavaAllocation getJavaAllocation() {
+	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
 }
 
 /**
@@ -99,6 +114,22 @@ public static String getJavaInitializationString(int width, int height, String a
 	buffer.append(String.valueOf(height));
 	buffer.append(')');
 	return buffer.toString();
+}
+
+/**
+ * Return initialization as a parse tree allocation.
+ * @param width
+ * @param height
+ * @param aDimensionClassName
+ * @return
+ * 
+ * @since 1.2.0
+ */
+public static ParseTreeAllocation getJavaAllocation(int width, int height, String aDimensionClassName) {
+	PTClassInstanceCreation newclass = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation(aDimensionClassName, null);
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(width)));
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(height)));
+	return InstantiationFactory.eINSTANCE.createParseTreeAllocation(newclass);
 }
 
 /**

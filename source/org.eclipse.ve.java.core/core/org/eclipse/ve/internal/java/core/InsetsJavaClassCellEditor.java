@@ -11,19 +11,21 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: InsetsJavaClassCellEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-15 18:53:28 $ 
  */
 
 import java.util.StringTokenizer;
 
 import org.eclipse.swt.widgets.Composite;
 
+import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaRefFactory;
 /**
  * Cell Editor for Insets Beans.
  */
-public class InsetsJavaClassCellEditor extends DefaultJavaClassCellEditor {
+public class InsetsJavaClassCellEditor extends DefaultJavaClassCellEditor implements IJavaCellEditor2 {
 	
 public InsetsJavaClassCellEditor(Composite aComposite){
 	super(aComposite);
@@ -51,6 +53,20 @@ protected String getJavaInitializationString(String insetsString) {
 	}
 	sb.append(')');
 	return (sb.toString());
+}
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.core.DefaultJavaClassCellEditor#getJavaAllocation(java.lang.String)
+ */
+protected JavaAllocation getJavaAllocation(String value) {
+	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString(value));
+}
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.core.IJavaCellEditor2#getJavaAllocation()
+ */
+public JavaAllocation getJavaAllocation() {
+	return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
 }
 
 /**
@@ -84,6 +100,26 @@ public void setData(Object data) {
  */
 public static String getJavaInitializationString(org.eclipse.draw2d.geometry.Insets insets) {
 	return getJavaInitializationString(insets.top, insets.left, insets.bottom, insets.right);
+}
+
+/**
+ * Return initialization as a parse tree allocation.
+ * @param top
+ * @param left
+ * @param bottom
+ * @param right
+ * @param aRectangleClassName
+ * @return
+ * 
+ * @since 1.2.0
+ */
+public static ParseTreeAllocation getJavaAllocation(int top, int left, int bottom, int right) {
+	PTClassInstanceCreation newclass = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("java.awt.Insets", null);
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(top)));
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(left)));
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(bottom)));
+	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(right)));
+	return InstantiationFactory.eINSTANCE.createParseTreeAllocation(newclass);	
 }
 
 /**

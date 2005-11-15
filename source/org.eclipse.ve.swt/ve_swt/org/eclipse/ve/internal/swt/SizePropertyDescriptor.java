@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: SizePropertyDescriptor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.7 $  $Date: 2005-11-15 18:53:27 $ 
  */
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EReference;
@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.ParseTreeAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
@@ -56,13 +57,14 @@ public class SizePropertyDescriptor extends BeanPropertyDescriptorAdapter implem
 				IRectangleBeanProxy bounds = (IRectangleBeanProxy) BeanProxyUtilities.getBeanProxy(boundsObject);
 				Object newLoc = BeanUtilities.createJavaObject(SWTConstants.POINT_CLASS_NAME,
 					comp.eResource().getResourceSet(),
-					PointJavaClassCellEditor.getJavaInitializationString(bounds.getX(), bounds.getY(),SWTConstants.POINT_CLASS_NAME));
+					PointJavaClassCellEditor.getJavaAllocation(bounds.getX(), bounds.getY(),SWTConstants.POINT_CLASS_NAME));
 				cb.applyAttributeSetting(comp, sfControlLocation, newLoc);
 			}
 		}
 			
 		// If there are any "preferred" settings on the bounds, we need to use ApplyNullLayoutConstraintCommand instead to handle these.
-		IBeanProxyHost sh = BeanProxyUtilities.getBeanProxyHost((IJavaInstance) setValue);
+		IJavaInstance setJavaInstanceValue = (IJavaInstance) setValue;
+		IBeanProxyHost sh = BeanProxyUtilities.getBeanProxyHost(setJavaInstanceValue);
 		IBeanProxy dim = sh.instantiateBeanProxy();
 		if (dim instanceof IPointBeanProxy) {
 			IPointBeanProxy pointProxy = (IPointBeanProxy) dim;
@@ -76,7 +78,13 @@ public class SizePropertyDescriptor extends BeanPropertyDescriptorAdapter implem
 				cb.append(apply);
 				return cb.getCommand();
 			}
-		}		
+		}
+		
+		ParseTreeAllocation alloc = changeToParseTreeAllocation(setJavaInstanceValue);
+		if (alloc != null)
+			cb.applyAttributeSetting(setJavaInstanceValue, JavaInstantiation.getAllocationFeature(setJavaInstanceValue), alloc);
+		cb.applyAttributeSetting(comp, (EStructuralFeature) getTarget(), setJavaInstanceValue);
+
 		cb.applyAttributeSetting(comp, (EStructuralFeature) getTarget(), setValue);
 		return cb.getCommand();
 

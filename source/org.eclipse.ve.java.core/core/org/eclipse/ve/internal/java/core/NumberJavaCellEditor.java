@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 
 /*
- * $RCSfile: NumberJavaCellEditor.java,v $ $Revision: 1.9 $ $Date: 2005-08-24 23:30:45 $
+ * $RCSfile: NumberJavaCellEditor.java,v $ $Revision: 1.10 $ $Date: 2005-11-15 18:53:28 $
  */
 
 import java.text.MessageFormat;
@@ -19,6 +19,7 @@ import java.text.MessageFormat;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.swt.widgets.Composite;
 
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.INumberBeanProxy;
 import org.eclipse.jem.java.JavaHelpers;
@@ -31,7 +32,7 @@ import org.eclipse.ve.internal.propertysheet.*;
 /**
  * Cell Editor for Integer beans
  */
-public class NumberJavaCellEditor extends NumberCellEditor implements INeedData, IJavaCellEditor {
+public class NumberJavaCellEditor extends NumberCellEditor implements INeedData, IJavaCellEditor2 {
 
 	protected JavaHelpers fNumberClassType;
 
@@ -55,7 +56,7 @@ public class NumberJavaCellEditor extends NumberCellEditor implements INeedData,
 			fTypeName = "void"; // Default to nothing allowed. //$NON-NLS-1$
 
 		if (fTypeName.equals("java.lang.Integer")) { //$NON-NLS-1$
-			fInitializationString = "new java.lang.Integer({0})"; //$NON-NLS-1$
+			fInitializationString = "new Integer({0})"; //$NON-NLS-1$
 			super.setInitializationData(null, null, "integer"); //$NON-NLS-1$
 		} else if (fTypeName.equals("int")) { //$NON-NLS-1$
 			fInitializationString = "{0}"; //$NON-NLS-1$
@@ -70,7 +71,7 @@ public class NumberJavaCellEditor extends NumberCellEditor implements INeedData,
 			fInitializationString = "{0}L"; //$NON-NLS-1$
 			super.setInitializationData(null, null, "long"); //$NON-NLS-1$
 		} else if (fTypeName.equals("java.lang.Long")) { //$NON-NLS-1$
-			fInitializationString = "new java.lang.Long({0}L)"; //$NON-NLS-1$
+			fInitializationString = "new Long({0}L)"; //$NON-NLS-1$
 			super.setInitializationData(null, null, "long"); //$NON-NLS-1$
 		} else if (fTypeName.equals("byte")) { //$NON-NLS-1$
 			fInitializationString = "(byte) {0}"; //$NON-NLS-1$
@@ -79,7 +80,7 @@ public class NumberJavaCellEditor extends NumberCellEditor implements INeedData,
 			fInitializationString = "new Byte((byte) {0})"; //$NON-NLS-1$
 			super.setInitializationData(null, null, "byte"); //$NON-NLS-1$
 		} else if (fTypeName.equals("java.lang.Float")) { //$NON-NLS-1$
-			fInitializationString = "new java.lang.Float({0}F)"; //$NON-NLS-1$
+			fInitializationString = "new Float({0}F)"; //$NON-NLS-1$
 			super.setInitializationData(null, null, "float"); //$NON-NLS-1$
 		} else if (fTypeName.equals("float")) { //$NON-NLS-1$
 			fInitializationString = "{0}F"; //$NON-NLS-1$
@@ -88,7 +89,7 @@ public class NumberJavaCellEditor extends NumberCellEditor implements INeedData,
 			fInitializationString = "{0}D"; //$NON-NLS-1$
 			super.setInitializationData(null, null, "double"); //$NON-NLS-1$
 		} else if (fTypeName.equals("java.lang.Double")) { //$NON-NLS-1$
-			fInitializationString = "new java.lang.Double({0}D)"; //$NON-NLS-1$
+			fInitializationString = "new Double({0}D)"; //$NON-NLS-1$
 			super.setInitializationData(null, null, "double"); //$NON-NLS-1$
 		}
 		;
@@ -134,6 +135,14 @@ public class NumberJavaCellEditor extends NumberCellEditor implements INeedData,
 			return (fFormatter.isParseIntegerOnly() ? sNotIntegerError : sNotNumberError);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.core.IJavaCellEditor2#getJavaAllocation()
+	 */
+	public JavaAllocation getJavaAllocation() {
+		// This we can make into an allocation because there are no field accesses.
+		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
+	}
+	
 	/**
 	 * getJavaInitializationString method comment.
 	 */

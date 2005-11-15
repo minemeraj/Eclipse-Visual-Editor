@@ -11,12 +11,11 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: ImageIconCellEditor.java,v $
- *  $Revision: 1.12 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.13 $  $Date: 2005-11-15 18:53:31 $ 
  */
 
 import java.util.StringTokenizer;
 
-import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.*;
@@ -25,8 +24,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
-import org.eclipse.jem.workbench.utility.NoASTResolver;
-import org.eclipse.jem.workbench.utility.ParseTreeCreationFromAST;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 
@@ -40,7 +37,7 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
  * @version 	1.0
  * @author
  */
-public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEditor, INeedData {
+public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEditor2, INeedData {
 
 	protected EditDomain fEditDomain;
 	private String path = ""; //$NON-NLS-1$
@@ -71,19 +68,7 @@ public class ImageIconCellEditor extends DialogCellEditor implements IJavaCellEd
 	 * @since 1.0.0
 	 */
 	public JavaAllocation getJavaAllocation() {
-
-		ASTParser parser = ASTParser.newParser(AST.JLS3);
-		String initString = getJavaInitializationString(); 
-		parser.setSource(initString.toCharArray());
-		parser.setSourceRange(0,initString.length());
-		parser.setKind(ASTParser.K_EXPRESSION) ;		
-        ASTNode ast = parser.createAST(null);
-        if (ast == null)
-        	return null;	// It didn't parse.
-	
-        ParseTreeAllocation alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-        alloc.setExpression(new ParseTreeCreationFromAST(new NoASTResolver()).createExpression((Expression) ast));
-		return alloc;
+		return BeanPropertyDescriptorAdapter.createAllocation(getJavaInitializationString());
 	}
 	
 	/*

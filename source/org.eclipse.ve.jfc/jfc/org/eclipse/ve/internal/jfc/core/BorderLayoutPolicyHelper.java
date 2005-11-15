@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutPolicyHelper.java,v $
- *  $Revision: 1.11 $  $Date: 2005-10-11 21:23:50 $ 
+ *  $Revision: 1.12 $  $Date: 2005-11-15 18:53:31 $ 
  */
 
 import java.util.*;
@@ -20,7 +20,9 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.*;
@@ -41,14 +43,14 @@ public class BorderLayoutPolicyHelper extends LayoutPolicyHelper {
 		RIGHT_TO_LEFT = 1;
 	public static final List REAL_INTERNAL_TAGS;
 	public static final List DISPLAY_TAGS;
-	public static final String[] CODEGEN_TAGS = new String[] {
-		"java.awt.BorderLayout.NORTH", //$NON-NLS-1$
-		"java.awt.BorderLayout.EAST", //$NON-NLS-1$
-		"java.awt.BorderLayout.WEST", //$NON-NLS-1$
-		"java.awt.BorderLayout.CENTER", //$NON-NLS-1$
-		"java.awt.BorderLayout.SOUTH", //$NON-NLS-1$
-		"java.awt.BorderLayout.BEFORE_LINE_BEGINS", //$NON-NLS-1$
-		"java.awt.BorderLayout.AFTER_LINE_ENDS"}; //$NON-NLS-1$
+	
+	private final static ParseTreeAllocation[] CODEGEN_ALLOCATIONS;
+	
+	private static ParseTreeAllocation createBorderAllocation(String classname, String fieldName) {
+		PTExpression fieldAccess = InstantiationFactory.eINSTANCE.createPTFieldAccess(InstantiationFactory.eINSTANCE.createPTName(classname), fieldName);
+		return InstantiationFactory.eINSTANCE.createParseTreeAllocation(fieldAccess);
+	}
+	
 		
 	public static final int
 		NORTH_INDEX = 0,
@@ -77,7 +79,28 @@ public class BorderLayoutPolicyHelper extends LayoutPolicyHelper {
 		DISPLAY_TAGS.add(JFCMessages.BorderLayout_South); 
 		DISPLAY_TAGS.add(JFCMessages.BorderLayout_BEFORE_LINE_BEGINS); 
 		DISPLAY_TAGS.add(JFCMessages.BorderLayout_AFTER_LINE_ENDS); 
+		
+		CODEGEN_ALLOCATIONS = new ParseTreeAllocation[7];
+		CODEGEN_ALLOCATIONS[0] = createBorderAllocation("java.awt.BorderLayout", "NORTH"); //$NON-NLS-1$
+		CODEGEN_ALLOCATIONS[1] = createBorderAllocation("java.awt.BorderLayout", "EAST"); //$NON-NLS-1$
+		CODEGEN_ALLOCATIONS[2] = createBorderAllocation("java.awt.BorderLayout", "WEST"); //$NON-NLS-1$
+		CODEGEN_ALLOCATIONS[3] = createBorderAllocation("java.awt.BorderLayout", "CENTER"); //$NON-NLS-1$
+		CODEGEN_ALLOCATIONS[4] = createBorderAllocation("java.awt.BorderLayout", "SOUTH"); //$NON-NLS-1$
+		CODEGEN_ALLOCATIONS[5] = createBorderAllocation("java.awt.BorderLayout", "BEFORE_LINE_BEGINS"); //$NON-NLS-1$
+		CODEGEN_ALLOCATIONS[6] = createBorderAllocation("java.awt.BorderLayout", "AFTER_LINE_ENDS"); //$NON-NLS-1$ 
 	}
+	
+/**
+ * Return a new allocation for the given constraint index.
+ * @param index
+ * @return
+ * 
+ * @since 1.2.0
+ */
+public static JavaAllocation createBorderAllocation(int index) {
+	return (JavaAllocation) EcoreUtil.copy(CODEGEN_ALLOCATIONS[index]);
+}
+
 /**
  * Helper method to return a table that maps BorderLayout constraint display names with their
  * corresponding constraints... based on the componentOrientation.
@@ -156,7 +179,7 @@ protected IJavaObjectInstance convertConstraint(Object constraint) {
 	if (constraint instanceof String) {
 		int ndx = REAL_INTERNAL_TAGS.indexOf(constraint);
 		return (IJavaObjectInstance) (ndx > -1 ?
-			BeanUtilities.createJavaObject("java.lang.String", getContainer().eResource().getResourceSet(), CODEGEN_TAGS[ndx]) :	// $NONS-NLS-1$ //$NON-NLS-1$
+			BeanUtilities.createJavaObject("java.lang.String", getContainer().eResource().getResourceSet(), createBorderAllocation(ndx)) :	// $NONS-NLS-1$ //$NON-NLS-1$
 			BeanUtilities.createString(getContainer().eResource().getResourceSet(), (String) constraint));
 	} else
 		return null;

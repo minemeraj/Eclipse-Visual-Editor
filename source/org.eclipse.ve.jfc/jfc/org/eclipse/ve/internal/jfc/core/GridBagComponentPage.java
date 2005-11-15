@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.14 $  $Date: 2005-07-12 20:13:36 $ 
+ *  $Revision: 1.15 $  $Date: 2005-11-15 18:53:31 $ 
  */
 
 import java.util.Collections;
@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
 import org.eclipse.gef.commands.*;
 import org.eclipse.gef.editparts.AbstractEditPart;
@@ -38,6 +39,7 @@ import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.*;
 
@@ -99,18 +101,42 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		JFCMessages.AnchorAction_southwest_tooltip,
 		JFCMessages.AnchorAction_south_tooltip,
 		JFCMessages.AnchorAction_southeast_tooltip};
-
-	protected static String[] anchorInitStrings = new String[] {
-		"java.awt.GridBagConstraints.NORTHWEST", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.NORTH", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.NORTHEAST", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.WEST", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.CENTER", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.EAST", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.SOUTHWEST", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.SOUTH", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.SOUTHEAST" //$NON-NLS-1$
-	};	
+	
+	private final static ParseTreeAllocation[] ANCHOR_ALLOCATIONS;
+	
+	private static ParseTreeAllocation createFieldAllocation(String classname, String fieldName) {
+		PTExpression fieldAccess = InstantiationFactory.eINSTANCE.createPTFieldAccess(InstantiationFactory.eINSTANCE.createPTName(classname), fieldName);
+		return InstantiationFactory.eINSTANCE.createParseTreeAllocation(fieldAccess);
+	}
+	
+	public static int 
+		ANCHOR_NORTHWEST = 0,
+		ANCHOR_NORTH = 1,
+		ANCHOR_NORTHEAST = 2,
+		ANCHOR_WEST = 3,
+		ANCHOR_CENTER = 4,
+		ANCHOR_EAST = 5,
+		ANCHOR_SOUTHWEST = 6,
+		ANCHOR_SOUTH = 7,
+		ANCHOR_SOUTHEAST = 8;
+	
+	static {
+		ANCHOR_ALLOCATIONS = new ParseTreeAllocation[9];
+		ANCHOR_ALLOCATIONS[ANCHOR_NORTHWEST] = createFieldAllocation("java.awt.GridBagConstraints", "NORTHWEST");	//$NON-NLS-1$
+		ANCHOR_ALLOCATIONS[ANCHOR_NORTH] = createFieldAllocation("java.awt.GridBagConstraints", "NORTH");	//$NON-NLS-1$
+		ANCHOR_ALLOCATIONS[ANCHOR_NORTHEAST] = createFieldAllocation("java.awt.GridBagConstraints", "NORTHEAST");	//$NON-NLS-1$
+		ANCHOR_ALLOCATIONS[ANCHOR_WEST] = createFieldAllocation("java.awt.GridBagConstraints", "WEST");	//$NON-NLS-1$
+		ANCHOR_ALLOCATIONS[ANCHOR_CENTER] = createFieldAllocation("java.awt.GridBagConstraints", "CENTER");	//$NON-NLS-1$
+		ANCHOR_ALLOCATIONS[ANCHOR_EAST] = createFieldAllocation("java.awt.GridBagConstraints", "EAST");	//$NON-NLS-1$
+		ANCHOR_ALLOCATIONS[ANCHOR_SOUTHWEST] = createFieldAllocation("java.awt.GridBagConstraints", "SOUTHWEST");	//$NON-NLS-1$
+		ANCHOR_ALLOCATIONS[ANCHOR_SOUTH] = createFieldAllocation("java.awt.GridBagConstraints", "SOUTH");	//$NON-NLS-1$
+		ANCHOR_ALLOCATIONS[ANCHOR_SOUTHEAST] = createFieldAllocation("java.awt.GridBagConstraints", "SOUTHEAST");	//$NON-NLS-1$
+	}
+	
+	public static JavaAllocation createAnchorAllocation(int index) {
+		return (JavaAllocation) EcoreUtil.copy(ANCHOR_ALLOCATIONS[index]);
+	}
+	
 
 	protected AnchorAction[] anchorActions =
 		{
@@ -139,19 +165,28 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	private final static String[] resFillPrefixImages = { 
 		JFCMessages.FillAction_horizontal_image,
 		JFCMessages.FillAction_vertical_image};
+	
+	private final static ParseTreeAllocation[] FILL_ALLOCATIONS;
 
-	protected static String[] fillInitStrings = new String[] {
-		"java.awt.GridBagConstraints.HORIZONTAL", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.VERTICAL", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.NONE", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.BOTH" //$NON-NLS-1$
-	};	
+	public final static int FILL_HORIZONTAL = 0, FILL_VERTICAL = 1, FILL_NONE = 2, FILL_BOTH = 3;
+	
+	static {
+		FILL_ALLOCATIONS = new ParseTreeAllocation[4];
+		FILL_ALLOCATIONS[FILL_HORIZONTAL] = createFieldAllocation("java.awt.GridBagConstraints", "HORIZONTAL");	//$NON-NLS-1$
+		FILL_ALLOCATIONS[FILL_VERTICAL] = createFieldAllocation("java.awt.GridBagConstraints", "VERTICAL");	//$NON-NLS-1$
+		FILL_ALLOCATIONS[FILL_NONE] = createFieldAllocation("java.awt.GridBagConstraints", "NONE");	//$NON-NLS-1$
+		FILL_ALLOCATIONS[FILL_BOTH] = createFieldAllocation("java.awt.GridBagConstraints", "BOTH");	//$NON-NLS-1$
+	}
+	
+	public static JavaAllocation createFillAllocation(int index) {
+		return (JavaAllocation) EcoreUtil.copy(FILL_ALLOCATIONS[index]);
+	}
+	
 	private FillAction[] fillActions =
 		{
 			new FillAction(FILL_HORIZONTAL),
 			new FillAction(FILL_VERTICAL)};
 			
-	public final static int FILL_HORIZONTAL = 0, FILL_VERTICAL = 1, FILL_NONE = 2, FILL_BOTH = 3;
 	protected final static int fillAWTValue[] = {2, 3, 0, 1};
 
 	protected EReference sfComponents, sfConstraintComponent, sfConstraintConstraint;
@@ -359,7 +394,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 					IJavaObjectInstance gridbagconstraint = (IJavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
 					if (gridbagconstraint != null) {
 						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
-						Object anchorObject = BeanUtilities.createJavaObject("int", rset, anchorInitStrings[anchorType]); //$NON-NLS-1$
+						Object anchorObject = BeanUtilities.createJavaObject("int", rset, createAnchorAllocation(anchorType)); //$NON-NLS-1$
 						componentCB.applyAttributeSetting(gridbagconstraint, sfAnchor, anchorObject);
 						componentCB.applyAttributeSetting(constraintComponent, sfConstraintConstraint, gridbagconstraint);
 						cb.append(componentCB.getCommand());
@@ -386,7 +421,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 					IJavaObjectInstance gridbagconstraint = (IJavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
 					if (gridbagconstraint != null) {
 						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
-						Object fillObject = BeanUtilities.createJavaObject("int", rset, fillInitStrings[fillType]); //$NON-NLS-1$
+						Object fillObject = BeanUtilities.createJavaObject("int", rset, createFillAllocation(fillType)); //$NON-NLS-1$
 						componentCB.applyAttributeSetting(gridbagconstraint, sfFill, fillObject);
 						componentCB.applyAttributeSetting(constraintComponent, sfConstraintConstraint, gridbagconstraint);
 						cb.append(componentCB.getCommand());
@@ -424,7 +459,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 						IJavaObjectInstance gridbagconstraint = (IJavaObjectInstance) constraintComponent.eGet(sfConstraintConstraint);
 						if (gridbagconstraint != null) {
 							RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
-							Object insetsObject = BeanUtilities.createJavaObject("java.awt.Insets", rset, InsetsJavaClassCellEditor.getJavaInitializationString(insets)); //$NON-NLS-1$
+							Object insetsObject = BeanUtilities.createJavaObject("java.awt.Insets", rset, InsetsJavaClassCellEditor.getJavaAllocation(insets.top, insets.left, insets.bottom, insets.right)); //$NON-NLS-1$
 							componentCB.applyAttributeSetting(gridbagconstraint, sfInsets, insetsObject);
 							componentCB.applyAttributeSetting(constraintComponent, sfConstraintConstraint, gridbagconstraint);
 							cb.append(componentCB.getCommand());

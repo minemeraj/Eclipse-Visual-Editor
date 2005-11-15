@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CodeGenExpFlattener.java,v $
- *  $Revision: 1.13 $  $Date: 2005-11-04 17:30:46 $ 
+ *  $Revision: 1.14 $  $Date: 2005-11-15 18:53:28 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -19,10 +19,10 @@ import java.util.*;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
-import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.IBeanDeclModel;
+import org.eclipse.ve.internal.java.codegen.util.TypeResolver;
  
 
 
@@ -116,18 +116,19 @@ public class CodeGenExpFlattener extends NaiveExpressionFlattener {
 		protected String handleQualifiedName(String qName) {									
 			if (fimportList!=null) {
 				// Use short names instead of full quallified names
-				JavaHelpers clazz = JavaRefFactory.eINSTANCE.reflectType(qName, fmodel.getCompositionModel().getModelRoot());
-				// mark a dependency on an import
-				if (clazz != null) {
-					// Add as an import if not primitive and it is not undefined, and not already in list.
-					if (!clazz.isPrimitive() && ((JavaClass) clazz).getKind() != TypeKind.UNDEFINED_LITERAL && !fimportList.contains(clazz.getJavaName()))
-						fimportList.add(clazz.getJavaName());
-					return clazz.getName();
-				} else
-					return qName;
+				TypeResolver.FieldResolvedType ft = fmodel.getResolver().resolveWithPossibleField(qName);
+				if (ft != null) {
+					// Could be resolved
+					if (ft.resolvedType.getIType() != null) {
+						// Is not primitive
+						String typeName = ft.resolvedType.getName();
+						if (!fimportList.contains(typeName))
+							fimportList.add(typeName);
+						return ft.resolvedType.getIType().getElementName() + qName.substring(typeName.length());	// Just the short name and then everything after the name.
+					}
+				}
 			}
-			else
-				return qName;
+			return qName;
 		}
 		
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: DefaultJavaClassCellEditor.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.8 $  $Date: 2005-11-15 18:53:28 $ 
  */
 
 import java.text.MessageFormat;
@@ -20,6 +20,9 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.jem.internal.instantiation.InstantiationFactory;
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.ve.internal.propertysheet.*;
 /**
@@ -49,8 +52,23 @@ public DefaultJavaClassCellEditor(Composite aComposite){
  */
 protected Object doGetObject(String value){
 	return (value != null) ?
-		BeanUtilities.createJavaObject(fJavaType, JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaInitializationString(value)) : null;
+		BeanUtilities.createJavaObject(fJavaType, JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaAllocation(value)) : null;
 }
+
+/**
+ * Get the java allocation from the string value from the text cell.
+ * <p>
+ * The default is to create a {@link InitStringAllocation}. This can be overridden if
+ * the subclass decides to return a different allocation instead.
+ * @param value
+ * @return
+ * 
+ * @since 1.2.0
+ */
+protected JavaAllocation getJavaAllocation(String value) {
+	return InstantiationFactory.eINSTANCE.createInitStringAllocation(getJavaInitializationString(value));
+}
+
 public void setData(Object data){
 	fEditDomain = (EditDomain) data;
 }

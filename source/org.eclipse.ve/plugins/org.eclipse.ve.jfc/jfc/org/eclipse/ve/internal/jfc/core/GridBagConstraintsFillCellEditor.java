@@ -11,12 +11,14 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagConstraintsFillCellEditor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.6 $  $Date: 2005-11-15 18:53:31 $ 
  */
 
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
+
+import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.java.core.*;
@@ -34,12 +36,18 @@ public class GridBagConstraintsFillCellEditor extends ObjectComboBoxCellEditor i
 		GridBagConstraint.VERTICAL,
 		GridBagConstraint.BOTH
 	};
-	public static String[] FILL_INITSTRINGS = new String [] {
-		"java.awt.GridBagConstraints.NONE", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.HORIZONTAL", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.VERTICAL", //$NON-NLS-1$
-		"java.awt.GridBagConstraints.BOTH" //$NON-NLS-1$
-	};	
+	
+	public static int[] FILLINDEX_TO_MAINFILLINDEX = new int[] {GridBagComponentPage.FILL_NONE, GridBagComponentPage.FILL_HORIZONTAL,
+		GridBagComponentPage.FILL_VERTICAL, GridBagComponentPage.FILL_BOTH};
+	
+	public static int getFillIndexFromConstraint(int gridbagFillConstraintValue) {
+		for (int i = 0; i < FILL_VALUES.length; i++) {
+			if (gridbagFillConstraintValue == FILL_VALUES[i]) {
+				return i;
+			}
+		}
+		return -1;
+	}
 	
 public GridBagConstraintsFillCellEditor(Composite aComposite){
 	// Create the combo editor with the list of possible fill values
@@ -49,16 +57,16 @@ public GridBagConstraintsFillCellEditor(Composite aComposite){
  * Return a MOF class that represents the constraint bean
  */
 protected Object doGetObject(int index){
-	String initString = ""; //$NON-NLS-1$
-	if (index < FILL_INITSTRINGS.length)
-		initString = FILL_INITSTRINGS[index];
+	JavaAllocation alloc;
+	if (index < FILLINDEX_TO_MAINFILLINDEX.length)
+		alloc = GridBagComponentPage.createFillAllocation(FILLINDEX_TO_MAINFILLINDEX[index]);
 	else
-		initString = FILL_INITSTRINGS[0];
+		alloc = GridBagComponentPage.createFillAllocation(FILLINDEX_TO_MAINFILLINDEX[0]);
 	
 	return BeanUtilities.createJavaObject(
 		"int", //$NON-NLS-1$
 		JavaEditDomainHelper.getResourceSet(fEditDomain),
-		initString
+		alloc
 		);
 }
 protected int doGetIndex(Object anObject){
@@ -69,11 +77,9 @@ protected int doGetIndex(Object anObject){
 		// The proxy is an int.  which represents one of the GridBagConstrains fill values.
 		// Loop the array of fill values and return the index for the one found.
 		int fillValue = fillValueProxy.intValue();
-		for (int i = 0; i < FILL_VALUES.length; i++) {
-			if (fillValue == FILL_VALUES[i]) {
-				return i;
-			}
-		}
+		int fillIndex = getFillIndexFromConstraint(fillValue);
+		if (fillIndex > -1)
+			return fillIndex;
 	}
 	return NO_SELECTION;
 }

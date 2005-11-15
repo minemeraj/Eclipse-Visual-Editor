@@ -33,10 +33,13 @@ import org.eclipse.ve.internal.propertysheet.INeedData;
 
 /**
  * Cell editor for SWT property editors.
+ * <p>
+ * <b>NOTE:</b> Very important that the wrappered cell editor does not return an field access other than org.eclipse.swt.SWT,
+ * org.eclipse.jface.resource.JFaceResources, or org.eclipse.jface.preference.JFacePreferences. If it does it won't convert correctly.
  * @version 	1.0
  * @author
  */
-public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEditor, INeedData , IExecutableExtension {
+public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEditor2, INeedData , IExecutableExtension {
 
 	protected EditDomain fEditDomain;
 	private String initString = ""; //$NON-NLS-1$
@@ -56,11 +59,7 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 		return BeanUtilities.createJavaObject(qualifiedClassName, JavaEditDomainHelper.getResourceSet(fEditDomain), getJavaAllocation());
 	}
 
-	/*
-	 * Create a Parse tree allocation from the initialization string returned from the property editor.
-	 * 
-	 */
-	private JavaAllocation getJavaAllocation() {
+	public JavaAllocation getJavaAllocation() {
 		ASTParser parser = ASTParser.newParser(AST.JLS2);
 		String initString = getJavaInitializationString();
 		parser.setSource(initString.toCharArray());
@@ -72,14 +71,15 @@ public class JVEDialogCellEditor extends DialogCellEditor implements IJavaCellEd
 	
 		ParseTreeCreationFromAST.Resolver res = new NoASTResolver() {
 			public PTExpression resolveName(Name name) {
-				PTExpression exp = null;
-				if (name instanceof QualifiedName &&
-						(name.getFullyQualifiedName().startsWith("org.eclipse.swt.SWT.") || //$NON-NLS-1$
-						name.getFullyQualifiedName().startsWith("org.eclipse.jface.resource.JFaceResources.") || //$NON-NLS-1$
-						name.getFullyQualifiedName().startsWith("org.eclipse.jface.preference.JFacePreferences."))) { //$NON-NLS-1$
-					PTExpression receiver = InstantiationFactory.eINSTANCE.createPTName(((QualifiedName)name).getQualifier().getFullyQualifiedName());
-					exp = InstantiationFactory.eINSTANCE.createPTFieldAccess(receiver, ((QualifiedName) name).getName().getIdentifier());
-					return exp;
+				if (name instanceof QualifiedName) {
+					QualifiedName qualifiedName = (QualifiedName)name;
+					String fullyQualified = qualifiedName.getQualifier().getFullyQualifiedName();
+					if (fullyQualified.equals("org.eclipse.swt.SWT") || //$NON-NLS-1$
+							fullyQualified.equals("org.eclipse.jface.resource.JFaceResources") || //$NON-NLS-1$
+							fullyQualified.equals("org.eclipse.jface.preference.JFacePreferences")) { //$NON-NLS-1$
+						PTExpression receiver = InstantiationFactory.eINSTANCE.createPTName(fullyQualified);
+						return InstantiationFactory.eINSTANCE.createPTFieldAccess(receiver, qualifiedName.getName().getIdentifier());
+					}
 				}
 				return super.resolveName(name);			
 			}
