@@ -5,7 +5,6 @@
          <listChanges referenceValues="_eAnnotations"/>
          <listChanges referenceValues="_eAnnotations1"/>
          <listChanges referenceValues="_eAnnotations2"/>
-         <listChanges referenceValues="_eAnnotations3"/>
       </value>
    </objectChanges>
    <objectsToAttach labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ToolItemLabelProvider:text" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator">
@@ -13,5 +12,4 @@
     </objectsToAttach>
    <objectsToAttach beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ToolItemProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
    <objectsToAttach expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTWidgetChildDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
-   <objectsToAttach propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.WidgetPropertySourceAdapter" xmi:id="_eAnnotations3" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"/>
 </change:ChangeDescription>
