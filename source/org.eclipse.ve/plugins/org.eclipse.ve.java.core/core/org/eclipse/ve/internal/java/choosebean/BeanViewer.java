@@ -97,13 +97,16 @@ public class BeanViewer extends TypeInfoViewer{
 			return super.matchesHistoryElement(type) && filter(type);
 		}
 
-		public boolean matchesNameExact(TypeInfo type) {
-			return super.matchesNameExact(type) && filter(type);
-		}
-
-		public boolean matchesSearchResult(TypeInfo type) {
-			return super.matchesSearchResult(type) && filter(type);
-		}
+		// TODO These internal APIs were removed in Eclipse 3.2M3. Need to use other APIs
+		// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=115567
+		
+//		public boolean matchesNameExact(TypeInfo type) {
+//			return super.matchesNameExact(type) && filter(type);
+//		}
+//
+//		public boolean matchesSearchResult(TypeInfo type) {
+//			return super.matchesSearchResult(type) && filter(type);
+//		}
 
 		protected boolean filter(TypeInfo type) {
 			boolean valid = true;
