@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.swt.widgets.beaninfo;
 
-import java.beans.*;
+import java.beans.BeanDescriptor;
+import java.beans.PropertyDescriptor;
+
+import org.eclipse.swt.SWT;
 
 public class TableColumnBeanInfo extends IvjBeanInfo {
 
@@ -24,6 +27,22 @@ public Class getBeanClass() {
 	return org.eclipse.swt.widgets.TableColumn.class;
 }
 
+public BeanDescriptor getBeanDescriptor() {
+	BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
+	descriptor.setValue(
+		SweetHelper.STYLE_BITS_ID,
+		new Object[] [] {
+			{ "alignment" , TableColumnMessages.getString("alignmentDN") , Boolean.FALSE ,  new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
+				TableColumnMessages.getString("StyleBits.Alignment.Value.Center") , "org.eclipse.swt.SWT.CENTER" , new Integer(SWT.CENTER) , //$NON-NLS-1$ //$NON-NLS-2$
+				TableColumnMessages.getString("StyleBits.Alignment.Value.Left") , "org.eclipse.swt.SWT.LEFT" ,  new Integer(SWT.LEFT), 				 //$NON-NLS-1$ //$NON-NLS-2$
+				TableColumnMessages.getString("StyleBits.Alignment.Value.Right") , "org.eclipse.swt.SWT.RIGHT" , new Integer(SWT.RIGHT)  //$NON-NLS-1$ //$NON-NLS-2$
+			} }
+		}
+	);
+	SweetHelper.mergeSuperclassStyleBits(descriptor);
+	return descriptor;
+}
+
 /**
  * Return the property descriptors for this bean.
  * @return java.beans.PropertyDescriptor[]
@@ -31,12 +50,6 @@ public Class getBeanClass() {
 public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	try {
 		PropertyDescriptor aDescriptorList[] = {
-			// alignment
-			super.createPropertyDescriptor(getBeanClass(),"alignment", new Object[] { //$NON-NLS-1$
-				DISPLAYNAME, TableColumnMessages.getString("alignmentDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, TableColumnMessages.getString("alignmentSD"), //$NON-NLS-1$
-			}
-			),
 			// resizable
 			super.createPropertyDescriptor(getBeanClass(),"resizable", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TableColumnMessages.getString("resizableDN"), //$NON-NLS-1$
