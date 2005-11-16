@@ -10,23 +10,14 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import java.util.Map;
 
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.BeanUpdatableFactory;
-import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.DataBinding;
 import org.eclipse.jface.databinding.IDataBindingContext;
-import org.eclipse.jface.databinding.IUpdatable;
 import org.eclipse.jface.databinding.IUpdatableFactory;
-import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.jface.databinding.SWTUpdatableFactory;
 import org.eclipse.jface.databinding.ViewersUpdatableFactory;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableCollection;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableEList;
-import org.eclipse.jface.examples.binding.emf.EMFUpdatableValue;
+import org.eclipse.jface.examples.binding.emf.EMFUpdatableFactory;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.examples.rcp.adventure.Account;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
@@ -180,39 +171,7 @@ public class SampleData {
 		swtUpdatableFactory = new SWTUpdatableFactory();
 		IDataBindingContext dbc = DataBinding.createContext(aControl, new IUpdatableFactory[] {swtUpdatableFactory, new ViewersUpdatableFactory()});
 
-		IUpdatableFactory emfFactory = new IUpdatableFactory() {
-			public IUpdatable createUpdatable(Map properties,
-					Object description, IDataBindingContext bindingContext)
-					throws BindingException {
-				if (description instanceof PropertyDescription) {
-					PropertyDescription propertyDescription = (PropertyDescription) description;
-					if (propertyDescription.getObject() instanceof EObject) {
-						EObject eObject = (EObject) propertyDescription
-								.getObject();
-						EStructuralFeature attr;
-						if (propertyDescription.getPropertyID() instanceof EStructuralFeature)
-							attr = (EStructuralFeature) propertyDescription
-									.getPropertyID();
-						else
-							attr = eObject.eClass().getEStructuralFeature(
-									(String) propertyDescription
-											.getPropertyID());
-						if (attr.isMany()) {
-							return new EMFUpdatableCollection(eObject, attr,
-									!attr.isChangeable());
-						} else
-							return new EMFUpdatableValue(eObject, attr, !attr
-									.isChangeable());
-					}
-					if (propertyDescription.getObject() instanceof EList) {
-						return new EMFUpdatableEList(
-								(EList) propertyDescription.getObject(), true);
-					}
-				}
-				return null;
-			}
-
-		};
+		IUpdatableFactory emfFactory = new EMFUpdatableFactory();
 		dbc.addUpdatableFactory(emfFactory);
 
 		return dbc;
