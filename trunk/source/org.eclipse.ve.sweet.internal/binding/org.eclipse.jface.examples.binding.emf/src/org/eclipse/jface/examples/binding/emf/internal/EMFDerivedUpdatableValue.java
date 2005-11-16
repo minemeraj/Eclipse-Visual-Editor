@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jface.examples.binding.emf;
+package org.eclipse.jface.examples.binding.emf.internal;
 
 import java.util.List;
 

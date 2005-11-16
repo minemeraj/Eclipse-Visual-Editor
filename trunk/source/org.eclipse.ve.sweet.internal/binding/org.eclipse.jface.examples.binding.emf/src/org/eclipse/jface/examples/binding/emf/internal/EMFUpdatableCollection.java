@@ -8,14 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/*
- *  Created Oct 20, 2005 by Gili Mendel
- * 
- *  $RCSfile: EMFUpdatableEList.java,v $
- *  $Revision: 1.5 $  $Date: 2005-11-14 22:26:29 $ 
- */
-
-package org.eclipse.jface.examples.binding.emf;
+package org.eclipse.jface.examples.binding.emf.internal;
 
 import java.util.Iterator;
 
@@ -24,14 +17,15 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.databinding.ChangeEvent;
-import org.eclipse.jface.databinding.IUpdatableCollection;
-import org.eclipse.jface.databinding.Updatable;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.databinding.*;
 
-public class EMFUpdatableEList extends Updatable implements
+public class EMFUpdatableCollection extends Updatable implements
 		IUpdatableCollection {
 
-	private final EList list;
+	private final EStructuralFeature attribute;
+
+	private final EObject object;
 
 	private boolean updating = false;
 
@@ -43,90 +37,89 @@ public class EMFUpdatableEList extends Updatable implements
 			if (!updating
 					&& msg.getEventType() != Notification.REMOVING_ADAPTER
 					&& msg.getEventType() != Notification.REMOVING_ADAPTER) { // A
-				// touch
-				// can
-				// designate
-				// a
-				// chile
-				// feature
-				// change
-				if (msg.getNotifier() == list) {
+																				// touch
+																				// can
+																				// designate
+																				// a
+																				// chile
+																				// feature
+																				// change
+				if (msg.getNotifier() == object
+						&& msg.getFeature() == attribute) {
 					if (msg.getEventType() == Notification.ADD) {
 						EObject newObject = (EObject) msg.getNewValue();
 						newObject.eAdapters().add(this);
-						fireChangeEvent(ChangeEvent.ADD, null,
-								newObject, msg.getPosition());
+						fireChangeEvent(ChangeEvent.ADD, null, newObject, msg
+								.getPosition());
 					} else if (msg.getEventType() == Notification.REMOVE) {
 						EObject oldObject = (EObject) msg.getOldValue();
 						oldObject.eAdapters().remove(this);
-						fireChangeEvent(ChangeEvent.REMOVE, oldObject,
-								null, msg.getPosition());
+						fireChangeEvent(ChangeEvent.REMOVE, oldObject, null,
+								msg.getPosition());
 					}
 				} else {
 					// notifier is one of the objects in the list
-					int position = list.indexOf(msg.getNotifier());
+					int position = getElements().indexOf(msg.getNotifier());
 					if (position != -1) {
-						fireChangeEvent(ChangeEvent.CHANGE, msg
-								.getNotifier(), msg.getNotifier(), position);
+						fireChangeEvent(ChangeEvent.CHANGE, msg.getNotifier(),
+								msg.getNotifier(), position);
 					}
 				}
 			}
 		}
 	};
 
-	public EMFUpdatableEList(EList list, boolean oversensitiveListening) {
-		this.list = list;
-		for (Iterator itr = list.iterator(); itr.hasNext();) {
-			Object containedObject = itr.next();
-			if (containedObject instanceof EObject)
-				((EObject) containedObject).eAdapters().add(adapter);
-
+	public EMFUpdatableCollection(EObject object, EStructuralFeature attribute,
+			boolean oversensitiveListening) {
+		this.object = object;
+		this.attribute = attribute;
+		object.eAdapters().add(adapter);
+		for (Iterator itr = getElements().iterator(); itr.hasNext();) {
+			EObject containedObject = (EObject) itr.next();
+			containedObject.eAdapters().add(adapter);
 		}
 	}
 
 	public void dispose() {
 		super.dispose();
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			Object object = it.next();
-			if (object instanceof EObject)
-				((EObject) object).eAdapters().remove(adapter);
+		for (Iterator it = getElements().iterator(); it.hasNext();) {
+			EObject object = (EObject) it.next();
+			object.eAdapters().remove(adapter);
 		}
+		object.eAdapters().remove(adapter);
+	}
+
+	protected EList getElements() {
+		return (EList) object.eGet(attribute);
 	}
 
 	public int getSize() {
-		return list.size();
+		return getElements().size();
 	}
 
 	public int addElement(Object value, int index) {
+		EList list = getElements();
 		if (index <= 0 || index > list.size())
 			index = list.size();
-		list.add(index, value);
-		if (value instanceof EObject)
-			((EObject) value).eAdapters().add(adapter);
-		fireChangeEvent(ChangeEvent.ADD, null, value, index);
+		getElements().add(index, value);
+		((EObject) value).eAdapters().add(adapter);
 		return index;
 	}
 
 	public void removeElement(int index) {
-		Object old = list.get(index);
-		list.remove(index);
-		fireChangeEvent(ChangeEvent.REMOVE, old, null, index);
-		if (old instanceof EObject)
-			((EObject) old).eAdapters().remove(adapter);
+		getElements().remove(index);
 	}
 
 	public void setElement(int row, Object value) {
-		Object old = getElement(row);
-		list.set(row, value);
-		if (old instanceof EObject)
-			((EObject) old).eAdapters().remove(adapter);
+		getElements().set(row, value);
 	}
 
 	public Object getElement(int row) {
-		return list.get(row);
+		return getElements().get(row);
 	}
 
 	public Class getElementType() {
-		return Object.class;
+		return attribute.getEType().getInstanceClass();
 	}
+
 }
