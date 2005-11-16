@@ -11,8 +11,8 @@
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta name="DC.Type" content="concept" />
 <meta name="DC.Title" content="Advanced options for debugging Java beans" />
-<meta name="abstract" content="During normal development you should not need to be concerned with the VM that is used by each visual editor instance. Advanced users, however, can configure the workbench so that any messages sent to System.out or System.err of the VM are written to the .log file in the .metadata directory in your workspace." />
-<meta name="description" content="During normal development you should not need to be concerned with the VM that is used by each visual editor instance. Advanced users, however, can configure the workbench so that any messages sent to System.out or System.err of the VM are written to the .log file in the .metadata directory in your workspace." />
+<meta name="abstract" content="During normal development you should not need to be concerned withthe VM that is used by each visual editor instance. Advanced users, however,can configure the workbench so that any messages sent to System.out or System.err ofthe VM are written to the .log file in the .metadata directoryin your workspace." />
+<meta name="description" content="During normal development you should not need to be concerned withthe VM that is used by each visual editor instance. Advanced users, however,can configure the workbench so that any messages sent to System.out or System.err ofthe VM are written to the .log file in the .metadata directoryin your workspace." />
 <meta name="DC.Relation" scheme="URI" content="../topics/tve_testdebug.html" />
 <meta name="DC.Relation" scheme="URI" content="../topics/tve_run.html" />
 <meta name="DC.Relation" scheme="URI" content="../topics/tve_run_config.html" />
@@ -31,100 +31,38 @@
 <title>Advanced options for debugging Java beans</title>
 </head>
 <body id="cve_debug_advanced"><a name="cve_debug_advanced"><!-- --></a>
-
 <h1 class="topictitle1">Advanced options for debugging Java beans</h1>
-<div><p>During normal development you should not need to be concerned with
-the VM that is used by each visual editor instance. Advanced users, however,
-can configure the workbench so that any messages sent to <tt class="sysout">System.out</tt> or <tt class="sysout">System.err</tt> of
-the VM are written to the <span class="filepath">.log</span> file in the <span class="filepath">.metadata</span> directory
-in your workspace.</p>
-<p>The virtual machine (VM) that is used to execute the Java beans is not
-the same VM that the workbench is running within. A separate VM is created
-for each instance of the visual editor. The class path of this VM is set to
-be the entries in the Java build path for the project. If while the visual
-editor is open the Java build path is changed any open editors must be closed
-and re-opened to reflect the updated build path.</p>
-<p>When the workbench is started it can be given a -DEBUG option that points
-to a text file:</p>
+<div><p>During normal development you should not need to be concerned withthe VM that is used by each visual editor instance. Advanced users, however,can configure the workbench so that any messages sent to <tt class="sysout">System.out</tt> or <tt class="sysout">System.err</tt> ofthe VM are written to the <span class="filepath">.log</span> file in the <span class="filepath">.metadata</span> directoryin your workspace.</p>
+<p>The virtual machine (VM) that is used to execute the Java beans is notthe same VM that the workbench is running within. A separate VM is createdfor each instance of the visual editor. The class path of this VM is set tobe the entries in the Java build path for the project. If while the visualeditor is open the Java build path is changed any open editors must be closedand re-opened to reflect the updated build path.</p>
+<p>When the workbench is started it can be given a -DEBUG option that pointsto a text file:</p>
 <p> <samp class="codeph">-DEBUG file:/c:/temp/options.txt</samp> </p>
-<p>The debug file contains entries that are read by the visual editor. If
-the file contains the following line then any messages sent to <tt class="sysout">System.out</tt> or <tt class="sysout">System.err</tt> are
-shown in the console:</p>
-<p> <samp class="codeph">org.eclipse.jem.proxy/debug/vmtraceout=true</samp> </p>
-<p>In addition to having console output shown from the VM used by the visual
-editor you can start it in debug mode and perform remote debugging. This scenario
-is not optimized and may change in future versions of the visual editor. However,
-it is documented in case you need to perform debugging of your Java beans
-at design time. To perform remote debugging you will need two workbenches
-running: one with the Java beans that you want to debug, and one that can
-perform socket based remote debugging. The second workbench could be running
-on the same machine or a different machine. To enable debugging of the visual
-editor's VM, the -DEBUG file should contain the line:</p>
-<p> <tt class="sysout">org.eclipse.jem.proxy/debug/debugvm=true</tt> </p>
-<p>Each time the visual editor starts a VM it will ask you whether you want
-it to be started in debug mode or not. This message is either written to a
-dialog, or if the -DEBUG file contains the entry <samp class="codeph">org.eclipse.jem.proxy/debug/ioconsole=true</samp> it
-will be written System.out.</p>
-<p> <img src="../images/DebugJavaBeanDialog.gif" alt="" /> </p>
-<p>If the message is written to System.out then it will ask you for input
-of Y or N and wait on System.in:</p>
-<p><tt class="sysout">Do you want to start the remote vm (Project (Test)-VM for
-HelloFrame.java) in debug mode? (Enter Y or N):</tt> </p>
-<p>The previous dialog is for when the class <tt class="sysout">HelloFrame.java</tt> in
-the project Test is opened with the visual editor . If you select Yes, or
-enter Y and press Enter in the console, then the VM is started in suspend
-mode with the  <tt class="sysout">-Xdebug</tt> using a socket connector.
-A free port is allocated. Then, you are told its number.</p>
+<p>The debug file contains entries that are read by the visual editor. Ifthe file contains the following line then any messages sent to <tt class="sysout">System.out</tt> or <tt class="sysout">System.err</tt> areshown in the console:</p>
+<p> <samp class="codeph">org.eclipse.jem.proxy/remote/debug/vmtraceout=true</samp> </p>
+<p>In addition to having console output shown from the VM used by the visualeditor you can start it in debug mode and perform remote debugging. This scenariois not optimized and may change in future versions of the visual editor. However,it is documented in case you need to perform debugging of your Java beansat design time. To perform remote debugging you will need two workbenchesrunning: one with the Java beans that you want to debug, and one that canperform socket based remote debugging. The second workbench could be runningon the same machine or a different machine. To enable debugging of the visualeditor's VM, the -DEBUG file should contain the line:</p>
+<p> <tt class="sysout">org.eclipse.jem.proxy/remote/debug/debugvm=true</tt> </p>
+<p>Each time the visual editor starts a VM it will ask you whether you wantit to be started in debug mode or not.</p>
+<p><img src="../images/DebugJavaBeanDialog.gif" alt="" /> </p>
+<p>The previous dialog is for when the class <tt class="sysout">HelloFrame.java</tt> inthe project Test is opened with the visual editor . If you select Yes, orenter Y and press Enter in the console, then the VM is started in suspendmode with the  <tt class="sysout">-Xdebug</tt> using a socket connector.A free port is allocated. Then, you are told its number.</p>
 <p><img src="../images/RemoteDebugJavaBeanDialog.gif" alt="" /> </p>
-<p>If the message is written to System.out then it will wait for input on
-System.in.</p>
-<p> <tt class="sysout">You must now attach the debugger to port number
-7078. Enter 'y' when the debugger is attached. The program will not continue
-properly without the debugger being attached. Press 'n' if you could not connect
-the debugger. This will still cause an error, but it will clean up better.
-Enter 'y' or 'n':</tt> </p>
-<p>The next step is to attach a remote debugger to port number 7078. The instance
-of the workbench that is running the visual editor is suspended while the
-remote debugger attaches, so you must use a debugger from another application.
-If the other application is another instance of the workbench, you can begin
-remote debugging by using the menu option <span class="uicontrol">Debug &gt; Debug</span> and
-creating a new Remote Java Application configuration.</p>
+<p>The next step is to attach a remote debugger to port number 7078. The instanceof the workbench that is running the visual editor is suspended while theremote debugger attaches, so you must use a debugger from another application.If the other application is another instance of the workbench, you can beginremote debugging by using the menu option <span class="uicontrol">Debug &gt; Debug</span> andcreating a new Remote Java Application configuration.</p>
 <p> <img src="../images/RemoteDebuAttach.gif" alt="" /> </p>
-<p>Enter the port number that was previously written to stdout, in this case
-7078. If the debugger is on a different machine, in the <span class="uicontrol">Host</span> field
-you should enter the IP address of the machine running the workbench that
-is being debugged. To begin the remote debugger, click <span class="uicontrol">Debug</span> and
-then enter <kbd class="userinput">y</kbd> in the stdin console of the workbench
-being debugged.</p>
-<p>In addition to being prompted to debug the VM used by each instance of
-the visual editor , you will see messages that prompt you to debug the project
-itself:</p>
-<p> <tt class="sysout">Do you want to start the remote vm (Project (Test)-Beaninfo)
-in debug mode? (Enter Y or N):</tt> </p>
-<p>This is for the VM that is used for introspection and the  <tt class="sysout">java.beans.Introspector</tt> is
-run in, and can be distinguished from the VM for the visual editor because
-it does not specify a particular Java source file name. This VM is started
-the first time any bean info is required for a Java bean within a project,
-and remains active as long as the project remains open. By debugging this
-project you can step through and analyze any code in your BeanInfo classes
-as your Java beans are being introspected. Introspection occurs once for each
-Java bean class for each project it is used in. The result is held in a cache
-to help performance. If at any time you need to clear the cache of BeanInfo
-information held for a project you can <span class="uicontrol">close</span> and <span class="uicontrol">open</span> the
-project from its pop-up menu.</p>
+<p>Enter the port number that was previously written to stdout, in this case7078. If the debugger is on a different machine, in the <span class="uicontrol">Host</span> fieldyou should enter the IP address of the machine running the workbench thatis being debugged. To begin the remote debugger, click <span class="uicontrol">Debug</span> andthen enter <kbd class="userinput">y</kbd> in the stdin console of the workbenchbeing debugged.</p>
+<p>In addition to being prompted to debug the VM used by each instance ofthe visual editor , you will see messages that prompt you to debug the projectitself:</p>
+<p> <tt class="sysout">Do you want to start the remote vm (Project (Test)-Beaninfo)in debug mode? (Enter Y or N):</tt> </p>
+<p>This is for the VM that is used for introspection and the  <tt class="sysout">java.beans.Introspector</tt> isrun in, and can be distinguished from the VM for the visual editor becauseit does not specify a particular Java source file name. This VM is startedthe first time any bean info is required for a Java bean within a project,and remains active as long as the project remains open. By debugging thisproject you can step through and analyze any code in your BeanInfo classesas your Java beans are being introspected. Introspection occurs once for eachJava bean class for each project it is used in. The result is held in a cacheto help performance. If at any time you need to clear the cache of BeanInfoinformation held for a project you can <span class="uicontrol">close</span> and <span class="uicontrol">open</span> theproject from its pop-up menu.</p>
 </div>
 <div>
 <div class="familylinks">
-<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_testdebug.html" title="After you write a Java class using the visual editor for Java, you can run it to test and debug the runtime behavior.">Testing and debugging in the visual editor</a></div>
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tve_testdebug.html" title="After you write a Java class using the visual editor for Java,you can run it to test and debug the runtime behavior.">Testing and debugging in the visual editor</a></div>
 </div>
 <div class="relconcepts"><strong>Related concepts</strong><br />
-<div><a href="../topics/cve_exceptions.html" title="During normal development, exceptions are sometimes thrown by the Java beans. The visual editor displays icons and visual markers to indicate exceptions.">Java bean exceptions</a></div>
+<div><a href="../topics/cve_exceptions.html" title="During normal development, exceptions are sometimes thrown by theJava beans. The visual editor displays icons and visual markers to indicateexceptions.">Java bean exceptions</a></div>
 </div>
 <div class="reltasks"><strong>Related tasks</strong><br />
-<div><a href="../topics/tve_run.html" title="While you are developing your visual class, you can run it to test its appearance and behavior.">Running your visual class as a Java bean or application</a></div>
-<div><a href="../topics/tve_run_config.html" title="You can specify different configurations for each Java bean or Java application that you run.">Configuring options for running a Java bean or application</a></div>
-<div><a href="../topics/tve_debug.html" title="If you want to see the Java processes and step through the code for your Java visual class while you are running it, you can choose the debug options.">Debugging a visual Java bean or application</a></div>
-<div><a href="../topics/tve_test_applets.html" title="You can test an applet using launch configuration options before deploying it to open in a browser.">Testing and deploying applets</a></div>
+<div><a href="../topics/tve_run.html" title="While you are developing your visual class, you can run it to testits appearance and behavior.">Running your visual class as a Java bean or application</a></div>
+<div><a href="../topics/tve_run_config.html" title="You can specify different configurations for each Java bean orJava application that you run.">Configuring options for running a Java bean or application</a></div>
+<div><a href="../topics/tve_debug.html" title="If you want to see the Java processes and step through the codefor your Java visual class while you are running it, you can choose the debugoptions.">Debugging a visual Java bean or application</a></div>
+<div><a href="../topics/tve_test_applets.html" title="You can test an applet using launch configuration options beforedeploying it to open in a browser.">Testing and deploying applets</a></div>
 </div>
 </div><div class="runningfooter"><p></p>(C) Copyright IBM Corporation 1999, 2004. All Rights Reserved.
 <br />
