@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.13 $  $Date: 2005-11-02 18:48:26 $ 
+ *  $Revision: 1.14 $  $Date: 2005-11-17 21:48:11 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -90,10 +90,11 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	
 	public void deactivate() {
 		if (fEditPartContributors != null) {
+			if (fActionBarController != null)
+				fActionBarController.hideActionBar();
 			for (Iterator itr = fEditPartContributors.iterator(); itr.hasNext();) {
 				EditPartContributor contributor = (EditPartContributor) itr.next();
 				contributor.dispose();
-				
 			}
 			getFigure().removeMouseMotionListener(this.fActionBarController);
 			removeEditPartListener(this.fActionBarEditPartListener);
