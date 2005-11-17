@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaObjectEmiter.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.10 $  $Date: 2005-11-17 13:29:24 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -28,6 +29,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.internal.compiler.*;
 import org.eclipse.jdt.internal.compiler.batch.FileSystem;
 import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
+import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblem;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
@@ -412,7 +414,6 @@ public class JavaObjectEmiter {
 	public Class getClass(String[] classPath, ClassLoader cl, IProgressMonitor pm) throws TemplatesException {
 		if (ftheClass != null)
 			return ftheClass;
-
 		if (getExistingClass(cl,pm) != null) 
 		   return ftheClass ;
 		   
@@ -430,7 +431,12 @@ public class JavaObjectEmiter {
 		IErrorHandlingPolicy errorPolicy = DefaultErrorHandlingPolicies.exitOnFirstError();
 		IProblemFactory problemFactory = org.eclipse.jdt.internal.core.builder.ProblemFactory.getProblemFactory(java.util.Locale.getDefault());
 		EmiterCompilerRequestor requestor = new EmiterCompilerRequestor();
-		org.eclipse.jdt.internal.compiler.Compiler cmp = new org.eclipse.jdt.internal.compiler.Compiler(env, errorPolicy, JavaCore.getOptions(), requestor, problemFactory);
+		Hashtable options = JavaCore.getOptions();
+		// Force JDK 1.4	
+		options.put(CompilerOptions.OPTION_Compliance,CompilerOptions.versionFromJdkLevel(CompilerOptions.JDK1_4));
+		options.put(CompilerOptions.OPTION_Source,CompilerOptions.versionFromJdkLevel(CompilerOptions.JDK1_3));
+		options.put(CompilerOptions.OPTION_TargetPlatform,CompilerOptions.versionFromJdkLevel(CompilerOptions.JDK1_2));
+		org.eclipse.jdt.internal.compiler.Compiler cmp = new org.eclipse.jdt.internal.compiler.Compiler(env, errorPolicy, options, requestor, problemFactory);		
 		tick(pm);
 
 		cmp.compile(cu);
