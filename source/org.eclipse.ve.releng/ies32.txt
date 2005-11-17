@@ -1,2 +1,2 @@
-VE-SDK-I20051027.zip=http://fullmoon.ottawa.ibm.com/tools/ve/downloads/drops/I-I20051027-200510271200/ | win32, win32, x86 & linux,gtk,x86 & solaris,gtk,sparc | | sdk | ve
-VE-runtime-I20051027.zip=http://fullmoon.ottawa.ibm.com/tools/ve/downloads/drops/I-I20051027-200510271200/ | win32, win32, x86 & linux,gtk,x86 & solaris,gtk,sparc | | runtime | ve
+VE-SDK-I20051117.zip=http://fullmoon.ottawa.ibm.com/tools/ve/downloads/drops/I-I20051117-200511171341/ | win32, win32, x86 & linux,gtk,x86 & solaris,gtk,sparc | | sdk | ve
+VE-runtime-I20051117.zip=http://fullmoon.ottawa.ibm.com/tools/ve/downloads/drops/I-I20051117-200511171341/ | win32, win32, x86 & linux,gtk,x86 & solaris,gtk,sparc | | runtime | ve
