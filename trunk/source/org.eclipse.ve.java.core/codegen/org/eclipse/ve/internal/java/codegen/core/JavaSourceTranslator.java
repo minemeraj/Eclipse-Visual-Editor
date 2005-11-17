@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.93 $  $Date: 2005-11-15 18:23:38 $ 
+ *  $Revision: 1.94 $  $Date: 2005-11-17 23:21:38 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -449,33 +449,33 @@ IDiagramSourceDecoder fSourceDecoder = null;
 			try {
 				monitor.beginTask(CodegenMessages.JavaSourceTranslator_1,10);;				 
 				
-				// We have to call takeCurrentSnapShot to clear events properly
-				monitor.subTask(CodegenMessages.JavaSourceTranslator_2); 
-				boolean reloadRequired = takeCurrentSnapshot(editorState, allDocEvents, workingCopy) ;
-				monitor.worked(1);				
-				reloadRequired |= ((fBeanModel == null) && !floadInProgress) ;				
-				if (reloadRequired) {
-					Reload(fDisplay, new SubProgressMonitor(monitor,2));
-				} else {
-					if (currentSource == null || monitor.isCanceled()) {
-						processCancel(editorState);
-						return;
-					}
-					
-					monitor.subTask(CodegenMessages.JavaSourceTranslator_3); 
-					CompilationUnit ast = parse(currentSource, new SubProgressMonitor(monitor, 3));
-					monitor.worked(1);
+				// only one updater can be touching the model at any time.
+				//TODO: Can not lock here the JavaTranslator because isBusy() may be called
+				//      recursivly
+				synchronized(fSrcSync.getLockObject()){
 
-					if (monitor.isCanceled()) {
-						processCancel(editorState);
-						return;
-					}
-
-					// only one updater can be touching the model at any time.
-					//TODO: Can not lock here the JavaTranslator because isBusy() may be called
-					//      recursivly
-					synchronized(fSrcSync.getLockObject()){
-
+					// We have to call takeCurrentSnapShot to clear events properly
+					monitor.subTask(CodegenMessages.JavaSourceTranslator_2); 
+					boolean reloadRequired = takeCurrentSnapshot(editorState, allDocEvents, workingCopy) ;
+					monitor.worked(1);				
+					reloadRequired |= ((fBeanModel == null) && !floadInProgress) ;				
+					if (reloadRequired) {
+						Reload(fDisplay, new SubProgressMonitor(monitor,2));
+					} else {
+						if (currentSource == null || monitor.isCanceled()) {
+							processCancel(editorState);
+							return;
+						}
+						
+						monitor.subTask(CodegenMessages.JavaSourceTranslator_3); 
+						CompilationUnit ast = parse(currentSource, new SubProgressMonitor(monitor, 3));
+						monitor.worked(1);
+	
+						if (monitor.isCanceled()) {
+							processCancel(editorState);
+							return;
+						}
+	
 						// TODO Adapters will not react for GUI deltas !!!
 						if (fBeanModel!=null)
 							fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);

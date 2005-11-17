@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BDMMerger.java,v $
- *  $Revision: 1.72 $  $Date: 2005-11-11 19:19:46 $ 
+ *  $Revision: 1.73 $  $Date: 2005-11-17 23:21:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -548,6 +548,7 @@ public class BDMMerger {
 	}
 
 	protected boolean processEquivalentExpressions(final CodeExpressionRef mainExp, final CodeExpressionRef newExp, int equivalencyLevel){
+		if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 		if(newExp.getBean()!=null) // Expressions like 'createComposite()' have no bean defined on them - no need of a proxy
 			newExp.getBean().setProxy(mainExp.getBean());
 		switch(equivalencyLevel){
@@ -717,6 +718,7 @@ public class BDMMerger {
 			for(int mainExpCount = 0; mainExpCount < mainExpTobeProcessed.size(); mainExpCount++ ){
 				CodeExpressionRef mainExp = (CodeExpressionRef) mainExpTobeProcessed.get(mainExpCount);
 				if (mainExp != null && updExp != null && !updExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
+					if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 					int equivalency = -1;
 					try {
 						equivalency = determineEquivalency(mainExp, updExp) ;
@@ -732,6 +734,7 @@ public class BDMMerger {
 					break;
 				}
 			}
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			if(!equivalentExpFound){
 				// No Equivalent expression was found 
 				// Now add the newly added expressions
@@ -744,6 +747,7 @@ public class BDMMerger {
 		// Now remove the old main expressions
 		for (int delExpCount = 0; delExpCount < mainExpTobeProcessed.size(); delExpCount++) {
 			CodeExpressionRef mainExp = (CodeExpressionRef) mainExpTobeProcessed.get(delExpCount);
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			// Now there are cases where expressions are added to the beanpart after parsing and 
 			// during decoding (ex: createTable() - which is added to the Shell beanpart, during the 
 			// decoding of the constructor for Table). Such expressions are generally stored in the 
@@ -1020,6 +1024,7 @@ public class BDMMerger {
 		HashMap beansInMethodMap = new HashMap();
 		Iterator newModelBeansItr = newModel.getBeans(true).iterator();
 		while (newModelBeansItr.hasNext()) {
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			BeanPart bp = (BeanPart) newModelBeansItr.next();
 			String key = "null"; //$NON-NLS-1$
 			if(bp.getInitMethod()!=null && bp.getInitMethod().getMethodHandle()!=null)
@@ -1042,6 +1047,7 @@ public class BDMMerger {
 			while (newBeansItr.hasNext()) {
 				BeanPart newBP = (BeanPart) newBeansItr.next();
 				BeanPart mainBP = getMainBDMBean(newBP);
+				if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 				if(mainBP != null){
 					if(mainBP.isDisposed() || mainBP.getModel()==null)
 						continue;
@@ -1090,6 +1096,7 @@ public class BDMMerger {
 			for(int mainExpCount = 0; mainExpCount < mainInitExpressions.size(); mainExpCount++ ){
 				CodeExpressionRef mainExp = (CodeExpressionRef) mainInitExpressions.get(mainExpCount);
 				if (mainExp != null && updExp != null && !updExp.isStateSet(CodeExpressionRef.STATE_EXP_IN_LIMBO)) {
+					if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 					int equivalency = -1;
 					try {
 						equivalency = isSpecialEquivalent(mainExp, updExp);
@@ -1105,6 +1112,7 @@ public class BDMMerger {
 					break;
 				}
 			}
+			if (mainModel.isStateSet(IBeanDeclModel.BDM_STATE_DOWN)||monitor.isCanceled()) return true ;
 			if(!equivalentExpFound){
 				// No Equivalent expression was found 
 				// Now add the newly added expressions
