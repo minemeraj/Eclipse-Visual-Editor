@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlBeanInfo.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:52:54 $ 
+ *  $Revision: 1.10 $  $Date: 2005-11-17 22:45:28 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -138,7 +138,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"menu", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ControlMessages.getString("menuDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, ControlMessages.getString("menuSD"), //$NON-NLS-1$
-				EXPERT, Boolean.TRUE,
+				HIDDEN, Boolean.TRUE,		// show hidden - can't set from PS, only palette
 			}
 			),
 			// monitor

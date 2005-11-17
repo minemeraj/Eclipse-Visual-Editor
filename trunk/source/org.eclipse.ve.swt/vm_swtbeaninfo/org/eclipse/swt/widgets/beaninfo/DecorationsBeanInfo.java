@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DecorationsBeanInfo.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:52:53 $ 
+ *  $Revision: 1.10 $  $Date: 2005-11-17 22:45:28 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -105,6 +105,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"menuBar", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, DecorationsMessages.getString("menuBarDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, DecorationsMessages.getString("menuBarSD"), //$NON-NLS-1$
+				HIDDEN, Boolean.TRUE,		// show hidden - can't set from PS, only palette
 			}
 			),
 			// minimized
