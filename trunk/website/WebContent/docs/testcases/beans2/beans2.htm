@@ -1,11 +1,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html xmlns:v="urn:schemas-microsoft-com:vml"
- xmlns:o="urn:schemas-microsoft-com:office:office"
- xmlns="http://www.w3.org/TR/REC-html40">
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
 <head>
+
+  
   <meta http-equiv="Content-Language" content="en-us">
-  <meta http-equiv="Content-Type"
- content="text/html; charset=windows-1252">
+
+  
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+  
+  
   <title>Swing beans testing with the Property Sheet</title>
   <style>
 <!--
@@ -32,373 +36,463 @@ o\:*         { behavior: url(#default#VML) }
 <xml><o:shapedefaults v:ext="edit" spidmax="1027"/>
 </xml><![endif]-->
 </head>
+
+
 <body>
-<p class="MsoNormal"><b><u><span style="font-family: sans-serif;"><font
- size="3">
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif;"><font size="3">
 Procedure</font></span></u></b> <br>
+
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">This test involves
 testing the numerous properties on several Swing components. Each java
 file within the test jar file is dedicated to one specfic JavaBean,
-(JButton, JLabel, etc). Every one of the beans’ parameters has been
+(JButton, JLabel, etc). Every one of the beans&rsquo; parameters has been
 somehow altered from its default value. </span><br>
+
 &nbsp;</p>
+
 <p class="MsoNormal"><font face="Arial" size="3"><b><u>Setup</u></b></font></p>
+
 <p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Import
 the <a href="../test-zips/marathon_beans_test.zip">marathon beans test
 jar</a> file into an Eclipse project.</span></p>
+
 <p class="MsoNormal"><br>
+
 <span style="font-size: 10pt; font-family: Arial;">To perform the test,
 go through the following steps for each java file:</span> </p>
+
 <ul style="margin-top: 0in; margin-bottom: 0in;" type="disc">
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Open the java source with
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Open the java source with
 the Java Visual Editor and compare what the editor displays with the
 images in this document. The images are screen captures of the
-program’s graphical output, so whatever the JVE displays should be
+program&rsquo;s graphical output, so whatever the JVE displays should be
 exactly the same.</span></li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Press the "Show Advanced
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Press the "Show Advanced
 Properties" button on the toolbar of the property sheet to show all of
 the bean's properties.<br>
+
     </span></li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Look at the accessor
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Look at the accessor
 method for the bean under inspection. There will be dozens of setXXX()
-statements for various properties. Look at each statement and <b> <span
- style="color: blue;">verify</span></b> that there is a corresponding
+statements for various properties. Look at each statement and <b> <span style="color: blue;">verify</span></b> that there is a corresponding
 row in the property sheet for the bean that has the correct value set.
 For example, in the first test, for a JButton bean, the method </span>
     <tt style="font-family: Courier New;"><span style="font-size: 10pt;">
-getJButton()</span></tt><span
- style="font-size: 10pt; font-family: Arial;"> contains the following
+getJButton()</span></tt><span style="font-size: 10pt; font-family: Arial;"> contains the following
 line:</span> <br>
+
     <tt style="font-family: Courier New;"><span style="font-size: 10pt;">
 jButton.setName(<span style="color: blue;">"JButton"</span>);</span></tt>
     <br>
+
     <span style="font-size: 10pt; font-family: Arial;">You need to look
 at the property sheet and <b><span style="color: blue;">verify</span></b>
-that there’s a row for the “name” property that has the value
-“JButton”. Make sure that the PropertySheet is set to the show advanced
+that there&rsquo;s a row for the &ldquo;name&rdquo; property that has the value
+&ldquo;JButton&rdquo;. Make sure that the PropertySheet is set to the show advanced
 properties because some of the properties tested are advanced ones.</span>
   </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">For each file below,
-there will be a checklist of additional things to <b> <span
- style="color: blue;">verify</span></b>.</span></li>
-  <li class="MsoNormal"><b><span
- style="font-size: 10pt; font-family: Arial;"> Monitor</span></b><span
- style="font-size: 10pt; font-family: Arial;"> the logs for codegen
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">For each file below,
+there will be a checklist of additional things to <b> <span style="color: blue;">verify</span></b>.</span></li>
+
+  <li class="MsoNormal"><b><span style="font-size: 10pt; font-family: Arial;"> Monitor</span></b><span style="font-size: 10pt; font-family: Arial;"> the logs for codegen
 exceptions and add necessary defects.</span> <br>
+
   </li>
+
 </ul>
-<p class="MsoNormal"><b><u><span style="font-family: Arial;"><font
- size="3">Test Files</font></span></u></b> <br>
+
+<p class="MsoNormal"><b><u><span style="font-family: Arial;"><font size="3">Test Files</font></span></u></b> <br>
+
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">File name: &nbsp;
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJButton.java</span>
+&nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJButton.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image001.jpg"
- v:shapes="_x0000_s1025"><br>
+
+<img src="JButton.jpg" alt=""><br>
+
 <span style="font-size: 10pt; font-family: Arial;">Remember to compare
 the property sheet values with the setXXX() statements in the source
 code, as</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">is described in the
 instructions above.</span> <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Things to <b>
 <span style="color: blue;">Verify</span></b>:</span> </p>
+
 <ul style="margin-top: 0in; margin-bottom: 0in;" type="disc">
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;"> Property Sheet has
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;"> Property Sheet has
 correct initial values</span> </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “enabled”
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;enabled&rdquo;
 property to true and the text should turn red.</span> </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the
-“contentAreaFilled” property to true and the background color should
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the
+&ldquo;contentAreaFilled&rdquo; property to true and the background color should
 turn green.</span> </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “borderPainted”
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;borderPainted&rdquo;
 property to true and an etched border should appear.</span> </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the layout manager of
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the layout manager of
 the JPanel to FlowLayout and the geometry of the JButton should become
 a square with 100 pixel long sides.</span> <br>
+
     <br>
+
 &nbsp;</li>
+
 </ul>
+
 <p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">File
 name: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJCheckBox.java</span>
+&nbsp; &nbsp; &nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJCheckBox.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image002.jpg"
- v:shapes="_x0000_s1026"><br>
+
+<img src="JCheckBox.jpg" alt=""><br>
+
 <span style="font-size: 10pt; font-family: Arial;">Things to <b>
 <span style="color: blue;">Verify</span></b>:</span> </p>
+
 <ul style="margin-top: 0in; margin-bottom: 0in;" type="disc">
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “enabled”
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;enabled&rdquo;
 property to true and the text should turn blue.</span> </li>
+
 </ul>
+
 <ul style="margin-top: 0in; margin-bottom: 0in;" type="disc">
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the
-“contentAreaFilled” property to true and the background color should
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the
+&ldquo;contentAreaFilled&rdquo; property to true and the background color should
 turn red.</span> </li>
-  <li class="MsoNormal">S<span
- style="font-size: 10pt; font-family: Arial;">et the layout manager of
+
+  <li class="MsoNormal">S<span style="font-size: 10pt; font-family: Arial;">et the layout manager of
 the JPanel to FlowLayout and the geometry of the JCheckBox should
 become a square with 100 pixel long sides.</span> <br>
+
     <br>
+
 &nbsp;</li>
+
 </ul>
+
 <p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">&nbsp;</span></p>
+
 <p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">File
 name: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJToggleButton.java</span>
+&nbsp; &nbsp; &nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJToggleButton.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image003.jpg"
- v:shapes="_x0000_s1027"><br>
+
+<img src="JToggleButton.jpg" alt=""><br>
+
 <span style="font-size: 10pt; font-family: Arial;">Things to <b>
 <span style="color: blue;">Verify</span></b>:</span> </p>
+
 <ul style="margin-top: 0in; margin-bottom: 0in;" type="disc">
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “enabled”
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;enabled&rdquo;
 property to true and the text should turn blue.</span> </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “selected”
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;selected&rdquo;
 property to false and the background color should turn green.</span> </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the layout manager of
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the layout manager of
 the JPanel to FlowLayout and the geometry of the JToggleButton should
 become a square with 100 pixel long sides.</span> </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;"> Check to make sure the
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;"> Check to make sure the
 Border Property Editor displays correctly.</span> <br>
+
     <br>
+
 &nbsp;</li>
+
 </ul>
+
 <p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">&nbsp;</span></p>
+
 <p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">File
 name: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJRadioButton.java</span>
+&nbsp; &nbsp; &nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJRadioButton.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image004.jpg"
- v:shapes="_x0000_s1028"><br>
+
+<img src="JRadioButton.jpg" alt=""><br>
+
 <span style="font-size: 10pt; font-family: Arial;">Things to <b>
 <span style="color: blue;">Verify</span></b>:</span> </p>
+
 <ul style="margin-top: 0in; margin-bottom: 0in;" type="disc">
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “enabled”
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;enabled&rdquo;
 property to true and the text should turn red.</span> </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “opaque” property
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;opaque&rdquo; property
 to true and the background color should turn orange.</span> </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the layout manager of
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the layout manager of
 the JPanel to FlowLayout and the geometry of the JRadioButton should
 become a square with 100 pixel long sides.</span> <br>
+
     <br>
+
 &nbsp;</li>
+
 </ul>
+
 <p class="MsoNormal"><br>
+
 <span style="font-size: 10pt; font-family: Arial;">File name: &nbsp;
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJLabel.java</span>
+&nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJLabel.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image005.jpg"
- v:shapes="_x0000_s1029"><br>
+
+<img src="JLabel.jpg" alt=""><br>
+
 <span style="font-size: 10pt; font-family: Arial;">Things to <b>
 <span style="color: blue;">Verify</span></b>:</span> </p>
+
 <ul style="margin-top: 0in; margin-bottom: 0in;" type="disc">
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “enabled”
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;enabled&rdquo;
 property to true and the text should turn red.</span> </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “opaque” property
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;opaque&rdquo; property
 to true and the background color should turn green.</span> </li>
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the layout manager of
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the layout manager of
 the JPanel to FlowLayout and the geometry of the JToggleButton should
 become a 100x20 pixel rectangle.</span> <br>
+
     <br>
+
 &nbsp;</li>
+
 </ul>
+
 <p class="MsoNormal"><br>
+
 <span style="font-size: 10pt; font-family: Arial;">File name: &nbsp;
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJTextField.java</span>
+&nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJTextField.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image006.jpg"
- v:shapes="_x0000_s1030"><br>
+
+<img src="JTextField.jpg" alt=""><br>
+
 <span style="font-size: 10pt; font-family: Arial;">Things to <b>
 <span style="color: blue;">Verify</span></b>:</span> </p>
+
 <ul style="margin-top: 0in; margin-bottom: 0in;" type="disc">
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “enabled” and
-“editable” properties to true and type into the free-form dialog to
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;enabled&rdquo; and
+&ldquo;editable&rdquo; properties to true and type into the free-form dialog to
 check the colors for highlighted, disabled, etc. text.</span> <br>
+
     <br>
+
     <br>
+
 &nbsp;</li>
+
 </ul>
+
 <p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">File
 name: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJPasswordField.java</span>
+&nbsp; &nbsp; &nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJPasswordField.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image007.jpg"
- v:shapes="_x0000_s1031"><br>
+
+<img src="JPasswordField.jpg" alt=""><br>
+
 <span style="font-size: 10pt; font-family: Arial;">Things to <b>
 <span style="color: blue;">Verify</span></b>:</span> </p>
+
 <ul style="margin-top: 0in; margin-bottom: 0in;" type="disc">
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “enabled” and
-“editable” properties to true and type into the free-form dialog to
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;enabled&rdquo; and
+&ldquo;editable&rdquo; properties to true and type into the free-form dialog to
 check the colors for highlighted, disabled, etc. text.</span> <br>
+
     <br>
+
     <b><span style="font-size: 10pt; font-family: Arial;">paw </span></b>
     <span style="font-size: 10pt; font-family: Arial;">note on </span>
-    <span style="font-size: 10pt; font-family: Arial;">5/19/03</span><span
- style="font-size: 10pt; font-family: Arial;"> - the 'enable' and
+    <span style="font-size: 10pt; font-family: Arial;">5/19/03</span><span style="font-size: 10pt; font-family: Arial;"> - the 'enable' and
 'editable' properties are already set to true for this bean and I
 didn't notice a change colors, both in design time and runtime when
 toggling these properties.</span> </li>
+
 </ul>
-<p class="MsoNormal" align="center"
- style="text-align: center; margin-bottom: 12pt;">
+
+<p class="MsoNormal" style="text-align: center; margin-bottom: 12pt;" align="center">
 &nbsp;</p>
+
 <p class="MsoNormal"><br>
+
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">File name: &nbsp;
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJTextArea.java</span>
+&nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJTextArea.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image008.jpg"
- v:shapes="_x0000_s1032"><br>
+
+<img src="JTextArea.jpg" alt=""><br>
+
 <span style="font-size: 10pt; font-family: Arial;">Things to <b>
 <span style="color: blue;">Verify</span></b>:</span> </p>
+
 <ul style="margin-top: 0in; margin-bottom: 0in;" type="disc">
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;">Set the “enabled” and
-“editable” properties to true and type into the free-form dialog to
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">Set the &ldquo;enabled&rdquo; and
+&ldquo;editable&rdquo; properties to true and type into the free-form dialog to
 check the colors for highlighted, disabled, etc. text.</span> </li>
+
 </ul>
-<p class="MsoNormal" align="center"
- style="text-align: center; margin-bottom: 12pt;">
+
+<p class="MsoNormal" style="text-align: center; margin-bottom: 12pt;" align="center">
 &nbsp;</p>
+
 <p class="MsoNormal"><br>
+
 <span style="font-size: 10pt; font-family: Arial;">File name: &nbsp;
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJSlider.java</span>
+&nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJSlider.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image009.jpg"
- v:shapes="_x0000_s1033"><br>
+
+<img src="JSlider.jpg" alt=""><br>
+
 <span style="font-size: 10pt; font-family: Arial;">Things to <b>
 <span style="color: blue;">Verify</span></b>:</span></p>
+
 <ul style="margin-top: 0in; margin-bottom: 0in;" type="disc">
-  <li class="MsoNormal"><span
- style="font-size: 10pt; font-family: Arial;"> Change the layout
-manager of the JPanel bean to FlowLayout and <b> <span
- style="color: blue;">Verify</span></b> that the JSlider is resized
+
+  <li class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;"> Change the layout
+manager of the JPanel bean to FlowLayout and <b> <span style="color: blue;">Verify</span></b> that the JSlider is resized
 correctly, (per its preferred size).</span> <br>
+
     <br>
+
 &nbsp;</li>
+
 </ul>
+
 <p class="MsoNormal">&nbsp;</p>
+
 <p class="MsoNormal"><span style="font-size: 10pt; font-family: Arial;">File
 name: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJScrollBar.java</span>
+&nbsp; &nbsp; &nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJScrollBar.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image010.jpg"
- v:shapes="_x0000_s1034"><br>
+
+<img src="JScrollBar.jpg" alt=""><br>
+
 <br>
+
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;"><br>
+
 File name: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp; &nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJList.java</span>
+&nbsp; &nbsp; &nbsp; &nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJList.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
+
 This is how it looks in the Visual Editor. Notice the blue circle "i"
 which indicates an informational error. This is because the property
 'selectedIndices' is set with an <b>int</b> array in the source code
 and this type of expression is too complicated to be evaluated in the
 VM. When the code is actually run, the list items will be visible.<br>
+
 <u>Note</u>: The selectedIndices property is not in the beaninfo and therefore 
 does not show in the property sheet viewer. It only shows in the source code <br>
-<img border="0" src="image014.jpg" width="161" height="121">
+
+<img src="JList1.jpg" alt="">
 <br>
+
 <br>
+
 This is how it looks when its running in which the list items show up.<br>
-<img border="0" width="168" height="147" src="image011.jpg"
- v:shapes="_x0000_s1035"><br>
+
+<img src="JList2.jpg" alt=""><br>
+
 <br>
+
 <br>
-<span style="font-size: 10pt; font-family: Arial;"></span><span
- style="font-size: 10pt; font-family: Arial;">File name: &nbsp; &nbsp;
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJComboBox.java</span>
+
+<span style="font-size: 10pt; font-family: Arial;"></span><span style="font-size: 10pt; font-family: Arial;">File name: &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJComboBox.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image012.jpg"
- v:shapes="_x0000_s1036"><br>
+
+<img src="JComboBox.jpg" alt=""><br>
+
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">File name: &nbsp;
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-&nbsp;</span><span
- style="font-size: 10pt; font-family: Courier New; color: red;">MBTJProgressBar.java</span>
+&nbsp;</span><span style="font-size: 10pt; font-family: Courier New; color: red;">MBTJProgressBar.java</span>
 <br>
+
 <span style="font-size: 10pt; font-family: Arial;">Correct graphical
 output:</span>
 <br>
-<img border="0" width="168" height="147" src="image013.jpg"
- v:shapes="_x0000_s1037"></p>
+
+<img src="JProgressBar.jpg" alt=""></p>
+
 </body>
 </html>
