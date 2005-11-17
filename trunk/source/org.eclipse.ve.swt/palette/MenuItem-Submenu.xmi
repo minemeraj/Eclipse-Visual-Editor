@@ -21,7 +21,7 @@
   <swt:Menu xmi:id="MenuCascade_1">
  	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
 	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTClassInstanceCreation" type="org.eclipse.swt.widgets.Menu">
-        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTInstanceReference" object="MenuItem_1"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTInstanceReference" reference="MenuItem_1"/>
       </expression>	  	
 	</allocation>  
   </swt:Menu>
