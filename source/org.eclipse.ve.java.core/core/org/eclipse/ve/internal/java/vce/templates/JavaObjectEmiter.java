@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaObjectEmiter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-11-17 13:29:24 $ 
+ *  $Revision: 1.11 $  $Date: 2005-11-17 18:41:28 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.compiler.*;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.internal.compiler.*;
 import org.eclipse.jdt.internal.compiler.batch.FileSystem;
+import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblem;
@@ -433,9 +434,9 @@ public class JavaObjectEmiter {
 		EmiterCompilerRequestor requestor = new EmiterCompilerRequestor();
 		Hashtable options = JavaCore.getOptions();
 		// Force JDK 1.4	
-		options.put(CompilerOptions.OPTION_Compliance,CompilerOptions.versionFromJdkLevel(CompilerOptions.JDK1_4));
-		options.put(CompilerOptions.OPTION_Source,CompilerOptions.versionFromJdkLevel(CompilerOptions.JDK1_3));
-		options.put(CompilerOptions.OPTION_TargetPlatform,CompilerOptions.versionFromJdkLevel(CompilerOptions.JDK1_2));
+		options.put(CompilerOptions.OPTION_Compliance,CompilerOptions.versionFromJdkLevel(ClassFileConstants.JDK1_4));
+		options.put(CompilerOptions.OPTION_Source,CompilerOptions.versionFromJdkLevel(ClassFileConstants.JDK1_3));
+		options.put(CompilerOptions.OPTION_TargetPlatform,CompilerOptions.versionFromJdkLevel(ClassFileConstants.JDK1_2));
 		org.eclipse.jdt.internal.compiler.Compiler cmp = new org.eclipse.jdt.internal.compiler.Compiler(env, errorPolicy, options, requestor, problemFactory);		
 		tick(pm);
 
