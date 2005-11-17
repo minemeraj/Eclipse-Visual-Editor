@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.94 $  $Date: 2005-11-17 23:21:38 $ 
+ *  $Revision: 1.95 $  $Date: 2005-11-17 23:52:33 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -329,6 +329,7 @@ IDiagramSourceDecoder fSourceDecoder = null;
 
 	protected CompilationUnit parse(String source, IProgressMonitor monitor){
    		ASTParser parser = ASTParser.newParser(AST.JLS2);
+   		parser.setCompilerOptions(fWorkingCopy.getJavaProject().getOptions(true));
 		parser.setSource(source.toCharArray());
 		return (CompilationUnit) parser.createAST(monitor);
   	}
