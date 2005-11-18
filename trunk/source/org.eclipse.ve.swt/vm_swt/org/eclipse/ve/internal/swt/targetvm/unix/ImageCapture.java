@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 03:34:57 $ 
+ *  $Revision: 1.11 $  $Date: 2005-11-18 22:09:01 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -41,7 +41,7 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 	static final int OBSCURED = 1<<6; // Must be the same value as Widget.OBSCURED
 	static final String FIELD_STATE_NAME = "state";  //$NON-NLS-1$
 	
-	private native int[] getPixels(int handle, int includeChildren, int arg2, int arg3, int arg4);
+	private native int[] getPixels(int handle, int includeChildren, int maxWidth, int maxHeight, int arg4);
 	
 	protected Point getTopLeftOfClientarea(Decorations decorations){
 		Point trim = decorations.toControl(decorations.getLocation());
@@ -62,17 +62,17 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		return new Point(trim.x, trim.y);
 	}
 	
-	protected Image getImageOfControl(Control control, int includeChildren){
+	protected Image getImageOfControl(Control control, int includeChildren, int maxWidth, int maxHeight){
 		Image image = null;
 		if (control instanceof Shell) {
 			Shell shell = (Shell) control;
 			int handle = readIntFieldValue(shell.getClass(), shell, "shellHandle"); //$NON-NLS-1$
 			if(handle>0){
-				image = getImageOfHandle(handle, shell.getDisplay(), includeChildren);
+				image = getImageOfHandle(handle, shell.getDisplay(), includeChildren, maxWidth, maxHeight);
 			}
 		}
 		if(image==null){
-			image = getImageOfHandle(control.handle, control.getDisplay(), includeChildren);
+			image = getImageOfHandle(control.handle, control.getDisplay(), includeChildren, maxWidth, maxHeight);
 		}
 		if (control instanceof Decorations) {
 			Decorations decorations = (Decorations) control;
@@ -93,8 +93,8 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		return image;
 	}
 	
-	protected Image getImageOfHandle(int handle, Display display, int includeChildren){
-		int[] tcData = getPixels(handle, includeChildren,0,0,0);
+	protected Image getImageOfHandle(int handle, Display display, int includeChildren, int maxWidth, int maxHeight){
+		int[] tcData = getPixels(handle, includeChildren,maxWidth,maxHeight,0);
 		int depth = display.getDepth();
 		if(depth==15)
 			depth=16; // SWT cant handle depth of 15. Similar to 16
@@ -313,7 +313,7 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		changeObscured(control, map, false);
 		Image image = null;
 		try {
-			image = getImageOfControl(control, ic);
+			image = getImageOfControl(control, ic, maxWidth, maxHeight);
 		} finally {
 			changeObscured(control, map, true);
 		}
