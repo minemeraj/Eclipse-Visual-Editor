@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.24 $  $Date: 2005-10-14 17:45:07 $ 
+ *  $Revision: 1.25 $  $Date: 2005-11-18 23:37:41 $ 
  */
 
 import java.util.HashMap;
@@ -216,16 +216,11 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 						// select it so it's highlighted in the tree viewer.
 						if (useSuperClass) {
 							if (vem.getSuperClass().equals(getSuperClass())) {
-								// There is an Eclipse policy where wizards cannot open with errors
-								if(vem.getStatus(getContainerRoot()).isOK()){
-									selectedElement = vem;
-								}
+								selectedElement = vem;
 							}
 						} else if (vem.getCategory().equals(previousSelectedElementData[0]) && vem.getName().equals(previousSelectedElementData[1])) {
-							if(vem.getStatus(getContainerRoot()).isOK()){							
-								selectedElement = vem;
-								setSuperClass(previousSelectedElementData[2], true);
-							}
+							selectedElement = vem;
+							setSuperClass(previousSelectedElementData[2], true);
 						}
 					}
 
@@ -478,5 +473,25 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	 */
 	public VisualElementModel getSelectedElement() {
 		return selectedElement;
+	}
+	
+	/**
+	 * Set visible on the wizard.
+	 * 
+	 * Overridden because Eclipse doesn't like to show error messages when you launch a wizard
+	 * but in the case where this wizard is launched via the New-->Other wizard, superclass parms
+	 * are passed in which may not work correctly if the project is not configured with correct plugins
+	 * or classpath. So there may be errors from selecting the specific element from the tree. 
+	 * In this case we want the errors to show and prevent the user from continuing with the wizard.
+	 */
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if (selectedElement != null) {
+			IStatus status = selectedElement.getStatus(getContainerRoot());
+			if(!(status.isOK())){
+				// TODO hack mode - force selection again to get the error message to show
+				styleTreeViewer.setSelection(new StructuredSelection(selectedElement), true);
+			}
+		}
 	}
 }
