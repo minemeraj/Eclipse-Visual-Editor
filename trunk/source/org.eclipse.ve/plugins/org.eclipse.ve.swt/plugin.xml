@@ -357,9 +357,61 @@
 			</visualElement>
   </extension>   
   
-    <!-- Add an SWT Examples category to the new wizard -->
   <extension
       point="org.eclipse.ui.newWizards">
+    <!-- Add a SWT category to the new wizard Other... Java selection -->
+      <category
+            name="%NewStyleComponent.SWT"
+            parentCategory="org.eclipse.jdt.ui.java"
+            id="org.eclipse.ve.internal.java.core.swt">
+      </category>
+      <wizard
+            name="%Visual.Class.Shell.Name"
+            icon="icons/full/clcl16/shell_obj.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.swt"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:java.lang.Object"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.Shell">
+         <description>
+            %Visual.Class.Shell.Desc
+         </description>
+      </wizard>
+      <wizard
+            name="%Visual.Class.Composite.Name"
+            icon="icons/full/clcl16/composite_obj.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.swt"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:org.eclipse.swt.widgets.Composite"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.Composite">
+         <description>
+            %Visual.Class.Composite.Desc
+         </description>
+      </wizard>
+    <!-- Add a SWT category to the new wizard Other... Java selection -->
+      <category
+            name="%NewStyleComponent.RCP"
+            parentCategory="org.eclipse.jdt.ui.java"
+            id="org.eclipse.ve.internal.java.core.rcp">
+      </category>
+      <wizard
+            name="%Visual.Class.Editor.Name"
+            icon="icons/full/clcl16/rcp_editor.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.rcp"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:org.eclipse.ui.part.EditorPart"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.Editor">
+         <description>
+            %Visual.Class.Editor.Desc
+         </description>
+      </wizard>
+      <wizard
+            name="%Visual.Class.View.Name"
+            icon="icons/full/clcl16/rcp_app.gif"
+            category="org.eclipse.jdt.ui.java/org.eclipse.ve.internal.java.core.rcp"
+            class="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard:org.eclipse.ui.part.ViewPart"
+            id="org.eclipse.ve.internal.java.codegen.wizards.NewVisualClassCreationWizard.View">
+         <description>
+            %Visual.Class.View.Desc
+         </description>
+      </wizard>
+    <!-- Add an SWT Examples category to the new wizard -->
       <category
             name="%Example.SWT"
             parentCategory="org.eclipse.ui.Examples/org.eclipse.ve.java.core.examples"
