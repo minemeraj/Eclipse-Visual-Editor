@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTabbedPaneContainerPolicy.java,v $
- *  $Revision: 1.10 $  $Date: 2005-11-04 17:30:48 $ 
+ *  $Revision: 1.11 $  $Date: 2005-11-18 19:23:17 $ 
  */
 
 import java.util.*;
@@ -51,12 +51,12 @@ public class JTabbedPaneContainerPolicy extends BaseJavaContainerPolicy {
 		super(JavaInstantiation.getSFeature(JavaEditDomainHelper.getResourceSet(domain), JFCConstants.SF_JTABBEDPANE_TABS), domain);
 
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain);
+		classJTabComponent = (EClass)containmentSF.getEType();
 		sfComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_COMPONENT);
+		classJComponent = (EClass) sfComponent.getEType();
 		sfTabTitle = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_TITLE);
 		sfTabIcon = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_ICON);
 		sfTabTooltip = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_TOOLTIP);
-		classJTabComponent = (EClass) rset.getEObject(JFCConstants.CLASS_JTABBEDPANE_JTABCOMPONENT, true);
-		classJComponent = (EClass) sfComponent.getEType();
 		visualsFact = JFCConstants.getFactory(classJTabComponent);
 	}
 
