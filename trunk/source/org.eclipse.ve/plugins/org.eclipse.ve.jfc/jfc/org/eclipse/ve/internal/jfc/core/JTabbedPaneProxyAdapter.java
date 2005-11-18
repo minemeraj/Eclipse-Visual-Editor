@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: JTabbedPaneProxyAdapter.java,v $
- *  $Revision: 1.13 $  $Date: 2005-11-04 15:15:01 $ 
+ *  $Revision: 1.14 $  $Date: 2005-11-18 19:23:17 $ 
  */
 
 import java.util.Iterator;
@@ -62,6 +62,7 @@ public class JTabbedPaneProxyAdapter extends ComponentProxyAdapter {
 
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
 		sfTabs = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABBEDPANE_TABS);
+		sfTabs.getEType();	// Force this so the correct resource set gets picked up
 		sfJTabComponent = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_COMPONENT);
 		sfTitle = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_TITLE);
 		sfIcon = JavaInstantiation.getReference(rset, JFCConstants.SF_JTABCOMPONENT_ICON);
