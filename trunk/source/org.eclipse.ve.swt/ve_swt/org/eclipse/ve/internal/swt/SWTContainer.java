@@ -351,6 +351,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	
 	
 	public static boolean isGTK = Platform.WS_GTK.equals(Platform.getWS());
+	public static boolean isCarbon = Platform.WS_CARBON.equals(Platform.getWS());
 			
 	/**
 	 * The following path info. provides both pre and post 3.1 locations

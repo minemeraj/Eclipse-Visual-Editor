@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.36 $  $Date: 2005-11-07 14:58:55 $ 
+ *  $Revision: 1.37 $  $Date: 2005-11-21 22:20:07 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -362,8 +362,8 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		// Add the jar file with the supporting classes required for the JVE into the classpath
 		// In development model the file proxy.jars redirects this to the plugin development project
 		controller.contributeClasspath(SwtPlugin.getDefault().getBundle(), "vm/jbcfswtvm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, false); //$NON-NLS-1$
-		// If GTK is the platform, then contribute the native library which does the offscreen screen-scrape
-		if(SWTContainer.isGTK)
+		// If GTK or Carbon is the platform, then contribute the native library which does the offscreen screen-scrape
+		if(SWTContainer.isGTK || SWTContainer.isCarbon)
 			controller.contributeClasspath(Platform.getBundle("org.eclipse.ve.swt"), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		if (!ProxyPlugin.isPDEProject(javaProject)) {
