@@ -10,17 +10,18 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.apache.xml.dtm.ref.sax2dtm.SAX2DTM;
-import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.DataBinding;
+import org.eclipse.jface.databinding.IDataBindingContext;
+import org.eclipse.jface.databinding.ITree;
+import org.eclipse.jface.databinding.PropertyDescription;
+import org.eclipse.jface.databinding.ViewersProperties;
 import org.eclipse.jface.tests.binding.scenarios.pojo.SampleData;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.examples.rcp.adventure.Category;
 
 public class CategoryTree extends Composite {
 
@@ -28,12 +29,12 @@ public class CategoryTree extends Composite {
 	private Tree tree = null;
 	private TreeViewer viewer = null;
 
-	public CategoryTree(Composite parent, int style) throws BindingException {
+	public CategoryTree(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		tree = new Tree(this, SWT.BORDER);
 		tree.setLinesVisible(true);
 		this.setLayout(new FillLayout());
@@ -42,7 +43,7 @@ public class CategoryTree extends Composite {
 		bind();
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 
 		// For a given catalog show its accounts with columns for "firstName,
 		// "lastName" and "state"

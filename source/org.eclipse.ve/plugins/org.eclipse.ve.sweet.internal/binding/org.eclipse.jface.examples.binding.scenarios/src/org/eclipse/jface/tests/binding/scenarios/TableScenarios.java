@@ -10,27 +10,26 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios;
 
-import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.jface.databinding.TableViewerDescription;
+import org.eclipse.jface.tests.binding.scenarios.pojo.Account;
+import org.eclipse.jface.tests.binding.scenarios.pojo.Catalog;
+import org.eclipse.jface.tests.binding.scenarios.pojo.PhoneConverter;
+import org.eclipse.jface.tests.binding.scenarios.pojo.SampleData;
+import org.eclipse.jface.tests.binding.scenarios.pojo.StateConverter;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.examples.rcp.adventure.Account;
-import org.eclipse.ui.examples.rcp.adventure.Catalog;
-import org.eclipse.ui.examples.rcp.binding.scenarios.PhoneConverter;
-import org.eclipse.ui.examples.rcp.binding.scenarios.SampleData;
-import org.eclipse.ui.examples.rcp.binding.scenarios.StateConverter;
 
 /**
  * To run the tests in this class, right-click and select "Run As JUnit Plug-in
@@ -68,9 +67,9 @@ public class TableScenarios extends ScenariosTestCase {
 		stateColumn = null;
 	}
 
-	public void testScenario01() throws BindingException {
+	public void testScenario01() {
 		// Show that a TableViewer with three columns renders the accounts
-		List accounts = catalog.getAccounts();		
+		List accounts = Arrays.asList(catalog.getAccounts());		
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
 		tableViewerDescription.addColumn("firstName");
@@ -80,7 +79,7 @@ public class TableScenarios extends ScenariosTestCase {
 
 		// Verify the data in the table columns matches the accounts
 		for (int i = 0; i < accounts.size(); i++) {
-			Account account = (Account) catalog.getAccounts().get(i);		
+			Account account = (Account) accounts.get(i);		
 			String col_0 = ((ITableLabelProvider)tableViewer.getLabelProvider()).getColumnText(account,0);
 			assertEquals(account.getFirstName(),col_0);
 			String col_1 = ((ITableLabelProvider)tableViewer.getLabelProvider()).getColumnText(account,1);
@@ -91,9 +90,9 @@ public class TableScenarios extends ScenariosTestCase {
 		}	
 	}
 	
-	public void testScenario02() throws BindingException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+	public void testScenario02() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		// Show that a TableViewer with three columns can be used to update columns
-		List accounts = catalog.getAccounts();	
+		List accounts = Arrays.asList(catalog.getAccounts());	
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
 		tableViewerDescription.addColumn("firstName");
@@ -103,13 +102,15 @@ public class TableScenarios extends ScenariosTestCase {
 		
 		CellEditor[] cellEditors = tableViewer.getCellEditors();
 		tableViewer.setSelection(new StructuredSelection(tableViewer.getTable().getItem(0)));
-		// To activate the cell editor on the first row we must get a private field which is the TableViewer.tableEditor
-		Field tableEditorField = TableViewer.class.getDeclaredField("tableEditor");
-		tableEditorField.setAccessible(true);
-		TableEditor tableEditor = (TableEditor)tableEditorField.get(tableViewer);
-		// Test firstName
+		// Select the first item in the table
+		tableViewer.getTable().setSelection(0);
+		// Send a mouse down event
+		Event event = new Event();
+		event.x = 19;
+		event.y = 21;
+		tableViewer.getTable().notifyListeners(3,event);
+		// The cell editor should now be active over the first column (firstName) of the first account
 		TextCellEditor firstNameEditor = (TextCellEditor)cellEditors[0];
-		tableEditor.setEditor(firstNameEditor.getControl(),tableViewer.getTable().getItem(0),0);
 		// Change the firstName and test it goes to the model
 		((Text)firstNameEditor.getControl()).setText("Bill");
 		((Text)((TextCellEditor)cellEditors[0]).getControl()).notifyListeners(SWT.DefaultSelection,null);
@@ -117,9 +118,9 @@ public class TableScenarios extends ScenariosTestCase {
 //		assertEquals("Bill",account.getFirstName());
 	}	
 	
-	public void testScenario03() throws BindingException {
+	public void testScenario03() {
 		// Show that converters work for table columns
-		List accounts = catalog.getAccounts();	
+		List accounts = Arrays.asList(catalog.getAccounts());	
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
 		tableViewerDescription.addColumn("lastName");
@@ -134,7 +135,7 @@ public class TableScenarios extends ScenariosTestCase {
 		PhoneConverter phoneConverter = new PhoneConverter();
 		StateConverter stateConverter = new StateConverter();
 		for (int i = 0; i < accounts.size(); i++) {
-			Account account = (Account) catalog.getAccounts().get(i);		
+			Account account = (Account) accounts.get(i);		
 			// Check the phone number
 			String col_phone = ((ITableLabelProvider)tableViewer.getLabelProvider()).getColumnText(account,1);
 			assertEquals(phoneConverter.convertModelToTarget(account.getPhone()),col_phone);

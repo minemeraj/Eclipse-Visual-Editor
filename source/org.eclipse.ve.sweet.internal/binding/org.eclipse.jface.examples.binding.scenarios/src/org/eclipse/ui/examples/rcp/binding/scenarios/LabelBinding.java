@@ -34,12 +34,12 @@ public class LabelBinding extends Composite {
 
 	private Label lblDescription = null;
 
-	public LabelBinding(Composite parent, int style) throws BindingException {
+	public LabelBinding(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		GridData gridData8 = new org.eclipse.swt.layout.GridData();
 		gridData8.grabExcessHorizontalSpace = true;
 		gridData8.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
@@ -77,7 +77,7 @@ public class LabelBinding extends Composite {
 		bind();
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
 

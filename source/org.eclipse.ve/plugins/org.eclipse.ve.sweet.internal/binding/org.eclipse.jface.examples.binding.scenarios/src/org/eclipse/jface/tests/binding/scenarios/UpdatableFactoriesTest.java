@@ -12,7 +12,7 @@
  *  Created Oct 21, 2005 by Gili Mendel
  * 
  *  $RCSfile: UpdatableFactoriesTest.java,v $
- *  $Revision: 1.8 $  $Date: 2005-11-15 19:11:43 $ 
+ *  $Revision: 1.9 $  $Date: 2005-11-21 16:07:40 $ 
  */
 
 package org.eclipse.jface.tests.binding.scenarios;
@@ -92,12 +92,12 @@ public class UpdatableFactoriesTest extends ScenariosTestCase {
 
 	IUpdatableFactory factory = new Factory(Object.class);
 
-	protected Class getFactoryType(Object src) throws BindingException {
+	protected Class getFactoryType(Object src) {
 		TestIUpdatable u = (TestIUpdatable) getDbc().createUpdatable(src);
 		return u.getType();
 	}
 
-	public void test_factoryRegistration() throws BindingException {
+	public void test_factoryRegistration() {
 
 		getDbc().addUpdatableFactory(root);
 		getDbc().addUpdatableFactory(middle);

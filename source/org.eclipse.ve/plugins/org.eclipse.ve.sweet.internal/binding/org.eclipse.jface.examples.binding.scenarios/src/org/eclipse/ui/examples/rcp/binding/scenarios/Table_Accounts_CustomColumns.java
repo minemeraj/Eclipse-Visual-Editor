@@ -12,7 +12,6 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import java.util.StringTokenizer;
 
-import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.DefaultCellModifier;
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.PropertyDescription;
@@ -40,13 +39,12 @@ public class Table_Accounts_CustomColumns extends Composite {
 
 	private TableViewer tableViewer1;
 
-	public Table_Accounts_CustomColumns(Composite parent, int style)
-			throws BindingException {
+	public Table_Accounts_CustomColumns(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		createTable();
@@ -56,12 +54,10 @@ public class Table_Accounts_CustomColumns extends Composite {
 	}
 
 	/**
-	 * This method initializes table
-	 * 
-	 * @throws BindingException
+	 * This method initializes table	 
 	 * 
 	 */
-	private void createTable() throws BindingException {
+	private void createTable() {
 		GridData gridData = new org.eclipse.swt.layout.GridData();
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -82,7 +78,7 @@ public class Table_Accounts_CustomColumns extends Composite {
 		bind();
 	}
 
-	private void bind1() throws BindingException {
+	private void bind1() {
 
 		// For a given catalog show its accounts with columns for "firstName,
 		// "lastName" and "state"
@@ -98,7 +94,7 @@ public class Table_Accounts_CustomColumns extends Composite {
 	
 	}
 	
-	private void bind() throws BindingException {
+	private void bind() {
 
 		// For a given catalog show its accounts with columns for "firstName,
 		// "lastName" and "state"
@@ -133,11 +129,10 @@ public class Table_Accounts_CustomColumns extends Composite {
 	}	
 
 	/**
-	 * This method initializes table1	
-	 * @throws BindingException 
+	 * This method initializes table1	 
 	 *
 	 */
-	private void createTable1() throws BindingException {
+	private void createTable1() {
 		GridData gridData1 = new org.eclipse.swt.layout.GridData();
 		gridData1.grabExcessHorizontalSpace = true;
 		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;

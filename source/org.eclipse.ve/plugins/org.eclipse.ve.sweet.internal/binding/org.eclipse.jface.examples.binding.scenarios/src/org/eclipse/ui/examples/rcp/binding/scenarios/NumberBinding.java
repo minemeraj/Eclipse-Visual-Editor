@@ -37,10 +37,8 @@ public class NumberBinding {
 
 	/**
 	 * This method initializes sShell
-	 * 
-	 * @throws BindingException
 	 */
-	private void createSShell() throws BindingException {
+	private void createSShell() {
 		GridData gridData3 = new org.eclipse.swt.layout.GridData();
 		gridData3.grabExcessHorizontalSpace = false;
 		gridData3.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
@@ -73,7 +71,7 @@ public class NumberBinding {
 		bind();
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(sShell);
 		AdventureFactory emfFactory = AdventurePackage.eINSTANCE
 				.getAdventureFactory();

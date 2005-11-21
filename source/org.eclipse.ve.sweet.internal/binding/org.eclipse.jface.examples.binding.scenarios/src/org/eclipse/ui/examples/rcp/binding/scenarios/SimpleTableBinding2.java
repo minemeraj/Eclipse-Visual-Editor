@@ -21,13 +21,12 @@ public class SimpleTableBinding2 extends Composite {
 
 	private IUpdatableValue selectedLodging;
 
-	public SimpleTableBinding2(Composite parent, int style)
-			throws BindingException {
+	public SimpleTableBinding2(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		this.setBounds(new org.eclipse.swt.graphics.Rectangle(0, 0, 400, 200));
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 3;
@@ -40,7 +39,7 @@ public class SimpleTableBinding2 extends Composite {
 		bind();
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		final Catalog catalog = SampleData.CATALOG_2005;
@@ -111,7 +110,7 @@ public class SimpleTableBinding2 extends Composite {
 		tableViewer = new TableViewer(table);
 	}
 
-	public static void main(String[] args) throws BindingException {
+	public static void main(String[] args) {
 		Display d = new Display();
 		Shell s = new Shell(d, SWT.SHELL_TRIM);
 		s.setLayout(new FillLayout());

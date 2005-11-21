@@ -37,8 +37,7 @@ public class TextBindingWithValidation extends Composite {
 
 	private Label validationMessage = null;
 
-	public TextBindingWithValidation(Composite parent, int style)
-			throws BindingException {
+	public TextBindingWithValidation(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
@@ -46,9 +45,8 @@ public class TextBindingWithValidation extends Composite {
 	/**
 	 * This method initializes sShell
 	 * 
-	 * @throws BindingException
 	 */
-	private void initialize() throws BindingException {
+	private void initialize() {
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		setLayout(gridLayout);
@@ -57,7 +55,7 @@ public class TextBindingWithValidation extends Composite {
 		bind();
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;

@@ -12,7 +12,6 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import java.util.Map;
 
-import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatable;
 import org.eclipse.jface.databinding.IUpdatableFactory;
@@ -33,13 +32,12 @@ public class Custom_TimeEntryCustomControl extends Composite {
 
 	private TimeEntry timeEntry1 = null;
 
-	public Custom_TimeEntryCustomControl(Composite parent, int style)
-			throws BindingException {
+	public Custom_TimeEntryCustomControl(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		GridData gridData = new org.eclipse.swt.layout.GridData();
 		gridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
@@ -52,7 +50,7 @@ public class Custom_TimeEntryCustomControl extends Composite {
 		bind();
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 
 		IDataBindingContext dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
@@ -60,8 +58,7 @@ public class Custom_TimeEntryCustomControl extends Composite {
 
 		dbc.addUpdatableFactory(new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Map properties,
-					Object description, IDataBindingContext bindingContext)
-					throws BindingException {
+					Object description, IDataBindingContext bindingContext) {
 				if (description instanceof PropertyDescription) {
 					PropertyDescription propertyDescription = (PropertyDescription) description;
 					if (propertyDescription.getObject() instanceof TimeEntry) {

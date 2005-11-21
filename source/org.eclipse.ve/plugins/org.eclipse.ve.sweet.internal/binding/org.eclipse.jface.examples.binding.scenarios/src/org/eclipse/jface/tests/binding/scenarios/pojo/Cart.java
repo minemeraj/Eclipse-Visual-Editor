@@ -10,16 +10,26 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios.pojo;
 
-public class Cart {
+public class Cart extends ModelObject {
+	
+	private int adventureDays;
+	private int lodgingDays;
 
 	public void setAdventureDays(int i) {
-		// TODO Auto-generated method stub
-		
+		adventureDays = i;
+	}
+	
+	public int getAdventureDays(){
+		return adventureDays;
 	}
 
 	public int getLodgingDays() {
-		// TODO Auto-generated method stub
-		return 0;
+		return lodgingDays;
 	}
+	
+	public void setLodgingDays(int lodgingDays) {
+		lodgingDays = lodgingDays;
+	}
+	
 
 }

@@ -8,28 +8,21 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jface.tests.binding.scenarios.pojo;
+package org.eclipse.ui.examples.pojo.binding.scenarios;
 
-public class Cart extends ModelObject {
+import org.eclipse.jface.databinding.IValidator;
+ 
+public class PhoneValidator implements IValidator {
 	
-	private int adventureDays;
-	private int lodgingDays;
-
-	public void setAdventureDays(int i) {
-		adventureDays = i;
-	}
-	
-	public int getAdventureDays(){
-		return adventureDays;
+	public PhoneValidator(){
 	}
 
-	public int getLodgingDays() {
-		return lodgingDays;
+	public String isPartiallyValid(Object value) {
+		return null;
 	}
-	
-	public void setLodgingDays(int lodgingDays) {
-		lodgingDays = lodgingDays;
+
+	public String isValid(Object value) {
+		return ((String)value).length() > 10 ? "Phone number too long" : null;
 	}
-	
 
 }

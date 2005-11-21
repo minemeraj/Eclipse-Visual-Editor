@@ -38,12 +38,12 @@ public class ListBinding extends Composite {
 
 	private Label validationMessage = null;
 
-	public ListBinding(Composite parent, int style) throws BindingException {
+	public ListBinding(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		GridData gridData11 = new org.eclipse.swt.layout.GridData();
 		gridData11.horizontalSpan = 2;
 		gridData11.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
@@ -75,7 +75,7 @@ public class ListBinding extends Composite {
 		bind();
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
 

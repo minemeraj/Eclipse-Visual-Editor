@@ -3,7 +3,6 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -15,12 +14,12 @@ import org.eclipse.swt.widgets.Shell;
 
 public class Showcase extends Composite {
 
-	public Showcase(Composite parent, int style) throws BindingException {
+	public Showcase(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		GridLayout gridLayout = new GridLayout(2, true);
 		gridLayout.horizontalSpacing = 20;
 		gridLayout.verticalSpacing = 20;
@@ -69,7 +68,7 @@ public class Showcase extends Composite {
 		}
 	}
 
-	public static void main(String[] args) throws BindingException {
+	public static void main(String[] args) {
 		Display display = new Display();
 		Shell shell = new Shell(display);
 		shell.setSize(800, 600);
