@@ -47,13 +47,12 @@ public class Custom_DerivedAggregateProperty extends Composite {
 
 	private Text txtCustom_multi = null;
 
-	public Custom_DerivedAggregateProperty(Composite parent, int style)
-			throws BindingException {
+	public Custom_DerivedAggregateProperty(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
 		setLayout(gridLayout);
@@ -64,7 +63,7 @@ public class Custom_DerivedAggregateProperty extends Composite {
 		bind();
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;

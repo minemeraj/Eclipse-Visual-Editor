@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatable;
 import org.eclipse.jface.databinding.PropertyDescription;
@@ -69,12 +68,12 @@ public class ComboBinding2 extends Composite {
 
 	private Label label3 = null;
 
-	public ComboBinding2(Composite parent, int style) throws BindingException {
+	public ComboBinding2(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		
 		
 		this.setLayout(new FillLayout());
@@ -99,7 +98,7 @@ public class ComboBinding2 extends Composite {
 		bind();
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);		
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;

@@ -9,7 +9,6 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
@@ -40,13 +39,12 @@ public class SimpleListBinding extends Composite {
 
 	private Text txtName = null;
 
-	public SimpleListBinding(Composite parent, int style)
-			throws BindingException {
+	public SimpleListBinding(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		setLayout(new GridLayout(2, false));
 		GridData gridData6 = new org.eclipse.swt.layout.GridData();
 		gridData6.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -72,7 +70,7 @@ public class SimpleListBinding extends Composite {
 		bind();
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 		AdventurePackage emfPackage = AdventurePackage.eINSTANCE;
 

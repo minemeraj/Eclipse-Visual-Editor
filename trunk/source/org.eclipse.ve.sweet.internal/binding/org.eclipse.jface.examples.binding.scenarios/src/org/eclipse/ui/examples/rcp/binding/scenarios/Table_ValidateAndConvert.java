@@ -32,13 +32,12 @@ public class Table_ValidateAndConvert extends Composite {
 
 	private Label lblErrorMessage = null;
 
-	public Table_ValidateAndConvert(Composite parent, int style)
-			throws BindingException {
+	public Table_ValidateAndConvert(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		GridData gridData2 = new org.eclipse.swt.layout.GridData();
 		gridData2.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		gridData2.horizontalSpan = 2;
@@ -58,12 +57,9 @@ public class Table_ValidateAndConvert extends Composite {
 	}
 
 	/**
-	 * This method initializes table
-	 * 
-	 * @throws BindingException
-	 * 
+	 * This method initializes table 
 	 */
-	private void createTable() throws BindingException {
+	private void createTable() {
 		GridData gridData = new org.eclipse.swt.layout.GridData();
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -86,7 +82,7 @@ public class Table_ValidateAndConvert extends Composite {
 		tableViewer = new TableViewer(table);
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 
 		// For a given catalog show its accounts with columns for "firstName,
 		// "phone" and "state"
@@ -96,16 +92,16 @@ public class Table_ValidateAndConvert extends Composite {
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
 				tableViewer);		
-		tableViewerDescription.addColumn(1, "firstName");
-		tableViewerDescription.addColumn(3, "phone",new PhoneValidator(), new PhoneConverter());
-		tableViewerDescription.addColumn(3, "state", null, null, new StateConverter());	
+		tableViewerDescription.addColumn("firstName");
+		tableViewerDescription.addColumn("phone",new PhoneValidator(), new PhoneConverter());
+		tableViewerDescription.addColumn("state", null, null, new StateConverter());	
 		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);
 		
 		IUpdatable errorMsgUpdatable = dbc.createUpdatable(new PropertyDescription(lblErrorMessage,"text"));
 		dbc.bind(errorMsgUpdatable, dbc.getCombinedValidationMessage(),null);		
 		
 	}
-	private void bind1() throws BindingException {
+	private void bind1() {
 
 		// For a given catalog show its accounts with columns for "firstName,
 		// "lastName" and "state"
@@ -115,9 +111,9 @@ public class Table_ValidateAndConvert extends Composite {
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
 				tableViewer1);		
-		tableViewerDescription.addColumn(1, "firstName");
-		tableViewerDescription.addColumn(2, "phone");
-		tableViewerDescription.addColumn(3, "state", new StateCellEditor(table1), null, null);	
+		tableViewerDescription.addColumn("firstName");
+		tableViewerDescription.addColumn("phone");
+		tableViewerDescription.addColumn("state", new StateCellEditor(table1), null, null);	
 		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);		
 
 		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"),null);
@@ -125,11 +121,9 @@ public class Table_ValidateAndConvert extends Composite {
 	}	
 
 	/**
-	 * This method initializes table1	
-	 * @throws BindingException 
-	 *
+	 * This method initializes table1	 
 	 */
-	private void createTable1() throws BindingException {
+	private void createTable1() {
 		GridData gridData1 = new org.eclipse.swt.layout.GridData();
 		gridData1.grabExcessHorizontalSpace = true;
 		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;

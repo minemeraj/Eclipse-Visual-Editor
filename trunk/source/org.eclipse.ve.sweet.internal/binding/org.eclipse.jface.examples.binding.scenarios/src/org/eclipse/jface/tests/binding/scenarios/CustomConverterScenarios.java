@@ -35,7 +35,7 @@ public class CustomConverterScenarios extends ScenariosTestCase {
 		super.tearDown();
 	}
 
-	public void testScenario01() throws BindingException {
+	public void testScenario01() {
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 		Spinner spinner_dollars = new Spinner(getComposite(), SWT.NONE);

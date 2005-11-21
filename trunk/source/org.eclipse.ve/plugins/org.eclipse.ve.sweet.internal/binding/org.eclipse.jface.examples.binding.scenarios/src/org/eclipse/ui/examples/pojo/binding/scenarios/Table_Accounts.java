@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.pojo.binding.scenarios;
 
-import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.jface.databinding.TableViewerDescription;
+import org.eclipse.jface.tests.binding.scenarios.pojo.Account;
+import org.eclipse.jface.tests.binding.scenarios.pojo.Catalog;
+import org.eclipse.jface.tests.binding.scenarios.pojo.SampleData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -21,7 +23,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.jface.tests.binding.scenarios.pojo.*;
 
 public class Table_Accounts extends Composite {
 
@@ -35,12 +36,12 @@ public class Table_Accounts extends Composite {
 
 	private TableViewer tableViewer1;
 
-	public Table_Accounts(Composite parent, int style) throws BindingException {
+	public Table_Accounts(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		createTable();
@@ -52,10 +53,8 @@ public class Table_Accounts extends Composite {
 	/**
 	 * This method initializes table
 	 * 
-	 * @throws BindingException
-	 * 
 	 */
-	private void createTable() throws BindingException {
+	private void createTable() {
 		GridData gridData = new org.eclipse.swt.layout.GridData();
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;
@@ -80,7 +79,7 @@ public class Table_Accounts extends Composite {
 		bind(tableViewer);
 	}
 
-	private void bind(TableViewer viewer) throws BindingException {
+	private void bind(TableViewer viewer) {
 
 		// For a given catalog show its accounts with columns for "firstName,
 		// "lastName" and "state"
@@ -93,18 +92,14 @@ public class Table_Accounts extends Composite {
 		tableViewerDescription.addColumn("firstName");
 		tableViewerDescription.addColumn("lastName");
 		tableViewerDescription.addColumn("state");
-		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,
-				"accounts"), null);
+		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,"accounts",Account.class,Boolean.TRUE), null);
 
 	}
 
 	/**
 	 * This method initializes table1
-	 * 
-	 * @throws BindingException
-	 * 
 	 */
-	private void createTable1() throws BindingException {
+	private void createTable1() {
 		GridData gridData1 = new org.eclipse.swt.layout.GridData();
 		gridData1.grabExcessHorizontalSpace = true;
 		gridData1.horizontalAlignment = org.eclipse.swt.layout.GridData.FILL;

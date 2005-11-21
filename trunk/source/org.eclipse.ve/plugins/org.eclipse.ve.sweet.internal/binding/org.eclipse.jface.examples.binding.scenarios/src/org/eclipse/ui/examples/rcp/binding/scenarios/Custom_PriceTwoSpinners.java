@@ -11,7 +11,6 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.BindSpec;
-import org.eclipse.jface.databinding.BindingException;
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.PropertyDescription;
 import org.eclipse.swt.SWT;
@@ -42,13 +41,12 @@ public class Custom_PriceTwoSpinners extends Composite {
 
 	private Spinner spin_Cents = null;
 
-	public Custom_PriceTwoSpinners(Composite parent, int style)
-			throws BindingException {
+	public Custom_PriceTwoSpinners(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
-	private void initialize() throws BindingException {
+	private void initialize() {
 		GridData gridData2 = new org.eclipse.swt.layout.GridData();
 		gridData2.horizontalAlignment = org.eclipse.swt.layout.GridData.BEGINNING;
 		gridData2.verticalAlignment = org.eclipse.swt.layout.GridData.CENTER;
@@ -82,7 +80,7 @@ public class Custom_PriceTwoSpinners extends Composite {
 		bind();
 	}
 
-	private void bind() throws BindingException {
+	private void bind() {
 		IDataBindingContext dbc = SampleData.getSWTtoEMFDatabindingContext(this);
 
 		final Adventure skiTrip = SampleData.WINTER_HOLIDAY;

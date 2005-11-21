@@ -36,7 +36,7 @@ public class CustomScenarios extends ScenariosTestCase {
 		super.tearDown();
 	}
 
-	public void testScenario01() throws BindingException {
+	public void testScenario01() {
 		// Binding the name property of an Adventure object to the contents of
 		// Text controls, no conversion, no validation.
 
