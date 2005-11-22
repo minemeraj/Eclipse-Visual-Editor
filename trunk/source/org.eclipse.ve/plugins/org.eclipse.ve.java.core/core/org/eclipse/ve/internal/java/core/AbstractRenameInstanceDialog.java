@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractRenameInstanceDialog.java,v $
- *  $Revision: 1.10 $  $Date: 2005-11-22 19:49:35 $ 
+ *  $Revision: 1.11 $  $Date: 2005-11-22 19:58:02 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -226,7 +226,7 @@ public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
 							Method method = thisClass.getMethodExtended("get"+possibleMethodName, new ArrayList()); //$NON-NLS-1$
 							if(method==null)
 								method = thisClass.getMethodExtended("create"+possibleMethodName, new ArrayList()); //$NON-NLS-1$
-							if(method!=null){
+							if(method!=null && method.getJavaVisibility().getValue()!=JavaVisibilityKind.PRIVATE){
 								allNamesValid = false;
 								errorMessage = MessageFormat.format(JavaMessages.AbstractRenameInstanceDialog_GetterNameInSuperTypes, new Object[]{method.getName()});
 								nameStatuses[nameCount].setImage(errorImage);
