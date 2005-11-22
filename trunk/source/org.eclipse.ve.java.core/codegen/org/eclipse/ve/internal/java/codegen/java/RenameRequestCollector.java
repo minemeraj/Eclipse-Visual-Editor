@@ -10,12 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RenameRequestCollector.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-26 23:10:12 $ 
+ *  $Revision: 1.5 $  $Date: 2005-11-22 16:36:52 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -94,12 +93,13 @@ public class RenameRequestCollector implements Runnable {
 		}
 	}
 	
-	private void processRenameRequest(String currentBeanName, int afterOffset, String newBeanName, IMethod beanMethod, ASTRewrite rewrite) {
+	private void processRenameRequest(String currentBeanName, int afterOffset, final String newBeanName, IMethod beanMethod, final ASTRewrite rewrite) {
 		BeanPartNodesFinder visitor = new BeanPartNodesFinder(currentBeanName, afterOffset, beanMethod);
 		cuNode.accept(visitor);
 		if(visitor.getVariableName()!=null){
 			// Rename variable
 			SimpleName simpleName = visitor.getVariableName();
+			final String oldName = simpleName.getFullyQualifiedName();
 			rename(cuNode, simpleName, newBeanName, rewrite);
 			
 			// Rename getter if available
@@ -108,6 +108,71 @@ public class RenameRequestCollector implements Runnable {
 				String vName = new String(new char[]{Character.toUpperCase(newBeanName.charAt(0))}) + newBeanName.substring(1);
 				String prefix = methodName.getFullyQualifiedName().startsWith("create") ? "create" : "get"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				rename(cuNode, methodName, prefix+vName, rewrite);
+				
+				if(methodName.getParent() instanceof MethodDeclaration){
+					MethodDeclaration md = (MethodDeclaration) methodName.getParent();
+					Javadoc jd = md.getJavadoc();
+					renameInJavadoc(jd, oldName, newBeanName, rewrite);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Renames occurences of 'oldName' in the javadoc with 'newName' using the ASTRewrite
+	 * 
+	 * @param javadoc
+	 * @param oldName
+	 * @param newName
+	 * @param rewrite
+	 * 
+	 * @since 1.2.0
+	 */
+	protected void renameInJavadoc(Javadoc javadoc, final String oldName, final String newName, final ASTRewrite rewrite) {
+		if(javadoc!=null){
+			List tags = javadoc.tags();
+			for (Iterator tagItr = tags.iterator(); tagItr.hasNext();) {
+				TagElement te = (TagElement) tagItr.next();
+				te.accept(new ASTVisitor(){
+					public boolean visit(TextElement node) {
+						boolean changesMade = false;
+						StringBuffer comment = new StringBuffer(node.getText());
+						int nameIndex = comment.indexOf(oldName);
+						while(nameIndex>-1 && nameIndex<comment.length()){
+							// prefix ?
+							boolean isCorrectPrefix = false;
+							if(nameIndex==0){
+								isCorrectPrefix = true; // beginning of line
+							} else {
+								char prefixChar = comment.charAt(nameIndex-1);
+								if(! (Character.isJavaIdentifierPart(prefixChar) || Character.isJavaIdentifierStart(prefixChar)) )
+									isCorrectPrefix = true;
+							}
+
+							// suffix ?
+							boolean isCorrectSuffix = false;
+							if((nameIndex+oldName.length())==comment.length()){
+								isCorrectSuffix = true;
+							} else{
+								char suffixChar = comment.charAt(nameIndex+oldName.length());
+								if(!Character.isJavaIdentifierPart(suffixChar))
+									isCorrectSuffix = true;
+							}
+							
+							if(isCorrectPrefix && isCorrectSuffix){
+								changesMade = true;
+								comment.replace(nameIndex, nameIndex+oldName.length(), newName);
+								nameIndex = comment.indexOf(oldName, nameIndex + newName.length());
+							}else{
+								nameIndex = comment.indexOf(oldName, nameIndex + oldName.length());
+							}
+						}
+						if(changesMade){
+							rewrite.set(node, TextElement.TEXT_PROPERTY, comment.toString(), null);
+						}
+						return true;
+					}
+				});
 			}
 		}
 	}
