@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AbstractRenameInstanceDialog.java,v $
- *  $Revision: 1.9 $  $Date: 2005-11-11 23:20:55 $ 
+ *  $Revision: 1.10 $  $Date: 2005-11-22 19:49:35 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -34,9 +34,14 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.*;
+
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+
+import org.eclipse.ve.internal.jcm.BeanSubclassComposition;
 
 import org.eclipse.ve.internal.java.vce.VCEPreferences;
 
@@ -147,7 +152,7 @@ public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalAlignment=SWT.BEGINNING;
 			preferencesLink.setLayoutData(data);
-			preferencesLink.setText(MessageFormat.format("<a>{0}</a>", new Object[]{JavaMessages.AbstractRenameInstanceDialog_Preferences})); 
+			preferencesLink.setText(MessageFormat.format("<a>{0}</a>", new Object[]{JavaMessages.AbstractRenameInstanceDialog_Preferences}));  //$NON-NLS-1$
 			preferencesLink.addSelectionListener(new SelectionAdapter(){
 				public void widgetSelected(SelectionEvent e) {
 					Link link = (Link) e.getSource();
@@ -170,7 +175,7 @@ public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
 			
 		}
 		
-		titleImage = CDEPlugin.getImageFromPlugin(JavaVEPlugin.getPlugin(), "icons/typerefact_wiz.gif"); // internal cleanup - copied from 'org.eclipse.jdt.ui\icons\full\wizban\typerefact_wiz.gif'
+		titleImage = CDEPlugin.getImageFromPlugin(JavaVEPlugin.getPlugin(), "icons/typerefact_wiz.gif"); // internal cleanup - copied from 'org.eclipse.jdt.ui\icons\full\wizban\typerefact_wiz.gif' //$NON-NLS-1$
 		errorImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
 		setTitleImage(titleImage);
 
@@ -186,6 +191,12 @@ public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
 		String errorMessage = null;
 		setErrorMessage(null);
 		
+		IJavaObjectInstance thisObject = null;
+		if (domain.getDiagramData() instanceof BeanSubclassComposition) {
+			BeanSubclassComposition bsc = (BeanSubclassComposition) domain.getDiagramData();
+			thisObject = bsc.getThisPart();
+		}
+
 		for (int nameCount = 0; nameCount < newNames.length; nameCount++) {
 			newNames[nameCount] = nameTexts[nameCount].getText();
 			IStatus validation = JavaConventions.validateFieldName(newNames[nameCount]);
@@ -204,9 +215,32 @@ public abstract class AbstractRenameInstanceDialog extends TitleAreaDialog {
 						nameStatuses[nameCount].setImage(errorImage);
 						nameStatuses[nameCount].setToolTipText(errorMessage);
 					}else{
-						//valid name
-						nameStatuses[nameCount].setImage(JavaVEPlugin.getJavaBeanImage());
-						nameStatuses[nameCount].setToolTipText(null);
+						// check hierarchy if getter name is already used
+						if(thisObject!=null && !thisObject.getJavaType().isPrimitive()){
+							JavaClass thisClass = (JavaClass) thisObject.getJavaType();
+							StringBuffer sb = new StringBuffer();
+							sb.append(Character.toUpperCase(newNames[nameCount].charAt(0)));
+							if(newNames[nameCount].length()>1)
+								sb.append(newNames[nameCount].substring(1));
+							String possibleMethodName = sb.toString();
+							Method method = thisClass.getMethodExtended("get"+possibleMethodName, new ArrayList()); //$NON-NLS-1$
+							if(method==null)
+								method = thisClass.getMethodExtended("create"+possibleMethodName, new ArrayList()); //$NON-NLS-1$
+							if(method!=null){
+								allNamesValid = false;
+								errorMessage = MessageFormat.format(JavaMessages.AbstractRenameInstanceDialog_GetterNameInSuperTypes, new Object[]{method.getName()});
+								nameStatuses[nameCount].setImage(errorImage);
+								nameStatuses[nameCount].setToolTipText(errorMessage);
+							}else{
+								//valid name
+								nameStatuses[nameCount].setImage(JavaVEPlugin.getJavaBeanImage());
+								nameStatuses[nameCount].setToolTipText(null);
+							}
+						}else{
+							//valid name
+							nameStatuses[nameCount].setImage(JavaVEPlugin.getJavaBeanImage());
+							nameStatuses[nameCount].setToolTipText(null);
+						}
 					}
 				} else {
 					// invalid java identifier
