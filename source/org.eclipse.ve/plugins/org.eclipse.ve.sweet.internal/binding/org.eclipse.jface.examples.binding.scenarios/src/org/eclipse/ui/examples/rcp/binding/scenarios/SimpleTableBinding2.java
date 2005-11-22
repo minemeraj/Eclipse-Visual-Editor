@@ -1,6 +1,9 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.updatables.ConditionalUpdatableValue;
+import org.eclipse.jface.databinding.viewers.TableViewerDescription;
+import org.eclipse.jface.databinding.viewers.ViewersProperties;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.*;
@@ -48,10 +51,10 @@ public class SimpleTableBinding2 extends Composite {
 				tableViewer);
 		tableViewerDescription.addColumn("name");
 		tableViewerDescription.addColumn("description");
-		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,
+		dbc.bind(tableViewerDescription, new PropertyDesc(catalog,
 				"lodgings"), null);
 
-		selectedLodging = (IUpdatableValue) dbc.createUpdatable(new PropertyDescription(tableViewer,
+		selectedLodging = (IUpdatableValue) dbc.createUpdatable(new PropertyDesc(tableViewer,
 				ViewersProperties.SINGLE_SELECTION));
 
 		addButton
@@ -77,7 +80,7 @@ public class SimpleTableBinding2 extends Composite {
 					}
 				});
 
-		dbc.bind(dbc.createUpdatable(new PropertyDescription(removeButton, "enabled")), 
+		dbc.bind(dbc.createUpdatable(new PropertyDesc(removeButton, "enabled")), 
 				new ConditionalUpdatableValue(
 				selectedLodging) {
 			protected boolean compute(Object currentValue) {

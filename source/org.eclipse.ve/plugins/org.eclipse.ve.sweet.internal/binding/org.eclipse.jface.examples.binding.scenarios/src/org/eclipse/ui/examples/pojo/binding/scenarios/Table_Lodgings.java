@@ -11,8 +11,8 @@
 package org.eclipse.ui.examples.pojo.binding.scenarios;
 
 import org.eclipse.jface.databinding.IDataBindingContext;
-import org.eclipse.jface.databinding.PropertyDescription;
-import org.eclipse.jface.databinding.TableViewerDescription;
+import org.eclipse.jface.databinding.PropertyDesc;
+import org.eclipse.jface.databinding.viewers.TableViewerDescription;
 import org.eclipse.jface.tests.binding.scenarios.pojo.Category;
 import org.eclipse.jface.tests.binding.scenarios.pojo.SampleData;
 import org.eclipse.jface.viewers.TableViewer;
@@ -94,7 +94,7 @@ public class Table_Lodgings extends Composite {
 				new DoubleConverter());
 		tableViewerDescription.addColumn("defaultLodging",
 				null, new LodgingConverter());
-		dbc.bind(tableViewerDescription, new PropertyDescription(category,
+		dbc.bind(tableViewerDescription, new PropertyDesc(category,
 				"adventures"), null);
 
 	}

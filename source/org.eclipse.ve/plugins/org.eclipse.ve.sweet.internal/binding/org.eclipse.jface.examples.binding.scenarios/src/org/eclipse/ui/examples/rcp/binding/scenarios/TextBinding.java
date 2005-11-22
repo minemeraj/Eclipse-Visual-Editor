@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.IDataBindingContext;
-import org.eclipse.jface.databinding.PropertyDescription;
+import org.eclipse.jface.databinding.PropertyDesc;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -68,14 +68,14 @@ public class TextBinding extends Composite {
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbc.bind(txtDescription, new PropertyDescription(skiTrip, "description"),null);
-		dbc.bind(txtDescription_1, new PropertyDescription(skiTrip, "description"),null);
+		dbc.bind(txtDescription, new PropertyDesc(skiTrip, "description"),null);
+		dbc.bind(txtDescription_1, new PropertyDesc(skiTrip, "description"),null);
 
-		dbc.bind(txtName, new PropertyDescription(skiTrip, "name"),null);
-		dbc.bind(txtName_1, new PropertyDescription(skiTrip, "name"),null);
+		dbc.bind(txtName, new PropertyDesc(skiTrip, "name"),null);
+		dbc.bind(txtName_1, new PropertyDesc(skiTrip, "name"),null);
 
-		dbc.bind(txtLocation, new PropertyDescription(skiTrip, "location"),null);
-		dbc.bind(txtLocation_1, new PropertyDescription(skiTrip, "location"),null);
+		dbc.bind(txtLocation, new PropertyDesc(skiTrip, "location"),null);
+		dbc.bind(txtLocation_1, new PropertyDesc(skiTrip, "location"),null);
 
 	}
 

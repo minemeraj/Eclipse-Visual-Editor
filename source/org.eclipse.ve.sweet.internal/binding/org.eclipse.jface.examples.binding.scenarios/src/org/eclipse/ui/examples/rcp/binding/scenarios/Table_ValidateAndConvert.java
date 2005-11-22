@@ -11,6 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.viewers.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -95,9 +96,9 @@ public class Table_ValidateAndConvert extends Composite {
 		tableViewerDescription.addColumn("firstName");
 		tableViewerDescription.addColumn("phone",new PhoneValidator(), new PhoneConverter());
 		tableViewerDescription.addColumn("state", null, null, new StateConverter());	
-		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);
+		dbc.bind(tableViewerDescription, new PropertyDesc(catalog,"accounts"), null);
 		
-		IUpdatable errorMsgUpdatable = dbc.createUpdatable(new PropertyDescription(lblErrorMessage,"text"));
+		IUpdatable errorMsgUpdatable = dbc.createUpdatable(new PropertyDesc(lblErrorMessage,"text"));
 		dbc.bind(errorMsgUpdatable, dbc.getCombinedValidationMessage(),null);		
 		
 	}
@@ -114,9 +115,9 @@ public class Table_ValidateAndConvert extends Composite {
 		tableViewerDescription.addColumn("firstName");
 		tableViewerDescription.addColumn("phone");
 		tableViewerDescription.addColumn("state", new StateCellEditor(table1), null, null);	
-		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"), null);		
+		dbc.bind(tableViewerDescription, new PropertyDesc(catalog,"accounts"), null);		
 
-		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,"accounts"),null);
+		dbc.bind(tableViewerDescription, new PropertyDesc(catalog,"accounts"),null);
 		
 	}	
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.databinding.IConverter;
+import org.eclipse.jface.databinding.converter.IConverter;
  
 public class StateConverter implements IConverter {
 	

@@ -11,8 +11,8 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.IDataBindingContext;
-import org.eclipse.jface.databinding.PropertyDescription;
-import org.eclipse.jface.databinding.TableViewerDescription;
+import org.eclipse.jface.databinding.PropertyDesc;
+import org.eclipse.jface.databinding.viewers.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -93,7 +93,7 @@ public class Table_Lodgings extends Composite {
 				new DoubleConverter());
 		tableViewerDescription.addColumn("defaultLodging",
 				null, new LodgingConverter());
-		dbc.bind(tableViewerDescription, new PropertyDescription(category,
+		dbc.bind(tableViewerDescription, new PropertyDesc(category,
 				"adventures"), null);
 
 	}

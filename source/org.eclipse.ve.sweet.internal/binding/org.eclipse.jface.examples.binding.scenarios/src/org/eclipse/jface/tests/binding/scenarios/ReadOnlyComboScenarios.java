@@ -19,9 +19,9 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.databinding.PropertyDescription;
-import org.eclipse.jface.databinding.SWTProperties;
-import org.eclipse.jface.databinding.ViewersProperties;
+import org.eclipse.jface.databinding.PropertyDesc;
+import org.eclipse.jface.databinding.swt.SWTProperties;
+import org.eclipse.jface.databinding.viewers.ViewersProperties;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -137,7 +137,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		 
 		 cviewer.setLabelProvider(lodgingLabelProvider);
 	     // Bind the ComboViewer's content to the available lodging
-	  	 getDbc().bind(cviewer, new PropertyDescription(catalog, "lodgings"), null);
+	  	 getDbc().bind(cviewer, new PropertyDesc(catalog, "lodgings"), null);
 				
 		 // Ensure that cv's content now has the catalog's lodgings
 		 assertEquals(catalog.getLodgings(), getViewerContent(cviewer));
@@ -147,8 +147,8 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				
 				
 		 // Bind the ComboViewer's selection to the Adventure's default lodging.
-		 getDbc().bind(new PropertyDescription(cviewer, ViewersProperties.SINGLE_SELECTION), 
-				       new PropertyDescription(skiAdventure ,"defaultLodging"), null);
+		 getDbc().bind(new PropertyDesc(cviewer, ViewersProperties.SINGLE_SELECTION), 
+				       new PropertyDesc(skiAdventure ,"defaultLodging"), null);
 				
 		 // Check to see that the initial selection is the currentDefault Lodging
 		 assertEquals(getViewerSelection(), skiAdventure.getDefaultLodging());
@@ -180,7 +180,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		cviewer.setLabelProvider(lodgingLabelProvider); // TODO: need to resolve
 														// column binding
 		// Bind the ComboViewer's content to the available lodging
-		getDbc().bind(cviewer, new PropertyDescription(catalog, "lodgings"), null);
+		getDbc().bind(cviewer, new PropertyDesc(catalog, "lodgings"), null);
 
 		// Ensure that cv's content now has the catalog's lodgings
 		assertEquals(catalog.getLodgings(), getViewerContent(cviewer));
@@ -253,8 +253,8 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 		 Account account = (Account) catalog.getAccounts().get(0);
 		 
 		 // simple Combo's selection bound to the Account's country property
-		 getDbc().bind(new PropertyDescription(combo, SWTProperties.SELECTION), 
-				        new PropertyDescription(account, "country"), null);
+		 getDbc().bind(new PropertyDesc(combo, SWTProperties.SELECTION), 
+				        new PropertyDesc(account, "country"), null);
 		 
 		 // Drive the combo selection
 		 int index = 3;		 
@@ -292,14 +292,14 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				list.add(((Account)iter.next()).getCountry());				
 			
 		    // Bind the combo's content to that of the String based list
-		    getDbc().bind(combo, new PropertyDescription(list, null), null);		    
+		    getDbc().bind(combo, new PropertyDesc(list, null), null);		    
 		    assertEquals(Arrays.asList(combo.getItems()), list);
 		    
 		    Account account = (Account) catalog.getAccounts().get(0);
 			 
 		    // simple Combo's selection bound to the Account's country property
-			 getDbc().bind(new PropertyDescription(combo, SWTProperties.SELECTION), 
-					 		new PropertyDescription(account, "country"), null);
+			 getDbc().bind(new PropertyDesc(combo, SWTProperties.SELECTION), 
+					 		new PropertyDesc(account, "country"), null);
 			 
 			 // Drive the combo selection
 			 String selection = (String)list.get(2); 			
@@ -321,7 +321,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				 // Account label provider will fill the combo with the country
 				 cviewer.setLabelProvider(accountLabelProvider);
 			     // Bind the ComboViewer's content to the available accounts
-			  	 getDbc().bind(cviewer, new PropertyDescription(catalog, "accounts"), null);
+			  	 getDbc().bind(cviewer, new PropertyDesc(catalog, "accounts"), null);
 						
 				 // Ensure that cv's content now has the catalog's accounts
 				 assertEquals(catalog.getAccounts(), getViewerContent(cviewer));						
@@ -331,8 +331,8 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				 Account account = AdventureFactory.eINSTANCE.createAccount();				 
 				 
 				 // Use the Viewers visual Combo (Strings) to set the account's country
-				 getDbc().bind(new PropertyDescription(combo, SWTProperties.SELECTION), 
-						       new PropertyDescription(account, "country"), null);
+				 getDbc().bind(new PropertyDesc(combo, SWTProperties.SELECTION), 
+						       new PropertyDesc(account, "country"), null);
 				 
 				 // Change the selection of the ComboViewer to all possible accounts, and
 				 // verify that the account's Country is being changed correctly.
@@ -354,7 +354,7 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				cviewer.setLabelProvider(lodgingLabelProvider); // TODO: need to resolve
 				// column binding
 				// Bind the ComboViewer's content to the available lodging
-				getDbc().bind(cviewer, new PropertyDescription(catalog, "lodgings"), null);
+				getDbc().bind(cviewer, new PropertyDesc(catalog, "lodgings"), null);
 				
 				// Ensure that cv's content now has the catalog's lodgings
 				assertEquals(catalog.getLodgings(), getViewerContent(cviewer));
@@ -369,15 +369,15 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				
 				ComboViewer otherViewer = new ComboViewer(getComposite(), SWT.NONE);
 				otherViewer.setLabelProvider(lodgingLabelProvider);
-				getDbc().bind(otherViewer, new PropertyDescription(catalog, "lodgings"), null);
+				getDbc().bind(otherViewer, new PropertyDesc(catalog, "lodgings"), null);
 				// Ensure that cv's content now has the catalog's lodgings
 				assertEquals(catalog.getLodgings(), getViewerContent(otherViewer));
 				
 				// Bind both selections to the same thing
-				getDbc().bind(new PropertyDescription(cviewer,ViewersProperties.SINGLE_SELECTION),
-						       new PropertyDescription(skiAdventure,"defaultLodging"), null);
-				getDbc().bind(new PropertyDescription(otherViewer,ViewersProperties.SINGLE_SELECTION),
-							   new PropertyDescription(skiAdventure,"defaultLodging"), null);
+				getDbc().bind(new PropertyDesc(cviewer,ViewersProperties.SINGLE_SELECTION),
+						       new PropertyDesc(skiAdventure,"defaultLodging"), null);
+				getDbc().bind(new PropertyDesc(otherViewer,ViewersProperties.SINGLE_SELECTION),
+							   new PropertyDesc(skiAdventure,"defaultLodging"), null);
 												
 				
 				Lodging lodging = (Lodging) catalog.getLodgings().get(0);
@@ -410,14 +410,14 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 				    CCombo ccombo = new CCombo(getComposite(), SWT.READ_ONLY | SWT.DROP_DOWN);
 					
 				    // Bind the combo's content to that of the String based list
-				    getDbc().bind(ccombo, new PropertyDescription(list, null), null);		    
+				    getDbc().bind(ccombo, new PropertyDesc(list, null), null);		    
 				    assertEquals(Arrays.asList(ccombo.getItems()), list);
 				    
 				    Account account = (Account) catalog.getAccounts().get(0);
 					 
 				    // simple Combo's selection bound to the Account's country property
-					 getDbc().bind(new PropertyDescription(ccombo, SWTProperties.SELECTION), 
-							 		new PropertyDescription(account, "country"), null);
+					 getDbc().bind(new PropertyDesc(ccombo, SWTProperties.SELECTION), 
+							 		new PropertyDesc(account, "country"), null);
 					 
 					 // Drive the combo selection
 					 String selection = (String)list.get(2); 			
@@ -443,14 +443,14 @@ public class ReadOnlyComboScenarios extends ScenariosTestCase {
 					    org.eclipse.swt.widgets.List swtlist = new org.eclipse.swt.widgets.List(getComposite(), SWT.READ_ONLY | SWT.SINGLE);
 						
 					    // Bind the combo's content to that of the String based list
-					    getDbc().bind(swtlist, new PropertyDescription(list, null), null);		    
+					    getDbc().bind(swtlist, new PropertyDesc(list, null), null);		    
 					    assertEquals(Arrays.asList(swtlist.getItems()), list);
 					    
 					    Account account = (Account) catalog.getAccounts().get(0);
 						 
 					    // simple Combo's selection bound to the Account's country property
-						 getDbc().bind(new PropertyDescription(swtlist, SWTProperties.SELECTION), 
-								 		new PropertyDescription(account, "country"), null);
+						 getDbc().bind(new PropertyDesc(swtlist, SWTProperties.SELECTION), 
+								 		new PropertyDesc(account, "country"), null);
 						 	
 						
 						 String selection = (String)list.get(2); 			

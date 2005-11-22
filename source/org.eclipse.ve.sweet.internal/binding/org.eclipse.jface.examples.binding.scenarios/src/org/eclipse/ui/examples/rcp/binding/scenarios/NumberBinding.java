@@ -79,9 +79,9 @@ public class NumberBinding {
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbc.bind(txtPrice,new PropertyDescription(skiTrip, emfPackage.getAdventure_Price()), new BindSpec(new DoubleConverter(), null));
-		dbc.bind(new PropertyDescription(lblPrice, "text"), new PropertyDescription(skiTrip, emfPackage.getAdventure_Price()), new BindSpec(new DoubleConverter(), null));
-		dbc.bind(txtPrice_2, new PropertyDescription(skiTrip, emfPackage.getAdventure_Price()), new BindSpec(new DoubleConverter(), null));
+		dbc.bind(txtPrice,new PropertyDesc(skiTrip, emfPackage.getAdventure_Price()), new BindSpec(new DoubleConverter(), null));
+		dbc.bind(new PropertyDesc(lblPrice, "text"), new PropertyDesc(skiTrip, emfPackage.getAdventure_Price()), new BindSpec(new DoubleConverter(), null));
+		dbc.bind(txtPrice_2, new PropertyDesc(skiTrip, emfPackage.getAdventure_Price()), new BindSpec(new DoubleConverter(), null));
 
 	}
 

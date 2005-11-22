@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.pojo.binding.scenarios;
 
-import org.eclipse.jface.databinding.IConverter;
+import org.eclipse.jface.databinding.converter.IConverter;
 import org.eclipse.ui.examples.rcp.adventure.Lodging;
  
 public class LodgingConverter implements IConverter {

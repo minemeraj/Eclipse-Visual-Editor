@@ -11,8 +11,8 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.IDataBindingContext;
-import org.eclipse.jface.databinding.PropertyDescription;
-import org.eclipse.jface.databinding.TableViewerDescription;
+import org.eclipse.jface.databinding.PropertyDesc;
+import org.eclipse.jface.databinding.viewers.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -90,7 +90,7 @@ public class Table_Accounts extends Composite {
 		tableViewerDescription.addColumn("firstName");
 		tableViewerDescription.addColumn("lastName");
 		tableViewerDescription.addColumn("state");
-		dbc.bind(tableViewerDescription, new PropertyDescription(catalog,
+		dbc.bind(tableViewerDescription, new PropertyDesc(catalog,
 				"accounts"), null);
 
 	}

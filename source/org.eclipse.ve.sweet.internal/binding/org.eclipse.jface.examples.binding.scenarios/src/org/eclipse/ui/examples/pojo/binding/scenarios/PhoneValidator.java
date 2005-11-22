@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ui.examples.pojo.binding.scenarios;
 
-import org.eclipse.jface.databinding.IValidator;
+import org.eclipse.jface.databinding.validator.IValidator;
  
 public class PhoneValidator implements IValidator {
 	

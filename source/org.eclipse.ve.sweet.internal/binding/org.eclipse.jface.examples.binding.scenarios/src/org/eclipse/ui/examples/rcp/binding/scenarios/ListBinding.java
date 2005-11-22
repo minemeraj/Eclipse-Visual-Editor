@@ -11,6 +11,7 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.converters.IdentityConverter;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -87,7 +88,7 @@ public class ListBinding extends Composite {
 		// new EMFUpdatableTable(catalog,"lodgings",new String[]
 		// {"description"})
 		// );
-		dbc.bind(listViewer, new PropertyDescription(catalog, "lodgings"),
+		dbc.bind(listViewer, new PropertyDesc(catalog, "lodgings"),
 				new BindSpec(new IdentityConverter(Lodging.class, Object.class), null));
 
 		// dbc.bindValue(

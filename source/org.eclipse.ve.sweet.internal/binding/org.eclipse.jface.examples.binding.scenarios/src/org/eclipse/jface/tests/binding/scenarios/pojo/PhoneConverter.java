@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios.pojo;
 
-import org.eclipse.jface.databinding.IConverter;
+import org.eclipse.jface.databinding.converter.IConverter;
  
 public class PhoneConverter implements IConverter {
 
