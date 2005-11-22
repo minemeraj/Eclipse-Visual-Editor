@@ -10,11 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DoubleConverter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-02 19:44:33 $ 
+ *  $Revision: 1.3 $  $Date: 2005-11-22 03:01:02 $ 
  */
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.jface.databinding.IConverter;
+import org.eclipse.jface.databinding.converter.IConverter;
  
 public class DoubleConverter implements IConverter {
 

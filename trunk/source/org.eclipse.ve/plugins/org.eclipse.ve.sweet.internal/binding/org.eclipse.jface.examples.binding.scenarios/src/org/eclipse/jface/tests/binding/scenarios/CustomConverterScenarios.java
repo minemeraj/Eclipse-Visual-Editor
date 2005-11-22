@@ -11,6 +11,7 @@
 package org.eclipse.jface.tests.binding.scenarios;
 
 import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.swt.SWTProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.examples.rcp.adventure.Adventure;
@@ -42,12 +43,12 @@ public class CustomConverterScenarios extends ScenariosTestCase {
 		spinner_dollars.setMaximum(10000);
 		Spinner spinner_cents = new Spinner(getComposite(), SWT.NONE);
 
-		getDbc().bind(new PropertyDescription(spinner_dollars, SWTProperties.SELECTION), 
-				       new PropertyDescription(skiTrip, "price"),
+		getDbc().bind(new PropertyDesc(spinner_dollars, SWTProperties.SELECTION), 
+				       new PropertyDesc(skiTrip, "price"),
 				       new BindSpec(new PriceDollarsConverter(),null));
 		
-		getDbc().bind(new PropertyDescription(spinner_cents, SWTProperties.SELECTION), 
-				       new PropertyDescription(skiTrip, "price"),
+		getDbc().bind(new PropertyDesc(spinner_cents, SWTProperties.SELECTION), 
+				       new PropertyDesc(skiTrip, "price"),
 				       new BindSpec(new PriceCentsConverter(), null));
 		// spinEventLoop(1);
 		// Make sure that the selection on the spinner_dollars matches the

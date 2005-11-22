@@ -13,6 +13,8 @@ package org.eclipse.jface.tests.binding.scenarios.pojo;
 import java.util.*;
 
 import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.swt.SWTUpdatableFactory;
+import org.eclipse.jface.databinding.viewers.ViewersUpdatableFactory;
 import org.eclipse.swt.widgets.Control;
 
 public class SampleData {

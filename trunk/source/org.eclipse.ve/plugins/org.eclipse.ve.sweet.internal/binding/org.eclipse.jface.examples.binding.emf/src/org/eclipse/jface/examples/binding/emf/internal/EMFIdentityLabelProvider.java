@@ -12,7 +12,7 @@ package org.eclipse.jface.examples.binding.emf.internal;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.databinding.IdentityConverter;
+import org.eclipse.jface.databinding.converters.IdentityConverter;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;

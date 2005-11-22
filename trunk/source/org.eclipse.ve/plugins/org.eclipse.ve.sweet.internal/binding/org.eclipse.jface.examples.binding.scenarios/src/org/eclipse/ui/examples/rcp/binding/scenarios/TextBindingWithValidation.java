@@ -11,6 +11,9 @@
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.converter.IConverter;
+import org.eclipse.jface.databinding.converters.IdentityConverter;
+import org.eclipse.jface.databinding.validator.IValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -73,13 +76,13 @@ public class TextBindingWithValidation extends Composite {
 			}
 		};
 		BindSpec bindSpec = new BindSpec(converter,validator);		
-		dbc.bind(txtDescription, new PropertyDescription(skiTrip, "description"), bindSpec);
+		dbc.bind(txtDescription, new PropertyDesc(skiTrip, "description"), bindSpec);
 
-		dbc.bind(txtName, new PropertyDescription(skiTrip, "name"),null);
+		dbc.bind(txtName, new PropertyDesc(skiTrip, "name"),null);
 
-		dbc.bind(txtLocation, new PropertyDescription(skiTrip, "location"),null);
+		dbc.bind(txtLocation, new PropertyDesc(skiTrip, "location"),null);
 
-		IUpdatable errorMsgUpdatable = dbc.createUpdatable(new PropertyDescription(validationMessage,"text"));
+		IUpdatable errorMsgUpdatable = dbc.createUpdatable(new PropertyDesc(validationMessage,"text"));
 		dbc.bind(errorMsgUpdatable, dbc.getCombinedValidationMessage(),null);
 	}
 

@@ -83,12 +83,12 @@ public class LabelBinding extends Composite {
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbc.bind(txtName, new PropertyDescription(skiTrip, emfPackage.getAdventure_Name()), null);
-		dbc.bind(new PropertyDescription(lblName, "text"), new PropertyDescription(skiTrip, emfPackage.getAdventure_Name()), null);
+		dbc.bind(txtName, new PropertyDesc(skiTrip, emfPackage.getAdventure_Name()), null);
+		dbc.bind(new PropertyDesc(lblName, "text"), new PropertyDesc(skiTrip, emfPackage.getAdventure_Name()), null);
 
-		dbc.bind(txtDescription, new PropertyDescription(skiTrip, emfPackage
+		dbc.bind(txtDescription, new PropertyDesc(skiTrip, emfPackage
 				.getAdventure_Description()), null);
-		dbc.bind(new PropertyDescription(lblDescription, "text"), new PropertyDescription(skiTrip, emfPackage
+		dbc.bind(new PropertyDesc(lblDescription, "text"), new PropertyDesc(skiTrip, emfPackage
 				.getAdventure_Description()), null);
 
 	}

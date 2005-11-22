@@ -10,7 +10,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatable;
 import org.eclipse.jface.databinding.IUpdatableFactory;
-import org.eclipse.jface.databinding.PropertyDescription;
+import org.eclipse.jface.databinding.PropertyDesc;
 import org.eclipse.jface.examples.binding.emf.internal.EMFUpdatableCollection;
 import org.eclipse.jface.examples.binding.emf.internal.EMFUpdatableEList;
 import org.eclipse.jface.examples.binding.emf.internal.EMFUpdatableValue;
@@ -18,8 +18,8 @@ import org.eclipse.jface.examples.binding.emf.internal.EMFUpdatableValue;
 public class EMFUpdatableFactory implements IUpdatableFactory {
 	public IUpdatable createUpdatable(Map properties,
 			Object description, IDataBindingContext bindingContext) {
-		if (description instanceof PropertyDescription) {
-			PropertyDescription propertyDescription = (PropertyDescription) description;
+		if (description instanceof PropertyDesc) {
+			PropertyDesc propertyDescription = (PropertyDesc) description;
 			if (propertyDescription.getObject() instanceof EObject) {
 				EObject eObject = (EObject) propertyDescription
 						.getObject();
