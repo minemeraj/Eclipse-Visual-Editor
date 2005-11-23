@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.15 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.16 $  $Date: 2005-11-23 19:55:25 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -145,6 +145,17 @@ public class EventMethodVisitor extends MethodVisitor {
 			MethodInvocation ms = (MethodInvocation) stmt.getExpression();
 			if (mref != null) {
 				if (mref.getMethodName().equals(ms.getName().getIdentifier())) {
+					EventExpressionVisitor v = visitorFactory.getEventExpressionVisitor();
+					v.initialize(fBean, fMethod, (Statement)stmt.getParent(), fModel, fESigs, fastDom);
+					v.setProgressMonitor(getProgressMonitor());
+					v.visit();
+				}
+			}else{
+				// NO return method for the bean being considered - 
+				// is the methodinvocation an implicit bean?
+				BeanPart implicitBeanCalled = fBean.getModel().getABean(ms.toString());
+				if(implicitBeanCalled==fBean){
+					// an implicit bean's event
 					EventExpressionVisitor v = visitorFactory.getEventExpressionVisitor();
 					v.initialize(fBean, fMethod, (Statement)stmt.getParent(), fModel, fESigs, fastDom);
 					v.setProgressMonitor(getProgressMonitor());

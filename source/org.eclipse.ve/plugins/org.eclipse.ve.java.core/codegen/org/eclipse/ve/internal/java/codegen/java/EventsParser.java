@@ -10,10 +10,12 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventsParser.java,v $
- *  $Revision: 1.13 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.14 $  $Date: 2005-11-23 19:55:25 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.*;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -129,6 +131,40 @@ public class EventsParser {
 		if (m != null) {
 			String t = b.getType() ;
 			JavaHelpers h = JavaRefFactory.eINSTANCE.reflectType(t,fModel.getCompositionModel().getModelResourceSet()) ;
+			if(h==null){
+				if(b.isImplicit() && b.getImplicitParent()!=null){
+					if (b.getImplicitInvocation()!=null) {
+						String invocation = b.getImplicitInvocation();
+						
+						// determine exact method name
+						int startIndex=-1, endIndex=-1;
+						StringCharacterIterator ci = new StringCharacterIterator(invocation);
+						for(char c = ci.first(); c != CharacterIterator.DONE; c = ci.next()) {
+							if(startIndex<0){
+								if(Character.isJavaIdentifierStart(c)){
+									startIndex = ci.getIndex();
+								}
+							}else{
+								if(!Character.isJavaIdentifierPart(c)){
+									endIndex = ci.getIndex();
+									break;
+								}
+							}
+					     }
+						if(startIndex>-1 && endIndex>-1 && endIndex>startIndex){
+							String methodName = invocation.substring(startIndex, endIndex);
+							JavaHelpers parentHelpers = JavaRefFactory.eINSTANCE.reflectType(b.getImplicitParent().getType(),fModel.getCompositionModel().getModelResourceSet()) ;
+							if(!parentHelpers.isPrimitive()){
+								JavaClass parentClass = (JavaClass) parentHelpers;
+								Method implicitInvocation = parentClass.getMethodExtended(methodName, new ArrayList());
+								if(implicitInvocation!=null){
+									h = implicitInvocation.getReturnType();
+								}
+							}
+						}
+					}
+				}
+			}
 			if (h instanceof JavaClass)			
 			   analyze(b, (JavaClass)h, visitorFactoryRule) ;
 		}

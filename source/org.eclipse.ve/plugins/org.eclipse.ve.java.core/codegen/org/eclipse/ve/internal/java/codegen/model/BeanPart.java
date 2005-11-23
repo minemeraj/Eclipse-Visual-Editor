@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.55 $  $Date: 2005-11-04 15:42:39 $ 
+ *  $Revision: 1.56 $  $Date: 2005-11-23 19:55:25 $ 
  */
 import java.util.*;
 import java.util.logging.Level;
@@ -1202,6 +1202,10 @@ public   void removeFromJVEModel()  {
 			  fimplicitParent=null;
 			}
 		}
+	}
+	
+	public String getImplicitInvocation(){
+		return fimplicitInvocation;
 	}
 	
 	public BeanPart getImplicitParent() {
