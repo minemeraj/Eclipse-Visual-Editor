@@ -12,7 +12,7 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.BindSpec;
 import org.eclipse.jface.databinding.IDataBindingContext;
-import org.eclipse.jface.databinding.PropertyDesc;
+import org.eclipse.jface.databinding.Property;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -86,14 +86,14 @@ public class Custom_PriceTwoSpinners extends Composite {
 		final Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
 		BindSpec doubleBindSpec = new BindSpec(new DoubleConverter(),null);
-		dbc.bind(lblPrice, new PropertyDesc(skiTrip, "price"),doubleBindSpec);
-		dbc.bind(txtPrice, new PropertyDesc(skiTrip, "price"),doubleBindSpec);
+		dbc.bind(lblPrice, new Property(skiTrip, "price"),doubleBindSpec);
+		dbc.bind(txtPrice, new Property(skiTrip, "price"),doubleBindSpec);
 
 		BindSpec priceDollarsBindSpec = new BindSpec(new PriceDollarsConverter(),null);
-		dbc.bind(spin_Dollars, new PropertyDesc(skiTrip, "price"),priceDollarsBindSpec);
+		dbc.bind(spin_Dollars, new Property(skiTrip, "price"),priceDollarsBindSpec);
 
 		BindSpec priceCentsBindSpec = new BindSpec(new PriceCentsConverter(),null);
-		dbc.bind(spin_Cents, new PropertyDesc(skiTrip, "price"),priceCentsBindSpec);
+		dbc.bind(spin_Cents, new Property(skiTrip, "price"),priceCentsBindSpec);
 
 	}
 }

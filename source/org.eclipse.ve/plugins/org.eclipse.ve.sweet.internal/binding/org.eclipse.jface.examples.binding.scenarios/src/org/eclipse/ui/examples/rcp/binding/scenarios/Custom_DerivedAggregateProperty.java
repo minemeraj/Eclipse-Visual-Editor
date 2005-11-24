@@ -68,17 +68,17 @@ public class Custom_DerivedAggregateProperty extends Composite {
 
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
-		dbc.bind(txtDescription, new PropertyDesc(skiTrip, "description"),null);
-		dbc.bind(txtName, new PropertyDesc(skiTrip, "name"),null);
+		dbc.bind(txtDescription, new Property(skiTrip, "description"),null);
+		dbc.bind(txtName, new Property(skiTrip, "name"),null);
 
 		AdventureNameAndDescription customUpdatable = new AdventureNameAndDescription(
 				skiTrip);
-		dbc.bind(dbc.createUpdatable(new PropertyDesc(txtCustom, "text")), customUpdatable,null);
+		dbc.bind(dbc.createUpdatable(new Property(txtCustom, "text")), customUpdatable,null);
 
 		IUpdatableValue descriptionUpdatable = (IUpdatableValue) dbc
-				.createUpdatable(new PropertyDesc(skiTrip, "description"));
+				.createUpdatable(new Property(skiTrip, "description"));
 		IUpdatableValue nameUpdatable = (IUpdatableValue) dbc.createUpdatable(
-				new PropertyDesc(skiTrip, "name"));
+				new Property(skiTrip, "name"));
 
 		AggregateUpdatableValue customUpdatable_1 = new AggregateUpdatableValue(
 				new IUpdatableValue[] { descriptionUpdatable, nameUpdatable },

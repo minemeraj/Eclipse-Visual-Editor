@@ -15,7 +15,7 @@ import java.util.Map;
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatable;
 import org.eclipse.jface.databinding.IUpdatableFactory;
-import org.eclipse.jface.databinding.PropertyDesc;
+import org.eclipse.jface.databinding.Property;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -59,8 +59,8 @@ public class Custom_TimeEntryCustomControl extends Composite {
 		dbc.addUpdatableFactory(new IUpdatableFactory() {
 			public IUpdatable createUpdatable(Map properties,
 					Object description, IDataBindingContext bindingContext) {
-				if (description instanceof PropertyDesc) {
-					PropertyDesc propertyDescription = (PropertyDesc) description;
+				if (description instanceof Property) {
+					Property propertyDescription = (Property) description;
 					if (propertyDescription.getObject() instanceof TimeEntry) {
 						if ("time".equals(propertyDescription.getPropertyID())) {
 							return new TimeEntryUpdatableValue(
@@ -76,9 +76,9 @@ public class Custom_TimeEntryCustomControl extends Composite {
 			}
 		});
 
-		dbc.bind(lbl_time, new PropertyDesc(bus, "arrivalTime"), null);
-		dbc.bind(new PropertyDesc(timeEntry, "time"), new PropertyDesc(bus, "arrivalTime"), null);
-		dbc.bind(new PropertyDesc(timeEntry1, "time"), new PropertyDesc(bus, "arrivalTime"), null);
+		dbc.bind(lbl_time, new Property(bus, "arrivalTime"), null);
+		dbc.bind(new Property(timeEntry, "time"), new Property(bus, "arrivalTime"), null);
+		dbc.bind(new Property(timeEntry1, "time"), new Property(bus, "arrivalTime"), null);
 
 	}
 

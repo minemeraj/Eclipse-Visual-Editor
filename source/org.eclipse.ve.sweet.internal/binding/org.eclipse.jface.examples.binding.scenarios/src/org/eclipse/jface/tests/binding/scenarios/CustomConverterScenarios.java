@@ -43,12 +43,12 @@ public class CustomConverterScenarios extends ScenariosTestCase {
 		spinner_dollars.setMaximum(10000);
 		Spinner spinner_cents = new Spinner(getComposite(), SWT.NONE);
 
-		getDbc().bind(new PropertyDesc(spinner_dollars, SWTProperties.SELECTION), 
-				       new PropertyDesc(skiTrip, "price"),
+		getDbc().bind(new Property(spinner_dollars, SWTProperties.SELECTION), 
+				       new Property(skiTrip, "price"),
 				       new BindSpec(new PriceDollarsConverter(),null));
 		
-		getDbc().bind(new PropertyDesc(spinner_cents, SWTProperties.SELECTION), 
-				       new PropertyDesc(skiTrip, "price"),
+		getDbc().bind(new Property(spinner_cents, SWTProperties.SELECTION), 
+				       new Property(skiTrip, "price"),
 				       new BindSpec(new PriceCentsConverter(), null));
 		// spinEventLoop(1);
 		// Make sure that the selection on the spinner_dollars matches the

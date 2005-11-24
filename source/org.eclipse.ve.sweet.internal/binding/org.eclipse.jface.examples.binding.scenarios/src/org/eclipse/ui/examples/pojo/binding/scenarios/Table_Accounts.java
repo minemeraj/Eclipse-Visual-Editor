@@ -11,7 +11,7 @@
 package org.eclipse.ui.examples.pojo.binding.scenarios;
 
 import org.eclipse.jface.databinding.IDataBindingContext;
-import org.eclipse.jface.databinding.PropertyDesc;
+import org.eclipse.jface.databinding.Property;
 import org.eclipse.jface.databinding.viewers.TableViewerDescription;
 import org.eclipse.jface.tests.binding.scenarios.pojo.Account;
 import org.eclipse.jface.tests.binding.scenarios.pojo.Catalog;
@@ -92,7 +92,7 @@ public class Table_Accounts extends Composite {
 		tableViewerDescription.addColumn("firstName");
 		tableViewerDescription.addColumn("lastName");
 		tableViewerDescription.addColumn("state");
-		dbc.bind(tableViewerDescription, new PropertyDesc(catalog,"accounts",Account.class,Boolean.TRUE), null);
+		dbc.bind(tableViewerDescription, new Property(catalog,"accounts",Account.class,Boolean.TRUE), null);
 
 	}
 
