@@ -13,7 +13,7 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.databinding.IDataBindingContext;
-import org.eclipse.jface.databinding.PropertyDesc;
+import org.eclipse.jface.databinding.Property;
 import org.eclipse.jface.databinding.viewers.DefaultCellModifier;
 import org.eclipse.jface.databinding.viewers.TableViewerDescription;
 import org.eclipse.jface.viewers.TableViewer;
@@ -89,7 +89,7 @@ public class Table_Accounts_CustomColumns extends Composite {
 		tableViewerDescription.addColumn(1,"firstName");
 		tableViewerDescription.addColumn(2,"state");		
 		tableViewerDescription.addColumn(3,"lastName");		
-		dbc.bind(tableViewerDescription, new PropertyDesc(catalog,
+		dbc.bind(tableViewerDescription, new Property(catalog,
 				"accounts"), null);	
 	
 	}
@@ -123,7 +123,7 @@ public class Table_Accounts_CustomColumns extends Composite {
 				}
 			}
 		});
-		dbc.bind(tableViewerDescription, new PropertyDesc(catalog,
+		dbc.bind(tableViewerDescription, new Property(catalog,
 				"accounts"), null);		
 
 	}	

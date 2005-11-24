@@ -88,7 +88,7 @@ public class ListBinding extends Composite {
 		// new EMFUpdatableTable(catalog,"lodgings",new String[]
 		// {"description"})
 		// );
-		dbc.bind(listViewer, new PropertyDesc(catalog, "lodgings"),
+		dbc.bind(listViewer, new Property(catalog, "lodgings"),
 				new BindSpec(new IdentityConverter(Lodging.class, Object.class), null));
 
 		// dbc.bindValue(

@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.databinding.IUpdatableValue;
-import org.eclipse.jface.databinding.PropertyDesc;
+import org.eclipse.jface.databinding.Property;
 import org.eclipse.jface.databinding.swt.SWTProperties;
 import org.eclipse.jface.databinding.updatables.ConditionalUpdatableValue;
 import org.eclipse.jface.databinding.viewers.ViewersProperties;
@@ -88,13 +88,13 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 			}
 		});
 		getDbc().bind(listViewer,
-				new PropertyDesc(catalog, "lodgings"), null);
+				new Property(catalog, "lodgings"), null);
 
 		assertEquals(catalog.getLodgings(), getViewerContent(listViewer));
 
 		IUpdatableValue selectedLodging = (IUpdatableValue) getDbc()
 				.createUpdatable(
-						new PropertyDesc(listViewer,
+						new Property(listViewer,
 								ViewersProperties.SINGLE_SELECTION));
 
 		selectedLodging.setValue(SampleData.CAMP_GROUND);
@@ -104,7 +104,7 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 
 		getDbc().bind(
 				txtName,
-				new PropertyDesc(selectedLodging, "name", String.class,
+				new Property(selectedLodging, "name", String.class,
 						Boolean.FALSE), null);
 
 		assertEquals(txtName.getText(), SampleData.CAMP_GROUND.getName());
@@ -136,13 +136,13 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 			}
 		});
 		getDbc().bind(listViewer,
-				new PropertyDesc(catalog, "lodgings"), null);
+				new Property(catalog, "lodgings"), null);
 
 		assertEquals(catalog.getLodgings(), getViewerContent(listViewer));
 
 		final IUpdatableValue selectedLodgingUpdatable = (IUpdatableValue) getDbc()
 				.createUpdatable(
-						new PropertyDesc(listViewer,
+						new Property(listViewer,
 								ViewersProperties.SINGLE_SELECTION));
 
 		selectedLodgingUpdatable.setValue(null);
@@ -161,14 +161,14 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 		final Text txtName = new Text(getComposite(), SWT.BORDER);
 
 		getDbc().bind(
-				new PropertyDesc(txtName, SWTProperties.ENABLED),
+				new Property(txtName, SWTProperties.ENABLED),
 				selectionExistsUpdatable, null);
 		// TODO discuss this - the NestedPropertyDescription is needed so that
 		// the type of the nested property is known even if the current value of
 		// the given updatable is null at bind time.
 		getDbc().bind(
-				new PropertyDesc(txtName, SWTProperties.TEXT),
-				new PropertyDesc(selectedLodgingUpdatable, "name",
+				new Property(txtName, SWTProperties.TEXT),
+				new Property(selectedLodgingUpdatable, "name",
 						String.class, Boolean.FALSE), null);
 
 		assertEquals(txtName.getText(), "");
@@ -177,16 +177,16 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 		final Text txtDescription = new Text(getComposite(), SWT.BORDER);
 
 		getDbc().bind(
-				new PropertyDesc(txtDescription,
+				new Property(txtDescription,
 						SWTProperties.ENABLED), selectionExistsUpdatable,
 				null);
 		// TODO discuss this - the NestedPropertyDescription is needed so that
 		// the type of the nested property is known even if the current value of
 		// the given updatable is null at bind time.
 		getDbc().bind(
-				new PropertyDesc(txtDescription,
+				new Property(txtDescription,
 						SWTProperties.TEXT),
-				new PropertyDesc(selectedLodgingUpdatable,
+				new Property(selectedLodgingUpdatable,
 						"description", String.class, Boolean.FALSE), null);
 
 		assertEquals(txtDescription.getText(), "");
@@ -269,14 +269,14 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 			}
 		});
 		getDbc().bind(categoryListViewer,
-				new PropertyDesc(catalog, "categories"), null);
+				new Property(catalog, "categories"), null);
 
 		assertEquals(catalog.getCategories(),
 				getViewerContent(categoryListViewer));
 
 		final IUpdatableValue selectedCategoryUpdatable = (IUpdatableValue) getDbc()
 				.createUpdatable(
-						new PropertyDesc(categoryListViewer,
+						new Property(categoryListViewer,
 								ViewersProperties.SINGLE_SELECTION));
 
 		final ListViewer adventureListViewer = new ListViewer(getComposite(),
@@ -295,7 +295,7 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 		// the given updatable is null at bind time.
 		getDbc().bind(
 				adventureListViewer,
-				new PropertyDesc(selectedCategoryUpdatable,
+				new Property(selectedCategoryUpdatable,
 						"adventures", Adventure.class, Boolean.TRUE), null);
 
 		ConditionalUpdatableValue categorySelectionExistsUpdatable = new ConditionalUpdatableValue(
@@ -306,13 +306,13 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 		};
 
 		getDbc().bind(
-				new PropertyDesc(adventureListViewer.getList(),
+				new Property(adventureListViewer.getList(),
 						SWTProperties.ENABLED),
 				categorySelectionExistsUpdatable, null);
 
 		final IUpdatableValue selectedAdventureUpdatable = (IUpdatableValue) getDbc()
 				.createUpdatable(
-						new PropertyDesc(adventureListViewer,
+						new Property(adventureListViewer,
 								ViewersProperties.SINGLE_SELECTION));
 
 		ConditionalUpdatableValue adventureSelectionExistsUpdatable = new ConditionalUpdatableValue(
@@ -325,14 +325,14 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 		final Text txtName = new Text(getComposite(), SWT.BORDER);
 
 		getDbc().bind(
-				new PropertyDesc(txtName, SWTProperties.ENABLED),
+				new Property(txtName, SWTProperties.ENABLED),
 				adventureSelectionExistsUpdatable, null);
 		// TODO discuss this - the NestedPropertyDescription is needed so that
 		// the type of the nested property is known even if the current value of
 		// the given updatable is null at bind time.
 		getDbc().bind(
-				new PropertyDesc(txtName, SWTProperties.TEXT),
-				new PropertyDesc(selectedAdventureUpdatable, "name",
+				new Property(txtName, SWTProperties.TEXT),
+				new Property(selectedAdventureUpdatable, "name",
 						String.class, Boolean.FALSE), null);
 
 		assertEquals(txtName.getText(), "");
@@ -341,16 +341,16 @@ public class MasterDetailScenarios extends ScenariosTestCase {
 		final Text txtDescription = new Text(getComposite(), SWT.BORDER);
 
 		getDbc().bind(
-				new PropertyDesc(txtDescription,
+				new Property(txtDescription,
 						SWTProperties.ENABLED),
 				adventureSelectionExistsUpdatable, null);
 		// TODO discuss this - the NestedPropertyDescription is needed so that
 		// the type of the nested property is known even if the current value of
 		// the given updatable is null at bind time.
 		getDbc().bind(
-				new PropertyDesc(txtDescription,
+				new Property(txtDescription,
 						SWTProperties.TEXT),
-				new PropertyDesc(selectedAdventureUpdatable,
+				new Property(selectedAdventureUpdatable,
 						"description", String.class, Boolean.FALSE), null);
 
 		assertFalse(adventureListViewer.getList().isEnabled());

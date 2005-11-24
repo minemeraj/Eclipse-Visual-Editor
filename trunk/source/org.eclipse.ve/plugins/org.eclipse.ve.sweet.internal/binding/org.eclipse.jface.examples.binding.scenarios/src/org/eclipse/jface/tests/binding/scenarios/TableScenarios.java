@@ -13,7 +13,7 @@ package org.eclipse.jface.tests.binding.scenarios;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.jface.databinding.PropertyDesc;
+import org.eclipse.jface.databinding.Property;
 import org.eclipse.jface.databinding.viewers.TableViewerDescription;
 import org.eclipse.jface.tests.binding.scenarios.pojo.Account;
 import org.eclipse.jface.tests.binding.scenarios.pojo.Catalog;
@@ -75,7 +75,7 @@ public class TableScenarios extends ScenariosTestCase {
 		tableViewerDescription.addColumn("firstName");
 		tableViewerDescription.addColumn("lastName");
 		tableViewerDescription.addColumn("state");	
-		getDbc().bind(tableViewerDescription, new PropertyDesc(catalog,"accounts"), null);
+		getDbc().bind(tableViewerDescription, new Property(catalog,"accounts"), null);
 
 		// Verify the data in the table columns matches the accounts
 		for (int i = 0; i < accounts.size(); i++) {
@@ -98,7 +98,7 @@ public class TableScenarios extends ScenariosTestCase {
 		tableViewerDescription.addColumn("firstName");
 		tableViewerDescription.addColumn("lastName",null, new PhoneConverter());
 		tableViewerDescription.addColumn("state",null,new StateConverter());	
-		getDbc().bind(tableViewerDescription, new PropertyDesc(catalog,"accounts"), null);			
+		getDbc().bind(tableViewerDescription, new Property(catalog,"accounts"), null);			
 		
 		CellEditor[] cellEditors = tableViewer.getCellEditors();
 		tableViewer.setSelection(new StructuredSelection(tableViewer.getTable().getItem(0)));
@@ -126,7 +126,7 @@ public class TableScenarios extends ScenariosTestCase {
 		tableViewerDescription.addColumn("lastName");
 		tableViewerDescription.addColumn("phone",null, new PhoneConverter());
 		tableViewerDescription.addColumn("state",null,new StateConverter());	
-		getDbc().bind(tableViewerDescription, new PropertyDesc(catalog,"accounts"), null);		
+		getDbc().bind(tableViewerDescription, new Property(catalog,"accounts"), null);		
 				
 		// Verify that the data in the the table columns matches the expected
 		// What we are looking for is that the phone numbers are converterted to nnn-nnn-nnnn and that

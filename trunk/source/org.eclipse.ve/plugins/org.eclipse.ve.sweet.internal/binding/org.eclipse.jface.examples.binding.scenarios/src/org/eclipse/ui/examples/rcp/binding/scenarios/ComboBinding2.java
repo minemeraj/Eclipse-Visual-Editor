@@ -12,7 +12,7 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatable;
-import org.eclipse.jface.databinding.PropertyDesc;
+import org.eclipse.jface.databinding.Property;
 import org.eclipse.jface.databinding.swt.SWTProperties;
 import org.eclipse.jface.databinding.viewers.ViewersProperties;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -114,14 +114,14 @@ public class ComboBinding2 extends Composite {
 		};
 		comboViewer.setLabelProvider(lp);
 //		dbc.bind(comboViewer, SWTBindingConstants.CONTENT, catalog, "lodgings");
-		dbc.bind(comboViewer , new PropertyDesc(catalog, "lodgings"), null);
+		dbc.bind(comboViewer , new Property(catalog, "lodgings"), null);
 		
 //		dbc.bind(comboViewer,ViewersProperties.SELECTION,skiTrip,"defaultLodging");
-		dbc.bind(new PropertyDesc(comboViewer,ViewersProperties.SINGLE_SELECTION), new PropertyDesc(skiTrip,"defaultLodging"), null);
+		dbc.bind(new Property(comboViewer,ViewersProperties.SINGLE_SELECTION), new Property(skiTrip,"defaultLodging"), null);
 //		IUpdatable defLodging = dbc.createUpdatable(skiTrip, "defaultLodging");
-		IUpdatable defLodging = dbc.createUpdatable(new PropertyDesc(skiTrip, "defaultLodging"));
+		IUpdatable defLodging = dbc.createUpdatable(new Property(skiTrip, "defaultLodging"));
 //		dbc.bind(txtDefaultLodging, "text", defLodging, "name");
-		dbc.bind(txtDefaultLodging, new PropertyDesc(defLodging, "name"), null);
+		dbc.bind(txtDefaultLodging, new Property(defLodging, "name"), null);
 		
 		
 		// bind the combo
@@ -130,9 +130,9 @@ public class ComboBinding2 extends Composite {
 		 Account account = (Account) catalog.getAccounts().get(0);
 		 
 //		 dbc.bind(pureCombo, SWTBindingConstants.SELECTION, account, "country");
-		 dbc.bind(new PropertyDesc(pureCombo, SWTProperties.SELECTION), new PropertyDesc(account, "country"), null);
+		 dbc.bind(new Property(pureCombo, SWTProperties.SELECTION), new Property(account, "country"), null);
 //		 dbc.bind(pureComboTxt, "text", account, "country");
-		 dbc.bind(pureComboTxt, new PropertyDesc(account, "country"), null);
+		 dbc.bind(pureComboTxt, new Property(account, "country"), null);
 		 
 		 
 		 // bind the two viewers
@@ -143,14 +143,14 @@ public class ComboBinding2 extends Composite {
 		 cb2.setLabelProvider(lp);
 		 		 
 //		 dbc.bind(cb1, SWTBindingConstants.CONTENT, catalog, "lodgings");
-		 dbc.bind(cb1, new PropertyDesc(catalog, "lodgings"),null);
+		 dbc.bind(cb1, new Property(catalog, "lodgings"),null);
 //		 dbc.bind(cb1,ViewersProperties.SELECTION,sameTrip,"defaultLodging");
-		 dbc.bind(new PropertyDesc(cb1,ViewersProperties.SINGLE_SELECTION), new PropertyDesc(sameTrip,"defaultLodging"), null);
+		 dbc.bind(new Property(cb1,ViewersProperties.SINGLE_SELECTION), new Property(sameTrip,"defaultLodging"), null);
 		 
 //		 dbc.bind(cb2, SWTBindingConstants.CONTENT, catalog, "lodgings");
-		 dbc.bind(cb2, new PropertyDesc(catalog, "lodgings"), null);
+		 dbc.bind(cb2, new Property(catalog, "lodgings"), null);
 //		 dbc.bind(cb2,ViewersProperties.SELECTION,sameTrip,"defaultLodging");
-		 dbc.bind(new PropertyDesc(cb2,ViewersProperties.SINGLE_SELECTION), new PropertyDesc(sameTrip,"defaultLodging"), null);
+		 dbc.bind(new Property(cb2,ViewersProperties.SINGLE_SELECTION), new Property(sameTrip,"defaultLodging"), null);
 		 
 		 
 		 
