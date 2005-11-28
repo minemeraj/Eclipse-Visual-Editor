@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.16 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.17 $  $Date: 2005-11-28 21:39:41 $ 
  */
 
 import java.util.List;
@@ -89,7 +89,7 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 	protected void primReleaseBeanProxy(IExpression expression) {
 		if (disposeParentOnRelease && isBeanProxyInstantiated()) {
 			// Execute: WindowManager.disposeWindow(dialog.getParent());
-			expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, BeanAwtUtilities.getWindowDisposeMethodProxy(expression), false, 0);
+			expression.createMethodInvocation(ForExpression.ROOTEXPRESSION, BeanAwtUtilities.getWindowDisposeMethodProxy(expression), false, 1);
 			expression.createMethodInvocation(ForExpression.METHOD_ARGUMENT, BeanAwtUtilities.getParentMethodProxy(expression), true, 0);
 			expression.createProxyExpression(ForExpression.METHOD_RECEIVER, getProxy());
 		}
