@@ -461,7 +461,7 @@
          type="javax.swing.JWindow"
          icon="icons/full/clcl16/window_obj.gif"
          category="org.eclipse.ve.jfc.swing.cat"
-         contributor="org.eclipse.ve.internal.jfc.codegen.wizards.contributors.ContentPaneSourceContributor"
+         contributor="org.eclipse.ve.internal.jfc.codegen.wizards.contributors.JWindowJDialogSourceContributor"
          name="%NewStyleComponent.Window">
 			</visualElement>
 			<visualElement
@@ -510,7 +510,7 @@
          type="javax.swing.JDialog"
          icon="icons/full/clcl16/dialog_obj.gif"
          category="org.eclipse.ve.jfc.swing.cat"
-         contributor="org.eclipse.ve.internal.jfc.codegen.wizards.contributors.ContentPaneSourceContributor"
+         contributor="org.eclipse.ve.internal.jfc.codegen.wizards.contributors.JWindowJDialogSourceContributor"
          name="%NewStyleComponent.Dialog">
 			</visualElement>
 		<category
