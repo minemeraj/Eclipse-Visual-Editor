@@ -27,7 +27,7 @@ public class WindowDialogSourceGenerator implements org.eclipse.ve.internal.java
   protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "import java.awt.Frame;" + NL + "" + NL + "public class ";
   protected final String TEXT_2 = " {" + NL + "" + NL + "\t/**" + NL + "\t * @param owner" + NL + "\t */" + NL + "\tpublic ";
-  protected final String TEXT_3 = "(Frame owner) {" + NL + "\t\tsuper(owner);" + NL + "\t\tinitialize();" + NL + "\t}" + NL + "\t" + NL + "\t/**" + NL + "\t * This method initializes this" + NL + "\t * " + NL + "\t * @return void" + NL + "\t */" + NL + "\tpublic void initialize(){" + NL + "\t\tthis.setSize(300,200);" + NL + "\t}" + NL + "}";
+  protected final String TEXT_3 = "(Frame owner) {" + NL + "\t\tsuper(owner);" + NL + "\t\tinitialize();" + NL + "\t}" + NL + "\t" + NL + "\t/**" + NL + "\t * This method initializes this" + NL + "\t * " + NL + "\t * @return void" + NL + "\t */" + NL + "\tprivate void initialize(){" + NL + "\t\tthis.setSize(300,200);" + NL + "\t}" + NL + "}";
 
 public String generateSource(String typeName, String superClassName, HashMap argumentMatrix)
   {
