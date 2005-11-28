@@ -12,35 +12,21 @@
  *  Created Oct 25, 2005 by Gili Mendel
  * 
  *  $RCSfile: SimpleTree.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-02 16:49:21 $ 
+ *  $Revision: 1.3 $  $Date: 2005-11-28 22:45:00 $ 
  */
 
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.viewers.*;
+import org.eclipse.jface.databinding.viewers.TableViewerDescription.Column;
+import org.eclipse.jface.tests.binding.scenarios.pojo.*;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.examples.rcp.adventure.Adventure;
-import org.eclipse.ui.examples.rcp.adventure.Catalog;
-import org.eclipse.ui.examples.rcp.adventure.Category;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
+
 
 
 public class SimpleTree extends Composite {
@@ -49,8 +35,12 @@ public class SimpleTree extends Composite {
 	private Composite buttonComposite = null;
 	private Button button = null;
 	private Tree tree = null;
-	private TreeViewer treeViewer = null;
+	private TreeViewer treeViewer1 = null;
 	private Button button1 = null;
+	
+	private IDataBindingContext dbc;
+	private Tree tree2 = null;
+	private TreeViewer treeViewer2 = null;
 
 	public SimpleTree(Composite parent, int style) {
 		super(parent, style);
@@ -71,16 +61,30 @@ public class SimpleTree extends Composite {
 		mainComposite = new Composite(this, SWT.NONE);
 		mainComposite.setLayout(new FillLayout());
 		mainComposite.setLayoutData(gridData);
+		
 		tree = new Tree(mainComposite, SWT.FULL_SELECTION);
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);
-		TreeColumn treeColumn1 = new TreeColumn(tree, SWT.NONE);
-		treeColumn1.setWidth(60);
-		treeColumn1.setText("ID");
-		TreeColumn treeColumn = new TreeColumn(tree, SWT.NONE);
-		treeColumn.setWidth(200);
-		treeColumn.setText("Column");
-		treeViewer = new TreeViewer(tree);
+		TreeColumn treeColumn10 = new TreeColumn(tree, SWT.NONE);
+		treeColumn10.setWidth(200);
+		treeColumn10.setText("ID");
+		TreeColumn treeColumn11 = new TreeColumn(tree, SWT.NONE);
+		treeColumn11.setWidth(200);
+		treeColumn11.setText("Column");
+		treeViewer1 = new TreeViewer(tree);
+		
+	
+		
+		tree2 = new Tree(mainComposite, SWT.FULL_SELECTION);
+		tree2.setHeaderVisible(true);
+		tree2.setLinesVisible(true);	
+		TreeColumn treeColumn2 = new TreeColumn(tree2, SWT.NONE);
+		treeColumn2.setWidth(200);
+		treeColumn2.setText("ID");
+		TreeColumn treeColumn3 = new TreeColumn(tree2, SWT.NONE);
+		treeColumn3.setWidth(200);
+		treeColumn3.setText("Name");
+		treeViewer2 = new TreeViewer(tree2);
 	}
 
 	/**
@@ -110,121 +114,70 @@ public class SimpleTree extends Composite {
 	
 	private void bind() {
 		
-		Catalog catalog = SampleData.CATALOG_2005;
-		
-		class ViewContentProvider implements ITreeContentProvider {
-			public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-			}
 
-			public void dispose() {
-			}
+		
+		try {
+			dbc = DataBinding.createContext(this);
 
-			public Object[] getElements(Object parent) {	
-				if (parent instanceof Catalog) {
-					return ((Catalog) parent).getCategories().toArray();
-				}
-				if (parent instanceof Category) {
-					return ((Category) parent).getAdventures().toArray();
-				}
-				return new Object[0];
-			}
-
-			public Object[] getChildren(Object parentElement) {
-				return getElements(parentElement);
-			}
-
-			public Object getParent(Object element) {
-				if (element instanceof EObject) {
-					return ((EObject) element).eContainer();
-				}
-				return null;
-			}
-
-			public boolean hasChildren(Object element) {
-				return getChildren(element).length > 0;
-			}
-		}
-		
-		class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
-
-			public String getText(Object obj) {
-				if (obj instanceof Category) { return ((Category) obj).getName(); }
-				if (obj instanceof Adventure) { return ((Adventure) obj).getName(); }
-				return super.getText(obj);
-			}
-
-			public String getColumnText(Object obj, int index) {
-				EObject o = (EObject)obj;
-				String featureName;
-				if (index==0)
-					featureName="id";
-				else
-					featureName="name";
-				
-				EStructuralFeature f = o.eClass().getEStructuralFeature(featureName);
-				return (String) o.eGet(f);
-			}
-
-			public Image getColumnImage(Object obj, int index) {
-				return getImage(obj);
-			}
-
-			public Image getImage(Object obj) {				
-				return null;
-			}
-		}
-		
-		
-		ICellModifier cellModifier = new ICellModifier() {		
-			public void modify(Object element, String property, Object value) {	
-				EObject o;
-				if (element instanceof TreeItem)
-					o = (EObject) ((TreeItem)element).getData();
-				else
-					o = (EObject)element;
-				if (property.equals("id") || property.equals("name")) {
-					EStructuralFeature f = o.eClass().getEStructuralFeature(property);
-					o.eSet(f,value);
-					treeViewer.update(o, null);
-				}				
-			}
-		
-			public Object getValue(Object element, String property) {
-				EObject o;
-				if (element instanceof TreeItem)
-					o = (EObject) ((TreeItem)element).getData();
-				else
-					o = (EObject)element;
-				if (property.equals("id") ||property.equals("name")) {
-					EStructuralFeature f = ((EObject)element).eClass().getEStructuralFeature(property);
-					return o.eGet(f);
-				}
-				return null;
-			}
-		
-			public boolean canModify(Object element, String property) {
-				return true;
-			}
-		
-		};
-		
-		treeViewer.setContentProvider(new ViewContentProvider());
-		treeViewer.setLabelProvider(new ViewLabelProvider());
-		treeViewer.setInput(catalog);
-		
-		
-		treeViewer.setCellEditors(new CellEditor[] {new TextCellEditor(tree), new TextCellEditor(tree)});
-		treeViewer.setCellModifier(cellModifier);
-		treeViewer.setColumnProperties(new String[] { "id", "name"});
+			ITree treeModel = org.eclipse.jface.tests.binding.scenarios.pojo.SampleData.CATEGORY_TREE;
+			
+			TreeViewerDescription treeDescription1 = new TreeViewerDescription(treeViewer1);
+			treeDescription1.addColumn(Catalog.class, "class.name");
+			
+			treeDescription1.addColumn(Lodging.class, "name");
+			treeDescription1.addColumn(Lodging.class, "description");
+			
+			treeDescription1.addColumn(Adventure.class, "name");
+			treeDescription1.addColumn(Adventure.class, "price");
+			((Column)treeDescription1.getColumn(Adventure.class, 1)).setPropertyType(Double.TYPE);
+						
+			treeDescription1.addColumn(Category.class, "name");
+			
+			treeDescription1.addColumn(Account.class, "firstName");
+			treeDescription1.addColumn(Account.class, "lastName");
+						
+			dbc.bind(treeDescription1, treeModel, null);
+			
+			////
+			
+			TreeViewerDescription treeDescription2 = new TreeViewerDescription(treeViewer2);
+			treeDescription2.addColumn(Catalog.class, "class.name");
+			
+			treeDescription2.addColumn(Lodging.class, "name");
+			treeDescription2.addColumn(Lodging.class, "description");
+			
+			treeDescription2.addColumn(Adventure.class, "name");
+			treeDescription2.addColumn(Adventure.class, "price");
+			((Column)treeDescription2.getColumn(Adventure.class, 1)).setPropertyType(Double.TYPE);
+						
+			treeDescription2.addColumn(Category.class, "name");
+			
+			treeDescription2.addColumn(Account.class, "firstName");
+			treeDescription2.addColumn(Account.class, "lastName");
+			
+			TreeModelDescription modelDescription = new TreeModelDescription(new Object[] {org.eclipse.jface.tests.binding.scenarios.pojo.SampleData.CATALOG_2005});
+			modelDescription.addChildrenProperty(org.eclipse.jface.tests.binding.scenarios.pojo.Catalog.class, "categories");
+			modelDescription.addChildrenProperty(org.eclipse.jface.tests.binding.scenarios.pojo.Catalog.class, "accounts");
+			modelDescription.addChildrenProperty(org.eclipse.jface.tests.binding.scenarios.pojo.Catalog.class, "lodgings");
+			
+			modelDescription.addChildrenProperty(org.eclipse.jface.tests.binding.scenarios.pojo.Category.class, "adventures");
+			
+			dbc.bind(treeDescription2, modelDescription, null);
+			
+		} catch (BindingException e) {			
+			e.printStackTrace();
+		} 
 		
 	}
 
 	private void initialize() {
+
 		createMainComposite();
 		this.setLayout(new GridLayout());
+
 		createButtonComposite();
-		setSize(new Point(300, 200));
+		this.setSize(new Point(759, 254));
 		bind();
 	}
 
-}
+}  //  @jve:decl-index=0:visual-constraint="10,10"
