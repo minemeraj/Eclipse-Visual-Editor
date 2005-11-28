@@ -24,7 +24,7 @@ public class <%=typeName%> {
 	 * 
 	 * @return void
 	 */
-	public void initialize(){
+	private void initialize(){
 		this.setSize(300,200);
 	}
 }
