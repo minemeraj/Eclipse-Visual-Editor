@@ -12,13 +12,14 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.17 $  $Date: 2005-11-28 21:39:41 $ 
+ *  $Revision: 1.18 $  $Date: 2005-11-28 23:26:09 $ 
  */
 
 import java.util.List;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.proxy.core.*;
+import org.eclipse.jem.internal.proxy.core.ExpressionProxy.ProxyEvent;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
 
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
@@ -78,11 +79,24 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 	protected IProxy primPrimInstantiatedThisPart(IProxyBeanType targetClass, IExpression expression) {
 		// We need to override so that we can generate the fake Frame that is required for Dialogs.
 		// We are assuming that we find a class that has a constructor with only Frame for a parent.
+		// If we can't find a ctor with Frame as the parameter, try the null ctor.
 
 		disposeParentOnRelease = true;
-		IProxy result = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
+		expression.createTry();
+		ExpressionProxy result = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 		expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass, 1);
 		expression.createClassInstanceCreation(ForExpression.CLASSINSTANCECREATION_ARGUMENT, "java.awt.Frame", 0); //$NON-NLS-1$
+		ExpressionProxy exception = expression.createTryCatchClause(getBeanTypeProxy("java.lang.NoSuchMethodException", expression), true);
+		// Reassign the expression and create with a null ctor.
+		expression.createProxyReassignmentExpression(ForExpression.ROOTEXPRESSION, result);
+		expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass, 0);
+		exception.addProxyListener(new ExpressionProxy.ProxyAdapter() {
+			public void proxyResolved(ProxyEvent event) {
+				// Set flag to false so we don't try to dispose the shared internal frame during the release
+				disposeParentOnRelease = false;
+			}
+		});
+		expression.createTryEnd();
 		return result;
 	}
 
