@@ -11,7 +11,7 @@ package org.eclipse.ve.internal.java.codegen.util;
  *******************************************************************************/
 /*
  *  $RCSfile: ExpressionParser.java,v $
- *  $Revision: 1.17 $  $Date: 2005-11-11 17:19:23 $ 
+ *  $Revision: 1.18 $  $Date: 2005-11-29 17:13:19 $ 
  */
 
 import java.text.CharacterIterator;
@@ -135,6 +135,8 @@ protected void primReplaceFiller(String oldFiller, String newFiller, int fillerO
 		if(lineEnds!=null){
 			for (int lec = 0; lec < lineEnds.length; lec++) {
 				int offset = lineEnds[lec]+1+lengthDelta;
+				if(offset < fSourceOff || offset > (fSourceOff+fSourceLen+lengthDelta))
+					continue; // we want to update fillers for only expression's source range
 				if(filledSource.indexOf(oldFiller, offset)==offset){
 					filledSource.replace(offset, offset+oldFiller.length(), newFiller);
 					lengthDelta+=(newFiller.length()-oldFiller.length());
