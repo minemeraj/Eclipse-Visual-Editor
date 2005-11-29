@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultJFCLayoutPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-29 19:49:00 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -65,8 +65,10 @@ public class DefaultJFCLayoutPolicy {
 							.getString(JFCVisualPlugin.DEFAULT_LAYOUTMANAGER) : defaultLayout;
 					if (defaultLayoutTypeName != null && defaultLayoutTypeName.length() > 0) {
 						CommandBuilder bldr = new CommandBuilder();
-						IJavaInstance layoutInstance = BeanUtilities.createJavaObject(defaultLayoutTypeName, EMFEditDomainHelper.getResourceSet(domain),
-								(String) null);
+						IJavaInstance layoutInstance = null;
+						if (defaultLayoutTypeName != JFCVisualPlugin.NULL_LAYOUT)
+							layoutInstance = BeanUtilities.createJavaObject(defaultLayoutTypeName, EMFEditDomainHelper.getResourceSet(domain),
+									(String) null);
 						bldr.applyAttributeSetting(model, layout_SF, layoutInstance);
 						command = bldr.getCommand();
 						command.execute();

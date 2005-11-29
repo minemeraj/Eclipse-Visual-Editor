@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultSWTLayoutPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:20:48 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-29 19:49:01 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -57,7 +57,7 @@ public class DefaultSWTLayoutPolicy {
 				if (!model.eIsSet(layout_SF)) {
 					// Get the type of layout to set
 					String defaultLayoutTypeName = defaultLayout == null ? SwtPlugin.getDefault().getPluginPreferences().getString(SwtPlugin.DEFAULT_LAYOUT) : defaultLayout;
-					if(defaultLayoutTypeName != null && defaultLayoutTypeName.length()>0){	
+					if(defaultLayoutTypeName != null && defaultLayoutTypeName.length()>0 && !defaultLayoutTypeName.equals(SwtPlugin.NULL_LAYOUT)){	
 						CommandBuilder bldr = new CommandBuilder();
 						IJavaInstance layoutInstance = BeanUtilities.createJavaObject(defaultLayoutTypeName, EMFEditDomainHelper.getResourceSet(domain), (String)null);
 						bldr.applyAttributeSetting(model,layout_SF,layoutInstance);
