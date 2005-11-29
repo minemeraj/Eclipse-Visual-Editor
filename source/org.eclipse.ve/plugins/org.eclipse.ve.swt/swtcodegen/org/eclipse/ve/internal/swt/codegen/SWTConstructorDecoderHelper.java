@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.30 $  $Date: 2005-11-08 17:20:34 $ 
+ *  $Revision: 1.31 $  $Date: 2005-11-29 19:28:03 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -111,9 +111,11 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	/**
 	 * Add this bean to the "controls" feature of the parent,
 	 * and create the proper Expression for the BDM
+	 * @param oldIndexSF 
+	 * @param oldParentBP 
 	 * @since 1.0.0
 	 */
-	protected void createControlFeature(boolean updateEMFModel) throws CodeGenException{
+	protected void createControlFeature(boolean updateEMFModel, BeanPart oldParentBP, EStructuralFeature oldIndexSF) throws CodeGenException{
 		
 		EStructuralFeature sf = getIndexSF();
 		CodeExpressionRef exp = fOwner.getExprRef();
@@ -124,6 +126,14 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 			masterExpression = null;
 		
 		if (updateEMFModel) {
+			
+			// clean up if the parent has changed - label moved from one container to another
+			if(getParent()!=oldParentBP && oldParentBP!=null && oldIndexSF!=null){
+				// not the same parent - clean up old setting
+				EList oldControlList = (EList)oldParentBP.getEObject().eGet(oldIndexSF);
+				oldControlList.remove(fbeanPart.getEObject());
+			}
+			
 			EObject parent = getParent().getEObject();
 			BeanDecoderAdapter pAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(parent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);
 
@@ -206,9 +216,11 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	public boolean decode() throws CodeGenException {		
 		boolean result = super.decode();
 		if (result) {
+			BeanPart oldParentBP = getParent();
+			EStructuralFeature oldIndexSF = getIndexSF();
 			fParent = null;
 			if (isControlFeatureNeeded()) {
-				createControlFeature(true);								
+				createControlFeature(true, oldParentBP, oldIndexSF);								
 			}
 		}
 		if (getParent()!=null) {
@@ -223,7 +235,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		boolean result = super.restore();
 		if (result) {
 			if (isControlFeatureNeeded()) {
-				createControlFeature(false);								
+				createControlFeature(false, null, null);								
 			}
 		}
 		if (getParent()!=null) {
