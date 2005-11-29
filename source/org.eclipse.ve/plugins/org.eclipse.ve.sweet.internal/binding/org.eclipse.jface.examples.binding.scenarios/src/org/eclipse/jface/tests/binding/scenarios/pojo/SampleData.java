@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jface.tests.binding.scenarios.pojo;
 
+import java.beans.PropertyChangeListener;
 import java.util.*;
 
 import org.eclipse.jface.databinding.*;
@@ -209,7 +210,14 @@ public class SampleData {
 			}
 			public Class[] getTypes() {
 				return new Class[]  { Catalog.class, Category.class, Lodging.class, Account.class, Adventure.class } ;
-			}			
+			}
+			public void addPropertyChangeListener(PropertyChangeListener listener) {
+
+			}
+			public void removePropertyChangeListener(PropertyChangeListener listener) {
+	
+			}
+
 		};
 	}
 
