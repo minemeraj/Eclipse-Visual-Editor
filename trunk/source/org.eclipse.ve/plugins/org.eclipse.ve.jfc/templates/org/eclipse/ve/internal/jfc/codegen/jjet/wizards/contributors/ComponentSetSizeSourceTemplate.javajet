@@ -6,7 +6,15 @@
 <%@ jet 
 	skeleton="VisualClassSourceWizardSkeleton.java" 
 	package="org.eclipse.ve.internal.jfc.codegen.jjet.wizards.contributors"
-	class="ComponentSetSizeGenerator" %>
+	class="ComponentSetSizeGenerator" %><%
+	String layout = org.eclipse.ve.internal.jfc.core.JFCVisualPlugin.getPlugin().getPluginPreferences().getString(org.eclipse.ve.internal.jfc.core.JFCVisualPlugin.DEFAULT_LAYOUTMANAGER);
+	boolean isNullLayout = layout.equals(org.eclipse.ve.internal.jfc.core.JFCVisualPlugin.NULL_LAYOUT);
+	String layoutName = "null";
+	if (!isNullLayout)
+		layoutName = layout.substring(layout.lastIndexOf('.')+1, layout.length());
+%>
+<%if("java.awt.Panel".equals(superClassName) || "javax.swing.JPanel".equals(superClassName))%>
+import <%=layout%>;
 
 public class <%=typeName%> {
 
@@ -40,6 +48,14 @@ public class <%=typeName%> {
 		this.setSize(300,200);<%
 	if ("java.awt.Frame".equals(superClassName)) {%>
 		this.setTitle("<%=superClassName.substring(superClassName.lastIndexOf(".")+1)%>");<%
+	}%>
+	<%
+	if("java.awt.Panel".equals(superClassName) || "javax.swing.JPanel".equals(superClassName)) {
+		if (isNullLayout){
+		%>this.setLayout(null);<%
+		} else {
+		%>this.setLayout(new <%=layoutName%>());<%
+		}
 	}%>
 	}
 }

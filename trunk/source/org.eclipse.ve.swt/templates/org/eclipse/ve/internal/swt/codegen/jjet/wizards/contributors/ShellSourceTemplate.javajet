@@ -8,12 +8,19 @@
 	package="org.eclipse.ve.internal.swt.codegen.jjet.wizards.contributors"
 	class="ShellSourceGenerator" %><%
 	boolean createMain = (argumentMatrix != null && ((String)argumentMatrix.get(CREATE_MAIN)).equals("true"));
+	String layout = org.eclipse.ve.internal.swt.SwtPlugin.getDefault().getPluginPreferences().getString(org.eclipse.ve.internal.swt.SwtPlugin.DEFAULT_LAYOUT);
+	boolean isNullLayout = layout.equals(org.eclipse.ve.internal.swt.SwtPlugin.NULL_LAYOUT);
+	String layoutName = "";
+	if (!isNullLayout)
+		layoutName = layout.substring(layout.lastIndexOf('.')+1, layout.length());
 	 %>
 
 <%if(createMain){%>
 import org.eclipse.swt.widgets.Display;<%}%>
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.graphics.Point;
+<%if(!isNullLayout){%>
+import <%=layout%>;<%}%>
 
 public class <%=typeName%> {
 
@@ -25,7 +32,8 @@ public class <%=typeName%> {
 	private void createSShell() {
 		sShell = new Shell();		   
 		sShell.setText("<%=org.eclipse.swt.widgets.Shell.class.getName().substring(org.eclipse.swt.widgets.Shell.class.getName().lastIndexOf(".")+1)%>");
-		sShell.setSize(new Point(300,200));
+		sShell.setSize(new Point(300,200));	<%if(!isNullLayout){%>	
+		sShell.setLayout(new <%=layoutName%>());<%}%>
 	}
 }
 <% 	
