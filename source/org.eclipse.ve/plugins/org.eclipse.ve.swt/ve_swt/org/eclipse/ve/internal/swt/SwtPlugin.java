@@ -35,6 +35,7 @@ public class SwtPlugin extends Plugin {
 	public static final String DEFAULT_LAYOUT = "DEFAULT_LAYOUT"; //$NON-NLS-1$
 	public static final String DEFAULT_LAYOUT_VAUE = "org.eclipse.swt.layout.GridLayout";  //$NON-NLS-1$	
 	public static final String PREFERENCE_PAGE_ID =  "org.eclipse.ve.internal.swt.SWTPreferencePage"; //$NON-NLS-1$	
+	public static final String NULL_LAYOUT =  "null"; //$NON-NLS-1$	
 	
 	//The shared instance.
 	private static SwtPlugin plugin;
@@ -76,7 +77,7 @@ public class SwtPlugin extends Plugin {
 		if(layouts == null){
 			layouts = new String[][] {
 			  new String[] {"null","GridLayout","FillLayout","RowLayout","FormLayout"},
-			  new String[] {null,"org.eclipse.swt.layout.GridLayout","org.eclipse.swt.layout.FillLayout","org.eclipse.swt.layout.RowLayout","org.eclipse.swt.layout.FormLayout"}
+			  new String[] {NULL_LAYOUT,"org.eclipse.swt.layout.GridLayout","org.eclipse.swt.layout.FillLayout","org.eclipse.swt.layout.RowLayout","org.eclipse.swt.layout.FormLayout"}
 			};
 		};
 		return layouts;
