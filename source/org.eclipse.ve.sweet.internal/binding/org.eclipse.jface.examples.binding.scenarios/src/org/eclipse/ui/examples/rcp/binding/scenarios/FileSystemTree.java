@@ -12,7 +12,7 @@
  *  Created Nov 29, 2005 by Gili Mendel
  * 
  *  $RCSfile: FileSystemTree.java,v $
- *  $Revision: 1.3 $  $Date: 2005-11-30 16:21:30 $ 
+ *  $Revision: 1.4 $  $Date: 2005-11-30 23:24:48 $ 
  */
 
 package org.eclipse.ui.examples.rcp.binding.scenarios;
@@ -173,6 +173,10 @@ public class FileSystemTree extends Composite {
 			public void removeTreeChangeListener(ITree.ChangeListener listener) {
 				if (changeSupport!=null)
 					changeSupport.removeTreeChangeListener(listener);
+			}
+
+			public void dispose() {
+				changeSupport=null;
 			}
 		
 		};
