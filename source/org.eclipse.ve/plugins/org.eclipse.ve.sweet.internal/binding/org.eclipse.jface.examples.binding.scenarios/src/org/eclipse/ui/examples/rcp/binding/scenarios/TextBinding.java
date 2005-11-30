@@ -12,6 +12,7 @@ package org.eclipse.ui.examples.rcp.binding.scenarios;
 
 import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.Property;
+import org.eclipse.jface.databinding.swt.SWTUpdatableFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -69,12 +70,12 @@ public class TextBinding extends Composite {
 		Adventure skiTrip = SampleData.WINTER_HOLIDAY;
 
 		dbc.bind(txtDescription, new Property(skiTrip, "description"),null);
-		dbc.bind(txtDescription_1, new Property(skiTrip, "description"),null);
-
 		dbc.bind(txtName, new Property(skiTrip, "name"),null);
-		dbc.bind(txtName_1, new Property(skiTrip, "name"),null);
+		dbc.bind(txtLocation, new Property(skiTrip, "location"),null);		
 
-		dbc.bind(txtLocation, new Property(skiTrip, "location"),null);
+		SampleData.getSwtUpdatableFactory().setUpdateTime(SWTUpdatableFactory.TIME_EARLY);
+		dbc.bind(txtDescription_1, new Property(skiTrip, "description"),null);
+		dbc.bind(txtName_1, new Property(skiTrip, "name"),null);		
 		dbc.bind(txtLocation_1, new Property(skiTrip, "location"),null);
 
 	}
@@ -124,6 +125,11 @@ public class TextBinding extends Composite {
 		label2.setText("Description:");
 		txtDescription = new Text(group, SWT.BORDER);
 		txtDescription.setLayoutData(gridData3);
+		txtDescription.addKeyListener(new org.eclipse.swt.events.KeyAdapter() {
+			public void keyPressed(org.eclipse.swt.events.KeyEvent e) {
+				int c = e.character;
+			}
+		});
 		txtDescription_1 = new Text(group, SWT.BORDER);
 		txtDescription_1.setLayoutData(gridData8);
 		label3 = new Label(group, SWT.NONE);
