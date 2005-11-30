@@ -12,13 +12,11 @@
  *  Created Nov 29, 2005 by Gili Mendel
  * 
  *  $RCSfile: FileSystemTree.java,v $
- *  $Revision: 1.1 $  $Date: 2005-11-29 21:21:22 $ 
+ *  $Revision: 1.2 $  $Date: 2005-11-30 16:19:39 $ 
  */
 
 package org.eclipse.ui.examples.rcp.binding.scenarios;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.Collections;
 
@@ -29,7 +27,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.TreeColumn;
 
 public class FileSystemTree extends Composite {
 
@@ -131,7 +128,7 @@ public class FileSystemTree extends Composite {
 		
 		fileTree = new ITree() {		
 			
-			private PropertyChangeSupport changeSupport = null;
+			private ITree.TreeChangeSupport changeSupport = null;
 			
 			private Object[] rootObjects = Collections.EMPTY_LIST.toArray();
 
@@ -148,8 +145,8 @@ public class FileSystemTree extends Composite {
 					Object old = rootObjects;
 					rootObjects = children==null?Collections.EMPTY_LIST.toArray():children;					
 					if (changeSupport!=null) {
-						ITree.ChangeEvent event = new ITree.ChangeEvent(this, IChangeEvent.REPLACE, parentElement, null, old, children, -1);								
-						changeSupport.firePropertyChange(event);
+						ITree.ChangeEvent event = new ITree.ChangeEvent(this, IChangeEvent.REPLACE, parentElement, old, children, -1);								
+						changeSupport.fireTreeChange(event);
 					}
 				}
 					
@@ -167,15 +164,15 @@ public class FileSystemTree extends Composite {
 				return children;
 			}
 
-			public void addPropertyChangeListener(PropertyChangeListener listener) {
+			public void addTreeChangeListener(ITree.ChangeListener listener) {
 				if (changeSupport==null)
-					changeSupport = new PropertyChangeSupport(this);
-				changeSupport.addPropertyChangeListener(listener);
+					changeSupport = new ITree.TreeChangeSupport(this);
+				changeSupport.addTreeChangeListener(listener);
 			}
 
-			public void removePropertyChangeListener(PropertyChangeListener listener) {
+			public void removeTreeChangeListener(ITree.ChangeListener listener) {
 				if (changeSupport!=null)
-					changeSupport.removePropertyChangeListener(listener);
+					changeSupport.removeTreeChangeListener(listener);
 			}
 		
 		};
