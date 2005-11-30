@@ -213,10 +213,10 @@ public class SampleData {
 				return new Class[]  { Catalog.class, Category.class, Lodging.class, Account.class, Adventure.class } ;
 			}
 			public void addTreeChangeListener(ChangeListener listener) {
-
 			}
-			public void removeTreeChangeListener(ChangeListener listener) {
-	
+			public void removeTreeChangeListener(ChangeListener listener) {	
+			}
+			public void dispose() {
 			}
 
 
