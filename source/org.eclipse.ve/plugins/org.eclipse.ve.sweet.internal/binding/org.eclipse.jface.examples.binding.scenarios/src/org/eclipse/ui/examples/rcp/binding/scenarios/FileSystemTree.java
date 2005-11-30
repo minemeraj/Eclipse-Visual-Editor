@@ -12,7 +12,7 @@
  *  Created Nov 29, 2005 by Gili Mendel
  * 
  *  $RCSfile: FileSystemTree.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-30 16:19:39 $ 
+ *  $Revision: 1.3 $  $Date: 2005-11-30 16:21:30 $ 
  */
 
 package org.eclipse.ui.examples.rcp.binding.scenarios;
@@ -128,7 +128,7 @@ public class FileSystemTree extends Composite {
 		
 		fileTree = new ITree() {		
 			
-			private ITree.TreeChangeSupport changeSupport = null;
+			private ITree.ChangeSupport changeSupport = null;
 			
 			private Object[] rootObjects = Collections.EMPTY_LIST.toArray();
 
@@ -166,7 +166,7 @@ public class FileSystemTree extends Composite {
 
 			public void addTreeChangeListener(ITree.ChangeListener listener) {
 				if (changeSupport==null)
-					changeSupport = new ITree.TreeChangeSupport(this);
+					changeSupport = new ITree.ChangeSupport(this);
 				changeSupport.addTreeChangeListener(listener);
 			}
 
