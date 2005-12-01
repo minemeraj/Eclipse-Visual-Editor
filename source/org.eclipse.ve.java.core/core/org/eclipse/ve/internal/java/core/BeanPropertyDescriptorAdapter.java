@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 
 /*
- * $RCSfile: BeanPropertyDescriptorAdapter.java,v $ $Revision: 1.27 $ $Date: 2005-11-15 18:53:28 $
+ * $RCSfile: BeanPropertyDescriptorAdapter.java,v $ $Revision: 1.28 $ $Date: 2005-12-01 23:42:56 $
  */
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -193,7 +193,6 @@ public class BeanPropertyDescriptorAdapter extends AbstractPropertyDescriptorAda
 			return createCellEditorInstance(editorClass, parent, editorClassNameAndData, null);
 		} else {
 			if (propertyDecorator != null) {
-				// TODO - should we always do this, or just for interfaces ?
 				return new TypeReferenceCellEditor((JavaHelpers) propertyDecorator.getPropertyType(), parent);
 			} else
 				return null;

@@ -10,15 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.18 $  $Date: 2005-10-28 17:27:35 $ 
+ *  $Revision: 1.19 $  $Date: 2005-12-01 23:42:56 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.text.MessageFormat;
 import java.util.*;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
@@ -28,6 +27,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
@@ -36,30 +37,28 @@ import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.ClassDescriptorDecoratorPolicy;
+import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
-import org.eclipse.ve.internal.jcm.BeanComposition;
+import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.choosebean.*;
 
 import org.eclipse.ve.internal.propertysheet.INeedData;
+import org.eclipse.ve.internal.propertysheet.ISourced;
  
 /**
  * Cell editor to show base components (i.e. ones that are members of the BeanSubclassComposition and not members
- * of Methods) that are instances of the java type for this cell editor. Also allows construction of base news ones
- * if one wanted is not on the BeanComposition.
+ * of Methods) that are instances of the java type for this cell editor.
  * @since 1.0.0
  */
-public class TypeReferenceCellEditor extends DialogCellEditor implements INeedData, IExecutableExtension {
+public class TypeReferenceCellEditor extends DialogCellEditor implements INeedData, ISourced {
 
 	CCombo combo;
 	private EditDomain editDomain;
 	private JavaClass javaClass;
-	protected BeanComposition beanComposition; // The top level object ( the free form )
-	protected List javaObjects; // Store the java objects on the free form that match the search class
-	protected List javaObjectLabels;
+	protected List javaObjects; // Store the java objects on the free form or local to the method of the source that match the search class
 	protected int selection = -1;
 	private String[] items;
-//	private boolean allowCreation = true; // By default a ... button is there, although this can be overridden with initialiation data	
 	
 	public TypeReferenceCellEditor(Composite parent){
 		super(parent);
@@ -84,6 +83,7 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 		}
 		return null;
 	}
+	
 	protected Control createContents(Composite cell) {
 		combo = new CCombo(cell,SWT.NONE);
 		combo.addSelectionListener(new SelectionAdapter(){
@@ -119,67 +119,102 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 		
 	protected void updateContents(Object value) {
 		if(combo != null && javaObjects != null){
-			combo.select(javaObjects.indexOf(value));
+			combo.select(selection = javaObjects.indexOf(value));
 		}
 	}
 
 	
 	public void setData(Object anObject){
 		editDomain = (EditDomain) anObject;
-		beanComposition = (BeanComposition) editDomain.getDiagramData();		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.propertysheet.ISourced#setSources(java.lang.Object[], org.eclipse.ui.views.properties.IPropertySource[], org.eclipse.ui.views.properties.IPropertyDescriptor[])
+	 */
+	public void setSources(Object[] sources, IPropertySource[] propertySources, IPropertyDescriptor[] descriptors) {
+		BeanComposition beanComposition = (BeanComposition) editDomain.getDiagramData();		
 		// Having got the root object we can now ask it for all of its child objects that match the desired type we are supposed to list
-		javaObjects = new ArrayList();
-		javaObjectLabels = new ArrayList();
+		SortedMap javaObjectLabels = new TreeMap();
 		Iterator components = beanComposition.getMembers().iterator();
 		while(components.hasNext()){
-			Object component = components.next();
-			if ( component instanceof IJavaObjectInstance ) { // We might have non java components, nor are we interested in primitives.	 
-				// Test the class
-				IJavaInstance javaComponent = (IJavaObjectInstance) component;
-				JavaHelpers componentType= javaComponent.getJavaType();
-				if ( javaClass.isAssignableFrom(componentType)) {
-					javaObjects.add(component);	
-					// The label used for the icon is the same one used by the JavaBeans tree view
-					ILabelProvider labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(editDomain).getLabelProvider(componentType);
-					if ( labelProvider != null ) {
-						javaObjectLabels.add(labelProvider.getText(component));		
-					} else { 
-						// If no label provider exists use the toString of the target VM JavaBean itself
-						javaObjectLabels.add(BeanProxyUtilities.getBeanProxy(javaComponent).toBeanString()); 
+			addComponentToList(javaObjectLabels, components.next());
+		}
+		
+		// Now we also need to walk through the one member container that is common to all of the sources.
+		// Some of the sources may be global with an initialize method. That is the member we must be in.
+		// If not global, then we need to see what method it is declared in. That will be the member. All of the sources must share this
+		// same member or we can't add them in. That is because if they came from different memberContainers we wouldn't be able to apply
+		// the same value to all of the sources because they couldn't cross membership for locals.
+		MemberContainer member = null;
+		for (int i = 0; i < sources.length; i++) {
+			Object source = sources[i];
+			if (source instanceof IJavaInstance) {
+				IJavaInstance javasource = (IJavaInstance) source;
+				JCMMethod initMethod = (JCMMethod) InverseMaintenanceAdapter.getFirstReferencedBy(javasource, JCMPackage.eINSTANCE.getJCMMethod_Initializes());
+				if (initMethod != null)
+					if (member == null)
+						member = initMethod;
+					else {
+						member = null;
+						break;	// We have a different init method. 
+					}
+				else {
+					EObject container = javasource.eContainer();
+					// If contained by BeanComposition and no init method, then it is a global, and already handled globals.
+					// OR if by some chance the container is NOT a MemberContainer, then it should be ignored.
+					if (!(container instanceof BeanComposition) && container instanceof MemberContainer) {
+						if (member != container)
+							if (member == null)
+								member = (MemberContainer) container;
+							else {
+								member = null;
+								break;	// We have a different member
+							}
 					}
 				}
 			}
 		}
-		// Now we know the children set the items
+		
+		// Now walk through member and get all of its members. (Properties and implicits at this time are not valid).
+		if (member != null) {
+			Iterator members = member.getMembers().iterator();
+			while(members.hasNext()){
+				addComponentToList(javaObjectLabels, members.next());
+			}
+
+		}
+		
+		// Now take the sorted map and produce two arrays, one the labels (which becomes items) and one the real objects.
+		javaObjects = new ArrayList(javaObjectLabels.size());
 		items = new String[javaObjectLabels.size()];
-		System.arraycopy(javaObjectLabels.toArray(),0,items,0,items.length);
-		//TODO: need to make this more efficient
-		Arrays.sort(items);
-		List a = new ArrayList() ;
-		for (int i = 0; i < items.length; i++) {			
-			for (int j = 0; j < javaObjectLabels.size(); j++) {
-				if (items[i].equals(javaObjectLabels.get(j))) {
-					a.add(javaObjects.get(j));
-					break;
+		for (Iterator itr = javaObjectLabels.entrySet().iterator(); itr.hasNext();) {
+			Map.Entry entry = (Map.Entry) itr.next();
+			items[javaObjects.size()] = (String) entry.getKey();
+			javaObjects.add(entry.getValue());
+		}
+		combo.setItems(items);
+	}
+	/**
+	 * @param javaObjectLabels
+	 * @param component
+	 * 
+	 * @since 1.2.0
+	 */
+	private void addComponentToList(SortedMap javaObjectLabels, Object component) {
+		if ( component instanceof IJavaObjectInstance ) { // We might have non java components, nor are we interested in primitives.	 
+			// Test the class
+			IJavaInstance javaComponent = (IJavaInstance) component;
+			JavaHelpers componentType= javaComponent.getJavaType();
+			if ( javaClass.isAssignableFrom(componentType)) {
+				// The label used for the icon is the same one used by the JavaBeans tree view
+				ILabelProvider labelProvider = ClassDescriptorDecoratorPolicy.getPolicy(editDomain).getLabelProvider(componentType);
+				if ( labelProvider != null ) {
+					javaObjectLabels.put(labelProvider.getText(component), component);		
+				} else { 
+					// If no label provider exists use the toString of the target VM JavaBean itself
+					javaObjectLabels.put(BeanProxyUtilities.getBeanProxy(javaComponent).toBeanString(), component); 
 				}
 			}
-			
-		}
-		javaObjects = a;
-		// The list items is the stuff to get added to the list
-		combo.setItems(items);
-
-		
-		
-	}
-	public void setInitializationData(IConfigurationElement element, String data, Object object){
-		// The string passed in determines whether or not the editor creates the ... button allowing new instances 
-		// to be created, or whether it just allows selection of existing ones
-		// As an example, nextFocusableComponent on JComponent lets you point to another component, but not add one, whereas
-		// model on JTable would let you add new models as well as attach to existing ones
-		if ( object instanceof String ) {
-			// TODO - not yet coded.  Superclass makes this difficult, need to think about it - JRW
-//			allowCreation = Boolean.getBoolean((String)object);
 		}
 	}	
 	
