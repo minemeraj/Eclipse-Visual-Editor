@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.4 $  $Date: 2005-12-01 00:15:09 $ 
+ *  $Revision: 1.5 $  $Date: 2005-12-01 19:48:42 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix.bits64;
 
@@ -72,7 +72,10 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 			}
 		}
 		if(image==null){
-			image = getImageOfHandle(control.handle, control.getDisplay(), includeChildren, maxWidth, maxHeight);
+			// Use reflection to get the control handle to avoid linking problems with being
+			// compiled on a 32 bit machine against 32 bit swt.
+			long handle = readLongFieldValue(Widget.class, control, "handle"); //$NON-NLS-1$
+			image = getImageOfHandle(handle, control.getDisplay(), includeChildren, maxWidth, maxHeight);
 		}
 		if (control instanceof Decorations) {
 			Decorations decorations = (Decorations) control;
