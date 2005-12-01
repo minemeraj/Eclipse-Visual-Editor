@@ -4,6 +4,8 @@
       <value featureName="eStructuralFeatures">
          <listChanges referenceValues="_eStructuralFeatures"/>
          <listChanges referenceValues="_eStructuralFeatures1"/>
+         <listChanges referenceValues="_eStructuralFeatures2"/>
+         <listChanges referenceValues="_eStructuralFeatures3"/>
       </value>
    </objectChanges>
    <objectsToAttach name="horizontalAlignment" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
@@ -12,4 +14,12 @@
    <objectsToAttach name="verticalAlignment" unsettable="true" xmi:id="_eStructuralFeatures1" xsi:type="ecore:EReference">
       <eAnnotations cellEditorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentCellEditor" labelProviderClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataAlignmentLabelProvider" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>      
     </objectsToAttach>
+   <objectsToAttach name="horizontalSpan" unsettable="true" xmi:id="_eStructuralFeatures2" xsi:type="ecore:EReference">
+      <eAnnotations propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataSpanPropertyDescriptor" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"/>
+      <eAnnotations cellEditorValidatorClassnames="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.MinMaxJavaValidator:min:1" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+   </objectsToAttach>    
+   <objectsToAttach name="verticalSpan" unsettable="true" xmi:id="_eStructuralFeatures3" xsi:type="ecore:EReference">
+      <eAnnotations propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridDataSpanPropertyDescriptor" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"/>
+      <eAnnotations cellEditorValidatorClassnames="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.MinMaxJavaValidator:min:1" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>      
+   </objectsToAttach>       
 </change:ChangeDescription>

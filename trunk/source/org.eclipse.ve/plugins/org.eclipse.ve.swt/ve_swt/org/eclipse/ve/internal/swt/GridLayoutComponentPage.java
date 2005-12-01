@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.20 $  $Date: 2005-11-14 17:03:33 $ 
+ *  $Revision: 1.21 $  $Date: 2005-12-01 20:19:43 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -595,25 +597,60 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		}
 		return UnexecutableCommand.INSTANCE;
 	}
+	
+	protected Command createSpanSpinnerCommand(List editparts, EStructuralFeature sf, int spinnerValue ) {
+		if (!editparts.isEmpty()) {
+			EditPart parentEditPart = ((EditPart) editparts.get(0)).getParent();	// We know they all have the same parent.
+			CompositeContainerPolicy cp = new CompositeContainerPolicy(EditDomain.getEditDomain(parentEditPart));
+			cp.setContainer(parentEditPart.getModel());
+			GridLayoutPolicyHelper helper = new GridLayoutPolicyHelper(cp);
+			helper.startRequest();
+			for (int i = 0; i < editparts.size(); i++) {
+				EditPart editpart = (EditPart)editparts.get(i);
+				
+				EObject control = (EObject)editpart.getModel();
+				if (control != null) {
+					Point spanTo;
+					boolean horizontalSpan = "horizontalSpan".equals(sf.getName());
+					if (horizontalSpan)
+						spanTo = new Point(spinnerValue, 0);
+					else
+						spanTo = new Point(0, spinnerValue);
+					helper.spanChild(control, spanTo, horizontalSpan ? PositionConstants.EAST : PositionConstants.SOUTH, null);
+				}
+			}
+			if (!restoreAllButton.getEnabled())
+				restoreAllButton.setEnabled(true);
+			return helper.stopRequest();
+		}
+		return UnexecutableCommand.INSTANCE;
+	}
+	
 
 	/*
 	 * Return the command to cancel the GridData settings for this control
 	 */
 	protected Command createRestoreDefaultsCommand(List editparts) {
 		if (!editparts.isEmpty()) {
-			CommandBuilder cb = new CommandBuilder();
+			EditPart parentEditPart = ((EditPart) editparts.get(0)).getParent();	// We know they all have the same parent.
+			CompositeContainerPolicy cp = new CompositeContainerPolicy(EditDomain.getEditDomain(parentEditPart));
+			cp.setContainer(parentEditPart.getModel());
+			GridLayoutPolicyHelper helper = new GridLayoutPolicyHelper(cp);
+			helper.startRequest();
+			RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(parentEditPart), null, false);
 			for (int i = 0; i < editparts.size(); i++) {
 				EditPart editpart = (EditPart) editparts.get(i);
 				EObject control = (EObject) editpart.getModel();
 				if (control != null) {
 					if (control.eIsSet(sfControlLayoutData)) {
-						RuledCommandBuilder componentCB = new RuledCommandBuilder(EditDomain.getEditDomain(editpart), null, false);
+						helper.spanChild(control, new Point(1,0), PositionConstants.EAST, null);
+						helper.spanChild(control, new Point(0,1), PositionConstants.SOUTH, null);
 						componentCB.cancelAttributeSetting(control, sfControlLayoutData);
-						cb.append(componentCB.getCommand());
 					}
 				}
 			}
-			return cb.getCommand();
+			componentCB.append(helper.stopRequest());
+			return componentCB.getCommand();
 		}
 		return UnexecutableCommand.INSTANCE;
 	}
@@ -779,7 +816,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 				int value = horizontalSpanSpinner.getSelection();
 				if (value != horizontalSpanValue) {
 					horizontalSpanValue = value;
-					execute(createSpinnerCommand(getSelectedObjects(), sfHorizontalSpan, value));
+					execute(createSpanSpinnerCommand(getSelectedObjects(), sfHorizontalSpan, value));
 				}
 			}
 		});
@@ -789,7 +826,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 				int value = verticalSpanSpinner.getSelection();
 				if (value != verticalSpanValue) {
 					verticalSpanValue = value;
-					execute(createSpinnerCommand(getSelectedObjects(), sfVerticalSpan, value));
+					execute(createSpanSpinnerCommand(getSelectedObjects(), sfVerticalSpan, value));
 				}
 			}
 		});

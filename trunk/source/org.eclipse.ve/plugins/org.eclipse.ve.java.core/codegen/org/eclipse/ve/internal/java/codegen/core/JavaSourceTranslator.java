@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.core;
 /*
  *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.95 $  $Date: 2005-11-17 23:52:33 $ 
+ *  $Revision: 1.96 $  $Date: 2005-12-01 20:19:39 $ 
  */
 import java.text.MessageFormat;
 import java.util.*;
@@ -455,28 +455,28 @@ IDiagramSourceDecoder fSourceDecoder = null;
 				//      recursivly
 				synchronized(fSrcSync.getLockObject()){
 
-					// We have to call takeCurrentSnapShot to clear events properly
-					monitor.subTask(CodegenMessages.JavaSourceTranslator_2); 
-					boolean reloadRequired = takeCurrentSnapshot(editorState, allDocEvents, workingCopy) ;
-					monitor.worked(1);				
-					reloadRequired |= ((fBeanModel == null) && !floadInProgress) ;				
-					if (reloadRequired) {
-						Reload(fDisplay, new SubProgressMonitor(monitor,2));
-					} else {
-						if (currentSource == null || monitor.isCanceled()) {
-							processCancel(editorState);
-							return;
-						}
-						
-						monitor.subTask(CodegenMessages.JavaSourceTranslator_3); 
-						CompilationUnit ast = parse(currentSource, new SubProgressMonitor(monitor, 3));
-						monitor.worked(1);
-	
-						if (monitor.isCanceled()) {
-							processCancel(editorState);
-							return;
-						}
-	
+				// We have to call takeCurrentSnapShot to clear events properly
+				monitor.subTask(CodegenMessages.JavaSourceTranslator_2); 
+				boolean reloadRequired = takeCurrentSnapshot(editorState, allDocEvents, workingCopy) ;
+				monitor.worked(1);				
+				reloadRequired |= ((fBeanModel == null) && !floadInProgress) ;				
+				if (reloadRequired) {
+					Reload(fDisplay, new SubProgressMonitor(monitor,2));
+				} else {
+					if (currentSource == null || monitor.isCanceled()) {
+						processCancel(editorState);
+						return;
+					}
+					
+					monitor.subTask(CodegenMessages.JavaSourceTranslator_3); 
+					CompilationUnit ast = parse(currentSource, new SubProgressMonitor(monitor, 3));
+					monitor.worked(1);
+
+					if (monitor.isCanceled()) {
+						processCancel(editorState);
+						return;
+					}
+
 						// TODO Adapters will not react for GUI deltas !!!
 						if (fBeanModel!=null)
 							fBeanModel.setState(IBeanDeclModel.BDM_STATE_UPDATING_JVE_MODEL, true);
@@ -1378,7 +1378,8 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 		if (Display.getCurrent()==null)
 			primDoSave(monitor);
 		else {
-			monitor.beginTask(CodegenEditorPartMessages.JavaSourceTranslator_18,1);
+			if (monitor != null)
+				monitor.beginTask(CodegenEditorPartMessages.JavaSourceTranslator_18,1);
 			//TODO this may cause a window where the cache will not match the model at the time of save
 			Job job = new ReverseParserJob(fFile, CodegenEditorPartMessages.JavaSourceTranslator_18) {
 				protected IStatus doRun(IProgressMonitor monitor) {
@@ -1401,8 +1402,9 @@ public IWorkingCopyProvider getWorkingCopyProvider() {
 				}
 			
 			});
-			job.schedule();			
-			monitor.done();
+			job.schedule();	
+			if (monitor != null)
+				monitor.done();
 		}
 	}
 

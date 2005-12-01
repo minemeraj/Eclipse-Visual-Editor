@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.9 $  $Date: 2005-11-04 17:30:48 $ 
+ *  $Revision: 1.10 $  $Date: 2005-12-01 20:19:40 $ 
  */
 
 
@@ -125,6 +125,27 @@ public abstract class LayoutPolicyHelper implements ILayoutPolicyHelper {
 	 */
 	public Command getOrphanConstraintsCommand(List constraintComponents) {
 		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getDeleteDependentCommand(java.util.List)
+	 */
+	public Command getDeleteDependentCommand(List children) {
+		return policy.getDeleteDependentCommand(children).getCommand();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getDeleteDependentCommand(java.lang.Object)
+	 */
+	public Command getDeleteDependentCommand(Object child) {
+		return policy.getDeleteDependentCommand(child).getCommand();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getMoveChildrenCommand(java.util.List, java.lang.Object)
+	 */
+	public Command getMoveChildrenCommand(List children, Object beforeChild) {
+		return policy.getMoveChildrenCommand(children, beforeChild);
 	}
 
 }

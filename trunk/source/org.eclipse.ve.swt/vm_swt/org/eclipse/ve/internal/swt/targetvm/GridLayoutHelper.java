@@ -238,6 +238,12 @@ public class GridLayoutHelper {
 		}
 
 		/* Column widths */
+		if (rowCount == 0) {
+			// There are no rows/columns if there are no rows.
+			widths = new int[0];
+			heights = new int[0];
+			return;	
+		}
 		int availableWidth = width - fGridLayout.horizontalSpacing * (columnCount - 1) - (fGridLayout.marginLeft + fGridLayout.marginWidth * 2 + fGridLayout.marginRight);
 		int expandCount = 0;
 		widths = new int[columnCount];

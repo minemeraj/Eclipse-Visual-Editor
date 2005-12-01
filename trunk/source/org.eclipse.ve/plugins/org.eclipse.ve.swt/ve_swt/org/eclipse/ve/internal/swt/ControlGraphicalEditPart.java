@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.39 $ $Date: 2005-10-20 22:30:50 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.40 $ $Date: 2005-12-01 20:19:43 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -105,7 +105,6 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 	}
 	
 	public void activate() {
-		super.activate();
 		
 		if (!transparent) {
 			imageFigureController.setImageNotifier(getVisualComponent());
@@ -126,7 +125,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		errorNotifier.addErrorNotifier((IErrorNotifier) EcoreUtil.getExistingAdapter((Notifier) getModel(), IErrorNotifier.ERROR_NOTIFIER_TYPE));	// This will signal initial severity if not none.
 		errorNotifier.addErrorNotifier(otherNotifier);
 		
-		((ToolTipContentHelper) getFigure().getToolTip()).activate();
+		super.activate();		
 	}
 	
 	public void setTransparent(boolean aBool){
@@ -134,15 +133,13 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 	}
 	
 	public void deactivate() {
-		((ToolTipContentHelper) getFigure().getToolTip()).deactivate();
-		
+		super.deactivate();		
 		if (imageFigureController != null)
 			imageFigureController.deactivate();
 		if (fBeanProxyErrorListener != null) {
 			errorNotifier.removeErrorListener(fBeanProxyErrorListener);
 		}
 		errorNotifier.dispose();
-		super.deactivate();
 	}
 
 	/**

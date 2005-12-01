@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 
 /*
- * $RCSfile: GridLayoutEditPolicy.java,v $ $Revision: 1.44 $ $Date: 2005-11-11 23:20:56 $
+ * $RCSfile: GridLayoutEditPolicy.java,v $ $Revision: 1.45 $ $Date: 2005-12-01 20:19:43 $
  */
 import java.util.*;
 
@@ -28,11 +28,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.java.JavaHelpers;
+import org.eclipse.jem.java.JavaRefFactory;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.commands.NoOpCommand;
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IContainmentHandler.StopRequestException;
+import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.visual.VisualContainerPolicy;
@@ -50,12 +54,17 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	public static final String LAYOUT_ID = "org.eclipse.swt.layout.GridLayout"; //$NON-NLS-1$
 
 	public static final String REQ_GRIDLAYOUT_SPAN = "GridLayout span cells"; //$NON-NLS-1$
+	
+	static final int DEFAULT_CELL_WIDTH = 40;
+	static final int DEFAULT_CELL_HEIGHT = 35;
 
 	// private final int DEFAULT_EDGE = 5;
 	// private final int HEIGHT_PADDING = 4;
 
 	boolean fShowGrid = false;
 
+	JavaHelpers controlType;
+	
 	GridLayoutPolicyHelper helper = new GridLayoutPolicyHelper();
 
 	private GridLayoutGridFigure fGridLayoutGridFigure;
@@ -64,15 +73,13 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 
 	private GridLayoutFeedbackFigure fGridLayoutCellFigure;
 
-	private GridLayoutRowFigure fRowFigure = null;
-
-	private GridLayoutColumnFigure fColumnFigure = null;
+	private IFigure fRowColFigure = null;
 
 	private GridController gridController;
 
 	private IVisualComponentListener fGridComponentListener;
 
-	private org.eclipse.ve.internal.cde.core.ContainerPolicy containerPolicy;
+	private VisualContainerPolicy containerPolicy;
 
 	protected FigureListener hostFigureListener = new FigureListener() {
 
@@ -160,6 +167,9 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	/*
 	 * Class used to identify the type of request relative to GridLayout.
 	 */
+	
+	static final int NO_ADD = -1;
+	
 	static final int INSERT_COLUMN = 0;
 
 	static final int INSERT_COLUMN_WITHIN_ROW = 1;
@@ -169,20 +179,20 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	static final int ADD_COLUMN = 3;
 
 	static final int ADD_ROW = 4;
+	
+	static final int ADD_ROW_COL = 5;
 
-	static final int REPLACE_FILLER = 5;
-
-	static final int ADD = 6;
+	static final int REPLACE_FILLER = 6;
 
 	static final int ADD_TO_EMPTY_CELL = 7;
 
-	class GridLayoutRequest {
+	public static class GridLayoutRequest {
 
-		int type = ADD;
+		int type;
 
-		int column = 0;
+		int column;
 
-		int row = 0;
+		int row;
 	}
 
 	/**
@@ -195,7 +205,8 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 
 	public void setHost(EditPart host) {
 		super.setHost(host);
-		helper.setEditDomain(EditDomain.getEditDomain(this.getHost()));
+		EditDomain editDomain = containerPolicy.getEditDomain();
+		controlType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Control", EMFEditDomainHelper.getResourceSet(editDomain));
 	}
 
 	public void activate() {
@@ -280,14 +291,8 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		Point startPosition = mapFigureToModel(spanToPosition.x - dim.width - handleSizeOffset, spanToPosition.y - dim.height - handleSizeOffset);
 		// Get the cell location of the child component
 		GraphicalEditPart ep = (GraphicalEditPart) editParts.get(0);
-		Point childPosition;
-		Point childCellLocation;
-		if (helper.getChildrenDimensions() != null)
-			childCellLocation = helper.getChildrenDimensions()[getHost().getChildren().indexOf(ep)].getLocation();
-		else {
-			childPosition = mapFigureToModel(ep.getContentPane().getBounds().getLocation());
-			childCellLocation = getGridLayoutGridFigure().getCellLocation(childPosition);
-		}
+		EObject child = (EObject) ep.getModel();
+		Point childCellLocation = helper.getChildDimensions(child).getLocation();
 		Point startCellLocation = getGridLayoutGridFigure().getCellLocation(startPosition);
 		// If the cell location where the pointer is located is different from the original cell location where we started,
 		// create the commands to change the gridwidth or gridheight
@@ -295,7 +300,9 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 				&& (spanToCellLocation.x != startCellLocation.x || spanToCellLocation.y != startCellLocation.y)) {
 			// Let the helper get the gridWidth or gridHeight commands based on the cell location
 			// where the pointer is and the span direction (EAST for gridwidth or SOUTH for gridheight)
-			return helper.getSpanChildrenCommand((EditPart) editParts.get(0), childCellLocation, spanToCellLocation, request.getResizeDirection());
+			helper.startRequest();
+			helper.spanChild(child, new Point(spanToCellLocation.x-childCellLocation.x+1, spanToCellLocation.y-childCellLocation.y+1), request.getResizeDirection(), null); 
+			return helper.stopRequest();
 		}
 		return NoOpCommand.INSTANCE;
 	}
@@ -323,7 +330,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		if (fGridLayoutGridFigure == null) {
 			IFigure f = ((GraphicalEditPart) getHost()).getContentPane();
 			int[][] layoutDimensions = null;
-			EObject[][] cellContents = null;
+			GridLayoutPolicyHelper.GridComponent[][] cellContents = null;
 			Rectangle layoutSpacing = null;
 			/*
 			 * If the container is empty, we can't depend on the layout dimensions or layout origin from the GridLayout, so we have nothing being
@@ -362,13 +369,9 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 			removeFeedback(fGridLayoutCellFigure);
 			fGridLayoutCellFigure = null;
 		}
-		if (fRowFigure != null) {
-			removeFeedback(fRowFigure);
-			fRowFigure = null;
-		}
-		if (fColumnFigure != null) {
-			removeFeedback(fColumnFigure);
-			fColumnFigure = null;
+		if (fRowColFigure != null) {
+			removeFeedback(fRowColFigure);
+			fRowColFigure = null;
 		}
 		super.eraseTargetFeedback(request);
 	}
@@ -394,15 +397,18 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 
 		// Get the cell location of the child component
 		GraphicalEditPart ep = (GraphicalEditPart) request.getEditParts().get(0);
-		Rectangle childRect = mapFigureToModel(ep.getContentPane().getBounds().getCopy());
+		EObject child = (EObject) ep.getModel();
+		Rectangle childDim = getHelper().getChildDimensions(child);
+		
 		// Get the start and end cell bounds in order to determine the entire bounds of the cell feedback figure.
-		Rectangle startCellBounds = getGridLayoutGridFigure().getCellBounds(childRect.getLocation());
+		Rectangle startCellBounds = getGridLayoutGridFigure().getCellBounds(childDim.getLocation());
+		Rectangle endCellChildBounds = getGridLayoutGridFigure().getCellBounds(childDim.getBottomRight().translate(-1,-1));	// This is the lower right of the child itself.
 		if (request.getResizeDirection() == PositionConstants.EAST || request.getResizeDirection() == PositionConstants.WEST) {
-			spanToPosition.y = childRect.y; // This forces us to not span north/south when going east/west.
+			spanToPosition.y = endCellChildBounds.y; // This forces us to not span north/south when going east/west. And it will make it tall enough that entire cell spanned height is covered.
 		} else {
-			spanToPosition.x = childRect.x; // This forces us to not span left/right when going north/south.
+			spanToPosition.x = endCellChildBounds.x+endCellChildBounds.width-1; // This forces us to not span left/right when going north/south. And it will make it wide enough that entire cell spanned width is covered.
 		}
-		Rectangle endCellBounds = getGridLayoutGridFigure().getCellBounds(spanToPosition);
+		Rectangle endCellBounds = getGridLayoutGridFigure().getCellBounds(getGridLayoutGridFigure().getCellLocation(spanToPosition));
 		if (endCellBounds == null || endCellBounds.x < startCellBounds.x || endCellBounds.y < startCellBounds.y) {
 			// End is not within a cell, or the end is before the start cell.
 			if (fGridLayoutSpanFigure != null) {
@@ -476,8 +482,16 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 
 	// modifying the feedback behavior from FlowLayoutEditPolicy
 
+	/*
+	 * this gets the location from the request and then makes it
+	 * absolute (relative to the bounds of the host figure). If
+	 * we didn't do this the point is relative to the viewport
+	 * that is displayed, not absolute wrt to the entire canvas. 
+	 */
 	private Point getLocationFromRequest(Request request) {
-		return ((DropRequest) request).getLocation();
+		Point loc = ((DropRequest) request).getLocation().getCopy();
+		getHostFigure().translateToRelative(loc);
+		return loc;
 	}
 
 	/**
@@ -488,49 +502,86 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		if (!fShowGrid)
 			addFeedback(getGridLayoutGridFigure());
 
-		if (fRowFigure != null) {
-			removeFeedback(fRowFigure);
-			fRowFigure = null;
+		if (fRowColFigure != null) {
+			removeFeedback(fRowColFigure);
+			fRowColFigure = null;
 		}
-		if (fColumnFigure != null) {
-			removeFeedback(fColumnFigure);
-			fColumnFigure = null;
+		
+		if (fGridLayoutCellFigure != null) {
+			removeFeedback(fGridLayoutCellFigure);
+			fGridLayoutCellFigure = null;
 		}
 
+		// We need to determine if true child is a control. If it is then continue, if not, then we have normal feedback and let container policy handle it.
+		try {
+			// First see if the true child is a control. If not, then let normal create processing handle it.
+			Object child;
+			if (request.getType().equals(RequestConstants.REQ_CREATE)) { 
+				child = ((CreateRequest) request).getNewObject();
+			} else if (request.getType().equals(RequestConstants.REQ_ADD) || request.getType().equals(RequestConstants.REQ_MOVE)) {
+				child = ((EditPart) ((ChangeBoundsRequest) request).getEditParts().get(0)).getModel();
+			} else
+				return;	// Anything else has no feedback.
+			Object trueChild = containerPolicy.getTrueChild(child, VisualContainerPolicy.CREATE_REQ, new CommandBuilder(), new CommandBuilder());
+			if (trueChild == null || !controlType.isInstance(trueChild))
+				return;	// No extra feedback.
+		} catch (StopRequestException e) {
+			return;
+		}
+		
 		Point position = getLocationFromRequest(request).getCopy();
 		Point positionModel = mapFigureToModel(position.getCopy());
 		GridLayoutRequest gridReq = createGridLayoutRequest(positionModel);
 
-		Rectangle cellBounds = getGridLayoutGridFigure().getCellBounds(positionModel);
+		Point cell = new Point(gridReq.column, gridReq.row);
+		Rectangle cellBounds = getGridLayoutGridFigure().getCellBounds(cell);
 
 		// Calculate the bounds of the target cell figure based on whether a column is added,
 		// row is added, or it's inserted before another control.
-		if (gridReq.type == INSERT_COLUMN) {
-			// If a column is added, show the target figure in between the two columns
-			showNewColumnFeedBack(positionModel);
-			Rectangle colFigBounds = fColumnFigure.getBounds();
-			mapModelToFigure(cellBounds);
-			cellBounds.width = 40;
-			cellBounds.x = colFigBounds.x + colFigBounds.width / 2 - cellBounds.width / 2;
-		} else if (gridReq.type == INSERT_ROW) {
-			// If a row is added, show the target figure in between the two rows
-			showNewRowFeedBack(positionModel);
-			Rectangle rowFigBounds = fRowFigure.getBounds();
-			mapModelToFigure(cellBounds);
-			cellBounds.height = 35;
-			cellBounds.y = rowFigBounds.y + rowFigBounds.height / 2 - cellBounds.height / 2;
-		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
-			// just the cell is selected. need to find out if replacing or inserting
-			mapModelToFigure(cellBounds);
-			showColumnFeedBackWithinARow(cellBounds);
-			Rectangle colFigBounds = fColumnFigure.getBounds();
-			cellBounds.width = 40;
-			cellBounds.x = colFigBounds.x + colFigBounds.width / 2 - cellBounds.width / 2;
-		} else if (gridReq.type == ADD || gridReq.type == ADD_COLUMN || gridReq.type == ADD_ROW) {
-			// No cell found, provide a default size and location.
-			cellBounds = new Rectangle(position.x - 6, position.y - 6, 40, 35);
-		} else {
-			mapModelToFigure(cellBounds);
+		switch (gridReq.type) {
+			case INSERT_COLUMN:
+				// If a column is added, show the target figure in between the two columns
+				showNewColumnFeedBack(gridReq.column);
+				Rectangle colFigBounds = fRowColFigure.getBounds();
+				mapModelToFigure(cellBounds);
+				cellBounds.width = DEFAULT_CELL_WIDTH;
+				if (cellBounds.height < 10)
+					cellBounds.expand(0, 20);
+				cellBounds.x = colFigBounds.x + colFigBounds.width / 2 - cellBounds.width / 2;
+				break;
+			case INSERT_ROW:
+				// If a row is added, show the target figure in between the two rows
+				showNewRowFeedBack(gridReq.row);
+				Rectangle rowFigBounds = fRowColFigure.getBounds();
+				mapModelToFigure(cellBounds);
+				cellBounds.height = DEFAULT_CELL_HEIGHT;
+				if (cellBounds.width < 10)
+					cellBounds.expand(20, 0);
+				cellBounds.y = rowFigBounds.y + rowFigBounds.height / 2 - cellBounds.height / 2;
+				break;
+			case INSERT_COLUMN_WITHIN_ROW:
+				// In case cell is spanned vertically we need to have the complete cellbounds.
+				showColumnFeedBackWithinARow(cellBounds);
+				mapModelToFigure(cellBounds);
+				colFigBounds = fRowColFigure.getBounds();
+				cellBounds.width = DEFAULT_CELL_WIDTH;
+				if (cellBounds.height < 10)
+					cellBounds.expand(0, 20);
+				cellBounds.x = colFigBounds.x + colFigBounds.width / 2 - cellBounds.width / 2;
+				break;
+			case ADD_COLUMN:
+			case ADD_ROW:
+			case ADD_ROW_COL:
+				showAddedCellFeedback(cellBounds);
+				colFigBounds = fRowColFigure.getBounds();
+				// Center the cell within these bounds.
+				cellBounds = colFigBounds.getCopy().shrink(ADDEDCELLBORDER, ADDEDCELLBORDER);
+				break;
+			case NO_ADD:
+				return;	// No feedback.
+			default:
+				mapModelToFigure(cellBounds.expand(cellBounds.width < 10 ? 20 : 0, cellBounds.height < 10 ? 20 : 0));
+				break;
 		}
 
 		if (fGridLayoutCellFigure == null) {
@@ -589,41 +640,37 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	}
 
 	protected Command getDeleteDependantCommand(Request aRequest) {
-		// Get the commands for doing the delete
-		Command cmd = containerPolicy.getCommand(aRequest);
-
 		// Get the commands to insert filler labels into the cells where the control used to be
-		if (cmd != null && aRequest instanceof ForwardedRequest) {
+		if (aRequest instanceof ForwardedRequest) {
 			EditPart editPart = ((ForwardedRequest) aRequest).getSender();
-			CommandBuilder cb = new CommandBuilder();
-			cb.append(helper.getFillerLabelsForDeletedControlCommands((EObject) editPart.getModel()));
-			cb.append(cmd);
-			return cb.getCommand();
-		}
-		return cmd != null ? cmd : UnexecutableCommand.INSTANCE;
+			helper.startRequest();
+			helper.deleteChild((EObject) editPart.getModel());
+			return helper.stopRequest();
+		} else
+			return UnexecutableCommand.INSTANCE;
 	}
 
 	/**
 	 * Show a new yellow row inserted into the grid near the row closest to position
 	 */
-	protected void showNewRowFeedBack(Point position) {
-		Rectangle rect = fGridLayoutGridFigure.getRowRectangle(position.y);
+	protected void showNewRowFeedBack(int row) {
+		Rectangle rect = fGridLayoutGridFigure.getRowRectangle(row);
 		rect.translate(-2, -3);
 		rect.width += 4;
 		rect.height = 6;
-		fRowFigure = new GridLayoutRowFigure(mapModelToFigure(rect));
-		addFeedback(fRowFigure);
+		fRowColFigure = new GridLayoutRowFigure(mapModelToFigure(rect));
+		addFeedback(fRowColFigure);
 	}
 
 	/**
 	 * Show a new yellow column inserted into the grid near the column closest to position
 	 */
-	protected void showNewColumnFeedBack(Point position) {
-		Rectangle rect = fGridLayoutGridFigure.getColumnRectangle(position.x);
+	protected void showNewColumnFeedBack(int col) {
+		Rectangle rect = fGridLayoutGridFigure.getColumnRectangle(col);
 		rect.x -= 3;
 		rect.width = 6;
-		fColumnFigure = new GridLayoutColumnFigure(mapModelToFigure(rect));
-		addFeedback(fColumnFigure);
+		fRowColFigure = new GridLayoutColumnFigure(mapModelToFigure(rect));
+		addFeedback(fRowColFigure);
 	}
 
 	/**
@@ -633,8 +680,23 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 		cellBounds = cellBounds.getCopy();
 		cellBounds.x -= 3; // start to the right by three from side of cell.
 		cellBounds.width = 6; // But only six wide. So it will be centered over the right side of the cell.
-		fColumnFigure = new GridLayoutColumnFigure(cellBounds);
-		addFeedback(fColumnFigure);
+		fRowColFigure = new GridLayoutColumnFigure(mapModelToFigure(cellBounds));
+		addFeedback(fRowColFigure);
+	}
+	
+	private static final int ADDEDCELLBORDER = 3;	// How much to expand cell for added cell to draw the new border.
+	
+	/**
+	 * Show the adding cell outside figure feedback.
+	 * @param cellBounds
+	 * 
+	 * @since 1.2.0
+	 */
+	protected void showAddedCellFeedback(Rectangle cellBounds) {
+		cellBounds = cellBounds.getExpanded(cellBounds.width < 10 ? 20 : 0, cellBounds.height < 10 ? 20 : 0);
+		fRowColFigure = new GridLayoutAddedCellFeedbackFigure();
+		fRowColFigure.setBounds(mapModelToFigure(cellBounds));
+		addFeedback(fRowColFigure);
 	}
 
 	protected Command createAddCommand(EditPart child, Object constraint) {
@@ -656,121 +718,80 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	protected Command getCreateCommand(CreateRequest request) {
 		if (fGridLayoutGridFigure == null)
 			return UnexecutableCommand.INSTANCE;
-		List children = getHost().getChildren();
-		if (children.isEmpty()) // If no children, just add to the end
-			return containerPolicy.getCreateCommand(request.getNewObject(), null).getCommand();
-
+		
+		// Since we need to work with true EObjects for the grid to work correctly, we need to bypass the normal processing and 
+		// get the real EObject child, if different than the new object.
+		EObject trueEObject;
+		try {
+			// First see if the true child is a control. If not, then let normal create processing handle it.
+			Object trueChild = containerPolicy.getTrueChild(request.getNewObject(), VisualContainerPolicy.CREATE_REQ, new CommandBuilder(), new CommandBuilder());
+			if (trueChild == null || !controlType.isInstance(trueChild))
+				return containerPolicy.getCreateCommand(request.getNewObject(), null).getCommand();	// Do normal, the container policy will handle it.
+			trueEObject = (EObject) trueChild;
+		} catch (StopRequestException e) {
+			return UnexecutableCommand.INSTANCE;
+		}
+		
 		Point position = mapFigureToModel(getLocationFromRequest(request).getCopy());
 		GridLayoutRequest gridReq = createGridLayoutRequest(position);
-		GraphicalEditPart editPart = null;
 		Point cell = new Point(gridReq.column, gridReq.row);
-		int epIndex = helper.getChildIndexAtCell(cell);
-		if (epIndex != -1)
-			editPart = (GraphicalEditPart) children.get(epIndex);
+		
+		Object requestType = request.getType();
+		
 		CommandBuilder cb = new CommandBuilder();
-
-		if (gridReq.type == REPLACE_FILLER) {
-			// Just replace a filler label with the new control
-			cb.append(containerPolicy.getCreateCommand(request.getNewObject(), editPart.getModel()).getCommand());
-			cb.append(containerPolicy.getDeleteDependentCommand(editPart.getModel()).getCommand());
-
-		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
-			cb.append(helper.createNumColumnsCommand(helper.getNumColumns() + 1)); // First add another column to the grid
-			cb.append(helper.createInsertColumnWithinRowCommands(cell.x, cell.y, request.getNewObject(), request)); // then add empty labels at the
-																													// end of each row
-
-		} else if (gridReq.type == INSERT_COLUMN || gridReq.type == ADD_COLUMN) {
-			boolean isLastColumn = false;
-			int column = getGridLayoutGridFigure().getNearestColumn(position.x);
-			// Not the last column
-			if (column != helper.getNumColumns()) {
-				epIndex = helper.getChildIndexAtCell(new Point(column, cell.y));
-				// Not the last control
-				if (epIndex != -1)
-					editPart = (GraphicalEditPart) children.get(epIndex);
-			} else {
-				// Last column... look for the first control on the next row
-				epIndex = helper.getChildIndexAtCell(new Point(0, cell.y + 1));
-				if (epIndex != -1 && epIndex < children.size())
-					editPart = (GraphicalEditPart) children.get(epIndex);
-				else
-					editPart = null;
-				// Insert before the first column of each row since we actually
-				// adding to the end of each row
-				column = 0;
-				cell.y = cell.y + 1;
-				isLastColumn = true;
-			}
-			cb.append(helper.createNumColumnsCommand(helper.getNumColumns() + 1)); // First add another column to the grid
-			cb.append(helper.createInsertColumnCommands(request.getNewObject(), request, column, cell.y, isLastColumn)); // then add empty labels
-																															// at this column position
-
-		} else if (gridReq.type == INSERT_ROW || gridReq.type == ADD_ROW) {
-			int row = getGridLayoutGridFigure().getNearestRow(position.y);
-			// Insert a row by adding labels and the new object at the appropriate column position
-			cb.append(helper.createFillerLabelsForNewRowCommand(request.getNewObject(), row, cell.x, request));
-
-		} else if (gridReq.type == ADD_TO_EMPTY_CELL) {
-			// Add to an empty cell at a column position
-			cb.append(helper.createAddToEmptyCellCommand(request.getNewObject(), cell, request));
+		helper.startRequest();
+		switch (gridReq.type) {
+			case REPLACE_FILLER:
+				helper.replaceFiller(trueEObject, request.getNewObject(), requestType, cell);
+				break;
+			case INSERT_COLUMN_WITHIN_ROW:
+				helper.insertColWithinRow(cell);
+				helper.replaceFillerOrEmpty(trueEObject, request.getNewObject(), requestType, cell);
+				break;
+			case INSERT_COLUMN:
+			case ADD_COLUMN:
+				helper.createNewCol(cell.x);
+				helper.replaceFillerOrEmpty(trueEObject, request.getNewObject(), requestType, cell);
+				break;
+			case INSERT_ROW:
+			case ADD_ROW:
+				helper.createNewRow(cell.y);
+				helper.replaceFillerOrEmpty(trueEObject, request.getNewObject(), requestType, cell);
+				break;
+			case ADD_TO_EMPTY_CELL:
+				helper.replaceEmptyCell(trueEObject, request.getNewObject(), requestType, cell);
+				break;
+			case ADD_ROW_COL:
+				cell.setLocation(helper.getNumColumns(), helper.getNumRows());
+				helper.createNewCol(cell.x);
+				if (cell.x != 0 || cell.y != 0)
+					helper.createNewRow(cell.y);	// If other than (0,0) for add row col, we need a new row. If it was (0,0) then we are adding the first entry to the grid.
+				helper.replaceFillerOrEmpty(trueEObject, request.getNewObject(), requestType, cell);
+				break;
+			case NO_ADD:
+				return UnexecutableCommand.INSTANCE;
 		}
-
+		
+		cb.append(helper.stopRequest());
+		
 		if (cb.isEmpty())
 			return UnexecutableCommand.INSTANCE;
 		return cb.getCommand();
 	}
 
 	private GridLayoutRequest createGridLayoutRequest(Point position) {
-		Point cell = getGridLayoutGridFigure().getCellLocation(position);
-		GridLayoutRequest gridReq = new GridLayoutRequest(); // Create request. default is PUT request
-		gridReq.column = cell.x;
-		gridReq.row = cell.y;
-
-		if (cell.x == -1 && cell.y == -1)
-			gridReq.type = ADD;
-		else if (cell.x == -1)
-			gridReq.type = ADD_COLUMN;
-		else if (cell.y == -1)
-			gridReq.type = ADD_ROW;
-		else if (fGridLayoutGridFigure.isPointerNearAColumn(position.x))
-			gridReq.type = INSERT_COLUMN;
-		else if (fGridLayoutGridFigure.isPointerNearARow(position.y))
-			gridReq.type = INSERT_ROW;
-		else {
-			EditPart editPart = null;
-			Point cellLocation = new Point(cell.x, cell.y);
-			int indexBeforeEP = helper.getChildIndexAtCell(cellLocation);
-			if (indexBeforeEP != -1) {
-				editPart = (EditPart) getHost().getChildren().get(indexBeforeEP);
-				if (editPart != null) {
-					if (helper.isFillerLabelAtCell(cellLocation))
-						gridReq.type = REPLACE_FILLER;
-					else
-						gridReq.type = INSERT_COLUMN_WITHIN_ROW;
-				}
-			} else
-				gridReq.type = ADD_TO_EMPTY_CELL;
-		}
-		return gridReq;
+		return getGridLayoutGridFigure().getGridLayoutRequest(position, helper);
 	}
 
 	protected Command getOrphanChildrenCommand(Request request) {
-		// Get the commands to do the orphaning
-		Command cmd = containerPolicy.getCommand(request);
-
 		// Get the commands to insert filler labels into the cells where the control used to be
-		if (cmd != null && request instanceof GroupRequest) {
-			List editparts = ((GroupRequest) request).getEditParts();
-			// Only allow one object to be orphaned
-			if (editparts.size() > 1)
-				return UnexecutableCommand.INSTANCE;
-			EditPart editPart = (EditPart) editparts.iterator().next();
-			CommandBuilder cb = new CommandBuilder();
-			cb.append(helper.getFillerLabelsForDeletedControlCommands((EObject) editPart.getModel()));
-			cb.append(cmd);
-			return cb.getCommand();
-		}
-		return cmd != null ? cmd : UnexecutableCommand.INSTANCE;
+		if (request instanceof GroupRequest) {
+			helper.startRequest();
+			List children = VisualContainerPolicy.getChildren((GroupRequest) request);
+			helper.orphanChildren(children);
+			return helper.stopRequest();
+		} else
+			return UnexecutableCommand.INSTANCE;
 	}
 
 	protected Command getAddCommand(Request request) {
@@ -787,135 +808,84 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	 * from.
 	 */
 	protected Command getMoveChildrenCommand(Request request) {
-		List children = getHost().getChildren();
 		if (fGridLayoutGridFigure == null || !(request instanceof ChangeBoundsRequest))
 			return UnexecutableCommand.INSTANCE;
 		ChangeBoundsRequest req = (ChangeBoundsRequest) request;
 		List editparts = req.getEditParts();
 		// Only allow one object to be moved
 		if (editparts.size() > 1)
-			return null;
-
-		Point position = mapFigureToModel(req.getLocation().getCopy());
+			return UnexecutableCommand.INSTANCE;
+		
+		EObject trueEObject;
+		Object child;
+		try {
+			// First see if the true child is a control. If not, then let normal create processing handle it.
+			child = ((EditPart) editparts.get(0)).getModel();
+			Object trueChild = containerPolicy.getTrueChild(child, VisualContainerPolicy.ADD_REQ, new CommandBuilder(), new CommandBuilder());
+			if (trueChild == null || !controlType.isInstance(trueChild))
+				return containerPolicy.getAddCommand(Collections.singletonList(child), null).getCommand();	// Do normal, the container policy will handle it.
+			trueEObject = (EObject) trueChild;
+		} catch (StopRequestException e) {
+			return UnexecutableCommand.INSTANCE;
+		}
+		
+		Point position = mapFigureToModel(getLocationFromRequest(request).getCopy());
 		GridLayoutRequest gridReq = createGridLayoutRequest(position);
 		Point cell = new Point(gridReq.column, gridReq.row);
-
-		int numColumns = helper.getNumColumns();
-		EditPart childEP = (EditPart) editparts.get(0), beforeEP = null;
-		int childIndex = children.indexOf(childEP);
-		int epIndex = helper.getChildIndexAtCell(cell);
-		if (epIndex != -1)
-			beforeEP = (EditPart) children.get(epIndex);
+		
+		Object requestType = request.getType();
+		
 		CommandBuilder cb = new CommandBuilder();
-
-		// No change if selected editpart and the target editpart are the same.
-		if (childEP == beforeEP && gridReq.type == ADD)
-			return UnexecutableCommand.INSTANCE;
-		EObject child = (EObject) childEP.getModel();
-
-		// If child is not one of the children this is an add request (i.e. orphaned from one container and added to this container).
-		if (childIndex == -1 && children.isEmpty())
-			return containerPolicy.getAddCommand(Collections.singletonList(child), null).getCommand();
-
-		// If it's an add child request, see if it's a valid add (can only add composites, not controls).
-		if (childIndex == -1
-				&& !(BeanSWTUtilities.isValidBeanLocation(containerPolicy.getEditDomain(), (IJavaObjectInstance) child, (EObject) containerPolicy
-						.getContainer())))
-			return UnexecutableCommand.INSTANCE;
-
-		// Replace a filler label with the moved control
-		if (gridReq.type == REPLACE_FILLER) {
-			cb.append(containerPolicy.getMoveChildrenCommand(Collections.singletonList(child), beforeEP.getModel()));
-			cb.append(containerPolicy.getDeleteDependentCommand(beforeEP.getModel()).getCommand());
-
-			// Insert the child within the row, adding one column
-		} else if (gridReq.type == INSERT_COLUMN_WITHIN_ROW) {
-			cb.append(helper.createNumColumnsCommand(++numColumns)); // First add another column to the grid
-			cb.append(helper.createInsertColumnWithinRowCommands(cell.x, cell.y, child, request)); // then add empty labels at the end of each row
-
-			// Insert the child within the row, adding a full column at the mouse position
-		} else if (gridReq.type == INSERT_COLUMN || gridReq.type == ADD_COLUMN) {
-			boolean isLastColumn = false;
-			int column = getGridLayoutGridFigure().getNearestColumn(position.x);
-			// Not the last column
-			if (column != helper.getNumColumns()) {
-				epIndex = helper.getChildIndexAtCell(new Point(column, cell.y));
-				// Not the last control
-				if (epIndex != -1)
-					beforeEP = (GraphicalEditPart) children.get(epIndex);
-			} else {
-				// Last column... look for the first control on the next row
-				epIndex = helper.getChildIndexAtCell(new Point(0, cell.y + 1));
-				if (epIndex != -1 && epIndex < children.size())
-					beforeEP = (GraphicalEditPart) children.get(epIndex);
-				else
-					beforeEP = null;
-				// Insert before the first column of each row since we actually
-				// adding to the end of each row
-				column = 0;
-				cell.y = cell.y + 1;
-				isLastColumn = true;
-			}
-			cb.append(helper.createNumColumnsCommand(++numColumns)); // First add another column to the grid
-			cb.append(helper.createInsertColumnCommands(child, request, column, cell.y, isLastColumn)); // then add empty labels at this column
-																										// position
-
-		} else if (gridReq.type == INSERT_ROW || gridReq.type == ADD_ROW) {
-			int row = getGridLayoutGridFigure().getNearestRow(position.y);
-			// Insert a row by adding labels and the new object at the appropriate column position
-			cb.append(helper.createFillerLabelsForNewRowCommand(child, row, cell.x, request));
-
-		} else if (gridReq.type == ADD_TO_EMPTY_CELL) {
-			// Add to an empty cell at a column position
-			cb.append(helper.createAddToEmptyCellCommand(child, cell, request));
+		helper.startRequest();
+		switch (gridReq.type) {
+			case REPLACE_FILLER:
+				helper.replaceFiller(trueEObject, child, requestType, cell);
+				break;
+			case INSERT_COLUMN_WITHIN_ROW:
+				helper.insertColWithinRow(cell);
+				helper.replaceFillerOrEmpty(trueEObject, child, requestType, cell);
+				break;
+			case INSERT_COLUMN:
+			case ADD_COLUMN:
+				helper.createNewCol(cell.x);
+				helper.replaceFillerOrEmpty(trueEObject, child, requestType, cell);
+				break;
+			case INSERT_ROW:
+			case ADD_ROW:
+				helper.createNewRow(cell.y);
+				helper.replaceFillerOrEmpty(trueEObject, child, requestType, cell);
+				break;
+			case ADD_TO_EMPTY_CELL:
+				helper.replaceEmptyCell(trueEObject, child, requestType, cell);
+				break;
+			case ADD_ROW_COL:
+				cell.setLocation(helper.getNumColumns(), helper.getNumRows());
+				helper.createNewCol(cell.x);
+				if (cell.x != 0 || cell.y != 0)
+					helper.createNewRow(cell.y);	// If other than (0,0) for add row col, we need a new row. If it was (0,0) then we are adding the first entry to the grid.
+				helper.replaceFillerOrEmpty(trueEObject, child, requestType, cell);
+				break;
+			case NO_ADD:
+				return UnexecutableCommand.INSTANCE;
 		}
-
-		// This next block of code is to handle moving a child only an assumes the child exists in this container.
-		if (childIndex != -1) {
-			// Remove columns and/or rows that are empty or contain all filler labels after the move
-			Rectangle rect = helper.getChildrenDimensions()[childIndex];
-			// If this control spans horizontally and/or vertically, reset to default values
-			if (rect.width != helper.getDefaultHorizontalSpan())
-				cb.append(helper.createHorizontalSpanDefaultCommand(child));
-			if (rect.height != helper.getDefaultVerticalSpan())
-				cb.append(helper.createVerticalSpanDefaultCommand(child));
-
-			// Only interested in removing the row if the moved control cell and target cell is not the same row.
-			Command rowCmds = null, columnCmds = null;
-			if (rect.y != cell.y) {
-				rowCmds = helper.createRemoveRowCommand(rect.y, child);
-				if (rowCmds != null)
-					cb.append(rowCmds);
-			}
-			// Only interested in removing the column if the moved control cell and target cell is not the same column.
-			if (rect.x != cell.x) {
-				columnCmds = helper.createRemoveColumnCommand(rect.x, child, helper.getNumColumns());
-				if (columnCmds != null)
-					cb.append(columnCmds);
-			}
-			// If no rows or colums to remove, add a filler label to fill the cell of the moved control.
-			if (rowCmds == null && columnCmds == null) {
-				cb.append(helper.createFillerLabelsForMovedControlCommands(child, beforeEP != null ? (EObject) beforeEP.getModel() : null));
-			}
-		}
+		
+		cb.append(helper.stopRequest());
+		
 		if (cb.isEmpty())
 			return UnexecutableCommand.INSTANCE;
 		return cb.getCommand();
 	}
 
 	public Rectangle getFullCellBounds(EditPart child) {
-		Rectangle bounds = new Rectangle();
-		List children = getHost().getChildren();
-		if (children.isEmpty() || fGridLayoutGridFigure == null)
-			return bounds;
-		int childIndex = children.indexOf(child);
-		if (childIndex != -1) {
-			Rectangle[] dims = helper.getChildrenDimensions();
-			if (childIndex < dims.length)
-				bounds = getGridLayoutGridFigure().getGridBroundsForCellBounds(dims[childIndex]);
-			else
-				bounds = new Rectangle();
-		}
+		if (getGridLayoutGridFigure() == null)
+			return new Rectangle();
+		Rectangle dims = helper.getChildDimensions((EObject) child.getModel());
+		Rectangle bounds;
+		if (dims != null) {
+			bounds = getGridLayoutGridFigure().getGridBroundsForCellBounds(dims);
+		} else
+			bounds = new Rectangle();
+
 		return mapModelToFigure(bounds);
 	}
 

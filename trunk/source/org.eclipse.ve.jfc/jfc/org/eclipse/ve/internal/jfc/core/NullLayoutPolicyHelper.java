@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: NullLayoutPolicyHelper.java,v $
- *  $Revision: 1.10 $  $Date: 2005-11-04 17:30:48 $ 
+ *  $Revision: 1.11 $  $Date: 2005-12-01 20:19:40 $ 
  */
 
 import java.util.*;
@@ -197,7 +197,21 @@ protected Command createChangeConstraintCommand(IJavaObjectInstance child, NullC
 		cancelConstraints(cb, children);
 		return cb.getCommand();
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getDeleteDependentCommand(java.util.List)
+	 */
+	public Command getDeleteDependentCommand(List children) {
+		return policy.getDeleteDependentCommand(children).getCommand();
+	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getDeleteDependentCommand(java.lang.Object)
+	 */
+	public Command getDeleteDependentCommand(Object child) {
+		return policy.getDeleteDependentCommand(child).getCommand();
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
 	 * Enable the Show/Hide Grid action on the Beans viewer depending on the layout EditPolicy
@@ -215,5 +229,12 @@ protected Command createChangeConstraintCommand(IJavaObjectInstance child, NullC
 			}
 		}
 		return false;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getMoveChildrenCommand(java.util.List, java.lang.Object)
+	 */
+	public Command getMoveChildrenCommand(List children, Object beforeChild) {
+		return policy.getMoveChildrenCommand(children, beforeChild);
 	}
 }

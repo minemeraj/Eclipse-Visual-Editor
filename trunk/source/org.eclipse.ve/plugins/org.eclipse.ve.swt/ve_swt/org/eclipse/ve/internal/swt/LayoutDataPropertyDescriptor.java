@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutDataPropertyDescriptor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-01 20:19:43 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.views.properties.IPropertySource;
 
+import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -44,7 +45,7 @@ public class LayoutDataPropertyDescriptor extends EToolsPropertyDescriptor imple
 	
 
 	public LayoutDataPropertyDescriptor(String aLayoutDataClassName, EStructuralFeature sf, boolean nullsInvalid){
-	    super(sf, "layoutData"); //$NON-NLS-1$
+	    super(sf, Utilities.getPropertyDecorator(sf).getDisplayName());
 	    setNullInvalid(nullsInvalid);
 		layoutDataClassName = aLayoutDataClassName;
 	}

@@ -11,15 +11,14 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: MinMaxJavaValidator.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.4 $  $Date: 2005-12-01 20:19:39 $ 
  */
 
-import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.ve.internal.propertysheet.MinmaxValidator;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.INumberBeanProxy;
+
+import org.eclipse.ve.internal.propertysheet.MinmaxValidator;
 /**
  * A min/max validator for Java Numbers (either primitive or class).
  * Null is valid. If null isn't valid, then use another validator to
@@ -34,7 +33,7 @@ public class MinMaxJavaValidator extends MinmaxValidator {
 	 */	
 	public String isValid(Object value) {
 		if (value instanceof IJavaInstance) {
-			IBeanProxy proxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) value, ((EObject) value).eResource().getResourceSet());
+			IBeanProxy proxy = BeanProxyUtilities.getBeanProxy((IJavaInstance) value);
 			if (proxy instanceof INumberBeanProxy)
 				return super.isValid(((INumberBeanProxy) proxy).numberValue());
 		} else if (value == null)

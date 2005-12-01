@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.25 $$  $$Date: 2005-11-08 22:33:17 $$ 
+ *  $$Revision: 1.26 $$  $$Date: 2005-12-01 20:19:43 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -99,7 +99,7 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 	protected void getCreateCommand(List constraints, List children, Object position, CommandBuilder cbld) {
 		// First create the create commands for the children so that we can let standard verification of the children be done.
 		CommandBuilder createBuilder = createCommandBuilder(true); 
-		getCreateCommand(children, position, createBuilder);
+		getMultipleCreateCommand(children, position, createBuilder);
 		if (createBuilder.isDead()) {
 			cbld.markDead();
 			return;
