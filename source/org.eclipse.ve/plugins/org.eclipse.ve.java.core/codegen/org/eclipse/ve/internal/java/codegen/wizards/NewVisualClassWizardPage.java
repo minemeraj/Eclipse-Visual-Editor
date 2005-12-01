@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.25 $  $Date: 2005-11-18 23:37:41 $ 
+ *  $Revision: 1.26 $  $Date: 2005-12-01 22:54:41 $ 
  */
 
 import java.util.HashMap;
@@ -22,13 +22,14 @@ import java.util.logging.Level;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.ui.dialogs.StatusUtil;
-import org.eclipse.jdt.internal.ui.wizards.dialogfields.*;
-import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
+import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.ui.CodeGeneration;
+import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -41,7 +42,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 /**
  * @author JoeWin, pmuldoon
  */
-public class NewVisualClassWizardPage extends NewClassWizardPage {
+public class NewVisualClassWizardPage extends NewTypeWizardPage {
 
 	TreeViewer styleTreeViewer;
 
@@ -59,6 +60,22 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	private IStatus fContributorStatus = StatusInfo.OK_STATUS;
 	private IStatus fSourceFolderStatus = StatusInfo.OK_STATUS;
 
+	private final static String PAGE_NAME= "NewVisualClassWizardPage"; //$NON-NLS-1$
+	
+	private final static String SETTINGS_CREATEMAIN= "create_main"; //$NON-NLS-1$
+	private final static String SETTINGS_CREATECONSTR= "create_constructor"; //$NON-NLS-1$
+	private final static String SETTINGS_CREATEUNIMPLEMENTED= "create_unimplemented"; //$NON-NLS-1$
+
+	private boolean createMain = false, createConstructors = false, createInherited = true;
+	private Button fMainCheckbox, fCtorsCheckbox, fInheritedCheckbox;
+
+	public NewVisualClassWizardPage() {
+		super(true, PAGE_NAME);
+		
+		setTitle("Java Visual Class"); 
+		setDescription("Create a new Java Visual Class."); 
+	}
+	
 	public class TreePrioritySorter extends ViewerSorter {
 
 		public int category(Object element) {
@@ -72,7 +89,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	/**
 	 * Sets the expanded/collapased state of each node
 	 */
-	protected void setTreeState() {
+	private void setTreeState() {
 		Object[] topLevel = treeRoot.getChildren();
 		if (topLevel != null)
 			for (int i = 0; i < topLevel.length; i++)
@@ -80,7 +97,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 					styleTreeViewer.setExpandedState(topLevel[i], ((CategoryModel) topLevel[i]).getDefaultExpand());
 	}
 
-	protected void createTreeClassComposite(Composite composite, int nColumns) {
+	private void createTreeClassComposite(Composite composite, int nColumns) {
 
 		Composite labelGroup = createComposite(composite, 5);
 		((GridLayout) labelGroup.getLayout()).marginHeight = 0;
@@ -130,7 +147,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	
 	
 	
-	protected IResource getContainerRoot(){ 
+	private IResource getContainerRoot(){ 
 		return getWorkspaceRoot().findMember(getPackageFragmentRootText());
 	}
 
@@ -237,46 +254,12 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		System.arraycopy(statusArg,0,status,1,statusArg.length);
 		status[status.length - 1] = fSourceFolderStatus;
 		status[0] = fContributorStatus;  //move our messages to the front
-		super.updateStatus(StatusUtil.getMostSevere(status));
+		super.updateStatus(getMostSevere(status));
 	}	
 
 	public void setSuperClass(String name) {
 		useSuperClass = true;
 		super.setSuperClass(name, true);
-	}
-	
-	protected SelectionButtonDialogFieldGroup fMethodStubsButtonsField;
-
-	protected SelectionButtonDialogFieldGroup getMethodStubsButtonsField() {
-		if (fMethodStubsButtonsField == null) {
-			// This field is private and inherited so we have to retrieve it using reflection
-			try {
-				Class newClassWizardPage = Class.forName("org.eclipse.jdt.ui.wizards.NewClassWizardPage"); //$NON-NLS-1$			
-				java.lang.reflect.Field field = newClassWizardPage.getDeclaredField("fMethodStubsButtons"); //$NON-NLS-1$
-				field.setAccessible(true);
-				fMethodStubsButtonsField = (SelectionButtonDialogFieldGroup) field.get(this);
-			} catch (Exception exc) {
-				JavaVEPlugin.log(exc, Level.FINEST);
-			}
-		}
-		return fMethodStubsButtonsField;
-	}
-
-	protected StringButtonDialogField localSuperclassButtonDialogField;
-
-	protected StringButtonDialogField getSuperclassButtonDialogField() {
-		if (localSuperclassButtonDialogField == null) {
-			// This field is private and inherited so we have to retrieve it using reflection
-			try {
-				Class newClassWizardPage = Class.forName("org.eclipse.jdt.ui.wizards.NewTypeWizardPage"); //$NON-NLS-1$			
-				java.lang.reflect.Field field = newClassWizardPage.getDeclaredField("fSuperClassDialogField"); //$NON-NLS-1$
-				field.setAccessible(true);
-				localSuperclassButtonDialogField = (StringButtonDialogField) field.get(this);
-			} catch (Exception exc) {
-				JavaVEPlugin.log(exc, Level.FINEST);
-			}
-		}
-		return localSuperclassButtonDialogField;
 	}
 
 	// When the container changes we must re-check whether or not this is a valid project for the template to be created into
@@ -341,6 +324,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 			}
 		}
 		super.handleFieldChanged(fieldName);
+		doStatusUpdate();
 	}
 
 	private void handleSuperclassChanged() {
@@ -387,7 +371,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		}
 	}
 
-	protected Composite createComposite(Composite aParent, int numColumns) {
+	private Composite createComposite(Composite aParent, int numColumns) {
 		Composite group = new Composite(aParent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = numColumns;
@@ -401,23 +385,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		return group;
 	}
 
-	protected Group createGroup(Composite aParent, String title, int numColumns) {
-		Group group = new Group(aParent, SWT.NONE);
-		if (title != null) {
-			group.setText(title);
-		}
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = numColumns;
-		group.setLayout(gridLayout);
-		GridData data = new GridData();
-		data.verticalAlignment = GridData.FILL;
-		data.horizontalAlignment = GridData.FILL;
-		data.grabExcessHorizontalSpace = true;
-		group.setLayoutData(data);
-		return group;
-	}
-
-	protected void createLabel(Composite parent, String text) {
+	private void createLabel(Composite parent, String text) {
 		Label spacer = new Label(parent, SWT.NONE);
 		if (text != null) {
 			spacer.setText(text);
@@ -433,25 +401,110 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	 * 
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 * 
-	 * Overridden here because we have to get the the private field NewClassWizard.fMethodStubsButton in order to reset its layout data so that the
-	 * method stubs selections will fit next to the Style tree and not below it.
+	 * Overridden here to include all the controls from the NewClassWizardPage.
+	 * If the NewClassWizardPage changes, this is where the changes need to be applied.
+	 * 
+	 * Method stubs selections will fit next to the Style tree and not below it.
 	 */
 	public void createControl(Composite parent) {
-		super.createControl(parent);
-		createMethodStubSelectionControls(parent, 2);
+		initializeDialogUnits(parent);
+		
+		Composite composite= new Composite(parent, SWT.NONE);
+		composite.setFont(parent.getFont());
+		
+		int nColumns= 4;
+		
+		GridLayout layout= new GridLayout();
+		layout.numColumns= nColumns;		
+		composite.setLayout(layout);
+		
+		createContainerControls(composite, nColumns);	
+		createPackageControls(composite, nColumns);	
+		createEnclosingTypeControls(composite, nColumns);
+				
+		createSeparator(composite, nColumns);
+		
+		createTypeNameControls(composite, nColumns);
+		createModifierControls(composite, nColumns);
+			
+		createSuperClassControls(composite, nColumns);
+		createSuperInterfacesControls(composite, nColumns);
+				
+		createMethodStubSelectionControls(composite, nColumns);
+		
+		createCommentControls(composite, nColumns);
+		enableCommentControl(true);
+		
+		setControl(composite);
+			
+		Dialog.applyDialogFont(composite);
 	}
 
+	/*
+	 * Create label and checkboxes for method stub selections
+	 * Includes:
+	 * - Label ("Which method stubs would you like to create?")
+	 * - Checkbox ("public static void main(String[] args)")
+	 * - Checkbox ("Constructors from superclass")
+	 * - Checkbox ("Inherited abstract methods")
+	 * 
+	 */
 	private void createMethodStubSelectionControls(Composite composite, int nColumns) {
-		SelectionButtonDialogFieldGroup fg = getMethodStubsButtonsField();
-		if (fg == null)
-			return;
-		Control labelControl = fg.getLabelControl(composite);
-		LayoutUtil.setHorizontalSpan(labelControl, nColumns);
-		LayoutUtil.setHorizontalIndent(labelControl, 20);
+		IDialogSettings dialogSettings= getDialogSettings();
+		if (dialogSettings != null) {
+			IDialogSettings section= dialogSettings.getSection(PAGE_NAME);
+			if (section != null) {
+				createMain= section.getBoolean(SETTINGS_CREATEMAIN);
+				createConstructors= section.getBoolean(SETTINGS_CREATECONSTR);
+				createInherited= section.getBoolean(SETTINGS_CREATEUNIMPLEMENTED);
+			}
+		}
 
-		Control buttonGroup = fg.getSelectionButtonsGroup(composite);
-		LayoutUtil.setHorizontalSpan(buttonGroup, nColumns);
-		LayoutUtil.setHorizontalIndent(buttonGroup, 60);
+		Label label= new Label(composite, SWT.LEFT | SWT.WRAP);
+		label.setFont(composite.getFont());
+		label.setText("Which method stubs would you like to create?");
+		GridData gd = new GridData();
+		gd.horizontalSpan = nColumns-1;
+		gd.horizontalIndent = 20;
+		label.setLayoutData(gd);
+
+		// Create composite for the three checkboxes
+		Composite comp = new Composite(composite, SWT.None);
+		comp.setFont(composite.getFont());
+		gd = new GridData();
+		gd.horizontalSpan = nColumns -1;
+		gd.horizontalIndent = 80;
+		comp.setLayoutData(gd);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight= 0;
+		layout.marginWidth= 0;
+		layout.makeColumnsEqualWidth= true;
+		comp.setLayout(layout);
+		
+		// Create the three checkboxes
+		fMainCheckbox = new Button(comp, SWT.CHECK);
+		fMainCheckbox.setText("public static void main(String[] args)");
+		fMainCheckbox.setSelection(createMain);
+		fCtorsCheckbox = new Button(comp, SWT.CHECK);
+		fCtorsCheckbox.setText("Constructors from superclass");
+		fCtorsCheckbox.setSelection(createConstructors);
+		fInheritedCheckbox = new Button(comp, SWT.CHECK);
+		fInheritedCheckbox.setText("Inherited abstract methods");
+		fInheritedCheckbox.setSelection(createInherited);
+		
+		SelectionListener listener = new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (e.getSource() == fMainCheckbox)
+					createMain = fMainCheckbox.getSelection();
+				else if (e.getSource() == fCtorsCheckbox)
+					createConstructors = fCtorsCheckbox.getSelection();
+				else if (e.getSource() == fInheritedCheckbox)
+					createInherited = fInheritedCheckbox.getSelection();
+			}
+		};
+		fMainCheckbox.addSelectionListener(listener);
+		fCtorsCheckbox.addSelectionListener(listener);
+		fInheritedCheckbox.addSelectionListener(listener);
 	}
 
 	/**
@@ -475,7 +528,7 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 		return selectedElement;
 	}
 	
-	/**
+	/*
 	 * Set visible on the wizard.
 	 * 
 	 * Overridden because Eclipse doesn't like to show error messages when you launch a wizard
@@ -486,6 +539,20 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 	 */
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
+		if (visible) {
+			setFocus();
+		} else {
+			IDialogSettings dialogSettings= getDialogSettings();
+			if (dialogSettings != null) {
+				IDialogSettings section= dialogSettings.getSection(PAGE_NAME);
+				if (section == null) {
+					section= dialogSettings.addNewSection(PAGE_NAME);
+				}
+				section.put(SETTINGS_CREATEMAIN, isCreateMain());
+				section.put(SETTINGS_CREATECONSTR, isCreateConstructors());
+				section.put(SETTINGS_CREATEUNIMPLEMENTED, isCreateInherited());
+			}
+		}
 		if (selectedElement != null) {
 			IStatus status = selectedElement.getStatus(getContainerRoot());
 			if(!(status.isOK())){
@@ -494,4 +561,118 @@ public class NewVisualClassWizardPage extends NewClassWizardPage {
 			}
 		}
 	}
+	/*
+	 * Returns the current selection state of the 'Create Main' checkbox.
+	 * 
+	 * @return the selection state of the 'Create Main' checkbox
+	 */
+	public boolean isCreateMain() {
+		return createMain;
+	}
+
+	/*
+	 * Returns the current selection state of the 'Create Constructors' checkbox.
+	 * 
+	 * @return the selection state of the 'Create Constructors' checkbox
+	 */
+	public boolean isCreateConstructors() {
+		return createConstructors;
+	}
+	
+	/*
+	 * Returns the current selection state of the 'Create inherited abstract methods' 
+	 * checkbox.
+	 * 
+	 * @return the selection state of the 'Create inherited abstract methods' checkbox
+	 */
+	public boolean isCreateInherited() {
+		return createInherited;
+	}
+
+	// -------- Initialization ---------
+	
+	/*
+	 * The wizard owning this page is responsible for calling this method with the
+	 * current selection. The selection is used to initialize the fields of the wizard 
+	 * page.
+	 * 
+	 * @param selection used to initialize the fields
+	 */
+	public void init(IStructuredSelection selection) {
+		IJavaElement jelem= getInitialJavaElement(selection);
+		initContainerPage(jelem);
+		initTypePage(jelem);
+		doStatusUpdate();
+	}
+	
+	// ------ validation --------
+	private void doStatusUpdate() {
+		// status of all used components
+		IStatus[] status= new IStatus[] {
+			fContainerStatus,
+			isEnclosingTypeSelected() ? fEnclosingTypeStatus : fPackageStatus,
+			fTypeNameStatus,
+			fModifierStatus,
+			fSuperClassStatus,
+			fSuperInterfacesStatus
+		};
+		
+		// the mode severe status will be displayed and the OK button enabled/disabled.
+		updateStatus(status);
+	}
+	
+	// ---- creation ----------------
+	
+	/*
+	 * @see NewTypeWizardPage#createTypeMembers
+	 */
+	protected void createTypeMembers(IType type, ImportsManager imports, IProgressMonitor monitor) throws CoreException {
+		boolean doMain= isCreateMain();
+		boolean doConstr= isCreateConstructors();
+		boolean doInherited= isCreateInherited();
+		createInheritedMethods(type, doConstr, doInherited, imports, new SubProgressMonitor(monitor, 1));
+
+		if (doMain) {
+			StringBuffer buf= new StringBuffer();
+			final String lineDelim= "\n"; // OK, since content is formatted afterwards //$NON-NLS-1$
+			String comment= CodeGeneration.getMethodComment(type.getCompilationUnit(), type.getTypeQualifiedName('.'), "main", new String[] {"args"}, new String[0], Signature.createTypeSignature("void", true), null, lineDelim); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			if (comment != null) {
+				buf.append(comment);
+				buf.append(lineDelim);
+			}
+			buf.append("public static void main("); //$NON-NLS-1$
+			buf.append(imports.addImport("java.lang.String")); //$NON-NLS-1$
+			buf.append("[] args) {"); //$NON-NLS-1$
+			buf.append(lineDelim);
+			final String content= CodeGeneration.getMethodBodyContent(type.getCompilationUnit(), type.getTypeQualifiedName('.'), "main", false, "", lineDelim); //$NON-NLS-1$ //$NON-NLS-2$
+			if (content != null && content.length() != 0)
+				buf.append(content);
+			buf.append(lineDelim);
+			buf.append("}"); //$NON-NLS-1$
+			type.createMethod(buf.toString(), null, false, null);
+		}
+		
+		if (monitor != null) {
+			monitor.done();
+		}	
+	}
+	/*
+	 * Finds the most severe status from a array of stati.
+	 * An error is more severe than a warning, and a warning is more severe
+	 * than ok.
+	 */
+	private static IStatus getMostSevere(IStatus[] status) {
+		IStatus max= null;
+		for (int i= 0; i < status.length; i++) {
+			IStatus curr= status[i];
+			if (curr.matches(IStatus.ERROR)) {
+				return curr;
+			}
+			if (max == null || curr.getSeverity() > max.getSeverity()) {
+				max= curr;
+			}
+		}
+		return max;
+	}
+	
 }

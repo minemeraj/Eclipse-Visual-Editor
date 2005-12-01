@@ -12,23 +12,26 @@ package org.eclipse.ve.internal.java.codegen.wizards;
 
 /*
  *  $RCSfile: NewVisualClassCreationWizard.java,v $
- *  $Revision: 1.39 $  $Date: 2005-10-26 22:14:02 $ 
+ *  $Revision: 1.40 $  $Date: 2005-12-01 22:54:41 $ 
  */
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
-import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
 import org.eclipse.jem.internal.proxy.core.IConfigurationContributionInfo.ContainerPaths;
@@ -43,7 +46,9 @@ import org.eclipse.ve.internal.java.vce.templates.*;
 /**
  * @authors JoeWin, pmuldoon
  */
-public class NewVisualClassCreationWizard extends NewElementWizard implements IExecutableExtension{
+public class NewVisualClassCreationWizard extends Wizard implements INewWizard, IExecutableExtension{
+	private IWorkbench fWorkbench;
+	private IStructuredSelection fSelection;
 	
 	private NewVisualClassWizardPage fPage;
 	private String superClassName = null;
@@ -450,21 +455,49 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 	 * @see org.eclipse.jface.wizard.IWizard#performFinish()
 	 */
 	public boolean performFinish() {
-		boolean res =super.performFinish();
-		if(res){
-			ICompilationUnit cu= fPage.getCreatedType().getCompilationUnit();
+		boolean result = true;
+		final IWorkspaceRunnable op = new IWorkspaceRunnable() {
+			public void run(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+				try {
+					finishPage(monitor);
+				} catch (InterruptedException e) {
+					throw new OperationCanceledException(e.getMessage());
+				}
+			}
+		};
+
+		try {
+			IRunnableWithProgress runnable = new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					try {
+						JavaCore.run(op, monitor);
+					} catch (CoreException e) {
+						throw new InvocationTargetException(e);
+					}
+				}
+			};
+			getContainer().run(true, true, runnable);
+		} catch (InvocationTargetException e) {
+			JavaVEPlugin.log(e.getCause());
+			result = false;
+		} catch (InterruptedException e) {
+			result = false;
+		}
+		if (result) {
+			ICompilationUnit cu = fPage.getCreatedType().getCompilationUnit();
 			if (cu.isWorkingCopy())
-			    cu = (ICompilationUnit) cu.getPrimaryElement();
-				//pmuldoon: removed deprecated call with getPrimaryElement
-				//pmuldoon: old was: cu = (ICompilationUnit) cu.getOriginal(cu);
+				cu = (ICompilationUnit) cu.getPrimaryElement();
+			// pmuldoon: removed deprecated call with getPrimaryElement
+			// pmuldoon: old was: cu = (ICompilationUnit) cu.getOriginal(cu);
 			if (cu != null) {
-				IResource resource= cu.getResource();
+				IResource resource = cu.getResource();
 				selectAndReveal(resource);
 				openResource(resource);
 			}
 		}
-		return res;
+		return result;
 	}
+
 	protected String getSelectedElementStringValue (VisualElementModel vem) {
 		if (vem != null) {
 			return vem.getCategory() + "-" + vem.getName() + "-" + fPage.getSuperClass();  //$NON-NLS-1$ //$NON-NLS-2$
@@ -474,5 +507,22 @@ public class NewVisualClassCreationWizard extends NewElementWizard implements IE
 
 	public IJavaElement getCreatedElement() {
 		return fPage.getCreatedType();
+	}
+
+	public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
+		fWorkbench= workbench;
+		fSelection= currentSelection;
+	}
+	
+	public IStructuredSelection getSelection() {
+		return fSelection;
+	}
+
+	public IWorkbench getWorkbench() {
+		return fWorkbench;
+	}
+
+	protected void selectAndReveal(IResource newResource) {
+		BasicNewResourceWizard.selectAndReveal(newResource, fWorkbench.getActiveWorkbenchWindow());
 	}
 }
