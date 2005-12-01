@@ -17,7 +17,7 @@
       <keyedValues typedValue="both" xsi:type="gridpref:Preference"/>
     </objectsToAttach>
    <objectsToAttach expDecoder="org.eclipse.ve.jfc/org.eclipse.ve.internal.jfc.codegen.JTabbedPaneDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
-   <objectsToAttach containment="true" eType="ecore:EClass jtabbedPaneVisuals.ecore#JTabComponent" name="tabs" upperBound="-1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+   <objectsToAttach containment="true" resolveProxies="false" eType="ecore:EClass jtabbedPaneVisuals.ecore#JTabComponent" name="tabs" upperBound="-1" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
       <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
     </objectsToAttach>
 </change:ChangeDescription>
