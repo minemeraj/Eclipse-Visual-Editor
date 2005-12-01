@@ -11,12 +11,13 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: AbstractEMFContainerPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-11-04 17:30:49 $ 
+ *  $Revision: 1.8 $  $Date: 2005-12-01 20:19:41 $ 
  */
 
 import java.util.*;
 
 import org.eclipse.emf.ecore.*;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 
@@ -219,6 +220,28 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 	}
 
 	/**
+	 * Get the policy's request type from the {@link org.eclipse.gef.RequestConstants} request types.
+	 * @param requestConstantsRequestType
+	 * @return
+	 * 
+	 * @since 1.2.0
+	 */
+	public int getPolicyRequestType(Object requestConstantsRequestType) {
+		if (RequestConstants.REQ_ADD.equals(requestConstantsRequestType))
+			return ADD_REQ;
+		else if (RequestConstants.REQ_CREATE.equals(requestConstantsRequestType))
+			return CREATE_REQ;
+		else if (RequestConstants.REQ_ORPHAN_CHILDREN.equals(requestConstantsRequestType))
+			return ORPHAN_REQ;
+		else if (RequestConstants.REQ_DELETE_DEPENDANT.equals(requestConstantsRequestType))
+			return DELETE_REQ;
+		else if (RequestConstants.REQ_MOVE_CHILDREN.equals(requestConstantsRequestType))
+			return MOVE_REQ;
+		else
+			return -1;	// Unknown.
+	}
+	
+	/**
 	 * Return the adjusted true child if {@link IContainmentHandler} decides for a different one.
 	 * @param child child to send in
 	 * @param reqType request type. {@link #ADD_REQ}, etc.
@@ -229,7 +252,7 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 	 * 
 	 * @since 1.2.0
 	 */
-	protected Object getTrueChild(Object child, int reqType, CommandBuilder preCmds, CommandBuilder postCmds) throws StopRequestException {
+	public Object getTrueChild(Object child, int reqType, CommandBuilder preCmds, CommandBuilder postCmds) throws StopRequestException {
 		// Go to the IContainmentHandler to decide what to do with the child.
 		IModelAdapterFactory fact = getModelAdapterFactory();
 		if (fact != null) {
@@ -345,6 +368,9 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 	 * <p>
 	 * By default this just calls {@link #getCreateCommand(Object, Object, CommandBuilder)}
 	 * for each child. Subclasses can override if they want to handle the list all at once.
+	 * The overrides can call {@link #getMultipleCreateCommand(List, Object, CommandBuilder)} instead
+	 * of this super method to do the same thing but do them all at once.
+	 * 
 	 * @param children
 	 * @param positionBeforeChild
 	 * @param cbldr
@@ -376,6 +402,33 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 			cbldr.markDead();
 		else
 			cbldr.append(getCreateCommand(child, positionBeforeChild, containmentSF));
+	}
+	
+	/**
+	 * A helper to handle creating for multiple children at once. It is not normally called. It can be
+	 * called by overrides to {@link #getCreateCommand(List, Object, CommandBuilder)} instead if desire
+	 * to use this.
+	 * @param children
+	 * @param positionBeforeChild
+	 * @param cbldr
+	 * 
+	 * @since 1.2.0
+	 */
+	protected void getMultipleCreateCommand(List children, Object positionBeforeChild, CommandBuilder cbldr) {
+		EStructuralFeature containmentSF = getContainmentSF(children, positionBeforeChild, CREATE_REQ);
+		if (containmentSF == null)
+			cbldr.markDead();
+		else {
+			Iterator itr = children.iterator();
+			while (itr.hasNext()) {
+				Object child = itr.next();
+				if (!isValidChild(child, containmentSF)) {
+					cbldr.markDead();
+					return;
+				}
+			}
+			cbldr.append(primCreateCommand(children, positionBeforeChild, containmentSF));
+		}
 	}
 	
 	/**
@@ -413,6 +466,27 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 			CommandBuilder cBld = createCommandBuilder(true); //$NON-NLS-1$
 			cBld.applyAttributeSetting((EObject) container, containmentSF, child, positionBeforeChild);
 			List annotations = AnnotationPolicy.getAllAnnotations(new ArrayList(), child, domain.getAnnotationLinkagePolicy());
+			return AnnotationPolicy.getCreateRequestCommand(annotations, cBld.getCommand(), domain);
+		}
+	}
+	
+	/**
+	 * A helper to be able handle create at all once for multiple children. Not normally called, but subclasses can
+	 * decide to call it if a simple create All at once it sufficent.
+	 * @param children
+	 * @param positionBeforeChild
+	 * @param containmentSF
+	 * @return
+	 * 
+	 * @since 1.2.0
+	 */
+	protected Command primCreateCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		if (!containmentSF.isMany() && ((EObject) container).eIsSet(containmentSF))
+			return UnexecutableCommand.INSTANCE; // This is a single valued feature, and it is already set.
+		else {
+			CommandBuilder cBld = createCommandBuilder(true); //$NON-NLS-1$
+			cBld.applyAttributeSetting((EObject) container, containmentSF, children, positionBeforeChild);
+			List annotations = AnnotationPolicy.getAllAnnotations(new ArrayList(), children, domain.getAnnotationLinkagePolicy());
 			return AnnotationPolicy.getCreateRequestCommand(annotations, cBld.getCommand(), domain);
 		}
 	}

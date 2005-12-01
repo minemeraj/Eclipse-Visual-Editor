@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LayoutPolicyHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-11-08 22:33:17 $ 
+ *  $Revision: 1.13 $  $Date: 2005-12-01 20:19:43 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -215,6 +215,15 @@ public Result getOrphanChildrenCommand(List children) {
 	return orphanContributionCmd;
 }
 
+/**
+ * Called to cancel any non-layoutdata constraints. Remove any specific contraints, properties, etc. (e.g. null layout to remove bounds, size, location).
+ * Subclasses should not remove the "layoutData" constraint itself. That is already taken care of.
+ * 
+ * @param commandBuilder
+ * @param children
+ * 
+ * @since 1.2.0
+ */
 protected abstract void cancelConstraints(CommandBuilder commandBuilder, List children);
 
 /*
@@ -247,5 +256,25 @@ public Command getChangeConstraintCommand(List children, List constraints) {
 	return NoOpCommand.INSTANCE;
 }
 
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getDeleteDependentCommand(java.util.List)
+ */
+public Command getDeleteDependentCommand(List children) {
+	return policy.getDeleteDependentCommand(children).getCommand();
+}
+
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getDeleteDependentCommand(java.lang.Object)
+ */
+public Command getDeleteDependentCommand(Object child) {
+	return policy.getDeleteDependentCommand(child).getCommand();
+}
 	
+/* (non-Javadoc)
+ * @see org.eclipse.ve.internal.java.visual.ILayoutPolicyHelper#getMoveChildrenCommand(java.util.List, java.lang.Object)
+ */
+public Command getMoveChildrenCommand(List children, Object beforeChild) {
+	return policy.getMoveChildrenCommand(children, beforeChild);
+}
+
 }

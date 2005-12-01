@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: TreeContainerEditPolicy.java,v $
- *  $Revision: 1.5 $  $Date: 2005-10-11 21:26:01 $ 
+ *  $Revision: 1.6 $  $Date: 2005-12-01 20:19:41 $ 
  */
 
 import java.util.*;
@@ -134,7 +134,19 @@ protected Command getMoveChildrenCommand(ChangeBoundsRequest request) {
 	if (!isChanged)
 		return UnexecutableCommand.INSTANCE;
 	else
-		return containerPolicy.getMoveChildrenCommand(ContainerPolicy.getChildren(request), beforePart != null ? beforePart.getModel() : null);
+		return getMoveChildrenCommand(ContainerPolicy.getChildren(request), beforePart != null ? beforePart.getModel() : null);
+}
+
+/**
+ * Subclasses should override to do different processing.
+ * @param children
+ * @param before
+ * @return
+ * 
+ * @since 1.2.0
+ */
+protected Command getMoveChildrenCommand(List children, Object before) {
+	return containerPolicy.getMoveChildrenCommand(children, before);
 }
 
 }

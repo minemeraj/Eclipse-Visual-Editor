@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: ILayoutPolicyHelper.java,v $
- *  $Revision: 1.7 $  $Date: 2005-11-04 17:30:45 $ 
+ *  $Revision: 1.8 $  $Date: 2005-12-01 20:19:39 $ 
  */
 
 import java.util.List;
@@ -97,6 +97,35 @@ public Result getOrphanChildrenCommand(List children);
  * need to acutally do something, cancel all of the bounds, etc. settings.
  */
 public Command getOrphanConstraintsCommand(List children);
+
+/**
+ * Delete the dependent children.
+ * @param children
+ * @return
+ * 
+ * @since 1.2.0
+ */
+public Command getDeleteDependentCommand(List children);
+
+/**
+ * Delete just one child.
+ * @param child
+ * @return
+ * 
+ * @since 1.2.0
+ */
+public Command getDeleteDependentCommand(Object child);
+
+
+/**
+ * Move the children to before the given child.
+ * @param children
+ * @param beforeChild
+ * @return
+ * 
+ * @since 1.2.0
+ */
+public Command getMoveChildrenCommand(List children, Object beforeChild);
 
 /**
  * Determine what the default constraint(s) are for this layout manager

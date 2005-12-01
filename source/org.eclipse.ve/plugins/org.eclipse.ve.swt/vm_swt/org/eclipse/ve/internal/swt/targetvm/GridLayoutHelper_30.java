@@ -43,6 +43,11 @@ public class GridLayoutHelper_30 {
 	private void computeValues() {
 		gridLayout = (GridLayout) fComposite.getLayout();
 		fComposite.layout();
+		if (fComposite.getChildren().length == 0) {
+			// If there aren't any children, there is no grid currently.
+			widths = heights = new int[0];
+			return;
+		}
 		try {
 			if(pixelColumnWidthsFieldProxy == null){
 				pixelColumnWidthsFieldProxy = gridLayout.getClass().getDeclaredField("pixelColumnWidths");

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet.common.commands;
 /*
  *  $RCSfile: CompoundCommand.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-03 19:20:39 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-01 20:19:41 $ 
  */
 
 import java.util.*;
@@ -20,6 +20,8 @@ import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
+
+import org.eclipse.ve.internal.propertysheet.command.ForwardUndoCompoundCommand;
 
 /**
  * A command that comprises a sequence of subcommands.
@@ -335,7 +337,7 @@ public class CompoundCommand extends AbstractCommand {
 	 */
 	public void append(Command command) {
 		if (command != null) {
-			if (command instanceof CompoundCommand)
+			if (command instanceof CompoundCommand && !(command instanceof ForwardUndoCompoundCommand))
 				commandList.addAll(((CompoundCommand) command).commandList);	// Just add them all in instead of nesting. Makes it easier to debug. The only problem is if the command could be added to after adding here, but nobody would think to do that. We wouldn't see that.
 			else
 				commandList.add(command);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce;
 /*
  *  $RCSfile: SubclassCompositionContainerPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-11-04 17:30:45 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-01 20:19:39 $ 
  */
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class SubclassCompositionContainerPolicy extends CompositionContainerPoli
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy#getTrueChild(java.lang.Object, int, org.eclipse.ve.internal.cde.commands.CommandBuilder, org.eclipse.ve.internal.cde.commands.CommandBuilder)
 	 */
-	protected Object getTrueChild(Object child, int reqType, CommandBuilder preCmds, CommandBuilder postCmds) throws StopRequestException {
+	public Object getTrueChild(Object child, int reqType, CommandBuilder preCmds, CommandBuilder postCmds) throws StopRequestException {
 		child = super.getTrueChild(child, reqType, preCmds, postCmds);
 		if (child == getComposition().getThisPart())
 			throw new StopRequestException("The this part is not a valid child to be added/removed.");

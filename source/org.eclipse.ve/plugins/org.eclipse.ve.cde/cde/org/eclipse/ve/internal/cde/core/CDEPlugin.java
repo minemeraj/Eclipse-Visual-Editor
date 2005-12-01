@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.17 $  $Date: 2005-09-14 21:36:28 $ 
+ *  $Revision: 1.18 $  $Date: 2005-12-01 20:19:41 $ 
  */
 
 import java.net.MalformedURLException;
@@ -123,10 +123,9 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	 */
 	static public Class getClassFromString(Bundle bundle, String pluginFormatedClassName) throws ClassNotFoundException {
 
-		int slashNdx = pluginFormatedClassName.indexOf('/');
-		int colonNdx = pluginFormatedClassName.indexOf(':', slashNdx + 1);
+		int slashNdx = pluginFormatedClassName.indexOf('/');	// Separator for bundle id
+		int colonNdx = pluginFormatedClassName.indexOf(':', slashNdx + 1); // Separator for data
 		String className = colonNdx == -1 ? pluginFormatedClassName : pluginFormatedClassName.substring(0, colonNdx);
-		// Strip off data portion
 		if (slashNdx != -1) {
 			String pluginName = className.substring(0, slashNdx);
 			className = className.substring(slashNdx + 1);

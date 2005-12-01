@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.visual;
 /*
  *  $RCSfile: TreeVisualContainerEditPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-11-04 17:30:45 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-01 20:19:39 $ 
  */
 
 import java.util.*;
@@ -70,6 +70,26 @@ public class TreeVisualContainerEditPolicy extends TreeContainerEditPolicy imple
 		Object child = request.getNewObject();
 		List constraints = helper.getDefaultConstraint(Collections.singletonList(child));
 		return helper.getCreateChildCommand(child, constraints.get(0), beforePart != null ? beforePart.getModel() : null).getCommand();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy#getMoveChildrenCommand(java.util.List, java.lang.Object)
+	 */
+	protected Command getMoveChildrenCommand(List children, Object before) {
+		return helper.getMoveChildrenCommand(children, before);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.core.TreeContainerEditPolicy#getDeleteDependantCommand(org.eclipse.gef.Request)
+	 */
+	protected Command getDeleteDependantCommand(Request request) {
+		// It currently will never be a group request, but in the future maybe.
+		if (request instanceof ForwardedRequest)
+			return helper.getDeleteDependentCommand(((ForwardedRequest) request).getSender().getModel());
+		else if (request instanceof GroupRequest)
+			return helper.getDeleteDependentCommand(ContainerPolicy.getChildren((GroupRequest) request));
+		else
+			return super.getDeleteDependantCommand(request);
 	}
 		
 	public boolean testAttribute(Object target, String name, String value) {
