@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-14 22:37:10 $ 
+ *  $Revision: 1.4 $  $Date: 2005-12-01 00:15:09 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix.bits64;
 
@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.*;
  
 
 /**
- * 64 bit GTK version of Image Capture
- * @since 1.1.0
+ * GTK version of Image Capture
+ * @since 1.0.0
  */
 public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapture{
 
@@ -41,7 +41,7 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 	static final int OBSCURED = 1<<6; // Must be the same value as Widget.OBSCURED
 	static final String FIELD_STATE_NAME = "state";  //$NON-NLS-1$
 	
-	private native int[] getPixels(long handle, int includeChildren, int arg2, int arg3, int arg4);
+	private native int[] getPixels(long handle, int includeChildren, int maxWidth, int maxHeight, int arg4);
 	
 	protected Point getTopLeftOfClientarea(Decorations decorations){
 		Point trim = decorations.toControl(decorations.getLocation());
@@ -62,20 +62,17 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		return new Point(trim.x, trim.y);
 	}
 	
-	protected Image getImageOfControl(Control control, int includeChildren){
+	protected Image getImageOfControl(Control control, int includeChildren, int maxWidth, int maxHeight){
 		Image image = null;
 		if (control instanceof Shell) {
 			Shell shell = (Shell) control;
 			long handle = readLongFieldValue(shell.getClass(), shell, "shellHandle"); //$NON-NLS-1$
 			if(handle>0){
-				image = getImageOfHandle(handle, shell.getDisplay(), includeChildren);
+				image = getImageOfHandle(handle, shell.getDisplay(), includeChildren, maxWidth, maxHeight);
 			}
 		}
 		if(image==null){
-			// Use reflection to get the control handle to avoid linking problems with being
-			// compiled on a 32 bit machine against 32 bit swt.
-			long handle = readLongFieldValue(Widget.class, control, "handle"); //$NON-NLS-1$
-			image = getImageOfHandle(handle, control.getDisplay(), includeChildren);
+			image = getImageOfHandle(control.handle, control.getDisplay(), includeChildren, maxWidth, maxHeight);
 		}
 		if (control instanceof Decorations) {
 			Decorations decorations = (Decorations) control;
@@ -96,8 +93,8 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		return image;
 	}
 	
-	protected Image getImageOfHandle(long handle, Display display, int includeChildren){
-		int[] tcData = getPixels(handle, includeChildren,0,0,0);
+	protected Image getImageOfHandle(long handle, Display display, int includeChildren, int maxWidth, int maxHeight){
+		int[] tcData = getPixels(handle, includeChildren,maxWidth,maxHeight,0);
 		int depth = display.getDepth();
 		if(depth==15)
 			depth=16; // SWT cant handle depth of 15. Similar to 16
@@ -270,13 +267,6 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		return -1;
 	}
 	
-	/**
-	 * @param object
-	 * @param fieldName
-	 * @return
-	 * 
-	 * @since 1.0.0
-	 */
 	private long readLongFieldValue(Class klass, Object object, String fieldName) {
 		try {
 			Field field = getField(klass, fieldName);
@@ -333,7 +323,7 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		changeObscured(control, map, false);
 		Image image = null;
 		try {
-			image = getImageOfControl(control, ic);
+			image = getImageOfControl(control, ic, maxWidth, maxHeight);
 		} finally {
 			changeObscured(control, map, true);
 		}
@@ -380,7 +370,7 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 			}
 		}
 	}
-	
+
 	/**
 	 * @param object
 	 * @param fieldName
@@ -400,6 +390,5 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		}
 		return null;
 	}
-
 
 }
