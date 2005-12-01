@@ -23,15 +23,7 @@ public class PhoneConverter implements IConverter {
 
 	public Object convertTargetToModel(Object targetObject) {
 		// Unformat the formatted phone to a raw String
-		String formattedPhone = (String)targetObject;
-		StringBuffer sb = new StringBuffer(9);
-		for (int i = 0; i < formattedPhone.length(); i++) {
-			char c = formattedPhone.charAt(i);
-			if((int)'0' <= (int)c && (int)'9' >= c){
-				sb.append(c);
-			}
-		}
-		return sb.toString();
+		return removePhoneSeparators((String)targetObject);
 	}
 	public Object convertModelToTarget(Object modelObject) {
 		String unformattedPhone = (String)modelObject;
@@ -47,4 +39,14 @@ public class PhoneConverter implements IConverter {
 			return sb.toString();
 		}
 	}
+	public static String removePhoneSeparators(String formattedPhone){
+		StringBuffer sb = new StringBuffer(formattedPhone);
+		for (int i = 0; i < formattedPhone.length(); i++) {
+			char c = formattedPhone.charAt(i);
+			if((int)'0' <= (int)c && (int)'9' >= c){
+				sb.append(c);
+			}
+		}
+		return sb.toString();		
+	}	
 }
