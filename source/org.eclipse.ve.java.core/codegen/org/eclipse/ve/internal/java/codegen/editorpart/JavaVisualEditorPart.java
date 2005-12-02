@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.156 $  $Date: 2005-10-26 14:14:05 $ 
+ *  $Revision: 1.157 $  $Date: 2005-12-02 18:22:47 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -567,7 +567,34 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 */
 	public void createPartControl(Composite parent) {	
 		Preferences store = VCEPreferences.getPlugin().getPluginPreferences();
-				
+		// TODO Dummy one needed because we need a site selection provider for
+		// open action group in createGraphical but we can't use the real one
+		// because the real one can't be created until after graphical has been created.
+		// catch 22 at this time (besides the fact we need to use a converting selection
+		// provider to take advantage of the new OpenActionGroup provided by JDT.
+		getSite().setSelectionProvider(new ISelectionProvider() {
+		
+			public void setSelection(ISelection selection) {
+				// TODO Auto-generated method stub
+		
+			}
+		
+			public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+				// TODO Auto-generated method stub
+		
+			}
+		
+			public ISelection getSelection() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		
+			public void addSelectionChangedListener(ISelectionChangedListener listener) {
+				// TODO Auto-generated method stub
+		
+			}
+		
+		});	
 		boolean isNotebook = store.getBoolean(VCEPreferences.NOTEBOOK_PAGE);
 		if (isNotebook) {
 			createNotebookEditor(parent, store);
