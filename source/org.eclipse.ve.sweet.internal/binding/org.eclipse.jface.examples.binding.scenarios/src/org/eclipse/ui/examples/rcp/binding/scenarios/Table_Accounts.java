@@ -74,10 +74,28 @@ public class Table_Accounts extends Composite {
 
 		tableViewer = new TableViewer(table);
 
-		bind(tableViewer);
+		bindEditable(tableViewer);
 	}
 
-	private void bind(TableViewer viewer) {
+	private void bindEditable(TableViewer viewer) {
+
+		// For a given catalog show its accounts with columns for "firstName,
+		// "lastName" and "state"
+		dbc = SampleData.getSWTtoEMFDatabindingContext(this);
+
+		Catalog catalog = SampleData.CATALOG_2005;
+
+		TableViewerDescription tableViewerDescription = new TableViewerDescription(
+				viewer);
+		tableViewerDescription.addEditableColumn("firstName");
+		tableViewerDescription.addEditableColumn("lastName");
+		tableViewerDescription.addEditableColumn("state");
+		dbc.bind(tableViewerDescription, new Property(catalog,
+				"accounts"), null);
+
+	}
+	
+	private void bindReadOnly(TableViewer viewer) {
 
 		// For a given catalog show its accounts with columns for "firstName,
 		// "lastName" and "state"
@@ -93,7 +111,7 @@ public class Table_Accounts extends Composite {
 		dbc.bind(tableViewerDescription, new Property(catalog,
 				"accounts"), null);
 
-	}
+	}	
 
 	/**
 	 * This method initializes table1
@@ -121,6 +139,6 @@ public class Table_Accounts extends Composite {
 		tableColumn5.setWidth(60);
 
 		tableViewer1 = new TableViewer(table1);
-		bind(tableViewer1);
+		bindReadOnly(tableViewer1);
 	}
 } // @jve:decl-index=0:visual-constraint="10,10"

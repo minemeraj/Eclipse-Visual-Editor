@@ -88,18 +88,19 @@ public class Table_Lodgings extends Composite {
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
 				viewer);
 		tableViewerDescription.addColumn("description");
-		tableViewerDescription.addColumn("price",
+		tableViewerDescription.addEditableColumn("price",
 				new DoubleTextCellEditor(viewer.getTable()), null,
 				new DoubleConverter());
-		tableViewerDescription.addColumn("defaultLodging",
-				null, new LodgingConverter());
+		tableViewerDescription.addEditableColumn("defaultLodging",
+				null, null,
+				new LodgingConverter());
 		dbc.bind(tableViewerDescription, new Property(category,
 				"adventures"), null);
 
 	}
 
 	/**
-	 * This method initializes table1
+	 * This method initializes table1table
 	 * 
 	 */
 	private void createTable1() {
