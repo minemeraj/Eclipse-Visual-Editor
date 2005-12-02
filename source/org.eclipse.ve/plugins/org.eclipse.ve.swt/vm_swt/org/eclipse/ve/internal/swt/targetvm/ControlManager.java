@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.27 $ $Date: 2005-11-09 16:25:22 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.28 $ $Date: 2005-12-02 00:24:03 $
  */
 package org.eclipse.ve.internal.swt.targetvm;
 
@@ -762,7 +762,7 @@ public class ControlManager {
 		 * @since 1.1.0
 		 */
 		public void disposeWidget(Widget widget) {
-			if (!widget.isDisposed()) {
+			if (widget != null && !widget.isDisposed()) {
 				if (widget instanceof Control) {
 					for (Control c = (Control) widget; c != null; c = c.getParent()) {
 						ControlManager cm = getControlManager(c);
