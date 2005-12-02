@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: OpenActionGroup.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-14 23:30:25 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-02 18:41:22 $ 
  */
 
 import org.eclipse.core.resources.IFile;
@@ -154,7 +154,7 @@ public class OpenActionGroup extends ActionGroup {
 				}
 			} 
 			if (!(e instanceof IJavaElement) && e instanceof IAdaptable) {
-				e = (IJavaElement) ((IAdaptable) e).getAdapter(IJavaElement.class); 
+				e = ((IAdaptable) e).getAdapter(IJavaElement.class); 
 			}
 			return (e instanceof IJavaElement) ? new StructuredSelection(e) : StructuredSelection.EMPTY;	// Just return empty since if not adaptable and not an IJavaElement. Faster this way.
 		}

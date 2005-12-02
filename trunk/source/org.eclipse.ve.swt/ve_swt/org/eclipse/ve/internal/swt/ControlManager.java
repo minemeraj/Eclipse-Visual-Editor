@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.22 $ $Date: 2005-11-08 22:33:17 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.23 $ $Date: 2005-12-02 18:41:26 $
  */
 
 import java.io.InputStream;
@@ -406,7 +406,7 @@ public class ControlManager implements ControlManagerFeedbackControllerNotifier,
 					}
 				});
 			} else
-				controlBeanProxy = (IBeanProxy) controlProxy;
+				controlBeanProxy = controlProxy;
 			if (locationOverride != null) {
 				// Need to apply right away.
 				expression.createSimpleMethodInvoke(BeanSWTUtilities.getOverrideLocationMethodProxy(expression), controlManagerProxy,

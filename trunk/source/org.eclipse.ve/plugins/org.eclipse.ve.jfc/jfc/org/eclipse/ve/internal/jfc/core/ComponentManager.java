@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentManager.java,v $ $Revision: 1.15 $ $Date: 2005-08-24 23:38:09 $
+ * $RCSfile: ComponentManager.java,v $ $Revision: 1.16 $ $Date: 2005-12-02 18:41:28 $
  */
 
 import java.io.InputStream;
@@ -396,7 +396,7 @@ public class ComponentManager implements ComponentManagerFeedbackControllerNotif
 					}
 				});
 			} else
-				fComponentBeanProxy = (IBeanProxy) componentProxy;
+				fComponentBeanProxy = componentProxy;
 			if (locationOverride != null) {
 				// Need to apply right away.
 				expression.createSimpleMethodInvoke(BeanAwtUtilities.getOverrideLocationMethodProxy(expression), fComponentManagerProxy,
