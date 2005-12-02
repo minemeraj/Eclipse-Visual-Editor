@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewerProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2005-11-04 17:30:52 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-02 00:24:03 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -88,7 +88,7 @@ public class ViewerProxyAdapter extends UIThreadOnlyProxyAdapter implements IExe
 		// We are instantiating. We need to determine if we own the control or not. After instantiation we will follow the 
 		// applied settings to determine this.
 		IJavaInstance tree = (IJavaInstance) getEObject().eGet(sf_control);
-		setOwnsControl(tree);
+		setOwnsControl(tree, expression);
 		return super.primInstantiateDroppedPart(expression);
 	}
 	
@@ -97,7 +97,7 @@ public class ViewerProxyAdapter extends UIThreadOnlyProxyAdapter implements IExe
 	 */
 	protected void primApplied(EStructuralFeature feature, Object value, int index, boolean isTouch, IExpression expression, boolean testValidity) {
 		if (feature == sf_control)
-			setOwnsControl((IJavaInstance) value);
+			setOwnsControl((IJavaInstance) value, expression);
 		super.primApplied(feature, value, index, isTouch, expression, testValidity);
 	}
 
@@ -107,7 +107,8 @@ public class ViewerProxyAdapter extends UIThreadOnlyProxyAdapter implements IExe
 	 * 
 	 * @since 1.2.0
 	 */
-	private void setOwnsControl(IJavaInstance control) {
+	private void setOwnsControl(IJavaInstance control, IExpression expression) {
+		boolean oldOwnsControl = ownsControl;
 		if (control != null) {
 			JavaAllocation alloc = control.getAllocation();
 			if (alloc != null && alloc.isImplicit()) {
@@ -117,14 +118,30 @@ public class ViewerProxyAdapter extends UIThreadOnlyProxyAdapter implements IExe
 				ownsControl = false;	// If no alloc or not implicit, then we don't own it.
 		} else
 			ownsControl = true;	// Assume we own it.
+		if (oldOwnsControl != ownsControl && oldOwnsControl) {
+			// It changed and we used to own it. Get rid of it now. This could happen because codegen parsing has changed the control
+			// setting to be non-implicit BEFORE it changes the viewers allocation. Normally we would do this on release of the viewer
+			// but this can occur before the release and we would loose this fact and we would have a control laying around.
+			disposeOfImplicitControl(expression);
+		}
 	}
 	
 	
 	protected void primPrimReleaseBeanProxy(IExpression expression) {
+		if (ownsControl)
+			disposeOfImplicitControl(expression);
+	}
+
+	/**
+	 * @param expression
+	 * 
+	 * @since 1.2.0
+	 */
+	private void disposeOfImplicitControl(IExpression expression) {
 		// We need to physically release the control if we created the control. Otherwise it will never go away.
-		if (isOwnsProxy() && isBeanProxyInstantiated() && ownsControl) {
-			// Since the tree proxy can't change once instantiated, we can use the getBeanPropertyProxyValue call
-			// to get the value.
+		if (isOwnsProxy() && isBeanProxyInstantiated()) {
+			// Since the control proxy can't change once instantiated, we can use the getBeanPropertyProxyValue call
+			// to get the value. Don't want to use the EMF setting for this because by this time the bean proxy could of changed in the control setting.
 			BeanSWTUtilities.invoke_WidgetDispose(getBeanPropertyProxyValue(sf_control, expression, ForExpression.ROOTEXPRESSION), expression, getModelChangeController());
 		}
 	}
