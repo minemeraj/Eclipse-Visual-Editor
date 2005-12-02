@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.64 $  $Date: 2005-09-22 22:13:16 $ 
+ *  $Revision: 1.65 $  $Date: 2005-12-02 00:52:08 $ 
  */
 
 
@@ -458,7 +458,20 @@ public  void refreshFromComposition() throws CodeGenException {
 		setContent((ExpressionParser) null) ;
 		return ;
 	}
-	String curContent = ExpressionTemplate.getExpression(fDecoder.reflectExpression(getCodeContent())) ;
+	String curContent = fDecoder.reflectExpression(getCodeContent());
+	if(curContent!=null)
+		curContent = ExpressionTemplate.getExpression(curContent) ;
+	if(curContent==null){
+		// no content - remove it from source
+		boolean isSrc = isStateSet(STATE_NO_SRC);
+		boolean isMaster = isStateSet(STATE_MASTER);
+		clearState();
+		setState(STATE_DELETE, true) ;
+		setState(STATE_NO_SRC,isSrc);
+		setState(STATE_MASTER, isMaster);
+		setContent((ExpressionParser) null) ;
+		return ;
+	}
 	if (!curContent.equals(getCodeContent())) {	
 	  setCodeContent(curContent) ;
 	  setOffset(-1) ;		
