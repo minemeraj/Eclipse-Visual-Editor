@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.44 $  $Date: 2005-12-02 16:31:20 $ 
+ *  $Revision: 1.45 $  $Date: 2005-12-02 20:22:22 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -60,26 +60,31 @@ public class ChooseBeanDialog {
 		Object[] results = null;
 		try {
 			// search scope
-			IPackageFragment packageFragment = (IPackageFragment) JavaCore.create(((FileEditorInput)editDomain.getEditorPart().getEditorInput()).getFile());
-			IJavaProject javaProject = packageFragment.getJavaProject();
-			IJavaSearchScope searchScope = SearchEngine.createJavaSearchScope(new IJavaElement[]{javaProject});
-			
-			// context
-			IRunnableContext context = editDomain.getEditorPart().getEditorSite().getWorkbenchWindow();
-			
-			// extension
-			ChooseBeanTypeSelectionExtension extension = new ChooseBeanTypeSelectionExtension(contributors, packageFragment, editDomain, searchScope);
-			
-			SelectionDialog dialog = JavaUI.createTypeDialog(
-					editDomain.getEditorPart().getSite().getShell(), 
-					context, 
-					searchScope, 
-					IJavaElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES, 
-					false, 
-					initialText,
-					extension);
-			if(dialog.open()==Window.OK){
-				return getEMFObjectAndType(dialog.getResult(), editDomain, extension.getBeanName());
+			ICompilationUnit compilationUnit = (ICompilationUnit) JavaCore.create(((FileEditorInput)editDomain.getEditorPart().getEditorInput()).getFile());
+			if (compilationUnit.getParent() instanceof IPackageFragment) {
+				IPackageFragment packageFragment = (IPackageFragment) compilationUnit.getParent();
+				IJavaProject javaProject = packageFragment.getJavaProject();
+				IJavaSearchScope searchScope = SearchEngine.createJavaSearchScope(new IJavaElement[]{javaProject});
+				
+				// context
+				IRunnableContext context = editDomain.getEditorPart().getEditorSite().getWorkbenchWindow();
+				
+				// extension
+				ChooseBeanTypeSelectionExtension extension = new ChooseBeanTypeSelectionExtension(contributors, packageFragment, editDomain, searchScope);
+				
+				SelectionDialog dialog = JavaUI.createTypeDialog(
+						editDomain.getEditorPart().getSite().getShell(), 
+						context, 
+						searchScope, 
+						IJavaElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES, 
+						false, 
+						initialText,
+						extension);
+				dialog.setTitle(ChooseBeanMessages.MainDialog_title);
+				dialog.setMessage(ChooseBeanMessages.MainDialog_message);
+				if(dialog.open()==Window.OK){
+					return getEMFObjectAndType(dialog.getResult(), editDomain, extension.getBeanName());
+				}
 			}
 		} catch (JavaModelException e) {
 			JavaVEPlugin.log(e, Level.WARNING);

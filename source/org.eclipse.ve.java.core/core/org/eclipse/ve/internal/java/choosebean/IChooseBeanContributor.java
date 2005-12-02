@@ -10,14 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IChooseBeanContributor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-12-02 16:31:20 $ 
+ *  $Revision: 1.6 $  $Date: 2005-12-02 20:22:23 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.ui.dialogs.ITypeInfoFilterExtension;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.resource.ImageDescriptor;
  
 /**
  * 
@@ -25,6 +25,6 @@ import org.eclipse.swt.graphics.Image;
  */
 public interface IChooseBeanContributor {
 public String getName();
-public Image getImage();
+public ImageDescriptor getImage();
 public ITypeInfoFilterExtension getFilter(IPackageFragment pkg, IProgressMonitor monitor);
 }

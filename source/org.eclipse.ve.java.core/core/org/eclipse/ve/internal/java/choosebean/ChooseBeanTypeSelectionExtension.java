@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanTypeSelectionExtension.java,v $
- *  $Revision: 1.1 $  $Date: 2005-12-02 16:31:20 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-02 20:22:22 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.dialogs.*;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
@@ -40,6 +41,47 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
  
 public class ChooseBeanTypeSelectionExtension extends TypeSelectionExtension{
 	
+	public class ChooseBeanDynamicProvider implements ITypeInfoFilterExtension, ITypeInfoImageProvider{
+		private HashMap selectedContributorToFilterMap = new HashMap();
+		private HashMap selectedContributorToImageMap = new HashMap();
+		
+		private ITypeInfoFilterExtension currentContributorFilter = null;
+		private ImageDescriptor currentContributorImage = null;
+		
+		public boolean select(ITypeInfoRequestor typeInfoRequestor) {
+			if(currentContributorFilter==null){
+				if(selectedContributor!=null){
+					if(!selectedContributorToFilterMap.containsKey(selectedContributor)){
+						ITypeInfoFilterExtension filter =selectedContributor.getFilter(packageFragment, new NullProgressMonitor());
+						selectedContributorToFilterMap.put(selectedContributor, filter);
+					}
+					currentContributorFilter = (ITypeInfoFilterExtension) selectedContributorToFilterMap.get(selectedContributor);
+				}
+			}
+			if(currentContributorFilter!=null)
+				return currentContributorFilter.select(typeInfoRequestor);
+			return true;
+		}
+		
+		public ImageDescriptor getImageDescriptor(ITypeInfoRequestor typeInfoRequestor) {
+			if(currentContributorImage==null){
+				if(selectedContributor!=null){
+					if(!selectedContributorToImageMap.containsKey(selectedContributor)){
+						ImageDescriptor imageDescriptor = selectedContributor.getImage();
+						selectedContributorToImageMap.put(selectedContributor, imageDescriptor);
+					}
+					currentContributorImage = (ImageDescriptor) selectedContributorToImageMap.get(selectedContributor);
+				}
+			}
+			return currentContributorImage;
+		}
+		
+		public void clear(){
+			currentContributorFilter = null;
+			currentContributorImage = null;
+		}
+	}
+	
 	private IPackageFragment packageFragment = null;
 	private IJavaProject javaProject = null;
 	private ResourceSet resourceSet = null;
@@ -48,11 +90,12 @@ public class ChooseBeanTypeSelectionExtension extends TypeSelectionExtension{
 	
 	private List unmodifieableContributors = null;
 	private IChooseBeanContributor selectedContributor = null;
-	private HashMap selectedContributorToFilterMap = null;
 	
-	Button[] contributorStyleButtons = null;
-	String beanName = null; // The below text gets disposed when OK is pressed - keep the text in string
-	Text beanNameText = null;
+	private Button[] contributorStyleButtons = null;
+	private String beanName = null; // The below text gets disposed when OK is pressed - keep the text in string
+	private Text beanNameText = null;
+	
+	private ChooseBeanDynamicProvider dynamicProvider = null;
 	
 	public ChooseBeanTypeSelectionExtension(IChooseBeanContributor[] contributors, IPackageFragment packageFragment, EditDomain editDomain, IJavaSearchScope searchScope){
 		this.packageFragment = packageFragment;
@@ -61,7 +104,6 @@ public class ChooseBeanTypeSelectionExtension extends TypeSelectionExtension{
 		this.resourceSet = JavaEditDomainHelper.getResourceSet(editDomain);
 		this.searchScope = searchScope;
 		this.unmodifieableContributors = contributors != null ? Arrays.asList(contributors) : Arrays.asList(ChooseBeanDialogUtilities.determineContributors(javaProject));
-		selectedContributorToFilterMap = new HashMap();
 		if(unmodifieableContributors.size()>0)
 			selectContributor((IChooseBeanContributor) unmodifieableContributors.get(0));
 	}
@@ -97,9 +139,16 @@ public class ChooseBeanTypeSelectionExtension extends TypeSelectionExtension{
 			for (int i = 0; i < unmodifieableContributors.size(); i++) {
 				IChooseBeanContributor contrib = (IChooseBeanContributor) unmodifieableContributors.get(i);
 				Label contribImage = new Label(stylesComposite, SWT.NONE);
-				Image image = ChooseBeanDialogUtilities.getContributorImage(contrib);
-				if(image!=null)
+				ImageDescriptor imageDescriptor = contrib.getImage();
+				final Image image = imageDescriptor==null ? null : imageDescriptor.createImage();
+				if(image!=null){
 					contribImage.setImage(image);
+					contribImage.addDisposeListener(new DisposeListener(){
+						public void widgetDisposed(DisposeEvent e) {
+							image.dispose();
+						}
+					});
+				}
 				
 				contributorStyleButtons[i] = new Button(stylesComposite, SWT.RADIO);
 				contributorStyleButtons[i].setText(contrib.getName());
@@ -170,42 +219,55 @@ public class ChooseBeanTypeSelectionExtension extends TypeSelectionExtension{
 		// finished
 		return area;
 	}
+	
+	protected ChooseBeanDynamicProvider getDynamicProvider(){
+		if(dynamicProvider==null)
+			dynamicProvider = new ChooseBeanDynamicProvider();
+		return dynamicProvider;
+	}
 
 	public ITypeInfoFilterExtension getFilterExtension() {
-		if(!selectedContributorToFilterMap.containsKey(selectedContributor)){
-			ITypeInfoFilterExtension filterExtension =selectedContributor.getFilter(packageFragment, new NullProgressMonitor());
-			selectedContributorToFilterMap.put(selectedContributor, filterExtension);
-		}
-		return (ITypeInfoFilterExtension) selectedContributorToFilterMap.get(selectedContributor);
+		return getDynamicProvider();
 	}
 	
 	public ITypeInfoImageProvider getImageProvider() {
-		// TODO Auto-generated method stub
-		return super.getImageProvider();
+		return getDynamicProvider();
 	}
 
 	public ISelectionStatusValidator getSelectionValidator() {
 		return new ISelectionStatusValidator(){
 			public IStatus validate(Object[] selection) {
-				if(selection!=null && selection.length>0)
+				if(selection!=null && selection.length>0 && selection[0] instanceof IType){
+					IType selectedIType = (IType) selection[0];
+					setBeanName(ChooseBeanDialog.getDefaultBeanName(selectedIType.getFullyQualifiedName('.')));
 					return ChooseBeanDialogUtilities.getClassStatus(
-							(IType) selection[0], 
+							selectedIType, 
 							packageFragment.getElementName(), 
 							resourceSet, 
 							searchScope, 
 							beanName, 
 							editDomain);
+					}
 				return null;
 			}
 		};
 	}
+	
+	public void dispose(){
+	}
 
 	protected void selectContributor(IChooseBeanContributor contrib) {
+		getDynamicProvider().clear();
 		selectedContributor = contrib;
-		if(selectedContributor!=null)
+		if(selectedContributor!=null && getTypeSelectionComponent()!=null)
 			getTypeSelectionComponent().triggerSearch();
 	}
 
+	protected void setBeanName(String name){
+		beanName = name;
+		if(beanNameText!=null && !beanNameText.isDisposed())
+			beanNameText.setText(name);
+	}
 	
 	public String getBeanName() {
 		return beanName;

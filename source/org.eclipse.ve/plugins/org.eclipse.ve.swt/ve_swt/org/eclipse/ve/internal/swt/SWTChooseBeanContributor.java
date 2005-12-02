@@ -10,11 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTChooseBeanContributor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-02 20:22:24 $ 
  */
 package org.eclipse.ve.internal.swt;
 
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
@@ -31,8 +31,8 @@ public class SWTChooseBeanContributor extends YesNoListChooseBeanContributor{
 	public SWTChooseBeanContributor(){
 		super(SWTMessages.SWTChooseBeanContributor_Name,  SWT_BASE_TYPE_NAMES, null); 
 	}
-	public Image getImage() {
-		return CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/obj16/swtbean.gif"); //$NON-NLS-1$
+	public ImageDescriptor getImage() {
+		return CDEPlugin.getImageDescriptorFromPlugin(SwtPlugin.getDefault(), "icons/full/obj16/swtbean.gif"); //$NON-NLS-1$
 	}
 
 }

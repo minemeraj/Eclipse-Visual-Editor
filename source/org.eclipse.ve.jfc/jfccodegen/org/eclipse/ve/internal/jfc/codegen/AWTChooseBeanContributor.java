@@ -10,11 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AWTChooseBeanContributor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:38:12 $ 
+ *  $Revision: 1.6 $  $Date: 2005-12-02 20:22:22 $ 
  */
 package org.eclipse.ve.internal.jfc.codegen;
 
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 
@@ -34,8 +34,8 @@ public class AWTChooseBeanContributor extends YesNoListChooseBeanContributor{
 	public AWTChooseBeanContributor(){
 		super(JFCCodegenMessages.AWTChooseBeanContributor_Label,  AWT_BASE_TYPE_NAMES, SwingChooseBeanContributor.SWING_BASE_TYPES);  
 	}
-	public Image getImage() {
-		return CDEPlugin.getImageFromPlugin(JFCVisualPlugin.getPlugin(), "icons/full/obj16/awtbean.gif"); //$NON-NLS-1$
+	public ImageDescriptor getImage() {
+		return CDEPlugin.getImageDescriptorFromPlugin(JFCVisualPlugin.getPlugin(), "icons/full/obj16/awtbean.gif"); //$NON-NLS-1$
 	}
 
 }
