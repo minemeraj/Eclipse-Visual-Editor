@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeEditPartContributor.java,v $
- *  $Revision: 1.3 $  $Date: 2005-09-19 20:37:48 $ 
+ *  $Revision: 1.4 $  $Date: 2005-12-02 21:17:46 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -29,6 +29,13 @@ public interface TreeEditPartContributor extends EditPartContributor {
 	 */
 	ImageOverlay getImageOverlay();
 
-	void appendToText(StringBuffer buffer);
+	/**
+	 * Modify the text to be displayed.
+	 * @param text
+	 * @return
+	 * 
+	 * @since 1.2.0
+	 */
+	String modifyText(String text);
 	
 }

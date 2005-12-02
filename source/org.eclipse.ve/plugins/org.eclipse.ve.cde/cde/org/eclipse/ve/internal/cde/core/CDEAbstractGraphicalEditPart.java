@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.14 $  $Date: 2005-11-17 21:48:11 $ 
+ *  $Revision: 1.15 $  $Date: 2005-12-02 21:17:46 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -64,7 +64,7 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			figureOverlayPanel  = new Panel();
 			figureOverlayPanel.setLayoutManager(new FlowLayout());
 			figureOverlayPanel.getBounds().translate(3, 3);
-			((ContentPaneFigure)getFigure()).getContentPane().add(figureOverlayPanel);
+			getFigure().add(figureOverlayPanel);
 			fContributionChangeListener = new EditPartContributionChangeListener () {
 				public void contributionChanged(EditPartContributor editpartContributor) {
 					refreshContributions();
@@ -391,6 +391,7 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 				Iterator iterator = figureOverlayCache.iterator();
 				while (iterator.hasNext())
 					figureOverlayPanel.remove((IFigure) iterator.next());
+				figureOverlayPanel.setSize(0,0);
 				figureOverlayCache = null;
 			}
 			if (hoverOverlayCache != null && getFigure().getToolTip() instanceof ToolTipContentHelper) {
@@ -406,10 +407,16 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	
 	// The contributions have changed... remove the old and re-add the contributions to pickup any changes
 	private void refreshContributions() {
-		fActionBarController.hideActionBar();
-		actionBarEditpartSelected = false;
-		removeContributions();
-		addContributions();
+		CDEUtilities.displayExec(this, "refreshContributions", new EditPartRunnable(this) {
+		
+			protected void doRun() {
+				fActionBarController.hideActionBar();
+				actionBarEditpartSelected = false;
+				removeContributions();
+				addContributions();
+			}
+		
+		});
 	}
 
 	/*

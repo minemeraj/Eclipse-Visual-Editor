@@ -1,4 +1,4 @@
-package org.eclipse.ve.internal.cde.emf;
+package org.eclipse.ve.internal.cde.core;
 
 import java.util.*;
 
@@ -6,15 +6,24 @@ import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 
-import org.eclipse.ve.internal.cde.core.ImageOverlay;
 
-
-public class TestCompositeImageDescriptor extends CompositeImageDescriptor {
+/**
+ * A CompositeImageDescriptor that takes {@link ImageOverlay} objects to overlay the base image.
+ * 
+ * @since 1.2.0
+ */
+public class CDECompositeImageDescriptor extends CompositeImageDescriptor {
 	
 	private ImageData fBaseImage;
 	private List imageOverlays;
 
-	public TestCompositeImageDescriptor(ImageData baseImage){
+	/**
+	 * Construct with the base image.
+	 * @param baseImage
+	 * 
+	 * @since 1.2.0
+	 */
+	public CDECompositeImageDescriptor(ImageData baseImage){
 		fBaseImage = baseImage;
 	}
 
@@ -31,10 +40,12 @@ public class TestCompositeImageDescriptor extends CompositeImageDescriptor {
 	}
 	
 	public void addOverlay(ImageOverlay anOverlay){
-		if(imageOverlays == null){
-			imageOverlays = new ArrayList(1);
+		if (anOverlay != null) {
+			if (imageOverlays == null) {
+				imageOverlays = new ArrayList(1);
+			}
+			imageOverlays.add(anOverlay);
 		}
-		imageOverlays.add(anOverlay);
 	}
 
 	protected Point getSize() {

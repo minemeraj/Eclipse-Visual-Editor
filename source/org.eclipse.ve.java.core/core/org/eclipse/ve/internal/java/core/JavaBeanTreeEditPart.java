@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.22 $ $Date: 2005-09-22 13:04:03 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.23 $ $Date: 2005-12-02 21:17:47 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -70,6 +70,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 
 	protected List propertyChangeEventInvocationsListenedTo;
 	private List fEditPartContributors;	
+	private EditPartContributionChangeListener fContributionChangeListener;
 
 	public JavaBeanTreeEditPart(Object aModel) {
 		super(aModel);
@@ -103,9 +104,22 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 	
 	private void addEditPartContributor(TreeEditPartContributor treeEditPartContributor){
 		if(fEditPartContributors == null){
+			if (fContributionChangeListener == null) {
+				fContributionChangeListener = new EditPartContributionChangeListener() {
+
+					public void contributionChanged(EditPartContributor editpartContributor) {
+						CDEUtilities.displayExec(JavaBeanTreeEditPart.this, "refreshContributions", new EditPartRunnable(JavaBeanTreeEditPart.this) {
+							protected void doRun() {
+								refreshVisuals();
+							}
+						});
+					}
+				};
+			}			
 			fEditPartContributors = new ArrayList(1);
-			fEditPartContributors.add(treeEditPartContributor);
 		}
+		fEditPartContributors.add(treeEditPartContributor);
+		treeEditPartContributor.addContributionChangeListener(fContributionChangeListener);
 	}
 
 	protected Adapter getListenerAdapter() {
@@ -149,7 +163,6 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 			for (Iterator itr = fEditPartContributors.iterator(); itr.hasNext();) {
 				EditPartContributor contributor = (EditPartContributor) itr.next();
 				contributor.dispose();
-				
 			}
 			fEditPartContributors = null;
 		}
@@ -236,13 +249,11 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 	protected String getText() {
 		String text = super.getText();
 		if(fEditPartContributors != null){
-			StringBuffer buffer = new StringBuffer(text);
 			Iterator iter = fEditPartContributors.iterator();
 			while(iter.hasNext()){
-				buffer.append(' ');
-				((TreeEditPartContributor)iter.next()).appendToText(buffer);
+				text = ((TreeEditPartContributor)iter.next()).modifyText(text);
 			}
-			return buffer.toString();
+			return text;
 		}
 		return text;		
 	}
@@ -264,7 +275,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 		}
 		Image anImage = super.getImage();
 		if (anImage != null) {
-			TestCompositeImageDescriptor imageDescriptor = new TestCompositeImageDescriptor(anImage.getImageData());
+			CDECompositeImageDescriptor imageDescriptor = new CDECompositeImageDescriptor(anImage.getImageData());
 			if(errorStatus != IErrorHolder.ERROR_NONE){
 				ImageData errorImageData = null;
 				switch (errorStatus) {

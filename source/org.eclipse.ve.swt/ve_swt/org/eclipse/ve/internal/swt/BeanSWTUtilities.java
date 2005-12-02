@@ -12,6 +12,7 @@ package org.eclipse.ve.internal.swt;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.*;
@@ -956,7 +957,18 @@ public class BeanSWTUtilities {
 			try {
 				FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(proj);
 				ContainerPaths cpaths = (ContainerPaths) foundIds.containerIds.get("SWT_CONTAINER");
-				return (cpaths != null && cpaths.getVisibleContainerPaths().length > 0) || foundIds.pluginIds.containsKey("org.eclipse.swt"); //$NON-NLS-1$
+				boolean jface = foundIds.pluginIds.containsKey("org.eclipse.jface");
+				if (!jface && cpaths != null && cpaths.getVisibleContainerPaths().length > 0) {
+					Pattern pattern = Pattern.compile("SWT_CONTAINER/JFACE(/.*)*");
+					String[] containerPaths = cpaths.getVisibleContainerPaths();
+					for (int i = 0; i < containerPaths.length; i++) {
+						if (pattern.matcher(containerPaths[i]).matches()) {
+							jface = true;
+							break;
+						}
+					}
+				}
+				return jface;
 			} catch (JavaModelException e) {
 			}
 		}
