@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialogUtilities.java,v $
- *  $Revision: 1.11 $  $Date: 2005-12-02 16:31:20 $ 
+ *  $Revision: 1.12 $  $Date: 2005-12-02 20:22:22 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
-import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.proxy.core.ContributorExtensionPointInfo;
@@ -38,7 +37,6 @@ import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.properties.NameInCompositionPropertyDescriptor;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-import org.eclipse.ve.internal.java.rules.IBeanNameProposalRule;
  
 /**
  * 
@@ -62,7 +60,6 @@ public class ChooseBeanDialogUtilities {
 	public static final String PI_CONTAINER = "container"; //$NON-NLS-1$	
 	public static final String PI_PLUGIN = "plugin"; //$NON-NLS-1$
 	public static final IChooseBeanContributor[] NO_CONTRIBS = new IChooseBeanContributor[0];
-	private static HashMap contributorNameImageMap = new HashMap();
 	private static ContributorExtensionPointInfo contributorInfo;
 	
 	private static void processContributorExtensionPoint() {
@@ -131,28 +128,6 @@ public class ChooseBeanDialogUtilities {
 	}
 	
 	/**
-	 * Stores the images of contributors based on contributor names
-	 * 
-	 * @param contrib
-	 * @return
-	 */
-	public static Image getContributorImage(IChooseBeanContributor contrib){
-		Image image = null;
-		if(contrib!=null){
-			String contribName = contrib.getName();
-			if(contribName==null)
-				contribName = contrib.getClass().getName();
-			if(contributorNameImageMap.containsKey(contribName))
-				image = (Image) contributorNameImageMap.get(contribName);
-			else{
-				image = contrib.getImage();
-				contributorNameImageMap.put(contribName, image);
-			}
-		}
-		return image;
-	}
-
-	/**
 	 * Returns whether the passed in selected object is acceptable or not for the purpose of
 	 * instantiation. 
 	 * 
@@ -188,7 +163,7 @@ public class ChooseBeanDialogUtilities {
 	 * 
 	 * @since 1.1
 	 */
-	public static IStatus getClassStatus(IType selected, String packageName, ResourceSet resourceSet, IJavaSearchScope javaSearchScope, EditDomain editDomain){
+	private static IStatus getClassStatus(IType selected, String packageName, ResourceSet resourceSet, IJavaSearchScope javaSearchScope, EditDomain editDomain){
 		Throwable t = null;
 		String message = new String(); 
 		boolean isInstantiable = true;
@@ -292,38 +267,5 @@ public class ChooseBeanDialogUtilities {
 			
 			policy.setModelOnAnnotation(obj, annotation);
 		}
-	}
-	
-	/**
-	 * 
-	 * This is a temporary solution, we need to have a name proposal provider - not
-	 * hard coded access to CodeGen.
-	 */
-	public static String getFieldProposal (String className, EditDomain ed, ResourceSet rs) {
-		String proposal = new String();
-		if (ed != null && rs != null) {
-			EObject o = ed.getDiagramData();
-			IType javaElement = null;
-			// CodeGen will have an adapter on the diagram to resolve the IType
-			for (Iterator iter = o.eAdapters().iterator(); iter.hasNext();) {
-				Object a = iter.next();
-				if (a instanceof IAdaptable) {
-					Object je = ((IAdaptable) a).getAdapter(IJavaElement.class);
-					// The rule needs the IType for a JavaBased editor to ensure
-					// no instance variable duplication
-					if (je instanceof IType) {
-						javaElement = (IType) je;
-						break;
-					}
-				}
-			}
-			if (javaElement != null) {
-				IBeanNameProposalRule pp = (IBeanNameProposalRule) ed.getRuleRegistry().getRule(IBeanNameProposalRule.RULE_ID); 
-				String result = pp.getProspectInstanceVariableName(className, new Object[] { javaElement }, rs);
-				if(result!=null)
-					proposal = result;
-			}
-		}
-		return proposal;
 	}
 }

@@ -10,14 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllTypesChooseBeanContributor.java,v $
- *  $Revision: 1.6 $  $Date: 2005-12-02 16:31:22 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-02 20:22:23 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.ui.dialogs.ITypeInfoFilterExtension;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.resource.ImageDescriptor;
  
 /**
  * 
@@ -39,7 +39,7 @@ public class AllTypesChooseBeanContributor implements IChooseBeanContributor {
 		return null;
 	}
 
-	public Image getImage() {
+	public ImageDescriptor getImage() {
 		return null;
 	}
 

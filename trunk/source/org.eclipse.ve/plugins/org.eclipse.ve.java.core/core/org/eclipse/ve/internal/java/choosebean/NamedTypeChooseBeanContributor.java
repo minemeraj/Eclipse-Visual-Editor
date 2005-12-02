@@ -10,11 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NamedTypeChooseBeanContributor.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-27 16:32:48 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-02 20:22:22 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.resource.ImageDescriptor;
  
 /**
  * 
@@ -26,7 +26,7 @@ public class NamedTypeChooseBeanContributor extends YesNoListChooseBeanContribut
 		super(displayName, new String[] {classPackageName, className},null); 		
 	}
 
-	public Image getImage() {
+	public ImageDescriptor getImage() {
 		return null;
 	}
 	
