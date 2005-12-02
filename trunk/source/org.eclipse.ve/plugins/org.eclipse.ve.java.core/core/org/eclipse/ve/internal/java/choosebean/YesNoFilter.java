@@ -16,13 +16,13 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.corext.util.TypeInfo;
-import org.eclipse.jface.viewers.IFilter;
+import org.eclipse.jdt.ui.dialogs.ITypeInfoFilterExtension;
+import org.eclipse.jdt.ui.dialogs.ITypeInfoRequestor;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 
-public class YesNoFilter implements IFilter {
+public class YesNoFilter implements ITypeInfoFilterExtension {
 
 	private String[] yesTypes = null;
 	private String[] noTypes = null;
@@ -43,9 +43,20 @@ public class YesNoFilter implements IFilter {
 		getMonitor().worked(num);
 	}
 	
-	public boolean select(Object toTest) {
-		TypeInfo type = (TypeInfo) toTest;
-		String fqn = type.getFullyQualifiedName();
+	public boolean select(ITypeInfoRequestor typeInfoRequestor) {
+		StringBuffer fqnBuffer = new StringBuffer();
+		if(typeInfoRequestor.getPackageName()!=null && typeInfoRequestor.getPackageName().length()>0){
+			fqnBuffer.append(typeInfoRequestor.getPackageName());
+			fqnBuffer.append(".");
+		}
+		if(typeInfoRequestor.getEnclosingName()!=null && typeInfoRequestor.getEnclosingName().length()>0){
+			fqnBuffer.append(typeInfoRequestor.getEnclosingName());
+			fqnBuffer.append(".");
+		}
+		if(typeInfoRequestor.getTypeName()!=null && typeInfoRequestor.getTypeName().length()>0){
+			fqnBuffer.append(typeInfoRequestor.getTypeName());
+		}
+		String fqn = fqnBuffer.toString();
 		if(		!getNoTypeFQNs().contains(fqn) && 
 				getYesTypeFQNs().contains(fqn))
 			return true;

@@ -10,13 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AllTypesChooseBeanContributor.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.6 $  $Date: 2005-12-02 16:31:22 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jface.viewers.IFilter;
+import org.eclipse.jdt.ui.dialogs.ITypeInfoFilterExtension;
 import org.eclipse.swt.graphics.Image;
  
 /**
@@ -35,7 +35,7 @@ public class AllTypesChooseBeanContributor implements IChooseBeanContributor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.java.choosebean.IChooseBeanContributor#getFilter(org.eclipse.jdt.core.search.IJavaSearchScope)
 	 */
-	public IFilter getFilter(IPackageFragment pkg, IProgressMonitor monitor) {
+	public ITypeInfoFilterExtension getFilter(IPackageFragment pkg, IProgressMonitor monitor) {
 		return null;
 	}
 

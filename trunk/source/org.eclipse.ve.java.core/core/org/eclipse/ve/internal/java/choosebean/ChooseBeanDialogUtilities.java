@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialogUtilities.java,v $
- *  $Revision: 1.10 $  $Date: 2005-10-20 22:02:29 $ 
+ *  $Revision: 1.11 $  $Date: 2005-12-02 16:31:20 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
-import org.eclipse.jdt.internal.corext.util.TypeInfo;
 import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
@@ -166,7 +165,7 @@ public class ChooseBeanDialogUtilities {
 	 * 
 	 * @since 1.2.0
 	 */
-	public static IStatus getClassStatus(Object selected, String packageName, ResourceSet resourceSet, IJavaSearchScope javaSearchScope, String name, EditDomain domain){
+	public static IStatus getClassStatus(IType selected, String packageName, ResourceSet resourceSet, IJavaSearchScope javaSearchScope, String name, EditDomain domain){
 		IStatus status = getClassStatus(selected, packageName, resourceSet, javaSearchScope, domain);
 		if(status.isOK()){
 			IStatus nameStatus = JavaConventions.validateFieldName(name);
@@ -189,7 +188,7 @@ public class ChooseBeanDialogUtilities {
 	 * 
 	 * @since 1.1
 	 */
-	public static IStatus getClassStatus(Object selected, String packageName, ResourceSet resourceSet, IJavaSearchScope javaSearchScope, EditDomain editDomain){
+	public static IStatus getClassStatus(IType selected, String packageName, ResourceSet resourceSet, IJavaSearchScope javaSearchScope, EditDomain editDomain){
 		Throwable t = null;
 		String message = new String(); 
 		boolean isInstantiable = true;
@@ -199,8 +198,6 @@ public class ChooseBeanDialogUtilities {
 			message = ChooseBeanMessages.SelectionAreaHelper_SecondaryMsg_NoSelectionMade; 
 		}else{
 			try{
-				TypeInfo ti = (TypeInfo) selected;
-				
 				boolean isDefaultConstructorSearchRequired = true;
 				// The base set of rules is that classes can only be instantiated if they have default constructors
 				// Some classes however (such as SWT controls) don't conform to this, however can still be created
@@ -208,14 +205,14 @@ public class ChooseBeanDialogUtilities {
 				if(resourceSet!=null){
 					IModelAdapterFactory modelAdapterFactory = CDEUtilities.getModelAdapterFactory(editDomain);
 					if (modelAdapterFactory != null) {
-						EClass selectedEMFClass = Utilities.getJavaClass(ti.getFullyQualifiedName(), resourceSet);
+						EClass selectedEMFClass = Utilities.getJavaClass(selected.getFullyQualifiedName('.'), resourceSet);
 						if (modelAdapterFactory.typeHasAdapter(selectedEMFClass, IContainmentHandler.class)) {
 							isDefaultConstructorSearchRequired = false;
 						}
 					}
 				}
 				
-				IType type = ti.resolveType(javaSearchScope);
+				IType type = selected;
 				
 				boolean isTypePublic = Flags.isPublic(type.getFlags());
 				boolean isInPresentPackage = type.getPackageFragment().getElementName().equals(packageName);
