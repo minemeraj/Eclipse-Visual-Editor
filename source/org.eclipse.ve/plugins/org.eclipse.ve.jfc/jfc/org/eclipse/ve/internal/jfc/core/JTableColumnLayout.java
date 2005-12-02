@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JTableColumnLayout.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.4 $  $Date: 2005-12-02 18:41:28 $ 
  */
 
 import org.eclipse.draw2d.*;
@@ -92,7 +92,7 @@ public void layout(IFigure parent) {
  * @see  #setConstraint(IFigure, Object)
  */
 public Object getConstraint(IFigure figure) {
-	return (Rectangle) constraints.get(figure);
+	return constraints.get(figure);
 }
 
 /**

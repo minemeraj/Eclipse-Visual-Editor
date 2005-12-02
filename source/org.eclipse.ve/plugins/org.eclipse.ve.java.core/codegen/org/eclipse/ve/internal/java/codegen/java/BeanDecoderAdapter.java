@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanDecoderAdapter.java,v $
- *  $Revision: 1.23 $  $Date: 2005-10-20 18:20:12 $ 
+ *  $Revision: 1.24 $  $Date: 2005-12-02 18:41:22 $ 
  */
 
 import java.util.*;
@@ -597,7 +597,7 @@ public ICodeGenSourceRange getHighlightSourceRange() throws CodeGenException {
 public Object getAdapter(Class aClass){
 	if ( aClass == IJavaElement.class && !fBean.getModel().isStateSet(IBeanDeclModel.BDM_STATE_DOWN)) { 
 		// Return the IField for this bean.
-		IJavaElement e = (IField) JavaCore.create(fBean.getFieldDeclHandle());
+		IJavaElement e = JavaCore.create(fBean.getFieldDeclHandle());
 		ICompilationUnit cu = fBean.getModel().getCompilationUnit() ;
 		IJavaElement[] es = cu.findElements(e);
 		if (es != null && es.length == 1)

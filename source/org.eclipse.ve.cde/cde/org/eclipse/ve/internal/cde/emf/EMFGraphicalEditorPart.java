@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.17 $  $Date: 2005-08-24 23:12:48 $ 
+ *  $Revision: 1.18 $  $Date: 2005-12-02 18:41:23 $ 
  */
 
 
@@ -516,7 +516,7 @@ public Object getAdapter(Class type) {
 	if (type == ActionRegistry.class)
 		return getActionRegistry();
 	if (type == org.eclipse.ve.internal.cde.core.EditDomain.class)
-		return (org.eclipse.ve.internal.cde.core.EditDomain)getDomain();
+		return getDomain();
 	if (type == PaletteRoot.class)
 		return ((org.eclipse.ve.internal.cde.core.EditDomain) getDomain()).getPaletteRoot();
 	return super.getAdapter(type);
