@@ -11,18 +11,13 @@
 package org.eclipse.ve.internal.java.choosebean;
 
 /*
- * $RCSfile: ChooseBeanSelector.java,v $ $Revision: 1.12 $ $Date: 2005-08-24 23:30:47 $
+ * $RCSfile: ChooseBeanSelector.java,v $ $Revision: 1.13 $ $Date: 2005-12-02 16:31:20 $
  */
 
-import java.util.logging.Level;
-
 import org.eclipse.gef.tools.CreationTool;
-import org.eclipse.jface.window.Window;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.palette.SelectionCreationToolEntry;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class ChooseBeanSelector implements SelectionCreationToolEntry.ISelector {
 
@@ -31,19 +26,7 @@ public class ChooseBeanSelector implements SelectionCreationToolEntry.ISelector 
 
 	public Object[] getNewObjectAndType(CreationTool creationTool, org.eclipse.gef.EditDomain domain) {
 		EditDomain ed = (EditDomain) domain;
-		ChooseBeanDialog dialog = new ChooseBeanDialog(ed.getEditorPart().getSite().getShell(), ed, null, -1, false);
-		if (dialog.open() == Window.OK) {
-			try {
-				Object[] results = dialog.getResult();
-				if (JavaVEPlugin.isLoggingLevel(Level.FINE))
-					JavaVEPlugin.log(ChooseBeanMessages.ToolSelector_SelectionLogMessage + results[0], Level.FINE); 
-				return results;
-			} catch (Exception e) {
-				return null;
-			}
-		} else {
-			return null;
-		}
+		return ChooseBeanDialog.getChooseBeanResults(ed, null, null);
 	}
 
 }

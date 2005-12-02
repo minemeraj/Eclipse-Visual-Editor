@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.19 $  $Date: 2005-12-01 23:42:56 $ 
+ *  $Revision: 1.20 $  $Date: 2005-12-02 16:31:22 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -20,7 +20,6 @@ import java.util.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -70,17 +69,12 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 	}
 	
 	protected Object openDialogBox(Control cellEditorWindow) {
-		ChooseBeanDialog chooseBean = new ChooseBeanDialog(
-				cellEditorWindow.getShell(),
+		Object[] results = ChooseBeanDialog.getChooseBeanResults(
 				editDomain,
 				new IChooseBeanContributor[] {new NamedTypeChooseBeanContributor(javaClass.getQualifiedName(),javaClass.getJavaPackage().getPackageName(), javaClass.getName())},
-				-1,
-				false);				
-		chooseBean.setFilter("**"); //$NON-NLS-1$
-		if(chooseBean.open()==Window.OK){
-			Object[] results = chooseBean.getResult();
+				"**");
+		if(results!=null && results.length>0)
 			return (IJavaObjectInstance)results[0];
-		}
 		return null;
 	}
 	
