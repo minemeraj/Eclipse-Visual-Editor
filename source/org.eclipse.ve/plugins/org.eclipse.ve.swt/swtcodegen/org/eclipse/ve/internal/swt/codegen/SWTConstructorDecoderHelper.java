@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.31 $  $Date: 2005-11-29 19:28:03 $ 
+ *  $Revision: 1.32 $  $Date: 2005-12-02 00:52:07 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -311,7 +311,15 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 			if (getControlIndex()<0) {
 			// Need to wait here for the control feature first
 			// Temporarily disable the source generation for this expression
-		 	  fOwner.getExprRef().setNoSrcExpression(true);
+			
+			// 116879: If there is no controls feature, we remove the expression. 
+		    // As when the controls feature is set, it will automatically generate
+			// the creation of an init expression, and magically move all remaining 
+			// expressions. Hence we return null, which makes the CodeExpressionRef 
+			// remove it from the source. 
+			// 
+			// fOwner.getExprRef().setNoSrcExpression(true);
+			
 			  return null ;
 			}
 		}		
