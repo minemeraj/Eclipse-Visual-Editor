@@ -12,7 +12,7 @@
  *  Created Oct 5, 2005 by Gili Mendel
  * 
  *  $RCSfile: ViewerConstructorDecoderHelper.java,v $
- *  $Revision: 1.5 $  $Date: 2005-11-01 20:15:16 $ 
+ *  $Revision: 1.6 $  $Date: 2005-12-02 22:17:38 $ 
  */
  
 package org.eclipse.ve.internal.jface.codegen;
@@ -161,5 +161,15 @@ public class ViewerConstructorDecoderHelper extends ConstructorDecoderHelper {
 		   super.restoreImplicitInstancesIfNeeded();				
 	}
 
+	public String generate(Object[] args) throws CodeGenException {
+		if (isExplicitConstructor()){
+			EStructuralFeature sf = getImplicitFeature();
+			EObject implicit = getImplicitChild();
+			ExpressionRefFactory eGen = new ExpressionRefFactory(fbeanPart, sf);		
+			// create a NOSRC expression in the BDM
+			eGen.createFromJVEModelWithNoSrc(new Object[] { implicit } );
+		}
+		return super.generate(args);
+	}
 
 }
