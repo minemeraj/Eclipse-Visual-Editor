@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialog.java,v $
- *  $Revision: 1.45 $  $Date: 2005-12-02 20:22:22 $ 
+ *  $Revision: 1.46 $  $Date: 2005-12-02 20:32:22 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -26,7 +26,6 @@ import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.dialogs.SelectionDialog;
-import org.eclipse.ui.part.FileEditorInput;
 
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
@@ -60,9 +59,12 @@ public class ChooseBeanDialog {
 		Object[] results = null;
 		try {
 			// search scope
-			ICompilationUnit compilationUnit = (ICompilationUnit) JavaCore.create(((FileEditorInput)editDomain.getEditorPart().getEditorInput()).getFile());
-			if (compilationUnit.getParent() instanceof IPackageFragment) {
-				IPackageFragment packageFragment = (IPackageFragment) compilationUnit.getParent();
+			ICompilationUnit compilationUnit = (ICompilationUnit) JavaCore.create(((IFileEditorInput)editDomain.getEditorPart().getEditorInput()).getFile());
+			IJavaElement parent = compilationUnit.getParent();
+			while(parent!=null && !(parent instanceof IPackageFragment))
+				parent = parent.getParent();
+			if (parent instanceof IPackageFragment) {
+				IPackageFragment packageFragment = (IPackageFragment) parent;
 				IJavaProject javaProject = packageFragment.getJavaProject();
 				IJavaSearchScope searchScope = SearchEngine.createJavaSearchScope(new IJavaElement[]{javaProject});
 				
