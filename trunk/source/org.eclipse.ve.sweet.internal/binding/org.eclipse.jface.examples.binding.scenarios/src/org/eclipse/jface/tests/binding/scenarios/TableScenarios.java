@@ -96,8 +96,8 @@ public class TableScenarios extends ScenariosTestCase {
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
 		tableViewerDescription.addColumn("firstName");
-		tableViewerDescription.addColumn("lastName",null, new PhoneConverter());
-		tableViewerDescription.addColumn("state",null,new StateConverter());	
+		tableViewerDescription.addColumn("lastName",new PhoneConverter());
+		tableViewerDescription.addColumn("state",new StateConverter());	
 		getDbc().bind(tableViewerDescription, new Property(catalog,"accounts"), null);			
 		
 		CellEditor[] cellEditors = tableViewer.getCellEditors();
@@ -124,8 +124,8 @@ public class TableScenarios extends ScenariosTestCase {
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(tableViewer);		
 		tableViewerDescription.addColumn("lastName");
-		tableViewerDescription.addColumn("phone",null, new PhoneConverter());
-		tableViewerDescription.addColumn("state",null,new StateConverter());	
+		tableViewerDescription.addColumn("phone",new PhoneConverter());
+		tableViewerDescription.addColumn("state",new StateConverter());	
 		getDbc().bind(tableViewerDescription, new Property(catalog,"accounts"), null);		
 				
 		// Verify that the data in the the table columns matches the expected

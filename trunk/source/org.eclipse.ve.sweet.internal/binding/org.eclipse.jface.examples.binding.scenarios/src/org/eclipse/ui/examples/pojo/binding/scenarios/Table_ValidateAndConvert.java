@@ -94,9 +94,9 @@ public class Table_ValidateAndConvert extends Composite {
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
 				tableViewer);		
-		tableViewerDescription.addColumn("firstName");
-		tableViewerDescription.addColumn("phone",new PhoneValidator(), new PhoneConverter());
-		tableViewerDescription.addColumn("state", null, null, new StateConverter());	
+		tableViewerDescription.addEditableColumn("firstName");
+		tableViewerDescription.addEditableColumn("phone",null,new PhoneValidator(), new PhoneConverter());
+		tableViewerDescription.addEditableColumn("state", null, null, new StateConverter());	
 		dbc.bind(tableViewerDescription, new Property(catalog,"accounts"), null);
 		
 		IUpdatable errorMsgUpdatable = dbc.createUpdatable(new Property(lblErrorMessage,"text"));
@@ -113,9 +113,9 @@ public class Table_ValidateAndConvert extends Composite {
 		
 		TableViewerDescription tableViewerDescription = new TableViewerDescription(
 				tableViewer1);		
-		tableViewerDescription.addColumn("firstName");
-		tableViewerDescription.addColumn("phone");
-		tableViewerDescription.addColumn("state", new StateCellEditor(table1), null, null);	
+		tableViewerDescription.addEditableColumn("firstName");
+		tableViewerDescription.addEditableColumn("phone");
+		tableViewerDescription.addEditableColumn("state", new StateCellEditor(table1), null, null);	
 		dbc.bind(tableViewerDescription, new Property(catalog,"accounts"), null);		
 
 		dbc.bind(tableViewerDescription, new Property(catalog,"accounts"),null);
