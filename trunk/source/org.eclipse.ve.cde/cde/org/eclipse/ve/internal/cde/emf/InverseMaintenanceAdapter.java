@@ -11,13 +11,15 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.16 $  $Date: 2005-11-08 22:33:27 $ 
+ *  $Revision: 1.17 $  $Date: 2005-12-02 21:17:46 $ 
  */
 
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.logging.Level;
 
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
@@ -25,6 +27,7 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.jface.util.ListenerList;
 
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 
@@ -93,6 +96,80 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
  */
 public class InverseMaintenanceAdapter extends AdapterImpl {
 	public static final Class ADAPTER_KEY = InverseMaintenanceAdapter.class;
+	
+	/**
+	 * The event for the {@link InverseReferenceListener} methods.
+	 * 
+	 * @since 1.2.0
+	 */
+	public static class InverseReferenceEvent extends EventObject {
+
+		private static final long serialVersionUID = -8979619768427935802L;
+		private final EObject refBy;
+		private final EReference reference;
+
+		/**
+		 * Construct the event.
+		 * @param source the inverse adapter being/was referenced
+		 * @param refBy the EObject referring/was referring
+		 * @param reference the EReference used
+		 * 
+		 * @since 1.2.0
+		 */
+		public InverseReferenceEvent(InverseMaintenanceAdapter source, EObject refBy, EReference reference) {
+			super(source);
+			this.refBy = refBy;
+			this.reference = reference;
+		}
+
+		
+		/**
+		 * Get who is now/was referencing the source (the notifier being pointed to).
+		 * 
+		 * @return Returns the refBy.
+		 * 
+		 * @since 1.2.0
+		 */
+		public final EObject getRefBy() {
+			return refBy;
+		}
+
+		
+		/**
+		 * Get the reference that was/is used to referencing the source (the notifier being pointed to).
+		 * @return Returns the reference.
+		 * 
+		 * @since 1.2.0
+		 */
+		public final EReference getReference() {
+			return reference;
+		}
+	}
+	
+	/**
+	 * A listener for InverseReference events.
+	 * 
+	 * @see InverseMaintenanceAdapter#addInverseReferenceListener(InverseReferenceListener)
+	 * @see InverseMaintenanceAdapter#removeInverseReferenceListener(InverseReferenceListener)
+	 * @since 1.2.0
+	 */
+	public interface InverseReferenceListener {
+		/**
+		 * A reference was added pointing to the notifier.
+		 * @param event
+		 * 
+		 * @since 1.2.0
+		 */
+		public void referenceAdded(InverseReferenceEvent event);
+		
+		/**
+		 * A reference was removed from the notifier.
+		 * @param event
+		 * 
+		 * @since 1.2.0
+		 */
+		public void referenceRemoved(InverseReferenceEvent event);
+	}
 
 	// Pointer to backrefs. Key==Back_Feature, Value=List(Weak(Back_EObjects)) or Weak(Back_EObject) if only one.
 	// Using WeakReference for back objects so that if the back object is not held onto by anybody, the reference
@@ -317,7 +394,73 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 		
 		return false;
 	}
+	
+	// TODO This needs to be changed to use the common aPI one in core.runtime when stepping up to Eclipse 3.2.
+	private ListenerList listeners;
+	
+	/**
+	 * Add a listener for {@link InverseReferenceEvent}.
+	 * @param listener
+	 * 
+	 * @since 1.2.0
+	 */
+	public void addInverseReferenceListener(InverseReferenceListener listener) {
+		if (listeners == null)
+			listeners = new ListenerList();
+		listeners.add(listener);
+	}
 
+	/**
+	 * Remove a listener for {@link InverseReferenceEvent}.
+	 * @param listener
+	 * 
+	 * @since 1.2.0
+	 */
+	public void removeInverseReferenceListener(InverseReferenceListener listener) {
+		if (listeners != null)
+			listeners.remove(listener);
+	}
+	
+	/**
+	 * Fire event.
+	 * @param addRef <code>true</code> fires add event, <code>false</code> fires remove event.
+	 * @param refBy EObject referring to this notifier
+	 * @param reference EReference used to do the referring.
+	 * @param event
+	 * 
+	 * @since 1.2.0
+	 */
+	protected void fireInverseReferenceEvent(final boolean addRef, EObject refBy, EReference reference) {
+		if (listeners != null) {
+			final InverseReferenceEvent event = new InverseReferenceEvent(this, refBy, reference);
+			Object[] listenerList = listeners.getListeners();
+			class SafeRunnable implements ISafeRunnable {
+				public InverseReferenceListener listener;
+				
+				/* (non-Javadoc)
+				 * @see org.eclipse.core.runtime.ISafeRunnable#run()
+				 */
+				public void run() throws Exception {
+					if (addRef)
+						listener.referenceAdded(event);
+					else
+						listener.referenceRemoved(event);
+				}
+				
+				/* (non-Javadoc)
+				 * @see org.eclipse.core.runtime.ISafeRunnable#handleException(java.lang.Throwable)
+				 */
+				public void handleException(Throwable exception) {
+				}
+			};
+			SafeRunnable safe = new SafeRunnable();
+			for (int i = 0; i < listenerList.length; i++) {
+				safe.listener = (InverseReferenceListener) listenerList[i];
+				Platform.run(safe);
+			}
+		}
+	}
+	
 	private static final EObject[] EMPTY_EOBJECTS = new EObject[0];
 	
 	/**
@@ -634,6 +777,7 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 					}
 				}
 			}
+			fireInverseReferenceEvent(false, (EObject) backObject, feature);
 		}			
 	}
 	
@@ -655,7 +799,8 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 				list.add(refs);	// Still valid
 			list.add(new WeakReference(backObject));
 			backRefs.put(feature, list);
-		}			
+		}
+		fireInverseReferenceEvent(true, (EObject) backObject, feature);
 	}	
 
 	public final void setPropagated(boolean propagated) {

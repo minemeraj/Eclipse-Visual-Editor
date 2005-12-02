@@ -1,28 +1,18 @@
 package org.eclipse.ve.internal.jface;
 
-import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.ecore.EObject;
+import java.text.MessageFormat;
+
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.*;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.TreeEditPart;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 
-import org.eclipse.jem.internal.beaninfo.core.Utilities;
-import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.JavaRefFactory;
+import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.core.ImageFigure;
-import org.eclipse.ve.internal.cde.emf.EMFCreationFactory;
-import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
-
-import org.eclipse.ve.internal.java.core.JavaBeanGraphicalEditPart;
+import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
 import org.eclipse.ve.internal.swt.SwtPlugin;
 
@@ -31,151 +21,83 @@ import org.eclipse.ve.internal.swt.SwtPlugin;
  * 
  * @since 1.2.0
  */
-public class TreeViewerEditPartContributorFactory implements AdaptableContributorFactory {
-
-	public static IJavaInstance getTreeViewer(IJavaInstance aTree) {
-
-		// See whether this has a TreeViewer pointing to it or not
-		JavaClass treeViewerClass = Utilities.getJavaClass("org.eclipse.jface.viewers.TreeViewer", aTree.eResource().getResourceSet());
-		return (IJavaInstance) InverseMaintenanceAdapter.getFirstReferencedBy(aTree, (EReference) treeViewerClass
-				.getEStructuralFeature("tree"));
-	}
+public class TreeViewerEditPartContributorFactory extends ViewerEditPartContributorFactory {
 
 	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/viewer_overlay.gif")
 			.getImageData();
 
-	private static class TreeViewerTreeEditPartContributor extends AbstractEditPartContributor implements TreeEditPartContributor {
+	protected static class TreeViewerTreeEditPartContributor extends ViewerTreeEditPartContributor {
 
-		public void dispose() {
+		/**
+		 * @param beanTreeEditPart
+		 * @param controlFeature
+		 * 
+		 * @since 1.2.0
+		 */
+		protected TreeViewerTreeEditPartContributor(TreeEditPart beanTreeEditPart, EReference controlFeature) {
+			super(beanTreeEditPart, controlFeature);
 		}
 
 		public ImageOverlay getImageOverlay() {
-			return new ImageOverlay(OVERLAY_IMAGEDATA);
+			return hasViewer ? new ImageOverlay(OVERLAY_IMAGEDATA) : null;
 		}
 
-		public void appendToText(StringBuffer buffer) {
-			buffer.append("with TreeViewer");
+		public String modifyText(String text) {
+			return hasViewer ? MessageFormat.format("{0} (with TreeViewer attached)", new Object[] {text}) : text;
 		}
 	}
+	
+	private static URI TREE_FEATURE_URI = URI.createURI("java:/org.eclipse.jface.viewers#TreeViewer/tree");
 
 	public TreeEditPartContributor getTreeEditPartContributor(TreeEditPart treeEditPart) {
-
-		Object treeViewer = getTreeViewer((IJavaInstance) treeEditPart.getModel());
-		if (treeViewer != null) {
-			// This tree is pointed to by a tree viewer
-			return new TreeViewerTreeEditPartContributor();
-		}
-		return null;
+		return new TreeViewerTreeEditPartContributor(treeEditPart, JavaInstantiation.getReference(EMFEditDomainHelper.getResourceSet(EditDomain.getEditDomain(treeEditPart)), TREE_FEATURE_URI));
 	}
 
-	static Image treeViewerOverlayImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer2_overlay.gif");
-	static Image treeViewerImage = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer_obj.gif");
+	protected static Image TREE_VIEWER_OVERLAY_IMAGE = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer2_overlay.gif");
+	protected static Image TREE_VIEWER_IMAGE = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer_obj.gif");
 
-	private static class TreeViewerGraphicalEditPartContributor extends AbstractEditPartContributor implements GraphicalEditPartContributor {
-
-		private Object tree;
-
-		private Object treeViewer;
-
-		private GraphicalEditPart treeEditPart;
-
-		public TreeViewerGraphicalEditPartContributor(GraphicalEditPart treeEditPart, Object treeViewer) {
-			this.treeEditPart = treeEditPart;
-			this.tree = treeEditPart.getModel();
-			this.treeViewer = treeViewer;
-		}
-
-		public void dispose() {
+	protected static class TreeViewerGraphicalEditPartContributor extends ViewerGraphicalEditPartContributor {
+		/**
+		 * @param controlEditPart
+		 * @param controlFeature
+		 * 
+		 * @since 1.2.0
+		 */
+		public TreeViewerGraphicalEditPartContributor(GraphicalEditPart controlEditPart, EReference controlFeature) {
+			super(controlEditPart, controlFeature);
 		}
 
 		public ToolTipProcessor getHoverOverLay() {
-			treeViewer = getTreeViewer((IJavaInstance) tree);
-			if (treeViewer != null)
+			if (viewer != null)
 				return new ToolTipProcessor.ToolTipLabel("Select TreeViewer in action bar to show Viewer properties");
 			else
 				return new ToolTipProcessor.ToolTipLabel("Press action in action bar to convert to a TreeViewer");
 		}
 
-		/*
-		 * Return an overlay image for the tree viewer only
+		/* (non-Javadoc)
+		 * @see org.eclipse.ve.internal.jface.ViewerEditPartContributorFactory.ViewerGraphicalEditPartContributor#getViewerOverlayImage()
 		 */
-		public IFigure getFigureOverLay() {
-			treeViewer = getTreeViewer((IJavaInstance) tree);
-			if (treeViewer == null)
-				return null;
-			final Image image = treeViewerOverlayImage;
-			org.eclipse.swt.graphics.Rectangle bounds = image.getBounds();
-			IFigure fig = new Figure() {
-
-				protected void paintFigure(Graphics graphics) {
-					super.paintFigure(graphics);
-					if (image != null) {
-						// Clear some background so the image can be seen
-						graphics.drawImage(image, getLocation().x + 2, getLocation().y + 2);
-					}
-				}
-			};
-			fig.setSize(new Dimension(bounds.width + 2, bounds.height + 2));
-			fig.setLocation(new Point(-1, -1));
-			fig.setVisible(true);
-			return fig;
+		protected Image getViewerOverlayImage() {
+			return TREE_VIEWER_OVERLAY_IMAGE;
 		}
 
-		public GraphicalEditPart[] getActionBarChildren() {
-			// If this tree has an associated TreeViewer, return an editpart with the treeviewer as it's model
-			if (treeViewer != null)
-				return new GraphicalEditPart[] { new JavaBeanGraphicalEditPart(treeViewer) {
+		/* (non-Javadoc)
+		 * @see org.eclipse.ve.internal.jface.ViewerEditPartContributorFactory.ViewerGraphicalEditPartContributor#getViewerImage()
+		 */
+		protected Image getViewerImage() {
+			return TREE_VIEWER_IMAGE;
+		}
 
-					protected IFigure createFigure() {
-						Label label = (Label) super.createFigure();
-						ImageFigure fig = new ImageFigure();
-						fig.setImage(treeViewerImage);
-						fig.add(fErrorIndicator);
-						fig.setToolTip(label.getToolTip());
-						fig.setCursor(Cursors.HAND);
-						fig.setPreferredSize(fig.getPreferredSize().width + 1, fig.getPreferredSize().height);
-						return fig;
-					}
-
-					protected void createEditPolicies() {
-						super.createEditPolicies();
-						installEditPolicy(EditPolicy.COMPONENT_ROLE, new ActionBarChildComponentPolicy(TreeViewerEditPartContributorFactory.TreeViewerGraphicalEditPartContributor.this, (IJavaInstance) tree));
-					}
-					
-					protected void setupLabelProvider() {
-						// don't do anything here, we'll provide our own image.
-					}
-				}};
-
-			// No Treeviewer... return an action editpart that can be selected to promote this tree to a tree viewer.
-			else
-				return new GraphicalEditPart[] { new ActionBarActionEditPart("Press here to convert to a TreeViewer") {
-
-					public void run() {
-						// If the tree viewer already exists, just the contributions need to be refreshed
-						if ((treeViewer = getTreeViewer((IJavaInstance) tree)) != null) {
-							notifyContributionChanged();
-
-						} else {
-							// Create and execute commands to promote this Tree to a JFace TreeViewer
-							CreateRequest cr = new CreateRequest();
-							cr.setFactory(new EMFCreationFactory(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.jface.viewers.TreeViewer",
-									(EObject) tree)));
-							Command c = treeEditPart.getCommand(cr);
-							if (c != null) {
-								EditDomain.getEditDomain(treeEditPart).getCommandStack().execute(c);
-								treeViewer = getTreeViewer((IJavaInstance) tree);
-								notifyContributionChanged();
-							}
-						}
-					}
-				}};
+		/* (non-Javadoc)
+		 * @see org.eclipse.ve.internal.jface.ViewerEditPartContributorFactory.ViewerGraphicalEditPartContributor#getActionTextForCreateViewerButton()
+		 */
+		protected String getActionTextForCreateViewerButton() {
+			return "Press here to attach a TreeViewer";
 		}
 	}
 
 	public GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart) {
-		Object tree = graphicalEditPart.getModel();
-		return new TreeViewerGraphicalEditPartContributor(graphicalEditPart, getTreeViewer((IJavaInstance)tree));
+		return new TreeViewerGraphicalEditPartContributor(graphicalEditPart, JavaInstantiation.getReference(EMFEditDomainHelper.getResourceSet(EditDomain.getEditDomain(graphicalEditPart)), TREE_FEATURE_URI));
 	}
 
 }
