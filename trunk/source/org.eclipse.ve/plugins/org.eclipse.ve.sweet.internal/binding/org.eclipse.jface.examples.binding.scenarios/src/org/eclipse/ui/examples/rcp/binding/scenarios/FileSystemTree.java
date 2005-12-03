@@ -12,7 +12,7 @@
  *  Created Nov 29, 2005 by Gili Mendel
  * 
  *  $RCSfile: FileSystemTree.java,v $
- *  $Revision: 1.4 $  $Date: 2005-11-30 23:24:48 $ 
+ *  $Revision: 1.5 $  $Date: 2005-12-03 01:16:56 $ 
  */
 
 package org.eclipse.ui.examples.rcp.binding.scenarios;
@@ -22,11 +22,15 @@ import java.util.Collections;
 
 import org.eclipse.jface.databinding.*;
 import org.eclipse.jface.databinding.viewers.TreeViewerDescription;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.databinding.viewers.ViewersProperties;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Tree;
 
 public class FileSystemTree extends Composite {
 
@@ -36,8 +40,12 @@ public class FileSystemTree extends Composite {
 	private Button directory = null;
 	private Tree tree = null;
 	private TreeViewer treeViewer = null;
+	private Image folderImage = new Image(Display.getCurrent(), getClass().getResourceAsStream("/org/eclipse/ui/examples/rcp/binding/scenarios/folder.gif"));
+	private Image fileImage = new Image(Display.getCurrent(), getClass().getResourceAsStream("/org/eclipse/ui/examples/rcp/binding/scenarios/file.gif"));
 	
-	ITree fileTree = null;
+	ITree fileTree = null;  //  @jve:decl-index=0:
+	
+	IUpdatableTree model = null;
 	
 	
 
@@ -65,12 +73,12 @@ public class FileSystemTree extends Composite {
 		treeComposite = new Composite(this, SWT.NONE);
 		treeComposite.setLayout(new GridLayout());
 		treeComposite.setLayoutData(gridData2);
-		tree = new Tree(treeComposite, SWT.NONE);
+		tree = new Tree(treeComposite, SWT.BORDER);
 		tree.setHeaderVisible(true);
-		tree.setLinesVisible(true);
+		tree.setLinesVisible(false);
 		tree.setLayoutData(gridData3);
-		TreeColumn treeColumn = new TreeColumn(tree, SWT.NONE);
-		treeColumn.setWidth(200);
+//		TreeColumn treeColumn = new TreeColumn(tree, SWT.NONE);
+//		treeColumn.setWidth(200);
 		treeViewer = new TreeViewer(tree);
 	}
 
@@ -95,6 +103,7 @@ public class FileSystemTree extends Composite {
 		label = new Label(buttonsComposite, SWT.NONE);
 		label.setText("Root Directory:");
 		directory = new Button(buttonsComposite, SWT.BORDER);
+		directory.setImage(folderImage);
 		directory.setLayoutData(gridData);
 		directory.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -104,7 +113,8 @@ public class FileSystemTree extends Composite {
 				directory.setText(dialog.getFilterPath());
 				File root = new File(directory.getText());
 				if (!root.canRead()) root = null;
-				fileTree.setChildren(null, new Object[] {root});
+				//fileTree.setChildren(null, new Object[] {root});
+				model.setElements(null, new Object[] {root});
 			}
 		});
 		
@@ -116,15 +126,7 @@ public class FileSystemTree extends Composite {
 		
 		IDataBindingContext dbc = DataBinding.createContext(this);
 		
-		TreeViewerDescription treeDescription = new TreeViewerDescription(treeViewer);
-		treeDescription.addColumn(File.class, "name");
-		
-//		treeDescription.addColumn(File.class, "directory");
-		
-//		TreeModelDescription modelDescription = new TreeModelDescription(new Object[] {rootFile});
-//		modelDescription.addChildrenProperty(File.class, "list");
-		
-		
+	
 		
 		fileTree = new ITree() {		
 			
@@ -181,7 +183,24 @@ public class FileSystemTree extends Composite {
 		
 		};
 		
-		dbc.bind(treeDescription, fileTree, null);
+		TreeModelDescription modelDescription = new TreeModelDescription(null);
+		modelDescription.addChildrenProperty(File.class, "listFiles");
+		model = (IUpdatableTree) dbc.createUpdatable(modelDescription);
+		
+		dbc.bind(new Property(treeViewer, ViewersProperties.CONTENT), model, null);
+		
+		treeViewer.setLabelProvider(new LabelProvider(){		
+			public String getText(Object element) {
+				return ((File)element).getName();
+			}		
+			public Image getImage(Object element) {
+				File f = (File)element;
+				if (f.isDirectory())
+					return folderImage;
+				else
+					return fileImage;
+			}		
+		});
 		
 	}
 
