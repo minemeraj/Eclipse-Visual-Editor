@@ -12,7 +12,7 @@
  *  Created Nov 29, 2005 by Gili Mendel
  * 
  *  $RCSfile: FileSystemTree.java,v $
- *  $Revision: 1.5 $  $Date: 2005-12-03 01:16:56 $ 
+ *  $Revision: 1.6 $  $Date: 2005-12-03 04:22:10 $ 
  */
 
 package org.eclipse.ui.examples.rcp.binding.scenarios;
@@ -45,9 +45,7 @@ public class FileSystemTree extends Composite {
 	
 	ITree fileTree = null;  //  @jve:decl-index=0:
 	
-	IUpdatableTree model = null;
-	
-	
+	TreeModelDescription modelDescription =null;
 
 	public FileSystemTree(Composite parent, int style) {
 		super(parent, style);
@@ -114,7 +112,7 @@ public class FileSystemTree extends Composite {
 				File root = new File(directory.getText());
 				if (!root.canRead()) root = null;
 				//fileTree.setChildren(null, new Object[] {root});
-				model.setElements(null, new Object[] {root});
+				modelDescription.setRootObjects(new Object[] {root});
 			}
 		});
 		
@@ -126,68 +124,10 @@ public class FileSystemTree extends Composite {
 		
 		IDataBindingContext dbc = DataBinding.createContext(this);
 		
-	
-		
-		fileTree = new ITree() {		
-			
-			private ITree.ChangeSupport changeSupport = null;
-			
-			private Object[] rootObjects = Collections.EMPTY_LIST.toArray();
-
-			public Class[] getTypes() {
-				return new Class[] { File.class } ;
-			}
-		
-			public boolean hasChildren(Object element) {
-				return ((File)element).isDirectory();
-			}
-		
-			public void setChildren(Object parentElement, Object[] children) {
-				if (parentElement==null) {
-					Object old = rootObjects;
-					rootObjects = children==null?Collections.EMPTY_LIST.toArray():children;					
-					if (changeSupport!=null) {
-						ITree.ChangeEvent event = new ITree.ChangeEvent(this, IChangeEvent.REPLACE, parentElement, old, children, -1);								
-						changeSupport.fireTreeChange(event);
-					}
-				}
-					
-		
-			}
-		
-			
-			public Object[] getChildren(Object parentElement) {
-				if (parentElement==null)
-					return rootObjects;
-				
-				File[] children = ((File)parentElement).listFiles();
-				if (children==null) return Collections.EMPTY_LIST.toArray();
-				
-				return children;
-			}
-
-			public void addTreeChangeListener(ITree.ChangeListener listener) {
-				if (changeSupport==null)
-					changeSupport = new ITree.ChangeSupport(this);
-				changeSupport.addTreeChangeListener(listener);
-			}
-
-			public void removeTreeChangeListener(ITree.ChangeListener listener) {
-				if (changeSupport!=null)
-					changeSupport.removeTreeChangeListener(listener);
-			}
-
-			public void dispose() {
-				changeSupport=null;
-			}
-		
-		};
-		
-		TreeModelDescription modelDescription = new TreeModelDescription(null);
+		modelDescription = new TreeModelDescription(null); // root FS will be set later
 		modelDescription.addChildrenProperty(File.class, "listFiles");
-		model = (IUpdatableTree) dbc.createUpdatable(modelDescription);
-		
-		dbc.bind(new Property(treeViewer, ViewersProperties.CONTENT), model, null);
+				
+		dbc.bind(new Property(treeViewer, ViewersProperties.CONTENT), modelDescription, null);
 		
 		treeViewer.setLabelProvider(new LabelProvider(){		
 			public String getText(Object element) {
