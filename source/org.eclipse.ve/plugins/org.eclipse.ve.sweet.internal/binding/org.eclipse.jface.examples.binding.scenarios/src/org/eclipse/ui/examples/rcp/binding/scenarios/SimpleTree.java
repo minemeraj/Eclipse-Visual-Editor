@@ -12,7 +12,7 @@
  *  Created Oct 25, 2005 by Gili Mendel
  * 
  *  $RCSfile: SimpleTree.java,v $
- *  $Revision: 1.3 $  $Date: 2005-11-28 22:45:00 $ 
+ *  $Revision: 1.4 $  $Date: 2005-12-03 01:16:56 $ 
  */
 
 package org.eclipse.ui.examples.rcp.binding.scenarios;
@@ -129,7 +129,7 @@ public class SimpleTree extends Composite {
 			
 			treeDescription1.addColumn(Adventure.class, "name");
 			treeDescription1.addColumn(Adventure.class, "price");
-			((Column)treeDescription1.getColumn(Adventure.class, 1)).setPropertyType(Double.TYPE);
+
 						
 			treeDescription1.addColumn(Category.class, "name");
 			
@@ -148,7 +148,6 @@ public class SimpleTree extends Composite {
 			
 			treeDescription2.addColumn(Adventure.class, "name");
 			treeDescription2.addColumn(Adventure.class, "price");
-			((Column)treeDescription2.getColumn(Adventure.class, 1)).setPropertyType(Double.TYPE);
 						
 			treeDescription2.addColumn(Category.class, "name");
 			
