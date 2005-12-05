@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.60 $  $Date: 2005-11-10 20:48:15 $ 
+ *  $Revision: 1.61 $  $Date: 2005-12-05 14:44:49 $ 
  */
 
 import java.util.*;
@@ -25,8 +25,7 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.InstantiationFactory;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.JavaRefFactory;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
@@ -282,7 +281,13 @@ protected void generateInstanceDecleration(BeanPart bp, IJavaObjectInstance comp
 //	InstanceVariableTemplate ft = new InstanceVariableTemplate(varName, ((IJavaObjectInstance) component).getJavaType().getQualifiedName(), INSTANCE_VAR_DEFAULT_COMMENT);
 	// Bug 64039 shows that there can be init expressions without new
 	// in them - hence need to handle imports here itself.
-	CodeExpressionRef.handleImportStatements(cuType.getCompilationUnit(), bp.getModel(), Collections.singletonList(component.getJavaType().getQualifiedName()));
+	String importType = component.getJavaType().getQualifiedName();
+	if(!component.getJavaType().isPrimitive()){
+		JavaClass javaClass = (JavaClass) component.getJavaType();
+		if(javaClass.isNested())
+			importType = javaClass.getDeclaringClass().getQualifiedName();
+	}
+	CodeExpressionRef.handleImportStatements(cuType.getCompilationUnit(), bp.getModel(), Collections.singletonList(importType));
 	
 	InstanceVariableTemplate ft = new InstanceVariableTemplate(varName, component.getJavaType().getSimpleName(), INSTANCE_VAR_DEFAULT_COMMENT);
 	// Create it as the last field
