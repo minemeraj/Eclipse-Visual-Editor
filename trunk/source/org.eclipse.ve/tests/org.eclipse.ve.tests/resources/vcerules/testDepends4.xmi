@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<org.eclipse.ve.internal.jcm:BeanSubclassComposition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
+<org.eclipse.ve.internal.jcm:BeanComposition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore"
   xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
   xmlns:vcerules="platform:/plugin/org.eclipse.ve.tests/resources/vcerules/vcerules.ecore">
@@ -11,8 +11,4 @@
   
   <members xsi:type="vcerules:ParentContainer" xmi:id="parentContainer2"/>
   
-  <methods name="getParentContainer2" initializes="parentContainer2" return="parentContainer2"/>
-  <methods name="getParentContainer1" initializes="parentContainer1" return="parentContainer1"/>
-  <methods name="getChild1" initializes="child1" return="child1"/>  
-  <methods name="getChild2" initializes="child2" return="child2"/>  
-</org.eclipse.ve.internal.jcm:BeanSubclassComposition>
+</org.eclipse.ve.internal.jcm:BeanComposition>

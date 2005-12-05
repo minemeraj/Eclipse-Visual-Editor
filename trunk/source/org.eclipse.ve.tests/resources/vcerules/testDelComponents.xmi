@@ -2,7 +2,7 @@
 <org.eclipse.ve.internal.jcm:BeanSubclassComposition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.eclipse.ve.internal.cdm="http:///org/eclipse/ve/internal/cdm.ecore"
   xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-  xmlns:vcerules="platform:/plugin/org.eclipse.ve.tests/resources/vcerules/vcerules.ecore" components="parentContainer2">
+  xmlns:vcerules="platform:/plugin/org.eclipse.ve.tests/resources/vcerules/vcerules.ecore">
   
   <members xsi:type="vcerules:ParentContainer" xmi:id="parentContainer1" child="child1"/>
   
