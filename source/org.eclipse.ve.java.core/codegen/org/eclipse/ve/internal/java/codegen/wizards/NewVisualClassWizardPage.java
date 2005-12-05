@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.26 $  $Date: 2005-12-01 22:54:41 $ 
+ *  $Revision: 1.27 $  $Date: 2005-12-05 20:55:12 $ 
  */
 
 import java.util.HashMap;
@@ -99,17 +99,27 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 
 	private void createTreeClassComposite(Composite composite, int nColumns) {
 
-		Composite labelGroup = createComposite(composite, 5);
-		((GridLayout) labelGroup.getLayout()).marginHeight = 0;
-		GridData labelData = (GridData) labelGroup.getLayoutData();
-		labelData.horizontalSpan = 5;
-		createLabel(labelGroup, CodegenWizardsMessages.NewVisualClassWizardPage_Style_Label); 
-
+		Label styleLabel = new Label(composite, SWT.NONE);
+		styleLabel.setText(CodegenWizardsMessages.NewVisualClassWizardPage_Style_Label);
+		GridData styleLabelGridData = new GridData();
+		styleLabelGridData.horizontalSpan = 3;
+		styleLabel.setLayoutData(styleLabelGridData);
+		Label filler = new Label(composite, SWT.NONE);
+		GridData fillerGridData = new GridData();
+		fillerGridData.horizontalSpan = 2;
+		fillerGridData.grabExcessHorizontalSpace = true;
+		filler.setLayoutData(fillerGridData);
+		filler = new Label(composite, SWT.NONE);
+		fillerGridData = new GridData();
+		fillerGridData.horizontalSpan = nColumns-5;
+		filler.setLayoutData(fillerGridData);
+		
+		
 		styleTreeViewer = new TreeViewer(composite, SWT.SINGLE | SWT.BORDER);
-		GridData treeGridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
-		treeGridData.verticalSpan = 4;
+		GridData treeGridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		treeGridData.verticalSpan = 6;
+		treeGridData.verticalAlignment = SWT.FILL;
 		treeGridData.widthHint = convertWidthInCharsToPixels(23);
-		treeGridData.heightHint = convertHeightInCharsToPixels(12);
 		styleTreeViewer.getTree().setLayoutData(treeGridData);
 
 		styleTreeViewer.setContentProvider(new StyleTreeContentProvider());
@@ -143,28 +153,19 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 				}
 			}
 		});
+		
+		// to cause an extra column after tree viewer.
+		filler = new Label(composite, SWT.NONE);
+		fillerGridData = new GridData();
+		fillerGridData.verticalSpan = 6;
+		filler.setLayoutData(fillerGridData);
+
 	}
 	
 	
 	
 	private IResource getContainerRoot(){ 
 		return getWorkspaceRoot().findMember(getPackageFragmentRootText());
-	}
-
-	protected void createSuperClassControls(Composite composite, int nColumns) {
-
-		createTreeClassComposite(composite, nColumns);
-		Composite controlsComp = createComposite(composite, nColumns);
-		((GridLayout) controlsComp.getLayout()).marginHeight = 0;
-		GridData griddata = (GridData) controlsComp.getLayoutData();
-		griddata.horizontalSpan = 3;
-		griddata.horizontalIndent = 20;
-		super.createSuperClassControls(controlsComp, nColumns);
-		super.createSuperInterfacesControls(controlsComp, nColumns);
-	}
-
-	protected void createSuperInterfacesControls(Composite composite, int nColumns) {
-
 	}
 
 	/**
@@ -370,31 +371,6 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 				styleTreeViewer.setSelection(null);
 		}
 	}
-
-	private Composite createComposite(Composite aParent, int numColumns) {
-		Composite group = new Composite(aParent, SWT.NONE);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = numColumns;
-		gridLayout.marginWidth = 1;
-		group.setLayout(gridLayout);
-		GridData data = new GridData();
-		//		data.verticalAlignment = GridData.FILL;
-		data.horizontalAlignment = GridData.FILL;
-		data.grabExcessHorizontalSpace = true;
-		group.setLayoutData(data);
-		return group;
-	}
-
-	private void createLabel(Composite parent, String text) {
-		Label spacer = new Label(parent, SWT.NONE);
-		if (text != null) {
-			spacer.setText(text);
-		}
-		GridData data = new GridData();
-		data.horizontalAlignment = GridData.FILL;
-		data.verticalAlignment = GridData.FILL;
-		spacer.setLayoutData(data);
-	}
 	
 	/*
 	 * (non-Javadoc)
@@ -409,35 +385,49 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		
-		Composite composite= new Composite(parent, SWT.NONE);
-		composite.setFont(parent.getFont());
+		Composite topComposite= new Composite(parent, SWT.NONE);
+		topComposite.setFont(parent.getFont());
 		
 		int nColumns= 4;
 		
 		GridLayout layout= new GridLayout();
 		layout.numColumns= nColumns;		
-		composite.setLayout(layout);
+		topComposite.setLayout(layout);
 		
-		createContainerControls(composite, nColumns);	
-		createPackageControls(composite, nColumns);	
-		createEnclosingTypeControls(composite, nColumns);
+		createContainerControls(topComposite, nColumns);	
+		createPackageControls(topComposite, nColumns);	
+		createEnclosingTypeControls(topComposite, nColumns);
 				
-		createSeparator(composite, nColumns);
+		createSeparator(topComposite, nColumns);
+		createTypeNameControls(topComposite, nColumns);
+		createModifierControls(topComposite, nColumns);
+
+		Composite bottomComposite= new Composite(topComposite, SWT.NONE);
+		bottomComposite.setFont(parent.getFont());
+		GridData gd = new GridData();
+		gd.horizontalSpan = nColumns;
+		gd.horizontalAlignment= SWT.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		bottomComposite.setLayoutData(gd);
 		
-		createTypeNameControls(composite, nColumns);
-		createModifierControls(composite, nColumns);
-			
-		createSuperClassControls(composite, nColumns);
-		createSuperInterfacesControls(composite, nColumns);
+		layout= new GridLayout();
+		int bottomColumns = 6;
+		layout.numColumns= bottomColumns;		
+		bottomComposite.setLayout(layout);
+		
+		createTreeClassComposite(bottomComposite, bottomColumns);
+
+		createSuperClassControls(bottomComposite, bottomColumns-2);
+		createSuperInterfacesControls(bottomComposite, bottomColumns-2);
 				
-		createMethodStubSelectionControls(composite, nColumns);
+		createMethodStubSelectionControls(bottomComposite, bottomColumns-2);
 		
-		createCommentControls(composite, nColumns);
+		createCommentControls(bottomComposite, bottomColumns-2);
 		enableCommentControl(true);
 		
-		setControl(composite);
+		setControl(bottomComposite);
 			
-		Dialog.applyDialogFont(composite);
+		Dialog.applyDialogFont(bottomComposite);
 	}
 
 	/*
@@ -464,21 +454,19 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 		label.setFont(composite.getFont());
 		label.setText("Which method stubs would you like to create?");
 		GridData gd = new GridData();
-		gd.horizontalSpan = nColumns-1;
-		gd.horizontalIndent = 20;
+		gd.horizontalSpan = nColumns;
 		label.setLayoutData(gd);
 
+		new Label(composite, SWT.NONE);
 		// Create composite for the three checkboxes
 		Composite comp = new Composite(composite, SWT.None);
 		comp.setFont(composite.getFont());
 		gd = new GridData();
-		gd.horizontalSpan = nColumns -1;
-		gd.horizontalIndent = 80;
+		gd.horizontalSpan = nColumns-2;
 		comp.setLayoutData(gd);
 		GridLayout layout = new GridLayout();
 		layout.marginHeight= 0;
 		layout.marginWidth= 0;
-		layout.makeColumnsEqualWidth= true;
 		comp.setLayout(layout);
 		
 		// Create the three checkboxes
