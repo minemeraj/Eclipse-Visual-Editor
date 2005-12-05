@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: ContentsGraphicalEditPart.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.8 $  $Date: 2005-12-05 23:13:07 $ 
  */
 
 import org.eclipse.draw2d.*;
@@ -33,6 +33,7 @@ public abstract class ContentsGraphicalEditPart extends AbstractGraphicalEditPar
  */
 protected IFigure createFigure() {
 	IFigure contentPane = new FreeformLayer();
+	contentPane.setBorder(new MarginBorder(20));
 	contentPane.setLayoutManager(new FreeformXYFlowLayout());	
 	contentPane.setBackgroundColor(ColorConstants.white);
 	contentPane.setOpaque(true);
