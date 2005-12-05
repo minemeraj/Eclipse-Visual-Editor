@@ -1,0 +1,58 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Test the ability to build in a RCP environment</title>
+<style>
+<!--
+ p.MsoNormal
+	{mso-style-parent:"";
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	margin-left:0in; margin-right:0in; margin-top:0in}
+pre          { margin-left: 10; background-color: #C0C0C0 }
+-->
+</style>
+</head>
+
+<body>
+
+<p class="MsoNormal"><b><u><span style="font-family: sans-serif"><font size="3">
+Procedure</font></span></u></b> <br>
+&nbsp;</p>
+<p class="MsoNormal">This test examines VE's general functionality by trying to 
+build, unscripted a small RCP application.<br>
+<br>
+<b><span style="font-family: sans-serif; text-decoration: underline">
+<font size="3">Setup</font></span></b> </p>
+<p class="MsoNormal">&nbsp;</p>
+<blockquote>
+	<p class="MsoNormal"><br><span style="font-family: sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; 
+	</span><br><u><b><span style="font-family: sans-serif"><font size="3">Tasks</font></span></b>
+	</u><br>&nbsp;</p>
+	<p class="MsoNormal"><font size="2"><span style="font-family: sans-serif">
+	Open the View class using the visual editor,</span></font></p>
+	<p class="MsoNormal">
+	<b><font color="#0000FF">
+	verify</font></b> that the following dialog comes up denoting that you did 
+	not specify anchors.</p>
+	<p class="MsoNormal">
+	<b><font color="#0000FF">
+	verify</font></b> that the link's text is rendered correctly on the on the 
+	right side of the From: label.</p>
+	<pre style="margin-left: 10px">link.setText(&quot;&lt;A&gt;nicole@mail.org&quot;);</pre>
+	<p class="MsoNormal"> <b><font color="#0000FF">
+	verify</font></b> that the content is reflected in the property sheet.</p>
+	<p class="MsoNormal">Add &lt;/A&gt; at the end of the <i>setText</i> property in 
+	the source, and <b><font color="#0000FF">
+	verify</font></b> that the link is now enabled on the canvas</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">&nbsp;</p>
+</blockquote>
+
+</body>
+
+</html>
