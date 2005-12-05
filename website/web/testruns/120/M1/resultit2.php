@@ -21,8 +21,8 @@ header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."
                   $status = $_POST["Result"];
                   $description=$_POST["Comments"];
                   // ve-dev@eclipse.org 
-//                  mail("ve-dev@eclipse.org, ".$_POST["Email"], $_POST["Test"].": ".$_POST["Result"].".", "VisualEditor, 1.2 M1 TestPass\n\tTestcase " . $_POST["Test"] . " status=".$_POST["Result"]." by ". $_POST["Email"]."\nComments:\n".$description.".", "From: gmendel@us.ibm.com");                  
-                  mail("walkerp@us.ibm.com, ".$_POST["Email"], $_POST["Test"].": ".$_POST["Result"].".", "VisualEditor, 1.2 M1 TestPass\n\tTestcase " . $_POST["Test"] . " status=".$_POST["Result"]." by ". $_POST["Email"]."\nComments:\n".$description.".", "From: VEproject@{$_SERVER['SERVER_NAME']}");                  
+                  mail("ve-dev@eclipse.org, ".$_POST["Email"], $_POST["Test"].": ".$_POST["Result"].".", "VisualEditor, 1.2 M1 TestPass\n\tTestcase " . $_POST["Test"] . " status=".$_POST["Result"]." by ". $_POST["Email"]."\nComments:\n".$description.".", "From: gmendel@us.ibm.com");                  
+//                  mail("walkerp@us.ibm.com, ".$_POST["Email"], $_POST["Test"].": ".$_POST["Result"].".", "VisualEditor, 1.2 M1 TestPass\n\tTestcase " . $_POST["Test"] . " status=".$_POST["Result"]." by ". $_POST["Email"]."\nComments:\n".$description.".", "From: VEproject@{$_SERVER['SERVER_NAME']}");                  
               }
               $out=sprintf("%s\t%s\t%s\t%s\t%s\n", $tst, $url, $tester, $status, $description);
               fwrite($f2,$out);
