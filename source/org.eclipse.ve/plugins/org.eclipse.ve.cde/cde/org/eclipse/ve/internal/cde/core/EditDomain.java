@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: EditDomain.java,v $
- *  $Revision: 1.14 $  $Date: 2005-09-22 12:55:53 $ 
+ *  $Revision: 1.15 $  $Date: 2005-12-05 17:57:07 $ 
  */
 
 import java.text.MessageFormat;
@@ -408,10 +408,10 @@ public class EditDomain extends DefaultEditDomain {
 	}
 	
 	private IConfigurationElement[] configElements;
-	private AdaptableContributorFactory[] contributorFactories;
+	private EditPartContributorFactory[] contributorFactories;
 	// This factory is used whenever a factory could not be successfully created so that it doesn't spend time trying each time.
 	// It is a factory that will return no contributors.
-	private static AdaptableContributorFactory INVALID_FACTORY = new AdaptableContributorFactory(){
+	private static EditPartContributorFactory INVALID_FACTORY = new EditPartContributorFactory(){
 	
 		public GraphicalEditPartContributor getGraphicalEditPartContributor(GraphicalEditPart graphicalEditPart) {
 			return null;
@@ -426,43 +426,48 @@ public class EditDomain extends DefaultEditDomain {
 	
 	public List getContributors(IAdaptable anAdaptable) {
 		if(configElements == null){
-			IExtensionPoint extp = Platform.getExtensionRegistry().getExtensionPoint("org.eclipse.ve.cde.contributor");
-			IExtension[] extensions = extp.getExtensions();
+			IExtensionPoint extp = Platform.getExtensionRegistry().getExtensionPoint("org.eclipse.ve.cde.editpartcontributor");
 			List configElementsList = new ArrayList();
-			for (int i = 0; i < extensions.length; i++) {
-				IConfigurationElement[] configurationElements = extensions[i].getConfigurationElements();
-				for (int j = 0; j < configurationElements.length; j++) {
-					if ("contributor".equals(configurationElements[j].getName()))
-						configElementsList.add(configurationElements[j]);
+			if (extp != null) {
+				IExtension[] extensions = extp.getExtensions();
+				for (int i = 0; i < extensions.length; i++) {
+					IConfigurationElement[] configurationElements = extensions[i].getConfigurationElements();
+					for (int j = 0; j < configurationElements.length; j++) {
+						if ("contributor".equals(configurationElements[j].getName()))
+							configElementsList.add(configurationElements[j]);
+					}
 				}
 			}
 			configElements = (IConfigurationElement[]) configElementsList.toArray(new IConfigurationElement[configElementsList.size()]);
-			contributorFactories = new AdaptableContributorFactory[configElements.length];
+			contributorFactories = new EditPartContributorFactory[configElements.length];
 		}
 		IActionFilter actionFilter = (IActionFilter) anAdaptable.getAdapter(IActionFilter.class);
 		// Now we have some of the configElements get their filter
 		List result = new ArrayList(1);
+nextContributor:	
 		for (int i = 0; i < configElements.length; i++) {
 			IConfigurationElement configElement = configElements[i];
 			IConfigurationElement[] filters = configElement.getChildren("filter");
 			for (int j = 0; j < filters.length; j++) {
 				String name = filters[j].getAttribute("name");
 				String value = filters[j].getAttribute("value");
-				if (actionFilter.testAttribute(anAdaptable,name,value)){
-					// The edit part wishes to be contributed to.  See if we have a contributor existing for this, or if not create one 
-					AdaptableContributorFactory editPartContributorFactory = contributorFactories[i];
-					if(editPartContributorFactory == null){
-						try {
-							editPartContributorFactory = contributorFactories[i] = (AdaptableContributorFactory) configElement.createExecutableExtension("class");
-						} catch (CoreException e) {
-							CDEPlugin.getPlugin().getLogger().log(e,Level.WARNING);
-							contributorFactories[i] = INVALID_FACTORY;
-						}
-					}
-					if (editPartContributorFactory != null)
-						result.add(editPartContributorFactory);
+				if (!actionFilter.testAttribute(anAdaptable,name,value))
+					continue nextContributor;	// Didn't pass one of the filters, try next contributor.
+			}
+			
+			// Passed all of the filters.
+			// The edit part wishes to be contributed to.  See if we have a contributor existing for this, or if not create one 
+			EditPartContributorFactory editPartContributorFactory = contributorFactories[i];
+			if(editPartContributorFactory == null){
+				try {
+					editPartContributorFactory = contributorFactories[i] = (EditPartContributorFactory) configElement.createExecutableExtension("class");
+				} catch (CoreException e) {
+					CDEPlugin.getPlugin().getLogger().log(e,Level.WARNING);
+					contributorFactories[i] = INVALID_FACTORY;
 				}
-			}			
+			}
+			if (editPartContributorFactory != null)
+				result.add(editPartContributorFactory);
 		}
 		return result;
 	}
