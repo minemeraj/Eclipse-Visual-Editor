@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: AbstractEMFContainerPolicy.java,v $
- *  $Revision: 1.8 $  $Date: 2005-12-01 20:19:41 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-05 23:13:07 $ 
  */
 
 import java.util.*;
@@ -485,7 +485,7 @@ public abstract class AbstractEMFContainerPolicy extends ContainerPolicy {
 			return UnexecutableCommand.INSTANCE; // This is a single valued feature, and it is already set.
 		else {
 			CommandBuilder cBld = createCommandBuilder(true); //$NON-NLS-1$
-			cBld.applyAttributeSetting((EObject) container, containmentSF, children, positionBeforeChild);
+			cBld.applyAttributeSettings((EObject) container, containmentSF, children, positionBeforeChild);
 			List annotations = AnnotationPolicy.getAllAnnotations(new ArrayList(), children, domain.getAnnotationLinkagePolicy());
 			return AnnotationPolicy.getCreateRequestCommand(annotations, cBld.getCommand(), domain);
 		}
