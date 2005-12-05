@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPostSetCommand.java,v $
- *  $Revision: 1.9 $  $Date: 2005-12-05 17:07:41 $ 
+ *  $Revision: 1.10 $  $Date: 2005-12-05 18:42:55 $ 
  */
 
 import java.util.*;
@@ -133,6 +133,8 @@ public class VCEPostSetCommand extends CommandWrapper {
 				}				
 			} else {
 				// It is not a child.
+				if (containmentFeature == JCMPackage.eINSTANCE.getMemberContainer_Members() && oldValue.eContainer() instanceof BeanSubclassComposition)
+					return false;	// Members of the main subclass composition (i.e. globals, should not be removed when no access. They are special).
 				// It can't go away if any other references
 				if (ai != null) {
 					// There are references, check if any other than init/return.
