@@ -11,7 +11,7 @@
 package org.eclipse.ve.tests.vce.rules;
 /*
  *  $RCSfile: PostSetTest.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:54:15 $ 
+ *  $Revision: 1.5 $  $Date: 2005-12-05 17:07:40 $ 
  */
 
 import java.io.ByteArrayOutputStream;
@@ -191,6 +191,31 @@ public class PostSetTest extends TestCase {
 		};
 		dd.eAdapters().add(ia);
 		ia.propagate();		
+	}
+	
+	/**
+	 * P1-c->C-d->P2<-components--BeanComposition
+	 * 
+	 * Delete P1, means C (because child).
+	 * P2 stays event though no other backrefs because it is a global.
+	 * 
+	 * (-c-) a child relationship
+	 * (-d-) a dependency relationship
+	 */
+	public void testDelComponents() throws IOException {
+		Resource testRes = rset.getResource(URI.createURI("platform:/plugin/org.eclipse.ve.tests/resources/vcerules/testDelComponents.xmi"), true);
+		setupResource(testRes);
+		
+		CommandBuilder cbld = new CommandBuilder();
+		EObject parentContainer = testRes.getEObject("parentContainer1");
+		cbld.append(childRule.postDeleteChild(domain, parentContainer));
+		cbld.getCommand().execute();
+
+		assertNull(testRes.getEObject("parentContainer1"));
+		assertNull(testRes.getEObject("child1"));
+		assertNotNull(testRes.getEObject("parentContainer2"));
+		
+		checkNoDangling(testRes);
 	}
 	
 	/**

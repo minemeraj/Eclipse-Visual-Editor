@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPostSetCommand.java,v $
- *  $Revision: 1.8 $  $Date: 2005-12-01 23:42:56 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-05 17:07:41 $ 
  */
 
 import java.util.*;
@@ -132,9 +132,7 @@ public class VCEPostSetCommand extends CommandWrapper {
 					}
 				}				
 			} else {
-				// It is not a child. Now check to see if it is a global. We won't get rid of global properties. That is too drastic.
-				if (oldValue.eContainer() instanceof BeanComposition)
-					return false;
+				// It is not a child.
 				// It can't go away if any other references
 				if (ai != null) {
 					// There are references, check if any other than init/return.
