@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.60 $  $Date: 2005-11-11 13:54:57 $ 
+ *  $Revision: 1.61 $  $Date: 2005-12-05 14:44:49 $ 
  */
 
 
@@ -26,12 +26,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.ArrayType;
 
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.instantiation.impl.NaiveExpressionFlattener;
-import org.eclipse.jem.java.JavaHelpers;
-import org.eclipse.jem.java.JavaRefFactory;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cdm.*;
 import org.eclipse.ve.internal.cdm.Annotation;
@@ -581,8 +581,11 @@ public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel mo
 			String qn;
 			if (importList!=null) {
 			  // use Imports
-			  if (!importList.contains(jc.getQualifiedName()))
-			      importList.add(jc.getQualifiedName());
+			  String importName = jc.getQualifiedName();
+			  if(((JavaClass)jc).isNested())
+				  importName = ((JavaClass)jc).getDeclaringClass().getQualifiedName();
+			  if (!importList.contains(importName))
+			      importList.add(importName);
 			  qn = jc.getSimpleName();
 		    }
 			else // use full qualifier
