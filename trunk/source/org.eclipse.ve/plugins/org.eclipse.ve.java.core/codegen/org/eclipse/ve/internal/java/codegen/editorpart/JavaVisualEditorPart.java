@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.157 $  $Date: 2005-12-02 18:22:47 $ 
+ *  $Revision: 1.158 $  $Date: 2005-12-05 22:10:15 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -747,7 +747,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 		paletteSplitter = new FlyoutPaletteComposite(parent, SWT.NONE, getSite().getPage(),	getPaletteViewerProvider(), getPalettePreferences());
 			
 		// JVE/Text editor split on the right under editorComposite
-		CustomSashForm editorParent = new CustomSashForm(paletteSplitter, SWT.VERTICAL|SWT.SMOOTH);
+		final CustomSashForm editorParent = new CustomSashForm(paletteSplitter, SWT.VERTICAL|SWT.SMOOTH);
 		editorSettings.addSetting(new SashSetting(editorParent));
 		createPrimaryViewer(editorParent);		
 
@@ -760,6 +760,29 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			paletteSplitter.setExternalViewer(palettePage.getPaletteViewer());
 			palettePage = null;
 		}
+		
+		final CustomSashForm.ICustomSashFormListener customSashformlistener = new CustomSashForm.ICustomSashFormListener(){
+			boolean isMaxed = false;
+			public void dividerMoved(int firstControlWeight, int secondControlWeight) {
+				if(firstControlWeight==0){
+					if(!isMaxed){
+						isMaxed = true;
+						increaseSourceSyncTimer();
+					}
+				}else{
+					if(isMaxed){
+						isMaxed = false;
+						restoreSourceSyncTimer();
+					}
+				}
+			}
+		};
+		editorParent.addCustomSashFormListener(customSashformlistener);
+		editorParent.addDisposeListener(new DisposeListener(){
+			public void widgetDisposed(DisposeEvent e) {
+				editorParent.removeCustomSashFormListener(customSashformlistener);
+			}
+		});
 	}
 	
 	private void replaceJavaEditorAction(IAction action){
@@ -841,6 +864,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 
 		// Selection must be on the first page otherwise it does not activate correctly
 		folder.setSelection(jveTab);
+		increaseSourceSyncTimer();
 	}
 
 	private List paletteDrawers = new ArrayList(5);
@@ -2891,5 +2915,25 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	
 	public EditDomain getEditDomain(){
 		return editDomain;
+	}
+	
+	/**
+	 * Increases the time before which source-sync kicks in by a factor of 4.
+	 * 
+	 * @since 1.2.0
+	 * @see #restoreSourceSyncTimer()
+	 */
+	protected void increaseSourceSyncTimer(){
+		modelBuilder.setSynchronizerSyncDelay(4 * VCEPreferences.getPlugin().getPluginPreferences().getInt(VCEPreferences.SOURCE_SYNC_DELAY));
+	}
+	
+	/**
+	 * Restores the preferred source-sync time as specified in preferences.
+	 * 
+	 * @since 1.2.0
+	 * @see #increaseSourceSyncTimer()
+	 */
+	protected void restoreSourceSyncTimer(){
+		modelBuilder.setSynchronizerSyncDelay(VCEPreferences.getPlugin().getPluginPreferences().getInt(VCEPreferences.SOURCE_SYNC_DELAY));
 	}
 }
