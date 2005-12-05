@@ -11,16 +11,18 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomSashForm.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-05 22:10:14 $ 
  */
 
+import java.util.*;
+import java.util.List;
+
+import org.eclipse.draw2d.Cursors;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
-
-import org.eclipse.draw2d.Cursors;
 
 /**
  * A SashForm that allows move to/from max controls on sash.
@@ -65,6 +67,10 @@ public class CustomSashForm extends SashForm {
 		}
 	};
 	
+	public static interface ICustomSashFormListener{
+		public void dividerMoved(int firstControlWeight, int secondControlWeight);
+	}
+	
 	protected SashInfo currentSashInfo = null;	// When the sash goes away, its entry is made null.
 	protected boolean inMouseClick = false;	// Because we can't stop drag even when we are in the arrow area, we need 
 												// to know that mouse down is in process so that when drag is completed, we
@@ -74,6 +80,7 @@ public class CustomSashForm extends SashForm {
 	protected boolean sashBorders[];	// Whether cooresponding control needs a sash border
 							
 	protected boolean noMaxUp, noMaxDown;
+	protected List customSashFormListeners = null;
 	
 	protected static final int 
 		UP_ARROW = 0,
@@ -400,6 +407,7 @@ public class CustomSashForm extends SashForm {
 					}
 					
 					currentSashInfo.sash.redraw();	// Make sure stipple goes away from the mouse up if not over an arrow button.
+					fireDividerMoved();
 				}
 
 			});
@@ -498,7 +506,8 @@ public class CustomSashForm extends SashForm {
 		weights[1] = sashinfo.weight;
 		sashinfo.weight = NO_WEIGHT;
 		
-		setWeights(weights);		
+		setWeights(weights);	
+		fireDividerMoved();
 	}
 	
 	protected void upMaxClicked(SashInfo sashinfo) {
@@ -517,6 +526,7 @@ public class CustomSashForm extends SashForm {
 		setWeights(weights);
 		if (upperFocus)
 			children[1].setFocus();	
+		fireDividerMoved();
 	}
 
 	protected void downClicked(SashInfo sashinfo) {
@@ -528,6 +538,7 @@ public class CustomSashForm extends SashForm {
 		sashinfo.weight = NO_WEIGHT;
 		
 		setWeights(weights);
+		fireDividerMoved();
 	}
 	
 	protected void downMaxClicked(SashInfo sashinfo) {
@@ -545,6 +556,7 @@ public class CustomSashForm extends SashForm {
 		setWeights(weights);
 		if (lowerFocus)
 			children[0].setFocus();		
+		fireDividerMoved();
 	}
 	
 	/*
@@ -835,6 +847,46 @@ public class CustomSashForm extends SashForm {
 			currentSashInfo.weight=weight;
 		}
 	}
-
-
+	
+	/**
+	 * Adds a custom sashform listener. This listener will be removed when 
+	 * this control is disposed.
+	 * 
+	 * @param listener
+	 * 
+	 * @since 1.2.0
+	 */
+	public void addCustomSashFormListener(ICustomSashFormListener listener){
+		if(customSashFormListeners==null)
+			customSashFormListeners = new ArrayList();
+		customSashFormListeners.add(listener);
+	}
+	
+	/**
+	 * Removes the custom sashform listener.
+	 * 
+	 * @param listener
+	 * 
+	 * @since 1.2.0
+	 */
+	public void removeCustomSashFormListener(ICustomSashFormListener listener){
+		if(customSashFormListeners!=null){
+			customSashFormListeners.remove(listener);
+		}
+	}
+	
+	protected void fireDividerMoved(){
+		if(customSashFormListeners!=null && customSashFormListeners.size()>0){
+			int[] weights = getWeights();
+			if(weights!=null && weights.length==2){
+				int firstControlWeight = weights[0];
+				int secondControlWeight = weights[1];
+				for (Iterator listenerItr = customSashFormListeners.iterator(); listenerItr.hasNext();) {
+					ICustomSashFormListener listener = (ICustomSashFormListener) listenerItr.next();
+					listener.dividerMoved(firstControlWeight, secondControlWeight);
+				}
+			}
+		}
+	}
+	
 }
