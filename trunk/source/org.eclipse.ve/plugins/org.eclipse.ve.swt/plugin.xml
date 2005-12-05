@@ -144,24 +144,36 @@
    </extension>    
  -->
    
-   <extension point="org.eclipse.ve.cde.contributor"> 
+   <extension point="org.eclipse.ve.cde.editpartcontributor"> 
      <contributor class="org.eclipse.ve.internal.jface.TreeViewerEditPartContributorFactory">
          <filter
            name="BEANTYPE"
            value="org.eclipse.swt.widgets.Tree">
          </filter>             
+         <filter
+           name="BEANTYPEPRESENT"
+           value="org.eclipse.jface.viewers.TreeViewer">
+         </filter>     
       </contributor>   
      <contributor class="org.eclipse.ve.internal.jface.TableViewerEditPartContributorFactory">
          <filter
            name="BEANTYPE"
            value="org.eclipse.swt.widgets.Table">
          </filter>             
+         <filter
+           name="BEANTYPEPRESENT"
+           value="org.eclipse.jface.viewers.TableViewer">
+         </filter>          
       </contributor>   
      <contributor class="org.eclipse.ve.internal.jface.ComboViewerEditPartContributorFactory">
          <filter
            name="BEANTYPE"
            value="org.eclipse.swt.widgets.Combo">
          </filter>             
+         <filter
+           name="BEANTYPEPRESENT"
+           value="org.eclipse.jface.viewers.ComboViewer">
+         </filter>                   
       </contributor>   
    </extension>
    

@@ -28,7 +28,7 @@ import org.eclipse.ve.internal.java.core.JavaBeanGraphicalEditPart;
  * 
  * @since 1.2.0
  */
-public abstract class ViewerEditPartContributorFactory implements AdaptableContributorFactory {
+public abstract class ViewerEditPartContributorFactory implements EditPartContributorFactory {
 
 	/**
 	 * Get the first viewer, if there is one, that is pointing to this control through the given feature.

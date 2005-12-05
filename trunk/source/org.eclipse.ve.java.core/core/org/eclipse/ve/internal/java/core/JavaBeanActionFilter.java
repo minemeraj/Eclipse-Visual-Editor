@@ -11,14 +11,14 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanActionFilter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-09-21 23:09:04 $ 
+ *  $Revision: 1.11 $  $Date: 2005-12-05 17:57:09 $ 
  */
 import org.eclipse.emf.ecore.*;
 import org.eclipse.gef.EditPart;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.java.JavaRefFactory;
+import org.eclipse.jem.java.*;
 
 import org.eclipse.ve.internal.cde.core.CDEActionFilter;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -62,16 +62,25 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
  * </extension>
  *
  * The valid tests are: 
- *   (name)        - (value)
- *   BEANTYPE      - "" means the model of the EditPart is any type of bean, IJavaInstance
- *                   "class" means the model of the EditPart can be assigned to this type (through the JavaModel (EMF), not straight Java).
+ * <dl>
+ * <dt>BEANTYPE</dt>
+ * <dd>"" means the model of the EditPart is any type of bean, IJavaInstance
+ *   "class" means the model of the EditPart can be assigned to this type (through the JavaModel (EMF), not straight Java).
+ * </dd>
+ * <dt>BEANTYPEPRESENT</dt>
+ * <dd>"class" means the class listed can be found on the build path. This doesn't mean that the VE class path container that
+ * normally has the bean is on the classpath. It could of been that someone just added a jar with that bean in it. So the rest
+ * of the support for that jar may not be available.
+ * </dd>
+ * </dl>
  */
 public class JavaBeanActionFilter extends CDEActionFilter {
 	
 	public static final JavaBeanActionFilter INSTANCE = new JavaBeanActionFilter();	// Only one is needed. All the info it needs comes from the input.
 	
 	public static final String 
-		BEAN_TYPE_STRING = "BEANTYPE"; //$NON-NLS-1$
+		BEAN_TYPE_STRING = "BEANTYPE", //$NON-NLS-1$
+		BEAN_TYPE_PRESENT_STRING = "BEANTYPEPRESENT"; //$NON-NLS-1$
 	
 	/*
 	 * Protected so that only singleton INSTANCE, or a subclass can instantiate it.
@@ -111,6 +120,10 @@ public class JavaBeanActionFilter extends CDEActionFilter {
 			EClassifier type = JavaRefFactory.eINSTANCE.reflectType(value, JavaEditDomainHelper.getResourceSet(EditDomain.getEditDomain(editPart)));
 			if (type != null)
 				return type.isInstance(editPart.getModel());
+		} else if (name.equals(BEAN_TYPE_PRESENT_STRING)) {
+			// See if it is present.
+			JavaHelpers type = JavaRefFactory.eINSTANCE.reflectType(value, JavaEditDomainHelper.getResourceSet(EditDomain.getEditDomain(editPart)));
+			return type.isPrimitive() || ((JavaClass) type).getKind() != TypeKind.UNDEFINED_LITERAL;
 		}
 		
 		// Pass this test up to the parent CDEActionFilter
