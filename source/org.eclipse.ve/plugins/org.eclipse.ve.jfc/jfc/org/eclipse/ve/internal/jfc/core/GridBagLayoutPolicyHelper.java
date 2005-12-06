@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagLayoutPolicyHelper.java,v $
- *  $Revision: 1.16 $  $Date: 2005-11-15 18:53:31 $ 
+ *  $Revision: 1.17 $  $Date: 2005-12-06 16:11:30 $ 
  */
 
 import java.util.*;
@@ -97,53 +97,59 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 	 * Convert the IDE GridBagConstraint to the java object instance constraint
 	 */
 	protected IJavaObjectInstance convertConstraint(Object constraint) {
-		GridBagConstraint gridBagConstraint = (GridBagConstraint) constraint;
-		GridBagConstraint defaultConstraint = new GridBagConstraint(); //  used to compare default values
-		IJavaObjectInstance javaGridBagConstraint = (IJavaObjectInstance) BeanUtilities.createJavaObject("java.awt.GridBagConstraints", rset, (String)null); //$NON-NLS-1$
-		if (gridBagConstraint.gridx != defaultConstraint.gridx) {
-			Object gridx = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.gridx));
-			javaGridBagConstraint.eSet(sfGridX, gridx);
-		}
-		if (gridBagConstraint.gridy != defaultConstraint.gridy) {
-			Object gridy = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.gridy));
-			javaGridBagConstraint.eSet(sfGridY, gridy);
-		}
-		if (gridBagConstraint.gridwidth != defaultConstraint.gridwidth) {
-			Object gridwidth = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.gridwidth));
-			javaGridBagConstraint.eSet(sfGridWidth, gridwidth);
-		}
-		if (gridBagConstraint.gridheight != defaultConstraint.gridheight) {
-			Object gridheight = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.gridheight));
-			javaGridBagConstraint.eSet(sfGridHeight, gridheight);
-		}
-		if (gridBagConstraint.weightx != defaultConstraint.weightx) {
-			Object weightx = BeanUtilities.createJavaObject(primDouble, rset, String.valueOf(gridBagConstraint.weightx));
-			javaGridBagConstraint.eSet(sfWeightX, weightx);
-		}
-		if (gridBagConstraint.weighty != defaultConstraint.weighty) {
-			Object weighty = BeanUtilities.createJavaObject(primDouble, rset, String.valueOf(gridBagConstraint.weighty));
-			javaGridBagConstraint.eSet(sfWeightY, weighty);
-		}
-		if (gridBagConstraint.fill != defaultConstraint.fill) {
-			Object fill = BeanUtilities.createJavaObject(primInt, rset, GridBagComponentPage.createFillAllocation(GridBagConstraintsFillCellEditor.getFillIndexFromConstraint(gridBagConstraint.fill))); 
-			javaGridBagConstraint.eSet(sfFill, fill);
-		}
-		// The insets value is a class, not a primitive.
-		if (!gridBagConstraint.insets.equals(defaultConstraint.insets)) {
-			Insets insets = gridBagConstraint.insets;
-			IJavaObjectInstance insetsBean = (IJavaObjectInstance) BeanUtilities.createJavaObject("java.awt.Insets", rset, InsetsJavaClassCellEditor.getJavaAllocation(insets.top, insets.left, insets.bottom, insets.right)); //$NON-NLS-1$ 
-			javaGridBagConstraint.eSet(sfInsets, insetsBean);
-		}
-		if (gridBagConstraint.ipadx != defaultConstraint.ipadx) {
-			Object ipadx = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.ipadx));
-			javaGridBagConstraint.eSet(sfIPadX, ipadx);
-		}
-		if (gridBagConstraint.ipady != defaultConstraint.ipady) {
-			Object ipady = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.ipady));
-			javaGridBagConstraint.eSet(sfIPadY, ipady);
-		}
+		if (constraint instanceof GridBagConstraint) {
+			GridBagConstraint gridBagConstraint = (GridBagConstraint) constraint;
+			GridBagConstraint defaultConstraint = new GridBagConstraint(); //  used to compare default values
+			IJavaObjectInstance javaGridBagConstraint = (IJavaObjectInstance) BeanUtilities.createJavaObject(
+					"java.awt.GridBagConstraints", rset, (String) null); //$NON-NLS-1$
+			if (gridBagConstraint.gridx != defaultConstraint.gridx) {
+				Object gridx = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.gridx));
+				javaGridBagConstraint.eSet(sfGridX, gridx);
+			}
+			if (gridBagConstraint.gridy != defaultConstraint.gridy) {
+				Object gridy = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.gridy));
+				javaGridBagConstraint.eSet(sfGridY, gridy);
+			}
+			if (gridBagConstraint.gridwidth != defaultConstraint.gridwidth) {
+				Object gridwidth = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.gridwidth));
+				javaGridBagConstraint.eSet(sfGridWidth, gridwidth);
+			}
+			if (gridBagConstraint.gridheight != defaultConstraint.gridheight) {
+				Object gridheight = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.gridheight));
+				javaGridBagConstraint.eSet(sfGridHeight, gridheight);
+			}
+			if (gridBagConstraint.weightx != defaultConstraint.weightx) {
+				Object weightx = BeanUtilities.createJavaObject(primDouble, rset, String.valueOf(gridBagConstraint.weightx));
+				javaGridBagConstraint.eSet(sfWeightX, weightx);
+			}
+			if (gridBagConstraint.weighty != defaultConstraint.weighty) {
+				Object weighty = BeanUtilities.createJavaObject(primDouble, rset, String.valueOf(gridBagConstraint.weighty));
+				javaGridBagConstraint.eSet(sfWeightY, weighty);
+			}
+			if (gridBagConstraint.fill != defaultConstraint.fill) {
+				Object fill = BeanUtilities.createJavaObject(primInt, rset, GridBagComponentPage
+						.createFillAllocation(GridBagConstraintsFillCellEditor.getFillIndexFromConstraint(gridBagConstraint.fill)));
+				javaGridBagConstraint.eSet(sfFill, fill);
+			}
+			// The insets value is a class, not a primitive.
+			if (!gridBagConstraint.insets.equals(defaultConstraint.insets)) {
+				Insets insets = gridBagConstraint.insets;
+				IJavaObjectInstance insetsBean = (IJavaObjectInstance) BeanUtilities.createJavaObject(
+						"java.awt.Insets", rset, InsetsJavaClassCellEditor.getJavaAllocation(insets.top, insets.left, insets.bottom, insets.right)); //$NON-NLS-1$ 
+				javaGridBagConstraint.eSet(sfInsets, insetsBean);
+			}
+			if (gridBagConstraint.ipadx != defaultConstraint.ipadx) {
+				Object ipadx = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.ipadx));
+				javaGridBagConstraint.eSet(sfIPadX, ipadx);
+			}
+			if (gridBagConstraint.ipady != defaultConstraint.ipady) {
+				Object ipady = BeanUtilities.createJavaObject(primInt, rset, String.valueOf(gridBagConstraint.ipady));
+				javaGridBagConstraint.eSet(sfIPadY, ipady);
+			}
 
-		return javaGridBagConstraint;
+			return javaGridBagConstraint;
+		} else
+			return (IJavaObjectInstance) constraint;	// It was already converted.
 	}
 
 	/**
@@ -831,7 +837,6 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 		if (childrenComponents.isEmpty() || constraints.isEmpty() || (childrenComponents.size() > 1))
 			return VisualContainerPolicy.createUnexecutableResult(childrenComponents, constraints);
 
-		EObject constraintComponent = visualFact.create(classConstraintComponent);
 		GridBagConstraint gridBagConstraint = (GridBagConstraint) constraints.get(0);
 		IJavaObjectInstance component = (IJavaObjectInstance) childrenComponents.get(0);
 		// If this component is added or moved from within this or another gridbag layout, use it's existing constraint as much as possible so
@@ -842,27 +847,26 @@ public class GridBagLayoutPolicyHelper extends LayoutPolicyHelper implements IAc
 		// What we will do is see if we have an old griddata constraint, if we do, we will just change the grid x/y to the values out
 		// of the incoming constraint. Then we will apply the old griddata constraint to the new constraint component so that
 		// it will be used instead of the incoming constraint.
-		CommandBuilder cb = new CommandBuilder();
+		RuledCommandBuilder cb = new RuledCommandBuilder(policy.getEditDomain());
 		EObject cc = InverseMaintenanceAdapter.getIntermediateReference(component, sfComponents, sfConstraintComponent, component);
 		if (cc != null) {
 			IJavaObjectInstance constraintObject = (IJavaObjectInstance) cc.eGet(sfConstraintConstraint);
 			if (constraintObject != null && gridBagConstraints.isInstance(constraintObject)) {
 				// This is a GridBagConstraints object. Just change the gridx and gridy, then apply the constraint to the ConstraintComponent
-				RuledCommandBuilder componentCB = new RuledCommandBuilder(policy.getEditDomain(), null, false);
 				Object intObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(gridBagConstraint.gridx)); //$NON-NLS-1$
-				componentCB.applyAttributeSetting(constraintObject, sfGridX, intObject);
+				cb.applyAttributeSetting(constraintObject, sfGridX, intObject);
 				intObject = BeanUtilities.createJavaObject("int", rset, String.valueOf(gridBagConstraint.gridy)); //$NON-NLS-1$
-				componentCB.applyAttributeSetting(constraintObject, sfGridY, intObject);
-				componentCB.applyAttributeSetting(constraintComponent, sfConstraintConstraint, constraintObject);
-				cb.append(componentCB.getCommand());
+				cb.applyAttributeSetting(constraintObject, sfGridY, intObject);
+				constraints = Collections.singletonList(constraintObject);	// This is now the constraint object.
 			}
 		}
-		// No commands created so the constraint didn't exist or wasn't a GridBagConstraint. Just create the default using the incoming constraint. 
-		if (cb.isEmpty())
-			constraintComponent.eSet(sfConstraintConstraint, gridBagConstraint != null ? convertConstraint(gridBagConstraint) : null);
+		
+		// If we didn't have an existing constraint and we do have a new constraint, convert the constraint to the Java EMF format.
+		if (cb.isEmpty() && gridBagConstraint != null )
+			constraints = Collections.singletonList(convertConstraint(gridBagConstraint));
 
-		// Now get the add command and see if the child was actually added.
-		VisualContainerPolicy.CorelatedResult result = policy.getAddCommand(constraints, childrenComponents, position);
+		// Now get the add command. Put it after the possible change constraint commands, and put the new set of commands back into the result and return it.
+		VisualContainerPolicy.CorelatedResult result = super.getAddChildrenCommand(childrenComponents, constraints, position);
 		cb.append(result.getCommand());
 		result.setCommand(cb.getCommand());
 		return result;
