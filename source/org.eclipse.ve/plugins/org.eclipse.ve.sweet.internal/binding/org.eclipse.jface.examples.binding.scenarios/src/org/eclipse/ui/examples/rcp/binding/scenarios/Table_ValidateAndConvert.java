@@ -18,6 +18,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.examples.rcp.adventure.Catalog;
+import org.eclipse.swt.widgets.Display;
 
 public class Table_ValidateAndConvert extends Composite {
 
@@ -32,6 +33,8 @@ public class Table_ValidateAndConvert extends Composite {
 	private TableViewer tableViewer1;
 
 	private Label lblErrorMessage = null;
+	
+	private Label lblPartialErrorMessage = null;	
 
 	public Table_ValidateAndConvert(Composite parent, int style) {
 		super(parent, style);
@@ -51,7 +54,12 @@ public class Table_ValidateAndConvert extends Composite {
 		setSize(new org.eclipse.swt.graphics.Point(507,224));
 		lblErrorMessage = new Label(this, SWT.NONE);
 		lblErrorMessage.setText("Label");
+		lblErrorMessage.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		lblErrorMessage.setLayoutData(gridData2);
+		lblPartialErrorMessage = new Label(this, SWT.NONE);
+		lblPartialErrorMessage.setText("Label");
+		lblPartialErrorMessage.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+		lblPartialErrorMessage.setLayoutData(gridData2);		
 		
 		bind();
 		bind1();
@@ -99,7 +107,10 @@ public class Table_ValidateAndConvert extends Composite {
 		dbc.bind(tableViewerDescription, new Property(catalog,"accounts"), null);
 		
 		IUpdatable errorMsgUpdatable = dbc.createUpdatable(new Property(lblErrorMessage,"text"));
-		dbc.bind(errorMsgUpdatable, dbc.getCombinedValidationMessage(),null);		
+		dbc.bind(errorMsgUpdatable, dbc.getValidationMessage(),null);		
+		
+		IUpdatable partialErrorMsgUpdatable = dbc.createUpdatable(new Property(lblPartialErrorMessage,"text"));
+		dbc.bind(partialErrorMsgUpdatable, dbc.getPartialValidationMessage(),null);		
 		
 	}
 	private void bind1() {

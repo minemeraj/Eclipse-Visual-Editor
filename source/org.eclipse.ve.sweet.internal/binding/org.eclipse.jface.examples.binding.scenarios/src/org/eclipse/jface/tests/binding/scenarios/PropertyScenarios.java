@@ -17,6 +17,7 @@ import java.util.Locale;
 import org.eclipse.jface.databinding.BindSpec;
 import org.eclipse.jface.databinding.ChangeEvent;
 import org.eclipse.jface.databinding.IChangeListener;
+import org.eclipse.jface.databinding.IDataBindingContext;
 import org.eclipse.jface.databinding.IUpdatableValue;
 import org.eclipse.jface.databinding.Property;
 import org.eclipse.jface.databinding.converter.Converter;
@@ -486,8 +487,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 	public void testScenario13() {
 		// Changing the update policy to be not automatic, but on explicit
 		// method call (e.g. triggered by a button click).
-		getSWTUpdatableFactory().setUpdateTime(SWTUpdatableFactory.TIME_LATE);
-		getSWTUpdatableFactory().setValidationTime(SWTUpdatableFactory.TIME_LATE);
+		getSWTUpdatableFactory().setUpdateTime(IDataBindingContext.TIME_LATE);
 		Text text = new Text(getComposite(), SWT.BORDER);
 		getDbc().bind(text, new Property(adventure, "name"), null);
 		// uncomment the following line to see what's happening
@@ -510,7 +510,7 @@ public class PropertyScenarios extends ScenariosTestCase {
 	public void testScenario14() {
 		Text t1 = new Text(getComposite(), SWT.BORDER);
 		Text t2 = new Text(getComposite(), SWT.BORDER);
-		getSWTUpdatableFactory().setUpdateTime(SWTUpdatableFactory.TIME_EARLY);
+		getSWTUpdatableFactory().setUpdateTime(IDataBindingContext.TIME_EARLY);
 		getDbc().bind(t1, new Property(adventure, "name"), null);
 		getDbc().bind(t2, new Property(adventure, "name"), null);
 		final int[] counter = { 0 };

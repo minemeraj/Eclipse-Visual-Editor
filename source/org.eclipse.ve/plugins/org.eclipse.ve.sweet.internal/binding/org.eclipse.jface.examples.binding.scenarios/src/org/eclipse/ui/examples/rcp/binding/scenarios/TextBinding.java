@@ -73,7 +73,7 @@ public class TextBinding extends Composite {
 		dbc.bind(txtName, new Property(skiTrip, "name"),null);
 		dbc.bind(txtLocation, new Property(skiTrip, "location"),null);		
 
-		SampleData.getSwtUpdatableFactory().setUpdateTime(SWTUpdatableFactory.TIME_EARLY);
+		SampleData.getSwtUpdatableFactory().setUpdateTime(IDataBindingContext.TIME_EARLY);
 		dbc.bind(txtDescription_1, new Property(skiTrip, "description"),null);
 		dbc.bind(txtName_1, new Property(skiTrip, "name"),null);		
 		dbc.bind(txtLocation_1, new Property(skiTrip, "location"),null);
