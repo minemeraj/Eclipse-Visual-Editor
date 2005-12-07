@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.27 $  $Date: 2005-12-05 20:55:12 $ 
+ *  $Revision: 1.28 $  $Date: 2005-12-07 23:35:20 $ 
  */
 
 import java.util.HashMap;
@@ -116,7 +116,7 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 		
 		
 		styleTreeViewer = new TreeViewer(composite, SWT.SINGLE | SWT.BORDER);
-		GridData treeGridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		GridData treeGridData = new GridData();
 		treeGridData.verticalSpan = 6;
 		treeGridData.verticalAlignment = SWT.FILL;
 		treeGridData.widthHint = convertWidthInCharsToPixels(23);
@@ -385,29 +385,31 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		
-		Composite topComposite= new Composite(parent, SWT.NONE);
-		topComposite.setFont(parent.getFont());
+		Composite overallComposite= new Composite(parent, SWT.NONE);
+		overallComposite.setFont(parent.getFont());
 		
 		int nColumns= 4;
 		
 		GridLayout layout= new GridLayout();
 		layout.numColumns= nColumns;		
-		topComposite.setLayout(layout);
+		overallComposite.setLayout(layout);
 		
-		createContainerControls(topComposite, nColumns);	
-		createPackageControls(topComposite, nColumns);	
-		createEnclosingTypeControls(topComposite, nColumns);
+		createContainerControls(overallComposite, nColumns);	
+		createPackageControls(overallComposite, nColumns);	
+		createEnclosingTypeControls(overallComposite, nColumns);
 				
-		createSeparator(topComposite, nColumns);
-		createTypeNameControls(topComposite, nColumns);
-		createModifierControls(topComposite, nColumns);
+		createSeparator(overallComposite, nColumns);
+		createTypeNameControls(overallComposite, nColumns);
+		createModifierControls(overallComposite, nColumns);
 
-		Composite bottomComposite= new Composite(topComposite, SWT.NONE);
+		Composite bottomComposite= new Composite(overallComposite, SWT.NONE);
 		bottomComposite.setFont(parent.getFont());
 		GridData gd = new GridData();
 		gd.horizontalSpan = nColumns;
 		gd.horizontalAlignment= SWT.FILL;
 		gd.grabExcessHorizontalSpace = true;
+		gd.verticalAlignment = SWT.FILL;
+		gd.grabExcessVerticalSpace = true;
 		bottomComposite.setLayoutData(gd);
 		
 		layout= new GridLayout();
@@ -425,9 +427,9 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 		createCommentControls(bottomComposite, bottomColumns-2);
 		enableCommentControl(true);
 		
-		setControl(bottomComposite);
+		setControl(overallComposite);
 			
-		Dialog.applyDialogFont(bottomComposite);
+		Dialog.applyDialogFont(overallComposite);
 	}
 
 	/*
