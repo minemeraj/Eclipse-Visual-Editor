@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: BeanAwtUtilities.java,v $ $Revision: 1.41 $ $Date: 2005-10-18 18:48:47 $
+ * $RCSfile: BeanAwtUtilities.java,v $ $Revision: 1.42 $ $Date: 2005-12-07 23:52:06 $
  */
 
 import java.util.List;
@@ -66,21 +66,17 @@ public class BeanAwtUtilities {
 	 * @since 1.1.0.1
 	 */
 	public static Point getOffScreenLocation(ProxyFactoryRegistry registry) {
-		if (VCEPreferences.isLiveWindowOn())
-			return new Point(0, 0);
-		else {
-			BeanAwtUtilities constants = getConstants(registry);
-			if (constants.offscreenLocation == null) {
-				IBeanProxy p = registry.getMethodProxyFactory().getMethodProxy("org.eclipse.ve.internal.jfc.vm.FreeFormAWTDialog",
-						"getOffScreenLocation", null).invokeCatchThrowableExceptions(null);
-				if (p instanceof IPointBeanProxy) {
-					IPointBeanProxy pb = (IPointBeanProxy) p;
-					constants.offscreenLocation = new Point(pb.getX(), pb.getY());
-				} else
-					constants.offscreenLocation = new Point(10000, 10000);
-			}
-			return constants.offscreenLocation;
+		BeanAwtUtilities constants = getConstants(registry);
+		if (constants.offscreenLocation == null) {
+			IBeanProxy p = registry.getMethodProxyFactory().getMethodProxy("org.eclipse.ve.internal.jfc.vm.FreeFormAWTDialog",
+					"getScreenLocation", new String[] {"boolean"}).invokeCatchThrowableExceptions(null, registry.getBeanProxyFactory().createBeanProxyWith(VCEPreferences.isLiveWindowOn()));
+			if (p instanceof IPointBeanProxy) {
+				IPointBeanProxy pb = (IPointBeanProxy) p;
+				constants.offscreenLocation = new Point(pb.getX(), pb.getY());
+			} else
+				constants.offscreenLocation = VCEPreferences.isLiveWindowOn() ? new Point(0,0) : new Point(10000, 10000);
 		}
+		return constants.offscreenLocation;
 	}
 
 	// JCMMethod proxies are cached in a registry constants.

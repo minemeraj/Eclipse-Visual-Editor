@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.vm;
 /*
  *  $RCSfile: FreeFormAWTDialog.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:38:13 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-07 23:52:06 $ 
  */
 
 import java.awt.*;
@@ -37,14 +37,16 @@ public class FreeFormAWTDialog extends Dialog {
 	protected static FreeFormAWTDialog AWT_DIALOG;
 	
 	/**
-	 * Get the off-screen location. It will get the screen size and go 1000 more
-	 * off of the lower-right corner.
+	 * Get the screen location. If live is <code>false</code> it will get the screen size and go 1000 more
+	 * off of the lower-right corner. If it is <code>true</code> it will find upper left visible corner
+	 * to put live window.
 	 * 
+	 * @param live should we return live location (which is calculated on screen) or off-screen location.
 	 * @return
 	 * 
 	 * @since 1.1.0.1
 	 */
-	public static Point getOffScreenLocation() {
+	public static Point getScreenLocation(boolean live) {
 		Rectangle virtualBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 //		The following should be the true way, but getConfigurations() is very very slow (it is about a second elapsed time).
 //		So we're relying on getMaxBounds to work with multi-screen virtual device. 
@@ -53,7 +55,7 @@ public class FreeFormAWTDialog extends Dialog {
 //		for (int i = 1; i < configurations.length; i++) {
 //			virtualBounds = virtualBounds.union(configurations[i].getBounds());
 //		}
-		return new Point(virtualBounds.width+1000, virtualBounds.height+1000);
+		return live ? virtualBounds.getLocation() : new Point(virtualBounds.width+1000, virtualBounds.height+1000);
 	}
 	
 	/**

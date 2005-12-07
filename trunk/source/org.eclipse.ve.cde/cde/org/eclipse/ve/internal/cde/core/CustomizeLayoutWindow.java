@@ -17,7 +17,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindow.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.13 $  $Date: 2005-12-07 23:52:06 $ 
  */
 
 import java.util.ArrayList;
@@ -118,11 +118,19 @@ public class CustomizeLayoutWindow extends Window {
 		
 		Rectangle displayBounds = getShell().getDisplay().getClientArea();
 		Point loc = getLocation();
+		if (loc.x < displayBounds.x)
+			loc.x = displayBounds.x;
+		if (loc.y < displayBounds.y)
+			loc.y = displayBounds.y;		
 		if (loc.x+initialSize.x > displayBounds.x+displayBounds.width)
 			loc.x = displayBounds.x+displayBounds.width - initialSize.x;
 		if (loc.y+initialSize.y > displayBounds.y+displayBounds.height)
 			loc.y = displayBounds.y+displayBounds.height - initialSize.y;
-			
+		// Check again in case the above moved off-screen to the left.
+		if (loc.x < displayBounds.x)
+			loc.x = displayBounds.x;
+		if (loc.y < displayBounds.y)
+			loc.y = displayBounds.y;		
 		setLocation(loc);
 		return loc;
 	}

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.18 $  $Date: 2005-12-01 20:19:41 $ 
+ *  $Revision: 1.19 $  $Date: 2005-12-07 23:52:06 $ 
  */
 
 import java.net.MalformedURLException;
@@ -287,7 +287,7 @@ public final class CDEPlugin extends AbstractUIPlugin {
 		aStore.setDefault(XY_GRID_SPACING, 15);		
 		aStore.setDefault(PREF_SHOW_OVERVIEW_KEY, false);
 		aStore.setDefault(SHOW_XML, false);
-		aStore.setDefault(CUSTOMIZELAYOUTWINDOW_X, 0);
-		aStore.setDefault(CUSTOMIZELAYOUTWINDOW_Y, 0);
+		aStore.setDefault(CUSTOMIZELAYOUTWINDOW_X, 20);
+		aStore.setDefault(CUSTOMIZELAYOUTWINDOW_Y, 20);
 	}
 }
