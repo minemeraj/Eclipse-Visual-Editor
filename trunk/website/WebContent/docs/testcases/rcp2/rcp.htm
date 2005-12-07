@@ -23,35 +23,149 @@ pre          { margin-left: 10; background-color: #C0C0C0 }
 Procedure</font></span></u></b> <br>
 &nbsp;</p>
 <p class="MsoNormal">This test examines VE's general functionality by trying to 
-build, unscripted a small RCP application.<br>
+build, unscripted a small RCP application.&nbsp; The instructions below are 
+going to be detailed one, as the idea is for one to not build the app. correctly 
+up front, but rather in a free form manner, have mistakes, change things around, 
+have multiple editors open etc.&nbsp; Make sure that the VE works as expected, 
+and that no errors are generated on the .log.<br>
 <br>
 <b><span style="font-family: sans-serif; text-decoration: underline">
 <font size="3">Setup</font></span></b> </p>
 <p class="MsoNormal">&nbsp;</p>
 <blockquote>
+	<p class="MsoNormal">Create a UI based RCP application Project-&gt;PluginProject-&gt;3.20-&gt;Yes 
+	for RCP app, and UI-&gt;Use the Hello World template.</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Create a new java package, called &quot;ui&quot;</p>
+	<p class="MsoNormal">Create a new Visual RCP View class in the <i>ui</i> 
+	package named QuickPickView.</p>
+	<p class="MsoNormal">Drop a table and two columns on the top composite (make 
+	sure it is using a FillLayout)</p>
+	<p class="MsoNormal"><img border="0" src="rcp.ht5.jpg"></p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Define the viewer in the manifest by creating a views 
+	extension point.&nbsp; The viewer id, must be the same one that is defined 
+	inside the QuickPickView.</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal"><img border="0" src="rcp.ht6.gif"></p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Import the following
+	<a href="file:///E:/Eclipse/DevEclipse/V7/WorkSpace/vep/WebContent/docs/testcases/rcp2/model.jar">
+	.jar</a> into the <i>src</i> directory of the RCP project - this is going to 
+	be the domain model we are going to populate the GUI with.</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Code the following viewer on top of the table (really 
+	need to type it in the source panel):</p>
+	<p class="MsoNormal"><img border="0" src="rcp.ht7.jpg"></p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Open the Perspective class, and update the prospective 
+	as following:</p>
+	<pre>	public void createInitialLayout(IPageLayout layout) {		
+		String editorArea = layout.getEditorArea();
+		layout.setEditorAreaVisible(true);
+		</pre>
+	<pre>		
+		// QuickPick
+		layout.addStandaloneView(QuickPickView.ID,  true, IPageLayout.LEFT, 0.45f, editorArea);
+		layout.getViewLayout(QuickPickView.ID).setCloseable(false);
+		</pre>
+	<pre>	}</pre>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Run the RCP app</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal"><img border="0" src="rcp.ht8.jpg"></p>
+	<p class="MsoNormal">&nbsp;</p>
 	<p class="MsoNormal"><br><span style="font-family: sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; 
-	</span><br><u><b><span style="font-family: sans-serif"><font size="3">Tasks</font></span></b>
-	</u><br>&nbsp;</p>
-	<p class="MsoNormal"><font size="2"><span style="font-family: sans-serif">
-	Open the View class using the visual editor,</span></font></p>
-	<p class="MsoNormal">
-	<b><font color="#0000FF">
-	verify</font></b> that the following dialog comes up denoting that you did 
-	not specify anchors.</p>
-	<p class="MsoNormal">
-	<b><font color="#0000FF">
-	verify</font></b> that the link's text is rendered correctly on the on the 
-	right side of the From: label.</p>
-	<pre style="margin-left: 10px">link.setText(&quot;&lt;A&gt;nicole@mail.org&quot;);</pre>
-	<p class="MsoNormal"> <b><font color="#0000FF">
-	verify</font></b> that the content is reflected in the property sheet.</p>
-	<p class="MsoNormal">Add &lt;/A&gt; at the end of the <i>setText</i> property in 
-	the source, and <b><font color="#0000FF">
-	verify</font></b> that the link is now enabled on the canvas</p>
+	</span><br>&nbsp;</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Create a Visual PersonEditor RCP Editor class as 
+	following in the <i>ui</i> package:</p>
+	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal"><img border="0" src="rcp.ht9.jpg"></p>
 	<p class="MsoNormal">&nbsp;</p>
 	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal">Register the Editor with the manifest</p>
 	<p class="MsoNormal">&nbsp;</p>
+	<p class="MsoNormal"><img border="0" src="rcp.ht10.jpg"></p>
 </blockquote>
+
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">Add the following code to the top of your PersonEditor 
+class, to define an instance variable for <i>user</i>, and an EditorInput inner 
+class:</p>
+<p class="MsoNormal">&nbsp;</p>
+<pre>public class PersonEditor extends EditorPart {
+	</pre>
+<pre>	IUser user = null;
+	</pre>
+<pre>	public static class EditorInput implements IEditorInput{</pre>
+<pre>		IUser user;
+		</pre>
+<pre>		public EditorInput (IUser user) {
+			this.user=user;
+		}</pre>
+<pre>
+		public boolean exists() {
+			return false;
+		}
+		public ImageDescriptor getImageDescriptor() {		
+			return null;
+		}</pre>
+<pre>		public String getName() {			
+			return user.getUserID();
+		}</pre>
+<pre>		public IPersistableElement getPersistable() {			
+			return null;
+		}</pre>
+<pre>		public String getToolTipText() {
+			return user.getFirstName() + &quot; &quot; + user.getLastName();
+		}</pre>
+<pre>		public Object getAdapter(Class adapter) {
+			return null;
+		}
+		</pre>
+<pre>		public IUser getUser() {
+			return user;
+		}
+		</pre>
+<pre>	}</pre>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">At the end of the <i>createPartControl </i>method you can 
+set the user instance variable as following</p>
+<p class="MsoNormal">&nbsp;</p>
+<pre>user = ((EditorInput)getEditorInput()).getUser();</pre>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">Then, you can write code to bind the various TextFields to 
+the given user instance.&nbsp; e.g., 
+firstNameTextField.setText(user.getFirstName).</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">The last thing that remains, it to create an event on the 
+QuickPickView's table so that a double click will create an EditorInput with the 
+proper user, and open an instance of the editor.</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">&nbsp;</p>
+<pre>		table.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				ILightUser u = (ILightUser) ((TableItem)e.item).getData();
+				PersonEditor.EditorInput input = new PersonEditor.EditorInput(DummyUserService.getInstance().getUser(u.getUserID()));
+				try {
+					getSite().getPage().openEditor(input, PersonEditor.ID);
+				} catch (PartInitException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}				
+			}
+		});</pre>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal">&nbsp;</p>
 
 </body>
 
