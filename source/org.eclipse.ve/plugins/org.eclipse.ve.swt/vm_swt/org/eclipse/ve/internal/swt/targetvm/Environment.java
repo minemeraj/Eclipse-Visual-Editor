@@ -127,15 +127,20 @@ public abstract class Environment {
 	}
 	
 	/**
-	 * Return the offscreen location for windows for the display associated with this environment.
+	 * Return the location for windows for the display associated with this environment.
+	 * If live is <code>true</code> then return the upper-left corner of the client area,
+	 * else return a point off screen by 1000 in both x and y.
+	 * 
+	 * @param live <code>true</code> to get upper left of client area, <code>false</code> for off-screen.
 	 * @return
 	 * 
 	 * @since 1.1.0.1
 	 */
-	public Point getOffScreenLocation() {
-		Rectangle bounds = getDisplay().getBounds();
-		return new Point(bounds.width+1000, bounds.height+1000);
+	public Point getScreenLocation(boolean live) {
+		Rectangle bounds = getDisplay().getClientArea();
+		return live ? new Point(bounds.x, bounds.y) : new Point(bounds.x+bounds.width+1000, bounds.y+bounds.height+1000);
 	}
+	
 	/**
 	 * Initialize the freeform host used by this environment.
 	 * This must be called on the UI thread. There must be a cooresponding disposeFreeFormHost because the ff host

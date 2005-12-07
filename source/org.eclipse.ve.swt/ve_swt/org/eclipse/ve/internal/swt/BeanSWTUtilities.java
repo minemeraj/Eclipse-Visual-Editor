@@ -807,21 +807,17 @@ public class BeanSWTUtilities {
 	 * @since 1.1.0.1
 	 */
 	public static Point getOffScreenLocation(ProxyFactoryRegistry registry) {
-		if (VCEPreferences.isLiveWindowOn())
-			return new Point(0, 0);
-		else {
-			BeanSWTUtilities constants = getConstants(registry);
-			if (constants.offscreenLocation == null) {
-				IBeanProxy env = JavaStandardSWTBeanConstants.getConstants(registry).getEnvironmentProxy();
-				IBeanProxy p = env.getTypeProxy().getMethodProxy("getOffScreenLocation", (String[]) null).invokeCatchThrowableExceptions(env);
-				if (p instanceof IPointBeanProxy) {
-					IPointBeanProxy pb = (IPointBeanProxy) p;
-					constants.offscreenLocation = new Point(pb.getX(), pb.getY());
-				} else
-					constants.offscreenLocation = new Point(10000, 10000);
-			}
-			return constants.offscreenLocation;
+		BeanSWTUtilities constants = getConstants(registry);
+		if (constants.offscreenLocation == null) {
+			IBeanProxy env = JavaStandardSWTBeanConstants.getConstants(registry).getEnvironmentProxy();
+			IBeanProxy p = env.getTypeProxy().getMethodProxy("getScreenLocation", new String[] {"boolean"}).invokeCatchThrowableExceptions(env, registry.getBeanProxyFactory().createBeanProxyWith(VCEPreferences.isLiveWindowOn()));
+			if (p instanceof IPointBeanProxy) {
+				IPointBeanProxy pb = (IPointBeanProxy) p;
+				constants.offscreenLocation = new Point(pb.getX(), pb.getY());
+			} else
+				constants.offscreenLocation = VCEPreferences.isLiveWindowOn() ? new Point(0,0) : new Point(10000, 10000);
 		}
+		return constants.offscreenLocation;
 	}
     /**
      * Set the selection on the TabFolder which brings the respective tab to the front.

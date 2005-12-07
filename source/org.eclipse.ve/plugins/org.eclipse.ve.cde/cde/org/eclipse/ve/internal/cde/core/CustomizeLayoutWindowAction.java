@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.18 $  $Date: 2005-11-15 21:48:48 $ 
+ *  $Revision: 1.19 $  $Date: 2005-12-07 23:52:06 $ 
  */
 
 import java.util.ArrayList;
@@ -349,9 +349,11 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 			if (fDialogLoc == null) {
 				// Get the persisted position of the dialog
 				Preferences preferences = CDEPlugin.getPlugin().getPluginPreferences();
-				int x = preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_X);
-				int y = preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_Y);
-				fDialog.setLocation(new Point(x, y));
+				// Use this point as an offset from the workbench window instead of as an absolute.
+				Point shellLoc = workbenchWindow.getShell().getLocation();
+				shellLoc.x+=preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_X);
+				shellLoc.y+=preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_Y);
+				fDialog.setLocation(shellLoc);
 				fDialogLoc = fDialog.getLocation();
 			} else {
 				fDialog.setLocation(fDialogLoc);
