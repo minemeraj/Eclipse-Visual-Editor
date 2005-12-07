@@ -7,6 +7,5 @@
 	<classpathentry kind="src" path="jfccodegen"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/org.eclipse.jem.beaninfo/bin_vm_beaninfovm"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
