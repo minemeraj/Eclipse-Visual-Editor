@@ -216,7 +216,7 @@
           value="scrolledComposite"/>
     </children>
   </org.eclipse.ve.internal.cde.palette:Drawer>
-  <org.eclipse.ve.internal.cde.palette:Drawer>
+  <org.eclipse.ve.internal.cde.palette:Drawer icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/pal/swt_menus.gif">
     <entryLabel xsi:type="org.eclipse.ve.internal.cde.utility:TranslatableString" key="Palette.Category.SWTMenus"
         bundle="#bundle"/>
     <children xsi:type="org.eclipse.ve.internal.cde.palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/menubar_obj.gif"
