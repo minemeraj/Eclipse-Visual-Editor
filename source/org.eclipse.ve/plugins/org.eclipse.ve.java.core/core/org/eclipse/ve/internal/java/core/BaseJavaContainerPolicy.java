@@ -24,6 +24,7 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy;
+
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
 
 /**
@@ -105,6 +106,35 @@ public class BaseJavaContainerPolicy extends AbstractEMFContainerPolicy {
 			cBld.applyAttributeSetting((EObject) container, containmentSF, child, positionBeforeChild);
 			
 		return cBld.getCommand();
+	}
+	
+	protected Command primCreateCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		if (!containmentSF.isMany())
+			if (((EObject) container).eIsSet(containmentSF))
+				return UnexecutableCommand.INSTANCE; // This is a single valued feature, and it is already set.
+			else if (children.isEmpty())
+				return null;	// This is single valued and no child passed in. Return as no command. Let caller handle no children being valid or not.
+
+		RuledCommandBuilder cBld = new RuledCommandBuilder(domain); 
+		cBld.setPropertyRule(false);
+		if (!containmentSF.isMany())
+			cBld.applyAttributeSetting((EObject) container, containmentSF, children.get(0));
+		else
+			cBld.applyAttributeSettings((EObject) container, containmentSF, children, positionBeforeChild);
+			
+		return cBld.getCommand();		
+	}
+	
+	protected Command primAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		// Change to use RuledCommandBuilder to add children.
+		if (!containmentSF.isMany() && (((EObject) container).eIsSet(containmentSF) || children.size() > 1)) {
+			return UnexecutableCommand.INSTANCE;	// This is a single valued feature, and it is already set or there is more than one child being added.
+		} else {
+			RuledCommandBuilder cbldr = new RuledCommandBuilder(domain);
+			cbldr.setPropertyRule(false);	// These are children.
+			cbldr.applyAttributeSettings((EObject) container, containmentSF, children, positionBeforeChild);
+			return cbldr.getCommand();
+		}
 	}
 
 }

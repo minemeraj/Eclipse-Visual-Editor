@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: GridLayoutGridFigure.java,v $
- *  $Revision: 1.16 $  $Date: 2005-12-01 20:19:43 $ 
+ *  $Revision: 1.17 $  $Date: 2005-12-07 23:12:34 $ 
  */
 
 import org.eclipse.draw2d.*;
@@ -231,7 +231,7 @@ protected int[][] calculateColumnDividers(int[] columnWidths, int[] rowHeights, 
 				else
 					trueRowHeight+=marginHeight;
 				GridComponent leftObject, rightObject;
-				if ((leftObject = leftColumn[j]) != GridLayoutPolicyHelper.EMPTY_GRID && (rightObject = rightColumn[j]) != GridLayoutPolicyHelper.EMPTY_GRID && leftObject == rightObject) {
+				if ((leftObject = leftColumn[j]) != helper.EMPTY_GRID && (rightObject = rightColumn[j]) != helper.EMPTY_GRID && leftObject == rightObject) {
 					// We are spanning, so skip it and move start of segment to next cell.
 					if (!prevSpan) {
 						// Need to close off previous one (if not first)
@@ -366,7 +366,7 @@ protected int[][] calculateRowDividers(int[] columnWidths, int[] rowHeights, Gri
 				else
 					trueColWidth+=marginWidth;
 				GridComponent upperObject, lowerObject;
-				if ((upperObject = cellContents[j][upperRow]) != GridLayoutPolicyHelper.EMPTY_GRID && (lowerObject = cellContents[j][lowerRow]) != GridLayoutPolicyHelper.EMPTY_GRID && upperObject == lowerObject) {
+				if ((upperObject = cellContents[j][upperRow]) != helper.EMPTY_GRID && (lowerObject = cellContents[j][lowerRow]) != helper.EMPTY_GRID && upperObject == lowerObject) {
 					// We are spanning, so skip it and move start of segment to next cell.
 					if (!prevSpan) {
 						// Need to close off previous one (if not first)
