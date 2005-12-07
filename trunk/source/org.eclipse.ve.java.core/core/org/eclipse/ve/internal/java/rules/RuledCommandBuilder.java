@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.rules;
 /*
  *  $RCSfile: RuledCommandBuilder.java,v $
- *  $Revision: 1.9 $  $Date: 2005-10-28 21:36:44 $ 
+ *  $Revision: 1.10 $  $Date: 2005-12-07 23:12:35 $ 
  */
 
 import java.util.*;
@@ -47,6 +47,7 @@ public class RuledCommandBuilder extends CommandBuilder {
 	private boolean regularCmd = true;
 	private boolean propertyRule = true;
 	private boolean applyRules = true;
+	private boolean applyRulesOnTouch;
 	
 	/**
 	 * Constructor for RuledCommandBuilder.
@@ -117,8 +118,8 @@ public class RuledCommandBuilder extends CommandBuilder {
 			// If feature is not an EReference, then pre/post aren't in effect.
 			boolean isSet = target.eIsSet(feature);
 			EObject oldValue = (EObject) target.eGet(feature);
-			if (!isSet || oldValue != newValue) {
-				// Not a Touch. Need a preSet command.
+			if (!isSet || (oldValue != newValue || applyRulesOnTouch)) {
+				// Not a Touch (or a touch but apply rules anyway). Need a preSet command.
 				buildUp = appendPre(createPre(target, feature, newValue), buildUp);
 			}
 	
@@ -640,6 +641,32 @@ public class RuledCommandBuilder extends CommandBuilder {
 	 */
 	public boolean isApplyRules() {
 		return applyRules;
+	}
+
+	/**
+	 * Is the apply rules on touch on. This means that even on a touch that rules should applied.
+	 * Normally (default is <code>false</code>) on a touch the rules are not applied. If this is <code>true</code> and {@link #isApplyRules()} also
+	 * <code>true</code> then the rules will be applied on a touch.
+	 * @return
+	 * 
+	 * @since 1.2.0
+	 */
+	public boolean isApplyRulesOnTouch() {
+		return applyRulesOnTouch;
+	}
+
+	/**
+	 * Set the apply rules on touch setting.
+	 * @param applyRulesOnTouch
+	 * @return old setting value
+	 * 
+	 * @see #isApplyRulesOnTouch()
+	 * @since 1.2.0
+	 */
+	public boolean setApplyRulesOnTouch(boolean applyRulesOnTouch) {
+		boolean old = this.applyRulesOnTouch;
+		this.applyRulesOnTouch = applyRulesOnTouch;
+		return old;
 	}
 
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.44 $  $Date: 2005-12-01 20:19:43 $
+ *  $Revision: 1.45 $  $Date: 2005-12-07 23:12:34 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -91,16 +91,36 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	private static final String NO_MODS = "NOMODS";
 	private static final int NOT_MODIFIED_SPAN = -1;
 	private static final int SET_TO_DEFAULT_SPAN = -2;
-	public static class GridComponent {
+	public class GridComponent {
 		
 		public GridComponent(Object component, EObject componentEObject) {
 			this.component = component;
 			this.componentEObject = componentEObject;
 		}
 		
-		public GridComponent(Object component, EObject componentEObject, Object modState) {
+		public GridComponent(Object component, EObject componentEObject, Object requestType) {
 			this(component, componentEObject);
-			this.modState = modState;
+			this.requestType = requestType;
+			setupUseGriddata(componentEObject, requestType);
+		}
+		
+		private void setupUseGriddata(EObject componentEObject, Object requestType) {
+			useGriddata = null;
+			if (RequestConstants.REQ_CREATE.equals(requestType) || RequestConstants.REQ_ADD.equals(requestType)) {
+				// For add/create we need to see if there is an existing griddata. If so, then we need to 
+				// set it as use griddata AND we need to seet the span to cancel span because it may
+				// already of had a span set.
+				if (componentEObject.eIsSet(sfLayoutData)) {
+					IJavaObjectInstance gridData = (IJavaObjectInstance) componentEObject.eGet(sfLayoutData);
+					JavaHelpers griddataType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.layout.GridData", rset);	//$NON-NLS-1$
+					if (griddataType.isInstance(gridData)) {
+						// We have one to copy over. If it was bad this is ok because for an add it would be orphaned and not actually retained.
+						// For a create, that shouldn't occur, but if it does we'll leave it there.
+						useGriddata = gridData;
+						modSpanHeight = modSpanWidth = SET_TO_DEFAULT_SPAN;	// Need to cancel out any current settings
+					}
+				}
+			}
 		}
 		
 		public GridComponent(EObject child, boolean filler) {
@@ -108,28 +128,13 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			this.filler = filler;
 		}
 		
-		public void setComponent(Object component, EObject componentEObject, Object modState) {
+		public void setComponent(Object component, EObject componentEObject, Object requestType) {
 			this.component = component;
 			this.componentEObject = componentEObject;
-			this.modState = modState;
+			this.requestType = requestType;
 			modSpanWidth = modSpanHeight = NOT_MODIFIED_SPAN;
 			filler = false;
-		}
-		
-		/**
-		 * Make a detached (not in linked list, no grid dimensions) copy. This is used for move component so that we can
-		 * move to new location and then remove from old location. This would require a temporary dup of
-		 * component in the list. 
-		 * @return
-		 * 
-		 * @since 1.2.0
-		 */
-		GridComponent copy() {
-			GridComponent copy = new GridComponent(component, componentEObject, modState);
-			copy.modSpanWidth = modSpanWidth;
-			copy.modSpanHeight = modSpanHeight;
-			copy.filler = filler;
-			return copy;
+			setupUseGriddata(componentEObject, requestType);
 		}
 		
 		/**
@@ -145,7 +150,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			// so that it will be picked up as needing to be moved in the stopRequest. Else leave as add/create/move so that
 			// it will be processed correctly for that appropriate state. We should not change an add/create to a move. It won't
 			// work correctly in the container policy.
-			modState = NO_MODS.equals(gc.modState) ? RequestConstants.REQ_MOVE : gc.modState;
+			requestType = NO_MODS.equals(gc.requestType) ? RequestConstants.REQ_MOVE : gc.requestType;
 			modSpanWidth = modSpanHeight = SET_TO_DEFAULT_SPAN;	// Also cancel the span for the moved child.
 			filler = gc.filler;
 			useGriddata = gc.useGriddata;
@@ -160,12 +165,11 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		boolean filler;
 		Object component;
 		EObject componentEObject;
-		Object modState = NO_MODS;
+		Object requestType = NO_MODS;
 		int modSpanWidth = NOT_MODIFIED_SPAN;
 		int modSpanHeight = NOT_MODIFIED_SPAN;
 		Rectangle gridDimension;
 		IJavaObjectInstance useGriddata;
-		
 		public boolean isFillerLabel() {
 			return filler;
 		}
@@ -227,28 +231,28 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		
 		Object beforeComp = null;
 		Object currentModState = null;
-		List currentComponents = new ArrayList();
+		List currentComponentGCs = new ArrayList();
 		Object prevComp = beforeComp;
 		// We build up from the end instead of from the beginning because we need to have the prevComp in place before we can put something
 		// in front of it. If we went from the beginning, something may of been moved to a later spot and it would not be in the correct 
 		// order in the real list.
 		for(GridComponent gc = last; gc != null; gc = gc.prev) {
-			if (gc.modState != NO_MODS) {
-				if (!gc.modState.equals(currentModState)) {
+			if (gc.requestType != NO_MODS) {
+				if (!gc.requestType.equals(currentModState)) {
 					// We are switching to a new type, send out the old group.
-					if (!currentComponents.isEmpty()) {
-						getCommandForAddCreateMoveChildren(currentModState, currentComponents, beforeComp, cb);
-						currentComponents.clear();
+					if (!currentComponentGCs.isEmpty()) {
+						getCommandForAddCreateMoveChildren(currentModState, currentComponentGCs, beforeComp, cb);
+						currentComponentGCs.clear();
 					}
 					beforeComp = prevComp;	// This new guy will now go before the latest prev component.
-					currentModState = gc.modState;
+					currentModState = gc.requestType;
 				}
-				currentComponents.add(0, gc.component);	// Since we build up backwards, we insert from the front so that it results in forward.
+				currentComponentGCs.add(0, gc);	// Since we build up backwards, we insert from the front so that it results in forward.
 			} else {
 				// Switch to no change, so put what we have.
-				if (!currentComponents.isEmpty()) {
-					getCommandForAddCreateMoveChildren(currentModState, currentComponents, beforeComp, cb);
-					currentComponents.clear();
+				if (!currentComponentGCs.isEmpty()) {
+					getCommandForAddCreateMoveChildren(currentModState, currentComponentGCs, beforeComp, cb);
+					currentComponentGCs.clear();
 					currentModState = null;
 				}
 			}
@@ -258,8 +262,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		}
 
 		// Do last group.
-		if (!currentComponents.isEmpty()) {
-			getCommandForAddCreateMoveChildren(currentModState, currentComponents, beforeComp, cb);
+		if (!currentComponentGCs.isEmpty()) {
+			getCommandForAddCreateMoveChildren(currentModState, currentComponentGCs, beforeComp, cb);
 		}
 		
 		if (deletedComponents != null)
@@ -328,7 +332,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 	
 	protected void deleteComponent(GridComponent gcomp) {
-		if (!gcomp.modState.equals(RequestConstants.REQ_ADD) && !gcomp.modState.equals(RequestConstants.REQ_CREATE)) {
+		if (!gcomp.requestType.equals(RequestConstants.REQ_ADD) && !gcomp.requestType.equals(RequestConstants.REQ_CREATE)) {
 			// If it was create or add, then it wasn't here to begin with so no need to add to deleted list.
 			addToDeleted(gcomp.component);
 		}
@@ -415,7 +419,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		return Collections.nCopies(children.size(), null);
 	}
 
-	public static final GridComponent EMPTY_GRID = new GridComponent(null, null);
+	public final GridComponent EMPTY_GRID = new GridComponent(null, null);
 
 	private static class AnyFeatureSetVisitor implements Visitor {
 
@@ -1177,13 +1181,20 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		fEditDomain = editDomain;
 	}
 
-	private void getCommandForAddCreateMoveChildren(Object requestType, List children, Object beforeObject, CommandBuilder cb) {
-		children = new ArrayList(children);	// Need a copy of it because the policies actually use the list itself and our further manipulations
-		// of it will mess up the policy commands created.
+	private void getCommandForAddCreateMoveChildren(Object requestType, List childrenGC, Object beforeObject, CommandBuilder cb) {
+		List children = new ArrayList(childrenGC.size());
+		List constraints = new ArrayList(childrenGC.size());
+		for (int i = 0; i < childrenGC.size(); i++) {
+			GridComponent gc = (GridComponent) childrenGC.get(i);
+			children.add(gc.component);
+			constraints.add(gc.useGriddata);
+		}
+		// of it will mess up the policy commands created..
+		// Create the appropriate set of constraints to apply with.
 		if (RequestConstants.REQ_CREATE.equals(requestType))
-			cb.append(policy.getCreateCommand(children, beforeObject).getCommand());
+			cb.append(policy.getCreateCommand(constraints, children, beforeObject).getCommand());
 		else if (RequestConstants.REQ_ADD.equals(requestType))
-			cb.append(policy.getAddCommand(children, beforeObject).getCommand());
+			cb.append(policy.getAddCommand(constraints, children, beforeObject).getCommand());
 		else
 			cb.append(policy.getMoveChildrenCommand(children, beforeObject));
 	}	
@@ -1743,7 +1754,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		if (glayoutTable[cellCol][cellRow] != EMPTY_GRID)
 			return;	// Invalid request.
 		
-		GridComponent movedComponent = getComponentIfMove(child.componentEObject, child.modState);
+		GridComponent movedComponent = getComponentIfMove(child.componentEObject, child.requestType);
 		
 		// Find the next occupied cell to be used as the before object.
 		GridComponent before = findNextValidGC(cellCol, cellRow);

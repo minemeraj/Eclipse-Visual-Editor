@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: CompositeContainerPolicy.java,v $$
- *  $$Revision: 1.26 $$  $$Date: 2005-12-01 20:19:43 $$ 
+ *  $$Revision: 1.27 $$  $$Date: 2005-12-07 23:12:34 $$ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -123,18 +123,13 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 
 	protected void getAddCommand(List constraints, List children, Object position, CommandBuilder cbld) {
 
-		// First create the add commands for the children so that we can let standard verification of the children be done.
-		CommandBuilder addBuilder = createCommandBuilder(true); 
-		getAddCommand(children, position, addBuilder);
-		if (addBuilder.isDead()) {
-			cbld.markDead();
-			return;
-		}
-		
+		RuledCommandBuilder rcb = new RuledCommandBuilder(domain); 
+
 		// Walk the constraints and apply to the children.
-		// The constraints need to be applied through a ruled builder because the children are already in the model for an add
-		// so we need to have the constraints handled through rules to get added to the model correctly.
-		RuledCommandBuilder rcb = new RuledCommandBuilder(domain);
+		// The constraints need to be applied through a ruled builder because the children controls are already in the model for an add
+		// so we need to have the constraints handled through rules to get added to the model correctly. 
+		rcb.setApplyRulesOnTouch(true);	// These constraints may be the old constraints (such as moving from one grid to another) but they were orphaned.
+		// But at this point in time they are not yet orphaned so the rule builder thinks these are touch and will not apply the rules.
 		Iterator constraintsItr = constraints.iterator();
 		Iterator childrenItr = children.iterator();
 		while(childrenItr.hasNext()) {
@@ -145,11 +140,11 @@ public class CompositeContainerPolicy extends VisualContainerPolicy {
 			if (constraint != null)
 				rcb.applyAttributeSetting(child, sfLayoutData, constraint);
 		}
-		
-		// The add commands should be in the list after the apply of the layout data so that
-		// when they actually execute the layout data will already be set.
+
+		// Now add the children. Add with rules as children, not properties. This will make sure the children and their settings are added to the model correctly.
+		rcb.setPropertyRule(false);	
+		getAddCommand(children, position, rcb);
 		cbld.append(rcb.getCommand());
-		cbld.append(addBuilder.getCommand());
 	}		
 
 }
