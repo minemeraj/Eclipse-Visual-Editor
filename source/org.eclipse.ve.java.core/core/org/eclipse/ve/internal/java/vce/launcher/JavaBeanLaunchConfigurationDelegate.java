@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.22 $  $Date: 2005-10-14 17:45:07 $ 
+ *  $Revision: 1.23 $  $Date: 2005-12-07 02:23:37 $ 
  */
 
 
@@ -147,14 +147,14 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	// First get any of the user requested ones.
 	StringBuffer args = new StringBuffer(super.getVMArguments(configuration));
 	
-	String launchersList = JFC_LAUNCHER_TYPE_NAME;	
+	List launchersList = new ArrayList(3);	
 	
 	// Now add in ours.
 	// TODO: refactor launchers into appropriate packages
 	
 	IJavaProject project = verifyJavaProject(configuration);
 	if ( isRCPPlugin(project) ){
-		launchersList = launchersList + "," + RCP_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
+		launchersList.add(RCP_LAUNCHER_TYPE_NAME); 
 		
 		// Ensure necessary classes are available for the launcher.
 		setupClasspath(configuration, args);
@@ -197,10 +197,24 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 	
 	if (configuration.getAttribute(IS_SWT, false)) { //$NON-NLS-1$
 		// SWT support is provided by the included library, so just add the launcher.
-		launchersList = launchersList + "," + SWT_LAUNCHER_TYPE_NAME; //$NON-NLS-1$
+		launchersList.add(SWT_LAUNCHER_TYPE_NAME);
 	}
 	
-	args.append(" -Dvce.launchers=\"" + launchersList + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+	// Add the JFC launcher last to avoid the SWT thread issue on OS X
+	launchersList.add(JFC_LAUNCHER_TYPE_NAME);
+	
+	// Join the launchers list into a comma deliminated string
+	StringBuffer launchersString = new StringBuffer();
+	for (Iterator itr = launchersList.iterator(); itr.hasNext();)
+	{
+		if (launchersString.length() > 0)
+		{
+			launchersString.append(',');
+		}
+		launchersString.append(itr.next());
+	}
+	
+	args.append(" -Dvce.launchers=\"" + launchersString.toString() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 	
 	// We always launch the program javaBeansLauncher on the target VM and we give it details about which JavaBean to test,
 	// which look and feel to use, etc... in arguments, e.g. to test the java.awt.Button the args would be
