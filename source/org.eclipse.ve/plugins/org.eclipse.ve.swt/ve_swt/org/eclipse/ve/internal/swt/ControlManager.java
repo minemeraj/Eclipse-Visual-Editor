@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.23 $ $Date: 2005-12-02 18:41:26 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.24 $ $Date: 2005-12-08 17:14:31 $
  */
 
 import java.io.InputStream;
@@ -1267,7 +1267,7 @@ public class ControlManager implements ControlManagerFeedbackControllerNotifier,
 		private Runnable invalidateRunnable = new Runnable() {
 
 			public void run() {
-				if (feedbackControllerProxy != null) {
+				if (feedbackControllerProxy != null && feedbackControllerProxy.isBeanProxy() && ((IBeanProxy) feedbackControllerProxy).isValid()) {
 					IExpression exp = ((IBeanProxy) feedbackControllerProxy).getProxyFactoryRegistry().getBeanProxyFactory().createExpression();
 					try {
 						for (Iterator itr = pendingInvalidates.iterator(); itr.hasNext();) {
