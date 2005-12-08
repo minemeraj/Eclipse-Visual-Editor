@@ -171,10 +171,10 @@
       </objectContribution>
 	-->
    	 <!-- 
-	 	Snap to Grid
+	 	Snap to Grid - only available on the Graph view
 	 -->
       <objectContribution
-            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
+            objectClass="org.eclipse.ve.internal.java.core.IJavaBeanGraphicalContextMenuContributor"
             id="org.eclipse.ve.internal.jfc.snaptogridaction.popup.object">
          <filter
                name="BEANTYPE"
