@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.46 $  $Date: 2005-12-08 15:50:33 $
+ *  $Revision: 1.47 $  $Date: 2005-12-08 16:05:40 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -1455,7 +1455,8 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		numColumns = glayoutTable.length;
 		// And finally! update the grid dimensions of all of the moved controls.
 		for (int rcol = col; rcol < glayoutTable.length; rcol++) {
-			for (int rrow = 0; rrow < glayoutTable[rcol].length; rrow++) {
+			// Need to rcol in the next for loop because we modify rcol within the for loop.
+			for (int rrow = 0; rcol < glayoutTable.length && rrow < glayoutTable[rcol].length; rrow++) {
 				GridComponent gc = glayoutTable[rcol][rrow];
 				if (gc != EMPTY_GRID) {
 					if (gc.gridDimension.x == rcol+1 && gc.gridDimension.y == rrow) {
