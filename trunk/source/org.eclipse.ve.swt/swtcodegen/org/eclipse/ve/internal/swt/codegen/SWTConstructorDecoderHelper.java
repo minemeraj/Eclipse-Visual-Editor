@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.32 $  $Date: 2005-12-02 00:52:07 $ 
+ *  $Revision: 1.33 $  $Date: 2005-12-08 17:22:09 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -103,7 +103,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	}
 	
 	protected EStructuralFeature getIndexSF() {
-		if (getParent()!=null)
+		if (getParent()!=null && !getParent().isDisposed())
 		    return getParent().getEObject().eClass().getEStructuralFeature(constructorSF);
 		return null;
 	}
