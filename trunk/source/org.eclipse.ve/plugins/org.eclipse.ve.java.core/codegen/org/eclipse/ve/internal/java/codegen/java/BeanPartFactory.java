@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.61 $  $Date: 2005-12-05 14:44:49 $ 
+ *  $Revision: 1.62 $  $Date: 2005-12-08 23:13:39 $ 
  */
 
 import java.util.*;
@@ -897,6 +897,7 @@ public BeanPart createImplicitBeanPart (BeanPart parent, EStructuralFeature sf) 
 	try {
 		// Create the implicit bean
 		BeanPartDecleration bpd = new BeanPartDecleration(parent, sf);
+		bpd.setDeclaringMethod(parent.getInitMethod());
 		BeanPartDecleration current = fBeanModel.getModelDecleration(bpd);
 		if (current!= null) {
 			// Implicit decleration was parsed in via a "parent.getImplicit().setFoo();" expression
