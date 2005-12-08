@@ -34,6 +34,7 @@
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 
 public class <%=typeName%> extends ViewPart {
 
@@ -42,6 +43,7 @@ public class <%=typeName%> extends ViewPart {
 	private Composite top = null;
 	
 	public void createPartControl(Composite <%=compositeArgumentName%>) {
-		top = new Composite(<%=compositeArgumentName%>, SWT.NONE);		   
+		top = new Composite(<%=compositeArgumentName%>, SWT.NONE);
+		top.setLayout(new GridLayout());
 	}
 }

@@ -25,11 +25,11 @@ public class RCPViewSourceGenerator implements org.eclipse.ve.internal.java.code
   }
 
   protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "import org.eclipse.ui.part.ViewPart;" + NL + "import org.eclipse.swt.widgets.Composite;" + NL + "import org.eclipse.swt.SWT;" + NL + "" + NL + "public class ";
+  protected final String TEXT_1 = "import org.eclipse.ui.part.ViewPart;" + NL + "import org.eclipse.swt.widgets.Composite;" + NL + "import org.eclipse.swt.SWT;" + NL + "import org.eclipse.swt.layout.GridLayout;" + NL + "" + NL + "public class ";
   protected final String TEXT_2 = " extends ViewPart {" + NL + "" + NL + "\tpublic static final String ID = \"";
   protected final String TEXT_3 = "\"; // TODO Needs to be whatever is mentioned in plugin.xml" + NL + "\t" + NL + "\tprivate Composite top = null;" + NL + "\t" + NL + "\tpublic void createPartControl(Composite ";
   protected final String TEXT_4 = ") {" + NL + "\t\ttop = new Composite(";
-  protected final String TEXT_5 = ", SWT.NONE);\t\t   " + NL + "\t}" + NL + "}";
+  protected final String TEXT_5 = ", SWT.NONE);" + NL + "\t\ttop.setLayout(new GridLayout());" + NL + "\t}" + NL + "}";
 
 public String generateSource(String typeName, String superClassName, HashMap argumentMatrix)
   {
