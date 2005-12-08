@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: DefaultModelAdapterFactory.java,v $
- *  $Revision: 1.8 $  $Date: 2005-10-03 19:21:04 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-08 17:52:30 $ 
  */
 
 import java.lang.reflect.Constructor;
@@ -192,6 +192,8 @@ public class DefaultModelAdapterFactory implements IModelAdapterFactory {
 	 * The modelObject will be set into the editpart after it is created.
 	 */
 	protected EditPart createEditPart(Object modelObject) {
+		if (!(modelObject instanceof EObject))
+			return null;
 		String epClassString = policy.getGraphViewClassname(((EObject) modelObject).eClass());
 		if (epClassString == null)
 			return null;
