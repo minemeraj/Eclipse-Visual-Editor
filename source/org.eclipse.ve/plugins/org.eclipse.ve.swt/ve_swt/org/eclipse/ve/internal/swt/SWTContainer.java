@@ -214,22 +214,19 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		String srcPluginID;		// Search for src. also in this plugin
 		String legacySrcPluginID;
 		
-		/**
-		 * 
-		 * @param pluginID same id for both legacy/current
-		 * @param legacyJarPath  legacy path
-		 * @param srcPluginID
-		 * 
-		 * @since 1.1.0
-		 */
-		public JarInfo (String pluginID, String jarPath, String srcPluginID) {		
-			this.pluginID=pluginID;			
+		public JarInfo (String pluginID, String jarPath, String srcPluginID, boolean legacyOnly) {
+			if (!legacyOnly)
+				this.pluginID=pluginID;			
 			legacyID=pluginID;			
 			this.legacyJarPath=jarPath;
 			this.srcPluginID=srcPluginID;
 			this.legacySrcPluginID=srcPluginID;
 			legacyLibPath=null;
 		}
+		
+		public JarInfo (String pluginID, String jarPath, String srcPluginID) {
+			this(pluginID, jarPath, srcPluginID, false);
+		}		
 		
 		public JarInfo (String pluginID, boolean includeLibraries, String legacyID, String jarPath, String libPath, String srcPluginID, String legacySrcPluginID) {
 			this.pluginID=pluginID;
@@ -402,9 +399,9 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			// TODO I don't think JFace TEXT will be allowed to run outside of Eclipse. It requires Jobs among other things
 			new JarInfo("org.eclipse.jface.text", "jfacetext.jar", SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
 			
-			// TODO These are required for legacy only
-			new JarInfo("org.eclipse.core.runtime", "runtime.jar", SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
-			new JarInfo("org.eclipse.core.runtime.compatibility", "compatibility.jar", SWT_CONTAINER_SRC_PLUGIN), 			 //$NON-NLS-1$ //$NON-NLS-2$
+			// These are required for legacy only
+			new JarInfo("org.eclipse.core.runtime", "runtime.jar", SWT_CONTAINER_SRC_PLUGIN, true),  //$NON-NLS-1$ //$NON-NLS-2$
+			new JarInfo("org.eclipse.core.runtime.compatibility", "compatibility.jar", SWT_CONTAINER_SRC_PLUGIN, true),	 //$NON-NLS-1$ //$NON-NLS-2$
 
 	};
 	
@@ -431,6 +428,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		removeProblems();
 		ArrayList entries = new ArrayList() ;		
 		for (int i = 0; i < swtLibraries.length; i++) {
+			if (swtLibraries[i].getPluginID() == null)
+				continue;	// Legacy only jar.
 			IClasspathEntry e = null;
 			Bundle b = Platform.getBundle(swtLibraries[i].getPluginID());	
 			if (b!=null) {
@@ -447,6 +446,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 
 		if (containerType.includeJFace()) {
 			for (int i = 0; i < jfaceLibraries.length; i++) {
+				if (jfaceLibraries[i].getPluginID() == null)
+					continue;	// Legacy only jar.
 				IClasspathEntry e = SWTConfigurationContributor.getPlatformPath(jfaceLibraries[i].getPluginID(), jfaceLibraries[i].isIncludesLibraries(), jfaceLibraries[i].getSrcPluginID());
 				if (e!=null)
 					entries.add(e);
@@ -546,6 +547,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	protected void initPDE(IPath containerPath) throws IOException {
 		ArrayList entries = new ArrayList() ;		
 		for (int i = 0; i < swtLibraries.length; i++) {
+			if (swtLibraries[i].getPluginID() == null)
+				continue;	// Legacy only jar.
 			IClasspathEntry e = null;
 			IPluginModelBase pluginBase = PDECore.getDefault().getModelManager().findModel(swtLibraries[i].getPluginID());	
 			if (pluginBase!=null) {
@@ -562,6 +565,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 
 		if (containerType.includeJFace()) {
 			for (int i = 0; i < jfaceLibraries.length; i++) {
+				if (jfaceLibraries[i].getPluginID() == null)
+					continue;	// Legacy only jar.
 				IPluginModelBase pluginBase = PDECore.getDefault().getModelManager().findModel(jfaceLibraries[i].getPluginID());
 				if (pluginBase!=null) {
 					IClasspathEntry e = SWTConfigurationContributor.getPDEPath(jfaceLibraries[i].getPluginID(), jfaceLibraries[i].getSrcPluginID(), jfaceLibraries[i].isIncludesLibraries());
@@ -633,7 +638,9 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		removeProblems();
 		
 		ArrayList entries = new ArrayList() ;		
-		for (int i = 0; i < swtLibraries.length; i++) {			
+		for (int i = 0; i < swtLibraries.length; i++) {
+			if (swtLibraries[i].getPluginID() == null)
+				continue;	// Legacy only jar.
 			Bundle b = Platform.getBundle(swtLibraries[i].getPluginID());	
 			if (b!=null) {
 				Bundle[] hosts = Platform.getHosts(b);
