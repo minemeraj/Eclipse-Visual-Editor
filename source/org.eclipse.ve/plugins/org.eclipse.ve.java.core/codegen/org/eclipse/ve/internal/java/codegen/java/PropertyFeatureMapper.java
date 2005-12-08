@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.java.codegen.java;
-/*
- *  $RCSfile: PropertyFeatureMapper.java,v $
- *  $Revision: 1.13 $  $Date: 2005-09-16 13:34:47 $ 
- */
 import java.util.*;
 import java.util.logging.Level;
 
@@ -20,19 +16,16 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.Statement;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
 import org.eclipse.jem.internal.beaninfo.core.Utilities;
-
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
-
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+import org.eclipse.jem.internal.java.beaninfo.IIntrospectionAdapter;
 import org.eclipse.jem.java.JavaClass;
 import org.eclipse.jem.java.Method;
-import org.eclipse.jem.internal.java.beaninfo.IIntrospectionAdapter;
+
+import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class PropertyFeatureMapper extends AbstractFeatureMapper {
 
@@ -126,7 +119,10 @@ public EStructuralFeature getImplicitFeature (Expression implicitExpression) {
 		return fSF;
 	if (fRefObj == null || implicitExpression == null)
 		return null;
-		
+	
+	EStructuralFeature requiredSF = null;
+	if(!fRefObj.isPrimitive())
+		requiredSF = ConstructorDecoderHelper.getRequiredImplicitFeature((IJavaObjectInstance) fRefObj);
 
 	List args = null;
 	if (implicitExpression instanceof MethodInvocation)
@@ -137,7 +133,7 @@ public EStructuralFeature getImplicitFeature (Expression implicitExpression) {
 	if (isHardCodedMethod(fMethodName, fRefObj)) {
 		processHardCodedProperty(fMethodName, fRefObj);
 	}
-	else {
+	else if(requiredSF!=null){
 		Iterator itr = getPropertiesIterator(fRefObj);
 		// Find a write method that matches the one in the Expression.
 		while (itr.hasNext()) {
@@ -150,6 +146,12 @@ public EStructuralFeature getImplicitFeature (Expression implicitExpression) {
 							|| !m.getName().equals(fMethodName)
 							|| args == null
 							|| (m.listParametersWithoutReturn().length != args.size()))
+						continue;
+					
+					// TODO we only want required SFs which are in the override.
+					// Trying to understand every getFoo() is complicated and should
+					// be addressed later.
+					if(!requiredSF.equals(pd.getEModelElement()))
 						continue;
 
 					//TODO: Need to check argument types

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: ExpressionVisitor.java,v $
- *  $Revision: 1.34 $  $Date: 2005-10-27 14:56:52 $ 
+ *  $Revision: 1.35 $  $Date: 2005-12-08 23:13:39 $ 
  */
 
 import java.text.MessageFormat;
@@ -69,6 +69,8 @@ BeanPart  processRefToImplicitSend(MethodInvocation stmt) {
 		bp = fModel.getABean(beanName);
 	
 	if (bp==null) {
+		// TODO - Do we really need to go to the callers bean ?
+		// This might need to be cleaned up.
 	   String parentName = selection.getExpression().toString();
 	   BeanPart parent = CodeGenUtil.getBeanPart(fModel, parentName, fMethod, fExpression.getOffset());
 	   if(parent==null)
@@ -82,7 +84,7 @@ BeanPart  processRefToImplicitSend(MethodInvocation stmt) {
 	  if(parent!=null){
 		  BeanPartDecleration decl = new BeanPartDecleration(beanName);
 		  decl.setImplicitDecleration(true);
-		  decl.setDeclaringMethod(parent.getDecleration().isInstanceVar()?null:parent.getInitMethod());
+		  decl.setDeclaringMethod(parent.getInitMethod());
 		  if (fModel.getModelDecleration(decl)!=null)
 			decl = fModel.getModelDecleration(decl); // reuse the existing mone
 		  bp = new BeanPart(decl) ;  
