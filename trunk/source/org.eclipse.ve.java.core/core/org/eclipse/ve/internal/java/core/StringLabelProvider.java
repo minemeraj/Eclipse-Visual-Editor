@@ -12,7 +12,7 @@
  *  Created May 23, 2005 by Gili Mendel
  * 
  *  $RCSfile: StringLabelProvider.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-08 17:15:54 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -20,13 +20,15 @@ import java.text.MessageFormat;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
+
+import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
  
 
 public class StringLabelProvider extends DefaultJavaBeanLabelProvider {
 	public String getText(Object element) {
 		String str = super.getText(element);
 		if (element instanceof IJavaInstance) {
-		   IBeanProxy h = BeanProxyUtilities.getBeanProxy((IJavaInstance)element);
+		   IBeanProxy h = BeanProxyUtilities.getBeanProxy((IJavaInstance)element, EMFEditDomainHelper.getResourceSet(domain));
 		   String post = h.toBeanString();
 		   str = MessageFormat.format("{0} - \"{1}\"", new Object[] { str, post });		   
 		}		
