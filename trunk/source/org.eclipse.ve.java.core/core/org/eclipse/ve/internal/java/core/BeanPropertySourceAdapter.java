@@ -9,19 +9,17 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.15 $ $Date: 2005-12-08 20:30:50 $
+ * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.16 $ $Date: 2005-12-08 20:39:27 $
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertySource;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
@@ -30,10 +28,7 @@ import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.java.JavaClass;
-import org.eclipse.jem.java.JavaRefFactory;
 
-import org.eclipse.ve.internal.cde.core.CDEActionFilter;
-import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 import org.eclipse.ve.internal.cde.properties.PropertySourceAdapter;
 
@@ -44,7 +39,7 @@ import org.eclipse.ve.internal.jcm.JCMPackage;
  * 
  * @since 1.0.0
  */
-public class BeanPropertySourceAdapter extends PropertySourceAdapter implements IAdaptable {
+public class BeanPropertySourceAdapter extends PropertySourceAdapter {
 	
 	/**
 	 * Get the target as a bean.
@@ -154,34 +149,6 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter implements 
 		return cls instanceof JavaClass ? ((JavaClass) cls).getAllProperties() : super.getAllFeatures(cls);
 	}
 
-	public static final String BEAN_TYPE_STRING = "BEANTYPE"; //$NON-NLS-1$
-	
-	public EditDomain getEditDomain(){
-		return domain;
-	}
-	
-	private static IActionFilter SINGLETON_FILTER;
-	public Object getAdapter(Class aKey) {
-		if (aKey == IActionFilter.class) {
-			if(SINGLETON_FILTER == null){
-				SINGLETON_FILTER = new CDEActionFilter(){
-					public boolean testAttribute(Object target, String name, String value) {
-						BeanPropertySourceAdapter propSourceAdapter = (BeanPropertySourceAdapter)target;
-						if (name.equals(BEAN_TYPE_STRING) && (propSourceAdapter.getTarget() instanceof IJavaInstance)) {
-							EClassifier type = JavaRefFactory.eINSTANCE.reflectType(value, JavaEditDomainHelper.getResourceSet( propSourceAdapter.getEditDomain()));
-							if (type != null)
-								return type.isInstance(propSourceAdapter.getTarget());
-						}					
-						// Pass this test up to the parent CDEActionFilter
-						return super.testAttribute(target, name, value);
-					}
-				};
-			}
-			return SINGLETON_FILTER;
-		};
-		return null;
-	}
-	
 	public boolean isPropertySet(Object feature) {
 		if (super.isPropertySet(feature)) {
 			Object value = ((EObject) target).eGet((EStructuralFeature) feature);
