@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.14 $ $Date: 2005-10-03 19:20:57 $
+ * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.15 $ $Date: 2005-12-08 20:30:50 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -180,6 +180,16 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter implements 
 			return SINGLETON_FILTER;
 		};
 		return null;
+	}
+	
+	public boolean isPropertySet(Object feature) {
+		if (super.isPropertySet(feature)) {
+			Object value = ((EObject) target).eGet((EStructuralFeature) feature);
+			if (value instanceof IJavaInstance)
+				return !((IJavaInstance) value).isImplicitAllocation();	// Implicit's are not considered set. We set it only so that settings on implicits will all apply to the same physical object.
+			else return true;
+		} else
+			return false;
 	}
 
 }
