@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.60 $  $Date: 2005-11-11 15:50:22 $ 
+ *  $Revision: 1.61 $  $Date: 2005-12-08 23:18:28 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -296,7 +296,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 				clearError(INSTANTIATION_ERROR_KEY);
 			else
 				return;	// Don't add it twice.
-		} else if (error == NO_BEAN_DUE_TO_PREVIOUS_ERROR)
+		} else if (errs != null && error == NO_BEAN_DUE_TO_PREVIOUS_ERROR)
 			return;	// Don't add it in, we have other errors.
 		processError(error, INSTANTIATION_ERROR_KEY);
 	}
@@ -385,7 +385,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		expression.createTry();
 		try {
 			beanProxy = primInstantiateBeanProxy(expression);
-			if (beanProxy.isExpressionProxy()) {
+			if (beanProxy != null && beanProxy.isExpressionProxy()) {
 				((ExpressionProxy) beanProxy).addProxyListener(new ExpressionProxy.ProxyAdapter() {
 
 					public void proxyResolved(ProxyEvent event) {
@@ -405,7 +405,13 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 					}
 				});
 			} else
-				setupBeanProxy((IBeanProxy) beanProxy); // TODO This could happen due to this being an implicit allocation from a non-proxyhost2 source. Can collapse back when these are merged. 
+				setupBeanProxy((IBeanProxy) beanProxy); // TODO This could happen due to this being an implicit allocation from a non-proxyhost2 source. Can collapse back when these are merged.
+			//   } catch (BeanInstantiationException e) {
+			//     ... ignore. This was sent because during instantiation (typically through implicit allocation) a needed bean
+			//         during allocation could not be instantiated. The error is already logged with that bean.
+			//   }
+			expression.createTryCatchClause(getBeanInstantiationExceptionTypeProxy(expression), false);
+			
 			//   } catch (Exception e) {
 			//     ... send back thru ExpressionProxy to mark an instantiation error ...
 			//     throw new BeanInstantiationError(); ... so that when being applied as a setting it can be seen as not valid, but rest of expression can continue.

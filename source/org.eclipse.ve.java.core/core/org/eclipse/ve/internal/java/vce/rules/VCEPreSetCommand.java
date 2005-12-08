@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.19 $  $Date: 2005-11-01 20:45:50 $ 
+ *  $Revision: 1.20 $  $Date: 2005-12-08 23:18:28 $ 
  */
 
 import java.util.*;
@@ -19,8 +19,11 @@ import java.util.*;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
+import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.base.*;
+import org.eclipse.jem.java.JavaHelpers;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 
@@ -31,6 +34,8 @@ import org.eclipse.ve.internal.cde.emf.ClassDecoratorFeatureAccess;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.jcm.*;
+
+import org.eclipse.ve.internal.java.core.BeanUtilities;
 
 import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
 
@@ -329,18 +334,21 @@ public class VCEPreSetCommand extends CommandWrapper {
 		final EReference allocationFeature = value instanceof IJavaInstance ? JavaInstantiation.getAllocationFeature((IJavaInstance) value) : null;
 		
 		final boolean isImplicit = value instanceof IJavaInstance && ((IJavaInstance) value).isImplicitAllocation();
-		EObject implicitParent = null;
+		IJavaObjectInstance implicitParent = null;
+		EStructuralFeature implicitRef = null;
 		if (isImplicit) {
 			// We need to process implicit because parent may not yet be assigned.
 			// Need to assign parent so that the implicit can get a location when it needs to.
 			ImplicitAllocation alloc = (ImplicitAllocation) ((IJavaInstance) value).getAllocation();
-			implicitParent = alloc.getParent();
+			implicitParent = (IJavaObjectInstance) alloc.getParent();
+			implicitRef = alloc.getFeature();
 			if (implicitParent.eContainer() == null) {
 				handleValue(cbld, incomingMethod, implicitParent, null, false, processed);
 			}
 		}
 		
-		final EObject finalImplicitParent = implicitParent;
+		final IJavaObjectInstance finalImplicitParent = implicitParent;
+		final EStructuralFeature finalImplicitRef = implicitRef;
 		
 		class FeatureVisitor implements FeatureValueProvider.Visitor {
 			public boolean hadChildren;		// During walking children, did it have children.
@@ -359,9 +367,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 										if (!isImplicit) {
 											visitMethod = getMethod(cbld, value, ref, visitMethod);
 										} else {
-											// TODO For now implicits will always be in implicit. Future we could have a settting that says over "n" properties means
-											// move from implicit to membership.
-											cbld.applyAttributeSetting(getMethod(cbld, finalImplicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);											
+											visitMethod = handleImplicitMembership(cbld, incomingMethod, (IJavaInstance) value, finalImplicitParent, finalImplicitRef);											
 										}
 									}
 									hadChildren = true;
@@ -379,9 +385,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 										if (!isImplicit) {
 											visitMethod = getMethod(cbld, value, ref, visitMethod);
 										} else {
-											// TODO For now implicits will always be in implicit. Future we could have a settting that says over "n" properties means
-											// move from implicit to membership.
-											cbld.applyAttributeSetting(getMethod(cbld, finalImplicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);																						
+											visitMethod = handleImplicitMembership(cbld, incomingMethod, (IJavaInstance) value, finalImplicitParent, finalImplicitRef);																						
 										}
 									}
 									hadChildren = true;
@@ -393,8 +397,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 					}
 				}
 				return null;
-			}
-		
+			}		
 		};
 		
 		FeatureVisitor visitor = new FeatureVisitor();
@@ -422,11 +425,60 @@ public class VCEPreSetCommand extends CommandWrapper {
 				} 
 			} else {
 				// Implicit with no children (properties) will be implicit in the method of the implicit parent.
-				cbld.applyAttributeSetting(getMethod(cbld, implicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(), value);
+				handleImplicitMembership(cbld, incomingMethod, (IJavaInstance) value, implicitParent, implicitRef);
 			}
 		} else if (containment)
 			handleAnnotation(value, cbld);	// Need to handle annotation before actual setting is done.
 	}
+
+	/*
+	 * Handle the implicit membership. Assign if not already assigned.
+	 */
+	private JCMMethod handleImplicitMembership(CommandBuilder cbld, JCMMethod incomingMethod, IJavaInstance value, IJavaObjectInstance implicitParent, EStructuralFeature parentRefToValue) {
+		JCMMethod implicitMethod;
+		if (value.eContainer() == null) {
+			// TODO For now implicits will always be in implicit. Future we could have a settting that says over "n" properties means
+			// move from implicit to membership.
+			
+			// KLUDGE For now codegen really doesn't handle implicits except for those special required ones. It especially can't handle it if
+			// the actual value is different than the return value (i.e. casting needed). Right now only handles the SWT "viewers" required
+			// implicits. When we really get implicits working we can pull out the kludge of creating a new setting.
+			if (isRequiredImplicitFeature(implicitParent.getJavaType(), parentRefToValue)) {
+				cbld.applyAttributeSetting(implicitMethod = getMethod(cbld, implicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(),
+					value);
+			} else {
+				// KLUDGE the real kludge is we assign to membership and change allocation to default ctor. Note this may fail but this is
+				// what we always did in the past.
+				cbld.cancelAttributeSetting(value, JavaInstantiation.getAllocationFeature(value));
+				cbld.applyAttributeSetting(implicitMethod = getMethod(cbld, implicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Members(),
+						value);
+			}
+		} else if (value.eContainer() instanceof JCMMethod){
+			implicitMethod = (JCMMethod) value.eContainer();
+		} else
+			implicitMethod = findInitializesMethod(value, cbld);
+		return implicitMethod;
+	}
+	
+	private boolean isRequiredImplicitFeature(JavaHelpers type, EStructuralFeature feature) {
+		FeatureAttributeValue val = BeanUtilities.getSetBeanDecoratorFeatureAttributeValue(type,
+				IBaseBeanInfoConstants.REQUIRED_IMPLICIT_PROPERTIES);
+		if (val != null) { 
+			Object fval = val.getValue();
+			if (fval instanceof String)
+				return ((String) fval).equals(feature.getName());
+			else if (fval instanceof String[]) {
+				String[] fvals = (String[]) fval;
+				for (int i = 0; i < fvals.length; i++) {
+					if (fvals[i].equals(feature.getName()))
+						return true;
+				}
+				return false;
+			}
+		}
+		return false;
+	}
+
 	
 	/*
 	 * Called to handle annotation on this child. It just accumulates
