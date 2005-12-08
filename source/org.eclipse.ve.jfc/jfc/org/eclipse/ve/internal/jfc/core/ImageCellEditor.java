@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.jfc.core;
 
-/*
- *  $RCSfile: ImageCellEditor.java,v $
- *  $Revision: 1.11 $  $Date: 2005-11-15 18:53:31 $ 
- */
 import java.util.StringTokenizer;
 
 import org.eclipse.jdt.core.dom.*;
@@ -88,17 +84,17 @@ public class ImageCellEditor extends DialogCellEditor implements IJavaCellEditor
 	 * Find the argument to the new ImageIcon. Turn it into a string.
 	 */
 	public static String getPathFromInitializationAllocation(JavaAllocation allocation) {
-		if (allocation .isParseTree()) {
+		if (allocation.isParseTree()) {
 			PTExpression exp = ((ParseTreeAllocation) allocation).getExpression();
-			if (exp instanceof PTClassInstanceCreation && ((PTClassInstanceCreation) exp).getType().equals(IMAGE_INITSTRING_START)
-					&& ((PTClassInstanceCreation) exp).getArguments().size() == 1) {
+			if (exp instanceof PTMethodInvocation && (IMAGE_INITSTRING_START.indexOf(((PTMethodInvocation) exp).getName()) != 1)
+					&& ((PTMethodInvocation) exp).getArguments().size() == 1) {
 				NaiveExpressionFlattener flattener = new NaiveExpressionFlattener();
-				((PTExpression) ((PTClassInstanceCreation) exp).getArguments().get(0)).accept(flattener);
+				((PTExpression) ((PTMethodInvocation) exp).getArguments().get(0)).accept(flattener);
 				return flattener.getResult();
 			}
 		}
 
-		return ""; // Don't know how to handle if not an ParseTree allocation. //$NON-NLS-1$
+		return ""; // Don't know how to handle if not a ParseTree allocation. //$NON-NLS-1$
 	}
 
 	/**
