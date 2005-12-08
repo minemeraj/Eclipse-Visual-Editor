@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMPackageImpl.java,v $
- *  $Revision: 1.10 $  $Date: 2005-10-03 19:20:57 $ 
+ *  $Revision: 1.11 $  $Date: 2005-12-08 17:52:29 $ 
  */
 
 import java.util.Map;
@@ -895,13 +895,14 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		if (isInitialized) return;
 		initializePackageContentsGen();
 		
-		// Now initialize the ModelAdapter decorator for the Events objects.
+		// Now initialize the ModelAdapter decorator for the Events objects. This handler prevents it from being moved/dropped from palette or choosebean.
+		// This is because these are explicitly handled by code.
 		ClassDescriptorDecorator cd = DecoratorsFactory.eINSTANCE.createClassDescriptorDecorator();
-		cd.setModelAdapterClassname("org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NoParentModelAdapter");
+		cd.setModelAdapterClassname("org.eclipse.ve.cde/org.eclipse.ve.internal.cde.core.NoParentContainmentHandler");
 		getCallback().getEAnnotations().add(cd);
 		
 		cd = DecoratorsFactory.eINSTANCE.createClassDescriptorDecorator();
-		cd.setModelAdapterClassname("org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.NoParentModelAdapter");
+		cd.setModelAdapterClassname("org.eclipse.ve.cde/org.eclipse.ve.internal.cde.core.NoParentContainmentHandler");
 		getPropertyEvent().getEAnnotations().add(cd);
 		
 	}
