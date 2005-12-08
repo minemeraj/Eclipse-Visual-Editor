@@ -240,6 +240,18 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 			this.includesLibraries=includeLibraries;
 			this.legacySrcPluginID=legacySrcPluginID;
 		}
+
+		/**
+		 * No legacy jars. It is all new format of plugin is jar, so the jar to use is the plugin itself.
+		 * @param pluginID
+		 * @param includeLibraries
+		 * @param srcPluginID
+		 * 
+		 * @since 1.2.0
+		 */
+		public JarInfo(String pluginID, boolean includeLibraries, String srcPluginID) {
+			this(pluginID, includeLibraries, null, null, null, srcPluginID, null);
+		}
 		
 		public String getLegacyJarPath() {
 			return legacyJarPath;
@@ -366,7 +378,6 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 							SWT_CONTAINER_WS.append("swt.jar").toPortableString(),  //$NON-NLS-1$
 							SWT_CONTAINER_OS.toPortableString(),
 							SWT_CONTAINER_SRC_PLUGIN,
-//							"org.eclipse.platform."+Platform.getWS()+".source"
 							SWT_CONTAINER_SRC_PLUGIN+SWT_CONTAINER_OS_PLUGIN_EXT
 						)};
 					
@@ -384,11 +395,16 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	
 	private final static JarInfo[] jfaceLibraries = new JarInfo[] {
 			new JarInfo("org.eclipse.jface", "jface.jar", SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
+			new JarInfo("org.eclipse.osgi", "core.jar", SWT_CONTAINER_SRC_PLUGIN), 					 //$NON-NLS-1$ //$NON-NLS-2$
+			new JarInfo("org.eclipse.core.commands", false, SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
+			new JarInfo("org.eclipse.equinox.common", false, SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
+			
+			// TODO I don't think JFace TEXT will be allowed to run outside of Eclipse. It requires Jobs among other things
 			new JarInfo("org.eclipse.jface.text", "jfacetext.jar", SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
+			
+			// TODO These are required for legacy only
 			new JarInfo("org.eclipse.core.runtime", "runtime.jar", SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
 			new JarInfo("org.eclipse.core.runtime.compatibility", "compatibility.jar", SWT_CONTAINER_SRC_PLUGIN), 			 //$NON-NLS-1$ //$NON-NLS-2$
-			new JarInfo("org.eclipse.osgi", "core.jar", SWT_CONTAINER_SRC_PLUGIN), 					 //$NON-NLS-1$ //$NON-NLS-2$
-			new JarInfo("org.eclipse.core.commands", ".", SWT_CONTAINER_SRC_PLUGIN)  //$NON-NLS-1$ //$NON-NLS-2$
 
 	};
 	
@@ -471,6 +487,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	protected void initLegacyPDE(IPath containerPath) throws IOException {		
 		ArrayList entries = new ArrayList() ;		
 		for (int i = 0; i < swtLibraries.length; i++) {
+			if (swtLibraries[i].getLegacyID() == null)
+				continue;	// There is no legacy. This is only found in new.
 			IClasspathEntry e = null;
 			IPluginModelBase pluginBase = PDECore.getDefault().getModelManager().findModel(swtLibraries[i].getLegacyID());	
 			if (pluginBase!=null) {
@@ -487,6 +505,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 
 		if (containerType.includeJFace()) {
 			for (int i = 0; i < jfaceLibraries.length; i++) {
+				if (jfaceLibraries[i].getLegacyID() == null)
+					continue;	// There is no legacy. This is only found in new.				
 				IPluginModelBase pluginBase = PDECore.getDefault().getModelManager().findModel(jfaceLibraries[i].getLegacyID());
 				if (pluginBase!=null) {
 					IClasspathEntry e = SWTConfigurationContributor.getLegacyPDEPath(jfaceLibraries[i].getLegacyID(), jfaceLibraries[i].getLegacyJarPath(), jfaceLibraries[i].getLegacyLibPath(), jfaceLibraries[i].getLegacySrcPluginID());
@@ -504,6 +524,8 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 		// GTK libraries are included in seperate SWT fragments
 		if (isGTK) {
 			for (int i = 0; i < swtGTKLibraries.length; i++) {
+				if (swtGTKLibraries[i].getLegacyID() == null)
+					continue;	// There is no legacy. This is only found in new.								
 				IPluginModelBase pluginBase = PDECore.getDefault().getModelManager().findModel(swtGTKLibraries[i].getLegacyID());
 				if (pluginBase!=null) {
 					IClasspathEntry e = SWTConfigurationContributor.getLegacyPDEPath(swtGTKLibraries[i].getLegacyID(), swtGTKLibraries[i].getLegacyJarPath(), swtGTKLibraries[i].getLegacyLibPath(), swtGTKLibraries[i].getLegacySrcPluginID());
@@ -540,7 +562,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 
 		if (containerType.includeJFace()) {
 			for (int i = 0; i < jfaceLibraries.length; i++) {
-				IPluginModelBase pluginBase = PDECore.getDefault().getModelManager().findModel(jfaceLibraries[i].getLegacyID());
+				IPluginModelBase pluginBase = PDECore.getDefault().getModelManager().findModel(jfaceLibraries[i].getPluginID());
 				if (pluginBase!=null) {
 					IClasspathEntry e = SWTConfigurationContributor.getPDEPath(jfaceLibraries[i].getPluginID(), jfaceLibraries[i].getSrcPluginID(), jfaceLibraries[i].isIncludesLibraries());
 					if (e!=null)

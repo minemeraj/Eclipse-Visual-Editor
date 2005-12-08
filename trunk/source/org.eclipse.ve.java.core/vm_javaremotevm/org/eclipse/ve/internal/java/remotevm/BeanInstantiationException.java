@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanInstantiationException.java,v $
- *  $Revision: 1.3 $  $Date: 2005-06-22 21:05:23 $ 
+ *  $Revision: 1.4 $  $Date: 2005-12-08 23:18:28 $ 
  */
 package org.eclipse.ve.internal.java.remotevm;
  
@@ -19,6 +19,9 @@ package org.eclipse.ve.internal.java.remotevm;
  * This is thrown by instantiation of a bean in BeanProxyAdapter to let everyone know the bean
  * did not instantiate. The actual error has already been processed. This is to tell the difference
  * between an instantiation error and an apply error.
+ * <p>
+ * Most of the time this is never actually directly referenced in code. It is usually created through
+ * proxies and referenced through proxies. The expression processor on the IDE side will create it through the expression.
  * @since 1.1.0
  */
 public class BeanInstantiationException extends Exception {

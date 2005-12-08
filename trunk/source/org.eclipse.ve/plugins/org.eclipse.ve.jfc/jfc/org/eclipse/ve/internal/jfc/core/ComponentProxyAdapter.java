@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComponentProxyAdapter.java,v $
- *  $Revision: 1.28 $  $Date: 2005-08-10 15:47:16 $ 
+ *  $Revision: 1.29 $  $Date: 2005-12-08 23:18:25 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -462,9 +462,9 @@ public class ComponentProxyAdapter extends BeanProxyAdapter implements IVisualCo
 		// Override for loc and bounds so that it goes through the component manager.
 		// Even though an expression is past in, we aren't using it here. Probably could in the future.
 		if (aBeanPropertyAttribute == sfComponentBounds)
-			return getComponentManager().getDefaultBounds();
+			return getComponentManager().getDefaultBounds(exp, forExpression);
 		else if (aBeanPropertyAttribute == sfComponentLocation)
-			return getComponentManager().getDefaultLocation();
+			return getComponentManager().getDefaultLocation(exp, forExpression);
 		else
 			return super.getBeanPropertyProxyValue(aBeanPropertyAttribute, exp, forExpression);
 	}

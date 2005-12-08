@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentManager.java,v $ $Revision: 1.16 $ $Date: 2005-12-02 18:41:28 $
+ * $RCSfile: ComponentManager.java,v $ $Revision: 1.17 $ $Date: 2005-12-08 23:18:25 $
  */
 
 import java.io.InputStream;
@@ -742,6 +742,28 @@ public class ComponentManager implements ComponentManagerFeedbackControllerNotif
 		} else
 			return null;
 	}
+	
+	/**
+	 * Get the default location. If no override applied, it returns the current location, else it returns the location at the time before the override
+	 * was applied.
+	 * 
+	 * @param expression
+	 * @param forExpression The expression type that this call is for.	 * 
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public IProxy getDefaultLocation(IExpression expression, ForExpression forExpression) {
+
+		if (isComponentManagerProxyValid()) {
+			ProxyFactoryRegistry registry = expression.getRegistry();
+			IProxy result = expression.createProxyAssignmentExpression(forExpression);
+			expression.createMethodInvocation(ForExpression.ASSIGNMENT_RIGHT, BeanAwtUtilities.getDefaultLocationMethodProxy(registry), true, 0);
+			expression.createProxyExpression(ForExpression.METHOD_RECEIVER, getComponentManagerProxy());
+			return result;
+		} else
+			return null;
+	}
 
 	/**
 	 * Get the default bounds. If no override applied, it returns the current bounds, else it returns the location at the time before the override was
@@ -758,6 +780,27 @@ public class ComponentManager implements ComponentManagerFeedbackControllerNotif
 		} else
 			return null;
 	}
+	
+	/**
+	 * Get the default bounds. If no override applied, it returns the current bounds, else it returns the location at the time before the override was
+	 * applied, and current size as the bounds.
+	 * 
+	 * @param expression
+	 * @param forExpression The expression type that this call is for.
+	 * @return
+	 * 
+	 * @since 1.1.0
+	 */
+	public IProxy getDefaultBounds(IExpression expression, ForExpression forExpression) {
+		if (isComponentManagerProxyValid()) {
+			ProxyFactoryRegistry registry = expression.getRegistry();
+			IProxy result = expression.createProxyAssignmentExpression(forExpression);
+			expression.createMethodInvocation(ForExpression.ASSIGNMENT_RIGHT, BeanAwtUtilities.getDefaultBoundsMethodProxy(registry), true, 0);
+			expression.createProxyExpression(ForExpression.METHOD_RECEIVER, getComponentManagerProxy());
+			return result;
+		} else
+			return null;
+	}	
 
 	/**
 	 * Get component manager proxy.
