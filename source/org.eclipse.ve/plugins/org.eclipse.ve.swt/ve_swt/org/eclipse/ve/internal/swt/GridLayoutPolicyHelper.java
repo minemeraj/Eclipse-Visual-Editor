@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.45 $  $Date: 2005-12-07 23:12:34 $
+ *  $Revision: 1.46 $  $Date: 2005-12-08 15:50:33 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -851,6 +851,38 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 					}
 				} else {
 					// Shrink by one column at a time from the right. Fill with filler and then see if column can go away.
+					if (gc.gridDimension.x == 0 && gc.gridDimension.y > 0) {
+						// However, there is a problem need to worry about. If this control is the first in the row and the previous
+						// row ends in at least the number of the new smaller span empty cells, then we need to fill in those empty
+						// with fillers. Otherwise the control will flow back onto the previous row.
+						//
+						// If we have too many empties, need to fill with filler. We'll do a little optimization here. We will actually
+						// leave one less empty than the new span width. 
+						// If we simply instead fill the last empty in the row, then all of the row will be filled with fillers
+						// and this would create extra unneeded fillers.
+						//
+						// For example say we need to have no more than two empties in the prev row (i.e. span down to two for
+						// the control in the next row), and we had the following layout:
+						//
+						// C C C E E E E
+						//
+						// The most efficient is to change to:
+						//
+						// C C C F F F E
+						boolean allEmpties = true;
+						int prevRow = gc.gridDimension.y-1;
+						for (int numCols = newgridDataWidth, colToTest = glayoutTable.length-1; numCols > 0; numCols--, colToTest--) {
+							if (glayoutTable[colToTest][prevRow] != EMPTY_GRID) {
+								allEmpties = false;
+								break;
+							}
+						}
+						if (allEmpties) {
+							// So replace the first one in the span of empties of the size we needed so that there will no longer
+							// be enough room for the next control.
+							replaceEmptyCell(createFillerComponent(), glayoutTable.length-newgridDataWidth, prevRow);
+						}
+					}
 					int colToSpanOutOf = gc.gridDimension.x+gc.gridDimension.width-1;
 					while (gc.gridDimension.width > newgridDataWidth) {
 						gc.setSpanWidth(gc.gridDimension.width-1);
