@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanProxyUtilities.java,v $
- *  $Revision: 1.20 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.21 $  $Date: 2005-12-08 17:15:54 $ 
  */
 
 import java.util.List;
@@ -444,7 +444,7 @@ public class BeanProxyUtilities {
 		if (aBean == null)
 			return null;
 		IInternalBeanProxyHost aBeanProxyHost = (IInternalBeanProxyHost) BeanProxyUtilities.getBeanProxyHost(aBean);
-		if (aBeanProxyHost.hasInstantiationErrors() && !noInstantiateOnError)
+		if (aBeanProxyHost == null || (aBeanProxyHost.hasInstantiationErrors() && !noInstantiateOnError))
 			return null;
 		aBeanProxyHost.instantiateBeanProxy();
 		return aBeanProxyHost.getBeanProxy();
