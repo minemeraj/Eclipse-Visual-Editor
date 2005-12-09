@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JSplitPaneTreeEditPart.java,v $ $Revision: 1.9 $ $Date: 2005-08-24 23:38:10 $
+ * $RCSfile: JSplitPaneTreeEditPart.java,v $ $Revision: 1.10 $ $Date: 2005-12-09 15:25:46 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -142,10 +142,11 @@ public class JSplitPaneTreeEditPart extends ComponentTreeEditPart {
 	protected void reorderChild(EditPart editpart, int index) {
 		super.reorderChild(editpart, index);
 		Iterator itr = children.iterator();
-		while (itr.hasNext()){
+		List modelChildren = getModelChildren();
+		while (itr.hasNext()) {
 			Object child = itr.next();
-			if(child instanceof ComponentTreeEditPart)
-				((ComponentTreeEditPart)child).refresh();
+			if (child instanceof ComponentTreeEditPart && modelChildren.contains(((ComponentTreeEditPart) child).getModel()))
+				((ComponentTreeEditPart) child).refresh();
 		}
 	}
 
