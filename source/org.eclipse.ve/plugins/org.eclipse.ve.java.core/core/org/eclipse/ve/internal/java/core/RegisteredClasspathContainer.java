@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RegisteredClasspathContainer.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-26 18:48:20 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-09 21:55:56 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -87,11 +87,11 @@ class RegisteredClasspathContainer implements IClasspathContainer {
 		// Unfortunately, you can't return class folders from a container, only jars, so in workbench dev mode
 		// we can't reference the bin directory. Therefore we have to have an actual jar sitting in the development
 		// image for it to be found.
-		if ("jar".equals(libpath.getFileExtension())) {
+		if ("jar".equals(libpath.getFileExtension())) { //$NON-NLS-1$
 			URL url = ProxyPlugin.getPlugin().urlLocalizeFromBundleOnly(bundle, libpath);
 			if (url != null) {
 				Path p = new Path(url.getFile());
-				if ("jar".equals(libpath.getFileExtension()))
+				if ("jar".equals(libpath.getFileExtension())) //$NON-NLS-1$
 					return p;
 				else
 					return null;

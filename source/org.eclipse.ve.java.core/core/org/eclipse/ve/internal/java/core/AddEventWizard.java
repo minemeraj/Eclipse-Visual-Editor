@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: AddEventWizard.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.13 $  $Date: 2005-12-09 21:55:57 $ 
  */
 
 import java.text.Collator;
@@ -695,7 +695,7 @@ public class AddEventWizard extends Wizard {
 		ILabelProvider provider = ClassDescriptorDecoratorPolicy.getPolicy(editPart).getLabelProvider(javaBean.eClass());		
 		if ( provider != null && javaBean != null ) {
 			javaBeanDescription = provider.getText(javaBean);
-			setWindowTitle(JavaMessages.AddEventWizard_addEventTitle + " - " + javaBeanDescription); 
+			setWindowTitle(JavaMessages.AddEventWizard_addEventTitle + " - " + javaBeanDescription);  //$NON-NLS-1$
 			javaBeanImage = provider.getImage(javaBean);
 		} else {
 			setWindowTitle(JavaMessages.AddEventWizard_addEventTitle); 

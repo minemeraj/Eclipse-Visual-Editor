@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewPartHost.java,v $
- *  $Revision: 1.7 $  $Date: 2005-06-06 12:07:31 $ 
+ *  $Revision: 1.8 $  $Date: 2005-12-09 21:55:57 $ 
  */
 
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
@@ -57,7 +57,7 @@ public class ViewPartHost {
 		// The method CTabFolder.setSimple(boolean) is only available in 3.1 and higher so we must use reflection
 		// to simulat the method call folder.setSimple(fTraditionalTabs);
 		try{
-			Method setSimpleMethod = folder.getClass().getMethod("setSimple",new Class[] {Boolean.TYPE});
+			Method setSimpleMethod = folder.getClass().getMethod("setSimple",new Class[] {Boolean.TYPE}); //$NON-NLS-1$
 			setSimpleMethod.invoke(folder,new Object[]{fTraditionalTabs ? Boolean.TRUE : Boolean.FALSE});
 		} catch (Exception e){
 		}		

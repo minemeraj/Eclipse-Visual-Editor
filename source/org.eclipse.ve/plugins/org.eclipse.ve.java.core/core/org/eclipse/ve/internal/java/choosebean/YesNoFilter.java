@@ -47,11 +47,11 @@ public class YesNoFilter implements ITypeInfoFilterExtension {
 		StringBuffer fqnBuffer = new StringBuffer();
 		if(typeInfoRequestor.getPackageName()!=null && typeInfoRequestor.getPackageName().length()>0){
 			fqnBuffer.append(typeInfoRequestor.getPackageName());
-			fqnBuffer.append(".");
+			fqnBuffer.append("."); //$NON-NLS-1$
 		}
 		if(typeInfoRequestor.getEnclosingName()!=null && typeInfoRequestor.getEnclosingName().length()>0){
 			fqnBuffer.append(typeInfoRequestor.getEnclosingName());
-			fqnBuffer.append(".");
+			fqnBuffer.append("."); //$NON-NLS-1$
 		}
 		if(typeInfoRequestor.getTypeName()!=null && typeInfoRequestor.getTypeName().length()>0){
 			fqnBuffer.append(typeInfoRequestor.getTypeName());

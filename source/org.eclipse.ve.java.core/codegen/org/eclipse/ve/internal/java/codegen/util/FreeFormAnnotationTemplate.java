@@ -22,7 +22,7 @@ import org.eclipse.ve.internal.java.codegen.model.IScannerFactory;
 
 /*
  *  $RCSfile: FreeFormAnnotationTemplate.java,v $
- *  $Revision: 1.15 $  $Date: 2005-10-05 15:25:09 $ 
+ *  $Revision: 1.16 $  $Date: 2005-12-09 21:55:57 $ 
  */
 /**
  * @version 	1.0
@@ -170,7 +170,7 @@ public class FreeFormAnnotationTemplate extends AbstractAnnotationTemplate {
       }
     }
     
-    private static final Pattern ANNOTATION_ARG_PATTERN = Pattern.compile(",");
+    private static final Pattern ANNOTATION_ARG_PATTERN = Pattern.compile(","); //$NON-NLS-1$
     
     public static int[] getAnnotationArgs(String src, int start) {
         int s = getAnnotationArgStart(src,start) ;

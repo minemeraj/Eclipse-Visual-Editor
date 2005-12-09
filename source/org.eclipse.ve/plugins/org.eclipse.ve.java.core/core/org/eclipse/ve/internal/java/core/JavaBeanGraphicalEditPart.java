@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.13 $ $Date: 2005-10-20 19:34:42 $
+ * $RCSfile: JavaBeanGraphicalEditPart.java,v $ $Revision: 1.14 $ $Date: 2005-12-09 21:55:56 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -63,7 +63,7 @@ public class JavaBeanGraphicalEditPart extends DefaultGraphicalEditPart implemen
 		fBeanProxyErrorListener = new IErrorNotifier.ErrorListenerAdapter() {
 
 			public void errorStatusChanged() {
-				CDEUtilities.displayExec(JavaBeanGraphicalEditPart.this, "STATUS_CHANGED", new EditPartRunnable(JavaBeanGraphicalEditPart.this) {
+				CDEUtilities.displayExec(JavaBeanGraphicalEditPart.this, "STATUS_CHANGED", new EditPartRunnable(JavaBeanGraphicalEditPart.this) { //$NON-NLS-1$
 
 					protected void doRun() {
 						setSeverity(getErrorNotifier().getErrorStatus());

@@ -39,18 +39,18 @@ public class ASTMethodUtil{
 		} catch (JavaModelException e) {
 			return null;
 		}
-		IFile newcuFile = cures.getParent().getFile(new Path("Tmp.java"));
+		IFile newcuFile = cures.getParent().getFile(new Path("Tmp.java")); //$NON-NLS-1$
 		ICompilationUnit dummyicu = JavaCore.createCompilationUnitFrom(newcuFile);
 		
-		IDocument tmpDoc = new Document("import " + jc.getQualifiedName() + ";"+
-					"public class Tmp{" +
-					"public void main(){" +
-						"new "+ jc.getName() + "(){};" +
-					"}" +
-				"}");
+		IDocument tmpDoc = new Document("import " + jc.getQualifiedName() + ";"+ //$NON-NLS-1$ //$NON-NLS-2$
+					"public class Tmp{" + //$NON-NLS-1$
+					"public void main(){" + //$NON-NLS-1$
+						"new "+ jc.getName() + "(){};" + //$NON-NLS-1$ //$NON-NLS-2$
+					"}" + //$NON-NLS-1$
+				"}"); //$NON-NLS-1$
 		
 		ASTParser parser = ASTParser.newParser(AST.JLS3);
-		parser.setUnitName("Tmp");
+		parser.setUnitName("Tmp"); //$NON-NLS-1$
 		parser.setCompilerOptions(null);
 		parser.setProject(dummyicu.getJavaProject());
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -284,7 +284,7 @@ public class ASTMethodUtil{
 				body = rs;
 			} else {
 				ReturnStatement rs = ast.newReturnStatement();
-				rs.setExpression(ast.newNumberLiteral("-1"));
+				rs.setExpression(ast.newNumberLiteral("-1")); //$NON-NLS-1$
 				body = rs;
 			}
 		} else {
@@ -295,7 +295,7 @@ public class ASTMethodUtil{
 
 		if (body != null) {
 			try {
-				String bodyContent = CodeGeneration.getMethodBodyContent(icu, declaringTypename, md.getName().getIdentifier(), false, body.toString(), "\n");
+				String bodyContent = CodeGeneration.getMethodBodyContent(icu, declaringTypename, md.getName().getIdentifier(), false, body.toString(), "\n"); //$NON-NLS-1$
 				if (bodyContent != null) {
 					ASTNode todoNode= rewriter.createStringPlaceholder(bodyContent, ASTNode.RETURN_STATEMENT);
 					md.getBody().statements().add(todoNode);
@@ -306,7 +306,7 @@ public class ASTMethodUtil{
 		
 		if (Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, icu.getJavaProject())).booleanValue()) {
 			try {
-				String methodComment = CodeGeneration.getMethodComment(icu, declaringTypename, md, binding, "\n");
+				String methodComment = CodeGeneration.getMethodComment(icu, declaringTypename, md, binding, "\n"); //$NON-NLS-1$
 				if (methodComment != null) {
 					Javadoc javadoc= (Javadoc) rewriter.createStringPlaceholder(methodComment, ASTNode.JAVADOC);
 					md.setJavadoc(javadoc);
@@ -340,7 +340,7 @@ public class ASTMethodUtil{
 				ITypeBinding[] paramTypes = methodBinding.getParameterTypes();
 				for (int pc = 0; pc < paramTypes.length; pc++) {
 					String name = paramTypes[pc].getName();
-					name = new String(new char[]{Character.toLowerCase(name.charAt(0))}) + (name.length()>1 ? name.substring(1): "");
+					name = new String(new char[]{Character.toLowerCase(name.charAt(0))}) + (name.length()>1 ? name.substring(1): ""); //$NON-NLS-1$
 					IStatus status = JavaConventions.validateFieldName(name);
 					if(status.isOK()){
 						names[pc] = name;

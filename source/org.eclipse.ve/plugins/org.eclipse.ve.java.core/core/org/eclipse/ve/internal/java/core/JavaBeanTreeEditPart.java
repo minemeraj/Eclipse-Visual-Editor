@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.24 $ $Date: 2005-12-05 17:57:09 $
+ * $RCSfile: JavaBeanTreeEditPart.java,v $ $Revision: 1.25 $ $Date: 2005-12-09 21:55:57 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -108,7 +108,7 @@ public class JavaBeanTreeEditPart extends DefaultTreeEditPart implements IJavaBe
 				fContributionChangeListener = new EditPartContributionChangeListener() {
 
 					public void contributionChanged(EditPartContributor editpartContributor) {
-						CDEUtilities.displayExec(JavaBeanTreeEditPart.this, "refreshContributions", new EditPartRunnable(JavaBeanTreeEditPart.this) {
+						CDEUtilities.displayExec(JavaBeanTreeEditPart.this, "refreshContributions", new EditPartRunnable(JavaBeanTreeEditPart.this) { //$NON-NLS-1$
 							protected void doRun() {
 								refreshVisuals();
 							}

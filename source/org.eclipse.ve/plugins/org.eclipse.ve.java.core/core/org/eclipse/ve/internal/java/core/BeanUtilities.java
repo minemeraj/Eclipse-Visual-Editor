@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.34 $  $Date: 2005-10-06 15:18:33 $ 
+ *  $Revision: 1.35 $  $Date: 2005-12-09 21:55:56 $ 
  */
 
 import java.util.regex.Pattern;
@@ -114,7 +114,7 @@ public class BeanUtilities {
 		return (IJavaObjectInstance) createJavaObject("java.lang.String", aResourceSet, createStringInitString(unquotedInitializationString)); //$NON-NLS-1$
 	}
 
-	private static final String lineSep = System.getProperties().getProperty("line.separator");
+	private static final String lineSep = System.getProperties().getProperty("line.separator"); //$NON-NLS-1$
 	
 	/**
 	 * Take a string and turn it into a quoted string with escape if necessary. This string can already
@@ -161,37 +161,37 @@ public class BeanUtilities {
 					if (i+1 < sl) {
 						if (lineSep.charAt(1) == value.charAt(i+1)) {
 							i++;
-							sb.append("\\n");	// Change to linesep.
+							sb.append("\\n");	// Change to linesep. //$NON-NLS-1$
 							continue;
 						}
 					}
 				} else {
-					sb.append("\\n");	// Change to linesep.
+					sb.append("\\n");	// Change to linesep. //$NON-NLS-1$
 					continue;					
 				}
 			}
 			switch (c) {
 				case '\b':
-					sb.append("\\b");
+					sb.append("\\b"); //$NON-NLS-1$
 					break;
 				case '\t':
-					sb.append("\\t");
+					sb.append("\\t"); //$NON-NLS-1$
 					break;					
 				case '\n':
-					sb.append("\\n");
+					sb.append("\\n"); //$NON-NLS-1$
 					break;
 				case '\r':
-					sb.append("\\r");
+					sb.append("\\r"); //$NON-NLS-1$
 					break;
 				case '"':
 					if (isString)
-						sb.append("\\\"");	// Put out an escaped quote. But only for string. Not needed for char.
+						sb.append("\\\"");	// Put out an escaped quote. But only for string. Not needed for char. //$NON-NLS-1$
 					else
 						sb.append('"');
 					break;
 				case '\'':
 					if (!isString)
-						sb.append("\\\'");	// Put out escaped quote. But we only do this on chars. Strings can handle it unquoted.
+						sb.append("\\\'");	// Put out escaped quote. But we only do this on chars. Strings can handle it unquoted. //$NON-NLS-1$
 					else
 						sb.append('\'');
 					break;
@@ -214,7 +214,7 @@ public class BeanUtilities {
 									i++;
 									continue;
 								default:
-									sb.append("\\\\"); // Put it out as escaped. Wanted the backslash to actually be in the string.
+									sb.append("\\\\"); // Put it out as escaped. Wanted the backslash to actually be in the string. //$NON-NLS-1$
 									continue;
 							}
 						} else {
@@ -230,7 +230,7 @@ public class BeanUtilities {
 		return sb.toString();
 	}
 
-	private static final Pattern NEEDS_ESCAPES = Pattern.compile("(.*\b|\t|\r|\n|\"|\'|\\\\)*.*", java.util.regex.Pattern.DOTALL);
+	private static final Pattern NEEDS_ESCAPES = Pattern.compile("(.*\b|\t|\r|\n|\"|\'|\\\\)*.*", java.util.regex.Pattern.DOTALL); //$NON-NLS-1$
 	/**
 	 * This takes a string that has no escapes and will add escapes in. 
 	 * @param value string to escape. <code>null</code> will return as null.
@@ -251,7 +251,7 @@ public class BeanUtilities {
 					if (i+1 < sl) {
 						if (lineSep.charAt(1) == value.charAt(i+1)) {
 							i++;
-							sb.append("\\n");	// Change to linesep.
+							sb.append("\\n");	// Change to linesep. //$NON-NLS-1$
 							continue;
 						}
 					}
@@ -259,19 +259,19 @@ public class BeanUtilities {
 				}
 				switch (c) {
 					case '\b':
-						sb.append("\\b");
+						sb.append("\\b"); //$NON-NLS-1$
 						break;
 					case '\t':
-						sb.append("\\t");
+						sb.append("\\t"); //$NON-NLS-1$
 						break;					
 					case '\n':
-						sb.append("\\n");
+						sb.append("\\n"); //$NON-NLS-1$
 						break;
 					case '\r':
-						sb.append("\\r");
+						sb.append("\\r"); //$NON-NLS-1$
 						break;
 					case '\\':
-						sb.append("\\\\");
+						sb.append("\\\\"); //$NON-NLS-1$
 						break;
 					default:
 						sb.append(c);

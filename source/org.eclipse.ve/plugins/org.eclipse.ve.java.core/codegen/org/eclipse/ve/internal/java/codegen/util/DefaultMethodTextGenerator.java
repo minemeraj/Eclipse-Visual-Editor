@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultMethodTextGenerator.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-20 22:09:37 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-09 21:55:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -39,7 +39,7 @@ public class DefaultMethodTextGenerator extends AbstractMethodTextGenerator {
 	
 	
 	
-	public final static  String[] ignoredFeatures = { JavaInstantiation.ALLOCATION, "visual_wrapper" };
+	public final static  String[] ignoredFeatures = { JavaInstantiation.ALLOCATION, "visual_wrapper" }; //$NON-NLS-1$
 												
 	AbstractMethodTextGenerator.MethodInfo fInfo = null ;
 	Boolean fgenerateTryCatchBlock = null ;

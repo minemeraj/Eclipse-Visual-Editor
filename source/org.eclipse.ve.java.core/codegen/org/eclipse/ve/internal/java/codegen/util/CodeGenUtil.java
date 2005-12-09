@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.61 $  $Date: 2005-12-05 14:44:49 $ 
+ *  $Revision: 1.62 $  $Date: 2005-12-09 21:55:57 $ 
  */
 
 
@@ -572,7 +572,7 @@ public static String getInitString(IJavaInstance javaInstance, IBeanDeclModel mo
 				importList.addAll(anon.getImports());
 				return anon.getDeclaration();
 			} else
-				return "";	// Shouldn't get here, but in case an error in the create.
+				return "";	// Shouldn't get here, but in case an error in the create. //$NON-NLS-1$
 		}
 		
 		// There is none, so let's create the default ctor (only valid for classes)
@@ -1056,7 +1056,7 @@ public static Collection getReferences(Object o, boolean includeO) {
 			}
 		} else if (bp.getEObject() != null) {
 			boolean shouldBeOnFreeform = false;
-			if(bp.getSimpleName().toLowerCase().startsWith("ivj")){
+			if(bp.getSimpleName().toLowerCase().startsWith("ivj")){ //$NON-NLS-1$
 				// Compatibility with ivj..
 				if(bp.getContainer()==null)
 					shouldBeOnFreeform = true;

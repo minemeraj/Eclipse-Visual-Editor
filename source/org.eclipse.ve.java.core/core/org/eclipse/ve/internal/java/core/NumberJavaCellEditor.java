@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 
 /*
- * $RCSfile: NumberJavaCellEditor.java,v $ $Revision: 1.10 $ $Date: 2005-11-15 18:53:28 $
+ * $RCSfile: NumberJavaCellEditor.java,v $ $Revision: 1.11 $ $Date: 2005-12-09 21:55:56 $
  */
 
 import java.text.MessageFormat;
@@ -165,39 +165,39 @@ public class NumberJavaCellEditor extends NumberCellEditor implements INeedData,
 			switch (fNumberType) {
 				case BYTE:
 					if (aNumber.byteValue() == Byte.MIN_VALUE)
-						return "Byte.MIN_VALUE";
+						return "Byte.MIN_VALUE"; //$NON-NLS-1$
 					else if (aNumber.byteValue() == Byte.MAX_VALUE)
-						return "Byte.MAX_VALUE";
+						return "Byte.MAX_VALUE"; //$NON-NLS-1$
 					break;
 				case DOUBLE:
 					if (aNumber.doubleValue() == Double.MIN_VALUE)
-						return "Double.MIN_VALUE";
+						return "Double.MIN_VALUE"; //$NON-NLS-1$
 					else if (aNumber.doubleValue() == Double.MAX_VALUE)
-						return "Double.MAX_VALUE";
+						return "Double.MAX_VALUE"; //$NON-NLS-1$
 					break;
 				case FLOAT:
 					if (aNumber.floatValue() == Float.MIN_VALUE)
-						return "Float.MIN_VALUE";
+						return "Float.MIN_VALUE"; //$NON-NLS-1$
 					else if (aNumber.floatValue() == Float.MAX_VALUE)
-						return "Float.MAX_VALUE";
+						return "Float.MAX_VALUE"; //$NON-NLS-1$
 					break;
 				case INTEGER:
 					if (aNumber.intValue() == Integer.MIN_VALUE)
-						return "Integer.MIN_VALUE";
+						return "Integer.MIN_VALUE"; //$NON-NLS-1$
 					else if (aNumber.intValue() == Integer.MAX_VALUE)
-						return "Integer.MAX_VALUE";
+						return "Integer.MAX_VALUE"; //$NON-NLS-1$
 					break;
 				case LONG:
 					if (aNumber.longValue() == Long.MIN_VALUE)
-						return "Long.MIN_VALUE";
+						return "Long.MIN_VALUE"; //$NON-NLS-1$
 					else if (aNumber.longValue() == Long.MAX_VALUE)
-						return "Long.MAX_VALUE";
+						return "Long.MAX_VALUE"; //$NON-NLS-1$
 					break;
 				case SHORT:
 					if (aNumber.shortValue() == Short.MIN_VALUE)
-						return "Short.MIN_VALUE";
+						return "Short.MIN_VALUE"; //$NON-NLS-1$
 					else if (aNumber.shortValue() == Short.MAX_VALUE)
-						return "Short.MAX_VALUE";
+						return "Short.MAX_VALUE"; //$NON-NLS-1$
 					break;
 			}
 		}
