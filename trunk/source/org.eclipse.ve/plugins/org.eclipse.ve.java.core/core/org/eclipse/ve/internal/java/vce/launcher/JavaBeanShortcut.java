@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanShortcut.java,v $
- *  $Revision: 1.15 $  $Date: 2005-10-14 17:45:07 $ 
+ *  $Revision: 1.16 $  $Date: 2005-12-09 21:55:57 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -219,7 +219,7 @@ public class JavaBeanShortcut implements ILaunchShortcut {
 			try {
 				FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(project);
 				// It is considered an SWT project even if SWT is hidden because someone needs it and we need to setup the launch correctly.
-				value = foundIds.containerIds.get("SWT_CONTAINER") != null || foundIds.pluginIds.containsKey("org.eclipse.swt"); //$NON-NLS-1$
+				value = foundIds.containerIds.get("SWT_CONTAINER") != null || foundIds.pluginIds.containsKey("org.eclipse.swt"); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (JavaModelException e) {
 			}
 		}

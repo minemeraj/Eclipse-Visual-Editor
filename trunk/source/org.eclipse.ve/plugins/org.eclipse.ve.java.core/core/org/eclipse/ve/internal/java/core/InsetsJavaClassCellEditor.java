@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: InsetsJavaClassCellEditor.java,v $
- *  $Revision: 1.8 $  $Date: 2005-11-15 18:53:28 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-09 21:55:57 $ 
  */
 
 import java.util.StringTokenizer;
@@ -19,7 +19,6 @@ import java.util.StringTokenizer;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaRefFactory;
 /**
@@ -114,7 +113,7 @@ public static String getJavaInitializationString(org.eclipse.draw2d.geometry.Ins
  * @since 1.2.0
  */
 public static ParseTreeAllocation getJavaAllocation(int top, int left, int bottom, int right) {
-	PTClassInstanceCreation newclass = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("java.awt.Insets", null);
+	PTClassInstanceCreation newclass = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("java.awt.Insets", null); //$NON-NLS-1$
 	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(top)));
 	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(left)));
 	newclass.getArguments().add(InstantiationFactory.eINSTANCE.createPTNumberLiteral(Integer.toString(bottom)));

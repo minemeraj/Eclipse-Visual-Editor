@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: XMLTextPage.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-05 15:57:16 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-09 21:55:56 $ 
  */
 
 
@@ -37,7 +37,7 @@ private void setBrowserText(String text) {
 	// that it is an XML mime type.
 	try {
 		File old = tempFile;
-		tempFile = File.createTempFile("VE_XMI",".xml");
+		tempFile = File.createTempFile("VE_XMI",".xml"); //$NON-NLS-1$ //$NON-NLS-2$
 		Writer output = new BufferedWriter( new FileWriter(tempFile) );
 		output.write( text );
 		output.close();

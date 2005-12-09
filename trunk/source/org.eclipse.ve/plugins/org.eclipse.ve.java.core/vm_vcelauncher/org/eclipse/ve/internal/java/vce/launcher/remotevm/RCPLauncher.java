@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RCPLauncher.java,v $
- *  $Revision: 1.12 $  $Date: 2005-06-08 14:54:08 $ 
+ *  $Revision: 1.13 $  $Date: 2005-12-09 21:55:57 $ 
  */
 
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
@@ -129,8 +129,8 @@ public class RCPLauncher implements ILauncher {
 	
 	private RGB stringToRGB(String str) {
 
-		str = str.substring(str.indexOf("{") + 1, str.indexOf("}"));
-		StringTokenizer tokens = new StringTokenizer(str, ",");
+		str = str.substring(str.indexOf("{") + 1, str.indexOf("}")); //$NON-NLS-1$ //$NON-NLS-2$
+		StringTokenizer tokens = new StringTokenizer(str, ","); //$NON-NLS-1$
 		
 		int red = 0;
 		int green = 0;
@@ -149,9 +149,9 @@ public class RCPLauncher implements ILauncher {
 	
 	private void setupColorPreferences(Display display){
 		
-		String activeLinkPref = "";
-		String errorPref = "";
-		String linkPref = "";
+		String activeLinkPref = ""; //$NON-NLS-1$
+		String errorPref = ""; //$NON-NLS-1$
+		String linkPref = ""; //$NON-NLS-1$
 		
 		RGB activeLinkRGB = null;
 		RGB errorRGB = null;
@@ -181,11 +181,11 @@ public class RCPLauncher implements ILauncher {
 	
 	private void setupFontPreferences(Display display){
 		
-		String defaultFont = "";
-		String dialogFont = "";
-		String bannerFont = "";
-		String headerFont = "";
-		String textFont = "";
+		String defaultFont = ""; //$NON-NLS-1$
+		String dialogFont = ""; //$NON-NLS-1$
+		String bannerFont = ""; //$NON-NLS-1$
+		String headerFont = ""; //$NON-NLS-1$
+		String textFont = ""; //$NON-NLS-1$
 		
 		try{
 			defaultFont = System.getProperty("rcp.launcher.defaultFont"); //$NON-NLS-1$

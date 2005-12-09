@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.18 $  $Date: 2005-10-26 16:11:40 $ 
+ *  $Revision: 1.19 $  $Date: 2005-12-09 21:55:57 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -569,7 +569,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 			try {
 				FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(project);
 				// It is considered an SWT project even if SWT is hidden because someone needs it and we need to setup the launch correctly.
-				value = foundIds.containerIds.get("SWT_CONTAINER") != null || foundIds.pluginIds.containsKey("org.eclipse.swt"); //$NON-NLS-1$
+				value = foundIds.containerIds.get("SWT_CONTAINER") != null || foundIds.pluginIds.containsKey("org.eclipse.swt"); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (JavaModelException e) {
 			}
 		}

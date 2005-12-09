@@ -12,7 +12,7 @@
  *  Created Jan 20, 2005 by Gili Mendel
  * 
  *  $RCSfile: JavaVisualEditorBuilder.java,v $
- *  $Revision: 1.11 $  $Date: 2005-06-28 20:13:15 $ 
+ *  $Revision: 1.12 $  $Date: 2005-12-09 21:55:57 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -36,7 +36,7 @@ public class JavaVisualEditorBuilder extends IncrementalProjectBuilder {
 
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		// Get rid of outselves. (Go away). Suicide.
-		JemProjectUtilities.removeFromBuildSpec("org.eclipse.ve.java.core.vebuilder", getProject());
+		JemProjectUtilities.removeFromBuildSpec("org.eclipse.ve.java.core.vebuilder", getProject()); //$NON-NLS-1$
 		return null;
 	}
 }

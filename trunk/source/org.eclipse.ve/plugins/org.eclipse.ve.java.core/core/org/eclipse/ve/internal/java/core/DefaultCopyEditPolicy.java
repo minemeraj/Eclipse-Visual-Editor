@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.19 $  $Date: 2005-09-14 23:30:25 $ 
+ *  $Revision: 1.20 $  $Date: 2005-12-09 21:55:57 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -74,7 +74,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				copier = new EcoreUtil.Copier(){
 					private static final long serialVersionUID = 1L;
 					protected void copyContainment(EReference reference,EObject subject,EObject target) {
-						if(reference.getName().equals("events")){
+						if(reference.getName().equals("events")){ //$NON-NLS-1$
 							// Do not copy events
 						} else {
 							super.copyContainment(reference,subject,target);
@@ -85,7 +85,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 				visitedObjects.clear();				
 				copyProperty(null, javaBeanToCopy);
 				
-				objectsToCopy.add(javaBeanToCopy.eClass().getEStructuralFeature("text"));				
+				objectsToCopy.add(javaBeanToCopy.eClass().getEStructuralFeature("text"));				 //$NON-NLS-1$
 		
 				// Expand the references
 				copier.copyReferences();
@@ -160,7 +160,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 		if(eObject.getClass().getPackage() ==  JavaRefPackage.eINSTANCE.getClass().getPackage())
 			return false;
 		// Do not copy events
-		if(feature.getName().equals("events")) return false;
+		if(feature.getName().equals("events")) return false; //$NON-NLS-1$
 		// By default copy references that are not containment and are not on the free form
 		return  
 			feature instanceof EReference
@@ -168,7 +168,7 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	}
 	
 	protected boolean shouldExpandFeature(EStructuralFeature feature, Object eObject){
-		if(feature != null && feature.getName().equals("events")){
+		if(feature != null && feature.getName().equals("events")){ //$NON-NLS-1$
 			return false;
 		}
 		return true;

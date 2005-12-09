@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ChooseBeanDialogUtilities.java,v $
- *  $Revision: 1.12 $  $Date: 2005-12-02 20:22:22 $ 
+ *  $Revision: 1.13 $  $Date: 2005-12-09 21:55:57 $ 
  */
 package org.eclipse.ve.internal.java.choosebean;
 
@@ -56,7 +56,7 @@ public class ChooseBeanDialogUtilities {
 	 * 
 	 * @since 1.2.0
 	 */
-	private static final String CONTRIBUTOR_EXTENSIONPOINT = JAVA_VE_SYMBOLICNAME+".choosebean";
+	private static final String CONTRIBUTOR_EXTENSIONPOINT = JAVA_VE_SYMBOLICNAME+".choosebean"; //$NON-NLS-1$
 	public static final String PI_CONTAINER = "container"; //$NON-NLS-1$	
 	public static final String PI_PLUGIN = "plugin"; //$NON-NLS-1$
 	public static final IChooseBeanContributor[] NO_CONTRIBS = new IChooseBeanContributor[0];

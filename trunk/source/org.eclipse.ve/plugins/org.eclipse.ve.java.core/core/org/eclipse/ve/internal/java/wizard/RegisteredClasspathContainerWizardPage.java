@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RegisteredClasspathContainerWizardPage.java,v $
- *  $Revision: 1.8 $  $Date: 2005-09-19 21:36:27 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-09 21:55:57 $ 
  */
 package org.eclipse.ve.internal.java.wizard;
 
@@ -91,7 +91,7 @@ public class RegisteredClasspathContainerWizardPage extends WizardPage implement
 			if ( source != null ) {
 				createSpacer(g,1);
 				Label l = createIndentedLabel(g);
-				l.setText(MessageFormat.format(InternalMessages.ClasspathWizardPage_BuildPath_SourceAttachments_Message, new Object[]{containerid + "/" + source})); 
+				l.setText(MessageFormat.format(InternalMessages.ClasspathWizardPage_BuildPath_SourceAttachments_Message, new Object[]{containerid + "/" + source}));  //$NON-NLS-1$
 			} 
 		}
 

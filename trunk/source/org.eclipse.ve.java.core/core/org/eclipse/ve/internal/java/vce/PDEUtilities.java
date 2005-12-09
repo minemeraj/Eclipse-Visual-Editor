@@ -10,17 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: PDEUtilities.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:30:49 $ 
+ *  $Revision: 1.6 $  $Date: 2005-12-09 21:55:56 $ 
  */
 package org.eclipse.ve.internal.java.vce;
 
 import java.io.*;
 import java.util.*;
-import java.util.HashMap;
-import java.util.Properties;
 
 import javax.xml.parsers.*;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -77,9 +74,9 @@ public class PDEUtilities {
 		if(pluginData != null){
 			// The view name could come from plugin.propeties entry
 			String viewName = pluginData[0];
-			if(viewName.startsWith("%")){
+			if(viewName.startsWith("%")){ //$NON-NLS-1$
 				// We must open the plugin.properties and find the value associated with the key as the name has been externalized
-				IFile propertiesFile = currentProject.getFile("plugin.properties");
+				IFile propertiesFile = currentProject.getFile("plugin.properties"); //$NON-NLS-1$
 				if(!propertiesFile.exists()) return viewName;
 				propertiesTimeStamp = propertiesFile.getLocalTimeStamp();
 				IPath propertiesFileInSystem = currentProject.getLocation().append(propertiesFile.getProjectRelativePath());
@@ -89,7 +86,7 @@ public class PDEUtilities {
 					properties.load(inputStream);
 					// Strip the leading % and trailing % before looking up the properties value
 					String propertyKey = viewName.substring(1);
-					if(propertyKey.endsWith("%")) propertyKey = propertyKey.substring(0,propertyKey.length()-1);
+					if(propertyKey.endsWith("%")) propertyKey = propertyKey.substring(0,propertyKey.length()-1); //$NON-NLS-1$
 					String bundleValue = properties.getProperty(propertyKey);
 					if(bundleValue == null) return viewName;
 					// We have a bundle value.  Substitute it in the map so we don't have to re-retrieve it
@@ -107,7 +104,7 @@ public class PDEUtilities {
 	}
 	
 	private void checkCacheNotStale(){		
-		IFile pluginXMLFile = currentProject.getFile("plugin.xml");
+		IFile pluginXMLFile = currentProject.getFile("plugin.xml"); //$NON-NLS-1$
 		// If we have a plugin XML file now and it doesn't match the time stamp of the last read one we are stale
 		if(pluginXMLFile.exists() && pluginXMLFile.getLocalTimeStamp() != pluginTimeStamp){
 			initialize();  // Re read the plugin.xml
@@ -115,7 +112,7 @@ public class PDEUtilities {
 		}
 		// If we are not stale from the plugin.xml it is possible the plugin.properties has changed
 		// If the properties time stamp is zero we don't need to flush the cache as if required it will just be read fresh
-		IFile propertiesXMLFile = currentProject.getFile("plugin.properties");
+		IFile propertiesXMLFile = currentProject.getFile("plugin.properties"); //$NON-NLS-1$
 		if(propertiesXMLFile.exists() && propertiesTimeStamp != 0 && propertiesXMLFile.getLocalTimeStamp() != propertiesTimeStamp){
 			// Reparse the plugin.xml which will load up the the names that when accessed will be read from the changed .properties file
 			initialize();
@@ -138,7 +135,7 @@ public class PDEUtilities {
 	
 	public String getViewPartIconPath(){
 		if(VIEW_PART_ICON_PATH == null){
-			IFile gifFile = currentProject.getFile("icons/full/clcl16/rcp_app.gif");
+			IFile gifFile = currentProject.getFile("icons/full/clcl16/rcp_app.gif"); //$NON-NLS-1$
 			IPath gifLocation = currentProject.getLocation().append(gifFile.getProjectRelativePath());
 			VIEW_PART_ICON_PATH = gifLocation.toString();
 		}
@@ -147,7 +144,7 @@ public class PDEUtilities {
 	
 	public String getEditorPartIconPath(){
 		if(EDITOR_PART_ICON_PATH == null){
-			IFile gifFile = currentProject.getFile("icons/full/clcl16/rcp_editor.gif");
+			IFile gifFile = currentProject.getFile("icons/full/clcl16/rcp_editor.gif"); //$NON-NLS-1$
 			IPath gifLocation = currentProject.getLocation().append(gifFile.getProjectRelativePath());
 			EDITOR_PART_ICON_PATH = gifLocation.toString();
 		}
@@ -156,7 +153,7 @@ public class PDEUtilities {
 	
 	private synchronized void initialize(){
 		viewClasses = new HashMap();		
-		IFile pluginXMLFile = currentProject.getFile("plugin.xml");
+		IFile pluginXMLFile = currentProject.getFile("plugin.xml"); //$NON-NLS-1$
 		if (pluginXMLFile.exists()){
 			try{
 				pluginTimeStamp = pluginXMLFile.getLocalTimeStamp();
@@ -169,20 +166,20 @@ public class PDEUtilities {
 					public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 						String tag = qName.trim().toLowerCase(Locale.US); // Always use US locale for system strings
 						// If we are an extension of "org.eclipse.ui.views" then flag this as our next set of tags
-						if(tag.equals("extension")){
-							String extensionPointName = attributes.getValue("point");
+						if(tag.equals("extension")){ //$NON-NLS-1$
+							String extensionPointName = attributes.getValue("point"); //$NON-NLS-1$
 							if(extensionPointName == null) return;
-							if(extensionPointName.equalsIgnoreCase("org.eclipse.ui.views")){
+							if(extensionPointName.equalsIgnoreCase("org.eclipse.ui.views")){ //$NON-NLS-1$
 								processing = VIEW;
-							} else if (extensionPointName.equalsIgnoreCase("org.eclipse.ui.editors")){
+							} else if (extensionPointName.equalsIgnoreCase("org.eclipse.ui.editors")){ //$NON-NLS-1$
 								processing = EDITOR;								
 							} else {
 								processing = DEFAULT;
 							}
 						}
-						if (tag.equalsIgnoreCase("view") && processing == VIEW){			
+						if (tag.equalsIgnoreCase("view") && processing == VIEW){			 //$NON-NLS-1$
 							processView(attributes);
-						} else if (tag.equalsIgnoreCase("editor") && processing == EDITOR){
+						} else if (tag.equalsIgnoreCase("editor") && processing == EDITOR){ //$NON-NLS-1$
 							processView(attributes);
 						}
 					}
@@ -198,9 +195,9 @@ public class PDEUtilities {
 	}	
 	private void processView(Attributes attributes){
 		// class, icon and name are what we are interested in
-		String nameName = attributes.getValue("name");
-		String iconName = attributes.getValue("icon"); 
-		String className = attributes.getValue("class");
+		String nameName = attributes.getValue("name"); //$NON-NLS-1$
+		String iconName = attributes.getValue("icon");  //$NON-NLS-1$
+		String className = attributes.getValue("class"); //$NON-NLS-1$
 		viewClasses.put(className,new String[] {nameName,iconName});
 	}
 }

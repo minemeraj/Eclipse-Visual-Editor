@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.java.core;
-/*
- *  $RCSfile: JavaBeanActionFilter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-12-05 17:57:09 $ 
- */
 import org.eclipse.emf.ecore.*;
 import org.eclipse.gef.EditPart;
 
@@ -91,7 +87,7 @@ public class JavaBeanActionFilter extends CDEActionFilter {
 	public boolean testAttributeForPropertyName(Object target, String value) {
 		// The "text" property can be present because the edit part's parent is a TabFolder
 		// which allows direct edit of the TabItem text
-		if("text".equals(value)){
+		if("text".equals(value)){ //$NON-NLS-1$
 			if(isTabFolderParent(target)) return true;
 		}
 		
@@ -101,7 +97,7 @@ public class JavaBeanActionFilter extends CDEActionFilter {
 	public static boolean isTabFolderParent(Object target){
 		Object parentModel = ((EditPart)target).getParent().getModel();
 		if(parentModel instanceof IJavaObjectInstance && 
-		   ((IJavaObjectInstance)parentModel).getJavaType().getQualifiedName().equals("org.eclipse.swt.widgets.TabFolder")){
+		   ((IJavaObjectInstance)parentModel).getJavaType().getQualifiedName().equals("org.eclipse.swt.widgets.TabFolder")){ //$NON-NLS-1$
 			return true;
 		}
 		return false;
