@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutLayoutPage.java,v $
- *  $Revision: 1.13 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.14 $  $Date: 2005-12-09 22:44:19 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -76,6 +76,8 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	   sfMarginHeight, sfMarginWidth, sfMarginBottom, sfMarginLeft, sfMarginRight, sfMarginTop;
 	
 	boolean initialized = false;
+	
+	boolean allEnabled;
 	
 	private static final String[] orientationInitStrings = new String[] {
 			"org.eclipse.swt.SWT.HORIZONTAL", //$NON-NLS-1$
@@ -226,7 +228,7 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
 			EditPart firstParent;
-			boolean enableAll = true;
+			allEnabled = true;
 			
 			// Check to see if this is a single selected container
 			if (editparts.size() == 1 && editparts.get(0) instanceof EditPart) {
@@ -234,7 +236,6 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				// check to see if this is a container with a GridLayout
 				if (isValidTarget(firstParent)) {
 					fEditPart = firstParent;
-					initialized = false;
 					initializeValues();
 					return true;
 				}
@@ -257,18 +258,17 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 							ep = (EditPart) editparts.get(i);
 							// Check to see if we have the same parent
 							if (ep.getParent() == null || ep.getParent() != firstParent) {
-								enableAll = false;
+								allEnabled = false;
 								break;
 							}
 						} else {
-							enableAll = false;
+							allEnabled = false;
 							break;
 						}
 					}
 					// If the parent is the same, enable all the actions and see if all the anchor & fill values are the same.
-					if (enableAll) {
+					if (allEnabled) {
 						fEditPart = firstParent;
-						initialized = false;
 						initializeValues();
 						return true;
 					}
@@ -328,46 +328,50 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		resetVariables();
 	}
 	
+	protected void refresh() {
+		if (allEnabled)
+			initializeValues();
+	}
+	
 	private void initializeValues() {
-		if (!initialized) {
-			getResourceSet(fEditPart);
-			// break out early if getControl() hasn't been called yet.
-			if (typeHorizontalRadio == null) {
-				return;
-			}
-			
-			int orientationValue = getIntValue(fEditPart, sfType);
-			if (orientationValue == SWT.HORIZONTAL){
-				typeHorizontalRadio.setSelection(true);
-				typeVerticalRadio.setSelection(false);
-			}
-			else if (orientationValue == SWT.VERTICAL){
-				typeVerticalRadio.setSelection(true);
-				typeHorizontalRadio.setSelection(false);
-			}
-			
-			spacingSpinner.setSelection(getIntValue(fEditPart, sfSpacing));
-			spacingSpinner.setEnabled(true);
-			heightSpinner.setSelection(getIntValue(fEditPart, sfMarginHeight));
-			heightSpinner.setEnabled(true);
-			widthSpinner.setSelection(getIntValue(fEditPart, sfMarginWidth));
-			widthSpinner.setEnabled(true);
-			topSpinner.setSelection(getIntValue(fEditPart, sfMarginTop));
-			topSpinner.setEnabled(true);
-			bottomSpinner.setSelection(getIntValue(fEditPart, sfMarginBottom));
-			bottomSpinner.setEnabled(true);
-			leftSpinner.setSelection(getIntValue(fEditPart, sfMarginLeft));
-			leftSpinner.setEnabled(true);
-			rightSpinner.setSelection(getIntValue(fEditPart, sfMarginRight));
-			rightSpinner.setEnabled(true);
-			
-			fillCheck.setSelection(getBooleanValue(fEditPart, sfFill));
-			justifyCheck.setSelection(getBooleanValue(fEditPart, sfJustify));
-			packCheck.setSelection(getBooleanValue(fEditPart, sfPack));
-			wrapCheck.setSelection(getBooleanValue(fEditPart, sfWrap));
-			
-			initialized = true;
+		initialized = false;
+		getResourceSet(fEditPart);
+		// break out early if getControl() hasn't been called yet.
+		if (typeHorizontalRadio == null) {
+			return;
 		}
+		
+		int orientationValue = getIntValue(fEditPart, sfType);
+		if (orientationValue == SWT.HORIZONTAL){
+			typeHorizontalRadio.setSelection(true);
+			typeVerticalRadio.setSelection(false);
+		}
+		else if (orientationValue == SWT.VERTICAL){
+			typeVerticalRadio.setSelection(true);
+			typeHorizontalRadio.setSelection(false);
+		}
+		
+		spacingSpinner.setSelection(getIntValue(fEditPart, sfSpacing));
+		spacingSpinner.setEnabled(true);
+		heightSpinner.setSelection(getIntValue(fEditPart, sfMarginHeight));
+		heightSpinner.setEnabled(true);
+		widthSpinner.setSelection(getIntValue(fEditPart, sfMarginWidth));
+		widthSpinner.setEnabled(true);
+		topSpinner.setSelection(getIntValue(fEditPart, sfMarginTop));
+		topSpinner.setEnabled(true);
+		bottomSpinner.setSelection(getIntValue(fEditPart, sfMarginBottom));
+		bottomSpinner.setEnabled(true);
+		leftSpinner.setSelection(getIntValue(fEditPart, sfMarginLeft));
+		leftSpinner.setEnabled(true);
+		rightSpinner.setSelection(getIntValue(fEditPart, sfMarginRight));
+		rightSpinner.setEnabled(true);
+		
+		fillCheck.setSelection(getBooleanValue(fEditPart, sfFill));
+		justifyCheck.setSelection(getBooleanValue(fEditPart, sfJustify));
+		packCheck.setSelection(getBooleanValue(fEditPart, sfPack));
+		wrapCheck.setSelection(getBooleanValue(fEditPart, sfWrap));
+		
+		initialized = true;
 	}
 	
 	
@@ -568,6 +572,7 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		sfMarginRight = null;
 		sfMarginTop = null;
 		initialized = false;
+		allEnabled = false;
 	}
 	
 	/*

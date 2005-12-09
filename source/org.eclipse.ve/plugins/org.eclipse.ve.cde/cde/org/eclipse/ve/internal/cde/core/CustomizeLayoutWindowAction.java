@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.20 $  $Date: 2005-12-09 16:27:20 $ 
+ *  $Revision: 1.21 $  $Date: 2005-12-09 22:44:18 $ 
  */
 
 import java.util.ArrayList;
@@ -30,6 +30,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.*;
+
+import org.eclipse.ve.internal.cde.core.ModelChangeController.ModelChangeEvent;
 
 /**
  * This action on the toolbar controls whether the customize layout dialog is up or not.
@@ -186,8 +188,7 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 	
 	private ISelectionListener selListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-			if (fDialog != null && !fDialog.isHidden())
-				update(selection);			
+			update(selection);			
 		}
 	};
 	private ISelectionProvider selectionProvider = new ISelectionProvider() {
@@ -279,6 +280,14 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 		});		
 	}
 	
+	protected ModelChangeController.ModelChangeListener changeListener = new ModelChangeController.ModelChangeListener() {
+
+		public void transactionEvent(ModelChangeEvent event) {
+			if (event.getEvent() == ModelChangeEvent.TRANSACTION_COMPLETED)
+				if (fDialog != null && !fDialog.isHidden())
+					fDialog.refresh();	// The model has changed, refire selection so everyone can refresh.
+		}
+	};
 	/*
 	 * When editor part switches, this is the new editor part.
 	 * @param anEditorPart
@@ -287,6 +296,7 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 		if (editorPart == anEditorPart)
 			return;
 
+		removeModelChangeController();
 		editorPart = anEditorPart;
 		if (editorPart != null && editorPart.getEditorSite().getActionBarContributor() == contributor && fDialog != null) {
 			runWithoutUpdate(); // Bring it up if necessary
@@ -296,6 +306,26 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 			fDialog.hide();
 			fDialog.setEditorPart(null);
 			update(StructuredSelection.EMPTY);
+		}
+		
+		if (editorPart != null) {
+			org.eclipse.gef.EditDomain domain = (org.eclipse.gef.EditDomain) editorPart.getAdapter(org.eclipse.gef.EditDomain.class);
+			if (domain instanceof EditDomain) {
+				ModelChangeController changeController = (ModelChangeController) ((EditDomain) domain).getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+				if (changeController != null)
+					changeController.addModelChangeListener(changeListener);
+			}			
+		}
+	}
+
+	private void removeModelChangeController() {
+		if (editorPart != null) {
+			org.eclipse.gef.EditDomain domain = (org.eclipse.gef.EditDomain) editorPart.getAdapter(org.eclipse.gef.EditDomain.class);
+			if (domain instanceof EditDomain) {
+				ModelChangeController changeController = (ModelChangeController) ((EditDomain) domain).getData(ModelChangeController.MODEL_CHANGE_CONTROLLER_KEY);
+				if (changeController != null)
+					changeController.removeModelChangeListener(changeListener);
+			}
 		}
 	}
 	
@@ -318,6 +348,7 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 	public void disposeAction() {
 		workbenchWindow.getSelectionService().removeSelectionListener(selListener);
 		workbenchWindow.getPartService().removePartListener(alignmentWindowPartListener);
+		removeModelChangeController();
 		editorPart = null;
 		contributor = null;
 		workbenchWindow = null;
@@ -387,7 +418,7 @@ protected void persistPreferences() {
 	
 	protected void update(ISelection selection) {
 		selectionProvider.setSelection(selection);
-		if (fDialog != null) {
+		if (fDialog != null && !fDialog.isHidden()) {
 			fDialog.update(selection);
 		}
 	}

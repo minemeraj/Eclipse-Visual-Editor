@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutPage.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.8 $  $Date: 2005-12-09 22:44:18 $ 
  */
 
 import org.eclipse.jface.viewers.*;
@@ -43,7 +43,7 @@ public abstract class CustomizeLayoutPage {
 		handleSelectionProviderInitialization(selectionProvider);
 	}
 		
-	/*
+	/**
 	 * During initialization this will be called with the selection provider.
 	 * It will only be called once. If new SelectionActions are created that need
 	 * it afterwards, it can use the getSelectionProvider() to get it.
@@ -51,6 +51,13 @@ public abstract class CustomizeLayoutPage {
 	 * @param selectionProvider
 	 */
 	protected abstract void handleSelectionProviderInitialization(ISelectionProvider selectionProvider);
+	
+	/**
+	 * Whenever the model changes a refresh is sent out. The page should refresh its fields from the
+	 * current selection.
+	 * @since 1.2.0
+	 */
+	protected abstract void refresh();
 		
 	/**
 	 * Return the control for this page, parent on the given parent (which will be a TabFolder).
@@ -84,9 +91,12 @@ public abstract class CustomizeLayoutPage {
 		return handleSelectionChanged(oldSelection);
 	}
 	
-	/*
+	/**
 	 * Called whenever selection has changed.
 	 * This may be called before getControl() is invoked.
+	 * The new and old selection may be the same. This is used to indicate
+	 * refresh required because the model has changed. The changes may
+	 * or may not affect the page.
 	 * 
 	 * @param oldSelection The previous selection.
 	 */

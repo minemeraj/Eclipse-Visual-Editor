@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridDataSpanPropertyDescriptor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-12-01 20:19:43 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-09 22:44:19 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -55,7 +55,6 @@ public class GridDataSpanPropertyDescriptor extends BeanPropertyDescriptorAdapte
 	 * @see org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor#setValue(org.eclipse.ui.views.properties.IPropertySource, java.lang.Object)
 	 */
 	public Command setValue(IPropertySource source, Object setValue) {
-		// The target of the BeanPropertySourceAdapter is the composite
 		IJavaObjectInstance griddata = (IJavaObjectInstance) source.getEditableValue();
 		IBeanProxyHost griddataProxyHost = BeanProxyUtilities.getBeanProxyHost(griddata);	
 		Object oldSpanValue = source.getPropertyValue(getTarget());

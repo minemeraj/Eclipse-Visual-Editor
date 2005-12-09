@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.15 $  $Date: 2005-11-15 18:53:31 $ 
+ *  $Revision: 1.16 $  $Date: 2005-12-09 22:44:21 $ 
  */
 
 import java.util.Collections;
@@ -192,6 +192,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	protected EReference sfComponents, sfConstraintComponent, sfConstraintConstraint;
 	protected EStructuralFeature sfAnchor, sfFill, sfInsets, sfSpan_X, sfSpan_Y, sfPad_X, sfPad_Y, sfWeight_X, sfWeight_Y;
 	protected ResourceSet rset;
+	private boolean allEnabled;
 	protected AnchorAction selectedAnchorAction;
 	protected int currentFillValue;
 	
@@ -1079,7 +1080,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
 			EditPart firstParent;
-			boolean enableAll = true;
+			allEnabled = true;
 			if (editparts.get(0) instanceof EditPart && ((EditPart) editparts.get(0)).getParent() != null) {
 				firstParent = ((EditPart) editparts.get(0)).getParent();
 				// Check the parent to ensure its layout policy is a GridBagLayout
@@ -1096,16 +1097,16 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 							ep = (EditPart) editparts.get(i);
 							// Check to see if we have the same parent
 							if (ep.getParent() == null || ep.getParent() != firstParent) {
-								enableAll = false;
+								allEnabled = false;
 								break;
 							}
 						} else {
-							enableAll = false;
+							allEnabled = false;
 							break;
 						}
 					}
 					// If the parent is the same, enable all the actions and see if all the anchor & fill values are the same.
-					if (enableAll) {
+					if (allEnabled) {
 						enableAnchorActions(true);
 						enableFillActions(true);
 						enableInsets(true);
@@ -1477,6 +1478,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 		rset = null;
 		sfConstraintConstraint = null;
 		sfAnchor = null;
+		allEnabled = false;
 	}
 	/**
 	 * refresh the values for all controls
@@ -1595,6 +1597,15 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			}
 		}
 	}
+	
+	protected void refresh() {
+		if (allEnabled) {
+			List editparts = getSelectedObjects();
+			if (!editparts.isEmpty())
+				refreshAllValues(editparts);
+		}
+	}
+	
 	/*
 	 * Return the command to cancel the GridData settings for this control
 	 */

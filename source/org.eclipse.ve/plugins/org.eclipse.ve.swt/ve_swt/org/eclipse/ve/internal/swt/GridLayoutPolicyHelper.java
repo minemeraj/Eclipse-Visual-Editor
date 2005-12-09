@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.47 $  $Date: 2005-12-08 16:05:40 $
+ *  $Revision: 1.48 $  $Date: 2005-12-09 22:44:19 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -1367,6 +1367,39 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	}
 	
 	/**
+	 * Change the number of columns to the new size if possible.
+	 * If it is larger than the current it will add as many empty columns
+	 * on the right as needed. If it less than the current it remove
+	 * as many empty columns from the right as possible. But it cannot
+	 * remove a column that has something other than fillers in it,
+	 * so it won't get any further than that.
+	 * <p>
+	 * Must call {@link #startRequest()} before this method can be called.
+	 *  
+	 * @param newNumCols
+	 * @return the actual new number of columns. It may be a different number than sent in if it could not remove a col.
+	 * 
+	 * @since 1.2.0
+	 */
+	public int changeNumberOfColumns(int newNumCols) {
+		int delta = newNumCols - numColumns;
+		if (delta > 0) {
+			// Add columns.
+			while(--delta>=0) {
+				createNewCol(numColumns);
+			}
+		} else if (delta < 0) {
+			// Remove columns;
+			while(++delta<=0) {
+				if (!removeColIfEmpty(numColumns-1))
+					break;	// Couldn't go any further.
+			}
+		}
+		
+		return numColumns;
+	}
+	
+	/**
 	 * Remove this row if contains nothing but empties, or fillers.
 	 * @param row
 	 * @return <code>true</code> if the row was removed.
@@ -1421,7 +1454,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	/**
 	 * Remove this col if contains nothing but empties, ir fillers.
 	 * @param col
-	 * @return <code>true</code> if the row was removed.
+	 * @return <code>true</code> if the col was removed.
 	 * @since 1.2.0
 	 */
 	protected boolean removeColIfEmpty(int col) {

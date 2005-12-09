@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.21 $  $Date: 2005-12-01 20:19:43 $ 
+ *  $Revision: 1.22 $  $Date: 2005-12-09 22:44:19 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -201,6 +201,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	protected EStructuralFeature sfHorizontalAlignment, sfVerticalAlignment, sfHorizontalGrab, sfVerticalGrab, sfHorizontalSpan, sfVerticalSpan,
 			sfHorizontalIndent, sfHeightHint, sfWidthHint;
 	protected ResourceSet rset;
+	private boolean allEnabled;
 	protected AlignmentAction selectedAlignmentAction;
 	protected boolean fillVertical = false, fillHorizontal = false;
 	
@@ -915,7 +916,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
 			EditPart firstParent;
-			boolean enableAll = true;
+			allEnabled = true;
 			if (editparts.get(0) instanceof EditPart && ((EditPart) editparts.get(0)).getParent() != null) {
 				firstParent = ((EditPart) editparts.get(0)).getParent();
 				// Check the parent to ensure its layout policy is a GridBagLayout
@@ -932,24 +933,19 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 							ep = (EditPart) editparts.get(i);
 							// Check to see if we have the same parent
 							if (ep.getParent() == null || ep.getParent() != firstParent) {
-								enableAll = false;
+								allEnabled = false;
 								break;
 							}
 						} else {
-							enableAll = false;
+							allEnabled = false;
 							break;
 						}
 					}
 					// If the parent is the same, enable all the actions and see if all the anchor & fill values are the same.
-					if (enableAll) {
+					if (allEnabled) {
 						enableAlignmentActions(true);
 						enableGrabActions(true);
 						refreshAllValues(editparts);
-						if (restoreAllButton != null)
-							if (hasGridData(editparts))
-								restoreAllButton.setEnabled(true);
-							else
-								restoreAllButton.setEnabled(false);
 						return true;
 					}
 				}
@@ -960,11 +956,25 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		enableGrabActions(false);
 		return false;
 	}
+	
+	protected void refresh() {
+		if (allEnabled) {
+			List editparts = getSelectedObjects();
+			if (!editparts.isEmpty())
+				refreshAllValues(editparts);			
+		}
+	}
+	
 	private void refreshAllValues(List editparts) {
 		handleSelectionChangedForAlignmentActions(editparts);
 		handleSelectionChangedForGrabActions(editparts);
 		handleSelectionChangedForSpinners(editparts);
 		hasGridDataValue = hasGridData(editparts);
+		if (restoreAllButton != null)
+			if (hasGridData(editparts))
+				restoreAllButton.setEnabled(true);
+			else
+				restoreAllButton.setEnabled(false);
 	}
 	
 	/*
@@ -1195,6 +1205,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 		sfHorizontalIndent = null;
 		sfHeightHint = null;
 		sfWidthHint = null;
+		allEnabled = false;
 	}
 	/*
 	 * Return the ResourceSet for this editpart. Initialize the structural features also. 
