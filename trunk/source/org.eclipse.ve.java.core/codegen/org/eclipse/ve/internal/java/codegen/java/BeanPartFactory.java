@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: BeanPartFactory.java,v $
- *  $Revision: 1.62 $  $Date: 2005-12-08 23:13:39 $ 
+ *  $Revision: 1.63 $  $Date: 2005-12-09 21:12:42 $ 
  */
 
 import java.util.*;
@@ -538,7 +538,7 @@ protected void generateSetFeatures(BeanPart bp) throws CodeGenException {
 public BeanPart createImplicitFromJVEModel(IJavaObjectInstance component, ICompilationUnit cu) throws CodeGenException {
 		
 	  if (component.eContainingFeature() == JCMPackage.eINSTANCE.getMemberContainer_Implicits())
-		  JavaVEPlugin.log("TODO: need to create an explicit Decleration.. at this time will use implicit decleration");
+		  JavaVEPlugin.log("TODO: need to create an explicit Decleration.. at this time will use implicit decleration"); //$NON-NLS-1$
 	
 	  ImplicitAllocation allocation = (ImplicitAllocation)component.getAllocation();
 	  // This should drive the creation of the implicit

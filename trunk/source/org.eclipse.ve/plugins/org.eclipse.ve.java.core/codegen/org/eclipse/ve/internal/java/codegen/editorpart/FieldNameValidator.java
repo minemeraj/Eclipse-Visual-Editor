@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FieldNameValidator.java,v $
- *  $Revision: 1.8 $  $Date: 2005-09-29 21:20:18 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-09 21:12:42 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -77,56 +77,56 @@ public class FieldNameValidator implements ICellEditorValidator, ISourced {
 	private static final Set KEYWORDS = new HashSet(20);
 	static {
 		// This is the list of keywords as of Java 5.0. 
-		KEYWORDS.add("abstract");
-		KEYWORDS.add("assert");
-		KEYWORDS.add("byte");
-		KEYWORDS.add("boolean");
-		KEYWORDS.add("break");
-		KEYWORDS.add("case");
-		KEYWORDS.add("char");
-		KEYWORDS.add("catch");
-		KEYWORDS.add("class");
-		KEYWORDS.add("continue");
-		KEYWORDS.add("do");
-		KEYWORDS.add("double");
-		KEYWORDS.add("default");
-		KEYWORDS.add("else");
-		KEYWORDS.add("extends");
-		KEYWORDS.add("for");
-		KEYWORDS.add("final");
-		KEYWORDS.add("float");
-		KEYWORDS.add("false");
-		KEYWORDS.add("finally");
-		KEYWORDS.add("if");
-		KEYWORDS.add("int");
-		KEYWORDS.add("import");
-		KEYWORDS.add("interface");
-		KEYWORDS.add("implements");
-		KEYWORDS.add("instanceof");
-		KEYWORDS.add("long");
-		KEYWORDS.add("new");
-		KEYWORDS.add("null");
-		KEYWORDS.add("native");
-		KEYWORDS.add("public");
-		KEYWORDS.add("package");
-		KEYWORDS.add("private");
-		KEYWORDS.add("protected");
-		KEYWORDS.add("return");
-		KEYWORDS.add("short");
-		KEYWORDS.add("super");
-		KEYWORDS.add("static");
-		KEYWORDS.add("switch");
-		KEYWORDS.add("strictfp");
-		KEYWORDS.add("synchronized");
-		KEYWORDS.add("try");
-		KEYWORDS.add("this");
-		KEYWORDS.add("true");
-		KEYWORDS.add("throw");
-		KEYWORDS.add("throws");
-		KEYWORDS.add("transient");
-		KEYWORDS.add("void");
-		KEYWORDS.add("volatile");
-		KEYWORDS.add("while");
+		KEYWORDS.add("abstract"); //$NON-NLS-1$
+		KEYWORDS.add("assert"); //$NON-NLS-1$
+		KEYWORDS.add("byte"); //$NON-NLS-1$
+		KEYWORDS.add("boolean"); //$NON-NLS-1$
+		KEYWORDS.add("break"); //$NON-NLS-1$
+		KEYWORDS.add("case"); //$NON-NLS-1$
+		KEYWORDS.add("char"); //$NON-NLS-1$
+		KEYWORDS.add("catch"); //$NON-NLS-1$
+		KEYWORDS.add("class"); //$NON-NLS-1$
+		KEYWORDS.add("continue"); //$NON-NLS-1$
+		KEYWORDS.add("do"); //$NON-NLS-1$
+		KEYWORDS.add("double"); //$NON-NLS-1$
+		KEYWORDS.add("default"); //$NON-NLS-1$
+		KEYWORDS.add("else"); //$NON-NLS-1$
+		KEYWORDS.add("extends"); //$NON-NLS-1$
+		KEYWORDS.add("for"); //$NON-NLS-1$
+		KEYWORDS.add("final"); //$NON-NLS-1$
+		KEYWORDS.add("float"); //$NON-NLS-1$
+		KEYWORDS.add("false"); //$NON-NLS-1$
+		KEYWORDS.add("finally"); //$NON-NLS-1$
+		KEYWORDS.add("if"); //$NON-NLS-1$
+		KEYWORDS.add("int"); //$NON-NLS-1$
+		KEYWORDS.add("import"); //$NON-NLS-1$
+		KEYWORDS.add("interface"); //$NON-NLS-1$
+		KEYWORDS.add("implements"); //$NON-NLS-1$
+		KEYWORDS.add("instanceof"); //$NON-NLS-1$
+		KEYWORDS.add("long"); //$NON-NLS-1$
+		KEYWORDS.add("new"); //$NON-NLS-1$
+		KEYWORDS.add("null"); //$NON-NLS-1$
+		KEYWORDS.add("native"); //$NON-NLS-1$
+		KEYWORDS.add("public"); //$NON-NLS-1$
+		KEYWORDS.add("package"); //$NON-NLS-1$
+		KEYWORDS.add("private"); //$NON-NLS-1$
+		KEYWORDS.add("protected"); //$NON-NLS-1$
+		KEYWORDS.add("return"); //$NON-NLS-1$
+		KEYWORDS.add("short"); //$NON-NLS-1$
+		KEYWORDS.add("super"); //$NON-NLS-1$
+		KEYWORDS.add("static"); //$NON-NLS-1$
+		KEYWORDS.add("switch"); //$NON-NLS-1$
+		KEYWORDS.add("strictfp"); //$NON-NLS-1$
+		KEYWORDS.add("synchronized"); //$NON-NLS-1$
+		KEYWORDS.add("try"); //$NON-NLS-1$
+		KEYWORDS.add("this"); //$NON-NLS-1$
+		KEYWORDS.add("true"); //$NON-NLS-1$
+		KEYWORDS.add("throw"); //$NON-NLS-1$
+		KEYWORDS.add("throws"); //$NON-NLS-1$
+		KEYWORDS.add("transient"); //$NON-NLS-1$
+		KEYWORDS.add("void"); //$NON-NLS-1$
+		KEYWORDS.add("volatile"); //$NON-NLS-1$
+		KEYWORDS.add("while"); //$NON-NLS-1$
 	}
 	
 	/**

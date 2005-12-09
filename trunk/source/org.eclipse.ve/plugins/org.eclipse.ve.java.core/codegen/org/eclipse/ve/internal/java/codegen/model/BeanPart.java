@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.java.codegen.model;
-/*
- *  $RCSfile: BeanPart.java,v $
- *  $Revision: 1.56 $  $Date: 2005-11-23 19:55:25 $ 
- */
 import java.util.*;
 import java.util.logging.Level;
 
@@ -523,7 +519,7 @@ public String toString () {
    if(!isActive())
 	   message+="[INACTIVE]"; //$NON-NLS-1$
    if (isImplicit())
-	   message+="[IMPLICIT:"+getImplicitName()+"]";
+	   message+="[IMPLICIT:"+getImplicitName()+"]"; //$NON-NLS-1$ //$NON-NLS-2$
    return message;
 }
 

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: TypeVisitor.java,v $
- *  $Revision: 1.21 $  $Date: 2005-11-11 22:30:50 $ 
+ *  $Revision: 1.22 $  $Date: 2005-12-09 21:12:42 $ 
  */
 
 import java.util.*;
@@ -205,19 +205,19 @@ private boolean skipMethod(MethodDeclaration method) {
 		skip = true;
 	else{
 		String methodName = method.getName().getIdentifier();
-		if("main".equals(methodName) && Modifier.isStatic(method.getModifiers())){
+		if("main".equals(methodName) && Modifier.isStatic(method.getModifiers())){ //$NON-NLS-1$
 			List params = method.parameters();
 			if(params!=null && params.size()==1 && params.get(0) instanceof SingleVariableDeclaration){
 				SingleVariableDeclaration svd = (SingleVariableDeclaration) params.get(0);
 				if(svd.getType() instanceof ArrayType){
 					Type simpleType = ((ArrayType) svd.getType()).getElementType();
 					if(simpleType.isSimpleType()){
-						if(		"java.lang.String".equals(((SimpleType)simpleType).getName().getFullyQualifiedName()) ||
-								"String".equals(((SimpleType)simpleType).getName().getFullyQualifiedName()))
+						if(		"java.lang.String".equals(((SimpleType)simpleType).getName().getFullyQualifiedName()) || //$NON-NLS-1$
+								"String".equals(((SimpleType)simpleType).getName().getFullyQualifiedName())) //$NON-NLS-1$
 							skip = true;
 					}else if(simpleType.isQualifiedType()){
-						if(		"java.lang.String".equals(((QualifiedType)simpleType).getName().getFullyQualifiedName()) ||
-								"String".equals(((QualifiedType)simpleType).getName().getFullyQualifiedName()))
+						if(		"java.lang.String".equals(((QualifiedType)simpleType).getName().getFullyQualifiedName()) || //$NON-NLS-1$
+								"String".equals(((QualifiedType)simpleType).getName().getFullyQualifiedName())) //$NON-NLS-1$
 							skip = true;
 					}
 				}
