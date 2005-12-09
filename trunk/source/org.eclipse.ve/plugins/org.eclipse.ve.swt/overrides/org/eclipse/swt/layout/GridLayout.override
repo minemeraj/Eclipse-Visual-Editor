@@ -4,8 +4,15 @@
       <value featureName="eAnnotations">
          <listChanges referenceValues="_eAnnotations"/>
       </value>
+      <value featureName="eStructuralFeatures">
+         <listChanges referenceValues="_eStructuralFeatures"/>
+      </value>      
    </objectChanges>
    <objectsToAttach xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
       <keyedValues key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey" value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridLayoutPolicyFactory" xsi:type="ecore:EStringToStringMapEntry"/>
     </objectsToAttach>
+   <objectsToAttach name="numColumns" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
+      <eAnnotations propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.GridLayoutNumColumnsPropertyDescriptor" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"/>
+      <eAnnotations cellEditorValidatorClassnames="org.eclipse.ve.java.core/org.eclipse.ve.internal.java.core.MinMaxJavaValidator:min:0" xsi:type="org.eclipse.ve.internal.cde.decorators:BasePropertyDecorator"/>
+   </objectsToAttach>            
 </change:ChangeDescription>

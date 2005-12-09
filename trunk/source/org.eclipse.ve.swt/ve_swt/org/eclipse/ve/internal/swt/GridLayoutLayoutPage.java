@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.16 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.17 $  $Date: 2005-12-09 22:44:19 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -47,7 +47,6 @@ import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
  */
 public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	
-//	public final static int SHOW_GRID_CHANGED = 1;
 	public final static int NUM_COLUMNS_CHANGED = 2;
 	public final static int HORIZONTAL_SPACING_CHANGED = 3;
 	public final static int VERTICAL_SPACING_CHANGED = 4;
@@ -56,9 +55,10 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	public final static int MAKE_COLS_EQUAL_WIDTH_CHANGED = 7;
 
 	EditPart fEditPart = null;
-//	protected GridController gridController;
 	
 	ResourceSet rset;
+	
+	boolean allEnabled;
 	
 	protected EReference sfCompositeLayout;
 	
@@ -68,18 +68,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	private int numColumnsValue, horizontalSpacingValue, verticalSpacingValue, marginHeightValue, marginWidthValue;
 	private boolean makeColsEqualWidthValue;
 	
-	boolean initialized = false;
-	
 	private GridLayoutLayoutComposite gridComposite = null;
-//	private IGridListener gridListener = new IGridListener() {
-//		public void gridHeightChanged(int gridHeight,int oldGridHeight) {};
-//		public void gridVisibilityChanged(boolean isShowing) {
-//			if (gridComposite != null)
-//				gridComposite.setShowGrid(isShowing);
-//		};
-//		public void gridMarginChanged(int gridMargin,int oldGridMargin) {};
-//		public void gridWidthChanged(int gridWidth,int oldGridWidth) {};
-//	};
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#handleSelectionProviderInitialization(org.eclipse.jface.viewers.ISelectionProvider)
@@ -94,12 +83,6 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	public Control getControl(Composite parent) {
 		gridComposite = new GridLayoutLayoutComposite(this, parent, SWT.NONE);
 		initializeValues();
-//		gridComposite.addDisposeListener(new DisposeListener() {
-//			public void widgetDisposed(org.eclipse.swt.events.DisposeEvent e) {
-//				if (gridController != null)
-//					gridController.removeGridListener(gridListener);
-//			};
-//		});
 		return gridComposite;
 	}
 
@@ -109,19 +92,14 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	protected void propertyChanged (int type, Object value) {
 		int intValue;
 		switch (type) {
-//			case SHOW_GRID_CHANGED:
-//				boolean isShowing = ((Boolean)value).booleanValue();
-//				gridController = GridController.getGridController(fEditPart);
-//				if (gridController != null && isShowing != gridController.isGridShowing())
-//					gridController.setGridShowing(isShowing);
-//				break;
 			case NUM_COLUMNS_CHANGED:
 				intValue = new Integer((String)value).intValue();
 				if (numColumnsValue != intValue) {
 					numColumnsValue = intValue;
-					execute(createSpinnerCommand(fEditPart, sfNumColumns, (String)value));
+					execute(createNumColumnsSpinnerCommand(fEditPart, sfNumColumns, (String)value));
+					initializeValues();	// Need to reget the values. The new number of columns could be different than requested due to restrictions.
 				}
-					break;
+				break;
 			case HORIZONTAL_SPACING_CHANGED:
 				intValue = new Integer((String)value).intValue();
 				if (horizontalSpacingValue != intValue) {
@@ -171,7 +149,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
 			EditPart firstParent;
-			boolean enableAll = true;
+			allEnabled = true;
 			
 			// Check to see if this is a single selected container
 			if (editparts.size() == 1 && editparts.get(0) instanceof EditPart) {
@@ -179,15 +157,8 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				// check to see if this is a container with a GridLayout
 				if (isValidTarget(firstParent)) {
 					fEditPart = firstParent;
-					initialized = false;
-//					if (gridController != null)
-//						gridController.removeGridListener(gridListener);
-//					gridController = GridController.getGridController(fEditPart);
-//					if (gridController != null) {
 					initializeValues();
-//						gridController.addGridListener(gridListener);
 					return true;
-//					}
 				}
 			}
 			
@@ -208,34 +179,24 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 							ep = (EditPart) editparts.get(i);
 							// Check to see if we have the same parent
 							if (ep.getParent() == null || ep.getParent() != firstParent) {
-								enableAll = false;
+								allEnabled = false;
 								break;
 							}
 						} else {
-							enableAll = false;
+							allEnabled = false;
 							break;
 						}
 					}
 					// If the parent is the same, enable all the actions and see if all the anchor & fill values are the same.
-					if (enableAll) {
+					if (allEnabled) {
 						fEditPart = firstParent;
-						initialized = false;
-//						if (gridController != null)
-//							gridController.removeGridListener(gridListener);
-//						gridController = GridController.getGridController(fEditPart);
-//						if (gridController != null) {
 						initializeValues();
-//							gridController.addGridListener(gridListener);
 						return true;
-//						}
 					}
 				}
 			}
 		}
 		fEditPart = null;
-//		if (gridController != null)
-//			gridController.removeGridListener(gridListener);
-//		gridController = null;
 		// By default if the initial checks failed, disable and uncheck all the actions.
 		return false;
 	}
@@ -288,10 +249,15 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		resetVariables();
 	}
 	
+	protected void refresh() {
+		if (allEnabled) {
+			initializeValues();
+		}
+	}
+	
 	private void initializeValues() {
 		getResourceSet(fEditPart);
 		// break out early if getControl() hasn't been called yet.
-//		gridController = GridController.getGridController(fEditPart);
 		if (gridComposite == null) { return; }
 		Object[] values = new Object[7];
 		numColumnsValue = getIntValue(fEditPart, sfNumColumns);
@@ -301,7 +267,6 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		marginWidthValue = getIntValue(fEditPart, sfMarginWidth);
 		makeColsEqualWidthValue = getBooleanValue(fEditPart, sfMakeColumnsEqualWidth);
 		values[0] = new Boolean(true);
-//		values[0] = new Boolean(gridController.isGridShowing());
 		values[1] = new Integer(numColumnsValue);
 		values[2] = new Integer(horizontalSpacingValue);
 		values[3] = new Integer(verticalSpacingValue);
@@ -333,6 +298,18 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		} else {
 			return UnexecutableCommand.INSTANCE;
 		}
+	}
+
+	/*
+	 * Return the commands to set the GridLayout value of a Spinner for the selected editpart for number of columns
+	 */
+	protected Command createNumColumnsSpinnerCommand(EditPart editpart, EStructuralFeature sf, String spinnerValue) {
+		CompositeContainerPolicy cp = new CompositeContainerPolicy(EditDomain.getEditDomain(editpart));
+		cp.setContainer(editpart.getModel());
+		GridLayoutPolicyHelper helper = new GridLayoutPolicyHelper(cp);
+		helper.startRequest();
+		helper.changeNumberOfColumns(Integer.parseInt(spinnerValue));
+		return helper.stopRequest();
 	}
 
 	protected int getIntValue(EditPart ep, EStructuralFeature sf) {
@@ -410,7 +387,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		sfVerticalSpacing = null;
 		sfMarginHeight = null;
 		sfMarginWidth = null;
-		initialized = false;
+		allEnabled = false;
 	}
 	
 	/*

@@ -17,7 +17,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindow.java,v $
- *  $Revision: 1.13 $  $Date: 2005-12-07 23:52:06 $ 
+ *  $Revision: 1.14 $  $Date: 2005-12-09 22:44:18 $ 
  */
 
 import java.util.ArrayList;
@@ -402,6 +402,20 @@ public class CustomizeLayoutWindow extends Window {
 		
 		if (lPage == null && lPage == null) {
 			setTitle(null);
+		}
+	}
+	
+	/**
+	 * Called when model has changed and all pages should refresh themselves.
+	 * 
+	 * 
+	 * @since 1.2.0
+	 */
+	public void refresh() {
+		for (int i = 0; i < layoutPages.size(); i++) {
+			CustomizeLayoutPage page = (CustomizeLayoutPage) layoutPages.get(i);
+			if (page != null)
+				page.refresh();
 		}
 	}
 	

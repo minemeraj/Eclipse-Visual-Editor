@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AlignmentXYGridPropertiesPage.java,v $
- *  $Revision: 1.11 $  $Date: 2005-08-09 18:32:33 $ 
+ *  $Revision: 1.12 $  $Date: 2005-12-09 22:44:18 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -388,6 +388,12 @@ public class AlignmentXYGridPropertiesPage extends CustomizeLayoutPage {
 		}
 		return GridController.getGridController(fEditPart);
 	}
+	
+	protected void refresh() {
+		if (fEditPart != null)
+			initializeValues();
+	}
+	
 	private void initializeValues() {
 		initializing = true;
 		gridController = GridController.getGridController(fEditPart);

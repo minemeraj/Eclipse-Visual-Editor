@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutComposite.java,v $
- *  $Revision: 1.6 $  $Date: 2005-07-12 19:04:20 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-09 22:44:19 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -107,15 +107,6 @@ public class GridLayoutLayoutComposite extends Composite {
 	private void createComposite() {
 		composite = new Composite(this, SWT.NONE);		   
 		composite.setLayout(new GridLayout());
-//		showGridCheckBox = new Button(composite, SWT.CHECK);
-//		showGridCheckBox.setText(SWTMessages.getString("GridLayoutLayoutComposite.Checkbox.ShowGrid.Text")); //$NON-NLS-1$
-//		showGridCheckBox.setSelection(showGrid);
-//		showGridCheckBox.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() { 
-//			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-//				if (initialized)
-//					parentPage.propertyChanged(GridLayoutLayoutPage.SHOW_GRID_CHANGED, new Boolean(showGridCheckBox.getSelection()));
-//			}
-//		});
 
 		Group colGroup = new Group(composite, SWT.NONE);
 		GridData gd0 = new GridData();
@@ -167,7 +158,6 @@ public class GridLayoutLayoutComposite extends Composite {
 	protected void setInitialValues (Object [] values) {
 		if (values == null || values.length != 7)
 			return;
-//		showGridCheckBox.setSelection(((Boolean)values[0]).booleanValue());
 		numColumnsSpinner.setSelection(((Integer)values[1]).intValue());
 		horizontalSpinner.setSelection(((Integer)values[2]).intValue());
 		verticalSpinner.setSelection(((Integer)values[3]).intValue());

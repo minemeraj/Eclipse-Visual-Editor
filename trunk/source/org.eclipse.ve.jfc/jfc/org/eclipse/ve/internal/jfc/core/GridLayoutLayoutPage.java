@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.13 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.14 $  $Date: 2005-12-09 22:44:21 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -66,6 +66,8 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		sfHgap, sfVgap;
 	
 	boolean initialized = false;
+	
+	boolean allEnabled;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ve.internal.cde.core.CustomizeLayoutPage#handleSelectionProviderInitialization(org.eclipse.jface.viewers.ISelectionProvider)
@@ -146,7 +148,6 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		label.setLayoutData(gd);
 		
 		if (fEditPart != null) {
-			initialized = false;
 			initializeValues();
 		}
 		
@@ -161,7 +162,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
 			EditPart firstParent;
-			boolean enableAll = true;
+			allEnabled = true;
 			
 			// Check to see if this is a single selected container
 			if (editparts.size() == 1 && editparts.get(0) instanceof EditPart) {
@@ -169,7 +170,6 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				// check to see if this is a container with a GridLayout
 				if (isValidTarget(firstParent)) {
 					fEditPart = firstParent;
-					initialized = false;
 					initializeValues();
 					return true;
 				}
@@ -192,18 +192,17 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 							ep = (EditPart) editparts.get(i);
 							// Check to see if we have the same parent
 							if (ep.getParent() == null || ep.getParent() != firstParent) {
-								enableAll = false;
+								allEnabled = false;
 								break;
 							}
 						} else {
-							enableAll = false;
+							allEnabled = false;
 							break;
 						}
 					}
 					// If the parent is the same, enable all the actions and see if all the anchor & fill values are the same.
-					if (enableAll) {
+					if (allEnabled) {
 						fEditPart = firstParent;
-						initialized = false;
 						initializeValues();
 						return true;
 					}
@@ -263,25 +262,29 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		resetVariables();
 	}
 	
+	protected void refresh() {
+		if (allEnabled)
+			initializeValues();
+	}
+	
 	private void initializeValues() {
-		if (!initialized) {
-			getResourceSet(fEditPart);
-			// break out early if getControl() hasn't been called yet.
-			if (columnsSpinner == null) {
-				return;
-			}
-			columnsSpinner.setSelection(getIntValue(fEditPart, sfColumns));
-			currentColsValue = columnsSpinner.getSelection();
-			columnsSpinner.setEnabled(true);
-			rowsSpinner.setSelection(getIntValue(fEditPart, sfRows));
-			currentRowValue = rowsSpinner.getSelection();
-			rowsSpinner.setEnabled(true);
-			hgapSpinner.setSelection(getIntValue(fEditPart, sfHgap));
-			hgapSpinner.setEnabled(true);
-			vgapSpinner.setSelection(getIntValue(fEditPart, sfVgap));
-			vgapSpinner.setEnabled(true);
-			initialized = true;
+		initialized = false;
+		getResourceSet(fEditPart);
+		// break out early if getControl() hasn't been called yet.
+		if (columnsSpinner == null) {
+			return;
 		}
+		columnsSpinner.setSelection(getIntValue(fEditPart, sfColumns));
+		currentColsValue = columnsSpinner.getSelection();
+		columnsSpinner.setEnabled(true);
+		rowsSpinner.setSelection(getIntValue(fEditPart, sfRows));
+		currentRowValue = rowsSpinner.getSelection();
+		rowsSpinner.setEnabled(true);
+		hgapSpinner.setSelection(getIntValue(fEditPart, sfHgap));
+		hgapSpinner.setEnabled(true);
+		vgapSpinner.setSelection(getIntValue(fEditPart, sfVgap));
+		vgapSpinner.setEnabled(true);
+		initialized = true;
 	}
 	
 	private EStructuralFeature getSFForSpinner(Spinner s) {
@@ -419,6 +422,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		sfHgap = null;
 		sfVgap = null;
 		initialized = false;
+		allEnabled = false;
 	}
 	
 	/*

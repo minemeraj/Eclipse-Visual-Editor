@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: AlignmentXYComponentPage.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.11 $  $Date: 2005-12-09 22:44:18 $ 
  */
 
 import java.util.List;
@@ -94,6 +94,10 @@ public class AlignmentXYComponentPage extends CustomizeLayoutPage {
 
 	}
 
+	protected void refresh() {
+		// Don't need to do anything. The actions are already enabled if necessary.
+	}
+	
 	protected boolean handleSelectionChanged(ISelection oldSelection) {
 		ISelection newSelection = getSelection();
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {

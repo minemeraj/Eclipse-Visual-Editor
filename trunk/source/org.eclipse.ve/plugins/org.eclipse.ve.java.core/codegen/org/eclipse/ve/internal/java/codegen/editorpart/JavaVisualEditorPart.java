@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.158 $  $Date: 2005-12-05 22:10:15 $ 
+ *  $Revision: 1.159 $  $Date: 2005-12-09 22:44:17 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -2626,7 +2626,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			return editDomain.getCommandStack();
 		else if (adapterKey == PalettePage.class){
 			return getPalettePage();
-		}
+		} else if (adapterKey == org.eclipse.gef.EditDomain.class)
+			return getEditDomain();
 		else
 			return super.getAdapter(adapterKey);
 	}
