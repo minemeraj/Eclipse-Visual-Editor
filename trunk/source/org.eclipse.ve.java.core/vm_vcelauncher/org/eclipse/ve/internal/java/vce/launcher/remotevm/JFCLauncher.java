@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher.remotevm;
 /*
  *  $RCSfile: JFCLauncher.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-09 19:40:20 $ 
  */
 
 import java.applet.Applet;
@@ -46,64 +46,74 @@ public class JFCLauncher implements ILauncher {
 	 * @see org.eclipse.ve.internal.java.vce.launcher.remotevm.ILauncher#launch(java.lang.Class, java.lang.Object, java.lang.String[])
 	 */
 		
-	public void launch(Class clazz, String[] args) {
-		Object javaBean = null;
-		try {
-			// new up an instance of the java bean
-			Constructor ctor = clazz.getDeclaredConstructor(null);
-			// Make sure we can intantiate it in case the class it not public
-			ctor.setAccessible(true);
-			javaBean = ctor.newInstance(null);
-		} catch (SecurityException e1) {
-			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
-			e1.printStackTrace();	
-			System.exit(0);	
-		} catch (IllegalArgumentException e1) {
-			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.IllegalAccessException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
-			e1.printStackTrace();		
-			System.exit(0);	
-		} catch (NoSuchMethodException e1) {
-			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
-			e1.printStackTrace();	
-			System.exit(0);	
-		} catch (InstantiationException e1) {
-			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
-			e1.printStackTrace();	
-			System.exit(0);	
-		} catch (IllegalAccessException e1) {
-			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.IllegalAccessException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
-			e1.printStackTrace();		
-			System.exit(0);	
-		} catch (InvocationTargetException e1) {
-			System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[]{clazz.getName()})); //$NON-NLS-1$
-			e1.printStackTrace();	
-			System.exit(0);	
-		}
-		
-		// Set the look and feel if required	
-		String lookAndFeelArg = System.getProperty("vce.launcher.lookandfeel"); //$NON-NLS-1$
-		// <default> means don't change the L&F from the one the JVM has used
-		if (lookAndFeelArg != null && !(lookAndFeelArg.equals(""))){ //$NON-NLS-1$
-			try { 
-				UIManager.setLookAndFeel(lookAndFeelArg);
-				SwingUtilities.updateComponentTreeUI((Component) javaBean);
-			} catch ( Exception exc ) {
-				System.out.println(MessageFormat.format(VCELauncherMessages.getString("BeansLauncher.Err.SettingLookAndFeel_ERROR_"), new Object[] {lookAndFeelArg})); //$NON-NLS-1$
-				exc.printStackTrace();
+	public void launch(final Class clazz, String[] args) {
+		// Need to invoke later because it is now recommended that all Swing stuff be done on ui thread.
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				Object javaBean = null;
+				try {
+					// new up an instance of the java bean
+					Constructor ctor = clazz.getDeclaredConstructor(null);
+					// Make sure we can intantiate it in case the class it not public
+					ctor.setAccessible(true);
+					javaBean = ctor.newInstance(null);
+				} catch (SecurityException e1) {
+					System.out.println(MessageFormat.format(
+							VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[] { clazz.getName()})); //$NON-NLS-1$
+					e1.printStackTrace();
+					System.exit(0);
+				} catch (IllegalArgumentException e1) {
+					System.out.println(MessageFormat.format(
+							VCELauncherMessages.getString("BeansLauncher.Err.IllegalAccessException_ERROR_"), new Object[] { clazz.getName()})); //$NON-NLS-1$
+					e1.printStackTrace();
+					System.exit(0);
+				} catch (NoSuchMethodException e1) {
+					System.out.println(MessageFormat.format(
+							VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[] { clazz.getName()})); //$NON-NLS-1$
+					e1.printStackTrace();
+					System.exit(0);
+				} catch (InstantiationException e1) {
+					System.out.println(MessageFormat.format(
+							VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[] { clazz.getName()})); //$NON-NLS-1$
+					e1.printStackTrace();
+					System.exit(0);
+				} catch (IllegalAccessException e1) {
+					System.out.println(MessageFormat.format(
+							VCELauncherMessages.getString("BeansLauncher.Err.IllegalAccessException_ERROR_"), new Object[] { clazz.getName()})); //$NON-NLS-1$
+					e1.printStackTrace();
+					System.exit(0);
+				} catch (InvocationTargetException e1) {
+					System.out.println(MessageFormat.format(
+							VCELauncherMessages.getString("BeansLauncher.Err.InvocationException_ERROR_"), new Object[] { clazz.getName()})); //$NON-NLS-1$
+					e1.printStackTrace();
+					System.exit(0);
+				}
+				// Set the look and feel if required	
+				String lookAndFeelArg = System.getProperty("vce.launcher.lookandfeel"); //$NON-NLS-1$
+				// <default> means don't change the L&F from the one the JVM has used
+				if (lookAndFeelArg != null && !(lookAndFeelArg.equals(""))) { //$NON-NLS-1$
+					try {
+						UIManager.setLookAndFeel(lookAndFeelArg);
+						SwingUtilities.updateComponentTreeUI((Component) javaBean);
+					} catch (Exception exc) {
+						System.out.println(MessageFormat.format(
+								VCELauncherMessages.getString("BeansLauncher.Err.SettingLookAndFeel_ERROR_"), new Object[] { lookAndFeelArg})); //$NON-NLS-1$
+						exc.printStackTrace();
+					}
+				}
+				// If the JavaBean is an instance of a Frame then we should make it visible
+				if (javaBean instanceof Applet) {
+					String projectURL = System.getProperty("vce.launcher.projecturl"); //$NON-NLS-1$
+					launchApplet(clazz, projectURL);
+				} else if (javaBean instanceof Window) {
+					launchWindow((Window) javaBean, (Component) javaBean, ((Component) javaBean).getSize());
+				} else if (javaBean instanceof JComponent) {
+					launchJComponent((JComponent) javaBean);
+				} else if (javaBean instanceof Component) {
+					launchComponent((Component) javaBean);
+				}
 			}
-		}
-		
-		// If the JavaBean is an instance of a Frame then we should make it visible
-		if ( javaBean instanceof Applet ) {
-			String projectURL = System.getProperty("vce.launcher.projecturl"); //$NON-NLS-1$
-			launchApplet(clazz, projectURL);
-		} else if ( javaBean instanceof Window ) {
-			launchWindow((Window)javaBean,(Component)javaBean,((Component)javaBean).getSize());
-		} else if ( javaBean instanceof JComponent ) {
-			launchJComponent((JComponent)javaBean);
-		} else if ( javaBean instanceof Component ) {
-			launchComponent((Component)javaBean);
-		}
+		});		
 	}
 	
 protected static void launchJComponent(JComponent aJComponent){

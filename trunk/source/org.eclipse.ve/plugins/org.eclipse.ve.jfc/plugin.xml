@@ -437,7 +437,7 @@
 			defaultExpand="false">>
 		</category>
 			<visualElement
-         type="javax.swing.JFrame"
+         type="java.lang.Object"
          icon="icons/full/clcl16/frame_obj.gif"
          category="org.eclipse.ve.jfc.swing.cat"
          contributor="org.eclipse.ve.internal.jfc.codegen.wizards.contributors.SwingApplicationSourceContributor"
@@ -447,7 +447,7 @@
          type="javax.swing.JFrame"
          icon="icons/full/clcl16/frame_obj.gif"
          category="org.eclipse.ve.jfc.swing.cat"
-         contributor="org.eclipse.ve.internal.jfc.codegen.wizards.contributors.ContentPaneSourceContributor"
+         contributor="org.eclipse.ve.internal.jfc.codegen.wizards.contributors.JFrameSourceContributor"
          name="%NewStyleComponent.Frame">
 			</visualElement>
 			<visualElement
