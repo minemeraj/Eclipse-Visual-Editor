@@ -18,7 +18,7 @@
  * BeanParts with the same name/Scope will reUse a single BeanPartDecleration 
  * 
  *  $RCSfile: BeanPartDecleration.java,v $
- *  $Revision: 1.14 $  $Date: 2005-09-27 15:12:09 $ 
+ *  $Revision: 1.15 $  $Date: 2005-12-09 21:15:05 $ 
  */
 package org.eclipse.ve.internal.java.codegen.model;
 
@@ -68,7 +68,7 @@ public class BeanPartDecleration {
 	
 
 	static public String getImplicitName(EStructuralFeature sf) {
-		return "."+Utilities.getPropertyDecorator(sf).getReadMethod().getName()+"()";
+		return "."+Utilities.getPropertyDecorator(sf).getReadMethod().getName()+"()"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	
@@ -292,7 +292,7 @@ public class BeanPartDecleration {
 		b.append(beanParts.size()+" BeanParts "); //$NON-NLS-1$
 		b.append("["+name+" ("+type+")]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		if (isImplicitDecleration())
-			b.append(" [IMPLICIT]");
+			b.append(" [IMPLICIT]"); //$NON-NLS-1$
 		return b.toString();
 	}
 	public String getDeclerationHandle() {

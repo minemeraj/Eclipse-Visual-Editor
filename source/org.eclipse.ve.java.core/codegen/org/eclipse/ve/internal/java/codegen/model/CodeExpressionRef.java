@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.model;
 /*
  *  $RCSfile: CodeExpressionRef.java,v $
- *  $Revision: 1.65 $  $Date: 2005-12-02 00:52:08 $ 
+ *  $Revision: 1.66 $  $Date: 2005-12-09 21:15:05 $ 
  */
 
 
@@ -876,8 +876,8 @@ public int isEquivalent(AbstractCodeRef code) throws CodeGenException  {
 		if(isStateSet(CodeExpressionRef.STATE_INIT_EXPR) && exp1.isStateSet(CodeExpressionRef.STATE_INIT_EXPR)){
 			expEquivalency = true;
 		}else{
-			String expc1 = exp1.isStateSet(CodeExpressionRef.STATE_NO_SRC)? "" : exp1.getMethodNameContent();
-			String expc2 = isStateSet(CodeExpressionRef.STATE_NO_SRC)? "" : getMethodNameContent();
+			String expc1 = exp1.isStateSet(CodeExpressionRef.STATE_NO_SRC)? "" : exp1.getMethodNameContent(); //$NON-NLS-1$
+			String expc2 = isStateSet(CodeExpressionRef.STATE_NO_SRC)? "" : getMethodNameContent(); //$NON-NLS-1$
 			expEquivalency = expc1.equals(expc2);
 		}
 		
@@ -1086,7 +1086,7 @@ public String toString(){
 		if (fMasteredExpression != null)
 		    return fMasteredExpression.getContent() + states;
 		else
-			return (fBean.getSimpleName()+"/"+ fDecoder.getSF().getName()+": "+states);
+			return (fBean.getSimpleName()+"/"+ fDecoder.getSF().getName()+": "+states); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	else
 	    return super.toString() + states;

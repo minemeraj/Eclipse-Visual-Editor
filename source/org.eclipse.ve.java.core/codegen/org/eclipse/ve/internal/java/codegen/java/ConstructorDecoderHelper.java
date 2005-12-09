@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.67 $  $Date: 2005-11-10 19:47:55 $ 
+ *  $Revision: 1.68 $  $Date: 2005-12-09 21:12:42 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -682,27 +682,27 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 				VariableDeclarationStatement vds = (VariableDeclarationStatement) fExpr;
 				int modifiers = vds.getModifiers();
 				if(Modifier.isFinal(modifiers))
-					sb.append("final ");
+					sb.append("final "); //$NON-NLS-1$
 				if(Modifier.isPrivate(modifiers))
-					sb.append("private ");
+					sb.append("private "); //$NON-NLS-1$
 				if(Modifier.isProtected(modifiers))
-					sb.append("protected ");
+					sb.append("protected "); //$NON-NLS-1$
 				if(Modifier.isPublic(modifiers))
-					sb.append("public ");
+					sb.append("public "); //$NON-NLS-1$
 				if(Modifier.isStatic(modifiers))
-					sb.append("static ");
+					sb.append("static "); //$NON-NLS-1$
 				if(Modifier.isStrictfp(modifiers))
-					sb.append("strictfp ");
+					sb.append("strictfp "); //$NON-NLS-1$
 				if(Modifier.isSynchronized(modifiers))
-					sb.append("synchronized ");
+					sb.append("synchronized "); //$NON-NLS-1$
 				if(Modifier.isTransient(modifiers))
-					sb.append("transient ");
+					sb.append("transient "); //$NON-NLS-1$
 				if(Modifier.isVolatile(modifiers))
-					sb.append("volatile ");
+					sb.append("volatile "); //$NON-NLS-1$
 				if(Modifier.isNative(modifiers))
-					sb.append("native ");
+					sb.append("native "); //$NON-NLS-1$
 				if(Modifier.isAbstract(modifiers))
-					sb.append("abstract ");
+					sb.append("abstract "); //$NON-NLS-1$
 			}
 		}
 	}
