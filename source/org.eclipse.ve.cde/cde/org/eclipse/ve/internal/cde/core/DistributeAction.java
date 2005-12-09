@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: DistributeAction.java,v $
- *  $Revision: 1.7 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.8 $  $Date: 2005-12-09 17:29:13 $ 
  */
 
 import java.util.*;
@@ -190,14 +190,12 @@ public class DistributeAction extends SelectionAction {
 		for (int i = 0; i < selObjs.size(); i++) {
 			GraphicalEditPart currObj = (GraphicalEditPart) selObjs.get(i);
 			Rectangle currRect = currObj.getFigure().getBounds();
-			if (nextXPos != currRect.x) { // create command if x's are different
-				Rectangle newRect = new Rectangle(nextXPos, currRect.y, currRect.width, currRect.height);
-				distReq.setBounds(newRect);
-				Command cmd = currObj.getCommand(distReq);
-				if (cmd == null)
-					return UnexecutableCommand.INSTANCE; // Can't distribute because request wasn't processed.
-				compoundCmd.append(cmd);
-			}
+			Rectangle newRect = new Rectangle(nextXPos, currRect.y, currRect.width, currRect.height);
+			distReq.setBounds(newRect);
+			Command cmd = currObj.getCommand(distReq);
+			if (cmd == null)
+				return UnexecutableCommand.INSTANCE; // Can't distribute because request wasn't processed.
+			compoundCmd.append(cmd);
 			nextXPos = nextXPos + gap + currRect.width;
 		}
 		return compoundCmd;
@@ -243,14 +241,12 @@ public class DistributeAction extends SelectionAction {
 		for (int i = 0; i < selObjs.size(); i++) {
 			GraphicalEditPart currObj = (GraphicalEditPart) selObjs.get(i);
 			Rectangle currRect = currObj.getFigure().getBounds();
-			if (nextYPos != currRect.y) { // create command if y's are different
-				Rectangle newRect = new Rectangle(currRect.x, nextYPos, currRect.width, currRect.height);
-				distReq.setBounds(newRect);
-				Command cmd = currObj.getCommand(distReq);
-				if (cmd == null)
-					return UnexecutableCommand.INSTANCE; // Can't distribute because request wasn't processed.
-				compoundCmd.append(cmd);
-			}
+			Rectangle newRect = new Rectangle(currRect.x, nextYPos, currRect.width, currRect.height);
+			distReq.setBounds(newRect);
+			Command cmd = currObj.getCommand(distReq);
+			if (cmd == null)
+				return UnexecutableCommand.INSTANCE; // Can't distribute because request wasn't processed.
+			compoundCmd.append(cmd);
 			nextYPos = nextYPos + gap + currRect.height;
 		}
 		return compoundCmd;
