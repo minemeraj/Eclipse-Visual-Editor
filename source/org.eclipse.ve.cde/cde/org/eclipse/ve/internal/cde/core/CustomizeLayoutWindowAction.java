@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.19 $  $Date: 2005-12-07 23:52:06 $ 
+ *  $Revision: 1.20 $  $Date: 2005-12-09 16:27:20 $ 
  */
 
 import java.util.ArrayList;
@@ -190,6 +190,23 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 				update(selection);			
 		}
 	};
+	private ISelectionProvider selectionProvider = new ISelectionProvider() {
+		private ISelection selection = StructuredSelection.EMPTY;
+		
+		public void addSelectionChangedListener(ISelectionChangedListener listener) {
+		}
+		
+		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+		}
+	
+		public ISelection getSelection() {
+			return selection;
+		}
+		
+		public void setSelection(ISelection selection) {
+			this.selection = selection;
+		}
+	};
 	
 	public CustomizeLayoutWindowAction(IWorkbenchWindow workbenchWindow, IEditorActionBarContributor contributor) {
 		super(CDEMessages.CustomizeLayoutWindowAction_label, IAction.AS_PUSH_BUTTON); 
@@ -217,8 +234,21 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 		toolbarMenuManager.setRemoveAllWhenShown(true);
 		toolbarMenuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				if(fLayoutList != null){
-					fLayoutList.fillMenuManager(toolbarMenuManager);
+				LayoutList layoutList = null;
+				ISelection selection = CustomizeLayoutWindowAction.this.workbenchWindow.getSelectionService().getSelection();	// Get current selection
+				if(selection instanceof IStructuredSelection){
+					Object firstElement = ((IStructuredSelection)selection).getFirstElement();
+					if(firstElement instanceof EditPart){
+						layoutList = (LayoutList) ((EditPart)firstElement).getAdapter(LayoutList.class);
+					}
+				}				
+				if(layoutList != null){
+					layoutList.fillMenuManager(toolbarMenuManager);
+				} else {
+					// Add a no layouts available label.
+					Action noAvailable = new Action("Layouts not applicable") {
+					};
+					toolbarMenuManager.add(noAvailable);
 				}
 			}
 		
@@ -267,47 +297,6 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 			fDialog.setEditorPart(null);
 			update(StructuredSelection.EMPTY);
 		}
-		editorPart.getSite().getSelectionProvider().addSelectionChangedListener(new ISelectionChangedListener(){
-			public void selectionChanged(SelectionChangedEvent event) {
-				fLayoutList = null;
-				ISelection selection = event.getSelection();
-				if(selection instanceof IStructuredSelection){
-					Object firstElement = ((IStructuredSelection)selection).getFirstElement();
-					if(firstElement instanceof EditPart){
-						LayoutList layoutList = (LayoutList) ((EditPart)firstElement).getAdapter(LayoutList.class);
-						if(layoutList != null){
-							fLayoutList = layoutList;
-						}
-					}
-				}				
-			}
-		});
-	}
-	
-	private ISelectionProvider selectionProvider = new ISelectionProvider() {
-		private ISelection selection = StructuredSelection.EMPTY;
-		
-		public void addSelectionChangedListener(ISelectionChangedListener listener) {
-		}
-		
-		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-		}
-
-		public ISelection getSelection() {
-			return selection;
-		}
-		
-		public void setSelection(ISelection selection) {
-			this.selection = selection;
-		}
-	};
-	private LayoutList fLayoutList;
-
-	/*
-	 * This is <package-protected> because only CustomizeLayoutWindow should access it.
-	 */
-	ISelectionProvider getSelectionProvider() {
-		return selectionProvider;
 	}
 	
 	/* (non-Javadoc)
@@ -343,26 +332,33 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 		update(workbenchWindow.getSelectionService().getSelection());			
 	}
 
+	/*
+	 * Set the location using the current fDialogLoc, which is relative to the upper-left corner of the workbenchWindow.
+	 */
+	private void setDialogLoc() {
+		Point shellLoc = workbenchWindow.getShell().getLocation();
+		shellLoc.x+=fDialogLoc.x;
+		shellLoc.y+=fDialogLoc.y;
+		fDialog.setLocation(shellLoc);		
+	}
 	protected void runWithoutUpdate () {
 		if (fDialog == null) {
 			fDialog = new CustomizeLayoutWindow(workbenchWindow.getShell(), this);
 			if (fDialogLoc == null) {
 				// Get the persisted position of the dialog
 				Preferences preferences = CDEPlugin.getPlugin().getPluginPreferences();
-				// Use this point as an offset from the workbench window instead of as an absolute.
-				Point shellLoc = workbenchWindow.getShell().getLocation();
-				shellLoc.x+=preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_X);
-				shellLoc.y+=preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_Y);
-				fDialog.setLocation(shellLoc);
-				fDialogLoc = fDialog.getLocation();
-			} else {
-				fDialog.setLocation(fDialogLoc);
-			}					
+				fDialogLoc = new Point(preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_X), preferences.getInt(CDEPlugin.CUSTOMIZELAYOUTWINDOW_Y));
+			}
+			setDialogLoc();
 			fDialog.open();				
 			fDialog.getShell().addControlListener(new ControlListener() {
 				public void controlMoved(ControlEvent event) {
 					fDialogLoc = fDialog.getShell().getLocation();
-					fDialog.setLocation(fDialogLoc);
+					fDialog.setLocation(fDialogLoc);	// So if closes and reopens it will be here.
+					// Calculate offset for next time.
+					Point shellLoc = workbenchWindow.getShell().getLocation();
+					fDialogLoc.x-=shellLoc.x;
+					fDialogLoc.y-=shellLoc.y;					
 				}
 				public void controlResized(ControlEvent event) {
 				}
@@ -383,13 +379,14 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 protected void persistPreferences() {
 	if (fDialogLoc != null) {
 			Preferences preferences = CDEPlugin.getPlugin().getPluginPreferences();
+			// Save it as relative to the workbench window.
 			preferences.setValue(CDEPlugin.CUSTOMIZELAYOUTWINDOW_X, fDialogLoc.x);
 			preferences.setValue(CDEPlugin.CUSTOMIZELAYOUTWINDOW_Y, fDialogLoc.y);
 		}
 	}
 	
 	protected void update(ISelection selection) {
-		selectionProvider.setSelection(selection);		
+		selectionProvider.setSelection(selection);
 		if (fDialog != null) {
 			fDialog.update(selection);
 		}
@@ -405,6 +402,10 @@ protected void persistPreferences() {
 
 	public Menu getMenu(Menu parent) {
 		return null;
+	}
+
+	ISelectionProvider getSelectionProvider() {
+		return selectionProvider;
 	}
 
 }
