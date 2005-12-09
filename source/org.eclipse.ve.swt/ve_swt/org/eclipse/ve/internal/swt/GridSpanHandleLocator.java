@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridSpanHandleLocator.java,v $
- *  $Revision: 1.1 $  $Date: 2005-07-12 22:42:52 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-09 20:19:19 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -45,7 +45,17 @@ public class GridSpanHandleLocator extends RelativeHandleLocator {
 	 * 
 	 * @see org.eclipse.draw2d.Locator#relocate(org.eclipse.draw2d.IFigure)
 	 */
-	public void relocate(IFigure target) {
+	public void relocate(final IFigure target) {
+		// Need to spawn this off in an async runnable to give the gridlayout edit policy
+		// time to update it's grid and cell positions. Then when we get the cell bounds
+		// for the handle, it will be correct.
+		editpart.getViewer().getControl().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				doRelocate(target);
+			}
+		});
+	}
+	private void doRelocate(IFigure target) {
 		fullCellBounds = layoutEditPolicy.getFullCellBounds(editpart).expand(-1,-1);
 		super.relocate(target);
 	}
