@@ -27,7 +27,7 @@ public class ComponentSetSizeGenerator implements org.eclipse.ve.internal.java.c
   protected final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "import ";
   protected final String TEXT_2 = ";" + NL + "" + NL + "public class ";
-  protected final String TEXT_3 = " {" + NL + "" + NL + "\t/**" + NL + "\t * This is the default constructor" + NL + "\t */" + NL + "\tpublic ";
+  protected final String TEXT_3 = " {" + NL + "" + NL + "\tprivate static final long serialVersionUID = 1L;" + NL + "" + NL + "\t/**" + NL + "\t * This is the default constructor" + NL + "\t */" + NL + "\tpublic ";
   protected final String TEXT_4 = "() {" + NL + "\t\tsuper(); \t" + NL + "\t";
   protected final String TEXT_5 = "\tinitialize();" + NL + "\t";
   protected final String TEXT_6 = "}" + NL + "" + NL + "\t" + NL + "\t/**" + NL + "\t * This method initializes this" + NL + "\t * " + NL + "\t * @return void" + NL + "\t */" + NL + "\t";

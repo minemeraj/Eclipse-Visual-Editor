@@ -12,6 +12,8 @@ import java.awt.BorderLayout;
 
 public class <%=typeName%> {
 
+	private static final long serialVersionUID = 1L;
+
 	private JPanel jContentPane = null;
 	
 	/**
@@ -41,10 +43,7 @@ public class <%=typeName%> {
 				%>initialize()<%
 		}%> {
 		this.setSize(300,200);
-		this.setContentPane(getJContentPane());<%
-	if ("javax.swing.JFrame".equals(superClassName)) {%>
-		this.setTitle("<%=superClassName.substring(superClassName.lastIndexOf(".")+1)%>");<%
-	}%>
+		this.setContentPane(getJContentPane());
 	}
 	
 	/**

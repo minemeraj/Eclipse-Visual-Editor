@@ -18,6 +18,8 @@ import <%=layout%>;
 
 public class <%=typeName%> {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * This is the default constructor
 	 */
