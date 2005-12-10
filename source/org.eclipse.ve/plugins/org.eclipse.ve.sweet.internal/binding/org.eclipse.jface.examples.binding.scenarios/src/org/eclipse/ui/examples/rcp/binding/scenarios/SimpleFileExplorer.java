@@ -12,7 +12,7 @@
  *  Created Dec 5, 2005 by Gili Mendel
  * 
  *  $RCSfile: SimpleFileExplorer.java,v $
- *  $Revision: 1.1 $  $Date: 2005-12-09 21:44:26 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-10 18:23:51 $ 
  */
 
 package org.eclipse.ui.examples.rcp.binding.scenarios;
@@ -22,8 +22,11 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 
 import org.eclipse.jface.databinding.*;
+import org.eclipse.jface.databinding.converter.IConverter;
+import org.eclipse.jface.databinding.viewers.TreeViewerDescription;
 import org.eclipse.jface.databinding.viewers.ViewersProperties;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ViewerLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -121,21 +124,55 @@ public class SimpleFileExplorer {
 		TreeModelDescription modelDescription = new TreeModelDescription(new Property (selectedFile, "file")); 
 		modelDescription.addChildrenProperty(File.class, "listFiles");
 		
-		dbc.bind(new Property(treeViewer, ViewersProperties.CONTENT), modelDescription, null);
 		
-		treeViewer.setLabelProvider(new LabelProvider(){		
-			public String getText(Object element) {
-				String name = ((File)element).getName();
-				return name.length()==0? ((File)element).getPath(): name;
-			}		
-			public Image getImage(Object element) {
-				File f = (File)element;
+		
+		IConverter fileNameConverter = new IConverter() {		
+			public Object convertModelToTarget(Object modelObject) {
+				File f = (File)modelObject;
+				Image image = fileImage;
 				if (f.isDirectory())
-					return folderImage;
-				else
-					return fileImage;
-			}		
-		});
+					image =folderImage;
+				
+				String name = f.getName();
+				if (name.length()==0)
+					 name = f.getPath();
+				
+				return new ViewerLabel(name, image );
+			}
+		
+			public Object convertTargetToModel(Object targetObject) {				
+				return null;
+			}
+		
+			public Class getTargetType() {
+				return ViewerLabel.class;
+			}
+		
+			public Class getModelType() {
+				return File.class;
+			}
+		
+		};
+		TreeViewerDescription viewerDescription = new TreeViewerDescription(treeViewer);
+		viewerDescription.addColumn(File.class, 0, null, null, fileNameConverter);
+		
+		dbc.bind(viewerDescription, modelDescription, null);
+		
+//		dbc.bind(new Property(treeViewer, ViewersProperties.CONTENT), modelDescription, null);
+//		
+//		treeViewer.setLabelProvider(new LabelProvider(){		
+//			public String getText(Object element) {
+//				String name = ((File)element).getName();
+//				return name.length()==0? ((File)element).getPath(): name;
+//			}		
+//			public Image getImage(Object element) {
+//				File f = (File)element;
+//				if (f.isDirectory())
+//					return folderImage;
+//				else
+//					return fileImage;
+//			}		
+//		});
 		
 		
 	}
