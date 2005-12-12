@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ImageController.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-12 21:29:30 $ 
  */
 
 import java.io.File;
@@ -679,7 +679,7 @@ public class ImageController {
 		// We know the old thread (if there is one) is finished because we couldn't get
 		// here otherwise because the entire browsein group and filter text is disabled during loading.
 		imageLoaderThread = new ImageLoaderThread(f, path);
-		imageLoaderThread.setPriority(Thread.NORM_PRIORITY);
+		imageLoaderThread.setPriority(Thread.MIN_PRIORITY);
 		imageLoaderThread.start();
 	}
 
@@ -980,7 +980,7 @@ public class ImageController {
 				return;
 			File[] inArray = file.listFiles(imageFilter);
 
-			IProgressMonitor subpm = new SubProgressMonitor(pm, ticksAvailable);
+			final IProgressMonitor subpm = new SubProgressMonitor(pm, ticksAvailable);
 			beginTask(subpm, null, inArray.length * 100);
 			try {
 				if (inArray != null) {
@@ -1003,12 +1003,12 @@ public class ImageController {
 							completeFilepaths.add(path);
 	
 							if (meetsFilter(path)) {
-								if (!terminateThread) {
+								if (!terminateThread && !subpm.isCanceled()) {
 									worked(subpm, 100);
 	
-									dialogDisplay.asyncExec(new Runnable() {
+									dialogDisplay.syncExec(new Runnable() {
 										public void run() {
-											if (terminateThread)
+											if (terminateThread || subpm.isCanceled())
 												return; // This could already be on the queue when closed requested.
 											drawingBoard.add(path);
 											fileList.add(jfile.getName());

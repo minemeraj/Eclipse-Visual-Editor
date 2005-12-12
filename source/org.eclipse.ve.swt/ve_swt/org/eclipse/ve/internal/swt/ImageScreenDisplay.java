@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: ImageScreenDisplay.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.6 $  $Date: 2005-12-12 21:29:30 $ 
  */
 import java.util.ArrayList;
 
@@ -212,7 +212,7 @@ public class ImageScreenDisplay extends Canvas {
 
 		int index = paths.size() - 1;
 		if (verticalIndexVisible(index) || horizontalIndexVisible(index)) {
-			getDisplay().asyncExec(new Runnable() {
+			getDisplay().syncExec(new Runnable() {
 				public void run() {
 					try{
 					setupImages();
