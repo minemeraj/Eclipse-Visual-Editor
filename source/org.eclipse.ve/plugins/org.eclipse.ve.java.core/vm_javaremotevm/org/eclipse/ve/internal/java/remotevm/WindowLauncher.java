@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.remotevm;
 /*
  *  $RCSfile: WindowLauncher.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:30:49 $ 
+ *  $Revision: 1.9 $  $Date: 2005-12-12 22:52:44 $ 
  */
 
 import java.awt.*;
@@ -26,6 +26,7 @@ import javax.swing.JComponent;
 import org.eclipse.jem.internal.proxy.common.*;
 
 import org.eclipse.ve.internal.java.common.Common;
+import org.eclipse.ve.internal.java.remotevm.macosx.ProcessManager;
 
 
 public class WindowLauncher implements ICallback {
@@ -38,6 +39,8 @@ public class WindowLauncher implements ICallback {
 	java.util.List fWindowListeners = new ArrayList(1);
 	int windowState = Common.WIN_OPENED;
 	private boolean explicitPropertyChange = false;
+	
+	private static final boolean isMacOSX = System.getProperty("os.name").equalsIgnoreCase("Mac OS X");
 	
 public WindowLauncher(Component aComponent){
 	fComponent = aComponent;
@@ -81,6 +84,9 @@ protected void callbackWindowClosed(){
 		fDialog.setPropertyEditor(null);	// To release the component
 		fWindow = null;
 		fDialog = null;
+		if (isMacOSX) {
+			ProcessManager.processToBack();
+		}
 	}
 }
 
@@ -115,6 +121,9 @@ void launchEditor(){
 	EventQueue.invokeLater(new Runnable() {
 		public void run() {
 			toFront();
+			if (isMacOSX) {
+				ProcessManager.processToFront();
+			}
 		}
 	});
 	windowState = Common.WIN_OPENED;
