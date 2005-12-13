@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.18 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.19 $  $Date: 2005-12-13 01:32:36 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -160,6 +160,10 @@ public class JavaVisualEditorVMController {
 					// Add in the remote vm jar and any nls jars that is required for JBCF itself.
 					controller.contributeClasspath(JavaVEPlugin.getPlugin().getBundle(),
 							"vm/javaremotevm.jar", IConfigurationContributionController.APPEND_USER_CLASSPATH, true); //$NON-NLS-1$
+					
+					if (Platform.OS_MACOSX.equals(Platform.getOS())) {
+						controller.contributeClasspath(JavaVEPlugin.getPlugin().getBundle(), "$os$", IConfigurationContributionController.APPEND_JAVA_LIBRARY_PATH, false); //$NON-NLS-1$
+					}
 				}
 
 				/*
