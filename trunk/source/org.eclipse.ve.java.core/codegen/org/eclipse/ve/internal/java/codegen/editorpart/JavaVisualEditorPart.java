@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.159 $  $Date: 2005-12-09 22:44:17 $ 
+ *  $Revision: 1.160 $  $Date: 2005-12-13 21:41:48 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -1021,7 +1021,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 					menuMgr.appendToGroup(GEFActionConstants.GROUP_EDIT, customize);
 			}
 		});
-		getSite().registerContextMenu("JavaVisualEditor.contextMenu", menuMgr, primaryViewer); //$NON-NLS-1$
+		getEditorSite().registerContextMenu("JavaVisualEditor.contextMenu", menuMgr, primaryViewer, false); //$NON-NLS-1$
 
 		loadingFigureController.startListener(primaryViewer);
 		reloadActionController.startListening(primaryViewer);
