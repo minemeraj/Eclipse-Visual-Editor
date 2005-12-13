@@ -392,14 +392,14 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 	
 	private final static JarInfo[] jfaceLibraries = new JarInfo[] {
 			new JarInfo("org.eclipse.jface", "jface.jar", SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
-			new JarInfo("org.eclipse.osgi", "core.jar", SWT_CONTAINER_SRC_PLUGIN), 					 //$NON-NLS-1$ //$NON-NLS-2$
 			new JarInfo("org.eclipse.core.commands", false, SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
 			new JarInfo("org.eclipse.equinox.common", false, SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
 			
-			// TODO I don't think JFace TEXT will be allowed to run outside of Eclipse. It requires Jobs among other things
-			new JarInfo("org.eclipse.jface.text", "jfacetext.jar", SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
+			// JFace TEXT will never be allowed to run outside of Eclipse. It requires Jobs among other things
+//			new JarInfo("org.eclipse.jface.text", "jfacetext.jar", SWT_CONTAINER_SRC_PLUGIN),  //$NON-NLS-1$ //$NON-NLS-2$
 			
 			// These are required for legacy only
+			new JarInfo("org.eclipse.osgi", "core.jar", SWT_CONTAINER_SRC_PLUGIN, true), 					 //$NON-NLS-1$ //$NON-NLS-2$			
 			new JarInfo("org.eclipse.core.runtime", "runtime.jar", SWT_CONTAINER_SRC_PLUGIN, true),  //$NON-NLS-1$ //$NON-NLS-2$
 			new JarInfo("org.eclipse.core.runtime.compatibility", "compatibility.jar", SWT_CONTAINER_SRC_PLUGIN, true),	 //$NON-NLS-1$ //$NON-NLS-2$
 
