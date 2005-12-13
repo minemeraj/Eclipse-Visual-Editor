@@ -227,6 +227,7 @@ public abstract class ViewerEditPartContributorFactory implements EditPartContri
 							// Create and execute commands to promote this Control to a JFace Viewer. The class that the control feature is owned by
 							// would be the class to be created.
 							CreateRequest cr = new CreateRequest();
+							cr.setLocation(new Point(0,0));  // Hack... need a point to solve the FlowLayout.getCommand... otherwise throws NPE
 							cr.setFactory(new EMFCreationFactory(controlFeature.getEContainingClass()));
 							Command c = controlEditPart.getCommand(cr);
 							if (c != null) {
