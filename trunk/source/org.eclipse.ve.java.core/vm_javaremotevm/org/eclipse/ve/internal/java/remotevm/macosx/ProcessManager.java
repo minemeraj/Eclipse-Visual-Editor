@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.remotevm.macosx;
 /*
  *  $RCSfile: ProcessManager.java,v $
- *  $Revision: 1.2 $  $Date: 2005-12-13 01:05:41 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-13 01:20:52 $ 
  */
 
 /**
@@ -21,16 +21,23 @@ package org.eclipse.ve.internal.java.remotevm.macosx;
  */
 public class ProcessManager {
 	
+	private static boolean libraryLoaded = false;
+	private static int[] originalFrontProcess = null;
+	private static boolean inFront = false;
+	
 	static {
-		System.loadLibrary("carbon-process-manager");
+		try {
+			System.loadLibrary("carbon-process-manager");
+			libraryLoaded = true;
+		}
+		catch (Exception e) {
+			// fail gracefully as a precaution if other platforms accidentally load this class
+		}
 	}
 
 	public static final native int GetCurrentProcess(int[] psn);
 	public static final native int GetFrontProcess(int[] psn);
 	public static final native int SetFrontProcess(int[] psn);
-	
-	private static int[] originalFrontProcess = null;
-	private static boolean inFront = false;
 	
 	/**
 	 * Bring the current process to the front.  This method will save the
@@ -40,7 +47,7 @@ public class ProcessManager {
 	 *
 	 */
 	public static void processToFront()	{
-		if (!inFront) {
+		if (libraryLoaded && !inFront) {
 			// Get the process serial number of the current front process
 			// This should be Eclipse's process id
 			originalFrontProcess = new int[2];
@@ -65,7 +72,7 @@ public class ProcessManager {
 	 *
 	 */
 	public static void processToBack() {
-		if (inFront) {
+		if (libraryLoaded && inFront) {
 			if (originalFrontProcess != null && originalFrontProcess[1] != 0) {
 				// Restore the original front process
 				SetFrontProcess(originalFrontProcess);
