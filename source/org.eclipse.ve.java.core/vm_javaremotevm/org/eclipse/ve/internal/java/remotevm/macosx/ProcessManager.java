@@ -11,9 +11,14 @@
 package org.eclipse.ve.internal.java.remotevm.macosx;
 /*
  *  $RCSfile: ProcessManager.java,v $
- *  $Revision: 1.1 $  $Date: 2005-12-12 22:52:44 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-13 01:05:41 $ 
  */
 
+/**
+ * This class manages the showing and hiding of the remote vm windows on Mac OS X.
+ * This is accomplished by manipulating the front process via calls through a native library to
+ * Carbon's ProcessManager functions.
+ */
 public class ProcessManager {
 	
 	static {
@@ -27,6 +32,13 @@ public class ProcessManager {
 	private static int[] originalFrontProcess = null;
 	private static boolean inFront = false;
 	
+	/**
+	 * Bring the current process to the front.  This method will save the
+	 * current front process, that will be restored with a call to processToBack();
+	 * 
+	 * This function must be followed with a call to processToBack() before being called again.
+	 *
+	 */
 	public static void processToFront()	{
 		if (!inFront) {
 			// Get the process serial number of the current front process
@@ -38,7 +50,7 @@ public class ProcessManager {
 			// This should be the java remote vm's process id
 			int[] currentProcess = new int[2];		
 			GetCurrentProcess(currentProcess);
-			if (currentProcess[0] != 0) {
+			if (currentProcess[1] != 0) {
 				// Set the java remote vm to be the front process
 				SetFrontProcess(currentProcess);
 				inFront = true;
@@ -46,9 +58,15 @@ public class ProcessManager {
 		}
 	}
 	
+	/**
+	 * Restore the old front process to the front, sending the current process to the back.
+	 * 
+	 * This function must follow a call to processToFront()
+	 *
+	 */
 	public static void processToBack() {
 		if (inFront) {
-			if (originalFrontProcess != null && originalFrontProcess[0] != 0) {
+			if (originalFrontProcess != null && originalFrontProcess[1] != 0) {
 				// Restore the original front process
 				SetFrontProcess(originalFrontProcess);
 				originalFrontProcess = null;

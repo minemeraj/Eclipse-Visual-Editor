@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.remotevm;
 /*
  *  $RCSfile: WindowLauncher.java,v $
- *  $Revision: 1.9 $  $Date: 2005-12-12 22:52:44 $ 
+ *  $Revision: 1.10 $  $Date: 2005-12-13 01:05:41 $ 
  */
 
 import java.awt.*;
@@ -84,9 +84,9 @@ protected void callbackWindowClosed(){
 		fDialog.setPropertyEditor(null);	// To release the component
 		fWindow = null;
 		fDialog = null;
-		if (isMacOSX) {
-			ProcessManager.processToBack();
-		}
+	}
+	if (isMacOSX) {
+		ProcessManager.processToBack();
 	}
 }
 
