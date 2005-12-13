@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.remotevm.macosx;
 /*
  *  $RCSfile: ProcessManager.java,v $
- *  $Revision: 1.3 $  $Date: 2005-12-13 01:20:52 $ 
+ *  $Revision: 1.4 $  $Date: 2005-12-13 01:32:36 $ 
  */
 
 /**
@@ -27,7 +27,7 @@ public class ProcessManager {
 	
 	static {
 		try {
-			System.loadLibrary("carbon-process-manager");
+			System.loadLibrary("carbon-process-manager"); //$NON-NLS-1$
 			libraryLoaded = true;
 		}
 		catch (Exception e) {

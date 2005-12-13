@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.remotevm;
 /*
  *  $RCSfile: WindowLauncher.java,v $
- *  $Revision: 1.10 $  $Date: 2005-12-13 01:05:41 $ 
+ *  $Revision: 1.11 $  $Date: 2005-12-13 01:32:36 $ 
  */
 
 import java.awt.*;
@@ -40,7 +40,7 @@ public class WindowLauncher implements ICallback {
 	int windowState = Common.WIN_OPENED;
 	private boolean explicitPropertyChange = false;
 	
-	private static final boolean isMacOSX = System.getProperty("os.name").equalsIgnoreCase("Mac OS X");
+	private static final boolean isMacOSX = System.getProperty("os.name").equalsIgnoreCase("Mac OS X"); //$NON-NLS-1$ //$NON-NLS-2$
 	
 public WindowLauncher(Component aComponent){
 	fComponent = aComponent;
