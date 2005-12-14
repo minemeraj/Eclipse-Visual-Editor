@@ -211,4 +211,6 @@ public final class SWTMessages extends NLS {
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, SWTMessages.class);
 	}
+
+	public static String SWTPreferencePageContents_OverviewLabel_Text;
 }
