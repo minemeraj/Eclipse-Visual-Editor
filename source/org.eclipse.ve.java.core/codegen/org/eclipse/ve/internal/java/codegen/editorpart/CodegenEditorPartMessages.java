@@ -74,4 +74,6 @@ public final class CodegenEditorPartMessages extends NLS {
 	public static String JavaVisualEditorOutlinePage_LinkSelectionSourceEditor_Action_Label;
 	public static String JavaSourceTranslator_17;
 	public static String JavaSourceTranslator_18;
+	public static String XMLViewPart_RefreshJob_Title;
+	public static String XMLViewPart_DefaultPage_Msg;
 }

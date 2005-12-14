@@ -123,4 +123,11 @@ public final class JFCMessages extends NLS {
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, JFCMessages.class);
 	}
+
+	public static String JFCPreferencePageContents_Label_Text;
+	public static String FrameSelectorDialog_Title;
+	public static String FrameSelectorDialog_Message;
+	public static String FrameSelectorDialog_Window_Title;
+	public static String BorderLayoutConstraintsPropertyEditor_InvalidConstraint_Msg;
+	public static String FrameSelectorDialogArea_OverviewLabel_Msg;
 }
