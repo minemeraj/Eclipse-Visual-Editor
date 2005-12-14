@@ -12,7 +12,7 @@
  *  Created May 27, 2005 by Gili Mendel
  * 
  *  $RCSfile: SashSetting.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:57 $ 
+ *  $Revision: 1.5 $  $Date: 2005-12-14 21:27:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -37,7 +37,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class SashSetting implements EditorSettings.ISetting {
 	
-	public final static String id = "Settings.Sash";
+	public final static String id = "Settings.Sash"; //$NON-NLS-1$
 	
 	
 	JavaVisualEditorPart editor;

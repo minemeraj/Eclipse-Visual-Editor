@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: JWindowJDialogContainmentHandler.java,v $ $Revision: 1.2 $ $Date: 2005-11-04 17:30:48 $
+ * $RCSfile: JWindowJDialogContainmentHandler.java,v $ $Revision: 1.3 $ $Date: 2005-12-14 21:37:04 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -43,7 +43,7 @@ public class JWindowJDialogContainmentHandler extends AbstractComponentModelCont
 				// Now see if JWindow or JDialog directly. If so we need to handle the content pane.
 				// We must call this BEFORE we handle the window drop.
 				String childType = jo.getJavaType().getQualifiedNameForReflection();
-				if (childType.equals("javax.swing.JDialog") || childType.equals("javax.swing.JWindow")) {
+				if (childType.equals("javax.swing.JDialog") || childType.equals("javax.swing.JWindow")) { //$NON-NLS-1$ //$NON-NLS-2$
 					RootPaneContainmentHandler.handleContentPane(jo, domain, preCmds);
 				}
 			}

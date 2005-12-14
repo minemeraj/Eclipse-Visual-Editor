@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WindowContainmentHandler.java,v $ $Revision: 1.3 $ $Date: 2005-11-04 17:30:48 $
+ * $RCSfile: WindowContainmentHandler.java,v $ $Revision: 1.4 $ $Date: 2005-12-14 21:37:04 $
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -155,7 +155,7 @@ public class WindowContainmentHandler extends AbstractComponentModelContainmentH
 							}
 						}
 					} else
-						throw new StopRequestException("Child can only be dropped on free form surface or a valid parent.");
+						throw new StopRequestException(JFCMessages.WindowContainmentHandler_ChildDroppableOnFFOrValidParent);
 				} else {
 					// Parent is a frame or window or dialog and we have a good constructor for it, so we choose just it.
 					validParents.add(parent);
@@ -180,7 +180,7 @@ public class WindowContainmentHandler extends AbstractComponentModelContainmentH
 									if (childHasNullConstructor)
 										return; // Use the null constructor.
 									else
-										throw new RuntimeException("User canceled drop.");
+										throw new RuntimeException(JFCMessages.WindowContainmentHandler_UserCancelledDrop);
 								frame = (IJavaObjectInstance) fsd.getSelectedFrame();
 
 								command = createWithParent(jo, javaClass, frame);
@@ -201,17 +201,17 @@ public class WindowContainmentHandler extends AbstractComponentModelContainmentH
 				} else if (hasNullConstructor) {
 					// Null ctor and on free form is just do as is.
 					if (parent != freeform)
-						throw new StopRequestException("Child can only be dropped on free form surface or a valid parent.");
+						throw new StopRequestException(JFCMessages.WindowContainmentHandler_ChildDroppableOnFFOrValidParent);
 				} else
-					throw new StopRequestException("Child has no valid parents and no null constructor. Cannot be dropped.");
+					throw new StopRequestException(JFCMessages.WindowContainmentHandler_ChildNoDrop);
 			} else if (hasNullConstructor) {
 				// Null ctor and on free form is just do as is.
 				if (parent != freeform)
-					throw new StopRequestException("Child can only be dropped on free form surface or a valid parent.");
+					throw new StopRequestException(JFCMessages.WindowContainmentHandler_ChildDroppableOnFFOrValidParent);
 			} else
-				throw new StopRequestException("Child has no valid parents and no null constructor. Cannot be dropped.");
+				throw new StopRequestException(JFCMessages.WindowContainmentHandler_ChildNoDrop);
 		} else if (parent != freeform)
-			throw new StopRequestException("Child can only be dropped on free form surface.");	// It has an allocation. In which case we can't look into and change it at this time.
+			throw new StopRequestException(JFCMessages.WindowContainmentHandler_ChildDroppableOnFF);	// It has an allocation. In which case we can't look into and change it at this time.
 		return childToDrop;
 	}
 

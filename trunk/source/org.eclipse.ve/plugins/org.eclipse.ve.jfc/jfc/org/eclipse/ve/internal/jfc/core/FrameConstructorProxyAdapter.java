@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: FrameConstructorProxyAdapter.java,v $
- *  $Revision: 1.18 $  $Date: 2005-11-28 23:26:09 $ 
+ *  $Revision: 1.19 $  $Date: 2005-12-14 21:37:04 $ 
  */
 
 import java.util.List;
@@ -86,7 +86,7 @@ public class FrameConstructorProxyAdapter extends WindowProxyAdapter {
 		ExpressionProxy result = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 		expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass, 1);
 		expression.createClassInstanceCreation(ForExpression.CLASSINSTANCECREATION_ARGUMENT, "java.awt.Frame", 0); //$NON-NLS-1$
-		ExpressionProxy exception = expression.createTryCatchClause(getBeanTypeProxy("java.lang.NoSuchMethodException", expression), true);
+		ExpressionProxy exception = expression.createTryCatchClause(getBeanTypeProxy("java.lang.NoSuchMethodException", expression), true); //$NON-NLS-1$
 		// Reassign the expression and create with a null ctor.
 		expression.createProxyReassignmentExpression(ForExpression.ROOTEXPRESSION, result);
 		expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass, 0);

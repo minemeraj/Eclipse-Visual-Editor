@@ -131,7 +131,7 @@ public IBeanProxy getEnvironmentProxy(){
 	if (environmentProxy == null) {
 		// Get one.
 		try {
-			IConstructorProxy newEnvProxy = environmentBeanTypeProxy.getConstructorProxy(new String[] {"org.eclipse.jem.internal.proxy.common.IVMServer"});
+			IConstructorProxy newEnvProxy = environmentBeanTypeProxy.getConstructorProxy(new String[] {"org.eclipse.jem.internal.proxy.common.IVMServer"}); //$NON-NLS-1$
 			environmentProxy = newEnvProxy.newInstance(new IBeanProxy[] {newEnvProxy.getProxyFactoryRegistry().getBeanProxyFactory().getIVMServerProxy()});
 		} catch (ThrowableProxy e) {
 			JavaVEPlugin.log(e, Level.WARNING);

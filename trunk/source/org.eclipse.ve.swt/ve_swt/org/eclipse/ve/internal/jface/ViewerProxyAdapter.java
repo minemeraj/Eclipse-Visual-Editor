@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewerProxyAdapter.java,v $
- *  $Revision: 1.2 $  $Date: 2005-12-02 00:24:03 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:39:00 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -58,7 +58,7 @@ public class ViewerProxyAdapter extends UIThreadOnlyProxyAdapter implements IExe
 
 
 	private EStructuralFeature sf_control;
-	private String controlFeatureName = "control";
+	private String controlFeatureName = "control"; //$NON-NLS-1$
 	
 	// Was the control created by the Viewer?
 	// This is determined by the "control" setting and seeing if it is implicit allocation of the control property.

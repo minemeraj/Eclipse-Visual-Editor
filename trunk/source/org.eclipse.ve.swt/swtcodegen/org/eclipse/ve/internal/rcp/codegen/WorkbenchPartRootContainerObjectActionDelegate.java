@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartRootContainerObjectActionDelegate.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 17:33:42 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-14 21:38:13 $ 
  */
 package org.eclipse.ve.internal.rcp.codegen;
 
@@ -104,7 +104,7 @@ public class WorkbenchPartRootContainerObjectActionDelegate extends ActionDelega
 				if(argumentEditPart!=null && workbenchEditPart!=null){
 					try{
 						EObject argumentEObject = (EObject) argumentEditPart.getModel();
-						EStructuralFeature controlsSF = argumentEObject.eClass().getEStructuralFeature("controls");
+						EStructuralFeature controlsSF = argumentEObject.eClass().getEStructuralFeature("controls"); //$NON-NLS-1$
 						if(controlsSF!=null){ // there should be a controls SF
 							if(!argumentEObject.eIsSet(controlsSF)){
 								// no controls set - now check if method is COMPLETELY empty
@@ -174,26 +174,26 @@ public class WorkbenchPartRootContainerObjectActionDelegate extends ActionDelega
 						int offset = sr.getOffset() + codeMethodRef.getOffset();
 						
 						// Composite initialization statement
-						String childName = "top";
+						String childName = "top"; //$NON-NLS-1$
 						EditDomain domain = methodRef.getTypeRef().getBeanModel().getDomain();
 						IInstanceVariableCreationRule cr = (IInstanceVariableCreationRule) domain.getRuleRegistry().getRule(IInstanceVariableCreationRule.RULE_ID);
 						if(cr!=null){
 							childName = cr.getValidInstanceVariableName(argumentBP.getEObject(), childName, CodeGenUtil.getMainType(fModel.getCompilationUnit()), fModel);
 						}
 						
-						String argumentName = "parent";
+						String argumentName = "parent"; //$NON-NLS-1$
 						if(methodDeclaration!=null){
 							List params = methodDeclaration.parameters();
 							SingleVariableDeclaration svd = (SingleVariableDeclaration) params.get(0);
 							argumentName = svd.getName().getFullyQualifiedName();
 						}
-						fModel.getCompilationUnit().getBuffer().replace(offset,0, filler+childName+" = new Composite("+argumentName+", SWT.NONE);"+fModel.getLineSeperator());
+						fModel.getCompilationUnit().getBuffer().replace(offset,0, filler+childName+" = new Composite("+argumentName+", SWT.NONE);"+fModel.getLineSeperator()); //$NON-NLS-1$ //$NON-NLS-2$
 						
 						// Field for the composite
-						CodeGenUtil.getMainType(fModel.getCompilationUnit()).createField("private Composite "+childName+" = null;", null, true, null);
+						CodeGenUtil.getMainType(fModel.getCompilationUnit()).createField("private Composite "+childName+" = null;", null, true, null); //$NON-NLS-1$ //$NON-NLS-2$
 						
 						// Import for the SWT
-						CodeExpressionRef.handleImportStatements(fModel.getCompilationUnit(), fModel, Collections.singletonList("org.eclipse.swt.SWT"));
+						CodeExpressionRef.handleImportStatements(fModel.getCompilationUnit(), fModel, Collections.singletonList("org.eclipse.swt.SWT")); //$NON-NLS-1$
 					} catch (JavaModelException e) {
 						JavaVEPlugin.log(e, Level.WARNING);
 					}finally{

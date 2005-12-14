@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: BorderLayoutPolicyHelper.java,v $
- *  $Revision: 1.12 $  $Date: 2005-11-15 18:53:31 $ 
+ *  $Revision: 1.13 $  $Date: 2005-12-14 21:37:04 $ 
  */
 
 import java.util.*;
@@ -81,13 +81,13 @@ public class BorderLayoutPolicyHelper extends LayoutPolicyHelper {
 		DISPLAY_TAGS.add(JFCMessages.BorderLayout_AFTER_LINE_ENDS); 
 		
 		CODEGEN_ALLOCATIONS = new ParseTreeAllocation[7];
-		CODEGEN_ALLOCATIONS[0] = createBorderAllocation("java.awt.BorderLayout", "NORTH"); //$NON-NLS-1$
-		CODEGEN_ALLOCATIONS[1] = createBorderAllocation("java.awt.BorderLayout", "EAST"); //$NON-NLS-1$
-		CODEGEN_ALLOCATIONS[2] = createBorderAllocation("java.awt.BorderLayout", "WEST"); //$NON-NLS-1$
-		CODEGEN_ALLOCATIONS[3] = createBorderAllocation("java.awt.BorderLayout", "CENTER"); //$NON-NLS-1$
-		CODEGEN_ALLOCATIONS[4] = createBorderAllocation("java.awt.BorderLayout", "SOUTH"); //$NON-NLS-1$
-		CODEGEN_ALLOCATIONS[5] = createBorderAllocation("java.awt.BorderLayout", "BEFORE_LINE_BEGINS"); //$NON-NLS-1$
-		CODEGEN_ALLOCATIONS[6] = createBorderAllocation("java.awt.BorderLayout", "AFTER_LINE_ENDS"); //$NON-NLS-1$ 
+		CODEGEN_ALLOCATIONS[0] = createBorderAllocation("java.awt.BorderLayout", "NORTH"); //$NON-NLS-1$ //$NON-NLS-2$
+		CODEGEN_ALLOCATIONS[1] = createBorderAllocation("java.awt.BorderLayout", "EAST"); //$NON-NLS-1$ //$NON-NLS-2$
+		CODEGEN_ALLOCATIONS[2] = createBorderAllocation("java.awt.BorderLayout", "WEST"); //$NON-NLS-1$ //$NON-NLS-2$
+		CODEGEN_ALLOCATIONS[3] = createBorderAllocation("java.awt.BorderLayout", "CENTER"); //$NON-NLS-1$ //$NON-NLS-2$
+		CODEGEN_ALLOCATIONS[4] = createBorderAllocation("java.awt.BorderLayout", "SOUTH"); //$NON-NLS-1$ //$NON-NLS-2$
+		CODEGEN_ALLOCATIONS[5] = createBorderAllocation("java.awt.BorderLayout", "BEFORE_LINE_BEGINS"); //$NON-NLS-1$ //$NON-NLS-2$
+		CODEGEN_ALLOCATIONS[6] = createBorderAllocation("java.awt.BorderLayout", "AFTER_LINE_ENDS"); //$NON-NLS-1$ //$NON-NLS-2$ 
 	}
 	
 /**

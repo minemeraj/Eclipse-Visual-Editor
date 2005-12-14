@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.16 $  $Date: 2005-12-09 22:44:21 $ 
+ *  $Revision: 1.17 $  $Date: 2005-12-14 21:37:04 $ 
  */
 
 import java.util.Collections;
@@ -122,15 +122,15 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	
 	static {
 		ANCHOR_ALLOCATIONS = new ParseTreeAllocation[9];
-		ANCHOR_ALLOCATIONS[ANCHOR_NORTHWEST] = createFieldAllocation("java.awt.GridBagConstraints", "NORTHWEST");	//$NON-NLS-1$
-		ANCHOR_ALLOCATIONS[ANCHOR_NORTH] = createFieldAllocation("java.awt.GridBagConstraints", "NORTH");	//$NON-NLS-1$
-		ANCHOR_ALLOCATIONS[ANCHOR_NORTHEAST] = createFieldAllocation("java.awt.GridBagConstraints", "NORTHEAST");	//$NON-NLS-1$
-		ANCHOR_ALLOCATIONS[ANCHOR_WEST] = createFieldAllocation("java.awt.GridBagConstraints", "WEST");	//$NON-NLS-1$
-		ANCHOR_ALLOCATIONS[ANCHOR_CENTER] = createFieldAllocation("java.awt.GridBagConstraints", "CENTER");	//$NON-NLS-1$
-		ANCHOR_ALLOCATIONS[ANCHOR_EAST] = createFieldAllocation("java.awt.GridBagConstraints", "EAST");	//$NON-NLS-1$
-		ANCHOR_ALLOCATIONS[ANCHOR_SOUTHWEST] = createFieldAllocation("java.awt.GridBagConstraints", "SOUTHWEST");	//$NON-NLS-1$
-		ANCHOR_ALLOCATIONS[ANCHOR_SOUTH] = createFieldAllocation("java.awt.GridBagConstraints", "SOUTH");	//$NON-NLS-1$
-		ANCHOR_ALLOCATIONS[ANCHOR_SOUTHEAST] = createFieldAllocation("java.awt.GridBagConstraints", "SOUTHEAST");	//$NON-NLS-1$
+		ANCHOR_ALLOCATIONS[ANCHOR_NORTHWEST] = createFieldAllocation("java.awt.GridBagConstraints", "NORTHWEST");	//$NON-NLS-1$ //$NON-NLS-2$
+		ANCHOR_ALLOCATIONS[ANCHOR_NORTH] = createFieldAllocation("java.awt.GridBagConstraints", "NORTH");	//$NON-NLS-1$ //$NON-NLS-2$
+		ANCHOR_ALLOCATIONS[ANCHOR_NORTHEAST] = createFieldAllocation("java.awt.GridBagConstraints", "NORTHEAST");	//$NON-NLS-1$ //$NON-NLS-2$
+		ANCHOR_ALLOCATIONS[ANCHOR_WEST] = createFieldAllocation("java.awt.GridBagConstraints", "WEST");	//$NON-NLS-1$ //$NON-NLS-2$
+		ANCHOR_ALLOCATIONS[ANCHOR_CENTER] = createFieldAllocation("java.awt.GridBagConstraints", "CENTER");	//$NON-NLS-1$ //$NON-NLS-2$
+		ANCHOR_ALLOCATIONS[ANCHOR_EAST] = createFieldAllocation("java.awt.GridBagConstraints", "EAST");	//$NON-NLS-1$ //$NON-NLS-2$
+		ANCHOR_ALLOCATIONS[ANCHOR_SOUTHWEST] = createFieldAllocation("java.awt.GridBagConstraints", "SOUTHWEST");	//$NON-NLS-1$ //$NON-NLS-2$
+		ANCHOR_ALLOCATIONS[ANCHOR_SOUTH] = createFieldAllocation("java.awt.GridBagConstraints", "SOUTH");	//$NON-NLS-1$ //$NON-NLS-2$
+		ANCHOR_ALLOCATIONS[ANCHOR_SOUTHEAST] = createFieldAllocation("java.awt.GridBagConstraints", "SOUTHEAST");	//$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public static JavaAllocation createAnchorAllocation(int index) {
@@ -172,10 +172,10 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	
 	static {
 		FILL_ALLOCATIONS = new ParseTreeAllocation[4];
-		FILL_ALLOCATIONS[FILL_HORIZONTAL] = createFieldAllocation("java.awt.GridBagConstraints", "HORIZONTAL");	//$NON-NLS-1$
-		FILL_ALLOCATIONS[FILL_VERTICAL] = createFieldAllocation("java.awt.GridBagConstraints", "VERTICAL");	//$NON-NLS-1$
-		FILL_ALLOCATIONS[FILL_NONE] = createFieldAllocation("java.awt.GridBagConstraints", "NONE");	//$NON-NLS-1$
-		FILL_ALLOCATIONS[FILL_BOTH] = createFieldAllocation("java.awt.GridBagConstraints", "BOTH");	//$NON-NLS-1$
+		FILL_ALLOCATIONS[FILL_HORIZONTAL] = createFieldAllocation("java.awt.GridBagConstraints", "HORIZONTAL");	//$NON-NLS-1$ //$NON-NLS-2$
+		FILL_ALLOCATIONS[FILL_VERTICAL] = createFieldAllocation("java.awt.GridBagConstraints", "VERTICAL");	//$NON-NLS-1$ //$NON-NLS-2$
+		FILL_ALLOCATIONS[FILL_NONE] = createFieldAllocation("java.awt.GridBagConstraints", "NONE");	//$NON-NLS-1$ //$NON-NLS-2$
+		FILL_ALLOCATIONS[FILL_BOTH] = createFieldAllocation("java.awt.GridBagConstraints", "BOTH");	//$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	public static JavaAllocation createFillAllocation(int index) {

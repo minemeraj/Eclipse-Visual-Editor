@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartProxyAdapter.java,v $
- *  $Revision: 1.3 $  $Date: 2005-11-11 23:37:38 $ 
+ *  $Revision: 1.4 $  $Date: 2005-12-14 21:39:34 $ 
  */
 package org.eclipse.ve.internal.rcp;
 
@@ -104,10 +104,10 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 		notInstantiatedClasses.add(thisClass);
 		JavaClass superclass = thisClass.getSupertype();
 		while (superclass != null && superclass.isAbstract()) {
-			if ("org.eclipse.ui.part.ViewPart".equals(superclass.getQualifiedName())) {
-				return getBeanTypeProxy("org.eclipse.ve.internal.jface.targetvm.ConcreteViewPart", expression);
-			} else if ("org.eclipse.ui.part.EditorPart".equals(superclass.getQualifiedName())) {
-				return getBeanTypeProxy("org.eclipse.ve.internal.jface.targetvm.ConcreteEditorPart", expression);
+			if ("org.eclipse.ui.part.ViewPart".equals(superclass.getQualifiedName())) { //$NON-NLS-1$
+				return getBeanTypeProxy("org.eclipse.ve.internal.jface.targetvm.ConcreteViewPart", expression); //$NON-NLS-1$
+			} else if ("org.eclipse.ui.part.EditorPart".equals(superclass.getQualifiedName())) { //$NON-NLS-1$
+				return getBeanTypeProxy("org.eclipse.ve.internal.jface.targetvm.ConcreteEditorPart", expression); //$NON-NLS-1$
 			}
 			notInstantiatedClasses.add(superclass);
 			superclass = superclass.getSupertype();
@@ -115,7 +115,7 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 		if (superclass != null)
 			return getBeanTypeProxy(superclass.getQualifiedNameForReflection(), expression);
 		else
-			return getBeanTypeProxy("java.lang.Object", expression);
+			return getBeanTypeProxy("java.lang.Object", expression); //$NON-NLS-1$
 	}
 	
 	protected FreeFormComponentsHost ffHost;
@@ -170,8 +170,8 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 			 */
 			ExpressionProxy methodResult = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 			expression.createMethodInvocation(ForExpression.ASSIGNMENT_RIGHT, 
-					workbenchPartHostTypeProxy.getMethodProxy(expression, "createWorkbenchPart", 
-					new String[] {"org.eclipse.swt.widgets.Composite", "org.eclipse.ui.IWorkbenchPart", "java.lang.String", "java.lang.String", "boolean", "int"}),
+					workbenchPartHostTypeProxy.getMethodProxy(expression, "createWorkbenchPart",  //$NON-NLS-1$
+					new String[] {"org.eclipse.swt.widgets.Composite", "org.eclipse.ui.IWorkbenchPart", "java.lang.String", "java.lang.String", "boolean", "int"}), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 					false,
 					6);
 			expression.createProxyExpression(ForExpression.METHOD_ARGUMENT, ffParent);
@@ -232,7 +232,7 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 			 * Call {@link org.eclipse.ve.internal.jface.targetvm.WorkbenchPartHost#setWorkbenchPartWorkingSize(Composite, int, int)}
 			 */
 			expression.createMethodInvocation(ForExpression.ROOTEXPRESSION,
-					workbenchPartHostTypeProxy.getMethodProxy(expression, "setWorkbenchPartWorkingSize", new String[] {"org.eclipse.swt.widgets.Composite", "int", "int"}),
+					workbenchPartHostTypeProxy.getMethodProxy(expression, "setWorkbenchPartWorkingSize", new String[] {"org.eclipse.swt.widgets.Composite", "int", "int"}), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					false,
 					3
 					);
@@ -260,8 +260,8 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 				DisplayManager.asyncExec(getBeanProxyDomain().getProxyFactoryRegistry(), new DisplayManager.DisplayRunnable() {
 
 					public Object run(IBeanProxy displayProxy) throws ThrowableProxy, RunnableException {
-						IMethodProxy setWorkSizeMethod = getBeanTypeProxy(TARGETVM_WORKBENCHPARTHOST).getMethodProxy("setWorkbenchPartWorkingSize",
-								new String[] { "org.eclipse.swt.widgets.Composite", "int", "int"});
+						IMethodProxy setWorkSizeMethod = getBeanTypeProxy(TARGETVM_WORKBENCHPARTHOST).getMethodProxy("setWorkbenchPartWorkingSize", //$NON-NLS-1$
+								new String[] { "org.eclipse.swt.widgets.Composite", "int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						IStandardBeanProxyFactory factory = workbenchParent.getProxyFactoryRegistry().getBeanProxyFactory();
 						setWorkSizeMethod.invoke(null, new IBeanProxy[] { (IBeanProxy) workbenchParent,
 								factory.createBeanProxyWith(setMinWidth), factory.createBeanProxyWith(setMinHeight)});

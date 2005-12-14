@@ -39,4 +39,5 @@ public final class JFaceMessages extends NLS {
 	public static String TreeViewerEditPartContributorFactory_TooltipLabel_SelectViewer_Msg;
 	public static String TreeViewerEditPartContributorFactory_TooltipLabel_ConvertToViewer_Msg;
 	public static String TreeViewerEditPartContributorFactory_Button_AttachViewer_Text;
+	public static String ViewerContainmentHandler_StopRequest_InvalidParentForViewer;
 }

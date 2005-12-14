@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.16 $  $Date: 2005-12-05 17:57:07 $ 
+ *  $Revision: 1.17 $  $Date: 2005-12-14 21:27:11 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -407,7 +407,7 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 	
 	// The contributions have changed... remove the old and re-add the contributions to pickup any changes
 	private void refreshContributions() {
-		CDEUtilities.displayExec(this, "refreshContributions", new EditPartRunnable(this) {
+		CDEUtilities.displayExec(this, "refreshContributions", new EditPartRunnable(this) { //$NON-NLS-1$
 		
 			protected void doRun() {
 				fActionBarController.hideActionBar();

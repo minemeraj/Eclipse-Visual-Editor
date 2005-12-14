@@ -12,7 +12,7 @@
  *  Created May 23, 2005 by Gili Mendel
  * 
  *  $RCSfile: StringLabelProvider.java,v $
- *  $Revision: 1.3 $  $Date: 2005-12-08 17:15:54 $ 
+ *  $Revision: 1.4 $  $Date: 2005-12-14 21:32:35 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -30,7 +30,7 @@ public class StringLabelProvider extends DefaultJavaBeanLabelProvider {
 		if (element instanceof IJavaInstance) {
 		   IBeanProxy h = BeanProxyUtilities.getBeanProxy((IJavaInstance)element, EMFEditDomainHelper.getResourceSet(domain));
 		   String post = h.toBeanString();
-		   str = MessageFormat.format("{0} - \"{1}\"", new Object[] { str, post });		   
+		   str = MessageFormat.format(JavaMessages.StringLabelProvider_BeanName_Extension, new Object[] { str, post });		   
 		}		
 		return str;
 	}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultJFCLayoutPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-29 19:49:00 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:37:04 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -58,7 +58,7 @@ public class DefaultJFCLayoutPolicy {
 			}
 
 			public void execute() {
-				EStructuralFeature layout_SF = model.eClass().getEStructuralFeature("layout");
+				EStructuralFeature layout_SF = model.eClass().getEStructuralFeature("layout"); //$NON-NLS-1$
 				if (!model.eIsSet(layout_SF)) {
 					// Get the type of layout to set
 					String defaultLayoutTypeName = defaultLayout == null ? JFCVisualPlugin.getPlugin().getPluginPreferences()

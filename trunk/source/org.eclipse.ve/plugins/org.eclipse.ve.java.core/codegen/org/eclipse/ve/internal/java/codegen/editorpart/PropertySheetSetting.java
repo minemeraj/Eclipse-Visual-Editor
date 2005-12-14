@@ -12,7 +12,7 @@
  *  Created May 27, 2005 by Gili Mendel
  * 
  *  $RCSfile: PropertySheetSetting.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:27:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -31,7 +31,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class PropertySheetSetting implements EditorSettings.ISetting {
 	
-	public final static String id = "Settings.PropertySheet";
+	public final static String id = "Settings.PropertySheet"; //$NON-NLS-1$
 	
 	
 	JavaVisualEditorPart editor;

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CDECreationTool.java,v $ $Revision: 1.11 $ $Date: 2005-10-03 19:21:04 $
+ * $RCSfile: CDECreationTool.java,v $ $Revision: 1.12 $ $Date: 2005-12-14 21:27:11 $
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -38,7 +38,7 @@ import org.eclipse.ve.internal.cde.emf.IDomainedFactory;
  */
 public class CDECreationTool extends CreationTool {
 
-	public static String CREATION_POLICY_KEY = "org.eclipse.ve.internal.cde.core.creationtool.policy";
+	public static String CREATION_POLICY_KEY = "org.eclipse.ve.internal.cde.core.creationtool.policy"; //$NON-NLS-1$
 
 	protected boolean fHasLookedupCreationPolicy = false;
 

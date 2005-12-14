@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LabelContainmentHandler.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:48 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:37:04 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -43,10 +43,10 @@ public class LabelContainmentHandler extends AbstractComponentModelContainmentHa
 			IJavaObjectInstance jo = (IJavaObjectInstance) child;
 			// Only if exactly Label or JLabel. Subclasses would assume to have their text already set.
 			String classname = jo.getJavaType().getQualifiedNameForReflection();
-			if (classname.equals("java.awt.Label"))
-				preCmds.append(new LabelCreationCommand(jo, "text", JavaMessages.LabelPolicy_text_Label, domain));
-			else if (classname.equals("javax.swing.JLabel"))
-				preCmds.append(new LabelCreationCommand(jo, "text", JavaMessages.LabelPolicy_text_JLabel, domain));
+			if (classname.equals("java.awt.Label")) //$NON-NLS-1$
+				preCmds.append(new LabelCreationCommand(jo, "text", JavaMessages.LabelPolicy_text_Label, domain)); //$NON-NLS-1$
+			else if (classname.equals("javax.swing.JLabel")) //$NON-NLS-1$
+				preCmds.append(new LabelCreationCommand(jo, "text", JavaMessages.LabelPolicy_text_JLabel, domain)); //$NON-NLS-1$
 		}
 		return child;
 	}

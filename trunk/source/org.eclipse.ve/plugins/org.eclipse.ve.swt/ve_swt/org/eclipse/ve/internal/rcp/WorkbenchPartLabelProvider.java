@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartLabelProvider.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 17:33:41 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-14 21:39:34 $ 
  */
 package org.eclipse.ve.internal.rcp;
 
@@ -52,6 +52,6 @@ public class WorkbenchPartLabelProvider extends DefaultLabelProvider{
 	public String getText(Object element) {
 		String viewClassName = ((IJavaInstance)element).getJavaType().getQualifiedName();
 		String viewNameInPDE = PDEUtilities.getUtilities(domain).getViewName(viewClassName);
-		return viewNameInPDE == null ? super.getText(element): super.getText(element) + "-\"" + viewNameInPDE + "\"";
+		return viewNameInPDE == null ? super.getText(element): super.getText(element) + "-\"" + viewNameInPDE + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

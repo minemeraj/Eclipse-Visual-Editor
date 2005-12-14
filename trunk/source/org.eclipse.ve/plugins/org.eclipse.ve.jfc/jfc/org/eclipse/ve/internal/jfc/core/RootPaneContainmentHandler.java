@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: RootPaneContainmentHandler.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:48 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:37:04 $ 
  */
 
 import org.eclipse.core.runtime.*;
@@ -60,7 +60,7 @@ public class RootPaneContainmentHandler extends AbstractComponentModelContainmen
 		if (ffOnly) {
 			// Verify if on Freeform
 			if (!(parent instanceof DiagramData))
-				throw new StopRequestException("This object can only be on the free form surface.");			
+				throw new StopRequestException(JFCMessages.RootPaneContainmentHandler_StopRequest_CanBeOnlyOnFF);			
 		}
 		if (creation && child instanceof IJavaObjectInstance) {
 			IJavaObjectInstance jo = (IJavaObjectInstance) child;

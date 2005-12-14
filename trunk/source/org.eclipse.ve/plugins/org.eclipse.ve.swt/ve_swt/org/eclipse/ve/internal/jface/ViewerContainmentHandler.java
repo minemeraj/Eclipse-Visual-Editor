@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ViewerContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-11-04 17:30:52 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-14 21:39:00 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -67,16 +67,16 @@ public class ViewerContainmentHandler implements IContainmentHandler, IExecutabl
 					if (controlSF.getEType().isInstance(pjo))
 						return dropOnSpecialClass(pjo, cjo, controlSF, preCmds, domain);
 				} else {
-					controlSF = cjo.getJavaType().getEStructuralFeature("control");
+					controlSF = cjo.getJavaType().getEStructuralFeature("control"); //$NON-NLS-1$
 				}
-				JavaHelpers compositeClass = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Composite", rset);
+				JavaHelpers compositeClass = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Composite", rset); //$NON-NLS-1$
 				if (compositeClass.isInstance(pjo)) {
 					// Dropping tree viewer onto a composite.
 					return dropOnComposite(pjo, cjo, controlSF, preCmds, rset);
 				}
 			}
 		}
-		throw new StopRequestException("Parent not valid for a Viewer");
+		throw new StopRequestException(JFaceMessages.ViewerContainmentHandler_StopRequest_InvalidParentForViewer);
 	}
 
 	/*
