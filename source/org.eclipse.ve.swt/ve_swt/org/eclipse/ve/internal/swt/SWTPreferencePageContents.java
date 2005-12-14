@@ -22,7 +22,7 @@ public class SWTPreferencePageContents extends Composite {
 	private Table table = null;
 	private TableItem currentlyCheckedItem = null;
 	private Label label = null;
-	private static final String TYPE_NAME = "TYPE_NAME";
+	private static final String TYPE_NAME = "TYPE_NAME"; //$NON-NLS-1$
 
 	public SWTPreferencePageContents(Composite parent, int style) {
 		super(parent, style);
@@ -31,7 +31,7 @@ public class SWTPreferencePageContents extends Composite {
 
 	private void initialize() {
 		label = new Label(this, SWT.NONE);
-		label.setText("Default Layout");
+		label.setText(SWTMessages.SWTPreferencePageContents_OverviewLabel_Text);
 		this.setLayout(new GridLayout());
 		createTable();
 		setSize(new Point(300, 200));

@@ -26,4 +26,17 @@ public final class JFaceMessages extends NLS {
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, JFaceMessages.class);
 	}
+
+	public static String ComboViewerEditPartContributorFactory_WithViewerAttached_Title;
+	public static String ComboViewerEditPartContributorFactory_TooltipLabel_SelectViewer_Msg;
+	public static String ComboViewerEditPartContributorFactory_TooltipLabel_ConvertToViewer_Msg;
+	public static String ComboViewerEditPartContributorFactory_Button_CreateViewer_Text;
+	public static String TableViewerEditPartContributorFactory_WithTableViewer_Msg;
+	public static String TableViewerEditPartContributorFactory_TooltipLabel_SelectViewer_Msg;
+	public static String TableViewerEditPartContributorFactory_TooltipLabel_ConvertToViewer_Msg;
+	public static String TableViewerEditPartContributorFactory_Button_AttachViewer_Text;
+	public static String TreeViewerEditPartContributorFactory_WithViewer_Msg;
+	public static String TreeViewerEditPartContributorFactory_TooltipLabel_SelectViewer_Msg;
+	public static String TreeViewerEditPartContributorFactory_TooltipLabel_ConvertToViewer_Msg;
+	public static String TreeViewerEditPartContributorFactory_Button_AttachViewer_Text;
 }

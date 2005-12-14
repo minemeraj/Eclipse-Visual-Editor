@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ComboViewerEditPartContributorFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2005-12-02 21:17:45 $ 
+ *  $Revision: 1.4 $  $Date: 2005-12-14 19:23:39 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -38,7 +38,7 @@ import org.eclipse.ve.internal.swt.SwtPlugin;
 public class ComboViewerEditPartContributorFactory extends ViewerEditPartContributorFactory {
 
 	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(SwtPlugin.getDefault(),
-			"icons/full/clcl16/viewer_overlay.gif").getImageData();
+			"icons/full/clcl16/viewer_overlay.gif").getImageData(); //$NON-NLS-1$
 
 	protected static class ComboViewerTreeEditPartContributor extends ViewerTreeEditPartContributor {
 
@@ -57,11 +57,11 @@ public class ComboViewerEditPartContributorFactory extends ViewerEditPartContrib
 		}
 
 		public String modifyText(String text) {
-			return hasViewer ? MessageFormat.format("{0} (with TableViewer attached)", new Object[] { text}) : text;
+			return hasViewer ? MessageFormat.format(JFaceMessages.ComboViewerEditPartContributorFactory_WithViewerAttached_Title, new Object[] { text}) : text;
 		}
 	}
 
-	private static URI COMBO_FEATURE_URI = URI.createURI("java:/org.eclipse.jface.viewers#ComboViewer/combo");
+	private static URI COMBO_FEATURE_URI = URI.createURI("java:/org.eclipse.jface.viewers#ComboViewer/combo"); //$NON-NLS-1$
 
 	public TreeEditPartContributor getTreeEditPartContributor(TreeEditPart treeEditPart) {
 		return new ComboViewerTreeEditPartContributor(treeEditPart, JavaInstantiation.getReference(EMFEditDomainHelper.getResourceSet(EditDomain
@@ -69,9 +69,9 @@ public class ComboViewerEditPartContributorFactory extends ViewerEditPartContrib
 	}
 
 	protected static Image COMBO_VIEWER_OVERLAY_IMAGE = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(),
-			"icons/full/clcl16/comboviewer_overlay.gif");
+			"icons/full/clcl16/comboviewer_overlay.gif"); //$NON-NLS-1$
 
-	protected static Image COMBO_VIEWER_IMAGE = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/comboviewer_obj.gif");
+	protected static Image COMBO_VIEWER_IMAGE = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/comboviewer_obj.gif"); //$NON-NLS-1$
 
 	protected static class ComboViewerGraphicalEditPartContributor extends ViewerGraphicalEditPartContributor {
 
@@ -87,9 +87,9 @@ public class ComboViewerEditPartContributorFactory extends ViewerEditPartContrib
 
 		public ToolTipProcessor getHoverOverLay() {
 			if (viewer != null)
-				return new ToolTipProcessor.ToolTipLabel("Select ComboViewer in action bar to show Viewer properties");
+				return new ToolTipProcessor.ToolTipLabel(JFaceMessages.ComboViewerEditPartContributorFactory_TooltipLabel_SelectViewer_Msg);
 			else
-				return new ToolTipProcessor.ToolTipLabel("Press action in action bar to convert to a ComboViewer");
+				return new ToolTipProcessor.ToolTipLabel(JFaceMessages.ComboViewerEditPartContributorFactory_TooltipLabel_ConvertToViewer_Msg);
 		}
 
 		/*
@@ -116,7 +116,7 @@ public class ComboViewerEditPartContributorFactory extends ViewerEditPartContrib
 		 * @see org.eclipse.ve.internal.jface.ViewerEditPartContributorFactory.ViewerGraphicalEditPartContributor#getActionTextForCreateViewerButton()
 		 */
 		protected String getActionTextForCreateViewerButton() {
-			return "Press here to attach a ComboViewer";
+			return JFaceMessages.ComboViewerEditPartContributorFactory_Button_CreateViewer_Text;
 		}
 	}
 

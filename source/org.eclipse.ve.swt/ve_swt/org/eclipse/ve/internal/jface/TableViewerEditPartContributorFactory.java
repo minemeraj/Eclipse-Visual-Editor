@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableViewerEditPartContributorFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2005-12-02 21:17:45 $ 
+ *  $Revision: 1.5 $  $Date: 2005-12-14 19:23:39 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -38,7 +38,7 @@ import org.eclipse.ve.internal.swt.SwtPlugin;
 public class TableViewerEditPartContributorFactory extends ViewerEditPartContributorFactory {
 
 	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(SwtPlugin.getDefault(),
-			"icons/full/clcl16/viewer_overlay.gif").getImageData();
+			"icons/full/clcl16/viewer_overlay.gif").getImageData(); //$NON-NLS-1$
 
 	protected static class TableViewerTreeEditPartContributor extends ViewerTreeEditPartContributor {
 
@@ -57,11 +57,11 @@ public class TableViewerEditPartContributorFactory extends ViewerEditPartContrib
 		}
 
 		public String modifyText(String text) {
-			return hasViewer ? MessageFormat.format("{0} (with TableViewer attached)", new Object[] { text}) : text;
+			return hasViewer ? MessageFormat.format(JFaceMessages.TableViewerEditPartContributorFactory_WithTableViewer_Msg, new Object[] { text}) : text;
 		}
 	}
 
-	private static URI TABLE_FEATURE_URI = URI.createURI("java:/org.eclipse.jface.viewers#TableViewer/table");
+	private static URI TABLE_FEATURE_URI = URI.createURI("java:/org.eclipse.jface.viewers#TableViewer/table"); //$NON-NLS-1$
 
 	public TreeEditPartContributor getTreeEditPartContributor(TreeEditPart treeEditPart) {
 		return new TableViewerTreeEditPartContributor(treeEditPart, JavaInstantiation.getReference(EMFEditDomainHelper.getResourceSet(EditDomain
@@ -69,9 +69,9 @@ public class TableViewerEditPartContributorFactory extends ViewerEditPartContrib
 	}
 
 	protected static Image TABLE_VIEWER_OVERLAY_IMAGE = CDEPlugin
-			.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/tableviewer_overlay.gif");
+			.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/tableviewer_overlay.gif"); //$NON-NLS-1$
 
-	protected static Image TABLE_VIEWER_IMAGE = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/tableviewer_obj.gif");
+	protected static Image TABLE_VIEWER_IMAGE = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/tableviewer_obj.gif"); //$NON-NLS-1$
 
 	protected static class TableViewerGraphicalEditPartContributor extends ViewerGraphicalEditPartContributor {
 
@@ -87,9 +87,9 @@ public class TableViewerEditPartContributorFactory extends ViewerEditPartContrib
 
 		public ToolTipProcessor getHoverOverLay() {
 			if (viewer != null)
-				return new ToolTipProcessor.ToolTipLabel("Select TableViewer in action bar to show Viewer properties");
+				return new ToolTipProcessor.ToolTipLabel(JFaceMessages.TableViewerEditPartContributorFactory_TooltipLabel_SelectViewer_Msg);
 			else
-				return new ToolTipProcessor.ToolTipLabel("Press action in action bar to convert to a TableViewer");
+				return new ToolTipProcessor.ToolTipLabel(JFaceMessages.TableViewerEditPartContributorFactory_TooltipLabel_ConvertToViewer_Msg);
 		}
 
 		/*
@@ -116,7 +116,7 @@ public class TableViewerEditPartContributorFactory extends ViewerEditPartContrib
 		 * @see org.eclipse.ve.internal.jface.ViewerEditPartContributorFactory.ViewerGraphicalEditPartContributor#getActionTextForCreateViewerButton()
 		 */
 		protected String getActionTextForCreateViewerButton() {
-			return "Press here to attach a TableViewer";
+			return JFaceMessages.TableViewerEditPartContributorFactory_Button_AttachViewer_Text;
 		}
 	}
 

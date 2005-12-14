@@ -33,7 +33,7 @@ import org.eclipse.ve.internal.swt.SwtPlugin;
  */
 public class TreeViewerEditPartContributorFactory extends ViewerEditPartContributorFactory {
 
-	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/viewer_overlay.gif")
+	private static ImageData OVERLAY_IMAGEDATA = CDEPlugin.getImageDescriptorFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/viewer_overlay.gif") //$NON-NLS-1$
 			.getImageData();
 
 	protected static class TreeViewerTreeEditPartContributor extends ViewerTreeEditPartContributor {
@@ -53,18 +53,18 @@ public class TreeViewerEditPartContributorFactory extends ViewerEditPartContribu
 		}
 
 		public String modifyText(String text) {
-			return hasViewer ? MessageFormat.format("{0} (with TreeViewer attached)", new Object[] {text}) : text;
+			return hasViewer ? MessageFormat.format(JFaceMessages.TreeViewerEditPartContributorFactory_WithViewer_Msg, new Object[] {text}) : text;
 		}
 	}
 	
-	private static URI TREE_FEATURE_URI = URI.createURI("java:/org.eclipse.jface.viewers#TreeViewer/tree");
+	private static URI TREE_FEATURE_URI = URI.createURI("java:/org.eclipse.jface.viewers#TreeViewer/tree"); //$NON-NLS-1$
 
 	public TreeEditPartContributor getTreeEditPartContributor(TreeEditPart treeEditPart) {
 		return new TreeViewerTreeEditPartContributor(treeEditPart, JavaInstantiation.getReference(EMFEditDomainHelper.getResourceSet(EditDomain.getEditDomain(treeEditPart)), TREE_FEATURE_URI));
 	}
 
-	protected static Image TREE_VIEWER_OVERLAY_IMAGE = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer2_overlay.gif");
-	protected static Image TREE_VIEWER_IMAGE = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer_obj.gif");
+	protected static Image TREE_VIEWER_OVERLAY_IMAGE = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer2_overlay.gif"); //$NON-NLS-1$
+	protected static Image TREE_VIEWER_IMAGE = CDEPlugin.getImageFromPlugin(SwtPlugin.getDefault(), "icons/full/clcl16/treeviewer_obj.gif"); //$NON-NLS-1$
 
 	protected static class TreeViewerGraphicalEditPartContributor extends ViewerGraphicalEditPartContributor {
 		/**
@@ -79,9 +79,9 @@ public class TreeViewerEditPartContributorFactory extends ViewerEditPartContribu
 
 		public ToolTipProcessor getHoverOverLay() {
 			if (viewer != null)
-				return new ToolTipProcessor.ToolTipLabel("Select TreeViewer in action bar to show Viewer properties");
+				return new ToolTipProcessor.ToolTipLabel(JFaceMessages.TreeViewerEditPartContributorFactory_TooltipLabel_SelectViewer_Msg);
 			else
-				return new ToolTipProcessor.ToolTipLabel("Press action in action bar to convert to a TreeViewer");
+				return new ToolTipProcessor.ToolTipLabel(JFaceMessages.TreeViewerEditPartContributorFactory_TooltipLabel_ConvertToViewer_Msg);
 		}
 
 		/* (non-Javadoc)
@@ -102,7 +102,7 @@ public class TreeViewerEditPartContributorFactory extends ViewerEditPartContribu
 		 * @see org.eclipse.ve.internal.jface.ViewerEditPartContributorFactory.ViewerGraphicalEditPartContributor#getActionTextForCreateViewerButton()
 		 */
 		protected String getActionTextForCreateViewerButton() {
-			return "Press here to attach a TreeViewer";
+			return JFaceMessages.TreeViewerEditPartContributorFactory_Button_AttachViewer_Text;
 		}
 	}
 
