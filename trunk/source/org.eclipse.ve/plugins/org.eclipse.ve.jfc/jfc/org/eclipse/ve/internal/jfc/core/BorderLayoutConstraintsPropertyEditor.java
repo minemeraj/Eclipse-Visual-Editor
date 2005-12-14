@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.jfc.core;
 
-/*
- * $RCSfile: BorderLayoutConstraintsPropertyEditor.java,v $ $Revision: 1.9 $ $Date: 2005-11-15 18:53:31 $
- */
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -230,7 +227,7 @@ public class BorderLayoutConstraintsPropertyEditor extends ObjectComboBoxCellEdi
 		} else if (anObject != null)
 			ansString = anObject.toString();
 
-		return ansString == null ? null : MessageFormat.format("Invalid border layout constraint: {0}", new Object[] { ansString});
+		return ansString == null ? null : MessageFormat.format(JFCMessages.BorderLayoutConstraintsPropertyEditor_InvalidConstraint_Msg, new Object[] { ansString});
 	}
 
 	public void setData(Object data) {

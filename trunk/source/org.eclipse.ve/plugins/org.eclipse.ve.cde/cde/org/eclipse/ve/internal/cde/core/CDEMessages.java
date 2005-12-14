@@ -113,4 +113,7 @@ public final class CDEMessages extends NLS {
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, CDEMessages.class);
 	}
+
+	public static String CustomizeLayoutWindowAction_Action_NoLayouts;
+	public static String ActionBarActionEditPart_Action_Performed_Msg;
 }

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindowAction.java,v $
- *  $Revision: 1.21 $  $Date: 2005-12-09 22:44:18 $ 
+ *  $Revision: 1.22 $  $Date: 2005-12-14 19:07:15 $ 
  */
 
 import java.util.ArrayList;
@@ -247,7 +247,7 @@ public class CustomizeLayoutWindowAction extends Action implements IMenuCreator 
 					layoutList.fillMenuManager(toolbarMenuManager);
 				} else {
 					// Add a no layouts available label.
-					Action noAvailable = new Action("Layouts not applicable") {
+					Action noAvailable = new Action(CDEMessages.CustomizeLayoutWindowAction_Action_NoLayouts) {
 					};
 					toolbarMenuManager.add(noAvailable);
 				}

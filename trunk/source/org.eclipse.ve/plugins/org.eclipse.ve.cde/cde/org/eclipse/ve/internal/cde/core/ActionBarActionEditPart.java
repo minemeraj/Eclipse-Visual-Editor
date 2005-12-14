@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarActionEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-24 15:21:09 $ 
+ *  $Revision: 1.5 $  $Date: 2005-12-14 19:07:15 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -27,7 +27,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public abstract class ActionBarActionEditPart extends AbstractGraphicalEditPart {
 
-	static final Image DEFAULT_IMAGE = CDEPlugin.getImageFromPlugin(CDEPlugin.getPlugin(), "images/action_plus.gif");
+	static final Image DEFAULT_IMAGE = CDEPlugin.getImageFromPlugin(CDEPlugin.getPlugin(), "images/action_plus.gif"); //$NON-NLS-1$
 	protected String fToolTip;
 	protected Image fIcon = DEFAULT_IMAGE;
 	protected List fActionListeners = null;
@@ -84,7 +84,7 @@ public abstract class ActionBarActionEditPart extends AbstractGraphicalEditPart 
 	private void handleActionPerformed(Object source) {
 		Iterator iter = fActionListeners.iterator();
 		while (iter.hasNext()) {
-			((ActionListener) iter.next()).actionPerformed(new ActionEvent(source, "Action performed on action edit part"));
+			((ActionListener) iter.next()).actionPerformed(new ActionEvent(source, CDEMessages.ActionBarActionEditPart_Action_Performed_Msg));
 		}
 		
 	}

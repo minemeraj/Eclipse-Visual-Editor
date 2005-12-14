@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: XMLViewPart.java,v $
- *  $Revision: 1.5 $  $Date: 2005-11-15 23:11:23 $ 
+ *  $Revision: 1.6 $  $Date: 2005-12-14 19:08:13 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -50,7 +50,7 @@ public class XMLViewPart extends ContentOutline {
 
 		protected EditDomain domain;
 
-		protected Job refreshJob = new Job("Refresh Visual Editor XMLView") {
+		protected Job refreshJob = new Job(CodegenEditorPartMessages.XMLViewPart_RefreshJob_Title) {
 		
 			{
 				this.setSystem(true);
@@ -142,7 +142,7 @@ public class XMLViewPart extends ContentOutline {
 
 	protected IPage createDefaultPage(PageBook book) {
 		MessagePage msgPage = (MessagePage) super.createDefaultPage(book);
-		msgPage.setMessage("For use with the Visual Editor");
+		msgPage.setMessage(CodegenEditorPartMessages.XMLViewPart_DefaultPage_Msg);
 		return msgPage;
 	}
 

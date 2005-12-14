@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FrameSelectorDialogArea.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-14 19:09:14 $ 
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -55,7 +55,7 @@ class FrameSelectorDialogArea extends Composite {
 		gridData.grabExcessVerticalSpace = true;
 		gridData.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		label = new Label(this, SWT.NONE);
-		label.setText("Select the parent for the new window:");
+		label.setText(JFCMessages.FrameSelectorDialogArea_OverviewLabel_Msg);
 		list = new List(this, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		listViewer = new ListViewer(list);
 		listViewer.setContentProvider(new IStructuredContentProvider() {

@@ -20,7 +20,7 @@ public class JFCPreferencePageContents extends Composite {
 
 	private Label label1 = null;
 	private Table table = null;
-	private static final String TYPE_NAME = "TYPE_NAME";
+	private static final String TYPE_NAME = "TYPE_NAME"; //$NON-NLS-1$
 	private TableItem currentlyCheckedItem;
 	
 	public JFCPreferencePageContents(Composite parent, int style) {
@@ -32,7 +32,7 @@ public class JFCPreferencePageContents extends Composite {
 		this.setLayout(new GridLayout());
 		setSize(new org.eclipse.swt.graphics.Point(365,200));
 		label1 = new Label(this, SWT.NONE);
-		label1.setText("Default Layout Manager");
+		label1.setText(JFCMessages.JFCPreferencePageContents_Label_Text);
 		createTree();
 	}
 
@@ -83,7 +83,7 @@ public class JFCPreferencePageContents extends Composite {
 		if(currentlyCheckedItem != null){
 			return (String) currentlyCheckedItem.getData(TYPE_NAME);
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 

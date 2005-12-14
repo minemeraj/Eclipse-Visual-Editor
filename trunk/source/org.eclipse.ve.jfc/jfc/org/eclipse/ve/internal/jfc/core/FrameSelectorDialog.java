@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FrameSelectorDialog.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-14 19:09:14 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -54,9 +54,9 @@ class FrameSelectorDialog extends TitleAreaDialog {
 		dialogArea = new FrameSelectorDialogArea(newParent, SWT.NONE, domain);
 		if (frames != null)
 			dialogArea.setFrames(frames);
-		setTitle("Parent Select");
-		setMessage("Select the parent to use:");
-		final Image titleImage = CDEPlugin.getImageFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/wizban/javabean_wiz.gif"); // internal cleanup - copied from 'org.eclipse.jdt.ui\icons\full\wizban\typerefact_wiz.gif'
+		setTitle(JFCMessages.FrameSelectorDialog_Title);
+		setMessage(JFCMessages.FrameSelectorDialog_Message);
+		final Image titleImage = CDEPlugin.getImageFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/wizban/javabean_wiz.gif"); // internal cleanup - copied from 'org.eclipse.jdt.ui\icons\full\wizban\typerefact_wiz.gif' //$NON-NLS-1$
 		setTitleImage(titleImage);
 		newParent.addDisposeListener(new DisposeListener() {
 		
@@ -80,6 +80,6 @@ class FrameSelectorDialog extends TitleAreaDialog {
 	
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Parent Selection");
+		newShell.setText(JFCMessages.FrameSelectorDialog_Window_Title);
 	}
 }
