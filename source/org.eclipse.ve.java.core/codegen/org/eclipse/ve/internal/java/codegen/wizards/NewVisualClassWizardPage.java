@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.java.codegen.wizards;
  *******************************************************************************/
 /*
  *  $RCSfile: NewVisualClassWizardPage.java,v $
- *  $Revision: 1.28 $  $Date: 2005-12-07 23:35:20 $ 
+ *  $Revision: 1.29 $  $Date: 2005-12-14 16:47:01 $ 
  */
 
 import java.util.HashMap;
@@ -72,8 +72,8 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 	public NewVisualClassWizardPage() {
 		super(true, PAGE_NAME);
 		
-		setTitle("Java Visual Class"); 
-		setDescription("Create a new Java Visual Class."); 
+		setTitle(CodegenWizardsMessages.NewVisualClassWizardPage_title); 
+		setDescription(CodegenWizardsMessages.NewVisualClassWizardPage_description); 
 	}
 	
 	public class TreePrioritySorter extends ViewerSorter {
@@ -278,7 +278,7 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 								// TODO Why is this here? It needs to be verified if needed. The root should of already evaluated no matter whether a pde or not.
 								fSourceFolderStatus = new StatusInfo(
 									IStatus.ERROR,
-									"", 
+									"",  //$NON-NLS-1$
 									JavaVEPlugin.PLUGIN_ID);
 							}
 							else {
@@ -297,7 +297,7 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 								if (!uiIncluded)
 									fSourceFolderStatus = new StatusInfo(
 											IStatus.ERROR,
-											"", 
+											"",  //$NON-NLS-1$
 											JavaVEPlugin.PLUGIN_ID);
 							}
 						}
@@ -454,7 +454,7 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 
 		Label label= new Label(composite, SWT.LEFT | SWT.WRAP);
 		label.setFont(composite.getFont());
-		label.setText("Which method stubs would you like to create?");
+		label.setText(CodegenWizardsMessages.NewVisualClassWizardPage_label_whichMethodStubs);
 		GridData gd = new GridData();
 		gd.horizontalSpan = nColumns;
 		label.setLayoutData(gd);
@@ -473,13 +473,13 @@ public class NewVisualClassWizardPage extends NewTypeWizardPage {
 		
 		// Create the three checkboxes
 		fMainCheckbox = new Button(comp, SWT.CHECK);
-		fMainCheckbox.setText("public static void main(String[] args)");
+		fMainCheckbox.setText(CodegenWizardsMessages.NewVisualClassWizardPage_checkbox_need_main);
 		fMainCheckbox.setSelection(createMain);
 		fCtorsCheckbox = new Button(comp, SWT.CHECK);
-		fCtorsCheckbox.setText("Constructors from superclass");
+		fCtorsCheckbox.setText(CodegenWizardsMessages.NewVisualClassWizardPage_checkbox_super_constructors);
 		fCtorsCheckbox.setSelection(createConstructors);
 		fInheritedCheckbox = new Button(comp, SWT.CHECK);
-		fInheritedCheckbox.setText("Inherited abstract methods");
+		fInheritedCheckbox.setText(CodegenWizardsMessages.NewVisualClassWizardPage_checkbox_inherited_abstract_methods);
 		fInheritedCheckbox.setSelection(createInherited);
 		
 		SelectionListener listener = new SelectionAdapter() {

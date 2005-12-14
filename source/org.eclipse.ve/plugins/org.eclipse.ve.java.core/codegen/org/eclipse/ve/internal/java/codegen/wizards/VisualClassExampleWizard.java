@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,11 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ve.internal.java.codegen.wizards;
 /*
  *  $RCSfile: VisualClassExampleWizard.java,v $
- *  $Revision: 1.16 $  $Date: 2005-08-24 23:30:48 $ 
+ *  $Revision: 1.17 $  $Date: 2005-12-14 16:47:01 $ 
  */
+package org.eclipse.ve.internal.java.codegen.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
@@ -20,102 +20,69 @@ import java.util.Hashtable;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter;
-import org.eclipse.jdt.internal.ui.wizards.NewClassCreationWizard;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
 import org.eclipse.ve.internal.java.codegen.core.CodegenMessages;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
-/**
- */
-public class VisualClassExampleWizard extends NewClassCreationWizard implements IExecutableExtension  {
+
+ 
+
+public class VisualClassExampleWizard extends Wizard implements INewWizard, IExecutableExtension {
 	
-	private VisualClassExampleWizardPage fPage;	
+	protected VisualClassExampleWizardPage page = null;
+	protected IStructuredSelection selection = null;
+	protected IWorkbench workbench = null;
+	
 	// the class name is going to be searched in the Examples directory of the
 	// contributing plugin
-	private String fExampleClassName;
-	private String fPluginName = null ;
-	private String fContainerPlugin = null;
-	private String fContainerName = null;
-	
-	public VisualClassExampleWizard() {
+	private String exampleClassName;
+	private String pluginName = null ;
+	private String containerPlugin = null;
+	private String containerName = null;
+
+	public VisualClassExampleWizard(){
 		super();
 		setDefaultPageImageDescriptor(JavaVEPlugin.getWizardTitleImageDescriptor());
 		setDialogSettings(JavaVEPlugin.getPlugin().getDialogSettings());
 		setWindowTitle(CodegenMessages.VisualClassExampleWizard_title); 
 	}
-
-	/*
-	 * @see Wizard#createPages
-	 */	
+	
 	public void addPages() {
-		fPage= new VisualClassExampleWizardPage();
-		addPage(fPage);
-		fPage.init(getSelection());
-		fPage.setSuperClass("javax.swing.JFrame",false); //$NON-NLS-1$
-		fPage.setTypeName(fExampleClassName,false);
-		fPage.setPluginName(fPluginName) ;
-	}	
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#finishPage(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
-		fPage.createType(monitor); // use the full progress monitor
-		// TODO What does this do (the toOriginal)? Does it need to be called here?
-		JavaModelUtil.toOriginal(fPage.getCreatedType().getCompilationUnit());
-
-		// If present, add the container to the classpath of the project 
-		if(fContainerPlugin!=null && fContainerName!=null){
-			NewVisualClassCreationWizard.updateProjectClassPath(fContainerPlugin, fContainerName, fPage.getCreatedType().getJavaProject(), monitor);
+		page = new VisualClassExampleWizardPage();
+		addPage(page);
+		page.init(selection);
+		page.setSuperClass("javax.swing.JFrame", false); //$NON-NLS-1$
+		page.setPluginName(pluginName);
+		page.setTypeName(exampleClassName, false);
+	}
+	
+	public boolean performFinish() {
+		boolean res= performFinishNewElement();
+		if (res) {
+			IResource resource= page.getModifiedResource();
+			if (resource != null) {
+				BasicNewResourceWizard.selectAndReveal(resource, workbench.getActiveWorkbenchWindow());
+				NewVisualClassCreationWizard.openResourceJVE(resource);
+			}	
 		}
-	}
-	
-	protected void openResource(IResource resource) {
-		NewVisualClassCreationWizard.openResourceJVE(resource);
-	}
-	
-	public void setInitializationData(IConfigurationElement element,String string,Object object){
-		if(!"class".equals(string)) //$NON-NLS-1$
-			return;
-		if ( object instanceof String ) {
-			setInitializationData(element.getDeclaringExtension().getNamespace(), (String) object);
-		}else if(object instanceof Hashtable){
-			Hashtable hash = (Hashtable) object;
-			if(hash.containsKey("exampleFile")) //$NON-NLS-1$
-				fExampleClassName = (String) hash.get("exampleFile"); //$NON-NLS-1$
-			if(hash.containsKey("classpathContainerPlugin")) //$NON-NLS-1$
-				fContainerPlugin = (String) hash.get("classpathContainerPlugin"); //$NON-NLS-1$
-			if(hash.containsKey("classpathContainerName")) //$NON-NLS-1$
-				fContainerName = (String) hash.get("classpathContainerName"); //$NON-NLS-1$
-			setInitializationData(element.getDeclaringExtension().getNamespace(), fExampleClassName, fContainerPlugin, fContainerName);
-		}
-	}
-	
-	public void setInitializationData(String pluginName, String exampleClassName){
-		fPluginName = pluginName;
-		fExampleClassName = exampleClassName;
+		return res;
 	}
 
-	protected void setInitializationData(String pluginName, String exampleClassName, String containerPlugin, String containerName){
-		setInitializationData(pluginName, exampleClassName);
-		fContainerPlugin = containerPlugin;
-		fContainerName = containerName;
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#canRunForked()
-	 */
-	protected boolean canRunForked() {
-		return !fPage.isEnclosingTypeSelected();
-	}
 	/*
 	 * This method is an exact copy of super.super.performFinish() API.
 	 * The reason for copying is that one cannot call that API without
 	 * hitting a NPE.
 	 */
 	public boolean performFinishNewElement() {
-		IWorkspaceRunnable op= new IWorkspaceRunnable() {
+		boolean result = true;
+		final IWorkspaceRunnable op= new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
 				try {
 					finishPage(monitor);
@@ -125,28 +92,69 @@ public class VisualClassExampleWizard extends NewClassCreationWizard implements 
 			}
 		};
 		try {
-			getContainer().run(canRunForked(), true, new WorkbenchRunnableAdapter(op, getSchedulingRule()));
+			IRunnableWithProgress runnable = new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					try {
+						JavaCore.run(op, monitor);
+					} catch (CoreException e) {
+						throw new InvocationTargetException(e);
+					}
+				}
+			};
+			getContainer().run(true, true, runnable);
 		} catch (InvocationTargetException e) {
-			handleFinishException(getShell(), e);
-			return false;
+			JavaVEPlugin.log(e.getCause());
+			result = false;
 		} catch  (InterruptedException e) {
-			return false;
+			result = false;
 		}
-		return true;
+		return result;
 	}
+	
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.wizard.IWizard#performFinish()
+	 * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#finishPage(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public boolean performFinish() {
-		warnAboutTypeCommentDeprecation();
-		boolean res= performFinishNewElement();
-		if (res) {
-			IResource resource= fPage.getModifiedResource();
-			if (resource != null) {
-				selectAndReveal(resource);
-				openResource(resource);
-			}	
+	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
+		page.createType(monitor); // use the full progress monitor
+
+		// If present, add the container to the classpath of the project 
+		if(containerPlugin!=null && containerName!=null){
+			NewVisualClassCreationWizard.updateProjectClassPath(containerPlugin, containerName, page.getCreatedType().getJavaProject(), monitor);
 		}
-		return res;
 	}
+
+
+	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		this.workbench = workbench;
+		this.selection = selection;
+	}
+
+	public void setInitializationData(String pluginName, String exampleClassName){
+		this.pluginName = pluginName;
+		this.exampleClassName = exampleClassName;
+	}
+	
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		if(!"class".equals(propertyName)) //$NON-NLS-1$
+			return;
+		if ( data instanceof String ) {
+			setInitializationData(config.getDeclaringExtension().getNamespace(), (String) data);
+		}else if(data instanceof Hashtable){
+			Hashtable hash = (Hashtable) data;
+			if(hash.containsKey("exampleFile")) //$NON-NLS-1$
+				exampleClassName = (String) hash.get("exampleFile"); //$NON-NLS-1$
+			if(hash.containsKey("classpathContainerPlugin")) //$NON-NLS-1$
+				containerPlugin = (String) hash.get("classpathContainerPlugin"); //$NON-NLS-1$
+			if(hash.containsKey("classpathContainerName")) //$NON-NLS-1$
+				containerName = (String) hash.get("classpathContainerName"); //$NON-NLS-1$
+			setInitializationData(config.getDeclaringExtension().getNamespace(), exampleClassName, containerPlugin, containerName);
+		}
+	}
+	
+	protected void setInitializationData(String pluginName, String exampleClassName, String containerPlugin, String containerName){
+		setInitializationData(pluginName, exampleClassName);
+		this.containerPlugin = containerPlugin;
+		this.containerName = containerName;
+	}
+
 }
