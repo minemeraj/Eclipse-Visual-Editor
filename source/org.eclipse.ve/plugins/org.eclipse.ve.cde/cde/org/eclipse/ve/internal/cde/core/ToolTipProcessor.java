@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ToolTipProcessor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-20 22:30:51 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:27:11 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -59,8 +59,8 @@ public interface ToolTipProcessor {
 	void deactivate();
 
 	public class ToolTipLabel implements ToolTipProcessor {
-		String text = "";
-		static final Font labelFont = new Font(Display.getDefault(), "Arial", 8, SWT.BOLD);
+		String text = ""; //$NON-NLS-1$
+		static final Font labelFont = new Font(Display.getDefault(), "Arial", 8, SWT.BOLD); //$NON-NLS-1$
 
 		public ToolTipLabel(String text) {
 			this.text = text;

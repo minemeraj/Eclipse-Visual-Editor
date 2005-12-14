@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoParentContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-12-08 17:52:30 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-14 21:27:11 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -30,7 +30,7 @@ public class NoParentContainmentHandler implements IContainmentHandler {
 	 */
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation,
 			EditDomain domain) throws StopRequestException {
-		throw new StopRequestException("Not allowed to be dropped on anything.");
+		throw new StopRequestException(CDEMessages.NoParentContainmentHandler_StopRequest_DropNotAllowed_Msg);
 	}
 
 	/* (non-Javadoc)

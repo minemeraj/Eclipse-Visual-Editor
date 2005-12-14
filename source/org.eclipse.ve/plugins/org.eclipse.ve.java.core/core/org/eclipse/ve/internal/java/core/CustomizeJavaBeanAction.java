@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.java.core;
-/*
- *  $RCSfile: CustomizeJavaBeanAction.java,v $
- *  $Revision: 1.20 $  $Date: 2005-11-15 18:53:28 $ 
- */
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -116,7 +112,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 				IConstructorProxy ctor = windowLauncherType.getConstructorProxy(new String[] { "java.awt.Component" }); //$NON-NLS-1$
 				windowLauncherProxy = ctor.newInstance(new IBeanProxy[] { customizerProxy });								
 			} else {
-				IConstructorProxy ctor = windowLauncherType.getConstructorProxy(new String[] { "java.awt.Component" , "boolean" }); //$NON-NLS-1$
+				IConstructorProxy ctor = windowLauncherType.getConstructorProxy(new String[] { "java.awt.Component" , "boolean" }); //$NON-NLS-1$ //$NON-NLS-2$
 				IBeanProxy explicitPropertyChangeProxy = customizerProxy.getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(explicitPropertyChange);
 				windowLauncherProxy = ctor.newInstance(new IBeanProxy[] { customizerProxy , explicitPropertyChangeProxy });				
 			}
@@ -290,7 +286,7 @@ public class CustomizeJavaBeanAction extends CustomizeAction {
 				String initString = ((IJavaCellEditor) cellEditor).getJavaInitializationString();
 				newBean.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation(initString));
 			} else {
-				newBean.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation("UNABLE TO DETERMINE INITIALIZATION STRING"));
+				newBean.setAllocation(InstantiationFactory.eINSTANCE.createInitStringAllocation("UNABLE TO DETERMINE INITIALIZATION STRING")); //$NON-NLS-1$
 			}
 		}
 		// Now we have a newBean to set

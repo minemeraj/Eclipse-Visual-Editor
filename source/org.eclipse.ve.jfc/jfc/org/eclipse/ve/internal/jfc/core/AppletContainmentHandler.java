@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AppletContainmentHandler.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:48 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:37:03 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -43,7 +43,7 @@ public class AppletContainmentHandler extends FFOnlyModelAdapter {
 			// Only interested in Applet directly (not a subclass). This
 			// is because subclasses may already have their layout specified. No way to know that developer wanted the layout
 			// to be supplied by users or the developer supplied the layout.
-			if (jo.getJavaType().getQualifiedNameForReflection().equals("java.applet.Applet")) {
+			if (jo.getJavaType().getQualifiedNameForReflection().equals("java.applet.Applet")) { //$NON-NLS-1$
 				preCmds.append(DefaultJFCLayoutPolicy.processDefaultLayout(domain, jo, null));
 			}
 		}

@@ -12,7 +12,7 @@
  *  Created May 27, 2005 by Gili Mendel
  * 
  *  $RCSfile: PaletteDrawersSetting.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-08 23:21:29 $ 
+ *  $Revision: 1.6 $  $Date: 2005-12-14 21:27:33 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -37,7 +37,7 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  */
 public class PaletteDrawersSetting implements EditorSettings.ISetting {
 
-	public final static String id = "Settings.Paletted.Drawers";
+	public final static String id = "Settings.Paletted.Drawers"; //$NON-NLS-1$
 
 	JavaVisualEditorPart editor;
 

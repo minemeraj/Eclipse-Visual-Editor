@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanLaunchConfigurationDelegate.java,v $
- *  $Revision: 1.23 $  $Date: 2005-12-07 02:23:37 $ 
+ *  $Revision: 1.24 $  $Date: 2005-12-14 21:33:30 $ 
  */
 
 
@@ -55,7 +55,7 @@ public class JavaBeanLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 	 * 
 	 * @since 1.2.0
 	 */
-	public static final String IS_SWT = "isSWT";
+	public static final String IS_SWT = "isSWT"; //$NON-NLS-1$
 	static String LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.JavaBeansLauncher"; //$NON-NLS-1$
 	static String JFC_LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.JFCLauncher"; //$NON-NLS-1$
 	static String SWT_LAUNCHER_TYPE_NAME = "org.eclipse.ve.internal.java.vce.launcher.remotevm.SWTLauncher"; //$NON-NLS-1$
@@ -65,7 +65,7 @@ public class JavaBeanLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 	static String APPLET_PARMS_NUMBER = "APPLET_PARMS_NUMBER"; //$NON-NLS-1$
 	static String APPLET_PARM_NAME = "APPLET_PARM_NAME"; //$NON-NLS-1$
 	static String APPLET_PARM_VALUE = "APPLET_PARM_VALUE"; //$NON-NLS-1$
-	static String QUOTE_DELIM = "\"";
+	static String QUOTE_DELIM = "\""; //$NON-NLS-1$
 	
 public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 	
@@ -262,7 +262,7 @@ public String getVMArguments(ILaunchConfiguration configuration, String javaBean
 private boolean isRCPPlugin(IJavaProject proj) {
 	try {
 		FoundIDs foundids = ProxyPlugin.getPlugin().getIDsFound(proj);
-		return foundids.pluginIds.get("org.eclipse.ui.workbench") == Boolean.TRUE;
+		return foundids.pluginIds.get("org.eclipse.ui.workbench") == Boolean.TRUE; //$NON-NLS-1$
 	} catch (JavaModelException e) {
 	}
 	return false;
@@ -291,10 +291,10 @@ protected void setupClasspath(ILaunchConfiguration configuration, StringBuffer a
 			}
 		}
 		Iterator libPaths = controller.getFinalJavaLibraryPath().iterator();
-		StringBuffer javaPath = new StringBuffer("");
+		StringBuffer javaPath = new StringBuffer(""); //$NON-NLS-1$
 		while(libPaths.hasNext()){
 			String curLib = ((URL)libPaths.next()).getPath();
-			if(curLib.startsWith("/") && Platform.getOS().equals(Platform.OS_WIN32))
+			if(curLib.startsWith("/") && Platform.getOS().equals(Platform.OS_WIN32)) //$NON-NLS-1$
 				curLib = curLib.substring(1);
 			if (javaPath.length()>0)
 				javaPath.append(File.pathSeparatorChar);

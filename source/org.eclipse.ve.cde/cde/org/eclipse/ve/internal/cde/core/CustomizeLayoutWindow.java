@@ -17,7 +17,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CustomizeLayoutWindow.java,v $
- *  $Revision: 1.14 $  $Date: 2005-12-09 22:44:18 $ 
+ *  $Revision: 1.15 $  $Date: 2005-12-14 21:27:11 $ 
  */
 
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public class CustomizeLayoutWindow extends Window {
 		if (description == null) {
 			shell.setText(CDEMessages.CustomizeLayoutWindow_title); 
 		} else {
-			shell.setText(CDEMessages.CustomizeLayoutWindow_title + " - " + description); 
+			shell.setText(CDEMessages.CustomizeLayoutWindow_title + " - " + description);  //$NON-NLS-1$
 		}
 	}
 

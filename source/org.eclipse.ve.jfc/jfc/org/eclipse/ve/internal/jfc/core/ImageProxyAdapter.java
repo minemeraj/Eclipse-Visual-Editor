@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageProxyAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-10-03 19:21:01 $ 
+ *  $Revision: 1.8 $  $Date: 2005-12-14 21:37:04 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -74,7 +74,7 @@ public class ImageProxyAdapter extends BeanProxyAdapter {
 			this.expression = expression;
 		}
 		public boolean visit(PTMethodInvocation node) {
-			if ("getImage".equals(node.getName()) && node.getArguments().size() == 1) {
+			if ("getImage".equals(node.getName()) && node.getArguments().size() == 1) { //$NON-NLS-1$
 				// Create a verification expression. It will simply take what it was, do the allocation, and test the result. If null, it will throw
 				// an NPE with a message. This will stop the rest of the allocation from taking place.
 				// If it worked, it will be reevaluated again in the full expression, but that is ok. This is not the frequent an operation.
@@ -86,7 +86,7 @@ public class ImageProxyAdapter extends BeanProxyAdapter {
 					expression.createNull(ForExpression.INFIX_RIGHT);
 					expression.createBlockBegin();
 					expression.createThrow();
-					expression.createClassInstanceCreation(ForExpression.THROW_OPERAND, expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "java.lang.NullPointerException"), 1);
+					expression.createClassInstanceCreation(ForExpression.THROW_OPERAND, expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, "java.lang.NullPointerException"), 1); //$NON-NLS-1$
 					expression.createStringLiteral(ForExpression.CLASSINSTANCECREATION_ARGUMENT, JFCMessages.ImageProxyAdapter_imageurlnotfound);
 					expression.createBlockEnd();
 					throw new ProcessingException(null);	// This just stops the walking of the rest of the expression.

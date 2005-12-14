@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JSplitPaneChildTreeLabelDecorator.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:38:09 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-14 21:37:04 $ 
  */
 
 import java.util.Arrays;
@@ -73,13 +73,13 @@ public class JSplitPaneChildTreeLabelDecorator implements ILabelDecorator {
 		if (ai != null) {
 			List backrefs = Arrays.asList(ai.getFeatures());
 			if (backrefs.contains(sfLeftComponent)) {
-				text = JFCMessages.Decorator_JSplitPane_Left + " - " + text; 
+				text = JFCMessages.Decorator_JSplitPane_Left + " - " + text;  //$NON-NLS-1$
 			} else if (backrefs.contains(sfRightComponent)) {
-				text = JFCMessages.Decorator_JSplitPane_Right + " - " + text; 
+				text = JFCMessages.Decorator_JSplitPane_Right + " - " + text;  //$NON-NLS-1$
 			} else if (backrefs.contains(sfTopComponent)) {
-				text = JFCMessages.Decorator_JSplitPane_Top + " - " + text; 
+				text = JFCMessages.Decorator_JSplitPane_Top + " - " + text;  //$NON-NLS-1$
 			} else if (backrefs.contains(sfBottomComponent)) {
-				text = JFCMessages.Decorator_JSplitPane_Bottom + " - " + text; 
+				text = JFCMessages.Decorator_JSplitPane_Bottom + " - " + text;  //$NON-NLS-1$
 			} else if (backrefs.contains(sf_constraintComponent)) {
 				EObject constraintComponent = ai.getFirstReferencedBy(sf_constraintComponent);
 				// See whether the component is in severe error.  If so then don't include it here
@@ -90,13 +90,13 @@ public class JSplitPaneChildTreeLabelDecorator implements ILabelDecorator {
 						String constraint = BeanProxyUtilities.getBeanProxy(constraintString).toBeanString();
 						if (constraint != null) {
 							if (constraint.equals("left")) //$NON-NLS-1$
-								text = JFCMessages.Decorator_JSplitPane_Left + " - " + text; 
+								text = JFCMessages.Decorator_JSplitPane_Left + " - " + text;  //$NON-NLS-1$
 							else if (constraint.equals("right")) //$NON-NLS-1$
-								text = JFCMessages.Decorator_JSplitPane_Right + " - " + text; 
+								text = JFCMessages.Decorator_JSplitPane_Right + " - " + text;  //$NON-NLS-1$
 							else if (constraint.equals("top")) //$NON-NLS-1$
-								text = JFCMessages.Decorator_JSplitPane_Top + " - " + text; 
+								text = JFCMessages.Decorator_JSplitPane_Top + " - " + text;  //$NON-NLS-1$
 							else if (constraint.equals("bottom")) //$NON-NLS-1$
-								text = JFCMessages.Decorator_JSplitPane_Bottom + " - " + text; 
+								text = JFCMessages.Decorator_JSplitPane_Bottom + " - " + text;  //$NON-NLS-1$
 						}
 					}
 				}

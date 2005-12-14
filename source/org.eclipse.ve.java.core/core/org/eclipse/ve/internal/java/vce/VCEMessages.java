@@ -61,4 +61,5 @@ public final class VCEMessages extends NLS {
 
 	public static String VCEPreferencePage_XYGridSpacing;
 	public static String VCEPreferencePage_CaretSelectUI_Checkbox_Label;
+	public static String SubclassCompositionContainerPolicy_StopRequest_ThisChildNotValid;
 }

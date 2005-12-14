@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartMethodVisitor.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 17:33:42 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-14 21:38:13 $ 
  */
 package org.eclipse.ve.internal.rcp.codegen;
 
@@ -66,7 +66,7 @@ public class WorkbenchPartMethodVisitor extends MethodVisitor {
 		varDeclStatement.setSourceRange(svd.getStartPosition(), svd.getLength());
 		
 		//TODO : Remove the AST node param - no need for it
-		WorkbenchPartArgumentCodegenHelper helper = new WorkbenchPartArgumentCodegenHelper("delegate_control", /*svd*/ null); // no need of passing in of node. It caches it and leaks memory.
+		WorkbenchPartArgumentCodegenHelper helper = new WorkbenchPartArgumentCodegenHelper("delegate_control", /*svd*/ null); // no need of passing in of node. It caches it and leaks memory. //$NON-NLS-1$
 		varDeclStatement.setProperty(IMethodArgumentCodegenHelper.KEY_METHODARGUMENT_CODEGENHELPER, helper);
 		
 		

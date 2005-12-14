@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: JMenuBarRootPaneOnlyModelAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-11-04 17:30:48 $ 
+ *  $Revision: 1.8 $  $Date: 2005-12-14 21:37:04 $ 
  */
 
 import org.eclipse.emf.ecore.*;
@@ -37,7 +37,7 @@ public class JMenuBarRootPaneOnlyModelAdapter extends AbstractComponentModelCont
 				}
 			}
 		}
-		throw new StopRequestException("This child can only be dropped on a class that takes a JMenuBar.");
+		throw new StopRequestException(JFCMessages.JMenuBarRootPaneOnlyModelAdapter_StopRequest_ParentTakesJMenubarOnly);
 	}
 
 }

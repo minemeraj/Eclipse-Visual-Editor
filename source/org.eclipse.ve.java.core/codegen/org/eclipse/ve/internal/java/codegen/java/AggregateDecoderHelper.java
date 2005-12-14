@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: AggregateDecoderHelper.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-16 13:34:48 $ 
+ *  $Revision: 1.5 $  $Date: 2005-12-14 21:27:57 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -34,15 +34,15 @@ public class AggregateDecoderHelper implements IExpressionDecoderHelper{
 	private IExpressionDecoderHelper decodedHelper = null;
 	
 	public AggregateDecoderHelper(BeanPart bean, Statement exp, IJavaFeatureMapper fm, IExpressionDecoder owner, Class[] helperClasses) {
-		Assert.isNotNull(helperClasses, "Must have atleast one decoder helper to aggregate");
-		Assert.isTrue(helperClasses.length>0, "Must have atleast one decoder helper to aggregate");
+		Assert.isNotNull(helperClasses, "Must have atleast one decoder helper to aggregate"); //$NON-NLS-1$
+		Assert.isTrue(helperClasses.length>0, "Must have atleast one decoder helper to aggregate"); //$NON-NLS-1$
 		this.helpers = new IExpressionDecoderHelper[helperClasses.length];
 		Class paramClasses[] = new Class[4];
 		try {
-			paramClasses[0] = getClass().getClassLoader().loadClass("org.eclipse.ve.internal.java.codegen.model.BeanPart");
-			paramClasses[1] = getClass().getClassLoader().loadClass("org.eclipse.jdt.core.dom.Statement");
-			paramClasses[2] = getClass().getClassLoader().loadClass("org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper");
-			paramClasses[3] = getClass().getClassLoader().loadClass("org.eclipse.ve.internal.java.codegen.java.IExpressionDecoder");
+			paramClasses[0] = getClass().getClassLoader().loadClass("org.eclipse.ve.internal.java.codegen.model.BeanPart"); //$NON-NLS-1$
+			paramClasses[1] = getClass().getClassLoader().loadClass("org.eclipse.jdt.core.dom.Statement"); //$NON-NLS-1$
+			paramClasses[2] = getClass().getClassLoader().loadClass("org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper"); //$NON-NLS-1$
+			paramClasses[3] = getClass().getClassLoader().loadClass("org.eclipse.ve.internal.java.codegen.java.IExpressionDecoder"); //$NON-NLS-1$
 			for (int helperClassCount = 0; helperClassCount < helperClasses.length; helperClassCount++) {
 				Constructor constructor = helperClasses[helperClassCount].getConstructor(paramClasses);
 				IExpressionDecoderHelper helper = (IExpressionDecoderHelper) constructor.newInstance(new Object[]{bean, exp, fm, owner});

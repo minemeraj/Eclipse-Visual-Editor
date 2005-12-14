@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.java.vce;
-/*
- *  $RCSfile: SubclassCompositionContainerPolicy.java,v $
- *  $Revision: 1.9 $  $Date: 2005-12-01 20:19:39 $ 
- */
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -47,7 +43,7 @@ public class SubclassCompositionContainerPolicy extends CompositionContainerPoli
 	public Object getTrueChild(Object child, int reqType, CommandBuilder preCmds, CommandBuilder postCmds) throws StopRequestException {
 		child = super.getTrueChild(child, reqType, preCmds, postCmds);
 		if (child == getComposition().getThisPart())
-			throw new StopRequestException("The this part is not a valid child to be added/removed.");
+			throw new StopRequestException(VCEMessages.SubclassCompositionContainerPolicy_StopRequest_ThisChildNotValid);
 		return child;
 	}
 	

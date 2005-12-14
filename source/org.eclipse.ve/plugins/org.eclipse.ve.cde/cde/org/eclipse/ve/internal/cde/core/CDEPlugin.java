@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: CDEPlugin.java,v $
- *  $Revision: 1.19 $  $Date: 2005-12-07 23:52:06 $ 
+ *  $Revision: 1.20 $  $Date: 2005-12-14 21:27:11 $ 
  */
 
 import java.net.MalformedURLException;
@@ -203,7 +203,7 @@ public final class CDEPlugin extends AbstractUIPlugin {
 	 */
 	public static String parseInitializationData(Object initData, String key) {
 		if (initData instanceof CharSequence) {
-			Pattern p = Pattern.compile("\\s*"+key+"='(.*)';*");
+			Pattern p = Pattern.compile("\\s*"+key+"='(.*)';*"); //$NON-NLS-1$ //$NON-NLS-2$
 			java.util.regex.Matcher m = p.matcher((CharSequence) initData);
 			if (m.find()) {
 				return m.group(1);

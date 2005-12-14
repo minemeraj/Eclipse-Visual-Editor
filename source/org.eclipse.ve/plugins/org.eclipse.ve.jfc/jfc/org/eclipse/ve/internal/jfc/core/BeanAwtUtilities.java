@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: BeanAwtUtilities.java,v $ $Revision: 1.42 $ $Date: 2005-12-07 23:52:06 $
+ * $RCSfile: BeanAwtUtilities.java,v $ $Revision: 1.43 $ $Date: 2005-12-14 21:37:03 $
  */
 
 import java.util.List;
@@ -68,8 +68,8 @@ public class BeanAwtUtilities {
 	public static Point getOffScreenLocation(ProxyFactoryRegistry registry) {
 		BeanAwtUtilities constants = getConstants(registry);
 		if (constants.offscreenLocation == null) {
-			IBeanProxy p = registry.getMethodProxyFactory().getMethodProxy("org.eclipse.ve.internal.jfc.vm.FreeFormAWTDialog",
-					"getScreenLocation", new String[] {"boolean"}).invokeCatchThrowableExceptions(null, registry.getBeanProxyFactory().createBeanProxyWith(VCEPreferences.isLiveWindowOn()));
+			IBeanProxy p = registry.getMethodProxyFactory().getMethodProxy("org.eclipse.ve.internal.jfc.vm.FreeFormAWTDialog", //$NON-NLS-1$
+					"getScreenLocation", new String[] {"boolean"}).invokeCatchThrowableExceptions(null, registry.getBeanProxyFactory().createBeanProxyWith(VCEPreferences.isLiveWindowOn())); //$NON-NLS-1$ //$NON-NLS-2$
 			if (p instanceof IPointBeanProxy) {
 				IPointBeanProxy pb = (IPointBeanProxy) p;
 				constants.offscreenLocation = new Point(pb.getX(), pb.getY());
@@ -1247,7 +1247,7 @@ public class BeanAwtUtilities {
 		if (constants.indexOfTabAtLocationMethodProxy == null) {
 			constants.indexOfTabAtLocationMethodProxy = aJTabbedPaneBeanProxy.getProxyFactoryRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(
 					"javax.swing.JTabbedPane").getMethodProxy( //$NON-NLS-1$
-					"indexAtLocation", new String[] { "int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$
+					"indexAtLocation", new String[] { "int", "int"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		if (constants.indexOfTabAtLocationMethodProxy != null) {
 			IBeanProxy pageNum = constants.indexOfTabAtLocationMethodProxy.invokeCatchThrowableExceptions(aJTabbedPaneBeanProxy, new IBeanProxy[] {

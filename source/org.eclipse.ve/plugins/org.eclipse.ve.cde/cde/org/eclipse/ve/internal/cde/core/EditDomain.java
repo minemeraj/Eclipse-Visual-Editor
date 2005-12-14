@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: EditDomain.java,v $
- *  $Revision: 1.15 $  $Date: 2005-12-05 17:57:07 $ 
+ *  $Revision: 1.16 $  $Date: 2005-12-14 21:27:11 $ 
  */
 
 import java.text.MessageFormat;
@@ -426,14 +426,14 @@ public class EditDomain extends DefaultEditDomain {
 	
 	public List getContributors(IAdaptable anAdaptable) {
 		if(configElements == null){
-			IExtensionPoint extp = Platform.getExtensionRegistry().getExtensionPoint("org.eclipse.ve.cde.editpartcontributor");
+			IExtensionPoint extp = Platform.getExtensionRegistry().getExtensionPoint("org.eclipse.ve.cde.editpartcontributor"); //$NON-NLS-1$
 			List configElementsList = new ArrayList();
 			if (extp != null) {
 				IExtension[] extensions = extp.getExtensions();
 				for (int i = 0; i < extensions.length; i++) {
 					IConfigurationElement[] configurationElements = extensions[i].getConfigurationElements();
 					for (int j = 0; j < configurationElements.length; j++) {
-						if ("contributor".equals(configurationElements[j].getName()))
+						if ("contributor".equals(configurationElements[j].getName())) //$NON-NLS-1$
 							configElementsList.add(configurationElements[j]);
 					}
 				}
@@ -447,10 +447,10 @@ public class EditDomain extends DefaultEditDomain {
 nextContributor:	
 		for (int i = 0; i < configElements.length; i++) {
 			IConfigurationElement configElement = configElements[i];
-			IConfigurationElement[] filters = configElement.getChildren("filter");
+			IConfigurationElement[] filters = configElement.getChildren("filter"); //$NON-NLS-1$
 			for (int j = 0; j < filters.length; j++) {
-				String name = filters[j].getAttribute("name");
-				String value = filters[j].getAttribute("value");
+				String name = filters[j].getAttribute("name"); //$NON-NLS-1$
+				String value = filters[j].getAttribute("value"); //$NON-NLS-1$
 				if (!actionFilter.testAttribute(anAdaptable,name,value))
 					continue nextContributor;	// Didn't pass one of the filters, try next contributor.
 			}
@@ -460,7 +460,7 @@ nextContributor:
 			EditPartContributorFactory editPartContributorFactory = contributorFactories[i];
 			if(editPartContributorFactory == null){
 				try {
-					editPartContributorFactory = contributorFactories[i] = (EditPartContributorFactory) configElement.createExecutableExtension("class");
+					editPartContributorFactory = contributorFactories[i] = (EditPartContributorFactory) configElement.createExecutableExtension("class"); //$NON-NLS-1$
 				} catch (CoreException e) {
 					CDEPlugin.getPlugin().getLogger().log(e,Level.WARNING);
 					contributorFactories[i] = INVALID_FACTORY;

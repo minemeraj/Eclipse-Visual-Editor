@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarChildComponentPolicy.java,v $
- *  $Revision: 1.1 $  $Date: 2005-11-02 18:48:27 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-14 21:39:00 $ 
  */
 package org.eclipse.ve.internal.jface;
 
@@ -68,7 +68,7 @@ public class ActionBarChildComponentPolicy extends ComponentEditPolicy {
 			}
 
 			public void execute() {
-				CDEUtilities.displayExec(getHost(), "EDITPART_CONTRIBUTION_NOTIFY", new EditPartRunnable(getHost()) {
+				CDEUtilities.displayExec(getHost(), "EDITPART_CONTRIBUTION_NOTIFY", new EditPartRunnable(getHost()) { //$NON-NLS-1$
 
 					protected void doRun() {
 						contributor.notifyContributionChanged();

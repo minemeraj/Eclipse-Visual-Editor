@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: AbstractPropertySheetEntry.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:44:29 $ 
+ *  $Revision: 1.13 $  $Date: 2005-12-14 21:37:27 $ 
  */
 
 
@@ -719,7 +719,7 @@ public String getValueAsString() {
 		
 	try {
 		if (editValue == null)
-			return fShowNulls ? PropertysheetMessages.display_null : "";
+			return fShowNulls ? PropertysheetMessages.display_null : ""; //$NON-NLS-1$
 		
 		ILabelProvider provider = fDescriptors[0].getLabelProvider();
 		if (provider == null)

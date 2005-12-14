@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 
 /*
- * $RCSfile: XYLayoutEditPolicy.java,v $ $Revision: 1.22 $ $Date: 2005-11-08 22:33:27 $
+ * $RCSfile: XYLayoutEditPolicy.java,v $ $Revision: 1.23 $ $Date: 2005-12-14 21:27:11 $
  */
 
 import java.beans.PropertyChangeListener;
@@ -678,7 +678,7 @@ public abstract class XYLayoutEditPolicy extends org.eclipse.gef.editpolicies.XY
 			return true;
 		else if (name.startsWith(CustomizeLayoutPage.LAYOUT_POLICY_KEY) && value.equals(LAYOUT_ID)) //$NON-NLS-1$
 			return true;
-		else if (name.startsWith("snaptogrid"))
+		else if (name.startsWith("snaptogrid")) //$NON-NLS-1$
 			return true;
 
 		return false;

@@ -116,4 +116,5 @@ public final class CDEMessages extends NLS {
 
 	public static String CustomizeLayoutWindowAction_Action_NoLayouts;
 	public static String ActionBarActionEditPart_Action_Performed_Msg;
+	public static String NoParentContainmentHandler_StopRequest_DropNotAllowed_Msg;
 }

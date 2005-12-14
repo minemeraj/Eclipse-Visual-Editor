@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.61 $  $Date: 2005-12-08 23:18:28 $ 
+ *  $Revision: 1.62 $  $Date: 2005-12-14 21:32:35 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -313,7 +313,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		if (!inInstantiation() && !isBeanProxyInstantiated() && expression.isValid()){
 			if (LOG_NOTIFICATIONS) {
 				StringBuffer r = new StringBuffer();
-				r.append("Instantiation request: ");
+				r.append("Instantiation request: "); //$NON-NLS-1$
 				printObject(getJavaObject(), r);
 				JavaVEPlugin.log(r.toString(), Level.WARNING);
 			}			
@@ -1306,7 +1306,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		if (superclass != null)
 			targetClass = getBeanTypeProxy(superclass.getQualifiedNameForReflection(), expression);
 		else
-			targetClass = getBeanTypeProxy("java.lang.Object", expression);
+			targetClass = getBeanTypeProxy("java.lang.Object", expression); //$NON-NLS-1$
 		return targetClass;
 	}
 
@@ -1347,7 +1347,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 			if (isBeanProxyInstantiated()) {
 				if (LOG_NOTIFICATIONS) {
 					StringBuffer r = new StringBuffer();
-					r.append("Release request: ");
+					r.append("Release request: "); //$NON-NLS-1$
 					printObject(getJavaObject(), r);
 					JavaVEPlugin.log(r.toString(), Level.WARNING);
 				}
@@ -1783,7 +1783,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	protected void primReinstantiate(IExpression expression) {
 		if (LOG_NOTIFICATIONS) {
 			StringBuffer r = new StringBuffer();
-			r.append("Reinstantiation request: ");
+			r.append("Reinstantiation request: "); //$NON-NLS-1$
 			printObject(getJavaObject(), r);
 			JavaVEPlugin.log(r.toString(), Level.WARNING);
 		}
@@ -1835,46 +1835,46 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	private static void logNotification(Notification n, StringBuffer result) {
 		switch (n.getEventType()) {
 			case Notification.SET: {
-				result.append("SET");
+				result.append("SET"); //$NON-NLS-1$
 				break;
 			}
 			case Notification.UNSET: {
-				result.append("UNSET");
+				result.append("UNSET"); //$NON-NLS-1$
 				break;
 			}
 			case Notification.ADD: {
-				result.append("ADD");
+				result.append("ADD"); //$NON-NLS-1$
 				break;
 			}
 			case Notification.ADD_MANY: {
-				result.append("ADD_MANY");
+				result.append("ADD_MANY"); //$NON-NLS-1$
 				break;
 			}
 			case Notification.REMOVE: {
-				result.append("REMOVE");
+				result.append("REMOVE"); //$NON-NLS-1$
 				break;
 			}
 			case Notification.REMOVE_MANY: {
-				result.append("REMOVE_MANY");
+				result.append("REMOVE_MANY"); //$NON-NLS-1$
 				break;
 			}
 			case Notification.MOVE: {
-				result.append("MOVE");
+				result.append("MOVE"); //$NON-NLS-1$
 				break;
 			}
 			case Notification.REMOVING_ADAPTER: {
-				result.append("REMOVING_ADPATER");
+				result.append("REMOVING_ADPATER"); //$NON-NLS-1$
 				break;
 			}
 			case Notification.RESOLVE: {
-				result.append("RESOLVE");
+				result.append("RESOLVE"); //$NON-NLS-1$
 				break;
 			}
 			case IInternalBeanProxyHost.NOTIFICATION_LIFECYCLE: {
 				if (((ReinstantiateBeanProxyNotification) n).isPrerelease())
-					result.append("PRERELEASE");
+					result.append("PRERELEASE"); //$NON-NLS-1$
 				else
-					result.append("POSTREINSTANTIATION");
+					result.append("POSTREINSTANTIATION"); //$NON-NLS-1$
 				break;
 			}
 			default: {
@@ -1884,22 +1884,22 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		}
 	    if (n.isTouch())
 	    {
-	      result.append(", touch");
+	      result.append(", touch"); //$NON-NLS-1$
 	    }
 	    if (n.getPosition() != -1) {
-	    	result.append(", pos: ");
+	    	result.append(", pos: "); //$NON-NLS-1$
 	    	result.append(n.getPosition());
 	    }
-	    result.append(", notifier: ");
+	    result.append(", notifier: "); //$NON-NLS-1$
 	    printObject(n.getNotifier(), result);
 	    Object feature = n.getFeature();
 	    if (feature instanceof EStructuralFeature) {
-	    	result.append(", feature: ");
+	    	result.append(", feature: "); //$NON-NLS-1$
 	    	result.append(((EStructuralFeature) feature).getName());
 	    }
 	    Object old = n.getOldValue();
 	    if (old != null) {
-	    	result.append(", oldValue: ");
+	    	result.append(", oldValue: "); //$NON-NLS-1$
 	    	if (n.getEventType() == Notification.REMOVE_MANY) {
 	    		result.append('{');
 	    		List ol = (List) old;
@@ -1908,7 +1908,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	    			if (first) 
 	    				first = false;
 	    			else
-	    				result.append(", ");
+	    				result.append(", "); //$NON-NLS-1$
 					Object element = iter.next();
 					printObject(element, result);
 				}
@@ -1919,7 +1919,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	    }
 	    Object newv = n.getNewValue();
 	    if (newv != null) {
-	    	result.append(", newValue: ");
+	    	result.append(", newValue: "); //$NON-NLS-1$
 	    	if (n.getEventType() == Notification.ADD_MANY) {
 	    		result.append('{');
 	    		List nl = (List) newv;
@@ -1928,7 +1928,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	    			if (first) 
 	    				first = false;
 	    			else
-	    				result.append(", ");
+	    				result.append(", "); //$NON-NLS-1$
 					Object element = iter.next();
 					printObject(element, result);
 				}
@@ -1939,7 +1939,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	    }
 
 	    if (n.wasSet())
-	    	result.append(", wasSet");
+	    	result.append(", wasSet"); //$NON-NLS-1$
 	}
 	
 	private static void printObject(Object o, StringBuffer b) {
@@ -1964,7 +1964,7 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 		if (LOG_NOTIFICATIONS) {
 			StringBuffer result = new StringBuffer();
 			if (isBeanProxyInstantiated())
-				result.append("BPA active: ");
+				result.append("BPA active: "); //$NON-NLS-1$
 			logNotification(notification, result);
 		    JavaVEPlugin.log(result.toString(), Level.WARNING);
 

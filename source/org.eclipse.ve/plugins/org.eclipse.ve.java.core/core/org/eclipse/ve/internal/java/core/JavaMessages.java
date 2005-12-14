@@ -100,4 +100,5 @@ public final class JavaMessages extends NLS {
 
 	public static String BasicAllocationProcesser_BeanRecurrsionError;
 	public static String AbstractRenameInstanceDialog_GetterNameInSuperTypes;
+	public static String StringLabelProvider_BeanName_Extension;
 }

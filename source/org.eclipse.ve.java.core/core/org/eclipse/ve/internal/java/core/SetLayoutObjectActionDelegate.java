@@ -76,7 +76,7 @@ public class SetLayoutObjectActionDelegate implements IObjectActionDelegate, IMe
 				}
 				LayoutList layoutList = (LayoutList) fEditPart.getAdapter(LayoutList.class);
 				if(layoutList != null){
-					MenuManager menuManager = new MenuManager("Foo");
+					MenuManager menuManager = new MenuManager("Foo"); //$NON-NLS-1$
 					layoutList.fillMenuManager(menuManager);
 					IContributionItem[] actions = menuManager.getItems();
 					for (int i = 0; i < actions.length; i++) {

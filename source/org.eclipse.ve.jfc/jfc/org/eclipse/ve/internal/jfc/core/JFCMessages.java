@@ -130,4 +130,19 @@ public final class JFCMessages extends NLS {
 	public static String FrameSelectorDialog_Window_Title;
 	public static String BorderLayoutConstraintsPropertyEditor_InvalidConstraint_Msg;
 	public static String FrameSelectorDialogArea_OverviewLabel_Msg;
+	public static String JMenuBarRootPaneOnlyModelAdapter_StopRequest_ParentTakesJMenubarOnly;
+	public static String FFOnlyModelAdapter_StopRequest_InvaidParent;
+	public static String WindowContainmentHandler_ChildDroppableOnFFOrValidParent;
+	public static String WindowContainmentHandler_UserCancelledDrop;
+	public static String WindowContainmentHandler_ChildNoDrop;
+	public static String WindowContainmentHandler_ChildDroppableOnFF;
+	public static String RootPaneContainmentHandler_StopRequest_CanBeOnlyOnFF;
+	public static String JFCVisualPlugin_layout_NULL;
+	public static String JFCVisualPlugin_layout_Flow;
+	public static String JFCVisualPlugin_layout_Border;
+	public static String JFCVisualPlugin_layout_GridBag;
+	public static String JFCVisualPlugin_layout_Grid;
+	public static String JFCVisualPlugin_layout_Box_XAxis;
+	public static String JFCVisualPlugin_layout_Box_YAxis;
+	public static String JFCVisualPlugin_layout_Card;
 }
