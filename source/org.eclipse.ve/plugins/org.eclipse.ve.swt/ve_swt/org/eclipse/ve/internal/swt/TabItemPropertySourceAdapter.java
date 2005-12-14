@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabItemPropertySourceAdapter.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:52:56 $ 
+ *  $Revision: 1.11 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -140,7 +140,7 @@ public class TabItemPropertySourceAdapter extends PropertySourceAdapter {
 		for (int i = 0; i < wi; i++) {
 			myDescriptors.add(wrappedMine[i].getId());
 			try{
-				if( ((EReference)wrappedMine[i].getId()).getName().equals("text") ){
+				if( ((EReference)wrappedMine[i].getId()).getName().equals("text") ){ //$NON-NLS-1$
 					tabTextPropertyDescriptor = wrappedMine[i];
 				}
 			} catch (ClassCastException exc){

@@ -32,7 +32,7 @@ public abstract class Environment {
 	
 	public Color lightGray;
 	
-	private static final String ENVIRONMENT_KEY = "ve.swt.Environment";
+	private static final String ENVIRONMENT_KEY = "ve.swt.Environment"; //$NON-NLS-1$
 	
 	/**
 	 * Get the Environment associated with the given display.
@@ -226,8 +226,8 @@ public abstract class Environment {
 		}
 	}
 	
-	private final static String LAYOUT_DATA = "ve.LAYOUT_DATA";
-	private final static String DISPOSE_ADDED = "ve.DISPOSE ADDED";
+	private final static String LAYOUT_DATA = "ve.LAYOUT_DATA"; //$NON-NLS-1$
+	private final static String DISPOSE_ADDED = "ve.DISPOSE ADDED"; //$NON-NLS-1$
 	private final static Layout FF_LAYOUT = new Layout() {
 		
 		private boolean getUseSetSize(Composite composite) {

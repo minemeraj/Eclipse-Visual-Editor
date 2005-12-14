@@ -501,7 +501,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				 }
 			}
 			else
-				JavaVEPlugin.log("SWTContainer: Could not find a plugin for:"+swtLibraries[i].getLegacyID());
+				JavaVEPlugin.log("SWTContainer: Could not find a plugin for:"+swtLibraries[i].getLegacyID()); //$NON-NLS-1$
 		}
 
 		if (containerType.includeJFace()) {
@@ -560,7 +560,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				 }
 			}
 			else
-				JavaVEPlugin.log("SWTContainer: Could not find a plugin for:"+swtLibraries[i].getLegacyID());	
+				JavaVEPlugin.log("SWTContainer: Could not find a plugin for:"+swtLibraries[i].getLegacyID());	 //$NON-NLS-1$
 		}
 
 		if (containerType.includeJFace()) {
@@ -579,7 +579,7 @@ public class SWTContainer implements IClasspathContainer, IConfigurationContribu
 				else {
 					// In a PDE environment, it may be a valid problem.  e.g., RCP only imaged does not contain jfacetext
 					if (JavaVEPlugin.isLoggingLevel(Level.INFO))
-					   JavaVEPlugin.log("SWTContainer: plugin "+jfaceLibraries[i].getLegacyID()+" is not available on the PDE target", Level.INFO);	 //$NON-NLS-1$ $NON-NLS-2$
+					   JavaVEPlugin.log("SWTContainer: plugin "+jfaceLibraries[i].getLegacyID()+" is not available on the PDE target", Level.INFO);	 //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
 				}
 			}
 		}

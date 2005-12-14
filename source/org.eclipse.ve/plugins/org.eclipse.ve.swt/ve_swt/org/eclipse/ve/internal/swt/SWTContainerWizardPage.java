@@ -31,7 +31,7 @@ public  class SWTContainerWizardPage extends WizardPage implements IClasspathCon
 		super("Standard Widget Toolkit (SWT)"); //$NON-NLS-1$
 		setTitle(SWTMessages.SWTContainerWizardPage_wizardTitle); 
 		setMessage(SWTMessages.SWTContainerWizardPage_wizardMessage); 
-		setImageDescriptor(JavaVEPlugin.imageDescriptorFromPlugin(SwtPlugin.getDefault().getBundle().getSymbolicName(), "icons/addlibrary_wiz.gif"));
+		setImageDescriptor(JavaVEPlugin.imageDescriptorFromPlugin(SwtPlugin.getDefault().getBundle().getSymbolicName(), "icons/addlibrary_wiz.gif")); //$NON-NLS-1$
 	}	
 	
 	public void createControl(Composite parent) {

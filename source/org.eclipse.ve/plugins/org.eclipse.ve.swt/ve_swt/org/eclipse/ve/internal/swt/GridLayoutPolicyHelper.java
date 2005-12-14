@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.48 $  $Date: 2005-12-09 22:44:19 $
+ *  $Revision: 1.49 $  $Date: 2005-12-14 21:44:40 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -88,7 +88,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 	protected JavaClass classLabel;
 	protected JavaClass classControl;
 	
-	private static final String NO_MODS = "NOMODS";
+	private static final String NO_MODS = "NOMODS"; //$NON-NLS-1$
 	private static final int NOT_MODIFIED_SPAN = -1;
 	private static final int SET_TO_DEFAULT_SPAN = -2;
 	public class GridComponent {
@@ -964,7 +964,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		
 		EStringToStringMapEntryImpl nameEntry = (EStringToStringMapEntryImpl) EcoreFactory.eINSTANCE.create(EcorePackage.eINSTANCE.getEStringToStringMapEntry());
 		nameEntry.setKey(NameInCompositionPropertyDescriptor.NAME_IN_COMPOSITION_KEY);
-		nameEntry.setValue(NameInMemberPropertyDescriptor.FORCE_NAME_IN_COMPOSITION_PREFIX+"filler");
+		nameEntry.setValue(NameInMemberPropertyDescriptor.FORCE_NAME_IN_COMPOSITION_PREFIX+"filler"); //$NON-NLS-1$
 		annotation.getKeyedValues().add(nameEntry);
 		
 		policy.setModelOnAnnotation(filler, annotation);

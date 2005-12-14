@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TreeBeanInfo.java,v $
- *  $Revision: 1.13 $  $Date: 2005-10-18 15:32:18 $ 
+ *  $Revision: 1.14 $  $Date: 2005-12-14 21:47:19 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -151,8 +151,8 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			// style bit
 			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
 				IBaseBeanInfoConstants.FACTORY_CREATION  , new Object[] { 
-						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createTree" , new Integer(1) , 
-								new String[] { "org.eclipse.swt.widgets.Composite" , "int"} } }				
+						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createTree" , new Integer(1) ,  //$NON-NLS-1$ //$NON-NLS-2$
+								new String[] { "org.eclipse.swt.widgets.Composite" , "int"} } }				 //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			),			
 		};

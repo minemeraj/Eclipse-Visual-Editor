@@ -38,7 +38,7 @@ public class FFOnlyModelAdapter extends ControlModelAdapter implements IContainm
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		// return child only for parents that are the freeform surface
 		if (!(parent instanceof DiagramData))
-				throw new StopRequestException("Parent is invalid for this child.");
+				throw new StopRequestException(SWTMessages.FFOnlyModelAdapter_StopRequest_InvalidParent);
 		return child;
 	}
 

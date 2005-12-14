@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: LabelContainmentHandler.java,v $
- *  $Revision: 1.3 $  $Date: 2005-11-04 17:30:52 $ 
+ *  $Revision: 1.4 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -40,7 +40,7 @@ public class LabelContainmentHandler extends WidgetContainmentHandler {
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		if (creation && child instanceof IJavaObjectInstance && !((IJavaObjectInstance)child).isSetAllocation()) {
 			IJavaObjectInstance jo = (IJavaObjectInstance) child;
-			preCmds.append(new LabelCreationCommand(jo, "text", SWTMessages.LabelPolicy_text_Label, domain));
+			preCmds.append(new LabelCreationCommand(jo, "text", SWTMessages.LabelPolicy_text_Label, domain)); //$NON-NLS-1$
 		}
 		return super.contributeToDropRequest(parent, child, preCmds, postCmds, creation, domain);
 	}

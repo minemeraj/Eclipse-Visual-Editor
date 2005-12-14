@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.11 $  $Date: 2005-11-18 22:09:01 $ 
+ *  $Revision: 1.12 $  $Date: 2005-12-14 21:47:19 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -347,7 +347,7 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 		if (control instanceof CCombo) {
 			// CCombo has a text field whose OBSCURED field needs to be changed
 			CCombo ccombo = (CCombo) control;
-			Object val = readObjectFieldValue(CCombo.class, ccombo, "text");
+			Object val = readObjectFieldValue(CCombo.class, ccombo, "text"); //$NON-NLS-1$
 			if (val instanceof Text) {
 				Text text = (Text) val;
 				changeObscured(text, map, on);

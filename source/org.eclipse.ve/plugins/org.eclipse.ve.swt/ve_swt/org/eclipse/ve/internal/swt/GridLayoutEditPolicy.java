@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
 
-/*
- * $RCSfile: GridLayoutEditPolicy.java,v $ $Revision: 1.45 $ $Date: 2005-12-01 20:19:43 $
- */
 import java.util.*;
 
 import org.eclipse.draw2d.*;
@@ -206,7 +203,7 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	public void setHost(EditPart host) {
 		super.setHost(host);
 		EditDomain editDomain = containerPolicy.getEditDomain();
-		controlType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Control", EMFEditDomainHelper.getResourceSet(editDomain));
+		controlType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Control", EMFEditDomainHelper.getResourceSet(editDomain)); //$NON-NLS-1$
 	}
 
 	public void activate() {

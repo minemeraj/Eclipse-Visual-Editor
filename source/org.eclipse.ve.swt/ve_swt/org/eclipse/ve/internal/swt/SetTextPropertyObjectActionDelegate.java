@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: SetTextPropertyObjectActionDelegate.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.7 $  $Date: 2005-12-14 21:44:40 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -81,7 +81,7 @@ public class SetTextPropertyObjectActionDelegate implements IObjectActionDelegat
 			sfProperty = modelType.getEStructuralFeature(propertyName); //$NON-NLS-1$
 			if (sfProperty == null) {
 				// no structural feature
-				if("text".equals(propertyName) && JavaBeanActionFilter.isTabFolderParent(fEditPart))   {
+				if("text".equals(propertyName) && JavaBeanActionFilter.isTabFolderParent(fEditPart))   { //$NON-NLS-1$
 					// Text property is special because it might not be on the control the action is being run on, but instead
 					// on its folder if it is a TabFolder
 					action.setEnabled(true);

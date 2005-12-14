@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridDataSpanPropertyDescriptor.java,v $
- *  $Revision: 1.2 $  $Date: 2005-12-09 22:44:19 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -130,7 +130,7 @@ public class GridDataSpanPropertyDescriptor extends BeanPropertyDescriptorAdapte
 		IJavaObjectInstance griddata = (IJavaObjectInstance) source.getEditableValue();
 		IBeanProxyHost griddataProxyHost = BeanProxyUtilities.getBeanProxyHost(griddata);	
 		ResourceSet rset = EMFEditDomainHelper.getResourceSet(griddataProxyHost.getBeanProxyDomain().getEditDomain());
-		Object oneValue = BeanProxyUtilities.wrapperBeanProxyAsPrimitiveType(griddataProxyHost.getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(1), (JavaDataType) ((EStructuralFeature) getTarget()).getEType(), rset, "1");
+		Object oneValue = BeanProxyUtilities.wrapperBeanProxyAsPrimitiveType(griddataProxyHost.getBeanProxyDomain().getProxyFactoryRegistry().getBeanProxyFactory().createBeanProxyWith(1), (JavaDataType) ((EStructuralFeature) getTarget()).getEType(), rset, "1"); //$NON-NLS-1$
 		return setValue(source, oneValue);
 	}
 
@@ -140,6 +140,6 @@ public class GridDataSpanPropertyDescriptor extends BeanPropertyDescriptorAdapte
 	public void setTarget(Notifier newTarget) {
 		super.setTarget(newTarget);
 		if (newTarget != null)
-			horizontalSpan = ((EStructuralFeature) newTarget).getName().equals("horizontalSpan");
+			horizontalSpan = ((EStructuralFeature) newTarget).getName().equals("horizontalSpan"); //$NON-NLS-1$
 	}
 }

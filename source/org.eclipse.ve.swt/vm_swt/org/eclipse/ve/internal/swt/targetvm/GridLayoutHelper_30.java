@@ -50,19 +50,19 @@ public class GridLayoutHelper_30 {
 		}
 		try {
 			if(pixelColumnWidthsFieldProxy == null){
-				pixelColumnWidthsFieldProxy = gridLayout.getClass().getDeclaredField("pixelColumnWidths");
+				pixelColumnWidthsFieldProxy = gridLayout.getClass().getDeclaredField("pixelColumnWidths"); //$NON-NLS-1$
 				pixelColumnWidthsFieldProxy.setAccessible(true);
 			}
 			if(pixelRowHeightsFieldProxy == null){
-				pixelRowHeightsFieldProxy = gridLayout.getClass().getDeclaredField("pixelRowHeights");
+				pixelRowHeightsFieldProxy = gridLayout.getClass().getDeclaredField("pixelRowHeights"); //$NON-NLS-1$
 				pixelRowHeightsFieldProxy.setAccessible(true);				
 			}			
 			if(expandableColumnsFieldProxy == null){
-				expandableColumnsFieldProxy = gridLayout.getClass().getDeclaredField("expandableColumns");
+				expandableColumnsFieldProxy = gridLayout.getClass().getDeclaredField("expandableColumns"); //$NON-NLS-1$
 				expandableColumnsFieldProxy.setAccessible(true);				
 			}			
 			if(expandableRowsFieldProxy == null){
-				expandableRowsFieldProxy = gridLayout.getClass().getDeclaredField("expandableRows");
+				expandableRowsFieldProxy = gridLayout.getClass().getDeclaredField("expandableRows"); //$NON-NLS-1$
 				expandableRowsFieldProxy.setAccessible(true);				
 			}			
 			widths = (int[])pixelColumnWidthsFieldProxy.get(gridLayout);

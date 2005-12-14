@@ -56,7 +56,7 @@ public class GridLayoutHelper {
 		if (computeSizeMethod == null) {
 			try {
 				computeSizeMethod = GridData.class
-						.getDeclaredMethod("computeSize", new Class[] { Control.class, int.class, int.class, boolean.class});
+						.getDeclaredMethod("computeSize", new Class[] { Control.class, int.class, int.class, boolean.class}); //$NON-NLS-1$
 				computeSizeMethod.setAccessible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -73,7 +73,7 @@ public class GridLayoutHelper {
 	private int getCacheWidth(GridData aGridData) {
 		if (cacheWidthField == null) {
 			try {
-				cacheWidthField = GridData.class.getDeclaredField("cacheWidth");
+				cacheWidthField = GridData.class.getDeclaredField("cacheWidth"); //$NON-NLS-1$
 				cacheWidthField.setAccessible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -91,7 +91,7 @@ public class GridLayoutHelper {
 	private int getCacheHeight(GridData aGridData) {
 		if (cacheHeightField == null) {
 			try {
-				cacheHeightField = GridData.class.getDeclaredField("cacheHeight");
+				cacheHeightField = GridData.class.getDeclaredField("cacheHeight"); //$NON-NLS-1$
 				cacheHeightField.setAccessible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -109,7 +109,7 @@ public class GridLayoutHelper {
 	private void putCacheWidth(GridData aGridData, int value) {
 		if (cacheWidthField == null) {
 			try {
-				cacheWidthField = GridData.class.getDeclaredField("cacheWidth");
+				cacheWidthField = GridData.class.getDeclaredField("cacheWidth"); //$NON-NLS-1$
 				cacheWidthField.setAccessible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -124,7 +124,7 @@ public class GridLayoutHelper {
 	private void putCacheHeight(GridData aGridData, int value) {
 		if (cacheHeightField == null) {
 			try {
-				cacheHeightField = GridData.class.getDeclaredField("cacheHeight");
+				cacheHeightField = GridData.class.getDeclaredField("cacheHeight"); //$NON-NLS-1$
 				cacheHeightField.setAccessible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -625,8 +625,8 @@ public class GridLayoutHelper {
 		Shell s = new Shell();
 		s.setLayout(new GridLayout());
 
-		new Label(s, SWT.NONE).setText("Label");
-		new Button(s, SWT.NONE).setText("Button");
+		new Label(s, SWT.NONE).setText("Label"); //$NON-NLS-1$
+		new Button(s, SWT.NONE).setText("Button"); //$NON-NLS-1$
 
 		s.open();
 

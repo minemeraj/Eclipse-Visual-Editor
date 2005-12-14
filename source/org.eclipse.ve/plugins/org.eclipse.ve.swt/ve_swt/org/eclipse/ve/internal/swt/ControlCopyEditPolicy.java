@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ControlCopyEditPolicy.java,v $
- *  $Revision: 1.7 $  $Date: 2005-09-14 18:20:06 $ 
+ *  $Revision: 1.8 $  $Date: 2005-12-14 21:44:40 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -40,7 +40,7 @@ public class ControlCopyEditPolicy extends WidgetCopyEditPolicy {
 		if(eObject instanceof EStructuralFeature){
 			return false;
 		} 
-		if(feature != null && feature.getName().equals("allocation")){
+		if(feature != null && feature.getName().equals("allocation")){ //$NON-NLS-1$
 			return false;
 		}
 		return super.shouldExpandFeature(feature,eObject);

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetContainmentHandler.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:52 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -69,8 +69,8 @@ public class WidgetContainmentHandler extends NoFFModelAdapter {
 				PTClassInstanceCreation classInstanceCreation = InstantiationFactory.eINSTANCE.createPTClassInstanceCreation(jo.getJavaType().getQualifiedNameForReflection(), null);
 				PTInstanceReference parentReference = InstantiationFactory.eINSTANCE.createPTInstanceReference((IJavaInstance) parent);
 				classInstanceCreation.getArguments().add(parentReference);
-				PTName SWTType = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT"); 
-				PTFieldAccess fieldAccess = InstantiationFactory.eINSTANCE.createPTFieldAccess(SWTType, "NONE");
+				PTName SWTType = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT");  //$NON-NLS-1$
+				PTFieldAccess fieldAccess = InstantiationFactory.eINSTANCE.createPTFieldAccess(SWTType, "NONE"); //$NON-NLS-1$
 				classInstanceCreation.getArguments().add(fieldAccess);
 				parseTreeAllocation.setExpression(classInstanceCreation);
 				

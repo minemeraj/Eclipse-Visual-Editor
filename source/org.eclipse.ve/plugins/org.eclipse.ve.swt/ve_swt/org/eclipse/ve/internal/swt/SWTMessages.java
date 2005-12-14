@@ -213,4 +213,11 @@ public final class SWTMessages extends NLS {
 	}
 
 	public static String SWTPreferencePageContents_OverviewLabel_Text;
+	public static String NoFFModelAdapter_StopRequest_InvalidParent;
+	public static String FFOnlyModelAdapter_StopRequest_InvalidParent;
+	public static String SwtPlugin_layout_NULL;
+	public static String SwtPlugin_layout_Grid;
+	public static String SwtPlugin_layout_Fill;
+	public static String SwtPlugin_layout_Row;
+	public static String SwtPlugin_layout_Form;
 }

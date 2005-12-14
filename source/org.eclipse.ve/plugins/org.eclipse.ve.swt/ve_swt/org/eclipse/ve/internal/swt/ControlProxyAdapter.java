@@ -180,15 +180,15 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 		// someone tried to extend the swt package because they are many package protected methods that a subclass on Control
 		// would need to call).
 		while (superclass != null && superclass.isAbstract()) {
-			if ("org.eclipse.swt.widgets.Control".equals(superclass.getQualifiedName()))
-				return getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.ConcreteControl", expression);
+			if ("org.eclipse.swt.widgets.Control".equals(superclass.getQualifiedName())) //$NON-NLS-1$
+				return getBeanTypeProxy("org.eclipse.ve.internal.swt.targetvm.ConcreteControl", expression); //$NON-NLS-1$
 			notInstantiatedClasses.add(superclass);
 			superclass = superclass.getSupertype();
 		}
 		if (superclass != null)
 			return getBeanTypeProxy(superclass.getQualifiedNameForReflection(), expression);
 		else
-			return getBeanTypeProxy("java.lang.Object", expression);
+			return getBeanTypeProxy("java.lang.Object", expression); //$NON-NLS-1$
 	}
 	
 	protected IProxy primInstantiateThisPart(IProxyBeanType targetClass, IExpression expression) throws AllocationException {
@@ -205,11 +205,11 @@ public class ControlProxyAdapter extends WidgetProxyAdapter implements IVisualCo
 
 			// newbean = new targetClass(Composite parent, int SWT.NONE);
 			ExpressionProxy newbean = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);;
-			if (!"java.lang.Object".equals(targetClass.getTypeName())) {
+			if (!"java.lang.Object".equals(targetClass.getTypeName())) { //$NON-NLS-1$
 				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass, 2);
 				expression.createProxyExpression(ForExpression.CLASSINSTANCECREATION_ARGUMENT, parent);
-				expression.createFieldAccess(ForExpression.CLASSINSTANCECREATION_ARGUMENT, getBeanTypeProxy("org.eclipse.swt.SWT", expression)
-						.getFieldProxy(expression, "NONE"), false);
+				expression.createFieldAccess(ForExpression.CLASSINSTANCECREATION_ARGUMENT, getBeanTypeProxy("org.eclipse.swt.SWT", expression) //$NON-NLS-1$
+						.getFieldProxy(expression, "NONE"), false); //$NON-NLS-1$
 			} else {
 				expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, targetClass,0);	// It's just java.lang.Object.
 			}
