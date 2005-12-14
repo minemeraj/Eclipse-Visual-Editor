@@ -30,4 +30,13 @@ public final class CodegenWizardsMessages extends NLS {
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, CodegenWizardsMessages.class);
 	}
+
+	public static String VisualClassExampleWizardPage_title;
+	public static String VisualClassExampleWizardPage_description;
+	public static String NewVisualClassWizardPage_title;
+	public static String NewVisualClassWizardPage_description;
+	public static String NewVisualClassWizardPage_label_whichMethodStubs;
+	public static String NewVisualClassWizardPage_checkbox_need_main;
+	public static String NewVisualClassWizardPage_checkbox_super_constructors;
+	public static String NewVisualClassWizardPage_checkbox_inherited_abstract_methods;
 }
