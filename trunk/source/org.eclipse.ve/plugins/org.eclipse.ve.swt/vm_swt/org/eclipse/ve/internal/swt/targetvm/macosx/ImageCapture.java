@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.4 $  $Date: 2005-11-14 05:38:34 $ 
+ *  $Revision: 1.5 $  $Date: 2005-12-14 21:45:52 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.macosx;
 
@@ -35,16 +35,16 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.ImageCapt
 	
 	static {
 		
-		System.loadLibrary("swt-carbon-print");
+		System.loadLibrary("swt-carbon-print"); //$NON-NLS-1$
 		
 		try {
-			shellHandleField = Shell.class.getDeclaredField("shellHandle");
+			shellHandleField = Shell.class.getDeclaredField("shellHandle"); //$NON-NLS-1$
 			shellHandleField.setAccessible(true);
 			
 			Class osClass = Class.forName("org.eclipse.swt.internal.carbon.OS"); //$NON-NLS-1$
 			HIViewGetRootMethod = osClass.getMethod("HIViewGetRoot", new Class[]{int.class}); //$NON-NLS-1$
 			
-			carbon_newMethod = Image.class.getMethod("carbon_new", new Class[] {Device.class, int.class, int.class, int.class});
+			carbon_newMethod = Image.class.getMethod("carbon_new", new Class[] {Device.class, int.class, int.class, int.class}); //$NON-NLS-1$
 
 		} catch (Exception e) {
 			e.printStackTrace();

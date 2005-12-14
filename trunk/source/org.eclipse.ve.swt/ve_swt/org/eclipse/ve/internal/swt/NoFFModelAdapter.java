@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: NoFFModelAdapter.java,v $
- *  $Revision: 1.7 $  $Date: 2005-11-04 17:30:52 $ 
+ *  $Revision: 1.8 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -38,7 +38,7 @@ public class NoFFModelAdapter extends ControlModelAdapter implements IContainmen
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		// return child only for parents that are the freeform surface
 		if (parent instanceof DiagramData)
-			throw new StopRequestException("Parent is invalid for this child.");
+			throw new StopRequestException(SWTMessages.NoFFModelAdapter_StopRequest_InvalidParent);
 		return child;
 	}
 

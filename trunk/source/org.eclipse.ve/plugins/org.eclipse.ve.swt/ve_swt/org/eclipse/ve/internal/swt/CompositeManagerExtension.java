@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeManagerExtension.java,v $
- *  $Revision: 1.4 $  $Date: 2005-11-08 22:33:17 $ 
+ *  $Revision: 1.5 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -89,7 +89,7 @@ public class CompositeManagerExtension extends ControlManagerExtension implement
 					// Create the cooresponding server on the remote vm that will do the callback.
 					IExpression expression = ((ExpressionProxy) proxy).getExpression();
 					ExpressionProxy pcb = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
-					expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, BeanSWTUtilities.COMPOSITEMANAGEREXTENSION_CLASSNAME+"$LayoutDataTypeCallback"), 0);
+					expression.createClassInstanceCreation(ForExpression.ASSIGNMENT_RIGHT, expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, BeanSWTUtilities.COMPOSITEMANAGEREXTENSION_CLASSNAME+"$LayoutDataTypeCallback"), 0); //$NON-NLS-1$
 					registry.getCallbackRegistry().registerCallback(pcb, cb, expression);
 					pcb.addProxyListener(new ExpressionProxy.ProxyAdapter() {
 						public void proxyNotResolved(ExpressionProxy.ProxyEvent event) {
@@ -98,7 +98,7 @@ public class CompositeManagerExtension extends ControlManagerExtension implement
 					});
 				} else {
 					try {
-						registry.getCallbackRegistry().registerCallback(registry.getBeanTypeProxyFactory().getBeanTypeProxy(BeanSWTUtilities.COMPOSITEMANAGEREXTENSION_CLASSNAME+"$LayoutDataTypeCallback").newInstance(), cb);
+						registry.getCallbackRegistry().registerCallback(registry.getBeanTypeProxyFactory().getBeanTypeProxy(BeanSWTUtilities.COMPOSITEMANAGEREXTENSION_CLASSNAME+"$LayoutDataTypeCallback").newInstance(), cb); //$NON-NLS-1$
 					} catch (ThrowableProxy e) {
 						JavaVEPlugin.log(e, Level.WARNING);
 					}

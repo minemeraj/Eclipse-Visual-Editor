@@ -178,7 +178,7 @@ public class BeanSWTUtilities {
 		if ((feedbackController = (FeedbackController) constants.controlManagerFeedbackController.get(displayProxy)) == null) {
 			ExpressionProxy feedbackProxy = expression.createProxyAssignmentExpression(ForExpression.ROOTEXPRESSION);
 			IProxyBeanType feedbackControllerTypeProxy = expression.getRegistry().getBeanTypeProxyFactory().getBeanTypeProxy(expression, BeanSWTUtilities.CONTROLMANAGERFEEDBACK_CLASSNAME);
-			expression.createMethodInvocation(ForExpression.ASSIGNMENT_RIGHT, feedbackControllerTypeProxy.getMethodProxy(expression, "createFeedbackController", new IProxyBeanType[] {displayProxy.getTypeProxy()}), true, 1);
+			expression.createMethodInvocation(ForExpression.ASSIGNMENT_RIGHT, feedbackControllerTypeProxy.getMethodProxy(expression, "createFeedbackController", new IProxyBeanType[] {displayProxy.getTypeProxy()}), true, 1); //$NON-NLS-1$
 			expression.createTypeReceiver(feedbackControllerTypeProxy);
 			expression.createProxyExpression(ForExpression.METHOD_ARGUMENT, displayProxy);
 			constants.controlManagerFeedbackController.put(displayProxy, feedbackController = new ControlManager.FeedbackController(feedbackProxy));
@@ -441,7 +441,7 @@ public class BeanSWTUtilities {
     static IBooleanBeanProxy invoke_imageCaptureStartCapture(IBeanProxy imageCaptureProxy, IBeanProxy controlProxy, int maxWidth, int maxHeight, boolean abortAndwait) {
         BeanSWTUtilities constants = getConstants(imageCaptureProxy);
         if (constants.imageCaptureStartCaptureMethodProxy == null) {
-            constants.imageCaptureStartCaptureMethodProxy = imageCaptureProxy.getTypeProxy().getMethodProxy("captureImage", new String[] {"org.eclipse.swt.widgets.Control", "int", "int", "boolean"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            constants.imageCaptureStartCaptureMethodProxy = imageCaptureProxy.getTypeProxy().getMethodProxy("captureImage", new String[] {"org.eclipse.swt.widgets.Control", "int", "int", "boolean"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         }
 		IStandardBeanProxyFactory beanProxyFactory = imageCaptureProxy.getProxyFactoryRegistry().getBeanProxyFactory();
 		return (IBooleanBeanProxy) constants.imageCaptureStartCaptureMethodProxy.invokeCatchThrowableExceptions(imageCaptureProxy, new IBeanProxy[] {
@@ -548,7 +548,7 @@ public class BeanSWTUtilities {
 		IProxyMethod method = constants.methods[WIDGET_GETSTYLE];
 		if (method == null || (method.isExpressionProxy() && ((ExpressionProxy) method).getExpression() != expression)) {
 			method = expression.getRegistry().getBeanTypeProxyFactory()
-					.getBeanTypeProxy(expression, "org.eclipse.swt.widgets.Widget").getMethodProxy(
+					.getBeanTypeProxy(expression, "org.eclipse.swt.widgets.Widget").getMethodProxy( //$NON-NLS-1$
 							expression, "getStyle", //$NON-NLS-1$
 							(IProxyBeanType[]) null);
 			processExpressionProxy(method, constants.methods, WIDGET_GETSTYLE);
@@ -810,7 +810,7 @@ public class BeanSWTUtilities {
 		BeanSWTUtilities constants = getConstants(registry);
 		if (constants.offscreenLocation == null) {
 			IBeanProxy env = JavaStandardSWTBeanConstants.getConstants(registry).getEnvironmentProxy();
-			IBeanProxy p = env.getTypeProxy().getMethodProxy("getScreenLocation", new String[] {"boolean"}).invokeCatchThrowableExceptions(env, registry.getBeanProxyFactory().createBeanProxyWith(VCEPreferences.isLiveWindowOn()));
+			IBeanProxy p = env.getTypeProxy().getMethodProxy("getScreenLocation", new String[] {"boolean"}).invokeCatchThrowableExceptions(env, registry.getBeanProxyFactory().createBeanProxyWith(VCEPreferences.isLiveWindowOn())); //$NON-NLS-1$ //$NON-NLS-2$
 			if (p instanceof IPointBeanProxy) {
 				IPointBeanProxy pb = (IPointBeanProxy) p;
 				constants.offscreenLocation = new Point(pb.getX(), pb.getY());
@@ -952,10 +952,10 @@ public class BeanSWTUtilities {
 		if (proj != null) {
 			try {
 				FoundIDs foundIds = ProxyPlugin.getPlugin().getIDsFound(proj);
-				ContainerPaths cpaths = (ContainerPaths) foundIds.containerIds.get("SWT_CONTAINER");
-				boolean jface = foundIds.pluginIds.containsKey("org.eclipse.jface");
+				ContainerPaths cpaths = (ContainerPaths) foundIds.containerIds.get("SWT_CONTAINER"); //$NON-NLS-1$
+				boolean jface = foundIds.pluginIds.containsKey("org.eclipse.jface"); //$NON-NLS-1$
 				if (!jface && cpaths != null && cpaths.getVisibleContainerPaths().length > 0) {
-					Pattern pattern = Pattern.compile("SWT_CONTAINER/JFACE(/.*)*");
+					Pattern pattern = Pattern.compile("SWT_CONTAINER/JFACE(/.*)*"); //$NON-NLS-1$
 					String[] containerPaths = cpaths.getVisibleContainerPaths();
 					for (int i = 0; i < containerPaths.length; i++) {
 						if (pattern.matcher(containerPaths[i]).matches()) {

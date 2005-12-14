@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultSWTLayoutPolicy.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-29 19:49:01 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -53,7 +53,7 @@ public class DefaultSWTLayoutPolicy {
 				return true;
 			}
 			public void execute() {
-				EStructuralFeature layout_SF = model.eClass().getEStructuralFeature("layout");
+				EStructuralFeature layout_SF = model.eClass().getEStructuralFeature("layout"); //$NON-NLS-1$
 				if (!model.eIsSet(layout_SF)) {
 					// Get the type of layout to set
 					String defaultLayoutTypeName = defaultLayout == null ? SwtPlugin.getDefault().getPluginPreferences().getString(SwtPlugin.DEFAULT_LAYOUT) : defaultLayout;

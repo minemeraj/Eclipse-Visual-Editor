@@ -93,8 +93,8 @@ public class DecorationsContainerPolicy extends CompositeContainerPolicy {
 								if (arg instanceof PTFieldAccess) {
 									PTFieldAccess ptf = (PTFieldAccess) arg;
 									if (ptf.getReceiver() instanceof PTName) {
-										if ("org.eclipse.swt.SWT".equals(((PTName) ptf.getReceiver()).getName())) { // $NON_NLS-1$
-											if ("BAR".equals(ptf.getField()))
+										if ("org.eclipse.swt.SWT".equals(((PTName) ptf.getReceiver()).getName())) { // $NON_NLS-1$ //$NON-NLS-1$
+											if ("BAR".equals(ptf.getField())) //$NON-NLS-1$
 												return true;
 										}
 									}

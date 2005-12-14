@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.22 $  $Date: 2005-12-09 22:44:19 $ 
+ *  $Revision: 1.23 $  $Date: 2005-12-14 21:44:40 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -612,7 +612,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 				EObject control = (EObject)editpart.getModel();
 				if (control != null) {
 					Point spanTo;
-					boolean horizontalSpan = "horizontalSpan".equals(sf.getName());
+					boolean horizontalSpan = "horizontalSpan".equals(sf.getName()); //$NON-NLS-1$
 					if (horizontalSpan)
 						spanTo = new Point(spinnerValue, 0);
 					else

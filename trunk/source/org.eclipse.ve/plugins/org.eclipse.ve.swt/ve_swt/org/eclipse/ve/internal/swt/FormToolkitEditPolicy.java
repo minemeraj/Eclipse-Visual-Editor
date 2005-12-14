@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $$RCSfile: FormToolkitEditPolicy.java,v $$
- *  $$Revision: 1.7 $$  $$Date: 2005-10-03 19:20:48 $$ 
+ *  $$Revision: 1.8 $$  $$Date: 2005-12-14 21:44:40 $$ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -98,9 +98,9 @@ public class FormToolkitEditPolicy extends ContainerEditPolicy {
 			List args = new ArrayList(1);
 			// Create an expression for "Display.getCurrent()";
 			PTMethodInvocation getDisplayExpression = InstantiationFactory.eINSTANCE.createPTMethodInvocation(
-					InstantiationFactory.eINSTANCE.createPTName(SwtPlugin.DISPLAY_CLASSNAME),"getCurrent",null);
+					InstantiationFactory.eINSTANCE.createPTName(SwtPlugin.DISPLAY_CLASSNAME),"getCurrent",null); //$NON-NLS-1$
 			args.add(getDisplayExpression);
-			PTClassInstanceCreation formToolkitExpression= InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("org.eclipse.ui.forms.widgets.FormToolkit",args);
+			PTClassInstanceCreation formToolkitExpression= InstantiationFactory.eINSTANCE.createPTClassInstanceCreation("org.eclipse.ui.forms.widgets.FormToolkit",args); //$NON-NLS-1$
 			ParseTreeAllocation formToolkitAllocation = InstantiationFactory.eINSTANCE.createParseTreeAllocation(formToolkitExpression);
 			IJavaObjectInstance newFormToolkit = (IJavaObjectInstance) BeanUtilities.createJavaObject(SwtPlugin.FORM_TOOLKIT_CLASSNAME,((IJavaObjectInstance)getHost().getModel()).eResource().getResourceSet(),formToolkitAllocation);
 			// add the form toolkit to the "components" relationship of the BeanComposition

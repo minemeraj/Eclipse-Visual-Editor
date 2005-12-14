@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CLabelContainmentHandler.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:52 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -41,7 +41,7 @@ public class CLabelContainmentHandler extends WidgetContainmentHandler {
 		child = super.contributeToDropRequest(parent, child, preCmds, postCmds, creation, domain);
 		if (creation && child instanceof IJavaObjectInstance) {
 			IJavaObjectInstance jo = (IJavaObjectInstance) child;
-			preCmds.append(new LabelCreationCommand(jo, "text", SWTMessages.CLabelPolicy_text_CLabel, domain));
+			preCmds.append(new LabelCreationCommand(jo, "text", SWTMessages.CLabelPolicy_text_CLabel, domain)); //$NON-NLS-1$
 		}
 		return child;		
 	}

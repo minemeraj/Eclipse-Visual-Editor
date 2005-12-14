@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FreeFormComponentsHost.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-12 17:43:05 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -49,7 +49,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 			ProxyFactoryRegistry registry = expression.getRegistry();
 			IBeanProxy environment = JavaStandardSWTBeanConstants.getConstants(registry).getEnvironmentProxy();
 			IStandardBeanProxyFactory proxyFactory = registry.getBeanProxyFactory();
-			ffHost = expression.createSimpleMethodInvoke(environment.getTypeProxy().getMethodProxy(expression, "initializeFreeFormHost", new String[] {"int", "int"}),
+			ffHost = expression.createSimpleMethodInvoke(environment.getTypeProxy().getMethodProxy(expression, "initializeFreeFormHost", new String[] {"int", "int"}), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					environment, new IProxy[] {proxyFactory.createBeanProxyWith(loc.x), proxyFactory.createBeanProxyWith(loc.y)}, true);
 			((ExpressionProxy) ffHost).addProxyListener(new ExpressionProxy.ProxyAdapter(){
 				public void proxyResolved(ProxyEvent event) {
@@ -77,7 +77,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 			recreateIfNecessary(expression);
 			IBeanProxy environment = JavaStandardSWTBeanConstants.getConstants(expression.getRegistry()).getEnvironmentProxy();
 			
-			return expression.createSimpleMethodInvoke(environment.getTypeProxy().getMethodProxy(expression, "addToFreeFormParent", new String[]{"boolean"}), 
+			return expression.createSimpleMethodInvoke(environment.getTypeProxy().getMethodProxy(expression, "addToFreeFormParent", new String[]{"boolean"}),  //$NON-NLS-1$ //$NON-NLS-2$
 					environment, new IProxy[] {expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(useSetSize)}, true);
 		}
 		
@@ -96,7 +96,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 			recreateIfNecessary(expression);
 			IBeanProxy environment = JavaStandardSWTBeanConstants.getConstants(expression.getRegistry()).getEnvironmentProxy();
 			
-			expression.createSimpleMethodInvoke(environment.getTypeProxy().getMethodProxy(expression, "setUseSetSize", new String[]{"org.eclipse.swt.widgets.Control", "boolean"}), 
+			expression.createSimpleMethodInvoke(environment.getTypeProxy().getMethodProxy(expression, "setUseSetSize", new String[]{"org.eclipse.swt.widgets.Control", "boolean"}),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					environment, new IProxy[] {control, expression.getRegistry().getBeanProxyFactory().createBeanProxyWith(useSetSize)}, false);
 		}
 
@@ -111,7 +111,7 @@ public class FreeFormComponentsHost implements CompositionProxyAdapter.IFreeForm
 				// We don't want to recreate on a dispose. That would fluff it up for no reason.
 				IBeanProxy environment = JavaStandardSWTBeanConstants.getConstants(expression.getRegistry()).getEnvironmentProxy();
 				
-				expression.createSimpleMethodInvoke(environment.getTypeProxy().getMethodProxy(expression, "disposeFreeFormHost"), 
+				expression.createSimpleMethodInvoke(environment.getTypeProxy().getMethodProxy(expression, "disposeFreeFormHost"),  //$NON-NLS-1$
 						environment, null, false);
 				ffHost = null;
 			}

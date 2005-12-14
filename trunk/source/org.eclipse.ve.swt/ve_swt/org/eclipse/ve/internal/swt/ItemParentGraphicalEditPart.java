@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ItemParentGraphicalEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-15 20:19:21 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -40,7 +40,7 @@ public abstract class ItemParentGraphicalEditPart extends CompositeGraphicalEdit
 	 * @since 1.1.0
 	 */
 	protected void refreshItems() {
-		CDEUtilities.displayExec(this, "ITEM VISUALS", new EditPartRunnable(this) {
+		CDEUtilities.displayExec(this, "ITEM VISUALS", new EditPartRunnable(this) { //$NON-NLS-1$
 			protected void doRun() {
 				List children = getChildren();
 				for (int i = 0; i < children.size(); i++) {

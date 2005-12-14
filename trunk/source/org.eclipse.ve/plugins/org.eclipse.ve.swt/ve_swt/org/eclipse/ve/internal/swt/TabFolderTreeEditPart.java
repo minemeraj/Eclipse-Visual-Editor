@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderTreeEditPart.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.13 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -46,7 +46,7 @@ import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
  */
 public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 
-	private static final String TAB_ITEM_DIRECT_EDIT_MANAGER = "TAB_ITEM_DIRECT_EDIT_MANAGER";
+	private static final String TAB_ITEM_DIRECT_EDIT_MANAGER = "TAB_ITEM_DIRECT_EDIT_MANAGER"; //$NON-NLS-1$
 	private EReference sf_items, sf_tabItemControl;
 
 	public TabFolderTreeEditPart(Object model) {

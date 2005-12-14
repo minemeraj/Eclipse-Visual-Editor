@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartHost.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-05 15:25:09 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:45:52 $ 
  */
 package org.eclipse.ve.internal.jface.targetvm;
 
@@ -68,7 +68,7 @@ public class WorkbenchPartHost {
 		// Having simple and traditional tabs is not available on all target platforms so use reflection
 		// folder.setSimple(fTraditionalTabs);
 		try {
-			Method setSimpleMethod = folder.getClass().getMethod("setSimple", new Class[] { Boolean.TYPE});
+			Method setSimpleMethod = folder.getClass().getMethod("setSimple", new Class[] { Boolean.TYPE}); //$NON-NLS-1$
 			setSimpleMethod.invoke(folder, new Object[] { Boolean.valueOf(traditionalTabs)});
 		} catch (Exception e) {
 		}
@@ -99,9 +99,9 @@ public class WorkbenchPartHost {
 		Image image = null;
 		if (iconLocation == null) {
 			if (aWorkbenchPart instanceof IEditorPart)
-				image = ImageDescriptor.createFromFile(WorkbenchPartHost.class, "rcp_editor.gif").createImage();
+				image = ImageDescriptor.createFromFile(WorkbenchPartHost.class, "rcp_editor.gif").createImage(); //$NON-NLS-1$
 			else
-				image = ImageDescriptor.createFromFile(WorkbenchPartHost.class, "rcp_app.gif").createImage();
+				image = ImageDescriptor.createFromFile(WorkbenchPartHost.class, "rcp_app.gif").createImage(); //$NON-NLS-1$
 		} else
 			image = ImageDescriptor.createFromFile(null, iconLocation).createImage();
 
@@ -124,8 +124,8 @@ public class WorkbenchPartHost {
 
 	}
 	
-	private static final String WIDTH = "width";
-	private static final String HEIGHT = "height";
+	private static final String WIDTH = "width"; //$NON-NLS-1$
+	private static final String HEIGHT = "height"; //$NON-NLS-1$
 	
 	/**
 	 * Set the preferred minimum size for the workbench part.

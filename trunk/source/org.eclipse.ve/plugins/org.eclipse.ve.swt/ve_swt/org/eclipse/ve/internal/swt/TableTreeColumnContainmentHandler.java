@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableTreeColumnContainmentHandler.java,v $
- *  $Revision: 1.4 $  $Date: 2005-11-04 17:30:52 $ 
+ *  $Revision: 1.5 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -59,20 +59,20 @@ public class TableTreeColumnContainmentHandler extends WidgetContainmentHandler 
 				ResourceSet rset = EMFEditDomainHelper.getResourceSet(domain);
 								
 				// If not a tree column and parent is a tree, change to a tree column.
-				JavaHelpers tableClass = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Table", rset);
+				JavaHelpers tableClass = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Table", rset); //$NON-NLS-1$
 				String childClassname = tjo.getJavaType().getQualifiedNameForReflection();
-				if (!"org.eclipse.swt.widgets.TableColumn".equals(childClassname) && tableClass.isInstance(parent)) {
-					child = BeanUtilities.createJavaObject(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.TableColumn", rset), null, (JavaAllocation) null);
+				if (!"org.eclipse.swt.widgets.TableColumn".equals(childClassname) && tableClass.isInstance(parent)) { //$NON-NLS-1$
+					child = BeanUtilities.createJavaObject(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.TableColumn", rset), null, (JavaAllocation) null); //$NON-NLS-1$
 				} else {
-					JavaHelpers treeClass = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Tree", rset);
-					if (!"org.eclipse.swt.widgets.TreeColumn".equals(childClassname) && treeClass.isInstance(parent)) {
-						child = BeanUtilities.createJavaObject(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.TreeColumn", rset), null, (JavaAllocation) null);
+					JavaHelpers treeClass = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Tree", rset); //$NON-NLS-1$
+					if (!"org.eclipse.swt.widgets.TreeColumn".equals(childClassname) && treeClass.isInstance(parent)) { //$NON-NLS-1$
+						child = BeanUtilities.createJavaObject(JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.TreeColumn", rset), null, (JavaAllocation) null); //$NON-NLS-1$
 					}
 				}
 			}
 			
 			final IJavaObjectInstance jo = (IJavaObjectInstance) child;
-			final EStructuralFeature sf_defaultWidth = jo.eClass().getEStructuralFeature("width");
+			final EStructuralFeature sf_defaultWidth = jo.eClass().getEStructuralFeature("width"); //$NON-NLS-1$
 			if (sf_defaultWidth != null && !jo.eIsSet(sf_defaultWidth)) {
 
 				preCmds.append(new CommandWrapper() {
@@ -83,7 +83,7 @@ public class TableTreeColumnContainmentHandler extends WidgetContainmentHandler 
 
 					public void execute() {
 						IJavaInstance intObj = BeanUtilities.createJavaObject((JavaHelpers) sf_defaultWidth.getEType(), JavaEditDomainHelper
-								.getResourceSet(domain), "60");
+								.getResourceSet(domain), "60"); //$NON-NLS-1$
 						RuledCommandBuilder cb = new RuledCommandBuilder(domain);
 						cb.applyAttributeSetting(jo, sf_defaultWidth, intObj);
 						command = cb.getCommand();
@@ -94,8 +94,8 @@ public class TableTreeColumnContainmentHandler extends WidgetContainmentHandler 
 			
 			// If we are dropping a column then we should have headers and lines.
 			final IJavaObjectInstance pjo = (IJavaObjectInstance) parent;
-			final EStructuralFeature sf_headerVisible = pjo.eClass().getEStructuralFeature("headerVisible");
-			final EStructuralFeature sf_linesVisible = pjo.eClass().getEStructuralFeature("linesVisible");
+			final EStructuralFeature sf_headerVisible = pjo.eClass().getEStructuralFeature("headerVisible"); //$NON-NLS-1$
+			final EStructuralFeature sf_linesVisible = pjo.eClass().getEStructuralFeature("linesVisible"); //$NON-NLS-1$
 			if (sf_headerVisible != null && sf_linesVisible != null && (!pjo.eIsSet(sf_headerVisible) || !pjo.eIsSet(sf_linesVisible))) {
 				preCmds.append(new CommandWrapper() {
 

@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.swt;
-/*
- *  $RCSfile: ControlPropertySourceAdapter.java,v $
- *  $Revision: 1.21 $  $Date: 2005-11-04 17:30:52 $ 
- */
 import java.util.*;
 
 import org.eclipse.emf.common.util.EMap;
@@ -62,7 +58,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				EStructuralFeature eFeature = null;
 				boolean isStyleBit = false;
 				if (descriptorID instanceof StyleBitPropertyID) {
-					eFeature = getBean().getJavaType().getEStructuralFeature("style");
+					eFeature = getBean().getJavaType().getEStructuralFeature("style"); //$NON-NLS-1$
 					// Check for null as only BeanInfo with explicit "style" PropertyDescriptors have features, introspected ones do not
 					if (eFeature == null)
 						return super.isPropertySet(descriptorID);
@@ -229,12 +225,12 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 		}
 		
 		String javaClassName = val.getJavaType().getQualifiedName();
-		if(javaClassName.equals("java.lang.String")){
+		if(javaClassName.equals("java.lang.String")){ //$NON-NLS-1$
 			PTStringLiteral stringValue = InstantiationFactory.eINSTANCE.createPTStringLiteral();
 			String targetVMString = ((IStringBeanProxy)BeanProxyUtilities.getBeanProxy(val)).stringValue();
 			stringValue.setLiteralValue(targetVMString);
 			return stringValue;
-		} else if (javaClassName.equals("boolean")){
+		} else if (javaClassName.equals("boolean")){ //$NON-NLS-1$
 			PTBooleanLiteral booleanValue = InstantiationFactory.eINSTANCE.createPTBooleanLiteral();
 			boolean targetVMBoolean = ((IBooleanBeanProxy)BeanProxyUtilities.getBeanProxy(val)).booleanValue();
 			booleanValue.setBooleanValue(targetVMBoolean);
@@ -276,7 +272,7 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 	}
 	
 	private JavaClass getJavaClass(PTStringLiteral aStringLiteral){
-		return Utilities.getJavaClass("java.lang.String",getBean().eResource().getResourceSet());		
+		return Utilities.getJavaClass("java.lang.String",getBean().eResource().getResourceSet());		 //$NON-NLS-1$
 	}
 	
 	private JavaClass getJavaClass(PTName aName){

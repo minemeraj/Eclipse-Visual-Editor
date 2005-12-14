@@ -76,8 +76,8 @@ public class SwtPlugin extends Plugin {
 	public String[][] getLayouts() {
 		if(layouts == null){
 			layouts = new String[][] {
-			  new String[] {"null","GridLayout","FillLayout","RowLayout","FormLayout"},
-			  new String[] {NULL_LAYOUT,"org.eclipse.swt.layout.GridLayout","org.eclipse.swt.layout.FillLayout","org.eclipse.swt.layout.RowLayout","org.eclipse.swt.layout.FormLayout"}
+			  new String[] {SWTMessages.SwtPlugin_layout_NULL,SWTMessages.SwtPlugin_layout_Grid,SWTMessages.SwtPlugin_layout_Fill,SWTMessages.SwtPlugin_layout_Row,SWTMessages.SwtPlugin_layout_Form},
+			  new String[] {NULL_LAYOUT,"org.eclipse.swt.layout.GridLayout","org.eclipse.swt.layout.FillLayout","org.eclipse.swt.layout.RowLayout","org.eclipse.swt.layout.FormLayout"} //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			};
 		};
 		return layouts;

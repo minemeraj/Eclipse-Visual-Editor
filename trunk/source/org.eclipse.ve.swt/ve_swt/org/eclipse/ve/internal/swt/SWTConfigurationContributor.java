@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.37 $  $Date: 2005-11-21 22:20:07 $ 
+ *  $Revision: 1.38 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -201,7 +201,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 		IFragmentModel[] frags = pm.getFragments();			
 		URL os = null;
 		for (int i = 0; i < frags.length; i++) {
-			if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt") &&
+			if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt") && //$NON-NLS-1$
 				frags[i].getBundleDescription().getHost().getName().equals("org.eclipse.swt")) { //$NON-NLS-1$
 				// swt fragment					
 				if (frags[i].getBundleDescription().getSymbolicName().startsWith("org.eclipse.swt.nl"))  //$NON-NLS-1$

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TableContainmentHandler.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:52 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-14 21:44:40 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -49,8 +49,8 @@ public class TableContainmentHandler extends WidgetContainmentHandler {
 		child = super.contributeToDropRequest(parent, child, preCmds, postCmds, creation, domain);
 		if (creation && child instanceof IJavaObjectInstance) {
 			final IJavaObjectInstance jo = (IJavaObjectInstance) child;
-			final EStructuralFeature sf_headerVisible = jo.eClass().getEStructuralFeature("headerVisible");
-			final EStructuralFeature sf_linesVisible = jo.eClass().getEStructuralFeature("linesVisible");
+			final EStructuralFeature sf_headerVisible = jo.eClass().getEStructuralFeature("headerVisible"); //$NON-NLS-1$
+			final EStructuralFeature sf_linesVisible = jo.eClass().getEStructuralFeature("linesVisible"); //$NON-NLS-1$
 			if (!jo.eIsSet(sf_headerVisible) || !jo.eIsSet(sf_linesVisible)) {
 				preCmds.append(new CommandWrapper() {
 
