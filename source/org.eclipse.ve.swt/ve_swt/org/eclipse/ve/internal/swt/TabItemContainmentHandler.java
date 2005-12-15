@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabItemContainmentHandler.java,v $
- *  $Revision: 1.1 $  $Date: 2005-12-15 14:55:17 $ 
+ *  $Revision: 1.2 $  $Date: 2005-12-15 20:44:47 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -55,7 +55,9 @@ public class TabItemContainmentHandler extends NoFFModelAdapter {
 					WidgetContainmentHandler.processAllocation(parent,child, preCmds);
 					// If the TabItem has a control (as occurs during copy and paste) then we must ensure the control is reparented
 					IJavaInstance tabItemControl = BeanUtilities.getFeatureValue((IJavaInstance) child, "control");
-					if(tabItemControl != null){
+					if(tabItemControl == null){
+						throw new StopRequestException("TabItem cannot be dropped directly when it has no control");
+					} else {
 						WidgetContainmentHandler.processAllocation(parent, tabItemControl, preCmds);
 					}
 					return child;
