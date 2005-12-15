@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 
+import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy;
 
@@ -109,20 +110,12 @@ public class BaseJavaContainerPolicy extends AbstractEMFContainerPolicy {
 	}
 	
 	protected Command primCreateCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		if (!containmentSF.isMany())
-			if (((EObject) container).eIsSet(containmentSF))
-				return UnexecutableCommand.INSTANCE; // This is a single valued feature, and it is already set.
-			else if (children.isEmpty())
-				return null;	// This is single valued and no child passed in. Return as no command. Let caller handle no children being valid or not.
-
-		RuledCommandBuilder cBld = new RuledCommandBuilder(domain); 
-		cBld.setPropertyRule(false);
-		if (!containmentSF.isMany())
-			cBld.applyAttributeSetting((EObject) container, containmentSF, children.get(0));
-		else
-			cBld.applyAttributeSettings((EObject) container, containmentSF, children, positionBeforeChild);
-			
-		return cBld.getCommand();		
+		CommandBuilder cb = new CommandBuilder();
+		for (Iterator iter = children.iterator(); !cb.isDead() && iter.hasNext();) {
+			Object child = iter.next();
+			cb.append(primCreateCommand(child, positionBeforeChild, containmentSF));
+		}
+		return cb.getCommand();
 	}
 	
 	protected Command primAddCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
