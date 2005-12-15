@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderContainerPolicy.java,v $
- *  $Revision: 1.15 $  $Date: 2005-12-15 14:55:17 $ 
+ *  $Revision: 1.16 $  $Date: 2005-12-15 20:44:47 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -22,8 +22,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.gef.commands.Command;
 
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
-import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
+import org.eclipse.jem.internal.instantiation.base.*;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -94,7 +93,18 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 	}
 
 
-	protected Command primCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
+	protected Command primCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) { 
+		// If we are dropping a tab item then if it has a control make this a child as well
+		// If we are dropping a tab item we need to see if it has a control
+		// and if so make this a "controls" child of the tab folder		
+		if(containmentSF == sf_tabItems){
+			IJavaInstance tabItem = (IJavaInstance)child;
+			Object control = tabItem.eGet(sf_tabItemControl);
+			if(control != null){
+				Command command = super.primCreateCommand(control, positionBeforeChild, sf_compositeControls);
+				return command.chain(getCreateTabItemCommand(child, (EObject) positionBeforeChild));
+			}
+		}		
 		return super.primCreateCommand(child, positionBeforeChild, containmentSF).chain(getCreateTabItemCommand(child, (EObject) positionBeforeChild));
 	}
 	
@@ -126,8 +136,9 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 				// See whether the child is a Control (in which case we need to create a TabItem to hold it) or else the child
 				// could be the TabItem directly
 				IJavaObjectInstance tabItem;
-				RuledCommandBuilder cb = new RuledCommandBuilder(domain);				
-				if(classTabItem.isInstance(child)){
+				RuledCommandBuilder cb = new RuledCommandBuilder(domain);	
+				boolean childIsTabItem = classTabItem.isInstance(child);
+				if(childIsTabItem){
 					tabItem = (IJavaObjectInstance) child;
 				} else {
 					tabItem = createTabItem();
