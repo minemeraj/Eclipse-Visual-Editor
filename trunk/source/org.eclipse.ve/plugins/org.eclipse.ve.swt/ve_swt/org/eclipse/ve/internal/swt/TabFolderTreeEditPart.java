@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderTreeEditPart.java,v $
- *  $Revision: 1.13 $  $Date: 2005-12-14 21:44:40 $ 
+ *  $Revision: 1.14 $  $Date: 2005-12-15 14:54:55 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -36,6 +36,7 @@ import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 import org.eclipse.ve.internal.cde.emf.InverseMaintenanceAdapter;
 
 import org.eclipse.ve.internal.java.core.BeanTreeDirectEditManager;
+import org.eclipse.ve.internal.java.core.CopyAction;
 
 import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
 
@@ -46,7 +47,7 @@ import org.eclipse.ve.internal.propertysheet.command.ICommandPropertyDescriptor;
  */
 public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 
-	private static final String TAB_ITEM_DIRECT_EDIT_MANAGER = "TAB_ITEM_DIRECT_EDIT_MANAGER"; //$NON-NLS-1$
+	private static final String TAB_ITEM_DIRECT_EDIT_MANAGER = "TAB_ITEM_DIRECT_EDIT_MANAGER";
 	private EReference sf_items, sf_tabItemControl;
 
 	public TabFolderTreeEditPart(Object model) {
@@ -113,6 +114,11 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 		EditDomain domain = EditDomain.getEditDomain(this);
 		EditPartViewer viewer = getRoot().getViewer();		
 		((ControlTreeEditPart)child).manager = getDirectEditManager(domain,viewer);
+		
+		// The child is the ControlTreeEditPart which knows how to copy itself, however because the model in fact has a TabItem
+		// inbetween we need to override the edit policy so TabItem itself get copied
+		child.installEditPolicy(CopyAction.REQ_COPY,new TabItemCopyEditPolicy(EditDomain.getEditDomain(this)));		
+		
 	}
 	
 	public static BeanTreeDirectEditManager getDirectEditManager(EditDomain domain, EditPartViewer viewer) {
@@ -169,6 +175,7 @@ public class TabFolderTreeEditPart extends CompositeTreeEditPart {
 		} catch (ClassCastException e) {
 		}
 	}
+
 
 	/*
 	 * @see EditPart#setModel(Object)

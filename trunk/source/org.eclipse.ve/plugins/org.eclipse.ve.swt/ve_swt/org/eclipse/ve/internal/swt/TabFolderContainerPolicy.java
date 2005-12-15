@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderContainerPolicy.java,v $
- *  $Revision: 1.14 $  $Date: 2005-11-04 17:30:52 $ 
+ *  $Revision: 1.15 $  $Date: 2005-12-15 14:55:17 $ 
  */
 package org.eclipse.ve.internal.swt;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.*;
@@ -42,7 +43,7 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 	private EReference sf_tabItems, sf_tabItemControl, sf_compositeControls;
 
 	protected EClass classControl;
-
+	
 	protected EClass classTabItem;
 
 	protected EFactory visualsFact;
@@ -68,12 +69,42 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 	 * Control at that point in time. We will later wrapper it into a TabItem after it has gone through this test.
 	 */
 	protected boolean isValidChild(Object child, EStructuralFeature containmentSF) {
-		return classControl.isInstance(child);
+		return containmentSF == sf_compositeControls && classControl.isInstance(child) ||
+			   containmentSF == sf_tabItems && classTabItem.isInstance(child);
+	}
+
+	/*
+	 * If the children are instances of Control then the feature is "controls" and if the children are instances
+	 * of "TabItem" then the feature is "items"
+	 */
+	protected EStructuralFeature getContainmentSF(List children, Object positionBeforeChild, int requestType) {
+		Iterator iter = children.iterator();
+		while(iter.hasNext()){
+			return getContainmentSF(iter.next(), positionBeforeChild, requestType);
+		}
+		return super.getContainmentSF(children, positionBeforeChild, requestType);
+	}
+	
+	protected EStructuralFeature getContainmentSF(Object child, Object positionBeforeChild, int requestType) {
+		if(classTabItem.isInstance(child)){
+			return sf_tabItems;
+		} else {
+			return super.getContainmentSF(child, positionBeforeChild, requestType);
+		}
 	}
 
 
 	protected Command primCreateCommand(Object child, Object positionBeforeChild, EStructuralFeature containmentSF) {
 		return super.primCreateCommand(child, positionBeforeChild, containmentSF).chain(getCreateTabItemCommand(child, (EObject) positionBeforeChild));
+	}
+	
+	protected Command primCreateCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
+		Command result = super.primAddCommand(children, positionBeforeChild, containmentSF);
+		Iterator iter = children.iterator();
+		while(iter.hasNext()){
+			result.chain(getCreateTabItemCommand(iter.next(), (EObject)positionBeforeChild));
+		}
+		return result;
 	}
 
 	/*
@@ -92,9 +123,16 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 				if (positionBeforeChild != null)
 					positionBeforeItem = InverseMaintenanceAdapter.getIntermediateReference((EObject) getContainer(), sf_tabItems, sf_tabItemControl,
 							positionBeforeChild);
-				IJavaObjectInstance tabItem = createTabItem();
-				RuledCommandBuilder cb = new RuledCommandBuilder(domain);
-				cb.applyAttributeSetting(tabItem, sf_tabItemControl, child);
+				// See whether the child is a Control (in which case we need to create a TabItem to hold it) or else the child
+				// could be the TabItem directly
+				IJavaObjectInstance tabItem;
+				RuledCommandBuilder cb = new RuledCommandBuilder(domain);				
+				if(classTabItem.isInstance(child)){
+					tabItem = (IJavaObjectInstance) child;
+				} else {
+					tabItem = createTabItem();
+					cb.applyAttributeSetting(tabItem, sf_tabItemControl, child);					
+				}
 				cb.applyAttributeSetting((EObject) getContainer(), sf_tabItems, tabItem, positionBeforeItem);
 				command = cb.getCommand();
 				command.execute();
@@ -104,7 +142,7 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 	}
 
 	/**
-	 * Delete the dependent. The child is the component, not the JTabComponent.
+	 * Delete the dependent. The child is the component, not the TabItem.
 	 */
 	protected void getDeleteDependentCommand(Object child, CommandBuilder cbldr) {
 		cbldr.append(getDeleteTabItemCommand(child));
