@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabFolderContainerPolicy.java,v $
- *  $Revision: 1.16 $  $Date: 2005-12-15 20:44:47 $ 
+ *  $Revision: 1.17 $  $Date: 2005-12-15 23:02:37 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -108,15 +108,6 @@ public class TabFolderContainerPolicy extends CompositeContainerPolicy {
 		return super.primCreateCommand(child, positionBeforeChild, containmentSF).chain(getCreateTabItemCommand(child, (EObject) positionBeforeChild));
 	}
 	
-	protected Command primCreateCommand(List children, Object positionBeforeChild, EStructuralFeature containmentSF) {
-		Command result = super.primAddCommand(children, positionBeforeChild, containmentSF);
-		Iterator iter = children.iterator();
-		while(iter.hasNext()){
-			result.chain(getCreateTabItemCommand(iter.next(), (EObject)positionBeforeChild));
-		}
-		return result;
-	}
-
 	/*
 	 * Create the command to create the parse tree allocation for the TabItem, the command to set the child as the 'control' property setting of the
 	 * TabItem, and the command to set the TabItem as a child of the TabFolder.
