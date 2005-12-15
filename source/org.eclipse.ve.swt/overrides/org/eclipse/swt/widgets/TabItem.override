@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<change:ChangeDescription xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.jem.java="java.xmi" xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmi:version="2.0">
+<change:ChangeDescription 
+     xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" 
+     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
+     xmlns:org.eclipse.jem.java="java.xmi" 
+     xmlns:org.eclipse.ve.internal.cde.decorators="http:///org/eclipse/ve/internal/cde/decorators.ecore" 
+     xmlns:org.eclipse.ve.internal.cde.utility="http:///org/eclipse/ve/internal/cde/utility.ecore" 
+     xmlns:org.eclipse.ve.internal.jcm="http:///org/eclipse/ve/internal/jcm.ecore" 
+     xmlns:xmi="http://www.omg.org/XMI" 
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+     xmlns:change="http://www.eclipse.org/emf/2003/Change" 
+     xmi:version="2.0">
    <objectChanges key="X:ROOT#//@root">
       <value featureName="eAnnotations">
-         <listChanges referenceValues="_eAnnotations"/>
          <listChanges referenceValues="_eAnnotations1"/>
          <listChanges referenceValues="_eAnnotations2"/>
+         <listChanges referenceValues="_eAnnotations3"/>
+         <listChanges referenceValues="_eAnnotations4"/>
       </value>
    </objectChanges>
-   <objectsToAttach propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TabItemPropertySourceAdapter" xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"/>
-   <objectsToAttach beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ItemProxyAdapter:parentItems='java:/org.eclipse.swt.widgets#TabFolder/items'" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
-   <objectsToAttach expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTWidgetChildDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
+   <objectsToAttach xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation" xmi:id="_eAnnotations1"
+     propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TabItemPropertySourceAdapter"/>
+   <objectsToAttach xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator" xmi:id="_eAnnotations2"
+     beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ItemProxyAdapter:parentItems='java:/org.eclipse.swt.widgets#TabFolder/items'"/>
+   <objectsToAttach xsi:type="codeGenHelpers:CodeGenHelperClass" xmi:id="_eAnnotations3"
+     expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.SWTWidgetChildDecoder" source="codegen.CodeGenHelperClass"/>
+   <objectsToAttach xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator" xmi:id="_eAnnotations4"
+        modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.TabItemContainmentHandler"/>
 </change:ChangeDescription>
