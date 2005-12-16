@@ -16,7 +16,9 @@
       <p><b><font size="+3" face="Verdana">@type@ Build: @build@</font></b><br>
 @date@ </p>
       <p>These downloads are provided under the <a
- href="http://www.eclipse.org/legal/epl/notice.html">Eclipse Foundation Software User Agreement</a>.</p> 
+ href="http://www.eclipse.org/legal/epl/notice.html">Eclipse Foundation Software User Agreement</a>.</p>
+<p><h3><a
+href=" http://www.eclipse.org/vep/WebContent/docs/newAndNoteworthy/1.2-M1/">New and Noteworthy</a><br> 
       <p><h3><a href="https://bugs.eclipse.org/bugs/buglist.cgi?product=VE&target_milestone=1.2M1&&cmdtype=doi&order=Reuse+same+sort+as+last+time">Defects fixed in this milestone.</a></p>
       <p>To view the build notes for this build click <a
  href="buildNotes.php">here</a>.<br>
