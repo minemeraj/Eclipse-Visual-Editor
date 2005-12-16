@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.32 $ $Date: 2005-11-15 18:53:27 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.33 $ $Date: 2005-12-16 19:51:35 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -18,8 +18,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.*;
 import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -191,7 +190,8 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 				if (gridController != null) {
 					viewer.setProperty(SnapToGrid.PROPERTY_GRID_SPACING, new Dimension(gridController.getGridWidth(), gridController.getGridHeight()));
 					int margin = gridController.getGridMargin();
-					viewer.setProperty(SnapToGrid.PROPERTY_GRID_ORIGIN, new Point(getFigure().getBounds().x + margin, getFigure().getBounds().y + margin));
+					Rectangle rect = getClientArea();
+					viewer.setProperty(SnapToGrid.PROPERTY_GRID_ORIGIN, new Point(rect.x + margin, rect.y + margin));
 					return new SnapToGrid(this);
 				}
 			}
@@ -233,5 +233,16 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 		}
 		return super.getAdapter(type);
 	}
+	protected Rectangle getClientArea() {
+		// We want to modify the border so that it is down to the client area. Don't want the grid drawing outside of this.
+		Rectangle clientArea = getCompositeProxyAdapter().getClientArea().getCopy();
+		IFigure hostFigure = getFigure();
+		clientArea = LayoutPolicyHelper.mapModelToFigure(getCompositeProxyAdapter(), hostFigure.getParent(), clientArea);
+		if (!hostFigure.isCoordinateSystem()) {
+			// It expects absolute. Don't ask why this works! I don't know.
+			clientArea.translate(hostFigure.getBounds().getTopLeft());
+		}
+		return clientArea;
+	};	
 
 }
