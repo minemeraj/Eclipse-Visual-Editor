@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeReferenceCellEditor.java,v $
- *  $Revision: 1.22 $  $Date: 2005-12-09 21:55:57 $ 
+ *  $Revision: 1.23 $  $Date: 2005-12-16 19:30:24 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -22,8 +22,7 @@ import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -79,9 +78,23 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 	}
 	
 	protected Control createContents(Composite cell) {
-		combo = new CCombo(cell,SWT.NONE);
-		combo.addSelectionListener(new SelectionAdapter(){
-			public void widgetSelected(SelectionEvent e) {
+
+        combo = new CCombo(cell, getStyle());
+        combo.setFont(cell.getFont());
+
+        combo.addKeyListener(new KeyAdapter() {
+            // hook key pressed - see PR 14201  
+            public void keyPressed(KeyEvent e) {
+                keyReleaseOccured(e);
+            }
+        });
+
+        combo.addSelectionListener(new SelectionListener() {
+            public void widgetDefaultSelected(SelectionEvent event) {
+                fireApplyEditorValue();
+            }
+
+            public void widgetSelected(SelectionEvent event) {
 				int newSelection = combo.getSelectionIndex();
 				if (newSelection == selection)
 					return;
@@ -91,16 +104,40 @@ public class TypeReferenceCellEditor extends DialogCellEditor implements INeedDa
 				boolean newValidState = isCorrect(newValue);
 				
 				if (!newValidState) {
-					// try to insert the current value into the error message.
-					setErrorMessage(
-						MessageFormat.format(getErrorMessage(), new Object[] {items[selection]}));
-				}
+		        	// Only format if the 'index' is valid
+		        	if (items.length > 0 && selection >= 0 && selection < items.length) {
+			            // try to insert the current value into the error message.
+			            setErrorMessage(MessageFormat.format(getErrorMessage(),
+			                    new Object[] { items[selection] }));
+		        	}
+		        	else {
+			            // Since we don't have a valid index, assume we're using an 'edit'
+		        		// combo so format using its text value
+			            setErrorMessage(MessageFormat.format(getErrorMessage(),
+			                    new Object[] { combo.getText() }));
+		        	}
+		        }
 				valueChanged(oldValidState, newValidState, newValue);
-				fireApplyEditorValue();
-			}
-		});
-		return combo;
-	}
+            }
+        });
+
+        combo.addTraverseListener(new TraverseListener() {
+            public void keyTraversed(TraverseEvent e) {
+                if (e.detail == SWT.TRAVERSE_ESCAPE
+                        || e.detail == SWT.TRAVERSE_RETURN) {
+                    e.doit = false;
+                }
+            }
+        });
+
+        combo.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e) {
+                TypeReferenceCellEditor.this.focusLost();
+            }
+        });
+        return combo;
+    }
+	
 	public boolean isActivated() {
 		return combo.isVisible();
 	}
