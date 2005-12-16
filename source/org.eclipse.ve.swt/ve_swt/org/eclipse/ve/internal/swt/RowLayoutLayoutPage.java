@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutLayoutPage.java,v $
- *  $Revision: 1.15 $  $Date: 2005-12-16 15:56:53 $ 
+ *  $Revision: 1.16 $  $Date: 2005-12-16 16:45:23 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -166,8 +166,7 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		// Now set the overall tabbing so that it goes up/down instead of left right. Works better.
 		c.setTabList(new Control[]{orientationGroup, configGroup, spacingGroup});
 		
-		if (fEditPart != null) {
-			initialized = false;
+		if (allEnabled) {
 			initializeValues();
 		}
 		
@@ -225,6 +224,7 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	 */
 	protected boolean handleSelectionChanged(ISelection oldSelection) {
 		ISelection newSelection = getSelection();
+		allEnabled = false;
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
 			EditPart firstParent;
@@ -275,6 +275,7 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				}
 			}
 		}
+		allEnabled = false;
 		fEditPart = null;
 		// By default if the initial checks failed, disable and uncheck all the actions.
 		return false;
@@ -334,7 +335,6 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	private void initializeValues() {
-		if (fEditPart == null) return;
 		initialized = false;
 		getResourceSet(fEditPart);
 		// break out early if getControl() hasn't been called yet.

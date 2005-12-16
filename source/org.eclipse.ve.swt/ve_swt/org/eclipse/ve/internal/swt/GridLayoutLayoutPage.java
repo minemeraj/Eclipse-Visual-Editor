@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.18 $  $Date: 2005-12-16 15:56:53 $ 
+ *  $Revision: 1.19 $  $Date: 2005-12-16 16:45:23 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -82,7 +82,8 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	 */
 	public Control getControl(Composite parent) {
 		gridComposite = new GridLayoutLayoutComposite(this, parent, SWT.NONE);
-		initializeValues();
+		if (allEnabled)
+			initializeValues();
 		return gridComposite;
 	}
 
@@ -146,6 +147,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	 */
 	protected boolean handleSelectionChanged(ISelection oldSelection) {
 		ISelection newSelection = getSelection();
+		allEnabled = false;
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
 			EditPart firstParent;
@@ -196,6 +198,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				}
 			}
 		}
+		allEnabled = false;
 		fEditPart = null;
 		// By default if the initial checks failed, disable and uncheck all the actions.
 		return false;
@@ -256,7 +259,6 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	private void initializeValues() {
-		if (fEditPart == null) return;
 		getResourceSet(fEditPart);
 		// break out early if getControl() hasn't been called yet.
 		if (gridComposite == null) { return; }

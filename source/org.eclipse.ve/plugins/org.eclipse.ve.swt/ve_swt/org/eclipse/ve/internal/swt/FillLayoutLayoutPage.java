@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FillLayoutLayoutPage.java,v $
- *  $Revision: 1.13 $  $Date: 2005-12-09 22:44:19 $ 
+ *  $Revision: 1.14 $  $Date: 2005-12-16 16:45:23 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -113,8 +113,7 @@ public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		heightSpinner = makeSpinner(spacingGroup, SWTMessages.FillLayoutLayoutPage_heightLabel); 
 		widthSpinner = makeSpinner(spacingGroup, SWTMessages.FillLayoutLayoutPage_widthLabel); 
 
-		if (fEditPart != null) {
-			initialized = false;
+		if (allEnabled) {
 			initializeValues();
 		}
 		
@@ -158,6 +157,7 @@ public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	 */
 	protected boolean handleSelectionChanged(ISelection oldSelection) {
 		ISelection newSelection = getSelection();
+		allEnabled = false;
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
 			EditPart firstParent;
@@ -208,6 +208,7 @@ public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				}
 			}
 		}
+		allEnabled = false;
 		fEditPart = null;
 		// By default if the initial checks failed, disable and uncheck all the actions.
 		return false;
@@ -261,7 +262,7 @@ public class FillLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	protected void refresh() {
-		if (fEditPart != null) {
+		if (allEnabled) {
 			initializeValues();
 		}
 	}

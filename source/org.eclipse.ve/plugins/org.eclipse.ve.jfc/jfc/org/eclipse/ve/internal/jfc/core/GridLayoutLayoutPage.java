@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.14 $  $Date: 2005-12-09 22:44:21 $ 
+ *  $Revision: 1.15 $  $Date: 2005-12-16 16:45:26 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -147,7 +147,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 		gd.grabExcessHorizontalSpace = true;
 		label.setLayoutData(gd);
 		
-		if (fEditPart != null) {
+		if (allEnabled) {
 			initializeValues();
 		}
 		
@@ -159,6 +159,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	 */
 	protected boolean handleSelectionChanged(ISelection oldSelection) {
 		ISelection newSelection = getSelection();
+		allEnabled = false;
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
 			EditPart firstParent;
@@ -209,6 +210,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 				}
 			}
 		}
+		allEnabled = false;
 		fEditPart = null;
 		// By default if the initial checks failed, disable and uncheck all the actions.
 		return false;

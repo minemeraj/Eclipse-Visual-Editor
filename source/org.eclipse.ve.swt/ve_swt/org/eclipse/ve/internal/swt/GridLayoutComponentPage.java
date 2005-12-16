@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutComponentPage.java,v $
- *  $Revision: 1.23 $  $Date: 2005-12-14 21:44:40 $ 
+ *  $Revision: 1.24 $  $Date: 2005-12-16 16:45:23 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -913,6 +913,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 	 */
 	protected boolean handleSelectionChanged(ISelection oldSelection) {
 		ISelection newSelection = getSelection();
+		allEnabled = false;
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
 			EditPart firstParent;
@@ -952,6 +953,7 @@ public class GridLayoutComponentPage extends JavaBeanCustomizeLayoutPage {
 			}
 		}
 		// By default if the initial checks failed, disable and uncheck all the actions.
+		allEnabled = false;
 		enableAlignmentActions(false);
 		enableGrabActions(false);
 		return false;

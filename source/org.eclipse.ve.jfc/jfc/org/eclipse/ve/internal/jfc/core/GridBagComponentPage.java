@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 /*
  *  $RCSfile: GridBagComponentPage.java,v $
- *  $Revision: 1.17 $  $Date: 2005-12-14 21:37:04 $ 
+ *  $Revision: 1.18 $  $Date: 2005-12-16 16:45:26 $ 
  */
 
 import java.util.Collections;
@@ -1076,6 +1076,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 	 * property values are equal.
 	 */
 	protected boolean handleSelectionChanged(ISelection oldSelection) {
+		allEnabled = false;
 		ISelection newSelection = getSelection();
 		if (newSelection != null && newSelection instanceof IStructuredSelection && !((IStructuredSelection) newSelection).isEmpty()) {
 			List editparts = ((IStructuredSelection) newSelection).toList();
@@ -1125,6 +1126,7 @@ public class GridBagComponentPage extends JavaBeanCustomizeLayoutPage {
 			}
 		}
 		// By default if the initial checks failed, disable and uncheck all the actions.
+		allEnabled = false;
 		enableAnchorActions(false);
 		enableFillActions(false);
 		enableInsets(false);
