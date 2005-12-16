@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: RowLayoutLayoutPage.java,v $
- *  $Revision: 1.14 $  $Date: 2005-12-09 22:44:19 $ 
+ *  $Revision: 1.15 $  $Date: 2005-12-16 15:56:53 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -334,6 +334,7 @@ public class RowLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	private void initializeValues() {
+		if (fEditPart == null) return;
 		initialized = false;
 		getResourceSet(fEditPart);
 		// break out early if getControl() hasn't been called yet.
