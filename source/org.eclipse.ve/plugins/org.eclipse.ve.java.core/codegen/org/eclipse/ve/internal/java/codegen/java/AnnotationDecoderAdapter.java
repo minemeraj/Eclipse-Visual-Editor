@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.java.codegen.java;
-/*
- *  $RCSfile: AnnotationDecoderAdapter.java,v $
- *  $Revision: 1.33 $  $Date: 2005-10-26 23:10:12 $ 
- */
 import java.util.*;
 import java.util.logging.Level;
 
@@ -187,8 +183,22 @@ public class AnnotationDecoderAdapter implements ICodeGenAdapter {
 			if(node!=null){
 				CompilationUnit cuNode = (CompilationUnit) node;
 				//	we need to look at end of field instead of starting as field could span multiple lines! (99637)
-				int len = field.getLength() - (field.getType().getStartPosition() - field.getStartPosition());
-				int fieldLineNumber = cuNode.lineNumber(field.getType().getStartPosition()+len); // we check for the type's location, cos previous comments effect the field's start position
+				// Need to determine the offset of the ';' because it decides ultimately the ending of the declaration.
+				int fieldStartOffset = field.getStartPosition();
+				int fieldEndOffset = field.getStartPosition() + field.getLength();
+				int lastSourceCharOffset = fieldEndOffset;
+				if(field.getType()!=null)
+					lastSourceCharOffset = field.getType().getStartPosition()+field.getType().getLength();
+				if(field.fragments().size()>0){
+					// Find the ending of the last fragment
+					VariableDeclarationFragment vdf = (VariableDeclarationFragment) field.fragments().get(field.fragments().size()-1);
+					lastSourceCharOffset = vdf.getStartPosition() + vdf.getLength();
+				}
+				int semiColonLocation = astSource.indexOf(';', lastSourceCharOffset);
+				if(semiColonLocation<fieldStartOffset || semiColonLocation>fieldEndOffset)
+					semiColonLocation = lastSourceCharOffset;
+				
+				int fieldLineNumber = cuNode.lineNumber(semiColonLocation); // we check for the type's location, cos previous comments effect the field's start position
 				List comments = ((CompilationUnit)node).getCommentList();
 				for (int cc = 0; cc < comments.size(); cc++) {
 					if (comments.get(cc) instanceof LineComment){ 
