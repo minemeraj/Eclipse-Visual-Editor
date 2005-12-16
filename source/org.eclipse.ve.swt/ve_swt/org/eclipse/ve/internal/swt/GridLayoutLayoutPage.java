@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutLayoutPage.java,v $
- *  $Revision: 1.17 $  $Date: 2005-12-09 22:44:19 $ 
+ *  $Revision: 1.18 $  $Date: 2005-12-16 15:56:53 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -256,6 +256,7 @@ public class GridLayoutLayoutPage extends JavaBeanCustomizeLayoutPage {
 	}
 	
 	private void initializeValues() {
+		if (fEditPart == null) return;
 		getResourceSet(fEditPart);
 		// break out early if getControl() hasn't been called yet.
 		if (gridComposite == null) { return; }
