@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WidgetCopyEditPolicy.java,v $
- *  $Revision: 1.12 $  $Date: 2005-12-15 14:55:17 $ 
+ *  $Revision: 1.13 $  $Date: 2005-12-16 15:51:30 $ 
  */
 
 package org.eclipse.ve.internal.swt;
@@ -46,7 +46,7 @@ public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 		if(eObject instanceof EStructuralFeature){
 			return false;
 		} 
-		if(feature != null && feature.getName().equals("allocation")){
+		if(feature != null && feature.getName().equals("allocation")){ //$NON-NLS-1$
 			return false;
 		}
 		return super.shouldExpandFeature(feature,eObject);
@@ -78,7 +78,7 @@ public class WidgetCopyEditPolicy extends DefaultCopyEditPolicy {
 			// If the argument is an instance reference that points to the parent then replace it with the token
 			if(arg instanceof PTInstanceReference){
 				IJavaInstance potentialParent = ((PTInstanceReference)arg).getReference();
-				List controls = (List) potentialParent.eGet(potentialParent.eClass().getEStructuralFeature("controls"));
+				List controls = (List) potentialParent.eGet(potentialParent.eClass().getEStructuralFeature("controls")); //$NON-NLS-1$
 				if(controls.indexOf(javaBean) != -1){
 					// Manipulate the allocation of the JavaBean in the copy set
 					IJavaInstance copiedJavaBean = (IJavaInstance) copier.get(javaBean);

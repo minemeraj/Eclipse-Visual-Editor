@@ -39,8 +39,8 @@ public class TabItemCopyEditPolicy extends WidgetCopyEditPolicy {
 	}
 	
 	private EReference getTabItemControlSF(){
-		JavaClass tabItemClass = Utilities.getJavaClass("org.eclipse.swt.widgets.TabItem", ((EObject)getHost().getModel()).eResource().getResourceSet());
-		return (EReference) tabItemClass.getEStructuralFeature("control");		
+		JavaClass tabItemClass = Utilities.getJavaClass("org.eclipse.swt.widgets.TabItem", ((EObject)getHost().getModel()).eResource().getResourceSet()); //$NON-NLS-1$
+		return (EReference) tabItemClass.getEStructuralFeature("control");		 //$NON-NLS-1$
 	}
 
 	protected void preExpand(IJavaInstance javaBean) {
@@ -69,7 +69,7 @@ public class TabItemCopyEditPolicy extends WidgetCopyEditPolicy {
 			// If the argument is an instance reference that points to the parent then replace it with the token
 			if(arg instanceof PTInstanceReference){
 				IJavaInstance potentialParent = ((PTInstanceReference)arg).getReference();
-				List controls = (List) potentialParent.eGet(potentialParent.eClass().getEStructuralFeature("items"));
+				List controls = (List) potentialParent.eGet(potentialParent.eClass().getEStructuralFeature("items")); //$NON-NLS-1$
 				if(controls.indexOf(javaBean) != -1){
 					// Manipulate the allocation of the JavaBean in the copy set
 					IJavaInstance copiedJavaBean = (IJavaInstance) copier.get(javaBean);

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabItemContainmentHandler.java,v $
- *  $Revision: 1.2 $  $Date: 2005-12-15 20:44:47 $ 
+ *  $Revision: 1.3 $  $Date: 2005-12-16 15:51:30 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -48,22 +48,22 @@ public class TabItemContainmentHandler extends NoFFModelAdapter {
 				ResourceSet rSet = ((IJavaObjectInstance)parent).eResource().getResourceSet();
 				// See whether the parent is a TabItem or a Composite
 				if(classTabFolder == null){
-					classTabFolder = Utilities.getJavaClass("org.eclipse.swt.widgets.TabFolder",rSet);
+					classTabFolder = Utilities.getJavaClass("org.eclipse.swt.widgets.TabFolder",rSet); //$NON-NLS-1$
 				} 				
 				if(classTabFolder.isAssignableFrom(javaParent.eClass())){
 					// Drop the TabItem onto the TabFolder
 					WidgetContainmentHandler.processAllocation(parent,child, preCmds);
 					// If the TabItem has a control (as occurs during copy and paste) then we must ensure the control is reparented
-					IJavaInstance tabItemControl = BeanUtilities.getFeatureValue((IJavaInstance) child, "control");
+					IJavaInstance tabItemControl = BeanUtilities.getFeatureValue((IJavaInstance) child, "control"); //$NON-NLS-1$
 					if(tabItemControl == null){
-						throw new StopRequestException("TabItem cannot be dropped directly when it has no control");
+						throw new StopRequestException(SWTMessages.TabItemContainmentHandler_StopRequest_TabItem_NoControlNoDrop);
 					} else {
 						WidgetContainmentHandler.processAllocation(parent, tabItemControl, preCmds);
 					}
 					return child;
 				} else {
 					// Get the control from the TabItem and make this the child to be dropped
-					IJavaInstance controlChild = BeanUtilities.getFeatureValue((IJavaObjectInstance)child, "control");					
+					IJavaInstance controlChild = BeanUtilities.getFeatureValue((IJavaObjectInstance)child, "control");					 //$NON-NLS-1$
 					WidgetContainmentHandler.processAllocation(parent, controlChild, preCmds);
 					WidgetContainmentHandler.processAllocation(parent, child, preCmds);					
 					return controlChild;
@@ -72,7 +72,7 @@ public class TabItemContainmentHandler extends NoFFModelAdapter {
 				return super.contributeToDropRequest(parent, child, preCmds, postCmds, creation, domain);	// Let super handle is not on FF.
 			}
 		}
-		throw new StopRequestException("Parent not valid for a TabItem");
+		throw new StopRequestException(SWTMessages.TabItemContainmentHandler_StopRequest_TabItem_InvalidParent);
 	}
 
 
