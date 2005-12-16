@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarGraphicalEditPart.java,v $
- *  $Revision: 1.9 $  $Date: 2005-11-14 22:56:24 $ 
+ *  $Revision: 1.10 $  $Date: 2005-12-16 20:08:09 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -348,11 +348,6 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 		private Rectangle hostBounds;
 
 		public void paint(Graphics graphics) {
-			try {
-				graphics.setAntialias(SWT.ON); // This makes the connection line look smooth
-			} catch (SWTException e) {
-				// For OS platforms that don't support Antialias
-			}
 			// Draw the border on the host figure
 			if (hostBorderPoints != null) {
 				graphics.setForegroundColor(ColorConstants.orange);
