@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventMethodVisitor.java,v $
- *  $Revision: 1.16 $  $Date: 2005-11-23 19:55:25 $ 
+ *  $Revision: 1.17 $  $Date: 2005-12-17 03:59:44 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -153,7 +153,7 @@ public class EventMethodVisitor extends MethodVisitor {
 			}else{
 				// NO return method for the bean being considered - 
 				// is the methodinvocation an implicit bean?
-				BeanPart implicitBeanCalled = fBean.getModel().getABean(ms.toString());
+				BeanPart implicitBeanCalled = CodeGenUtil.getBeanPart(fBean.getModel(), ms.toString(), fMethod, ms.getStartPosition()-fMethod.getOffset());
 				if(implicitBeanCalled==fBean){
 					// an implicit bean's event
 					EventExpressionVisitor v = visitorFactory.getEventExpressionVisitor();
