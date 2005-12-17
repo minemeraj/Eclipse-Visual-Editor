@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EventDecoderHelper.java,v $
- *  $Revision: 1.26 $  $Date: 2005-11-23 19:55:25 $ 
+ *  $Revision: 1.27 $  $Date: 2005-12-17 03:59:44 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -34,8 +34,7 @@ import org.eclipse.jem.java.*;
 import org.eclipse.ve.internal.jcm.*;
 
 import org.eclipse.ve.internal.java.codegen.java.IJavaFeatureMapper.VEexpressionPriority;
-import org.eclipse.ve.internal.java.codegen.model.BeanPart;
-import org.eclipse.ve.internal.java.codegen.model.CodeEventRef;
+import org.eclipse.ve.internal.java.codegen.model.*;
 import org.eclipse.ve.internal.java.codegen.util.*;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
 import org.eclipse.ve.internal.java.core.JavaBeanEventUtilities;
@@ -88,8 +87,11 @@ public abstract class EventDecoderHelper implements IEventDecoderHelper {
     		    fbeanPart.getInitMethod().getMethodName().equals(r.getName().getIdentifier())) {
     		    return true ;
     		}
-    		if(fbeanPart.isImplicit() && fbeanPart==fbeanPart.getModel().getABean(r.toString())){
-    			return true;
+    		if(fbeanPart.isImplicit()){
+    			CodeExpressionRef exp1 = fOwner.getExprRef();
+    			BeanPart implicitBean = CodeGenUtil.getBeanPart(fbeanPart.getModel(), r.toString(), exp1.getMethod(), exp1.getOffset());
+    			if(fbeanPart==implicitBean)
+    				return true;
     		}
     	} else if (e instanceof SimpleName ||
     	           e instanceof ThisExpression) {
