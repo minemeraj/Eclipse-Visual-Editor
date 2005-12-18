@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.java;
 /*
  *  $RCSfile: CodeSnippetModelBuilder.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-29 18:47:05 $ 
+ *  $Revision: 1.15 $  $Date: 2005-12-18 16:25:58 $ 
  */
 
 import java.util.List;
@@ -81,14 +81,16 @@ protected void updateModelPositions(CompilationUnit decl){
 		if(decl!=null && fieldStarts!=null && decls != null && decls.length==fieldStarts.length){ 
 			// liner mapping.. no problems.
 			for(int dc=0;dc<decls.length;dc++){
-				decls[dc].setSourceRange(fieldStarts[dc], fieldEnds[dc]-fieldStarts[dc]+1);
+				if(fieldStarts[dc]!=0 || fieldEnds[dc]!=0) // Sometimes the snapshot is not reconciled
+					decls[dc].setSourceRange(fieldStarts[dc], fieldEnds[dc]-fieldStarts[dc]+1);
 			}
 		}
 		if(methods!=null && methodStarts!=null){
 			int usefulMethodIndex = 0;
 			for(int mc=0;mc<methods.length;mc++){
 				if(!methods[mc].isConstructor()) {
-							methods[mc].setSourceRange(methodStarts[usefulMethodIndex], methodEnds[usefulMethodIndex]-methodStarts[usefulMethodIndex]+1);
+							if(methodStarts[usefulMethodIndex]!=0 || methodEnds[usefulMethodIndex]!=0) // Sometimes the snapshot is not reconciled
+								methods[mc].setSourceRange(methodStarts[usefulMethodIndex], methodEnds[usefulMethodIndex]-methodStarts[usefulMethodIndex]+1);
 							usefulMethodIndex++;
 				}
 			}
