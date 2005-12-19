@@ -89,7 +89,7 @@ public class ListBinding extends Composite {
 		// {"description"})
 		// );
 		dbc.bind(listViewer, new Property(catalog, "lodgings"),
-				new BindSpec(new IdentityConverter(Lodging.class, Object.class), null));
+				new BindSpec(new IdentityConverter(Object.class, Lodging.class), null));
 
 		// dbc.bindValue(
 		// listViewer,ViewersProperties.SELECTION,skiTrip,emfPackage.getAdventure_DefaultLodging(),
