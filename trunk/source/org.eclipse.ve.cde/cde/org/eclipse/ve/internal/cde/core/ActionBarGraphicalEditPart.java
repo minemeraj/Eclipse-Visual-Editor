@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ActionBarGraphicalEditPart.java,v $
- *  $Revision: 1.10 $  $Date: 2005-12-16 20:08:09 $ 
+ *  $Revision: 1.11 $  $Date: 2005-12-19 17:21:49 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -153,11 +153,6 @@ public class ActionBarGraphicalEditPart extends AbstractGraphicalEditPart {
 			}
 
 			public void paintFigure(Graphics graphics) {
-				try {
-					graphics.setAntialias(SWT.ON); // This makes the lines look smooth
-				} catch (SWTException e) {
-					// For OS platforms that don't support Antialias
-				}
 				if (actionBarOpen) {
 					// Action bar is open. Show left arrow and action divider
 					super.paintFigure(graphics);
