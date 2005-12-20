@@ -38,7 +38,7 @@
     <tr>
       <td align="left" width="60%"><h1>$pageTitle</h1>
 	    <br>
-        <font class="indexsub">First-class GUI building tools for Eclipse</font>
+        <font size="xx-small" color="#8080FF">First-class GUI building tools for Eclipse</font>
       </td>
       <td style="width: 40%; text-align: right;"><img src="images/vep.png"
  title="" alt="Visual Editor Project Logo"> <br>
