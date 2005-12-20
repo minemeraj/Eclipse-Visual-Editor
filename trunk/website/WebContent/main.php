@@ -18,12 +18,10 @@
 	$pageKeywords	= "ve, vep, visual, editor, gui, builder, wysiwyg, eclipse, gui builder, GUI building, tool";
 	$pageAuthor		= "Visual Editor Commiters";
 	
-	# Add page-specific Nav bars here
-	# Format is Link text, link URL (can be http://www.someothersite.com/), target (_self, _blank), level (1, 2 or 3)
-	# $Nav->addNavSeparator("My Page Links", 	"downloads.php");
-	 $Nav->addCustomNav("Visual Editor Test Pass runs", "docs/testpass.html", "_self", 3);
-	# $Nav->addCustomNav("Google", "http://www.google.com/", "_blank", 3);
-
+	
+	 $Nav->addCustomNav("VE Newsgroup", "http://www.eclipse.org/newsportal/thread.php?group=eclipse.tools.ve", "_self", 2);
+	 $Nav->addCustomNav("VE Test Pass runs", "docs/testpass.html", "_self", 2);
+	
 	# End: page-specific settings
 	#
 		
