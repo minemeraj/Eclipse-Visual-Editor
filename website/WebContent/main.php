@@ -36,9 +36,10 @@
 <table style="width: 100%;" border="0" cellpadding="2">
   <tbody>
     <tr>
-      <td align="left" width="60%"><h1>$pageTitle</h1>
+      <td align="left" width="60%"><h1>$pageTitle
 	    <br>
-        <font size="xx-small" color="#8080FF">First-class GUI building tools for Eclipse</font>
+        <font size="1" color="#8080FF">First-class GUI building tools for Eclipse</font>
+        </h1>
       </td>
       <td style="width: 40%; text-align: right;"><img src="images/vep.png"
  title="" alt="Visual Editor Project Logo"> <br>
