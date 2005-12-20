@@ -71,9 +71,9 @@
 		<div class="homeitem3col">
 			<h3>"What's New"</h3>
 			<ul>
-				<li><img src="http://www.eclipse.org/images/new.gif" height="14" width="31"><a href="#">VE 1.2 plan posted</a>. Teaser text <span class="dates">11/08/05</span></li>
-				<li><a href="#">Link</a>. Teaser text <a href="#">'Reference'</a><span class="dates">02/05/05</span></li>
-				<li><a href="#">Link</a>. Teaser text <a href="#">'Reference'</a><span class="dates">02/05/05</span></li>
+				<li><img src="http://www.eclipse.org/images/new.gif" height="14" width="31"><a href="docs/v1.2/plan/vep-plan-1.2.html">VE 1.2 plan posted</a> <span class="dates">11/08/05</span></li>
+				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/R-1.1.0.1-200509071822/index.html">VE v1.1.0.1 released</a> <span class="dates">09/07/05</span></li>
+				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/R-1.1-200507221721/index.html">VE v1.1 released</a> <span class="dates">07/22/05</span></li>
 			</ul>
 		</div>
 		<hr class="clearer" />
