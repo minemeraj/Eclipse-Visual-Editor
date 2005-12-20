@@ -15,7 +15,7 @@
 	#
 	# Begin: page-specific settings.  Change these. 
 	$pageTitle 		= "Visual Editor Project";
-	$pageKeywords	= "ve, vep, visual, editor, gui, builder, wysiwyg";
+	$pageKeywords	= "ve, vep, visual, editor, gui, builder, wysiwyg, eclipse, gui builder, GUI building, tool";
 	$pageAuthor		= "Visual Editor Commiters";
 	
 	# Add page-specific Nav bars here
@@ -32,7 +32,22 @@
 
 <div id="maincontent">
 	<div id="midcolumn">
-		<h1>$pageTitle</h1>
+
+<table style="width: 100%;" border="0" cellpadding="2">
+  <tbody>
+    <tr>
+      <td align="left" width="60%"><h1>$pageTitle</h1>
+	    <br>
+        <font class="indexsub">First-class GUI building tools for Eclipse</font>
+      </td>
+      <td style="width: 40%; text-align: right;"><img src="images/vep.png"
+ title="" alt="Visual Editor Project Logo"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+	
 		<h2>Section title</h2>
 		<p>Intro text.<br /> <a href="#">more about something &raquo;</a> </p>
 		<div class="homeitem">
