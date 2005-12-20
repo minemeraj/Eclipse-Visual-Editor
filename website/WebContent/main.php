@@ -49,7 +49,23 @@
 
 	
 		<h2>Section title</h2>
-		<p>Intro text.<br /> <a href="#">more about something &raquo;</a> </p>
+		<p>The Eclipse Visual Editor project is a vendor-neutral, open
+		development platform supplying frameworks for creating GUI builders,
+		and exemplary, extensible tool implementations for Swing/JFC and SWT/RCP.
+		These tools are exemplary in that they verify the utility of the
+		Eclipse Visual Editor frameworks, illustrate the appropriate use of
+		those frameworks, and support the development and maintenance of the
+		Eclipse Visual Editor Platform itself.</p>
+
+		<p>The purpose of the Eclipse Visual Editor Project is to advance the
+		creation, evolution, promotion of the Eclipse Visual Editor platform,
+		and to cultivate both an open source community and an ecosystem of
+		complementary products, capabilities, and services.  In particular,
+		the Visual Editor Project intends to be useful for creating GUI
+		builders for other languages such as C/C++ and alternate widget sets,
+		including those that are not supported under Java.
+		</p>
+		
 		<div class="homeitem">
 			<h3>Narrow column</h3>
 			<ul>
