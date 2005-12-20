@@ -186,10 +186,9 @@ of the Visual Editor itself, not usage of it.<br>
 			<h6>Related links</h6>
 			<ul>
 				<li><a href="http://eclipse.org/tools/index.html">Eclipse Tools Project</a></li>
-				<li><a href="http://www.eclipse.org/gef">GEF Subproject</a></li>
-				<li><a href="http://www.eclipse.org/emf">EMF Subproject</a> </li>
-				<li><a href="#">Link</a> - descriptive text</li>
-				<li><a href="#">Link</a> - descriptive text</li>
+				<li><a href="http://www.eclipse.org/gef">GEF Tools Subproject</a></li>
+				<li><a href="http://www.eclipse.org/emf">EMF Tools Subproject</a> </li>
+				<li><a href="http://wiki.eclipse.org/index.php/JFace_Data_Binding ">JFace Data Binding</a></li>				
 			</ul>
 		</div>
 	</div>
