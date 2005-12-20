@@ -172,21 +172,22 @@ of the Visual Editor itself, not usage of it.<br>
 	</div>
 	<div id="rightcolumn">
 		<div class="sideitem">
-			<h6>Related links</h6>
+			<h6>VEP Components</h6>
 			<ul>
-				<li><a href="#">Link</a> - descriptive text</li>
-				<li><a href="#">Link</a> - descriptive text</li>
-				<li><a href="#">Link</a> - descriptive text</li>
-				<li><a href="#">Link</a> - descriptive text</li>
-				<li><a href="#">Link</a> - descriptive text</li>
+				<li><a href="docs/components/cde/cde.html"> CDE </a></li>
+				<li><a href="docs/components/core/core.html"> Core </a></li>
+				<li><a href="docs/components/jfc/jfc.html"> JFC/Swing</a> </li>
+				<li><a href="docs/components/javamodel/javaModel.html"> Java Model</a></li>
+				<li><a href="docs/components/swt/swt.html">SWT</a></li>
 			</ul>
 		</div>
+
 		<div class="sideitem">
 			<h6>Related links</h6>
 			<ul>
-				<li><a href="#">Link</a> - descriptive text</li>
-				<li><a href="#">Link</a> - descriptive text</li>
-				<li><a href="#">Link</a> - descriptive text</li>
+				<li><a href="http://eclipse.org/tools/index.html">Eclipse Tools Project</a></li>
+				<li><a href="http://www.eclipse.org/gef">GEF Subproject</a></li>
+				<li><a href="http://www.eclipse.org/emf">EMF Subproject</a> </li>
 				<li><a href="#">Link</a> - descriptive text</li>
 				<li><a href="#">Link</a> - descriptive text</li>
 			</ul>
