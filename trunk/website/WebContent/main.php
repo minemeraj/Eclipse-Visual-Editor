@@ -49,7 +49,7 @@
 </table>
 
 	
-		<h2>Section title</h2>
+		<h2>About Us</h2>
 		<p>The Eclipse Visual Editor project is a vendor-neutral, open
 		development platform supplying frameworks for creating GUI builders,
 		and exemplary, extensible tool implementations for Swing/JFC and SWT/RCP.
@@ -67,26 +67,11 @@
 		including those that are not supported under Java.
 		</p>
 		
-		<div class="homeitem">
-			<h3>Narrow column</h3>
-			<ul>
-				<li><a href="#">Link</a>. Teaser text <a href="#">'Reference'</a><span class="dates">02/05/05</span></li>
-				<li><a href="#">Link</a>. Teaser text <a href="#">'Reference'</a><span class="dates">02/05/05</span></li>
-				<li><a href="#">Link</a>. Teaser text <a href="#">'Reference'</a><span class="dates">02/05/05</span></li>
-			</ul>
-		</div>
-		<div class="homeitem">
-			<h3>Narrow column</h3>
-			<ul>
-				<li><a href="#">Link</a>. Teaser text <a href="#">'Reference'</a><span class="dates">02/05/05</span></li>
-				<li><a href="#">Link</a>. Teaser text <a href="#">'Reference'</a><span class="dates">02/05/05</span></li>
-				<li><a href="#">Link</a>. Teaser text <a href="#">'Reference'</a><span class="dates">02/05/05</span></li>
-			</ul>
-		</div>
+	
 		<div class="homeitem3col">
-			<h3>This is a wide column</h3>
+			<h3>"What's New"</h3>
 			<ul>
-				<li><a href="#">Link</a>. Teaser text <a href="#">'Reference'</a><span class="dates">02/05/05</span></li>
+				<li><img src="http://www.eclipse.org/images/new.gif" height="14" width="31"><a href="#">VE 1.2 plan posted</a>. Teaser text <span class="dates">11/08/05</span></li>
 				<li><a href="#">Link</a>. Teaser text <a href="#">'Reference'</a><span class="dates">02/05/05</span></li>
 				<li><a href="#">Link</a>. Teaser text <a href="#">'Reference'</a><span class="dates">02/05/05</span></li>
 			</ul>
