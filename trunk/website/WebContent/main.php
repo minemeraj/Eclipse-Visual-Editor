@@ -74,20 +74,143 @@
 				<li><img src="http://www.eclipse.org/images/new.gif" height="14" width="31"><a href="docs/v1.2/plan/vep-plan-1.2.html">VE 1.2 plan posted</a> <span class="dates">11/08/05</span></li>
 				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/R-1.1.0.1-200509071822/index.html">VE v1.1.0.1 released</a> <span class="dates">09/07/05</span></li>
 				<li><a href="http://download.eclipse.org/tools/ve/downloads/drops/R-1.1-200507221721/index.html">VE v1.1 released</a> <span class="dates">07/22/05</span></li>
-			</ul>
+				<li><a href="docs/v1.1/VE11grid.html">VE v1.1 Grid support</a> <span class="dates">07/13/05</span></li>
+				<li><a href="docs/v1.1/VE11M2.html">VE v1.1 M2 overview</a> <span class="dates">06/10/05</span></li>
+				<li><a href="http://eclipse.org/articles/Article-VE-Custom-Widget/customwidget.html">Extending the Visual Editor Tutorial: Enabling support for a custom widget</a> <span class="dates">06/15/05</span></li>
+				<li><a href="docs/newsArchive/main.html">News Archive...</a></li>
+			</ul>			
 		</div>
-		<hr class="clearer" />
-		<p>Some free text</p>
-		<ul class="midlist">
-			<li>list of items in free text</li>
-			<li>list of items in free text</li>
-			<li>list of items in free text</li>
-		</ul>
-		<ol>
-			<li>Ordered list</li>
-			<li>Ordered list</li>
-			<li>Ordered list</li>
-		</ol>
+		
+		<div class="homeitem3col">
+			<h3>Developer Resources:</h3>
+			
+<table style="border-collapse: collapse;" border="0"
+ bordercolor="#111111" cellpadding="3" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td colspan="3" bgcolor="#0070a0"><font color="#ffffff"><b>Developer
+Resources:</b></font></td>
+    </tr>
+    <tr>
+      <td rowspan="2" width="48"><a
+ href="http://download.eclipse.org/tools/ve/downloads/index.php"><img
+ src="images/download.gif" border="0"></a></td>
+      <td colspan="2"><a
+ href="http://download.eclipse.org/tools/ve/downloads/index.php">Download
+Page </a>, <a href="docs/translations/translation.html">Translations</a>,
+      <A href="http://archive.eclipse.org/tools/ve/downloads/">Archives
+			Download Page</A></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>Get the packages from the <a
+ href="http://download.eclipse.org/tools/ve/downloads/index.php">download
+page</a> and the translations from the <a
+ href="docs/translations/translation.html">translations page</a>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="2"><a href="http://bugs.eclipse.org/bugs"> <img
+ src="images/bugzilla.gif" border="0"> </a></td>
+      <td colspan="2" bgcolor="#ffffbb"><a
+ href="http://bugs.eclipse.org/bugs"> Bugzilla</a></td>
+    </tr>
+    <tr>
+      <td bgcolor="#ffffbb">&nbsp;</td>
+      <td bgcolor="#ffffbb">Find/report bugs and feature requests <br>
+      <a
+ href="http://dev.eclipse.org/bugs/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=VE&amp;short_desc=&amp;short_desc_type=allwordssubstr&amp;long_desc=&amp;long_desc_type=allwordssubstr&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time">All
+open</a>, <a
+ href="http://bugs.eclipse.org/bugs/buglist.cgi?short_desc_type=allwordssubstr&amp;short_desc=&amp;product=VE&amp;long_desc_type=allwordssubstr&amp;long_desc=&amp;bug_file_loc_type=allwordssubstr&amp;bug_file_loc=&amp;keywords_type=allwords&amp;keywords=&amp;bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;emailtype1=substring&amp;email1=&amp;emailtype2=substring&amp;email2=&amp;bugidtype=include&amp;bug_id=&amp;votes=&amp;changedin=7&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=">Recently
+closed</a>, <a
+ href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=VE">Open a
+new bug</a>, <a
+ href="https://bugs.eclipse.org/bugs/enter_bug.cgi?product=VE&bug_severity=enhancement">Open
+a feature request</a></td>
+    </tr>
+    <tr>
+      <td rowspan="2"><a href="faq.html"> <img
+ src="images/faq.gif" border="0"> </a></td>
+      <td colspan="2"><a href="faq.html">FAQ </a></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>Frequently Asked Questions</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><a
+ href="news://news.eclipse.org/eclipse.tools.vep"> <img
+ src="images/news.gif" border="0"> </a></td>
+      <td colspan="2" bgcolor="#ffffbb"><a target="_top"
+ href="news://news.eclipse.org/eclipse.tools.ve" name="newsgroup">Newsgroup:
+eclipse.tools.ve </a> (<a
+ href="http://www.eclipse.org/newsportal/thread.php?group=eclipse.tools.ve">web
+interface</a><a>) </a></td>
+    </tr>
+    <tr>
+      <td bgcolor="#ffffbb">&nbsp;</td>
+      <td bgcolor="#ffffbb">Place to ask questions on how to use the
+Visual Editor</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><a href="docs/doc.html"> <img
+ src="images/reference.gif" border="0"> </a></td>
+      <td colspan="2"><a href="docs/doc.html">Documents</a>, <A
+				href="docs/migration/migration.html">Migration Documents</A></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>white papers, articles, user guides, reference manuals, test
+scenarios, tutorials, Javadoc...</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><a
+ href="news://news.eclipse.org/eclipse.tools.vep"> <img
+ src="images/OK.gif" border="0" height="39" width="38"> </a></td>
+      <td colspan="2" bgcolor="#ffffbb"><a target="_top"
+ href="news://news.eclipse.org/eclipse.tools.ve"> </a><a
+ href="docs/testpass.html">Visual Editor Test Pass runs</a></td>
+    </tr>
+    <tr>
+      <td bgcolor="#ffffbb">&nbsp;</td>
+      <td bgcolor="#ffffbb">Formal external test passes</td>
+    </tr>
+    <tr>
+      <td rowspan="2"><a
+ href="http://dev.eclipse.org/mailman/listinfo/vep-dev"> <img
+ src="images/mail.gif" border="0"> </a></td>
+      <td colspan="2"><a target="_top"
+ href="http://dev.eclipse.org/mailman/listinfo/ve-dev"> Mailing List </a></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>If you have questions about VE or why something doesn't work
+in VE, please don't ask in the mailing list.<a href="#newsgroup"
+ target="_self"><b>Please use the Newsgroup above.</b></a>. This
+mailing list is used to participate in discussions on the <b>implementation</b>
+of the Visual Editor itself, not usage of it.<br>
+      <a
+ href="http://dev.eclipse.org/mhonarc/lists/ve-dev/maillist.html">Archives</a>,<a
+ href="mailto:ve-dev@eclipse.org">Send message</a></td>
+    </tr>
+    <tr>
+      <td rowspan="2"><a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/?cvsroot=Tools_Project">
+      <img src="images/cvs.gif" border="0"> </a></td>
+      <td colspan="2" bgcolor="#ffffbb"><a
+ href="http://dev.eclipse.org/viewcvs/index.cgi/?cvsroot=Tools_Project">CVS
+Repository</a></td>
+    </tr>
+    <tr>
+      <td bgcolor="#ffffbb">&nbsp;</td>
+      <td bgcolor="#ffffbb">Web Interface to Visual Editor's Source Code</td>
+    </tr>
+  </tbody>
+</table>			
+			
+		</div>
+
+		
 	</div>
 	<div id="rightcolumn">
 		<div class="sideitem">
