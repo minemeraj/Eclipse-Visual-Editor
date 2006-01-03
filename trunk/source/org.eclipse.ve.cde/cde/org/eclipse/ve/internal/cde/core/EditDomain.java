@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.core;
 /*
  *  $RCSfile: EditDomain.java,v $
- *  $Revision: 1.16 $  $Date: 2005-12-14 21:27:11 $ 
+ *  $Revision: 1.17 $  $Date: 2006-01-03 21:25:35 $ 
  */
 
 import java.text.MessageFormat;
@@ -77,26 +77,34 @@ public class EditDomain extends DefaultEditDomain {
 		return existingImage;
 	}
 	
-	public void setPaletteViewer(PaletteViewer palette) {
-		super.setPaletteViewer(palette);
-		palette.addPaletteListener(new PaletteListener(){
-			public void activeToolChanged(PaletteViewer palette, ToolEntry tool) {
-				if (tool instanceof CreationToolEntry){
-					CreationToolEntry creationTool = (CreationToolEntry)tool;
-					toolInfo = new ToolInfo(
-							MessageFormat.format(CDEMessages.ActionContributor_Status_Creating_label_, new Object[]{creationTool.getLabel()}),
-							getImage(creationTool.getSmallIcon()));
-				} else {
-					toolInfo = null;
+	private PaletteListener paletteListener = new PaletteListener(){
+		public void activeToolChanged(PaletteViewer palette, ToolEntry tool) {
+			if (tool instanceof CreationToolEntry){
+				CreationToolEntry creationTool = (CreationToolEntry)tool;
+				toolInfo = new ToolInfo(
+						MessageFormat.format(CDEMessages.ActionContributor_Status_Creating_label_, new Object[]{creationTool.getLabel()}),
+						getImage(creationTool.getSmallIcon()));
+			} else {
+				toolInfo = null;
+			}
+			if(toolListeners != null){
+				Iterator iter = toolListeners.iterator();
+				while(iter.hasNext()){
+					((ToolChangedListener)iter.next()).toolChanged();
 				}
-				if(toolListeners != null){
-					Iterator iter = toolListeners.iterator();
-					while(iter.hasNext()){
-						((ToolChangedListener)iter.next()).toolChanged();
-					}
-				}				
-			}			
-		});
+			}				
+		}			
+	};
+	
+	public void setPaletteViewer(PaletteViewer paletteViewer) {
+		PaletteViewer oldPaletteViewer = getPaletteViewer();
+		if (oldPaletteViewer == paletteViewer)
+			return;
+		if (oldPaletteViewer != null)
+			oldPaletteViewer.removePaletteListener(paletteListener);
+		super.setPaletteViewer(paletteViewer);
+		if (paletteViewer != null)
+			paletteViewer.addPaletteListener(paletteListener);
 	}
 	
 	public void setActiveTool(Tool tool) {
