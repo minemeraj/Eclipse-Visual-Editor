@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-12-14 21:39:34 $ 
+ *  $Revision: 1.5 $  $Date: 2006-01-05 19:28:20 $ 
  */
 package org.eclipse.ve.internal.rcp;
 
@@ -289,9 +289,12 @@ public class WorkbenchPartProxyAdapter extends UIThreadOnlyProxyAdapter implemen
 			
 			// Don't need to do workbenchparent because that will automatically be disposed too by disposing host.
 			workbenchHost = workbenchParent = null;
-			IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter((IJavaInstance) getJavaObject().eGet(sf_delegate_control), IBeanProxyHost.BEAN_PROXY_TYPE);
-			if (value != null)
-				value.releaseBeanProxy(expression);
+			IJavaInstance delegateControl = (IJavaInstance) getJavaObject().eGet(sf_delegate_control);
+			if (delegateControl != null) {
+				IBeanProxyHost value = (IBeanProxyHost) EcoreUtil.getExistingAdapter(delegateControl, IBeanProxyHost.BEAN_PROXY_TYPE);
+				if (value != null)
+					value.releaseBeanProxy(expression);
+			}			
 		}
 
 		if (imageListener != null) {
