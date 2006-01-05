@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartTreeEditPart.java,v $
- *  $Revision: 1.1 $  $Date: 2005-10-14 17:33:41 $ 
+ *  $Revision: 1.2 $  $Date: 2006-01-05 19:26:24 $ 
  */
 package org.eclipse.ve.internal.rcp;
 
@@ -23,7 +23,6 @@ import org.eclipse.gef.EditPolicy;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
-import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.JavaBeanTreeEditPart;
 
 import org.eclipse.ve.internal.swt.ControlTreeEditPart;
@@ -44,7 +43,7 @@ public class WorkbenchPartTreeEditPart extends JavaBeanTreeEditPart {
 	
 	protected List getChildJavaBeans() {
 		List result = new ArrayList(1);
-		IJavaInstance delegate_control = BeanUtilities.getFeatureValue((IJavaInstance)getModel(),sf_delegate_control);
+		IJavaInstance delegate_control = (IJavaInstance) ((IJavaInstance)getModel()).eGet(sf_delegate_control);
 		if(delegate_control != null){
 			result.add(delegate_control);
 			return result;			
