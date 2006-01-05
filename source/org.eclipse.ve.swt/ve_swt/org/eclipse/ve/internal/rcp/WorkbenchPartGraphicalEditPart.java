@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartGraphicalEditPart.java,v $
- *  $Revision: 1.2 $  $Date: 2005-10-20 19:34:43 $ 
+ *  $Revision: 1.3 $  $Date: 2006-01-05 19:26:24 $ 
  */
 package org.eclipse.ve.internal.rcp;
 
@@ -22,6 +22,7 @@ import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -234,7 +235,9 @@ public class WorkbenchPartGraphicalEditPart extends AbstractGraphicalEditPart im
 	}
 
 	private IJavaInstance getDelegateComposite() {
-		return BeanUtilities.getFeatureValue((IJavaInstance) getModel(), SwtPlugin.DELEGATE_CONTROL);
+		IJavaInstance modelJI = (IJavaInstance) getModel();
+		EStructuralFeature sfDelgateControl = modelJI.eClass().getEStructuralFeature(SwtPlugin.DELEGATE_CONTROL);
+		return (IJavaInstance) (sfDelgateControl != null ? modelJI.eGet(sfDelgateControl) : null);
 	}
 
 	protected EditPart createChild(Object model) {

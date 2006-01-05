@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: BeanUtilities.java,v $
- *  $Revision: 1.35 $  $Date: 2005-12-09 21:55:56 $ 
+ *  $Revision: 1.36 $  $Date: 2006-01-05 19:26:24 $ 
  */
 
 import java.util.regex.Pattern;
@@ -420,40 +420,6 @@ public class BeanUtilities {
 
 	}
 
-	/**
-	 * @param javaObjectInstance
-	 * @param featureName
-	 * Return the feature value.  Either is is set in the EMF model so we get it
-	 * or else we go to the target VM
-	 * 
-	 * @since 1.0.0
-	 */
-	public static IJavaInstance getFeatureValue(IJavaInstance javaObject, String featureName) {
-		EStructuralFeature feature = javaObject.eClass().getEStructuralFeature(featureName);
-		if(feature == null) {
-			return null;
-		} else {
-			return getFeatureValue(javaObject,feature);
-		}
-	}
-	/**
-	 * @param javaObjectInstance
-	 * @param featureName
-	 * Return the feature value.  Either is is set in the EMF model so we get it
-	 * or else we go to the target VM
-	 * 
-	 * @since 1.0.0
-	 */	
-	public static IJavaInstance getFeatureValue(IJavaInstance javaObject, EStructuralFeature feature){
-		Object featureValue = javaObject.eGet(feature);
-		if(featureValue != null){
-			return (IJavaInstance)featureValue;
-		} else {
-			IBeanProxyHost beanProxyHost = BeanProxyUtilities.getBeanProxyHost(javaObject);
-			if(!beanProxyHost.isBeanProxyInstantiated()) beanProxyHost.instantiateBeanProxy();
-			return beanProxyHost.getBeanPropertyValue(feature);
-		}
-	}
 	
 
 	/**

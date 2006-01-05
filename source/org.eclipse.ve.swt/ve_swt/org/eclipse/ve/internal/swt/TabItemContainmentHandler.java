@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TabItemContainmentHandler.java,v $
- *  $Revision: 1.3 $  $Date: 2005-12-16 15:51:30 $ 
+ *  $Revision: 1.4 $  $Date: 2006-01-05 19:26:24 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -23,8 +23,6 @@ import org.eclipse.jem.java.JavaClass;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
-
-import org.eclipse.ve.internal.java.core.BeanUtilities;
 
 /**
  * TabItem containment handler. This handles dropping a TabItem onto a Composite or a TabFolder
@@ -44,6 +42,7 @@ public class TabItemContainmentHandler extends NoFFModelAdapter {
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		if (creation) {
 			if (parent instanceof IJavaObjectInstance) {
+				IJavaObjectInstance childTabITem = (IJavaObjectInstance) child;
 				IJavaObjectInstance javaParent = (IJavaObjectInstance)parent;
 				ResourceSet rSet = ((IJavaObjectInstance)parent).eResource().getResourceSet();
 				// See whether the parent is a TabItem or a Composite
@@ -54,7 +53,7 @@ public class TabItemContainmentHandler extends NoFFModelAdapter {
 					// Drop the TabItem onto the TabFolder
 					WidgetContainmentHandler.processAllocation(parent,child, preCmds);
 					// If the TabItem has a control (as occurs during copy and paste) then we must ensure the control is reparented
-					IJavaInstance tabItemControl = BeanUtilities.getFeatureValue((IJavaInstance) child, "control"); //$NON-NLS-1$
+					IJavaInstance tabItemControl = (IJavaInstance) childTabITem.eGet(childTabITem.eClass().getEStructuralFeature("control")); //$NON-NLS-1$
 					if(tabItemControl == null){
 						throw new StopRequestException(SWTMessages.TabItemContainmentHandler_StopRequest_TabItem_NoControlNoDrop);
 					} else {
@@ -63,10 +62,10 @@ public class TabItemContainmentHandler extends NoFFModelAdapter {
 					return child;
 				} else {
 					// Get the control from the TabItem and make this the child to be dropped
-					IJavaInstance controlChild = BeanUtilities.getFeatureValue((IJavaObjectInstance)child, "control");					 //$NON-NLS-1$
-					WidgetContainmentHandler.processAllocation(parent, controlChild, preCmds);
+					IJavaInstance tabItemControl = (IJavaInstance) childTabITem.eGet(childTabITem.eClass().getEStructuralFeature("control")); //$NON-NLS-1$
+					WidgetContainmentHandler.processAllocation(parent, tabItemControl, preCmds);
 					WidgetContainmentHandler.processAllocation(parent, child, preCmds);					
-					return controlChild;
+					return tabItemControl;
 				}
 			} else {
 				return super.contributeToDropRequest(parent, child, preCmds, postCmds, creation, domain);	// Let super handle is not on FF.
