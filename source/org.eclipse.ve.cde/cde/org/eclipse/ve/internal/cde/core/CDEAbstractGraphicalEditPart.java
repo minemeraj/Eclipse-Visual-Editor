@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEAbstractGraphicalEditPart.java,v $
- *  $Revision: 1.17 $  $Date: 2005-12-14 21:27:11 $ 
+ *  $Revision: 1.18 $  $Date: 2006-01-06 23:08:11 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -60,7 +60,7 @@ public abstract class CDEAbstractGraphicalEditPart extends AbstractGraphicalEdit
 			getFigure().setToolTip(contentHelper);
 		}
 		List editPartContributorFactories = getEditDomain().getContributors(this);
-		if(editPartContributorFactories != null){
+		if(editPartContributorFactories != null && !editPartContributorFactories.isEmpty()){
 			figureOverlayPanel  = new Panel();
 			figureOverlayPanel.setLayoutManager(new FlowLayout());
 			figureOverlayPanel.getBounds().translate(3, 3);
