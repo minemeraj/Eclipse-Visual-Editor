@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ModelChangeController.java,v $
- *  $Revision: 1.10 $  $Date: 2005-10-04 18:08:41 $ 
+ *  $Revision: 1.11 $  $Date: 2006-01-06 21:42:49 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -363,6 +363,7 @@ public abstract class ModelChangeController {
 
 			};
 			for (int i = 0; i < ll.length; i++) {
+				index[0] = i;
 				Platform.run(safeRunnable);
 			}
 		}
