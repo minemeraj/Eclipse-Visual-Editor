@@ -12,10 +12,15 @@ Widget			->	WidgetContainmentHandler
             Shell	->	ShellContainmentHandler
   Item
     TableColumn		->	TableColumnContainmentHandler
+    TabItem			->	TabItemContainmentHandler
     
-Viewer
+Viewer				->	ViewerContainmentHandler
   ContentViewer
     StructuredViewer
+      TableViewer	0>	ViewerContainmentHandler:table
       AbstractTreeViewer
-        TreeViewer	->	TreeViewerContainmentHandler
+        TreeViewer	->	ViewerContainmentHandler:tree
+      AbstractListViewer
+        ComboViewer	->	ViewerContainmentHandler:combo
+        ListViewer	->	ViewerContainmentHandler:list        
       
