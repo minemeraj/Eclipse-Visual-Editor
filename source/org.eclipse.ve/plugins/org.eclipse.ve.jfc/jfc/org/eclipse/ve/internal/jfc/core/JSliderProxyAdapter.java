@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JSliderProxyAdapter.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.5 $  $Date: 2006-01-06 20:21:03 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import org.eclipse.jem.internal.beaninfo.PropertyDecorator;
-import org.eclipse.jem.internal.beaninfo.core.Utilities;
 import org.eclipse.jem.internal.instantiation.base.JavaInstantiation;
 import org.eclipse.jem.internal.proxy.core.IExpression;
 import org.eclipse.jem.internal.proxy.core.IProxy;
@@ -33,7 +32,8 @@ import org.eclipse.ve.internal.java.core.JavaEditDomainHelper;
  */
 public class JSliderProxyAdapter extends ComponentProxyAdapter {
 
-	protected EStructuralFeature sfMajorTicks, sfLabelTable;
+	protected EStructuralFeature sfMajorTicks;
+//	protected EStructuralFeature sfLabelTable;
 
 	/**
 	 * Constructor for JSliderProxyAdapter.
@@ -45,7 +45,7 @@ public class JSliderProxyAdapter extends ComponentProxyAdapter {
 
 		ResourceSet rset = JavaEditDomainHelper.getResourceSet(domain.getEditDomain());
 		sfMajorTicks = JavaInstantiation.getSFeature(rset, JFCConstants.SF_JSLIDER_MAJORTICKS);
-		sfLabelTable = JavaInstantiation.getSFeature(rset, JFCConstants.SF_JSLIDER_LABELTABLE);
+//		sfLabelTable = JavaInstantiation.getSFeature(rset, JFCConstants.SF_JSLIDER_LABELTABLE);
 	}
 	
 	
@@ -59,9 +59,15 @@ public class JSliderProxyAdapter extends ComponentProxyAdapter {
 		// the labels, but if you then change the majorTicks again, the labels are not changed again.
 		// So we need to test to see if it is major ticks, and if it is, and label table NOT set, then we need to ALSO apply null
 		// to the label table first so that it will always recreate the labels on each major tick change.
-		if (!inInstantiation() && propertyDecorator.getEModelElement() == sfMajorTicks && !getEObject().eIsSet(sfLabelTable)) {
-			super.applyBeanProperty(Utilities.getPropertyDecorator(sfLabelTable), null, expression, false);
-		}
+		// Note: Since https://bugs.eclipse.org/bugs/show_bug.cgi?id=111745 we don't have LabelTable property to set.
+		// So we will instead just access the set method directly. In the future if we turn label table back on we should
+		// uncomment out the usage of the property and do that instead.
+//		if (!inInstantiation() && propertyDecorator.getEModelElement() == sfMajorTicks && !getEObject().eIsSet(sfLabelTable)) {
+//			super.applyBeanProperty(Utilities.getPropertyDecorator(sfLabelTable), null, expression, false);
+//		}
+		if (!inInstantiation() && propertyDecorator.getEModelElement() == sfMajorTicks) {
+			expression.createSimpleMethodInvoke(getBeanTypeProxy("javax.swing.JSlider", expression).getMethodProxy(expression, "setLabelTable", new String[] {"java.util.Dictionary"}), getProxy(), new IProxy[] {null}, false);
+		}		
 
 		return super.applyBeanProperty(propertyDecorator, settingProxy, expression, getOriginalValue);
 	}
