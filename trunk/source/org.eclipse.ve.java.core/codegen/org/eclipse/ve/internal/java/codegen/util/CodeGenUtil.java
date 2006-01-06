@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.62 $  $Date: 2005-12-09 21:55:57 $ 
+ *  $Revision: 1.63 $  $Date: 2006-01-06 21:45:58 $ 
  */
 
 
@@ -1112,9 +1112,13 @@ public static Collection getReferences(Object o, boolean includeO) {
 						public boolean visit(PTInstanceReference node) {
 							IJavaInstance obj = node.getReference();
 							BeanPart bp = fbeanPart.getModel().getABean(obj);
-							if (bp != null)
+							if (bp != null){
 								bps.add(bp);
-							else {
+								while(bp!=null && bp.getDecleration().isImplicitDecleration()){
+									bp = bp.getImplicitParent();
+									bps.add(0, bp); // #determineParentBeanPart() always expects last child to be the parent
+								}
+							} else {
 								if (obj != null && obj.isParseTreeAllocation()) {
 									ParseTreeAllocation alloc = (ParseTreeAllocation) obj.getAllocation();
 									alloc.getExpression().accept(this);
