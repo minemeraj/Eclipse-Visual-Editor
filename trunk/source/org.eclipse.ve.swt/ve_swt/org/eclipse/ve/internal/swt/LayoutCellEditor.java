@@ -11,9 +11,10 @@
 package org.eclipse.ve.internal.swt;
 /*
  *  $RCSfile: LayoutCellEditor.java,v $
- *  $Revision: 1.12 $  $Date: 2005-11-15 18:53:27 $ 
+ *  $Revision: 1.13 $  $Date: 2006-01-06 21:47:34 $ 
  */
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,9 +101,12 @@ public static String getDisplayName(EditDomain editDomain, String className){
 			break;
 		}
 	}
-	if(dispName==null)
-		return ""; //$NON-NLS-1$
-	else
+	if(dispName==null) {
+		int pkgSep = className.lastIndexOf('.');
+		if (pkgSep != -1)
+			className = className.substring(pkgSep+1);
+		return MessageFormat.format(SWTMessages.LayoutCellEditor_Unknown_layout_display_name, new Object[] {className});
+	} else
 		return dispName;
 }
 
