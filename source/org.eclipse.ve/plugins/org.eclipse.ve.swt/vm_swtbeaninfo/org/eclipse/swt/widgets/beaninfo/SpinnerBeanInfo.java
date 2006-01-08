@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SpinnerBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-08 23:21:37 $ 
+ *  $Revision: 1.6 $  $Date: 2006-01-08 03:12:09 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -53,6 +53,7 @@ public class SpinnerBeanInfo extends IvjBeanInfo {
 	 */
 	public EventSetDescriptor[] getEventSetDescriptors() {
 		return new EventSetDescriptor[] {
+				ModifyListenerEventSet.getEventSetDescriptor(getBeanClass()),
 				SelectionListenerEventSet.getEventSetDescriptor(getBeanClass())
 		};
 	}
