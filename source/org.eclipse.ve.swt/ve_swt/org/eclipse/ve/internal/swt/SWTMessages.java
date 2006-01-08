@@ -223,4 +223,8 @@ public final class SWTMessages extends NLS {
 	public static String TabItemContainmentHandler_StopRequest_TabItem_NoControlNoDrop;
 	public static String TabItemContainmentHandler_StopRequest_TabItem_InvalidParent;
 	public static String LayoutCellEditor_Unknown_layout_display_name;
+	public static String FormLayoutLayoutComposite_spacingTitle;
+	public static String FormLayoutLayoutComposite_spacing;
+	public static String FormLayoutLayoutComposite_marginWidth;
+	public static String FormLayoutLayoutComposite_marginHeight;
 }
