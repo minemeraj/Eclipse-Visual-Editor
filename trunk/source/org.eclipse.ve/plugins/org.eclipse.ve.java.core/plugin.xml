@@ -74,19 +74,23 @@
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
             id="org.eclipse.ve.java.events.popup.object">
+         <visibility>
+            <and>
+              <objectState
+                    name="DOMAIN"
+                    value="STANDARD EVENTS"/>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+            </and>
+         </visibility>                                                      
          <action
                label="%events.label"
                style="pulldown"
                class="org.eclipse.ve.internal.java.core.JavaBeanEventsObjectActionDelegate"
                menubarPath="group.add"
                enablesFor="1"
-               id="org.eclipse.ve.java.visual.events">
-           <enablement>
-              <objectState
-                    name="CHANGEABLE"
-                    value="true"/>
-           </enablement>               
-         </action>
+               id="org.eclipse.ve.java.visual.events"/>
       </objectContribution>
 <!--
      Events popup for an existing listener in the Java Beans view, i.e. add a focusLost method to an existing focusListener 
@@ -95,19 +99,23 @@
       <objectContribution
             objectClass="org.eclipse.ve.internal.java.core.EventInvocationAndListenerTreeEditPart"
             id="org.eclipse.ve.java.listener.events.popup.object">
+         <visibility>
+            <and>
+              <objectState
+                    name="DOMAIN"
+                    value="STANDARD EVENTS"/>
+              <objectState
+                    name="CHANGEABLE"
+                    value="true"/>
+            </and>
+         </visibility>                                          
          <action
                label="%events.label"
                style="pulldown"
                class="org.eclipse.ve.internal.java.core.EventInvocationAndListenerEventsObjectActionDelegate"
                menubarPath="group.add"
                enablesFor="1"
-               id="org.eclipse.ve.java.visual.listener.events">
-           <enablement>
-              <objectState
-                    name="CHANGEABLE"
-                    value="true"/>
-           </enablement>                              
-         </action>
+               id="org.eclipse.ve.java.visual.listener.events"/>
       </objectContribution>
 <!-- ======================================================================== -->
 <!-- Extend the popup menu on Edit parts                                      -->
@@ -123,9 +131,14 @@
                enablesFor="+"
                id="org.eclipse.ve.internal.java.codegen.editorpart.renameaction">
            <enablement>
-              <objectState
-                    name="CHANGEABLE"
-                    value="true"/>
+              <and>
+                <objectState
+                      name="DOMAIN"
+                      value="STANDARD EVENTS"/>
+                <objectState
+                      name="CHANGEABLE"
+                      value="true"/>
+              </and>
            </enablement>               
          </action>
       </objectContribution>    

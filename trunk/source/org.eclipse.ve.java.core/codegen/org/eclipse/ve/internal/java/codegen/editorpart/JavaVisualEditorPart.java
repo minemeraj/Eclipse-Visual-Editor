@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.160 $  $Date: 2005-12-13 21:41:48 $ 
+ *  $Revision: 1.161 $  $Date: 2006-01-09 16:54:17 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -2349,6 +2349,8 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 			editDomain.setRuleRegistry(JVEStyleRegistry.getJVEStyleRegistry().getStyle(VCEPreferences.getStyleID()));
 			editDomain.setData(ExpressionDecoderFactory.CodeGenDecoderFactory_KEY, new ExpressionDecoderFactory());
 			editDomain.setData(MethodGeneratorFactory.CodeGenMethodGeneratorFactory_KEY, new MethodGeneratorFactory());
+			
+			editDomain.setData(JavaBeanEventsObjectActionDelegate.STANDARD_EVENT_CAPABLE, JavaBeanEventsObjectActionDelegate.STANDARD_EVENT_CAPABLE);
 
 			editDomain.setAnnotationLinkagePolicy(new EMFAnnotationLinkagePolicy());
 			ClassDescriptorDecoratorPolicy policy = ClassDescriptorDecoratorPolicy.getPolicy(editDomain);
