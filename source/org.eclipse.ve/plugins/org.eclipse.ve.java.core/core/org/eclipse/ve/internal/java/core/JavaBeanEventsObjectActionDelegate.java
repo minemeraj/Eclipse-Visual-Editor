@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanEventsObjectActionDelegate.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.11 $  $Date: 2006-01-09 16:54:17 $ 
  */
 
 import java.text.Collator;
@@ -48,6 +48,8 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
  * Window>Preferences>Java>Code Generation.
  */
 public class JavaBeanEventsObjectActionDelegate implements IObjectActionDelegate, IMenuCreator {
+	
+	public static final String STANDARD_EVENT_CAPABLE = "STANDARD EVENTS"; //$NON-NLS1$
 	
 	/**
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)

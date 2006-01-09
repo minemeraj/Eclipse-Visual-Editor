@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CDEActionFilter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.9 $  $Date: 2006-01-09 16:54:17 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -35,6 +35,8 @@ import org.eclipse.ui.IActionFilter;
  * The valid tests are: 
  *   (name)        - (value)
  *   CHANGABLE     - "true" if the model can be changed (is ready), "false" if it is not ready (busy, read-only, paused, etc.).
+ *   DOMAIN        - "nameOfDomainDataKey" tests if the given key/data in the editdomain has been set. It doesn't test the value value, only
+ *                   that the key has been set. 
  *   PROPERTY      - "nameOfFeature" tests if the given feature is an available property of the model of the editpart. (Model needs to be EMF, does not need to be JavaModel).
  *   EDITPOLICY#   - This means redirect the request to the Editpolicies. The portion of "name" after the "#" becomes that "name" and
  *                   value is left as is, and then request to filter is sent to each of the edit policies that can handle IActionFilter or adapt to it.
@@ -49,6 +51,7 @@ public class CDEActionFilter implements IActionFilter {
 	
 	public final static String
 		CHANGEABLE_STRING = "CHANGEABLE", //$NON-NLS-1$
+		DOMAIN_STRING = "DOMAIN",	//$NON-NLS-1$
 		EDITPOLICY_STRING = "EDITPOLICY#", //$NON-NLS-1$
 		PARENT_STRING = "PARENT#", //$NON-NLS-1$
 		ANCESTOR_STRING = "ANCESTOR#", //$NON-NLS-1$
@@ -70,6 +73,8 @@ public class CDEActionFilter implements IActionFilter {
 		if (name.equals(CHANGEABLE_STRING)) {
 			// This tests the model to see if it is changable.
 			return Boolean.valueOf(value).booleanValue() == (CDEUtilities.getHoldState(EditDomain.getEditDomain((EditPart) target)) == ModelChangeController.READY_STATE);
+		} if (name.equals(DOMAIN_STRING)) {
+			return EditDomain.getEditDomain((EditPart) target).getData(value) != null;
 		} else if (name.equals(PROPERTY_STRING)) {
 			// This allows an extension so that a popup action could be provided if a component
 			// had a specific property with its name equal to 'value'.			
