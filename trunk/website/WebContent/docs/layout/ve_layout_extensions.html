@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>Visual Editor Layout Extensions</title>
+
+
+  <meta content="Peter Walker" name="author">
+
+  <link type="text/css" href="http://dev.eclipse.org/default_style.css" rel="stylesheet">
+
+</head>
+
+
+<body>
+
+<!--TOP OF PAGE...Documents -->
+<table border="0" cellpadding="2" width="100%">
+
+  <tbody>
+
+    <tr>
+
+      <td align="left" width="60%"><font class="indextop">VE Layout Extensions</font><br>
+
+      <font class="indexsub">Adding your own layouts to VE</font></td>
+
+      <td width="40%"><img src="../../images/reference.gif" align="right" hspace="50"></td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+<br>
+
+<font face="sans-serif" size="2"><br>
+
+VE provides APIs and the capability to add your own
+layout in VE so it will show up in the drop down list in the property
+sheet
+view for the 'layout' property... and if even show up in the (optional)
+Customize Layout Window. This document will attempt to give you some
+pointers to classes
+and overrides to help you get started.</font><font size="3">
+<br>
+
+</font><font face="sans-serif" size="2"><b><u><br>
+
+</u></b></font>
+<h3><span style="text-decoration: underline;">Overrides</span></h3>
+
+<font face="sans-serif" size="2">
+The first place to look is the <b>layout.override</b> file
+in the <b>org.eclipse.ve.swt</b>
+plugin. It's located in the <b>overrides</b> directory. In
+your plugin,
+you will need to create an <b>overrides</b> directory. The
+directory structure
+is the same as the package name for the actual class. For example, <b>layout.override</b>
+is for the class <b>org.eclipse.swt.widgets</b> and is in
+the directory
+<b>...override\org\eclipse\swt\widgets</b>. You will need
+to create an
+SWT <b>layout.override</b> file in your plugin (with the
+same respective
+directory structure) and put your layout information in the file. VE
+will
+automatically pickup this override and add the information to VE's <b>layout.override</b>.
+BTW... look in the <b>LayoutCellEditor</b> class if you
+want to see how
+it's done. The xmi format for the override file varies depending on
+whether
+you are using VE 1.1 or the current (under development) VE 1.2. If you
+use the 1.1 format, you will have to convert it to 1.2 format using a
+migration
+tool later on when you move up to VE 1.2 (which is based on Eclipse
+3.2).
+Either version there are key/value pairs in the file and you need to
+add
+your layout here. Here's an example of the xmi decorator for RowLayout
+(1.2 format):</font><font size="3"> </font><font face="Courier New" size="1"><br>
+
+<span style="font-family: Arial;"> &nbsp;
+&lt;objectsToAttach source="org.eclipse.ve.LayoutInfo"
+xmi:id="_eAnnotations3" xsi:type="ecore:EAnnotation"&gt;</span></font><font style="font-family: Arial;" size="3">
+</font><font style="font-family: Arial;" face="Courier New" size="1"><br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp;&lt;details
+key="org.eclipse.ve.internal.swt.layoutClass"
+value="org.eclipse.swt.layout.RowLayout"/&gt;</font><font style="font-family: Arial;" size="3">
+</font><font style="font-family: Arial;" face="Courier New" size="1"><br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp; &nbsp;&lt;details
+key="org.eclipse.ve.internal.swt.layoutDisplayName"
+value="RowLayout"/&gt;</font><font style="font-family: Arial;" size="3"> </font><font style="font-family: Arial;" face="Courier New" size="1"><br>
+
+&nbsp; &lt;/objectsToAttach&gt;</font><font style="font-family: Arial;" size="3"><br>
+
+</font><font face="sans-serif" size="2"><br>
+
+There are two important keys defined here:</font><font size="3">
+</font><br>
+
+<font face="sans-serif" size="2">1. &nbsp;
+&nbsp; &nbsp; &nbsp;</font><font style="font-family: Arial;" face="Courier New" size="1">org.eclipse.ve.internal.swt.layoutClass</font><font face="sans-serif" size="2">
+- the value is the actual class name (i.e. </font><font style="font-family: Arial;" face="Courier New" size="1">org.eclipse.swt.layout.RowLayout</font><font face="sans-serif" size="2">)</font><font size="3">
+</font><br>
+
+<font face="sans-serif" size="2">2. &nbsp;
+&nbsp; &nbsp; &nbsp;</font><font style="font-family: Arial;" face="Courier New" size="1">org.eclipse.ve.internal.swt.layoutDisplayName</font><font face="sans-serif" size="2">
+- the value is the display name in the property sheet view drop down
+list
+(i.e. </font><font style="font-family: Arial;" face="Courier New" size="1">RowLayout</font><font face="sans-serif" size="2">)</font>
+<br>
+
+<font face="sans-serif" size="2"><br>
+
+In addition to the <b>layout.override</b> file, you will
+also need to create
+an override file for the actual layout you have developed and in it you
+will point to the layout factory to be used by VE for your layout. Put
+this also in the directory structure to what your layout path is. For
+example,
+<b>cool.layouts.MyCoolSWTLayout</b> would be in <b>...overrides\cool\layouts\MyCoolSWTLayout.override</b>.</font><font size="3">
+<br>
+
+</font><font face="sans-serif" size="2"><br>
+
+A layout factory is an implementation of the class </font><font face="Courier New" size="2"><b>ILayoutPolicyFactory</b></font><font face="sans-serif" size="2">
+which has various getter methods that return things like the type of
+layout
+policy to use in the graph viewer, the layout switcher to use when
+someone
+selects your layout, a <b>constraint</b> class that is
+used if your layout
+class uses layout data for the children (e.g. RowData for RowLayout),
+and
+other methods as well... just check out the javadoc. Looking at an
+example
+is the easiest way to find out how to write up your own. Here's the xmi
+information for <b>RowLayout.override</b> (located in the <b>...override\org\eclipse\swt\layout</b>
+directory):</font><font size="3"> </font><font face="Courier New" size="1"><br>
+
+<span style="font-family: Arial;">
+&lt;objectsToAttach xmi:id="_eAnnotations"
+xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"&gt;</span></font><font style="font-family: Arial;" size="3">
+</font><font style="font-family: Arial;" face="Courier New" size="1"><br>
+
+&nbsp; &lt;keyedValues
+key="org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey"
+&nbsp; <br>
+
+&nbsp;
+value="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.RowLayoutPolicyFactory"
+xsi:type="ecore:EStringToStringMapEntry"/&gt;</font><font style="font-family: Arial;" size="3">
+</font><font style="font-family: Arial;" face="Courier New" size="1"><br>
+
+&lt;/objectsToAttach&gt;</font><font size="3">
+<br>
+
+</font><font face="sans-serif" size="2"><br>
+
+The key here is </font><font face="Courier New" size="1">"<span style="font-family: Arial;">org.eclipse.ve.internal.java.visual.layoutpolicyfactoryclassnamekey</span>"</font><font face="sans-serif" size="2">
+and the value will be your own layout policy factory.</font><font size="3">
+<br>
+
+</font><font size="3"><br>
+
+</font>
+<h3><span style="text-decoration: underline;">Policies</span></h3>
+
+<font face="sans-serif" size="2">
+To actually use your layout in VE such that you can create, move,
+delete,
+and manipulate the SWT controls with a Composite, you will need to
+create
+your own edit policy, helper, and container policy... or use some (or
+all)
+of the VE policies if they suit your needs. These policies are used
+primarily
+to create and execute GEF commands. VE uses commands so that operations
+can be undone and batched together in a logical manner. </font><font size="3"><br>
+
+</font><font face="sans-serif" size="2"><br>
+
+Your layout factory will return the layout policy and policy helper to
+be used for this purpose and you will need to write these with the
+respective
+interfaces. You can use one of the VE classes if you find it performs
+the
+behavior you want or you can subclass one of them and just override the
+methods you need to. VE provides a layout policy </font><font face="Courier New" size="2"><b>org.eclipse.ve.internal.swt</b></font><font face="sans-serif" size="2"><b>.DefaultLayoutEditPolicy</b>
+which provides basic functions similar to RowLayout and FillLayout.
+This
+provides a vertical or horizontal insertion line when dragging controls
+in the graph viewer.</font><font size="3"> <br>
+
+</font><font face="sans-serif" size="2"><br>
+
+You'll may need a policy helper as a common policy for both the beans
+viewer and the graph viewer. The layout policy usually forwards
+requests
+onto the helper policy. The
+CompositeTreeEditPart.createLayoutPolicyHelper()
+shows where the helper policy is created. The layout policy also
+instantiates
+them. Or just use VE's </font><font face="Courier New" size="2"><b>UnknownLayoutPolicyHelper</b></font><font face="sans-serif" size="2">
+which VE uses for layouts it doesn't know about.</font><font size="3"> <br>
+
+</font><font face="sans-serif" size="2"><br>
+
+Initially, you may want to just add one of the VE default layout
+policies
+and helpers to get things working in a generic way and then add your
+own
+layout policies. You will need to override various functions (add,
+delete,
+move, create, etc.). &nbsp;The simplest layout to look at is
+probably FillLayout
+or RowLayout. GridLayout and a null layout are much more complex
+because
+of the constraints and feedback mechanisms in place.</font><font size="3">
+<br>
+
+</font><font face="sans-serif" size="2"><br>
+
+Just a little background information that might prove useful in
+understanding
+and debugging layout behavior in the graph viewer, VE uses <b>CompositeGraphicalEditPart</b>
+as the general purpose graphical editpart for Composites. In the <b>createLayoutPolicy</b>
+method, it gets the 'layout' property and uses some VE utilities to get
+the layout factory based on the layout. From the factory, it gets the
+layout
+policy. </font><font size="3"><br>
+
+<br>
+
+</font>
+<h3><span style="text-decoration: underline;">Customize
+Layout Window</span></h3>
+
+<font face="sans-serif" size="2">If you want to
+provide
+your own layout and/or component page (for layout
+or layout data, respectively) in the <b>Customize Layout</b>
+window, you
+will need to have your own layout policy and point the customize layout
+window to your own pages. For RowLayout, look in <b>RowLayoutEditPolicy.activate()</b>.
+At the end of the method there is a statement that defines what page to
+use for the layout itself:</font><font size="3"> </font><font face="sans-serif" size="2"><br>
+
+&nbsp; &nbsp; </font><font style="font-family: Arial;" face="Courier New" size="1">CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(),
+RowLayoutLayoutPage.class);</font><font size="3"> </font><font face="sans-serif" size="2"><br>
+
+Whereas </font><font style="font-family: Arial;" face="Courier New" size="1">RowLayoutLayoutPage</font><font face="sans-serif" size="2">
+is the GUI page for change RowLayout properties. If you write your own
+you will need to extend VE's </font><font face="Courier New" size="2"><b>CustomizeLayoutPage</b></font><font face="sans-serif" size="2">.
+</font><font size="3"><br>
+
+</font><font face="sans-serif" size="2"><br>
+
+If you have a page for the layout data (for a child of the composite),
+you will need to add an additional statement in the activate method of
+your layout policy. For example, in GridLayoutEditPolicy, there is a
+page
+for the layout and the component:</font><font size="3">
+</font><font face="Courier New" size="1"><br>
+
+&nbsp;<span style="font-family: Arial;">CustomizeLayoutWindowAction.addLayoutCustomizationPage(getHost().getViewer(),
+GridLayoutLayoutPage.</span></font><font style="font-family: Arial;" color="#820040" face="Courier New" size="1"><b>class</b></font><font style="font-family: Arial;" face="Courier New" size="1">);
+&nbsp; &nbsp; &nbsp; &nbsp;// for the layout itself</font><font style="font-family: Arial;" size="3">
+</font><font style="font-family: Arial;" face="Courier New" size="1"><br>
+
+&nbsp;
+CustomizeLayoutWindowAction.addComponentCustomizationPage(getHost().getViewer(),
+GridLayoutComponentPage.</font><font style="font-family: Arial;" color="#820040" face="Courier New" size="1"><b>class</b></font><font style="font-family: Arial;" face="Courier New" size="1">);
+&nbsp;// for GridData of the child</font><font size="3">
+<br>
+
+</font><font face="sans-serif" size="2"><br>
+
+This layout component page (</font><font style="font-family: Arial;" face="Courier New" size="1">GridLayoutComponentPage</font><font face="sans-serif" size="2">)
+also extends VE's </font><font face="Courier New" size="2"><b>CustomizeLayoutPage</b></font><font face="sans-serif" size="2">.</font><font size="3">
+</font><font face="sans-serif" size="2"><br>
+
+Please pay particular attention to the </font><font style="font-family: Arial;" face="Courier New" size="1"><b>handleSelectionChanged(ISelection
+oldSelection)</b></font><font face="sans-serif" size="2"> method which is
+called by the VE's Customize window to determine if your page needs to
+be shown or not when selection changes in the graph or beans view.</font><font size="3">
+<br>
+
+</font><font face="sans-serif" size="2"><br>
+
+In your layout policy, you also need to implement the interface </font><font face="Courier New" size="2"><b>IActionFilter</b></font><font face="sans-serif" size="2">
+which requires a method</font><font size="3"> </font><font face="sans-serif" size="2"><br>
+
+&nbsp; &nbsp;</font><font face="Courier New" size="1"> &nbsp;<span style="font-family: Arial;">public
+boolean
+testAttribute(Object target, String name, String value)</span></font><font size="3">
+</font><font face="sans-serif" size="2"><br>
+
+This is a basic test for actions on the popup menu to determine if <b>Customize
+Layout...</b> should be added when someone clicks MB2 over a
+composite
+with your layout. You will need to add the statements:</font><font size="3">
+</font><font face="sans-serif" size="2"><br>
+
+<small><span style="font-family: Arial;"> &nbsp;
+&nbsp; &nbsp; &nbsp;if
+(name.startsWith(CustomizeLayoutPage.LAYOUT_POLICY_KEY)
+&amp;&amp; value.equals(LAYOUT_ID)) </span><br style="font-family: Arial;">
+
+<span style="font-family: Arial;"> &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;return
+true;</span></small></font><small><font style="font-family: Arial;" size="3"><small>
+</small></font><font style="font-family: Arial;" face="sans-serif" size="2"><small><br>
+
+&nbsp; &nbsp; &nbsp; &nbsp;return false;</small></font></small><font size="3"><small><span style="font-family: Arial;">
+</span></small><br>
+
+</font><font face="sans-serif" size="2"><br>
+
+Whereas the LAYOUT_ID should be your own unique ID for your layout
+(e.g.
+RowLayoutEditPolicy's LAYOUT_ID is </font>"<small><small><span style="font-family: Arial;">org.eclipse.swt.layout.RowLayout</span></small></small>"<font face="sans-serif" size="2">).<br>
+
+<br>
+
+</font>
+<h3>Additional Reading</h3>
+
+In addition to the layout information provided, I would suggest reading
+<a href="http://dev.eclipse.org/viewcvs/indextools.cgi/%7Echeckout%7E/org.eclipse.ve.examples/org.eclipse.ve.example.customwidget/WebContent/index.html">Extending
+the Visual Editor Tutorial: Enabling support for a custom widget</a>
+to understand how to extend VE. In particular, the section <span style="font-weight: bold;">The EMF override mechanism</span>
+provides information about plugin extension points and where/how VE
+picks up the override files for your plugin.<font size="3">
+</font>
+</body>
+</html>
