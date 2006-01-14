@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.vm;
 /*
  *  $RCSfile: ImageDataCollector.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:38:13 $ 
+ *  $Revision: 1.11 $  $Date: 2006-01-14 23:34:06 $ 
  */
 
 import java.awt.*;
@@ -20,10 +20,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 
-import org.eclipse.ve.internal.jfc.common.ImageDataConstants;
 import org.eclipse.jem.internal.proxy.common.*;
 import org.eclipse.jem.internal.proxy.common.remote.CommandErrorException;
 import org.eclipse.jem.internal.proxy.common.remote.Commands;
+
+import org.eclipse.ve.internal.jfc.common.ImageDataConstants;
+import org.eclipse.ve.internal.jfc.vm.macosx.OSXComponentImageDecorator;
 
 /**
  * An AWT Image Consumer which will consume an AWT image
@@ -62,6 +64,8 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 	protected boolean fEndProductionRequested = false;	// There's no way to stop production, so we need to indicate that
 														// production end was requested so that we can ignore further
 														// data until the end is normally reached and then return the abort flag.
+	
+	private static final boolean isMacOSX = System.getProperty("os.name").equalsIgnoreCase("Mac OS X"); //$NON-NLS-1$ //$NON-NLS-2$
 	
 	public ImageDataCollector() {
 	}
@@ -163,6 +167,11 @@ public class ImageDataCollector implements ImageConsumer, ICallback {
 						graphics = componentImage.getGraphics();
 						graphics.setClip(0, 0, iWidth, iHeight);
 						component.printAll(graphics);
+						
+						if (isMacOSX)
+						{
+							OSXComponentImageDecorator.decorateComponent(component, componentImage, iWidth, iHeight);
+						}
 					} finally {
 						if (graphics != null)
 							graphics.dispose(); // Clear out the resources.
