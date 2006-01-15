@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.vm.macosx;
 
 /*
  *  $RCSfile: OSXComponentImageDecorator.java,v $
- *  $Revision: 1.3 $  $Date: 2006-01-15 00:13:28 $ 
+ *  $Revision: 1.4 $  $Date: 2006-01-15 03:24:26 $ 
  */
 
 import java.awt.*;
@@ -36,13 +36,7 @@ public class OSXComponentImageDecorator {
 	 * Map is Component -> DecorationInfo
 	 */
 	private static HashMap decorationInfoCache = null;
-	
-	/* 
-	 * Cache of title bar images
-	 * Map is Component -> Image
-	 */
-	private static HashMap titleBarImageCache = null;
-	
+		
 	// Title bar image components
 	
 	// Left border of the title bar, along with the red close button
@@ -112,7 +106,6 @@ public class OSXComponentImageDecorator {
 				resizeWidth = resizeImage.getWidth(null);
 				resizeHeight = resizeImage.getHeight(null);
 				
-				titleBarImageCache = new HashMap();
 				decorationInfoCache = new HashMap();
 			} else {
 				initializationFailed = true;
@@ -123,8 +116,7 @@ public class OSXComponentImageDecorator {
 			// http://developer.apple.com/documentation/UserExperience/Conceptual/OSXHIGuidelines/XHIGText/chapter_13_section_2.html
 			titleBarFont = new Font("Lucida Grande", Font.PLAIN, 13); //$NON-NLS-1$
 			
-			if (titleBarFont == null)
-			{
+			if (titleBarFont == null) {
 				// Fall back on the default font
 				titleBarFont = new Font(null, Font.PLAIN, 13);
 			}
@@ -166,25 +158,20 @@ public class OSXComponentImageDecorator {
 		// any of the decorated properties have changed on the component
 		boolean needsNewImage = !matchesCachedDecorations(component, info);
 		
-		Image titleBarImage = null;
-		if (needsNewImage)
-		{
+		if (needsNewImage) {
 			// Create a new title bar image
-			titleBarImage = makeTitleBarImage(info, component.getColorModel(), imageWidth);
-			if (titleBarImage != null) {
-				// Put the title bar image into the cache
-				titleBarImageCache.put(component, titleBarImage);
-				decorationInfoCache.put(component, info);
-			}
+			info.titleBarImage = makeTitleBarImage(info, component.getColorModel(), imageWidth);
+			// Put the new title bar image into the cache
+			decorationInfoCache.put(component, info);
 		} else {
-			// Get the title bar image from the cache
-			titleBarImage = (Image)titleBarImageCache.get(component);
+			// Get the cached decorations info
+			info = (DecorationInfo)decorationInfoCache.get(component);
 		}
 		
-		if (titleBarImage != null) {
+		if (info.titleBarImage != null) {
 			// Draw the title bar image
 			Graphics graphics = componentImage.getGraphics();
-			graphics.drawImage(titleBarImage, 0, 0, null);
+			graphics.drawImage(info.titleBarImage, 0, 0, null);
 			
 			// Draw the resize pull in the bottom right
 			if (info.isResizable) {
@@ -204,9 +191,6 @@ public class OSXComponentImageDecorator {
 		synchronized(decorationInfoCache) {
 			decorationInfoCache.clear();	
 		}
-		synchronized(titleBarImageCache) {
-			titleBarImageCache.clear();	
-		}
 	}
 	
 	/**
@@ -222,8 +206,9 @@ public class OSXComponentImageDecorator {
 		Image image = new BufferedImage(cm, cm.createCompatibleWritableRaster(width, titleHeight), cm.isAlphaPremultiplied(), null);
 		
 		// Ensure that we have Graphics2D to work with
-		if (image == null || !(image.getGraphics() instanceof Graphics2D))
+		if (image == null || !(image.getGraphics() instanceof Graphics2D)) {
 			return null;
+		}
 		
 		Graphics2D graphics = (Graphics2D)image.getGraphics();
 		
@@ -241,23 +226,17 @@ public class OSXComponentImageDecorator {
 		x += leftWidth;
 		
 		// Draw the minimizable button
-		if (info.isMinimizable)
-		{
+		if (info.isMinimizable) {
 			graphics.drawImage(yellowImage, x, 0, null);
-		}
-		else
-		{
+		} else {
 			graphics.drawImage(grayImage, x, 0, null);
 		}
 		x += buttonWidth;
 		
 		// Draw the resizable button
-		if (info.isResizable)
-		{
+		if (info.isResizable) {
 			graphics.drawImage(greenImage, x, 0, null);
-		}
-		else
-		{
+		} else {
 			graphics.drawImage(grayImage, x, 0, null);
 		}
 		x += buttonWidth;
@@ -288,7 +267,6 @@ public class OSXComponentImageDecorator {
 			graphics.setClip(innerX, 0, innerWidth, titleHeight);
 			graphics.drawString(info.title, fontX, fontY);
 		}
-		
 		graphics.dispose();
 		
 		return image;
@@ -303,8 +281,7 @@ public class OSXComponentImageDecorator {
 		DecorationInfo info = new DecorationInfo();
 		info.size = component.getSize();
 		
-		if (component instanceof Frame)
-		{
+		if (component instanceof Frame) {
 			Frame frame = (Frame)component;
 			info.title = frame.getTitle();
 			info.isUndecorated = frame.isUndecorated();
@@ -328,11 +305,10 @@ public class OSXComponentImageDecorator {
 	 * @param newInfo the component's info object
 	 * @return true if the cached info matches the given info, false if the cache is out of date
 	 */
-	private static boolean matchesCachedDecorations(Component component, DecorationInfo newInfo)
-	{
+	private static boolean matchesCachedDecorations(Component component, DecorationInfo newInfo) {
 		DecorationInfo oldInfo = (DecorationInfo)decorationInfoCache.get(component);
 		
-		return (oldInfo != null && oldInfo.equals(newInfo));
+		return (oldInfo != null && oldInfo.equals(newInfo) && oldInfo.titleBarImage != null);
 	}
 	
 	private static class DecorationInfo {
@@ -341,6 +317,8 @@ public class OSXComponentImageDecorator {
 		public boolean isUndecorated = false;
 		public boolean isResizable = true;
 		public boolean isMinimizable = true;
+		
+		public Image titleBarImage = null;
 		
 		public boolean equals(Object o) {
 			if (o == null || !(o instanceof DecorationInfo))
@@ -370,5 +348,4 @@ public class OSXComponentImageDecorator {
 			return matches;
 		}
 	}
-
 }
