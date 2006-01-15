@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.vm.macosx;
 
 /*
  *  $RCSfile: OSXComponentImageDecorator.java,v $
- *  $Revision: 1.1 $  $Date: 2006-01-14 23:34:05 $ 
+ *  $Revision: 1.2 $  $Date: 2006-01-15 00:09:17 $ 
  */
 
 import java.awt.*;
@@ -221,7 +221,7 @@ public class OSXComponentImageDecorator {
 		Image image = new BufferedImage(cm, cm.createCompatibleWritableRaster(width, titleHeight), cm.isAlphaPremultiplied(), null);
 		
 		// Ensure that we have Graphics2D to work with
-		if (!(image.getGraphics() instanceof Graphics2D))
+		if (image == null || !(image.getGraphics() instanceof Graphics2D))
 			return null;
 		
 		Graphics2D graphics = (Graphics2D)image.getGraphics();
@@ -272,13 +272,18 @@ public class OSXComponentImageDecorator {
 		if (info.title != null && info.title.length() > 0) {			
 			graphics.setColor(SystemColor.activeCaptionText);
 			graphics.setFont(titleBarFont);
+			
+			// Calculate the title's position
+			// This position is usually centered in the title bar, but can
+			// be shifted to the right if the text is too long or the bar is too
+			// small, so that the text does not overlap with the control buttons on the left
 			Rectangle2D fontBounds = titleBarFont.getStringBounds(info.title, graphics.getFontRenderContext());
 			int fontX = (int)((width / 2) - fontBounds.getCenterX());
 			// Prevent the text from drawing over the buttons
 			fontX = Math.max(fontX, innerX);
 			int fontY = (int)Math.ceil((double)titleHeight / 2 - fontBounds.getCenterY());
 			
-			// clip the text to the inner region
+			// clip the text to the inner region to prevent drawing past right side of the bar
 			graphics.setClip(innerX, 0, innerWidth, titleHeight);
 			graphics.drawString(info.title, fontX, fontY);
 		}
