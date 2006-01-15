@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.vm.macosx;
 
 /*
  *  $RCSfile: OSXComponentImageDecorator.java,v $
- *  $Revision: 1.2 $  $Date: 2006-01-15 00:09:17 $ 
+ *  $Revision: 1.3 $  $Date: 2006-01-15 00:13:28 $ 
  */
 
 import java.awt.*;
@@ -192,6 +192,7 @@ public class OSXComponentImageDecorator {
 				int y = imageHeight - resizeHeight;
 				graphics.drawImage(resizeImage, x, y, null);
 			}
+			graphics.dispose();
 		}
 	}
 	
@@ -287,6 +288,8 @@ public class OSXComponentImageDecorator {
 			graphics.setClip(innerX, 0, innerWidth, titleHeight);
 			graphics.drawString(info.title, fontX, fontY);
 		}
+		
+		graphics.dispose();
 		
 		return image;
 	}
