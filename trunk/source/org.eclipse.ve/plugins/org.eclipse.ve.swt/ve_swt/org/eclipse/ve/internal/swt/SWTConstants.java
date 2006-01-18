@@ -42,6 +42,10 @@ public class SWTConstants {
 		SF_FILL_LAYOUT_SPACING,
 		SF_FILL_LAYOUT_TYPE,
 		
+		SF_FORM_LAYOUT_SPACING,
+		SF_FORM_LAYOUT_MARGIN_HEIGHT,
+		SF_FORM_LAYOUT_MARGIN_WIDTH,
+		
 		SF_GRID_LAYOUT_NUM_COLUMNS,
 		SF_GRID_LAYOUT_MAKE_COLUMNS_EQUAL_WIDTH,
 		SF_GRID_LAYOUT_HORIZONTAL_SPACING,
@@ -125,6 +129,10 @@ public class SWTConstants {
 		SF_FILL_LAYOUT_MARGIN_WIDTH = URI.createURI("java:/org.eclipse.swt.layout#FillLayout/marginWidth");    //$NON-NLS-1$
 		SF_FILL_LAYOUT_SPACING = URI.createURI("java:/org.eclipse.swt.layout#FillLayout/spacing");    //$NON-NLS-1$
 		SF_FILL_LAYOUT_TYPE = URI.createURI("java:/org.eclipse.swt.layout#FillLayout/type");    //$NON-NLS-1$
+		
+		SF_FORM_LAYOUT_SPACING = URI.createURI("java:/org.eclipse.swt.layout#FormLayout/spacing");    //$NON-NLS-1$
+		SF_FORM_LAYOUT_MARGIN_HEIGHT = URI.createURI("java:/org.eclipse.swt.layout#FormLayout/marginHeight");    //$NON-NLS-1$
+		SF_FORM_LAYOUT_MARGIN_WIDTH = URI.createURI("java:/org.eclipse.swt.layout#FormLayout/marginWidth");    //$NON-NLS-1$
 		
 		SF_GRID_LAYOUT_NUM_COLUMNS = URI.createURI("java:/org.eclipse.swt.layout#GridLayout/numColumns");    //$NON-NLS-1$
 		SF_GRID_LAYOUT_MAKE_COLUMNS_EQUAL_WIDTH = URI.createURI("java:/org.eclipse.swt.layout#GridLayout/makeColumnsEqualWidth");    //$NON-NLS-1$
