@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.java.codegen.core;
-/*
- *  $RCSfile: JavaSourceTranslator.java,v $
- *  $Revision: 1.96 $  $Date: 2005-12-01 20:19:39 $ 
- */
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -54,6 +50,23 @@ import org.eclipse.ve.internal.java.core.JavaVEPlugin;
 
 public class JavaSourceTranslator implements IDiagramSourceDecoder, IDiagramModelBuilder { 
 	
+	/**
+	 * Use this flag in object contributions to indicate that the contribution is only for editors that
+	 * support standard java codegen. This is placed into the domain during the editor setup.
+	 * <pre>
+	 *    <visibility>
+     *      <and>
+     *        <objectState
+     *              name="DOMAIN"
+     *              value="STANDARD JAVA CODEGEN"/>
+     *        <objectState
+     *              name="CHANGEABLE"
+     *              value="true"/>
+     *      </and>
+     *   </visibility> 
+	 * </pre>
+	 */
+	public static final String STANDARD_CODEGEN = "STANDARD JAVA CODEGEN";	//$NON-NLS-1$
 
          
 IBeanDeclModel          fBeanModel ;
