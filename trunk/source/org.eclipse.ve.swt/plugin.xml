@@ -300,22 +300,27 @@
             objectClass="org.eclipse.ve.internal.java.core.IJavaBeanContextMenuContributor"
             id="org.eclipse.ve.internal.rcp.codegen.rootcontainer.popup.object">
          <visibility>
-         	<or>
-	            <objectState
-	                  name="BEANTYPE"
-	                  value="org.eclipse.ui.part.WorkbenchPart">
-	            </objectState>
-            	<and>
-		            <objectState
-		                  name="PARENT#BEANTYPE"
-		                  value="org.eclipse.ui.part.WorkbenchPart">
-		            </objectState>
-		            <objectState
-		                  name="BEANTYPE"
-		                  value="org.eclipse.swt.widgets.Composite">
-		            </objectState>
-            	</and>
-	        </or>
+            <and>
+              <objectState
+                    name="DOMAIN"
+                    value="STANDARD JAVA CODEGEN"/>
+	          <or>
+		        <objectState
+    	               name="BEANTYPE"
+                       value="org.eclipse.ui.part.WorkbenchPart">
+		        </objectState>
+    	        <and>
+			       <objectState
+			           name="PARENT#BEANTYPE"
+			           value="org.eclipse.ui.part.WorkbenchPart">
+			       </objectState>
+			       <objectState
+			           name="BEANTYPE"
+		               value="org.eclipse.swt.widgets.Composite">
+			       </objectState>
+    	       	</and>
+	    	  </or>
+	    	</and>
          </visibility>
          <action
                label="%PopupMenus.RootContainer.Label &amp;Create container"

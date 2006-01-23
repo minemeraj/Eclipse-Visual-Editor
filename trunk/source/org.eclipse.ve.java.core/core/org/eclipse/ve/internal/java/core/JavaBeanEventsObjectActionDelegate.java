@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanEventsObjectActionDelegate.java,v $
- *  $Revision: 1.11 $  $Date: 2006-01-09 16:54:17 $ 
+ *  $Revision: 1.12 $  $Date: 2006-01-23 19:01:58 $ 
  */
 
 import java.text.Collator;
@@ -49,6 +49,23 @@ import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
  */
 public class JavaBeanEventsObjectActionDelegate implements IObjectActionDelegate, IMenuCreator {
 	
+
+	/**
+	 * Use this flag in object contributions to indicate that the contribution is only for editors that
+	 * support standard events. This is placed into the domain during the editor setup.
+	 * <pre>
+	 *    <visibility>
+     *      <and>
+     *        <objectState
+     *              name="DOMAIN"
+     *              value="STANDARD EVENTS"/>
+     *        <objectState
+     *              name="CHANGEABLE"
+     *              value="true"/>
+     *      </and>
+     *   </visibility> 
+	 * </pre>
+	 */
 	public static final String STANDARD_EVENT_CAPABLE = "STANDARD EVENTS"; //$NON-NLS1$
 	
 	/**
