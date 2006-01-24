@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.68 $  $Date: 2005-12-09 21:12:42 $ 
+ *  $Revision: 1.69 $  $Date: 2006-01-24 14:26:34 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -491,7 +491,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 								return createAllocation (receiver, expOfMethod);
 							}
 						}else{
-							return createAllocation (receiver, expOfMethod);
+							return createParseTreeAllocation (ast, expOfMethod);
 						}
 					}
 				}
