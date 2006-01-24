@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.33 $ $Date: 2005-12-16 19:51:35 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.34 $ $Date: 2006-01-24 14:26:31 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -64,8 +64,7 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 		super.createEditPolicies();
 
 		// Any occurences of the {formToolkit} token are replaced by a reference to a real FormToolkit instance
-// TODO If we ever to form toolkit, this may need to come back. Need to see if we can do it in a non-intrusive way.
-//		installEditPolicy(FormToolkitEditPolicy.class,new FormToolkitEditPolicy());
+		installEditPolicy(FormToolkitEditPolicy.class,new FormToolkitEditPolicy());
 
 		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(false));
 		// This is a special policy that just
