@@ -6,7 +6,7 @@
 <%@ jet 
 	skeleton="VisualClassSourceWizardSkeleton.java" 
 	package="org.eclipse.ve.internal.jfc.codegen.jjet.wizards.contributors"
-	class="JContentPaneGenerator" %>
+	class="JFrameSourceGenerator" %>
 	
 <%
 	boolean createMain = (argumentMatrix != null && ((String)argumentMatrix.get(CREATE_MAIN)).equals("true"));	
