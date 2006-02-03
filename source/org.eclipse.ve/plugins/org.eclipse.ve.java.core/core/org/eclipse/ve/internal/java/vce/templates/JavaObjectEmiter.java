@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaObjectEmiter.java,v $
- *  $Revision: 1.11 $  $Date: 2005-11-17 18:41:28 $ 
+ *  $Revision: 1.12 $  $Date: 2006-02-03 17:12:49 $ 
  */
 package org.eclipse.ve.internal.java.vce.templates;
 
@@ -437,7 +437,7 @@ public class JavaObjectEmiter {
 		options.put(CompilerOptions.OPTION_Compliance,CompilerOptions.versionFromJdkLevel(ClassFileConstants.JDK1_4));
 		options.put(CompilerOptions.OPTION_Source,CompilerOptions.versionFromJdkLevel(ClassFileConstants.JDK1_3));
 		options.put(CompilerOptions.OPTION_TargetPlatform,CompilerOptions.versionFromJdkLevel(ClassFileConstants.JDK1_2));
-		org.eclipse.jdt.internal.compiler.Compiler cmp = new org.eclipse.jdt.internal.compiler.Compiler(env, errorPolicy, options, requestor, problemFactory);		
+		org.eclipse.jdt.internal.compiler.Compiler cmp = new org.eclipse.jdt.internal.compiler.Compiler(env, errorPolicy, options, requestor, problemFactory, false);		
 		tick(pm);
 
 		cmp.compile(cu);
