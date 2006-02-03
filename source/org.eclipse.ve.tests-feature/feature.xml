@@ -15,15 +15,12 @@
       <discovery label="%updateSiteName" url="http://update.eclipse.org/tools/ve/updates/1.0/"/>
    </url>
 
-   <includes
-         id="org.eclipse.jem.tests"
-         version="0.0.0"
-         name="%featureName"/>
-
    <requires>
-      <import feature="org.eclipse.ve" version="1.1.0"/>
+      <import feature="org.eclipse.ve" version="1.2.0"/>
    </requires>
 
+   <!-- We need to manually include the JEM tests in here for the automated build/test to work. So
+        any new ones must be added here too. -->
    <plugin
          id="org.eclipse.ve.tests"
          download-size="0"
@@ -47,5 +44,24 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+         
+   <plugin
+         id="org.eclipse.jem.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.ant.optional.junit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.eclipse.jem.tests.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>         
 
 </feature>
