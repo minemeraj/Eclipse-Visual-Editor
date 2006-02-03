@@ -203,6 +203,9 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				// but if not then add it at the end (this occurs if you do something like go from SWT.ARROW to SWT.ARROW | SWT.UP
 				if(methodInvocation.getArguments().size() == argumentNumber.intValue()){
 					methodInvocation.getArguments().add(changedStyleExpression);					
+				} else if (changedStyleExpression == null && argumentNumber.equals(new Long(1))  && existingStyleBitExpression instanceof PTFieldAccess) {
+					// If we have null and only one argument then set it to "org.eclipse.swt.SWT.NONE"
+					methodInvocation.getArguments().set(1,getSWTNONE());
 				} else {
 					methodInvocation.getArguments().set(argumentNumber.intValue(),changedStyleExpression);
 				}
@@ -216,6 +219,11 @@ public class ControlPropertySourceAdapter extends WidgetPropertySourceAdapter {
 				getBean().setAllocation(allocation);  // Set the allocation back into the bean to trigger notification				
 			} 
 		}
+	}
+	
+	private PTFieldAccess getSWTNONE(){
+		PTName SWTType = InstantiationFactory.eINSTANCE.createPTName("org.eclipse.swt.SWT");
+		return InstantiationFactory.eINSTANCE.createPTFieldAccess(SWTType, "NONE");
 	}
 	
 	private PTExpression getExpression(IJavaInstance val){

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" 
+  xmlns:xmi="http://www.omg.org/XMI"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+  xmlns:cdm="http:///org/eclipse/ve/internal/cdm.ecore"     
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"  
+  
+  nsURI="platform:/plugin/org.eclipse.ve.swt/overrides/orgeclipse/swt/layout/gridpreference.ecore"
+  nsPrefix="gridpreference"
+  name="gridpreference">
+  
+  <!-- The enumeration for FillKind -->
+  <eClassifiers xsi:type="ecore:EEnum" xmi:id="FillKind" name="FillKind" >
+    <eLiterals name="none" value="0"/>  
+    <eLiterals name="both" value="1"/>
+    <eLiterals name="horizontal" value="2"/>
+    <eLiterals name="vertical" value="3"/>
+  </eClassifiers>
+  
+  <!-- Preference is used to set the Grid preference for Fill -->
+  <eClassifiers xsi:type="ecore:EClass" xmi:id="FillPreference" name="FillPreference"
+      eSuperTypes="ecore:EClass http:///org/eclipse/ve/internal/cdm.ecore#//KeyedDynamic">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" 
+      name="keyString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" 
+      defaultValueLiteral="org.eclipse.ve.internal.swt.gridbagfillpreferencekey"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" 
+      name="typedValue" eType="FillKind" defaultValueLiteral="none"/>
+  </eClassifiers>
+  
+<!-- Preference is used to set the Grid preference for Grab -->
+  <eClassifiers xsi:type="ecore:EClass" xmi:id="GrabPreference" name="GrabPreference"
+      eSuperTypes="ecore:EClass http:///org/eclipse/ve/internal/cdm.ecore#//KeyedDynamic">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" 
+      name="keyString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+      defaultValueLiteral="org.eclipse.ve.internal.jfc.core.gridbaggrabpreferencekey"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" 
+      name="typedValue" eType="FillKind" defaultValueLiteral="none"/>
+  </eClassifiers>  
+  
+</ecore:EPackage>

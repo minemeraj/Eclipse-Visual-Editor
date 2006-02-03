@@ -125,7 +125,7 @@
             plugin="org.eclipse.swt">
       </palette>
    </extension>
-   <!-- Comment this in to get Eclipse forms on the palette
+   <!-- Comment this in to get Eclipse forms on the palette -->
    <extension
          point="org.eclipse.ve.java.core.contributors">
       <palette
@@ -133,7 +133,7 @@
             plugin="org.eclipse.ui.forms">
       </palette>
    </extension>   
-   -->
+
    <extension point="org.eclipse.ve.cde.editpartcontributor"> 
      <contributor class="org.eclipse.ve.internal.jface.TreeViewerEditPartContributorFactory">
          <filter

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.31 $ $Date: 2005-10-06 15:18:51 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.32 $ $Date: 2006-02-03 15:22:02 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -178,6 +178,10 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		private ILabelProvider labelProvider; // Performance cache because property sheets asks for this twice always
 
 		private final SweetStyleBits styleBits;
+		
+		public String toString(){
+			return "StyleBitPropertyDescriptor(" + getDisplayName() + ")";
+		}
 
 		public StyleBitPropertyDescriptor(SweetStyleBits styleBits) {
 			super(new StyleBitPropertyID(), styleBits.fPropertyName);

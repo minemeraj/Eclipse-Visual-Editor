@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <change:ChangeDescription 
+      xmlns:gridpref="platform:/plugin/org.eclipse.ve.swt/overrides/org/eclipse/swt/layout/gridpreference.ecore"
       xmlns:codeGenHelpers="platform:/plugin/org.eclipse.ve.java.core/overrides/codegenHelpers.ecore" 
       xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
       xmlns:org.eclipse.jem.java="java.xmi" 
@@ -22,19 +23,27 @@
          <listChanges referenceValues="_eStructuralFeatures1"/>
       </value>
    </objectChanges>
-   <objectsToAttach xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator"
+   <objectsToAttach xmi:id="_eAnnotations" xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator" 
         graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeGraphicalEditPart:true" 
         treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeTreeEditPart" 
-        modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeContainmentHandler:org.eclipse.swt.widgets.Composite" xmi:id="_eAnnotations">
+        modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeContainmentHandler:org.eclipse.swt.widgets.Composite">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
     </objectsToAttach>
-   <objectsToAttach beanLocation="GLOBAL_GLOBAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
-   <objectsToAttach expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.CompositeDecoder" source="codegen.CodeGenHelperClass" xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"/>
-   <objectsToAttach name="layout" unsettable="true" xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference">
-      <eAnnotations propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LayoutPropertyDescriptor" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"/>
+   <objectsToAttach xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
+     beanLocation="GLOBAL_GLOBAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter">
+    <keyedValues typedValue="both" xsi:type="gridpref:FillPreference"/>
+    <keyedValues typedValue="both" xsi:type="gridpref:GrabPreference"/>
+   </objectsToAttach>
+   <objectsToAttach xmi:id="_eAnnotations2" xsi:type="codeGenHelpers:CodeGenHelperClass"
+     expDecoder="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.codegen.CompositeDecoder" source="codegen.CodeGenHelperClass"/>
+   <objectsToAttach xmi:id="_eStructuralFeatures" xsi:type="ecore:EReference"
+     name="layout" unsettable="true">
+     <eAnnotations xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorInformation"
+       propertyDescriptorClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.LayoutPropertyDescriptor"/>
     </objectsToAttach>
-   <objectsToAttach containment="false" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#Control" name="controls" upperBound="-1" xmi:id="_eStructuralFeatures1" xsi:type="ecore:EReference">
+   <objectsToAttach xmi:id="_eStructuralFeatures1" xsi:type="ecore:EReference"
+       containment="false" eType="org.eclipse.jem.java:JavaClass java:/org.eclipse.swt.widgets#Control" name="controls" upperBound="-1">
       <eAnnotations hidden="true" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertyDescriptorDecorator"/>
       <eAnnotations linkType="CHILD" xsi:type="org.eclipse.ve.internal.jcm:BeanFeatureDecorator"/>
-    </objectsToAttach>
+  </objectsToAttach>
 </change:ChangeDescription>
