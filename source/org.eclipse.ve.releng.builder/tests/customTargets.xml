@@ -182,12 +182,11 @@
     <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
     <javac verbose="true" failonerror="true" srcdir="${builderDirectory}/tools" destdir="${builderDirectory}/tools" classpath="${eclipse.home}/plugins/org.apache.xerces_4.0.13/xercesImpl.jar:${eclipse.home}/plugins/org.apache.xerces_4.0.13/xmlParserAPIs.jar"/>
    		
-    <java classname="TestVersionTracker" >
-         <arg line="${workingDirectory}/eclipse/features/org.eclipse.ve.tests_1.2.0/feature.xml  ${buildDirectory} ${workingDirectory}/ve-testing/test.properties" /> 
-         <classpath>
-            	<pathelement path="${eclipse.home}/plugins/org.apache.xerces_4.0.13/xercesImpl.jar:${eclipse.home}/plugins/org.apache.xerces_4.0.13/xmlParserAPIs.jar:${builderDirectory}/tools" />
-         </classpath>
-    </java>
+	<generateTestProperties
+		buildDirectory="${buildDirectory}"
+		featureId="org.eclipse.ve.tests"
+		outputFile="${workingDirectory}/ve-testing/test.properties"
+	/>
 
 	<!--load the property file created with the directory names for all test plugins-->
 	<property file="${workingDirectory}/ve-testing/test.properties" />
