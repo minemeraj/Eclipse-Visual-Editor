@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.launcher;
 /*
  *  $RCSfile: JavaBeanTab.java,v $
- *  $Revision: 1.19 $  $Date: 2005-12-09 21:55:57 $ 
+ *  $Revision: 1.20 $  $Date: 2006-02-03 17:11:45 $ 
  */
  
 import java.lang.reflect.InvocationTargetException;
@@ -27,8 +27,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.debug.ui.launcher.JavaLaunchConfigurationTab;
-import org.eclipse.jdt.internal.ui.util.BusyIndicatorRunnableContext;
+import org.eclipse.jdt.debug.ui.launchConfigurations.JavaLaunchTab;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
@@ -40,6 +39,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
 import org.eclipse.jem.internal.proxy.core.ProxyPlugin;
@@ -53,7 +53,7 @@ import org.eclipse.ve.internal.java.vce.VCEPreferences;
  * This tab appears in the LaunchConfigurationDialog for launch configurations that
  * require Java-specific launching information such as a main type and JRE.
  */
-public class JavaBeanTab extends JavaLaunchConfigurationTab {
+public class JavaBeanTab extends JavaLaunchTab {
 		
 	// Project UI widgets
 	private Label fProjLabel;
@@ -322,6 +322,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(ILaunchConfiguration)
 	 */
 	public void initializeFrom(ILaunchConfiguration config) {
+		super.initializeFrom(config);
 		updateProjectFromConfig(config);
 		updateMainTypeFromConfig(config);
 		// Put the look and feels into the list having cleared it out first.  The widget is persisted as the user
@@ -461,12 +462,6 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		config.setAttribute(JavaBeanLaunchConfigurationDelegate.IS_SWT, isSWTProject(getJavaProject()));
 	}
 			
-	/**
-	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#dispose()
-	 */
-	public void dispose() {
-	}
-	
 	/**
 	 * Create some empty space 
 	 */
@@ -677,7 +672,7 @@ public class JavaBeanTab extends JavaLaunchConfigurationTab {
 		}
 		if (javaElement instanceof ICompilationUnit || javaElement instanceof IClassFile) {
 			try {
-				IType[] types = JavaBeanFinder.findTargets(new BusyIndicatorRunnableContext(), new Object[] {javaElement});
+				IType[] types = JavaBeanFinder.findTargets(PlatformUI.getWorkbench().getProgressService(), new Object[] {javaElement});
 				if (types != null && (types.length > 0)) {
 					// Simply grab the first bean type found in the searched element
 					name = types[0].getFullyQualifiedName();
