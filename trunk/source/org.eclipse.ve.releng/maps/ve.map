@@ -37,6 +37,6 @@ feature@org.eclipse.jem.tests=I20060203,:pserver:anonymous@dev.eclipse.org:/home
 
 feature@org.eclipse.ve=I20060203,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature
 feature@org.eclipse.ve.examples=I20060203,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.examples-feature
-feature@org.eclipse.ve.tests=I20060203,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.tests-feature
+feature@org.eclipse.ve.tests=I20060203a,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve.tests-feature
 feature@org.eclipse.ve.sdk=I20060203,:pserver:anonymous@dev.eclipse.org:/home/tools,,org.eclipse.ve-feature/org.eclipse.ve.sdk-feature
 
