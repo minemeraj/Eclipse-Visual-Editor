@@ -14,9 +14,16 @@
 		<receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{formToolkit}"/>	  
         <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
         <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTNullLiteral"/>
-        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="SINGLE">
-          <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
-        </arguments>
+        
+		<arguments xsi:type="org.eclipse.jem.internal.instantiation:PTInfixExpression" operator="OR">
+          <leftOperand xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="SINGLE">
+            <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
+          </leftOperand>		
+          <rightOperand xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="BORDER">
+            <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
+          </rightOperand>		          
+		</arguments>        
+                
       </expression>	  	
 	</allocation>
   </swt:Text>
