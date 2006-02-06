@@ -11,14 +11,14 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaModelSynchronizer.java,v $
- *  $Revision: 1.10 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.11 $  $Date: 2006-02-06 23:49:37 $ 
  */
 
 import java.util.Iterator;
 
 import org.eclipse.jdt.core.*;
 
-import org.eclipse.jem.internal.adapters.jdom.JavaModelListener;
+import org.eclipse.jem.workbench.utility.JavaModelListener;
 import org.eclipse.jem.internal.proxy.core.IStandardBeanTypeProxyFactory;
 /**
  * This class listens for changes to the java model and terminates
