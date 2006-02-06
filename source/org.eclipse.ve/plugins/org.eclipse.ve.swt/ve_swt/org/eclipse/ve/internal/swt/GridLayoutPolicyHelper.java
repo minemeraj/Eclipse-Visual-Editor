@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.49 $  $Date: 2005-12-14 21:44:40 $
+ *  $Revision: 1.50 $  $Date: 2006-02-06 17:14:41 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -478,6 +478,18 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			last = gc;
 		}
 	}
+	
+	private int getSetNumColumns() {
+		try {
+			// Get the actual set number of columns.
+			IBeanProxy layoutProxy = getLayoutManagerBeanProxy();
+			return ((IIntegerBeanProxy)layoutProxy.getTypeProxy().getFieldProxy("numColumns").get(layoutProxy)).intValue();
+		} catch (ThrowableProxy e) {
+		} catch (NullPointerException e) {
+		} catch (ClassCastException e) {
+		}
+		return 0;
+	}
 	/**
 	 * Get a representation of the grid. The grid is indexed by [column][row]. The value at each position is the child located at that position. Empty
 	 * cells will have null values.
@@ -492,7 +504,9 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 			if (dimensions == null)
 				return null;
 			glayoutTable = new GridComponent[dimensions[0].length][dimensions[1].length];
-			numColumns = originalNumColumns = dimensions[0].length;
+			// Original num columns is the actual setting in the layout.
+			originalNumColumns = getSetNumColumns();
+			numColumns = dimensions[0].length;
 			// If empty container, don't continue.
 			if (glayoutTable.length < 1 || glayoutTable[0].length < 1) {
 				return glayoutTable;

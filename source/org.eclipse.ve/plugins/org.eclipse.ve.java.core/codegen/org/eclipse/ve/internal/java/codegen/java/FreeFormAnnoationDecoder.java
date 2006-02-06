@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.java.codegen.java;
-/*
- *  $RCSfile: FreeFormAnnoationDecoder.java,v $
- *  $Revision: 1.29 $  $Date: 2005-11-01 17:11:29 $ 
- */
 import java.util.logging.Level;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -111,7 +107,11 @@ public class FreeFormAnnoationDecoder extends AbstractAnnotationDecoder {
 					fft.setPosition(null);
 			}
 			fContent = fft.toString() ;
-        }else{
+		} else if (CodeGenUtil.needFreeFormAnnotation(getBeanPart())) {
+			FreeFormAnnotationTemplate fft = getFFtemplate() ;
+			fft.setPosition(null);
+			fContent = fft.toString();
+        } else {
         	fContent = ""; //$NON-NLS-1$
         }
         return fContent ;

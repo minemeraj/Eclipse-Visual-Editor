@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPreSetCommand.java,v $
- *  $Revision: 1.20 $  $Date: 2005-12-08 23:18:28 $ 
+ *  $Revision: 1.21 $  $Date: 2006-02-06 17:14:38 $ 
  */
 
 import java.util.*;
@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
 import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
-import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.java.JavaHelpers;
 
@@ -288,9 +288,13 @@ public class VCEPreSetCommand extends CommandWrapper {
 		// First see if the property has an annotation with the location set.
 		Annotation annotation = domain.getAnnotationLinkagePolicy().getAnnotation(property);
 		if (annotation != null) {
-			InstanceLocation il = (InstanceLocation) annotation.getKeyedValues().get(BEAN_LOCATION_KEY);
-			if (il != null)
-				return il;
+			try {
+				InstanceLocation il = (InstanceLocation) annotation.getKeyedValues().get(BEAN_LOCATION_KEY);
+				if (il != null)
+					return il;
+			} catch (ClassCastException e) {
+				// In case incorrectly declared key type.
+			}			
 		}
 		
 		// Next check if the feature has it set.
@@ -304,11 +308,14 @@ public class VCEPreSetCommand extends CommandWrapper {
 		if (bd != null)
 			return bd.getBeanLocation();
 		
-		// Default to Property.
-		return InstanceLocation.PROPERTY_LITERAL;
+		// Default to Property. Except if it is the InstanceRef feature. In that case, it should be local_local if not already determined by bean type.
+		// TODO Currently Codegen can't handle creating a local reference to a constructor instance ref if the 
+		// init method is for the object that this constructor is for. It doesn't know how to put it into
+		// the as of yet non-generated init method BEFORE the constructor stmt. So for now these will become GLOBAL_GLOBAL.
+		return InstantiationPackage.eINSTANCE.getPTInstanceReference_Reference() != feature ? InstanceLocation.PROPERTY_LITERAL : InstanceLocation.GLOBAL_GLOBAL_LITERAL;
 	}
 	
-	protected void handleValue(final CommandBuilder cbld, final JCMMethod incomingMethod, final EObject value, EStructuralFeature feature, final boolean containment, final Set processed) {
+	protected void handleValue(final CommandBuilder cbld, final JCMMethod incomingMethod, final EObject value, final EStructuralFeature feature, final boolean containment, final Set processed) {
 		processed.add(value);
 		
 		// We will only walk into and handle non-IJavaInstance values that are contained.
@@ -354,9 +361,9 @@ public class VCEPreSetCommand extends CommandWrapper {
 			public boolean hadChildren;		// During walking children, did it have children.
 			public JCMMethod visitMethod = incomingMethod;
 			
-			public Object isSet(EStructuralFeature feature, Object featureValue) {
-				if (feature instanceof EReference) {
-					EReference ref = (EReference) feature;
+			public Object isSet(EStructuralFeature setFeature, Object featureValue) {
+				if (setFeature instanceof EReference) {
+					EReference ref = (EReference) setFeature;
 					if (ref.isChangeable()) {
 						if (ref.isMany()) {
 							Iterator kids = ((List) featureValue).iterator();
@@ -365,7 +372,7 @@ public class VCEPreSetCommand extends CommandWrapper {
 								if (!hadChildren) {
 									if (!containment) {
 										if (!isImplicit) {
-											visitMethod = getMethod(cbld, value, ref, visitMethod);
+											visitMethod = getMethod(cbld, value, feature, visitMethod);
 										} else {
 											visitMethod = handleImplicitMembership(cbld, incomingMethod, (IJavaInstance) value, finalImplicitParent, finalImplicitRef);											
 										}
@@ -376,14 +383,12 @@ public class VCEPreSetCommand extends CommandWrapper {
 									handleValue(cbld, visitMethod, (EObject) kid, ref, ref.isContainment(), processed);
 							}
 						} else {
-							// Don't want to process the allocation feature. That would not have any java instances in it
-							// and we don't want to force promotion of this value just for it.					
 							if (ref != allocationFeature) {
 								Object kid = featureValue;
 								if (!hadChildren) {
 									if (!containment) {
 										if (!isImplicit) {
-											visitMethod = getMethod(cbld, value, ref, visitMethod);
+											visitMethod = getMethod(cbld, value, feature, visitMethod);
 										} else {
 											visitMethod = handleImplicitMembership(cbld, incomingMethod, (IJavaInstance) value, finalImplicitParent, finalImplicitRef);																						
 										}
@@ -392,7 +397,32 @@ public class VCEPreSetCommand extends CommandWrapper {
 								}
 								if (kid != null && !processed.contains(kid))
 									handleValue(cbld, visitMethod, (EObject) kid, ref, ref.isContainment(), processed);
-							} 
+							} else {
+								// If allocation feature then we want to walk the allocation and handle PTInstanceRef's. These may be instances
+								// that don't yet have membership assigned.
+								if (featureValue instanceof ParseTreeAllocation) {
+									((ParseTreeAllocation) featureValue).getExpression().accept(new ParseVisitor() {
+										public boolean visit(PTInstanceReference node) {
+											// We are walking into this to handle possibly not-contained parent ref. If parent ref is contained, we won't walk into it.
+											if (node.getReference().eContainer() != null)
+												return true;
+											if (!hadChildren) {
+												if (!containment) {
+													if (!isImplicit) {
+														visitMethod = getMethod(cbld, value, feature, visitMethod);
+													} else {
+														visitMethod = handleImplicitMembership(cbld, incomingMethod, (IJavaInstance) value, finalImplicitParent, finalImplicitRef);																						
+													}
+												}
+												hadChildren = true;												
+											}
+											handleValue(cbld, visitMethod, node.getReference(), InstantiationPackage.eINSTANCE.getPTInstanceReference_Reference(), false, processed);
+											return true;
+										}
+									
+									});
+								}
+							}
 						}
 					}
 				}
@@ -435,17 +465,29 @@ public class VCEPreSetCommand extends CommandWrapper {
 	 * Handle the implicit membership. Assign if not already assigned.
 	 */
 	private JCMMethod handleImplicitMembership(CommandBuilder cbld, JCMMethod incomingMethod, IJavaInstance value, IJavaObjectInstance implicitParent, EStructuralFeature parentRefToValue) {
-		JCMMethod implicitMethod;
+		JCMMethod implicitMethod = null;
 		if (value.eContainer() == null) {
 			// TODO For now implicits will always be in implicit. Future we could have a settting that says over "n" properties means
 			// move from implicit to membership.
+			handleAnnotation(value, cbld); // Need to handle annotation first.
 			
 			// KLUDGE For now codegen really doesn't handle implicits except for those special required ones. It especially can't handle it if
 			// the actual value is different than the return value (i.e. casting needed). Right now only handles the SWT "viewers" required
 			// implicits. When we really get implicits working we can pull out the kludge of creating a new setting.
 			if (isRequiredImplicitFeature(implicitParent.getJavaType(), parentRefToValue)) {
-				cbld.applyAttributeSetting(implicitMethod = getMethod(cbld, implicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(),
-					value);
+				// See if we have a promotion default. If we do, then use that instead of "implicits" membership.
+				InstanceLocation settingType = settingType(value, parentRefToValue);			
+				if (settingType == InstanceLocation.GLOBAL_GLOBAL_LITERAL) {
+					implicitMethod = promoteGlobal(cbld, value);
+				} else if(settingType == InstanceLocation.GLOBAL_LOCAL_LITERAL){
+					implicitMethod = promoteGlobalLocal(cbld,value,incomingMethod);
+				} else if (settingType == InstanceLocation.LOCAL_LITERAL) {
+					implicitMethod = promoteLocal(cbld, value, incomingMethod);
+				} else {
+					// It wasn't asked to go any where special, so put it in implicits.
+					cbld.applyAttributeSetting(implicitMethod = getMethod(cbld, implicitParent, null, incomingMethod), JCMPackage.eINSTANCE.getMemberContainer_Implicits(),
+						value);
+				}
 			} else {
 				// KLUDGE the real kludge is we assign to membership and change allocation to default ctor. Note this may fail but this is
 				// what we always did in the past.

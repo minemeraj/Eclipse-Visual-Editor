@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.34 $ $Date: 2006-01-24 14:26:31 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.35 $ $Date: 2006-02-06 17:14:41 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -63,9 +63,6 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 	protected void createEditPolicies() {
 		super.createEditPolicies();
 
-		// Any occurences of the {formToolkit} token are replaced by a reference to a real FormToolkit instance
-		installEditPolicy(FormToolkitEditPolicy.class,new FormToolkitEditPolicy());
-
 		installEditPolicy(VisualComponentsLayoutPolicy.LAYOUT_POLICY, new VisualComponentsLayoutPolicy(false));
 		// This is a special policy that just
 		// handles the size/position of visual
@@ -106,7 +103,7 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 
 		EditPolicy layoutPolicy = null;
 		CompositeProxyAdapter compositeBeanProxyAdapter = getCompositeProxyAdapter();
-		if (compositeBeanProxyAdapter.getBeanProxy() == null)
+		if (compositeBeanProxyAdapter == null || compositeBeanProxyAdapter.getBeanProxy() == null)
 			return;
 		// See the layout of the composite to determine the edit policy
 		IBeanProxy layoutBeanProxy = BeanSWTUtilities.invoke_getLayout(compositeBeanProxyAdapter.getBeanProxy());

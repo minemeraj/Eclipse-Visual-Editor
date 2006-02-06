@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ShellPropertySourceAdapter.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:52:55 $ 
+ *  $Revision: 1.9 $  $Date: 2006-02-06 17:14:41 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -136,7 +136,6 @@ public class ShellPropertySourceAdapter extends CompositePropertySourceAdapter {
 					// Any more than one is ok. They all have style as second arg.
 					return (PTExpression) classInstanceCreation.getArguments().get(1);
 			}
-		}
-		return null; // Not found or not of what we expect.
+		} else return super.getStyleExpression(allocationExp);
 	}
 }

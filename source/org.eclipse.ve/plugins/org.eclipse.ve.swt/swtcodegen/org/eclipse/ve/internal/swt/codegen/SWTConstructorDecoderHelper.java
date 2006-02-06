@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.33 $  $Date: 2005-12-08 17:22:09 $ 
+ *  $Revision: 1.34 $  $Date: 2006-02-06 17:14:42 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -23,6 +23,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.core.dom.Statement;
 
+import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
 
@@ -31,7 +33,11 @@ import org.eclipse.ve.internal.java.codegen.model.BeanPart;
 import org.eclipse.ve.internal.java.codegen.model.CodeExpressionRef;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
+import org.eclipse.ve.internal.java.core.FactoryCreationData;
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.FactoryCreationData.MethodData;
+
+import org.eclipse.ve.internal.swt.SwtPlugin;
  
 /**
  * @author Gili Mendel
@@ -44,13 +50,20 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	protected CodeExpressionRef masterExpression = null; // Expression drives the existence of this expression
 
 	private static boolean isWidget(EObject eObject, ResourceSet rs) {
-		JavaHelpers widgetType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets.Widget", rs) ; //$NON-NLS-1$
-		if(widgetType!=null && widgetType.isAssignableFrom(eObject.eClass())){
-			// first reference is not a widget - use the factory instance approach
+		JavaHelpers widgetType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets", "Widget", rs) ; //$NON-NLS-1$
+		if(widgetType!=null && widgetType.isInstance(eObject)){
 			return true;
 		}
 		return false;
 	}
+	
+	private static boolean isComposite(EObject eObject, ResourceSet rs) {
+		JavaHelpers widgetType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets", "Composite", rs) ; //$NON-NLS-1$
+		if(widgetType!=null && widgetType.isInstance(eObject)){
+			return true;
+		}
+		return false;
+	}	
 
 	/**
 	 * @param bean
@@ -75,6 +88,44 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	
 	protected BeanPart getParent() {
 		if (fParent!=null) return fParent;
+		// It the BeanPart is an implicit swt, then the parent may not be the first referenced widget. It may be the parent widget
+		// itself.
+		IJavaObjectInstance jo = (IJavaObjectInstance) fbeanPart.getEObject();
+		// Try to handle special if implicit.
+		if (jo.isImplicitAllocation()) {
+			ImplicitAllocation ia = (ImplicitAllocation) jo.getAllocation();
+			EObject pParent = ia.getParent();
+			// If parent is a composite, then use it as the parent.
+			if(isComposite(pParent, fOwner.getBeanModel().getCompositionModel().getModelResourceSet())){
+				fParent = fbeanPart.getModel().getABean(pParent);
+				return fParent;
+			}
+		} else if (jo.isParseTreeAllocation()) {
+			// See if factory creation.
+			ParseTreeAllocation pa = (ParseTreeAllocation) jo.getAllocation();
+			if (pa.getExpression() instanceof PTMethodInvocation) {
+				PTMethodInvocation mi = (PTMethodInvocation) pa.getExpression();
+				FactoryCreationData fcd = FactoryCreationData.getCreationData(mi);
+				if (fcd != null) {
+					// This is a factory receiver, see if get parentComposite. This will tell us the parent.
+					MethodData methodData = fcd.getMethodData(mi.getName());
+					if (methodData != null) {
+						// It is a factory method
+						int argIndex = methodData.getArgIndex(SwtPlugin.PARENT_COMPOSITE_PROPERTY, mi.getArguments().size());
+						if (argIndex >= 0) {
+							// We found it. Assuming an instance ref.
+							Object parentExpression = mi.getArguments().get(argIndex);
+							if (parentExpression instanceof PTInstanceReference) {
+								fParent = fbeanPart.getModel().getABean(((PTInstanceReference) parentExpression).getReference());
+								return fParent;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
 		if (getExpressionReferences().size()>0){
 			Iterator refItr = getExpressionReferences().iterator();
 			while (refItr.hasNext()) {
@@ -338,7 +389,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 		
 		if (getParent()!=null) {
 			EObject parent = getParent().getEObject();
-			if(parent==null && getParent().isDisposed()){
+			if(parent==null || getParent().isDisposed()){
 				// parent beanpart got disposed before this beanpart - no master expression
 			}else{
 				BeanDecoderAdapter pAdapter = (BeanDecoderAdapter) EcoreUtil.getExistingAdapter(parent, ICodeGenAdapter.JVE_CODEGEN_BEAN_PART_ADAPTER);

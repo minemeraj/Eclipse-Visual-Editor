@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultSWTLayoutPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-12-14 21:44:40 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-06 17:14:41 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
-import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -47,7 +46,7 @@ public class DefaultSWTLayoutPolicy {
 	 * @param defaultLayout layout classname to use instead of the default. Use <code>null</code> to use the default from preferences.
 	 * @since 1.2.0
 	 */
-	public static Command processDefaultLayout(final EditDomain domain, final IJavaObjectInstance model, final String defaultLayout) {
+	public static Command processDefaultLayout(final EditDomain domain, final IJavaInstance model, final String defaultLayout) {
 		return new CommandWrapper(){
 			protected boolean prepare() {
 				return true;

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.63 $  $Date: 2006-01-06 21:45:58 $ 
+ *  $Revision: 1.64 $  $Date: 2006-02-06 17:14:38 $ 
  */
 
 
@@ -1017,6 +1017,43 @@ public static Collection getReferences(Object o, boolean includeO) {
 }
 
 	/**
+	 * Used by {@link FreeFormAnnoationDecoder} to see if there is a need for a freeform annotation
+	 * in the code for the beanpart. It is called for a beanpart that is being put on the freeform by
+	 * a user, but there was no visual constraint supplied. It must already be assigned
+	 * within the freeform or "thisPart" in the composition so that it can be determined
+	 * if floating annotation needed. This method will return if a freeform
+	 * floating annotation is required. If it was required and we didn't put one on, then the next 
+	 * reparse would remove it from the freeform. It is determined to be required by the following
+	 * criteria all be met:
+	 * 
+	 * <ol>
+	 * <li>Simple name not starting with <code>ivj</code>
+	 * <li>Not <code>Modeled</code>
+	 * </ol>
+	 * <p>
+	 * If the simple name did start with "ivj" or it was "modeled" then it would automatically be
+	 * added to the freeform on a reparse. So in that case a freeform annotation is not needed.
+	 * Otherwise a freeform annotation is needed to maintain being on the freeform when reparsed.
+	 * 
+	 * @param bp the beanpart. This beanpart must be one that is being added to the freeform by the user. It must already 
+	 * be assigned to either the "thisPart" or the freeform. If not then it will return <code>false</code>.
+	 * @return <code>true</code> if a floating freeform annotation is needed, <code>false</code> otherwise.
+	 * 
+	 * @see #addBeanToBSC(BeanPart, BeanSubclassComposition, boolean) if that is changed then this will need to be changed.
+	 * @since 1.2.0
+	 */
+	public static boolean needFreeFormAnnotation(BeanPart bp) {
+		IBeanDeclModel model = bp.getModel();
+		EObject bean = bp.getEObject();
+		BeanSubclassComposition bsc = model.getCompositionModel().getModelRoot();
+		if (bsc.getThisPart() == bean)
+			return false;	// No annotation needed for this part bean.
+		if (!bsc.getComponents().contains(bean))
+			return false;	// Not a freeform component, so no annotation.
+		return !bp.getSimpleName().toLowerCase().startsWith("ivj") && !InstanceVariableCreationRule.isModelled(bean.eClass(), model.getCompositionModel().getModelResourceSet());
+	}
+	
+	/**
 	 * Adds the bean part to the model. The added bean part is put on the freeform only if it is either
 	 * <ol>
 	 * <li> <code>THIS</code>
@@ -1029,12 +1066,15 @@ public static Collection getReferences(Object o, boolean includeO) {
 	 * @param bsc  Freeform to where it should be added.
 	 * @param checkForExisting  When true checks for existence of the objects in model before adding
 	 * @throws CodeGenException
-	 * 
+	 * @see #needFreeFormAnnotation(BeanPart) if addBeanToBSC is changed then needFreeFormAnnoation should be changed.
 	 * @since 1.1
 	 */
 	public static void addBeanToBSC(BeanPart bp, BeanSubclassComposition bsc, boolean checkForExisting) throws CodeGenException {
 		boolean thisPart = bp.getSimpleName().equals(BeanPart.THIS_NAME) ? true : false;
 
+		/** 
+		 * if this method is changed, please modify {@link #needFreeFormAnnotation(BeanPart)} too
+		 */
 		if(checkForExisting){
 			if (!bp.isInJVEModel())
 				bp.addToJVEModel();

@@ -10,13 +10,15 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeContainmentHandler.java,v $
- *  $Revision: 1.2 $  $Date: 2005-11-04 17:30:52 $ 
+ *  $Revision: 1.3 $  $Date: 2006-02-06 17:14:41 $ 
  */
 package org.eclipse.ve.internal.swt;
 
 import org.eclipse.core.runtime.*;
 
 import org.eclipse.jem.internal.instantiation.base.IJavaObjectInstance;
+
+import org.eclipse.ve.internal.cdm.Annotation;
 
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
@@ -48,6 +50,15 @@ public class CompositeContainmentHandler extends WidgetContainmentHandler implem
 		super(model);
 	}
 	
+	/**
+	 * Key for a Boolean (KeyedBoolean) annotation on the child to override standard default layout processing.
+	 * If this key is added to an instance annotation when created then it will use the boolean value to determine
+	 * whether to set the default layout or to leave it not set.
+	 *  
+	 * @since 1.2.0
+	 */
+	public static final String DEFAULT_LAYOUT_KEY = "org.eclipse.ve.swt.DefaultLayout";
+	
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		child = super.contributeToDropRequest(parent, child, preCmds, postCmds, creation, domain);
 		// Only for creation do we do layout modification. Add assumes layout already handled.
@@ -56,6 +67,22 @@ public class CompositeContainmentHandler extends WidgetContainmentHandler implem
 			// Only classes that are of the class passed in through the IExtension data will have the default layout added. This
 			// is because subclasses may already have their layout specified. No way to know that developer wanted the layout
 			// to be supplied by users or the developer supplied the layout.
+			//
+			// OR the annotation on the child itself has the "DEFAULT_LAYOUT" boolean key. It will then respect that key.
+			Annotation annotation = domain.getAnnotationLinkagePolicy().getAnnotation(jo);
+			if (annotation != null) {
+				try {
+					Boolean il = (Boolean) annotation.getKeyedValues().get(DEFAULT_LAYOUT_KEY);
+					if (il != null) {
+						if (il.booleanValue())
+							preCmds.append(DefaultSWTLayoutPolicy.processDefaultLayout(domain, jo, null));
+						return child;
+					}
+				} catch (ClassCastException e) {
+					// In case incorrectly declared the key type.
+				}				
+			} 
+			
 			if (jo.getJavaType().getQualifiedNameForReflection().equals(typeForLayoutHandling)) {
 				preCmds.append(DefaultSWTLayoutPolicy.processDefaultLayout(domain, jo, null));
 			}

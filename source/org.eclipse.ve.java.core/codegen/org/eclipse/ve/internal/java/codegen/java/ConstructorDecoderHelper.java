@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ConstructorDecoderHelper.java,v $
- *  $Revision: 1.69 $  $Date: 2006-01-24 14:26:34 $ 
+ *  $Revision: 1.70 $  $Date: 2006-02-06 17:14:38 $ 
  */
 package org.eclipse.ve.internal.java.codegen.java;
 
@@ -34,8 +34,7 @@ import org.eclipse.ve.internal.java.codegen.util.CodeGenException;
 import org.eclipse.ve.internal.java.codegen.util.CodeGenUtil;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.FieldResolvedType;
 import org.eclipse.ve.internal.java.codegen.util.TypeResolver.Resolved;
-import org.eclipse.ve.internal.java.core.BeanUtilities;
-import org.eclipse.ve.internal.java.core.JavaVEPlugin;
+import org.eclipse.ve.internal.java.core.*;
  
 /**
  * @author Gili Mendel
@@ -452,6 +451,7 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 			return InstantiationFactory.eINSTANCE.createImplicitAllocation(parent, sf);
 		return null;
 	}
+	
 	protected JavaAllocation createAllocation(Expression ast, CodeMethodRef expOfMethod){
 		if (ast!=null) {
 			if (ast instanceof MethodInvocation) {
@@ -468,7 +468,12 @@ public class ConstructorDecoderHelper extends ExpressionDecoderHelper {
 						if(parent==null)
 							parent = fbeanPart.getModel().getABean(parentName);
 						if (parent!=null) {							
-							return createImplicitAllocation (parent.getEObject(), ast);
+							JavaAllocation t = createImplicitAllocation (parent.getEObject(), ast);
+							if (t == null) {
+								// It wasn't a getter for a valid property, so do a normal allocation.
+								t = createParseTreeAllocation(ast, expOfMethod);
+							}
+							return t;
 					    }
 					}
 					else if (receiver instanceof MethodInvocation) {

@@ -33,4 +33,4 @@ Require-Bundle: org.eclipse.ve.java.core,
  org.eclipse.jem.workbench,
  org.eclipse.core.runtime,
  org.eclipse.jem.util
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

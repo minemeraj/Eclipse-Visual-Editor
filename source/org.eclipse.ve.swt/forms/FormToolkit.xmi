@@ -11,7 +11,7 @@
   <swt:FormToolkit xmi:id="FormToolkit_1">
   	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
 	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTClassInstanceCreation" type="org.eclipse.ui.forms.widgets.FormToolkit">
-        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="getDefault">
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="getCurrent">
           <receiver xsitype=""org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.widgets.Display"/>
         </arguments>
       </expression>	  	

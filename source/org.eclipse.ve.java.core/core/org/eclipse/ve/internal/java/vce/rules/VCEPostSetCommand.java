@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.vce.rules;
 /*
  *  $RCSfile: VCEPostSetCommand.java,v $
- *  $Revision: 1.10 $  $Date: 2005-12-05 18:42:55 $ 
+ *  $Revision: 1.11 $  $Date: 2006-02-06 17:14:38 $ 
  */
 
 import java.util.*;
@@ -19,7 +19,9 @@ import java.util.*;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.jem.internal.instantiation.ImplicitAllocation;
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 import org.eclipse.ve.internal.cdm.CDMPackage;
@@ -135,8 +137,14 @@ public class VCEPostSetCommand extends CommandWrapper {
 				// It is not a child.
 				if (containmentFeature == JCMPackage.eINSTANCE.getMemberContainer_Members() && oldValue.eContainer() instanceof BeanSubclassComposition)
 					return false;	// Members of the main subclass composition (i.e. globals, should not be removed when no access. They are special).
+				// If it is an implicit allocation but a member, then it must go away because who it was retrieved is gone and so constructor would be invalid.
+				boolean notImplicit = true;
+				if (oldValue instanceof IJavaInstance && ((IJavaInstance) oldValue).isImplicitAllocation()) {
+					ImplicitAllocation ia = (ImplicitAllocation) ((IJavaInstance) oldValue).getAllocation();
+					notImplicit = ia.getParent() != refTarget || ia.getFeature() != refby;	// It the referring target and feature are the allocation's, then this is a reference only. Continue as normal.
+				}
 				// It can't go away if any other references
-				if (ai != null) {
+				if (notImplicit && ai != null) {
 					// There are references, check if any other than init/return.
 					for (int i = 0; i < features.length; i++) {
 						EReference feature = features[i];

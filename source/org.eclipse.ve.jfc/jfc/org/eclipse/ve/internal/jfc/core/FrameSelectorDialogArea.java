@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FrameSelectorDialogArea.java,v $
- *  $Revision: 1.2 $  $Date: 2005-12-14 19:09:14 $ 
+ *  $Revision: 1.3 $  $Date: 2006-02-06 17:14:44 $ 
  */
 
 package org.eclipse.ve.internal.jfc.core;
@@ -114,7 +114,7 @@ class FrameSelectorDialogArea extends Composite {
 	
 	public void setFrames(java.util.List frames) {
 		listViewer.setInput(frames.toArray());
-		listViewer.getList().select(0);
+		listViewer.setSelection(new StructuredSelection(frames.get(0)),true);
 	}
 	
 	public Object getSelectedFrame() {

@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.ve.internal.swt.targetvm;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
@@ -26,7 +29,6 @@ import org.eclipse.jem.internal.proxy.common.IVMServer;
 public abstract class Environment {
 
 	private Display display;
-	private Thread t;
 	private Shell freeFormHost;
 	private int freeFormHostRefCount = 0;	// ReferenceCount on freeFormHost. Since access can only be through UI thread we don't need to worry about synchronization.
 	
@@ -45,62 +47,124 @@ public abstract class Environment {
 		return (Environment) display.getData(ENVIRONMENT_KEY);
 	}
 
+	/**
+	 * Called in the case of only one environment wanted, the default. If there
+	 * is no current default display, then one will be created and a new environment.
+	 * Otherwise the default environment will be returned. It is the one associated with the default display.
+	 * @param vmserver
+	 * @param environmentType The class of the environment type to use if there is no default environment. This
+	 * is needed because the class is dependent on the OS and is different for each OS.
+	 * 
+	 * @return
+	 * 
+	 * @since 1.2.0
+	 */
+	public static Environment getDefaultEnvironment(IVMServer vmserver, Class environmentType) {
+		// Sync on class so that only one default environment request can complete at a time.
+		// We could have a race condition and actually create two default environments.
+		synchronized(Environment.class) {
+			// Note: can't access Display.getDefault() here because if there was no display, this thread
+			// would become the display thread. We can't have that because this is a callback thread
+			// and the callback thread cannot be the default display thread because it would be waiting
+			// most of the time on a call from the IDE.
+			if (DEFAULT_ENVIRONMENT != null)
+				return DEFAULT_ENVIRONMENT;	// We have a default set up.
+			// We need to create one. Since we have environment locked, no other thread can create
+			// the default one.
+			try {
+				Constructor ctor = environmentType.getConstructor(new Class[] {IVMServer.class});
+				ctor.newInstance(new Object[] {vmserver});
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			return DEFAULT_ENVIRONMENT;	// The constructor will have set this for us. If not, then there was an error.
+		}
+	}
+	
+	private static Environment DEFAULT_ENVIRONMENT;
 	
 	public Environment(IVMServer vmserver) {
 		initialize(vmserver);
 	}
 	
-	private boolean shutdownRequested;
+	boolean shutdownRequested;
 	
 	private void initialize(IVMServer vmserver) {
-		t = new Thread("SWT UI Thread for VE") { //$NON-NLS-1$
-			public void run() {
-				synchronized (Thread.currentThread()) {
-					display = new Display();
-					display.setData(ENVIRONMENT_KEY, Environment.this);
-					lightGray = new Color(display, 220, 220, 220);
-					Thread.currentThread().notifyAll();
+		// Sync on Env class so that we can create only one default. If we had a normal create and it
+		// happened to be the first one (which means it will become the default) and at the same time
+		// we asked for the default we need to lock out the create on a different server thread until
+		// we can complete or until then can complete so that only one sets the default env.
+		synchronized (Environment.class) {
+			final Thread t = new Thread("SWT UI Thread for VE for Env: " + Environment.this) { //$NON-NLS-1$
+
+				public void run() {
+					synchronized (Thread.currentThread()) {
+						display = new Display();
+						display.setData(ENVIRONMENT_KEY, Environment.this);
+						lightGray = new Color(display, 220, 220, 220);
+						Thread.currentThread().notifyAll();
+					}
+					while (true) {
+						try {
+							if (shutdownRequested)
+								break;
+							if (!display.readAndDispatch())
+								display.sleep();
+						} catch (RuntimeException e) {
+							e.printStackTrace();
+							// We don't want this to end because of some user error. It will stay
+							// running until vm is killed.
+						}
+					}
+					display.dispose();
 				}
-				while (true) {
+			};
+			vmserver.addShutdownListener(new Runnable() {
+
+				public void run() {
+					shutdownRequested = true;
+					synchronized (Environment.class) {
+						if (DEFAULT_ENVIRONMENT == Environment.this)
+							DEFAULT_ENVIRONMENT = null;	// We were also the default env. So shut us down too.
+					}
+					display.asyncExec(null); // Wake it up
 					try {
-						if (shutdownRequested)
-							break;
-						if (!display.readAndDispatch())
-							display.sleep();
-					} catch (RuntimeException e) {
-						e.printStackTrace();
-						// We don't want this to end because of some user error. It will stay
-						// running until vm is killed.
+						t.join(10000);
+					} catch (InterruptedException e) {
 					}
 				}
-				display.dispose();
-			}
-		};
-		
-		vmserver.addShutdownListener(new Runnable() {
-		
-			public void run() {
-				shutdownRequested = true;
-				display.asyncExec(null);	// Wake it up
-				try {
-					t.join(10000);
-				} catch (InterruptedException e) {
-				}
-			}
-		
-		});
 
-		synchronized (t) {
-			t.start();
-			while (true) {
-				try {
-					t.wait();
-					break;
-				} catch (InterruptedException e) {
-					continue;
+			});
+			synchronized (t) {
+				t.start();
+				while (true) {
+					try {
+						t.wait();
+						break;
+					} catch (InterruptedException e) {
+						continue;
+					}
 				}
 			}
-		}
+			
+			// We now have a display. So it is safe to do Display.getDefault(). We won't accidently create the
+			// default display on this callback thread.
+			// See if we are the default display. If we are then
+			// lock on environment class and set the default env.
+			if (display != null && Display.getDefault() == display) {
+				DEFAULT_ENVIRONMENT = this;
+			}
+		}		
 	}
 
 	/**

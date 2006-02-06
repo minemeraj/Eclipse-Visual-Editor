@@ -48,4 +48,4 @@ Require-Bundle: org.eclipse.ve.java.core,
  org.eclipse.debug.core,
  org.eclipse.pde.core,
  org.eclipse.ui.forms
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

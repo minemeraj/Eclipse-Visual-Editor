@@ -345,7 +345,8 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 
 	protected void eraseGridFigure() {
 		if (fGridLayoutGridFigure != null) {
-			removeFeedback(fGridLayoutGridFigure);
+			if (fGridLayoutGridFigure.getParent() != null)
+				removeFeedback(fGridLayoutGridFigure);
 			fGridLayoutGridFigure = null;
 		}
 		fShowGrid = false;
@@ -354,8 +355,9 @@ public class GridLayoutEditPolicy extends ConstrainedLayoutEditPolicy implements
 	// private static final Object requestData = new Object();
 	public void eraseTargetFeedback(Request request) {
 		if (!fShowGrid)
-			if (fGridLayoutGridFigure != null && fGridLayoutGridFigure.getParent() != null) {
-				removeFeedback(fGridLayoutGridFigure);
+			if (fGridLayoutGridFigure != null) {
+				if (fGridLayoutGridFigure.getParent() != null) 
+					removeFeedback(fGridLayoutGridFigure);
 				fGridLayoutGridFigure = null;
 			}
 		if (fGridLayoutSpanFigure != null) {

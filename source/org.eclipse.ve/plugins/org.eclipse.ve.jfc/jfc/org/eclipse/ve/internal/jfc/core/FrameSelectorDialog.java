@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FrameSelectorDialog.java,v $
- *  $Revision: 1.2 $  $Date: 2005-12-14 19:09:14 $ 
+ *  $Revision: 1.3 $  $Date: 2006-02-06 17:14:44 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -21,6 +21,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
@@ -52,6 +53,7 @@ class FrameSelectorDialog extends TitleAreaDialog {
 	protected Control createDialogArea(Composite parent) {
 		Composite newParent = (Composite) super.createDialogArea(parent);
 		dialogArea = new FrameSelectorDialogArea(newParent, SWT.NONE, domain);
+		dialogArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		if (frames != null)
 			dialogArea.setFrames(frames);
 		setTitle(JFCMessages.FrameSelectorDialog_Title);
