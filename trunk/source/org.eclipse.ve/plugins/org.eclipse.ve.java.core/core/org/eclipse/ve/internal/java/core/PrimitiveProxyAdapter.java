@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: PrimitiveProxyAdapter.java,v $
- *  $Revision: 1.14 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.15 $  $Date: 2006-02-06 23:49:25 $ 
  */
 
 import java.util.*;
@@ -19,7 +19,7 @@ import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 
 import org.eclipse.jem.internal.instantiation.JavaAllocation;
 import org.eclipse.jem.internal.instantiation.base.IJavaDataTypeInstance;
@@ -238,7 +238,7 @@ public class PrimitiveProxyAdapter extends AdapterImpl implements IInternalBeanP
 	}
 
 	public void addErrorListener(ErrorListener aListener) {
-		if(errorListeners == null) errorListeners = new ListenerList(2);
+		if(errorListeners == null) errorListeners = new ListenerList(ListenerList.IDENTITY);
 		errorListeners.add(aListener);
 	}
 	
