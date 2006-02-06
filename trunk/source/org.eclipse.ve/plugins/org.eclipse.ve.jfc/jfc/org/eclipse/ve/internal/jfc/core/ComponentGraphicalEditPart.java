@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -167,7 +167,7 @@ public class ComponentGraphicalEditPart extends CDEAbstractGraphicalEditPart imp
 		 */
 		public void addConstraintHandlerListener(IConstraintHandlerListener listener) {
 			if (listeners == null)
-				listeners = new ListenerList(1);
+				listeners = new ListenerList(ListenerList.IDENTITY);
 			if (vListener == null) {
 				// About to add first one, so also add visual component
 				// listener

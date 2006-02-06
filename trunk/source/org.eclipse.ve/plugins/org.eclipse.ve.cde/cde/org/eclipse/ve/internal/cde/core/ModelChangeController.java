@@ -10,14 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ModelChangeController.java,v $
- *  $Revision: 1.11 $  $Date: 2006-01-06 21:42:49 $ 
+ *  $Revision: 1.12 $  $Date: 2006-02-06 23:38:37 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.propertysheet.IDescriptorPropertySheetEntry;
@@ -201,7 +201,7 @@ public abstract class ModelChangeController {
      */
     public void addModelChangeListener(ModelChangeListener listener) {
     	if (listeners == null)
-    		listeners = new ListenerList();
+    		listeners = new ListenerList(ListenerList.IDENTITY);
     	listeners.add(listener);
     }
     

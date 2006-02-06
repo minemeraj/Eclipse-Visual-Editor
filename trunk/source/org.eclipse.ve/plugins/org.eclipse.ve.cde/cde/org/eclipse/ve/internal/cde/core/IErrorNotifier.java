@@ -10,13 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: IErrorNotifier.java,v $
- *  $Revision: 1.2 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.3 $  $Date: 2006-02-06 23:38:37 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
 import java.util.*;
 
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 
 
 /**
@@ -69,7 +69,7 @@ public interface IErrorNotifier extends IErrorHolder {
 		 */
 		public void addErrorListener(ErrorListener aListener) {
 			if(errorListeners == null) 
-				errorListeners = new ListenerList(2);
+				errorListeners = new ListenerList(ListenerList.IDENTITY);
 			errorListeners.add(aListener);
 		}
 

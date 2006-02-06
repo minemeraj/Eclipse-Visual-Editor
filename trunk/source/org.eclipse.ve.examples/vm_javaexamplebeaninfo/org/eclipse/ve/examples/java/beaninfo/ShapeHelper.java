@@ -28,7 +28,7 @@ public class ShapeHelper {
 	
 
 public static int getShapeIndex(String text){
-	loop1: for (int i = 0; i < fShapeNames.length ; i++){
+	for (int i = 0; i < fShapeNames.length ; i++){
 		if ( fShapeNames[i].equals(text)) {
 			return i;
 		}

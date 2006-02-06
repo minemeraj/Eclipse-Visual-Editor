@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: AbstractPropertySheetEntry.java,v $
- *  $Revision: 1.13 $  $Date: 2005-12-14 21:37:27 $ 
+ *  $Revision: 1.14 $  $Date: 2006-02-06 23:38:32 $ 
  */
 
 
@@ -19,7 +19,7 @@ import java.text.Collator;
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -162,7 +162,7 @@ public Object getData() {
  */
 public void addPropertySheetEntryListener(IPropertySheetEntryListener listener) {
 	if (listeners == null)
-		listeners = new ListenerList(1);
+		listeners = new ListenerList(ListenerList.IDENTITY);
 	listeners.add(listener);
 }
 

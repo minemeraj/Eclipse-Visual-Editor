@@ -10,11 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageNotifierSupport.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-06 23:38:37 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.swt.graphics.ImageData;
 
 /**
@@ -37,7 +37,7 @@ public class ImageNotifierSupport {
 	 */
 	public synchronized void addImageListener(IImageListener aListener) {
 		if (imageListeners == null)
-			imageListeners = new ListenerList(2);
+			imageListeners = new ListenerList(ListenerList.IDENTITY);
 		imageListeners.add(aListener);
 	}
 

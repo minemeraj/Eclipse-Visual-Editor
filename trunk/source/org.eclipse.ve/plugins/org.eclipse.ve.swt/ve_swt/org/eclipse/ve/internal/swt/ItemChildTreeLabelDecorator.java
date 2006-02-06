@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ItemChildTreeLabelDecorator.java,v $
- *  $Revision: 1.2 $  $Date: 2005-06-22 16:24:10 $ 
+ *  $Revision: 1.3 $  $Date: 2006-02-06 23:38:34 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -21,7 +21,7 @@ import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
@@ -42,7 +42,7 @@ public class ItemChildTreeLabelDecorator extends Object implements ILabelDecorat
 
 	protected EReference sfItemText;
 
-	private ListenerList listeners = new ListenerList(1);
+	private ListenerList listeners = new ListenerList(ListenerList.IDENTITY);
 
 	private Adapter itemAdapter;
 

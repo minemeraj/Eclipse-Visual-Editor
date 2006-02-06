@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.swt;
 
 /*
- * $RCSfile: ControlManager.java,v $ $Revision: 1.24 $ $Date: 2005-12-08 17:14:31 $
+ * $RCSfile: ControlManager.java,v $ $Revision: 1.25 $ $Date: 2006-02-06 23:38:34 $
  */
 
 import java.io.InputStream;
@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.draw2d.geometry.*;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.swt.graphics.ImageData;
 
 import org.eclipse.jem.internal.proxy.core.*;
@@ -836,7 +836,7 @@ public class ControlManager implements ControlManagerFeedbackControllerNotifier,
 			imSupport = new ImageNotifierSupport();
 		if (listener instanceof IControlImageListener) {
 			if (controlImageListeners == null)
-				controlImageListeners = new ListenerList(1);
+				controlImageListeners = new ListenerList(ListenerList.IDENTITY);
 			controlImageListeners.add(listener);
 		}
 		imSupport.addImageListener(listener);

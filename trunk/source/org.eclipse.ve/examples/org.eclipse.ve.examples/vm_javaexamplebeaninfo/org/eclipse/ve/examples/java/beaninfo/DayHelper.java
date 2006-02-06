@@ -38,7 +38,7 @@ public class DayHelper {
 	}
 
 public static int getDayIndex(String text){
-	loop1: for (int i = 0; i < DAY_NAMES.length ; i++){
+	for (int i = 0; i < DAY_NAMES.length ; i++){
 		if ( DAY_NAMES[i].equals(text)) {
 			return i;
 		}

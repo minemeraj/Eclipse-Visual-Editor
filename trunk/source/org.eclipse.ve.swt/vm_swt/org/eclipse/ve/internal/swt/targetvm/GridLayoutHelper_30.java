@@ -102,7 +102,7 @@ public class GridLayoutHelper_30 {
 				availableHorizontal = availableHorizontal - (widths.length - 1) * gridLayout.horizontalSpacing;
 			}
 			// Subtract the currently used space
-			widths: for (int i = 0; i < widths.length; i++) {
+			for (int i = 0; i < widths.length; i++) {
 				availableHorizontal = availableHorizontal - widths[i];					
 			}			
 			// We have the remaining space to use.  Divide by the number of columns that want to be expanded
@@ -121,7 +121,7 @@ public class GridLayoutHelper_30 {
 				availableVerical = availableVerical - (heights.length - 1) * gridLayout.verticalSpacing;
 			}
 			// Subtract the currently used space
-			heights: for (int i = 0; i < heights.length; i++) {
+			for (int i = 0; i < heights.length; i++) {
 				availableVerical = availableVerical - heights[i];					
 			}			
 			// We have the remaining space to use.  Divide by the number of rows that want to be expanded

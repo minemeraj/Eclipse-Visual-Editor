@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: EMFGraphicalEditorPart.java,v $
- *  $Revision: 1.18 $  $Date: 2005-12-02 18:41:23 $ 
+ *  $Revision: 1.19 $  $Date: 2006-02-06 23:38:37 $ 
  */
 
 
@@ -43,7 +43,7 @@ import org.eclipse.gef.ui.parts.*;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
@@ -176,7 +176,7 @@ class ResourceTracker implements IResourceChangeListener, IResourceDeltaVisitor 
 private ActionRegistry actionRegistry;
 private DefaultEditDomain domain;
 protected EToolsPropertySheetPage fPropertySheetPage;
-protected ListenerList fPropertySheetSelectionListeners = new ListenerList(1);
+protected ListenerList fPropertySheetSelectionListeners = new ListenerList(ListenerList.IDENTITY);
 
 protected EditPartViewer primaryViewer;
 protected PaletteViewer paletteViewer;

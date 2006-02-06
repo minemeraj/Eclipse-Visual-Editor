@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.core;
 
 /*
- * $RCSfile: ComponentManager.java,v $ $Revision: 1.17 $ $Date: 2005-12-08 23:18:25 $
+ * $RCSfile: ComponentManager.java,v $ $Revision: 1.18 $ $Date: 2006-02-06 23:38:32 $
  */
 
 import java.io.InputStream;
@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.draw2d.geometry.*;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.swt.graphics.ImageData;
 
 import org.eclipse.jem.internal.proxy.core.*;
@@ -858,7 +858,7 @@ public class ComponentManager implements ComponentManagerFeedbackControllerNotif
 			imSupport = new ImageNotifierSupport();
 		if (listener instanceof IComponentImageListener) {
 			if (componentImageListeners == null)
-				componentImageListeners = new ListenerList(1);
+				componentImageListeners = new ListenerList(ListenerList.IDENTITY);
 			componentImageListeners.add(listener);
 		}
 		imSupport.addImageListener(listener);

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.propertysheet;
 /*
  *  $RCSfile: EToolsPropertySheetPage.java,v $
- *  $Revision: 1.12 $  $Date: 2005-08-24 23:44:29 $ 
+ *  $Revision: 1.13 $  $Date: 2006-02-06 23:38:32 $ 
  */
 
 
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.*;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPart;
@@ -37,7 +37,7 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 	protected SetToNullAction fSetToNullAction;
 	protected ShowReadOnlyAction fShowReadOnlyAction;
 	
-	protected ListenerList fSelectionListeners = new ListenerList(1);
+	protected ListenerList fSelectionListeners = new ListenerList(ListenerList.IDENTITY);
 	protected Viewer propertySheetViewer;	// They hide it so we can't do anything with it and we need it so we will get and use reflection on it.
 	protected Method deactivateCellEditorMethod;
 	protected IDescriptorPropertySheetEntry rootEntry;
@@ -59,7 +59,7 @@ public class EToolsPropertySheetPage extends PropertySheetPage implements ISelec
 		public void controlCreated(Control control);
 	}
 	
-	protected ListenerList fListeners = new ListenerList(1);
+	protected ListenerList fListeners = new ListenerList(ListenerList.IDENTITY);
 	
 	public void addListener(Listener aListener){
 		fListeners.add(aListener);
