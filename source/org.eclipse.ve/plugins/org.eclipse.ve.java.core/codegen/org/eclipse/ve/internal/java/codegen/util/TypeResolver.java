@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TypeResolver.java,v $
- *  $Revision: 1.9 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-06 23:49:37 $ 
  */
 package org.eclipse.ve.internal.java.codegen.util;
 
@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.dom.*;
 
-import org.eclipse.jem.internal.adapters.jdom.JavaModelListener;
+import org.eclipse.jem.workbench.utility.JavaModelListener;
 
 import org.eclipse.ve.internal.java.core.JavaVEPlugin;
  
