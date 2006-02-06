@@ -14,4 +14,4 @@ Require-Bundle: org.eclipse.emf.common,
  org.eclipse.gef;resolution:=optional,
  org.eclipse.ui.views,
  org.eclipse.core.runtime
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

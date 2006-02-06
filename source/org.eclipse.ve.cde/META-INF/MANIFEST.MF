@@ -32,4 +32,4 @@ Require-Bundle: org.eclipse.ve.propertysheet,
  org.eclipse.core.runtime,
  org.eclipse.jem,
  org.eclipse.jem.util
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

@@ -3,11 +3,6 @@
 	<name>org.eclipse.ve.propertysheet</name>
 	<comment></comment>
 	<projects>
-		<project>org.eclipse.core.runtime.compatibility</project>
-		<project>org.eclipse.emf.common</project>
-		<project>org.eclipse.gef</project>
-		<project>org.eclipse.ui</project>
-		<project>org.eclipse.ui.views</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
