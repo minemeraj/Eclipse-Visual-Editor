@@ -3,16 +3,6 @@
 	<name>org.eclipse.ve.tests</name>
 	<comment></comment>
 	<projects>
-		<project>org.eclipse.core.runtime.compatibility</project>
-		<project>org.eclipse.emf.ecore</project>
-		<project>org.eclipse.gef</project>
-		<project>org.eclipse.jdt.core</project>
-		<project>org.eclipse.jem</project>
-		<project>org.eclipse.jface.text</project>
-		<project>org.eclipse.ui.workbench</project>
-		<project>org.eclipse.ve.cde</project>
-		<project>org.eclipse.ve.java.core</project>
-		<project>org.junit</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
