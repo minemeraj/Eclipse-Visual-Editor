@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JavaVisualEditorVMController.java,v $
- *  $Revision: 1.19 $  $Date: 2005-12-13 01:32:36 $ 
+ *  $Revision: 1.20 $  $Date: 2006-02-06 23:37:58 $ 
  */
 package org.eclipse.ve.internal.java.codegen.editorpart;
 
@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.*;
 import org.eclipse.ui.*;
 
-import org.eclipse.jem.internal.adapters.jdom.JavaModelListener;
+import org.eclipse.jem.workbench.utility.JavaModelListener;
 import org.eclipse.jem.internal.beaninfo.adapters.BeaninfoNature;
 import org.eclipse.jem.internal.proxy.core.*;
 import org.eclipse.jem.internal.proxy.initParser.tree.ForExpression;
