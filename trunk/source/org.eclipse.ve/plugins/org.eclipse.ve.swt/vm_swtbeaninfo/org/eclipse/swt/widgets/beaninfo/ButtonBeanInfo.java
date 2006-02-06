@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ButtonBeanInfo.java,v $
- *  $Revision: 1.17 $  $Date: 2005-12-14 21:47:19 $ 
+ *  $Revision: 1.18 $  $Date: 2006-02-06 17:14:42 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
@@ -114,16 +114,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			// text
 			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, ButtonMessages.getString("textDN"), //$NON-NLS-1$
-				SHORTDESCRIPTION, ButtonMessages.getString("textSD"), //$NON-NLS-1$
-				IBaseBeanInfoConstants.FACTORY_CREATION , new Object[] { new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createButton" , new Integer(1) ,  //$NON-NLS-1$ //$NON-NLS-2$
-					new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } } //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			}
-			),
-			// style bit
-			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
-				IBaseBeanInfoConstants.FACTORY_CREATION  , new Object[] { 
-						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createButton" , new Integer(2) ,  //$NON-NLS-1$ //$NON-NLS-2$
-								new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } }				 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				SHORTDESCRIPTION, ButtonMessages.getString("textSD") //$NON-NLS-1$
 			}
 			),
 		};

@@ -8,11 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile$
  *  $Revision$  $Date$ 
  */
+package org.eclipse.ve.internal.java.core;
+
 
 import java.util.Iterator;
 import java.util.List;
@@ -22,8 +23,13 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 
+import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
+import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+
 import org.eclipse.ve.internal.cde.commands.CommandBuilder;
 import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.core.IContainmentHandler.StopRequestException;
 import org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy;
 
 import org.eclipse.ve.internal.java.rules.RuledCommandBuilder;
@@ -53,6 +59,65 @@ public class BaseJavaContainerPolicy extends AbstractEMFContainerPolicy {
 	 */
 	public BaseJavaContainerPolicy(EditDomain domain) {
 		super(domain);
+	}
+	
+	/**
+	 * Called to process for an allocation of the form <code>{factory:factory-class}.methodInvocation(arguments,...)</code>. In this case it
+	 * will find the beaninfo for the factory-class, and if it is a factory, it will try to change to the proper factory. Using the criteria:
+	 * <ol>
+	 * <li>See if parent is also a factory invocation of the same type. If it is, use the parent's factory.
+	 * <li>Find valid factories of the given type. A valid factoryis one that is in the same member container as the parent, or any global ones.
+	 * <li>If only one factory is valid, then use that one. If more than one, then at drop time ask the client which one to use.
+	 * <li>If none, then create one.
+	 * </ol>
+	 * <p><b>Note:</b>This is experimental API. It will change.
+	 * @param child
+	 * @param parent
+	 * @param reqType
+	 * @param preCmds
+	 * @param ed
+	 * @throws StopRequestException
+	 * 
+	 * @since 1.2.0
+	 */
+	public static void processForFactory(Object child, Object parent, int reqType, CommandBuilder preCmds, EditDomain ed) throws StopRequestException {
+		if (reqType == CREATE_REQ || reqType == ADD_REQ) {
+			if (child instanceof IJavaInstance && parent instanceof IJavaInstance) {
+				IJavaInstance jChild = (IJavaInstance) child;
+				JavaAllocation allocation = jChild.getAllocation();
+				if (allocation instanceof ParseTreeAllocation) {
+					ParseTreeAllocation pta = (ParseTreeAllocation) allocation;
+					PTExpression pte = pta.getExpression();
+					if (pte instanceof PTMethodInvocation) {
+						PTMethodInvocation ptmi = (PTMethodInvocation) pte;
+						if (ptmi.getReceiver() instanceof PTName) {
+							PTName recv = (PTName) ptmi.getReceiver();
+							if (recv.getName().startsWith(EnsureFactoryCommand.FACTORY_PREFIX_FLAG)) {
+								preCmds.append(new EnsureFactoryCommand(jChild, (IJavaInstance) parent, ed));
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public static void processforRequiredImplicits(Object child, int reqType, CommandBuilder preCmds, EditDomain ed) {
+		if (child instanceof IJavaInstance) {
+			IJavaInstance javaInstance = (IJavaInstance) child;
+			if (BeanUtilities.getSetBeanDecoratorFeatureAttributeValue(javaInstance.getJavaType(), IBaseBeanInfoConstants.REQUIRED_IMPLICIT_PROPERTIES) != null)
+				preCmds.append(new EnsureRequiredImplicitCommand(javaInstance, ed));
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy#getTrueChild(java.lang.Object, int, org.eclipse.ve.internal.cde.commands.CommandBuilder, org.eclipse.ve.internal.cde.commands.CommandBuilder)
+	 */
+	public Object getTrueChild(Object child, int reqType, CommandBuilder preCmds, CommandBuilder postCmds) throws StopRequestException {
+		Object trueChild = super.getTrueChild(child, reqType, preCmds, postCmds);
+		processForFactory(trueChild, getContainer(), reqType, preCmds, getEditDomain());
+		processforRequiredImplicits(trueChild, reqType, preCmds, getEditDomain());
+		return trueChild;
 	}
 
 	/* (non-Javadoc)

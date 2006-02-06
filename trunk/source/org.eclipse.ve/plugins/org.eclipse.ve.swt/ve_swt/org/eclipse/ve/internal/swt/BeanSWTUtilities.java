@@ -60,6 +60,7 @@ public class BeanSWTUtilities {
 		getLocationMethodProxy,
 		getChildrenMethodProxy,
 		getParentMethodProxy,
+		widgetIsDisposedMethodProxy,
 		computeSizeMethodProxy,
 		setTabfolderSelectionMethodProxy,
 		indexOfTabITemMethodProxy,
@@ -581,6 +582,18 @@ public class BeanSWTUtilities {
 	public static ExpressionProxy invoke_WidgetGetStyle(IProxy widget, IExpression expression) {
 		return expression.createSimpleMethodInvoke(getWidgetGetStyle(expression), widget, null, true);
 	}
+	
+	public static boolean invoke_WidgetIsDisposed(IBeanProxy widget) {
+		BeanSWTUtilities constants = getConstants(widget);
+
+		if (constants.widgetIsDisposedMethodProxy == null) {
+			constants.widgetIsDisposedMethodProxy = widget.getProxyFactoryRegistry().getBeanTypeProxyFactory()
+			.getBeanTypeProxy("org.eclipse.swt.widgets.Widget").getMethodProxy( //$NON-NLS-1$
+					"isDisposed"); //$NON-NLS-1$
+		}
+		return ((IBooleanBeanProxy) constants.widgetIsDisposedMethodProxy.invokeCatchThrowableExceptions(widget)).booleanValue();
+			
+	}
 
 	/**
 	 * Invoke get all column rectangles for a table.
@@ -670,7 +683,10 @@ public class BeanSWTUtilities {
                     new DisplayManager.DisplayRunnable() {
 
                         public Object run(IBeanProxy displayProxy) throws ThrowableProxy {
-                            return layoutMethodProxy.invoke(aCompositeBeanProxy);
+                        	if (!invoke_WidgetIsDisposed(aCompositeBeanProxy))
+                        		return layoutMethodProxy.invoke(aCompositeBeanProxy);
+                        	else
+                        		return null;
                         }
                     });
         }

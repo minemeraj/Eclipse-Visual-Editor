@@ -10,15 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: TextBeanInfo.java,v $
- *  $Revision: 1.12 $  $Date: 2005-12-14 21:47:19 $ 
+ *  $Revision: 1.13 $  $Date: 2006-02-06 17:14:42 $ 
  */
 package org.eclipse.swt.widgets.beaninfo;
 
 import java.beans.*;
 
 import org.eclipse.swt.SWT;
-
-import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
  
 /**
  * 
@@ -183,8 +181,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 			super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
 				DISPLAYNAME, TextMessages.getString("textDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TextMessages.getString("textSD"), //$NON-NLS-1$
-				IBaseBeanInfoConstants.FACTORY_CREATION , new Object[] { new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(1) ,  //$NON-NLS-1$ //$NON-NLS-2$
-						new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } }				 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			),
 			// textLimit
@@ -205,15 +201,6 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 				DISPLAYNAME, TextMessages.getString("topPixelDN"), //$NON-NLS-1$
 				SHORTDESCRIPTION, TextMessages.getString("topPixelSD"), //$NON-NLS-1$
 				EXPERT, Boolean.TRUE,
-			}
-			),			
-			// style bit
-			super.createPropertyDescriptor(getBeanClass(),"style", new Object[] { //$NON-NLS-1$
-				IBaseBeanInfoConstants.FACTORY_CREATION  , new Object[] { 
-						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(2) ,  //$NON-NLS-1$ //$NON-NLS-2$
-								new String[] { "org.eclipse.swt.widgets.Composite" , "java.lang.String" , "int"} } , //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						new Object[] { "org.eclipse.ui.forms.widgets.FormToolkit" , "createText" , new Integer(1) ,  //$NON-NLS-1$ //$NON-NLS-2$
-								new String[] { "org.eclipse.swt.widgets.Composite" , "int"} } }					 //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			),			
 		};

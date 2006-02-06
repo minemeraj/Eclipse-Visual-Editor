@@ -10,10 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormBeanInfo.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-18 15:32:18 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-06 17:14:42 $ 
  */
 package org.eclipse.ui.forms.widgets.beaninfo;
 
+import java.beans.BeanDescriptor;
 import java.beans.PropertyDescriptor;
 
 import org.eclipse.swt.SWT;
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
 import org.eclipse.ui.forms.widgets.Form;
 
 import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
+import org.eclipse.jem.beaninfo.vm.BaseBeanInfo;
  
 /**
  * 
@@ -33,7 +35,11 @@ public class FormBeanInfo extends IvjBeanInfo {
 	 */
 	public Class getBeanClass() {
 		return Form.class;
-	}	
+	}
+	
+	public BeanDescriptor getBeanDescriptor() {
+		return createBeanDescriptor(getBeanClass(), new Object[] {BaseBeanInfo.REQUIRED_IMPLICIT_PROPERTIES, "body"});
+	}
 	
 /**
  * Return the property descriptors for this bean.

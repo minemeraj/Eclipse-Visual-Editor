@@ -5,7 +5,7 @@
   xmlns:cdm="http:///org/eclipse/ve/internal/cdm.ecore"     
   xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"  
   
-  nsURI="platform:/plugin/org.eclipse.ve.swt/overrides/orgeclipse/swt/layout/gridpreference.ecore"
+  nsURI="platform:/plugin/org.eclipse.ve.swt/overrides/org/eclipse/swt/layout/gridpreference.ecore"
   nsPrefix="gridpreference"
   name="gridpreference">
   

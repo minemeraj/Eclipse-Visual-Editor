@@ -9,14 +9,16 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: FormToolkitProxyAdapter.java,v $ $Revision: 1.2 $ $Date: 2005-06-22 15:51:19 $
+ * $RCSfile: FormToolkitProxyAdapter.java,v $ $Revision: 1.1 $ $Date: 2006-02-06 17:14:41 $
  */
-package org.eclipse.ve.internal.swt;
+package org.eclipse.ve.internal.forms;
 
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.internal.proxy.core.IExpression;
 
 import org.eclipse.ve.internal.java.core.IBeanProxyDomain;
+
+import org.eclipse.ve.internal.swt.UIThreadOnlyProxyAdapter;
 
 
 public class FormToolkitProxyAdapter extends UIThreadOnlyProxyAdapter {

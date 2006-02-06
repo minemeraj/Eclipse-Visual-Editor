@@ -12,10 +12,13 @@
    <objectChanges key="X:ROOT#//@root">
       <value featureName="eAnnotations">
          <listChanges referenceValues="_eAnnotations"/>
+         <listChanges referenceValues="_eAnnotations1"/>
       </value>
    </objectChanges>
    <objectsToAttach xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator" xmi:id="_eAnnotations"
      modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeContainmentHandler:org.eclipse.ui.forms.widgets.ExpandableComposite"
-     graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.ExpandableCompositeGraphicalEditPart:true">
+     graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.forms.ExpandableCompositeGraphicalEditPart:true"
+     treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.forms.ExpandableCompositeTreeEditPart">
    </objectsToAttach>
+   <objectsToAttach beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.forms.ExpandableCompositeProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
 </change:ChangeDescription>

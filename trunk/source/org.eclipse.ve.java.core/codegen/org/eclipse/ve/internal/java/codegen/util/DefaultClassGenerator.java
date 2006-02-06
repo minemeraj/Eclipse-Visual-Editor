@@ -14,7 +14,7 @@
 
 /*
 *  $RCSfile: DefaultClassGenerator.java,v $
-*  $Revision: 1.10 $
+*  $Revision: 1.11 $
 */
 
 
@@ -104,13 +104,17 @@ public class DefaultClassGenerator extends AbstractClassGenerator {
 	public static String format(String src, int kind, Map options, String lineSeperator) {
 		CodeFormatter formatter = ToolFactory.createCodeFormatter(options);
 		TextEdit te = formatter.format(kind, src, 0, src.length(), 0, lineSeperator);
-		Document d = new Document (src);
-		try {
-			te.apply(d);
-		} 
-		catch (MalformedTreeException e) {} 
-		catch (BadLocationException e) {}
-		return d.get();		
+		
+		if (te != null) {
+			Document d = new Document (src);
+			try {
+				te.apply(d);
+			} catch (MalformedTreeException e) {
+			} catch (BadLocationException e) {
+			}
+			return d.get();		
+		}		
+		return src;	// If we got here then formatting failed, so just return the src string unchanged and let it show as syntax error.
 	}
 	
 	public void generateClass(IProgressMonitor monitor) throws CodeGenException {

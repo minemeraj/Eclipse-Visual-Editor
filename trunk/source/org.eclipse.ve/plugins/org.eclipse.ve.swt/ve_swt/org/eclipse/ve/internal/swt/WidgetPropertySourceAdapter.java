@@ -9,12 +9,11 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.32 $ $Date: 2006-02-03 15:22:02 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.33 $ $Date: 2006-02-06 17:14:41 $
  */
 package org.eclipse.ve.internal.swt;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -178,10 +177,6 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		private ILabelProvider labelProvider; // Performance cache because property sheets asks for this twice always
 
 		private final SweetStyleBits styleBits;
-		
-		public String toString(){
-			return "StyleBitPropertyDescriptor(" + getDisplayName() + ")";
-		}
 
 		public StyleBitPropertyDescriptor(SweetStyleBits styleBits) {
 			super(new StyleBitPropertyID(), styleBits.fPropertyName);
@@ -374,6 +369,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		if (descriptorID instanceof EStructuralFeature) {
 			return super.isPropertySet(descriptorID);
 		} else if (descriptorID instanceof StyleBitPropertyID) {
+			// We don't worry about isSet for factory args because we use the 
 			int currentValue = ((Number) getPropertyValue(descriptorID)).intValue();
 			// If the current property value is -1 then this means it is the "UNSET" value from a single value'd property and by definition must be
 			// not set
@@ -437,6 +433,11 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			PTClassInstanceCreation classInstanceCreation = (PTClassInstanceCreation) allocationExp;
 			if (classInstanceCreation.getArguments().size() == 2)
 				return (PTExpression) classInstanceCreation.getArguments().get(1);
+		} else if (allocationExp instanceof PTMethodInvocation) {
+			// Could be a factory.
+			Map factoryMap = getFactoryArgumentsMap();
+			Integer styleArgIndex = (Integer) factoryMap.get("style");	//$NON-NLS-1$
+			return (PTExpression) (styleArgIndex != null ? ((PTMethodInvocation) allocationExp).getArguments().get(styleArgIndex.intValue()) : null);
 		}
 		return null; // Not found or not of what we expect.
 	}
@@ -641,37 +642,69 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 			super.setPropertyValue(feature, val);
 		} else if (feature instanceof StyleBitPropertyID) {
 			StyleBitPropertyID propertyID = (StyleBitPropertyID) feature;
-			// The tree for creating the example for a single style bit is
-			// <allocation xmi:type=ParseTreeAllocation>
-			//   <expression xmi:type=PTClassInstanceCreation>
-			//     <arguments xmi:type=PTInstanceReference>
-			//     <arguments xmi:type=PTFieldAccess field="NONE>
-			//       <receiver xmi:type=PTName name="org.eclipse.swt.SWT">
-			// And for a set of style bits is
-			// <allocation xmi:type=ParseTreeAllocation>
-			//   <expression xmi:type=PTClassInstanceCreation>
-			//     <arguments xmi:type=PTInstanceReference>
-			//     <arguments xmi:type=PTInfixExpression operator=OR>
-			//       <leftOperator xmi:type=PTName name="org.eclipse.swt.BORDER">
-			//       <rightOperator xmi:type=PTName name="org.eclipse.swt.CHECK">
-			// A value of -1 (or null) means that we are unsetting the property value
-			int intValue = val != null ? ((INumberBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) val)).intValue() : STYLE_NOT_SET;
-			
-			// See if we are changing it. If not, then don't do anything. Don't want to signal an unneeded change.	
-			if (((Number) getPropertyValue(feature)).intValue() == intValue)
-				return;	// The property has not changed. Don't do anything.
-				
-			JavaAllocation alloc = getBean().getAllocation();
-			if (alloc.isParseTree()) {
-				// Get the changed allocation. If null, then it means don't change it. This could occur because the expression
-				// was not understood, so we couldn't change the style.
-				PTExpression newAllocation = getChangedAllocation(((ParseTreeAllocation) alloc).getExpression(), propertyID,
-						intValue);
-				if (newAllocation != null) {
-					ParseTreeAllocation newParseTreeAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
-					newParseTreeAlloc.setExpression(newAllocation);
-					getBean().setAllocation(newParseTreeAlloc);
+			if (!isFactoryType()) {
+				// The tree for creating the example for a single style bit is
+				// <allocation xmi:type=ParseTreeAllocation>
+				//   <expression xmi:type=PTClassInstanceCreation>
+				//     <arguments xmi:type=PTInstanceReference>
+				//     <arguments xmi:type=PTFieldAccess field="NONE>
+				//       <receiver xmi:type=PTName name="org.eclipse.swt.SWT">
+				// And for a set of style bits is
+				// <allocation xmi:type=ParseTreeAllocation>
+				//   <expression xmi:type=PTClassInstanceCreation>
+				//     <arguments xmi:type=PTInstanceReference>
+				//     <arguments xmi:type=PTInfixExpression operator=OR>
+				//       <leftOperator xmi:type=PTName name="org.eclipse.swt.BORDER">
+				//       <rightOperator xmi:type=PTName name="org.eclipse.swt.CHECK">
+				// A value of -1 (or null) means that we are unsetting the property value
+				int intValue = val != null ? ((INumberBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) val)).intValue() : STYLE_NOT_SET;
+				// See if we are changing it. If not, then don't do anything. Don't want to signal an unneeded change.	
+				if (((Number) getPropertyValue(feature)).intValue() == intValue)
+					return; // The property has not changed. Don't do anything.
+				JavaAllocation alloc = getBean().getAllocation();
+				if (alloc.isParseTree()) {
+					// Get the changed allocation. If null, then it means don't change it. This could occur because the expression
+					// was not understood, so we couldn't change the style.
+					PTExpression newAllocation = getChangedAllocation(((ParseTreeAllocation) alloc).getExpression(), propertyID, intValue);
+					if (newAllocation != null) {
+						ParseTreeAllocation newParseTreeAlloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation();
+						newParseTreeAlloc.setExpression(newAllocation);
+						getBean().setAllocation(newParseTreeAlloc);
+					}
 				}
+			} else {
+				int intValue = val != null ? ((INumberBeanProxy) BeanProxyUtilities.getBeanProxy((IJavaInstance) val)).intValue() : STYLE_NOT_SET;
+				// See if we are changing it. If not, then don't do anything. Don't want to signal an unneeded change.	
+				if (((Number) getPropertyValue(feature)).intValue() == intValue) {
+					return;	// The property has not changed. Don't do anything.			
+				}
+				Map factoryMap = getFactoryArgumentsMap();
+				Integer argIndex = (Integer) factoryMap.get("style");	//$NON-NLS-1$
+				ParseTreeAllocation allocation = (ParseTreeAllocation) getBean().getAllocation();
+				PTMethodInvocation methodInvocation = (PTMethodInvocation)allocation.getExpression();
+				if (argIndex == null) {
+					// See if we can expand to include style. we will use SWT.NONE as the default for the new style setting until we can apply the real setting lower down.
+					PTFieldAccess swtNone = InstantiationFactory.eINSTANCE.createPTFieldAccess(InstantiationFactory.eINSTANCE.createPTName(SWT_TYPE_ID), STYLE_NONE);
+					int newIndex = expandToIncludeProperty("style", swtNone, methodInvocation);
+					if (newIndex == COULD_NOT_EXPAND)
+						return;	// Couldn't expand it
+					else
+						argIndex = new Integer(newIndex);	// This is now the arg index. Use it to apply the new bit.
+				}
+				// Put "null" there as a place-holder so that we don't loose the entry from arg list. This could happen because the
+				// current arg(argIndex) could be pulled and put into a new expression. This would then remove the setting from index argIndex.
+				// This could accidently collapse the following args into the argIndex arg. By putting the placeholder there we don't loose
+				// the spot.
+				PTExpression existingStyleBitExpression = (PTExpression) methodInvocation.getArguments().set(argIndex.intValue(), InstantiationFactory.eINSTANCE.createPTNullLiteral());
+				PTExpression changedStyleExpression = getChangedStyleExpression(existingStyleBitExpression,propertyID,intValue);
+				if (changedStyleExpression == null) {
+					// Set go back to no style expression. The default for Widget is SWT.NONE.
+					PTName name = InstantiationFactory.eINSTANCE.createPTName(SWT_TYPE_ID);
+					changedStyleExpression = InstantiationFactory.eINSTANCE.createPTFieldAccess(name, STYLE_NONE); 
+				}
+				methodInvocation.getArguments().set(argIndex.intValue(),changedStyleExpression);
+				getBean().setAllocation(allocation);  // Set the allocation back into the bean to trigger notification
+
 			}
 		}
 	}

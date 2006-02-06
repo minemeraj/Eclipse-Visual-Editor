@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: BeanProxyAdapter.java,v $
- *  $Revision: 1.62 $  $Date: 2005-12-14 21:32:35 $ 
+ *  $Revision: 1.63 $  $Date: 2006-02-06 17:14:38 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -759,25 +759,32 @@ public class BeanProxyAdapter extends ErrorNotifier.ErrorNotifierAdapter impleme
 	 * @since 1.1.0
 	 */
 	protected void applySetting(EStructuralFeature feature, Object value, int index, IExpression expression) {			
-		PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator( feature);
-		if ((propertyDecorator != null && propertyDecorator.isWriteable())) {
-			try {
-				IJavaInstance javaValue = (IJavaInstance)value;
-				IInternalBeanProxyHost settingBean = getSettingBeanProxyHost(javaValue);						
-				IProxy settingBeanProxy = null;
-				if (settingBean != null) {
-					settingBeanProxy = instantiateSettingBean(settingBean, expression, feature, value);
-					if (settingBeanProxy == null)
-						return;	// It failed creation, don't go any further. 
-				}
+		if (value == null || value instanceof IJavaInstance) {
+			IJavaInstance javaValue = (IJavaInstance) value;
+			if (value == null || !javaValue.isImplicitAllocation()) {
+				PropertyDecorator propertyDecorator = Utilities.getPropertyDecorator(feature);
+				if ((propertyDecorator != null && propertyDecorator.isWriteable())) {
+					try {
+						IInternalBeanProxyHost settingBean = getSettingBeanProxyHost(javaValue);
+						IProxy settingBeanProxy = null;
+						if (settingBean != null) {
+							settingBeanProxy = instantiateSettingBean(settingBean, expression, feature, value);
+							if (settingBeanProxy == null)
+								return; // It failed creation, don't go any further. 
+						}
 
-				applyInternalBeanProperty(expression, propertyDecorator, settingBeanProxy);
-			} catch (NoSuchMethodException e) {
-				processPropertyError(e, feature, value);
-			} catch (NoSuchFieldException e) {
-				processPropertyError(e, feature, value);
+						applyInternalBeanProperty(expression, propertyDecorator, settingBeanProxy);
+					} catch (NoSuchMethodException e) {
+						processPropertyError(e, feature, value);
+					} catch (NoSuchFieldException e) {
+						processPropertyError(e, feature, value);
+					}
+				}
+			} else {
+				// It is implicit (but explicitly set). Make sure instantiated.
+				instantiateSettingBean(getSettingBeanProxyHost(javaValue), expression, feature, value);
 			}
-		}
+		}		
 	}
 
 	/**

@@ -124,15 +124,11 @@
             categories="palette/swtpalette.xmi"
             plugin="org.eclipse.swt">
       </palette>
-   </extension>
-   <!-- Comment this in to get Eclipse forms on the palette -->
-   <extension
-         point="org.eclipse.ve.java.core.contributors">
       <palette
-            categories="forms/palette.xmi"
+            categories="forms_palette/formsPalette.xmi"
             plugin="org.eclipse.ui.forms">
       </palette>
-   </extension>   
+   </extension>  
 
    <extension point="org.eclipse.ve.cde.editpartcontributor"> 
      <contributor class="org.eclipse.ve.internal.jface.TreeViewerEditPartContributorFactory">
