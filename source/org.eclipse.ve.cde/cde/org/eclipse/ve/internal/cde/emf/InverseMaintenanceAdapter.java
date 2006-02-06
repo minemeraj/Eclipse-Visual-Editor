@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.emf;
 /*
  *  $RCSfile: InverseMaintenanceAdapter.java,v $
- *  $Revision: 1.17 $  $Date: 2005-12-02 21:17:46 $ 
+ *  $Revision: 1.18 $  $Date: 2006-02-06 23:38:37 $ 
  */
 
 import java.lang.ref.WeakReference;
@@ -27,7 +27,7 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 
@@ -406,7 +406,7 @@ public class InverseMaintenanceAdapter extends AdapterImpl {
 	 */
 	public void addInverseReferenceListener(InverseReferenceListener listener) {
 		if (listeners == null)
-			listeners = new ListenerList();
+			listeners = new ListenerList(ListenerList.IDENTITY);
 		listeners.add(listener);
 	}
 

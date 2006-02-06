@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: WorkbenchPartGraphicalEditPart.java,v $
- *  $Revision: 1.3 $  $Date: 2006-01-05 19:26:24 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-06 23:38:35 $ 
  */
 package org.eclipse.ve.internal.rcp;
 
@@ -30,7 +30,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertySource;
 
@@ -278,7 +278,7 @@ public class WorkbenchPartGraphicalEditPart extends AbstractGraphicalEditPart im
 
 		public void addConstraintHandlerListener(IConstraintHandlerListener listener) {
 			if (listeners == null)
-				listeners = new ListenerList(1);
+				listeners = new ListenerList(ListenerList.IDENTITY);
 			if (vListener == null) {
 				// About to add first one, so also add visual component listener
 				IVisualComponent visualComponent = getVisualComponent();

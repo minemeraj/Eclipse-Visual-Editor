@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CustomContainerGraphicalEditPart.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-20 19:34:43 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-06 23:38:34 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -28,7 +28,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertySource;
 
@@ -175,7 +175,7 @@ public abstract class CustomContainerGraphicalEditPart extends AbstractGraphical
 			
 			public void addConstraintHandlerListener(IConstraintHandlerListener listener) {
 				if (listeners == null)
-					listeners = new ListenerList(1);
+					listeners = new ListenerList(ListenerList.IDENTITY);
 				if (vListener == null) {
 					// About to add first one, so also add visual component listener
 					IVisualComponent visualComponent = getVisualComponent();

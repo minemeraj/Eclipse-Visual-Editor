@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.40 $ $Date: 2005-12-01 20:19:43 $
+ * $RCSfile: ControlGraphicalEditPart.java,v $ $Revision: 1.41 $ $Date: 2006-02-06 23:38:35 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
 import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.gef.tools.DirectEditManager;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -284,7 +284,7 @@ public class ControlGraphicalEditPart extends CDEAbstractGraphicalEditPart imple
 		}
 		public void addConstraintHandlerListener(IConstraintHandlerListener listener) {
 			if (listeners == null)
-				listeners = new ListenerList(1);
+				listeners = new ListenerList(ListenerList.IDENTITY);
 			if (vListener == null) {
 				// About to add first one, so also add visual component listener
 				IVisualComponent visualComponent = (IVisualComponent) BeanProxyUtilities.getBeanProxyHost(control);

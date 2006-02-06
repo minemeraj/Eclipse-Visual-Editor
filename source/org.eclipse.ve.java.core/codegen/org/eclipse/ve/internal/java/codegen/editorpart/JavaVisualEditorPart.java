@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.162 $  $Date: 2006-01-23 19:01:58 $ 
+ *  $Revision: 1.163 $  $Date: 2006-02-06 23:38:33 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -54,7 +54,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.Assert;
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
@@ -2531,7 +2531,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	 * providers can be accessed.
 	 */
 	private class JavaSelectionProvider implements ISelectionProvider {
-		ListenerList listeners = new ListenerList();
+		ListenerList listeners = new ListenerList(ListenerList.IDENTITY);
 		
 		public JavaSelectionProvider() {
 			getSelectionProvider().addSelectionChangedListener(new ISelectionChangedListener() {

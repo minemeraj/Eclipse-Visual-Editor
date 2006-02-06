@@ -12,7 +12,7 @@ package org.eclipse.ve.internal.jfc.core;
 
 /*
  *  $RCSfile: JTabbedPaneChildTreeLabelDecorator.java,v $
- *  $Revision: 1.8 $  $Date: 2005-08-24 23:38:10 $ 
+ *  $Revision: 1.9 $  $Date: 2006-02-06 23:38:32 $ 
  */
 
 import java.text.MessageFormat;
@@ -22,7 +22,7 @@ import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
@@ -44,7 +44,7 @@ public class JTabbedPaneChildTreeLabelDecorator extends Object implements ILabel
 
 	protected EReference sfTabTitle, sfTabComponent, sfTabs;
 
-	private ListenerList listeners = new ListenerList(1);
+	private ListenerList listeners = new ListenerList(ListenerList.IDENTITY);
 
 	private Adapter tabcomponentAdapter;
 

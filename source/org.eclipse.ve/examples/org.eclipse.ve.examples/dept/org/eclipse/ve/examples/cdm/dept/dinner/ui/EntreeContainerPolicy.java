@@ -11,19 +11,19 @@
 package org.eclipse.ve.examples.cdm.dept.dinner.ui;
 /*
  *  $RCSfile: EntreeContainerPolicy.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:16:43 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-06 23:38:35 $ 
  */
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.ve.internal.cde.core.EditDomain;
-import org.eclipse.ve.internal.cde.emf.EMFContainerPolicy;
+import org.eclipse.ve.internal.cde.emf.AbstractEMFContainerPolicy;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.DiagramFigure;
 /**
  * Container Policy for Entree.
  */
-public class EntreeContainerPolicy extends EMFContainerPolicy {
+public class EntreeContainerPolicy extends AbstractEMFContainerPolicy {
 
 	public EntreeContainerPolicy(EditDomain domain) {
 		super(CDMPackage.eINSTANCE.getDiagramFigure_ChildFigures(), domain);

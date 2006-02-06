@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ErrorNotifier.java,v $
- *  $Revision: 1.1 $  $Date: 2005-05-11 19:01:26 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-06 23:38:37 $ 
  */
 package org.eclipse.ve.internal.cde.core;
 
@@ -19,7 +19,7 @@ import java.util.*;
 import org.eclipse.emf.common.notify.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
  
 
 /**
@@ -319,7 +319,7 @@ public class ErrorNotifier implements IErrorNotifier {
 	 */
 	public void addErrorListener(ErrorListener aListener) {
 		if(errorListeners == null) 
-			errorListeners = new ListenerList(2);
+			errorListeners = new ListenerList(ListenerList.IDENTITY);
 		errorListeners.add(aListener);
 	}
 

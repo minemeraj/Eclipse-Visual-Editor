@@ -12,10 +12,10 @@ package org.eclipse.ve.internal.cde.core;
 
 /*
  *  $RCSfile: VisualComponentSupport.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-06 23:38:37 $ 
  */
 
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 
 /**
  * This is a visual component support class. It maintains the listeners for a component and does the firing. Implementers of IVisualComponent only
@@ -35,7 +35,7 @@ public class VisualComponentSupport {
 	 */
 	public synchronized void addComponentListener(IVisualComponentListener aListener) {
 		if (componentListeners == null)
-			componentListeners = new ListenerList(2);
+			componentListeners = new ListenerList(ListenerList.IDENTITY);
 		componentListeners.add(aListener);
 	}
 
