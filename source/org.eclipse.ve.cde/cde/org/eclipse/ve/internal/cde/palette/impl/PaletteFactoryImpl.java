@@ -12,14 +12,18 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: PaletteFactoryImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import org.eclipse.ve.internal.cde.palette.*;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.gef.requests.CreationFactory;
 
@@ -30,6 +34,25 @@ import org.eclipse.gef.requests.CreationFactory;
  * @generated
  */
 public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
+	/**
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static PaletteFactory init() {
+		try {
+			PaletteFactory thePaletteFactory = (PaletteFactory)EPackage.Registry.INSTANCE.getEFactory("http:///org/eclipse/ve/internal/cde/palette.ecore"); 
+			if (thePaletteFactory != null) {
+				return thePaletteFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new PaletteFactoryImpl();
+	}
+
 	/**
 	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->
@@ -72,16 +95,10 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	 */
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case PalettePackage.PERMISSIONS: {
-				Permissions result = Permissions.get(initialValue);
-				if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-				return result;
-			}
-			case PalettePackage.INITIAL_STATE: {
-				InitialState result = InitialState.get(initialValue);
-				if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-				return result;
-			}
+			case PalettePackage.PERMISSIONS:
+				return createPermissionsFromString(eDataType, initialValue);
+			case PalettePackage.INITIAL_STATE:
+				return createInitialStateFromString(eDataType, initialValue);
 			case PalettePackage.CREATION_FACTORY:
 				return createCreationFactoryFromString(eDataType, initialValue);
 			default:
@@ -97,9 +114,9 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
 			case PalettePackage.PERMISSIONS:
-				return instanceValue == null ? null : instanceValue.toString();
+				return convertPermissionsToString(eDataType, instanceValue);
 			case PalettePackage.INITIAL_STATE:
-				return instanceValue == null ? null : instanceValue.toString();
+				return convertInitialStateToString(eDataType, instanceValue);
 			case PalettePackage.CREATION_FACTORY:
 				return convertCreationFactoryToString(eDataType, instanceValue);
 			default:
@@ -235,6 +252,46 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	public Separator createSeparator() {
 		SeparatorImpl separator = new SeparatorImpl();
 		return separator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Permissions createPermissionsFromString(EDataType eDataType, String initialValue) {
+		Permissions result = Permissions.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertPermissionsToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InitialState createInitialStateFromString(EDataType eDataType, String initialValue) {
+		InitialState result = InitialState.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertInitialStateToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: Permissions.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-20 23:54:40 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-07 17:21:33 $ 
  */
 package org.eclipse.ve.internal.cde.palette;
 
@@ -111,7 +111,7 @@ public final class Permissions extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final Permissions DEFAULT_LITERAL = new Permissions(DEFAULT, "Default");
+	public static final Permissions DEFAULT_LITERAL = new Permissions(DEFAULT, "Default", "Default");
 
 	/**
 	 * The '<em><b>Full</b></em>' literal object.
@@ -121,7 +121,7 @@ public final class Permissions extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final Permissions FULL_LITERAL = new Permissions(FULL, "Full");
+	public static final Permissions FULL_LITERAL = new Permissions(FULL, "Full", "Full");
 
 	/**
 	 * The '<em><b>Hide Only</b></em>' literal object.
@@ -131,7 +131,7 @@ public final class Permissions extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final Permissions HIDE_ONLY_LITERAL = new Permissions(HIDE_ONLY, "HideOnly");
+	public static final Permissions HIDE_ONLY_LITERAL = new Permissions(HIDE_ONLY, "HideOnly", "HideOnly");
 
 	/**
 	 * The '<em><b>Limited</b></em>' literal object.
@@ -141,7 +141,7 @@ public final class Permissions extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final Permissions LIMITED_LITERAL = new Permissions(LIMITED, "Limited");
+	public static final Permissions LIMITED_LITERAL = new Permissions(LIMITED, "Limited", "Limited");
 
 	/**
 	 * The '<em><b>None</b></em>' literal object.
@@ -151,7 +151,7 @@ public final class Permissions extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final Permissions NONE_LITERAL = new Permissions(NONE, "None");
+	public static final Permissions NONE_LITERAL = new Permissions(NONE, "None", "None");
 
 	/**
 	 * An array of all the '<em><b>Permissions</b></em>' enumerators.
@@ -177,15 +177,15 @@ public final class Permissions extends AbstractEnumerator {
 	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Permissions</b></em>' literal with the specified name.
+	 * Returns the '<em><b>Permissions</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static Permissions get(String name) {
+	public static Permissions get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			Permissions result = VALUES_ARRAY[i];
-			if (result.toString().equals(name)) {
+			if (result.toString().equals(literal)) {
 				return result;
 			}
 		}
@@ -193,7 +193,23 @@ public final class Permissions extends AbstractEnumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Permissions</b></em>' literal with the specified value.
+	 * Returns the '<em><b>Permissions</b></em>' literal with the specified name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static Permissions getByName(String name) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			Permissions result = VALUES_ARRAY[i];
+			if (result.getName().equals(name)) {
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the '<em><b>Permissions</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -215,8 +231,8 @@ public final class Permissions extends AbstractEnumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private Permissions(int value, String name) {
-		super(value, name);
+	private Permissions(int value, String name, String literal) {
+		super(value, name, literal);
 	}
 
 } //Permissions

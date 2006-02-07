@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyEventImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-09-15 21:33:49 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:37 $ 
  */
 
 import org.eclipse.ve.internal.jcm.JCMPackage;
@@ -27,7 +27,6 @@ import org.eclipse.ve.internal.jcm.PropertyEvent;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
@@ -102,7 +101,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return JCMPackage.eINSTANCE.getPropertyEvent();
+		return JCMPackage.Literals.PROPERTY_EVENT;
 	}
 
 	/**
@@ -152,14 +151,14 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case JCMPackage.PROPERTY_EVENT__PROPERTY_NAME:
 				return getPropertyName();
 			case JCMPackage.PROPERTY_EVENT__USE_IF_EXPRESSION:
 				return isUseIfExpression() ? Boolean.TRUE : Boolean.FALSE;
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -167,8 +166,8 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case JCMPackage.PROPERTY_EVENT__PROPERTY_NAME:
 				setPropertyName((String)newValue);
 				return;
@@ -176,7 +175,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 				setUseIfExpression(((Boolean)newValue).booleanValue());
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -184,8 +183,8 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case JCMPackage.PROPERTY_EVENT__PROPERTY_NAME:
 				setPropertyName(PROPERTY_NAME_EDEFAULT);
 				return;
@@ -193,7 +192,7 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 				setUseIfExpression(USE_IF_EXPRESSION_EDEFAULT);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -201,14 +200,14 @@ public class PropertyEventImpl extends EObjectImpl implements PropertyEvent {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case JCMPackage.PROPERTY_EVENT__PROPERTY_NAME:
 				return PROPERTY_NAME_EDEFAULT == null ? propertyName != null : !PROPERTY_NAME_EDEFAULT.equals(propertyName);
 			case JCMPackage.PROPERTY_EVENT__USE_IF_EXPRESSION:
 				return ((eFlags & USE_IF_EXPRESSION_EFLAG) != 0) != USE_IF_EXPRESSION_EDEFAULT;
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**

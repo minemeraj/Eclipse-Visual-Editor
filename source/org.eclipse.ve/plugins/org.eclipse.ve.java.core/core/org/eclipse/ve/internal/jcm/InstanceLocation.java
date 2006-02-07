@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: InstanceLocation.java,v 1.4 2005-11-11 23:20:55 rkulp Exp $
+ * $Id: InstanceLocation.java,v 1.5 2006-02-07 17:21:37 rkulp Exp $
  */
 package org.eclipse.ve.internal.jcm;
 /*******************************************************************************
@@ -101,7 +101,7 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final InstanceLocation GLOBAL_GLOBAL_LITERAL = new InstanceLocation(GLOBAL_GLOBAL, "GLOBAL_GLOBAL");
+	public static final InstanceLocation GLOBAL_GLOBAL_LITERAL = new InstanceLocation(GLOBAL_GLOBAL, "GLOBAL_GLOBAL", "GLOBAL_GLOBAL");
 
 	/**
 	 * The '<em><b>GLOBAL LOCAL</b></em>' literal object.
@@ -111,7 +111,7 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final InstanceLocation GLOBAL_LOCAL_LITERAL = new InstanceLocation(GLOBAL_LOCAL, "GLOBAL_LOCAL");
+	public static final InstanceLocation GLOBAL_LOCAL_LITERAL = new InstanceLocation(GLOBAL_LOCAL, "GLOBAL_LOCAL", "GLOBAL_LOCAL");
 
 	/**
 	 * The '<em><b>LOCAL</b></em>' literal object.
@@ -121,7 +121,7 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final InstanceLocation LOCAL_LITERAL = new InstanceLocation(LOCAL, "LOCAL");
+	public static final InstanceLocation LOCAL_LITERAL = new InstanceLocation(LOCAL, "LOCAL", "LOCAL");
 
 	/**
 	 * The '<em><b>PROPERTY</b></em>' literal object.
@@ -131,7 +131,7 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final InstanceLocation PROPERTY_LITERAL = new InstanceLocation(PROPERTY, "PROPERTY");
+	public static final InstanceLocation PROPERTY_LITERAL = new InstanceLocation(PROPERTY, "PROPERTY", "PROPERTY");
 
 	/**
 	 * An array of all the '<em><b>Instance Location</b></em>' enumerators.
@@ -156,15 +156,15 @@ public final class InstanceLocation extends AbstractEnumerator {
 	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Instance Location</b></em>' literal with the specified name.
+	 * Returns the '<em><b>Instance Location</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static InstanceLocation get(String name) {
+	public static InstanceLocation get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			InstanceLocation result = VALUES_ARRAY[i];
-			if (result.toString().equals(name)) {
+			if (result.toString().equals(literal)) {
 				return result;
 			}
 		}
@@ -172,7 +172,23 @@ public final class InstanceLocation extends AbstractEnumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Instance Location</b></em>' literal with the specified value.
+	 * Returns the '<em><b>Instance Location</b></em>' literal with the specified name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static InstanceLocation getByName(String name) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			InstanceLocation result = VALUES_ARRAY[i];
+			if (result.getName().equals(name)) {
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the '<em><b>Instance Location</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -193,8 +209,8 @@ public final class InstanceLocation extends AbstractEnumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private InstanceLocation(int value, String name) {
-		super(value, name);
+	private InstanceLocation(int value, String name, String literal) {
+		super(value, name, literal);
 	}
 
 } //InstanceLocation

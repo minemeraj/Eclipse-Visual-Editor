@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.cde.decorators.impl;
-/*
- *  $RCSfile: BasePropertyDecoratorImpl.java,v $
- *  $Revision: 1.10 $  $Date: 2005-09-19 15:45:35 $ 
- */
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -20,17 +16,12 @@ import java.util.Collection;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.EAnnotationImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
-import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.jface.viewers.ILabelProvider;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -199,7 +190,7 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return DecoratorsPackage.eINSTANCE.getBasePropertyDecorator();
+		return DecoratorsPackage.Literals.BASE_PROPERTY_DECORATOR;
 	}
 
 	/**
@@ -416,83 +407,8 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EANNOTATIONS:
-					return ((InternalEList)getEAnnotations()).basicAdd(otherEnd, msgs);
-				case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EMODEL_ELEMENT:
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, DecoratorsPackage.BASE_PROPERTY_DECORATOR__EMODEL_ELEMENT, msgs);
-				default:
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EANNOTATIONS:
-					return ((InternalEList)getEAnnotations()).basicRemove(otherEnd, msgs);
-				case DecoratorsPackage.BASE_PROPERTY_DECORATOR__DETAILS:
-					return ((InternalEList)getDetails()).basicRemove(otherEnd, msgs);
-				case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EMODEL_ELEMENT:
-					return eBasicSetContainer(null, DecoratorsPackage.BASE_PROPERTY_DECORATOR__EMODEL_ELEMENT, msgs);
-				case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CONTENTS:
-					return ((InternalEList)getContents()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID >= 0) {
-			switch (eContainerFeatureID) {
-				case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EMODEL_ELEMENT:
-					return eContainer.eInverseRemove(this, EcorePackage.EMODEL_ELEMENT__EANNOTATIONS, EModelElement.class, msgs);
-				default:
-					return eDynamicBasicRemoveFromContainer(msgs);
-			}
-		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EANNOTATIONS:
-				return getEAnnotations();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__SOURCE:
-				return getSource();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__DETAILS:
-				return getDetails();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EMODEL_ELEMENT:
-				return getEModelElement();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CONTENTS:
-				return getContents();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__REFERENCES:
-				return getReferences();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
 				return getCellEditorValidatorClassnames();
 			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__LABEL_PROVIDER_CLASSNAME:
@@ -504,28 +420,7 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__ENTRY_EXPANDABLE:
 				return isEntryExpandable() ? Boolean.TRUE : Boolean.FALSE;
 		}
-		return eDynamicGet(eFeature, resolve);
-	}
-
-	/*
-	 * Called by overrides to eIsSet to test if source is set. This is because for the 
-	 * FeatureDecorator and subclasses, setting source to the classname is considered
-	 * to be not set since that is the new default for each class level. By doing this
-	 * when serializing it won't waste space and time adding a copy of the source string
-	 * to the serialized output and then creating a NEW copy on each decorator loaded
-	 * from an XMI file. 
-	 * 
-	 * @return <code>true</code> if source is not null and not equal to class name.
-	 * 
-	 * @since 1.1.0
-	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__SOURCE:
-				return source != null && !getClass().getName().equals(source);
-			default:
-				return eIsSetGen(eFeature);
-		}
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -533,63 +428,8 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSetGen(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EANNOTATIONS:
-				return eAnnotations != null && !eAnnotations.isEmpty();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__SOURCE:
-				return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__DETAILS:
-				return details != null && !details.isEmpty();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EMODEL_ELEMENT:
-				return getEModelElement() != null;
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CONTENTS:
-				return contents != null && !contents.isEmpty();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__REFERENCES:
-				return references != null && !references.isEmpty();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
-				return cellEditorValidatorClassnames != null && !cellEditorValidatorClassnames.isEmpty();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__LABEL_PROVIDER_CLASSNAME:
-				return isSetLabelProviderClassname();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CELL_EDITOR_CLASSNAME:
-				return isSetCellEditorClassname();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__NULL_INVALID:
-				return isSetNullInvalid();
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__ENTRY_EXPANDABLE:
-				return isSetEntryExpandable();
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EANNOTATIONS:
-				getEAnnotations().clear();
-				getEAnnotations().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__SOURCE:
-				setSource((String)newValue);
-				return;
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__DETAILS:
-				getDetails().clear();
-				getDetails().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EMODEL_ELEMENT:
-				setEModelElement((EModelElement)newValue);
-				return;
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CONTENTS:
-				getContents().clear();
-				getContents().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__REFERENCES:
-				getReferences().clear();
-				getReferences().addAll((Collection)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
 				getCellEditorValidatorClassnames().clear();
 				getCellEditorValidatorClassnames().addAll((Collection)newValue);
@@ -607,7 +447,7 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 				setEntryExpandable(((Boolean)newValue).booleanValue());
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -615,26 +455,8 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EANNOTATIONS:
-				getEAnnotations().clear();
-				return;
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__SOURCE:
-				setSource(SOURCE_EDEFAULT);
-				return;
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__DETAILS:
-				getDetails().clear();
-				return;
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__EMODEL_ELEMENT:
-				setEModelElement((EModelElement)null);
-				return;
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CONTENTS:
-				getContents().clear();
-				return;
-			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__REFERENCES:
-				getReferences().clear();
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
 				getCellEditorValidatorClassnames().clear();
 				return;
@@ -651,7 +473,49 @@ public class BasePropertyDecoratorImpl extends EAnnotationImpl implements BasePr
 				unsetEntryExpandable();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
+				return cellEditorValidatorClassnames != null && !cellEditorValidatorClassnames.isEmpty();
+			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__LABEL_PROVIDER_CLASSNAME:
+				return isSetLabelProviderClassname();
+			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__CELL_EDITOR_CLASSNAME:
+				return isSetCellEditorClassname();
+			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__NULL_INVALID:
+				return isSetNullInvalid();
+			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__ENTRY_EXPANDABLE:
+				return isSetEntryExpandable();
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/*
+	 * Called by overrides to eIsSet to test if source is set. This is because for the 
+	 * FeatureDecorator and subclasses, setting source to the classname is considered
+	 * to be not set since that is the new default for each class level. By doing this
+	 * when serializing it won't waste space and time adding a copy of the source string
+	 * to the serialized output and then creating a NEW copy on each decorator loaded
+	 * from an XMI file. 
+	 * 
+	 * @return <code>true</code> if source is not null and not equal to class name.
+	 * 
+	 * @since 1.1.0
+	 */
+	public boolean eIsSet(EStructuralFeature feature) {
+		switch (eDerivedStructuralFeatureID(feature)) {
+			case DecoratorsPackage.BASE_PROPERTY_DECORATOR__SOURCE:
+				return source != null && !getClass().getName().equals(source);
+			default:
+				return super.eIsSet(feature);
+		}
 	}
 
 	/**

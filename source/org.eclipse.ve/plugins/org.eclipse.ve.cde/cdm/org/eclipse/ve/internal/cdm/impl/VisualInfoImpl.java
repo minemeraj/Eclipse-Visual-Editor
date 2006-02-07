@@ -11,18 +11,15 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: VisualInfoImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-07 17:21:33 $ 
  */
  
-import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.Diagram;
@@ -67,7 +64,7 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return CDMPackage.eINSTANCE.getVisualInfo();
+		return CDMPackage.Literals.VISUAL_INFO;
 	}
 
 	/**
@@ -77,8 +74,8 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 */
 	public Diagram getDiagram() {
 		if (diagram != null && diagram.eIsProxy()) {
-			Diagram oldDiagram = diagram;
-			diagram = (Diagram)eResolveProxy((InternalEObject)diagram);
+			InternalEObject oldDiagram = (InternalEObject)diagram;
+			diagram = (Diagram)eResolveProxy(oldDiagram);
 			if (diagram != oldDiagram) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, CDMPackage.VISUAL_INFO__DIAGRAM, oldDiagram, diagram));
@@ -135,20 +132,14 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case CDMPackage.VISUAL_INFO__DIAGRAM:
-					if (diagram != null)
-						msgs = ((InternalEObject)diagram).eInverseRemove(this, CDMPackage.DIAGRAM__VISUAL_INFOS, Diagram.class, msgs);
-					return basicSetDiagram((Diagram)otherEnd, msgs);
-				default:
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CDMPackage.VISUAL_INFO__DIAGRAM:
+				if (diagram != null)
+					msgs = ((InternalEObject)diagram).eInverseRemove(this, CDMPackage.DIAGRAM__VISUAL_INFOS, Diagram.class, msgs);
+				return basicSetDiagram((Diagram)otherEnd, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -156,18 +147,12 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case CDMPackage.VISUAL_INFO__KEYED_VALUES:
-					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
-				case CDMPackage.VISUAL_INFO__DIAGRAM:
-					return basicSetDiagram(null, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CDMPackage.VISUAL_INFO__DIAGRAM:
+				return basicSetDiagram(null, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -175,15 +160,13 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.VISUAL_INFO__KEYED_VALUES:
-				return getKeyedValues();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case CDMPackage.VISUAL_INFO__DIAGRAM:
 				if (resolve) return getDiagram();
 				return basicGetDiagram();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -191,17 +174,13 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.VISUAL_INFO__KEYED_VALUES:
-				getKeyedValues().clear();
-				getKeyedValues().addAll((Collection)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case CDMPackage.VISUAL_INFO__DIAGRAM:
 				setDiagram((Diagram)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -209,16 +188,13 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.VISUAL_INFO__KEYED_VALUES:
-				getKeyedValues().clear();
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case CDMPackage.VISUAL_INFO__DIAGRAM:
 				setDiagram((Diagram)null);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -226,14 +202,12 @@ public class VisualInfoImpl extends KeyedValueHolderImpl implements VisualInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.VISUAL_INFO__KEYED_VALUES:
-				return keyedValues != null && !keyedValues.isEmpty();
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case CDMPackage.VISUAL_INFO__DIAGRAM:
 				return diagram != null;
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 } //VisualInfoImpl

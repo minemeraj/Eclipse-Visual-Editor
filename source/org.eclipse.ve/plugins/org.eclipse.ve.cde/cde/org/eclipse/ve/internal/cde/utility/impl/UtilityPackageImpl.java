@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: UtilityPackageImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-import org.eclipse.emf.ecore.impl.EcorePackageImpl;
 
 import org.eclipse.ve.internal.cde.decorators.DecoratorsPackage;
 import org.eclipse.ve.internal.cde.decorators.impl.DecoratorsPackageImpl;
@@ -35,7 +34,8 @@ import org.eclipse.ve.internal.cde.utility.TranslatableString;
 import org.eclipse.ve.internal.cde.utility.URLResourceBundle;
 import org.eclipse.ve.internal.cde.utility.UtilityFactory;
 import org.eclipse.ve.internal.cde.utility.UtilityPackage;
-import org.eclipse.ve.internal.cdm.impl.CDMPackageImpl;
+import org.eclipse.ve.internal.cdm.CDMPackage;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model <b>Package</b>.
@@ -157,8 +157,8 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 		isInited = true;
 
 		// Initialize simple dependencies
-		CDMPackageImpl.init();
-		EcorePackageImpl.init();
+		CDMPackage.eINSTANCE.eClass();
+		EcorePackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
 		PalettePackageImpl thePalettePackage = (PalettePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PalettePackage.eNS_URI) instanceof PalettePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PalettePackage.eNS_URI) : PalettePackage.eINSTANCE);
@@ -381,7 +381,7 @@ public class UtilityPackageImpl extends EPackageImpl implements UtilityPackage {
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		EcorePackageImpl theEcorePackage = (EcorePackageImpl)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 
 		// Add supertypes to classes
 		constantStringEClass.getESuperTypes().add(this.getAbstractString());

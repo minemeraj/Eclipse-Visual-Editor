@@ -11,17 +11,12 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: AnnotationGenericImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-07 17:21:33 $ 
  */
-import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.ve.internal.cdm.AnnotationGeneric;
 import org.eclipse.ve.internal.cdm.CDMPackage;
@@ -86,7 +81,7 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return CDMPackage.eINSTANCE.getAnnotationGeneric();
+		return CDMPackage.Literals.ANNOTATION_GENERIC;
 	}
 
 	/**
@@ -140,35 +135,12 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case CDMPackage.ANNOTATION_GENERIC__KEYED_VALUES:
-					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
-				case CDMPackage.ANNOTATION_GENERIC__VISUAL_INFOS:
-					return ((InternalEList)getVisualInfos()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.ANNOTATION_GENERIC__KEYED_VALUES:
-				return getKeyedValues();
-			case CDMPackage.ANNOTATION_GENERIC__VISUAL_INFOS:
-				return getVisualInfos();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case CDMPackage.ANNOTATION_GENERIC__ANNOTATES_ID:
 				return getAnnotatesID();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -176,38 +148,13 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.ANNOTATION_GENERIC__KEYED_VALUES:
-				return keyedValues != null && !keyedValues.isEmpty();
-			case CDMPackage.ANNOTATION_GENERIC__VISUAL_INFOS:
-				return visualInfos != null && !visualInfos.isEmpty();
-			case CDMPackage.ANNOTATION_GENERIC__ANNOTATES_ID:
-				return isSetAnnotatesID();
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.ANNOTATION_GENERIC__KEYED_VALUES:
-				getKeyedValues().clear();
-				getKeyedValues().addAll((Collection)newValue);
-				return;
-			case CDMPackage.ANNOTATION_GENERIC__VISUAL_INFOS:
-				getVisualInfos().clear();
-				getVisualInfos().addAll((Collection)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case CDMPackage.ANNOTATION_GENERIC__ANNOTATES_ID:
 				setAnnotatesID((String)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -215,19 +162,26 @@ public class AnnotationGenericImpl extends AnnotationImpl implements AnnotationG
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.ANNOTATION_GENERIC__KEYED_VALUES:
-				getKeyedValues().clear();
-				return;
-			case CDMPackage.ANNOTATION_GENERIC__VISUAL_INFOS:
-				getVisualInfos().clear();
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case CDMPackage.ANNOTATION_GENERIC__ANNOTATES_ID:
 				unsetAnnotatesID();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case CDMPackage.ANNOTATION_GENERIC__ANNOTATES_ID:
+				return isSetAnnotatesID();
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**

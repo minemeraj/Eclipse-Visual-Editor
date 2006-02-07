@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: CDMPackage.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-07 17:21:33 $ 
  */
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -35,7 +35,7 @@ import org.eclipse.emf.ecore.EReference;
  * @model kind="package"
  * @generated
  */
-public interface CDMPackage extends EPackage{
+public interface CDMPackage extends EPackage {
 	/**
 	 * The package name.
 	 * <!-- begin-user-doc -->
@@ -97,7 +97,7 @@ public interface CDMPackage extends EPackage{
 	int DIAGRAM_DATA__ANNOTATIONS = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Diagram Data</em>' class.
+	 * The number of structural features of the '<em>Diagram Data</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -125,7 +125,7 @@ public interface CDMPackage extends EPackage{
 	int KEYED_VALUE_HOLDER__KEYED_VALUES = 0;
 
 	/**
-	 * The number of structural features of the the '<em>Keyed Value Holder</em>' class.
+	 * The number of structural features of the '<em>Keyed Value Holder</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -198,7 +198,7 @@ public interface CDMPackage extends EPackage{
 	int DIAGRAM__FIGURES = KEYED_VALUE_HOLDER_FEATURE_COUNT + 4;
 
 	/**
-	 * The number of structural features of the the '<em>Diagram</em>' class.
+	 * The number of structural features of the '<em>Diagram</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -235,7 +235,7 @@ public interface CDMPackage extends EPackage{
 	int VISUAL_INFO__DIAGRAM = KEYED_VALUE_HOLDER_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Visual Info</em>' class.
+	 * The number of structural features of the '<em>Visual Info</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -272,7 +272,7 @@ public interface CDMPackage extends EPackage{
 	int KEYED_LOCATION__KEY = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Keyed Location</em>' class.
+	 * The number of structural features of the '<em>Keyed Location</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -309,7 +309,7 @@ public interface CDMPackage extends EPackage{
 	int KEYED_SIZE__KEY = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Keyed Size</em>' class.
+	 * The number of structural features of the '<em>Keyed Size</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -346,7 +346,7 @@ public interface CDMPackage extends EPackage{
 	int KEYED_CONSTRAINT__KEY = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Keyed Constraint</em>' class.
+	 * The number of structural features of the '<em>Keyed Constraint</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -383,7 +383,7 @@ public interface CDMPackage extends EPackage{
 	int ANNOTATION__VISUAL_INFOS = KEYED_VALUE_HOLDER_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Annotation</em>' class.
+	 * The number of structural features of the '<em>Annotation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -420,7 +420,7 @@ public interface CDMPackage extends EPackage{
 	int KEYED_POINTS__KEY = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Keyed Points</em>' class.
+	 * The number of structural features of the '<em>Keyed Points</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -466,7 +466,7 @@ public interface CDMPackage extends EPackage{
 	int ANNOTATION_EMF__ANNOTATES = ANNOTATION_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Annotation EMF</em>' class.
+	 * The number of structural features of the '<em>Annotation EMF</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -512,7 +512,7 @@ public interface CDMPackage extends EPackage{
 	int ANNOTATION_GENERIC__ANNOTATES_ID = ANNOTATION_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Annotation Generic</em>' class.
+	 * The number of structural features of the '<em>Annotation Generic</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -558,7 +558,7 @@ public interface CDMPackage extends EPackage{
 	int DIAGRAM_FIGURE__CHILD_FIGURES = KEYED_VALUE_HOLDER_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of structural features of the the '<em>Diagram Figure</em>' class.
+	 * The number of structural features of the '<em>Diagram Figure</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -595,7 +595,7 @@ public interface CDMPackage extends EPackage{
 	int KEYED_GENERIC__VALUE = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Keyed Generic</em>' class.
+	 * The number of structural features of the '<em>Keyed Generic</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -632,7 +632,7 @@ public interface CDMPackage extends EPackage{
 	int KEYED_INTEGER__KEY = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Keyed Integer</em>' class.
+	 * The number of structural features of the '<em>Keyed Integer</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -669,7 +669,7 @@ public interface CDMPackage extends EPackage{
 	int MAP_ENTRY__VALUE = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Map Entry</em>' class.
+	 * The number of structural features of the '<em>Map Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -706,7 +706,7 @@ public interface CDMPackage extends EPackage{
 	int KEYED_DYNAMIC__VALUE = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Keyed Dynamic</em>' class.
+	 * The number of structural features of the '<em>Keyed Dynamic</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -743,7 +743,7 @@ public interface CDMPackage extends EPackage{
 	int KEYED_BOOLEAN__VALUE = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Keyed Boolean</em>' class.
+	 * The number of structural features of the '<em>Keyed Boolean</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1381,5 +1381,476 @@ public interface CDMPackage extends EPackage{
 	 * @generated
 	 */
 	CDMFactory getCDMFactory();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * Defines literals for the meta objects that represent
+	 * <ul>
+	 *   <li>each class,</li>
+	 *   <li>each feature of each class,</li>
+	 *   <li>each enum,</li>
+	 *   <li>and each data type</li>
+	 * </ul>
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	interface Literals  {
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.DiagramDataImpl <em>Diagram Data</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.DiagramDataImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getDiagramData()
+		 * @generated
+		 */
+		EClass DIAGRAM_DATA = eINSTANCE.getDiagramData();
+
+		/**
+		 * The meta object literal for the '<em><b>Diagrams</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIAGRAM_DATA__DIAGRAMS = eINSTANCE.getDiagramData_Diagrams();
+
+		/**
+		 * The meta object literal for the '<em><b>Annotations</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIAGRAM_DATA__ANNOTATIONS = eINSTANCE.getDiagramData_Annotations();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.DiagramImpl <em>Diagram</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.DiagramImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getDiagram()
+		 * @generated
+		 */
+		EClass DIAGRAM = eINSTANCE.getDiagram();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIAGRAM__NAME = eINSTANCE.getDiagram_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIAGRAM__ID = eINSTANCE.getDiagram_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Diagram Data</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIAGRAM__DIAGRAM_DATA = eINSTANCE.getDiagram_DiagramData();
+
+		/**
+		 * The meta object literal for the '<em><b>Visual Infos</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIAGRAM__VISUAL_INFOS = eINSTANCE.getDiagram_VisualInfos();
+
+		/**
+		 * The meta object literal for the '<em><b>Figures</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIAGRAM__FIGURES = eINSTANCE.getDiagram_Figures();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.VisualInfoImpl <em>Visual Info</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.VisualInfoImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getVisualInfo()
+		 * @generated
+		 */
+		EClass VISUAL_INFO = eINSTANCE.getVisualInfo();
+
+		/**
+		 * The meta object literal for the '<em><b>Diagram</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference VISUAL_INFO__DIAGRAM = eINSTANCE.getVisualInfo_Diagram();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.KeyedValueHolderImpl <em>Keyed Value Holder</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.KeyedValueHolderImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getKeyedValueHolder()
+		 * @generated
+		 */
+		EClass KEYED_VALUE_HOLDER = eINSTANCE.getKeyedValueHolder();
+
+		/**
+		 * The meta object literal for the '<em><b>Keyed Values</b></em>' map feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference KEYED_VALUE_HOLDER__KEYED_VALUES = eINSTANCE.getKeyedValueHolder_KeyedValues();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.KeyedLocationImpl <em>Keyed Location</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.KeyedLocationImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getKeyedLocation()
+		 * @generated
+		 */
+		EClass KEYED_LOCATION = eINSTANCE.getKeyedLocation();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_LOCATION__VALUE = eINSTANCE.getKeyedLocation_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_LOCATION__KEY = eINSTANCE.getKeyedLocation_Key();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.KeyedSizeImpl <em>Keyed Size</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.KeyedSizeImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getKeyedSize()
+		 * @generated
+		 */
+		EClass KEYED_SIZE = eINSTANCE.getKeyedSize();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_SIZE__VALUE = eINSTANCE.getKeyedSize_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_SIZE__KEY = eINSTANCE.getKeyedSize_Key();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.KeyedConstraintImpl <em>Keyed Constraint</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.KeyedConstraintImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getKeyedConstraint()
+		 * @generated
+		 */
+		EClass KEYED_CONSTRAINT = eINSTANCE.getKeyedConstraint();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_CONSTRAINT__VALUE = eINSTANCE.getKeyedConstraint_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_CONSTRAINT__KEY = eINSTANCE.getKeyedConstraint_Key();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.AnnotationImpl <em>Annotation</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.AnnotationImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getAnnotation()
+		 * @generated
+		 */
+		EClass ANNOTATION = eINSTANCE.getAnnotation();
+
+		/**
+		 * The meta object literal for the '<em><b>Visual Infos</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ANNOTATION__VISUAL_INFOS = eINSTANCE.getAnnotation_VisualInfos();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.KeyedPointsImpl <em>Keyed Points</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.KeyedPointsImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getKeyedPoints()
+		 * @generated
+		 */
+		EClass KEYED_POINTS = eINSTANCE.getKeyedPoints();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_POINTS__VALUE = eINSTANCE.getKeyedPoints_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_POINTS__KEY = eINSTANCE.getKeyedPoints_Key();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.AnnotationEMFImpl <em>Annotation EMF</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.AnnotationEMFImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getAnnotationEMF()
+		 * @generated
+		 */
+		EClass ANNOTATION_EMF = eINSTANCE.getAnnotationEMF();
+
+		/**
+		 * The meta object literal for the '<em><b>Annotates</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ANNOTATION_EMF__ANNOTATES = eINSTANCE.getAnnotationEMF_Annotates();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.AnnotationGenericImpl <em>Annotation Generic</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.AnnotationGenericImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getAnnotationGeneric()
+		 * @generated
+		 */
+		EClass ANNOTATION_GENERIC = eINSTANCE.getAnnotationGeneric();
+
+		/**
+		 * The meta object literal for the '<em><b>Annotates ID</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ANNOTATION_GENERIC__ANNOTATES_ID = eINSTANCE.getAnnotationGeneric_AnnotatesID();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.DiagramFigureImpl <em>Diagram Figure</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.DiagramFigureImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getDiagramFigure()
+		 * @generated
+		 */
+		EClass DIAGRAM_FIGURE = eINSTANCE.getDiagramFigure();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIAGRAM_FIGURE__TYPE = eINSTANCE.getDiagramFigure_Type();
+
+		/**
+		 * The meta object literal for the '<em><b>Child Figures</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIAGRAM_FIGURE__CHILD_FIGURES = eINSTANCE.getDiagramFigure_ChildFigures();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.KeyedGenericImpl <em>Keyed Generic</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.KeyedGenericImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getKeyedGeneric()
+		 * @generated
+		 */
+		EClass KEYED_GENERIC = eINSTANCE.getKeyedGeneric();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_GENERIC__KEY = eINSTANCE.getKeyedGeneric_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference KEYED_GENERIC__VALUE = eINSTANCE.getKeyedGeneric_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.KeyedIntegerImpl <em>Keyed Integer</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.KeyedIntegerImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getKeyedInteger()
+		 * @generated
+		 */
+		EClass KEYED_INTEGER = eINSTANCE.getKeyedInteger();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_INTEGER__VALUE = eINSTANCE.getKeyedInteger_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_INTEGER__KEY = eINSTANCE.getKeyedInteger_Key();
+
+		/**
+		 * The meta object literal for the '{@link java.util.Map.Entry <em>Map Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.util.Map.Entry
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getMapEntry()
+		 * @generated
+		 */
+		EClass MAP_ENTRY = eINSTANCE.getMapEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAP_ENTRY__KEY = eINSTANCE.getMapEntry_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAP_ENTRY__VALUE = eINSTANCE.getMapEntry_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.KeyedDynamicImpl <em>Keyed Dynamic</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.KeyedDynamicImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getKeyedDynamic()
+		 * @generated
+		 */
+		EClass KEYED_DYNAMIC = eINSTANCE.getKeyedDynamic();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_DYNAMIC__KEY = eINSTANCE.getKeyedDynamic_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_DYNAMIC__VALUE = eINSTANCE.getKeyedDynamic_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cdm.impl.KeyedBooleanImpl <em>Keyed Boolean</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.impl.KeyedBooleanImpl
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getKeyedBoolean()
+		 * @generated
+		 */
+		EClass KEYED_BOOLEAN = eINSTANCE.getKeyedBoolean();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_BOOLEAN__KEY = eINSTANCE.getKeyedBoolean_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_BOOLEAN__VALUE = eINSTANCE.getKeyedBoolean_Value();
+
+		/**
+		 * The meta object literal for the '<em>View Dimension</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.model.Dimension
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getViewDimension()
+		 * @generated
+		 */
+		EDataType VIEW_DIMENSION = eINSTANCE.getViewDimension();
+
+		/**
+		 * The meta object literal for the '<em>View Point</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.model.Point
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getViewPoint()
+		 * @generated
+		 */
+		EDataType VIEW_POINT = eINSTANCE.getViewPoint();
+
+		/**
+		 * The meta object literal for the '<em>View Rectangle</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cdm.model.Rectangle
+		 * @see org.eclipse.ve.internal.cdm.impl.CDMPackageImpl#getViewRectangle()
+		 * @generated
+		 */
+		EDataType VIEW_RECTANGLE = eINSTANCE.getViewRectangle();
+
+	}
 
 } //CDMPackage

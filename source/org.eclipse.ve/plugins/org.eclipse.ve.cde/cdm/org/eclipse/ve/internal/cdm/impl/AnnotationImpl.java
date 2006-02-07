@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: AnnotationImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,7 +19,6 @@ import java.util.Iterator;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -70,7 +69,7 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return CDMPackage.eINSTANCE.getAnnotation();
+		return CDMPackage.Literals.ANNOTATION;
 	}
 
 	public VisualInfo getVisualInfo(Diagram aDiagram) {
@@ -88,11 +87,12 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getVisualInfos() {
-		if (visualInfos == null) {
-			visualInfos = new EObjectContainmentEList(VisualInfo.class, this, CDMPackage.ANNOTATION__VISUAL_INFOS);
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CDMPackage.ANNOTATION__VISUAL_INFOS:
+				return ((InternalEList)getVisualInfos()).basicRemove(otherEnd, msgs);
 		}
-		return visualInfos;
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -100,33 +100,12 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case CDMPackage.ANNOTATION__KEYED_VALUES:
-					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
-				case CDMPackage.ANNOTATION__VISUAL_INFOS:
-					return ((InternalEList)getVisualInfos()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.ANNOTATION__KEYED_VALUES:
-				return getKeyedValues();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case CDMPackage.ANNOTATION__VISUAL_INFOS:
 				return getVisualInfos();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -134,18 +113,14 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.ANNOTATION__KEYED_VALUES:
-				getKeyedValues().clear();
-				getKeyedValues().addAll((Collection)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case CDMPackage.ANNOTATION__VISUAL_INFOS:
 				getVisualInfos().clear();
 				getVisualInfos().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -153,16 +128,13 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.ANNOTATION__KEYED_VALUES:
-				getKeyedValues().clear();
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case CDMPackage.ANNOTATION__VISUAL_INFOS:
 				getVisualInfos().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -170,14 +142,24 @@ public abstract class AnnotationImpl extends KeyedValueHolderImpl implements Ann
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.ANNOTATION__KEYED_VALUES:
-				return keyedValues != null && !keyedValues.isEmpty();
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case CDMPackage.ANNOTATION__VISUAL_INFOS:
 				return visualInfos != null && !visualInfos.isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList getVisualInfos() {
+		if (visualInfos == null) {
+			visualInfos = new EObjectContainmentEList(VisualInfo.class, this, CDMPackage.ANNOTATION__VISUAL_INFOS);
+		}
+		return visualInfos;
 	}
 
 }

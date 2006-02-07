@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm;
 /*
  *  $RCSfile: CDMFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:33 $ 
  */
 
 import org.eclipse.emf.ecore.EFactory;
@@ -31,7 +31,7 @@ public interface CDMFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	CDMFactory eINSTANCE = new org.eclipse.ve.internal.cdm.impl.CDMFactoryImpl();
+	CDMFactory eINSTANCE = org.eclipse.ve.internal.cdm.impl.CDMFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Diagram Data</em>'.

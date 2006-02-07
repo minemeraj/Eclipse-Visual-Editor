@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: JavaCacheDataImpl.java,v 1.2 2005-02-15 23:23:54 sgunturi Exp $
+ * $Id: JavaCacheDataImpl.java,v 1.3 2006-02-07 17:21:37 rkulp Exp $
  */
 package org.eclipse.ve.internal.jcm.impl;
 /*******************************************************************************
@@ -16,7 +16,6 @@ package org.eclipse.ve.internal.jcm.impl;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -73,7 +72,7 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return JCMPackage.eINSTANCE.getJavaCacheData();
+		return JCMPackage.Literals.JAVA_CACHE_DATA;
 	}
 
 	/**
@@ -83,7 +82,7 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 */
 	public EMap getNamesToBeans() {
 		if (namesToBeans == null) {
-			namesToBeans = new EcoreEMap(JCMPackage.eINSTANCE.getNamesToBeans(), NamesToBeansImpl.class, this, JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS);
+			namesToBeans = new EcoreEMap(JCMPackage.Literals.NAMES_TO_BEANS, NamesToBeansImpl.class, this, JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS);
 		}
 		return namesToBeans;
 	}
@@ -93,16 +92,12 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS:
-					return ((InternalEList)getNamesToBeans()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS:
+				return ((InternalEList)getNamesToBeans()).basicRemove(otherEnd, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -110,12 +105,13 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS:
-				return getNamesToBeans();
+				if (coreType) return getNamesToBeans();
+				else return getNamesToBeans().map();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -123,14 +119,13 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS:
-				getNamesToBeans().clear();
-				getNamesToBeans().addAll((Collection)newValue);
+				((EStructuralFeature.Setting)getNamesToBeans()).set(newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -138,13 +133,13 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS:
 				getNamesToBeans().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -152,12 +147,12 @@ public class JavaCacheDataImpl extends EObjectImpl implements JavaCacheData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case JCMPackage.JAVA_CACHE_DATA__NAMES_TO_BEANS:
 				return namesToBeans != null && !namesToBeans.isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 } //JavaCacheDataImpl

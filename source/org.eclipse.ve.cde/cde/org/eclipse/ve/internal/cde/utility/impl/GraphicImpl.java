@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: GraphicImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
@@ -47,7 +47,7 @@ public abstract class GraphicImpl extends EObjectImpl implements Graphic {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return UtilityPackage.eINSTANCE.getGraphic();
+		return UtilityPackage.Literals.GRAPHIC;
 	}
 
 	public Image getImage() {

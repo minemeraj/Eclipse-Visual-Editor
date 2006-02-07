@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: MemberContainerImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-10-03 19:20:56 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:37 $ 
  */
 
 import java.util.Collection;
@@ -27,7 +27,6 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -97,7 +96,7 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return JCMPackage.eINSTANCE.getMemberContainer();
+		return JCMPackage.Literals.MEMBER_CONTAINER;
 	}
 
 	/**
@@ -129,11 +128,16 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getProperties() {
-		if (properties == null) {
-			properties = new EObjectContainmentEList(EObject.class, this, JCMPackage.MEMBER_CONTAINER__PROPERTIES);
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case JCMPackage.MEMBER_CONTAINER__PROPERTIES:
+				return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
+			case JCMPackage.MEMBER_CONTAINER__MEMBERS:
+				return ((InternalEList)getMembers()).basicRemove(otherEnd, msgs);
+			case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
+				return ((InternalEList)getImplicits()).basicRemove(otherEnd, msgs);
 		}
-		return properties;
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -141,29 +145,8 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case JCMPackage.MEMBER_CONTAINER__PROPERTIES:
-					return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
-				case JCMPackage.MEMBER_CONTAINER__MEMBERS:
-					return ((InternalEList)getMembers()).basicRemove(otherEnd, msgs);
-				case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
-					return ((InternalEList)getImplicits()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case JCMPackage.MEMBER_CONTAINER__PROPERTIES:
 				return getProperties();
 			case JCMPackage.MEMBER_CONTAINER__MEMBERS:
@@ -171,7 +154,7 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 			case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
 				return getImplicits();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -179,8 +162,8 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case JCMPackage.MEMBER_CONTAINER__PROPERTIES:
 				getProperties().clear();
 				getProperties().addAll((Collection)newValue);
@@ -194,7 +177,7 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 				getImplicits().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -202,8 +185,8 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case JCMPackage.MEMBER_CONTAINER__PROPERTIES:
 				getProperties().clear();
 				return;
@@ -214,7 +197,7 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 				getImplicits().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -222,8 +205,8 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case JCMPackage.MEMBER_CONTAINER__PROPERTIES:
 				return properties != null && !properties.isEmpty();
 			case JCMPackage.MEMBER_CONTAINER__MEMBERS:
@@ -231,7 +214,19 @@ public class MemberContainerImpl extends EObjectImpl implements MemberContainer 
 			case JCMPackage.MEMBER_CONTAINER__IMPLICITS:
 				return implicits != null && !implicits.isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList getProperties() {
+		if (properties == null) {
+			properties = new EObjectContainmentEList(EObject.class, this, JCMPackage.MEMBER_CONTAINER__PROPERTIES);
+		}
+		return properties;
 	}
 
 } //MemberContainerImpl

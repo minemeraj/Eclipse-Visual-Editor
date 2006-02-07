@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: DecoratorsPackageImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-07 17:21:33 $ 
  */
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-import org.eclipse.emf.ecore.impl.EcorePackageImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator;
@@ -37,7 +36,6 @@ import org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl;
 import org.eclipse.ve.internal.cde.utility.UtilityPackage;
 import org.eclipse.ve.internal.cde.utility.impl.UtilityPackageImpl;
 import org.eclipse.ve.internal.cdm.CDMPackage;
-import org.eclipse.ve.internal.cdm.impl.CDMPackageImpl;
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model <b>Package</b>.
@@ -157,8 +155,8 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 		isInited = true;
 
 		// Initialize simple dependencies
-		CDMPackageImpl.init();
-		EcorePackageImpl.init();
+		CDMPackage.eINSTANCE.eClass();
+		EcorePackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
 		PalettePackageImpl thePalettePackage = (PalettePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PalettePackage.eNS_URI) instanceof PalettePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PalettePackage.eNS_URI) : PalettePackage.eINSTANCE);
@@ -539,9 +537,9 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		EcorePackageImpl theEcorePackage = (EcorePackageImpl)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
-		UtilityPackageImpl theUtilityPackage = (UtilityPackageImpl)EPackage.Registry.INSTANCE.getEPackage(UtilityPackage.eNS_URI);
-		CDMPackageImpl theCDMPackage = (CDMPackageImpl)EPackage.Registry.INSTANCE.getEPackage(CDMPackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+		UtilityPackage theUtilityPackage = (UtilityPackage)EPackage.Registry.INSTANCE.getEPackage(UtilityPackage.eNS_URI);
+		CDMPackage theCDMPackage = (CDMPackage)EPackage.Registry.INSTANCE.getEPackage(CDMPackage.eNS_URI);
 
 		// Add supertypes to classes
 		basePropertyDecoratorEClass.getESuperTypes().add(theEcorePackage.getEAnnotation());
@@ -581,8 +579,8 @@ public class DecoratorsPackageImpl extends EPackageImpl implements DecoratorsPac
 		initEReference(getFeatureDescriptorDecorator_DisplayNameString(), theUtilityPackage.getAbstractString(), null, "displayNameString", null, 0, 1, FeatureDescriptorDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFeatureDescriptorDecorator_DescriptionString(), theUtilityPackage.getAbstractString(), null, "descriptionString", null, 0, 1, FeatureDescriptorDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		EOperation op = addEOperation(featureDescriptorDecoratorEClass, ecorePackage.getEBoolean(), "isFiltered");
-		addEParameter(op, ecorePackage.getEString(), "flag");
+		EOperation op = addEOperation(featureDescriptorDecoratorEClass, ecorePackage.getEBoolean(), "isFiltered", 0, 1);
+		addEParameter(op, ecorePackage.getEString(), "flag", 0, 1);
 
 		initEClass(classDescriptorDecoratorEClass, ClassDescriptorDecorator.class, "ClassDescriptorDecorator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getClassDescriptorDecorator_CustomizerClassname(), ecorePackage.getEString(), "customizerClassname", null, 0, 1, ClassDescriptorDecorator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

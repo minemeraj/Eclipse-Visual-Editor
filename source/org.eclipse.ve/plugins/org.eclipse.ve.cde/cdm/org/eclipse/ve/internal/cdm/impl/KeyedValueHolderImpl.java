@@ -11,10 +11,9 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: KeyedValueHolderImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-07 17:21:33 $ 
  */
  
-import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
@@ -69,7 +68,7 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return CDMPackage.eINSTANCE.getKeyedValueHolder();
+		return CDMPackage.Literals.KEYED_VALUE_HOLDER;
 	}
 
 	/**
@@ -88,16 +87,12 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES:
-					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES:
+				return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -105,12 +100,13 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES:
-				return getKeyedValues();
+				if (coreType) return getKeyedValues();
+				else return getKeyedValues().map();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -118,14 +114,13 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES:
-				getKeyedValues().clear();
-				getKeyedValues().addAll((Collection)newValue);
+				((EStructuralFeature.Setting)getKeyedValues()).set(newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -133,13 +128,13 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES:
 				getKeyedValues().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -147,12 +142,12 @@ public abstract class KeyedValueHolderImpl extends EObjectImpl implements KeyedV
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case CDMPackage.KEYED_VALUE_HOLDER__KEYED_VALUES:
 				return keyedValues != null && !keyedValues.isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/* (non-Javadoc)

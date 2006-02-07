@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility;
 /*
  *  $RCSfile: UtilityPackage.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-15 21:27:16 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-07 17:21:33 $ 
  */
 
 
@@ -36,7 +36,7 @@ import org.eclipse.emf.ecore.EcorePackage;
  * @model kind="package"
  * @generated
  */
-public interface UtilityPackage extends EPackage{
+public interface UtilityPackage extends EPackage {
 
 
 	/**
@@ -57,7 +57,7 @@ public interface UtilityPackage extends EPackage{
 	 */
 	int ABSTRACT_STRING = 0;
 	/**
-	 * The number of structural features of the the '<em>Abstract String</em>' class.
+	 * The number of structural features of the '<em>Abstract String</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -101,7 +101,7 @@ public interface UtilityPackage extends EPackage{
 	 */
 	int CONSTANT_STRING__STRING = ABSTRACT_STRING_FEATURE_COUNT + 0;
 	/**
-	 * The number of structural features of the the '<em>Constant String</em>' class.
+	 * The number of structural features of the '<em>Constant String</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -128,7 +128,7 @@ public interface UtilityPackage extends EPackage{
 	 */
 	int RESOURCE_BUNDLE = 2;
 	/**
-	 * The number of structural features of the the '<em>Resource Bundle</em>' class.
+	 * The number of structural features of the '<em>Resource Bundle</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -162,7 +162,7 @@ public interface UtilityPackage extends EPackage{
 	 */
 	int URL_RESOURCE_BUNDLE__BUNDLE_UR_LS = RESOURCE_BUNDLE_FEATURE_COUNT + 1;
 	/**
-	 * The number of structural features of the the '<em>URL Resource Bundle</em>' class.
+	 * The number of structural features of the '<em>URL Resource Bundle</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -171,7 +171,7 @@ public interface UtilityPackage extends EPackage{
 	int URL_RESOURCE_BUNDLE_FEATURE_COUNT = RESOURCE_BUNDLE_FEATURE_COUNT + 2;
 
 	/**
-	 * The number of structural features of the the '<em>Graphic</em>' class.
+	 * The number of structural features of the '<em>Graphic</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -188,7 +188,7 @@ public interface UtilityPackage extends EPackage{
 	 */
 	int GIF_FILE_GRAPHIC__RESOURCE_NAME = GRAPHIC_FEATURE_COUNT + 0;
 	/**
-	 * The number of structural features of the the '<em>GIF File Graphic</em>' class.
+	 * The number of structural features of the '<em>GIF File Graphic</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -213,7 +213,7 @@ public interface UtilityPackage extends EPackage{
 	 */
 	int TRANSLATABLE_STRING__BUNDLE = ABSTRACT_STRING_FEATURE_COUNT + 1;
 	/**
-	 * The number of structural features of the the '<em>Translatable String</em>' class.
+	 * The number of structural features of the '<em>Translatable String</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -233,7 +233,7 @@ public interface UtilityPackage extends EPackage{
 	int IGRAPHIC = 7;
 
 	/**
-	 * The number of structural features of the the '<em>IGraphic</em>' class.
+	 * The number of structural features of the '<em>IGraphic</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -420,5 +420,148 @@ public interface UtilityPackage extends EPackage{
 	 * @generated
 	 */
 	UtilityFactory getUtilityFactory();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * Defines literals for the meta objects that represent
+	 * <ul>
+	 *   <li>each class,</li>
+	 *   <li>each feature of each class,</li>
+	 *   <li>each enum,</li>
+	 *   <li>and each data type</li>
+	 * </ul>
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	interface Literals  {
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.utility.impl.AbstractStringImpl <em>Abstract String</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.utility.impl.AbstractStringImpl
+		 * @see org.eclipse.ve.internal.cde.utility.impl.UtilityPackageImpl#getAbstractString()
+		 * @generated
+		 */
+		EClass ABSTRACT_STRING = eINSTANCE.getAbstractString();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.utility.impl.ConstantStringImpl <em>Constant String</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.utility.impl.ConstantStringImpl
+		 * @see org.eclipse.ve.internal.cde.utility.impl.UtilityPackageImpl#getConstantString()
+		 * @generated
+		 */
+		EClass CONSTANT_STRING = eINSTANCE.getConstantString();
+
+		/**
+		 * The meta object literal for the '<em><b>String</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONSTANT_STRING__STRING = eINSTANCE.getConstantString_String();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.utility.impl.ResourceBundleImpl <em>Resource Bundle</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.utility.impl.ResourceBundleImpl
+		 * @see org.eclipse.ve.internal.cde.utility.impl.UtilityPackageImpl#getResourceBundle()
+		 * @generated
+		 */
+		EClass RESOURCE_BUNDLE = eINSTANCE.getResourceBundle();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.utility.impl.URLResourceBundleImpl <em>URL Resource Bundle</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.utility.impl.URLResourceBundleImpl
+		 * @see org.eclipse.ve.internal.cde.utility.impl.UtilityPackageImpl#getURLResourceBundle()
+		 * @generated
+		 */
+		EClass URL_RESOURCE_BUNDLE = eINSTANCE.getURLResourceBundle();
+
+		/**
+		 * The meta object literal for the '<em><b>Bundle Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute URL_RESOURCE_BUNDLE__BUNDLE_NAME = eINSTANCE.getURLResourceBundle_BundleName();
+
+		/**
+		 * The meta object literal for the '<em><b>Bundle UR Ls</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute URL_RESOURCE_BUNDLE__BUNDLE_UR_LS = eINSTANCE.getURLResourceBundle_BundleURLs();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.utility.impl.GraphicImpl <em>Graphic</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.utility.impl.GraphicImpl
+		 * @see org.eclipse.ve.internal.cde.utility.impl.UtilityPackageImpl#getGraphic()
+		 * @generated
+		 */
+		EClass GRAPHIC = eINSTANCE.getGraphic();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.utility.impl.GIFFileGraphicImpl <em>GIF File Graphic</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.utility.impl.GIFFileGraphicImpl
+		 * @see org.eclipse.ve.internal.cde.utility.impl.UtilityPackageImpl#getGIFFileGraphic()
+		 * @generated
+		 */
+		EClass GIF_FILE_GRAPHIC = eINSTANCE.getGIFFileGraphic();
+
+		/**
+		 * The meta object literal for the '<em><b>Resource Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GIF_FILE_GRAPHIC__RESOURCE_NAME = eINSTANCE.getGIFFileGraphic_ResourceName();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.utility.impl.TranslatableStringImpl <em>Translatable String</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.utility.impl.TranslatableStringImpl
+		 * @see org.eclipse.ve.internal.cde.utility.impl.UtilityPackageImpl#getTranslatableString()
+		 * @generated
+		 */
+		EClass TRANSLATABLE_STRING = eINSTANCE.getTranslatableString();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TRANSLATABLE_STRING__KEY = eINSTANCE.getTranslatableString_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Bundle</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TRANSLATABLE_STRING__BUNDLE = eINSTANCE.getTranslatableString_Bundle();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.emf.IGraphic <em>IGraphic</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.emf.IGraphic
+		 * @see org.eclipse.ve.internal.cde.utility.impl.UtilityPackageImpl#getIGraphic()
+		 * @generated
+		 */
+		EClass IGRAPHIC = eINSTANCE.getIGraphic();
+
+	}
 
 }

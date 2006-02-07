@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMFactoryImpl.java,v $
- *  $Revision: 1.11 $  $Date: 2005-10-03 19:20:57 $ 
+ *  $Revision: 1.12 $  $Date: 2006-02-07 17:21:37 $ 
  */
 
 import java.util.Map;
@@ -20,7 +20,11 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.emf.ecore.EPackage;
+
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.ve.internal.jcm.*;
 
@@ -31,6 +35,25 @@ import org.eclipse.ve.internal.jcm.*;
  * @generated
  */
 public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
+	/**
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static JCMFactory init() {
+		try {
+			JCMFactory theJCMFactory = (JCMFactory)EPackage.Registry.INSTANCE.getEFactory("http:///org/eclipse/ve/internal/jcm.ecore"); 
+			if (theJCMFactory != null) {
+				return theJCMFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new JCMFactoryImpl();
+	}
+
 	/**
 	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->
@@ -75,16 +98,10 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	 */
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-			case JCMPackage.INSTANCE_LOCATION: {
-				InstanceLocation result = InstanceLocation.get(initialValue);
-				if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-				return result;
-			}
-			case JCMPackage.LINK_TYPE: {
-				LinkType result = LinkType.get(initialValue);
-				if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-				return result;
-			}
+			case JCMPackage.INSTANCE_LOCATION:
+				return createInstanceLocationFromString(eDataType, initialValue);
+			case JCMPackage.LINK_TYPE:
+				return createLinkTypeFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -98,9 +115,9 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
 			case JCMPackage.INSTANCE_LOCATION:
-				return instanceValue == null ? null : instanceValue.toString();
+				return convertInstanceLocationToString(eDataType, instanceValue);
 			case JCMPackage.LINK_TYPE:
-				return instanceValue == null ? null : instanceValue.toString();
+				return convertLinkTypeToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -214,6 +231,46 @@ public class JCMFactoryImpl extends EFactoryImpl implements JCMFactory {
 	public Map.Entry createNamesToBeans() {
 		NamesToBeansImpl namesToBeans = new NamesToBeansImpl();
 		return namesToBeans;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InstanceLocation createInstanceLocationFromString(EDataType eDataType, String initialValue) {
+		InstanceLocation result = InstanceLocation.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertInstanceLocationToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LinkType createLinkTypeFromString(EDataType eDataType, String initialValue) {
+		LinkType result = LinkType.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertLinkTypeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

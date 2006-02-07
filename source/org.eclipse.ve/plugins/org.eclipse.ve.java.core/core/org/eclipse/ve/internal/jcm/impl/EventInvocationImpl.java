@@ -18,23 +18,18 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: EventInvocationImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-02-15 23:23:54 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:37 $ 
  */
 
-import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.jem.internal.beaninfo.BeanEvent;
 import org.eclipse.ve.internal.jcm.EventInvocation;
 import org.eclipse.ve.internal.jcm.JCMPackage;
-import org.eclipse.ve.internal.jcm.Listener;
 
 /**
  * <!-- begin-user-doc -->
@@ -75,7 +70,7 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return JCMPackage.eINSTANCE.getEventInvocation();
+		return JCMPackage.Literals.EVENT_INVOCATION;
 	}
 
 	/**
@@ -85,8 +80,8 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 */
 	public BeanEvent getEvent() {
 		if (event != null && event.eIsProxy()) {
-			BeanEvent oldEvent = event;
-			event = (BeanEvent)eResolveProxy((InternalEObject)event);
+			InternalEObject oldEvent = (InternalEObject)event;
+			event = (BeanEvent)eResolveProxy(oldEvent);
 			if (event != oldEvent) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, JCMPackage.EVENT_INVOCATION__EVENT, oldEvent, event));
@@ -121,58 +116,13 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case JCMPackage.EVENT_INVOCATION__LISTENER:
-					if (listener != null)
-						msgs = ((InternalEObject)listener).eInverseRemove(this, JCMPackage.LISTENER__LISTENED_BY, Listener.class, msgs);
-					return basicSetListener((Listener)otherEnd, msgs);
-				default:
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case JCMPackage.EVENT_INVOCATION__CALLBACKS:
-					return ((InternalEList)getCallbacks()).basicRemove(otherEnd, msgs);
-				case JCMPackage.EVENT_INVOCATION__LISTENER:
-					return basicSetListener(null, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.EVENT_INVOCATION__CALLBACKS:
-				return getCallbacks();
-			case JCMPackage.EVENT_INVOCATION__LISTENER:
-				if (resolve) return getListener();
-				return basicGetListener();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case JCMPackage.EVENT_INVOCATION__EVENT:
 				if (resolve) return getEvent();
 				return basicGetEvent();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -180,20 +130,13 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.EVENT_INVOCATION__CALLBACKS:
-				getCallbacks().clear();
-				getCallbacks().addAll((Collection)newValue);
-				return;
-			case JCMPackage.EVENT_INVOCATION__LISTENER:
-				setListener((Listener)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case JCMPackage.EVENT_INVOCATION__EVENT:
 				setEvent((BeanEvent)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -201,19 +144,13 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.EVENT_INVOCATION__CALLBACKS:
-				getCallbacks().clear();
-				return;
-			case JCMPackage.EVENT_INVOCATION__LISTENER:
-				setListener((Listener)null);
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case JCMPackage.EVENT_INVOCATION__EVENT:
 				setEvent((BeanEvent)null);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -221,16 +158,12 @@ public class EventInvocationImpl extends AbstractEventInvocationImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.EVENT_INVOCATION__CALLBACKS:
-				return callbacks != null && !callbacks.isEmpty();
-			case JCMPackage.EVENT_INVOCATION__LISTENER:
-				return listener != null;
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case JCMPackage.EVENT_INVOCATION__EVENT:
 				return event != null;
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 } //EventInvocationImpl

@@ -2,33 +2,27 @@
  * <copyright>
  * </copyright>
  *
- * $Id: RootImpl.java,v 1.2 2005-09-15 21:27:15 rkulp Exp $
+ * $Id: RootImpl.java,v 1.3 2006-02-07 17:21:33 rkulp Exp $
  */
 package org.eclipse.ve.internal.cde.palette.impl;
 
-import java.util.Collection;
 import java.util.Map;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.ve.internal.cde.palette.AbstractToolEntry;
 import org.eclipse.gef.palette.*;
 
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
-import org.eclipse.ve.internal.cde.palette.Permissions;
 import org.eclipse.ve.internal.cde.palette.Root;
 
-import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 /**
  * <!-- begin-user-doc -->
@@ -69,7 +63,7 @@ public class RootImpl extends ContainerImpl implements Root {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return PalettePackage.eINSTANCE.getRoot();
+		return PalettePackage.Literals.ROOT;
 	}
 
 	/**
@@ -79,8 +73,8 @@ public class RootImpl extends ContainerImpl implements Root {
 	 */
 	public AbstractToolEntry getDefEntry() {
 		if (defEntry != null && defEntry.eIsProxy()) {
-			AbstractToolEntry oldDefEntry = defEntry;
-			defEntry = (AbstractToolEntry)eResolveProxy((InternalEObject)defEntry);
+			InternalEObject oldDefEntry = (InternalEObject)defEntry;
+			defEntry = (AbstractToolEntry)eResolveProxy(oldDefEntry);
 			if (defEntry != oldDefEntry) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, PalettePackage.ROOT__DEF_ENTRY, oldDefEntry, defEntry));
@@ -115,52 +109,13 @@ public class RootImpl extends ContainerImpl implements Root {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case PalettePackage.ROOT__ENTRY_LABEL:
-					return basicSetEntryLabel(null, msgs);
-				case PalettePackage.ROOT__ENTRY_SHORT_DESCRIPTION:
-					return basicSetEntryShortDescription(null, msgs);
-				case PalettePackage.ROOT__CHILDREN:
-					return ((InternalEList)getChildren()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.ROOT__ICON16_NAME:
-				return getIcon16Name();
-			case PalettePackage.ROOT__ICON32_NAME:
-				return getIcon32Name();
-			case PalettePackage.ROOT__VISIBLE:
-				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
-			case PalettePackage.ROOT__DEFAULT_ENTRY:
-				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
-			case PalettePackage.ROOT__ID:
-				return getId();
-			case PalettePackage.ROOT__MODIFICATION:
-				return getModification();
-			case PalettePackage.ROOT__ENTRY_LABEL:
-				return getEntryLabel();
-			case PalettePackage.ROOT__ENTRY_SHORT_DESCRIPTION:
-				return getEntryShortDescription();
-			case PalettePackage.ROOT__CHILDREN:
-				return getChildren();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case PalettePackage.ROOT__DEF_ENTRY:
 				if (resolve) return getDefEntry();
 				return basicGetDefEntry();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -168,41 +123,13 @@ public class RootImpl extends ContainerImpl implements Root {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.ROOT__ICON16_NAME:
-				setIcon16Name((String)newValue);
-				return;
-			case PalettePackage.ROOT__ICON32_NAME:
-				setIcon32Name((String)newValue);
-				return;
-			case PalettePackage.ROOT__VISIBLE:
-				setVisible(((Boolean)newValue).booleanValue());
-				return;
-			case PalettePackage.ROOT__DEFAULT_ENTRY:
-				setDefaultEntry(((Boolean)newValue).booleanValue());
-				return;
-			case PalettePackage.ROOT__ID:
-				setId((String)newValue);
-				return;
-			case PalettePackage.ROOT__MODIFICATION:
-				setModification((Permissions)newValue);
-				return;
-			case PalettePackage.ROOT__ENTRY_LABEL:
-				setEntryLabel((AbstractString)newValue);
-				return;
-			case PalettePackage.ROOT__ENTRY_SHORT_DESCRIPTION:
-				setEntryShortDescription((AbstractString)newValue);
-				return;
-			case PalettePackage.ROOT__CHILDREN:
-				getChildren().clear();
-				getChildren().addAll((Collection)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case PalettePackage.ROOT__DEF_ENTRY:
 				setDefEntry((AbstractToolEntry)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -210,40 +137,13 @@ public class RootImpl extends ContainerImpl implements Root {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.ROOT__ICON16_NAME:
-				setIcon16Name(ICON16_NAME_EDEFAULT);
-				return;
-			case PalettePackage.ROOT__ICON32_NAME:
-				setIcon32Name(ICON32_NAME_EDEFAULT);
-				return;
-			case PalettePackage.ROOT__VISIBLE:
-				setVisible(VISIBLE_EDEFAULT);
-				return;
-			case PalettePackage.ROOT__DEFAULT_ENTRY:
-				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
-				return;
-			case PalettePackage.ROOT__ID:
-				setId(ID_EDEFAULT);
-				return;
-			case PalettePackage.ROOT__MODIFICATION:
-				setModification(MODIFICATION_EDEFAULT);
-				return;
-			case PalettePackage.ROOT__ENTRY_LABEL:
-				setEntryLabel((AbstractString)null);
-				return;
-			case PalettePackage.ROOT__ENTRY_SHORT_DESCRIPTION:
-				setEntryShortDescription((AbstractString)null);
-				return;
-			case PalettePackage.ROOT__CHILDREN:
-				getChildren().clear();
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case PalettePackage.ROOT__DEF_ENTRY:
 				setDefEntry((AbstractToolEntry)null);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -251,30 +151,12 @@ public class RootImpl extends ContainerImpl implements Root {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.ROOT__ICON16_NAME:
-				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
-			case PalettePackage.ROOT__ICON32_NAME:
-				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
-			case PalettePackage.ROOT__VISIBLE:
-				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
-			case PalettePackage.ROOT__DEFAULT_ENTRY:
-				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
-			case PalettePackage.ROOT__ID:
-				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-			case PalettePackage.ROOT__MODIFICATION:
-				return modification != MODIFICATION_EDEFAULT;
-			case PalettePackage.ROOT__ENTRY_LABEL:
-				return entryLabel != null;
-			case PalettePackage.ROOT__ENTRY_SHORT_DESCRIPTION:
-				return entryShortDescription != null;
-			case PalettePackage.ROOT__CHILDREN:
-				return children != null && !children.isEmpty();
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case PalettePackage.ROOT__DEF_ENTRY:
 				return defEntry != null;
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	protected PaletteEntry createPaletteEntry() {

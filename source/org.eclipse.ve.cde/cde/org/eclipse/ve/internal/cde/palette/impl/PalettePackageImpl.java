@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: PalettePackageImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-import org.eclipse.emf.ecore.impl.EcorePackageImpl;
 import org.eclipse.gef.requests.CreationFactory;
 
 import org.eclipse.ve.internal.cde.decorators.DecoratorsPackage;
@@ -52,7 +51,6 @@ import org.eclipse.ve.internal.cde.utility.UtilityPackage;
 import org.eclipse.ve.internal.cde.utility.impl.UtilityPackageImpl;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 
-import org.eclipse.ve.internal.cdm.impl.CDMPackageImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -265,8 +263,8 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 		isInited = true;
 
 		// Initialize simple dependencies
-		CDMPackageImpl.init();
-		EcorePackageImpl.init();
+		CDMPackage.eINSTANCE.eClass();
+		EcorePackage.eINSTANCE.eClass();
 
 		// Obtain or create and register interdependencies
 		UtilityPackageImpl theUtilityPackage = (UtilityPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(UtilityPackage.eNS_URI) instanceof UtilityPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(UtilityPackage.eNS_URI) : UtilityPackage.eINSTANCE);
@@ -833,9 +831,9 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		UtilityPackageImpl theUtilityPackage = (UtilityPackageImpl)EPackage.Registry.INSTANCE.getEPackage(UtilityPackage.eNS_URI);
-		EcorePackageImpl theEcorePackage = (EcorePackageImpl)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
-		CDMPackageImpl theCDMPackage = (CDMPackageImpl)EPackage.Registry.INSTANCE.getEPackage(CDMPackage.eNS_URI);
+		UtilityPackage theUtilityPackage = (UtilityPackage)EPackage.Registry.INSTANCE.getEPackage(UtilityPackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+		CDMPackage theCDMPackage = (CDMPackage)EPackage.Registry.INSTANCE.getEPackage(CDMPackage.eNS_URI);
 
 		// Add supertypes to classes
 		rootEClass.getESuperTypes().add(this.getContainer());

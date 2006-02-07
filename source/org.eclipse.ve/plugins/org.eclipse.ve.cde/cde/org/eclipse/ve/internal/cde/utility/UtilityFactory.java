@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility;
 /*
  *  $RCSfile: UtilityFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:33 $ 
  */
 
 
@@ -33,7 +33,7 @@ public interface UtilityFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	UtilityFactory eINSTANCE = new org.eclipse.ve.internal.cde.utility.impl.UtilityFactoryImpl();
+	UtilityFactory eINSTANCE = org.eclipse.ve.internal.cde.utility.impl.UtilityFactoryImpl.init();
 
 	/**
 	 * Some helper methods for creating the string objects.

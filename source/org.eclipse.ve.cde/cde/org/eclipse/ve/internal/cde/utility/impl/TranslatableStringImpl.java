@@ -11,11 +11,10 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: TranslatableStringImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -85,7 +84,7 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return UtilityPackage.eINSTANCE.getTranslatableString();
+		return UtilityPackage.Literals.TRANSLATABLE_STRING;
 	}
 
 	public String getStringValue() {
@@ -128,8 +127,8 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 */
 	public ResourceBundle getBundle() {
 		if (bundle != null && bundle.eIsProxy()) {
-			ResourceBundle oldBundle = bundle;
-			bundle = (ResourceBundle)eResolveProxy((InternalEObject)bundle);
+			InternalEObject oldBundle = (InternalEObject)bundle;
+			bundle = (ResourceBundle)eResolveProxy(oldBundle);
 			if (bundle != oldBundle) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UtilityPackage.TRANSLATABLE_STRING__BUNDLE, oldBundle, bundle));
@@ -164,15 +163,15 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case UtilityPackage.TRANSLATABLE_STRING__KEY:
 				return getKey();
 			case UtilityPackage.TRANSLATABLE_STRING__BUNDLE:
 				if (resolve) return getBundle();
 				return basicGetBundle();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -180,23 +179,8 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case UtilityPackage.TRANSLATABLE_STRING__KEY:
-				return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
-			case UtilityPackage.TRANSLATABLE_STRING__BUNDLE:
-				return bundle != null;
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case UtilityPackage.TRANSLATABLE_STRING__KEY:
 				setKey((String)newValue);
 				return;
@@ -204,7 +188,7 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 				setBundle((ResourceBundle)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -212,8 +196,8 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case UtilityPackage.TRANSLATABLE_STRING__KEY:
 				setKey(KEY_EDEFAULT);
 				return;
@@ -221,7 +205,22 @@ public class TranslatableStringImpl extends AbstractStringImpl implements Transl
 				setBundle((ResourceBundle)null);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case UtilityPackage.TRANSLATABLE_STRING__KEY:
+				return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
+			case UtilityPackage.TRANSLATABLE_STRING__BUNDLE:
+				return bundle != null;
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**

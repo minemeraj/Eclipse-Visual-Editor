@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: JCMPackage.java,v $
- *  $Revision: 1.9 $  $Date: 2005-10-03 19:20:57 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-07 17:21:37 $ 
  */
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
@@ -38,7 +38,7 @@ import org.eclipse.emf.ecore.EcorePackage;
  * @model kind="package"
  * @generated
  */
-public interface JCMPackage extends EPackage{
+public interface JCMPackage extends EPackage {
 	/**
 	 * The package name.
 	 * <!-- begin-user-doc -->
@@ -172,7 +172,7 @@ public interface JCMPackage extends EPackage{
 	int BEAN_DECORATOR__BEAN_RETURN = EcorePackage.EANNOTATION_FEATURE_COUNT + 3;
 
 	/**
-	 * The number of structural features of the the '<em>Bean Decorator</em>' class.
+	 * The number of structural features of the '<em>Bean Decorator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -281,7 +281,7 @@ public interface JCMPackage extends EPackage{
 	int BEAN_FEATURE_DECORATOR__BEAN_LOCATION = EcorePackage.EANNOTATION_FEATURE_COUNT + 3;
 
 	/**
-	 * The number of structural features of the the '<em>Bean Feature Decorator</em>' class.
+	 * The number of structural features of the '<em>Bean Feature Decorator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -363,7 +363,7 @@ public interface JCMPackage extends EPackage{
 	int BEAN_COMPOSITION__LISTENER_TYPES = CDMPackage.DIAGRAM_DATA_FEATURE_COUNT + 4;
 
 	/**
-	 * The number of structural features of the the '<em>Bean Composition</em>' class.
+	 * The number of structural features of the '<em>Bean Composition</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -401,7 +401,7 @@ public interface JCMPackage extends EPackage{
 	int ABSTRACT_EVENT_INVOCATION__LISTENER = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Abstract Event Invocation</em>' class.
+	 * The number of structural features of the '<em>Abstract Event Invocation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -494,7 +494,7 @@ public interface JCMPackage extends EPackage{
 	int LISTENER_TYPE__LISTENERS = 5;
 
 	/**
-	 * The number of structural features of the the '<em>Listener Type</em>' class.
+	 * The number of structural features of the '<em>Listener Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -560,7 +560,7 @@ public interface JCMPackage extends EPackage{
 	int MEMBER_CONTAINER__IMPLICITS = 2;
 
 	/**
-	 * The number of structural features of the the '<em>Member Container</em>' class.
+	 * The number of structural features of the '<em>Member Container</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -587,7 +587,7 @@ public interface JCMPackage extends EPackage{
 	int LISTENER__LISTENER_TYPE = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Listener</em>' class.
+	 * The number of structural features of the '<em>Listener</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -624,7 +624,7 @@ public interface JCMPackage extends EPackage{
 	int CALLBACK__STATEMENTS = 2;
 
 	/**
-	 * The number of structural features of the the '<em>Callback</em>' class.
+	 * The number of structural features of the '<em>Callback</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -661,7 +661,7 @@ public interface JCMPackage extends EPackage{
 	int EVENT_INVOCATION__EVENT = ABSTRACT_EVENT_INVOCATION_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Event Invocation</em>' class.
+	 * The number of structural features of the '<em>Event Invocation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -706,7 +706,7 @@ public interface JCMPackage extends EPackage{
 	int PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES = ABSTRACT_EVENT_INVOCATION_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of structural features of the the '<em>Property Change Event Invocation</em>' class.
+	 * The number of structural features of the '<em>Property Change Event Invocation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -744,7 +744,7 @@ public interface JCMPackage extends EPackage{
 	int PROPERTY_EVENT__USE_IF_EXPRESSION = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Property Event</em>' class.
+	 * The number of structural features of the '<em>Property Event</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -845,7 +845,7 @@ public interface JCMPackage extends EPackage{
 	int BEAN_SUBCLASS_COMPOSITION__METHODS = BEAN_COMPOSITION_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of structural features of the the '<em>Bean Subclass Composition</em>' class.
+	 * The number of structural features of the '<em>Bean Subclass Composition</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -918,7 +918,7 @@ public interface JCMPackage extends EPackage{
 	int JCM_METHOD__RETURN = MEMBER_CONTAINER_FEATURE_COUNT + 2;
 
 	/**
-	 * The number of structural features of the the '<em>Method</em>' class.
+	 * The number of structural features of the '<em>Method</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -956,7 +956,7 @@ public interface JCMPackage extends EPackage{
 	int KEYED_INSTANCE_LOCATION__VALUE = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Keyed Instance Location</em>' class.
+	 * The number of structural features of the '<em>Keyed Instance Location</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -984,7 +984,7 @@ public interface JCMPackage extends EPackage{
 	int JAVA_CACHE_DATA__NAMES_TO_BEANS = 0;
 
 	/**
-	 * The number of structural features of the the '<em>Java Cache Data</em>' class.
+	 * The number of structural features of the '<em>Java Cache Data</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1021,7 +1021,7 @@ public interface JCMPackage extends EPackage{
 	int NAMES_TO_BEANS__VALUE = 1;
 
 	/**
-	 * The number of structural features of the the '<em>Names To Beans</em>' class.
+	 * The number of structural features of the '<em>Names To Beans</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1478,6 +1478,513 @@ public interface JCMPackage extends EPackage{
 	 * @generated
 	 */
 	JCMFactory getJCMFactory();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * Defines literals for the meta objects that represent
+	 * <ul>
+	 *   <li>each class,</li>
+	 *   <li>each feature of each class,</li>
+	 *   <li>each enum,</li>
+	 *   <li>and each data type</li>
+	 * </ul>
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	interface Literals  {
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.BeanDecoratorImpl <em>Bean Decorator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.BeanDecoratorImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getBeanDecorator()
+		 * @generated
+		 */
+		EClass BEAN_DECORATOR = eINSTANCE.getBeanDecorator();
+
+		/**
+		 * The meta object literal for the '<em><b>Bean Proxy Class Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BEAN_DECORATOR__BEAN_PROXY_CLASS_NAME = eINSTANCE.getBeanDecorator_BeanProxyClassName();
+
+		/**
+		 * The meta object literal for the '<em><b>Bean Location</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BEAN_DECORATOR__BEAN_LOCATION = eINSTANCE.getBeanDecorator_BeanLocation();
+
+		/**
+		 * The meta object literal for the '<em><b>Bean Return</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BEAN_DECORATOR__BEAN_RETURN = eINSTANCE.getBeanDecorator_BeanReturn();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl <em>Bean Feature Decorator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.BeanFeatureDecoratorImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getBeanFeatureDecorator()
+		 * @generated
+		 */
+		EClass BEAN_FEATURE_DECORATOR = eINSTANCE.getBeanFeatureDecorator();
+
+		/**
+		 * The meta object literal for the '<em><b>Bean Proxy Mediator Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BEAN_FEATURE_DECORATOR__BEAN_PROXY_MEDIATOR_NAME = eINSTANCE.getBeanFeatureDecorator_BeanProxyMediatorName();
+
+		/**
+		 * The meta object literal for the '<em><b>Link Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BEAN_FEATURE_DECORATOR__LINK_TYPE = eINSTANCE.getBeanFeatureDecorator_LinkType();
+
+		/**
+		 * The meta object literal for the '<em><b>Bean Location</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BEAN_FEATURE_DECORATOR__BEAN_LOCATION = eINSTANCE.getBeanFeatureDecorator_BeanLocation();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.BeanCompositionImpl <em>Bean Composition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.BeanCompositionImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getBeanComposition()
+		 * @generated
+		 */
+		EClass BEAN_COMPOSITION = eINSTANCE.getBeanComposition();
+
+		/**
+		 * The meta object literal for the '<em><b>Components</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BEAN_COMPOSITION__COMPONENTS = eINSTANCE.getBeanComposition_Components();
+
+		/**
+		 * The meta object literal for the '<em><b>Listener Types</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BEAN_COMPOSITION__LISTENER_TYPES = eINSTANCE.getBeanComposition_ListenerTypes();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.AbstractEventInvocationImpl <em>Abstract Event Invocation</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.AbstractEventInvocationImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getAbstractEventInvocation()
+		 * @generated
+		 */
+		EClass ABSTRACT_EVENT_INVOCATION = eINSTANCE.getAbstractEventInvocation();
+
+		/**
+		 * The meta object literal for the '<em><b>Callbacks</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ABSTRACT_EVENT_INVOCATION__CALLBACKS = eINSTANCE.getAbstractEventInvocation_Callbacks();
+
+		/**
+		 * The meta object literal for the '<em><b>Listener</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ABSTRACT_EVENT_INVOCATION__LISTENER = eINSTANCE.getAbstractEventInvocation_Listener();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.ListenerTypeImpl <em>Listener Type</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.ListenerTypeImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getListenerType()
+		 * @generated
+		 */
+		EClass LISTENER_TYPE = eINSTANCE.getListenerType();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LISTENER_TYPE__NAME = eINSTANCE.getListenerType_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>This Part</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LISTENER_TYPE__THIS_PART = eINSTANCE.getListenerType_ThisPart();
+
+		/**
+		 * The meta object literal for the '<em><b>Extends</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LISTENER_TYPE__EXTENDS = eINSTANCE.getListenerType_Extends();
+
+		/**
+		 * The meta object literal for the '<em><b>Implements</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LISTENER_TYPE__IMPLEMENTS = eINSTANCE.getListenerType_Implements();
+
+		/**
+		 * The meta object literal for the '<em><b>Is</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LISTENER_TYPE__IS = eINSTANCE.getListenerType_Is();
+
+		/**
+		 * The meta object literal for the '<em><b>Listeners</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LISTENER_TYPE__LISTENERS = eINSTANCE.getListenerType_Listeners();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.MemberContainerImpl <em>Member Container</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.MemberContainerImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getMemberContainer()
+		 * @generated
+		 */
+		EClass MEMBER_CONTAINER = eINSTANCE.getMemberContainer();
+
+		/**
+		 * The meta object literal for the '<em><b>Properties</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MEMBER_CONTAINER__PROPERTIES = eINSTANCE.getMemberContainer_Properties();
+
+		/**
+		 * The meta object literal for the '<em><b>Members</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MEMBER_CONTAINER__MEMBERS = eINSTANCE.getMemberContainer_Members();
+
+		/**
+		 * The meta object literal for the '<em><b>Implicits</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MEMBER_CONTAINER__IMPLICITS = eINSTANCE.getMemberContainer_Implicits();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.ListenerImpl <em>Listener</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.ListenerImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getListener()
+		 * @generated
+		 */
+		EClass LISTENER = eINSTANCE.getListener();
+
+		/**
+		 * The meta object literal for the '<em><b>Listened By</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LISTENER__LISTENED_BY = eINSTANCE.getListener_ListenedBy();
+
+		/**
+		 * The meta object literal for the '<em><b>Listener Type</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LISTENER__LISTENER_TYPE = eINSTANCE.getListener_ListenerType();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.CallbackImpl <em>Callback</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.CallbackImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getCallback()
+		 * @generated
+		 */
+		EClass CALLBACK = eINSTANCE.getCallback();
+
+		/**
+		 * The meta object literal for the '<em><b>Shared Scope</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CALLBACK__SHARED_SCOPE = eINSTANCE.getCallback_SharedScope();
+
+		/**
+		 * The meta object literal for the '<em><b>Method</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CALLBACK__METHOD = eINSTANCE.getCallback_Method();
+
+		/**
+		 * The meta object literal for the '<em><b>Statements</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CALLBACK__STATEMENTS = eINSTANCE.getCallback_Statements();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.EventInvocationImpl <em>Event Invocation</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.EventInvocationImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getEventInvocation()
+		 * @generated
+		 */
+		EClass EVENT_INVOCATION = eINSTANCE.getEventInvocation();
+
+		/**
+		 * The meta object literal for the '<em><b>Event</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EVENT_INVOCATION__EVENT = eINSTANCE.getEventInvocation_Event();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.PropertyChangeEventInvocationImpl <em>Property Change Event Invocation</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.PropertyChangeEventInvocationImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getPropertyChangeEventInvocation()
+		 * @generated
+		 */
+		EClass PROPERTY_CHANGE_EVENT_INVOCATION = eINSTANCE.getPropertyChangeEventInvocation();
+
+		/**
+		 * The meta object literal for the '<em><b>Add Method</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROPERTY_CHANGE_EVENT_INVOCATION__ADD_METHOD = eINSTANCE.getPropertyChangeEventInvocation_AddMethod();
+
+		/**
+		 * The meta object literal for the '<em><b>Properties</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES = eINSTANCE.getPropertyChangeEventInvocation_Properties();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.PropertyEventImpl <em>Property Event</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.PropertyEventImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getPropertyEvent()
+		 * @generated
+		 */
+		EClass PROPERTY_EVENT = eINSTANCE.getPropertyEvent();
+
+		/**
+		 * The meta object literal for the '<em><b>Property Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY_EVENT__PROPERTY_NAME = eINSTANCE.getPropertyEvent_PropertyName();
+
+		/**
+		 * The meta object literal for the '<em><b>Use If Expression</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY_EVENT__USE_IF_EXPRESSION = eINSTANCE.getPropertyEvent_UseIfExpression();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.BeanSubclassCompositionImpl <em>Bean Subclass Composition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.BeanSubclassCompositionImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getBeanSubclassComposition()
+		 * @generated
+		 */
+		EClass BEAN_SUBCLASS_COMPOSITION = eINSTANCE.getBeanSubclassComposition();
+
+		/**
+		 * The meta object literal for the '<em><b>This Part</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BEAN_SUBCLASS_COMPOSITION__THIS_PART = eINSTANCE.getBeanSubclassComposition_ThisPart();
+
+		/**
+		 * The meta object literal for the '<em><b>Methods</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BEAN_SUBCLASS_COMPOSITION__METHODS = eINSTANCE.getBeanSubclassComposition_Methods();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.JCMMethodImpl <em>Method</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMMethodImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getJCMMethod()
+		 * @generated
+		 */
+		EClass JCM_METHOD = eINSTANCE.getJCMMethod();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute JCM_METHOD__NAME = eINSTANCE.getJCMMethod_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Initializes</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JCM_METHOD__INITIALIZES = eINSTANCE.getJCMMethod_Initializes();
+
+		/**
+		 * The meta object literal for the '<em><b>Return</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JCM_METHOD__RETURN = eINSTANCE.getJCMMethod_Return();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.KeyedInstanceLocationImpl <em>Keyed Instance Location</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.KeyedInstanceLocationImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getKeyedInstanceLocation()
+		 * @generated
+		 */
+		EClass KEYED_INSTANCE_LOCATION = eINSTANCE.getKeyedInstanceLocation();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_INSTANCE_LOCATION__KEY = eINSTANCE.getKeyedInstanceLocation_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYED_INSTANCE_LOCATION__VALUE = eINSTANCE.getKeyedInstanceLocation_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.JavaCacheDataImpl <em>Java Cache Data</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.JavaCacheDataImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getJavaCacheData()
+		 * @generated
+		 */
+		EClass JAVA_CACHE_DATA = eINSTANCE.getJavaCacheData();
+
+		/**
+		 * The meta object literal for the '<em><b>Names To Beans</b></em>' map feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JAVA_CACHE_DATA__NAMES_TO_BEANS = eINSTANCE.getJavaCacheData_NamesToBeans();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.impl.NamesToBeansImpl <em>Names To Beans</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.impl.NamesToBeansImpl
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getNamesToBeans()
+		 * @generated
+		 */
+		EClass NAMES_TO_BEANS = eINSTANCE.getNamesToBeans();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NAMES_TO_BEANS__KEY = eINSTANCE.getNamesToBeans_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NAMES_TO_BEANS__VALUE = eINSTANCE.getNamesToBeans_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.InstanceLocation <em>Instance Location</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.InstanceLocation
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getInstanceLocation()
+		 * @generated
+		 */
+		EEnum INSTANCE_LOCATION = eINSTANCE.getInstanceLocation();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.jcm.LinkType <em>Link Type</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.jcm.LinkType
+		 * @see org.eclipse.ve.internal.jcm.impl.JCMPackageImpl#getLinkType()
+		 * @generated
+		 */
+		EEnum LINK_TYPE = eINSTANCE.getLinkType();
+
+	}
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.ve.internal.jcm.ListenerType <em>Listener Type</em>}'.

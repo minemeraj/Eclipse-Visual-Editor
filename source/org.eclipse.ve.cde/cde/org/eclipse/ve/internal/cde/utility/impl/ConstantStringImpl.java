@@ -11,11 +11,10 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: ConstantStringImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.ve.internal.cde.utility.ConstantString;
@@ -71,7 +70,7 @@ public class ConstantStringImpl extends AbstractStringImpl implements ConstantSt
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return UtilityPackage.eINSTANCE.getConstantString();
+		return UtilityPackage.Literals.CONSTANT_STRING;
 	}
 
 	public String getStringValue() {
@@ -104,12 +103,12 @@ public class ConstantStringImpl extends AbstractStringImpl implements ConstantSt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case UtilityPackage.CONSTANT_STRING__STRING:
 				return getString();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -117,26 +116,13 @@ public class ConstantStringImpl extends AbstractStringImpl implements ConstantSt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case UtilityPackage.CONSTANT_STRING__STRING:
-				return STRING_EDEFAULT == null ? string != null : !STRING_EDEFAULT.equals(string);
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case UtilityPackage.CONSTANT_STRING__STRING:
 				setString((String)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -144,13 +130,26 @@ public class ConstantStringImpl extends AbstractStringImpl implements ConstantSt
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case UtilityPackage.CONSTANT_STRING__STRING:
 				setString(STRING_EDEFAULT);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case UtilityPackage.CONSTANT_STRING__STRING:
+				return STRING_EDEFAULT == null ? string != null : !STRING_EDEFAULT.equals(string);
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**

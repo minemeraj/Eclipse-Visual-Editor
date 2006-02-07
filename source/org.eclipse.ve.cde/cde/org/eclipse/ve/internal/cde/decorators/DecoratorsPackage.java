@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: DecoratorsPackage.java,v $
- *  $Revision: 1.4 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-07 17:21:33 $ 
  */
 
 
@@ -36,7 +36,7 @@ import org.eclipse.emf.ecore.EcorePackage;
  * @model kind="package"
  * @generated
  */
-public interface DecoratorsPackage extends EPackage{
+public interface DecoratorsPackage extends EPackage {
 
 
 	/**
@@ -153,7 +153,7 @@ public interface DecoratorsPackage extends EPackage{
 	int BASE_PROPERTY_DECORATOR__ENTRY_EXPANDABLE = EcorePackage.EANNOTATION_FEATURE_COUNT + 4;
 
 	/**
-	 * The number of structural features of the the '<em>Base Property Decorator</em>' class.
+	 * The number of structural features of the '<em>Base Property Decorator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -260,7 +260,7 @@ public interface DecoratorsPackage extends EPackage{
 	 */
 	int PROPERTY_SOURCE_ADAPTER_INFORMATION__PROPERTY_SOURCE_ADAPTER_CLASSNAME = EcorePackage.EANNOTATION_FEATURE_COUNT + 0;
 	/**
-	 * The number of structural features of the the '<em>Property Source Adapter Information</em>' class.
+	 * The number of structural features of the '<em>Property Source Adapter Information</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -379,7 +379,7 @@ public interface DecoratorsPackage extends EPackage{
 	 */
 	int FEATURE_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING = EcorePackage.EANNOTATION_FEATURE_COUNT + 6;
 	/**
-	 * The number of structural features of the the '<em>Feature Descriptor Decorator</em>' class.
+	 * The number of structural features of the '<em>Feature Descriptor Decorator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -557,7 +557,7 @@ public interface DecoratorsPackage extends EPackage{
 	int PROPERTY_DESCRIPTOR_DECORATOR__ALWAYS_INCOMPATIBLE = FEATURE_DESCRIPTOR_DECORATOR_FEATURE_COUNT + 6;
 
 	/**
-	 * The number of structural features of the the '<em>Property Descriptor Decorator</em>' class.
+	 * The number of structural features of the '<em>Property Descriptor Decorator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -646,7 +646,7 @@ public interface DecoratorsPackage extends EPackage{
 	 */
 	int PROPERTY_DESCRIPTOR_INFORMATION__PROPERTY_DESCRIPTOR_CLASSNAME = EcorePackage.EANNOTATION_FEATURE_COUNT + 1;
 	/**
-	 * The number of structural features of the the '<em>Property Descriptor Information</em>' class.
+	 * The number of structural features of the '<em>Property Descriptor Information</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -829,7 +829,7 @@ public interface DecoratorsPackage extends EPackage{
 	 */
 	int CLASS_DESCRIPTOR_DECORATOR__GRAPHIC = FEATURE_DESCRIPTOR_DECORATOR_FEATURE_COUNT + 7;
 	/**
-	 * The number of structural features of the the '<em>Class Descriptor Decorator</em>' class.
+	 * The number of structural features of the '<em>Class Descriptor Decorator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1193,5 +1193,272 @@ public interface DecoratorsPackage extends EPackage{
 	 * @generated
 	 */
 	DecoratorsFactory getDecoratorsFactory();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * Defines literals for the meta objects that represent
+	 * <ul>
+	 *   <li>each class,</li>
+	 *   <li>each feature of each class,</li>
+	 *   <li>each enum,</li>
+	 *   <li>and each data type</li>
+	 * </ul>
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	interface Literals  {
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.decorators.impl.BasePropertyDecoratorImpl <em>Base Property Decorator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.BasePropertyDecoratorImpl
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.DecoratorsPackageImpl#getBasePropertyDecorator()
+		 * @generated
+		 */
+		EClass BASE_PROPERTY_DECORATOR = eINSTANCE.getBasePropertyDecorator();
+
+		/**
+		 * The meta object literal for the '<em><b>Cell Editor Validator Classnames</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BASE_PROPERTY_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES = eINSTANCE.getBasePropertyDecorator_CellEditorValidatorClassnames();
+
+		/**
+		 * The meta object literal for the '<em><b>Label Provider Classname</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BASE_PROPERTY_DECORATOR__LABEL_PROVIDER_CLASSNAME = eINSTANCE.getBasePropertyDecorator_LabelProviderClassname();
+
+		/**
+		 * The meta object literal for the '<em><b>Cell Editor Classname</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BASE_PROPERTY_DECORATOR__CELL_EDITOR_CLASSNAME = eINSTANCE.getBasePropertyDecorator_CellEditorClassname();
+
+		/**
+		 * The meta object literal for the '<em><b>Null Invalid</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BASE_PROPERTY_DECORATOR__NULL_INVALID = eINSTANCE.getBasePropertyDecorator_NullInvalid();
+
+		/**
+		 * The meta object literal for the '<em><b>Entry Expandable</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute BASE_PROPERTY_DECORATOR__ENTRY_EXPANDABLE = eINSTANCE.getBasePropertyDecorator_EntryExpandable();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.decorators.impl.PropertySourceAdapterInformationImpl <em>Property Source Adapter Information</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.PropertySourceAdapterInformationImpl
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.DecoratorsPackageImpl#getPropertySourceAdapterInformation()
+		 * @generated
+		 */
+		EClass PROPERTY_SOURCE_ADAPTER_INFORMATION = eINSTANCE.getPropertySourceAdapterInformation();
+
+		/**
+		 * The meta object literal for the '<em><b>Property Source Adapter Classname</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY_SOURCE_ADAPTER_INFORMATION__PROPERTY_SOURCE_ADAPTER_CLASSNAME = eINSTANCE.getPropertySourceAdapterInformation_PropertySourceAdapterClassname();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.decorators.impl.PropertyDescriptorDecoratorImpl <em>Property Descriptor Decorator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.PropertyDescriptorDecoratorImpl
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.DecoratorsPackageImpl#getPropertyDescriptorDecorator()
+		 * @generated
+		 */
+		EClass PROPERTY_DESCRIPTOR_DECORATOR = eINSTANCE.getPropertyDescriptorDecorator();
+
+		/**
+		 * The meta object literal for the '<em><b>Designtime Property</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY_DESCRIPTOR_DECORATOR__DESIGNTIME_PROPERTY = eINSTANCE.getPropertyDescriptorDecorator_DesigntimeProperty();
+
+		/**
+		 * The meta object literal for the '<em><b>Always Incompatible</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY_DESCRIPTOR_DECORATOR__ALWAYS_INCOMPATIBLE = eINSTANCE.getPropertyDescriptorDecorator_AlwaysIncompatible();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.decorators.impl.PropertyDescriptorInformationImpl <em>Property Descriptor Information</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.PropertyDescriptorInformationImpl
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.DecoratorsPackageImpl#getPropertyDescriptorInformation()
+		 * @generated
+		 */
+		EClass PROPERTY_DESCRIPTOR_INFORMATION = eINSTANCE.getPropertyDescriptorInformation();
+
+		/**
+		 * The meta object literal for the '<em><b>Adapter</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY_DESCRIPTOR_INFORMATION__ADAPTER = eINSTANCE.getPropertyDescriptorInformation_Adapter();
+
+		/**
+		 * The meta object literal for the '<em><b>Property Descriptor Classname</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY_DESCRIPTOR_INFORMATION__PROPERTY_DESCRIPTOR_CLASSNAME = eINSTANCE.getPropertyDescriptorInformation_PropertyDescriptorClassname();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.decorators.impl.FeatureDescriptorDecoratorImpl <em>Feature Descriptor Decorator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.FeatureDescriptorDecoratorImpl
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.DecoratorsPackageImpl#getFeatureDescriptorDecorator()
+		 * @generated
+		 */
+		EClass FEATURE_DESCRIPTOR_DECORATOR = eINSTANCE.getFeatureDescriptorDecorator();
+
+		/**
+		 * The meta object literal for the '<em><b>Hidden</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FEATURE_DESCRIPTOR_DECORATOR__HIDDEN = eINSTANCE.getFeatureDescriptorDecorator_Hidden();
+
+		/**
+		 * The meta object literal for the '<em><b>Help Context Ids String</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FEATURE_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING = eINSTANCE.getFeatureDescriptorDecorator_HelpContextIdsString();
+
+		/**
+		 * The meta object literal for the '<em><b>Preferred</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FEATURE_DESCRIPTOR_DECORATOR__PREFERRED = eINSTANCE.getFeatureDescriptorDecorator_Preferred();
+
+		/**
+		 * The meta object literal for the '<em><b>Category String</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FEATURE_DESCRIPTOR_DECORATOR__CATEGORY_STRING = eINSTANCE.getFeatureDescriptorDecorator_CategoryString();
+
+		/**
+		 * The meta object literal for the '<em><b>Filter Flag Strings</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FEATURE_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS = eINSTANCE.getFeatureDescriptorDecorator_FilterFlagStrings();
+
+		/**
+		 * The meta object literal for the '<em><b>Display Name String</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FEATURE_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING = eINSTANCE.getFeatureDescriptorDecorator_DisplayNameString();
+
+		/**
+		 * The meta object literal for the '<em><b>Description String</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FEATURE_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING = eINSTANCE.getFeatureDescriptorDecorator_DescriptionString();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.decorators.impl.ClassDescriptorDecoratorImpl <em>Class Descriptor Decorator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.ClassDescriptorDecoratorImpl
+		 * @see org.eclipse.ve.internal.cde.decorators.impl.DecoratorsPackageImpl#getClassDescriptorDecorator()
+		 * @generated
+		 */
+		EClass CLASS_DESCRIPTOR_DECORATOR = eINSTANCE.getClassDescriptorDecorator();
+
+		/**
+		 * The meta object literal for the '<em><b>Customizer Classname</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CLASS_DESCRIPTOR_DECORATOR__CUSTOMIZER_CLASSNAME = eINSTANCE.getClassDescriptorDecorator_CustomizerClassname();
+
+		/**
+		 * The meta object literal for the '<em><b>Tree View Classname</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CLASS_DESCRIPTOR_DECORATOR__TREE_VIEW_CLASSNAME = eINSTANCE.getClassDescriptorDecorator_TreeViewClassname();
+
+		/**
+		 * The meta object literal for the '<em><b>Graph View Classname</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CLASS_DESCRIPTOR_DECORATOR__GRAPH_VIEW_CLASSNAME = eINSTANCE.getClassDescriptorDecorator_GraphViewClassname();
+
+		/**
+		 * The meta object literal for the '<em><b>Model Adapter Classname</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CLASS_DESCRIPTOR_DECORATOR__MODEL_ADAPTER_CLASSNAME = eINSTANCE.getClassDescriptorDecorator_ModelAdapterClassname();
+
+		/**
+		 * The meta object literal for the '<em><b>Default Palette</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CLASS_DESCRIPTOR_DECORATOR__DEFAULT_PALETTE = eINSTANCE.getClassDescriptorDecorator_DefaultPalette();
+
+		/**
+		 * The meta object literal for the '<em><b>Label Provider Classname</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CLASS_DESCRIPTOR_DECORATOR__LABEL_PROVIDER_CLASSNAME = eINSTANCE.getClassDescriptorDecorator_LabelProviderClassname();
+
+		/**
+		 * The meta object literal for the '<em><b>Graphic</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CLASS_DESCRIPTOR_DECORATOR__GRAPHIC = eINSTANCE.getClassDescriptorDecorator_Graphic();
+
+	}
 
 }

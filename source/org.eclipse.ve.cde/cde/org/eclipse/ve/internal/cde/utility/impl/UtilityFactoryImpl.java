@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: UtilityFactoryImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:16 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import org.eclipse.ve.internal.cde.utility.*;
 
@@ -19,7 +19,11 @@ import java.util.Arrays;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,6 +35,25 @@ public class UtilityFactoryImpl extends EFactoryImpl implements UtilityFactory {
 
 	
 	
+	/**
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static UtilityFactory init() {
+		try {
+			UtilityFactory theUtilityFactory = (UtilityFactory)EPackage.Registry.INSTANCE.getEFactory("http:///org/eclipse/ve/internal/cde/utility.ecore"); 
+			if (theUtilityFactory != null) {
+				return theUtilityFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new UtilityFactoryImpl();
+	}
+
 	/**
 	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->

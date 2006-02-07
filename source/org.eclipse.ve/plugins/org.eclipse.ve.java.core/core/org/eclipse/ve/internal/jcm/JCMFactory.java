@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm;
 /*
  *  $RCSfile: JCMFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:30:47 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-07 17:21:37 $ 
  */
 
 import org.eclipse.emf.ecore.EFactory;
@@ -24,14 +24,14 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.ve.internal.jcm.JCMPackage
  * @generated
  */
-public interface JCMFactory extends EFactory{
+public interface JCMFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	JCMFactory eINSTANCE = new org.eclipse.ve.internal.jcm.impl.JCMFactoryImpl();
+	JCMFactory eINSTANCE = org.eclipse.ve.internal.jcm.impl.JCMFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Bean Decorator</em>'.
