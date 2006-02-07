@@ -11,14 +11,13 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: DiagramDataImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -81,7 +80,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return CDMPackage.eINSTANCE.getDiagramData();
+		return CDMPackage.Literals.DIAGRAM_DATA;
 	}
 
 	/**
@@ -113,18 +112,12 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
-					return ((InternalEList)getDiagrams()).basicAdd(otherEnd, msgs);
-				default:
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
+				return ((InternalEList)getDiagrams()).basicAdd(otherEnd, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -132,18 +125,14 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
-					return ((InternalEList)getDiagrams()).basicRemove(otherEnd, msgs);
-				case CDMPackage.DIAGRAM_DATA__ANNOTATIONS:
-					return ((InternalEList)getAnnotations()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
+				return ((InternalEList)getDiagrams()).basicRemove(otherEnd, msgs);
+			case CDMPackage.DIAGRAM_DATA__ANNOTATIONS:
+				return ((InternalEList)getAnnotations()).basicRemove(otherEnd, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -151,14 +140,14 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
 				return getDiagrams();
 			case CDMPackage.DIAGRAM_DATA__ANNOTATIONS:
 				return getAnnotations();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -166,8 +155,8 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
 				getDiagrams().clear();
 				getDiagrams().addAll((Collection)newValue);
@@ -177,7 +166,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 				getAnnotations().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -185,8 +174,8 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
 				getDiagrams().clear();
 				return;
@@ -194,7 +183,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 				getAnnotations().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -202,14 +191,14 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case CDMPackage.DIAGRAM_DATA__DIAGRAMS:
 				return diagrams != null && !diagrams.isEmpty();
 			case CDMPackage.DIAGRAM_DATA__ANNOTATIONS:
 				return annotations != null && !annotations.isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 }

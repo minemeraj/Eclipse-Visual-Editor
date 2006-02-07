@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: JCMPackageImpl.java,v $
- *  $Revision: 1.11 $  $Date: 2005-12-08 17:52:29 $ 
+ *  $Revision: 1.12 $  $Date: 2006-02-07 17:21:37 $ 
  */
 
 import java.util.Map;
@@ -24,17 +24,12 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-import org.eclipse.emf.ecore.impl.EcorePackageImpl;
 
 import org.eclipse.jem.internal.beaninfo.BeaninfoPackage;
-import org.eclipse.jem.internal.beaninfo.impl.BeaninfoPackageImpl;
 import org.eclipse.jem.internal.instantiation.InstantiationPackage;
-import org.eclipse.jem.internal.instantiation.impl.InstantiationPackageImpl;
 import org.eclipse.jem.java.JavaRefPackage;
-import org.eclipse.jem.java.internal.impl.JavaRefPackageImpl;
 
 import org.eclipse.ve.internal.cdm.CDMPackage;
-import org.eclipse.ve.internal.cdm.impl.CDMPackageImpl;
 
 import org.eclipse.ve.internal.jcm.AbstractEventInvocation;
 import org.eclipse.ve.internal.jcm.BeanComposition;
@@ -249,11 +244,11 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		isInited = true;
 
 		// Initialize simple dependencies
-		CDMPackageImpl.init();
-		JavaRefPackageImpl.init();
-		BeaninfoPackageImpl.init();
-		InstantiationPackageImpl.init();
-		EcorePackageImpl.init();
+		CDMPackage.eINSTANCE.eClass();
+		JavaRefPackage.eINSTANCE.eClass();
+		BeaninfoPackage.eINSTANCE.eClass();
+		InstantiationPackage.eINSTANCE.eClass();
+		EcorePackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theJCMPackage.createPackageContents();
@@ -923,11 +918,11 @@ public class JCMPackageImpl extends EPackageImpl implements JCMPackage {
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		EcorePackageImpl theEcorePackage = (EcorePackageImpl)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
-		CDMPackageImpl theCDMPackage = (CDMPackageImpl)EPackage.Registry.INSTANCE.getEPackage(CDMPackage.eNS_URI);
-		JavaRefPackageImpl theJavaRefPackage = (JavaRefPackageImpl)EPackage.Registry.INSTANCE.getEPackage(JavaRefPackage.eNS_URI);
-		InstantiationPackageImpl theInstantiationPackage = (InstantiationPackageImpl)EPackage.Registry.INSTANCE.getEPackage(InstantiationPackage.eNS_URI);
-		BeaninfoPackageImpl theBeaninfoPackage = (BeaninfoPackageImpl)EPackage.Registry.INSTANCE.getEPackage(BeaninfoPackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+		CDMPackage theCDMPackage = (CDMPackage)EPackage.Registry.INSTANCE.getEPackage(CDMPackage.eNS_URI);
+		JavaRefPackage theJavaRefPackage = (JavaRefPackage)EPackage.Registry.INSTANCE.getEPackage(JavaRefPackage.eNS_URI);
+		InstantiationPackage theInstantiationPackage = (InstantiationPackage)EPackage.Registry.INSTANCE.getEPackage(InstantiationPackage.eNS_URI);
+		BeaninfoPackage theBeaninfoPackage = (BeaninfoPackage)EPackage.Registry.INSTANCE.getEPackage(BeaninfoPackage.eNS_URI);
 
 		// Add supertypes to classes
 		beanDecoratorEClass.getESuperTypes().add(theEcorePackage.getEAnnotation());

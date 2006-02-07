@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.decorators;
 /*
  *  $RCSfile: DecoratorsFactory.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:33 $ 
  */
 
 
@@ -35,7 +35,7 @@ public interface DecoratorsFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	DecoratorsFactory eINSTANCE = new org.eclipse.ve.internal.cde.decorators.impl.DecoratorsFactoryImpl();
+	DecoratorsFactory eINSTANCE = org.eclipse.ve.internal.cde.decorators.impl.DecoratorsFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Base Property Decorator</em>'.

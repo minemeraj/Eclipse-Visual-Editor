@@ -11,12 +11,11 @@
 package org.eclipse.ve.internal.cde.decorators.impl;
 /*
  *  $RCSfile: ClassDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.11 $  $Date: 2005-09-19 15:45:35 $ 
+ *  $Revision: 1.12 $  $Date: 2006-02-07 17:21:33 $ 
  */
 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
-import java.util.Collection;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -24,10 +23,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -40,7 +37,6 @@ import org.eclipse.ve.internal.cde.core.CDEMessages;
 import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.decorators.ClassDescriptorDecorator;
 import org.eclipse.ve.internal.cde.decorators.DecoratorsPackage;
-import org.eclipse.ve.internal.cde.utility.AbstractString;
 import org.eclipse.ve.internal.cde.utility.Graphic;
 import org.eclipse.ve.internal.cdm.CDMPackage;
 import org.eclipse.ve.internal.cdm.KeyedValueHolder;
@@ -239,7 +235,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * @generated
 	 */
   protected EClass eStaticClass() {
-		return DecoratorsPackage.eINSTANCE.getClassDescriptorDecorator();
+		return DecoratorsPackage.Literals.CLASS_DESCRIPTOR_DECORATOR;
 	}
 
 	/**
@@ -446,108 +442,26 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-					return ((InternalEList)getEAnnotations()).basicAdd(otherEnd, msgs);
-				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT, msgs);
-				default:
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-					return ((InternalEList)getEAnnotations()).basicRemove(otherEnd, msgs);
-				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DETAILS:
-					return ((InternalEList)getDetails()).basicRemove(otherEnd, msgs);
-				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-					return eBasicSetContainer(null, DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT, msgs);
-				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CONTENTS:
-					return ((InternalEList)getContents()).basicRemove(otherEnd, msgs);
-				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
-					return basicSetDisplayNameString(null, msgs);
-				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING:
-					return basicSetDescriptionString(null, msgs);
-				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES:
-					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
-				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__GRAPHIC:
-					return basicSetGraphic(null, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-  public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID >= 0) {
-			switch (eContainerFeatureID) {
-				case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-					return eContainer.eInverseRemove(this, EcorePackage.EMODEL_ELEMENT__EANNOTATIONS, EModelElement.class, msgs);
-				default:
-					return eDynamicBasicRemoveFromContainer(msgs);
-			}
-		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-  public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-				return getEAnnotations();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__SOURCE:
-				return getSource();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DETAILS:
-				return getDetails();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-				return getEModelElement();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CONTENTS:
-				return getContents();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__REFERENCES:
-				return getReferences();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__HIDDEN:
-				return isHidden() ? Boolean.TRUE : Boolean.FALSE;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
-				return getHelpContextIdsString();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__PREFERRED:
-				return isPreferred() ? Boolean.TRUE : Boolean.FALSE;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CATEGORY_STRING:
-				if (resolve) return getCategoryString();
-				return basicGetCategoryString();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:
-				return getFilterFlagStrings();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
-				return getDisplayNameString();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING:
-				return getDescriptionString();
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES:
-				return getKeyedValues();
+				return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
+			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__GRAPHIC:
+				return basicSetGraphic(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES:
+				if (coreType) return getKeyedValues();
+				else return getKeyedValues().map();
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CUSTOMIZER_CLASSNAME:
 				return getCustomizerClassname();
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__TREE_VIEW_CLASSNAME:
@@ -563,7 +477,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__GRAPHIC:
 				return getGraphic();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -571,56 +485,10 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-				getEAnnotations().clear();
-				getEAnnotations().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__SOURCE:
-				setSource((String)newValue);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DETAILS:
-				getDetails().clear();
-				getDetails().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-				setEModelElement((EModelElement)newValue);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CONTENTS:
-				getContents().clear();
-				getContents().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__REFERENCES:
-				getReferences().clear();
-				getReferences().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__HIDDEN:
-				setHidden(((Boolean)newValue).booleanValue());
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
-				getHelpContextIdsString().clear();
-				getHelpContextIdsString().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__PREFERRED:
-				setPreferred(((Boolean)newValue).booleanValue());
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CATEGORY_STRING:
-				setCategoryString((AbstractString)newValue);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:
-				getFilterFlagStrings().clear();
-				getFilterFlagStrings().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
-				setDisplayNameString((AbstractString)newValue);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING:
-				setDescriptionString((AbstractString)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES:
-				getKeyedValues().clear();
-				getKeyedValues().addAll((Collection)newValue);
+				((EStructuralFeature.Setting)getKeyedValues()).set(newValue);
 				return;
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CUSTOMIZER_CLASSNAME:
 				setCustomizerClassname((String)newValue);
@@ -644,7 +512,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 				setGraphic((Graphic)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -652,47 +520,8 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-				getEAnnotations().clear();
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__SOURCE:
-				setSource(SOURCE_EDEFAULT);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DETAILS:
-				getDetails().clear();
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-				setEModelElement((EModelElement)null);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CONTENTS:
-				getContents().clear();
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__REFERENCES:
-				getReferences().clear();
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__HIDDEN:
-				setHidden(HIDDEN_EDEFAULT);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
-				getHelpContextIdsString().clear();
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__PREFERRED:
-				setPreferred(PREFERRED_EDEFAULT);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CATEGORY_STRING:
-				setCategoryString((AbstractString)null);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:
-				getFilterFlagStrings().clear();
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
-				setDisplayNameString((AbstractString)null);
-				return;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING:
-				setDescriptionString((AbstractString)null);
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES:
 				getKeyedValues().clear();
 				return;
@@ -718,28 +547,7 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 				setGraphic((Graphic)null);
 				return;
 		}
-		eDynamicUnset(eFeature);
-	}
-
-	/*
-	 * Called by overrides to eIsSet to test if source is set. This is because for the 
-	 * FeatureDecorator and subclasses, setting source to the classname is considered
-	 * to be not set since that is the new default for each class level. By doing this
-	 * when serializing it won't waste space and time adding a copy of the source string
-	 * to the serialized output and then creating a NEW copy on each decorator loaded
-	 * from an XMI file. 
-	 * 
-	 * @return <code>true</code> if source is not null and not equal to class name.
-	 * 
-	 * @since 1.1.0
-	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__SOURCE:
-				return source != null && !getClass().getName().equals(source);
-			default:
-				return eIsSetGen(eFeature);
-		}
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -747,34 +555,8 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-  public boolean eIsSetGen(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-				return eAnnotations != null && !eAnnotations.isEmpty();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__SOURCE:
-				return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DETAILS:
-				return details != null && !details.isEmpty();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-				return getEModelElement() != null;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CONTENTS:
-				return contents != null && !contents.isEmpty();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__REFERENCES:
-				return references != null && !references.isEmpty();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__HIDDEN:
-				return ((eFlags & HIDDEN_EFLAG) != 0) != HIDDEN_EDEFAULT;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
-				return helpContextIdsString != null && !helpContextIdsString.isEmpty();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__PREFERRED:
-				return ((eFlags & PREFERRED_EFLAG) != 0) != PREFERRED_EDEFAULT;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CATEGORY_STRING:
-				return categoryString != null;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:
-				return filterFlagStrings != null && !filterFlagStrings.isEmpty();
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
-				return displayNameString != null;
-			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING:
-				return descriptionString != null;
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__KEYED_VALUES:
 				return keyedValues != null && !keyedValues.isEmpty();
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__CUSTOMIZER_CLASSNAME:
@@ -792,7 +574,30 @@ public class ClassDescriptorDecoratorImpl extends FeatureDescriptorDecoratorImpl
 			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__GRAPHIC:
 				return graphic != null;
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
+	}
+
+	/*
+	 * Called by overrides to eIsSet to test if source is set. This is because for the 
+	 * FeatureDecorator and subclasses, setting source to the classname is considered
+	 * to be not set since that is the new default for each class level. By doing this
+	 * when serializing it won't waste space and time adding a copy of the source string
+	 * to the serialized output and then creating a NEW copy on each decorator loaded
+	 * from an XMI file. 
+	 * 
+	 * @return <code>true</code> if source is not null and not equal to class name.
+	 * 
+	 * @since 1.1.0
+	 */
+	public boolean eIsSet(EStructuralFeature feature) {
+		// See the FeatureDescriptorDecoratorImpl.eIsSet(EStructuralFeature) for why need 
+		// to do it this way.
+		switch (eDerivedStructuralFeatureID(feature)) {
+			case DecoratorsPackage.CLASS_DESCRIPTOR_DECORATOR__SOURCE:
+				return source != null && !getClass().getName().equals(source);
+			default:
+				return super.eIsSet(feature);
+		}
 	}
 
 	/**

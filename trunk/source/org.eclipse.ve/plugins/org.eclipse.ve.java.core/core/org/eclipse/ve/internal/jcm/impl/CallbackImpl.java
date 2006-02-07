@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: CallbackImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-10-03 19:20:56 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-07 17:21:37 $ 
  */
 
 import java.util.Collection;
@@ -27,7 +27,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -112,7 +111,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return JCMPackage.eINSTANCE.getCallback();
+		return JCMPackage.Literals.CALLBACK;
 	}
 
 	/**
@@ -143,8 +142,8 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 */
 	public Method getMethod() {
 		if (method != null && method.eIsProxy()) {
-			Method oldMethod = method;
-			method = (Method)eResolveProxy((InternalEObject)method);
+			InternalEObject oldMethod = (InternalEObject)method;
+			method = (Method)eResolveProxy(oldMethod);
 			if (method != oldMethod) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, JCMPackage.CALLBACK__METHOD, oldMethod, method));
@@ -191,16 +190,12 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case JCMPackage.CALLBACK__STATEMENTS:
-					return ((InternalEList)getStatements()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case JCMPackage.CALLBACK__STATEMENTS:
+				return ((InternalEList)getStatements()).basicRemove(otherEnd, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -208,8 +203,8 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case JCMPackage.CALLBACK__SHARED_SCOPE:
 				return isSharedScope() ? Boolean.TRUE : Boolean.FALSE;
 			case JCMPackage.CALLBACK__METHOD:
@@ -218,7 +213,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 			case JCMPackage.CALLBACK__STATEMENTS:
 				return getStatements();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -226,8 +221,8 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case JCMPackage.CALLBACK__SHARED_SCOPE:
 				setSharedScope(((Boolean)newValue).booleanValue());
 				return;
@@ -239,7 +234,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 				getStatements().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -247,8 +242,8 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case JCMPackage.CALLBACK__SHARED_SCOPE:
 				setSharedScope(SHARED_SCOPE_EDEFAULT);
 				return;
@@ -259,7 +254,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 				getStatements().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -267,8 +262,8 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case JCMPackage.CALLBACK__SHARED_SCOPE:
 				return ((eFlags & SHARED_SCOPE_EFLAG) != 0) != SHARED_SCOPE_EDEFAULT;
 			case JCMPackage.CALLBACK__METHOD:
@@ -276,7 +271,7 @@ public class CallbackImpl extends EObjectImpl implements Callback {
 			case JCMPackage.CALLBACK__STATEMENTS:
 				return statements != null && !statements.isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**

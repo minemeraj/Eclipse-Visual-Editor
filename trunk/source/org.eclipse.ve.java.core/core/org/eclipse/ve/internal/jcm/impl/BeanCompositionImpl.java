@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jcm.impl;
 /*
  *  $RCSfile: BeanCompositionImpl.java,v $
- *  $Revision: 1.12 $  $Date: 2005-10-03 19:20:56 $ 
+ *  $Revision: 1.13 $  $Date: 2006-02-07 17:21:37 $ 
  */
 
 import java.util.Collection;
@@ -22,7 +22,6 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -128,7 +127,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return JCMPackage.eINSTANCE.getBeanComposition();
+		return JCMPackage.Literals.BEAN_COMPOSITION;
 	}
 
 	/**
@@ -196,18 +195,18 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case JCMPackage.BEAN_COMPOSITION__DIAGRAMS:
-					return ((InternalEList)getDiagrams()).basicAdd(otherEnd, msgs);
-				default:
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case JCMPackage.BEAN_COMPOSITION__PROPERTIES:
+				return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
+			case JCMPackage.BEAN_COMPOSITION__MEMBERS:
+				return ((InternalEList)getMembers()).basicRemove(otherEnd, msgs);
+			case JCMPackage.BEAN_COMPOSITION__IMPLICITS:
+				return ((InternalEList)getImplicits()).basicRemove(otherEnd, msgs);
+			case JCMPackage.BEAN_COMPOSITION__LISTENER_TYPES:
+				return ((InternalEList)getListenerTypes()).basicRemove(otherEnd, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -215,39 +214,8 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case JCMPackage.BEAN_COMPOSITION__DIAGRAMS:
-					return ((InternalEList)getDiagrams()).basicRemove(otherEnd, msgs);
-				case JCMPackage.BEAN_COMPOSITION__ANNOTATIONS:
-					return ((InternalEList)getAnnotations()).basicRemove(otherEnd, msgs);
-				case JCMPackage.BEAN_COMPOSITION__PROPERTIES:
-					return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
-				case JCMPackage.BEAN_COMPOSITION__MEMBERS:
-					return ((InternalEList)getMembers()).basicRemove(otherEnd, msgs);
-				case JCMPackage.BEAN_COMPOSITION__IMPLICITS:
-					return ((InternalEList)getImplicits()).basicRemove(otherEnd, msgs);
-				case JCMPackage.BEAN_COMPOSITION__LISTENER_TYPES:
-					return ((InternalEList)getListenerTypes()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.BEAN_COMPOSITION__DIAGRAMS:
-				return getDiagrams();
-			case JCMPackage.BEAN_COMPOSITION__ANNOTATIONS:
-				return getAnnotations();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case JCMPackage.BEAN_COMPOSITION__PROPERTIES:
 				return getProperties();
 			case JCMPackage.BEAN_COMPOSITION__MEMBERS:
@@ -259,7 +227,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 			case JCMPackage.BEAN_COMPOSITION__LISTENER_TYPES:
 				return getListenerTypes();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -267,16 +235,8 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.BEAN_COMPOSITION__DIAGRAMS:
-				getDiagrams().clear();
-				getDiagrams().addAll((Collection)newValue);
-				return;
-			case JCMPackage.BEAN_COMPOSITION__ANNOTATIONS:
-				getAnnotations().clear();
-				getAnnotations().addAll((Collection)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case JCMPackage.BEAN_COMPOSITION__PROPERTIES:
 				getProperties().clear();
 				getProperties().addAll((Collection)newValue);
@@ -298,7 +258,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 				getListenerTypes().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -306,14 +266,8 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.BEAN_COMPOSITION__DIAGRAMS:
-				getDiagrams().clear();
-				return;
-			case JCMPackage.BEAN_COMPOSITION__ANNOTATIONS:
-				getAnnotations().clear();
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case JCMPackage.BEAN_COMPOSITION__PROPERTIES:
 				getProperties().clear();
 				return;
@@ -330,7 +284,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 				getListenerTypes().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -338,12 +292,8 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.BEAN_COMPOSITION__DIAGRAMS:
-				return diagrams != null && !diagrams.isEmpty();
-			case JCMPackage.BEAN_COMPOSITION__ANNOTATIONS:
-				return annotations != null && !annotations.isEmpty();
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case JCMPackage.BEAN_COMPOSITION__PROPERTIES:
 				return properties != null && !properties.isEmpty();
 			case JCMPackage.BEAN_COMPOSITION__MEMBERS:
@@ -355,7 +305,7 @@ public class BeanCompositionImpl extends DiagramDataImpl implements BeanComposit
 			case JCMPackage.BEAN_COMPOSITION__LISTENER_TYPES:
 				return listenerTypes != null && !listenerTypes.isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**

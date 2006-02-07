@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: DiagramImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import java.util.Collection;
 
@@ -19,7 +19,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -126,7 +125,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return CDMPackage.eINSTANCE.getDiagram();
+		return CDMPackage.Literals.DIAGRAM;
 	}
 
 	/**
@@ -178,7 +177,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 */
 	public DiagramData getDiagramData() {
 		if (eContainerFeatureID != CDMPackage.DIAGRAM__DIAGRAM_DATA) return null;
-		return (DiagramData)eContainer;
+		return (DiagramData)eContainer();
 	}
 
 	/**
@@ -187,11 +186,11 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * @generated
 	 */
 	public void setDiagramData(DiagramData newDiagramData) {
-		if (newDiagramData != eContainer || (eContainerFeatureID != CDMPackage.DIAGRAM__DIAGRAM_DATA && newDiagramData != null)) {
+		if (newDiagramData != eInternalContainer() || (eContainerFeatureID != CDMPackage.DIAGRAM__DIAGRAM_DATA && newDiagramData != null)) {
 			if (EcoreUtil.isAncestor(this, newDiagramData))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
 			NotificationChain msgs = null;
-			if (eContainer != null)
+			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
 			if (newDiagramData != null)
 				msgs = ((InternalEObject)newDiagramData).eInverseAdd(this, CDMPackage.DIAGRAM_DATA__DIAGRAMS, DiagramData.class, msgs);
@@ -231,22 +230,16 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case CDMPackage.DIAGRAM__DIAGRAM_DATA:
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, CDMPackage.DIAGRAM__DIAGRAM_DATA, msgs);
-				case CDMPackage.DIAGRAM__VISUAL_INFOS:
-					return ((InternalEList)getVisualInfos()).basicAdd(otherEnd, msgs);
-				default:
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CDMPackage.DIAGRAM__DIAGRAM_DATA:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return eBasicSetContainer(otherEnd, CDMPackage.DIAGRAM__DIAGRAM_DATA, msgs);
+			case CDMPackage.DIAGRAM__VISUAL_INFOS:
+				return ((InternalEList)getVisualInfos()).basicAdd(otherEnd, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -254,22 +247,16 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case CDMPackage.DIAGRAM__KEYED_VALUES:
-					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
-				case CDMPackage.DIAGRAM__DIAGRAM_DATA:
-					return eBasicSetContainer(null, CDMPackage.DIAGRAM__DIAGRAM_DATA, msgs);
-				case CDMPackage.DIAGRAM__VISUAL_INFOS:
-					return ((InternalEList)getVisualInfos()).basicRemove(otherEnd, msgs);
-				case CDMPackage.DIAGRAM__FIGURES:
-					return ((InternalEList)getFigures()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CDMPackage.DIAGRAM__DIAGRAM_DATA:
+				return eBasicSetContainer(null, CDMPackage.DIAGRAM__DIAGRAM_DATA, msgs);
+			case CDMPackage.DIAGRAM__VISUAL_INFOS:
+				return ((InternalEList)getVisualInfos()).basicRemove(otherEnd, msgs);
+			case CDMPackage.DIAGRAM__FIGURES:
+				return ((InternalEList)getFigures()).basicRemove(otherEnd, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -277,16 +264,12 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID >= 0) {
-			switch (eContainerFeatureID) {
-				case CDMPackage.DIAGRAM__DIAGRAM_DATA:
-					return eContainer.eInverseRemove(this, CDMPackage.DIAGRAM_DATA__DIAGRAMS, DiagramData.class, msgs);
-				default:
-					return eDynamicBasicRemoveFromContainer(msgs);
-			}
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID) {
+			case CDMPackage.DIAGRAM__DIAGRAM_DATA:
+				return eInternalContainer().eInverseRemove(this, CDMPackage.DIAGRAM_DATA__DIAGRAMS, DiagramData.class, msgs);
 		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -294,10 +277,8 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.DIAGRAM__KEYED_VALUES:
-				return getKeyedValues();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case CDMPackage.DIAGRAM__NAME:
 				return getName();
 			case CDMPackage.DIAGRAM__ID:
@@ -309,7 +290,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 			case CDMPackage.DIAGRAM__FIGURES:
 				return getFigures();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -317,35 +298,8 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.DIAGRAM__KEYED_VALUES:
-				return keyedValues != null && !keyedValues.isEmpty();
-			case CDMPackage.DIAGRAM__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case CDMPackage.DIAGRAM__ID:
-				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-			case CDMPackage.DIAGRAM__DIAGRAM_DATA:
-				return getDiagramData() != null;
-			case CDMPackage.DIAGRAM__VISUAL_INFOS:
-				return visualInfos != null && !visualInfos.isEmpty();
-			case CDMPackage.DIAGRAM__FIGURES:
-				return figures != null && !figures.isEmpty();
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.DIAGRAM__KEYED_VALUES:
-				getKeyedValues().clear();
-				getKeyedValues().addAll((Collection)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case CDMPackage.DIAGRAM__NAME:
 				setName((String)newValue);
 				return;
@@ -364,7 +318,7 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 				getFigures().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -372,11 +326,8 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.DIAGRAM__KEYED_VALUES:
-				getKeyedValues().clear();
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case CDMPackage.DIAGRAM__NAME:
 				setName(NAME_EDEFAULT);
 				return;
@@ -393,7 +344,28 @@ public class DiagramImpl extends KeyedValueHolderImpl implements Diagram {
 				getFigures().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case CDMPackage.DIAGRAM__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case CDMPackage.DIAGRAM__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case CDMPackage.DIAGRAM__DIAGRAM_DATA:
+				return getDiagramData() != null;
+			case CDMPackage.DIAGRAM__VISUAL_INFOS:
+				return visualInfos != null && !visualInfos.isEmpty();
+			case CDMPackage.DIAGRAM__FIGURES:
+				return figures != null && !figures.isEmpty();
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**

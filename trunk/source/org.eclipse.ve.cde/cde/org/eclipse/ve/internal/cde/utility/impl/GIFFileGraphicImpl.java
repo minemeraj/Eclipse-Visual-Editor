@@ -11,11 +11,10 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: GIFFileGraphicImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.swt.graphics.Image;
 
@@ -63,7 +62,7 @@ public class GIFFileGraphicImpl extends GraphicImpl implements GIFFileGraphic {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return UtilityPackage.eINSTANCE.getGIFFileGraphic();
+		return UtilityPackage.Literals.GIF_FILE_GRAPHIC;
 	}
 
 	protected Image fImage;
@@ -112,47 +111,6 @@ public class GIFFileGraphicImpl extends GraphicImpl implements GIFFileGraphic {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case UtilityPackage.GIF_FILE_GRAPHIC__RESOURCE_NAME:
-				return RESOURCE_NAME_EDEFAULT == null ? resourceName != null : !RESOURCE_NAME_EDEFAULT.equals(resourceName);
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case UtilityPackage.GIF_FILE_GRAPHIC__RESOURCE_NAME:
-				setResourceName((String)newValue);
-				return;
-		}
-		eDynamicSet(eFeature, newValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case UtilityPackage.GIF_FILE_GRAPHIC__RESOURCE_NAME:
-				setResourceName(RESOURCE_NAME_EDEFAULT);
-				return;
-		}
-		eDynamicUnset(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
@@ -180,12 +138,53 @@ public class GIFFileGraphicImpl extends GraphicImpl implements GIFFileGraphic {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case UtilityPackage.GIF_FILE_GRAPHIC__RESOURCE_NAME:
 				return getResourceName();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case UtilityPackage.GIF_FILE_GRAPHIC__RESOURCE_NAME:
+				setResourceName((String)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case UtilityPackage.GIF_FILE_GRAPHIC__RESOURCE_NAME:
+				setResourceName(RESOURCE_NAME_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case UtilityPackage.GIF_FILE_GRAPHIC__RESOURCE_NAME:
+				return RESOURCE_NAME_EDEFAULT == null ? resourceName != null : !RESOURCE_NAME_EDEFAULT.equals(resourceName);
+		}
+		return super.eIsSet(featureID);
 	}
 
 }

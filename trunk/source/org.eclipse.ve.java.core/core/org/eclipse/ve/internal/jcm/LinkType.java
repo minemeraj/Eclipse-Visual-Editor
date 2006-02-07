@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: LinkType.java,v 1.3 2005-09-15 21:33:50 rkulp Exp $
+ * $Id: LinkType.java,v 1.4 2006-02-07 17:21:37 rkulp Exp $
  */
 package org.eclipse.ve.internal.jcm;
 /*******************************************************************************
@@ -91,7 +91,7 @@ public final class LinkType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final LinkType NORMAL_LITERAL = new LinkType(NORMAL, "NORMAL");
+	public static final LinkType NORMAL_LITERAL = new LinkType(NORMAL, "NORMAL", "NORMAL");
 
 	/**
 	 * The '<em><b>CHILD</b></em>' literal object.
@@ -101,7 +101,7 @@ public final class LinkType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final LinkType CHILD_LITERAL = new LinkType(CHILD, "CHILD");
+	public static final LinkType CHILD_LITERAL = new LinkType(CHILD, "CHILD", "CHILD");
 
 	/**
 	 * The '<em><b>DEPENDENCY</b></em>' literal object.
@@ -111,7 +111,7 @@ public final class LinkType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final LinkType DEPENDENCY_LITERAL = new LinkType(DEPENDENCY, "DEPENDENCY");
+	public static final LinkType DEPENDENCY_LITERAL = new LinkType(DEPENDENCY, "DEPENDENCY", "DEPENDENCY");
 
 	/**
 	 * An array of all the '<em><b>Link Type</b></em>' enumerators.
@@ -135,15 +135,15 @@ public final class LinkType extends AbstractEnumerator {
 	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Link Type</b></em>' literal with the specified name.
+	 * Returns the '<em><b>Link Type</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static LinkType get(String name) {
+	public static LinkType get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			LinkType result = VALUES_ARRAY[i];
-			if (result.toString().equals(name)) {
+			if (result.toString().equals(literal)) {
 				return result;
 			}
 		}
@@ -151,7 +151,23 @@ public final class LinkType extends AbstractEnumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Link Type</b></em>' literal with the specified value.
+	 * Returns the '<em><b>Link Type</b></em>' literal with the specified name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static LinkType getByName(String name) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			LinkType result = VALUES_ARRAY[i];
+			if (result.getName().equals(name)) {
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the '<em><b>Link Type</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -171,8 +187,8 @@ public final class LinkType extends AbstractEnumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private LinkType(int value, String name) {
-		super(value, name);
+	private LinkType(int value, String name, String literal) {
+		super(value, name, literal);
 	}
 
 } //LinkType

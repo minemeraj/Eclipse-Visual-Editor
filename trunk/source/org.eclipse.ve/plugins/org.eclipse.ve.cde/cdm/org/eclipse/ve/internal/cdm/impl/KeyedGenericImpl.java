@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: KeyedGenericImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-07 17:21:33 $ 
  */
  
 import org.eclipse.emf.common.notify.Notification;
@@ -20,7 +20,6 @@ import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
@@ -87,7 +86,7 @@ public class KeyedGenericImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return CDMPackage.eINSTANCE.getKeyedGeneric();
+		return CDMPackage.Literals.KEYED_GENERIC;
 	}
 
 	/**
@@ -159,16 +158,12 @@ public class KeyedGenericImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case CDMPackage.KEYED_GENERIC__VALUE:
-					return basicSetTypedValue(null, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CDMPackage.KEYED_GENERIC__VALUE:
+				return basicSetTypedValue(null, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -176,14 +171,14 @@ public class KeyedGenericImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case CDMPackage.KEYED_GENERIC__KEY:
 				return getTypedKey();
 			case CDMPackage.KEYED_GENERIC__VALUE:
 				return getTypedValue();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -191,8 +186,8 @@ public class KeyedGenericImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case CDMPackage.KEYED_GENERIC__KEY:
 				setTypedKey((String)newValue);
 				return;
@@ -200,7 +195,7 @@ public class KeyedGenericImpl extends EObjectImpl implements BasicEMap.Entry {
 				setTypedValue((EObject)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -208,8 +203,8 @@ public class KeyedGenericImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case CDMPackage.KEYED_GENERIC__KEY:
 				setTypedKey(KEY_EDEFAULT);
 				return;
@@ -217,7 +212,7 @@ public class KeyedGenericImpl extends EObjectImpl implements BasicEMap.Entry {
 				setTypedValue((EObject)null);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -225,14 +220,14 @@ public class KeyedGenericImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case CDMPackage.KEYED_GENERIC__KEY:
 				return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
 			case CDMPackage.KEYED_GENERIC__VALUE:
 				return value != null;
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**

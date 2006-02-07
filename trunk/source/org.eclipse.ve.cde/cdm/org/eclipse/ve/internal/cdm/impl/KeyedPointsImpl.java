@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: KeyedPointsImpl.java,v $
- *  $Revision: 1.6 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-07 17:21:33 $ 
  */
  
 import java.util.Collection;
@@ -22,7 +22,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
@@ -90,7 +89,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return CDMPackage.eINSTANCE.getKeyedPoints();
+		return CDMPackage.Literals.KEYED_POINTS;
 	}
 
 	/**
@@ -131,14 +130,14 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case CDMPackage.KEYED_POINTS__VALUE:
 				return getTypedValue();
 			case CDMPackage.KEYED_POINTS__KEY:
 				return getTypedKey();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -146,8 +145,8 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case CDMPackage.KEYED_POINTS__VALUE:
 				getTypedValue().clear();
 				getTypedValue().addAll((Collection)newValue);
@@ -156,7 +155,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 				setTypedKey((String)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -164,8 +163,8 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case CDMPackage.KEYED_POINTS__VALUE:
 				getTypedValue().clear();
 				return;
@@ -173,7 +172,7 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 				setTypedKey(KEY_EDEFAULT);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -181,14 +180,14 @@ public class KeyedPointsImpl extends EObjectImpl implements BasicEMap.Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case CDMPackage.KEYED_POINTS__VALUE:
 				return value != null && !value.isEmpty();
 			case CDMPackage.KEYED_POINTS__KEY:
 				return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**

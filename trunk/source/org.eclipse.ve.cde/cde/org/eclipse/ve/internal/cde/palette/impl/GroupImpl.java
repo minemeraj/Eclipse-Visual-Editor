@@ -11,22 +11,18 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: GroupImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-07 17:21:33 $ 
  */
-import java.util.Collection;
 
 
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.gef.palette.*;
 
 import org.eclipse.ve.internal.cde.palette.Group;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
-import org.eclipse.ve.internal.cde.palette.Permissions;
 
 import org.eclipse.ve.internal.cde.utility.AbstractString;
 
@@ -63,7 +59,7 @@ public class GroupImpl extends ContainerImpl implements Group {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return PalettePackage.eINSTANCE.getGroup();
+		return PalettePackage.Literals.GROUP;
 	}
 
 	/**
@@ -101,22 +97,12 @@ public class GroupImpl extends ContainerImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case PalettePackage.GROUP__ENTRY_LABEL:
-					return basicSetEntryLabel(null, msgs);
-				case PalettePackage.GROUP__ENTRY_SHORT_DESCRIPTION:
-					return basicSetEntryShortDescription(null, msgs);
-				case PalettePackage.GROUP__CHILDREN:
-					return ((InternalEList)getChildren()).basicRemove(otherEnd, msgs);
-				case PalettePackage.GROUP__GROUP_LABEL:
-					return basicSetGroupLabel(null, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case PalettePackage.GROUP__GROUP_LABEL:
+				return basicSetGroupLabel(null, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -124,30 +110,12 @@ public class GroupImpl extends ContainerImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.GROUP__ICON16_NAME:
-				return getIcon16Name();
-			case PalettePackage.GROUP__ICON32_NAME:
-				return getIcon32Name();
-			case PalettePackage.GROUP__VISIBLE:
-				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
-			case PalettePackage.GROUP__DEFAULT_ENTRY:
-				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
-			case PalettePackage.GROUP__ID:
-				return getId();
-			case PalettePackage.GROUP__MODIFICATION:
-				return getModification();
-			case PalettePackage.GROUP__ENTRY_LABEL:
-				return getEntryLabel();
-			case PalettePackage.GROUP__ENTRY_SHORT_DESCRIPTION:
-				return getEntryShortDescription();
-			case PalettePackage.GROUP__CHILDREN:
-				return getChildren();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case PalettePackage.GROUP__GROUP_LABEL:
 				return getGroupLabel();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -155,72 +123,13 @@ public class GroupImpl extends ContainerImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.GROUP__ICON16_NAME:
-				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
-			case PalettePackage.GROUP__ICON32_NAME:
-				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
-			case PalettePackage.GROUP__VISIBLE:
-				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
-			case PalettePackage.GROUP__DEFAULT_ENTRY:
-				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
-			case PalettePackage.GROUP__ID:
-				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-			case PalettePackage.GROUP__MODIFICATION:
-				return modification != MODIFICATION_EDEFAULT;
-			case PalettePackage.GROUP__ENTRY_LABEL:
-				return entryLabel != null;
-			case PalettePackage.GROUP__ENTRY_SHORT_DESCRIPTION:
-				return entryShortDescription != null;
-			case PalettePackage.GROUP__CHILDREN:
-				return children != null && !children.isEmpty();
-			case PalettePackage.GROUP__GROUP_LABEL:
-				return getGroupLabel() != null;
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.GROUP__ICON16_NAME:
-				setIcon16Name((String)newValue);
-				return;
-			case PalettePackage.GROUP__ICON32_NAME:
-				setIcon32Name((String)newValue);
-				return;
-			case PalettePackage.GROUP__VISIBLE:
-				setVisible(((Boolean)newValue).booleanValue());
-				return;
-			case PalettePackage.GROUP__DEFAULT_ENTRY:
-				setDefaultEntry(((Boolean)newValue).booleanValue());
-				return;
-			case PalettePackage.GROUP__ID:
-				setId((String)newValue);
-				return;
-			case PalettePackage.GROUP__MODIFICATION:
-				setModification((Permissions)newValue);
-				return;
-			case PalettePackage.GROUP__ENTRY_LABEL:
-				setEntryLabel((AbstractString)newValue);
-				return;
-			case PalettePackage.GROUP__ENTRY_SHORT_DESCRIPTION:
-				setEntryShortDescription((AbstractString)newValue);
-				return;
-			case PalettePackage.GROUP__CHILDREN:
-				getChildren().clear();
-				getChildren().addAll((Collection)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case PalettePackage.GROUP__GROUP_LABEL:
 				setGroupLabel((AbstractString)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -228,40 +137,26 @@ public class GroupImpl extends ContainerImpl implements Group {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.GROUP__ICON16_NAME:
-				setIcon16Name(ICON16_NAME_EDEFAULT);
-				return;
-			case PalettePackage.GROUP__ICON32_NAME:
-				setIcon32Name(ICON32_NAME_EDEFAULT);
-				return;
-			case PalettePackage.GROUP__VISIBLE:
-				setVisible(VISIBLE_EDEFAULT);
-				return;
-			case PalettePackage.GROUP__DEFAULT_ENTRY:
-				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
-				return;
-			case PalettePackage.GROUP__ID:
-				setId(ID_EDEFAULT);
-				return;
-			case PalettePackage.GROUP__MODIFICATION:
-				setModification(MODIFICATION_EDEFAULT);
-				return;
-			case PalettePackage.GROUP__ENTRY_LABEL:
-				setEntryLabel((AbstractString)null);
-				return;
-			case PalettePackage.GROUP__ENTRY_SHORT_DESCRIPTION:
-				setEntryShortDescription((AbstractString)null);
-				return;
-			case PalettePackage.GROUP__CHILDREN:
-				getChildren().clear();
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case PalettePackage.GROUP__GROUP_LABEL:
 				setGroupLabel((AbstractString)null);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case PalettePackage.GROUP__GROUP_LABEL:
+				return getGroupLabel() != null;
+		}
+		return super.eIsSet(featureID);
 	}
 
 	protected PaletteEntry createPaletteEntry() {

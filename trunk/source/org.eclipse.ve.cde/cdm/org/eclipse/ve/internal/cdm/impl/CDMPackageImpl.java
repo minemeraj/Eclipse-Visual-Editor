@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: CDMPackageImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import java.util.Map;
 
@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.impl.EStructuralFeatureImpl;
-import org.eclipse.emf.ecore.impl.EcorePackageImpl;
 
 import org.eclipse.ve.internal.cdm.Annotation;
 import org.eclipse.ve.internal.cdm.AnnotationEMF;
@@ -248,7 +247,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 		isInited = true;
 
 		// Initialize simple dependencies
-		EcorePackageImpl.init();
+		EcorePackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theCDMPackage.createPackageContents();
@@ -889,7 +888,7 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		EcorePackageImpl theEcorePackage = (EcorePackageImpl)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 
 		// Add supertypes to classes
 		diagramEClass.getESuperTypes().add(this.getKeyedValueHolder());
@@ -932,8 +931,8 @@ public class CDMPackageImpl extends EPackageImpl implements CDMPackage {
 		initEClass(annotationEClass, Annotation.class, "Annotation", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getAnnotation_VisualInfos(), this.getVisualInfo(), null, "visualInfos", null, 0, -1, Annotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		EOperation op = addEOperation(annotationEClass, this.getVisualInfo(), "getVisualInfo");
-		addEParameter(op, this.getDiagram(), "aDiagram");
+		EOperation op = addEOperation(annotationEClass, this.getVisualInfo(), "getVisualInfo", 0, 1);
+		addEParameter(op, this.getDiagram(), "aDiagram", 0, 1);
 
 		initEClass(keyedPointsEClass, Map.Entry.class, "KeyedPoints", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getKeyedPoints_Value(), this.getViewPoint(), "value", null, 0, -1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

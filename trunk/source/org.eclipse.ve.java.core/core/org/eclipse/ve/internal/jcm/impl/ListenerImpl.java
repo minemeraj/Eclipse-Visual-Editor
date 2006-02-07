@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: ListenerImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:57 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-07 17:21:37 $ 
  */
 
 import java.util.Collection;
@@ -27,7 +27,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -83,7 +82,7 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return JCMPackage.eINSTANCE.getListener();
+		return JCMPackage.Literals.LISTENER;
 	}
 
 	/**
@@ -105,7 +104,7 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 */
 	public ListenerType getListenerType() {
 		if (eContainerFeatureID != JCMPackage.LISTENER__LISTENER_TYPE) return null;
-		return (ListenerType)eContainer;
+		return (ListenerType)eContainer();
 	}
 
 	/**
@@ -114,11 +113,11 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * @generated
 	 */
 	public void setListenerType(ListenerType newListenerType) {
-		if (newListenerType != eContainer || (eContainerFeatureID != JCMPackage.LISTENER__LISTENER_TYPE && newListenerType != null)) {
+		if (newListenerType != eInternalContainer() || (eContainerFeatureID != JCMPackage.LISTENER__LISTENER_TYPE && newListenerType != null)) {
 			if (EcoreUtil.isAncestor(this, newListenerType))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
 			NotificationChain msgs = null;
-			if (eContainer != null)
+			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
 			if (newListenerType != null)
 				msgs = ((InternalEObject)newListenerType).eInverseAdd(this, JCMPackage.LISTENER_TYPE__LISTENERS, ListenerType.class, msgs);
@@ -134,22 +133,16 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case JCMPackage.LISTENER__LISTENED_BY:
-					return ((InternalEList)getListenedBy()).basicAdd(otherEnd, msgs);
-				case JCMPackage.LISTENER__LISTENER_TYPE:
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, JCMPackage.LISTENER__LISTENER_TYPE, msgs);
-				default:
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case JCMPackage.LISTENER__LISTENED_BY:
+				return ((InternalEList)getListenedBy()).basicAdd(otherEnd, msgs);
+			case JCMPackage.LISTENER__LISTENER_TYPE:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return eBasicSetContainer(otherEnd, JCMPackage.LISTENER__LISTENER_TYPE, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -157,18 +150,14 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case JCMPackage.LISTENER__LISTENED_BY:
-					return ((InternalEList)getListenedBy()).basicRemove(otherEnd, msgs);
-				case JCMPackage.LISTENER__LISTENER_TYPE:
-					return eBasicSetContainer(null, JCMPackage.LISTENER__LISTENER_TYPE, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case JCMPackage.LISTENER__LISTENED_BY:
+				return ((InternalEList)getListenedBy()).basicRemove(otherEnd, msgs);
+			case JCMPackage.LISTENER__LISTENER_TYPE:
+				return eBasicSetContainer(null, JCMPackage.LISTENER__LISTENER_TYPE, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -176,16 +165,12 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID >= 0) {
-			switch (eContainerFeatureID) {
-				case JCMPackage.LISTENER__LISTENER_TYPE:
-					return eContainer.eInverseRemove(this, JCMPackage.LISTENER_TYPE__LISTENERS, ListenerType.class, msgs);
-				default:
-					return eDynamicBasicRemoveFromContainer(msgs);
-			}
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID) {
+			case JCMPackage.LISTENER__LISTENER_TYPE:
+				return eInternalContainer().eInverseRemove(this, JCMPackage.LISTENER_TYPE__LISTENERS, ListenerType.class, msgs);
 		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -193,14 +178,14 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case JCMPackage.LISTENER__LISTENED_BY:
 				return getListenedBy();
 			case JCMPackage.LISTENER__LISTENER_TYPE:
 				return getListenerType();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -208,8 +193,8 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case JCMPackage.LISTENER__LISTENED_BY:
 				getListenedBy().clear();
 				getListenedBy().addAll((Collection)newValue);
@@ -218,7 +203,7 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 				setListenerType((ListenerType)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -226,8 +211,8 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case JCMPackage.LISTENER__LISTENED_BY:
 				getListenedBy().clear();
 				return;
@@ -235,7 +220,7 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 				setListenerType((ListenerType)null);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -243,14 +228,14 @@ public class ListenerImpl extends EObjectImpl implements Listener {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case JCMPackage.LISTENER__LISTENED_BY:
 				return listenedBy != null && !listenedBy.isEmpty();
 			case JCMPackage.LISTENER__LISTENER_TYPE:
 				return getListenerType() != null;
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 } //ListenerImpl

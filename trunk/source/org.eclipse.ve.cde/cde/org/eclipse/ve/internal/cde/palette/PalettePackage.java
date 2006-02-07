@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: PalettePackage.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-15 21:27:16 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-07 17:21:33 $ 
  */
  
 import org.eclipse.emf.ecore.EAttribute;
@@ -38,7 +38,7 @@ import org.eclipse.emf.ecore.EcorePackage;
  * @model kind="package"
  * @generated
  */
-public interface PalettePackage extends EPackage{
+public interface PalettePackage extends EPackage {
 	/**
 	 * The package name.
 	 * <!-- begin-user-doc -->
@@ -204,7 +204,7 @@ public interface PalettePackage extends EPackage{
 	int ENTRY__ENTRY_SHORT_DESCRIPTION = EcorePackage.EOBJECT_FEATURE_COUNT + 7;
 
 	/**
-	 * The number of structural features of the the '<em>Entry</em>' class.
+	 * The number of structural features of the '<em>Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -294,7 +294,7 @@ public interface PalettePackage extends EPackage{
 	int CONTAINER__CHILDREN = ENTRY_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Container</em>' class.
+	 * The number of structural features of the '<em>Container</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -393,7 +393,7 @@ public interface PalettePackage extends EPackage{
 	int ROOT__DEF_ENTRY = CONTAINER_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Root</em>' class.
+	 * The number of structural features of the '<em>Root</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -492,7 +492,7 @@ public interface PalettePackage extends EPackage{
 	int DRAWER__INITIAL_STATE = CONTAINER_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Drawer</em>' class.
+	 * The number of structural features of the '<em>Drawer</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -600,7 +600,7 @@ public interface PalettePackage extends EPackage{
 	int CATEGORY__CATEGORY_LABEL = DRAWER_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Category</em>' class.
+	 * The number of structural features of the '<em>Category</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -699,7 +699,7 @@ public interface PalettePackage extends EPackage{
 	int GROUP__GROUP_LABEL = CONTAINER_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Group</em>' class.
+	 * The number of structural features of the '<em>Group</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -799,7 +799,7 @@ public interface PalettePackage extends EPackage{
 	int ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES = ENTRY_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Abstract Tool Entry</em>' class.
+	 * The number of structural features of the '<em>Abstract Tool Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -908,7 +908,7 @@ public interface PalettePackage extends EPackage{
 	int TOOL_ENTRY__TOOL_CLASS_NAME = ABSTRACT_TOOL_ENTRY_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Tool Entry</em>' class.
+	 * The number of structural features of the '<em>Tool Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1017,7 +1017,7 @@ public interface PalettePackage extends EPackage{
 	int CREATION_TOOL_ENTRY__KEYED_VALUES = ABSTRACT_TOOL_ENTRY_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Creation Tool Entry</em>' class.
+	 * The number of structural features of the '<em>Creation Tool Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1153,7 +1153,7 @@ public interface PalettePackage extends EPackage{
 	int PALETTE_CMP__PALETTE_LABEL = ROOT_FEATURE_COUNT + 2;
 
 	/**
-	 * The number of structural features of the the '<em>Cmp</em>' class.
+	 * The number of structural features of the '<em>Cmp</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1280,7 +1280,7 @@ public interface PalettePackage extends EPackage{
 	int CATEGORY_CMP__CMP_GROUPS = CATEGORY_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Category Cmp</em>' class.
+	 * The number of structural features of the '<em>Category Cmp</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1398,7 +1398,7 @@ public interface PalettePackage extends EPackage{
 	int GROUP_CMP__CMP_ENTRIES = GROUP_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Group Cmp</em>' class.
+	 * The number of structural features of the '<em>Group Cmp</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1516,7 +1516,7 @@ public interface PalettePackage extends EPackage{
 	int EMF_CREATION_TOOL_ENTRY__CREATION_CLASS_URI = CREATION_TOOL_ENTRY_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>EMF Creation Tool Entry</em>' class.
+	 * The number of structural features of the '<em>EMF Creation Tool Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1634,7 +1634,7 @@ public interface PalettePackage extends EPackage{
 	int EMF_PROTOTYPE_TOOL_ENTRY__PROTOTYPE_URI = CREATION_TOOL_ENTRY_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>EMF Prototype Tool Entry</em>' class.
+	 * The number of structural features of the '<em>EMF Prototype Tool Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1752,7 +1752,7 @@ public interface PalettePackage extends EPackage{
 	int ANNOTATED_CREATION_ENTRY__VALUES = ABSTRACT_TOOL_ENTRY_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of structural features of the the '<em>Annotated Creation Entry</em>' class.
+	 * The number of structural features of the '<em>Annotated Creation Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1870,7 +1870,7 @@ public interface PalettePackage extends EPackage{
 	int SELECTION_CREATION_TOOL_ENTRY__SELECTOR_CLASS_NAME = CREATION_TOOL_ENTRY_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Selection Creation Tool Entry</em>' class.
+	 * The number of structural features of the '<em>Selection Creation Tool Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1979,7 +1979,7 @@ public interface PalettePackage extends EPackage{
 	int STACK__ACTIVE_ENTRY = CONTAINER_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the the '<em>Stack</em>' class.
+	 * The number of structural features of the '<em>Stack</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -2070,7 +2070,7 @@ public interface PalettePackage extends EPackage{
 	int SEPARATOR__ENTRY_SHORT_DESCRIPTION = ENTRY__ENTRY_SHORT_DESCRIPTION;
 
 	/**
-	 * The number of structural features of the the '<em>Separator</em>' class.
+	 * The number of structural features of the '<em>Separator</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -2614,5 +2614,438 @@ public interface PalettePackage extends EPackage{
 	 * @generated
 	 */
 	PaletteFactory getPaletteFactory();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * Defines literals for the meta objects that represent
+	 * <ul>
+	 *   <li>each class,</li>
+	 *   <li>each feature of each class,</li>
+	 *   <li>each enum,</li>
+	 *   <li>and each data type</li>
+	 * </ul>
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	interface Literals  {
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.RootImpl <em>Root</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.RootImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getRoot()
+		 * @generated
+		 */
+		EClass ROOT = eINSTANCE.getRoot();
+
+		/**
+		 * The meta object literal for the '<em><b>Def Entry</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ROOT__DEF_ENTRY = eINSTANCE.getRoot_DefEntry();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.CategoryImpl <em>Category</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.CategoryImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getCategory()
+		 * @generated
+		 */
+		EClass CATEGORY = eINSTANCE.getCategory();
+
+		/**
+		 * The meta object literal for the '<em><b>Category Label</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CATEGORY__CATEGORY_LABEL = eINSTANCE.getCategory_CategoryLabel();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.GroupImpl <em>Group</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.GroupImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getGroup()
+		 * @generated
+		 */
+		EClass GROUP = eINSTANCE.getGroup();
+
+		/**
+		 * The meta object literal for the '<em><b>Group Label</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference GROUP__GROUP_LABEL = eINSTANCE.getGroup_GroupLabel();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.EntryImpl <em>Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.EntryImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getEntry()
+		 * @generated
+		 */
+		EClass ENTRY = eINSTANCE.getEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Icon16 Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ENTRY__ICON16_NAME = eINSTANCE.getEntry_Icon16Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Icon32 Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ENTRY__ICON32_NAME = eINSTANCE.getEntry_Icon32Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Visible</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ENTRY__VISIBLE = eINSTANCE.getEntry_Visible();
+
+		/**
+		 * The meta object literal for the '<em><b>Default Entry</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ENTRY__DEFAULT_ENTRY = eINSTANCE.getEntry_DefaultEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ENTRY__ID = eINSTANCE.getEntry_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Modification</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ENTRY__MODIFICATION = eINSTANCE.getEntry_Modification();
+
+		/**
+		 * The meta object literal for the '<em><b>Entry Label</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ENTRY__ENTRY_LABEL = eINSTANCE.getEntry_EntryLabel();
+
+		/**
+		 * The meta object literal for the '<em><b>Entry Short Description</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ENTRY__ENTRY_SHORT_DESCRIPTION = eINSTANCE.getEntry_EntryShortDescription();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.ToolEntryImpl <em>Tool Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.ToolEntryImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getToolEntry()
+		 * @generated
+		 */
+		EClass TOOL_ENTRY = eINSTANCE.getToolEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Tool Class Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TOOL_ENTRY__TOOL_CLASS_NAME = eINSTANCE.getToolEntry_ToolClassName();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.CreationToolEntryImpl <em>Creation Tool Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.CreationToolEntryImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getCreationToolEntry()
+		 * @generated
+		 */
+		EClass CREATION_TOOL_ENTRY = eINSTANCE.getCreationToolEntry();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.AbstractToolEntryImpl <em>Abstract Tool Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.AbstractToolEntryImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getAbstractToolEntry()
+		 * @generated
+		 */
+		EClass ABSTRACT_TOOL_ENTRY = eINSTANCE.getAbstractToolEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>String Properties</b></em>' map feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ABSTRACT_TOOL_ENTRY__STRING_PROPERTIES = eINSTANCE.getAbstractToolEntry_StringProperties();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.PaletteCmpImpl <em>Cmp</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PaletteCmpImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getPaletteCmp()
+		 * @generated
+		 */
+		EClass PALETTE_CMP = eINSTANCE.getPaletteCmp();
+
+		/**
+		 * The meta object literal for the '<em><b>Cmp Categories</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PALETTE_CMP__CMP_CATEGORIES = eINSTANCE.getPaletteCmp_CmpCategories();
+
+		/**
+		 * The meta object literal for the '<em><b>Cmp Control Group</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PALETTE_CMP__CMP_CONTROL_GROUP = eINSTANCE.getPaletteCmp_CmpControlGroup();
+
+		/**
+		 * The meta object literal for the '<em><b>Palette Label</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PALETTE_CMP__PALETTE_LABEL = eINSTANCE.getPaletteCmp_PaletteLabel();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.CategoryCmpImpl <em>Category Cmp</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.CategoryCmpImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getCategoryCmp()
+		 * @generated
+		 */
+		EClass CATEGORY_CMP = eINSTANCE.getCategoryCmp();
+
+		/**
+		 * The meta object literal for the '<em><b>Cmp Groups</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CATEGORY_CMP__CMP_GROUPS = eINSTANCE.getCategoryCmp_CmpGroups();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.GroupCmpImpl <em>Group Cmp</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.GroupCmpImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getGroupCmp()
+		 * @generated
+		 */
+		EClass GROUP_CMP = eINSTANCE.getGroupCmp();
+
+		/**
+		 * The meta object literal for the '<em><b>Cmp Entries</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference GROUP_CMP__CMP_ENTRIES = eINSTANCE.getGroupCmp_CmpEntries();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.ContainerImpl <em>Container</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.ContainerImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getContainer()
+		 * @generated
+		 */
+		EClass CONTAINER = eINSTANCE.getContainer();
+
+		/**
+		 * The meta object literal for the '<em><b>Children</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONTAINER__CHILDREN = eINSTANCE.getContainer_Children();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.EMFCreationToolEntryImpl <em>EMF Creation Tool Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.EMFCreationToolEntryImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getEMFCreationToolEntry()
+		 * @generated
+		 */
+		EClass EMF_CREATION_TOOL_ENTRY = eINSTANCE.getEMFCreationToolEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Creation Class URI</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EMF_CREATION_TOOL_ENTRY__CREATION_CLASS_URI = eINSTANCE.getEMFCreationToolEntry_CreationClassURI();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.EMFPrototypeToolEntryImpl <em>EMF Prototype Tool Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.EMFPrototypeToolEntryImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getEMFPrototypeToolEntry()
+		 * @generated
+		 */
+		EClass EMF_PROTOTYPE_TOOL_ENTRY = eINSTANCE.getEMFPrototypeToolEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Prototype URI</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EMF_PROTOTYPE_TOOL_ENTRY__PROTOTYPE_URI = eINSTANCE.getEMFPrototypeToolEntry_PrototypeURI();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.AnnotatedCreationEntryImpl <em>Annotated Creation Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.AnnotatedCreationEntryImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getAnnotatedCreationEntry()
+		 * @generated
+		 */
+		EClass ANNOTATED_CREATION_ENTRY = eINSTANCE.getAnnotatedCreationEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Object Creation Entry</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ANNOTATED_CREATION_ENTRY__OBJECT_CREATION_ENTRY = eINSTANCE.getAnnotatedCreationEntry_ObjectCreationEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Values</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ANNOTATED_CREATION_ENTRY__VALUES = eINSTANCE.getAnnotatedCreationEntry_Values();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.SelectionCreationToolEntryImpl <em>Selection Creation Tool Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.SelectionCreationToolEntryImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getSelectionCreationToolEntry()
+		 * @generated
+		 */
+		EClass SELECTION_CREATION_TOOL_ENTRY = eINSTANCE.getSelectionCreationToolEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Selector Class Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SELECTION_CREATION_TOOL_ENTRY__SELECTOR_CLASS_NAME = eINSTANCE.getSelectionCreationToolEntry_SelectorClassName();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.DrawerImpl <em>Drawer</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.DrawerImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getDrawer()
+		 * @generated
+		 */
+		EClass DRAWER = eINSTANCE.getDrawer();
+
+		/**
+		 * The meta object literal for the '<em><b>Initial State</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DRAWER__INITIAL_STATE = eINSTANCE.getDrawer_InitialState();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.StackImpl <em>Stack</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.StackImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getStack()
+		 * @generated
+		 */
+		EClass STACK = eINSTANCE.getStack();
+
+		/**
+		 * The meta object literal for the '<em><b>Active Entry</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STACK__ACTIVE_ENTRY = eINSTANCE.getStack_ActiveEntry();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.impl.SeparatorImpl <em>Separator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.impl.SeparatorImpl
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getSeparator()
+		 * @generated
+		 */
+		EClass SEPARATOR = eINSTANCE.getSeparator();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.Permissions <em>Permissions</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.Permissions
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getPermissions()
+		 * @generated
+		 */
+		EEnum PERMISSIONS = eINSTANCE.getPermissions();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.ve.internal.cde.palette.InitialState <em>Initial State</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.ve.internal.cde.palette.InitialState
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getInitialState()
+		 * @generated
+		 */
+		EEnum INITIAL_STATE = eINSTANCE.getInitialState();
+
+		/**
+		 * The meta object literal for the '<em>Creation Factory</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.gef.requests.CreationFactory
+		 * @see org.eclipse.ve.internal.cde.palette.impl.PalettePackageImpl#getCreationFactory()
+		 * @generated
+		 */
+		EDataType CREATION_FACTORY = eINSTANCE.getCreationFactory();
+
+	}
 
 } //PalettePackage

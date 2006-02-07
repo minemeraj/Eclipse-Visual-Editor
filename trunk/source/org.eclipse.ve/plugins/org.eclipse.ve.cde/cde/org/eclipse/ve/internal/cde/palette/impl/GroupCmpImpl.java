@@ -11,22 +11,19 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: GroupCmpImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.ve.internal.cde.palette.GroupCmp;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
-import org.eclipse.ve.internal.cde.palette.Permissions;
 
-import org.eclipse.ve.internal.cde.utility.AbstractString;
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Group Cmp</b></em>'.
@@ -60,7 +57,7 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return PalettePackage.eINSTANCE.getGroupCmp();
+		return PalettePackage.Literals.GROUP_CMP;
 	}
 
 	/**
@@ -76,24 +73,12 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case PalettePackage.GROUP_CMP__ENTRY_LABEL:
-					return basicSetEntryLabel(null, msgs);
-				case PalettePackage.GROUP_CMP__ENTRY_SHORT_DESCRIPTION:
-					return basicSetEntryShortDescription(null, msgs);
-				case PalettePackage.GROUP_CMP__CHILDREN:
-					return ((InternalEList)getChildren()).basicRemove(otherEnd, msgs);
-				case PalettePackage.GROUP_CMP__GROUP_LABEL:
-					return basicSetGroupLabel(null, msgs);
-				case PalettePackage.GROUP_CMP__CMP_ENTRIES:
-					return ((InternalEList)getCmpEntries()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case PalettePackage.GROUP_CMP__CMP_ENTRIES:
+				return ((InternalEList)getCmpEntries()).basicRemove(otherEnd, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -101,32 +86,12 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.GROUP_CMP__ICON16_NAME:
-				return getIcon16Name();
-			case PalettePackage.GROUP_CMP__ICON32_NAME:
-				return getIcon32Name();
-			case PalettePackage.GROUP_CMP__VISIBLE:
-				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
-			case PalettePackage.GROUP_CMP__DEFAULT_ENTRY:
-				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
-			case PalettePackage.GROUP_CMP__ID:
-				return getId();
-			case PalettePackage.GROUP_CMP__MODIFICATION:
-				return getModification();
-			case PalettePackage.GROUP_CMP__ENTRY_LABEL:
-				return getEntryLabel();
-			case PalettePackage.GROUP_CMP__ENTRY_SHORT_DESCRIPTION:
-				return getEntryShortDescription();
-			case PalettePackage.GROUP_CMP__CHILDREN:
-				return getChildren();
-			case PalettePackage.GROUP_CMP__GROUP_LABEL:
-				return getGroupLabel();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case PalettePackage.GROUP_CMP__CMP_ENTRIES:
 				return getCmpEntries();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -134,45 +99,14 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.GROUP_CMP__ICON16_NAME:
-				setIcon16Name((String)newValue);
-				return;
-			case PalettePackage.GROUP_CMP__ICON32_NAME:
-				setIcon32Name((String)newValue);
-				return;
-			case PalettePackage.GROUP_CMP__VISIBLE:
-				setVisible(((Boolean)newValue).booleanValue());
-				return;
-			case PalettePackage.GROUP_CMP__DEFAULT_ENTRY:
-				setDefaultEntry(((Boolean)newValue).booleanValue());
-				return;
-			case PalettePackage.GROUP_CMP__ID:
-				setId((String)newValue);
-				return;
-			case PalettePackage.GROUP_CMP__MODIFICATION:
-				setModification((Permissions)newValue);
-				return;
-			case PalettePackage.GROUP_CMP__ENTRY_LABEL:
-				setEntryLabel((AbstractString)newValue);
-				return;
-			case PalettePackage.GROUP_CMP__ENTRY_SHORT_DESCRIPTION:
-				setEntryShortDescription((AbstractString)newValue);
-				return;
-			case PalettePackage.GROUP_CMP__CHILDREN:
-				getChildren().clear();
-				getChildren().addAll((Collection)newValue);
-				return;
-			case PalettePackage.GROUP_CMP__GROUP_LABEL:
-				setGroupLabel((AbstractString)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case PalettePackage.GROUP_CMP__CMP_ENTRIES:
 				getCmpEntries().clear();
 				getCmpEntries().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -180,43 +114,13 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.GROUP_CMP__ICON16_NAME:
-				setIcon16Name(ICON16_NAME_EDEFAULT);
-				return;
-			case PalettePackage.GROUP_CMP__ICON32_NAME:
-				setIcon32Name(ICON32_NAME_EDEFAULT);
-				return;
-			case PalettePackage.GROUP_CMP__VISIBLE:
-				setVisible(VISIBLE_EDEFAULT);
-				return;
-			case PalettePackage.GROUP_CMP__DEFAULT_ENTRY:
-				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
-				return;
-			case PalettePackage.GROUP_CMP__ID:
-				setId(ID_EDEFAULT);
-				return;
-			case PalettePackage.GROUP_CMP__MODIFICATION:
-				setModification(MODIFICATION_EDEFAULT);
-				return;
-			case PalettePackage.GROUP_CMP__ENTRY_LABEL:
-				setEntryLabel((AbstractString)null);
-				return;
-			case PalettePackage.GROUP_CMP__ENTRY_SHORT_DESCRIPTION:
-				setEntryShortDescription((AbstractString)null);
-				return;
-			case PalettePackage.GROUP_CMP__CHILDREN:
-				getChildren().clear();
-				return;
-			case PalettePackage.GROUP_CMP__GROUP_LABEL:
-				setGroupLabel((AbstractString)null);
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case PalettePackage.GROUP_CMP__CMP_ENTRIES:
 				getCmpEntries().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -224,32 +128,12 @@ public class GroupCmpImpl extends GroupImpl implements GroupCmp {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.GROUP_CMP__ICON16_NAME:
-				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
-			case PalettePackage.GROUP_CMP__ICON32_NAME:
-				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
-			case PalettePackage.GROUP_CMP__VISIBLE:
-				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
-			case PalettePackage.GROUP_CMP__DEFAULT_ENTRY:
-				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
-			case PalettePackage.GROUP_CMP__ID:
-				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-			case PalettePackage.GROUP_CMP__MODIFICATION:
-				return modification != MODIFICATION_EDEFAULT;
-			case PalettePackage.GROUP_CMP__ENTRY_LABEL:
-				return entryLabel != null;
-			case PalettePackage.GROUP_CMP__ENTRY_SHORT_DESCRIPTION:
-				return entryShortDescription != null;
-			case PalettePackage.GROUP_CMP__CHILDREN:
-				return children != null && !children.isEmpty();
-			case PalettePackage.GROUP_CMP__GROUP_LABEL:
-				return getGroupLabel() != null;
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case PalettePackage.GROUP_CMP__CMP_ENTRIES:
 				return !getCmpEntries().isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 }

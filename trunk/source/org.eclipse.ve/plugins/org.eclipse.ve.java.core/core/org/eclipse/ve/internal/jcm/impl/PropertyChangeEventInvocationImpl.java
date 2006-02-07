@@ -18,7 +18,7 @@ package org.eclipse.ve.internal.jcm.impl;
  *******************************************************************************/
 /*
  *  $RCSfile: PropertyChangeEventInvocationImpl.java,v $
- *  $Revision: 1.4 $  $Date: 2005-10-03 19:20:57 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-07 17:21:37 $ 
  */
 
 import java.util.Collection;
@@ -27,7 +27,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -37,7 +36,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.jem.java.Method;
 
 import org.eclipse.ve.internal.jcm.JCMPackage;
-import org.eclipse.ve.internal.jcm.Listener;
 import org.eclipse.ve.internal.jcm.PropertyChangeEventInvocation;
 import org.eclipse.ve.internal.jcm.PropertyEvent;
 
@@ -92,7 +90,7 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return JCMPackage.eINSTANCE.getPropertyChangeEventInvocation();
+		return JCMPackage.Literals.PROPERTY_CHANGE_EVENT_INVOCATION;
 	}
 
 	/**
@@ -102,8 +100,8 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 */
 	public Method getAddMethod() {
 		if (addMethod != null && addMethod.eIsProxy()) {
-			Method oldAddMethod = addMethod;
-			addMethod = (Method)eResolveProxy((InternalEObject)addMethod);
+			InternalEObject oldAddMethod = (InternalEObject)addMethod;
+			addMethod = (Method)eResolveProxy(oldAddMethod);
 			if (addMethod != oldAddMethod) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__ADD_METHOD, oldAddMethod, addMethod));
@@ -150,20 +148,12 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__LISTENER:
-					if (listener != null)
-						msgs = ((InternalEObject)listener).eInverseRemove(this, JCMPackage.LISTENER__LISTENED_BY, Listener.class, msgs);
-					return basicSetListener((Listener)otherEnd, msgs);
-				default:
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES:
+				return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -171,41 +161,15 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__CALLBACKS:
-					return ((InternalEList)getCallbacks()).basicRemove(otherEnd, msgs);
-				case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__LISTENER:
-					return basicSetListener(null, msgs);
-				case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES:
-					return ((InternalEList)getProperties()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__CALLBACKS:
-				return getCallbacks();
-			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__LISTENER:
-				if (resolve) return getListener();
-				return basicGetListener();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__ADD_METHOD:
 				if (resolve) return getAddMethod();
 				return basicGetAddMethod();
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES:
 				return getProperties();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -213,15 +177,8 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__CALLBACKS:
-				getCallbacks().clear();
-				getCallbacks().addAll((Collection)newValue);
-				return;
-			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__LISTENER:
-				setListener((Listener)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__ADD_METHOD:
 				setAddMethod((Method)newValue);
 				return;
@@ -230,7 +187,7 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 				getProperties().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -238,14 +195,8 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__CALLBACKS:
-				getCallbacks().clear();
-				return;
-			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__LISTENER:
-				setListener((Listener)null);
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__ADD_METHOD:
 				setAddMethod((Method)null);
 				return;
@@ -253,7 +204,7 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 				getProperties().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -261,18 +212,14 @@ public class PropertyChangeEventInvocationImpl extends AbstractEventInvocationIm
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__CALLBACKS:
-				return callbacks != null && !callbacks.isEmpty();
-			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__LISTENER:
-				return listener != null;
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__ADD_METHOD:
 				return addMethod != null;
 			case JCMPackage.PROPERTY_CHANGE_EVENT_INVOCATION__PROPERTIES:
 				return properties != null && !properties.isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 } //PropertyChangeEventInvocationImpl

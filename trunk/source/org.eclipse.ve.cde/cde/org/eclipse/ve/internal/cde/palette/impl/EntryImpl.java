@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: EntryImpl.java,v $
- *  $Revision: 1.8 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.9 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,7 +21,6 @@ import java.util.Map;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.*;
@@ -206,7 +205,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return PalettePackage.eINSTANCE.getEntry();
+		return PalettePackage.Literals.ENTRY;
 	}
 
 	/**
@@ -382,18 +381,14 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case PalettePackage.ENTRY__ENTRY_LABEL:
-					return basicSetEntryLabel(null, msgs);
-				case PalettePackage.ENTRY__ENTRY_SHORT_DESCRIPTION:
-					return basicSetEntryShortDescription(null, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case PalettePackage.ENTRY__ENTRY_LABEL:
+				return basicSetEntryLabel(null, msgs);
+			case PalettePackage.ENTRY__ENTRY_SHORT_DESCRIPTION:
+				return basicSetEntryShortDescription(null, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -401,8 +396,8 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case PalettePackage.ENTRY__ICON16_NAME:
 				return getIcon16Name();
 			case PalettePackage.ENTRY__ICON32_NAME:
@@ -420,7 +415,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 			case PalettePackage.ENTRY__ENTRY_SHORT_DESCRIPTION:
 				return getEntryShortDescription();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -428,35 +423,8 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.ENTRY__ICON16_NAME:
-				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
-			case PalettePackage.ENTRY__ICON32_NAME:
-				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
-			case PalettePackage.ENTRY__VISIBLE:
-				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
-			case PalettePackage.ENTRY__DEFAULT_ENTRY:
-				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
-			case PalettePackage.ENTRY__ID:
-				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-			case PalettePackage.ENTRY__MODIFICATION:
-				return modification != MODIFICATION_EDEFAULT;
-			case PalettePackage.ENTRY__ENTRY_LABEL:
-				return entryLabel != null;
-			case PalettePackage.ENTRY__ENTRY_SHORT_DESCRIPTION:
-				return entryShortDescription != null;
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case PalettePackage.ENTRY__ICON16_NAME:
 				setIcon16Name((String)newValue);
 				return;
@@ -482,7 +450,7 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 				setEntryShortDescription((AbstractString)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -490,8 +458,8 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case PalettePackage.ENTRY__ICON16_NAME:
 				setIcon16Name(ICON16_NAME_EDEFAULT);
 				return;
@@ -517,7 +485,34 @@ public abstract class EntryImpl extends EObjectImpl implements Entry {
 				setEntryShortDescription((AbstractString)null);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case PalettePackage.ENTRY__ICON16_NAME:
+				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
+			case PalettePackage.ENTRY__ICON32_NAME:
+				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
+			case PalettePackage.ENTRY__VISIBLE:
+				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
+			case PalettePackage.ENTRY__DEFAULT_ENTRY:
+				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
+			case PalettePackage.ENTRY__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case PalettePackage.ENTRY__MODIFICATION:
+				return modification != MODIFICATION_EDEFAULT;
+			case PalettePackage.ENTRY__ENTRY_LABEL:
+				return entryLabel != null;
+			case PalettePackage.ENTRY__ENTRY_SHORT_DESCRIPTION:
+				return entryShortDescription != null;
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**

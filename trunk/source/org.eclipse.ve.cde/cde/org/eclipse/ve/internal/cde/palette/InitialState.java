@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: InitialState.java,v $
- *  $Revision: 1.1 $  $Date: 2005-06-20 23:54:40 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-07 17:21:33 $ 
  */
 package org.eclipse.ve.internal.cde.palette;
 
@@ -83,7 +83,7 @@ public final class InitialState extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final InitialState OPEN_LITERAL = new InitialState(OPEN, "Open");
+	public static final InitialState OPEN_LITERAL = new InitialState(OPEN, "Open", "Open");
 
 	/**
 	 * The '<em><b>Closed</b></em>' literal object.
@@ -93,7 +93,7 @@ public final class InitialState extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final InitialState CLOSED_LITERAL = new InitialState(CLOSED, "Closed");
+	public static final InitialState CLOSED_LITERAL = new InitialState(CLOSED, "Closed", "Closed");
 
 	/**
 	 * The '<em><b>Pinned Open</b></em>' literal object.
@@ -103,7 +103,7 @@ public final class InitialState extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final InitialState PINNED_OPEN_LITERAL = new InitialState(PINNED_OPEN, "PinnedOpen");
+	public static final InitialState PINNED_OPEN_LITERAL = new InitialState(PINNED_OPEN, "PinnedOpen", "PinnedOpen");
 
 	/**
 	 * An array of all the '<em><b>Initial State</b></em>' enumerators.
@@ -127,15 +127,15 @@ public final class InitialState extends AbstractEnumerator {
 	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Initial State</b></em>' literal with the specified name.
+	 * Returns the '<em><b>Initial State</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static InitialState get(String name) {
+	public static InitialState get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			InitialState result = VALUES_ARRAY[i];
-			if (result.toString().equals(name)) {
+			if (result.toString().equals(literal)) {
 				return result;
 			}
 		}
@@ -143,7 +143,23 @@ public final class InitialState extends AbstractEnumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Initial State</b></em>' literal with the specified value.
+	 * Returns the '<em><b>Initial State</b></em>' literal with the specified name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static InitialState getByName(String name) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			InitialState result = VALUES_ARRAY[i];
+			if (result.getName().equals(name)) {
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the '<em><b>Initial State</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -163,8 +179,8 @@ public final class InitialState extends AbstractEnumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private InitialState(int value, String name) {
-		super(value, name);
+	private InitialState(int value, String name, String literal) {
+		super(value, name, literal);
 	}
 
 } //InitialState

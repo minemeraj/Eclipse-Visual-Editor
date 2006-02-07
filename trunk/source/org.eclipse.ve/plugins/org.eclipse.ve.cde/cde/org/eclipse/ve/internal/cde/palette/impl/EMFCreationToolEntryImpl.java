@@ -11,27 +11,20 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: EMFCreationToolEntryImpl.java,v $
- *  $Revision: 1.5 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-07 17:21:33 $ 
  */
-import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.gef.requests.CreationFactory;
 
 import org.eclipse.ve.internal.cde.emf.EMFClassCreationFactory;
 import org.eclipse.ve.internal.cde.palette.EMFCreationToolEntry;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
-import org.eclipse.ve.internal.cde.palette.Permissions;
 
-import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 /**
  * <!-- begin-user-doc -->
@@ -86,134 +79,11 @@ public class EMFCreationToolEntryImpl extends CreationToolEntryImpl implements E
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return PalettePackage.eINSTANCE.getEMFCreationToolEntry();
+		return PalettePackage.Literals.EMF_CREATION_TOOL_ENTRY;
 	}
 
 	public CreationFactory createFactory() {
 		return new EMFClassCreationFactory(getCreationClassURI());
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ICON16_NAME:
-				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ICON32_NAME:
-				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__VISIBLE:
-				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
-				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ID:
-				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__MODIFICATION:
-				return modification != MODIFICATION_EDEFAULT;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ENTRY_LABEL:
-				return entryLabel != null;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
-				return entryShortDescription != null;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__STRING_PROPERTIES:
-				return stringProperties != null && !stringProperties.isEmpty();
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__KEYED_VALUES:
-				return keyedValues != null && !keyedValues.isEmpty();
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__CREATION_CLASS_URI:
-				return CREATION_CLASS_URI_EDEFAULT == null ? creationClassURI != null : !CREATION_CLASS_URI_EDEFAULT.equals(creationClassURI);
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ICON16_NAME:
-				setIcon16Name((String)newValue);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ICON32_NAME:
-				setIcon32Name((String)newValue);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__VISIBLE:
-				setVisible(((Boolean)newValue).booleanValue());
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
-				setDefaultEntry(((Boolean)newValue).booleanValue());
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ID:
-				setId((String)newValue);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__MODIFICATION:
-				setModification((Permissions)newValue);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ENTRY_LABEL:
-				setEntryLabel((AbstractString)newValue);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
-				setEntryShortDescription((AbstractString)newValue);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__STRING_PROPERTIES:
-				getStringProperties().clear();
-				getStringProperties().addAll((Collection)newValue);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__KEYED_VALUES:
-				getKeyedValues().clear();
-				getKeyedValues().addAll((Collection)newValue);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__CREATION_CLASS_URI:
-				setCreationClassURI((String)newValue);
-				return;
-		}
-		eDynamicSet(eFeature, newValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ICON16_NAME:
-				setIcon16Name(ICON16_NAME_EDEFAULT);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ICON32_NAME:
-				setIcon32Name(ICON32_NAME_EDEFAULT);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__VISIBLE:
-				setVisible(VISIBLE_EDEFAULT);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
-				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ID:
-				setId(ID_EDEFAULT);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__MODIFICATION:
-				setModification(MODIFICATION_EDEFAULT);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ENTRY_LABEL:
-				setEntryLabel((AbstractString)null);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
-				setEntryShortDescription((AbstractString)null);
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__STRING_PROPERTIES:
-				getStringProperties().clear();
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__KEYED_VALUES:
-				getKeyedValues().clear();
-				return;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__CREATION_CLASS_URI:
-				setCreationClassURI(CREATION_CLASS_URI_EDEFAULT);
-				return;
-		}
-		eDynamicUnset(eFeature);
 	}
 
 	/**
@@ -242,22 +112,12 @@ public class EMFCreationToolEntryImpl extends CreationToolEntryImpl implements E
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case PalettePackage.EMF_CREATION_TOOL_ENTRY__ENTRY_LABEL:
-					return basicSetEntryLabel(null, msgs);
-				case PalettePackage.EMF_CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
-					return basicSetEntryShortDescription(null, msgs);
-				case PalettePackage.EMF_CREATION_TOOL_ENTRY__STRING_PROPERTIES:
-					return ((InternalEList)getStringProperties()).basicRemove(otherEnd, msgs);
-				case PalettePackage.EMF_CREATION_TOOL_ENTRY__KEYED_VALUES:
-					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case PalettePackage.EMF_CREATION_TOOL_ENTRY__CREATION_CLASS_URI:
+				return getCreationClassURI();
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -265,32 +125,40 @@ public class EMFCreationToolEntryImpl extends CreationToolEntryImpl implements E
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ICON16_NAME:
-				return getIcon16Name();
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ICON32_NAME:
-				return getIcon32Name();
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__VISIBLE:
-				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
-				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ID:
-				return getId();
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__MODIFICATION:
-				return getModification();
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ENTRY_LABEL:
-				return getEntryLabel();
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
-				return getEntryShortDescription();
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__STRING_PROPERTIES:
-				return getStringProperties();
-			case PalettePackage.EMF_CREATION_TOOL_ENTRY__KEYED_VALUES:
-				return getKeyedValues();
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case PalettePackage.EMF_CREATION_TOOL_ENTRY__CREATION_CLASS_URI:
-				return getCreationClassURI();
+				setCreationClassURI((String)newValue);
+				return;
 		}
-		return eDynamicGet(eFeature, resolve);
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case PalettePackage.EMF_CREATION_TOOL_ENTRY__CREATION_CLASS_URI:
+				setCreationClassURI(CREATION_CLASS_URI_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case PalettePackage.EMF_CREATION_TOOL_ENTRY__CREATION_CLASS_URI:
+				return CREATION_CLASS_URI_EDEFAULT == null ? creationClassURI != null : !CREATION_CLASS_URI_EDEFAULT.equals(creationClassURI);
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**

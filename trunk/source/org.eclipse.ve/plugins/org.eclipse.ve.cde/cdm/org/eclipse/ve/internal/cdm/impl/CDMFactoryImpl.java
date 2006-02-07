@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: CDMFactoryImpl.java,v $
- *  $Revision: 1.7 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.8 $  $Date: 2006-02-07 17:21:33 $ 
  */
 
 import org.eclipse.ve.internal.cdm.*;
@@ -22,7 +22,11 @@ import java.util.StringTokenizer;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.ve.internal.cdm.model.Dimension;
 import org.eclipse.ve.internal.cdm.model.Point;
@@ -35,6 +39,25 @@ import org.eclipse.ve.internal.cdm.model.Rectangle;
  * @generated
  */
 public class CDMFactoryImpl extends EFactoryImpl implements CDMFactory {
+	/**
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static CDMFactory init() {
+		try {
+			CDMFactory theCDMFactory = (CDMFactory)EPackage.Registry.INSTANCE.getEFactory("http:///org/eclipse/ve/internal/cdm.ecore"); 
+			if (theCDMFactory != null) {
+				return theCDMFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new CDMFactoryImpl();
+	}
+
 	/**
 	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc -->

@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: ResourceBundleImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:50 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
@@ -46,7 +46,7 @@ public abstract class ResourceBundleImpl extends EObjectImpl implements Resource
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return UtilityPackage.eINSTANCE.getResourceBundle();
+		return UtilityPackage.Literals.RESOURCE_BUNDLE;
 	}
 
 	public java.util.ResourceBundle getBundle() {

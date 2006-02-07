@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cdm.impl;
 /*
  *  $RCSfile: DiagramFigureImpl.java,v $
- *  $Revision: 1.3 $  $Date: 2005-08-24 23:12:49 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-07 17:21:33 $ 
  */
  
 import java.util.Collection;
@@ -20,7 +20,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -89,7 +88,7 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return CDMPackage.eINSTANCE.getDiagramFigure();
+		return CDMPackage.Literals.DIAGRAM_FIGURE;
 	}
 
 	/**
@@ -130,18 +129,12 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case CDMPackage.DIAGRAM_FIGURE__KEYED_VALUES:
-					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
-				case CDMPackage.DIAGRAM_FIGURE__CHILD_FIGURES:
-					return ((InternalEList)getChildFigures()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CDMPackage.DIAGRAM_FIGURE__CHILD_FIGURES:
+				return ((InternalEList)getChildFigures()).basicRemove(otherEnd, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -149,16 +142,14 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.DIAGRAM_FIGURE__KEYED_VALUES:
-				return getKeyedValues();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case CDMPackage.DIAGRAM_FIGURE__TYPE:
 				return getType();
 			case CDMPackage.DIAGRAM_FIGURE__CHILD_FIGURES:
 				return getChildFigures();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -166,12 +157,8 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.DIAGRAM_FIGURE__KEYED_VALUES:
-				getKeyedValues().clear();
-				getKeyedValues().addAll((Collection)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case CDMPackage.DIAGRAM_FIGURE__TYPE:
 				setType((String)newValue);
 				return;
@@ -180,7 +167,7 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 				getChildFigures().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -188,11 +175,8 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.DIAGRAM_FIGURE__KEYED_VALUES:
-				getKeyedValues().clear();
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case CDMPackage.DIAGRAM_FIGURE__TYPE:
 				setType(TYPE_EDEFAULT);
 				return;
@@ -200,7 +184,7 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 				getChildFigures().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
@@ -208,16 +192,14 @@ public class DiagramFigureImpl extends KeyedValueHolderImpl implements DiagramFi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case CDMPackage.DIAGRAM_FIGURE__KEYED_VALUES:
-				return keyedValues != null && !keyedValues.isEmpty();
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case CDMPackage.DIAGRAM_FIGURE__TYPE:
 				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
 			case CDMPackage.DIAGRAM_FIGURE__CHILD_FIGURES:
 				return childFigures != null && !childFigures.isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**

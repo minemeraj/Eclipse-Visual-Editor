@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.palette;
 /*
  *  $RCSfile: PaletteFactory.java,v $
- *  $Revision: 1.4 $  $Date: 2005-08-24 23:12:51 $ 
+ *  $Revision: 1.5 $  $Date: 2006-02-07 17:21:33 $ 
  */
  
 import org.eclipse.emf.ecore.EFactory;
@@ -24,14 +24,14 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.ve.internal.cde.palette.PalettePackage
  * @generated
  */
-public interface PaletteFactory extends EFactory{
+public interface PaletteFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	PaletteFactory eINSTANCE = new org.eclipse.ve.internal.cde.palette.impl.PaletteFactoryImpl();
+	PaletteFactory eINSTANCE = org.eclipse.ve.internal.cde.palette.impl.PaletteFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Root</em>'.

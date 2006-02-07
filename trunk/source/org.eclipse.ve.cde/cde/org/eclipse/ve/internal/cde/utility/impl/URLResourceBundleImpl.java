@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.cde.utility.impl;
 /*
  *  $RCSfile: URLResourceBundleImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2005-09-15 21:27:16 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import java.util.Collection;
 
@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.osgi.framework.Bundle;
@@ -95,7 +94,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return UtilityPackage.eINSTANCE.getURLResourceBundle();
+		return UtilityPackage.Literals.URL_RESOURCE_BUNDLE;
 	}
 
 	// dbk cache previously loaded bundles (custom classloader defeats ResourceBundle cache)
@@ -194,14 +193,14 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_NAME:
 				return getBundleName();
 			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_UR_LS:
 				return getBundleURLs();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -209,23 +208,8 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_NAME:
-				return BUNDLE_NAME_EDEFAULT == null ? bundleName != null : !BUNDLE_NAME_EDEFAULT.equals(bundleName);
-			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_UR_LS:
-				return bundleURLs != null && !bundleURLs.isEmpty();
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_NAME:
 				setBundleName((String)newValue);
 				return;
@@ -234,7 +218,7 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 				getBundleURLs().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -242,8 +226,8 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_NAME:
 				setBundleName(BUNDLE_NAME_EDEFAULT);
 				return;
@@ -251,7 +235,22 @@ public class URLResourceBundleImpl extends ResourceBundleImpl implements URLReso
 				getBundleURLs().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_NAME:
+				return BUNDLE_NAME_EDEFAULT == null ? bundleName != null : !BUNDLE_NAME_EDEFAULT.equals(bundleName);
+			case UtilityPackage.URL_RESOURCE_BUNDLE__BUNDLE_UR_LS:
+				return bundleURLs != null && !bundleURLs.isEmpty();
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**

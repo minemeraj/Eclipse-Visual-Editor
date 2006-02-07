@@ -11,24 +11,18 @@
 package org.eclipse.ve.internal.cde.palette.impl;
 /*
  *  $RCSfile: SelectionCreationToolEntryImpl.java,v $
- *  $Revision: 1.9 $  $Date: 2005-09-15 21:27:15 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-07 17:21:33 $ 
  */
 import java.text.MessageFormat;
-import java.util.Collection;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.ve.internal.cde.palette.PalettePackage;
-import org.eclipse.ve.internal.cde.palette.Permissions;
 import org.eclipse.ve.internal.cde.palette.SelectionCreationToolEntry;
 
 import org.eclipse.gef.palette.PaletteEntry;
@@ -37,7 +31,6 @@ import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.ve.internal.cde.core.*;
-import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 /**
  * <!-- begin-user-doc -->
@@ -80,7 +73,7 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return PalettePackage.eINSTANCE.getSelectionCreationToolEntry();
+		return PalettePackage.Literals.SELECTION_CREATION_TOOL_ENTRY;
 	}
 
 	protected static class SelectionFactory implements CreationFactory {
@@ -255,55 +248,12 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ENTRY_LABEL:
-					return basicSetEntryLabel(null, msgs);
-				case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
-					return basicSetEntryShortDescription(null, msgs);
-				case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__STRING_PROPERTIES:
-					return ((InternalEList)getStringProperties()).basicRemove(otherEnd, msgs);
-				case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__KEYED_VALUES:
-					return ((InternalEList)getKeyedValues()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ICON16_NAME:
-				return getIcon16Name();
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ICON32_NAME:
-				return getIcon32Name();
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__VISIBLE:
-				return isVisible() ? Boolean.TRUE : Boolean.FALSE;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
-				return isDefaultEntry() ? Boolean.TRUE : Boolean.FALSE;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ID:
-				return getId();
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__MODIFICATION:
-				return getModification();
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ENTRY_LABEL:
-				return getEntryLabel();
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
-				return getEntryShortDescription();
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__STRING_PROPERTIES:
-				return getStringProperties();
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__KEYED_VALUES:
-				return getKeyedValues();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__SELECTOR_CLASS_NAME:
 				return getSelectorClassName();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -311,78 +261,13 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ICON16_NAME:
-				return ICON16_NAME_EDEFAULT == null ? icon16Name != null : !ICON16_NAME_EDEFAULT.equals(icon16Name);
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ICON32_NAME:
-				return ICON32_NAME_EDEFAULT == null ? icon32Name != null : !ICON32_NAME_EDEFAULT.equals(icon32Name);
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__VISIBLE:
-				return ((eFlags & VISIBLE_EFLAG) != 0) != VISIBLE_EDEFAULT;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
-				return isDefaultEntry() != DEFAULT_ENTRY_EDEFAULT;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ID:
-				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__MODIFICATION:
-				return modification != MODIFICATION_EDEFAULT;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ENTRY_LABEL:
-				return entryLabel != null;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
-				return entryShortDescription != null;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__STRING_PROPERTIES:
-				return stringProperties != null && !stringProperties.isEmpty();
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__KEYED_VALUES:
-				return keyedValues != null && !keyedValues.isEmpty();
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__SELECTOR_CLASS_NAME:
-				return SELECTOR_CLASS_NAME_EDEFAULT == null ? selectorClassName != null : !SELECTOR_CLASS_NAME_EDEFAULT.equals(selectorClassName);
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ICON16_NAME:
-				setIcon16Name((String)newValue);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ICON32_NAME:
-				setIcon32Name((String)newValue);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__VISIBLE:
-				setVisible(((Boolean)newValue).booleanValue());
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
-				setDefaultEntry(((Boolean)newValue).booleanValue());
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ID:
-				setId((String)newValue);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__MODIFICATION:
-				setModification((Permissions)newValue);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ENTRY_LABEL:
-				setEntryLabel((AbstractString)newValue);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
-				setEntryShortDescription((AbstractString)newValue);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__STRING_PROPERTIES:
-				getStringProperties().clear();
-				getStringProperties().addAll((Collection)newValue);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__KEYED_VALUES:
-				getKeyedValues().clear();
-				getKeyedValues().addAll((Collection)newValue);
-				return;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__SELECTOR_CLASS_NAME:
 				setSelectorClassName((String)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
@@ -390,43 +275,26 @@ public class SelectionCreationToolEntryImpl extends CreationToolEntryImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ICON16_NAME:
-				setIcon16Name(ICON16_NAME_EDEFAULT);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ICON32_NAME:
-				setIcon32Name(ICON32_NAME_EDEFAULT);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__VISIBLE:
-				setVisible(VISIBLE_EDEFAULT);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__DEFAULT_ENTRY:
-				setDefaultEntry(DEFAULT_ENTRY_EDEFAULT);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ID:
-				setId(ID_EDEFAULT);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__MODIFICATION:
-				setModification(MODIFICATION_EDEFAULT);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ENTRY_LABEL:
-				setEntryLabel((AbstractString)null);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__ENTRY_SHORT_DESCRIPTION:
-				setEntryShortDescription((AbstractString)null);
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__STRING_PROPERTIES:
-				getStringProperties().clear();
-				return;
-			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__KEYED_VALUES:
-				getKeyedValues().clear();
-				return;
+	public void eUnset(int featureID) {
+		switch (featureID) {
 			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__SELECTOR_CLASS_NAME:
 				setSelectorClassName(SELECTOR_CLASS_NAME_EDEFAULT);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case PalettePackage.SELECTION_CREATION_TOOL_ENTRY__SELECTOR_CLASS_NAME:
+				return SELECTOR_CLASS_NAME_EDEFAULT == null ? selectorClassName != null : !SELECTOR_CLASS_NAME_EDEFAULT.equals(selectorClassName);
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**

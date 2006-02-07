@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ve.internal.cde.decorators.impl;
-/*
- *  $RCSfile: PropertyDescriptorDecoratorImpl.java,v $
- *  $Revision: 1.10 $  $Date: 2005-09-19 15:45:35 $ 
- */
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -20,16 +16,11 @@ import java.util.Collection;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
-import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.jface.viewers.ILabelProvider;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -38,7 +29,6 @@ import org.eclipse.ve.internal.cde.core.CDEPlugin;
 import org.eclipse.ve.internal.cde.decorators.BasePropertyDecorator;
 import org.eclipse.ve.internal.cde.decorators.DecoratorsPackage;
 import org.eclipse.ve.internal.cde.decorators.PropertyDescriptorDecorator;
-import org.eclipse.ve.internal.cde.utility.AbstractString;
 
 /**
  * <!-- begin-user-doc -->
@@ -255,7 +245,7 @@ public class PropertyDescriptorDecoratorImpl
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return DecoratorsPackage.eINSTANCE.getPropertyDescriptorDecorator();
+		return DecoratorsPackage.Literals.PROPERTY_DESCRIPTOR_DECORATOR;
 	}
 
 	/**
@@ -330,102 +320,8 @@ public class PropertyDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-					return ((InternalEList)getEAnnotations()).basicAdd(otherEnd, msgs);
-				case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT, msgs);
-				default:
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-					return ((InternalEList)getEAnnotations()).basicRemove(otherEnd, msgs);
-				case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DETAILS:
-					return ((InternalEList)getDetails()).basicRemove(otherEnd, msgs);
-				case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-					return eBasicSetContainer(null, DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT, msgs);
-				case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CONTENTS:
-					return ((InternalEList)getContents()).basicRemove(otherEnd, msgs);
-				case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
-					return basicSetDisplayNameString(null, msgs);
-				case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING:
-					return basicSetDescriptionString(null, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID >= 0) {
-			switch (eContainerFeatureID) {
-				case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-					return eContainer.eInverseRemove(this, EcorePackage.EMODEL_ELEMENT__EANNOTATIONS, EModelElement.class, msgs);
-				default:
-					return eDynamicBasicRemoveFromContainer(msgs);
-			}
-		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-				return getEAnnotations();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__SOURCE:
-				return getSource();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DETAILS:
-				return getDetails();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-				return getEModelElement();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CONTENTS:
-				return getContents();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__REFERENCES:
-				return getReferences();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__HIDDEN:
-				return isHidden() ? Boolean.TRUE : Boolean.FALSE;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
-				return getHelpContextIdsString();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__PREFERRED:
-				return isPreferred() ? Boolean.TRUE : Boolean.FALSE;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CATEGORY_STRING:
-				if (resolve) return getCategoryString();
-				return basicGetCategoryString();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:
-				return getFilterFlagStrings();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
-				return getDisplayNameString();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING:
-				return getDescriptionString();
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
 				return getCellEditorValidatorClassnames();
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__LABEL_PROVIDER_CLASSNAME:
@@ -441,28 +337,7 @@ public class PropertyDescriptorDecoratorImpl
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ALWAYS_INCOMPATIBLE:
 				return isAlwaysIncompatible() ? Boolean.TRUE : Boolean.FALSE;
 		}
-		return eDynamicGet(eFeature, resolve);
-	}
-
-	/*
-	 * Called by overrides to eIsSet to test if source is set. This is because for the 
-	 * FeatureDecorator and subclasses, setting source to the classname is considered
-	 * to be not set since that is the new default for each class level. By doing this
-	 * when serializing it won't waste space and time adding a copy of the source string
-	 * to the serialized output and then creating a NEW copy on each decorator loaded
-	 * from an XMI file. 
-	 * 
-	 * @return <code>true</code> if source is not null and not equal to class name.
-	 * 
-	 * @since 1.1.0
-	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__SOURCE:
-				return source != null && !getClass().getName().equals(source);
-			default:
-				return eIsSetGen(eFeature);
-		}
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -470,34 +345,73 @@ public class PropertyDescriptorDecoratorImpl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSetGen(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-				return eAnnotations != null && !eAnnotations.isEmpty();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__SOURCE:
-				return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DETAILS:
-				return details != null && !details.isEmpty();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-				return getEModelElement() != null;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CONTENTS:
-				return contents != null && !contents.isEmpty();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__REFERENCES:
-				return references != null && !references.isEmpty();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__HIDDEN:
-				return ((eFlags & HIDDEN_EFLAG) != 0) != HIDDEN_EDEFAULT;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
-				return helpContextIdsString != null && !helpContextIdsString.isEmpty();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__PREFERRED:
-				return ((eFlags & PREFERRED_EFLAG) != 0) != PREFERRED_EDEFAULT;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CATEGORY_STRING:
-				return categoryString != null;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:
-				return filterFlagStrings != null && !filterFlagStrings.isEmpty();
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
-				return displayNameString != null;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING:
-				return descriptionString != null;
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
+				getCellEditorValidatorClassnames().clear();
+				getCellEditorValidatorClassnames().addAll((Collection)newValue);
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__LABEL_PROVIDER_CLASSNAME:
+				setLabelProviderClassname((String)newValue);
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_CLASSNAME:
+				setCellEditorClassname((String)newValue);
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__NULL_INVALID:
+				setNullInvalid(((Boolean)newValue).booleanValue());
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ENTRY_EXPANDABLE:
+				setEntryExpandable(((Boolean)newValue).booleanValue());
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESIGNTIME_PROPERTY:
+				setDesigntimeProperty(((Boolean)newValue).booleanValue());
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ALWAYS_INCOMPATIBLE:
+				setAlwaysIncompatible(((Boolean)newValue).booleanValue());
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
+				getCellEditorValidatorClassnames().clear();
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__LABEL_PROVIDER_CLASSNAME:
+				unsetLabelProviderClassname();
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_CLASSNAME:
+				unsetCellEditorClassname();
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__NULL_INVALID:
+				unsetNullInvalid();
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ENTRY_EXPANDABLE:
+				unsetEntryExpandable();
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESIGNTIME_PROPERTY:
+				unsetDesigntimeProperty();
+				return;
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ALWAYS_INCOMPATIBLE:
+				setAlwaysIncompatible(ALWAYS_INCOMPATIBLE_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
 				return cellEditorValidatorClassnames != null && !cellEditorValidatorClassnames.isEmpty();
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__LABEL_PROVIDER_CLASSNAME:
@@ -513,7 +427,28 @@ public class PropertyDescriptorDecoratorImpl
 			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ALWAYS_INCOMPATIBLE:
 				return ((eFlags & ALWAYS_INCOMPATIBLE_EFLAG) != 0) != ALWAYS_INCOMPATIBLE_EDEFAULT;
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
+	}
+
+	/*
+	 * Called by overrides to eIsSet to test if source is set. This is because for the 
+	 * FeatureDecorator and subclasses, setting source to the classname is considered
+	 * to be not set since that is the new default for each class level. By doing this
+	 * when serializing it won't waste space and time adding a copy of the source string
+	 * to the serialized output and then creating a NEW copy on each decorator loaded
+	 * from an XMI file. 
+	 * 
+	 * @return <code>true</code> if source is not null and not equal to class name.
+	 * 
+	 * @since 1.1.0
+	 */
+	public boolean eIsSet(EStructuralFeature feature) {
+		switch (eDerivedStructuralFeatureID(feature)) {
+			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__SOURCE:
+				return source != null && !getClass().getName().equals(source);
+			default:
+				return super.eIsSet(feature);
+		}
 	}
 
 	/**
@@ -552,155 +487,6 @@ public class PropertyDescriptorDecoratorImpl
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-				getEAnnotations().clear();
-				getEAnnotations().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__SOURCE:
-				setSource((String)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DETAILS:
-				getDetails().clear();
-				getDetails().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-				setEModelElement((EModelElement)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CONTENTS:
-				getContents().clear();
-				getContents().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__REFERENCES:
-				getReferences().clear();
-				getReferences().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__HIDDEN:
-				setHidden(((Boolean)newValue).booleanValue());
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
-				getHelpContextIdsString().clear();
-				getHelpContextIdsString().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__PREFERRED:
-				setPreferred(((Boolean)newValue).booleanValue());
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CATEGORY_STRING:
-				setCategoryString((AbstractString)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:
-				getFilterFlagStrings().clear();
-				getFilterFlagStrings().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
-				setDisplayNameString((AbstractString)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING:
-				setDescriptionString((AbstractString)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
-				getCellEditorValidatorClassnames().clear();
-				getCellEditorValidatorClassnames().addAll((Collection)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__LABEL_PROVIDER_CLASSNAME:
-				setLabelProviderClassname((String)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_CLASSNAME:
-				setCellEditorClassname((String)newValue);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__NULL_INVALID:
-				setNullInvalid(((Boolean)newValue).booleanValue());
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ENTRY_EXPANDABLE:
-				setEntryExpandable(((Boolean)newValue).booleanValue());
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESIGNTIME_PROPERTY:
-				setDesigntimeProperty(((Boolean)newValue).booleanValue());
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ALWAYS_INCOMPATIBLE:
-				setAlwaysIncompatible(((Boolean)newValue).booleanValue());
-				return;
-		}
-		eDynamicSet(eFeature, newValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EANNOTATIONS:
-				getEAnnotations().clear();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__SOURCE:
-				setSource(SOURCE_EDEFAULT);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DETAILS:
-				getDetails().clear();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__EMODEL_ELEMENT:
-				setEModelElement((EModelElement)null);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CONTENTS:
-				getContents().clear();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__REFERENCES:
-				getReferences().clear();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__HIDDEN:
-				setHidden(HIDDEN_EDEFAULT);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__HELP_CONTEXT_IDS_STRING:
-				getHelpContextIdsString().clear();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__PREFERRED:
-				setPreferred(PREFERRED_EDEFAULT);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CATEGORY_STRING:
-				setCategoryString((AbstractString)null);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__FILTER_FLAG_STRINGS:
-				getFilterFlagStrings().clear();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DISPLAY_NAME_STRING:
-				setDisplayNameString((AbstractString)null);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESCRIPTION_STRING:
-				setDescriptionString((AbstractString)null);
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_VALIDATOR_CLASSNAMES:
-				getCellEditorValidatorClassnames().clear();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__LABEL_PROVIDER_CLASSNAME:
-				unsetLabelProviderClassname();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__CELL_EDITOR_CLASSNAME:
-				unsetCellEditorClassname();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__NULL_INVALID:
-				unsetNullInvalid();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ENTRY_EXPANDABLE:
-				unsetEntryExpandable();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__DESIGNTIME_PROPERTY:
-				unsetDesigntimeProperty();
-				return;
-			case DecoratorsPackage.PROPERTY_DESCRIPTOR_DECORATOR__ALWAYS_INCOMPATIBLE:
-				setAlwaysIncompatible(ALWAYS_INCOMPATIBLE_EDEFAULT);
-				return;
-		}
-		eDynamicUnset(eFeature);
 	}
 
 	/**
