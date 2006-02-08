@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.jfc.beaninfo;
 /*
  *  $RCSfile: ComponentBeanInfo.java,v $
- *  $Revision: 1.9 $  $Date: 2005-10-18 15:32:23 $ 
+ *  $Revision: 1.10 $  $Date: 2006-02-08 17:27:25 $ 
  */
 
 import java.awt.dnd.DropTarget;
@@ -1283,6 +1283,7 @@ public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
 	      	DISPLAYNAME, rescomponent.getString("localeDN"), //$NON-NLS-1$
 	      	EXPERT, Boolean.TRUE,
 	      	SHORTDESCRIPTION, rescomponent.getString("localeSD"),  //$NON-NLS-1$
+	      	BOUND, Boolean.TRUE,
 	    		}
 	    	),	
 			// locationOnScreen
