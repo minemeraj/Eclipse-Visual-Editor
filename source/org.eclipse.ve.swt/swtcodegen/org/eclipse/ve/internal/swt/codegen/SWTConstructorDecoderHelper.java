@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConstructorDecoderHelper.java,v $
- *  $Revision: 1.34 $  $Date: 2006-02-06 17:14:42 $ 
+ *  $Revision: 1.35 $  $Date: 2006-02-09 15:22:12 $ 
  */
 package org.eclipse.ve.internal.swt.codegen;
 
@@ -50,7 +50,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	protected CodeExpressionRef masterExpression = null; // Expression drives the existence of this expression
 
 	private static boolean isWidget(EObject eObject, ResourceSet rs) {
-		JavaHelpers widgetType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets", "Widget", rs) ; //$NON-NLS-1$
+		JavaHelpers widgetType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets", "Widget", rs) ; //$NON-NLS-1$ //$NON-NLS-2$
 		if(widgetType!=null && widgetType.isInstance(eObject)){
 			return true;
 		}
@@ -58,7 +58,7 @@ public class SWTConstructorDecoderHelper extends ConstructorDecoderHelper {
 	}
 	
 	private static boolean isComposite(EObject eObject, ResourceSet rs) {
-		JavaHelpers widgetType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets", "Composite", rs) ; //$NON-NLS-1$
+		JavaHelpers widgetType = JavaRefFactory.eINSTANCE.reflectType("org.eclipse.swt.widgets", "Composite", rs) ; //$NON-NLS-1$ //$NON-NLS-2$
 		if(widgetType!=null && widgetType.isInstance(eObject)){
 			return true;
 		}

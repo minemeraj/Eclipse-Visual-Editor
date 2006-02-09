@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: GridLayoutPolicyHelper.java,v $
- *  $Revision: 1.50 $  $Date: 2006-02-06 17:14:41 $
+ *  $Revision: 1.51 $  $Date: 2006-02-09 15:22:12 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -483,7 +483,7 @@ public class GridLayoutPolicyHelper extends LayoutPolicyHelper implements IActio
 		try {
 			// Get the actual set number of columns.
 			IBeanProxy layoutProxy = getLayoutManagerBeanProxy();
-			return ((IIntegerBeanProxy)layoutProxy.getTypeProxy().getFieldProxy("numColumns").get(layoutProxy)).intValue();
+			return ((IIntegerBeanProxy)layoutProxy.getTypeProxy().getFieldProxy("numColumns").get(layoutProxy)).intValue(); //$NON-NLS-1$
 		} catch (ThrowableProxy e) {
 		} catch (NullPointerException e) {
 		} catch (ClassCastException e) {
