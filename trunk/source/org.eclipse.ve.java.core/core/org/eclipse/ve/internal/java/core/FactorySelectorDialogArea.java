@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FactorySelectorDialogArea.java,v $
- *  $Revision: 1.1 $  $Date: 2006-02-06 17:14:38 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-09 15:03:05 $ 
  */
 
 package org.eclipse.ve.internal.java.core;
@@ -55,7 +55,7 @@ class FactorySelectorDialogArea extends Composite {
 		gridData.grabExcessVerticalSpace = true;
 		gridData.verticalAlignment = org.eclipse.swt.layout.GridData.FILL;
 		label = new Label(this, SWT.NONE);
-		label.setText("Select the factory for the new component:");
+		label.setText(JavaMessages.FactorySelectorDialogArea_Instructions);
 		list = new List(this, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		listViewer = new ListViewer(list);
 		listViewer.setContentProvider(new IStructuredContentProvider() {

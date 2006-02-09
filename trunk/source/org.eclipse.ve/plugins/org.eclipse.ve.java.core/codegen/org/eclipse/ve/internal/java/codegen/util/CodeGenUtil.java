@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.util;
 /*
  *  $RCSfile: CodeGenUtil.java,v $
- *  $Revision: 1.64 $  $Date: 2006-02-06 17:14:38 $ 
+ *  $Revision: 1.65 $  $Date: 2006-02-09 15:03:05 $ 
  */
 
 
@@ -1050,7 +1050,7 @@ public static Collection getReferences(Object o, boolean includeO) {
 			return false;	// No annotation needed for this part bean.
 		if (!bsc.getComponents().contains(bean))
 			return false;	// Not a freeform component, so no annotation.
-		return !bp.getSimpleName().toLowerCase().startsWith("ivj") && !InstanceVariableCreationRule.isModelled(bean.eClass(), model.getCompositionModel().getModelResourceSet());
+		return !bp.getSimpleName().toLowerCase().startsWith("ivj") && !InstanceVariableCreationRule.isModelled(bean.eClass(), model.getCompositionModel().getModelResourceSet()); //$NON-NLS-1$
 	}
 	
 	/**

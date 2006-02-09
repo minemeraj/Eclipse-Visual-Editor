@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FactorySelectorDialog.java,v $
- *  $Revision: 1.1 $  $Date: 2006-02-06 17:14:38 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-09 15:03:05 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -56,8 +56,8 @@ class FactorySelectorDialog extends TitleAreaDialog {
 		dialogArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		if (factories != null)
 			dialogArea.setFactories(factories);
-		setTitle("Factory Select");
-		setMessage("Select the factory to use:");
+		setTitle(JavaMessages.FactorySelectorDialog_Title);
+		setMessage(JavaMessages.FactorySelectorDialog_Message);
 		final Image titleImage = CDEPlugin.getImageFromPlugin(JavaVEPlugin.getPlugin(), "icons/full/wizban/javabean_wiz.gif"); // internal cleanup - copied from 'org.eclipse.jdt.ui\icons\full\wizban\typerefact_wiz.gif' //$NON-NLS-1$
 		setTitleImage(titleImage);
 		newParent.addDisposeListener(new DisposeListener() {
@@ -82,6 +82,6 @@ class FactorySelectorDialog extends TitleAreaDialog {
 	
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Factory Selection");
+		newShell.setText(JavaMessages.FactorySelectorDialog_Instructions);
 	}
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EnsureFactoryCommand.java,v $
- *  $Revision: 1.1 $  $Date: 2006-02-06 17:14:38 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-09 15:03:05 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -64,7 +64,7 @@ import org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper;
  */
 public class EnsureFactoryCommand extends CommandWrapper {
 	
-	public static final String FACTORY_PREFIX_FLAG = "{factory:";
+	public static final String FACTORY_PREFIX_FLAG = "{factory:"; //$NON-NLS-1$
 	private final IJavaInstance child;
 	private final IJavaInstance parent;
 	private final EditDomain ed;	
