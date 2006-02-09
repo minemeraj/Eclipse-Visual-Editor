@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.33 $ $Date: 2006-02-06 17:14:41 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.34 $ $Date: 2006-02-09 14:28:18 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -51,7 +51,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 
 	private static String[] EXPERT_FILTER_FLAGS = new String[] { IPropertySheetEntry.FILTER_ID_EXPERT};		
 
-	static class StyleBitPropertyID {		
+	public static class StyleBitPropertyID {		
 		// These are the packaged init strings for fields were for each entry in the
 		// primary array there are two entries in the secondary one, the first entry
 		// is the fully-qualified class and the second is the field name. 
@@ -352,17 +352,21 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 		if (descriptorID instanceof EStructuralFeature) {
 			return super.getPropertyValue(descriptorID);
 		} else if (descriptorID instanceof StyleBitPropertyID) {
-			int currentStyleValue = getWidgetProxyAdapter().getStyle();
-			// The style value represents all the bits together. We must return a single int value the represents the style that is set
-			// for the family that this property represents
-			Number[] availableValues = ((StyleBitPropertyID) descriptorID).propertyDescriptor.fValues;
-			for (int i = 0; i < availableValues.length; i++) {
-				if ((availableValues[i].intValue() & currentStyleValue) == availableValues[i].intValue()) { return availableValues[i]; }
-			}
-			return STYLE_NOT_SET_INTEGER;
+			return getStyleBitPropertyValue((StyleBitPropertyID)descriptorID);
 		} else {
 			return "???"; //$NON-NLS-1$
 		}
+	}
+
+	protected Object getStyleBitPropertyValue(StyleBitPropertyID descriptorID) {
+		int currentStyleValue = getWidgetProxyAdapter().getStyle() | getExplicitStyle();
+		// The style value represents all the bits together. We must return a single int value the represents the style that is set
+		// for the family that this property represents
+		Number[] availableValues = descriptorID.propertyDescriptor.fValues;
+		for (int i = 0; i < availableValues.length; i++) {
+			if ((availableValues[i].intValue() & currentStyleValue) == availableValues[i].intValue()) { return availableValues[i]; }
+		}
+		return STYLE_NOT_SET_INTEGER;
 	}
 
 	public boolean isPropertySet(Object descriptorID) {

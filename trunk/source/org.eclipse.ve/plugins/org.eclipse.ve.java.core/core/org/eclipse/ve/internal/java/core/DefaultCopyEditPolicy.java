@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: DefaultCopyEditPolicy.java,v $
- *  $Revision: 1.21 $  $Date: 2005-12-15 13:23:11 $ 
+ *  $Revision: 1.22 $  $Date: 2006-02-09 14:28:24 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -29,8 +29,10 @@ import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.widgets.Display;
 
+import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
+import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefPackage;
 
 import org.eclipse.ve.internal.cdm.Annotation;
@@ -267,6 +269,22 @@ public class DefaultCopyEditPolicy extends AbstractEditPolicy {
 	}
 			
     protected void preExpand(final IJavaInstance javaBean){
+    	
+    	// See if the allocation uses a factory method    	
+		// Manipulate the allocation of the JavaBean in the copy set    	
+    	JavaAllocation allocation = javaBean.getAllocation();
+    	if(allocation instanceof ParseTreeAllocation){
+    		PTExpression expression = ((ParseTreeAllocation)allocation).getExpression();
+    		if(expression instanceof PTMethodInvocation){
+    			PTMethodInvocation factoryMethodCall = (PTMethodInvocation) expression; 
+    			PTInstanceReference receiver = (PTInstanceReference) factoryMethodCall.getReceiver();
+    			JavaHelpers factoryClass = receiver.getReference().getJavaType();
+    			// The bean to be manipulated is the one in the copy set's parse tree, not the original one
+    			IJavaInstance beanToCopy = (IJavaInstance) copier.get(javaBean);    			
+    			FactoryCreationData.contributeToCopy(
+    					factoryClass,
+    	    			(PTMethodInvocation) ((ParseTreeAllocation)beanToCopy.getAllocation()).getExpression());
+    		}
+    	}    	
 	 }
-
 }

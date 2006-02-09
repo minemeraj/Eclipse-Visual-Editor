@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormToolkitBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2006-02-06 17:14:42 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-09 14:28:18 $ 
  */
 package org.eclipse.ui.forms.widgets.beaninfo;
 
@@ -55,13 +55,32 @@ public class FormToolkitBeanInfo extends IvjBeanInfo {
 					"createExpandableComposite", "org.eclipse.ui.forms.widgets.ExpandableComposite", Boolean.FALSE, new Object[] {"parentComposite", "style"},
 				},
 				new Object[] {
+					"createSection", "org.eclipse.ui.forms.widgets.Section", Boolean.FALSE, new Object[] {"parentComposite", "style"},
+				},				
+				new Object[] {
 					"createForm", "org.eclipse.ui.forms.widgets.Form", Boolean.FALSE, new Object[] {"parentComposite"},
 				},				
 				new Object[] {
 					"createLabel", "org.eclipse.swt.widgets.Label", Boolean.FALSE, new Object[] {"parentComposite", "text"}, new Object[] {"parentComposite", "text", "style"}
-				},				
-			}
-			});
+				},
+				new Object[] {
+					"createText", "org.eclipse.swt.widgets.Text", Boolean.FALSE, new Object[] {"parentComposite", "text"}, new Object[] {"parentComposite", "text", "style"}
+				},
+				new Object[] {
+					"createHyperlink", "org.eclipse.ui.forms.Hyperlink", Boolean.FALSE, new Object[] {"parentComposite", "text", "style"}
+				},
+				new Object[] {
+					"createImageHyperlink", "org.eclipse.ui.forms.ImageHyperlink", Boolean.FALSE, new Object[] {"parentComposite", "style"}
+				},
+				new Object[] {
+					"createTable", "org.eclipse.swt.widgets.Table", Boolean.FALSE, new Object[] {"parentComposite", "style"}
+				},
+				new Object[] {
+					"createTree", "org.eclipse.swt.widgets.Tree", Boolean.FALSE, new Object[] {"parentComposite", "style"}
+				},					
+			} , BaseBeanInfo.FACTORY_COPY_CONTRIBUTOR , "org.eclipse.ve.swt/org.eclipse.ve.internal.forms.FormToolkitCopyContributor"
+		}
+		);
 	}
 	
 	public java.beans.PropertyDescriptor[] getPropertyDescriptors() {

@@ -10,14 +10,14 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ExpandableCompositeBeanInfo.java,v $
- *  $Revision: 1.1 $  $Date: 2006-02-03 15:22:02 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-09 14:28:18 $ 
  */
 package org.eclipse.ui.forms.widgets.beaninfo;
 
 import java.beans.BeanDescriptor;
+import java.beans.PropertyDescriptor;
 
-import org.eclipse.swt.widgets.beaninfo.IvjBeanInfo;
-import org.eclipse.swt.widgets.beaninfo.SweetHelper;
+import org.eclipse.swt.widgets.beaninfo.*;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 public class ExpandableCompositeBeanInfo extends IvjBeanInfo {
@@ -62,5 +62,43 @@ public class ExpandableCompositeBeanInfo extends IvjBeanInfo {
 		);
 		SweetHelper.mergeSuperclassStyleBits(descriptor);
 		return descriptor;
+	}
+	
+	public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
+		try {
+			PropertyDescriptor aDescriptorList[] = {
+				// accessible
+				super.createPropertyDescriptor(getBeanClass(),"client", new Object[] { //$NON-NLS-1$
+					HIDDEN, Boolean.TRUE,	// The "client" property should not be on the property sheet							
+				}
+				),	
+				super.createPropertyDescriptor(getBeanClass(),"textClient", new Object[] { //$NON-NLS-1$
+					HIDDEN, Boolean.TRUE, // The "textClient" property should not be on the property sheet
+				}
+				),
+				super.createPropertyDescriptor(getBeanClass(),"expanded", new Object[] { //$NON-NLS-1$
+					HIDDEN, Boolean.TRUE, // expanded only has a set method - hide from property sheet
+				}
+				),
+				super.createPropertyDescriptor(getBeanClass(),"layout", new Object[] { //$NON-NLS-1$
+					HIDDEN, Boolean.TRUE, // layout shoud be hidden as there is a custom one ExpandableComposite uses
+				}
+				),
+				super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, ExpandableCompositeMessages.getString("textDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, ExpandableCompositeMessages.getString("textSD"), //$NON-NLS-1$
+				}
+				),		
+				super.createPropertyDescriptor(getBeanClass(),"titleBarForeground", new Object[] { //$NON-NLS-1$
+					DISPLAYNAME, ExpandableCompositeMessages.getString("titleBarForegroundDN"), //$NON-NLS-1$
+					SHORTDESCRIPTION, ExpandableCompositeMessages.getString("titleBarForegroundSD"), //$NON-NLS-1$
+				}
+				),						
+			};
+			return aDescriptorList;
+		} catch (Throwable exception) {
+			handleException(exception);
+		};
+		return null;
 	}
 }

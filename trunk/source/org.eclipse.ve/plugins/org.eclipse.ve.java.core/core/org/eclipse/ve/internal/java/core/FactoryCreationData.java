@@ -10,19 +10,23 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FactoryCreationData.java,v $
- *  $Revision: 1.1 $  $Date: 2006-02-06 17:14:38 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-09 14:28:24 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.util.*;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+
 import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
 import org.eclipse.jem.internal.beaninfo.BeanDecorator;
 import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.instantiation.*;
-import org.eclipse.jem.internal.instantiation.PTMethodInvocation;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
+
+import org.eclipse.ve.internal.cde.core.CDEPlugin;
  
 
 /**
@@ -181,6 +185,23 @@ public class FactoryCreationData {
 			return null;	// Don't think it is a factory because don't know the receiver.
 		return getCreationData(recvType);
 	}
+	public static void contributeToCopy(JavaHelpers factoryType, PTMethodInvocation factoryMethodCall){
+		FeatureAttributeValue factoryAttributeValue = BeanUtilities.getSetBeanDecoratorFeatureAttributeValue(factoryType, IBaseBeanInfoConstants.FACTORY_COPY_CONTRIBUTOR);
+		Object value = factoryAttributeValue.getValue();
+		// The value is a String class that should change the factory call's parse tree to something that can be transported as XMI in the clipboard
+		if(value instanceof String){
+			try{
+				Class copyContributorClass = CDEPlugin.getClassFromString((String)value);
+				CopyContributor copyContributor = null;	
+				copyContributor = (CopyContributor) copyContributorClass.newInstance();
+				copyContributor.contributeToCopy(factoryMethodCall);
+			} catch (Exception e){
+				Status s = new Status(IStatus.ERROR, CDEPlugin.getPlugin().getPluginID(), 0, "", e);
+				CDEPlugin.getPlugin().getLog().log(s);				
+			}
+		}
+	}
+	
 	/**
 	 * Return the factory creation data, if any for the given java type.
 	 * @param jType the factory type.

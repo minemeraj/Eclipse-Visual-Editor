@@ -17,8 +17,10 @@
    </objectChanges>
    <objectsToAttach xsi:type="org.eclipse.ve.internal.cde.decorators:ClassDescriptorDecorator" xmi:id="_eAnnotations"
      modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeContainmentHandler:org.eclipse.ui.forms.widgets.ExpandableComposite"
-     graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.forms.ExpandableCompositeGraphicalEditPart:true"
-     treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.forms.ExpandableCompositeTreeEditPart">
+     treeViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.forms.ExpandableCompositeTreeEditPart"
+     graphViewClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.forms.ExpandableCompositeGraphicalEditPart:true">
+      <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/expandable_composite_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
    </objectsToAttach>
-   <objectsToAttach beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.forms.ExpandableCompositeProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"/>
+   <objectsToAttach xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator"
+     beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.forms.ExpandableCompositeProxyAdapter"/>
 </change:ChangeDescription>

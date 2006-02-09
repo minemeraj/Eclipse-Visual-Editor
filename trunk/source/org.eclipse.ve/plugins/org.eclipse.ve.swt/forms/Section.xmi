@@ -9,6 +9,8 @@
   xmlns:_-javaprim="java:/"  
   xmlns:forms="java:/org.eclipse.ui.forms.widgets"
   xmlns:swt="java:/org.eclipse.swt.widgets">
+
+<!-- Section with expanded=true and style bits of TWISTE and TITLE_BAR -->
     
   <forms:Section xmi:id="Section_1" expanded="expanded_property">
   	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
@@ -32,6 +34,29 @@
   </_-javaprim:boolean>  
   
   <cdm:AnnotationEMF annotates="Section_1">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="section"/>
+  </cdm:AnnotationEMF>  
+  
+<!-- Section with a child Composite and expanded=true style bits of TWISTE and TITLE_BAR -->  
+
+  <forms:Section xmi:id="Section_2" expanded="expanded_property">
+  	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
+	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="createSection">
+		<receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{formToolkit}"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
+		<arguments xsi:type="org.eclipse.jem.internal.instantiation:PTInfixExpression" operator="OR">
+		  <leftOperand xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="TWISTIE">
+            <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.ui.forms.widgets.ExpandableComposite"/> 
+         </leftOperand>
+         <rightOperand xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="TITLE_BAR">
+           <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.ui.forms.widgets.ExpandableComposite"/> 
+         </rightOperand>
+       </arguments>        
+      </expression>	  	
+	</allocation>
+  </forms:Section>
+    
+  <cdm:AnnotationEMF annotates="Section_2">
     <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="section"/>
   </cdm:AnnotationEMF>  
 
