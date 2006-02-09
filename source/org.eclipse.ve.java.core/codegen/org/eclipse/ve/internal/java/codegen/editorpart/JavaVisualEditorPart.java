@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.codegen.editorpart;
 /*
  *  $RCSfile: JavaVisualEditorPart.java,v $
- *  $Revision: 1.163 $  $Date: 2006-02-06 23:38:33 $ 
+ *  $Revision: 1.164 $  $Date: 2006-02-09 15:03:05 $ 
  */
 
 import java.lang.reflect.InvocationTargetException;
@@ -438,7 +438,7 @@ public class JavaVisualEditorPart extends CompilationUnitEditor implements Direc
 	// The change of the uri and the removal of the resource from the resource set will be
 	// done under the setRootInProgressLock so that setRootModel will not progress during
 	// these two steps.
-	private static final URI DELETED_URI = URI.createURI("deleted:org.eclipse.ve.deleted");
+	private static final URI DELETED_URI = URI.createURI("deleted:org.eclipse.ve.deleted"); //$NON-NLS-1$
 	
 	/*
 	 * Set a new model into the root editparts. This can happen because the setup and the initial creation

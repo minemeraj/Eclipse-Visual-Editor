@@ -11,7 +11,7 @@
 package org.eclipse.ve.internal.java.core;
 /*
  *  $RCSfile: JavaBeanEventsObjectActionDelegate.java,v $
- *  $Revision: 1.12 $  $Date: 2006-01-23 19:01:58 $ 
+ *  $Revision: 1.13 $  $Date: 2006-02-09 15:03:05 $ 
  */
 
 import java.text.Collator;
@@ -66,7 +66,7 @@ public class JavaBeanEventsObjectActionDelegate implements IObjectActionDelegate
      *   </visibility> 
 	 * </pre>
 	 */
-	public static final String STANDARD_EVENT_CAPABLE = "STANDARD EVENTS"; //$NON-NLS1$
+	public static final String STANDARD_EVENT_CAPABLE = "STANDARD EVENTS"; //$NON-NLS1$ //$NON-NLS-1$
 	
 	/**
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: JSliderProxyAdapter.java,v $
- *  $Revision: 1.5 $  $Date: 2006-01-06 20:21:03 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-09 15:03:09 $ 
  */
 package org.eclipse.ve.internal.jfc.core;
 
@@ -66,7 +66,7 @@ public class JSliderProxyAdapter extends ComponentProxyAdapter {
 //			super.applyBeanProperty(Utilities.getPropertyDecorator(sfLabelTable), null, expression, false);
 //		}
 		if (!inInstantiation() && propertyDecorator.getEModelElement() == sfMajorTicks) {
-			expression.createSimpleMethodInvoke(getBeanTypeProxy("javax.swing.JSlider", expression).getMethodProxy(expression, "setLabelTable", new String[] {"java.util.Dictionary"}), getProxy(), new IProxy[] {null}, false);
+			expression.createSimpleMethodInvoke(getBeanTypeProxy("javax.swing.JSlider", expression).getMethodProxy(expression, "setLabelTable", new String[] {"java.util.Dictionary"}), getProxy(), new IProxy[] {null}, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}		
 
 		return super.applyBeanProperty(propertyDecorator, settingProxy, expression, getOriginalValue);
