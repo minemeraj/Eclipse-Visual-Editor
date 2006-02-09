@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ExpandableCompositeProxyAdapter.java,v $
- *  $Revision: 1.1 $  $Date: 2006-02-06 17:14:41 $ 
+ *  $Revision: 1.2 $  $Date: 2006-02-09 15:22:12 $ 
  */
 package org.eclipse.ve.internal.forms;
 
@@ -43,7 +43,7 @@ public class ExpandableCompositeProxyAdapter extends CompositeProxyAdapter {
 	 */
 	protected void primCanceled(EStructuralFeature feature, Object value, int index, IExpression expression) {
 		// Can't cancel client. setClient(null) is an error. We need reinstantiate instead.
-		if (!feature.getName().equals("client"))
+		if (!feature.getName().equals("client")) //$NON-NLS-1$
 			super.primCanceled(feature, value, index, expression);
 		else
 			reinstantiate(expression);

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.34 $ $Date: 2006-02-09 14:28:18 $
+ * $RCSfile: WidgetPropertySourceAdapter.java,v $ $Revision: 1.35 $ $Date: 2006-02-09 15:22:12 $
  */
 package org.eclipse.ve.internal.swt;
 
@@ -689,7 +689,7 @@ public class WidgetPropertySourceAdapter extends BeanPropertySourceAdapter {
 				if (argIndex == null) {
 					// See if we can expand to include style. we will use SWT.NONE as the default for the new style setting until we can apply the real setting lower down.
 					PTFieldAccess swtNone = InstantiationFactory.eINSTANCE.createPTFieldAccess(InstantiationFactory.eINSTANCE.createPTName(SWT_TYPE_ID), STYLE_NONE);
-					int newIndex = expandToIncludeProperty("style", swtNone, methodInvocation);
+					int newIndex = expandToIncludeProperty("style", swtNone, methodInvocation); //$NON-NLS-1$
 					if (newIndex == COULD_NOT_EXPAND)
 						return;	// Couldn't expand it
 					else

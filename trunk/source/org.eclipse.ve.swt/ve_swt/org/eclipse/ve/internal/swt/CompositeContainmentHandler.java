@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeContainmentHandler.java,v $
- *  $Revision: 1.3 $  $Date: 2006-02-06 17:14:41 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-09 15:22:12 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -57,7 +57,7 @@ public class CompositeContainmentHandler extends WidgetContainmentHandler implem
 	 *  
 	 * @since 1.2.0
 	 */
-	public static final String DEFAULT_LAYOUT_KEY = "org.eclipse.ve.swt.DefaultLayout";
+	public static final String DEFAULT_LAYOUT_KEY = "org.eclipse.ve.swt.DefaultLayout"; //$NON-NLS-1$
 	
 	public Object contributeToDropRequest(Object parent, Object child, CommandBuilder preCmds, CommandBuilder postCmds, boolean creation, EditDomain domain) throws StopRequestException {
 		child = super.contributeToDropRequest(parent, child, preCmds, postCmds, creation, domain);

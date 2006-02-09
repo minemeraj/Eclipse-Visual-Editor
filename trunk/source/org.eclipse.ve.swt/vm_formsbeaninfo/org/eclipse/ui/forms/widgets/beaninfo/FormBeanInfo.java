@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormBeanInfo.java,v $
- *  $Revision: 1.5 $  $Date: 2006-02-06 17:14:42 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-09 15:22:12 $ 
  */
 package org.eclipse.ui.forms.widgets.beaninfo;
 
@@ -38,7 +38,7 @@ public class FormBeanInfo extends IvjBeanInfo {
 	}
 	
 	public BeanDescriptor getBeanDescriptor() {
-		return createBeanDescriptor(getBeanClass(), new Object[] {BaseBeanInfo.REQUIRED_IMPLICIT_PROPERTIES, "body"});
+		return createBeanDescriptor(getBeanClass(), new Object[] {BaseBeanInfo.REQUIRED_IMPLICIT_PROPERTIES, "body"}); //$NON-NLS-1$
 	}
 	
 /**
