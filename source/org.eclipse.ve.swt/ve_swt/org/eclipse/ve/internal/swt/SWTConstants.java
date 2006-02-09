@@ -89,6 +89,7 @@ public class SWTConstants {
 		SF_TOOLBAR_ITEMS,
 		SF_MENU_ITEMS,
 		SF_MENUITEM_MENU,
+		SF_EXPANDABLECOMPOSITE_CLIENT,
 		SF_ITEM_TEXT;
 		
 	public static final String
@@ -180,5 +181,7 @@ public class SWTConstants {
 		SF_MENUITEM_MENU = URI.createURI("java:/org.eclipse.swt.widgets#MenuItem/menu");	 //$NON-NLS-1$
 		
 		SF_ITEM_TEXT = URI.createURI("java:/org.eclipse.swt.widgets#Item/text");	 //$NON-NLS-1$
+		
+		SF_EXPANDABLECOMPOSITE_CLIENT = URI.createURI("java:/org.eclipse.ui.forms.widgets#ExpandableComposite/client");	 //$NON-NLS-1$		
 	}
 }	

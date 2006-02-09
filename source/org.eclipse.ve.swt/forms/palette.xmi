@@ -18,22 +18,28 @@
       <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/scrolledform_obj.gif"
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/ScrolledPageBook.xmi#ScrolledPageBook_1">
         <entryLabel xsi:type="utility:ConstantString" string="PageBook"/>
-      </children>                
-      <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
+      </children>        
+      
+      <children xsi:type="palette:Stack">
+        <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/expandable_composite_obj.gif"
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Section.xmi#Section_1">
-        <entryLabel xsi:type="utility:ConstantString" string="Section"/>
-      </children>            
+          <entryLabel xsi:type="utility:ConstantString" string="Section"/>
+        </children>            
+        <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/expandable_composite_obj.gif"
+          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Section.xmi#Section_2">
+          <entryLabel xsi:type="utility:ConstantString" string="Section with Composite"/>
+        </children>                    
+	  </children>              
+              
       <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Composite.xmi#Composite_1">
         <entryLabel xsi:type="utility:ConstantString" string="Composite"/>
       </children>      
 
-      <children xsi:type="palette:Stack">
-        <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
-          prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/ExpandableComposite.xmi#ExpandableComposite_1">
-          <entryLabel xsi:type="utility:ConstantString" string="ExpandableComposite"/>
-        </children>
-	  </children>        
+      <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/expandable_composite_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/ExpandableComposite.xmi#ExpandableComposite_1">
+        <entryLabel xsi:type="utility:ConstantString" string="Expandable Composite"/>
+      </children>
 
       <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/button_obj.gif"
           prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms/Button.xmi#Button_1">

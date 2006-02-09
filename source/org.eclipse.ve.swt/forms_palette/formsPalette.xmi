@@ -17,10 +17,14 @@
         prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/CompositeSeparator.xmi#Composite_1">
       <entryLabel xsi:type="utility:ConstantString" string="Separator"/>
     </children>                
-    <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif"
+    <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/expandable_composite_obj.gif"
         prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/ExpandableComposite.xmi#ExpandableComposite_1">
       <entryLabel xsi:type="utility:ConstantString" string="ExpandableComposite"/>
     </children>    
+    <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/section_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Section.xmi#Section_1">
+      <entryLabel xsi:type="utility:ConstantString" string="Section"/>
+    </children>        
     <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/label_obj.gif"
         prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Label.xmi#Label_1">
       <entryLabel xsi:type="utility:ConstantString" string="Label"/>
@@ -28,7 +32,27 @@
     <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/form_obj.gif"
         prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Form.xmi#Form_1">
       <entryLabel xsi:type="utility:ConstantString" string="Form"/>
-    </children>      
+    </children>   
+    <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/text_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Text.xmi#Text_1">
+      <entryLabel xsi:type="utility:ConstantString" string="Text"/>
+    </children>       
+    <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/table_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Table.xmi#Table_1">
+      <entryLabel xsi:type="utility:ConstantString" string="Table"/>
+    </children>       
+    <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/tree_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Tree.xmi#Tree_1">
+      <entryLabel xsi:type="utility:ConstantString" string="Tree"/>
+    </children>     
+    <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/link_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Hyperlink.xmi#Hyperlink_1">
+      <entryLabel xsi:type="utility:ConstantString" string="Hyperlink"/>
+    </children>   
+    <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/link_obj.gif"
+       prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/ImageHyperlink.xmi#ImageHyperlink_1">
+      <entryLabel xsi:type="utility:ConstantString" string="ImageHyperlink"/>
+    </children>        
   </palette:Drawer>
   
   <utility:URLResourceBundle xmi:id="bundle" bundleName="palette">

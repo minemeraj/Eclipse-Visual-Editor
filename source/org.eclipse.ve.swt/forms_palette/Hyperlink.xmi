@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" 
+  xmlns:cdm="http:///org/eclipse/ve/internal/cdm.ecore" 
+  xmlns:utility="http:///org/eclipse/ve/internal/cde/utility.ecore"
+  xmlns:org.eclipse.jem.internal.instantiation="http:///org/eclipse/jem/internal/instantiation.ecore"
+  xmlns:java="java.xmi"
+  xmlns:forms="java:/org.eclipse.ui.forms.widgets"  
+  xmlns:swt="java:/org.eclipse.swt.widgets">
+    
+  <forms:Hyperlink xmi:id="Hyperlink_1">
+  	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
+	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="createHyperlink">
+		<receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{factory:org.eclipse.ui.forms.widgets.FormToolkit}"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTStringLiteral" literalValue="Hyperlink"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="NONE">
+          <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
+        </arguments>        
+      </expression>	  	
+	</allocation>
+  </forms:Hyperlink>
+  
+  <cdm:AnnotationEMF annotates="Hyperlink_1">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="hyperlink"/>
+  </cdm:AnnotationEMF>  
+
+</xmi:XMI>
