@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.18 $ $Date: 2006-02-10 19:07:18 $
+ * $RCSfile: BeanPropertySourceAdapter.java,v $ $Revision: 1.19 $ $Date: 2006-02-10 19:11:15 $
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -161,28 +161,30 @@ public class BeanPropertySourceAdapter extends PropertySourceAdapter {
 			// Assume feature is an EStructuralFeature. Test to see if this is a factory arg.
 			Map factoryMap = getFactoryArgumentsMap();
 			Integer argIndex = (Integer) factoryMap.get(((EStructuralFeature) feature).getName());
-			ParseTreeAllocation parseTreeAllocation = (ParseTreeAllocation) getBean().getAllocation();
-			if (parseTreeAllocation.getExpression() instanceof PTMethodInvocation) {
-				PTMethodInvocation methodInvocation = (PTMethodInvocation) parseTreeAllocation.getExpression();
-				if (argIndex != null) {
-					// It is a factory arg. Test it.
-					PTExpression newArgExpression = createArgumentExpression((IJavaInstance) val);
-					if (newArgExpression != null) {
-						methodInvocation.getArguments().set(argIndex.intValue(), newArgExpression);
-						getBean().setAllocation(parseTreeAllocation); // Touch the allocation to cause a target VM refresh
-						return;
-					}
-				} else if (isFactoryType()) {
-					// we are a factory type, but the property is not on the factory. See if we can expand.
-					PTExpression newArgExpression = createArgumentExpression((IJavaInstance) val);
-					if (newArgExpression != null) {
-						if (expandToIncludeProperty(((EStructuralFeature) feature).getName(), newArgExpression, methodInvocation) != COULD_NOT_EXPAND) {
+			if (getBean().isParseTreeAllocation()) {
+				ParseTreeAllocation parseTreeAllocation = (ParseTreeAllocation) getBean().getAllocation();
+				if (parseTreeAllocation.getExpression() instanceof PTMethodInvocation) {
+					PTMethodInvocation methodInvocation = (PTMethodInvocation) parseTreeAllocation.getExpression();
+					if (argIndex != null) {
+						// It is a factory arg. Test it.
+						PTExpression newArgExpression = createArgumentExpression((IJavaInstance) val);
+						if (newArgExpression != null) {
+							methodInvocation.getArguments().set(argIndex.intValue(), newArgExpression);
 							getBean().setAllocation(parseTreeAllocation); // Touch the allocation to cause a target VM refresh
 							return;
 						}
+					} else if (isFactoryType()) {
+						// we are a factory type, but the property is not on the factory. See if we can expand.
+						PTExpression newArgExpression = createArgumentExpression((IJavaInstance) val);
+						if (newArgExpression != null) {
+							if (expandToIncludeProperty(((EStructuralFeature) feature).getName(), newArgExpression, methodInvocation) != COULD_NOT_EXPAND) {
+								getBean().setAllocation(parseTreeAllocation); // Touch the allocation to cause a target VM refresh
+								return;
+							}
+						}
 					}
 				}
-			}			
+			}						
 		} 
 		
 		// By default do normal. If we fall through and get here.
