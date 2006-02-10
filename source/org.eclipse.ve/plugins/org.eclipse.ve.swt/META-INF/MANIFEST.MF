@@ -24,7 +24,8 @@ Export-Package: org.eclipse.jem.internal.proxy.ide.swt,
  org.eclipse.ve.internal.swt.common,
  org.eclipse.ve.internal.swt.targetvm,
  org.eclipse.ve.internal.swt.targetvm.unix,
- org.eclipse.ve.internal.swt.targetvm.win32
+ org.eclipse.ve.internal.swt.targetvm.win32,
+ org.eclipse.ve.swt.common
 Require-Bundle: org.eclipse.ve.java.core,
  org.eclipse.jdt.core,
  org.eclipse.jdt.ui,

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.15 $ $Date: 2006-02-06 17:14:41 $
+ * $RCSfile: CompositeTreeEditPart.java,v $ $Revision: 1.16 $ $Date: 2006-02-10 21:53:46 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -24,6 +24,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.jface.action.MenuManager;
 
+import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.java.JavaClass;
@@ -31,11 +32,13 @@ import org.eclipse.jem.java.JavaClass;
 import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
+import org.eclipse.ve.internal.java.core.*;
 import org.eclipse.ve.internal.java.core.BeanProxyUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 import org.eclipse.ve.internal.java.visual.*;
 
 import org.eclipse.ve.internal.swt.CompositeProxyAdapter.ControlLayoutDataAdapter;
+import org.eclipse.ve.swt.common.SWTBeanInfoConstants;
 
 /**
  * TreeEditPart for a SWT Container.
@@ -157,38 +160,42 @@ public class CompositeTreeEditPart extends ControlTreeEditPart {
 	
 	public Object getAdapter(Class type) {
 		if(type == LayoutList.class){
-			return new LayoutList(){
-				public void fillMenuManager(MenuManager aMenuManager) {
-					LayoutListMenuContributor layoutListMenuContributor = new LayoutListMenuContributor(){
-						protected EditPart getEditPart() {
-							return CompositeTreeEditPart.this;
-						}
-						protected IJavaInstance getBean() {
-							return CompositeTreeEditPart.this.getBean();
-						}
-						protected EStructuralFeature getLayoutSF() {
-							return sf_compositeLayout;
-						}
-						
-						protected IBeanProxy getLayoutBeanProxyAdapter() {
-							return BeanSWTUtilities.invoke_getLayout(getCompositeProxyAdapter().getBeanProxy());
-						}
-						protected String[][] getLayoutItems() {
-							return LayoutCellEditor.getLayoutItems(getEditDomain());
-						}
-						protected ILayoutPolicyFactory getLayoutPolicyFactory(JavaClass layoutManagerClass) {
-							return BeanSWTUtilities.getLayoutPolicyFactoryFromLayout(layoutManagerClass, getEditDomain());
-						}
-						protected VisualContainerPolicy getVisualContainerPolicy() {
-							return getContainerPolicy();
-						}
-						protected String getPreferencePageID() {
-							return SwtPlugin.PREFERENCE_PAGE_ID;
-
-						}
-					};
-					layoutListMenuContributor.fillMenuManager(aMenuManager);
-				}
+			FeatureAttributeValue defLayout = BeanUtilities.getSetBeanDecoratorFeatureAttributeValue(getBean().getJavaType(), SWTBeanInfoConstants.DEFAULT_LAYOUT);
+			if (defLayout != null && defLayout.getValue() instanceof Boolean && !((Boolean) defLayout.getValue()).booleanValue())
+				return BeanSWTUtilities.getDefaultLayoutList();	// Don't want to change layouts.
+			else			
+				return new LayoutList(){
+					public void fillMenuManager(MenuManager aMenuManager) {
+						LayoutListMenuContributor layoutListMenuContributor = new LayoutListMenuContributor(){
+							protected EditPart getEditPart() {
+								return CompositeTreeEditPart.this;
+							}
+							protected IJavaInstance getBean() {
+								return CompositeTreeEditPart.this.getBean();
+							}
+							protected EStructuralFeature getLayoutSF() {
+								return sf_compositeLayout;
+							}
+							
+							protected IBeanProxy getLayoutBeanProxyAdapter() {
+								return BeanSWTUtilities.invoke_getLayout(getCompositeProxyAdapter().getBeanProxy());
+							}
+							protected String[][] getLayoutItems() {
+								return LayoutCellEditor.getLayoutItems(getEditDomain());
+							}
+							protected ILayoutPolicyFactory getLayoutPolicyFactory(JavaClass layoutManagerClass) {
+								return BeanSWTUtilities.getLayoutPolicyFactoryFromLayout(layoutManagerClass, getEditDomain());
+							}
+							protected VisualContainerPolicy getVisualContainerPolicy() {
+								return getContainerPolicy();
+							}
+							protected String getPreferencePageID() {
+								return SwtPlugin.PREFERENCE_PAGE_ID;
+	
+							}
+						};
+						layoutListMenuContributor.fillMenuManager(aMenuManager);
+					}
 			};
 		}
 		return super.getAdapter(type);

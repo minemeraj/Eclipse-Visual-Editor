@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FormToolkitBeanInfo.java,v $
- *  $Revision: 1.3 $  $Date: 2006-02-09 15:22:12 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-10 21:53:46 $ 
  */
 package org.eclipse.ui.forms.widgets.beaninfo;
 
@@ -39,7 +39,8 @@ public class FormToolkitBeanInfo extends IvjBeanInfo {
 	
 	public BeanDescriptor getBeanDescriptor() {
 		return createBeanDescriptor(getBeanClass(), 
-			new Object[] {BaseBeanInfo.FACTORY_CREATION, new Object[][] {
+			new Object[] {
+			BaseBeanInfo.FACTORY_CREATION, new Object[][] {
 				new Object[] {"new org.eclipse.ui.forms.widgets.FormToolkit(org.eclipse.swt.widgets.Display.getCurrent())", Boolean.TRUE, Boolean.TRUE}, //$NON-NLS-1$
 				new Object[] {
 					"createButton", "org.eclipse.swt.widgets.Button", Boolean.FALSE, new Object[] {"parentComposite", "text", "style"} //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
@@ -58,7 +59,7 @@ public class FormToolkitBeanInfo extends IvjBeanInfo {
 				},				
 				new Object[] {
 					"createLabel", "org.eclipse.swt.widgets.Label", Boolean.FALSE, new Object[] {"parentComposite", "text"}, new Object[] {"parentComposite", "text", "style"} //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-				},				
+				},
 			}
 			});
 	}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CopyJavaBeanAction.java,v $
- *  $Revision: 1.6 $  $Date: 2005-08-24 23:30:45 $ 
+ *  $Revision: 1.7 $  $Date: 2006-02-10 21:53:45 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -26,7 +26,6 @@ import org.eclipse.ve.internal.cde.core.EditDomain;
 
 public class CopyJavaBeanAction extends SelectionAction {
 	
-	public static final String REQ_COPY = "VE_REQ_COPY"; //$NON-NLS-1$
 	private Command copyCommand;
 	private EditDomain editDomain;
 
@@ -44,7 +43,7 @@ public class CopyJavaBeanAction extends SelectionAction {
 				EditPart selectedEditPart = (EditPart)selectedObject;
 				editDomain = EditDomain.getEditDomain(selectedEditPart);
 				// Get a request from the object to create a copy of itself
-				Request copyRequest = new Request(REQ_COPY);
+				Request copyRequest = new Request(CopyAction.REQ_COPY);
 				copyCommand = selectedEditPart.getCommand(copyRequest);
 				if (copyCommand != null){
 					return copyCommand.canExecute();

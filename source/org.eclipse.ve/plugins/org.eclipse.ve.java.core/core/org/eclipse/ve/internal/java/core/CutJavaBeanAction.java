@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CutJavaBeanAction.java,v $
- *  $Revision: 1.5 $  $Date: 2005-08-24 23:30:46 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-10 21:53:45 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
@@ -48,7 +48,7 @@ public class CutJavaBeanAction extends SelectionAction {
 				EditPart selectedEditPart = (EditPart)selectedObject;
 				editDomain = EditDomain.getEditDomain(selectedEditPart);
 				// Get a request from the object to create a copy of itself
-				Request copyRequest = new Request(CopyJavaBeanAction.REQ_COPY);
+				Request copyRequest = new Request(CopyAction.REQ_COPY);
 				copyCommand = selectedEditPart.getCommand(copyRequest);
 				// Also get a request from the object to delete itself
 				GroupRequest deleteRequest = new GroupRequest(RequestConstants.REQ_DELETE);

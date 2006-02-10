@@ -15,6 +15,7 @@
          <listChanges referenceValues="_eAnnotations"/>
          <listChanges referenceValues="_eAnnotations1"/>
          <listChanges referenceValues="_eAnnotations2"/>
+         <listChanges referenceValues="_eAnnotations3"/>
       </value>
       <value featureName="eStructuralFeatures">
          <!-- Layout property has special property sheet processing for changing layoutData properties (constraints) when layouts are switched -->
@@ -29,6 +30,7 @@
         modelAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeContainmentHandler:org.eclipse.swt.widgets.Composite" xmi:id="_eAnnotations">
       <graphic resourceName="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/composite_obj.gif" xsi:type="org.eclipse.ve.internal.cde.utility:GIFFileGraphic"/>
     </objectsToAttach>
+   <objectsToAttach propertySourceAdapterClassname="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositePropertySourceAdapter" xmi:id="_eAnnotations3" xsi:type="org.eclipse.ve.internal.cde.decorators:PropertySourceAdapterInformation"/>    
    <objectsToAttach beanLocation="GLOBAL_GLOBAL" beanProxyClassName="org.eclipse.ve.swt/org.eclipse.ve.internal.swt.CompositeProxyAdapter" xmi:id="_eAnnotations1" xsi:type="org.eclipse.ve.internal.jcm:BeanDecorator">
       <keyedValues typedValue="both" xsi:type="gridpref:FillPreference"/>
    </objectsToAttach>

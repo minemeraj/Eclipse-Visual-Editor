@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ExpandableCompositeBeanInfo.java,v $
- *  $Revision: 1.2 $  $Date: 2006-02-09 14:28:18 $ 
+ *  $Revision: 1.3 $  $Date: 2006-02-10 21:53:46 $ 
  */
 package org.eclipse.ui.forms.widgets.beaninfo;
 
@@ -19,6 +19,8 @@ import java.beans.PropertyDescriptor;
 
 import org.eclipse.swt.widgets.beaninfo.*;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+
+import org.eclipse.ve.swt.common.SWTBeanInfoConstants;
 
 public class ExpandableCompositeBeanInfo extends IvjBeanInfo {
 
@@ -30,8 +32,7 @@ public class ExpandableCompositeBeanInfo extends IvjBeanInfo {
 	}	
 	
 	public BeanDescriptor getBeanDescriptor() {
-		BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
-		descriptor.setValue(
+		BeanDescriptor descriptor = createBeanDescriptor(getBeanClass(), new Object[] {
 			SweetHelper.STYLE_BITS_ID,
 			new Object[] [] {
 				{ "expansion toggle" , ExpandableCompositeMessages.getString("ExpandableCompositeBeanInfo.StyleBits.ExpansionToggle.Name"), Boolean.FALSE, new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
@@ -58,8 +59,10 @@ public class ExpandableCompositeBeanInfo extends IvjBeanInfo {
 				{ "left text alignment" , ExpandableCompositeMessages.getString("ExpandableCompositeBeanInfo.StyleBits.LeftTextAlignment.Name"), Boolean.FALSE, new Object[] { //$NON-NLS-1$ //$NON-NLS-2$
 					ExpandableCompositeMessages.getString("ExpandableCompositeBeanInfo.StyleBits.LeftTextAlignment.Value") , "org.eclipse.ui.forms.widgets.ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT" , new Integer(ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT) //$NON-NLS-1$ //$NON-NLS-2$
 				} },				
-			}
-		);
+			},
+			
+			SWTBeanInfoConstants.DEFAULT_LAYOUT, Boolean.FALSE
+		});
 		SweetHelper.mergeSuperclassStyleBits(descriptor);
 		return descriptor;
 	}
@@ -78,10 +81,6 @@ public class ExpandableCompositeBeanInfo extends IvjBeanInfo {
 				),
 				super.createPropertyDescriptor(getBeanClass(),"expanded", new Object[] { //$NON-NLS-1$
 					HIDDEN, Boolean.TRUE, // expanded only has a set method - hide from property sheet
-				}
-				),
-				super.createPropertyDescriptor(getBeanClass(),"layout", new Object[] { //$NON-NLS-1$
-					HIDDEN, Boolean.TRUE, // layout shoud be hidden as there is a custom one ExpandableComposite uses
 				}
 				),
 				super.createPropertyDescriptor(getBeanClass(),"text", new Object[] { //$NON-NLS-1$

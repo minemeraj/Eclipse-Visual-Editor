@@ -10,23 +10,22 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FactoryCreationData.java,v $
- *  $Revision: 1.2 $  $Date: 2006-02-09 14:28:24 $ 
+ *  $Revision: 1.3 $  $Date: 2006-02-10 21:53:45 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.util.*;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-
 import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
 import org.eclipse.jem.internal.beaninfo.BeanDecorator;
 import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
 
-import org.eclipse.ve.internal.cde.core.CDEPlugin;
+import org.eclipse.ve.internal.cde.core.EditDomain;
+import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
  
 
 /**
@@ -185,21 +184,36 @@ public class FactoryCreationData {
 			return null;	// Don't think it is a factory because don't know the receiver.
 		return getCreationData(recvType);
 	}
-	public static void contributeToCopy(JavaHelpers factoryType, PTMethodInvocation factoryMethodCall){
-		FeatureAttributeValue factoryAttributeValue = BeanUtilities.getSetBeanDecoratorFeatureAttributeValue(factoryType, IBaseBeanInfoConstants.FACTORY_COPY_CONTRIBUTOR);
-		Object value = factoryAttributeValue.getValue();
-		// The value is a String class that should change the factory call's parse tree to something that can be transported as XMI in the clipboard
-		if(value instanceof String){
-			try{
-				Class copyContributorClass = CDEPlugin.getClassFromString((String)value);
-				CopyContributor copyContributor = null;	
-				copyContributor = (CopyContributor) copyContributorClass.newInstance();
-				copyContributor.contributeToCopy(factoryMethodCall);
-			} catch (Exception e){
-				Status s = new Status(IStatus.ERROR, CDEPlugin.getPlugin().getPluginID(), 0, "", e);
-				CDEPlugin.getPlugin().getLog().log(s);				
-			}
-		}
+
+	/**
+	 * Handle copy/cut action for any factories.
+	 * @param bean the original bean
+	 * @param beanCopy the copy of it that will be placed into the copy request.
+	 * @param ed
+	 * 
+	 * @since 1.2.0
+	 */
+	public static void contributeToCopy(IJavaInstance bean, IJavaInstance beanCopy, EditDomain ed){
+		if (!bean.isParseTreeAllocation())
+			return;	// Not a factory.
+		if (!(((ParseTreeAllocation) bean.getAllocation()).getExpression() instanceof PTMethodInvocation))
+			return; // Not a factory.
+		PTMethodInvocation originalCall = (PTMethodInvocation) ((ParseTreeAllocation) bean.getAllocation()).getExpression();  
+		JavaHelpers factoryType;
+		if (originalCall.getReceiver() instanceof PTInstanceReference)
+			factoryType = ((PTInstanceReference) originalCall.getReceiver()).getReference().getJavaType();
+		else if (originalCall.getReceiver() instanceof PTName) {
+			// It is a static ref.
+			factoryType = JavaRefFactory.eINSTANCE.reflectType(((PTName) originalCall.getReceiver()).getName(), EMFEditDomainHelper.getResourceSet(ed));
+		} else
+			return;	// Not a valid call for factories.
+
+		FactoryCreationData fcd = getCreationData(factoryType);
+		if (fcd != null) {
+			// It is a factory. At this point we will just change to the type of the factory.
+			PTName factoryKey = InstantiationFactory.eINSTANCE.createPTName(EnsureFactoryCommand.FACTORY_PREFIX_FLAG+factoryType.getQualifiedNameForReflection()+'}');
+			((PTMethodInvocation)((ParseTreeAllocation) beanCopy.getAllocation()).getExpression()).setReceiver(factoryKey);
+		}		
 	}
 	
 	/**
