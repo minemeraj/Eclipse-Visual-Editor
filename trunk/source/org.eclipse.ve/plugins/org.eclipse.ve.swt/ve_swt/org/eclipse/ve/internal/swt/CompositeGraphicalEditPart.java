@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.35 $ $Date: 2006-02-06 17:14:41 $
+ * $RCSfile: CompositeGraphicalEditPart.java,v $ $Revision: 1.36 $ $Date: 2006-02-10 21:53:46 $
  */
 
 package org.eclipse.ve.internal.swt;
@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.*;
 import org.eclipse.jface.action.MenuManager;
 
+import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.instantiation.base.*;
 import org.eclipse.jem.internal.proxy.core.IBeanProxy;
 import org.eclipse.jem.java.JavaClass;
@@ -34,8 +35,11 @@ import org.eclipse.ve.internal.cde.core.*;
 import org.eclipse.ve.internal.cde.core.EditDomain;
 import org.eclipse.ve.internal.cde.emf.EditPartAdapterRunnable;
 
+import org.eclipse.ve.internal.java.core.BeanUtilities;
 import org.eclipse.ve.internal.java.core.IBeanProxyHost;
 import org.eclipse.ve.internal.java.visual.*;
+
+import org.eclipse.ve.swt.common.SWTBeanInfoConstants;
 
 /**
  * ViewObject for the swt Composite. Creation date: (2/16/00 3:45:46 PM)
@@ -89,7 +93,7 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 	
 	protected void setupControl(ControlGraphicalEditPart childEP, EObject child) {
 		CompositeProxyAdapter compositeProxyAdapter = getCompositeProxyAdapter();
-		if (compositeProxyAdapter.isBeanProxyInstantiated())
+		if (compositeProxyAdapter != null && compositeProxyAdapter.isBeanProxyInstantiated() && compositeProxyAdapter.getControlLayoutDataAdapter(child) != null)
 			childEP.setErrorNotifier(compositeProxyAdapter.getControlLayoutDataAdapter(child).getErrorNotifier());
 	}
 
@@ -193,38 +197,42 @@ public class CompositeGraphicalEditPart extends ControlGraphicalEditPart {
 			}
 			return null;
 		} else if(type == LayoutList.class){
-			return new LayoutList(){
-				public void fillMenuManager(MenuManager aMenuManager) {
-					LayoutListMenuContributor layoutListMenuContributor = new LayoutListMenuContributor(){
-						protected EditPart getEditPart() {
-							return CompositeGraphicalEditPart.this;
-						}
-						protected IJavaInstance getBean() {
-							return CompositeGraphicalEditPart.this.getBean();
-						}
-						protected EStructuralFeature getLayoutSF() {
-							return sf_compositeLayout;
-						}
-						
-						protected IBeanProxy getLayoutBeanProxyAdapter() {
-							return BeanSWTUtilities.invoke_getLayout(getCompositeProxyAdapter().getBeanProxy());
-						}
-						protected String[][] getLayoutItems() {
-							return LayoutCellEditor.getLayoutItems(getEditDomain());
-						}
-						protected ILayoutPolicyFactory getLayoutPolicyFactory(JavaClass layoutManagerClass) {
-							return BeanSWTUtilities.getLayoutPolicyFactoryFromLayout(layoutManagerClass, getEditDomain());
-						}
-						protected VisualContainerPolicy getVisualContainerPolicy() {
-							return getContainerPolicy();
-						}
-						protected String getPreferencePageID() {
-							return SwtPlugin.PREFERENCE_PAGE_ID;
-
-						}
-					};
-					layoutListMenuContributor.fillMenuManager(aMenuManager);
-				}
+			FeatureAttributeValue defLayout = BeanUtilities.getSetBeanDecoratorFeatureAttributeValue(getBean().getJavaType(), SWTBeanInfoConstants.DEFAULT_LAYOUT);
+			if (defLayout != null && defLayout.getValue() instanceof Boolean && !((Boolean) defLayout.getValue()).booleanValue())
+				return BeanSWTUtilities.getDefaultLayoutList();	// Don't want to change layouts.
+			else
+				return new LayoutList(){
+					public void fillMenuManager(MenuManager aMenuManager) {
+						LayoutListMenuContributor layoutListMenuContributor = new LayoutListMenuContributor(){
+							protected EditPart getEditPart() {
+								return CompositeGraphicalEditPart.this;
+							}
+							protected IJavaInstance getBean() {
+								return CompositeGraphicalEditPart.this.getBean();
+							}
+							protected EStructuralFeature getLayoutSF() {
+								return sf_compositeLayout;
+							}
+							
+							protected IBeanProxy getLayoutBeanProxyAdapter() {
+								return BeanSWTUtilities.invoke_getLayout(getCompositeProxyAdapter().getBeanProxy());
+							}
+							protected String[][] getLayoutItems() {
+								return LayoutCellEditor.getLayoutItems(getEditDomain());
+							}
+							protected ILayoutPolicyFactory getLayoutPolicyFactory(JavaClass layoutManagerClass) {
+								return BeanSWTUtilities.getLayoutPolicyFactoryFromLayout(layoutManagerClass, getEditDomain());
+							}
+							protected VisualContainerPolicy getVisualContainerPolicy() {
+								return getContainerPolicy();
+							}
+							protected String getPreferencePageID() {
+								return SwtPlugin.PREFERENCE_PAGE_ID;
+	
+							}
+						};
+						layoutListMenuContributor.fillMenuManager(aMenuManager);
+					}
 			};
 		}
 		return super.getAdapter(type);

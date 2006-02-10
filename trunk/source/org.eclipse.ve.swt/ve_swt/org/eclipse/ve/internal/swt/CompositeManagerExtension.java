@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: CompositeManagerExtension.java,v $
- *  $Revision: 1.5 $  $Date: 2005-12-14 21:44:40 $ 
+ *  $Revision: 1.6 $  $Date: 2006-02-10 21:53:46 $ 
  */
 package org.eclipse.ve.internal.swt;
 
@@ -189,19 +189,21 @@ nextChild:		for (int i = 0; i < children.size(); i++) {
 					IBeanProxyHost childHost = (IBeanProxyHost) EcoreUtil.getExistingAdapter(child, IBeanProxyHost.BEAN_PROXY_TYPE);
 					if (childHost != null) {
 						CompositeProxyAdapter.ControlLayoutDataAdapter a = composite.getControlLayoutDataAdapter(child);
-						a.clearLayoutDataError();	// Clear it out, add back in only if an error.
-						if (parms != null) {
-							IBeanProxy childProxy = childHost.getBeanProxy();
-							if (childProxy != null) {
-								for (int j = 1; j < parms.length; j+=2) {
-									if (childProxy.sameAs((IBeanProxy) parms[j])) {
-										// We have a winner!
-										a.processLayoutDataError(layoutDataValidType, ((IStringBeanProxy) parms[j+1]).stringValue());
-										break nextChild;
+						if (a != null) {
+							a.clearLayoutDataError(); // Clear it out, add back in only if an error.
+							if (parms != null) {
+								IBeanProxy childProxy = childHost.getBeanProxy();
+								if (childProxy != null) {
+									for (int j = 1; j < parms.length; j += 2) {
+										if (childProxy.sameAs((IBeanProxy) parms[j])) {
+											// We have a winner!
+											a.processLayoutDataError(layoutDataValidType, ((IStringBeanProxy) parms[j + 1]).stringValue());
+											break nextChild;
+										}
 									}
 								}
 							}
-						}
+						}						
 					}
 					
 				}

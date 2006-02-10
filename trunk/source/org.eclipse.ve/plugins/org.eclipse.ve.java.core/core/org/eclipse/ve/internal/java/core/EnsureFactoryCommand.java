@@ -10,18 +10,19 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EnsureFactoryCommand.java,v $
- *  $Revision: 1.2 $  $Date: 2006-02-09 15:03:05 $ 
+ *  $Revision: 1.3 $  $Date: 2006-02-10 21:53:45 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.util.*;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.*;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.jem.internal.instantiation.*;
+import org.eclipse.jem.internal.instantiation.base.FeatureValueProvider;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
 import org.eclipse.jem.java.JavaHelpers;
 import org.eclipse.jem.java.JavaRefFactory;
@@ -87,139 +88,186 @@ public class EnsureFactoryCommand extends CommandWrapper {
 	 * @see org.eclipse.ve.internal.propertysheet.common.commands.CommandWrapper#execute()
 	 */
 	public void execute() {
-		ParseTreeAllocation allocation = (ParseTreeAllocation) child.getAllocation();
-		PTMethodInvocation cmi = (PTMethodInvocation) allocation.getExpression();
-		if (cmi.getReceiver() instanceof PTName) {
-			PTName cmiRecv = (PTName) cmi.getReceiver();
-			final String flagName = cmiRecv.getName();
-			if (flagName != null && flagName.startsWith(FACTORY_PREFIX_FLAG)) {
-				// It is not a reg. builder (i.e. it is a forward undo) because we need to always have the setAllocation be last in the stack
-				// because it is the setAllocation that all listeners are listening for to know there is an allocation change.
-				final RuledCommandBuilder cbld = new RuledCommandBuilder(ed, false);	 
-				final String classname = flagName.substring(FACTORY_PREFIX_FLAG.length(), flagName.length()-1);	// The classname, e.g. "{factory:classname}"
-				JavaHelpers factoryType = JavaRefFactory.eINSTANCE.reflectType(classname, EMFEditDomainHelper.getResourceSet(ed));
-				FactoryCreationData factoryData = FactoryCreationData.getCreationData(factoryType);
-				if (factoryData == null)
-					return; // Not a real factory. Let it fail with invalid syntax.
-				MethodData fmd = factoryData.getMethodData(cmi.getName());
-				// If there is no factory data, let it go through as an undefined factory method. This means that we don't know if is static or not or what the properties are.
-				// We will treat it as non-static, non-Freeform factory method.
-				final boolean staticFactory = fmd != null && fmd.isStatic();
-				IJavaInstance factory = null;
-				if (!staticFactory) {
-					if (factoryData.isShared()) {
-						JavaAllocation parentAlloc = parent.getAllocation();
-						while (true) {
-							if (parentAlloc instanceof ParseTreeAllocation) {
-								PTExpression paexp = ((ParseTreeAllocation) parentAlloc).getExpression();
-								if (paexp instanceof PTMethodInvocation) {
-									PTMethodInvocation pmi = (PTMethodInvocation) paexp;
-									if (pmi.getReceiver() instanceof PTInstanceReference) {
-										PTInstanceReference factoryRef = (PTInstanceReference) pmi.getReceiver();
-										IJavaInstance parentFactory = factoryRef.getReference();
-										if (factoryType.isInstance(parentFactory)) {
-											factory = parentFactory; // Got it. Use it.
+		command = handleSetting(child, parent, null, new HashSet());
+	}
+	
+	private Command handleSetting(final IJavaInstance jiChild, IJavaInstance jiParent, IJavaInstance inParentFactory, final Set processed) {
+		if (!processed.add(jiChild))
+			return null;	// Child already processed.
+		final RuledCommandBuilder cbld = new RuledCommandBuilder(ed, jiChild.eContainer() == null); ;	// A normal command if not contained because we don't need to apply allocation again to indicate change.
+		cbld.setExecuteAndAppend(true); // Execute immediately so that we can see the parent's factory when processing a child.
+		
+		if (jiChild.isParseTreeAllocation()) {
+			// TODO Actually would love to have (1) this be a contributed extension to process "{factory:" allocation variables. This allows others
+			// to add more types and (2) this is in VCEPreset so that we only walk the tree of instances once, instead of multiple times.
+			ParseTreeAllocation allocation = (ParseTreeAllocation) jiChild.getAllocation();
+			if (allocation.getExpression() instanceof PTMethodInvocation) {
+				PTMethodInvocation cmi = (PTMethodInvocation) allocation.getExpression();
+				if (cmi.getReceiver() instanceof PTName) {
+					PTName cmiRecv = (PTName) cmi.getReceiver();
+					final String flagName = cmiRecv.getName();
+					if (flagName != null && flagName.startsWith(FACTORY_PREFIX_FLAG)) {
+						// It is not a reg. builder (i.e. it is a forward undo) because we need to always have the setAllocation be last in the stack
+						// because it is the setAllocation that all listeners are listening for to know there is an allocation change.
+						final String classname = flagName.substring(FACTORY_PREFIX_FLAG.length(), flagName.length() - 1); // The classname, e.g. "{factory:classname}"
+						JavaHelpers factoryType = JavaRefFactory.eINSTANCE.reflectType(classname, EMFEditDomainHelper.getResourceSet(ed));
+						FactoryCreationData factoryData = FactoryCreationData.getCreationData(factoryType);
+						if (factoryData == null)
+							return null; // Not a real factory. Let it fail with invalid syntax.
+						MethodData fmd = factoryData.getMethodData(cmi.getName());
+						// If there is no factory data, let it go through as an undefined factory method. This means that we don't know if is static or not or what the properties are.
+						// We will treat it as non-static, non-Freeform factory method.
+						final boolean staticFactory = fmd != null && fmd.isStatic();
+						IJavaInstance factory = null;
+						if (!staticFactory) {
+							if (factoryData.isShared()) {
+								JavaAllocation parentAlloc = jiParent.getAllocation();
+								while (true) {
+									if (parentAlloc instanceof ParseTreeAllocation) {
+										PTExpression paexp = ((ParseTreeAllocation) parentAlloc).getExpression();
+										if (paexp instanceof PTMethodInvocation) {
+											PTMethodInvocation pmi = (PTMethodInvocation) paexp;
+											if (pmi.getReceiver() instanceof PTInstanceReference) {
+												PTInstanceReference factoryRef = (PTInstanceReference) pmi.getReceiver();
+												IJavaInstance parentFactory = factoryRef.getReference();
+												if (factoryType.isInstance(parentFactory)) {
+													factory = parentFactory; // Got it. Use it.
+												}
+											}
+										}
+										break;
+									} else if (parentAlloc instanceof ImplicitAllocation) {
+										// Parent was an implicit, see if the who it is from has the factory to use.
+										ImplicitAllocation impAlloc = (ImplicitAllocation) parentAlloc;
+										EObject impParent = impAlloc.getParent();
+										if (impParent instanceof IJavaInstance)
+											parentAlloc = ((IJavaInstance) impParent).getAllocation();
+										else
+											break;
+									} else
+										break;
+								}
+								if (factory == null) {
+									// Not found for parent. Look for others.
+									List validFactories = new ArrayList();
+									// Find only global factories for now.
+									// TODO Need to also try to handle those in same method as parent, but we have a problem of ordering (not
+									// sure codegen would move to correct spot in method to prevent problems, need to test that)
+									// or if the child became a GLOBAL_GLOBAL
+									// it wouldn't have access to the toolkit. Would need codegen smart enough to create an init method that would
+									// pass in everything that the child create method would need, such as parent and toolkit.
+									DiagramData freeform = ed.getDiagramData();
+									if (freeform instanceof BeanComposition) {
+										List components = ((BeanComposition) freeform).getComponents();
+										for (Iterator comps = components.iterator(); comps.hasNext();) {
+											IJavaInstance comp = (IJavaInstance) comps.next();
+											if (factoryType.isInstance(comp))
+												validFactories.add(comp);
 										}
 									}
-								}
-								break;
-							} else if (parentAlloc instanceof ImplicitAllocation) {
-								// Parent was an implicit, see if the who it is from has the factory to use.
-								ImplicitAllocation impAlloc = (ImplicitAllocation) parentAlloc;
-								EObject impParent = impAlloc.getParent();
-								if (impParent instanceof IJavaInstance)
-									parentAlloc = ((IJavaInstance) impParent).getAllocation();
-								else
-									break;
-							} else
-								break;
-						}						
-						if (factory == null) {
-							// Not found for parent. Look for others.
-							List validFactories = new ArrayList();
-							// Find only global factories for now.
-							// TODO Need to also try to handle those in same method as parent, but we have a problem of ordering (not
-							// sure codegen would move to correct spot in method to prevent problems, need to test that)
-							// or if the child became a GLOBAL_GLOBAL
-							// it wouldn't have access to the toolkit. Would need codegen smart enough to create an init method that would
-							// pass in everything that the child create method would need, such as parent and toolkit.
-							DiagramData freeform = ed.getDiagramData();
-							if (freeform instanceof BeanComposition) {
-								List components = ((BeanComposition) freeform).getComponents();
-								for (Iterator comps = components.iterator(); comps.hasNext();) {
-									IJavaInstance comp = (IJavaInstance) comps.next();
-									if (factoryType.isInstance(comp))
-										validFactories.add(comp);
+									if (!validFactories.isEmpty()) {
+										// Popup a dialog.
+										Shell s = ed.getEditorPart().getSite().getShell();
+										FactorySelectorDialog fsd = new FactorySelectorDialog(s, ed);
+										fsd.setInput(validFactories);
+										int r = fsd.open();
+										// If canceled, then create new one.
+										if (r != Dialog.CANCEL)
+											factory = (IJavaInstance) fsd.getSelectedFactory();
+									}
 								}
 							}
-							if (!validFactories.isEmpty()) {
-								// Popup a dialog.
-								Shell s = ed.getEditorPart().getSite().getShell();
-								FactorySelectorDialog fsd = new FactorySelectorDialog(s, ed);
-								fsd.setInput(validFactories);
-								int r = fsd.open();
-								// If canceled, then create new one.
-								if (r != Dialog.CANCEL)
-									factory = (IJavaInstance) fsd.getSelectedFactory(); 
+	
+							if (factory == null && factoryType.isInstance(inParentFactory))
+								factory = inParentFactory; // Try one from a grand-parent if it is compatible.
+							else if (factory == null) {
+								// One was not found, or it is not shared, so create one.
+								String initString = factoryData.getInitString();
+								JavaAllocation alloc;
+								if (initString == null) {
+									// Use default ctor.
+									alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(InstantiationFactory.eINSTANCE
+											.createPTClassInstanceCreation(classname, null));
+								} else {
+									alloc = BeanPropertyDescriptorAdapter.createAllocation(initString);
+								}
+								factory = BeanUtilities.createJavaObject(factoryType, EMFEditDomainHelper.getResourceSet(ed), alloc);
+								// TODO If the child is GLOBAL_GLOBAL and factory is not, then codegen will fail because it does not
+								// know how to generate code into the child's global init method BEFORE the construction of the child
+								// itself.
+								// What is needed instead is a way to assign it relative to child, but we don't know where child will be
+								// until too late. For now we hardcoded in VCEPreSetCommand to put unassigned instances found in an allocation
+								// into GLOBAL_GLOBAL.
+								if (factoryData.isOnFreeform()) {
+									// Need to force to freeform.
+									BeanComposition bc = (BeanComposition) ed.getDiagramData();
+									cbld.applyAttributeSetting(bc, JCMPackage.eINSTANCE.getBeanComposition_Components(), factory);
+								}
 							}
 						}
-					}
-					
-					if (factory == null) {
-						// One was not found, or it is not shared, so create one.
-						String initString = factoryData.getInitString();
-						JavaAllocation alloc;
-						if (initString == null) {
-							// Use default ctor.
-							alloc = InstantiationFactory.eINSTANCE.createParseTreeAllocation(InstantiationFactory.eINSTANCE.createPTClassInstanceCreation(classname, null));
-						} else {
-							alloc = BeanPropertyDescriptorAdapter.createAllocation(initString);
-						}
-						factory = BeanUtilities.createJavaObject(factoryType, EMFEditDomainHelper.getResourceSet(ed), alloc);
-						// TODO If the child is GLOBAL_GLOBAL and factory is not, then codegen will fail because it does not
-						// know how to generate code into the child's global init method BEFORE the construction of the child
-						// itself.
-						// What is needed instead is a way to assign it relative to child, but we don't know where child will be
-						// until too late. For now we hardcoded in VCEPreSetCommand to put unassigned instances found in an allocation
-						// into GLOBAL_GLOBAL.
-						if (factoryData.isOnFreeform()) {
-							// Need to force to freeform.
-							BeanComposition bc = (BeanComposition) ed.getDiagramData();
-							cbld.applyAttributeSetting(bc, JCMPackage.eINSTANCE.getBeanComposition_Components(), factory);
-						}
-					}
-				}
-				
-				// Now go through the allocation replacing the flag's (flagName in a PTName) with the appropriate factory reference.
-				final IJavaInstance factoryInstance = factory;
-				cbld.setApplyRules(false);	// Don't apply the rules at this time. We are just building everything up. When the child get's added
-				// to the parent the rules will applied then, so less walking of the containments.
-				cmi.accept(new ParseVisitor() {
-					public boolean visit(PTName node) {
-						if (flagName.equals(node.getName())) {
-							// Found a reference to the factory.
-							if (staticFactory) {
-								replaceWithStaticFactory(node, classname, cbld);
-							} else {
-								replaceWithFactory(node, factoryInstance, cbld);
+	
+						// Now go through the allocation replacing the flag's (flagName in a PTName) with the appropriate factory reference.
+						final IJavaInstance factoryInstance = factory;
+						cbld.setApplyRules(false); // Don't apply the rules at this time. We are just building everything up. When the child get's added
+						// to the parent the rules will applied then, so less walking of the containments.
+						cmi.accept(new ParseVisitor() {
+	
+							public boolean visit(PTName node) {
+								if (flagName.equals(node.getName())) {
+									// Found a reference to the factory.
+									if (staticFactory) {
+										replaceWithStaticFactory(node, classname, cbld);
+									} else {
+										replaceWithFactory(node, factoryInstance, cbld);
+									}
+								}
+								return true;
 							}
+	
+						});
+						if (!cbld.isEmpty() && jiChild.eContainer() != null) {
+							// We have something, and we are contained, so we need to now reapply allocation to make sure the change is seen by others since they do not listen on
+							// changes within allocation.
+							cbld.setApplyRules(true); // We are contained, so we need the rules to be applied.
+							cbld.applyAttributeSetting(jiChild, allocation.eContainmentFeature(), allocation);
 						}
-						return true;
+	
+						if (factory != null)
+							inParentFactory = factory; // This factory is now the grandparent factory to try if all else fails.
 					}
-				
-				});
-				if (!cbld.isEmpty()) {
-					// We have something so we need to now reapply allocation to make sure the change is seen by others since they do not listen on
-					// changes within allocation.
-					cbld.applyAttributeSetting(child, allocation.eContainmentFeature(), allocation);
-					command = cbld.getCommand();
-					command.execute();
 				}
 			}
-
-		}
+		}		
+		// Now process the settings to see if any of them have factories.
+		cbld.setApplyRules(false);	// Go back to not apply, let visit determine if apply or not.
+		final IJavaInstance grandParentFactory = inParentFactory;
+		class FeatureVisitor implements FeatureValueProvider.Visitor {
+			public Object isSet(EStructuralFeature setFeature, Object featureValue) {
+				if (setFeature instanceof EReference) {
+					EReference ref = (EReference) setFeature;
+					if (ref.isChangeable()) {
+						if (ref.isMany()) {
+							Iterator kids = ((List) featureValue).iterator();
+							while (kids.hasNext()) {
+								Object kid = kids.next();
+								if (kid instanceof IJavaInstance)
+									cbld.append(handleSetting((IJavaInstance) kid, jiChild, grandParentFactory, processed));
+							}
+						} else {
+							Object kid = featureValue;
+							if (kid instanceof IJavaInstance)
+								cbld.append(handleSetting((IJavaInstance) kid, jiChild, grandParentFactory, processed));
+						}
+					}
+				}
+				return null;
+			}		
+		};
 		
-
+		FeatureVisitor visitor = new FeatureVisitor();
+		FeatureValueProvider.FeatureValueProviderHelper.visitSetFeatures(jiChild, visitor);
+		
+		return !cbld.isEmpty() ? cbld.getCommand() : null;
 	}
 	
 	private void replaceWithFactory(PTName node, IJavaInstance factory, RuledCommandBuilder cbld) {
