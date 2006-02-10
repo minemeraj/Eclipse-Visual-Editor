@@ -104,7 +104,7 @@ public class PerfSuiteJDT extends TestSetup {
 
 	protected void disableStartupPlugins() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint point = registry.getExtensionPoint(PlatformUI.PLUGIN_ID, IWorkbenchConstants.PL_STARTUP);
+		IExtensionPoint point = registry.getExtensionPoint(PlatformUI.PLUGIN_ID, IWorkbenchConstants.TAG_STARTUP);
 		IExtension[] extensions = point.getExtensions();
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < extensions.length; ++i) {
