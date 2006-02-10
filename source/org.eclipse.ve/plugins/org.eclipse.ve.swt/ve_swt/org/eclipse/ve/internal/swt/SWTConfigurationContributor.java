@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: SWTConfigurationContributor.java,v $
- *  $Revision: 1.38 $  $Date: 2005-12-14 21:44:40 $ 
+ *  $Revision: 1.39 $  $Date: 2006-02-10 18:41:49 $ 
  */
 package org.eclipse.ve.internal.swt;
 import java.io.*;
@@ -27,7 +27,6 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.osgi.framework.adaptor.core.AbstractFrameworkAdaptor;
 import org.eclipse.osgi.service.environment.Constants;
 import org.eclipse.osgi.service.resolver.BundleDescription;
 import org.eclipse.pde.core.plugin.*;
@@ -136,7 +135,7 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 								try {
 									if (in!=null) {
 										File dest = new File (root.toFile(), entry.getName());
-										AbstractFrameworkAdaptor.readFile(in, dest);
+										readFile(in, dest);
 										if (!Platform.getOS().equals(Constants.OS_WIN32))
 											Runtime.getRuntime().exec(new String[] {"chmod", "755", dest.getAbsolutePath()}).waitFor(); //$NON-NLS-1$ //$NON-NLS-2$
 									}
@@ -690,5 +689,42 @@ static public URL generateLibCacheIfNeeded (String srcJarFile, String relativePa
 			JavaVEPlugin.log(e, Level.INFO);
 		}
 		return null;
-	}	
+	}
+	/*
+	 * Helper method that came from a removed OSGI class org.eclipse.osgi.framework.adaptor.core.AbstractFrameworkAdaptor
+	 */
+	private static void readFile(InputStream in, File file) throws IOException {
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(file);
+
+			byte buffer[] = new byte[1024];
+			int count;
+			while ((count = in.read(buffer, 0, buffer.length)) > 0) {
+				fos.write(buffer, 0, count);
+			}
+
+			fos.close();
+			fos = null;
+
+			in.close();
+			in = null;
+		} catch (IOException e) {
+			// close open streams
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException ee) {
+				}
+			}
+
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException ee) {
+				}
+			}
+			throw e;
+		}
+	}
 }
