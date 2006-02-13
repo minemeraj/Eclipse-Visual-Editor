@@ -52,15 +52,28 @@
   </table>
   <?php
 		 
-		 $fileHandle = fopen("dlconfig.txt", "r");
-		 while (!feof($fileHandle)) {
-		 		 
-		 		 $aLine = fgets($fileHandle, 4096);
-		 		 parse_str($aLine);
+        $contents = substr(file_get_contents('dlconfig.txt'),0,-1);
+        $contents = str_replace("\n", "", $contents);
 
-		 		 
+         #split the content file by & and fill the arrays
+         $elements = explode("&",$contents);
+         $t = 0; 
+         $p = 0;
+		 for ($c = 0; $c < count($elements)-1; $c++) {
+		 		 $tString = "dropType";
+		 		 $pString = "dropPrefix";
+		 		 if (strstr($elements[$c],$tString)) {
+		 		    $temp = preg_split("/=/",$elements[$c]);
+		 		    $dropType[$t] = $temp[1];
+		 		    $t++;
+		 		 }
+		 		 if (strstr($elements[$c],$pString)) {
+		 		    $temp = preg_split("/=/",$elements[$c]);
+		 		    $dropPrefix[$p] = $temp[1];
+		 		    $p++;
+		 		 }
 		 }
-		 fclose($fileHandle);
+ 	
 		 
 		 for ($i = 0; $i < count($dropType); $i++) {
 		 		 $typeToPrefix[$dropType[$i]] = $dropPrefix[$i];
