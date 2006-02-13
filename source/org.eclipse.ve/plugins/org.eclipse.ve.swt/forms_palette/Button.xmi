@@ -24,5 +24,39 @@
   <cdm:AnnotationEMF annotates="Button_1">
     <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="button"/>
   </cdm:AnnotationEMF>  
+  
+  <swt:Button xmi:id="Check_1">
+  	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
+	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="createButton">
+		<receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{factory:org.eclipse.ui.forms.widgets.FormToolkit}"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTNullLiteral"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="CHECK">
+          <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
+        </arguments>       
+      </expression>	  	
+	</allocation>
+  </swt:Button>
+  
+  <cdm:AnnotationEMF annotates="Check_1">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="checkBox"/>
+  </cdm:AnnotationEMF>  
+  
+  <swt:Button xmi:id="Radio_1">
+  	<allocation xsi:type="org.eclipse.jem.internal.instantiation:ParseTreeAllocation">
+	  <expression xsi:type="org.eclipse.jem.internal.instantiation:PTMethodInvocation" name="createButton">
+		<receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{factory:org.eclipse.ui.forms.widgets.FormToolkit}"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="{parentComposite}"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTNullLiteral"/>
+        <arguments xsi:type="org.eclipse.jem.internal.instantiation:PTFieldAccess" field="RADIO">
+          <receiver xsi:type="org.eclipse.jem.internal.instantiation:PTName" name="org.eclipse.swt.SWT"/>
+        </arguments>       
+      </expression>	  	
+	</allocation>
+  </swt:Button>
+  
+  <cdm:AnnotationEMF annotates="Radio_1">
+    <keyedValues xmi:type="ecore:EStringToStringMapEntry" key="org.eclipse.ve.internal.cde.core.nameincomposition" value="radio"/>
+  </cdm:AnnotationEMF>    
 
 </xmi:XMI>
