@@ -10,14 +10,13 @@
  *******************************************************************************/
 /*
  *  $RCSfile: FactoryCreationData.java,v $
- *  $Revision: 1.3 $  $Date: 2006-02-10 21:53:45 $ 
+ *  $Revision: 1.4 $  $Date: 2006-02-13 17:39:57 $ 
  */
 package org.eclipse.ve.internal.java.core;
 
 import java.util.*;
 
 import org.eclipse.jem.beaninfo.common.IBaseBeanInfoConstants;
-import org.eclipse.jem.internal.beaninfo.BeanDecorator;
 import org.eclipse.jem.internal.beaninfo.common.FeatureAttributeValue;
 import org.eclipse.jem.internal.instantiation.*;
 import org.eclipse.jem.internal.instantiation.base.IJavaInstance;
@@ -30,7 +29,7 @@ import org.eclipse.ve.internal.cde.emf.EMFEditDomainHelper;
 
 /**
  * Factory Creation data. This will be the internal data of a {@link FeatureAttributeValue#getInternalValue()} that has
- * the key of {@link IBaseBeanInfoConstants#FACTORY_CREATION}. It will be on the {@link BeanDecorator} for the factory type.
+ * the key of {@link IBaseBeanInfoConstants#FACTORY_CREATION}. It will be on the {@link org.eclipse.jem.internal.beaninfo.BeanDecorator} for the factory type.
  * <p>
  * @since 1.2.0
  */
