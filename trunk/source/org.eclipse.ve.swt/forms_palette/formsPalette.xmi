@@ -13,6 +13,14 @@
         prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Button.xmi#Button_1">
       <entryLabel xsi:type="utility:ConstantString" string="Button"/>
     </children>    
+    <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/checkbox_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Button.xmi#Check_1">
+      <entryLabel xsi:type="utility:ConstantString" string="CheckBox"/>
+    </children>    
+    <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/radiobutton_obj.gif"
+        prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/Button.xmi#Radio_1">
+      <entryLabel xsi:type="utility:ConstantString" string="RadioButton"/>
+    </children>        
     <children xsi:type="palette:EMFPrototypeToolEntry" icon16Name="platform:/plugin/org.eclipse.ve.swt/icons/full/clcl16/separator_obj.gif"
         prototypeURI="platform:/plugin/org.eclipse.ve.swt/forms_palette/CompositeSeparator.xmi#Composite_1">
       <entryLabel xsi:type="utility:ConstantString" string="Separator"/>
